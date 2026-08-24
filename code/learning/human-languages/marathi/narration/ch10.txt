@@ -1,146 +1,155 @@
-Marathi, chapter 10: Water, Tea, Milk, and Bhakri.
+Marathi, chapter 10: Taking, Asking, Helping, Liking.
 4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
 Lesson 1 of 4.
-पाणी (pāṇī) — the first thing you'll actually ask for.
+घेणे (gheṇe) — "to take," which you have been saying since Chapter 5.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-आवडणे told you what you like; प्रेम करणे what you love. This chapter asks for something smaller and more frequent than either: a drink.
+Say "to write" and "to read" — lihiṇe, vāchṇe — and what lihiṇe's root meant before writing existed. (To scratch.) This next verb has been in your mouth since the farewells, unrecognised.
 
-You'll want to know: पाणी.
-पाणी — pāṇī — water.
+You'll want to know: घेणे.
+घेणे — gheṇe — to take.
+काळजी घ्या — kāḷjī ghyā, "take care" — is this verb. घ्या ghyā is its respectful command, घे ghe the familiar one you would use with तू. The plain present is मी घेतो mī gheto / घेते ghete.
+Note the -त- that appears in the present but not the infinitive: ghe- on its own, ghe-t-o when conjugated. Marathi's commonest verbs are the ones that bend.
 
 The letters in this word.
-Nothing new here. प pa you have from punhā; ण you have from every -णे verb so far; ी is the familiar long ī. पा-णी.
+घ is gha — a g with a real puff of breath behind it, a separate letter from ग ga, exactly as ख kha is separate from क ka. Add the -e stroke over the top and the retroflex णे: ghe-ṇe.
 
-Grammar Lens: asking politely.
-पाणी, कृपया. — pāṇī, kṛpayā. — Water, please.
-कृपया kṛpayā is Sanskrit's own instrumental of कृपा kṛpā, "mercy, kindness" — literally "by kindness, out of kindness." Name the thing you want, add कृपया, and the request is complete: no verb for "give" required. This is the pattern the whole chapter reuses, and the first time this track has built a "please" of any kind — a spine node this book had left empty until now.
-
-The word, taken apart — the oldest drinking word you own.
-पाणी continues Maharastri Prakrit pāṇīa, from Sanskrit पानीय pānīya, "that which is to be drunk," built on पा pā-, "to drink." That root is Indo-European peh₃(i)-, and English keeps two disguised pieces of it: potion and poison both come through Latin potare, "to drink" — a poison, by origin, is just a drink gone wrong. Greek turned the same idea into sympotēs, "one who drinks together," which English keeps as symposium.
+The word, taken apart — the root of "grab".
+घेणे (gheṇe) comes through Prakrit gahaï from the Sanskrit root ग्रह् grah-, "to seize, to grasp" — the root of ग्रहण grahaṇ, an eclipse, which is the sky being seized.
+Its older Vedic shape was ग्रभ् grabh-, and that bh is the piece worth holding on to: Indo-European gʰrebʰ- kept its bh in Vedic and turned it into a b in Germanic, which is English grab. Marathi's gh- is what four thousand years did to the same first consonant. Grabh and grab are the same word.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: pāṇī — water]
+[your turn — say: "gheṇe" — to take — then "mī gheto" or "ghete"]
 [pause 8 seconds for the answer]
-[your turn — say: pāṇī, kṛpayā. — water, please]
+[your turn — say: the farewell it was hiding in — "kāḷjī ghyā"]
 [pause 8 seconds for the answer]
-[your turn — run: malā marāṭhī āvaḍte, then pāṇī, kṛpayā — liking and requesting, side by side]
+[your turn — say: the Vedic form and its English cousin — "grabh … grab"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Ask for water politely. (Pāṇī, kṛpayā.) What does कृपया literally mean? ("By kindness.") Which two English words for a drink, and one for a whole gathering of them, share pāṇī's root? (Potion, poison, symposium.)
-Sources: Wiktionary: पाणी (pāṇī); Wiktionary: कृपया.
+Which farewell has been using घेणे all along, and what does it literally say? (काळजी घ्या — "take care.") Which English word is the same word as Vedic grabh? (Grab.) What gender is घेणे when it acts as a noun? (Neuter, like every -णे form.) Say "to write" and "to take" in one breath. (Lihiṇe, gheṇe.)
 
 
 Lesson 2 of 4.
-चहा (chahā) — a word that took the overland road.
+विचारणे (vichārṇe) — "to ask," built out of "a thought".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-पाणी, कृपया (pāṇī, kṛpayā) — water, please. Say it once more, then ask for something that is not water at all.
+Say "to take" — gheṇe. Say "to think" — vichār karṇe — and what its root meant. (To turn, to range about.) Hold that word. The next verb is it, with four letters fewer.
 
-You'll want to know: चहा.
-चहा — chahā — tea.
-चहा, कृपया. — chahā, kṛpayā. — Tea, please.
+You'll want to know: विचारणे.
+विचारणे — vichārṇe — to ask.
+मी विचारतो — mī vichārto — "I ask," विचारते vichārte if a woman speaks. And the same च rule holds: say it vitsārto, with the ts Marathi puts before a long ā.
 
 The letters in this word.
-Nothing new. च you already say near ts from Chapter 6's चार; ह is नमस्कार's; ा the familiar long ā. Cha-hā.
+There is nothing new. विचारणे (vichārṇe) is विचार — the noun from the last chapter, letter for letter — with णे on the end. If you can write "a thought," you can write "to ask."
 
-The word, taken apart — the one word in this chapter with no Sanskrit in it.
-Every other word in this chapter reaches back to Sanskrit. चहा (chahā) does not — it is a loanword from Mandarin cha, and it reached Marathi by the overland route, through Persian and Turkic trade, the same road that gave Hindi चाय chāy, Bengali cha, and Persian chāy their words for the same drink. A second branch of the same plant travelled by sea: Dutch traders carried the Hokkien word te to Western Europe, which is why English says tea, not cha. One plant, two words, two trade routes.
-चहा (chahā) is also this chapter's first masculine noun, against पाणी (pāṇī)'s neuter — a reminder that Marathi's three genders do not sort words by where they came from.
+The word, taken apart — one root, two verbs.
+Marathi builds both verbs on विचार:
+[a table of 2 rows, read aloud]
+विचार करणे means to think — "to do a thought".
+विचारणे (vichārṇe) means to ask — the thought made into a verb.
+Both sit on वि- plus चर् car-, "to move, to range." Thinking is ranging over something privately; asking is ranging over it out loud with somebody else. Marathi did not decide they were different enough to need different words.
+This is Marathi's own arrangement, not a family inheritance. Hindi's verb for asking, पूछना pūchnā, comes from an unrelated root, and Hindi's विचार stays a noun. Where a language draws its lines is a choice each language makes for itself.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: chahā, kṛpayā — tea, please]
+[your turn — say: the pair, slowly — "vichār karṇe … vichārṇe"]
 [pause 8 seconds for the answer]
-[your turn — name: the two trade routes — overland to chāy/chahā, by sea to tea]
+[your turn — say: "I ask" in your own gender — "mī vichārto" or "vichārte"]
 [pause 8 seconds for the answer]
-[your turn — say: both requests — pāṇī, kṛpayā … chahā, kṛpayā]
+[your turn — say: both with the Marathi ts — "vitsār karto … vitsārto"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Ask for tea politely. (Chahā, kṛpayā.) Which language does चहा (chahā) ultimately come from? (Mandarin Chinese, cha.) Which English word for the same plant took the sea route instead? (Tea.)
-Sources: Wiktionary: चहा (chahā).
+What is the only difference between Marathi's "to think" and its "to ask"? (करणे — thinking adds "to do"; asking puts -णे straight onto विचार.) What did the shared root mean? (To move, to turn over.) How is the च said in both? (Nearer ts before the long ā.) And "to take"? (Gheṇe.)
 
 
 Lesson 3 of 4.
-दूध (dūdh) — back to Sanskrit, and a surprising English cousin.
+मदत करणे (madat karṇe) — "to help," a word that travelled.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-चहा (chahā) broke the pattern — a loanword with no Sanskrit behind it. This next word rejoins पाणी (pāṇī)'s family: inherited, traceable, Indo-European.
+Say "to ask" — vichārṇe. And say "I know" — malā māhīt āhe — then name where माहीत was borrowed from. (Arabic, through Persian.) A second borrowed word from that same layer is coming.
 
-You'll want to know: दूध.
-दूध — dūdh — milk.
-दूध, कृपया. — dūdh, kṛpayā. — Milk, please.
+You'll want to know: मदत करणे.
+मदत करणे — madat karṇe — to help.
+Built the way kām karṇe and vichār karṇe are built: a noun, मदत madat ("help"), with करणे behind it. मी मदत करतो — mī madat karto — "I help," करते karte for a woman.
+That pattern is the most productive thing in the language: put करणे behind almost any noun and Marathi will accept the verb.
 
 The letters in this word.
-One new mark: ू, the long ū vowel sign — a longer hook under the consonant than any you've written so far. द you have from dhanyavād and madat; ध from dhanyavād too. Dū-dh.
+मदत is three bare consonants, each with its built-in a: म ma, द da, त ta — ma-da-t, with the last a falling away in speech as it usually does at the end of a Marathi word.
 
-The word, taken apart — milk, and the root behind "doughty".
-दूध (dūdh) continues Maharastri Prakrit duddha, from Sanskrit दुग्ध dugdha, "milked, milk" — literally the past participle of दुह् duh-, "to milk." That root traces to Indo-European dʰewgʰ-, "to be fit, to be of use, to produce" — milking as producing something useful. Germanic kept the same root for a different sense of "useful, capable": English doughty, "brave and able," is dūhtig in Old English, built on this exact root. Milk and doughtiness, four thousand years apart, share one ancestor.
+The word, taken apart — help as a hand extended.
+मदत is Arabic madad, borrowed through Persian. Its Arabic root means to stretch out, to extend — madad is a thing extended: a hand, or reinforcements sent to an army. Help, named as reach.
+It belongs to the layer of Persian and Arabic administration that settled into Marathi under the Deccan sultanates — the same layer that gave you माहीत in malā māhīt āhe, and हरकत in kāhī harkat nāhī. Three everyday words, one route.
+One small tell worth keeping: Marathi writes मदत, with a final त. Hindi and Urdu write मदद, with a द. The same loan, landing differently in each language — which is what borrowing normally looks like.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: dūdh, kṛpayā — milk, please]
+[your turn — say: "madat karṇe" — then "mī madat karto" or "karte"]
 [pause 8 seconds for the answer]
-[your turn — say: what dugdha literally was — "milked"]
+[your turn — say: the three करणे verbs you have — "kām karṇe, vichār karṇe, madat karṇe"]
 [pause 8 seconds for the answer]
-[your turn — run: all three requests — pāṇī, chahā, dūdh — kṛpayā]
+[your turn — say: what the Arabic root meant — "to stretch out"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Ask for milk politely. (Dūdh, kṛpayā.) What English word for "brave and capable" shares दूध (dūdh)'s root? (Doughty.)
-Sources: Wiktionary: दूध (dūdh).
+What did मदत's Arabic root mean before it meant help? (To stretch out, to extend.) Which road did it travel to reach Marathi? (Persian.) Name another word you have from that same layer. (माहीत, or हरकत in kāhī harkat nāhī.) And how does Marathi spell the end of the word, against Hindi and Urdu? (With त, not द.)
 
 
 Lesson 4 of 4.
-भाकरी (bhākarī) — the request that breaks the pattern.
+आवडणे (āvaḍṇe) — "to like," which is not something you do.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-Three requests so far: pāṇī, chahā, dūdh. Two inherited from Sanskrit, one borrowed from Chinese. The fourth belongs to neither story.
+Three verbs from this chapter: gheṇe, vichārṇe, madat karṇe. Say them. Each let you be the one acting. The fourth will not.
 
-You'll want to know: भाकरी.
-भाकरी — bhākarī — a round flatbread, the everyday Maharashtrian bread — of jowar, bajra, or rice flour, not wheat.
-भाकरी, कृपया. — bhākarī, kṛpayā. — Bhakri, please.
+You'll want to know: आवडणे.
+आवडणे — āvaḍṇe — to like.
+मला मराठी आवडते — malā marāṭhī āvaḍte — "I like Marathi," or word for word, "to me Marathi pleases."
 
 The letters in this word.
-Nothing new. भ from bheṭū, क from everywhere, र from marāṭhī, ी the familiar long ī. Bhā-ka-rī.
+आ is the standalone long ā; व va; ड ḍa, a retroflex d made with the tongue curled back — new here, and not the द da of madat; then णे. Ā-va-ḍa-ṇe.
 
-The word, taken apart — the one word that stayed home.
-भाकरी is inherited from Old Marathi bhākarī, from Proto-Indo-Aryan bʰakkaras, "heap, pile, lump" — the flatbread named for the lump of dough it started as. That reconstruction is as far back as the sources trace it; its own root before Proto-Indo-Aryan is not established, so this lesson claims none rather than inventing one.
-Unlike पाणी (pāṇī) and दूध (dūdh), भाकरी (bhākarī) is not a Sanskrit tatsama or tadbhava — it never touched classical Sanskrit. And unlike चहा (chahā), it is no loanword either — a regional word, close kin to Gujarati bhākhrī and Kannada bakkari, and simply not Hindi's word for bread: Hindi asks for रोटी roṭī, an unrelated root. A Delhi shopkeeper would not recognize the request; a Pune one would hand you lunch.
+Grammar Lens: the third sentence built this way.
+[a table of 3 rows, read aloud]
+Marathi: मला मराठी येते. word for word: to-me Marathi comes — I know it.
+Marathi: मला मराठी समजते. word for word: to-me Marathi is-understood — I understand it.
+Marathi: मला मराठी आवडते. word for word: to-me Marathi pleases — I like it.
+One frame, three meanings. You are मला in all three, never the subject, and the verb agrees with मराठी. Change the thing liked and the ending follows it: a masculine thing takes आवडतो, a neuter thing आवडतं.
+
+The word, taken apart — one native, one inherited.
+आवडणे (āvaḍṇe) is Marathi's own — straight down from Old Marathi, cousin to Konkani āvaḍ, with no Sanskrit ancestor securely established, so this lesson claims none. Hindi and Urdu say पसंद pasand, borrowed from Persian.
+Loving is a separate verb: प्रेम करणे prem karṇe, and there you are the subject — मी प्रेम करतो. प्रेम is Sanskrit preman, on प्री prī-, "to be dear," from Indo-European preyH-. Germanic built a verb "to love" on it, and from that English has friend — the one loved — and free.
 
 Why it's said this way.
-Say the four requests once more and notice their genders: पाणी (pāṇī) neuter, चहा (chahā) masculine, दूध (dūdh) neuter, भाकरी (bhākarī) feminine. Four everyday nouns, all three of Marathi's genders, in one short chapter — proof, alongside the verbs' present-tense endings, that the third gender Hindi lost is not a museum piece here.
+Chapter 7's rule holds here: neither language is simply older. Marathi's दोन took its final n by copying तीन — an innovation. Hindi's पाँच kept a nasal Marathi dropped — a retention. Now a verb: Marathi kept its native word for liking, Hindi took a Persian one.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: all four requests, kṛpayā each time — pāṇī, chahā, dūdh, bhākarī]
+[your turn — say: "malā marāṭhī āvaḍte" — hearing "to me," not "I"]
 [pause 8 seconds for the answer]
-[your turn — say: "I eat bhakri" — mī bhākarī khāto or khāte, putting Chapter 7's खाणे to work on a word it never had before]
+[your turn — say: the one you do — "mī prem karto" or "karte"]
 [pause 8 seconds for the answer]
-[your turn — name: which of the four is neither Sanskrit nor a loanword — bhākarī]
+[your turn — say: this chapter's four — "gheṇe, vichārṇe, madat karṇe, āvaḍṇe"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What did भाकरी's Proto-Indo-Aryan ancestor mean? (A heap, a lump.) What does Hindi ask for instead? (रोटी, an unrelated root.) Give all four requests with their genders. (पाणी (pāṇī) n, चहा m, दूध n, भाकरी f — all with कृपया.) Sort the four sources: two from Sanskrit, one a Chinese loan, one purely regional. (Pāṇī, dūdh — Sanskrit; chahā — Chinese; bhākarī — regional.)
-Sources: Wiktionary: भाकरी (bhākarī).
+Who is the subject of malā marāṭhī āvaḍte? (मराठी — not you.) Which of the two puts you in the subject's chair? (प्रेम करणे.) Which English words share प्रेम's root? (Friend, free.) Now the chapter's four sources — gheṇe, vichārṇe, madat karṇe, āvaḍṇe. (Sanskrit ग्रह्, cousin of grab; विचार, the thinking word itself; Arabic madad through Persian; and आवड, native.)

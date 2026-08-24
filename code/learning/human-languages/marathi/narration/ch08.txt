@@ -1,157 +1,226 @@
-Marathi, chapter 8: The Mind and the Page.
-4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Marathi, chapter 8: The Core Verbs.
+6 lessons. All 6 can be done entirely by ear.
 
 
-Lesson 1 of 4.
-विचार करणे (vichār karṇe) — "to think," which is a turning.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+Lesson 1 of 6.
+असणे (asṇe) — "to be," and the word your sentence ends on.
 
 Warm-up.
 [pause 2 seconds]
-Say "I see" in your own gender — mī pāhto or mī pāhte — and name one English word from that verb's root. (Spectacle, inspect, spy: any of them.) Now the verb for what happens behind the eyes.
+You have already said it: mājhaṁ nāv … āhe. Now meet the verb that form belongs to, and notice where Marathi insists on putting it.
 
-You'll want to know: विचार करणे.
-विचार करणे — vichār karṇe — to think.
-Two words, not one. विचार vichār is a noun, "a thought"; करणे karṇe is "to do," which has been yours since kām karṇe, "to work." Marathi thinks by doing a thought.
-The present runs on endings you already own: मी विचार करतो — mī vichār karto, a man speaking — and करते karte, a woman.
+You'll want to know: असणे and its present आहे.
+असणे — asṇe — to be.
+The ending -णे (-ṇe) is the Marathi infinitive, the same ending as bolṇe "to speak." Its present tense is short, irregular, and already yours: आहे (āhe) — "am, is, are."
+[a table of 3 rows, read aloud]
+who: मी (I). Marathi: आहे. said: āhe.
+who: तू (you, familiar). Marathi: आहेस. said: āhes.
+who: तुम्ही (you, respectful). Marathi: आहात. said: āhāt.
 
-The letters in this word.
-विचार is वि (vi — व carrying the short-i stroke, which stands to the left of its letter), then चा (chā), then र (ra). करणे is क ka, र ra, णे ṇe.
+Sounds you'll need: अ, स, णे and आ, हे.
+अ is the bare vowel a; स is sa; णे is the retroflex ण ṇa carrying the -e stroke — a-sa-ṇe. आ is that first letter with an upright stroke added, the long ā. हे is ह ha with the same -e stroke: ā-he.
 
-Sounds you'll need: चा.
-च before a long ā hides a sound change: Marathi says it nearer ts. So चार is tsār, and विचार is vitsār — spelling unchanged, mouth moved.
+The word, taken apart — the oldest verb in the family.
+Sanskrit's word for "is" was अस्ति ásti, sitting on the stem as-, and that stem goes back to the Indo-European root h₁es-. It surfaces almost everywhere the family reaches: Latin est, Greek estí, German ist, and English is. Asṇe is built straight on it.
+आहे itself is the contested piece. Some trace it to ásti directly; others route it through a Middle Indo-Aryan verb acchai "stays, remains." The family is not in doubt, the exact line of descent is — so treat it as an open question rather than a settled fact.
 
-The word, taken apart — a thought is a turning.
-विचार is वि- vi- ("apart, thoroughly") on the Sanskrit root चर् car-, "to move, to range about." A thought is a ranging over.
-And car- comes from Indo-European kʷelh₁-, "to turn," which surfaces as Greek pélomai, Latin colō, and — through a doubled form — English wheel and cycle. When English says you turn something over in your mind, that is the same picture, and विचार has it built into the root.
+Grammar Lens: the sentence ends on आहे.
+English slots is into the middle of a sentence: "My name is Sara." Marathi holds it back to the very end:
+माझं नाव सारा आहे — mājhaṁ nāv Sārā āhe — piece by piece, "my name Sara is."
+That is the rule for every Marathi verb, and āhe is where it becomes unmissable. Whatever else the sentence carries, the verb closes it.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "vichār karṇe" — to think — with the ts: vitsār]
+[your turn — say: "asṇe" — to be — then its present, "āhe"]
 [pause 8 seconds for the answer]
-[your turn — say: "I think" in your own gender — "mī vichār karto" or "karte"]
+[your turn — say: the three persons — "mī āhe … tū āhes … tumhī āhāt"]
 [pause 8 seconds for the answer]
-[your turn — say: the root and its English cousins — "car-, to turn … wheel, cycle"]
+[your turn — say: your own name in Marathi order — "mājhaṁ nāv … āhe"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which two words make "to think"? (विचार "a thought" and करणे "to do.") What did the root inside विचार mean? (To move, to turn — the root behind wheel.) What gender is a -णे infinitive as a noun? (Neuter.) And why vitsār? (Marathi's च leans toward ts before a long ā.)
+What is the infinitive behind āhe? (असणे, asṇe.) Where does a Marathi verb stand? (Last — the sentence closes on it.) Which everyday English word is ásti's own cousin? (Is.) Next: a verb that changes shape according to who is speaking.
 
 
-Lesson 2 of 4.
-समजणे (samajṇe) — "to understand," which happens to you.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+Lesson 2 of 6.
+जाणे (jāṇe) — "to go," and a present tense that gives you away.
 
 Warm-up.
 [pause 2 seconds]
-Say "I think" — mī vichār karto or karte. Now say "I know" the way Marathi builds it. (मला माहीत आहे — malā māhīt āhe, "to me known is.") Understanding takes that second shape, not the first.
+Say "my name is …" once more, and hear where āhe lands. Every verb from here obeys that same rule. This one adds a second rule English has no use for.
 
-You'll want to know: समजणे.
-समजणे — samajṇe — to understand.
-मला मराठी समजते — malā marāṭhī samajte — "I understand Marathi." Piece by piece: "to me Marathi is-understood."
+You'll want to know: जाणे.
+जाणे — jāṇe — to go.
+Strip the infinitive ending -णे and the stem is जा- jā-. On that stem Marathi builds the everyday present: जातो (jāto) and जाते (jāte).
+Both mean "I go." Neither is more correct than the other. Which one you may say is decided by something the English sentence never mentions.
 
-The letters in this word.
-समजणे (samajṇe) is four plain letters with nothing hanging off the first three: स sa, म ma, ज ja, then णे ṇe. Each consonant carries its own built-in a, which is why sa-ma-ja comes out of three letters.
+Sounds you'll need: जा, णे.
+ज is ja, and the upright stroke after it is the long ā — together जा jā. णे you met last lesson: retroflex ण with the -e stroke. Two syllables, jā-ṇe, with the tongue curled back for that second one.
 
-Grammar Lens: three verbs, one frame.
-You now have two Marathi sentences built the same way, and they belong side by side:
-[a table of 2 rows, read aloud]
-Marathi: मला मराठी येते. word for word: to-me Marathi comes — I know Marathi.
-Marathi: मला मराठी समजते. word for word: to-me Marathi is-understood — I understand Marathi.
-In both, you sit in the dative — malā, "to me" — and the verb agrees with मराठी, a feminine noun, which is why both end -ते whoever is speaking.
-The first one is worth hearing literally: knowing a language is it coming to you, on येणे — the verb that is जाणे with आ- "toward here" fixed to the front. Understanding works the same way. Neither is something you do.
-
-The word, taken apart — the root that named the Buddha.
-समजणे (samajṇe) comes through Prakrit saṁbujjhaï from Sanskrit सम्बुध्यते sambudhyate: सम् sam-, "together," on the root बुध् budh-, "to wake up." To understand is to come awake to something.
-That root named a man: बुद्ध buddha is simply "the awakened one." It is Indo-European bʰewdʰ-, which also gave Greek punthánomai, "to learn by asking," and English bid. English keeps the picture in it dawned on me.
+Grammar Lens: the ending declares who is speaking.
+English "I go" hides the speaker completely — a man and a woman say the same two words. Marathi will not let you:
+[a table of 4 rows, read aloud]
+speaking of: a man, of himself. Marathi: मी जातो. said: mī jāto.
+speaking of: a woman, of herself. Marathi: मी जाते. said: mī jāte.
+speaking of: a man, "he goes". Marathi: तो जातो. said: to jāto.
+speaking of: a woman, "she goes". Marathi: ती जाते. said: tī jāte.
+The -तो / -ते swap is the whole mechanism, and it runs through every verb: bolto / bolte, yeto / yete. Hindi marks gender on its verbs too, but Marathi makes it unavoidable in the plainest sentence a beginner can build. From your first "I go," you are choosing.
+Notice also what is missing: no separate word for "am." The ending carries the action, the person, and the gender at once.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "malā marāṭhī samajte" — hearing "to me," not "I"]
+[your turn — say: "jāṇe" — to go — then the stem, "jā-"]
 [pause 8 seconds for the answer]
-[your turn — say: its twin — "malā marāṭhī yete"]
+[your turn — say: "I go" in your own gender — "mī jāto" or "mī jāte"]
 [pause 8 seconds for the answer]
-[your turn — say: the root and the man it named — "budh-, to wake … buddha"]
+[your turn — say: the pair — "to jāto … tī jāte"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Where does Marathi put the understander? (In the dative — malā.) Why samajte and not samajto, even for a man? (It agrees with मराठी, feminine.) What did budh- mean before it meant understanding, and whom did it name? (To wake — and the Buddha.) Which two verbs beside this one take malā? (माहीत असणे and येणे, in malā marāṭhī yete.)
+What is the stem inside jāṇe? (जा-, jā-.) Which two endings split the present, and by what? (-तो / -ते, by the gender of the one the verb is about.) Can a Marathi speaker say "I go" without revealing it? (No — the choice is forced.) Next: the same ancient root, pointed the other way.
 
 
-Lesson 3 of 4.
-वाचणे (vāchṇe) — "to read," which is making a page speak.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+Lesson 3 of 6.
+येणे (yeṇe) — "to come," the other half of "to go".
 
 Warm-up.
 [pause 2 seconds]
-Say "I understand Marathi" — malā marāṭhī samajte. And "I see" — mī pāhto or pāhte. This verb sits between the two: eyes first, meaning after.
+Say "I go" in your own gender: mī jāto or mī jāte. Hold that shape. The next verb is closer to it than it sounds.
 
-You'll want to know: वाचणे.
-वाचणे — vāchṇe — to read.
-मी मराठी वाचतो — mī marāṭhī vāchto — "I read Marathi," and वाचते vāchte if a woman is speaking. This one takes an ordinary subject: मी. Reading is something you do.
+You'll want to know: येणे.
+येणे — yeṇe — to come.
+Same infinitive ending, same machinery: stem ये- ye-, present येतो (yeto) and येते (yete), split by gender exactly as jāto / jāte was.
+You met yeto in Chapter 2 as a farewell — Marathi takes its leave by saying "I come," promising the return rather than announcing the departure.
 
-The letters in this word.
-वा is व va with the upright long-ā stroke; च is cha; णे is the retroflex infinitive ending. Three letters, and you have met all three before — व in nāv, च in chār, णे on every verb in the last chapter.
+Sounds you'll need: ये, णे.
+य is ya, a soft English y as in yes. Add the -e stroke above and you have ये ye — the same stroke you have been putting on णे and on हे in āhe. Two syllables: ye-ṇe.
 
-The word, taken apart — the root of "voice".
-वाचणे (vāchṇe) goes back to Sanskrit वाचयति vācayati, and vācayati is not its own verb — it is the root वच् vac-, "to speak," with a gear changed: "to make speak." Marathi reading is making the marks talk. That is not a poetic gloss; it is the grammar of the Sanskrit form.
-वच् is Indo-European wekʷ-. Latin took it as vōx, "voice," and vocāre, "to call," and from that pair English has voice, vocal, vocation, invoke and advocate. Greek has óps, "voice."
-One honest footnote: Marathi also has a वाचणे (vāchṇe) meaning "to survive," and it is a different word — from vañcati, "to escape." Same spelling, unrelated history.
+The word, taken apart — one root, two directions.
+Sanskrit had a verb of travelling, yā-, whose present was याति yāti "goes, travels." Middle Indo-Aryan turned that initial y- into a j-, giving Prakrit jāi — and that is Marathi जाणे (jāṇe).
+Now put a prefix on it. Sanskrit आ- ā- means "toward, hither," and आयाति āyāti is "travels toward here" — that is, comes. Worn down through the same centuries, āyāti is Marathi येणे (yeṇe).
+So going and coming are not two verbs in this family. They are one verb of travelling, and the only difference is a prefix meaning "this way." English keeps a faint echo of the same trick in go against in-coming, but it needs two separate roots to do what Sanskrit did with one.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "mī marāṭhī vāchto" or "vāchte" — in your own gender]
+[your turn — say: "yeṇe" — to come — then the stem, "ye-"]
 [pause 8 seconds for the answer]
-[your turn — say: the literal sense — "to make it speak"]
+[your turn — say: "I come" in your own gender — "mī yeto" or "mī yete"]
 [pause 8 seconds for the answer]
-[your turn — say: the cousins — "vāch- … voice, vocal, invoke"]
-[pause 8 seconds for the answer]
-[your turn — say: the chapter's three verbs so far — "vichār karṇe, samajṇe, vāchṇe"]
+[your turn — say: the derivation — "yāti … āyāti … yeṇe"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What did वाचणे's Sanskrit ancestor literally mean? (To make speak — reading as speaking aloud.) Name two English words from the same root. (Voice, vocal, invoke, advocate: any two.) Which of your verbs takes mī and which takes malā — vāchṇe or samajṇe? (Vāchṇe takes मी; samajṇe takes मला.)
+What is the stem of yeṇe? (ये-, ye-.) Which Sanskrit root do jāṇe and yeṇe share? (yā-, to travel.) What single piece turns going into coming? (The prefix आ- ā-, "toward here.") Next: an infinitive that is also a noun, and the gender Hindi does not have.
 
 
-Lesson 4 of 4.
-लिहिणे (lihiṇe) — "to write," which began as scratching.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+Lesson 4 of 6.
+खाणे (khāṇe) — "to eat," and Marathi's third gender.
 
 Warm-up.
 [pause 2 seconds]
-Three verbs and three roots: vichār karṇe on a root meaning to turn, samajṇe on one meaning to wake, vāchṇe on one meaning to speak. Say all three. The fourth root is the most physical of the lot.
+Two infinitives so far: jāṇe, yeṇe. Say them. This third one is ordinary as a verb and quietly remarkable as a noun.
 
-You'll want to know: लिहिणे.
-लिहिणे — lihiṇe — to write.
-मी माझं नाव लिहितो — mī mājhaṁ nāv lihito — "I write my name," and लिहिते lihite if a woman says it. The stem keeps its i: lihi-, not lih-.
+You'll want to know: खाणे.
+खाणे — khāṇe — to eat.
+Stem खा- khā-, present खातो (khāto) and खाते (khāte) on the gendered pattern you already have.
+Its root is Sanskrit खादति khādati, "chews, eats" — a solidly Indo-Aryan word with no borrowing in its history. The -d- wore away on the road to Marathi; the long ā stayed.
 
-The letters in this word.
-लि is ल la with the short-i stroke standing to its left; हि is ह ha with the same stroke; then णे. One stroke, used on two letters running: li-hi-ṇe.
+Sounds you'll need: खा, णे.
+ख is kha — a k with a genuine puff of breath after it, the sound in English kit said hard, not the k of skit. Marathi treats that puff as a different letter, not an accent. Add the long-ā stroke and the familiar णे: khā-ṇe.
 
-The word, taken apart — writing was scratching.
-लिहिणे (lihiṇe) comes through Prakrit lihaï from Sanskrit लिखति likhati, and likh- meant to scratch, to score before it meant to write. Its plainest relative inside Sanskrit is रेखा rekhā, "a line, a scratch."
-Outside Indo-Aryan the cousins are genuinely disputed, and this lesson claims none. What is not disputed is that three families reached for the same picture: Latin scrībere also meant to scratch, and stands behind scribe and script; English write began as Germanic "to tear, to score."
-
-Grammar Lens: what Marathi writes that Hindi does not.
-A lesson about writing is the place for two things Marathi writes its own way. Count to five: ek, don, tīn, tsār, pāch. दोन ends in a न that Hindi's दो does not have. पाच has no nasal mark, where Hindi writes पाँच.
-And लिहिणे (lihiṇe) is a noun as well as a verb — "writing," the thing — because every -णे infinitive is, and every one of them is neuter.
+Grammar Lens: the infinitive is a neuter noun.
+खाणे (khāṇe) also simply means "eating" — the thing, not the act of doing it. Every -णे infinitive works this way; खाणंपिणं (khāṇaṁ-piṇaṁ), "eating and drinking," is how Marathi says food and drink.
+And as a noun it carries a gender — neuter, the third one. Hindi has two genders, masculine and feminine. Marathi kept all three that Sanskrit had, so words agreeing with a noun come in three shapes:
+[a table of 3 rows, read aloud]
+gender: masculine. "good": चांगला. said: chāṅglā.
+gender: feminine. "good": चांगली. said: chāṅglī.
+gender: neuter. "good": चांगलं. said: chāṅglaṁ.
+So "eating is good" is खाणं चांगलं आहे — khāṇaṁ chāṅglaṁ āhe, with the neuter ending twice over and the verb, as always, last.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "mī mājhaṁ nāv lihito" or "lihite"]
+[your turn — say: "khāṇe" — to eat — then "I eat" in your own gender]
 [pause 8 seconds for the answer]
-[your turn — say: the chapter's four verbs — "vichār karṇe, samajṇe, vāchṇe, lihiṇe"]
+[your turn — say: the three shapes — "chāṅglā … chāṅglī … chāṅglaṁ"]
 [pause 8 seconds for the answer]
-[your turn — say: their four roots — "to turn, to wake, to speak, to scratch"]
+[your turn — say: "eating is good" — "khāṇaṁ chāṅglaṁ āhe"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What did likh- mean first, and which two families named writing the same way? (To scratch — Latin scrībere, English write.) Give the four verbs of this chapter and what their roots meant. (Vichār karṇe / turn, samajṇe / wake, vāchṇe / speak, lihiṇe / scratch.) Which one refuses मी? (समजणे — it takes malā.) Which number does Marathi write with an extra न, and which with one mark fewer than Hindi? (दोन; पाच.)
+What are the two things खाणे (khāṇe) means? (To eat, and eating as a noun.) How many genders does Marathi have, and how many does Hindi have? (Three against two — Marathi kept Sanskrit's neuter.) Which gender is an infinitive? (Neuter.) Next: a verb whose root you already own in a dozen English words.
+
+
+Lesson 5 of 6.
+पाहणे (pāhṇe) — "to see," a root you already own.
+
+Warm-up.
+[pause 2 seconds]
+Say "I eat" in your own gender — mī khāto or mī khāte. The next verb runs on the same endings, and on a root you have been using in English all your life without knowing it.
+
+You'll want to know: पाहणे.
+पाहणे — pāhṇe — to see, to watch.
+Stem पाह- pāh-, present पाहतो (pāhto) and पाहते (pāhte). In everyday speech you will also hear बघणे (baghṇe) for the same job; pāhṇe is the one whose history repays digging.
+
+Sounds you'll need: पा, ह, णे.
+प is pa without the puff of breath that kha had. Add the upright stroke for long ā: पा pā. Then ह ha, and the णे you now know by heart. Three light syllables, pā-ha-ṇe, usually spoken as two: pāh-ṇe.
+
+The word, taken apart — one root, a dozen English words.
+Sanskrit's verb for seeing was पश्यति paśyati, on the root paś-, and Marathi's pāhṇe descends from its prefixed form प्रपश्यति prapaśyati, "looks out at."
+Now the payoff. That paś- is the Indo-European root spek-, "to observe." Sanskrit dropped the s- and swapped the consonants around; Latin kept them in order as speciō, "I look." From the Latin side English inherited an enormous family, every one of them a cousin of pāhṇe:
+spectacle, inspect, respect, suspect, prospect, species, specimen, speculate, telescope, and — through Italian — spy.
+So a Marathi speaker asking you to pāhṇe something is asking you to inspect it, in the most literal ancestral sense the word has.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "pāhṇe" — to see — then "I see" in your own gender]
+[pause 8 seconds for the answer]
+[your turn — say: the derivation — "paśyati … prapaśyati … pāhṇe"]
+[pause 8 seconds for the answer]
+[your turn — say: four English cousins — "spectacle, inspect, species, spy"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is the stem of pāhṇe? (पाह-, pāh-.) Which Sanskrit verb is it from? (पश्यति paśyati, in its prefixed form prapaśyati.) Name three English words from the same ancient root. (Spectacle, inspect, species, spy — any three.) Next: a verb Marathi mostly refuses to use, and what it says instead.
+
+
+Lesson 6 of 6.
+माहीत असणे (māhīt asṇe) — "to know," which Marathi says sideways.
+
+Warm-up.
+[pause 2 seconds]
+Say "I go" and "I come" in your own gender — jāto or jāte, yeto or yete. Five verbs obeyed that pattern. This one refuses.
+
+You'll want to know: माहीत असणे and जाणणे.
+माहीत असणे — māhīt asṇe — to know (everyday).
+जाणणे — jāṇṇe — to know (formal, literary).
+Marathi has an inherited verb for knowing and barely uses it. Everyday speech says māhīt asṇe, "to be known," built on asṇe.
+
+Sounds you'll need: मा, ही, त.
+म is ma; with the long-ā stroke, मा. ही is ह ha with the long -ī stroke, which leans forward ahead of its letter. त is ta: mā-hī-t.
+
+Grammar Lens: knowledge comes to you, you do not do it.
+मला माहीत आहे — malā māhīt āhe — "I know."
+Word by word: "to me known is." Malā is "to me," and the knower sits there, not in the subject slot. Nobody acts; a fact is simply in your possession, and āhe closes the line.
+The same frame carries a language: मला मराठी येते — malā marāṭhī yete — "I know Marathi," literally "to me Marathi comes." Yete is feminine because the subject is मराठी, a feminine noun — not the speaker; a man says it too. The verb agrees with its subject, as always. Here the subject is not you.
+
+The word, taken apart — a loan beside an inheritance.
+माहीत is a loan: through Persian from Arabic māhiyat, "the particulars" — one of the administrative words the Deccan sultanates left in Marathi.
+जाणणे is pure inheritance: Sanskrit जानाति jānāti, root jñā-, from Indo-European gnō- — the root of English know, Latin nōscere (notice, recognize) and Greek gnōsis (diagnosis). Marathi kept the cousin and gave the daily work to the loan.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "malā māhīt āhe" — then literally, "to me known is"]
+[pause 8 seconds for the answer]
+[your turn — say: "I know Marathi" — "malā marāṭhī yete"]
+[pause 8 seconds for the answer]
+[your turn — say: the inherited verb and its English cousin — "jāṇṇe … know"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Where does Marathi put the knower? (In the dative — malā, "to me.") Which verb finishes malā māhīt āhe, and where? (आहे, last.) Why yete in malā marāṭhī yete? (The subject is मराठी, feminine — agreeing with it, not the speaker.) Which know-verb was borrowed? (माहीत, through Persian.)

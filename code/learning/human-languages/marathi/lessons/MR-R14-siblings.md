@@ -3,7 +3,7 @@ schema_version: 2
 id: MR-R14-siblings
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 650
-chapter: 14
+chapter: 15
 type: review
 headword: भाऊ / बहीण
 romanization: bhau / bahin

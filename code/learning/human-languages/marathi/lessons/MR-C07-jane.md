@@ -3,7 +3,7 @@ schema_version: 2
 id: MR-C07-jane
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 370
-chapter: 7
+chapter: 8
 type: word
 headword: जाणे
 romanization: jāṇe

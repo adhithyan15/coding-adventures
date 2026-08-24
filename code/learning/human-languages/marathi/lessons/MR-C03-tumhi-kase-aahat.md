@@ -1,7 +1,7 @@
 ---
 id: MR-C03-tumhi-kase-aahat
 sequence: 90
-chapter: 3
+chapter: 4
 type: phrase
 headword: तुम्ही कसे आहात?
 gloss: how are you? (tumhī kase āhāt?)

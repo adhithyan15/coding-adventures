@@ -1,10 +1,10 @@
 ---
 id: MR-C02-practice
 sequence: 80
-chapter: 2
+chapter: 3
 type: practice
 headword: (recap)
-gloss: Chapter 2 recap — introducing yourself
+gloss: Chapter 3 recap — introducing yourself
 concept_tag: REVIEW
 prerequisites: [MR-C02-anand]
 sounds: []
@@ -13,7 +13,7 @@ est_minutes: 4
 reviews_of: [MR-C02-naav, MR-C02-majhe, MR-C02-aahe, MR-C02-majhe-naav-aahe, MR-C02-tu-tumhi, MR-C02-kaay, MR-C02-tumche-naav-kaay-aahe, MR-C02-anand]
 ---
 
-# Chapter 2 recap — introducing yourself
+# Chapter 3 recap — introducing yourself
 
 ## Warm-up
 

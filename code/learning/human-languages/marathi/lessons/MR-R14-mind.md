@@ -3,7 +3,7 @@ schema_version: 2
 id: MR-R14-mind
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 700
-chapter: 14
+chapter: 15
 type: review
 headword: विचार करणे / समजणे / लिहिणे
 romanization: vichar karne / samajne / lihine

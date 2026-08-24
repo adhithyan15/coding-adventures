@@ -1,7 +1,7 @@
 ---
 id: MR-C04-punha
 sequence: 115
-chapter: 4
+chapter: 5
 type: word
 headword: पुन्हा
 gloss: again (punhā)
@@ -17,7 +17,7 @@ reviews_of: [MR-C01-yeto]
 
 ## Warm-up
 
-[PAUSE 2s] Chapter 1 gave you the goodbye *yeto* ("I'll come [again]"). Now the
+[PAUSE 2s] Chapter 2 gave you the goodbye *yeto* ("I'll come [again]"). Now the
 explicit word for **again**, to build the warm "see you again."
 
 ## The letters in this word

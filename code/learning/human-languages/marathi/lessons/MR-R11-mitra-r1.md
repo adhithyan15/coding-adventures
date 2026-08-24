@@ -3,7 +3,7 @@ schema_version: 2
 id: MR-R11-mitra-r1
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 545
-chapter: 11
+chapter: 12
 type: review
 headword: मित्र
 romanization: mitra

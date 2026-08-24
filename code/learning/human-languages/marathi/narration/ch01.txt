@@ -1,8 +1,8 @@
-Marathi, chapter 1: Greetings and the First Devanagari Runway.
-20 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Marathi, chapter 1: Namaskar, Piece by Piece.
+14 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 20.
+Lesson 1 of 14.
 नमस्कार (namaskar) (namaskār) — "greetings".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -32,7 +32,7 @@ Wrap-up Recall.
 What does नमस्कार (namaskar) literally mean, and how does Marathi's greeting habit differ from Hindi's? ("The making of a bow"; Marathi favors namaskār, Hindi namaste.)
 
 
-Lesson 2 of 20.
+Lesson 2 of 14.
 ह — the consonant ha.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it.
@@ -60,7 +60,7 @@ Source: Unicode Devanagari chart.
 Trace the visible Devanagari consonant once, then name its built-in vowel.
 
 
-Lesson 3 of 20.
+Lesson 3 of 14.
 ो (-o) — the vowel sign that replaces the inherent a.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it.
@@ -89,7 +89,7 @@ Source: Unicode Devanagari chart.
 Copy the visible Marathi word for yes once, then name its two pieces.
 
 
-Lesson 4 of 20.
+Lesson 4 of 14.
 हो (ho) — look, hide, write, compare.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
@@ -110,7 +110,7 @@ Read your repaired word as ho. Stop after one memory attempt.
 After hiding the model for five seconds, write the Marathi word for yes and then compare it.
 
 
-Lesson 5 of 20.
+Lesson 5 of 14.
 One heard answer — write what you know.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
@@ -129,7 +129,7 @@ Writing from sound completes this tiny runway. It is not a mock assessment; late
 From the heard cue ho alone, write the known Marathi word for yes.
 
 
-Lesson 6 of 20.
+Lesson 6 of 14.
 न — the consonant na.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -155,7 +155,7 @@ What vowel is inside न (na) when nothing is attached? (a.) And how many new ru
 Source: Unicode Devanagari chart.
 
 
-Lesson 7 of 20.
+Lesson 7 of 14.
 ा (-ā) — a second vowel sign, and the simplest one in the script.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -182,7 +182,7 @@ Where does this mātrā sit? (To the right of the consonant.) Does it add a beat
 Source: Unicode Devanagari chart.
 
 
-Lesson 8 of 20.
+Lesson 8 of 14.
 ी (-ī) — a mātrā that leans the other way.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -197,10 +197,10 @@ Script.
 Here it is, and here is what it completes:
 ह (ha) + ी (-ī) becomes ही.
 And now put that beside a piece you already built:
-ना + ही becomes नाही (nahi).
+ना + ही becomes नाही.
 nā-hī — no.
 You can now read both answers to a yes-or-no question:
-हो (ho) नाही (nahi).
+हो (ho) नाही.
 Two consonants and three vowel signs. That is the arithmetic of an abugida: consonants and mātrās multiply, so a small number of pieces reaches a large number of syllables very fast.
 
 Guided Practice.
@@ -210,11 +210,11 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What is नाही (nahi)? (No.) How many pieces is it built from? (Four — two consonants and two mātrās.) And which two mātrās look similar but hook differently? (The ā and the ī.)
+What is नाही? (No.) How many pieces is it built from? (Four — two consonants and two mātrās.) And which two mātrās look similar but hook differently? (The ā and the ī.)
 Source: Unicode Devanagari chart.
 
 
-Lesson 9 of 20.
+Lesson 9 of 14.
 म — the consonant ma.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -241,7 +241,7 @@ Say the three consonants you hold, each with its inherent vowel. (ha, na, ma.)
 Source: Unicode Devanagari chart.
 
 
-Lesson 10 of 20.
+Lesson 10 of 14.
 स — the consonant sa.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -266,7 +266,7 @@ What is the inherent vowel in स? (a — sa.)
 Source: Unicode Devanagari chart.
 
 
-Lesson 11 of 20.
+Lesson 11 of 14.
 क — the consonant ka.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -292,7 +292,7 @@ Is क (ka) the k of kit or of skip? (Of skip — no puff of air.) And does the 
 Source: Unicode Devanagari chart.
 
 
-Lesson 12 of 20.
+Lesson 12 of 14.
 ् ((virama)) — the mark that DELETES the inherent vowel and glues two consonants together.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -321,7 +321,7 @@ What does the virama do? (Removes the inherent vowel.) What usually happens to a
 Source: Unicode Devanagari chart.
 
 
-Lesson 13 of 20.
+Lesson 13 of 14.
 र (ra) — the last consonant of the greeting.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -346,7 +346,7 @@ How is र (ra) made? (A light tap of the tongue, not an English r.)
 Source: Unicode Devanagari chart.
 
 
-Lesson 14 of 20.
+Lesson 14 of 14.
 नमस्कार (namaskār) (namaskar) — seven pieces, all of them already yours.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -377,179 +377,3 @@ Wrap-up Recall.
 [pause 3 seconds]
 How many new pieces were in this lesson? (None.) What is स्क made of? (स (sa) with its vowel removed, joined to क (ka).) And what still remains to learn — rules, or shapes? (Shapes.)
 Source: Unicode Devanagari chart.
-
-
-Lesson 15 of 20.
-धन्यवाद (dhanyavad) (dhanyavād) — "thank you".
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-The formal "thanks" — Sanskrit, shared across the Indian languages.
-
-The letters in this word.
-(Skim if you read Devanagari.) New: ध dha (a breathy d), य ya, वा vā, द da, and the conjunct न्य (na + ya). Read ध, न्य, वा, द becomes dhanyavād.
-
-The word, taken apart.
-धन्यवाद (dhanyavad) (dhanyavād) = Sanskrit dhanya ("worthy") + vāda ("a saying") — "an utterance of '[you are] worthy.'" The same Sanskrit word behind Hindi dhanyavād, Kannada dhanyavāda, Telugu dhanyavādamulu. Warmer, more spoken Marathi often says आभारी आहे (ābhārī āhe, "[I] am grateful"), on the root ābhār, "gratitude."
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "dhanyavād"]
-[pause 8 seconds for the answer]
-[your turn — say: the warmer spoken form — "ābhārī āhe"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What are the two Sanskrit pieces of धन्यवाद (dhanyavad), and a warmer Marathi alternative? (dhanya "worthy" + vāda "a saying"; ābhārī āhe.)
-
-
-Lesson 16 of 20.
-हो (ho) — "yes".
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-A one-syllable "yes."
-
-The letters in this word.
-(Skim if you read Devanagari.) ह (ha) + the o-mātrā ो (-o) becomes हो (ho).
-
-The word, taken apart.
-हो (ho, "yes") is Marathi's plain affirmative — distinct from Hindi's hāṁ. Marathi builds its own everyday words on shared Indo-Aryan roots. The polite, fuller "yes" is ho, baraṃ āhe ("yes, it's fine").
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "ho" ("yes")]
-[pause 8 seconds for the answer]
-[your turn — say: the fuller polite form — "ho, baraṃ āhe"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What is Marathi's "yes," and how does it differ from Hindi's? (ho; Hindi says hāṁ.)
-
-
-Lesson 17 of 20.
-बरं (baram) (baraṃ) — "okay, fine".
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-The verbal shrug of Marathi — "sure, fine, all right."
-
-The letters in this word.
-(Skim if you read Devanagari.) ब (ba) + रं (ra with the anusvāra dot ं, a light nasal) becomes baraṃ. That dot on top nasalises the vowel.
-
-The word, taken apart.
-बरं (baram) (baraṃ, "okay, fine, good, all right") is the oil of everyday Marathi talk — a soft "sure, fine." Its neutral form is bare. A genuinely Marathi word, not a Sanskrit loan — the kind of small, high-frequency word that gives a language its everyday texture.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "baraṃ" (feel the nasal dot)]
-[pause 8 seconds for the answer]
-[your turn — say: "ho, baraṃ āhe" — "yes, it's fine"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What does बरं (baram) mean, and what does the dot ं do? ("Okay/fine"; the anusvāra nasalises the vowel.)
-
-
-Lesson 18 of 20.
-नाही (nahi) (nāhī) — "no," a word older than English.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-The partner of ho — built on one of the oldest words in the whole Indo-European family.
-
-The letters in this word.
-(Skim if you read Devanagari.) ना (nā) + ही (hī) becomes nāhī.
-
-The word, taken apart.
-नाही (nahi) (nāhī, "no / is not") sits on the ancient negative na- — the same Proto-Indo-European ne behind English no, not, none, Latin non, and Hindi nahīṁ. So Marathi's "no" and English's "no" are cousins from before either language existed. It doubles as "there isn't": Marathi, like Hindi, denies with this one word.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: the pair — ho ("yes") / nāhī ("no")]
-[pause 8 seconds for the answer]
-[your turn — say: the ancient cousins — no, not, Latin non]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What ancient root is नाही (nahi) built on, and what English words share it? (PIE ne; no, not, none.)
-
-
-Lesson 19 of 20.
-येतो / येते (yeto / yete) — "I'll take my leave".
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-The Marathi goodbye — which, like the Dravidian languages, refuses to say a bare "I'm leaving." And it changes with the speaker's gender.
-
-The letters in this word.
-(Skim if you read Devanagari.) ये (ye) + तो (to) becomes yeto; ये + ते (te) becomes yete.
-
-The word, taken apart.
-Marathi, like the Dravidian languages to its south, will not say a bare "I'm leaving." The everyday goodbye is येतो (yeto) — literally "I come [again]," a promise of return, never a final departure. (Fuller: yeto, namaskār.)
-
-Grammar Lens: Marathi verbs carry gender.
-yeto is what a man says; a woman says येते (yete). The verb itself changes with the speaker's gender — something Hindi does only in the past tense, but Marathi does in the present too. (And Marathi keeps three genders — masculine, feminine, and neuter — where Hindi kept only two.) You'll meet this at every verb.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "yeto" (if male) / "yete" (if female)]
-[pause 8 seconds for the answer]
-[your turn — say: what it literally means ("I come [again]") — a promise of return]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What does the Marathi goodbye literally mean, and why two forms? ("I'll come [again]"; the verb agrees with the speaker's gender — yeto m. / yete f.)
-
-
-Lesson 20 of 20.
-Chapter 1 — recap.
-
-Warm-up.
-[a table of 6 rows, read aloud]
-Marathi: नमस्कार (namaskar), namaskār. Meaning: hello / goodbye.
-Marathi: धन्यवाद (dhanyavad), dhanyavād. Meaning: thank you.
-Marathi: हो, ho. Meaning: yes.
-Marathi: नाही (nahi), nāhī. Meaning: no.
-Marathi: बरं (baram), baraṃ. Meaning: okay / fine.
-Marathi: येतो / येते, yeto / yete. Meaning: "I'll be going" (m./f.)
-
-What you've built.
-It prefers namaskār as the everyday greeting (Hindi leans on namaste).
-It keeps three genders — masculine, feminine, neuter — where Hindi kept two.
-It marks gender on the verb, even in the present: yeto (m.) / yete (f.).
-It has an extra letter, ळ (retroflex ḷ), shared with the Dravidian south and absent from Hindi.
-Shared with Hindi/Sanskrit: the Devanagari script, the negative nā- ( from PIE ne, English no), and much formal vocabulary (dhanyavād).
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: all six — namaskār, dhanyavād, ho, nāhī, baraṃ, yeto/yete]
-[pause 8 seconds for the answer]
-[your turn — say: greet and thank — "namaskār!" … "dhanyavād."]
-[pause 8 seconds for the answer]
-[your turn — say: your leave-taking — "yeto/yete"]
-[pause 8 seconds for the answer]
-[question — say your answer, then pause 18 seconds]
-Without a visible model, write the Marathi word you hear: ho (yes).
-[question — say your answer, then pause 15 seconds]
-Read नमस्कार (namaskār) (namaskar) and give its conversational meaning.
-
-Wrap-up Recall.
-[pause 3 seconds]
-Read नमस्कार (namaskar), write हो once without a model, then name two ways Marathi differs from Hindi despite sharing Devanagari. (Prefers namaskār; three genders; gender on the verb; the extra letter ळ.)
-Next chapter: introducing yourself — mājhe nāv… ("my name…") — and Marathi's tū / tumhī (familiar / respectful "you").

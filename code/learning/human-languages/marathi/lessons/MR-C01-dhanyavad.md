@@ -3,7 +3,7 @@ schema_version: 2
 id: MR-C01-dhanyavad
 spine_node: SPINE-COURTESY-THANK
 sequence: 20
-chapter: 1
+chapter: 2
 type: word
 headword: धन्यवाद
 romanization: dhanyavad

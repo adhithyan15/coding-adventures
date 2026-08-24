@@ -3,7 +3,7 @@ schema_version: 2
 id: MR-R14-core
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 710
-chapter: 14
+chapter: 15
 type: review
 headword: असणे / जाणे / येणे
 romanization: asne / jane / yene

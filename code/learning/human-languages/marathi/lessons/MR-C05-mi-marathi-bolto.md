@@ -1,7 +1,7 @@
 ---
 id: MR-C05-mi-marathi-bolto
 sequence: 150
-chapter: 5
+chapter: 6
 type: phrase
 headword: मी मराठी बोलतो
 gloss: I speak Marathi (gendered)

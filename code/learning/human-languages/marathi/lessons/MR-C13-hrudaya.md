@@ -3,7 +3,7 @@ schema_version: 2
 id: MR-C13-hrudaya
 spine_node: SPINE-CHECK-WELLBEING
 sequence: 620
-chapter: 13
+chapter: 14
 type: word
 headword: हृदय
 romanization: hṛdaya
@@ -63,11 +63,11 @@ diverging by ordinary sound change and nothing stranger.
 ## Why it's said this way — one word that stood still
 <!-- hl-knowledge: introduces=[]; assesses=[MR-ETYMON-VACH-VOICE, MR-ETYMON-BUDH-AWAKE, MR-ETYMON-DOLA-SWING] -->
 
-Set **हृदय** against the words this book has already taken apart. Chapter 8's
+Set **हृदय** against the words this book has already taken apart. Chapter 9's
 **वाचणे** drifted from *vac-*, "to speak," into "to read" by way of a
 causative twist — reading as *making the text speak*. The same chapter's
 **समजणे** drifted from *budh-*, "to wake," into "to understand" — an idea
-arriving is a kind of waking up. This chapter's own **डोळा** drifted furthest
+arriving is a kind of waking up. Chapter 13's **डोळा** drifted furthest
 of all, from *dola*, "a swing," into "eye," pushing out the word it replaced.
 **हृदय**, by contrast, has drifted almost nowhere: no causative twist, no
 metaphor, no replacement — the same word, doing the same job, since before

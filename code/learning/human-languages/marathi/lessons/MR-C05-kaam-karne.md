@@ -1,7 +1,7 @@
 ---
 id: MR-C05-kaam-karne
 sequence: 160
-chapter: 5
+chapter: 6
 type: word
 headword: काम करणे
 gloss: to work (kām karṇe)

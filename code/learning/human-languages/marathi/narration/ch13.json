@@ -2,24 +2,24 @@
   "version": 1,
   "language": "marathi",
   "chapter": 13,
-  "title": "Heart",
+  "title": "Eye, Ear, Mouth, and Nose",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e9c69014bcab3516",
+  "sourceHash": "fnv1a64:ebd1db36614edd73",
   "lessons": [
     {
-      "id": "MR-C13-hrudaya",
-      "sequence": 620,
-      "title": "हृदय (hṛdaya) — the word that never drifted",
-      "headword": "हृदय",
-      "romanization": "hṛdaya",
-      "gloss": "heart — the surest cognate taught so far, and a new vowel sign that has waited thirteen chapters",
+      "id": "MR-C12-dola",
+      "sequence": 580,
+      "title": "डोळा (ḍoḷā) — the letter you've heard since Chapter 5, formally",
+      "headword": "डोळा",
+      "romanization": "ḍoḷā",
+      "gloss": "eye — carrying Marathi's signature extra letter ळ, and a word that started life meaning something else entirely",
       "script": "devanagari",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:05271d1a75fe6ec6",
+      "sourceHash": "fnv1a64:e3e51bd206e55943",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -44,18 +44,18 @@
             },
             {
               "kind": "speech",
-              "text": "The face is complete: ḍoḷā, kān, tõḍ, nāk — and nāk was the one whose English cousin, nose, needed no qualification at all. One organ is left, and its history could not be more different from डोळा's."
+              "text": "मित्र, कुटुंब, भाऊ, बहीण (mitra, kuṭumb, bhāū, bahīṇ) — the people you'd introduce. This chapter turns to the body you'd ask after when you check how someone is."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: हृदय",
+          "title": "You'll want to know: डोळा",
           "segments": [
             {
               "kind": "speech",
-              "text": "हृदय — hṛdaya — heart (neuter)."
+              "text": "डोळा — ḍoḷā — eye (masculine)."
             }
           ]
         },
@@ -66,29 +66,186 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One new mark, thirteen chapters in: ृ, the vocalic r — a small hook below the consonant, standing for a syllabic r sound with no vowel written beside it. ह, द, य are all familiar. Hṛ-da-ya."
+              "text": "ड you have from āvaḍṇe; ो the familiar o mark, from bolṇe. Then ळ — the retroflex \"l\" you first met, unlabeled, inside Chapter 5's काळजी. Formally: tongue curled back, same place as ट and ण. Standard Hindi dropped this sound centuries ago; Marathi kept it, sharing it with the Dravidian languages to the south and with Gujarati. Ḍo-ḷā."
             }
           ]
         },
         {
           "index": 3,
           "type": "etymology",
-          "title": "The word, taken apart — the surest cousin taught so far",
+          "title": "The word, taken apart — not the old eye-word at all",
           "segments": [
             {
               "kind": "speech",
-              "text": "हृदय continues Sanskrit हृदय hṛdaya itself, unchanged in shape since this book's earliest chapters were still explaining what a halant does. Its root is Indo-European ḱērd-, \"heart\" — and this is about as secure as a cognate gets: English heart, Latin cor/cordis (behind cordial), and Greek kardia (behind cardiac) are all the same word, diverging by ordinary sound change and nothing stranger."
+              "text": "डोळा (ḍoḷā) continues Maharastri Prakrit ḍola, \"eye,\" from Sanskrit दोल dola — \"a swing, a swinging.\" Somewhere in Prakrit, \"a swinging thing\" came to mean \"eye,\" and that word pushed out the one you might expect: the true inherited Indo-Aryan eye-word is Sanskrit अक्षि/अक्ष akṣi/akṣa, from Indo-European h₃ekʷ-, the very cousin of Latin oculus and English eye. Hindi's आँख ā̃kh continues that old word, worn down through Prakrit acchi. Marathi's eye is not that word at all — it is a replacement, built on something that once just meant swing."
             }
           ]
         },
         {
           "index": 4,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way — one word that stood still",
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍoḷā — eye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **ḍoḷā** — eye]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what its Sanskrit root actually meant — \"a swing\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what its Sanskrit root actually meant — \"a swing\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "NAME",
+              "instruction": "the word Marathi's eye-word replaced — akṣi, Hindi's āṅkh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU NAME: the word Marathi's eye-word replaced — **akṣi**, Hindi's **āṅkh**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what you do with your डोळे — pāhṇe, \"to see,\" Chapter 8's verb whose own root was Indo-European spek-",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what you do with your **डोळे** — **pāhṇe**, \"to see,\" Chapter 8's verb whose own root was Indo-European *\\*spek-*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "Chapter 12's tatsama/tadbhava split — मित्र, कुटुंब taken up whole, भाऊ, बहीण worn down — and कुटुंब's own neuter gender against Hindi's masculine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: Chapter 12's tatsama/tadbhava split — **मित्र, कुटुंब** taken up whole, **भाऊ, बहीण** worn down — and **कुटुंब**'s own neuter gender against Hindi's masculine]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did डोळा (ḍoḷā)'s Sanskrit root originally mean? (A swing.) Is डोळा (ḍoḷā) the same word as Hindi's आँख? (No — Marathi replaced the old eye-word entirely.) What Marathi letter appears in डोळा (ḍoḷā) that Hindi lost? (ळ, the retroflex l.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: डोळा (ḍoḷā); Wiktionary: दोल."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C12-kaan",
+      "sequence": 590,
+      "title": "कान (kān) — an ear, and a cluster you've seen simplify before",
+      "headword": "कान",
+      "romanization": "kān",
+      "gloss": "ear — a consonant cluster simplified the same way don copied teen, and a root disputed among Sanskrit scholars",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:4801eb810232f351",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "डोळा (ḍoḷā) — its own root turned out to be a surprise, a swing, not the old eye-word. This next word has a different kind of surprise: not what it meant, but how its middle got simpler."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कान",
           "segments": [
             {
               "kind": "speech",
-              "text": "Set हृदय (hṛdaya) against the words this book has already taken apart. Chapter 8's वाचणे drifted from vac-, \"to speak,\" into \"to read\" by way of a causative twist — reading as making the text speak. The same chapter's समजणे drifted from budh-, \"to wake,\" into \"to understand\" — an idea arriving is a kind of waking up. This chapter's own डोळा drifted furthest of all, from dola, \"a swing,\" into \"eye,\" pushing out the word it replaced. हृदय (hṛdaya), by contrast, has drifted almost nowhere: no causative twist, no metaphor, no replacement — the same word, doing the same job, since before Sanskrit was written down."
+              "text": "कान — kān — ear (masculine)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Nothing new. क, ा, न are all familiar from Chapter 1 onward. Kā-n."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "pronunciation",
+          "title": "Sounds you'll need: a cluster ground down, like Chapter 7's दोन",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कान continues Sanskrit कर्ण karṇa. Getting there took the same kind of step Chapter 7 traced in दोन: Prakrit could not keep Sanskrit's consonant cluster rṇ intact, so it simplified — not by copying a neighbor this time, but by doubling the surviving consonant, rṇ becomes ṇṇ, giving Prakrit कण्ण kaṇṇa. Old Marathi then simplified the geminate back down to one ṇ with a lengthened vowel: kāna. Different cluster, different path, same underlying habit — Prakrit does not tolerate what Sanskrit could pack into one syllable."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart — a disputed root",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Past Sanskrit, कर्ण's own origin is genuinely disputed among scholars — proposals connect it to a word for \"point, spike,\" to a root for \"handle, grip,\" even to the verb \"to hear,\" but none has won general acceptance. Rather than choose one and present it as settled, this lesson names the dispute and stops there, the same honest gap Chapter 12 named for कुटुंब, and the same restraint that kept बहीण from being handed a false cousin — बहीण looks like it should match English sister, and does not."
             }
           ]
         },
@@ -106,29 +263,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "hṛdaya — heart",
+              "instruction": "kān — ear",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: **hṛdaya** — heart]"
+              "source": "[YOU SAY: **kān** — ear]"
             },
             {
               "kind": "prompt",
-              "action": "NAME",
-              "instruction": "three English words sharing its root — heart, cordial, cardiac",
-              "spoken": true,
+              "action": "TRACE",
+              "instruction": "karṇa becomes kaṇṇa becomes kāna, the cluster ground down and then simplified again",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU NAME: three English words sharing its root — **heart, cordial, cardiac**]"
+              "source": "[YOU TRACE: *karṇa* → *kaṇṇa* → *kāna*, the cluster ground down and then simplified again]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "all five body words this book has taught — ḍoḷā, kān, tõḍ, nāk, hṛdaya",
+              "instruction": "ḍoḷā, kān — eye, ear",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: all five body words this book has taught — **ḍoḷā, kān, tõḍ, nāk, hṛdaya**]"
+              "source": "[YOU SAY: **ḍoḷā, kān** — eye, ear]"
             }
           ]
         },
@@ -145,11 +302,298 @@
             },
             {
               "kind": "speech",
-              "text": "Name three English words that share हृदय (hṛdaya)'s root. (Heart, cordial, cardiac.) What makes हृदय (hṛdaya) different from वाचणे, समजणे, and डोळा? (Those three drifted — speaking to reading, waking to understanding, swinging to eye; हृदय (hṛdaya) did not drift at all.) What new Devanagari mark did this lesson add? (ृ, the vocalic r.)"
+              "text": "What did Prakrit do to Sanskrit कर्ण's rṇ cluster? (Doubled it to ṇṇ, then Old Marathi simplified that back to one ṇ.) Is कर्ण's root beyond Sanskrit settled? (No — disputed.) Which Chapter 7 word also showed a consonant cluster changing shape? (दोन, whose final n came from copying तीन.)"
             },
             {
               "kind": "speech",
-              "text": "Sources: Wiktionary: हृदय (hṛdaya)."
+              "text": "Sources: Wiktionary: कान (kān)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C12-tond",
+      "sequence": 600,
+      "title": "तोंड (tõḍ) — the mouth, and the formal word standing behind it",
+      "headword": "तोंड",
+      "romanization": "tõḍ",
+      "gloss": "mouth — the everyday word, beside a formal Sanskrit doublet you already half-know",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:4a04194b8445709f",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "डोळा (ḍoḷā), कान (kān) — eye, ear. Recall how कान (kān)'s middle got simpler — rṇ doubled to ṇṇ, then simplified again. One more word before the chapter's closing one."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तोंड",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तोंड — tõḍ — mouth (neuter)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Nothing new. त, ो, ं, ड are all familiar. Tõ-ḍ, the anusvāra nasalizing the o."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart — the everyday word, and its formal twin",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तोंड (tõḍ) continues Maharastri Prakrit तुंड tuṃḍa, from Sanskrit तुण्ड tuṇḍa, \"mouth, snout, beak\" — a tadbhava, worn down the way भाऊ was. Marathi keeps a second, formal word for the same thing: मुख mukh, borrowed whole from Sanskrit exactly the way मित्र and कुटुंब were — the same everyday-versus-formal split कुटुंब's chapter didn't need to show you for a body part until now. You'll hear तोंड (tõḍ) in daily speech and मुख in writing, formal address, and words like mukhya, \"chief, principal\" — literally \"at the mouth/face of things.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tõḍ — mouth",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **tõḍ** — mouth]"
+            },
+            {
+              "kind": "prompt",
+              "action": "NAME",
+              "instruction": "its formal doublet — mukh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU NAME: its formal doublet — **mukh**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "three so far — ḍoḷā, kān, tõḍ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: three so far — **ḍoḷā, kān, tõḍ**]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is तोंड (tõḍ)'s formal Sanskrit doublet? (मुख, mukh.) Is तोंड (tõḍ) itself borrowed whole or worn down? (Worn down — a tadbhava, like भाऊ.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: तोंड (tõḍ)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C12-naak",
+      "sequence": 610,
+      "title": "नाक (nāk) — the face, completed",
+      "headword": "नाक",
+      "romanization": "nāk",
+      "gloss": "nose — completing the face, and the one of the four with the most secure English cousin",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:0b3edc3cd02bbda0",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "डोळा, कान, तोंड (ḍoḷā, kān, tõḍ) — say them. One face part left, and it is the one with the plainest history of the four."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नाक",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नाक — nāk — nose (neuter)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Nothing new. न, ा, क — all familiar since Chapter 1. Nā-k."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart — the secure cousin of \"nose\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नाक (nāk) continues Prakrit णक्क ṇakka, \"nose,\" built on Sanskrit नस् nas-, \"nose,\" plus a suffix. You may have met the other Sanskrit route to \"nose,\" नासिका nāsikā, elsewhere — Marathi's नाक (nāk) took the shorter one, straight from the bare root. Either way the destination is the same Indo-European neh₂s-, which English inherited directly as nose. Of this chapter's four words, नाक (nāk) is the one whose English cousin needs no qualification at all."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way — four words, four kinds of history",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Run the face back one more time, and notice each word told a different kind of story: डोळा (ḍoḷā) replaced its old Indo-Aryan word entirely, with something that once just meant swing; कान (kān)'s root is honestly disputed, even though its rṇ becomes ṇṇ becomes ṇ path is not; तोंड (tõḍ) keeps a formal Sanskrit doublet, मुख, standing beside it; and नाक (nāk) is the plainest of the four — a straight, secure line to Sanskrit and to English both. Not every word in a family carries the same amount of history, and knowing which is which is worth more than assuming they all match."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all four, with gender — ḍoḷā m, kān m, tõḍ n, nāk n",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all four, with gender — **ḍoḷā** m, **kān** m, **tõḍ** n, **nāk** n]"
+            },
+            {
+              "kind": "prompt",
+              "action": "NAME",
+              "instruction": "which is a secure English cousin (nāk), which replaced its old word (ḍoḷā), which is disputed (kān), which has a formal doublet (tõḍ)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU NAME: which is a secure English cousin (**nāk**), which replaced its old word (**ḍoḷā**), which is disputed (**kān**), which has a formal doublet (**tõḍ**)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what you do with your डोळे — pāhṇe, \"to see\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what you do with your **डोळे** — **pāhṇe**, \"to see\"]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which English word is नाक's most secure cousin? (Nose.) Sort the four face words by their history — replaced, disputed, twinned, secure. (Ḍoḷā replaced its old word; kān's root is disputed; tõḍ has the formal doublet mukh; nāk is the secure one.) What Chapter 8 verb names what your eyes do? (Pāhṇe, \"to see.\")"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: नाक (nāk)."
             }
           ]
         }

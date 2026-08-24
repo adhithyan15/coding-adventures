@@ -3,7 +3,7 @@ schema_version: 2
 id: MR-C01-ho
 spine_node: SPINE-RESPOND-BASIC
 sequence: 22
-chapter: 1
+chapter: 2
 type: word
 headword: हो
 romanization: ho
