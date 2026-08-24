@@ -1484,6 +1484,9 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     | wasm_opcodes::SimdOpKind::Swizzle
                     | wasm_opcodes::SimdOpKind::MulF32x4
                     | wasm_opcodes::SimdOpKind::MinF32x4
+                    | wasm_opcodes::SimdOpKind::AddF32x4
+                    | wasm_opcodes::SimdOpKind::SubF32x4
+                    | wasm_opcodes::SimdOpKind::DivF32x4
                     | wasm_opcodes::SimdOpKind::ExtmulLowI64x2S
                     | wasm_opcodes::SimdOpKind::ExtmulHighI64x2S
                     | wasm_opcodes::SimdOpKind::ExtmulLowI64x2U
@@ -1511,7 +1514,12 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         // runtime subtlety (see wasm-opcodes'
                         // `SimdOpKind::MinF32x4` doc comment) is entirely
                         // invisible here -- still just two V128 pops, one
-                        // V128 push. `i64x2.extmul_low`/`high_i32x4_s`/
+                        // V128 push. `f32x4.add`/`sub`/`div` (SIMD widen
+                        // PR29) join too, same reasoning: ordinary IEEE-754
+                        // arithmetic (including `div`'s TOTAL behavior on
+                        // a zero divisor -- no trap) is entirely a runtime
+                        // concern, invisible to the type checker.
+                        // `i64x2.extmul_low`/`high_i32x4_s`/
                         // `_u` (SIMD widen PR21) complete the third and
                         // final "extmul" rung -- same reasoning: the
                         // `i32x4` -> `i64x2` widening is entirely a
@@ -1588,6 +1596,8 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     | wasm_opcodes::SimdOpKind::AbsI64x2
                     | wasm_opcodes::SimdOpKind::NegI64x2
                     | wasm_opcodes::SimdOpKind::AbsF32x4
+                    | wasm_opcodes::SimdOpKind::NegF32x4
+                    | wasm_opcodes::SimdOpKind::SqrtF32x4
                     | wasm_opcodes::SimdOpKind::TruncSatF32x4S
                     | wasm_opcodes::SimdOpKind::TruncSatF32x4U
                     | wasm_opcodes::SimdOpKind::ConvertI32x4S
@@ -1616,7 +1626,12 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         // push-one-`v128` at the type level, same as
                         // `Neg`/`Abs`. `f32x4.abs` (SIMD widen PR19)
                         // joins too -- a pure bit operation, no new
-                        // type-checker machinery needed. `TruncSatF32x4S`/
+                        // type-checker machinery needed. `f32x4.neg`/
+                        // `sqrt` (SIMD widen PR29) join too, same
+                        // reasoning -- their sign-flip/IEEE-754-sqrt
+                        // runtime behavior is entirely invisible here,
+                        // still just pop-one-`V128`-push-one-`V128`.
+                        // `TruncSatF32x4S`/
                         // `_U`/`ConvertI32x4S`/`_U` (SIMD widen PR20) join
                         // too: even though these change the LANE TYPE
                         // (f32 lanes <-> i32 lanes), WASM's type system

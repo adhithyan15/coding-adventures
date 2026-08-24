@@ -1874,6 +1874,11 @@ fn encode_stream_instr(
             | wasm_opcodes::SimdOpKind::AbsF32x4
             | wasm_opcodes::SimdOpKind::MulF32x4
             | wasm_opcodes::SimdOpKind::MinF32x4
+            | wasm_opcodes::SimdOpKind::NegF32x4
+            | wasm_opcodes::SimdOpKind::SqrtF32x4
+            | wasm_opcodes::SimdOpKind::AddF32x4
+            | wasm_opcodes::SimdOpKind::SubF32x4
+            | wasm_opcodes::SimdOpKind::DivF32x4
             | wasm_opcodes::SimdOpKind::TruncSatF32x4S
             | wasm_opcodes::SimdOpKind::TruncSatF32x4U
             | wasm_opcodes::SimdOpKind::ConvertI32x4S
@@ -1914,6 +1919,10 @@ fn encode_stream_instr(
                 // shape at the ENCODING level -- the unary/binary
                 // distinction only matters at the type-checker/runtime
                 // level (see `wasm-validator`/`wasm-execution`), not here.
+                // `NegF32x4`/`SqrtF32x4`/`AddF32x4`/`SubF32x4`/`DivF32x4`
+                // (SIMD widen PR29) join too, same reasoning -- 2 UNARY
+                // (`neg`/`sqrt`) and 3 BINARY (`add`/`sub`/`div`), all
+                // still no-immediate at the encoding level.
                 // `TruncSatF32x4S`/`_U`/`ConvertI32x4S`/`_U` (SIMD widen
                 // PR20) join too -- same no-immediate shape, the fact
                 // that these change lane TYPE (not just value) is
@@ -2657,6 +2666,11 @@ fn encode_flat_instr(
             | wasm_opcodes::SimdOpKind::AbsF32x4
             | wasm_opcodes::SimdOpKind::MulF32x4
             | wasm_opcodes::SimdOpKind::MinF32x4
+            | wasm_opcodes::SimdOpKind::NegF32x4
+            | wasm_opcodes::SimdOpKind::SqrtF32x4
+            | wasm_opcodes::SimdOpKind::AddF32x4
+            | wasm_opcodes::SimdOpKind::SubF32x4
+            | wasm_opcodes::SimdOpKind::DivF32x4
             | wasm_opcodes::SimdOpKind::TruncSatF32x4S
             | wasm_opcodes::SimdOpKind::TruncSatF32x4U
             | wasm_opcodes::SimdOpKind::ConvertI32x4S
@@ -2689,6 +2703,9 @@ fn encode_flat_instr(
                 // the matching comment in `encode_stream_instr` above.
                 // `AbsF32x4`/`MulF32x4`/`MinF32x4` (SIMD widen PR19) join
                 // too -- same no-immediate encoding shape, see the
+                // matching comment in `encode_stream_instr` above.
+                // `NegF32x4`/`SqrtF32x4`/`AddF32x4`/`SubF32x4`/`DivF32x4`
+                // (SIMD widen PR29) join too, same reasoning -- see the
                 // matching comment in `encode_stream_instr` above.
                 // `TruncSatF32x4S`/`_U`/`ConvertI32x4S`/`_U` (SIMD widen
                 // PR20) join too, same reasoning. `TruncSatF64x2SZero`/
@@ -5673,6 +5690,43 @@ mod tests {
             assert!(code.windows(3).any(|w| w == [0xFD, 0xE0, 0x01]), "missing f32x4.abs: {code:?}");
             assert!(code.windows(3).any(|w| w == [0xFD, 0xE6, 0x01]), "missing f32x4.mul: {code:?}");
             assert!(code.windows(3).any(|w| w == [0xFD, 0xE8, 0x01]), "missing f32x4.min: {code:?}");
+        }
+    }
+
+    #[test]
+    fn f32x4_arith_family_encodes_the_real_two_byte_leb128_sub_opcodes() {
+        // SIMD widen PR29 (task #202-204): f32x4.neg (0xE1), f32x4.sqrt
+        // (0xE3), f32x4.add (0xE4), f32x4.sub (0xE5), f32x4.div (0xE7) --
+        // closes the last remaining gap in f32x4's core arithmetic family
+        // (abs/mul/min landed in PR19 above). All five sub-opcode values
+        // are >= 128, so each encodes as a real 2-byte LEB128 sequence
+        // (`[byte, 0x01]`). `neg`/`sqrt` are UNARY (one v128 operand);
+        // `add`/`sub`/`div` are BINARY (two) -- same "no immediate beyond
+        // the opcode bytes themselves" shape as `f32x4.abs`/`mul`/`min`
+        // above either way.
+        let folded = parse_module(
+            r#"(module (func (param v128 v128) (result v128)
+                 (f32x4.div
+                   (f32x4.sub
+                     (f32x4.add (f32x4.sqrt (f32x4.neg (local.get 0))) (local.get 1))
+                     (local.get 1))
+                   (local.get 1))))"#,
+        )
+        .unwrap();
+        let flat = parse_module(
+            r#"(module (func (param v128 v128) (result v128)
+                 local.get 0 f32x4.neg f32x4.sqrt
+                 local.get 1 f32x4.add
+                 local.get 1 f32x4.sub
+                 local.get 1 f32x4.div))"#,
+        )
+        .unwrap();
+        for code in [code_of(&folded, 0), code_of(&flat, 0)] {
+            assert!(code.windows(3).any(|w| w == [0xFD, 0xE1, 0x01]), "missing f32x4.neg: {code:?}");
+            assert!(code.windows(3).any(|w| w == [0xFD, 0xE3, 0x01]), "missing f32x4.sqrt: {code:?}");
+            assert!(code.windows(3).any(|w| w == [0xFD, 0xE4, 0x01]), "missing f32x4.add: {code:?}");
+            assert!(code.windows(3).any(|w| w == [0xFD, 0xE5, 0x01]), "missing f32x4.sub: {code:?}");
+            assert!(code.windows(3).any(|w| w == [0xFD, 0xE7, 0x01]), "missing f32x4.div: {code:?}");
         }
     }
 

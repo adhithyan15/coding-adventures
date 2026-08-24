@@ -2,6 +2,24 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.32] - 2026-08-24 - SIMD widen PR29: f32x4 add/sub/div/neg/sqrt (task #202-204)
+
+### Added
+
+- 5 new `SIMD_OPS` entries: `f32x4.neg` (`0xE1`), `f32x4.sqrt` (`0xE3`),
+  `f32x4.add` (`0xE4`), `f32x4.sub` (`0xE5`), `f32x4.div` (`0xE7`) --
+  closes the last remaining gap in `f32x4`'s core arithmetic family
+  (`abs`/`mul`/`min` landed in PR19; `max`/`pmin`/`pmax` remain future
+  work). 159 SIMD opcodes total, up from 154. Each sub-opcode byte
+  fetched live from the SIMD proposal's own `BinarySIMD.md` and
+  cross-checked against this table's own already-implemented
+  neighbors: `f32x4.abs` (`0xE0`)/`f32x4.mul` (`0xE6`)/`f32x4.min`
+  (`0xE8`) (all matched exactly; `0xE2` is genuinely unassigned in the
+  spec, not a skipped op). 5 new `SimdOpKind` variants: `NegF32x4`,
+  `SqrtF32x4`, `AddF32x4`, `SubF32x4`, `DivF32x4`.
+- New tests: `simd_ops_table_has_the_expected_159_entries_and_no_duplicates`
+  (was 154) and `simd_f32x4_arith_family_has_the_real_verified_sub_opcode_values`.
+
 ## [0.2.31] - 2026-08-19 - SIMD widen PR28: promote/demote/convert_low family (task #199-201)
 
 ### Added

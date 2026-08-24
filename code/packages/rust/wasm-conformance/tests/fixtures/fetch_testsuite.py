@@ -472,6 +472,13 @@ TESTSUITE_FILES = [
     # real integration test exercising opcodes from all three PRs
     # together in one corpus file.
     "simd_conversions.wast",
+    # SIMD widen PR29 (task #202-204): simd_f32x4_arith.wast -- vendors
+    # the dedicated upstream file for f32x4.neg/sqrt/add/sub/div, this
+    # PR's 5 new opcodes (joining the already-implemented abs/mul/min,
+    # PR19), closing the last remaining gap in f32x4's core arithmetic
+    # family. The single biggest directive-count win in this campaign so
+    # far -- see the NOTICE file for the real vendored/pass counts.
+    "simd_f32x4_arith.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under

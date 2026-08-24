@@ -6203,6 +6203,83 @@ fn register_simd(vm: &mut GenericVM) {
                 let handle = push_v128(ctx, result)?;
                 push_wasm(vm, WasmValue::V128(handle));
             }
+            SimdOpKind::NegF32x4 => {
+                // f32x4.neg (SIMD widen PR29): UNARY, pop one v128, flip
+                // the sign bit of each of the 4 `f32` lanes, push one
+                // v128. Same shape as `AbsF32x4` above, just negating
+                // (`-v`) instead of clearing the sign bit -- `-NaN` is
+                // still NaN, just sign-flipped, which is the spec-correct
+                // result, no bespoke NaN handling needed.
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let mut result = [0u8; 16];
+                for i in 0..4 {
+                    let v = f32::from_le_bytes(bytes[i * 4..i * 4 + 4].try_into().unwrap());
+                    let out = -v;
+                    result[i * 4..i * 4 + 4].copy_from_slice(&out.to_le_bytes());
+                }
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::SqrtF32x4 => {
+                // f32x4.sqrt (SIMD widen PR29): UNARY, pop one v128, take
+                // the IEEE-754 square root of each of the 4 `f32` lanes.
+                // Rust's `f32::sqrt()` is already IEEE-754 compliant
+                // (sqrt of a negative lane is NaN, sqrt(-0.0) is -0.0),
+                // so no bespoke NaN/signed-zero handling is needed here,
+                // same discipline as `MulF32x4` (unlike `MinF32x4`).
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let mut result = [0u8; 16];
+                for i in 0..4 {
+                    let v = f32::from_le_bytes(bytes[i * 4..i * 4 + 4].try_into().unwrap());
+                    let out = v.sqrt();
+                    result[i * 4..i * 4 + 4].copy_from_slice(&out.to_le_bytes());
+                }
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::AddF32x4 | SimdOpKind::SubF32x4 | SimdOpKind::DivF32x4 => {
+                // f32x4.add/sub/div (SIMD widen PR29): BINARY, pop two
+                // v128s, apply standard IEEE-754 float arithmetic to each
+                // of the 4 `f32` lane pairs, push one v128. Same "pop two
+                // v128s, push one" shape as `MulF32x4` above -- ordinary
+                // add/sub/div have no WASM-specific deviation from
+                // IEEE-754 (unlike `min`/`max`), so Rust's native `+`/
+                // `-`/`/` on `f32` are directly correct, including
+                // `/`'s TOTAL behavior on a zero divisor (finite/0.0 ->
+                // +/-infinity, 0.0/0.0 -> NaN, no trap, no panic).
+                let rhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let lhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let rhs = *ctx
+                    .v128_heap
+                    .get(rhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let lhs = *ctx
+                    .v128_heap
+                    .get(lhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let mut result = [0u8; 16];
+                for i in 0..4 {
+                    let l = f32::from_le_bytes(lhs[i * 4..i * 4 + 4].try_into().unwrap());
+                    let r = f32::from_le_bytes(rhs[i * 4..i * 4 + 4].try_into().unwrap());
+                    let out = match op.kind {
+                        SimdOpKind::AddF32x4 => l + r,
+                        SimdOpKind::SubF32x4 => l - r,
+                        SimdOpKind::DivF32x4 => l / r,
+                        _ => unreachable!("only AddF32x4/SubF32x4/DivF32x4 reach this arm"),
+                    };
+                    result[i * 4..i * 4 + 4].copy_from_slice(&out.to_le_bytes());
+                }
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
             SimdOpKind::TruncSatF32x4S | SimdOpKind::TruncSatF32x4U => {
                 // i32x4.trunc_sat_f32x4_s/_u (SIMD widen PR20): UNARY,
                 // pop one v128, convert each of the 4 `f32` lanes to a
@@ -14527,6 +14604,167 @@ mod tests {
         let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
         let out = f32x4_lanes(results[0].unwrap());
         assert_eq!(out, [-3.0, -3.0, 7.5, -1.5], "f32x4.min must pick the smaller value in each lane");
+    }
+
+    // ── f32x4.neg/sqrt/add/sub/div (SIMD widen PR29, task #202-204) ─────────
+
+    /// `f32x4.neg`: flips the sign bit of each lane -- a normal positive
+    /// lane becomes negative and vice versa, `+0.0` becomes `-0.0`, and a
+    /// NaN lane stays NaN (only its sign bit flips, same as scalar
+    /// `-f32`, which is exactly why this op needs no bespoke NaN handling
+    /// the way `f32x4.min` does).
+    #[test]
+    fn f32x4_neg_flips_sign_bit_and_leaves_nan_lane_nan() {
+        let lanes = [3.5f32, -2.0f32, 0.0f32, f32::NAN];
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_f32x4(lanes));
+        code.extend([0xFD, 0xE1, 0x01]); // f32x4.neg (LEB128: [0xE1, 0x01] for sub-opcode 0xE1)
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f32x4_lanes(results[0].unwrap());
+        assert_eq!(out[0], -3.5, "neg(3.5) must be -3.5");
+        assert_eq!(out[1], 2.0, "neg(-2.0) must be 2.0");
+        assert!(out[2] == 0.0 && out[2].is_sign_negative(), "neg(+0.0) must flip the sign bit to -0.0, got {}", out[2]);
+        assert!(out[3].is_nan(), "neg(NaN) must stay NaN, got {}", out[3]);
+    }
+
+    /// `f32x4.sqrt`: IEEE-754 square root per lane -- an ordinary perfect
+    /// square, a non-perfect-square value, `sqrt(-0.0) == -0.0` (per
+    /// IEEE-754, checked by sign bit not just `== 0.0`), and
+    /// `sqrt(negative) == NaN` (per IEEE-754, not a trap/error).
+    #[test]
+    fn f32x4_sqrt_computes_ieee754_square_root_per_lane() {
+        let lanes = [4.0f32, 2.0f32, -0.0f32, -1.0f32];
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_f32x4(lanes));
+        code.extend([0xFD, 0xE3, 0x01]); // f32x4.sqrt (LEB128: [0xE3, 0x01] for sub-opcode 0xE3)
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f32x4_lanes(results[0].unwrap());
+        assert_eq!(out[0], 2.0, "sqrt(4.0) must be 2.0");
+        assert_eq!(out[1], 2.0f32.sqrt(), "sqrt(2.0) must match f32::sqrt(2.0)");
+        assert!(out[2] == 0.0 && out[2].is_sign_negative(), "sqrt(-0.0) must be -0.0, got {}", out[2]);
+        assert!(out[3].is_nan(), "sqrt(-1.0) must be NaN, got {}", out[3]);
+    }
+
+    /// `f32x4.add`: ordinary lane-wise IEEE-754 float addition across
+    /// mixed-sign, non-trivial values.
+    #[test]
+    fn f32x4_add_adds_each_lane_pair() {
+        let lhs = [2.0f32, -3.0f32, 0.5f32, 10.0f32];
+        let rhs = [4.0f32, 5.0f32, -2.0f32, 0.1f32];
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_f32x4(lhs));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes_f32x4(rhs));
+        code.extend([0xFD, 0xE4, 0x01]); // f32x4.add (LEB128: [0xE4, 0x01] for sub-opcode 0xE4)
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f32x4_lanes(results[0].unwrap());
+        assert_eq!(out, [6.0, 2.0, -1.5, 10.1], "f32x4.add must compute the exact lane-wise sum");
+    }
+
+    /// `f32x4.sub`: ordinary lane-wise IEEE-754 float subtraction across
+    /// mixed-sign, non-trivial values.
+    #[test]
+    fn f32x4_sub_subtracts_each_lane_pair() {
+        let lhs = [2.0f32, -3.0f32, 0.5f32, 10.0f32];
+        let rhs = [4.0f32, 5.0f32, -2.0f32, 0.1f32];
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_f32x4(lhs));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes_f32x4(rhs));
+        code.extend([0xFD, 0xE5, 0x01]); // f32x4.sub (LEB128: [0xE5, 0x01] for sub-opcode 0xE5)
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f32x4_lanes(results[0].unwrap());
+        assert_eq!(out, [-2.0, -8.0, 2.5, 9.9], "f32x4.sub must compute the exact lane-wise difference");
+    }
+
+    /// `f32x4.div`: ordinary lane-wise IEEE-754 float division for a
+    /// normal in-range case.
+    #[test]
+    fn f32x4_div_divides_each_lane_pair() {
+        let lhs = [8.0f32, -9.0f32, 1.0f32, 10.0f32];
+        let rhs = [2.0f32, 3.0f32, 4.0f32, 5.0f32];
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_f32x4(lhs));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes_f32x4(rhs));
+        code.extend([0xFD, 0xE7, 0x01]); // f32x4.div (LEB128: [0xE7, 0x01] for sub-opcode 0xE7)
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f32x4_lanes(results[0].unwrap());
+        assert_eq!(out, [4.0, -3.0, 0.25, 2.0], "f32x4.div must compute the exact lane-wise quotient");
+    }
+
+    /// `f32x4.div`: IEEE-754 division is TOTAL, not partial -- a finite
+    /// lane divided by `0.0` must produce `+/-infinity` (sign per the
+    /// usual sign-of-quotient rule), NOT a trap or a panic. This is the
+    /// most important correctness case in this PR: this crate's INTEGER
+    /// division opcodes trap on divide-by-zero, but float division must
+    /// not.
+    #[test]
+    fn f32x4_div_by_zero_produces_signed_infinity_not_a_trap() {
+        let lhs = [1.0f32, -1.0f32, 1.0f32, -1.0f32];
+        let rhs = [0.0f32, 0.0f32, -0.0f32, -0.0f32];
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_f32x4(lhs));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes_f32x4(rhs));
+        code.extend([0xFD, 0xE7, 0x01]); // f32x4.div
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f32x4_lanes(results[0].unwrap());
+        assert_eq!(out[0], f32::INFINITY, "1.0 / 0.0 must be +infinity, got {}", out[0]);
+        assert_eq!(out[1], f32::NEG_INFINITY, "-1.0 / 0.0 must be -infinity, got {}", out[1]);
+        assert_eq!(out[2], f32::NEG_INFINITY, "1.0 / -0.0 must be -infinity, got {}", out[2]);
+        assert_eq!(out[3], f32::INFINITY, "-1.0 / -0.0 must be +infinity, got {}", out[3]);
+    }
+
+    /// `f32x4.div`: `0.0 / 0.0` must produce `NaN`, per IEEE-754 --
+    /// checked in every lane and both zero signs, still no trap/panic.
+    #[test]
+    fn f32x4_div_zero_by_zero_produces_nan() {
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_f32x4([0.0f32, -0.0f32, 0.0f32, -0.0f32]));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes_f32x4([0.0f32, 0.0f32, -0.0f32, -0.0f32]));
+        code.extend([0xFD, 0xE7, 0x01]); // f32x4.div
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f32x4_lanes(results[0].unwrap());
+        assert!(out.iter().all(|v| v.is_nan()), "0.0 / 0.0 (any zero-sign combination) must be NaN in every lane, got {out:?}");
+    }
+
+    /// `f32x4.add`/`sub`/`div`: NaN propagates through ordinary
+    /// arithmetic the same way IEEE-754 (and Rust's native `f32` ops)
+    /// already handle it -- if EITHER operand lane is NaN, the result
+    /// lane is NaN. Unlike `f32x4.min`, none of these three ops need any
+    /// bespoke NaN-propagation logic (Rust's native `+`/`-`/`/` already
+    /// do the right thing), but this test proves that's actually true at
+    /// the interpreter level, not just assumed.
+    #[test]
+    fn f32x4_add_sub_div_propagate_nan_in_either_operand() {
+        for (sub_opcode, name) in [(0xE4u8, "add"), (0xE5u8, "sub"), (0xE7u8, "div")] {
+            let mut code = vec![0xFD, 0x0C];
+            code.extend(v128_const_bytes_f32x4([f32::NAN; 4]));
+            code.extend([0xFD, 0x0C]);
+            code.extend(v128_const_bytes_f32x4([5.0; 4]));
+            code.extend([0xFD, sub_opcode, 0x01]);
+            code.push(0x0B);
+            let mut engine = simd_engine_returning_v128(code);
+            let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+            let out = f32x4_lanes(results[0].unwrap());
+            assert!(out.iter().all(|v| v.is_nan()), "f32x4.{name}(NaN, 5.0) must be NaN in every lane, got {out:?}");
+        }
     }
 
     // ── i32x4<->f32x4 conversions (SIMD widen PR20, task #177-179) ──────────

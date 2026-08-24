@@ -1,5 +1,21 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.51 — 2026-08-24 — SIMD widen PR29: f32x4 add/sub/div/neg/sqrt text-form (task #202-204)
+
+### Added
+
+- `SimdOpKind::NegF32x4`/`SqrtF32x4`/`AddF32x4`/`SubF32x4`/`DivF32x4`
+  join the shared "no immediate beyond the opcode byte itself" SIMD
+  dispatch arm (already used for `AbsF32x4`/`MulF32x4`/`MinF32x4`/etc.)
+  in both the folded (`encode_stream_instr`) and flat
+  (`encode_flat_instr`) instruction encoders -- verified byte-identical
+  at both call sites before editing. All five sub-opcodes are looked up
+  by name from `wasm_opcodes::SIMD_OPS` (data-driven, via
+  `get_simd_op_by_name`), so no separate name-to-encoding table was
+  needed.
+- New test: `f32x4_arith_family_encodes_the_real_two_byte_leb128_sub_opcodes`
+  (folded and flat forms, all five sub-opcodes).
+
 ## 0.1.50 — 2026-08-19 — SIMD widen PR28: promote/demote/convert_low family text-form, v128 NaN-class expected lanes (task #199-201)
 
 ### Added
