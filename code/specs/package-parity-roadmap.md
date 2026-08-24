@@ -6204,6 +6204,18 @@ C#, state, or roadmap surfaces; the target branch and prior PR were absent
 before the fresh exact-main worktree was created. F# tracked-artifact remains
 the preferred next engine child after this shared contract is closed.
 
+The implementation closes the reachability gap without widening the validator:
+the schema admits only the exact zero-through-513-scalar fixture envelope while
+the pure oracle continues to reject empty and longer-than-512 paths. One new
+shared case proves the 512/513 astral boundary, Unicode-scalar diagnostic order
+across U+E000 and U+10000, and the U+0131 dotless-i `CONIN$` reserved-basename
+alias. Python and C# both consume all five tracked-artifact cases. The complete
+neutral schema and runner suites pass 80 tests plus 119 subtests; the 111-case,
+269-file corpus validates; Python passes 424 package tests at 90.01% total
+coverage and 97% validator coverage; and C# passes all 27 release tests. The
+corpus remains process-free and adds no Git, filesystem, environment, process,
+or network authority.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
