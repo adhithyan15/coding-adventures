@@ -4008,6 +4008,70 @@
       "after": []
     },
     {
+      "id": "ES-PATH-320-01",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "ES-C320-favor",
+        "ES-C320-molestia",
+        "ES-C320-pena",
+        "ES-C320-suerte",
+        "ES-C320-culpa"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-320-COURT"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-321-01",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "ES-C321-placer",
+        "ES-C321-razon",
+        "ES-C321-respeto",
+        "ES-C321-paciencia",
+        "ES-C321-consejo"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-321-COURT"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-322-01",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "ES-C322-anoche",
+        "ES-C322-semana",
+        "ES-C322-temprano",
+        "ES-C322-enseguida",
+        "ES-C322-todavia"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-322-WHEN"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-323-01",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "ES-C323-ya",
+        "ES-C323-entonces",
+        "ES-C323-antes",
+        "ES-C323-despues",
+        "ES-C323-mientras"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-323-WHEN"
+      ],
+      "after": []
+    },
+    {
       "id": "ES-PATH-310-01",
       "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
       "lessons": [
@@ -4157,7 +4221,9 @@
         "ES-PATH-010",
         "ES-PATH-283-01",
         "ES-PATH-290-01",
-        "ES-PATH-297-01"
+        "ES-PATH-297-01",
+        "ES-PATH-320-01",
+        "ES-PATH-321-01"
       ],
       "omits": [
         "COURTESY-THANKS-CASUAL"
@@ -4253,7 +4319,9 @@
         "ES-PATH-295-01",
         "ES-PATH-302-01",
         "ES-PATH-318-01",
-        "ES-PATH-319-02"
+        "ES-PATH-319-02",
+        "ES-PATH-322-01",
+        "ES-PATH-323-01"
       ],
       "omits": [
         "FAREWELL-CASUAL"
@@ -8280,6 +8348,66 @@
       "lessons": [
         "ES-C319-repaso-respuestas",
         "ES-C319-otro-y-poco"
+      ]
+    },
+    {
+      "id": "ES-EXT-320-COURT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name the favour, the trouble, the shame, the luck and the fault behind a Spanish courtesy.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C320-favor",
+        "ES-C320-molestia",
+        "ES-C320-pena",
+        "ES-C320-suerte",
+        "ES-C320-culpa"
+      ]
+    },
+    {
+      "id": "ES-EXT-321-COURT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can answer a first meeting with un placer, agree with tienes razon, and ask for patience, respect or advice in Spanish.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C321-placer",
+        "ES-C321-razon",
+        "ES-C321-respeto",
+        "ES-C321-paciencia",
+        "ES-C321-consejo"
+      ]
+    },
+    {
+      "id": "ES-EXT-322-WHEN",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can say last night, the week, early, right away and still in Spanish.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C322-anoche",
+        "ES-C322-semana",
+        "ES-C322-temprano",
+        "ES-C322-enseguida",
+        "ES-C322-todavia"
+      ]
+    },
+    {
+      "id": "ES-EXT-323-WHEN",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can put two events in order with antes, despues, entonces and mientras, and say that a thing is already done with ya.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C323-ya",
+        "ES-C323-entonces",
+        "ES-C323-antes",
+        "ES-C323-despues",
+        "ES-C323-mientras"
       ]
     },
     {

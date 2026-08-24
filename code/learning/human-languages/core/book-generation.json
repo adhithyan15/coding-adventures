@@ -5222,6 +5222,26 @@
       "output": "spanish/book/chapters/ch319-repaso-la-superficie.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 320,
+      "output": "spanish/book/chapters/ch320-favor-y-culpa.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 321,
+      "output": "spanish/book/chapters/ch321-placer-y-consejo.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 322,
+      "output": "spanish/book/chapters/ch322-anoche-y-todavia.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 323,
+      "output": "spanish/book/chapters/ch323-antes-y-despues.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "output": "tamil/book/chapters/ch06-dative-case.tex",
