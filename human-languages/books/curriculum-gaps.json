@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 3585,
+    "totalLessons": 3596,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -32,7 +32,7 @@
     "headwordsWithoutRomanization": 287,
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
-    "atomsNeverRevisited": 620,
+    "atomsNeverRevisited": 610,
     "forwardReferences": 456,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 80,
@@ -40,7 +40,7 @@
     "tracksWithoutWritingStageEvidence": 6,
     "missingWritingStagePairs": 650,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 3000,
+    "drivableLessons": 3010,
     "drivablePercent": 84,
     "chaptersWithoutDrivablePrefix": 104,
     "unexplainedModalityOverrides": 0
@@ -1224,7 +1224,9 @@
           314,
           315,
           316,
-          317
+          317,
+          318,
+          319
         ],
         "bookChapters": [
           1,
@@ -1535,7 +1537,9 @@
           314,
           315,
           316,
-          317
+          317,
+          318,
+          319
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -2745,7 +2749,8 @@
           11,
           12,
           13,
-          14
+          14,
+          15
         ],
         "bookChapters": [
           1,
@@ -2761,7 +2766,8 @@
           11,
           12,
           13,
-          14
+          14,
+          15
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -3220,9 +3226,9 @@
       {
         "language": "spanish",
         "status": "version-2",
-        "lessonCount": 624,
+        "lessonCount": 635,
         "versions": {
-          "2": 624
+          "2": 635
         }
       },
       {
@@ -4079,8 +4085,8 @@
       },
       {
         "language": "marathi",
-        "bookChapters": 14,
-        "declaredChapters": 14,
+        "bookChapters": 15,
+        "declaredChapters": 15,
         "missingCapability": 0,
         "findings": 0,
         "clean": true
@@ -4135,8 +4141,8 @@
       },
       {
         "language": "spanish",
-        "bookChapters": 309,
-        "declaredChapters": 309,
+        "bookChapters": 311,
+        "declaredChapters": 311,
         "missingCapability": 0,
         "findings": 26,
         "clean": false
@@ -4167,8 +4173,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 1024,
-      "declaredChapters": 1024,
+      "bookChapters": 1027,
+      "declaredChapters": 1027,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 80,
@@ -4180,9 +4186,9 @@
     }
   },
   "levels": {
-    "totalLessons": 3585,
+    "totalLessons": 3596,
     "byLevel": {
-      "pre-A1": 2292,
+      "pre-A1": 2303,
       "A1": 599,
       "A2": 549,
       "B1": 40,
@@ -4480,9 +4486,9 @@
       },
       {
         "language": "spanish",
-        "lessonCount": 624,
+        "lessonCount": 635,
         "byLevel": {
-          "pre-A1": 226,
+          "pre-A1": 237,
           "A1": 155,
           "A2": 158,
           "B1": 40,
@@ -4808,7 +4814,7 @@
       {
         "lessonId": "MR-C06-numbers-1-5",
         "language": "marathi",
-        "chapter": 6,
+        "chapter": 7,
         "atoms": 4,
         "budget": 3
       },
@@ -4911,13 +4917,6 @@
         "atoms": 18,
         "budget": 12,
         "lessonCount": 12
-      },
-      {
-        "language": "marathi",
-        "chapter": 1,
-        "atoms": 17,
-        "budget": 12,
-        "lessonCount": 20
       },
       {
         "language": "arabic",
@@ -5142,7 +5141,7 @@
         "measurable": 63,
         "unmeasurable": 26,
         "lessonViolations": 1,
-        "chapterViolations": 1
+        "chapterViolations": 0
       },
       {
         "language": "marwadi",
@@ -5194,8 +5193,8 @@
       },
       {
         "language": "spanish",
-        "lessonCount": 624,
-        "measurable": 620,
+        "lessonCount": 635,
+        "measurable": 631,
         "unmeasurable": 4,
         "lessonViolations": 6,
         "chapterViolations": 0
@@ -5355,7 +5354,7 @@
         {
           "lessonId": "MR-C01-dhanyavad",
           "language": "marathi",
-          "chapter": 1,
+          "chapter": 2,
           "glyphs": 7,
           "sample": "आदधभयवे",
           "systems": [
@@ -5879,7 +5878,7 @@
           "language": "spanish",
           "script": "latin",
           "latinScript": true,
-          "lessonCount": 624,
+          "lessonCount": 635,
           "totalGlyphs": 0,
           "lessonViolations": 0,
           "systemViolations": 0,
@@ -5936,7 +5935,7 @@
     },
     "summary": {
       "lessonViolations": 46,
-      "chapterViolations": 24,
+      "chapterViolations": 23,
       "unmeasurableLessons": 393,
       "measurablePercent": 89,
       "steepestLesson": {
@@ -6482,7 +6481,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 0
+        "revisits": 1
       },
       {
         "atom": "ES-ETYMON-PERO-PER-HOC",
@@ -6547,7 +6546,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 0
+        "revisits": 1
       },
       {
         "atom": "ES-ETYMON-QUAERERE",
@@ -6782,19 +6781,6 @@
           "R4"
         ],
         "revisits": 1
-      },
-      {
-        "atom": "ES-FORM-MANANA",
-        "language": "spanish",
-        "introducedBy": "ES-W02-enye-formas",
-        "introducedAt": 55,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
       },
       {
         "atom": "ES-FRIENDS-FALSE-FRIENDS",
@@ -7041,7 +7027,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "ES-GRAMMAR-NOUN-FROM-VERB-IDA",
@@ -7184,7 +7170,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 0
+        "revisits": 2
       },
       {
         "atom": "ES-GRAMMAR-QUERER-SUBJUNCTIVE-SINGULAR",
@@ -7314,7 +7300,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 0
+        "revisits": 2
       },
       {
         "atom": "ES-LEX-AMARILLO-03",
@@ -7535,7 +7521,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 3
       },
       {
         "atom": "ES-LEX-HABITACION",
@@ -7691,7 +7677,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 0
+        "revisits": 3
       },
       {
         "atom": "ES-LEX-SEASONS-01",
@@ -7795,7 +7781,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 0
+        "revisits": 2
       },
       {
         "atom": "ES-SEMANTIC-ASKING-DIRECTIONS",
@@ -8029,7 +8015,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 0
+        "revisits": 2
       },
       {
         "atom": "ES-SOUND-LATIN-CLUSTER-TO-CH",
@@ -13039,7 +13025,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "ES-ETYMON-GERMEN-03",
@@ -13663,7 +13649,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "ES-ETYMON-SIC-04",
@@ -13939,7 +13925,19 @@
           "R2",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
+      },
+      {
+        "atom": "ES-FORM-MANANA",
+        "language": "spanish",
+        "introducedBy": "ES-W02-enye-formas",
+        "introducedAt": 55,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
       },
       {
         "atom": "ES-FRIEND-ARIO-ARY",
@@ -14108,18 +14106,6 @@
           "R4"
         ],
         "revisits": 3
-      },
-      {
-        "atom": "ES-GRAMMAR-BARE-LANGUAGE",
-        "language": "spanish",
-        "introducedBy": "ES-C06-hablo-espanol",
-        "introducedAt": 82,
-        "missed": [
-          "R1",
-          "R3",
-          "R4"
-        ],
-        "revisits": 1
       },
       {
         "atom": "ES-GRAMMAR-BARE-PROFESSION",
@@ -14767,7 +14753,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "ES-GRAMMAR-NUMBER-FORMATION-04",
@@ -15211,7 +15197,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "ES-GRAMMAR-TENER-FUTURE-CONDITIONAL-SINGULAR",
@@ -15343,7 +15329,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "ES-HISTORY-AR-PRETERITE-LATIN-PERFECT",
@@ -16282,16 +16268,136 @@
         "revisits": 2
       },
       {
-        "atom": "ES-LEX-C305-NAME-05",
+        "atom": "ES-LEX-C294-HOME-01",
         "language": "spanish",
-        "introducedBy": "ES-C305-encantado",
-        "introducedAt": 603,
+        "introducedBy": "ES-C294-cuchillo",
+        "introducedAt": 544,
         "missed": [
-          "R1",
           "R2",
-          "R3"
+          "R3",
+          "R4"
         ],
-        "revisits": 0
+        "revisits": 4
+      },
+      {
+        "atom": "ES-LEX-C294-HOME-02",
+        "language": "spanish",
+        "introducedBy": "ES-C294-taza",
+        "introducedAt": 545,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ES-LEX-C294-HOME-03",
+        "language": "spanish",
+        "introducedBy": "ES-C294-olla",
+        "introducedAt": 546,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C294-HOME-04",
+        "language": "spanish",
+        "introducedBy": "ES-C294-manta",
+        "introducedAt": 547,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C294-HOME-05",
+        "language": "spanish",
+        "introducedBy": "ES-C294-escoba",
+        "introducedAt": 548,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C295-PATH-01",
+        "language": "spanish",
+        "introducedBy": "ES-C295-sendero",
+        "introducedAt": 549,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "ES-LEX-C295-PATH-02",
+        "language": "spanish",
+        "introducedBy": "ES-C295-puente",
+        "introducedAt": 550,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ES-LEX-C295-PATH-03",
+        "language": "spanish",
+        "introducedBy": "ES-C295-orilla",
+        "introducedAt": 551,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C295-PATH-04",
+        "language": "spanish",
+        "introducedBy": "ES-C295-isla",
+        "introducedAt": 552,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C295-PATH-05",
+        "language": "spanish",
+        "introducedBy": "ES-C295-niebla",
+        "introducedAt": 553,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C296-BEAST-01",
+        "language": "spanish",
+        "introducedBy": "ES-C296-caballo",
+        "introducedAt": 554,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
       },
       {
         "atom": "ES-LEX-CABEZA-01",
@@ -16303,7 +16409,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "ES-LEX-CAMA",
@@ -16642,30 +16748,6 @@
         "revisits": 2
       },
       {
-        "atom": "ES-LEX-HABLO-ESPANOL",
-        "language": "spanish",
-        "introducedBy": "ES-C06-hablo-espanol",
-        "introducedAt": 82,
-        "missed": [
-          "R1",
-          "R3",
-          "R4"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "ES-LEX-HASTA-LUEGO",
-        "language": "spanish",
-        "introducedBy": "ES-C05-hasta-luego",
-        "introducedAt": 63,
-        "missed": [
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 1
-      },
-      {
         "atom": "ES-LEX-HASTA-MANANA",
         "language": "spanish",
         "introducedBy": "ES-C05-hasta-manana",
@@ -16675,7 +16757,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "ES-LEX-HASTA-PRONTO",
@@ -16687,7 +16769,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 3
       },
       {
         "atom": "ES-LEX-HAY",
@@ -16831,7 +16913,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "ES-LEX-MAL",
@@ -16867,7 +16949,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "ES-LEX-MANZANA",
@@ -17107,7 +17189,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "ES-LEX-PASAR-A-MEJOR-VIDA",
@@ -17455,7 +17537,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "ES-LEX-WEEKDAYS-01",
@@ -17530,18 +17612,6 @@
         "revisits": 1
       },
       {
-        "atom": "ES-ORTHOGRAPHY-OPENING-PUNCTUATION",
-        "language": "spanish",
-        "introducedBy": "ES-W03-inverted",
-        "introducedAt": 56,
-        "missed": [
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 1
-      },
-      {
         "atom": "ES-ORTHOGRAPHY-PUNCTUATION-SPAN",
         "language": "spanish",
         "introducedBy": "ES-W03-question-span",
@@ -17575,7 +17645,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "ES-SCRIPT-INVERTED-EXCLAMATION",
@@ -32673,7 +32743,7 @@
           "R2",
           "R3"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "ES-GRAMMAR-APOCOPE-PATTERN",
@@ -32729,6 +32799,17 @@
           "R4"
         ],
         "revisits": 6
+      },
+      {
+        "atom": "ES-GRAMMAR-BARE-LANGUAGE",
+        "language": "spanish",
+        "introducedBy": "ES-C06-hablo-espanol",
+        "introducedAt": 82,
+        "missed": [
+          "R1",
+          "R3"
+        ],
+        "revisits": 2
       },
       {
         "atom": "ES-GRAMMAR-BARE-PLURAL-NOUN",
@@ -33498,7 +33579,7 @@
           "R2",
           "R3"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "ES-LEX-BEBER",
@@ -33521,127 +33602,6 @@
           "R4"
         ],
         "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C294-HOME-01",
-        "language": "spanish",
-        "introducedBy": "ES-C294-cuchillo",
-        "introducedAt": 544,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 4
-      },
-      {
-        "atom": "ES-LEX-C294-HOME-02",
-        "language": "spanish",
-        "introducedBy": "ES-C294-taza",
-        "introducedAt": 545,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ES-LEX-C294-HOME-03",
-        "language": "spanish",
-        "introducedBy": "ES-C294-olla",
-        "introducedAt": 546,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C294-HOME-04",
-        "language": "spanish",
-        "introducedBy": "ES-C294-manta",
-        "introducedAt": 547,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C294-HOME-05",
-        "language": "spanish",
-        "introducedBy": "ES-C294-escoba",
-        "introducedAt": 548,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C295-PATH-01",
-        "language": "spanish",
-        "introducedBy": "ES-C295-sendero",
-        "introducedAt": 549,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 4
-      },
-      {
-        "atom": "ES-LEX-C295-PATH-02",
-        "language": "spanish",
-        "introducedBy": "ES-C295-puente",
-        "introducedAt": 550,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ES-LEX-C295-PATH-03",
-        "language": "spanish",
-        "introducedBy": "ES-C295-orilla",
-        "introducedAt": 551,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C295-PATH-04",
-        "language": "spanish",
-        "introducedBy": "ES-C295-isla",
-        "introducedAt": 552,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C295-PATH-05",
-        "language": "spanish",
-        "introducedBy": "ES-C295-niebla",
-        "introducedAt": 553,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C296-BEAST-01",
-        "language": "spanish",
-        "introducedBy": "ES-C296-caballo",
-        "introducedAt": 554,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 4
       },
       {
         "atom": "ES-LEX-C296-BEAST-02",
@@ -33963,61 +33923,6 @@
         "revisits": 2
       },
       {
-        "atom": "ES-LEX-C302-AWAY-01",
-        "language": "spanish",
-        "introducedBy": "ES-C302-calle",
-        "introducedAt": 584,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 4
-      },
-      {
-        "atom": "ES-LEX-C302-AWAY-02",
-        "language": "spanish",
-        "introducedBy": "ES-C302-esquina",
-        "introducedAt": 585,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ES-LEX-C302-AWAY-03",
-        "language": "spanish",
-        "introducedBy": "ES-C302-huella",
-        "introducedAt": 586,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C302-AWAY-04",
-        "language": "spanish",
-        "introducedBy": "ES-C302-puerto",
-        "introducedAt": 587,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C302-AWAY-05",
-        "language": "spanish",
-        "introducedBy": "ES-C302-faro",
-        "introducedAt": 588,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
         "atom": "ES-LEX-C303-REPAIR-01",
         "language": "spanish",
         "introducedBy": "ES-C303-ayuda",
@@ -34106,10 +34011,21 @@
         "revisits": 2
       },
       {
-        "atom": "ES-LEX-C305-NAME-01",
+        "atom": "ES-LEX-C305-NAME-05",
         "language": "spanish",
-        "introducedBy": "ES-C305-nombre",
-        "introducedAt": 599,
+        "introducedBy": "ES-C305-encantado",
+        "introducedAt": 603,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C314-BODY-01",
+        "language": "spanish",
+        "introducedBy": "ES-C314-brazo",
+        "introducedAt": 604,
         "missed": [
           "R2",
           "R3"
@@ -34117,10 +34033,10 @@
         "revisits": 2
       },
       {
-        "atom": "ES-LEX-C305-NAME-02",
+        "atom": "ES-LEX-C314-BODY-02",
         "language": "spanish",
-        "introducedBy": "ES-C305-apellido",
-        "introducedAt": 600,
+        "introducedBy": "ES-C314-pierna",
+        "introducedAt": 605,
         "missed": [
           "R2",
           "R3"
@@ -34128,10 +34044,10 @@
         "revisits": 2
       },
       {
-        "atom": "ES-LEX-C305-NAME-03",
+        "atom": "ES-LEX-C314-BODY-03",
         "language": "spanish",
-        "introducedBy": "ES-C305-senor",
-        "introducedAt": 601,
+        "introducedBy": "ES-C314-pie",
+        "introducedAt": 606,
         "missed": [
           "R2",
           "R3"
@@ -34139,15 +34055,92 @@
         "revisits": 2
       },
       {
-        "atom": "ES-LEX-C305-NAME-04",
+        "atom": "ES-LEX-C314-BODY-04",
         "language": "spanish",
-        "introducedBy": "ES-C305-senora",
-        "introducedAt": 602,
+        "introducedBy": "ES-C314-diente",
+        "introducedAt": 607,
         "missed": [
           "R2",
           "R3"
         ],
-        "revisits": 1
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C314-BODY-05",
+        "language": "spanish",
+        "introducedBy": "ES-C314-oido",
+        "introducedAt": 608,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C315-BODY-06",
+        "language": "spanish",
+        "introducedBy": "ES-C315-pecho",
+        "introducedAt": 609,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C315-BODY-07",
+        "language": "spanish",
+        "introducedBy": "ES-C315-fuerza",
+        "introducedAt": 610,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C315-BODY-08",
+        "language": "spanish",
+        "introducedBy": "ES-C315-descanso",
+        "introducedAt": 611,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C315-BODY-09",
+        "language": "spanish",
+        "introducedBy": "ES-C315-miedo",
+        "introducedAt": 612,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C315-BODY-10",
+        "language": "spanish",
+        "introducedBy": "ES-C315-risa",
+        "introducedAt": 613,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C316-ANSW-11",
+        "language": "spanish",
+        "introducedBy": "ES-C316-llanto",
+        "introducedAt": 614,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
       },
       {
         "atom": "ES-LEX-CANSADO",
@@ -34293,6 +34286,17 @@
         "revisits": 4
       },
       {
+        "atom": "ES-LEX-HABLO-ESPANOL",
+        "language": "spanish",
+        "introducedBy": "ES-C06-hablo-espanol",
+        "introducedAt": 82,
+        "missed": [
+          "R1",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "ES-LEX-HASTA",
         "language": "spanish",
         "introducedBy": "ES-C05-hasta",
@@ -34301,7 +34305,18 @@
           "R3",
           "R4"
         ],
-        "revisits": 6
+        "revisits": 8
+      },
+      {
+        "atom": "ES-LEX-HASTA-LUEGO",
+        "language": "spanish",
+        "introducedBy": "ES-C05-hasta-luego",
+        "introducedAt": 63,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
       },
       {
         "atom": "ES-LEX-HORA-01",
@@ -34389,7 +34404,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 2
+        "revisits": 3
       },
       {
         "atom": "ES-LEX-NEGRO-01",
@@ -34643,6 +34658,17 @@
           "R3"
         ],
         "revisits": 2
+      },
+      {
+        "atom": "ES-ORTHOGRAPHY-OPENING-PUNCTUATION",
+        "language": "spanish",
+        "introducedBy": "ES-W03-inverted",
+        "introducedAt": 56,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
       },
       {
         "atom": "ES-REGISTER-TU-USTED",
@@ -49066,7 +49092,7 @@
         "missed": [
           "R3"
         ],
-        "revisits": 32
+        "revisits": 33
       },
       {
         "atom": "ES-GRAMMAR-NOUN-NUMBER",
@@ -49169,6 +49195,56 @@
         "revisits": 13
       },
       {
+        "atom": "ES-LEX-C302-AWAY-01",
+        "language": "spanish",
+        "introducedBy": "ES-C302-calle",
+        "introducedAt": 584,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 5
+      },
+      {
+        "atom": "ES-LEX-C302-AWAY-02",
+        "language": "spanish",
+        "introducedBy": "ES-C302-esquina",
+        "introducedAt": 585,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "ES-LEX-C302-AWAY-03",
+        "language": "spanish",
+        "introducedBy": "ES-C302-huella",
+        "introducedAt": 586,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ES-LEX-C302-AWAY-04",
+        "language": "spanish",
+        "introducedBy": "ES-C302-puerto",
+        "introducedAt": 587,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "ES-LEX-C302-AWAY-05",
+        "language": "spanish",
+        "introducedBy": "ES-C302-faro",
+        "introducedAt": 588,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 4
+      },
+      {
         "atom": "ES-LEX-C304-WELL-04",
         "language": "spanish",
         "introducedBy": "ES-C304-ocupado",
@@ -49189,110 +49265,40 @@
         "revisits": 4
       },
       {
-        "atom": "ES-LEX-C314-BODY-01",
+        "atom": "ES-LEX-C305-NAME-01",
         "language": "spanish",
-        "introducedBy": "ES-C314-brazo",
-        "introducedAt": 604,
+        "introducedBy": "ES-C305-nombre",
+        "introducedAt": 599,
         "missed": [
           "R2"
         ],
-        "revisits": 2
+        "revisits": 3
       },
       {
-        "atom": "ES-LEX-C314-BODY-02",
+        "atom": "ES-LEX-C305-NAME-02",
         "language": "spanish",
-        "introducedBy": "ES-C314-pierna",
-        "introducedAt": 605,
+        "introducedBy": "ES-C305-apellido",
+        "introducedAt": 600,
         "missed": [
           "R2"
         ],
-        "revisits": 2
+        "revisits": 3
       },
       {
-        "atom": "ES-LEX-C314-BODY-03",
+        "atom": "ES-LEX-C305-NAME-03",
         "language": "spanish",
-        "introducedBy": "ES-C314-pie",
-        "introducedAt": 606,
+        "introducedBy": "ES-C305-senor",
+        "introducedAt": 601,
         "missed": [
           "R2"
         ],
-        "revisits": 2
+        "revisits": 3
       },
       {
-        "atom": "ES-LEX-C314-BODY-04",
+        "atom": "ES-LEX-C305-NAME-04",
         "language": "spanish",
-        "introducedBy": "ES-C314-diente",
-        "introducedAt": 607,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C314-BODY-05",
-        "language": "spanish",
-        "introducedBy": "ES-C314-oido",
-        "introducedAt": 608,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C315-BODY-06",
-        "language": "spanish",
-        "introducedBy": "ES-C315-pecho",
-        "introducedAt": 609,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C315-BODY-07",
-        "language": "spanish",
-        "introducedBy": "ES-C315-fuerza",
-        "introducedAt": 610,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C315-BODY-08",
-        "language": "spanish",
-        "introducedBy": "ES-C315-descanso",
-        "introducedAt": 611,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C315-BODY-09",
-        "language": "spanish",
-        "introducedBy": "ES-C315-miedo",
-        "introducedAt": 612,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C315-BODY-10",
-        "language": "spanish",
-        "introducedBy": "ES-C315-risa",
-        "introducedAt": 613,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C316-ANSW-11",
-        "language": "spanish",
-        "introducedBy": "ES-C316-llanto",
-        "introducedAt": 614,
+        "introducedBy": "ES-C305-senora",
+        "introducedAt": 602,
         "missed": [
           "R2"
         ],
@@ -49335,6 +49341,16 @@
         "introducedAt": 618,
         "missed": [
           "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C317-ANSW-20",
+        "language": "spanish",
+        "introducedBy": "ES-C317-poco",
+        "introducedAt": 623,
+        "missed": [
+          "R1"
         ],
         "revisits": 2
       },
@@ -60482,12 +60498,12 @@
       },
       {
         "language": "spanish",
-        "lessonCount": 624,
+        "lessonCount": 635,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "atomsTaught": 912,
-        "atomsNeverRevisited": 129,
+        "atomsNeverRevisited": 119,
         "forwardReferences": 111
       },
       {
@@ -60527,13 +60543,13 @@
       "forwardPrerequisites": 0,
       "forwardReviews": 0,
       "atomsTaught": 4864,
-      "atomsNeverRevisited": 620,
+      "atomsNeverRevisited": 610,
       "neverRevisitedPercent": 13,
       "missedByWindow": {
-        "R1": 1180,
-        "R2": 3679,
+        "R1": 1181,
+        "R2": 3678,
         "R3": 3589,
-        "R4": 2136
+        "R4": 2144
       },
       "forwardReferences": 456
     }
@@ -60829,7 +60845,7 @@
       {
         "lessonId": "MR-C12-dola",
         "language": "marathi",
-        "chapter": 12,
+        "chapter": 13,
         "glyphs": "ँंअआऊखजटणतदबभलषिुे",
         "count": 18
       },
@@ -60892,7 +60908,7 @@
       {
         "lessonId": "MR-C02-practice",
         "language": "marathi",
-        "chapter": 2,
+        "chapter": 3,
         "glyphs": "ंअआचझटणतदभयलवुूे",
         "count": 16
       },
@@ -61116,7 +61132,7 @@
       {
         "lessonId": "MR-C04-practice",
         "language": "marathi",
-        "chapter": 4,
+        "chapter": 5,
         "glyphs": "उघजटतदपभयळुूे",
         "count": 13
       },
@@ -61249,14 +61265,14 @@
       {
         "lessonId": "MR-C03-practice",
         "language": "marathi",
-        "chapter": 3,
+        "chapter": 4,
         "glyphs": "ंआतदधबयवशुूे",
         "count": 12
       },
       {
         "lessonId": "MR-C09-avadne",
         "language": "marathi",
-        "chapter": 9,
+        "chapter": 10,
         "glyphs": "ँंगचजठतदपयलि",
         "count": 12
       },
@@ -61389,21 +61405,21 @@
       {
         "lessonId": "MR-C03-mi-bara-aahe",
         "language": "marathi",
-        "chapter": 3,
+        "chapter": 4,
         "glyphs": "ंआतदधबयवुूे",
         "count": 11
       },
       {
         "lessonId": "MR-C04-udya-bhetu",
         "language": "marathi",
-        "chapter": 4,
+        "chapter": 5,
         "glyphs": "ःउटदभयलवशूे",
         "count": 11
       },
       {
         "lessonId": "MR-C10-bhakari",
         "language": "marathi",
-        "chapter": 10,
+        "chapter": 11,
         "glyphs": "खचटणदधपयूृे",
         "count": 11
       },
@@ -61557,28 +61573,28 @@
       {
         "lessonId": "MR-C02-anand",
         "language": "marathi",
-        "chapter": 2,
+        "chapter": 3,
         "glyphs": "ंआझटणदभलूे",
         "count": 10
       },
       {
         "lessonId": "MR-C08-lihine",
         "language": "marathi",
-        "chapter": 8,
+        "chapter": 9,
         "glyphs": "ँंखचजझतदपव",
         "count": 10
       },
       {
         "lessonId": "MR-C08-samajne",
         "language": "marathi",
-        "chapter": 8,
+        "chapter": 9,
         "glyphs": "अआठतदधबयलु",
         "count": 10
       },
       {
         "lessonId": "MR-C11-bahin",
         "language": "marathi",
-        "chapter": 11,
+        "chapter": 12,
         "glyphs": "ंऊगजटतभिुे",
         "count": 10
       },
@@ -61753,49 +61769,49 @@
       {
         "lessonId": "MR-C01-practice",
         "language": "marathi",
-        "chapter": 1,
+        "chapter": 2,
         "glyphs": "ंतदधबयळवे",
         "count": 9
       },
       {
         "lessonId": "MR-C02-tumche-naav-kaay-aahe",
         "language": "marathi",
-        "chapter": 2,
+        "chapter": 3,
         "glyphs": "ंआचझतयवुे",
         "count": 9
       },
       {
         "lessonId": "MR-C05-practice",
         "language": "marathi",
-        "chapter": 5,
+        "chapter": 6,
         "glyphs": "ठणतपबयलुे",
         "count": 9
       },
       {
         "lessonId": "MR-C07-khane",
         "language": "marathi",
-        "chapter": 7,
+        "chapter": 8,
         "glyphs": "ंआगचतदपलि",
         "count": 9
       },
       {
         "lessonId": "MR-C12-kaan",
         "language": "marathi",
-        "chapter": 12,
+        "chapter": 13,
         "glyphs": "ंटडणतदबळु",
         "count": 9
       },
       {
         "lessonId": "MR-C12-naak",
         "language": "marathi",
-        "chapter": 12,
+        "chapter": 13,
         "glyphs": "ंखडणतळिुे",
         "count": 9
       },
       {
         "lessonId": "MR-C12-tond",
         "language": "marathi",
-        "chapter": 12,
+        "chapter": 13,
         "glyphs": "ऊखटणबभळिु",
         "count": 9
       },
@@ -62054,42 +62070,42 @@
       {
         "lessonId": "MR-C04-kalji-ghya",
         "language": "marathi",
-        "chapter": 4,
+        "chapter": 5,
         "glyphs": "घजतयळुूे",
         "count": 8
       },
       {
         "lessonId": "MR-C04-punha-bhetu",
         "language": "marathi",
-        "chapter": 4,
+        "chapter": 5,
         "glyphs": "टतपभयुूे",
         "count": 8
       },
       {
         "lessonId": "MR-C05-mi-marathi-bolto",
         "language": "marathi",
-        "chapter": 5,
+        "chapter": 6,
         "glyphs": "टठतबलळषे",
         "count": 8
       },
       {
         "lessonId": "MR-C07-asne",
         "language": "marathi",
-        "chapter": 7,
+        "chapter": 8,
         "glyphs": "ंआझतविुू",
         "count": 8
       },
       {
         "lessonId": "MR-C09-ghene",
         "language": "marathi",
-        "chapter": 9,
+        "chapter": 10,
         "glyphs": "खगजतभयळू",
         "count": 8
       },
       {
         "lessonId": "MR-C11-bhau",
         "language": "marathi",
-        "chapter": 11,
+        "chapter": 12,
         "glyphs": "ंआटतबिुृ",
         "count": 8
       },
@@ -62425,21 +62441,21 @@
       {
         "lessonId": "MR-C10-dudh",
         "language": "marathi",
-        "chapter": 10,
+        "chapter": 11,
         "glyphs": "गचणपयुृ",
         "count": 7
       },
       {
         "lessonId": "MR-C11-kutumb",
         "language": "marathi",
-        "chapter": 11,
+        "chapter": 12,
         "glyphs": "णतदधपिू",
         "count": 7
       },
       {
         "lessonId": "MR-C13-hrudaya",
         "language": "marathi",
-        "chapter": 13,
+        "chapter": 14,
         "glyphs": "चजडणळवे",
         "count": 7
       },
@@ -62607,49 +62623,49 @@
       {
         "lessonId": "MR-C02-kaay",
         "language": "marathi",
-        "chapter": 2,
+        "chapter": 3,
         "glyphs": "ंठणयुे",
         "count": 6
       },
       {
         "lessonId": "MR-C03-mi",
         "language": "marathi",
-        "chapter": 3,
+        "chapter": 4,
         "glyphs": "ंअआझबे",
         "count": 6
       },
       {
         "lessonId": "MR-C03-tumhi-kase-aahat",
         "language": "marathi",
-        "chapter": 3,
+        "chapter": 4,
         "glyphs": "आतशुूे",
         "count": 6
       },
       {
         "lessonId": "MR-C05-rahne",
         "language": "marathi",
-        "chapter": 5,
+        "chapter": 6,
         "glyphs": "णतपयुे",
         "count": 6
       },
       {
         "lessonId": "MR-C07-mahit-asne",
         "language": "marathi",
-        "chapter": 7,
+        "chapter": 8,
         "glyphs": "आजठयलि",
         "count": 6
       },
       {
         "lessonId": "MR-C07-pahne",
         "language": "marathi",
-        "chapter": 7,
+        "chapter": 8,
         "glyphs": "घतबयशि",
         "count": 6
       },
       {
         "lessonId": "MR-C10-paani",
         "language": "marathi",
-        "chapter": 10,
+        "chapter": 11,
         "glyphs": "आडयवृे",
         "count": 6
       },
@@ -63020,42 +63036,42 @@
       {
         "lessonId": "MR-C02-aahe",
         "language": "marathi",
-        "chapter": 2,
+        "chapter": 3,
         "glyphs": "अआतिे",
         "count": 5
       },
       {
         "lessonId": "MR-C02-majhe-naav-aahe",
         "language": "marathi",
-        "chapter": 2,
+        "chapter": 3,
         "glyphs": "ंआझवे",
         "count": 5
       },
       {
         "lessonId": "MR-C02-tu-tumhi",
         "language": "marathi",
-        "chapter": 2,
+        "chapter": 3,
         "glyphs": "आतवुू",
         "count": 5
       },
       {
         "lessonId": "MR-C04-bhetu",
         "language": "marathi",
-        "chapter": 4,
+        "chapter": 5,
         "glyphs": "टणभूे",
         "count": 5
       },
       {
         "lessonId": "MR-C05-bolne",
         "language": "marathi",
-        "chapter": 5,
+        "chapter": 6,
         "glyphs": "णतबले",
         "count": 5
       },
       {
         "lessonId": "MR-C08-vachne",
         "language": "marathi",
-        "chapter": 8,
+        "chapter": 9,
         "glyphs": "ठतयलि",
         "count": 5
       },
@@ -63426,28 +63442,28 @@
       {
         "lessonId": "MR-C05-kaam-karne",
         "language": "marathi",
-        "chapter": 5,
+        "chapter": 6,
         "glyphs": "णतृे",
         "count": 4
       },
       {
         "lessonId": "MR-C07-yene",
         "language": "marathi",
-        "chapter": 7,
+        "chapter": 8,
         "glyphs": "आजति",
         "count": 4
       },
       {
         "lessonId": "MR-C09-vicharne",
         "language": "marathi",
-        "chapter": 9,
+        "chapter": 10,
         "glyphs": "छतपू",
         "count": 4
       },
       {
         "lessonId": "MR-C10-chaha",
         "language": "marathi",
-        "chapter": 10,
+        "chapter": 11,
         "glyphs": "णपयृ",
         "count": 4
       },
@@ -63832,21 +63848,21 @@
       {
         "lessonId": "MR-C01-dhanyavad",
         "language": "marathi",
-        "chapter": 1,
+        "chapter": 2,
         "glyphs": "आभे",
         "count": 3
       },
       {
         "lessonId": "MR-C02-majhe",
         "language": "marathi",
-        "chapter": 2,
+        "chapter": 3,
         "glyphs": "ंझव",
         "count": 3
       },
       {
         "lessonId": "MR-C06-number-differences",
         "language": "marathi",
-        "chapter": 6,
+        "chapter": 7,
         "glyphs": "ँणि",
         "count": 3
       },
@@ -64441,21 +64457,21 @@
       {
         "lessonId": "MR-C03-kasa",
         "language": "marathi",
-        "chapter": 3,
+        "chapter": 4,
         "glyphs": "ंश",
         "count": 2
       },
       {
         "lessonId": "MR-C04-punha",
         "language": "marathi",
-        "chapter": 4,
+        "chapter": 5,
         "glyphs": "पु",
         "count": 2
       },
       {
         "lessonId": "MR-R14-mouth-nose",
         "language": "marathi",
-        "chapter": 14,
+        "chapter": 15,
         "glyphs": "खु",
         "count": 2
       },
@@ -65267,56 +65283,56 @@
       {
         "lessonId": "MR-C02-naav",
         "language": "marathi",
-        "chapter": 2,
+        "chapter": 3,
         "glyphs": "व",
         "count": 1
       },
       {
         "lessonId": "MR-C03-kaahi-harkat-nahi",
         "language": "marathi",
-        "chapter": 3,
+        "chapter": 4,
         "glyphs": "त",
         "count": 1
       },
       {
         "lessonId": "MR-C06-numbers-1-5",
         "language": "marathi",
-        "chapter": 6,
+        "chapter": 7,
         "glyphs": "ँ",
         "count": 1
       },
       {
         "lessonId": "MR-C07-jane",
         "language": "marathi",
-        "chapter": 7,
+        "chapter": 8,
         "glyphs": "त",
         "count": 1
       },
       {
         "lessonId": "MR-C08-vichar-karne",
         "language": "marathi",
-        "chapter": 8,
+        "chapter": 9,
         "glyphs": "त",
         "count": 1
       },
       {
         "lessonId": "MR-C11-mitra",
         "language": "marathi",
-        "chapter": 11,
+        "chapter": 12,
         "glyphs": "भ",
         "count": 1
       },
       {
         "lessonId": "MR-R14-eye-ear",
         "language": "marathi",
-        "chapter": 14,
+        "chapter": 15,
         "glyphs": "ल",
         "count": 1
       },
       {
         "lessonId": "MR-R14-numbers",
         "language": "marathi",
-        "chapter": 14,
+        "chapter": 15,
         "glyphs": "द",
         "count": 1
       },
@@ -72971,7 +72987,7 @@
         "atomMeasurementBlindLessons": 26,
         "durationViolations": 0,
         "atomLessonSpikes": 1,
-        "atomChapterSpikes": 1,
+        "atomChapterSpikes": 0,
         "glyphLessonSpikes": 2,
         "scriptSystemSpikes": 0,
         "scriptClosureViolations": 60,
@@ -73013,7 +73029,7 @@
           {
             "language": "marathi",
             "kind": "atom-step",
-            "count": 2,
+            "count": 1,
             "unit": "lesson/chapter spike(s)",
             "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
           },
@@ -73505,8 +73521,8 @@
       },
       {
         "language": "spanish",
-        "lessonCount": 624,
-        "atomMeasurableLessons": 620,
+        "lessonCount": 635,
+        "atomMeasurableLessons": 631,
         "atomMeasurementBlindLessons": 4,
         "durationViolations": 0,
         "atomLessonSpikes": 6,
@@ -73522,13 +73538,13 @@
         "forwardReviews": 0,
         "forwardReferences": 111,
         "atomsTaught": 912,
-        "atomsNeverRevisited": 129,
-        "reinforcementWindowMisses": 2430,
+        "atomsNeverRevisited": 119,
+        "reinforcementWindowMisses": 2438,
         "reinforcementMissesByWindow": {
-          "R1": 221,
-          "R2": 742,
+          "R1": 222,
+          "R2": 741,
           "R3": 771,
-          "R4": 696
+          "R4": 704
         },
         "payoffSurprises": 26,
         "writingPracticeLessons": 11,
@@ -73559,7 +73575,7 @@
           {
             "language": "spanish",
             "kind": "reinforcement",
-            "count": 2430,
+            "count": 2438,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -74216,13 +74232,6 @@
         "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
       },
       {
-        "language": "marathi",
-        "kind": "atom-step",
-        "count": 2,
-        "unit": "lesson/chapter spike(s)",
-        "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
-      },
-      {
         "language": "portuguese",
         "kind": "atom-step",
         "count": 2,
@@ -74245,6 +74254,13 @@
       },
       {
         "language": "malayalam",
+        "kind": "atom-step",
+        "count": 1,
+        "unit": "lesson/chapter spike(s)",
+        "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+      },
+      {
+        "language": "marathi",
         "kind": "atom-step",
         "count": 1,
         "unit": "lesson/chapter spike(s)",
@@ -74358,7 +74374,7 @@
       {
         "language": "spanish",
         "kind": "reinforcement",
-        "count": 2430,
+        "count": 2438,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -75187,11 +75203,6 @@
             "criterion": "vocabulary",
             "detail": "teaches 189 distinct headwords at or below pre-A1, against 300",
             "shortfall": 111
-          },
-          {
-            "criterion": "reinforcement",
-            "detail": "26 atom(s) at or below pre-A1 are revisited fewer than twice (38 etymology hook(s) waived)",
-            "shortfall": 26
           }
         ],
         "vocabulary": 367
@@ -75295,11 +75306,11 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 3585,
-    "voice": 2544,
-    "sight": 577,
+    "totalLessons": 3596,
+    "voice": 2554,
+    "sight": 578,
     "pen": 464,
-    "coreVoice": 3000,
+    "coreVoice": 3010,
     "lessonsWithWritingSegments": 238,
     "drivablePercent": 84,
     "tracks": [
@@ -81510,18 +81521,17 @@
         "pen": 13,
         "coreVoice": 75,
         "drivablePercent": 84,
-        "drivablePrefixTotal": 67,
+        "drivablePrefixTotal": 73,
         "chapters": [
           {
             "language": "marathi",
             "chapter": 1,
-            "lessonCount": 20,
-            "voice": 1,
-            "sight": 6,
+            "lessonCount": 14,
+            "voice": 0,
+            "sight": 1,
             "pen": 13,
-            "coreVoice": 7,
+            "coreVoice": 1,
             "modalities": [
-              "voice",
               "sight",
               "pen"
             ],
@@ -81531,6 +81541,21 @@
           {
             "language": "marathi",
             "chapter": 2,
+            "lessonCount": 6,
+            "voice": 1,
+            "sight": 5,
+            "pen": 0,
+            "coreVoice": 6,
+            "modalities": [
+              "voice",
+              "sight"
+            ],
+            "drivablePrefix": 6,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marathi",
+            "chapter": 3,
             "lessonCount": 9,
             "voice": 4,
             "sight": 5,
@@ -81545,7 +81570,7 @@
           },
           {
             "language": "marathi",
-            "chapter": 3,
+            "chapter": 4,
             "lessonCount": 6,
             "voice": 4,
             "sight": 2,
@@ -81560,7 +81585,7 @@
           },
           {
             "language": "marathi",
-            "chapter": 4,
+            "chapter": 5,
             "lessonCount": 6,
             "voice": 2,
             "sight": 4,
@@ -81575,7 +81600,7 @@
           },
           {
             "language": "marathi",
-            "chapter": 5,
+            "chapter": 6,
             "lessonCount": 5,
             "voice": 2,
             "sight": 3,
@@ -81590,7 +81615,7 @@
           },
           {
             "language": "marathi",
-            "chapter": 6,
+            "chapter": 7,
             "lessonCount": 2,
             "voice": 2,
             "sight": 0,
@@ -81604,7 +81629,7 @@
           },
           {
             "language": "marathi",
-            "chapter": 7,
+            "chapter": 8,
             "lessonCount": 6,
             "voice": 6,
             "sight": 0,
@@ -81614,20 +81639,6 @@
               "voice"
             ],
             "drivablePrefix": 6,
-            "firstNonVoiceLesson": null
-          },
-          {
-            "language": "marathi",
-            "chapter": 8,
-            "lessonCount": 4,
-            "voice": 0,
-            "sight": 4,
-            "pen": 0,
-            "coreVoice": 4,
-            "modalities": [
-              "sight"
-            ],
-            "drivablePrefix": 4,
             "firstNonVoiceLesson": null
           },
           {
@@ -81661,6 +81672,20 @@
           {
             "language": "marathi",
             "chapter": 11,
+            "lessonCount": 4,
+            "voice": 0,
+            "sight": 4,
+            "pen": 0,
+            "coreVoice": 4,
+            "modalities": [
+              "sight"
+            ],
+            "drivablePrefix": 4,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marathi",
+            "chapter": 12,
             "lessonCount": 6,
             "voice": 2,
             "sight": 4,
@@ -81675,7 +81700,7 @@
           },
           {
             "language": "marathi",
-            "chapter": 12,
+            "chapter": 13,
             "lessonCount": 4,
             "voice": 0,
             "sight": 4,
@@ -81689,7 +81714,7 @@
           },
           {
             "language": "marathi",
-            "chapter": 13,
+            "chapter": 14,
             "lessonCount": 1,
             "voice": 0,
             "sight": 1,
@@ -81703,7 +81728,7 @@
           },
           {
             "language": "marathi",
-            "chapter": 14,
+            "chapter": 15,
             "lessonCount": 12,
             "voice": 12,
             "sight": 0,
@@ -83673,13 +83698,13 @@
       },
       {
         "language": "spanish",
-        "lessonCount": 624,
-        "voice": 568,
-        "sight": 45,
+        "lessonCount": 635,
+        "voice": 578,
+        "sight": 46,
         "pen": 11,
-        "coreVoice": 568,
+        "coreVoice": 578,
         "drivablePercent": 91,
-        "drivablePrefixTotal": 542,
+        "drivablePrefixTotal": 551,
         "chapters": [
           {
             "language": "spanish",
@@ -88024,6 +88049,35 @@
             ],
             "drivablePrefix": 5,
             "firstNonVoiceLesson": null
+          },
+          {
+            "language": "spanish",
+            "chapter": 318,
+            "lessonCount": 4,
+            "voice": 4,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 4,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 4,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "spanish",
+            "chapter": 319,
+            "lessonCount": 7,
+            "voice": 6,
+            "sight": 1,
+            "pen": 0,
+            "coreVoice": 6,
+            "modalities": [
+              "voice",
+              "sight"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": "ES-C319-repaso-respuestas"
           }
         ]
       },
@@ -90792,11 +90846,11 @@
   "rootLedger": {
     "roots": 3123,
     "underspent": 2999,
-    "neverSpent": 2045,
+    "neverSpent": 2043,
     "payoffDistribution": {
-      "0": 2045,
+      "0": 2043,
       "1": 666,
-      "2": 288,
+      "2": 290,
       "3": 69,
       "4": 22,
       "5": 12,
@@ -90809,7 +90863,7 @@
     "underspentPercent": 96
   },
   "infoDump": {
-    "lessons": 3585,
+    "lessons": 3596,
     "lessonsWithFindings": 121,
     "ruleStatements": 30,
     "paradigmTables": 95,
@@ -90819,10 +90873,10 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 53,
-    "lessonsUsingTerms": 3444,
-    "usesBeforeIntroduction": 12349,
-    "technicalUsesBeforeIntroduction": 3210,
-    "technicalLessons": 1680,
+    "lessonsUsingTerms": 3455,
+    "usesBeforeIntroduction": 12396,
+    "technicalUsesBeforeIntroduction": 3226,
+    "technicalLessons": 1689,
     "worstTerms": [
       {
         "term": "verb",
@@ -90830,7 +90884,7 @@
       },
       {
         "term": "noun",
-        "lessons": 538
+        "lessons": 544
       },
       {
         "term": "tense",
@@ -90842,21 +90896,21 @@
       },
       {
         "term": "adjective",
-        "lessons": 145
+        "lessons": 146
       },
       {
         "term": "pronoun",
-        "lessons": 142
+        "lessons": 144
       }
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 3585,
+    "lessonsScanned": 3596,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
   "glyphCoverage": {
-    "filesScanned": 1162,
+    "filesScanned": 1165,
     "mainCharacters": 126,
     "scriptCharacters": 681,
     "gaps": 0
