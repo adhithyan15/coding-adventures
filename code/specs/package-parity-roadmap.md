@@ -5458,6 +5458,34 @@ acyclic. Security review finds no new dependency, credential, network,
 process, capability, or production-authority surface; the pre-existing AOF
 filesystem authority remains isolated in its separately blocked owner.
 
+### Post-#12520 refresh and Wemo authority registration
+
+Final head `1df0eee904d1828a9b4858130d843fb15e331b73` completed all 30
+reported checks with 24 successes, five expected skips, one neutral CodeQL
+result, and no failures or pending work. GitHub reported PR #12520 clean and
+mergeable; the loop requested squash auto-merge, and GitHub merged it as
+`e5eb4be0c234456a3a5c0ae627ed88a723b066b6` at 2026-08-24T07:22:29Z.
+
+The collision-checked schema-3 inventory at that exact merged main remains
+identity-neutral: 15 established lanes, 1,369 implementation identities, 4,562
+package slots, 175 high-consensus identities with 276 gaps, 122 identities in
+five to nine lanes with 926 gaps, 166 identities in two to four lanes with
+2,087 gaps, and 906 singletons with 12,684 gaps. There are 717 Rust
+singletons, zero collisions, and zero unknown buckets. OCaml remains correctly
+emerging with no packages; no package marker, identity, or slot changed. The
+live uv audit now reports the expected nine fronts across seven components.
+
+The same audit found one newly unowned privileged contract introduced by
+merged Wemo PR #12515. The Rust Wemo host now performs recognized outlet and
+switch mutations with idempotent pre-read/set/readback execution, concrete
+SSDP/TCP/HTTP endpoint policy, catalog-command capability, CLI effects, and
+runtime mutation, but the crate has no `required_capabilities.json`. New owner
+`smart-home-wemo-upnp-native-authority-review` records that excluded work as
+selection-blocked behind the portable Wemo core and the shared Rust network-
+substrate capability review. The existing portable owner now includes
+recognized-model, endpoint-policy, and pre-read/readback fixtures without
+making native network or CLI authority portable.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
