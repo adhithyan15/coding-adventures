@@ -3055,6 +3055,35 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: devanagariAlphabetSource("ज"),
   },
+  // Opiaterein's animation joins the descending left stem, clockwise lower
+  // bowl, and ascending inner right stem in one run, then separately descends
+  // the outer right stem and finishes the headline: three strokes, two lifts.
+  [ductusKey("devanagari", "ण")]: {
+    script: "devanagari",
+    glyph: "ण",
+    strokes: [
+      { segments: [{ label: "descend the left stem, curve around the bowl, and rise along the inner stem", path: [
+        { x: 120, y: 551 }, { x: 120, y: 480 }, { x: 120, y: 410 },
+        { x: 120, y: 355 }, { x: 128, y: 310 }, { x: 145, y: 270 },
+        { x: 170, y: 238 }, { x: 205, y: 215 }, { x: 245, y: 202 },
+        { x: 285, y: 202 }, { x: 325, y: 215 }, { x: 360, y: 238 },
+        { x: 385, y: 270 }, { x: 400, y: 310 }, { x: 408, y: 355 },
+        { x: 408, y: 410 }, { x: 408, y: 480 }, { x: 408, y: 551 },
+      ] }] },
+      { segments: [{ label: "lift, then descend the outer right stem", path: [
+        { x: 600, y: 551 }, { x: 600, y: 475 }, { x: 600, y: 395 },
+        { x: 600, y: 315 }, { x: 600, y: 235 }, { x: 600, y: 155 },
+        { x: 600, y: 75 }, { x: 600, y: 5 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the shirorekha left-to-right", path: [
+        { x: 5, y: 585 }, { x: 85, y: 585 }, { x: 165, y: 585 },
+        { x: 245, y: 585 }, { x: 325, y: 585 }, { x: 405, y: 585 },
+        { x: 485, y: 585 }, { x: 585, y: 585 }, { x: 670, y: 585 },
+        { x: 730, y: 585 },
+      ] }] },
+    ],
+    source: devanagariAlphabetSource("ण"),
+  },
   // Opiaterein's animation sweeps the shoulder right-to-left and carries the
   // same run down around the open body, then separately descends the right stem
   // and finishes the headline. The Central Hindi Directorate deskbook shows
