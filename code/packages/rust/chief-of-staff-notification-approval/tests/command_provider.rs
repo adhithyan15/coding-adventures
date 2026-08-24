@@ -162,14 +162,22 @@ fn bulk_request(request_id: &str) -> TrustRequest {
 /// parent's environment leaked. Uninstrumented production builds never link
 /// that runtime and never contain the variable.
 ///
-/// Tolerating this one exact name keeps the security assertion intact: any
-/// genuinely inherited variable still fails the check.
-fn is_expected_helper_variable(name: &OsStr) -> bool {
-    name == "CHIEF_APPROVAL_PROTOCOL" || name == "__LLVM_PROFILE_RT_INIT_ONCE"
+/// The tolerance is matched on name AND value, not name alone. compiler-rt sets
+/// the guard with `setenv(..., overwrite=0)`, so a variable of that name that
+/// was genuinely INHERITED would survive into the child with the parent's value
+/// intact -- making a name-only allowlist a one-variable smuggling channel. The
+/// value the child sets on itself is a fixed sentinel equal to its own name, so
+/// pinning it costs nothing and closes that hole.
+///
+/// If a future compiler-rt changes the sentinel, this assertion fails loudly
+/// rather than silently widening; re-pin it deliberately.
+fn is_expected_helper_variable(name: &OsStr, value: &OsStr) -> bool {
+    name == "CHIEF_APPROVAL_PROTOCOL"
+        || (name == "__LLVM_PROFILE_RT_INIT_ONCE" && value == "__LLVM_PROFILE_RT_INIT_ONCE")
 }
 
 fn helper_main() {
-    assert!(env::vars_os().all(|(name, _)| is_expected_helper_variable(&name)));
+    assert!(env::vars_os().all(|(name, value)| is_expected_helper_variable(&name, &value)));
     let stdin = io::stdin();
     let mut lines = stdin.lock().lines();
     assert_eq!(
