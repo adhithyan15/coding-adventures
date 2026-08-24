@@ -5297,8 +5297,10 @@ suites pass 2, 13, 10, and 7 tests. The Go build tool passes tests, vet, and
 trimpath compilation.
 
 The exact build-tool dry plan evaluates 45 Starlark files and 494 Python
-packages, selecting the expected one changed and eight affected packages. Its
-real affected execution builds `hash-functions`, `bloom-filter`, `hash-map`,
+packages, selecting the expected one changed and eight affected packages. With
+the uv 0.11.28 executable directory on `PATH` and explicit `UV_PYTHON=3.13`
+plus `UV_VENV_CLEAR=1` only for separately owned legacy fronts, the real
+affected execution builds `hash-functions`, `bloom-filter`, `hash-map`,
 `hyperloglog`, `in-memory-data-store-protocol`, and `resp-protocol`; it then
 reproduces the unchanged engine front's separately owned Windows-invalid
 quoted editable requirement and dependency-skips the composed store. That
