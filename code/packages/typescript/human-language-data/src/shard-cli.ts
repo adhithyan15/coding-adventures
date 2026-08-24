@@ -68,6 +68,7 @@ import { lstatSync, mkdirSync, readFileSync, realpathSync, rmSync, writeFileSync
 import { basename, dirname, isAbsolute, join, normalize, relative as pathRelative, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { defaultCurriculumRoot } from "./loader.js";
+import { assertRelativeManifestPath } from "./manifest-path.js";
 import {
   META_SHARD,
   assertRealFile,
@@ -218,17 +219,25 @@ function statIfPresent(path: string): ReturnType<typeof lstatSync> | undefined {
  * contains no leading `..` and still escapes.
  */
 export function safeLedgerPath(root: string, relative: string): string {
-  // Absolute rejected up front, because on Windows `path.relative` returns the
-  // TARGET unchanged when the two paths sit on different roots —
+  // Non-relative rejected up front, because on Windows `path.relative` returns
+  // the TARGET unchanged when the two paths sit on different roots —
   // `relative('C:\\a', 'D:\\b')` is `'D:\\b'`, which is neither `".."` nor
-  // `"../"`-prefixed and so passes the containment test below. Not reachable
-  // today (`relative` always comes from the hardcoded `SHARD_PLANS`), but the
-  // docstring promises a defence against a command-line path, and a comment
-  // claiming a guard the code does not have is exactly what produced the last
-  // two findings in this file.
-  if (isAbsolute(relative)) {
-    throw new Error(`shard-cli: ledger path must be relative to the curriculum root, got '${relative}'`);
-  }
+  // `"../"`-prefixed and so passes the containment test below.
+  //
+  // `isAbsolute` alone cannot express that rule, because it is PLATFORM-
+  // DEPENDENT: on POSIX `D:\evil\x.json` is an ordinary relative filename, so
+  // the check silently does nothing and the value falls through to a lexical
+  // containment test it passes. That is not hypothetical — asserting this guard
+  // unconditionally is what turned this file red on ubuntu and macos while it
+  // was green on Windows.
+  //
+  // `assertRelativeManifestPath` applies the drive-letter and UNC patterns on
+  // EVERY platform, so the rule a ledger path must satisfy is the same wherever
+  // it is read, and the six generator CLIs already share it.
+  assertRelativeManifestPath(
+    relative,
+    `shard-cli: ledger path must be relative to the curriculum root, got '${relative}'`,
+  );
   const output = resolve(root, relative);
   const fromRoot = normalize(pathRelative(resolve(root), output)).replaceAll("\\", "/");
   if (
