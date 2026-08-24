@@ -2815,6 +2815,37 @@ https://openconnectivity.org/wp-content/uploads/2015/11/UPnP-av-RenderingControl
 This broadens common local multi-room audio telemetry and low-risk control while
 preserving explicit endpoint, authorization, lifetime, and secret boundaries.
 
+## Current Wemo UPnP Switch Control Breadth Slice
+
+The next breadth slice applies the available D23 switch command surface to the
+existing Wemo UPnP integration without opening its broader event, rule, or
+energy services:
+
+- Explicit setup accepts only credential-free HTTP URLs whose hosts are
+  private, link-local, or loopback IP literals. Device-advertised `basicevent`
+  control URLs must remain on that exact authority, and TCP connects directly
+  to the validated address without DNS resolution.
+- Existing SSDP, setup-description, and `GetBinaryState` inspection remains the
+  source of normalized switch/light state. Recognized light-switch, dimmer,
+  switch, Insight, outlet, socket, and plug models expose low-risk D23 on/off
+  control; unknown `basicevent` models remain read-only.
+- D23 command authorization runs before native I/O. Each requested state is
+  idempotent: the integration reads the exact current value, sends the fixed
+  `SetBinaryState` action only when needed, then requires a fresh
+  `GetBinaryState` response to prove the requested postcondition.
+- The runtime accepts no credential and exposes no arbitrary SOAP action, GENA
+  subscription, energy telemetry, rule mutation, pairing, cloud control,
+  public endpoint, DNS resolution, or long-lived connection.
+
+Belkin documents local Wemo UPnP discovery and local web-service ports, and its
+official support notice confirms the Wemo cloud service ended in January 2026:
+https://www.belkin.com/hk/en/support-article/?articleNum=54237 and
+https://www.belkin.com/support-article/?articleNum=335419.
+
+This keeps already-configured local Wemo switches and outlets useful after the
+vendor cloud shutdown while preserving explicit endpoint, authorization,
+lifetime, and model-recognition boundaries.
+
 The protocol- and vendor-specific backlog below remains valid after these
 breadth steps:
 

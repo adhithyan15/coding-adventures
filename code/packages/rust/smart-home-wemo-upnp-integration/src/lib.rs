@@ -1,4 +1,4 @@
-//! Wemo UPnP discovery, inspection, and light-switch control for D23.
+//! Wemo UPnP discovery, inspection, and verified switch control for D23.
 
 #![forbid(unsafe_code)]
 
@@ -17,8 +17,8 @@ use smart_home_discovery::{
 use smart_home_runtime::{RuntimeCommandToolRequest, RuntimeError, SmartHomeRuntime};
 use std::collections::{BTreeMap, BTreeSet};
 use std::fmt;
-use std::io::{self, Read, Write};
-use std::net::{SocketAddr, TcpStream, ToSocketAddrs};
+use std::io::{Read, Write};
+use std::net::{IpAddr, Ipv6Addr, SocketAddr, TcpStream};
 use std::time::Duration;
 use udp_client::{send_to_and_collect, UdpDiscoveryEndpoint, UdpError, UdpOptions};
 use url_parser::{Url, UrlError};
@@ -41,6 +41,7 @@ pub enum WemoError {
     ResponseTooLarge { limit: usize },
     TruncatedBody { expected: usize, actual: usize },
     MissingBasicEventService,
+    BinaryStatePostcondition { expected: bool, actual: bool },
     UnsupportedCommand(CommandType),
     UnknownEntity(EntityId),
     Runtime(RuntimeError),
@@ -66,6 +67,10 @@ impl fmt::Display for WemoError {
             Self::MissingBasicEventService => {
                 formatter.write_str("Wemo description has no basicevent service")
             }
+            Self::BinaryStatePostcondition { expected, actual } => write!(
+                formatter,
+                "Wemo binary-state postcondition failed: expected {expected}, got {actual}"
+            ),
             Self::UnsupportedCommand(command) => {
                 write!(formatter, "Wemo integration does not support {command:?}")
             }
@@ -116,6 +121,7 @@ impl WemoConfig {
                 "setup URL must be credential-free local HTTP with a path".to_string(),
             ));
         }
+        validate_local_ip_url(&parsed, "setup URL")?;
         Ok(Self {
             bridge_id,
             setup_url,
@@ -152,6 +158,14 @@ impl WemoDeviceDescription {
     pub fn supports_light_commands(&self) -> bool {
         let model = self.model_name.to_ascii_lowercase();
         model.contains("lightswitch") || model.contains("dimmer")
+    }
+
+    pub fn supports_binary_commands(&self) -> bool {
+        let model = self.model_name.to_ascii_lowercase();
+        self.supports_light_commands()
+            || ["switch", "insight", "outlet", "socket", "plug"]
+                .iter()
+                .any(|token| model.contains(token))
     }
 }
 
@@ -373,30 +387,48 @@ impl<T: WemoTransport> WemoClient<T> {
 
     pub fn inspect(&mut self) -> Result<WemoSnapshot, WemoError> {
         let description = parse_device_description(&self.transport.get(&self.config.setup_url)?)?;
-        let control_url =
-            resolve_control_url(&self.config.setup_url, &description.basic_event.control_url)?;
-        let response = self.soap_action(&control_url, "GetBinaryState", None)?;
-        let on = parse_binary_state_response(&response)?;
         self.description = Some(description.clone());
+        let on = self.binary_state()?;
         Ok(WemoSnapshot {
             device: description,
             on,
         })
     }
 
+    pub fn binary_state(&mut self) -> Result<bool, WemoError> {
+        let control_url = self.basic_event_control_url()?;
+        let response = self.soap_action(&control_url, "GetBinaryState", None)?;
+        parse_binary_state_response(&response)
+    }
+
     pub fn set_binary_state(&mut self, on: bool) -> Result<bool, WemoError> {
-        let description = self
-            .description
-            .as_ref()
-            .ok_or_else(|| WemoError::Validation("device must be inspected first".to_string()))?;
-        let control_url =
-            resolve_control_url(&self.config.setup_url, &description.basic_event.control_url)?;
+        let current = self.binary_state()?;
+        if current == on {
+            return Ok(current);
+        }
+        let control_url = self.basic_event_control_url()?;
         let response = self.soap_action(
             &control_url,
             "SetBinaryState",
             Some(if on { "1" } else { "0" }),
         )?;
-        parse_binary_state_response(&response)
+        parse_binary_state_response(&response)?;
+        let actual = self.binary_state()?;
+        if actual != on {
+            return Err(WemoError::BinaryStatePostcondition {
+                expected: on,
+                actual,
+            });
+        }
+        Ok(actual)
+    }
+
+    fn basic_event_control_url(&self) -> Result<String, WemoError> {
+        let description = self
+            .description
+            .as_ref()
+            .ok_or_else(|| WemoError::Validation("device must be inspected first".to_string()))?;
+        resolve_control_url(&self.config.setup_url, &description.basic_event.control_url)
     }
 
     fn soap_action(
@@ -450,7 +482,7 @@ impl<T: WemoTransport> WemoRuntimeIntegration<T> {
         }
         let snapshot = self.client.inspect()?;
         let entity_id = install_snapshot(runtime, &self.client.config, &snapshot, observed_at_ms)?;
-        if snapshot.device.supports_light_commands() {
+        if snapshot.device.supports_binary_commands() {
             self.controllable_entities.insert(entity_id.clone());
         }
         Ok(entity_id)
@@ -572,18 +604,24 @@ pub fn install_snapshot(
         health: Health::Online,
         metadata: Vec::new(),
     })?;
-    let capability = if is_light {
-        Capability::new(
-            CapabilityId::trusted("light.on_off"),
-            CapabilityMode::ObserveAndCommand,
-            ValueKind::Boolean,
-        )
+    let supports_binary_commands = snapshot.device.supports_binary_commands();
+    let capabilities = if is_light {
+        vec![Capability::light_on_off()]
     } else {
-        Capability::new(
+        let mode = if supports_binary_commands {
+            CapabilityMode::ObserveAndCommand
+        } else {
+            CapabilityMode::Observe
+        };
+        let mut capabilities = vec![Capability::new(
             CapabilityId::trusted("switch.binary_state"),
-            CapabilityMode::Observe,
+            mode,
             ValueKind::Boolean,
-        )
+        )];
+        if supports_binary_commands {
+            capabilities.push(Capability::light_on_off());
+        }
+        capabilities
     };
     runtime.upsert_entity(Entity {
         entity_id: entity_id.clone(),
@@ -594,7 +632,7 @@ pub fn install_snapshot(
             EntityKind::Switch
         },
         name: snapshot.device.friendly_name.clone(),
-        capabilities: vec![capability],
+        capabilities,
         state: Some(StateSnapshot {
             entity_id: entity_id.clone(),
             value: Value::Bool(snapshot.on),
@@ -608,6 +646,8 @@ pub fn install_snapshot(
             "wemo.control_surface",
             if is_light {
                 "light"
+            } else if supports_binary_commands {
+                "switch"
             } else {
                 "read_only_switch"
             },
@@ -657,9 +697,6 @@ fn collect_descendants<'a>(root: &'a XmlElement, name: &str, output: &mut Vec<&'
 }
 
 fn resolve_control_url(setup_url: &str, control_url: &str) -> Result<String, WemoError> {
-    if control_url.starts_with("http://") {
-        return Ok(control_url.to_string());
-    }
     let setup = Url::parse(setup_url)?;
     let host = setup
         .host
@@ -668,13 +705,75 @@ fn resolve_control_url(setup_url: &str, control_url: &str) -> Result<String, Wem
     let authority = setup
         .port
         .map_or_else(|| host.to_string(), |port| format!("{host}:{port}"));
-    let path = if control_url.starts_with('/') {
+    let resolved = if control_url.starts_with("http://") {
         control_url.to_string()
     } else {
-        let directory = setup.path.rsplit_once('/').map_or("/", |(dir, _)| dir);
-        format!("{directory}/{control_url}")
+        let path = if control_url.starts_with('/') {
+            control_url.to_string()
+        } else {
+            let directory = setup.path.rsplit_once('/').map_or("/", |(dir, _)| dir);
+            format!("{directory}/{control_url}")
+        };
+        format!("http://{authority}{path}")
     };
-    Ok(format!("http://{authority}{path}"))
+    let endpoint = Url::parse(&resolved)?;
+    validate_local_ip_url(&endpoint, "control URL")?;
+    if endpoint.host != setup.host || endpoint.effective_port() != setup.effective_port() {
+        return Err(WemoError::Validation(
+            "control URL must share the configured setup authority".to_string(),
+        ));
+    }
+    Ok(resolved)
+}
+
+fn validate_local_ip_url(url: &Url, label: &str) -> Result<(), WemoError> {
+    if url.scheme != "http"
+        || url.userinfo.is_some()
+        || url.query.is_some()
+        || url.fragment.is_some()
+        || url.path.is_empty()
+        || url.effective_port() == Some(0)
+    {
+        return Err(WemoError::Validation(format!(
+            "{label} must be credential-free local HTTP with a path"
+        )));
+    }
+    let host = url
+        .host
+        .as_deref()
+        .ok_or_else(|| WemoError::Validation(format!("{label} is missing a host")))?;
+    let address = strip_ipv6_brackets(host)
+        .parse::<IpAddr>()
+        .map_err(|_| WemoError::Validation(format!("{label} host must be an IP literal")))?;
+    if !is_local_ip(address) {
+        return Err(WemoError::Validation(format!(
+            "{label} host must be private, link-local, or loopback"
+        )));
+    }
+    Ok(())
+}
+
+fn is_local_ip(address: IpAddr) -> bool {
+    match address {
+        IpAddr::V4(address) => {
+            address.is_private() || address.is_link_local() || address.is_loopback()
+        }
+        IpAddr::V6(address) => {
+            address.is_loopback()
+                || address.is_unicast_link_local()
+                || is_unique_local_ipv6(address)
+        }
+    }
+}
+
+fn is_unique_local_ipv6(address: Ipv6Addr) -> bool {
+    address.segments()[0] & 0xfe00 == 0xfc00
+}
+
+fn strip_ipv6_brackets(host: &str) -> &str {
+    host.strip_prefix('[')
+        .and_then(|host| host.strip_suffix(']'))
+        .unwrap_or(host)
 }
 
 fn protocol_identifier(kind: &str, value: &str) -> Result<ProtocolIdentifier, WemoError> {
@@ -729,35 +828,23 @@ fn encode_request(
 }
 
 fn connect_tcp(host: &str, port: u16, timeout: Duration) -> Result<TcpStream, WemoError> {
-    let addresses = (host, port)
-        .to_socket_addrs()
-        .map_err(|error| WemoError::Io(error.to_string()))?
-        .collect::<Vec<_>>();
-    let mut last_error = None;
-    for address in addresses {
-        match TcpStream::connect_timeout(&address, timeout) {
-            Ok(stream) => {
-                stream
-                    .set_read_timeout(Some(timeout))
-                    .map_err(|error| WemoError::Io(error.to_string()))?;
-                stream
-                    .set_write_timeout(Some(timeout))
-                    .map_err(|error| WemoError::Io(error.to_string()))?;
-                return Ok(stream);
-            }
-            Err(error) => last_error = Some(error),
-        }
+    let address = strip_ipv6_brackets(host)
+        .parse::<IpAddr>()
+        .map_err(|_| WemoError::Validation("endpoint host must be an IP literal".to_string()))?;
+    if !is_local_ip(address) {
+        return Err(WemoError::Validation(
+            "endpoint host must be private, link-local, or loopback".to_string(),
+        ));
     }
-    Err(WemoError::Io(
-        last_error
-            .unwrap_or_else(|| {
-                io::Error::new(
-                    io::ErrorKind::AddrNotAvailable,
-                    "host resolved to no addresses",
-                )
-            })
-            .to_string(),
-    ))
+    let stream = TcpStream::connect_timeout(&SocketAddr::new(address, port), timeout)
+        .map_err(|error| WemoError::Io(error.to_string()))?;
+    stream
+        .set_read_timeout(Some(timeout))
+        .map_err(|error| WemoError::Io(error.to_string()))?;
+    stream
+        .set_write_timeout(Some(timeout))
+        .map_err(|error| WemoError::Io(error.to_string()))?;
+    Ok(stream)
 }
 
 fn read_bounded(reader: &mut dyn Read, maximum: usize) -> Result<Vec<u8>, WemoError> {
@@ -813,14 +900,58 @@ fn decode_http_response(bytes: &[u8], maximum: usize) -> Result<Vec<u8>, WemoErr
 mod tests {
     use super::*;
     use smart_home_core::{CapabilityGrant, CapabilityGrantId, PrivilegeTier};
+    use std::collections::VecDeque;
     use std::net::{TcpListener, UdpSocket};
     use std::sync::atomic::{AtomicUsize, Ordering};
     use std::sync::{Arc, Mutex};
     use std::thread;
 
     const SETUP: &str = r#"<root xmlns="urn:Belkin:device-1-0"><device><deviceType>urn:Belkin:device:controllee:1</deviceType><friendlyName>Hall Light</friendlyName><modelName>LightSwitch</modelName><modelNumber>F7C030</modelNumber><firmwareVersion>WeMo_WW_2.00.11420.PVT</firmwareVersion><serialNumber>221423K0101769</serialNumber><UDN>uuid:Socket-1_0-221423K0101769</UDN><serviceList><service><serviceType>urn:Belkin:service:basicevent:1</serviceType><serviceId>urn:Belkin:serviceId:basicevent1</serviceId><controlURL>/upnp/control/basicevent1</controlURL><eventSubURL>/upnp/event/basicevent1</eventSubURL><SCPDURL>/eventservice.xml</SCPDURL></service></serviceList></device></root>"#;
+    const OUTLET_SETUP: &str = r#"<root xmlns="urn:Belkin:device-1-0"><device><deviceType>urn:Belkin:device:controllee:1</deviceType><friendlyName>Desk Plug</friendlyName><modelName>Socket</modelName><modelNumber>F7C027</modelNumber><firmwareVersion>WeMo_WW_2.00.11420.PVT</firmwareVersion><serialNumber>221423K0101770</serialNumber><UDN>uuid:Socket-1_0-221423K0101770</UDN><serviceList><service><serviceType>urn:Belkin:service:basicevent:1</serviceType><serviceId>urn:Belkin:serviceId:basicevent1</serviceId><controlURL>/upnp/control/basicevent1</controlURL><eventSubURL>/upnp/event/basicevent1</eventSubURL><SCPDURL>/eventservice.xml</SCPDURL></service></serviceList></device></root>"#;
     const GET_STATE: &str = r#"<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><u:GetBinaryStateResponse xmlns:u="urn:Belkin:service:basicevent:1"><BinaryState>1|1492338954|0</BinaryState></u:GetBinaryStateResponse></s:Body></s:Envelope>"#;
+    const GET_OFF: &str = r#"<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><u:GetBinaryStateResponse xmlns:u="urn:Belkin:service:basicevent:1"><BinaryState>0</BinaryState></u:GetBinaryStateResponse></s:Body></s:Envelope>"#;
     const SET_STATE: &str = r#"<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><u:SetBinaryStateResponse xmlns:u="urn:Belkin:service:basicevent:1"><BinaryState>0</BinaryState></u:SetBinaryStateResponse></s:Body></s:Envelope>"#;
+
+    struct ScriptedTransport {
+        state_responses: VecDeque<Vec<u8>>,
+        actions: Arc<Mutex<Vec<String>>>,
+    }
+
+    impl WemoTransport for ScriptedTransport {
+        fn get(&mut self, _endpoint: &str) -> Result<Vec<u8>, WemoError> {
+            Ok(OUTLET_SETUP.as_bytes().to_vec())
+        }
+
+        fn soap(
+            &mut self,
+            _endpoint: &str,
+            soap_action: &str,
+            _body: &[u8],
+        ) -> Result<Vec<u8>, WemoError> {
+            self.actions.lock().unwrap().push(soap_action.to_string());
+            if soap_action.contains("GetBinaryState") {
+                return self.state_responses.pop_front().ok_or_else(|| {
+                    WemoError::Validation("missing scripted binary state".to_string())
+                });
+            }
+            Ok(SET_STATE.as_bytes().to_vec())
+        }
+    }
+
+    fn runtime_with_grant(principal: &AgentId) -> SmartHomeRuntime {
+        let mut runtime = SmartHomeRuntime::new();
+        let _ = runtime.registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_all_smart_home(
+                CapabilityGrantId::trusted("grant:wemo-test"),
+                principal.clone(),
+                PrivilegeTier::LowRisk,
+                "test",
+                1,
+            )
+            .with_expiry(100),
+        );
+        runtime
+    }
 
     #[test]
     fn parses_ssdp_description_and_state() {
@@ -832,7 +963,34 @@ mod tests {
         assert_eq!(candidate.location, "http://127.0.0.1:49153/setup.xml");
         assert_eq!(description.friendly_name, "Hall Light");
         assert!(description.supports_light_commands());
+        assert!(description.supports_binary_commands());
+        let unknown = parse_device_description(
+            SETUP
+                .replace(
+                    "<modelName>LightSwitch</modelName>",
+                    "<modelName>Motion</modelName>",
+                )
+                .as_bytes(),
+        )
+        .unwrap();
+        assert!(!unknown.supports_binary_commands());
         assert!(parse_binary_state_response(GET_STATE.as_bytes()).unwrap());
+    }
+
+    #[test]
+    fn configuration_rejects_dns_public_and_cross_authority_urls() {
+        for endpoint in [
+            "http://wemo.local:49153/setup.xml",
+            "http://8.8.8.8:49153/setup.xml",
+            "http://127.0.0.1:0/setup.xml",
+        ] {
+            assert!(WemoConfig::new(BridgeId::trusted("wemo:test"), endpoint).is_err());
+        }
+        assert!(resolve_control_url(
+            "http://127.0.0.1:49153/setup.xml",
+            "http://127.0.0.2:49153/upnp/control/basicevent1"
+        )
+        .is_err());
     }
 
     #[test]
@@ -873,13 +1031,99 @@ mod tests {
     }
 
     #[test]
+    fn generic_outlet_control_is_idempotent_and_uses_no_toggle_when_already_on() {
+        let actions = Arc::new(Mutex::new(Vec::new()));
+        let transport = ScriptedTransport {
+            state_responses: VecDeque::from([
+                GET_STATE.as_bytes().to_vec(),
+                GET_STATE.as_bytes().to_vec(),
+            ]),
+            actions: Arc::clone(&actions),
+        };
+        let config = WemoConfig::new(
+            BridgeId::trusted("wemo:test"),
+            "http://127.0.0.1:49153/setup.xml",
+        )
+        .unwrap();
+        let mut integration = WemoRuntimeIntegration::new(WemoClient::new(config, transport));
+        let principal = AgentId::trusted("agent:wemo-test");
+        let mut runtime = runtime_with_grant(&principal);
+        let entity_id = integration
+            .inspect_and_install_authorized(&mut runtime, principal.clone(), 10)
+            .unwrap();
+        let entity = runtime.registry().entity(&entity_id).unwrap();
+        assert_eq!(entity.kind, EntityKind::Switch);
+        assert!(entity.capabilities.iter().any(|capability| {
+            capability.capability_id == CapabilityId::trusted("switch.binary_state")
+                && capability.mode == CapabilityMode::ObserveAndCommand
+        }));
+
+        integration
+            .dispatch_command(
+                &mut runtime,
+                principal,
+                RuntimeCommandToolRequest::new(entity_id, CommandType::TurnOn, Value::Null),
+                11,
+            )
+            .unwrap();
+        let actions = actions.lock().unwrap();
+        assert_eq!(actions.len(), 2);
+        assert!(actions
+            .iter()
+            .all(|action| action.contains("GetBinaryState")));
+    }
+
+    #[test]
+    fn command_fails_closed_when_binary_state_readback_mismatches() {
+        let actions = Arc::new(Mutex::new(Vec::new()));
+        let transport = ScriptedTransport {
+            state_responses: VecDeque::from([
+                GET_STATE.as_bytes().to_vec(),
+                GET_STATE.as_bytes().to_vec(),
+                GET_STATE.as_bytes().to_vec(),
+            ]),
+            actions: Arc::clone(&actions),
+        };
+        let config = WemoConfig::new(
+            BridgeId::trusted("wemo:test"),
+            "http://127.0.0.1:49153/setup.xml",
+        )
+        .unwrap();
+        let mut integration = WemoRuntimeIntegration::new(WemoClient::new(config, transport));
+        let principal = AgentId::trusted("agent:wemo-test");
+        let mut runtime = runtime_with_grant(&principal);
+        let entity_id = integration
+            .inspect_and_install_authorized(&mut runtime, principal.clone(), 10)
+            .unwrap();
+        let error = integration
+            .dispatch_command(
+                &mut runtime,
+                principal,
+                RuntimeCommandToolRequest::new(entity_id, CommandType::TurnOff, Value::Null),
+                11,
+            )
+            .unwrap_err();
+        assert!(matches!(
+            error,
+            WemoError::BinaryStatePostcondition {
+                expected: false,
+                actual: true
+            }
+        ));
+        let actions = actions.lock().unwrap();
+        assert_eq!(actions.len(), 4);
+        assert!(actions[2].contains("SetBinaryState"));
+        assert!(actions[3].contains("GetBinaryState"));
+    }
+
+    #[test]
     fn loopback_discovery_inspection_install_and_command() {
         let listener = TcpListener::bind("127.0.0.1:0").unwrap();
         let http_address = listener.local_addr().unwrap();
         let requests = Arc::new(Mutex::new(Vec::new()));
         let server_requests = Arc::clone(&requests);
         let http_handle = thread::spawn(move || {
-            for body in [SETUP, GET_STATE, SET_STATE] {
+            for body in [OUTLET_SETUP, GET_STATE, GET_STATE, SET_STATE, GET_OFF] {
                 let (mut stream, _) = listener.accept().unwrap();
                 let mut request = [0u8; 4096];
                 let read = stream.read(&mut request).unwrap();
@@ -923,18 +1167,8 @@ mod tests {
             WemoConfig::new(BridgeId::trusted("wemo:test"), &candidates[0].location).unwrap();
         let client = WemoClient::new(config, WemoLanTransport::default());
         let mut integration = WemoRuntimeIntegration::new(client);
-        let mut runtime = SmartHomeRuntime::new();
         let principal = AgentId::trusted("agent:wemo-test");
-        let _ = runtime.registry_mut().upsert_capability_grant(
-            CapabilityGrant::for_all_smart_home(
-                CapabilityGrantId::trusted("grant:wemo-test"),
-                principal.clone(),
-                PrivilegeTier::LowRisk,
-                "test",
-                1,
-            )
-            .with_expiry(100),
-        );
+        let mut runtime = runtime_with_grant(&principal);
         let entity_id = integration
             .inspect_and_install_authorized(&mut runtime, principal.clone(), 10)
             .unwrap();
@@ -952,7 +1186,9 @@ mod tests {
         let requests = requests.lock().unwrap();
         assert!(requests[0].starts_with("GET /setup.xml HTTP/1.1"));
         assert!(requests[1].contains("GetBinaryState"));
-        assert!(requests[2].contains("SetBinaryState"));
-        assert!(requests[2].contains("<BinaryState>0</BinaryState>"));
+        assert!(requests[2].contains("GetBinaryState"));
+        assert!(requests[3].contains("SetBinaryState"));
+        assert!(requests[3].contains("<BinaryState>0</BinaryState>"));
+        assert!(requests[4].contains("GetBinaryState"));
     }
 }

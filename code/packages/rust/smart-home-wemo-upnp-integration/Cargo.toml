@@ -2,7 +2,7 @@
 name = "smart-home-wemo-upnp-integration"
 version = "0.1.0"
 edition = "2021"
-description = "Wemo UPnP discovery, inspection, and light-switch control for the smart-home runtime"
+description = "Wemo UPnP discovery, inspection, and verified switch control for the smart-home runtime"
 license = "MIT"
 
 [dependencies]

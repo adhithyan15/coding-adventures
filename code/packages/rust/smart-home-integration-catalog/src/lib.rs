@@ -45418,14 +45418,18 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
         base_entry(
             "wemo",
             "Wemo UPnP",
-            "Local Wemo discovery, binary-state inspection, and light-switch control.",
+            "Local Wemo discovery, binary-state inspection, and verified light and outlet control.",
             IntegrationCategory::LocalDevice,
             ConnectivityClass::LocalPolling,
             ImplementationStatus::FirstPartyRuntime,
             2,
             "wemo",
         )
-        .with_capabilities(&["smart_home.read", "smart_home.command.light"])
+        .with_capabilities(&[
+            "smart_home.read",
+            "smart_home.command.light",
+            "smart_home.command.switch",
+        ])
         .with_entities(&[EntityKind::Light, EntityKind::Switch])
         .with_discovery(&[DiscoveryMechanism::Ssdp, DiscoveryMechanism::Manual])
         .with_auth(&[AuthMode::None])
@@ -45441,7 +45445,9 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
             PrimitiveFamily::Supervision,
         ])
         .with_notes(&[
-            "Wemo light switches use the D23 light command contract; generic outlets remain read-only until D23 has a switch command contract.",
+            "Recognized Wemo lights, switches, outlets, sockets, and plugs use fixed BinaryState actions with an exact pre-read and post-command readback.",
+            "Setup and advertised control URLs are credential-free local-IP HTTP endpoints on one exact authority; DNS and public endpoints are rejected.",
+            "Unknown basicevent models remain read-only; GENA, energy telemetry, rules, pairing, cloud control, arbitrary SOAP, and long-lived connections remain out of scope.",
         ]),
         camera_entry(
             "ring",
@@ -81983,7 +81989,7 @@ mod tests {
     }
 
     #[test]
-    fn wemo_entry_exposes_ssdp_upnp_and_bounded_light_control() {
+    fn wemo_entry_exposes_ssdp_upnp_and_verified_switch_control() {
         let catalog = first_party_catalog();
         let wemo = find_entry(&catalog, &IntegrationId::trusted("wemo")).unwrap();
 
@@ -82007,6 +82013,9 @@ mod tests {
         assert!(wemo
             .required_capabilities
             .contains(&CapabilityId::trusted("smart_home.command.light")));
+        assert!(wemo
+            .required_capabilities
+            .contains(&CapabilityId::trusted("smart_home.command.switch")));
     }
 
     #[test]
