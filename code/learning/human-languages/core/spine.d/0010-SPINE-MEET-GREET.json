@@ -1,0 +1,14 @@
+{
+  "id": "SPINE-MEET-GREET",
+  "stage": "pre-A1",
+  "strand": "FUNCTION",
+  "canDo": "I can recognize and use an appropriate greeting when I meet someone.",
+  "prerequisites": [],
+  "core": true,
+  "concepts": [
+    "GREETING-HELLO",
+    "GREETING-FORMAL",
+    "GREETING-PEACE",
+    "GREETING-WELCOME"
+  ]
+}

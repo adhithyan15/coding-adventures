@@ -1,0 +1,17 @@
+{
+  "id": "SPINE-STRUCTURE-EXTENDED-TEXT",
+  "stage": "C1",
+  "strand": "TEXT",
+  "canDo": "I can produce clear, well-structured text on a complex subject.",
+  "prerequisites": [
+    "SPINE-READ-EXTENDED-PROSE",
+    "SPINE-ARGUE-A-VIEW"
+  ],
+  "core": true,
+  "concepts": [
+    "DISCOURSE-COHESION",
+    "PARAGRAPH-PLAN",
+    "CONNECTIVE-FURTHERMORE",
+    "REFERENCE-ANAPHORA"
+  ]
+}

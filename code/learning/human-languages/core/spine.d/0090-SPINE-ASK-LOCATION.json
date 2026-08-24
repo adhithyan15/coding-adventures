@@ -1,0 +1,13 @@
+{
+  "id": "SPINE-ASK-LOCATION",
+  "stage": "A1",
+  "strand": "FUNCTION",
+  "canDo": "I can ask where a familiar person, place, or object is.",
+  "prerequisites": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "core": true,
+  "concepts": [
+    "QUESTION-WHERE"
+  ]
+}

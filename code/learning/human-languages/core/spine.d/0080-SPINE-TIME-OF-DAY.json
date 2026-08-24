@@ -1,0 +1,21 @@
+{
+  "id": "SPINE-TIME-OF-DAY",
+  "stage": "A1",
+  "strand": "FUNCTION",
+  "canDo": "I can recognize basic times of day and choose a time-appropriate greeting.",
+  "prerequisites": [
+    "SPINE-MEET-GREET"
+  ],
+  "core": true,
+  "concepts": [
+    "TIME-DAY",
+    "TIME-MORNING",
+    "TIME-AFTERNOON",
+    "TIME-EVENING",
+    "TIME-NIGHT",
+    "GREETING-DAY",
+    "GREETING-MORNING",
+    "GREETING-AFTERNOON",
+    "GREETING-EVENING"
+  ]
+}

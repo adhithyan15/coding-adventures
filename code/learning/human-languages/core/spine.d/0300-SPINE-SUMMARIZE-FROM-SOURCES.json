@@ -1,0 +1,17 @@
+{
+  "id": "SPINE-SUMMARIZE-FROM-SOURCES",
+  "stage": "C2",
+  "strand": "TEXT",
+  "canDo": "I can summarise several sources and reconstruct the argument in my own words.",
+  "prerequisites": [
+    "SPINE-STRUCTURE-EXTENDED-TEXT",
+    "SPINE-INFER-IMPLICIT-MEANING"
+  ],
+  "core": true,
+  "concepts": [
+    "SYNTHESIS-MULTI-SOURCE",
+    "PARAPHRASE",
+    "ATTRIBUTION-CITE",
+    "SUMMARY-COMPRESSION"
+  ]
+}

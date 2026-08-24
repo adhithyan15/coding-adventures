@@ -1,0 +1,16 @@
+{
+  "id": "SPINE-REPORT-WHAT-OTHERS-SAID",
+  "stage": "B2",
+  "strand": "GRAMMAR",
+  "canDo": "I can report what someone else said or asked.",
+  "prerequisites": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "core": true,
+  "concepts": [
+    "REPORTED-SPEECH",
+    "TENSE-BACKSHIFT",
+    "SPEECH-ACT-REPORT",
+    "QUOTATION-DIRECT"
+  ]
+}

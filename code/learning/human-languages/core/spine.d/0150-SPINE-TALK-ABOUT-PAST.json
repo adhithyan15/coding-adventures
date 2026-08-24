@@ -1,0 +1,13 @@
+{
+  "id": "SPINE-TALK-ABOUT-PAST",
+  "stage": "A2",
+  "strand": "GRAMMAR",
+  "canDo": "I can say what happened before now.",
+  "prerequisites": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "core": true,
+  "concepts": [
+    "VERB-PAST"
+  ]
+}

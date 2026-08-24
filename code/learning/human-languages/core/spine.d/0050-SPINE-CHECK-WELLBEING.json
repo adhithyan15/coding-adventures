@@ -1,0 +1,17 @@
+{
+  "id": "SPINE-CHECK-WELLBEING",
+  "stage": "pre-A1",
+  "strand": "FUNCTION",
+  "canDo": "I can ask how someone is and give a simple answer.",
+  "prerequisites": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "core": true,
+  "concepts": [
+    "QUESTION-HOW",
+    "STATE-HOW-ARE-YOU",
+    "WORD-GOOD",
+    "WORD-WELL",
+    "WORD-SOSO"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "id": "SPINE-READ-CULTURAL-WEIGHT",
+  "stage": "C2",
+  "strand": "CULTURE",
+  "canDo": "I can read the cultural weight of a phrase, not only its meaning.",
+  "prerequisites": [
+    "SPINE-SHIFT-REGISTER",
+    "SPINE-READ-LITERARY-AND-CLASSICAL"
+  ],
+  "core": true,
+  "concepts": [
+    "CULTURAL-ALLUSION",
+    "PROVERB",
+    "EUPHEMISM-AND-TABOO",
+    "HUMOR-CONVENTION"
+  ]
+}

@@ -65,6 +65,7 @@ if [ "$MODE" != "books" ]; then
   ( cd "$PKG" && run "check:gentle-snapshots" npm run check:gentle-snapshots )
   ( cd "$PKG" && run "check:modality" npm run check:modality )
   ( cd "$PKG" && run "check:narration" npm run check:narration )
+  ( cd "$PKG" && run "check:shards" npm run check:shards )
 
   step "language-ladder"
   ( cd "$LADDER" && run "vitest" npx vitest run --testTimeout=60000 )

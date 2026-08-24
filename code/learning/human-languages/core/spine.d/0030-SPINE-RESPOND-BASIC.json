@@ -1,0 +1,16 @@
+{
+  "id": "SPINE-RESPOND-BASIC",
+  "stage": "pre-A1",
+  "strand": "FUNCTION",
+  "canDo": "I can give a basic yes, no, or okay response.",
+  "prerequisites": [
+    "SPINE-MEET-GREET"
+  ],
+  "core": true,
+  "concepts": [
+    "RESPONSE-YES",
+    "RESPONSE-NO",
+    "RESPONSE-YESNO",
+    "RESPONSE-OKAY"
+  ]
+}

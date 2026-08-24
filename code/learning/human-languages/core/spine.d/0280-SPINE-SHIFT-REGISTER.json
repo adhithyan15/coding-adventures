@@ -1,0 +1,16 @@
+{
+  "id": "SPINE-SHIFT-REGISTER",
+  "stage": "C1",
+  "strand": "CULTURE",
+  "canDo": "I can shift register to suit the person I am speaking to and the setting.",
+  "prerequisites": [
+    "SPINE-DISCUSS-ABSTRACT"
+  ],
+  "core": true,
+  "concepts": [
+    "REGISTER-FORMAL",
+    "REGISTER-COLLOQUIAL",
+    "HONORIFIC-SYSTEM",
+    "POLITENESS-STRATEGY"
+  ]
+}

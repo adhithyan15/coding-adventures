@@ -1,0 +1,17 @@
+{
+  "id": "SPINE-EXPRESS-FINE-SHADES",
+  "stage": "C2",
+  "strand": "LEXICON",
+  "canDo": "I can convey finer shades of meaning precisely.",
+  "prerequisites": [
+    "SPINE-SHIFT-REGISTER",
+    "SPINE-SUMMARIZE-FROM-SOURCES"
+  ],
+  "core": true,
+  "concepts": [
+    "NUANCE-MODALITY",
+    "COLLOCATION-PRECISE",
+    "EMPHASIS-DEVICE",
+    "CONNOTATION-CHOICE"
+  ]
+}

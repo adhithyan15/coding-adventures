@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "stages": [
+    "pre-A1",
+    "A1",
+    "A2",
+    "B1",
+    "B2",
+    "C1",
+    "C2"
+  ],
+  "strands": [
+    "FUNCTION",
+    "GRAMMAR",
+    "LEXICON",
+    "SOUND",
+    "ETYMOLOGY",
+    "CULTURE",
+    "IDIOM",
+    "TEXT"
+  ],
+  "strandNote": "HL10 section 2: the eight parallel ladders the curriculum runs. Every node declares exactly one. FUNCTION and TEXT are fully universal across tracks; GRAMMAR, SOUND and ETYMOLOGY are universal SLOTS filled per language; CULTURE and IDIOM are universal HOOKS whose content is entirely local. A strand with zero nodes is not an oversight to be hidden -- it is the measurement that the strand exists as an aspiration rather than a commitment."
+}
