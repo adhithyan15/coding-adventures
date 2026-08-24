@@ -6028,6 +6028,34 @@ Rust singletons, zero collisions, and zero unknown buckets; OCaml remains
 correctly emerging with no packages. Nine open PRs still have no exact
 changed-file overlap, and the target branch and prior PR remain absent.
 
+### Post-#12598 refresh and Python tracked-artifact selection
+
+Final head `bc18656cbf4375f418a1a75f8150391445be6498` completed all 29
+reported checks with 23 successes, six expected skips, and no failures or
+pending work. GitHub reported PR #12598 clean and mergeable; the loop enabled
+squash auto-merge, and GitHub merged it as
+`d960dabfe5e07a4d0d7073dada2fea00c05de426` at 2026-08-24T17:55:43Z
+without a manual merge command.
+
+The collision-checked schema-3 inventory on that exact merge remains 15
+established lanes, 1,370 identities, and 4,563 present slots: 175
+high-consensus identities have 276 gaps, 122 identities in five to nine lanes
+have 926 gaps, 166 identities in two to four lanes have 2,087 gaps, and 907
+singletons have 12,698 gaps. There are 718 Rust singletons, zero canonical
+collisions, and zero unknown buckets. OCaml remains correctly emerging with no
+packages. Exact tree comparison from the prior inventory revision found no
+identity, slot, directory-spelling, marker, or unknown-bucket change and no
+newly unowned portable package.
+
+Before selection, the loop decomposed both closed validation-corpus umbrellas
+into independently reviewable C#, Elixir, Haskell, Lua, Perl, Python, Ruby,
+Rust, Swift, and TypeScript children. This prevents an umbrella from being
+mistaken for native engine coverage and gives every extant non-Go consumer an
+explicit owner. The completion umbrellas remain selection-blocked tracking
+nodes until their ten engine children merge. The Go tracked-artifact
+Git-index/process boundary stays separately selection-blocked and outside the
+process-free oracle.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
