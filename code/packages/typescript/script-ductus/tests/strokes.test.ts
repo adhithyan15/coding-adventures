@@ -568,6 +568,16 @@ describe("handwriting ductus", () => {
     expect(DUCTUS["ம"].strokes).toHaveLength(1);
   });
 
+  it("ப descends, crosses the bottom, and rises without lifting", () => {
+    expect(penLifts(DUCTUS["ப"])).toBe(0);
+    expect(DUCTUS["ப"].strokes).toHaveLength(1);
+    expect(DUCTUS["ப"].strokes[0].segments.map((segment) => segment.label)).toEqual([
+      "down the left upright",
+      "along the bottom",
+      "up the right upright",
+    ]);
+  });
+
   it("Chinese 人 draws the left-falling stroke before the lifted right-falling stroke", () => {
     expect(CHINESE_REN.script).toBe("chinese");
     expect(penLifts(CHINESE_REN)).toBe(1);
@@ -5942,6 +5952,13 @@ describe("handwriting ductus", () => {
     expect(src.url).toContain("tamilscript");
     expect(src.citation).toMatch(/Appendix I|Frame 1/);
     expect(src.variation, "must not present one order as the only order").toMatch(/variation|no single/i);
+  });
+
+  it("ப's continuous order traces to Frame 1 of the UT Austin primer", () => {
+    const src = DUCTUS["ப"].source;
+    expect(src.url).toContain("tamilscript/category/3-moduals/module-01");
+    expect(src.citation).toMatch(/Tamil Script Learners Manual.*Frame 1.*ப/i);
+    expect(src.variation).toMatch(/left-to-right.*top-to-bottom.*varies by school.*continuous order.*Noto Sans Tamil/i);
   });
 
   it("அ's stroke order traces to Frame 4 of the same primer", () => {

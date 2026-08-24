@@ -192,7 +192,7 @@ describe("truetype: reading the vendored fonts", () => {
 
   it("resolves each Tamil letter the writing track teaches to a non-empty outline", () => {
     const f = tamil();
-    for (const ch of ["க", "ம", "ண", "ன", "ந", "ற", "வ", "அ", "இ", "ல"]) {
+    for (const ch of ["க", "ப", "ம", "ண", "ன", "ந", "ற", "வ", "அ", "இ", "ல"]) {
       const g = f.glyphFor(ch);
       expect(g, ch).toBeDefined();
       expect(g!.contours.length, ch).toBeGreaterThan(0);
