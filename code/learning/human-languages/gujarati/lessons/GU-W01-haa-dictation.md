@@ -4,7 +4,7 @@ id: GU-W01-haa-dictation
 spine_node: SPINE-RESPOND-BASIC
 sequence: 45
 delivery: script
-chapter: 1
+chapter: 2
 type: writing
 headword: હા
 romanization: "hā"

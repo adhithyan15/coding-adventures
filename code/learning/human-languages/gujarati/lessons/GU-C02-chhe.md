@@ -3,7 +3,7 @@ schema_version: 2
 id: GU-C02-chhe
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 90
-chapter: 2
+chapter: 3
 type: word
 headword: છે
 gloss: is (the copula)

@@ -1,275 +1,226 @@
-Gujarati, chapter 2: Introducing Yourself.
-9 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Gujarati, chapter 2: Courtesy and Responses.
+8 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 9.
-નામ (nām) — "name," a word older than Europe.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-The first word of the introduction — and a bridge between India and Europe.
-
-The letters in this word.
-ન (na) + ા (long ā) + મ (ma) becomes નામ (nām).
-
-The word, taken apart.
-નામ (nām, "name") from Sanskrit નામન્ (nāman), from Proto-Indo-European h₃nómn (its final n syllabic) — the same root as English name, Latin nōmen ( becomes noun), Greek onoma, and Hindi nām. Gujarati nām and English name are cousins from before either language existed.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "nām"]
-[pause 8 seconds for the answer]
-[your turn — say: the family — nām / English name / Latin nōmen]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What root is nām from, and its English cousin? (Sanskrit nāman / PIE h₃nómn; English name.)
-
-
-Lesson 2 of 9.
-મારું (mārũ) — "my," and gender again.
+Lesson 1 of 8.
+આભાર (ābhār) — "thank you," an obligation gladly owed.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-The word that makes the name yours — and, like sārũ, it changes with gender.
+Gujarati's everyday "thank you" — and it comes from the idea of being indebted.
 
 The letters in this word.
-મા (mā) + રું (rũ, with the nasal) becomes મારું (mārũ).
+આ (the independent long ā, for a word-initial vowel) + ભા (bhā) + ર (r) becomes આભાર (ābhār). Note again: no top line.
 
 The word, taken apart.
-મારું (mārũ, "my") is on the first-person root ma- — the same ma-/me- behind English me, my, mine, Latin meus, and Hindi merā. Gujarati's "my" and English's "my" are, at the root, one word.
-
-Grammar Lens: "my" agrees in all three genders.
-Because nām ("name") is neuter, "my name" is મારું નામ (mārũ nām) — the neuter mārũ. The full set:
-મારો (māro) — masculine (e.g. māro dēsh, "my country").
-મારી (mārī) — feminine (e.g. mārī bhāṣā, "my language").
-મારું (mārũ) — neuter (e.g. mārũ nām, "my name").
-Every possessive works this way — three forms, chosen by the noun's gender. It is the thread you first pulled in Chapter 1's sārũ.
+આભાર (ābhār, "thanks, gratitude") is from Sanskrit આભાર (ābhāra, "a burden, an obligation"), from આ- (ā-, "toward") + the root ભૃ (bhṛ, "to bear, carry"). To thank someone is to acknowledge you now bear an obligation to them — the same idea as English oblige (Latin ob- + ligāre "to bind") and Portuguese obrigado. That root bhṛ is Proto-Indo-European bʰer-, the ancestor of English bear (to carry) and Latin ferre. (The more Sanskritic ધન્યવાદ dhanyavād is also used, but ābhār is the warm, everyday Gujarati word.)
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the three — māro (m.) / mārī (f.) / mārũ (n.)]
+[your turn — say: "ābhār"]
 [pause 8 seconds for the answer]
-[your turn — say: "my name" and why (mārũ nām — nām is neuter)]
+[your turn — say: what it literally acknowledges (an obligation "borne")]
 [pause 8 seconds for the answer]
-[your turn — say: the m- family (mārũ, English me, my)]
+[your turn — say: the English cousin of its root bhṛ (bear, "to carry")]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which form of "my" goes with nām, and why? (Mārũ — the neuter, because nām is a neuter noun.)
+What does ābhār literally mean, and what English word shares its root? ("An obligation borne"; bear — from PIE bʰer-, "to carry.")
 
 
-Lesson 3 of 9.
-છે (chhe) — "is," a copula all Gujarati's own.
+Lesson 2 of 8.
+આવજો (āvjo) — "goodbye" (come again).
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-The little verb "is" — and here it is a word you will not recognise from Hindi.
+The everyday Gujarati goodbye — and, like the goodbyes across all of India, it is really an invitation to return.
 
 The letters in this word.
-છ (chha, a breathy ch) + ે (the e-sign) becomes છે (chhe). One syllable.
+આ (independent ā) + વ (va) + જો (jo) becomes આવજો (āvjo).
 
 The word, taken apart.
-છે (chhe, "is") is Gujarati's copula — and, unusually, it is not the hai of Hindi or the asti of Sanskrit. It grew from an Old Gujarati form (achhaï) along its own path, so it is one of the words that most quickly marks a sentence as Gujarati rather than Hindi. Its forms run: હું છું (hũ chhũ, "I am"), તું છે (tũ chhe, "you are"), તે છે (te chhe, "he/she/it is"), તમે છો (tame chho, "you are," respectful).
-
-Grammar Lens: the verb goes last.
-Gujarati is subject–object–verb, like all its Indo-Aryan sisters: "my name Arun is." Chhe sits at the end of the sentence, where English puts "is" in the middle.
+આવજો (āvjo) is the polite imperative of આવવું (āvvũ, "to come") — literally "[please] come [again]." A Gujarati never signs off by saying "I'm leaving"; the parting word is come. It is the same "promise of return" that runs through the whole subcontinent — Tamil pōy varugiṟēṉ ("I'll go and come back"), Bengali āshi ("I'll come"), Hindi phir milenge ("we'll meet again") — here made into a single warm word built on the verb to come. (To one person, familiarly: આવજે āvje.)
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "chhe"]
+[your turn — say: "āvjo"]
 [pause 8 seconds for the answer]
-[your turn — say: the copula set — hũ chhũ (I am), tame chho (you are), te chhe (is)]
+[your turn — say: what it literally means ("[please] come [again]")]
 [pause 8 seconds for the answer]
-[your turn — say: what makes chhe special (it's Gujarati's own, not Hindi's hai)]
+[your turn — say: the verb it's built on (āvvũ, "to come")]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What is chhe, and how does it differ from Hindi? (Gujarati's copula, "is"; it is not Hindi's hai — a distinctively Gujarati word.)
+What does the Gujarati goodbye literally say, and what verb is it from? ("Come [again]"; āvvũ, "to come" — never "I'm leaving.")
 
 
-Lesson 4 of 9.
-મારું નામ … છે (mārũ nām … chhe) — "my name is…"
-
-Warm-up.
-[pause 2 seconds]
-Three atoms you now own, assembled into a first sentence.
-
-The two words — assembled.
-મારું (my, neuter) + નામ (name) + your name + છે (is) = mārũ nām … chhe, "my name is…" Mārũ nām Arun chhe. becomes "My name is Arun."
-
-Grammar Lens: the verb goes last.
-Gujarati keeps the verb at the end — "my name Arun is." Note too that mārũ is neuter to agree with nām (neuter): the agreement you learned two lessons ago is already doing its quiet work.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "mārũ nām … chhe" with your name]
-[pause 8 seconds for the answer]
-[your turn — say: why mārũ (neuter) and where chhe sits (agrees with nām; verb last)]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Give your name in Gujarati, and say where the verb goes. (Mārũ nām … chhe; the verb chhe is last.)
-
-
-Lesson 5 of 9.
-તમને મળીને આનંદ થયો (tamne maḷīne ānand thayo) — "pleased to meet you".
+Lesson 3 of 8.
+હા / ના (hā / nā) — "yes" and "no".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-The warm close of an introduction — a word that means bliss itself.
+Two tiny words no conversation survives without — and one is a cousin of English.
 
 The letters in this word.
-The key word is આનંદ (ānand): આ + ન + ં (the nasal) + દ (da).
+હા (hā) = હ (ha) + the long-ā sign. ના (nā) = ન (na) + the long-ā sign.
 
 The word, taken apart.
-તમને મળીને આનંદ થયો = તમને (tamne, "to you") + મળીને (maḷīne, "having met") + આનંદ થયો (ānand thayo, "joy happened") — literally "having met you, joy happened." The key word આનંદ (ānand, "joy, bliss") is Sanskrit — ā- ("fully") + nand ("to rejoice") — the ānanda of sat-cit-ānanda ("being-consciousness-bliss"), and a common Gujarati name. So a simple greeting reaches, as Sanskrit did, for the word for the deepest happiness.
+હા (hā, "yes") and ના (nā, "no"). The "no" rides the ancient negative na- — the very same Proto-Indo-European ne behind English no, not, none, Latin nōn, Hindi nahīṁ, and Bengali nā. Of all the words in this book, this "no" reaches furthest unchanged: one syllable spoken, in some form, from Iceland to Gujarat for five thousand years.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "tamne maḷīne ānand thayo"]
+[your turn — say: "hā" (yes) and "nā" (no)]
 [pause 8 seconds for the answer]
-[your turn — say: the key word and its meaning (ānand, "joy/bliss")]
-[pause 8 seconds for the answer]
-[your turn — say: what it's built from (ā- "fully" + nand "to rejoice")]
+[your turn — say: the shared ancestor of nā and English no (PIE ne)]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does the phrase literally say, and what is ānand? ("Having met you, joy happened"; Sanskrit ānanda, "bliss.")
+What ancient root links Gujarati nā to English no? (Proto-Indo- European ne, "not.")
 
 
-Lesson 6 of 9.
-તું / તમે (tũ / tame) — "you," familiar and respectful.
+Lesson 4 of 8.
+હા (hā) — one supported copy.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+Point to the consonant હ, then the attached vowel sign ા. Say the whole known word: હા, hā, "yes." Keep the model visible.
+
+Writing — guided copy.
+Copy હા once. You may look back after each piece: first હ, then ા. Touch both pieces in your copy and read hā.
+
+Wrap-up recall.
+Compare only the two pieces and their order. Repair one piece if needed, then stop. The model stays visible today.
+[question — say your answer, then pause 18 seconds]
+Copy the visible Gujarati word for yes once, then name its two pieces.
+
+
+Lesson 5 of 8.
+હા (hā) — look, hide, write, compare.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+Look at હા (hā) for five seconds. Point first to હ, then to ા. Do not copy it yet.
+
+Writing — delayed copy.
+cover હા (hā).
+wait five seconds.
+write it once from memory.
+uncover the model and compare the two pieces.
+If one piece differs, circle it and repair only that place. Repair is part of the exercise, not a failure.
+
+Wrap-up recall.
+Read your repaired word as hā. Stop after one memory attempt.
+[question — say your answer, then pause 18 seconds]
+After hiding the model for five seconds, write the Gujarati word for yes and then compare it.
+
+
+Lesson 6 of 8.
+One heard answer — write what you know.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+Cover the answer lower on this page. You will hear one familiar answer. No new Gujarati is hiding in this lesson.
+
+Writing — short dictation.
+[your turn — hear: hā — "yes"]
+[pause 8 seconds for the answer]
+Write the Gujarati word from sound alone. Now uncover and compare: હા (hā). Check હ first and attached ા second. Repair one place if needed.
+
+Wrap-up recall.
+Writing from sound completes this tiny runway. It is not a mock assessment; later lessons must grow from one known word to forms, messages, and timed tasks.
+[question — say your answer, then pause 18 seconds]
+From the heard cue hā alone, write the known Gujarati word for yes.
+
+
+Lesson 7 of 8.
+સારું (sārũ) — "good," "okay".
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-To ask a name you need "you" — and Gujarati grades respect the way French does.
+The all-purpose "good / fine / okay / alright" — and your first taste of Gujarati's three genders.
 
 The letters in this word.
-તું (tũ): ત (ta) + the u-sign + nasal. તમે (tame): ત + મ + ે.
+સા (sā) + રું (rũ, with the nasal anusvāra on the u) becomes સારું (sārũ).
 
 The word, taken apart.
-તું (tũ, familiar "you") from Sanskrit tvam, from PIE tū — the same root as English archaic thou, Latin tū, French tu, and Hindi tū. તમે (tame, respectful "you") is grammatically plural — courtesy-by-plural, like French vous and Hindi āp. For a first meeting, use તમે; it takes the plural copula chho (tame … chho).
+સારું (sārũ, "good, fine, okay") is from Sanskrit સાર (sāra, "essence, substance, the best part") — the same sāra behind Bengali's sāramilla ("no matter"). As "okay/agreed" it oils every Gujarati conversation, the way English uses "alright."
+
+Grammar Lens: three genders, on the adjective.
+Look at that ending -ું (-ũ). Gujarati, like Marathi, keeps three genders from Sanskrit — masculine, feminine, and neuter — where Hindi and Punjabi kept only two. An adjective agrees with its noun in all three:
+સારો (sāro) — masculine.
+સારી (sārī) — feminine.
+સારું (sārũ) — neuter.
+Standing alone as "okay," it takes the neuter sārũ. You will meet this three-way agreement on every adjective and possessive.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "tũ" (familiar) and "tame" (respectful)]
+[your turn — say: "sārũ" — good / okay]
 [pause 8 seconds for the answer]
-[your turn — say: the English cousin of tũ (thou)]
+[your turn — say: the three genders — sāro (m.) / sārī (f.) / sārũ (n.)]
 [pause 8 seconds for the answer]
-[your turn — say: which you use on first meeting (tame)]
+[your turn — say: the Sanskrit root (sāra, "essence")]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which "you" is respectful, and what English word is tũ cousin to? (Tame; archaic thou, from PIE tū.)
+What does sārũ mean, and what does its -ũ ending tell you? ("Good / okay"; it is the neuter — Gujarati keeps three genders.)
 
 
-Lesson 7 of 9.
-શું (shũ) — "what".
+Lesson 8 of 8.
+Chapter 2 — Courtesy and responses.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-The question-word — and the one Gujarati question that does not start with k-.
-
-The letters in this word.
-શ (sha) + the u-sign + nasal becomes શું (shũ).
-
-The word, taken apart.
-શું (shũ, "what") descends, by a winding road, from the Sanskrit interrogative stem ક- (ka-, PIE kʷo-) — the root behind English what, Latin quis, and Hindi kyā. Most of Gujarati's questions still show that k- plainly — કેમ (kem, how), કોણ (kōṇ, who), ક્યાં (kyā̃, where), ક્યારે (kyāre, when) — but "what" wore down into this sh- form. So shũ is the odd cousin in a k- family.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "shũ"]
-[pause 8 seconds for the answer]
-[your turn — say: the k- question family it belongs to (kem, kōṇ, kyā̃, kyāre)]
-[pause 8 seconds for the answer]
-[your turn — say: its distant English cousin (what)]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What does shũ mean, and what root does it share with English what? ("What"; the interrogative ka- / PIE kʷo- — worn to sh- in Gujarati.)
-
-
-Lesson 8 of 9.
-તમારું નામ શું છે? (tamārũ nām shũ chhe?) — "what's your name?"
+Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the script and the language until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-Turn the introduction around — ask, instead of tell.
+No new words. The five greetings, mixed and recombined.
 
-The two words — assembled.
-તમારું (tamārũ, "your," the respectful possessive from tame, neuter to match nām) + નામ (name) + શું (what) + છે (is) becomes literally "your name what is?" Gujarati keeps the verb last and drops the question-word shũ into the object slot.
-
-Grammar Lens: answering, and the familiar form.
-Answer with the sentence you built: Mārũ nām Arun chhe. The familiar version swaps tamārũ for તારું (tārũ, "your," from tũ): tārũ nām shũ chhe? Note mārũ / tārũ / tamārũ — "my / your / your (resp.)" — all take the neuter -ũ before nām.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: the respectful question — tamārũ nām shũ chhe?]
-[pause 8 seconds for the answer]
-[your turn — say: answer it — mārũ nām … chhe]
-[pause 8 seconds for the answer]
-[your turn — say: the familiar "your" (tārũ)]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Ask "what's your name?" respectfully. (Tamārũ nām shũ chhe?; the verb chhe is last.)
-
-
-Lesson 9 of 9.
-Chapter 2 — The introduction exchange.
-
-Warm-up.
-[pause 2 seconds]
-No new words. The whole introduction, assembled from atoms you now own.
-
-The exchange.
+How to answer — rapid recall.
 [pause 1 second after each]
-[your turn — say: "My name is Mira." — mārũ nām Mira chhe.]
+[your turn — say: hello / goodbye — namaste]
 [pause 8 seconds for the answer]
-[your turn — say: "What's your name?" — tamārũ nām shũ chhe?]
+[your turn — say: thank you — ābhār]
 [pause 8 seconds for the answer]
-[your turn — say: "My name is Arun." — mārũ nām Arun chhe.]
+[your turn — say: yes and no — hā / nā]
 [pause 8 seconds for the answer]
-[your turn — say: "Pleased to meet you." — tamne maḷīne ānand thayo.]
+[your turn — say: good / okay — sārũ]
+[pause 8 seconds for the answer]
+[your turn — say: the "come again" goodbye — āvjo]
 [pause 8 seconds for the answer]
 
-The word, taken apart — the atoms.
+Script — the script and the language.
 [pause 2 seconds]
-[your turn — say: "name," "my," "is" (nām, mārũ, chhe)]
+[your turn — say: the one visible thing that sets Gujarati apart from Devanagari (no top line)]
 [pause 8 seconds for the answer]
-[your turn — say: the two "you" levels (tũ / tame)]
+[your turn — say: how many genders Gujarati keeps (three — sāro/sārī/sārũ)]
 [pause 8 seconds for the answer]
-[your turn — say: "what," and where the verb sits (shũ; the verb is last)]
-[pause 8 seconds for the answer]
+
+Writing — retrieve the tiny word once.
+Cover every written answer. Hear hā, "yes," once in your mind and write it from memory. Then uncover હા and check the two pieces: હ, then attached ા. One repair is allowed.
+[question — say your answer, then pause 20 seconds]
+Without a visible model, write the Gujarati word you hear: hā, yes.
 
 What you've built — roots you now carry.
 [pause 2 seconds]
-nām from Sanskrit nāman becomes English name.
-mārũ from ma- becomes English my; agrees in three genders (māro/mārī/mārũ).
-chhe — Gujarati's own copula (not Hindi's hai).
-shũ from ka- becomes English what; tũ from tū becomes thou.
+namaste = namas "a bow" + te "to you".
+ābhār from ā + bhṛ "to bear" becomes an obligation borne (cousin of English bear).
+nā ("no") from PIE ne becomes English no/not/none.
+āvjo ("goodbye") = "come [again]," from āvvũ "to come".
 
 Wrap-up Recall.
 [pause 3 seconds]
-Introduce yourself and ask a stranger's name in Gujarati. (Mārũ nām … chhe. Tamārũ nām shũ chhe?)
+Someone thanks you and turns to leave. Answer their thanks and send them off the Gujarati way. (Sārũ — and āvjo, "come again.")

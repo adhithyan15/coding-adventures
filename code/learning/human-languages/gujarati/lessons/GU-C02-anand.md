@@ -3,7 +3,7 @@ schema_version: 2
 id: GU-C02-anand
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 110
-chapter: 2
+chapter: 3
 type: phrase
 headword: તમને મળીને આનંદ થયો
 gloss: pleased to meet you (lit. "meeting you, joy happened")

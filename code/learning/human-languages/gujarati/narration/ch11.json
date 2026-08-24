@@ -2,24 +2,24 @@
   "version": 1,
   "language": "gujarati",
   "chapter": 11,
-  "title": "Friend and Family",
+  "title": "Water, Tea, Milk, and Bread",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b8d449da74c1452e",
+  "sourceHash": "fnv1a64:af583bddccb08301",
   "lessons": [
     {
-      "id": "GU-C11-mitra",
-      "sequence": 540,
-      "title": "મિત્ર (mitra) — a friend, and the word inside your own \"please\"",
-      "headword": "મિત્ર",
-      "romanization": "mitra",
-      "gloss": "friend — a word this chapter will link to the very phrase you used to ask for water",
+      "id": "GU-C10-paani",
+      "sequence": 500,
+      "title": "પાણી (pāṇī) — the first thing you'll actually ask for",
+      "headword": "પાણી",
+      "romanization": "pāṇī",
+      "gloss": "water — Gujarati's first noun for something you would actually ask for, and the phrase that asks for it politely",
       "script": "gujarati",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:510109a8b8bddacd",
+      "sourceHash": "fnv1a64:00a8de9cbe1b8a3f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -45,7 +45,7 @@
             },
             {
               "kind": "speech",
-              "text": "Last chapter asked politely for roṭlī with meherbānī karīne. That phrase is about to turn out to share its root with the very first word of this new chapter."
+              "text": "Gamvũ let you say what you like; madad karvī let you ask for help. This chapter asks for something smaller and more frequent: a drink."
             }
           ]
         },
@@ -56,7 +56,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "મિત્ર — mitra — friend."
+              "text": "પાણી — pāṇī — water."
             }
           ]
         },
@@ -67,175 +67,33 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "મ ma, િ the short-i sign written before the consonant it belongs to — the same leftward quirk you saw open vichārvũ — then a conjunct: ત્ર — ત ta with the virama ્ stripping its vowel, joined straight into ર ra. Mi-tra, two syllables, the second one a cluster."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart — the friend hiding inside \"please\"",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "mitra is Sanskrit for \"friend,\" from Proto-Indo-Iranian mitras, \"(that which) causes binding\" — a covenant word before it was a friendship word. Its exact twin is Avestan Mithra, the god of contracts and given word, whose name lived on in Middle Persian as Mihr."
-            },
-            {
-              "kind": "speech",
-              "text": "That is not a dead end. મહેરબાની, the \"kindness\" you built meherbānī karīne from last chapter, is Persian mihrbānī — built on that very same Mihr. So મિત્ર (mitra), inherited straight down from Sanskrit, and મહેરબાની, borrowed centuries later from Persian, are cousins by the same Indo-Iranian root — one word for \"friend,\" the other for \"favor,\" both once naming the same idea of a bond that holds."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "mitra — friend",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: **mitra** — friend]"
-            },
-            {
-              "kind": "prompt",
-              "action": "TRACE",
-              "instruction": "Proto-Indo-Iranian mitras becomes Avestan Mithra becomes Persian Mihr becomes મહેરબાની",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU TRACE: Proto-Indo-Iranian *mitras* → Avestan **Mithra** → Persian **Mihr** → **મહેરબાની**]"
-            },
-            {
-              "kind": "prompt",
-              "action": "CONNECT",
-              "instruction": "મિત્ર (mitra) and મહેરબાની — same ancient root, two different doors into Gujarati",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU CONNECT: **મિત્ર** and **મહેરબાની** — same ancient root, two different doors into Gujarati]"
-            },
-            {
-              "kind": "prompt",
-              "action": "RUN",
-              "instruction": "roṭlī, meherbānī karīne once more, now naming the \"friend\" root inside it",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU RUN: **roṭlī, meherbānī karīne** once more, now naming the \"friend\" root inside it]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Give the word for \"friend.\" (Mitra.) Which other Gujarati word you already know shares its root, and through which language did each arrive? (મહેરબાની — mitra inherited from Sanskrit, meherbānī borrowed from Persian mihr.) What did the shared root originally mean? (\"To bind,\" a covenant.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Sources: Wiktionary: મિત્ર (mitra); Wiktionary: Mithra."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GU-C11-kutumb",
-      "sequence": 550,
-      "title": "કુટુંબ (kuṭumb) — a word that skipped the sound changes",
-      "headword": "કુટુંબ",
-      "romanization": "kuṭumb",
-      "gloss": "family — the whole group, and a word that arrived in Gujarati already finished rather than growing there",
-      "script": "gujarati",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:f359800e0ad34bc1",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word",
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "મિત્ર (mitra) reached Gujarati the long way, worn down through Prakrit like nearly every word you own. The word for the group a friend gets folded into took a different road entirely."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know first — one word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "કુટુંબ — kuṭumb — family."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ક ka, ુ the short-u sign below it, then ટ — the same retroflex ṭ you first curled back in roṭlī, here doing the same job again. ું closes it: u with the nasal dot on top, then બ ba. Ku-ṭu-m-b."
+              "text": "પ pa, ા the long-ā sign, ણ the retroflex ṇ you already curled back in jāṇvũ, then ી long-ī. No bar runs across the top of any of them — the headless tell, working the same way in a noun as it did in a verb."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: taken whole, not worn down",
+          "title": "Grammar Lens: asking politely",
           "segments": [
             {
               "kind": "speech",
-              "text": "You have seen Sanskrit reach back into Gujarati once before: ત્રણ's r, restored after Prakrit had already dropped it — a repair, made to a word that had kept changing the whole time. કુટુંબ is a different kind of contact. Gujarati did not inherit this word through the centuries of sound change that gave you pāṇī or be; it took the Sanskrit word up directly, close to whole, the way a modern language reaches for a ready-made technical term instead of growing one on its own. Linguists call an inherited word like pāṇī tadbhava, \"born from that,\" and a direct borrowing like this one tatsama, \"same as that\" — kuṭumb is tatsama."
+              "text": "પાણી, મહેરબાની કરીને. — pāṇī, meherbānī karīne. — Water, please."
+            },
+            {
+              "kind": "speech",
+              "text": "મહેરબાની કરીને meherbānī karīne is built from મહેરબાની, \"kindness\" or \"favor,\" plus કરીને, \"having done\" — the same કરીને/કરવી family you met in મદદ કરવી, \"to do a favor of help.\" Literally: \"having done a kindness.\" Name the item, add this, and you have a complete polite request with no verb for \"give\" needed at all — the pattern this whole chapter will reuse."
             }
           ]
         },
         {
           "index": 4,
           "type": "etymology",
-          "title": "The word, taken apart — a family word borrowed by Sanskrit itself",
+          "title": "The word, taken apart — the oldest drinking word you own",
           "segments": [
             {
               "kind": "speech",
-              "text": "Here the trail runs further than usual, in an unexpected direction. Sanskrit kuṭumba is itself thought to be a loanword, taken from a Dravidian source and compared to Tamil kuṭimai, \"family, lineage,\" both built on kuṭi, \"hut.\" A word that looks purely Sanskrit, and that Gujarati then borrowed as purely Sanskrit, may have entered Sanskrit from a completely different family of languages first. The chain of ownership runs Dravidian becomes Sanskrit becomes Gujarati, with no step skipped and no step certain beyond reasonable comparison."
+              "text": "pāṇī comes from Sanskrit pānīya, \"that which is to be drunk,\" built on pā-, \"to drink.\" That root is Indo-European, peh₃(i)-, and English holds two disguised pieces of it: potion and poison both come through Latin potare, \"to drink\" — a poison, etymologically, is just a drink gone wrong. Greek turned the same idea into sympotēs, \"one who drinks together,\" which English keeps as symposium. Pāṇī is not a stranger to those words; it is what \"to drink\" looks like when it never left the family that gave you jāṇvũ's Sanskrit cousin jñā-."
             }
           ]
         },
@@ -247,38 +105,47 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "kuṭumb — family",
+              "instruction": "pāṇī — water",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: **kuṭumb** — family]"
+              "source": "[YOU SAY: **pāṇī** — water]"
             },
             {
               "kind": "prompt",
-              "action": "CONTRAST",
-              "instruction": "tadbhava pāṇī (worn down over time) against tatsama kuṭumb (taken whole)",
+              "action": "SAY",
+              "instruction": "pāṇī, meherbānī karīne. — water, please",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU CONTRAST: **tadbhava** *pāṇī* (worn down over time) against **tatsama** *kuṭumb* (taken whole)]"
+              "source": "[YOU SAY: **pāṇī, meherbānī karīne.** — water, please]"
             },
             {
               "kind": "prompt",
               "action": "MATCH",
-              "instruction": "this \"taken whole\" idea against traṇ's restored r — both are Sanskrit reaching forward, in different ways",
+              "instruction": "karīne against madad karvī's own kar- root",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU MATCH: this \"taken whole\" idea against *traṇ*'s restored *r* — both are Sanskrit reaching forward, in different ways]"
+              "source": "[YOU MATCH: **karīne** against **madad karvī**'s own **kar-** root]"
             },
             {
               "kind": "prompt",
               "action": "TRACE",
-              "instruction": "proposed Dravidian kuṭi \"hut\" becomes Sanskrit kuṭumba becomes કુટુંબ",
+              "instruction": "pā- \"to drink\" becomes pāṇī, and becomes potion, poison, symposium",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU TRACE: proposed Dravidian *kuṭi* \"hut\" → Sanskrit *kuṭumba* → **કુટુંબ**]"
+              "source": "[YOU TRACE: *pā-* \"to drink\" → **pāṇī**, and → **potion**, **poison**, **symposium**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "mane gujarātī game chhe, then pāṇī, meherbānī karīne — liking and requesting, side by side",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: **mane gujarātī game chhe**, then **pāṇī, meherbānī karīne** — liking and requesting, side by side]"
             }
           ]
         },
@@ -295,30 +162,30 @@
             },
             {
               "kind": "speech",
-              "text": "Give the word for \"family.\" (Kuṭumb.) Is it tadbhava or tatsama? (Tatsama — borrowed whole from Sanskrit, not worn down through Prakrit.) Where does Sanskrit's own kuṭumba likely come from? (Dravidian, compared to Tamil kuṭimai.)"
+              "text": "Ask for water politely. (Pāṇī, meherbānī karīne.) What does meherbānī karīne mean word for word? (\"Having done a kindness.\") Which two English words for a drink, and one for a whole gathering of them, share pāṇī's root? (Potion, poison, symposium.)"
             },
             {
               "kind": "speech",
-              "text": "Sources: Wiktionary: કુટુંબ (kuṭumb); Wiktionary: Sanskrit kutumba."
+              "text": "Sources: Wiktionary: પાણી (pāṇī); Wiktionary: મહેરબાની."
             }
           ]
         }
       ]
     },
     {
-      "id": "GU-C11-bhai",
-      "sequence": 560,
-      "title": "ભાઈ (bhāī) — the same word as \"brother,\" unbroken",
-      "headword": "ભાઈ",
-      "romanization": "bhāī",
-      "gloss": "brother — the plainest possible cousin of the English word for the very same person",
+      "id": "GU-C10-chaa",
+      "sequence": 510,
+      "title": "ચા (chā) — the tea that went overland",
+      "headword": "ચા",
+      "romanization": "chā",
+      "gloss": "tea — a word that took the overland road out of China, so it rhymes with Hindi and Persian rather than with English",
       "script": "gujarati",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4704038cd28045da",
+      "sourceHash": "fnv1a64:3654467a616af4b0",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -344,7 +211,7 @@
             },
             {
               "kind": "speech",
-              "text": "કુટુંબ (kuṭumb) was taken up whole, close to the finished Sanskrit shape. The two words for its members run the opposite way — worn all the way down, the ordinary path nearly every Gujarati word has followed."
+              "text": "Pāṇī, meherbānī karīne — water, please. The next drink uses the exact same pattern, and its own name has traveled further than water's ever needed to."
             }
           ]
         },
@@ -355,7 +222,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ભાઈ — bhāī — brother."
+              "text": "ચા — chā — tea."
+            },
+            {
+              "kind": "speech",
+              "text": "ચા, મહેરબાની કરીને. — chā, meherbānī karīne. — Tea, please."
             }
           ]
         },
@@ -366,18 +237,22 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ભ bha, the aspirated b, with the long-ā sign ા, then ઈ, the independent long-ī vowel standing on its own rather than attached to a consonant. Bhā-ī, two syllables, no consonant closing the second."
+              "text": "ચ cha — the same letter that opened chār, \"four,\" and sat inside vichār — plus the long-ā sign. Two letters, both already yours."
             }
           ]
         },
         {
           "index": 3,
           "type": "etymology",
-          "title": "The word, taken apart — no disguise at all",
+          "title": "The word, taken apart — the word that went by land, not by sea",
           "segments": [
             {
               "kind": "speech",
-              "text": "bhāī is inherited, through Prakrit bhāi, from Sanskrit bhrātṛ. Its root is Indo-European bʰréh₂tēr, and this is one of the cleanest cognate sets Indo-European linguistics has: Sanskrit bhrātṛ, English brother, Latin frāter, Greek phrātēr, Russian brat — every one of them the same word, carried down by ordinary sound change in every branch rather than borrowed by any of them. Where kuṭumb skipped the centuries of change that shape tadbhava words, bhāī is the textbook case of what those centuries do: the consonant cluster bhr- simplified once the r dropped, exactly the kind of wearing-down that gave you pāṇī from pānīya."
+              "text": "ચા is a loanword — unlike pāṇī, which Gujarati has owned since Sanskrit. It came through Classical Persian chā, from Mandarin Chinese chá. That is the overland route, out through Central Asia and Persia: Hindi and Urdu chāy, Russian chai, Turkish çay all took the same road and the same syllable."
+            },
+            {
+              "kind": "speech",
+              "text": "There is another route entirely. Chinese merchants on the coast spoke a different dialect, Hokkien, where the same word is tê. Dutch sailors picked that form up by sea and carried it into Europe: English tea, French thé, German Tee. One plant, one original Chinese word, and two pronunciations of it, sorted by whether a language met the word on a caravan route or a ship's deck. Gujarati's chā and English tea are, in that exact sense, the same word taken two different ways out of the same country."
             }
           ]
         },
@@ -389,193 +264,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "bhāī — brother",
+              "instruction": "chā — tea, and chā, meherbānī karīne — tea, please",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: **bhāī** — brother]"
-            },
-            {
-              "kind": "prompt",
-              "action": "TRACE",
-              "instruction": "PIE bʰréh₂tēr becomes Sanskrit bhrātṛ becomes ભાઈ (bhāī), and becomes English brother",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU TRACE: PIE *bʰréh₂tēr* → Sanskrit *bhrātṛ* → **ભાઈ**, and → English **brother**]"
-            },
-            {
-              "kind": "prompt",
-              "action": "CONTRAST",
-              "instruction": "bhāī worn down over centuries against kuṭumb taken up whole",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU CONTRAST: *bhāī* worn down over centuries against *kuṭumb* taken up whole]"
-            },
-            {
-              "kind": "prompt",
-              "action": "NAME",
-              "instruction": "two other languages whose word for \"brother\" is the same cognate (Latin frāter, Greek phrātēr, or Russian brat)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU NAME: two other languages whose word for \"brother\" is the same cognate (Latin *frāter*, Greek *phrātēr*, or Russian *brat*)]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Give the word for \"brother.\" (Bhāī.) Which English word is the very same word, by unbroken descent, not borrowing? (Brother.) Is bhāī tadbhava or tatsama — worn down, or taken whole like kuṭumb? (Tadbhava — worn down.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Sources: Wiktionary: ભાઈ (bhāī); Wiktionary: bʰréh₂tēr."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GU-C11-bahen",
-      "sequence": 570,
-      "title": "બહેન (bahen) — the sister who is not \"sister\"'s cousin",
-      "headword": "બહેન",
-      "romanization": "bahen",
-      "gloss": "sister — which, unlike its brother, is not the same word as the English one at all",
-      "script": "gujarati",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:2c3f1494bcb283fb",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word",
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "ભાઈ (bhāī) is English brother, unbroken, down to the root. Do not assume the sibling pair matches. This chapter's last word breaks the pattern."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know first — one word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "બહેન — bahen — sister."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "બ ba, હ ha, ે the e sign above the consonant, then ન na. Ba-hen, every letter already yours from earlier chapters."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart — a different root entirely",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Here is the surprise: બહેન (bahen) is not bhāī's counterpart the way English sister is brother's. English sister, Latin soror, and Sanskrit svasṛ all descend from one shared PIE root, swésōr. Gujarati's word for sister does not use that root at all."
-            },
-            {
-              "kind": "speech",
-              "text": "bahen comes from Sanskrit bhaginī, through Prakrit bhaginī. Scholars connect bhaginī to bhaga, \"good fortune, a share\" — the same bhaga behind bhāgya, \"fate\" — plus a feminine suffix, so \"sister\" may originally have meant something closer to \"the one who shares.\" That connection is debated rather than settled, the way roṭlī's root was: some scholars accept the bhaga link, others have argued against it. What is certain is what it is not: unlike bhāī, bahen is no relation to English sister at all — and unlike the disputed-but-real mitra/meherbānī pair, this dial lands on \"unrelated,\" full stop."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "bahen — sister, and bhāī — brother",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: **bahen** — sister, and **bhāī** — brother]"
-            },
-            {
-              "kind": "prompt",
-              "action": "CONTRAST",
-              "instruction": "bhāī — same root as English brother; bahen — a different Sanskrit word entirely, not sister's cousin",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU CONTRAST: *bhāī* — same root as English *brother*; *bahen* — a different Sanskrit word entirely, not *sister*'s cousin]"
-            },
-            {
-              "kind": "prompt",
-              "action": "TRACE",
-              "instruction": "proposed bhaga \"share, fortune\" becomes bhaginī becomes બહેન (bahen)",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU TRACE: proposed *bhaga* \"share, fortune\" → *bhaginī* → **બહેન**]"
+              "source": "[YOU SAY: **chā** — tea, and **chā, meherbānī karīne** — tea, please]"
             },
             {
               "kind": "prompt",
               "action": "RUN",
-              "instruction": "all four family words — mitra, kuṭumb, bhāī, bahen — inherited/borrowed, direct/indirect",
+              "instruction": "both requests — pāṇī, meherbānī karīne; chā, meherbānī karīne",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RUN: all four family words — **mitra**, **kuṭumb**, **bhāī**, **bahen** — inherited/borrowed, direct/indirect]"
+              "source": "[YOU RUN: both requests — **pāṇī, meherbānī karīne**; **chā, meherbānī karīne**]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "મિત્ર (mitra) and મહેરબાની's shared root from the last chapter, and કુટુંબ (kuṭumb)'s proposed Dravidian root",
+              "action": "TRACE",
+              "instruction": "Chinese chá becomes Persian chā becomes ચા, the overland road",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: Chinese *chá* → Persian *chā* → **ચા**, the overland road]"
+            },
+            {
+              "kind": "prompt",
+              "action": "NAME",
+              "instruction": "one language that took the sea road instead, and its word (English, tea)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: **મિત્ર** and **મહેરબાની**'s shared root from the last chapter, and **કુટુંબ**'s proposed Dravidian root]"
+              "source": "[YOU NAME: one language that took the sea road instead, and its word (English, **tea**)]"
             }
           ]
         },
@@ -592,11 +312,321 @@
             },
             {
               "kind": "speech",
-              "text": "Give the word for \"sister.\" (Bahen.) Is it the same root as English sister? (No — that connection belongs to bhāī/brother instead.) What does bahen probably come from? (Sanskrit bhaginī, disputedly tied to bhaga, \"share.\") Name this chapter's four people and things: friend, family, brother, sister. (Mitra, kuṭumb, bhāī, bahen.)"
+              "text": "Ask for tea politely. (Chā, meherbānī karīne.) Did chā come by land or by sea? (Land — through Persian, from Mandarin.) Which English word for the same plant took the sea route instead, and through which language? (Tea, through Dutch.)"
             },
             {
               "kind": "speech",
-              "text": "Sources: Wiktionary: બહેન (bahen); Wiktionary: Sanskrit bhagini."
+              "text": "Sources: Wiktionary: ચા (chā); Etymonline: chai."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C10-dudh",
+      "sequence": 520,
+      "title": "દૂધ (dūdh) — a verb frozen into a noun",
+      "headword": "દૂધ",
+      "romanization": "dūdh",
+      "gloss": "milk — inherited straight from Sanskrit, and a root English keeps in an unexpected word",
+      "script": "gujarati",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:55b1fd302fdde432",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "પાણી (pāṇī) was never borrowed. ચા (chā) came the long way from China. The third drink is, like water, entirely Gujarati's own — but it got that way differently."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "દૂધ — dūdh — milk."
+            },
+            {
+              "kind": "speech",
+              "text": "દૂધ, મહેરબાની કરીને. — dūdh, meherbānī karīne. — Milk, please."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "દ da, ૂ the long-ū sign below it, then ધ dha — the aspirated d, the same puff of breath that made ખ the aspirated k and ભ the aspirated b. You have met the letter itself before, in વાંધો નહીં."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart — the verb that became its own product",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dūdh comes from Sanskrit dugdha, and dugdha is not, at root, a noun at all — it is the past participle of duh-, \"to milk,\" so it means literally \"milked.\" The action came first; the word for the substance is just that verb, frozen. It is the same trick gamvũ played with \"to please,\" run on a different part of speech: a verb collapsing into the thing it names."
+            },
+            {
+              "kind": "speech",
+              "text": "The Indo-European root is dheugh-, \"to be fit, useful, of avail.\" Its Germanic descendant did not go on to mean milk in English at all — it survives in doughty, \"valiant, capable,\" from Old English dohtig, \"of good use.\" Dūdh and doughty are cousins by way of a root that once meant simply being of use — milk as the useful thing, valor as the useful person."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dūdh — milk, and dūdh, meherbānī karīne — milk, please",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **dūdh** — milk, and **dūdh, meherbānī karīne** — milk, please]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "all three requests so far — pāṇī, chā, dūdh, each with meherbānī karīne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: all three requests so far — **pāṇī**, **chā**, **dūdh**, each with *meherbānī karīne*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "duh- \"to milk\" becomes dugdha \"milked\" becomes dūdh, and becomes English doughty",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: *duh-* \"to milk\" → *dugdha* \"milked\" → **dūdh**, and → English **doughty**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "NAME",
+              "instruction": "which of the three drinks is a loanword (ચા (chā)) and which two are not",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU NAME: which of the three drinks is a loanword (**ચા**) and which two are not]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask for milk politely. (Dūdh, meherbānī karīne.) What part of speech was dugdha before it became a noun for milk? (A past participle — \"milked.\") Which unexpected English word for bravery shares its root with dūdh? (Doughty.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: દૂધ (dūdh); Etymonline: doughty."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C10-rotli",
+      "sequence": 530,
+      "title": "રોટલી (roṭlī) — a request pattern, run four times",
+      "headword": "રોટલી",
+      "romanization": "roṭlī",
+      "gloss": "flatbread — the fourth request, an honest dead end for its origin, and the letter -ī does not always mean what you'd guess",
+      "script": "gujarati",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:a5742f7d8db85833",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three drinks, one pattern: pāṇī, chā, dūdh, each followed by meherbānī karīne. The fourth request is food, not drink, and it closes the chapter by finally breaking a pattern instead of continuing one."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "રોટલી — roṭlī — flatbread."
+            },
+            {
+              "kind": "speech",
+              "text": "રોટલી, મહેરબાની કરીને. — roṭlī, meherbānī karīne. — Bread, please."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ર ra, ો the o sign, then a new letter: ટ, a retroflex ṭ — the tongue curls back the way it does for ણ, but here it stops the airflow instead of letting it through the nose. Then લ la, and ી long-ī. Headless throughout, like every letter you've met."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: an -ī that does not mean \"feminine, guaranteed\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "રોટલી (roṭlī) is feminine, and its ending fits: many Gujarati nouns ending in -ī are feminine, the same -ī you saw mark the feminine adjective ending in sārī. But you already own the counter-example: પાણી also ends in -ī, and pāṇī is neuter. The ending is a hint worth noticing, not a rule you can trust blind — every noun's gender has to be learned with the noun, the way madad karvī forced કરવી into its feminine shape only because madad itself was feminine, not because of any ending on karvī alone."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart — where the trail runs out",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "roṭlī is inherited from Sanskrit roṭikā, \"a kind of bread.\" That much is certain. What roṭikā itself comes from is not: the standard comparative dictionaries weigh an unattested root meaning \"to strike against\" against another meaning \"to crush,\" and neither Turner nor Mayrhofer picks a winner."
+            },
+            {
+              "kind": "speech",
+              "text": "That gives this chapter its own three-way dial, the same shape jāṇvũ, levũ, and khāvũ once drew for verbs: pāṇī and dūdh are inherited straight from Sanskrit with a full etymology behind them; chā is a loan, traceable to Mandarin by a known road; roṭlī is inherited too, but its own root is where recorded history simply stops."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "roṭlī, meherbānī karīne — bread, please",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **roṭlī, meherbānī karīne** — bread, please]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "all four requests — pāṇī, chā, dūdh, roṭlī, each with meherbānī karīne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: all four requests — **pāṇī**, **chā**, **dūdh**, **roṭlī**, each with *meherbānī karīne*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SORT",
+              "instruction": "inherited with a known root (pāṇī, dūdh), loaned (chā), inherited with an unknown root (roṭlī)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SORT: inherited with a known root (**pāṇī**, **dūdh**), loaned (**chā**), inherited with an unknown root (**roṭlī**)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "roṭlī feminine by its -ī, pāṇī neuter despite its -ī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: **roṭlī** feminine by its **-ī**, **pāṇī** neuter despite its **-ī**]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask for bread politely. (Roṭlī, meherbānī karīne.) Does roṭikā's own root have a settled answer? (No — the dictionaries disagree and leave it open.) Name one Gujarati noun ending in -ī that is feminine and one that is neuter. (Roṭlī; pāṇī.) Run all four requests from this chapter. (Pāṇī, chā, dūdh, roṭlī, each with meherbānī karīne.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: રોટલી (roṭlī); Wiktionary: Sanskrit rotika."
             }
           ]
         }

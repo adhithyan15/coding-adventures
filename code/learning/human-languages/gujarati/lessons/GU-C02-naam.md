@@ -3,7 +3,7 @@ schema_version: 2
 id: GU-C02-naam
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 70
-chapter: 2
+chapter: 3
 type: word
 headword: નામ
 gloss: name

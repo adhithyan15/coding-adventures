@@ -2,24 +2,24 @@
   "version": 1,
   "language": "gujarati",
   "chapter": 3,
-  "title": "How Are You?",
+  "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:8761b18a7cb6a98f",
+  "sourceHash": "fnv1a64:d6ec24575b6947f5",
   "lessons": [
     {
-      "id": "GU-C03-hun",
-      "sequence": 160,
-      "title": "હું (hũ) — \"I\"",
-      "headword": "હું",
+      "id": "GU-C02-naam",
+      "sequence": 70,
+      "title": "નામ (nām) — \"name,\" a word older than Europe",
+      "headword": "નામ",
       "romanization": "",
-      "gloss": "I",
+      "gloss": "name",
       "script": "gujarati",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:67be20d0fd32bf19",
+      "sourceHash": "fnv1a64:15e0f75a40262bd8",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -44,7 +44,7 @@
             },
             {
               "kind": "speech",
-              "text": "To answer \"how are you?\" you first need \"I.\" In Chapter 2 you learned mārũ (\"my\"); here is its owner."
+              "text": "The first word of the introduction — and a bridge between India and Europe."
             }
           ]
         },
@@ -55,7 +55,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "હ (ha) + the u-sign + nasal becomes હું (hũ). One nasal syllable."
+              "text": "ન (na) + ા (long ā) + મ (ma) becomes નામ (nām)."
             }
           ]
         },
@@ -66,18 +66,148 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "હું (hũ, \"I\") descends from Sanskrit અહમ્ (aham, \"I\"), worn down through Old Gujarati (haũ) to hũ. That aham is from Proto-Indo-European h₁eǵ(H)om — the ancestor of Latin ego and English I. So Gujarati's hũ, Latin ego, and English I are one ancient word. Its possessive is the મારું (mārũ, \"my\") from Chapter 2."
+              "text": "નામ (nām, \"name\") from Sanskrit નામન્ (nāman), from Proto-Indo-European h₃nómn (its final n syllabic) — the same root as English name, Latin nōmen ( becomes noun), Greek onoma, and Hindi nām. Gujarati nām and English name are cousins from before either language existed."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"nām\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"nām\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the family — nām / English name / Latin nōmen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the family — *nām* / English *name* / Latin *nōmen*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What root is nām from, and its English cousin? (Sanskrit nāman / PIE h₃nómn; English name.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C02-maarun",
+      "sequence": 80,
+      "title": "મારું (mārũ) — \"my,\" and gender again",
+      "headword": "મારું",
+      "romanization": "",
+      "gloss": "my (neuter; also મારો m. / મારી f.)",
+      "script": "gujarati",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:2e77586c2c521882",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word that makes the name yours — and, like sārũ, it changes with gender."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "મા (mā) + રું (rũ, with the nasal) becomes મારું (mārũ)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "મારું (mārũ, \"my\") is on the first-person root ma- — the same ma-/me- behind English me, my, mine, Latin meus, and Hindi merā. Gujarati's \"my\" and English's \"my\" are, at the root, one word."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: \"I\" plus the copula",
+          "title": "Grammar Lens: \"my\" agrees in all three genders",
           "segments": [
             {
               "kind": "speech",
-              "text": "Hũ takes the copula છું (chhũ, \"am\"): hũ … chhũ. So the answer to tame kem chho? begins હું (hũ …)."
+              "text": "Because nām (\"name\") is neuter, \"my name\" is મારું નામ (mārũ nām) — the neuter mārũ. The full set:"
+            },
+            {
+              "kind": "speech",
+              "text": "મારો (māro) — masculine (e.g. māro dēsh, \"my country\")."
+            },
+            {
+              "kind": "speech",
+              "text": "મારી (mārī) — feminine (e.g. mārī bhāṣā, \"my language\")."
+            },
+            {
+              "kind": "speech",
+              "text": "મારું (mārũ) — neuter (e.g. mārũ nām, \"my name\")."
+            },
+            {
+              "kind": "speech",
+              "text": "Every possessive works this way — three forms, chosen by the noun's gender. It is the thread you first pulled in the earlier sārũ lesson."
             }
           ]
         },
@@ -95,29 +225,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"hũ\"",
+              "instruction": "the three — māro (m.) / mārī (f.) / mārũ (n.)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"hũ\"]"
+              "source": "[YOU SAY: the three — *māro* (m.) / *mārī* (f.) / *mārũ* (n.)]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the family — hũ / Latin ego / English I",
+              "instruction": "\"my name\" and why (mārũ nām — nām is neuter)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the family — *hũ* / Latin *ego* / English **I**]"
+              "source": "[YOU SAY: \"my name\" and why (*mārũ nām* — *nām* is neuter)]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"hũ … chhũ\" — I am …",
+              "instruction": "the m- family (mārũ, English me, my)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"hũ … chhũ\" — I am …]"
+              "source": "[YOU SAY: the m- family (*mārũ*, English *me*, *my*)]"
             }
           ]
         },
@@ -134,26 +264,26 @@
             },
             {
               "kind": "speech",
-              "text": "What Sanskrit word is hũ from, and its cousins? (Aham; Latin ego, English I.)"
+              "text": "Which form of \"my\" goes with nām, and why? (Mārũ — the neuter, because nām is a neuter noun.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "GU-C03-kem",
-      "sequence": 170,
-      "title": "કેમ (kem) — \"how,\" a proper k- question",
-      "headword": "કેમ",
+      "id": "GU-C02-chhe",
+      "sequence": 90,
+      "title": "છે (chhe) — \"is,\" a copula all Gujarati's own",
+      "headword": "છે",
       "romanization": "",
-      "gloss": "how (also \"why\")",
+      "gloss": "is (the copula)",
       "script": "gujarati",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6043558b512b105c",
+      "sourceHash": "fnv1a64:4f941baeef9ff5f4",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -178,7 +308,7 @@
             },
             {
               "kind": "speech",
-              "text": "Where shũ (\"what\") hid its k-, this one wears it plainly — and it opens the most Gujarati of greetings."
+              "text": "The little verb \"is\" — and here it is a word you will not recognise from Hindi."
             }
           ]
         },
@@ -189,7 +319,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ક (ka) + ે (the e-sign) + મ (ma) becomes કેમ (kem)."
+              "text": "છ (chha, a breathy ch) + ે (the e-sign) becomes છે (chhe). One syllable."
             }
           ]
         },
@@ -200,12 +330,23 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "કેમ (kem, \"how\"; also \"why\") is from the interrogative stem ક- (ka-), PIE kʷo- — the same root behind English wh- and Latin qu-. It heads the plain k- family Gujarati mostly kept: kem (how), kōṇ (who), kyā̃ (where), kyāre (when). And કેમ છો? (kem chho?, \"how are you?\") is, for most Gujaratis, the real everyday hello — warmer than namaste."
+              "text": "છે (chhe, \"is\") is Gujarati's copula — and, unusually, it is not the hai of Hindi or the asti of Sanskrit. It grew from an Old Gujarati form (achhaï) along its own path, so it is one of the words that most quickly marks a sentence as Gujarati rather than Hindi. Its forms run: હું છું (hũ chhũ, \"I am\"), તું છે (tũ chhe, \"you are\"), તે છે (te chhe, \"he/she/it is\"), તમે છો (tame chho, \"you are,\" respectful)."
             }
           ]
         },
         {
           "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the verb goes last",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Gujarati is subject–object–verb, like all its Indo-Aryan sisters: \"my name Arun is.\" Chhe sits at the end of the sentence, where English puts \"is\" in the middle."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -218,25 +359,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"kem\"",
+              "instruction": "\"chhe\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"kem\"]"
+              "source": "[YOU SAY: \"chhe\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the k- question family — kem, kōṇ, kyā̃, kyāre",
+              "instruction": "the copula set — hũ chhũ (I am), tame chho (you are), te chhe (is)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the k- question family — *kem, kōṇ, kyā̃, kyāre*]"
+              "source": "[YOU SAY: the copula set — *hũ chhũ* (I am), *tame chho* (you are), *te chhe* (is)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what makes chhe special (it's Gujarati's own, not Hindi's hai)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what makes *chhe* special (it's Gujarati's own, not Hindi's *hai*)]"
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -248,26 +398,26 @@
             },
             {
               "kind": "speech",
-              "text": "What root does kem share with English how/what? (The interrogative ka-, PIE kʷo-.)"
+              "text": "What is chhe, and how does it differ from Hindi? (Gujarati's copula, \"is\"; it is not Hindi's hai — a distinctively Gujarati word.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "GU-C03-tame-kem-chho",
-      "sequence": 180,
-      "title": "તમે કેમ છો? (tame kem chho?) — \"how are you?\"",
-      "headword": "તમે કેમ છો?",
+      "id": "GU-C02-maarun-naam-chhe",
+      "sequence": 100,
+      "title": "મારું નામ … છે (mārũ nām … chhe) — \"my name is…\"",
+      "headword": "મારું નામ … છે",
       "romanization": "",
-      "gloss": "how are you? (respectful)",
+      "gloss": "my name is…",
       "script": "gujarati",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ba6d1156668fc552",
+      "sourceHash": "fnv1a64:cc4bb16a4b9ddb66",
       "notice": null,
       "blocks": [
         {
@@ -283,37 +433,29 @@
             },
             {
               "kind": "speech",
-              "text": "The greeting most Gujaratis actually use — three words you already own."
+              "text": "Three atoms you now own, assembled into a first sentence."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The phrase, taken apart",
+          "type": "input",
+          "title": "The two words — assembled",
           "segments": [
             {
               "kind": "speech",
-              "text": "તમે કેમ છો? = તમે (tame, respectful \"you\") + કેમ (kem, \"how\") + છો (chho, \"are\") — literally \"you how are?\", the verb last. Chho is the respectful/plural form of the copula chhe you met in Chapter 2 (hũ chhũ I am / tame chho you are). To a friend (tũ): તું કેમ છે? (tũ kem chhe?)."
+              "text": "મારું (my, neuter) + નામ (name) + your name + છે (is) = mārũ nām … chhe, \"my name is…\" Mārũ nām Arun chhe. becomes \"My name is Arun.\""
             }
           ]
         },
         {
           "index": 2,
           "type": "grammar",
-          "title": "Grammar Lens: match the \"you\" to the copula",
+          "title": "Grammar Lens: the verb goes last",
           "segments": [
             {
               "kind": "speech",
-              "text": "Respectful: તમે કેમ છો? (tame … chho)."
-            },
-            {
-              "kind": "speech",
-              "text": "Familiar: તું કેમ છે? (tũ … chhe)."
-            },
-            {
-              "kind": "speech",
-              "text": "Same pattern as every Indo-Aryan track: the \"you\" and its verb-form travel together."
+              "text": "Gujarati keeps the verb at the end — \"my name Arun is.\" Note too that mārũ is neuter to agree with nām (neuter): the agreement you learned two lessons ago is already doing its quiet work."
             }
           ]
         },
@@ -331,29 +473,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the respectful greeting — tame kem chho?",
+              "instruction": "\"mārũ nām … chhe\" with your name",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the respectful greeting — *tame kem chho?*]"
+              "source": "[YOU SAY: \"mārũ nām … chhe\" with your name]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the familiar version — tũ kem chhe?",
+              "instruction": "why mārũ (neuter) and where chhe sits (agrees with nām; verb last)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the familiar version — *tũ kem chhe?*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "where the verb sits (at the end)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: where the verb sits (at the end)]"
+              "source": "[YOU SAY: why *mārũ* (neuter) and where *chhe* sits (agrees with *nām*; verb last)]"
             }
           ]
         },
@@ -370,26 +503,26 @@
             },
             {
               "kind": "speech",
-              "text": "Give the everyday Gujarati \"how are you?\", and its copula form. (Tame kem chho?; chho — the respectful form of chhe.)"
+              "text": "Give your name in Gujarati, and say where the verb goes. (Mārũ nām … chhe; the verb chhe is last.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "GU-C03-majaa",
-      "sequence": 190,
-      "title": "મજા (majā) — \"enjoyment,\" and how to answer",
-      "headword": "મજા",
+      "id": "GU-C02-anand",
+      "sequence": 110,
+      "title": "તમને મળીને આનંદ થયો (tamne maḷīne ānand thayo) — \"pleased to meet you\"",
+      "headword": "તમને મળીને આનંદ થયો",
       "romanization": "",
-      "gloss": "enjoyment, fun — and the reply \"હું મજામાં છું\"",
+      "gloss": "pleased to meet you (lit. \"meeting you, joy happened\")",
       "script": "gujarati",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:864f25d192a091ed",
+      "sourceHash": "fnv1a64:c6b727d1a11e6531",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -414,7 +547,7 @@
             },
             {
               "kind": "speech",
-              "text": "The word that answers \"how are you?\" — and it comes not from Sanskrit but from Persia."
+              "text": "The warm close of an introduction — a word that means bliss itself."
             }
           ]
         },
@@ -425,7 +558,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "મ (ma) + જા (jā) becomes મજા (majā)."
+              "text": "The key word is આનંદ (ānand): આ + ન + ં (the nasal) + દ (da)."
             }
           ]
         },
@@ -436,141 +569,367 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "મજા (majā, \"enjoyment, fun, relish, pleasure\") is not Sanskrit — it is Perso-Arabic, from Persian maza (\"taste, relish\"). Gujaratis, a great trading people, wove thousands of Persian and Arabic words into their speech over centuries of commerce across the Arabian Sea — and even \"how are you\" is answered with one. To say \"I'm well,\" Gujarati says હું મજામાં છું (hũ majāmā chhũ) — literally \"I am in enjoyment\" (majā + -mā \"in\" + chhũ \"am\")."
+              "text": "તમને મળીને આનંદ થયો = તમને (tamne, \"to you\") + મળીને (maḷīne, \"having met\") + આનંદ થયો (ānand thayo, \"joy happened\") — literally \"having met you, joy happened.\" The key word આનંદ (ānand, \"joy, bliss\") is Sanskrit — ā- (\"fully\") + nand (\"to rejoice\") — the ānanda of sat-cit-ānanda (\"being-consciousness-bliss\"), and a common Gujarati name. So a simple greeting reaches, as Sanskrit did, for the word for the deepest happiness."
             }
           ]
         },
         {
           "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"tamne maḷīne ānand thayo\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"tamne maḷīne ānand thayo\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the key word and its meaning (ānand, \"joy/bliss\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the key word and its meaning (*ānand*, \"joy/bliss\")]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what it's built from (ā- \"fully\" + nand \"to rejoice\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what it's built from (*ā-* \"fully\" + *nand* \"to rejoice\")]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does the phrase literally say, and what is ānand? (\"Having met you, joy happened\"; Sanskrit ānanda, \"bliss.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C02-tu-tame",
+      "sequence": 120,
+      "title": "તું / તમે (tũ / tame) — \"you,\" familiar and respectful",
+      "headword": "તું / તમે",
+      "romanization": "",
+      "gloss": "you (familiar / respectful)",
+      "script": "gujarati",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:1dbe9a9860ca7d78",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To ask a name you need \"you\" — and Gujarati grades respect the way French does."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "તું (tũ): ત (ta) + the u-sign + nasal. તમે (tame): ત + મ + ે."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "તું (tũ, familiar \"you\") from Sanskrit tvam, from PIE tū — the same root as English archaic thou, Latin tū, French tu, and Hindi tū. તમે (tame, respectful \"you\") is grammatically plural — courtesy-by-plural, like French vous and Hindi āp. For a first meeting, use તમે; it takes the plural copula chho (tame … chho)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"tũ\" (familiar) and \"tame\" (respectful)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"tũ\" (familiar) and \"tame\" (respectful)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the English cousin of tũ (thou)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the English cousin of *tũ* (**thou**)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which you use on first meeting (tame)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which you use on first meeting (*tame*)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which \"you\" is respectful, and what English word is tũ cousin to? (Tame; archaic thou, from PIE tū.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C02-shun",
+      "sequence": 130,
+      "title": "શું (shũ) — \"what\"",
+      "headword": "શું",
+      "romanization": "",
+      "gloss": "what",
+      "script": "gujarati",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:ba0eb5e58c15daea",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The question-word — and the one Gujarati question that does not start with k-."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "શ (sha) + the u-sign + nasal becomes શું (shũ)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "શું (shũ, \"what\") descends, by a winding road, from the Sanskrit interrogative stem ક- (ka-, PIE kʷo-) — the root behind English what, Latin quis, and Hindi kyā. Most of Gujarati's questions still show that k- plainly — કેમ (kem, how), કોણ (kōṇ, who), ક્યાં (kyā̃, where), ક્યારે (kyāre, when) — but \"what\" wore down into this sh- form. So shũ is the odd cousin in a k- family."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"shũ\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"shũ\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the k- question family it belongs to (kem, kōṇ, kyā̃, kyāre)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the k- question family it belongs to (*kem, kōṇ, kyā̃, kyāre*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "its distant English cousin (what)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: its distant English cousin (*what*)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does shũ mean, and what root does it share with English what? (\"What\"; the interrogative ka- / PIE kʷo- — worn to sh- in Gujarati.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C02-tamarun-naam-shun-chhe",
+      "sequence": 140,
+      "title": "તમારું નામ શું છે? (tamārũ nām shũ chhe?) — \"what's your name?\"",
+      "headword": "તમારું નામ શું છે?",
+      "romanization": "",
+      "gloss": "what's your name?",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bd3a4f94655850ec",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Turn the introduction around — ask, instead of tell."
+            }
+          ]
+        },
+        {
+          "index": 1,
           "type": "input",
-          "title": "The exchange — the reply",
+          "title": "The two words — assembled",
           "segments": [
             {
               "kind": "speech",
-              "text": "— tame kem chho? (\"How are you?\") — majāmā, ābhār. (\"Well [lit. 'in enjoyment'], thank you.\")"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"majā\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"majā\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the full reply — hũ majāmā chhũ",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the full reply — *hũ majāmā chhũ*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "which heritage majā belongs to (Persian, not Sanskrit)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: which heritage *majā* belongs to (Persian, not Sanskrit)]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "How does Gujarati say \"I'm well,\" and where does majā come from? (Hũ majāmā chhũ, \"I'm in enjoyment\"; Persian maza, \"taste/relish.\")"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GU-C03-vandho-nahi",
-      "sequence": 200,
-      "title": "વાંધો નહીં (vāndho nahĩ) — \"no problem\"",
-      "headword": "વાંધો નહીં",
-      "romanization": "",
-      "gloss": "no problem / it's okay / you're welcome",
-      "script": "gujarati",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:7be03f1fc69c0369",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "When someone thanks you — or apologises — this is the easy, gracious reply."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "વાંધો (vāndho, \"objection, problem\" — with the nasal on વાં) + નહીં (nahĩ, \"not\") becomes vāndho nahĩ."
+              "text": "તમારું (tamārũ, \"your,\" the respectful possessive from tame, neuter to match nām) + નામ (name) + શું (what) + છે (is) becomes literally \"your name what is?\" Gujarati keeps the verb last and drops the question-word shũ into the object slot."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "grammar",
+          "title": "Grammar Lens: answering, and the familiar form",
           "segments": [
             {
               "kind": "speech",
-              "text": "વાંધો નહીં literally means \"[there is] no objection\" — vāndho (\"objection, difficulty, harm\") + નહીં (nahĩ, \"not / no\"). It serves as \"it's okay / no worries / no problem / you're welcome.\" The negative નહીં (nahĩ) is the fuller form of the ના (nā) you met in Chapter 1 — both from the ancient na-, Proto-Indo-European ne, behind English no, not, and Hindi nahīṁ."
+              "text": "Answer with the sentence you built: Mārũ nām Arun chhe. The familiar version swaps tamārũ for તારું (tārũ, \"your,\" from tũ): tārũ nām shũ chhe? Note mārũ / tārũ / tamārũ — \"my / your / your (resp.)\" — all take the neuter -ũ before nām."
             }
           ]
         },
@@ -588,29 +947,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"vāndho nahĩ\"",
+              "instruction": "the respectful question — tamārũ nām shũ chhe?",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"vāndho nahĩ\"]"
+              "source": "[YOU SAY: the respectful question — *tamārũ nām shũ chhe?*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "what it literally means (\"no objection\")",
+              "instruction": "answer it — mārũ nām … chhe",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: what it literally means (\"no objection\")]"
+              "source": "[YOU SAY: answer it — *mārũ nām … chhe*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the exchange — ābhār / vāndho nahĩ",
+              "instruction": "the familiar \"your\" (tārũ)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the exchange — *ābhār* / *vāndho nahĩ*]"
+              "source": "[YOU SAY: the familiar \"your\" (*tārũ*)]"
             }
           ]
         },
@@ -627,26 +986,26 @@
             },
             {
               "kind": "speech",
-              "text": "What does vāndho nahĩ literally say, and what ancient root is its nahĩ from? (\"No objection\"; PIE ne — English no/not.)"
+              "text": "Ask \"what's your name?\" respectfully. (Tamārũ nām shũ chhe?; the verb chhe is last.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "GU-C03-practice",
-      "sequence": 210,
-      "title": "Chapter 3 — The how-are-you exchange",
+      "id": "GU-C02-practice",
+      "sequence": 150,
+      "title": "Chapter 3 — The introduction exchange",
       "headword": "(dialogue)",
       "romanization": "",
-      "gloss": "Chapter 3 recap — the how-are-you exchange",
+      "gloss": "Chapter 3 recap — the introduction exchange",
       "script": "gujarati",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8864bcf8b507d9d1",
+      "sourceHash": "fnv1a64:784b4f8e18b9f565",
       "notice": null,
       "blocks": [
         {
@@ -662,7 +1021,7 @@
             },
             {
               "kind": "speech",
-              "text": "No new words. The whole responding cycle, from atoms you now own."
+              "text": "No new words. The whole introduction, assembled from atoms you now own."
             }
           ]
         },
@@ -680,38 +1039,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"How are you?\" (the everyday hello) — tame kem chho?",
+              "instruction": "\"My name is Mira.\" — mārũ nām Mira chhe.",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"How are you?\" (the everyday hello) — *tame kem chho?*]"
+              "source": "[YOU SAY: \"My name is Mira.\" — *mārũ nām Mira chhe.*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"I'm well, thank you.\" — hũ majāmā chhũ, ābhār.",
+              "instruction": "\"What's your name?\" — tamārũ nām shũ chhe?",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"I'm well, thank you.\" — *hũ majāmā chhũ, ābhār.*]"
+              "source": "[YOU SAY: \"What's your name?\" — *tamārũ nām shũ chhe?*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"No problem / you're welcome.\" — vāndho nahĩ.",
+              "instruction": "\"My name is Arun.\" — mārũ nām Arun chhe.",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"No problem / you're welcome.\" — *vāndho nahĩ.*]"
+              "source": "[YOU SAY: \"My name is Arun.\" — *mārũ nām Arun chhe.*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the familiar question — tũ kem chhe?",
+              "instruction": "\"Pleased to meet you.\" — tamne maḷīne ānand thayo.",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the familiar question — *tũ kem chhe?*]"
+              "source": "[YOU SAY: \"Pleased to meet you.\" — *tamne maḷīne ānand thayo.*]"
             }
           ]
         },
@@ -729,29 +1088,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the k- question-word for \"how\" (kem)",
+              "instruction": "\"name,\" \"my,\" \"is\" (nām, mārũ, chhe)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the k- question-word for \"how\" (*kem*)]"
+              "source": "[YOU SAY: \"name,\" \"my,\" \"is\" (*nām*, *mārũ*, *chhe*)]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"I\" and its copula (hũ, chhũ)",
+              "instruction": "the two \"you\" levels (tũ / tame)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"I\" and its copula (*hũ*, *chhũ*)]"
+              "source": "[YOU SAY: the two \"you\" levels (*tũ* / *tame*)]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "which of your words is Persian, not Sanskrit (majā)",
+              "instruction": "\"what,\" and where the verb sits (shũ; the verb is last)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: which of your words is Persian, not Sanskrit (*majā*)]"
+              "source": "[YOU SAY: \"what,\" and where the verb sits (*shũ*; the verb is last)]"
             }
           ]
         },
@@ -768,19 +1127,19 @@
             },
             {
               "kind": "speech",
-              "text": "kem from the interrogative k- (PIE kʷo-), cousin of English how/what."
+              "text": "nām from Sanskrit nāman becomes English name."
             },
             {
               "kind": "speech",
-              "text": "hũ from Sanskrit aham becomes Latin ego, English I."
+              "text": "mārũ from ma- becomes English my; agrees in three genders (māro/mārī/mārũ)."
             },
             {
               "kind": "speech",
-              "text": "majā from Persian maza, \"taste/relish\" — the trade-language layer."
+              "text": "chhe — Gujarati's own copula (not Hindi's hai)."
             },
             {
               "kind": "speech",
-              "text": "nahĩ from PIE ne, English no (in vāndho nahĩ)."
+              "text": "shũ from ka- becomes English what; tũ from tū becomes thou."
             }
           ]
         },
@@ -797,7 +1156,7 @@
             },
             {
               "kind": "speech",
-              "text": "Someone greets you with tame kem chho? — reply that you're well and thank them. (Hũ majāmā chhũ, ābhār — and to their thanks, vāndho nahĩ.)"
+              "text": "Introduce yourself and ask a stranger's name in Gujarati. (Mārũ nām … chhe. Tamārũ nām shũ chhe?)"
             }
           ]
         }

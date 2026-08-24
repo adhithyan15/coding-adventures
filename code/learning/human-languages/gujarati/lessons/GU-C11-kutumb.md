@@ -3,7 +3,7 @@ schema_version: 2
 id: GU-C11-kutumb
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 550
-chapter: 11
+chapter: 12
 type: word
 headword: કુટુંબ
 romanization: kuṭumb

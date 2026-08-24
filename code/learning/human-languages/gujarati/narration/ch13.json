@@ -2,36 +2,34 @@
   "version": 1,
   "language": "gujarati",
   "chapter": 13,
-  "title": "The Headless Script, Piece by Piece",
+  "title": "Eye, Ear, Mouth, and Nose",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c8aff7352808a4fa",
+  "sourceHash": "fnv1a64:0cc5e0bbbf453e5b",
   "lessons": [
     {
-      "id": "GU-W01-aa",
-      "sequence": 720,
-      "title": "આ (ā) — the SAME vowel standing alone",
-      "headword": "આ",
-      "romanization": "ā",
-      "gloss": "the SAME vowel standing alone — and why a script needs two shapes for one sound",
+      "id": "GU-C12-aankh",
+      "sequence": 580,
+      "title": "આંખ (āṅkh) — an eye, and a nasal that is not what it looks like",
+      "headword": "આંખ",
+      "romanization": "āṅkh",
+      "gloss": "eye — a straight cousin of the English word, and a nasal mark that is not the neuter tell you might expect",
       "script": "gujarati",
-      "modality": "pen",
-      "derivedModality": "pen",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3fb042e70dbca6f9",
+      "sourceHash": "fnv1a64:767d78e31b9bac8b",
       "notice": {
-        "modality": "pen",
+        "modality": "sight",
         "needs": [
-          "a pen and something to write on",
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script",
+          "The letters in this word",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -47,84 +45,88 @@
             },
             {
               "kind": "speech",
-              "text": "Write the piece from the previous lesson before adding another."
+              "text": "બહેન (bahen) closed a chapter about people. This chapter checks on how someone is — starting with the parts of the body a friend might actually ask about."
             }
           ]
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "Script",
+          "type": "input",
+          "title": "You'll want to know first — one word",
           "segments": [
             {
               "kind": "speech",
-              "text": "Now a distinction that trips up every beginner in every Indic script, and it is worth meeting deliberately rather than by accident."
-            },
-            {
-              "kind": "speech",
-              "text": "The mark you just learned only works attached to a consonant. So what do you write when a word starts with that vowel, with no consonant to hang it on?"
-            },
-            {
-              "kind": "speech",
-              "text": "You write a different character:"
-            },
-            {
-              "kind": "speech",
-              "text": "આ (ā)."
-            },
-            {
-              "kind": "speech",
-              "text": "That is ā as well — the same sound — but it is an independent vowel, a full letter that stands on its own at the start of a word."
-            },
-            {
-              "kind": "speech",
-              "text": "These are two different characters, not two styles of one. They look related because they are, and a computer, a font and this book all treat them as completely separate. Confusing them is the commonest spelling error in the script."
-            },
-            {
-              "kind": "speech",
-              "text": "So what decides which one you write is position, not sound:"
-            },
-            {
-              "kind": "speech",
-              "text": "આ (ā) begins a word."
-            },
-            {
-              "kind": "speech",
-              "text": "ા rides on a consonant."
-            },
-            {
-              "kind": "speech",
-              "text": "You already know a word that opens with the independent one — the word for thanks — and you will be able to read the whole of it shortly."
+              "text": "આંખ — āṅkh — eye."
             }
           ]
         },
         {
           "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
+          "type": "script",
+          "title": "The letters in this word",
           "segments": [
             {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "આ (ā)",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: આ]"
-            },
-            {
-              "kind": "prompt",
-              "action": "READ",
-              "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU READ: every piece this chapter has given you so far, in order]"
+              "kind": "speech",
+              "text": "આ the independent long-ā, then the nasal dot ં sitting on top of it — exactly the medial anusvāra you first read inside વાંચવું, doing the same job here, in the middle of a noun rather than a verb — then ખ, the aspirated k. Note what this nasal is NOT: it does not mark આંખ (āṅkh) as neuter — the word is feminine. A nasal dot in the middle of a word is a sound, present or absent as pronunciation happens to need it; it is a different thing entirely from the grammatical -ũ ending you will meet again soon, and this chapter keeps the two apart on purpose."
             }
           ]
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart — the same word as \"eye,\" unbroken",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "āṅkh is inherited from Sauraseni Prakrit akkhi, from Sanskrit akṣi, \"eye.\" The root is Indo-European h₃ekʷ-, \"eye; to see,\" and it survives unbroken in English eye itself, in Latin oculus (behind ocular), and in Greek ósse. This is bhāī's kind of cousin, not bahen's: a straight line back to the same ancestor, no borrowing and no detour."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āṅkh — eye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **āṅkh** — eye]"
+            },
+            {
+              "kind": "prompt",
+              "action": "MATCH",
+              "instruction": "the medial nasal here against the one in વાંચવું",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU MATCH: the medial nasal here against the one in **વાંચવું**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "STATE",
+              "instruction": "is this nasal a gender marker? (No.) Is āṅkh neuter? (No — feminine.)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU STATE: is this nasal a gender marker? (No.) Is **āṅkh** neuter? (No — feminine.)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "PIE h₃ekʷ- becomes Sanskrit akṣi becomes આંખ (āṅkh), and becomes English eye",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: PIE *h₃ekʷ-* → Sanskrit *akṣi* → **આંખ**, and → English **eye**]"
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -136,42 +138,39 @@
             },
             {
               "kind": "speech",
-              "text": "Which of the two starts a word? (આ, the independent vowel.) Which one attaches to a consonant? (ા, the mātrā.) And are they the same character? (No — two separate characters for one sound.)"
+              "text": "Give the word for \"eye.\" (Āṅkh.) Which English word is the same word by unbroken descent? (Eye.) Does the nasal dot in āṅkh mean the word is neuter? (No — āṅkh is feminine; the dot is only a sound.)"
             },
             {
               "kind": "speech",
-              "text": "Source: Unicode Gujarati chart."
+              "text": "Sources: Wiktionary: આંખ (āṅkh); Wiktionary: Sanskrit akshi."
             }
           ]
         }
       ]
     },
     {
-      "id": "GU-W01-na",
-      "sequence": 730,
-      "title": "ન — the consonant na",
-      "headword": "ન",
-      "romanization": "na",
-      "gloss": "the consonant na — and the second word you can read",
+      "id": "GU-C12-kaan",
+      "sequence": 590,
+      "title": "કાન (kān) — an ear whose own root is unsettled",
+      "headword": "કાન",
+      "romanization": "kān",
+      "gloss": "ear — a word Sanskrit itself could not settle the origin of, and one that changed gender on the way to Gujarati",
       "script": "gujarati",
-      "modality": "pen",
-      "derivedModality": "pen",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:fa3d353a1b98bf38",
+      "sourceHash": "fnv1a64:559d7aa7856a5423",
       "notice": {
-        "modality": "pen",
+        "modality": "sight",
         "needs": [
-          "a pen and something to write on",
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script",
-          "Guided Practice"
+          "The letters in this word"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -187,76 +186,99 @@
             },
             {
               "kind": "speech",
-              "text": "Write the piece from the previous lesson before adding another."
+              "text": "આંખ (āṅkh) traced back cleanly to a confirmed Indo-European root. The next body part will not be nearly as tidy."
             }
           ]
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "Script",
+          "type": "input",
+          "title": "You'll want to know first — one word",
           "segments": [
             {
               "kind": "speech",
-              "text": "ન (na)."
-            },
-            {
-              "kind": "speech",
-              "text": "na, with the same inherent a inside it. The n of English net, then the vowel nobody wrote."
-            },
-            {
-              "kind": "speech",
-              "text": "Now put the mātrā on it, exactly as you did with the first consonant:"
-            },
-            {
-              "kind": "speech",
-              "text": "ન (na) + ા becomes ના."
-            },
-            {
-              "kind": "speech",
-              "text": "nā — and that is no."
-            },
-            {
-              "kind": "speech",
-              "text": "You now hold both answers to a yes-or-no question, and you can read them both off the page:"
-            },
-            {
-              "kind": "speech",
-              "text": "હા ના."
-            },
-            {
-              "kind": "speech",
-              "text": "Two consonants and one mark. That is the arithmetic of an abugida: consonants and vowel signs multiply, so a small number of pieces reaches a large number of syllables very quickly."
+              "text": "કાન — kān — ear."
             }
           ]
         },
         {
           "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
+          "type": "script",
+          "title": "The letters in this word",
           "segments": [
             {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "ન (na)",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: ન]"
-            },
-            {
-              "kind": "prompt",
-              "action": "READ",
-              "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU READ: every piece this chapter has given you so far, in order]"
+              "kind": "speech",
+              "text": "ક ka, ા long-ā, ન na. All three already yours."
             }
           ]
         },
         {
           "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: a gender that changed on the way here",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કાન is feminine in Gujarati. Its Sanskrit ancestor, karṇa, was masculine. Nothing about inheriting a word guarantees its gender comes along unchanged — મિત્ર kept Sanskrit's masculine, but kān did not keep karṇa's. Gender, like the gender of આંખ (āṅkh) or બહેન, has to be learned with each noun as it stands today, not projected backward from what its ancestor was — the same caution રોટલી's chapter drew from its own -ī ending."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart — where even Sanskrit scholars disagree",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kān is inherited from Old Gujarati kāna, through Apabhramsa and Prakrit kaṇṇa, from Sanskrit karṇa, \"ear.\" Past that point, no agreement exists. Proposed origins include a root for \"defect\" (with \"ear\" as a later, narrower sense), a root meaning \"point\" or \"spike,\" a root meaning \"handle\" or \"grip,\" and a connection to śṛṇoti, \"to hear.\" None of these has won out. Kān joins roṭlī as a second word in your Gujarati vocabulary whose Sanskrit form is certain and whose deeper root is not — the honest answer, said plainly rather than picked at random."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kān — ear, and āṅkh — eye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **kān** — ear, and **āṅkh** — eye]"
+            },
+            {
+              "kind": "prompt",
+              "action": "STATE",
+              "instruction": "karṇa's Sanskrit gender against kān's Gujarati gender (masculine becomes feminine)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU STATE: *karṇa*'s Sanskrit gender against *kān*'s Gujarati gender (masculine → feminine)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "NAME",
+              "instruction": "two of the four disputed origins scholars have proposed for karṇa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU NAME: two of the four disputed origins scholars have proposed for *karṇa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "āṅkh's confirmed PIE root against kān's unsettled one",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: *āṅkh*'s confirmed PIE root against *kān*'s unsettled one]"
+            }
+          ]
+        },
+        {
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -268,42 +290,39 @@
             },
             {
               "kind": "speech",
-              "text": "What is ના? (No.) How many separate pieces did it take? (Two — a consonant and a mātrā.) And what does the bare consonant sound like on its own? (na, with the inherent vowel.)"
+              "text": "Give the word for \"ear.\" (Kān.) Did its gender change between Sanskrit and Gujarati? (Yes — masculine to feminine.) Is karṇa's own root settled? (No — several proposals, no agreement.)"
             },
             {
               "kind": "speech",
-              "text": "Source: Unicode Gujarati chart."
+              "text": "Sources: Wiktionary: કાન (kān); Wiktionary: Sanskrit karna."
             }
           ]
         }
       ]
     },
     {
-      "id": "GU-W01-ma",
-      "sequence": 740,
-      "title": "મ — the consonant ma",
-      "headword": "મ",
-      "romanization": "ma",
-      "gloss": "the consonant ma — the third piece of the greeting",
+      "id": "GU-C12-modhu",
+      "sequence": 600,
+      "title": "મોઢું (moḍhũ) — the tell you have been hearing all along",
+      "headword": "મોઢું",
+      "romanization": "moḍhũ",
+      "gloss": "mouth — the clearest example yet of Gujarati's neuter tell, the nasalized -ũ you have been hearing on every verb",
       "script": "gujarati",
-      "modality": "pen",
-      "derivedModality": "pen",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ac40c8630452d762",
+      "sourceHash": "fnv1a64:685ab11aa0e037e8",
       "notice": {
-        "modality": "pen",
+        "modality": "sight",
         "needs": [
-          "a pen and something to write on",
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script",
-          "Guided Practice"
+          "The letters in this word"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -319,64 +338,99 @@
             },
             {
               "kind": "speech",
-              "text": "Write the piece from the previous lesson before adding another."
+              "text": "કાન (kān)'s own gender shifted away from Sanskrit's. The next body part wears its gender in plain sight — the same nasalized ending you have heard on nearly every verb in this book."
             }
           ]
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "Script",
+          "type": "input",
+          "title": "You'll want to know first — one word",
           "segments": [
             {
               "kind": "speech",
-              "text": "મ (ma)."
-            },
-            {
-              "kind": "speech",
-              "text": "ma. The m of English met, with the inherent a riding along."
-            },
-            {
-              "kind": "speech",
-              "text": "Nothing new in the machinery this time — this is simply another consonant, and the rules you already have apply to it unchanged. Add the mātrā and you would get mā; leave it bare and it is ma."
-            },
-            {
-              "kind": "speech",
-              "text": "That is worth saying plainly, because it is the payoff of learning the system rather than the words. Every consonant from here behaves exactly like the two you already know. There are no new rules coming for them, only new shapes."
-            },
-            {
-              "kind": "speech",
-              "text": "Write it beside the two you have. Three letters, floating, no bar across the top."
+              "text": "મોઢું — moḍhũ — mouth."
             }
           ]
         },
         {
           "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
+          "type": "script",
+          "title": "The letters in this word",
           "segments": [
             {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "મ (ma)",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: મ]"
-            },
-            {
-              "kind": "prompt",
-              "action": "READ",
-              "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU READ: every piece this chapter has given you so far, in order]"
+              "kind": "speech",
+              "text": "મ ma, ો the o sign, then a new letter: ઢ, the retroflex aspirated ḍh — curl the tongue back as for ટ and ણ, and add the puff of breath that made ધ aspirated. Then ું, u with the nasal dot. Mo-ḍhũ."
             }
           ]
         },
         {
           "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the neuter tell, named plainly",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Every verb infinitive in this book ends in the neuter -વું: hovũ, javũ, jāṇvũ, lakhvũ — a whole word class marked by that one nasalized ending. મોઢું shows the same ending doing the same job on a noun: moḍhũ is neuter, and the nasalized -ũ is the single most recognizable tell for it. Not every neuter noun wears it — પાણી and નાક (nāk) do not — but when you do see or hear a word end this way, neuter is the way to bet. And do not confuse it with આંખ (āṅkh)'s nasal: that one sat in the middle of a feminine word and marked nothing about gender at all. This one sits at the end, and it does."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart — a mouth, and a doublet with its own formal twin",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "moḍhũ is inherited from Sauraseni Prakrit muha, from Sanskrit mukha, \"mouth, face.\" It has a formal doublet, મુખ mukh, borrowed directly from the same Sanskrit word the way kuṭumb was — the everyday and the formal register, side by side, from one ancestor reached by two different roads. Past Sanskrit, mukha's own root is not agreed upon — a second open question, alongside karṇa's, rather than a guess dressed up as an answer."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moḍhũ — mouth",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **moḍhũ** — mouth]"
+            },
+            {
+              "kind": "prompt",
+              "action": "STATE",
+              "instruction": "what gender the -ũ ending marks, and one verb infinitive that wears the same ending",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU STATE: what gender the *-ũ* ending marks, and one verb infinitive that wears the same ending]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "moḍhũ's end-of-word nasal against āṅkh's middle-of-word one",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: *moḍhũ*'s end-of-word nasal against *āṅkh*'s middle-of-word one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "NAME",
+              "instruction": "moḍhũ's formal doublet, and how it reached Gujarati (borrowed whole, like kuṭumb)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU NAME: *moḍhũ*'s formal doublet, and how it reached Gujarati (borrowed whole, like *kuṭumb*)]"
+            }
+          ]
+        },
+        {
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,42 +442,40 @@
             },
             {
               "kind": "speech",
-              "text": "What vowel is inside મ (ma) when nothing is attached? (a.) And what would મ (ma) plus the mātrā you know sound like? (mā.)"
+              "text": "Give the word for \"mouth.\" (Moḍhũ.) What gender does its -ũ ending mark? (Neuter.) Name the formal doublet of moḍhũ. (મુખ, mukh.)"
             },
             {
               "kind": "speech",
-              "text": "Source: Unicode Gujarati chart."
+              "text": "Sources: Wiktionary: મોં; Wiktionary: Sanskrit mukha."
             }
           ]
         }
       ]
     },
     {
-      "id": "GU-W01-sa",
-      "sequence": 750,
-      "title": "સ — the consonant sa",
-      "headword": "સ",
-      "romanization": "sa",
-      "gloss": "the consonant sa",
+      "id": "GU-C12-naak",
+      "sequence": 610,
+      "title": "નાક (nāk) — the whole face, run back",
+      "headword": "નાક",
+      "romanization": "nāk",
+      "gloss": "nose — the fourth body word, closing the chapter by running the whole face back through gender, sound, and certainty",
       "script": "gujarati",
-      "modality": "pen",
-      "derivedModality": "pen",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:698b5fc32936bf3c",
+      "sourceHash": "fnv1a64:a0955b33309664ea",
       "notice": {
-        "modality": "pen",
+        "modality": "sight",
         "needs": [
-          "a pen and something to write on",
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script",
+          "The letters in this word",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -439,64 +491,108 @@
             },
             {
               "kind": "speech",
-              "text": "Write the piece from the previous lesson before adding another."
+              "text": "આંખ (āṅkh), કાન (kān), મોઢું (moḍhũ) — eye, ear, mouth. One more completes the face, and this one closes the chapter by tying its ending back to a pattern from three chapters ago."
             }
           ]
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "Script",
+          "type": "input",
+          "title": "You'll want to know first — one word",
           "segments": [
             {
               "kind": "speech",
-              "text": "સ (sa)."
-            },
-            {
-              "kind": "speech",
-              "text": "sa. The s of English sit, plus the inherent vowel."
-            },
-            {
-              "kind": "speech",
-              "text": "You are four consonants and one mātrā into this script, and every one of them has behaved the same way. Say the four aloud in the order you met them, each with its inherent vowel:"
-            },
-            {
-              "kind": "speech",
-              "text": "હ ન (na) મ (ma) સ (sa)."
-            },
-            {
-              "kind": "speech",
-              "text": "ha, na, ma, sa. Four beats, four shapes, no bar across any of them."
+              "text": "નાક — nāk — nose."
             }
           ]
         },
         {
           "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
+          "type": "script",
+          "title": "The letters in this word",
           "segments": [
             {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "સ (sa)",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: સ]"
-            },
-            {
-              "kind": "prompt",
-              "action": "READ",
-              "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU READ: every piece this chapter has given you so far, in order]"
+              "kind": "speech",
+              "text": "ન na, ા long-ā, ક ka. Every letter already familiar — nāk's only new information is the word itself."
             }
           ]
         },
         {
           "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: closing the chapter's gender count",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નાક is neuter, like મોઢું — but unlike moḍhũ, it carries no nasalized -ũ at all. Run the whole face: āṅkh feminine, kān feminine, moḍhũ neuter with the tell, nāk neuter without it. Two neuters, only one of them wearing the ending that names the class. This is exactly why last lesson called the nasalized -ũ a tell, not a rule: it is the loudest signal Gujarati gives you for neuter, and it is still only sometimes there — the same caution roṭlī and pāṇī already taught you about -ī, and kān's Grammar Lens taught you about gender and inheritance more generally."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart — the last unbroken cousin in the chapter",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nāk is inherited from Prakrit ṇakka, from Sanskrit nas, \"nose,\" with a suffix added along the way — the retroflex ṇ here is the same sound-shift you first met turning jānāti into jāṇvũ, a single letter's worth of difference deciding a great deal, the way one mark once told javũ apart from jovũ. The root is Indo-European nehas-, unbroken in English nose, Latin nāsus (behind nasal), and Lithuanian nósis. Like āṅkh, nāk needed no ship and no loan to reach you — only the ordinary work of sound change, the same work that once put a nasal dot in the middle of વાંચવું and, this chapter, in the middle of આંખ."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all four face words — āṅkh, kān, moḍhũ, nāk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all four face words — **āṅkh**, **kān**, **moḍhũ**, **nāk**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SORT",
+              "instruction": "gender of each — feminine, feminine, neuter, neuter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SORT: gender of each — feminine, feminine, neuter, neuter]"
+            },
+            {
+              "kind": "prompt",
+              "action": "STATE",
+              "instruction": "which of the two neuters carries the -ũ tell, and which does not",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU STATE: which of the two neuters carries the *-ũ* tell, and which does not]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "PIE nehas- becomes Sanskrit nas becomes નાક (nāk), and becomes English nose",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: PIE *nehas-* → Sanskrit *nas* → **નાક**, and → English **nose**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "the medial nasal in વાંચવું, and the one-mark contrast between જવું and જોવું",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: the medial nasal in **વાંચવું**, and the one-mark contrast between **જવું** and **જોવું**]"
+            }
+          ]
+        },
+        {
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -508,523 +604,11 @@
             },
             {
               "kind": "speech",
-              "text": "Say the four consonants you now hold, each with its inherent vowel. (ha, na, ma, sa.)"
+              "text": "Give the word for \"nose.\" (Nāk.) Which English word is the same word by unbroken descent? (Nose.) Name this chapter's four body words and their genders. (Āṅkh f., kān f., moḍhũ n., nāk n.) Which neuter noun wears the nasalized -ũ tell, and which does not? (Moḍhũ does; nāk does not.)"
             },
             {
               "kind": "speech",
-              "text": "Source: Unicode Gujarati chart."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GU-W01-ta",
-      "sequence": 760,
-      "title": "ત — the consonant ta",
-      "headword": "ત",
-      "romanization": "ta",
-      "gloss": "the consonant ta — a dental t, made further forward than English's",
-      "script": "gujarati",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:5f24fa19090991da",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "Script",
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Write the piece from the previous lesson before adding another."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "Script",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ત (ta)."
-            },
-            {
-              "kind": "speech",
-              "text": "ta — and the consonant is not quite the English one."
-            },
-            {
-              "kind": "speech",
-              "text": "English t is made with the tongue on the ridge behind the teeth. This one is dental: the tongue touches the back of the upper teeth themselves, further forward. It sounds softer to an English ear, and getting it right is one of the quickest ways to stop sounding foreign."
-            },
-            {
-              "kind": "speech",
-              "text": "The script will make you care about this shortly, because it has a second t made even further back, and the two are different letters and different words. This is the forward one."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "ત (ta)",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: ત]"
-            },
-            {
-              "kind": "prompt",
-              "action": "READ",
-              "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU READ: every piece this chapter has given you so far, in order]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Where does the tongue go for ત? (Against the back of the upper teeth — dental, not on the ridge.) And is there another t in this script? (Yes, one made further back.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Source: Unicode Gujarati chart."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GU-W01-e-matra",
-      "sequence": 770,
-      "title": "ે (-e) — a mātrā that sits ABOVE the letter, not beside it",
-      "headword": "ે",
-      "romanization": "-e",
-      "gloss": "a mātrā that sits ABOVE the letter, not beside it",
-      "script": "gujarati",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:7f1e7ffa8c412439",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "Script",
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Write the piece from the previous lesson before adding another."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "Script",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "A second vowel sign, and it introduces something the first one did not."
-            },
-            {
-              "kind": "speech",
-              "text": "ે (-e)."
-            },
-            {
-              "kind": "speech",
-              "text": "This is e, the vowel of English bed. And unlike the mātrā you already know, which stands to the right of its consonant, this one sits above it:"
-            },
-            {
-              "kind": "speech",
-              "text": "ત (ta) + ે (-e) becomes તે."
-            },
-            {
-              "kind": "speech",
-              "text": "te. One beat, still — the mark changes the vowel, never the count."
-            },
-            {
-              "kind": "speech",
-              "text": "Where a mātrā sits is not decoration. In this family of scripts a vowel sign can go to the right, to the left, above, below, or even on both sides at once, and the position is part of the character's identity. A reader learns to look around a consonant, not just after it."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "ે (-e)",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: ે]"
-            },
-            {
-              "kind": "prompt",
-              "action": "READ",
-              "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU READ: every piece this chapter has given you so far, in order]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Where does this mātrā sit? (Above the consonant.) Does it add a beat? (No — it replaces the vowel, it does not add one.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Source: Unicode Gujarati chart."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GU-W01-virama",
-      "sequence": 780,
-      "title": "્ ((virama)) — the mark that DELETES the inherent vowel, and glues two consonants together",
-      "headword": "્",
-      "romanization": "(virama)",
-      "gloss": "the mark that DELETES the inherent vowel, and glues two consonants together",
-      "script": "gujarati",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:d0039eb10d908271",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "Script",
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Write the piece from the previous lesson before adding another."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "Script",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "One piece of machinery left, and it is the one that makes the script's hardest shapes make sense."
-            },
-            {
-              "kind": "speech",
-              "text": "The inherent vowel is a nuisance when you do not want it. If a word has two consonants pressed together with no vowel between them, writing them plainly would insert an a that is not there."
-            },
-            {
-              "kind": "speech",
-              "text": "So there is a mark that removes it:"
-            },
-            {
-              "kind": "speech",
-              "text": "્ ((virama))."
-            },
-            {
-              "kind": "speech",
-              "text": "This is the virama. Attached under a consonant, it says: no vowel here."
-            },
-            {
-              "kind": "speech",
-              "text": "And then something happens that no European alphabet does. A consonant stripped of its vowel does not usually sit there bare — it fuses with the consonant after it into a single joined shape called a conjunct:"
-            },
-            {
-              "kind": "speech",
-              "text": "સ (sa) + ્ ((virama)) + ત (ta) becomes સ્ત."
-            },
-            {
-              "kind": "speech",
-              "text": "sta, one cluster. You can still see both letters in it if you look, and that is the trick to reading conjuncts: they are not new characters to memorise, they are two you already know, joined."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "્ ((virama))",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: ્]"
-            },
-            {
-              "kind": "prompt",
-              "action": "READ",
-              "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU READ: every piece this chapter has given you so far, in order]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does the virama do? (Removes the inherent vowel.) And what usually happens to a consonant that loses its vowel? (It joins the next one into a conjunct.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Source: Unicode Gujarati chart."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GU-W01-namaste-read",
-      "sequence": 790,
-      "title": "નમસ્તે (namaste) — five pieces, all of them already yours",
-      "headword": "નમસ્તે",
-      "romanization": "namaste",
-      "gloss": "five pieces, all of them already yours — the greeting, read",
-      "script": "gujarati",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:df2ae56ded388fa2",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "Script",
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Write the piece from the previous lesson before adding another."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "Script",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Everything in this word is something you can already write. Nothing new is introduced here at all."
-            },
-            {
-              "kind": "speech",
-              "text": "ન + મ + સ (sa) + ્ ((virama)) + ત (ta) + ે (-e) becomes નમસ્તે (namaste)."
-            },
-            {
-              "kind": "speech",
-              "text": "Read it the way you built it:"
-            },
-            {
-              "kind": "speech",
-              "text": "ન — na, inherent vowel."
-            },
-            {
-              "kind": "speech",
-              "text": "મ — ma, inherent vowel."
-            },
-            {
-              "kind": "speech",
-              "text": "સ્ત — the conjunct: sa with its vowel removed, fused to ta."
-            },
-            {
-              "kind": "speech",
-              "text": "ે (-e) — the mātrā above, making that last piece te."
-            },
-            {
-              "kind": "speech",
-              "text": "na-ma-ste. The greeting you learned in your first lesson, now decoded rather than recalled."
-            },
-            {
-              "kind": "speech",
-              "text": "Look back at what it took: four consonants, two vowel signs, one virama, and one independent vowel. With them you can read yes, no, and the greeting — and every consonant you meet from here obeys rules you already hold, so the next word costs you shapes and no new machinery."
-            },
-            {
-              "kind": "speech",
-              "text": "The script has around forty more letters. It does not have any more systems."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "નમસ્તે (namaste)",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: નમસ્તે]"
-            },
-            {
-              "kind": "prompt",
-              "action": "READ",
-              "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU READ: every piece this chapter has given you so far, in order]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "How many new pieces were in this lesson? (None.) What is સ્ત made of? (સ (sa) with its vowel removed, joined to ત.) And what does the mark above the last letter do? (Makes it te instead of ta.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Source: Unicode Gujarati chart."
+              "text": "Sources: Wiktionary: નાક (nāk); Wiktionary: Sanskrit nas."
             }
           ]
         }

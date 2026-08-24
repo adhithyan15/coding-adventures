@@ -1,8 +1,8 @@
-Gujarati, chapter 1: Greetings.
-19 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
+Gujarati, chapter 1: Namaste, Piece by Piece.
+11 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 19.
+Lesson 1 of 11.
 Namaste — first hear the greeting.
 
 Warm-up.
@@ -30,7 +30,7 @@ Wrap-up Recall.
 What can you say when you meet someone? (Namaste.) What is its literal memory hook? (A bow to you.) Do you need to read its Gujarati spelling yet? (No — the script ramp starts next, one piece at a time.)
 
 
-Lesson 2 of 19.
+Lesson 2 of 11.
 હ — the consonant ha.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it.
@@ -57,7 +57,7 @@ Source: Unicode Gujarati chart.
 Trace the visible Gujarati consonant once, then name its built-in vowel.
 
 
-Lesson 3 of 19.
+Lesson 3 of 11.
 ા (-ā) — the vowel sign that replaces the inherent a.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it.
@@ -87,7 +87,7 @@ Source: Unicode Gujarati chart.
 Trace the visible long-aa sign once, point from હ (ha) to the separate ા (-ā), and say the resulting syllable.
 
 
-Lesson 4 of 19.
+Lesson 4 of 11.
 આ (ā) — the SAME vowel standing alone.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -119,7 +119,7 @@ Which of the two starts a word? (આ, the independent vowel.) Which one attaches
 Source: Unicode Gujarati chart.
 
 
-Lesson 5 of 19.
+Lesson 5 of 11.
 ન — the consonant na.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -145,7 +145,7 @@ What does the bare consonant sound like on its own? (Na, with the inherent vowel
 Source: Unicode Gujarati chart.
 
 
-Lesson 6 of 19.
+Lesson 6 of 11.
 મ — the consonant ma.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -172,7 +172,7 @@ What vowel is inside મ (ma) when nothing is attached? (a.) And what would મ 
 Source: Unicode Gujarati chart.
 
 
-Lesson 7 of 19.
+Lesson 7 of 11.
 સ — the consonant sa.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -199,7 +199,7 @@ Say the four consonants you now hold, each with its inherent vowel. (ha, na, ma,
 Source: Unicode Gujarati chart.
 
 
-Lesson 8 of 19.
+Lesson 8 of 11.
 ત — the consonant ta.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -225,7 +225,7 @@ Where does the tongue go for ત? (Against the back of the upper teeth — denta
 Source: Unicode Gujarati chart.
 
 
-Lesson 9 of 19.
+Lesson 9 of 11.
 ે (-e) — a mātrā that sits ABOVE the letter, not beside it.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -253,7 +253,7 @@ Where does this mātrā sit? (Above the consonant.) Does it add a beat? (No — 
 Source: Unicode Gujarati chart.
 
 
-Lesson 10 of 19.
+Lesson 10 of 11.
 ્ ((virama)) — the mark that DELETES the inherent vowel, and glues two consonants together.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -283,7 +283,7 @@ What does the virama do? (Removes the inherent vowel.) And what usually happens 
 Source: Unicode Gujarati chart.
 
 
-Lesson 11 of 19.
+Lesson 11 of 11.
 નમસ્તે (namaste) — five pieces, all of them already yours.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it.
@@ -314,227 +314,3 @@ Wrap-up Recall.
 [pause 3 seconds]
 How many new pieces were in this lesson? (None.) What is સ્ત made of? (સ (sa) with its vowel removed, joined to ત.) And what does the mark above the last letter do? (Makes it te instead of ta.)
 Source: Unicode Gujarati chart.
-
-
-Lesson 12 of 19.
-આભાર (ābhār) — "thank you," an obligation gladly owed.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Gujarati's everyday "thank you" — and it comes from the idea of being indebted.
-
-The letters in this word.
-આ (the independent long ā, for a word-initial vowel) + ભા (bhā) + ર (r) becomes આભાર (ābhār). Note again: no top line.
-
-The word, taken apart.
-આભાર (ābhār, "thanks, gratitude") is from Sanskrit આભાર (ābhāra, "a burden, an obligation"), from આ- (ā-, "toward") + the root ભૃ (bhṛ, "to bear, carry"). To thank someone is to acknowledge you now bear an obligation to them — the same idea as English oblige (Latin ob- + ligāre "to bind") and Portuguese obrigado. That root bhṛ is Proto-Indo-European bʰer-, the ancestor of English bear (to carry) and Latin ferre. (The more Sanskritic ધન્યવાદ dhanyavād is also used, but ābhār is the warm, everyday Gujarati word.)
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "ābhār"]
-[pause 8 seconds for the answer]
-[your turn — say: what it literally acknowledges (an obligation "borne")]
-[pause 8 seconds for the answer]
-[your turn — say: the English cousin of its root bhṛ (bear, "to carry")]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What does ābhār literally mean, and what English word shares its root? ("An obligation borne"; bear — from PIE bʰer-, "to carry.")
-
-
-Lesson 13 of 19.
-આવજો (āvjo) — "goodbye" (come again).
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-The everyday Gujarati goodbye — and, like the goodbyes across all of India, it is really an invitation to return.
-
-The letters in this word.
-આ (independent ā) + વ (va) + જો (jo) becomes આવજો (āvjo).
-
-The word, taken apart.
-આવજો (āvjo) is the polite imperative of આવવું (āvvũ, "to come") — literally "[please] come [again]." A Gujarati never signs off by saying "I'm leaving"; the parting word is come. It is the same "promise of return" that runs through the whole subcontinent — Tamil pōy varugiṟēṉ ("I'll go and come back"), Bengali āshi ("I'll come"), Hindi phir milenge ("we'll meet again") — here made into a single warm word built on the verb to come. (To one person, familiarly: આવજે āvje.)
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "āvjo"]
-[pause 8 seconds for the answer]
-[your turn — say: what it literally means ("[please] come [again]")]
-[pause 8 seconds for the answer]
-[your turn — say: the verb it's built on (āvvũ, "to come")]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What does the Gujarati goodbye literally say, and what verb is it from? ("Come [again]"; āvvũ, "to come" — never "I'm leaving.")
-
-
-Lesson 14 of 19.
-હા / ના (hā / nā) — "yes" and "no".
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Two tiny words no conversation survives without — and one is a cousin of English.
-
-The letters in this word.
-હા (hā) = હ (ha) + the long-ā sign. ના (nā) = ન (na) + the long-ā sign.
-
-The word, taken apart.
-હા (hā, "yes") and ના (nā, "no"). The "no" rides the ancient negative na- — the very same Proto-Indo-European ne behind English no, not, none, Latin nōn, Hindi nahīṁ, and Bengali nā. Of all the words in this book, this "no" reaches furthest unchanged: one syllable spoken, in some form, from Iceland to Gujarat for five thousand years.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "hā" (yes) and "nā" (no)]
-[pause 8 seconds for the answer]
-[your turn — say: the shared ancestor of nā and English no (PIE ne)]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What ancient root links Gujarati nā to English no? (Proto-Indo- European ne, "not.")
-
-
-Lesson 15 of 19.
-હા (hā) — one supported copy.
-
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
-
-Warm-up.
-Point to the consonant હ (ha), then the attached vowel sign ા (-ā). Say the whole known word: હા, hā, "yes." Keep the model visible.
-
-Writing — guided copy.
-Copy હા once. You may look back after each piece: first હ (ha), then ા (-ā). Touch both pieces in your copy and read hā.
-
-Wrap-up recall.
-Compare only the two pieces and their order. Repair one piece if needed, then stop. The model stays visible today.
-[question — say your answer, then pause 18 seconds]
-Copy the visible Gujarati word for yes once, then name its two pieces.
-
-
-Lesson 16 of 19.
-હા (hā) — look, hide, write, compare.
-
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
-
-Warm-up.
-Look at હા (hā) for five seconds. Point first to હ (ha), then to ા (-ā). Do not copy it yet.
-
-Writing — delayed copy.
-cover હા (hā).
-wait five seconds.
-write it once from memory.
-uncover the model and compare the two pieces.
-If one piece differs, circle it and repair only that place. Repair is part of the exercise, not a failure.
-
-Wrap-up recall.
-Read your repaired word as hā. Stop after one memory attempt.
-[question — say your answer, then pause 18 seconds]
-After hiding the model for five seconds, write the Gujarati word for yes and then compare it.
-
-
-Lesson 17 of 19.
-One heard answer — write what you know.
-
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
-
-Warm-up.
-Cover the answer lower on this page. You will hear one familiar answer. No new Gujarati is hiding in this lesson.
-
-Writing — short dictation.
-[your turn — hear: hā — "yes"]
-[pause 8 seconds for the answer]
-Write the Gujarati word from sound alone. Now uncover and compare: હા (hā). Check હ (ha) first and attached ા (-ā) second. Repair one place if needed.
-
-Wrap-up recall.
-Writing from sound completes this tiny runway. It is not a mock assessment; later lessons must grow from one known word to forms, messages, and timed tasks.
-[question — say your answer, then pause 18 seconds]
-From the heard cue hā alone, write the known Gujarati word for yes.
-
-
-Lesson 18 of 19.
-સારું (sārũ) — "good," "okay".
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-The all-purpose "good / fine / okay / alright" — and your first taste of Gujarati's three genders.
-
-The letters in this word.
-સા (sā) + રું (rũ, with the nasal anusvāra on the u) becomes સારું (sārũ).
-
-The word, taken apart.
-સારું (sārũ, "good, fine, okay") is from Sanskrit સાર (sāra, "essence, substance, the best part") — the same sāra behind Bengali's sāramilla ("no matter"). As "okay/agreed" it oils every Gujarati conversation, the way English uses "alright."
-
-Grammar Lens: three genders, on the adjective.
-Look at that ending -ું (-ũ). Gujarati, like Marathi, keeps three genders from Sanskrit — masculine, feminine, and neuter — where Hindi and Punjabi kept only two. An adjective agrees with its noun in all three:
-સારો (sāro) — masculine.
-સારી (sārī) — feminine.
-સારું (sārũ) — neuter.
-Standing alone as "okay," it takes the neuter sārũ. You will meet this three-way agreement on every adjective and possessive.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "sārũ" — good / okay]
-[pause 8 seconds for the answer]
-[your turn — say: the three genders — sāro (m.) / sārī (f.) / sārũ (n.)]
-[pause 8 seconds for the answer]
-[your turn — say: the Sanskrit root (sāra, "essence")]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What does sārũ mean, and what does its -ũ ending tell you? ("Good / okay"; it is the neuter — Gujarati keeps three genders.)
-
-
-Lesson 19 of 19.
-Chapter 1 — The greetings.
-
-Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the script and the language until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-No new words. The five greetings, mixed and recombined.
-
-How to answer — rapid recall.
-[pause 1 second after each]
-[your turn — say: hello / goodbye — namaste]
-[pause 8 seconds for the answer]
-[your turn — say: thank you — ābhār]
-[pause 8 seconds for the answer]
-[your turn — say: yes and no — hā / nā]
-[pause 8 seconds for the answer]
-[your turn — say: good / okay — sārũ]
-[pause 8 seconds for the answer]
-[your turn — say: the "come again" goodbye — āvjo]
-[pause 8 seconds for the answer]
-
-Script — the script and the language.
-[pause 2 seconds]
-[your turn — say: the one visible thing that sets Gujarati apart from Devanagari (no top line)]
-[pause 8 seconds for the answer]
-[your turn — say: how many genders Gujarati keeps (three — sāro/sārī/sārũ)]
-[pause 8 seconds for the answer]
-
-Writing — retrieve the tiny word once.
-Cover every written answer. Hear hā, "yes," once in your mind and write it from memory. Then uncover હા and check the two pieces: હ (ha), then attached ા (-ā). One repair is allowed.
-[question — say your answer, then pause 20 seconds]
-Without a visible model, write the Gujarati word you hear: hā, yes.
-
-What you've built — roots you now carry.
-[pause 2 seconds]
-namaste = namas "a bow" + te "to you".
-ābhār from ā + bhṛ "to bear" becomes an obligation borne (cousin of English bear).
-nā ("no") from PIE ne becomes English no/not/none.
-āvjo ("goodbye") = "come [again]," from āvvũ "to come".
-
-Wrap-up Recall.
-[pause 3 seconds]
-Someone thanks you and turns to leave. Answer their thanks and send them off the Gujarati way. (Sārũ — and āvjo, "come again.")

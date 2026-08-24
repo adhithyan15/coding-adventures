@@ -3,7 +3,7 @@ schema_version: 2
 id: GU-C03-hun
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 160
-chapter: 3
+chapter: 4
 type: word
 headword: હું
 gloss: I
@@ -32,7 +32,7 @@ reviews_of: [GU-C02-maarun]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C02-MAARUN-01] -->
 
-[PAUSE 2s] To answer "how are you?" you first need "I." In Chapter 2 you learned
+[PAUSE 2s] To answer "how are you?" you first need "I." In the name exchange you learned
 *mārũ* ("my"); here is its owner.
 
 ## The letters in this word
@@ -47,7 +47,7 @@ reviews_of: [GU-C02-maarun]
 through Old Gujarati (*haũ*) to *hũ*. That *aham* is from Proto-Indo-European
 **\*h₁eǵ(H)om** — the ancestor of Latin **ego** and English **I**. So Gujarati's
 *hũ*, Latin *ego*, and English *I* are one ancient word. Its possessive is the
-**મારું** (*mārũ*, "my") from Chapter 2.
+**મારું** (*mārũ*, "my") from that name exchange.
 
 ## Grammar Lens: "I" plus the copula
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C02-MAARUN-01, GU-CONCEPT-C03-HUN-01] -->

@@ -3,7 +3,7 @@ schema_version: 2
 id: GU-C09-madad-karvi
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 480
-chapter: 9
+chapter: 10
 type: phrase
 headword: મદદ કરવી
 romanization: madad karvī

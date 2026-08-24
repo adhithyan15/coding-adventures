@@ -5,7 +5,7 @@
     {
       "language": "gujarati",
       "chapter": 1,
-      "sourceHash": "fnv1a64:b8212d7f346f2b02",
+      "sourceHash": "fnv1a64:a90b947cceb17b89",
       "lessonIds": [
         "GU-C01-namaste",
         "GU-W01-ha",
@@ -17,7 +17,15 @@
         "GU-W01-ta",
         "GU-W01-e-matra",
         "GU-W01-virama",
-        "GU-W01-namaste-read",
+        "GU-W01-namaste-read"
+      ],
+      "tex": "gujarati/book/chapters/ch01-namaste-script.tex"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 2,
+      "sourceHash": "fnv1a64:a949e8329c53e24f",
+      "lessonIds": [
         "GU-C01-aabhaar",
         "GU-C01-aavjo",
         "GU-C01-haa-naa",
@@ -27,12 +35,12 @@
         "GU-C01-saarun",
         "GU-C01-practice"
       ],
-      "tex": "gujarati/book/chapters/ch01-greetings.tex"
+      "tex": "gujarati/book/chapters/ch02-courtesy-responses.tex"
     },
     {
       "language": "gujarati",
-      "chapter": 2,
-      "sourceHash": "fnv1a64:a3d95b6d78b1c688",
+      "chapter": 3,
+      "sourceHash": "fnv1a64:9f8a99c3f5d8208d",
       "lessonIds": [
         "GU-C02-naam",
         "GU-C02-maarun",
@@ -44,12 +52,12 @@
         "GU-C02-tamarun-naam-shun-chhe",
         "GU-C02-practice"
       ],
-      "tex": "gujarati/book/chapters/ch02-introductions.tex"
+      "tex": "gujarati/book/chapters/ch03-introductions.tex"
     },
     {
       "language": "gujarati",
-      "chapter": 3,
-      "sourceHash": "fnv1a64:cae11c3d6233e8ef",
+      "chapter": 4,
+      "sourceHash": "fnv1a64:db23cc118f5fda2a",
       "lessonIds": [
         "GU-C03-hun",
         "GU-C03-kem",
@@ -58,12 +66,12 @@
         "GU-C03-vandho-nahi",
         "GU-C03-practice"
       ],
-      "tex": "gujarati/book/chapters/ch03-responding.tex"
+      "tex": "gujarati/book/chapters/ch04-responding.tex"
     },
     {
       "language": "gujarati",
-      "chapter": 4,
-      "sourceHash": "fnv1a64:ece16679fa29a79e",
+      "chapter": 5,
+      "sourceHash": "fnv1a64:b9d772a09b78a342",
       "lessonIds": [
         "GU-C04-malishun",
         "GU-C04-kaale",
@@ -71,12 +79,12 @@
         "GU-C04-pachha-malishun",
         "GU-C04-practice"
       ],
-      "tex": "gujarati/book/chapters/ch04-farewells.tex"
+      "tex": "gujarati/book/chapters/ch05-farewells.tex"
     },
     {
       "language": "gujarati",
-      "chapter": 5,
-      "sourceHash": "fnv1a64:60a19d30501cd678",
+      "chapter": 6,
+      "sourceHash": "fnv1a64:b678df59f0d09a07",
       "lessonIds": [
         "GU-C05-bolvun",
         "GU-C05-hun-gujarati-bolun-chhun",
@@ -84,22 +92,22 @@
         "GU-C05-rahevun",
         "GU-C05-practice"
       ],
-      "tex": "gujarati/book/chapters/ch05-first-verbs.tex"
-    },
-    {
-      "language": "gujarati",
-      "chapter": 6,
-      "sourceHash": "fnv1a64:c231d5277ecc1fed",
-      "lessonIds": [
-        "GU-C06-numbers-1-5",
-        "GU-C06-number-histories"
-      ],
-      "tex": "gujarati/book/chapters/ch06-numbers-1-5.tex"
+      "tex": "gujarati/book/chapters/ch06-first-verbs.tex"
     },
     {
       "language": "gujarati",
       "chapter": 7,
-      "sourceHash": "fnv1a64:12beff7fde229e66",
+      "sourceHash": "fnv1a64:22b69d5e4820edce",
+      "lessonIds": [
+        "GU-C06-numbers-1-5",
+        "GU-C06-number-histories"
+      ],
+      "tex": "gujarati/book/chapters/ch07-numbers-1-5.tex"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:f5c70b675441223e",
       "lessonIds": [
         "GU-C07-hovun",
         "GU-C07-javun",
@@ -108,67 +116,67 @@
         "GU-C07-jovun",
         "GU-C07-jaanvun"
       ],
-      "tex": "gujarati/book/chapters/ch07-core-verbs.tex"
+      "tex": "gujarati/book/chapters/ch08-core-verbs.tex"
     },
     {
       "language": "gujarati",
-      "chapter": 8,
-      "sourceHash": "fnv1a64:1214814dfebba509",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:8a3f0ef8e283ccb7",
       "lessonIds": [
         "GU-C08-vicharvun",
         "GU-C08-samajvun",
         "GU-C08-vanchvun",
         "GU-C08-lakhvun"
       ],
-      "tex": "gujarati/book/chapters/ch08-mind-and-page.tex"
+      "tex": "gujarati/book/chapters/ch09-mind-and-page.tex"
     },
     {
       "language": "gujarati",
-      "chapter": 9,
-      "sourceHash": "fnv1a64:5a4f43afffb2b64c",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:5a7938472c33fe92",
       "lessonIds": [
         "GU-C09-levun",
         "GU-C09-puchhvun",
         "GU-C09-madad-karvi",
         "GU-C09-gamvun"
       ],
-      "tex": "gujarati/book/chapters/ch09-doing-verbs.tex"
+      "tex": "gujarati/book/chapters/ch10-doing-verbs.tex"
     },
     {
       "language": "gujarati",
-      "chapter": 10,
-      "sourceHash": "fnv1a64:4a27094a14e0077d",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:205471bbf7a2f7ea",
       "lessonIds": [
         "GU-C10-paani",
         "GU-C10-chaa",
         "GU-C10-dudh",
         "GU-C10-rotli"
       ],
-      "tex": "gujarati/book/chapters/ch10-request-food-drink.tex"
+      "tex": "gujarati/book/chapters/ch11-request-food-drink.tex"
     },
     {
       "language": "gujarati",
-      "chapter": 11,
-      "sourceHash": "fnv1a64:90845aa5f84cb894",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:d00495385912916b",
       "lessonIds": [
         "GU-C11-mitra",
         "GU-C11-kutumb",
         "GU-C11-bhai",
         "GU-C11-bahen"
       ],
-      "tex": "gujarati/book/chapters/ch11-friend-and-family.tex"
+      "tex": "gujarati/book/chapters/ch12-friend-and-family.tex"
     },
     {
       "language": "gujarati",
-      "chapter": 12,
-      "sourceHash": "fnv1a64:54121385f25ba2ae",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:8a35b1245746f9eb",
       "lessonIds": [
         "GU-C12-aankh",
         "GU-C12-kaan",
         "GU-C12-modhu",
         "GU-C12-naak"
       ],
-      "tex": "gujarati/book/chapters/ch12-face-parts.tex"
+      "tex": "gujarati/book/chapters/ch13-face-parts.tex"
     }
   ]
 }
