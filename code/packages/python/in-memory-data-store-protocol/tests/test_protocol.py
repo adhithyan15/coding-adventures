@@ -24,11 +24,17 @@ def test_command_frame_new_copies_args() -> None:
 
 
 def test_engine_response_constructors() -> None:
-    assert EngineResponse.simple_string("PONG") == EngineResponse("simple_string", "PONG")
+    assert EngineResponse.simple_string("PONG") == EngineResponse(
+        "simple_string", "PONG"
+    )
     assert EngineResponse.error("ERR") == EngineResponse("error", "ERR")
     assert EngineResponse.integer(42) == EngineResponse("integer", 42)
-    assert EngineResponse.bulk_string(b"value") == EngineResponse("bulk_string", b"value")
-    assert EngineResponse.bulk_string(bytearray(b"value")) == EngineResponse("bulk_string", b"value")
+    assert EngineResponse.bulk_string(b"value") == EngineResponse(
+        "bulk_string", b"value"
+    )
+    assert EngineResponse.bulk_string(bytearray(b"value")) == EngineResponse(
+        "bulk_string", b"value"
+    )
     assert EngineResponse.null() == EngineResponse("bulk_string", None)
     assert EngineResponse.ok() == EngineResponse("simple_string", "OK")
     assert EngineResponse.zero() == EngineResponse("integer", 0)
