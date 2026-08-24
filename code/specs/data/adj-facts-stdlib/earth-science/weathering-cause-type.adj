@@ -1,0 +1,122 @@
+% ============================================================================
+% weathering-cause-type — for each of five named CAUSES of weathering, which
+% of the two basic weathering TYPES (physical or chemical) it belongs to, a
+% fresh WebFetch-sourced U.S. National Park Service table (adj-facts-stdlib,
+% EARTH-SCIENCE). Grounds the "Earth-processes" Major Gap
+% ADJ-STDLIB-COVERAGE.md §5.1/§5.2 names for K-8 science — the SECOND
+% instance of that gap (after `geology/earth-layer-matter-behavior.adj`), and
+% the first to ground it with a fresh source rather than composing two
+% already-shipped tables (composition was confirmed exhaustively dry for this
+% gap in the immediately-prior session).
+% ============================================================================
+% Nothing already shipped in this stdlib names "weathering" at all:
+% `geology/rock-types.adj` tables which of three FAMILIES a rock belongs to
+% and one combined phrase for how each forms (e.g. metamorphic rock forms
+% from "heat_and_pressure"); `earth-science/metamorphism-cause.adj` tables
+% individual causes of METAMORPHISM specifically (heat, pressure, hot
+% mineral-rich fluids acting deep underground). Weathering is a different,
+% shallower Earth process — the breakdown of rock AT OR NEAR THE SURFACE,
+% into physical and chemical mechanisms neither of those tables touches. The
+% U.S. National Park Service's "Weathering and Erosion" article (Scotts
+% Bluff National Monument geology-in-action page, a NEW source never before
+% cited in this stdlib) states the two-way split directly, in one clean
+% back-to-back pair of sentences naming five distinct causes across the two
+% types:
+%
+%   "Physical weathering is caused by heating and cooling, the growth of
+%    foreign crystals, and by the collision of rock pieces during movement."
+%
+%   "Chemical weathering occurs when a rock or mineral is changed after
+%    being exposed to things like acid or oxygen."
+%
+% Recall is a binding query:
+%
+%     ? weathering_cause_type(heating_and_cooling, $Type)   % physical
+%     ? weathering_cause_type(acid_exposure, $Type)          % chemical
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `weathering_cause_type(cause, type)` carrying the citation, so the
+% lookups above are ordinary SLD binding queries — the engine returns each
+% cause's type WITH its source, on the CPU, with zero model calls, and
+% abstains on a cause the source does not name. The query also runs
+% BACKWARD as a genuine one-to-many recall — bind a type and recall EVERY
+% cause the source assigns to it:
+%
+%     ? weathering_cause_type($C, physical)   % heating_and_cooling ;
+%                                              % foreign_crystal_growth ; rock_collision
+%     ? weathering_cause_type($C, chemical)   % acid_exposure ; oxygen_exposure
+%
+% The five causes and their type, as a little truth table:
+%
+%     cause                    type       the source's own words
+%     -----------------------  ---------  --------------------------------------------
+%     heating_and_cooling      physical   "caused by heating and cooling"
+%     foreign_crystal_growth   physical   "the growth of foreign crystals"
+%     rock_collision           physical   "the collision of rock pieces during movement"
+%     acid_exposure            chemical   "exposed to things like acid"
+%     oxygen_exposure          chemical   "exposed to ... oxygen"
+%
+% WHY this is a genuine "Earth-processes" fact, not a coincidental
+% relabeling of anything already shipped: NGSS 4-ESS2-1 (grade 4, band 3-5)
+% names as its own performance expectation "evidence of the effects of
+% weathering or the rate of erosion by water, ice, wind, or vegetation" —
+% that competency presupposes a learner already knows weathering itself
+% splits into named, distinguishable MECHANISMS (not just "rocks break
+% down"), which is exactly the axis this table grounds and nothing already
+% shipped names.
+%
+% HONEST ABSTENTION — the crux of why this table is narrow rather than
+% overreaching:
+%
+% 1. `erosion` is deliberately NOT a row in the `type` column, even though
+%    the SAME cited article discusses it at length immediately after
+%    weathering. The article's own structure treats erosion as a distinct,
+%    LATER process — its own words: "The products of weathering (sand,
+%    silt, gravel, rock fragments) are then removed by erosion" — the
+%    moving-away step, not a third kind of weathering. A query for
+%    `erosion`'s type honestly abstains rather than inventing one.
+% 2. `frost_wedging` / `crystal_wedging` is deliberately NOT a sixth row.
+%    The article's OPENING general definition of weathering mentions "frost
+%    or crystal wedging" as an example in passing, but its own later,
+%    specific two-type breakdown accounts for that exact mechanism under
+%    "the growth of foreign crystals" (its own detailed "Growth of Foreign
+%    Crystals" section names both salt AND ice crystals as the foreign
+%    crystals in question). Adding a separate `frost_wedging` row would
+%    double-count the SAME cause under a second name, not add new content —
+%    the same disqualifying pattern the prior session's composition sweep
+%    already established for other candidate pairs.
+% 3. `abrasion` is deliberately not used as the atom for the third physical
+%    cause; the source's own phrase is "the collision of rock pieces during
+%    movement", so the row is named `rock_collision` to stay literally
+%    checkable against the quoted span rather than importing a textbook
+%    synonym the source itself never uses.
+%
+% Provenance: WebFetch- and curl-verified directly against the raw page HTML
+% (not just an AI-summarized fetch) before writing this file, confirming
+% every quoted span byte-for-byte, including the full surrounding list
+% markup and the absence of any third weathering type.
+% `www.nps.gov/articles/000/weathering-erosion.htm` ("Weathering and
+% Erosion", U.S. National Park Service, Scotts Bluff National Monument
+% geology-in-action page) — an nps.gov (.gov) primary government reference,
+% the same standing this stdlib already gives `geology/rock-types.adj`'s NPS
+% teacher-page citation. `trust authoritative`. Nothing here is asserted
+% from memory. (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table weathering_cause_type {
+    columns cause, type
+
+    row (heating_and_cooling, physical)
+    row (foreign_crystal_growth, physical)
+    row (rock_collision, physical)
+    row (acid_exposure, chemical)
+    row (oxygen_exposure, chemical)
+
+    source "Physical weathering is caused by heating and cooling, the growth of foreign crystals, and by the collision of rock pieces during movement."
+    locator "https://www.nps.gov/articles/000/weathering-erosion.htm"
+    trust authoritative
+
+    cites "Chemical weathering occurs when a rock or mineral is changed after being exposed to things like acid or oxygen." locator "https://www.nps.gov/articles/000/weathering-erosion.htm"
+    cites "Acid in rain can dissolve rocks like limestone, and oxygen can cause iron, often found in rocks, to corrode or rust." locator "https://www.nps.gov/articles/000/weathering-erosion.htm"
+}

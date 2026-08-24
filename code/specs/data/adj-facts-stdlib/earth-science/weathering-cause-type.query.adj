@@ -1,0 +1,24 @@
+% ============================================================================
+% weathering-cause-type.query.adj — worked recall over the earth-science
+% weathering-cause-type library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "is heating and cooling
+% a physical or chemical cause of weathering?" (direct binding) or "which
+% causes are physical weathering?" (reverse, one-to-many binding) — it
+% states no earth-science fact of its own, it only `import`s the grounded
+% table and asks binding queries. The third and fourth queries run the
+% relation BACKWARD as a genuine one-to-many recall (three physical causes,
+% two chemical causes). The final query demonstrates honest abstention:
+% `erosion` is a real Earth process the table's own cited article discusses
+% at length, but the article's own structure treats erosion as a distinct,
+% LATER process that moves weathering's products away — not a third
+% weathering type — so recalling it abstains rather than inventing one.
+% ============================================================================
+
+import "weathering-cause-type.adj"
+
+? weathering_cause_type(heating_and_cooling, $Type)   % expect physical (direct)
+? weathering_cause_type(acid_exposure, $Type)         % expect chemical (direct)
+? weathering_cause_type($C, physical)                 % expect heating_and_cooling ; foreign_crystal_growth ; rock_collision (reverse, one-to-many)
+? weathering_cause_type($C, chemical)                 % expect acid_exposure ; oxygen_exposure (reverse, one-to-many)
+? weathering_cause_type(erosion, $Type)                % expect abstain -- erosion is a distinct, later process, not a weathering type
