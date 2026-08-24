@@ -118,9 +118,12 @@ and excluded from Git.
 
 ## Backfill decomposition
 
-The audit closes only when every corpus member has exactly one pending
-dependency-shaped backfill owner in the parity state. Owners must respect
-repository-local prerequisite order. A legacy recipe with a different repair
-shape may not be hidden inside a generated-pattern bulk edit. Each backfill
-must later prove both canonical and Windows fronts from clean state and on an
-immediate repeat, then run its real affected downstream closure.
+The audit closes only when every corpus member has exactly one
+dependency-shaped backfill owner recorded initially as `pending` in the parity
+state. After the audit merges, an owner may advance through the normal
+`pending`, `in-progress`, `pr-open`, and `merged` lifecycle without invalidating
+the corpus decomposition. Owners must respect repository-local prerequisite
+order. A legacy recipe with a different repair shape may not be hidden inside
+a generated-pattern bulk edit. Each backfill must later prove both canonical
+and Windows fronts from clean state and on an immediate repeat, then run its
+real affected downstream closure.

@@ -2,8 +2,6 @@
 Tests for the DJB2 hash function by Dan Bernstein.
 """
 
-import pytest
-
 from hash_functions import djb2
 
 

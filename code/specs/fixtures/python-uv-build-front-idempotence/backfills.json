@@ -34,7 +34,8 @@
       "depends_on": [
         "python-uv-build-front-idempotence-audit",
         "python-hash-collections-build-front-idempotence",
-        "python-resp-tcp-build-front-idempotence"
+        "python-resp-tcp-build-front-idempotence",
+        "python-in-memory-data-store-protocol-build-front-python313"
       ]
     },
     {

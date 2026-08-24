@@ -5,10 +5,13 @@ Test vectors are from the official FNV hash test suite at
   http://www.isthe.com/chongo/tech/comp/fnv/
 """
 
-import pytest
-
 from hash_functions import fnv1a_32, fnv1a_64
-from hash_functions.algorithms import FNV32_OFFSET_BASIS, FNV32_PRIME, FNV64_OFFSET_BASIS, FNV64_PRIME
+from hash_functions.algorithms import (
+    FNV32_OFFSET_BASIS,
+    FNV32_PRIME,
+    FNV64_OFFSET_BASIS,
+    FNV64_PRIME,
+)
 
 
 class TestFnv1a32KnownVectors:
@@ -145,7 +148,7 @@ class TestFnv1aCollisionResistance:
         n = 10_000
         seen: set[int] = set()
         collisions = 0
-        for i in range(n):
+        for _i in range(n):
             data = random.randbytes(8)
             h = fnv1a_32(data)
             if h in seen:
