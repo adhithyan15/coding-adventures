@@ -36,8 +36,12 @@ book-only human validation remain explicit backlog.
 
 ## Progress
 
-- **Chapter 1 — Greetings** ([`lessons/PA-C01-*`](./lessons/)): sat srī akāl,
-  namaste, dhannavād, shukrīā, hāṇ/nahīṇ, practice. In the book.
+- **Chapter 1 — Greetings and the first written answer**
+  ([`lessons/PA-C01-*`](./lessons/), [`lessons/PA-W01-*`](./lessons/)):
+  sat srī akāl, namaste, sound-first hā̃/nahī̃, one Gurmukhi sign per short
+  session, assembly of ਹਾਂ, guided copy, delayed copy, heard-word dictation,
+  dhannavād, shukrīā, and a four-skill checkpoint with no compensating score.
+  In the book.
 - **Chapter 2 — Introducing Yourself** ([`lessons/PA-C02-*`](./lessons/)): nāṁ,
   merā, hai, **merā nāṁ … hai**, tū̃/tusī̃, kī, **tuhāḍā nāṁ kī hai?**, khushī,
   practice. Every atom traced; SOV order; two-level "you". In the book.
@@ -99,7 +103,9 @@ book-only human validation remain explicit backlog.
   ਦਿਲ is Punjabi's one borrowed body word against four inherited ones; ਸਿਰ
   traces to the same root as English *horn*, not *head*. In the book.
 
-Chapters 1–13 are in the book.
+Chapters 1–14 are in the book. Chapter 1 owns the first three Gurmukhi pieces
+and the complete pre-A1 writing runway for **ਹਾਂ**; Chapter 14 adds six more
+pieces and assembles **ਨਹੀਂ** and **ਨਮਸਤੇ** without using an untaught sign.
 
 ---
 

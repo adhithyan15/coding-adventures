@@ -1,55 +1,54 @@
 ---
+schema_version: 2
 id: PA-C01-shukriya
-sequence: 40
+spine_node: SPINE-COURTESY-THANK
+sequence: 50
 chapter: 1
 type: word
 headword: ਸ਼ੁਕਰੀਆ
-gloss: thank you (Perso-Arabic) (shukrīā)
+romanization: "shukrīā"
+gloss: "thank you — the Perso-Arabic choice"
 concept_tag: COURTESY-THANKS-CASUAL
 prerequisites: [PA-C01-dhanvaad]
-sounds: [pair-bindi, vowel-sign]
+sounds: []
 roots: [shukr]
-est_minutes: 4
+duration:
+  max_seconds: 150
+requires:
+  knowledge: [PA-LEX-DHANVAAD-01]
+introduces:
+  knowledge: [PA-LEX-SHUKRIYA-01]
+practises:
+  knowledge: [PA-LEX-DHANVAAD-01, PA-LEX-SHUKRIYA-01]
+skills: [listening, speaking]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-punjabi
 reviews_of: [PA-C01-dhanvaad]
 ---
 
-# ਸ਼ੁਕਰੀਆ (shukrīā) — "thank you," the Persian way
+# *shukrīā* — “thank you,” the Persian way
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-DHANVAAD-01] -->
 
-[PAUSE 2s] The same meaning as *dhannavād* — but a word that came to Punjab from
-the opposite direction.
+[PAUSE 2s] Say the Sanskritic thanks *dhannavād*. Now add a second spoken choice.
+No new Gurmukhi sign is required.
 
-## The letters in this word
+## You'll want to know first — listen and use
+<!-- hl-knowledge: introduces=[PA-LEX-SHUKRIYA-01]; assesses=[PA-LEX-DHANVAAD-01] -->
 
-New: **ਸ਼** sha — the letter **ਸ** (*sa*) with a **dot beneath**, a *pair bindi*
-that marks a Perso-Arabic sound. With **ੁ** (the *u*-sign) and **ੀ** (ī), read
-**ਸ਼ੁ·ਕ·ਰੀ·ਆ** → *shukrīā*.
+[YOU HEAR: *shukrīā*] — **thank you**. Return it once: [YOU SAY: *shukrīā*].
 
-## The word, taken apart
+The word came through Persian from Arabic *shukr*, “gratitude,” the same root
+heard in Arabic *shukran*. Punjabi carries both a Sanskritic thanks,
+*dhannavād*, and this Perso-Arabic one. Learn the contrast by history and sound;
+the dotted borrowed-sound spelling can wait for its own sign lesson.
 
-**ਸ਼ੁਕਰੀਆ** (*shukrīā*) is **not** Sanskrit. It came through Persian from **Arabic
-*shukr*** ("gratitude") — the same Semitic root behind Arabic *shukran*. Punjab
-sat for centuries on the road between Persia and India, and (like Urdu and Hindi)
-it carries **two vocabularies**: Sanskrit (*dhannavād*) and Perso-Arabic
-(*shukrīā*), side by side for the same idea. The dot under **ਸ਼** is the script's
-own record of the borrowing — Gurmukhi literally annotates its loanwords.
+## Wrap-up recall
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-DHANVAAD-01, PA-LEX-SHUKRIYA-01] -->
+<!-- hl-activity: {"id":"PA-C01-shukriya-source","kind":"text","assesses":["PA-LEX-DHANVAAD-01","PA-LEX-SHUKRIYA-01"],"prompt":"Which thanks came through Persian from Arabic: dhannavād or shukrīā?","answer":"shukrīā","accepted":["shukriya"],"feedback":{"correct":"Right: shukrīā carries Arabic shukr through Persian.","incorrect":"Shukrīā is Perso-Arabic; dhannavād is Sanskritic."},"response_seconds":8} -->
 
-## Why it's said this way
-
-Both words are alive. *Shukrīā* feels a touch more colloquial and Urdu-flavored;
-*dhannavād* more formal and Sanskritic. Choosing between them is choosing which
-of Punjab's two heritages to lean on — the everyday drama of a border language.
-
-## Guided Practice
-
-[PAUSE 1s]
-- [YOU SAY: read it — shu · ka · rī · ā]
-- [YOU SAY: which "thank you" is Sanskrit and which is Persian (*dhannavād* / *shukrīā*)]
-- [YOU SAY: what the dot under ਸ਼ signals (a borrowed Perso-Arabic sound)]
-
-## Wrap-up Recall
-
-[PAUSE 3s] Where does *shukrīā* come from, and what does the dot beneath **ਸ਼**
-tell you? (Arabic *shukr* "gratitude," via Persian; that the letter spells a
-borrowed Perso-Arabic sound.)
+[PAUSE 3s] Say both choices in historical order: Sanskritic *dhannavād*, then
+Perso-Arabic *shukrīā*.

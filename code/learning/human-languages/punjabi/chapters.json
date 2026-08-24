@@ -7,7 +7,7 @@
       "chapter": 1,
       "title": "Greetings",
       "label": "ch:greetings",
-      "canDo": "I can greet someone in Punjabi, recognize the reply, and choose an appropriate response.",
+      "canDo": "I can greet someone in Punjabi and keep reading, listening, independent writing, and speaking separately measurable when I answer yes or no.",
       "spineNodes": [
         "SPINE-MEET-GREET",
         "SPINE-COURTESY-THANK",
@@ -16,9 +16,18 @@
       "payoff": {
         "lesson": "PA-C01-practice",
         "kind": "task",
-        "summary": "Complete PA-C01-practice, the canonical closing checkpoint, and demonstrate the chapter promise: greet someone in Punjabi, recognize the reply, and choose an appropriate response.",
-        "assesses": [],
-        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+        "summary": "Complete four short, separately scored checks: read ਹਾਂ, distinguish heard ਹਾਂ and ਨਹੀਂ, write ਹਾਂ from sound with no visible model, and answer aloud without borrowing credit across skills.",
+        "assesses": [
+          "PA-LEX-SAT-SRI-AKAL-01",
+          "PA-LEX-NAMASTE-01",
+          "PA-LEX-HAAN-NAHIN-01",
+          "PA-SCRIPT-HA-01",
+          "PA-SCRIPT-AA-MATRA-01",
+          "PA-SCRIPT-BINDI-01",
+          "PA-SCRIPT-HAAN-01",
+          "PA-LEX-DHANVAAD-01",
+          "PA-LEX-SHUKRIYA-01"
+        ]
       }
     },
     {
@@ -293,7 +302,7 @@
       "chapter": 14,
       "title": "From the Mouth of the Guru, One Piece at a Time",
       "label": "ch:pa-script-first",
-      "canDo": "I can write nine Gurmukhi pieces from memory — four consonants, three vowel signs and the nasal bindi — and read the words for yes, no and the greeting by assembling them from those pieces.",
+      "canDo": "I can add six Gurmukhi pieces to the three learned with ਹਾਂ, then read ਨਹੀਂ and ਨਮਸਤੇ by assembling only known pieces.",
       "spineNodes": [
         "SPINE-MEET-GREET"
       ],

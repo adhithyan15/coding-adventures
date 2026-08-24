@@ -1,49 +1,55 @@
 ---
+schema_version: 2
 id: PA-C01-namaste
+spine_node: SPINE-MEET-GREET
 sequence: 20
 chapter: 1
 type: word
 headword: ਨਮਸਤੇ
-gloss: hello (general, pan-Indian) (namaste)
+romanization: "namaste"
+gloss: "hello — the broader pan-Indian greeting"
 concept_tag: GREETING-HELLO
 prerequisites: [PA-C01-sat-sri-akal]
-sounds: [inherent-a, vowel-sign]
+sounds: []
 roots: [namas, te]
-est_minutes: 4
-reviews_of: []
+duration:
+  max_seconds: 150
+requires:
+  knowledge: [PA-LEX-SAT-SRI-AKAL-01]
+introduces:
+  knowledge: [PA-LEX-NAMASTE-01]
+practises:
+  knowledge: [PA-LEX-SAT-SRI-AKAL-01, PA-LEX-NAMASTE-01]
+skills: [listening, speaking]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: respectful
+variety: standard-punjabi
+reviews_of: [PA-C01-sat-sri-akal]
 ---
 
-# ਨਮਸਤੇ (namaste) — the shared greeting
+# *namaste* — the shared greeting by ear
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-SAT-SRI-AKAL-01] -->
 
-[PAUSE 2s] Not every greeting in Punjab is Sikh. Here is the one used across
-communities.
+[PAUSE 2s] Return *sat srī akāl* once. Now meet a broader greeting. Its printed
+form is still only a label; no sign must be decoded.
 
-## The letters in this word
+## The exchange — listen and answer
+<!-- hl-knowledge: introduces=[PA-LEX-NAMASTE-01]; assesses=[PA-LEX-SAT-SRI-AKAL-01] -->
 
-New: **ਨ** na, **ਮ** ma, and **ਤੇ** te (**ਤ** ta + the *e*-sign **ੇ**). With **ਸ**
-from before, read **ਨ·ਮ·ਸ·ਤੇ** → *namaste*.
+[YOU HEAR: *namaste*]. It is a respectful **hello** used across communities and
+across much of India. Answer in kind: [YOU SAY: *namaste*].
 
-## The word, taken apart
+Sanskrit *namas* means “a bow” and *te* means “to you”: “a bow to you.” That is
+why the same word appears in several modern languages. Shared history does not
+make every community’s greeting interchangeable: use *sat srī akāl* when that
+Sikh context is present, and *namaste* as the broader greeting taught here.
 
-**ਨਮਸਤੇ** (*namaste*) = Sanskrit *namas* ("a bow") + *te* ("to you") — literally
-"I bow to you." It is the very same word as Hindi *namaste* — one of the
-Sanskrit-inherited words Punjabi and Hindi share exactly.
+## Wrap-up recall
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-SAT-SRI-AKAL-01, PA-LEX-NAMASTE-01] -->
+<!-- hl-activity: {"id":"PA-C01-namaste-context","kind":"text","assesses":["PA-LEX-SAT-SRI-AKAL-01","PA-LEX-NAMASTE-01"],"prompt":"Type the broader pan-Indian greeting taught after sat srī akāl.","answer":"namaste","accepted":[],"feedback":{"correct":"Right: namaste is the broader greeting here.","incorrect":"The broader greeting is namaste; sat srī akāl is specifically Sikh."},"response_seconds":8} -->
 
-## Why it's said this way
-
-Punjab is home to many communities. *Namaste* is the more general, pan-Indian
-greeting — used across faiths — where *sat srī akāl* is specifically Sikh.
-Reaching for the right one is itself a small act of courtesy.
-
-## Guided Practice
-
-[PAUSE 1s]
-- [YOU SAY: read it — na · ma · s · te]
-- [YOU SAY: which greeting is Sikh and which is general (*sat srī akāl* / *namaste*)]
-
-## Wrap-up Recall
-
-[PAUSE 3s] What does *namaste* literally mean, and how does it differ in use from
-*sat srī akāl*? ("I bow to you"; general/pan-Indian vs. specifically Sikh.)
+[PAUSE 3s] What do the two Sanskrit pieces mean? (*Namas*, “a bow,” plus *te*,
+“to you.”)
