@@ -2,6 +2,9 @@ use std::collections::BTreeSet;
 use std::fs;
 use std::path::Path;
 
+use oxixml_unicode::{case, norm};
+use serde::{Deserialize, Serialize};
+
 use crate::discovery::Package;
 
 const CI_MANAGED_TOOLCHAIN_LANGUAGES: &[&str] = &[
@@ -16,6 +19,171 @@ const CI_MANAGED_TOOLCHAIN_LANGUAGES: &[&str] = &[
     "kotlin",
     "haskell",
 ];
+
+const TRACKED_ARTIFACT_COMPONENT_IDENTITY: &str = "node_modules";
+const TRACKED_ARTIFACT_REDACTED_PATH: &str = "repository";
+pub const TRACKED_ARTIFACT_UNICODE_VERSION: &str = oxixml_unicode::UNICODE_VERSION;
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct TrackedArtifactEntry {
+    pub ordinal: u32,
+    pub path: String,
+    pub entry_kind: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct TrackedArtifactDiagnosticDetails {
+    pub ordinal: u32,
+    pub entry_kind: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub problem: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct TrackedArtifactDiagnostic {
+    pub code: String,
+    pub severity: String,
+    pub path: String,
+    pub details: TrackedArtifactDiagnosticDetails,
+}
+
+/// Derive tracked-artifact diagnostics from caller-supplied inert path records.
+///
+/// This oracle does not inspect Git, the filesystem, processes, the environment,
+/// or the network. Entry kinds are metadata only and grant no path authority.
+pub fn validate_tracked_artifact_snapshot(
+    entries: &[TrackedArtifactEntry],
+) -> Vec<TrackedArtifactDiagnostic> {
+    let mut diagnostics = Vec::new();
+
+    for entry in entries {
+        let details = TrackedArtifactDiagnosticDetails {
+            ordinal: entry.ordinal,
+            entry_kind: entry.entry_kind.clone(),
+            problem: None,
+        };
+
+        let normalized_path = match normalize_tracked_artifact_path(&entry.path) {
+            Ok(path) => path,
+            Err(problem) => {
+                diagnostics.push(TrackedArtifactDiagnostic {
+                    code: "TRACKED_ARTIFACT_PATH_INVALID".to_string(),
+                    severity: "error".to_string(),
+                    path: TRACKED_ARTIFACT_REDACTED_PATH.to_string(),
+                    details: TrackedArtifactDiagnosticDetails {
+                        problem: Some(problem.to_string()),
+                        ..details
+                    },
+                });
+                continue;
+            }
+        };
+
+        if normalized_path.split('/').any(|component| {
+            case::fold_str(&norm::nfkc(component)) == TRACKED_ARTIFACT_COMPONENT_IDENTITY
+        }) {
+            diagnostics.push(TrackedArtifactDiagnostic {
+                code: "TRACKED_ARTIFACT_FORBIDDEN".to_string(),
+                severity: "error".to_string(),
+                path: normalized_path,
+                details,
+            });
+        }
+    }
+
+    diagnostics.sort_by(|left, right| {
+        left.code
+            .cmp(&right.code)
+            .then_with(|| left.path.chars().cmp(right.path.chars()))
+            .then_with(|| {
+                canonical_details_key(&left.details).cmp(&canonical_details_key(&right.details))
+            })
+    });
+    diagnostics
+}
+
+fn normalize_tracked_artifact_path(path: &str) -> Result<String, &'static str> {
+    let normalized = path.replace('\\', "/");
+    if normalized.is_empty() {
+        return Err("EMPTY");
+    }
+    if normalized.chars().count() > 512 {
+        return Err("TOO_LONG");
+    }
+    if !norm::is_nfc(&normalized) {
+        return Err("NON_NFC");
+    }
+    if normalized.starts_with('/') {
+        return Err("ABSOLUTE");
+    }
+    if normalized.as_bytes().get(1) == Some(&b':') && normalized.as_bytes()[0].is_ascii_alphabetic()
+    {
+        return Err("DRIVE_QUALIFIED");
+    }
+    if normalized.contains("//") {
+        return Err("EMPTY_SEGMENT");
+    }
+    if normalized.ends_with('/') {
+        return Err("EMPTY_SEGMENT");
+    }
+    if normalized.chars().any(|character| {
+        character < '\u{20}' || matches!(character, '<' | '>' | ':' | '"' | '|' | '?' | '*')
+    }) {
+        return Err("UNSAFE_CHARACTER");
+    }
+
+    for component in normalized.split('/') {
+        if component == "." || component == ".." {
+            return Err("DOT_SEGMENT");
+        }
+        if component.ends_with([' ', '.']) {
+            return Err("TRAILING_DOT_OR_SPACE");
+        }
+        let basename = component.split('.').next().unwrap_or_default();
+        let uppercase = case::full_uppercase(basename);
+        if is_windows_reserved_basename(&uppercase) {
+            return Err("RESERVED_BASENAME");
+        }
+    }
+
+    Ok(normalized)
+}
+
+fn is_windows_reserved_basename(basename: &str) -> bool {
+    if matches!(
+        basename,
+        "CON" | "PRN" | "AUX" | "NUL" | "CONIN$" | "CONOUT$" | "CLOCK$"
+    ) {
+        return true;
+    }
+
+    let suffix = basename
+        .strip_prefix("COM")
+        .or_else(|| basename.strip_prefix("LPT"));
+    matches!(
+        suffix,
+        Some("1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "¹" | "²" | "³")
+    )
+}
+
+fn canonical_details_key(details: &TrackedArtifactDiagnosticDetails) -> String {
+    let mut object = serde_json::Map::new();
+    object.insert(
+        "entry_kind".to_string(),
+        serde_json::Value::String(details.entry_kind.clone()),
+    );
+    object.insert(
+        "ordinal".to_string(),
+        serde_json::Value::Number(details.ordinal.into()),
+    );
+    if let Some(problem) = &details.problem {
+        object.insert(
+            "problem".to_string(),
+            serde_json::Value::String(problem.clone()),
+        );
+    }
+    serde_json::to_string(&object).expect("tracked-artifact details are JSON-safe")
+}
 
 pub fn validate_ci_full_build_toolchains(repo_root: &Path, packages: &[Package]) -> Option<String> {
     let ci_path = repo_root.join(".github").join("workflows").join("ci.yml");
@@ -310,10 +478,96 @@ fn lua_sibling_install_dirs(lines: &[String]) -> Vec<String> {
 
 #[cfg(test)]
 mod tests {
-    use super::{validate_build_contracts, validate_ci_full_build_toolchains};
+    use super::{
+        validate_build_contracts, validate_ci_full_build_toolchains,
+        validate_tracked_artifact_snapshot, TrackedArtifactDiagnostic, TrackedArtifactEntry,
+        TRACKED_ARTIFACT_UNICODE_VERSION,
+    };
     use crate::discovery::Package;
     use std::fs;
+    use std::path::PathBuf;
     use std::time::{SystemTime, UNIX_EPOCH};
+
+    const TRACKED_ARTIFACT_CASES: &[&str] = &[
+        "validation-tracked-artifacts-clean.json",
+        "validation-tracked-artifacts-forbidden.json",
+        "validation-tracked-artifacts-aliases.json",
+        "validation-tracked-artifacts-invalid.json",
+        "validation-tracked-artifacts-unicode-boundaries.json",
+    ];
+
+    fn repository_root() -> PathBuf {
+        PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .ancestors()
+            .nth(4)
+            .expect("build-tool package must be four levels below the repository root")
+            .to_path_buf()
+    }
+
+    #[test]
+    fn tracked_artifact_validation_matches_shared_conformance_fixtures() {
+        let cases_root = repository_root().join("code/specs/fixtures/build-tool-v1/cases");
+
+        for fixture_name in TRACKED_ARTIFACT_CASES {
+            let fixture: serde_json::Value =
+                serde_json::from_str(&fs::read_to_string(cases_root.join(fixture_name)).unwrap())
+                    .unwrap();
+            let entries: Vec<TrackedArtifactEntry> = serde_json::from_value(
+                fixture["input"]["options"]["tracked_artifact_snapshot"]["entries"].clone(),
+            )
+            .unwrap();
+            let expected: Vec<TrackedArtifactDiagnostic> =
+                serde_json::from_value(fixture["expected"]["diagnostics"].clone()).unwrap();
+
+            assert_eq!(
+                validate_tracked_artifact_snapshot(&entries),
+                expected,
+                "fixture {fixture_name}"
+            );
+        }
+    }
+
+    #[test]
+    fn tracked_artifact_validation_rejects_closed_path_errors_without_echoing_input() {
+        assert_eq!(TRACKED_ARTIFACT_UNICODE_VERSION, "17.0.0");
+        let cases = [
+            (String::new(), "EMPTY"),
+            ("a".repeat(513), "TOO_LONG"),
+            ("code/packages/e\u{0301}/file.rs".to_string(), "NON_NFC"),
+            ("/absolute/file.rs".to_string(), "ABSOLUTE"),
+            ("C:/drive/file.rs".to_string(), "DRIVE_QUALIFIED"),
+            ("code//empty/file.rs".to_string(), "EMPTY_SEGMENT"),
+            ("code/trailing/".to_string(), "EMPTY_SEGMENT"),
+            ("code\\trailing\\".to_string(), "EMPTY_SEGMENT"),
+            ("code/bad?/file.rs".to_string(), "UNSAFE_CHARACTER"),
+            ("code/../traversal".to_string(), "DOT_SEGMENT"),
+            (
+                "code/trailing./file.rs".to_string(),
+                "TRAILING_DOT_OR_SPACE",
+            ),
+            ("code/COM1.txt/file.rs".to_string(), "RESERVED_BASENAME"),
+        ];
+
+        for (path, expected_problem) in cases {
+            let diagnostics = validate_tracked_artifact_snapshot(&[TrackedArtifactEntry {
+                ordinal: 7,
+                path: path.clone(),
+                entry_kind: "regular".to_string(),
+            }]);
+
+            assert_eq!(diagnostics.len(), 1, "path {path:?}");
+            let diagnostic = &diagnostics[0];
+            assert_eq!(diagnostic.code, "TRACKED_ARTIFACT_PATH_INVALID");
+            assert_eq!(diagnostic.path, "repository");
+            assert_eq!(
+                diagnostic.details.problem.as_deref(),
+                Some(expected_problem)
+            );
+            if !path.is_empty() {
+                assert!(!serde_json::to_string(diagnostic).unwrap().contains(&path));
+            }
+        }
+    }
 
     fn make_package(root: &std::path::Path, rel_path: &str, language: &str) -> Package {
         let pkg_path = root.join(rel_path);

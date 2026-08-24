@@ -6326,8 +6326,27 @@ had temporarily outranked it only because that work unlocked the now-complete
 two-step .NET chain. Ten live open PRs have zero exact overlap on the Rust
 build-tool, shared spec, state, or roadmap surfaces, and the target remote
 branch was absent. The strategic OCaml process-free substrate remains
-collision-unsafe while live PR #12162 touches its Go validator and main
-surfaces.
+collision-unsafe while live PRs #12149 and #12162 touch its Go validator and
+main surfaces.
+
+The Rust implementation review exposed three separately owned follow-ups before
+publication. A trailing slash or backslash creates a final empty component that
+the shared Python and C# validators currently accept despite the portable-path
+contract; the Rust child rejects both forms directly, while
+`build-tool-tracked-artifact-trailing-empty-segment-cross-runtime-hardening`
+owns the neutral fixture and reviewed shared-engine repairs. The contract also
+needs one explicit Unicode data version across runtimes, now owned by
+`build-tool-tracked-artifact-unicode-version-contract`; Rust uses one exactly
+pinned Unicode 17.0.0 snapshot for normalization, full default folding, and
+reserved-name uppercase rather than mixing Unicode 17 normalization with an
+older folding table. Both owners now gate the unfinished native consumers and
+the Go, JVM, and Dart implementations.
+
+The canonical Rust `BUILD_windows` recipe also leaves an unignored
+`target_isolated/` directory after a real run. The generated validation output
+was removed, and `build-tool-rust-windows-isolated-target-artifact-hygiene`
+owns the durable build-front fix and repeated-clean-run proof without widening
+the process-free validator tranche.
 
 ## Autonomous Loop Protocol
 

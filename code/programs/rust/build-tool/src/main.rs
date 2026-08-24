@@ -40,7 +40,7 @@ mod hasher;
 pub mod plan;
 mod reporter;
 mod resolver;
-mod validator;
+pub mod validator;
 
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
