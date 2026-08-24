@@ -5,6 +5,18 @@ Findings from the pre-A1 tranche work were recorded in commit messages and PR
 bodies, which are durable and searchable, but a reader opening this file found
 nothing. The entries below are the ones that change how the work is done.
 
+## HL-C09P — Tamil த keeps the letter-ledger queue moving
+
+After Tamil pa landed, the measured queue put Tamil dental **த** first at **50
+affected realizations**. The UT Austin *Tamil Script Learners Manual* presents
+த beside ப in Frame 1, states the usual left-to-right and top-to-bottom hand
+movement, and gives the letter directly for copying. The continuous fitted path
+keeps that attested movement while expanding it across the bundled Noto Sans
+Tamil outline: short left stem, compact loop, central cap, broad bowl, and tail.
+
+The new inventory and ductus entry remove all **50 affected realizations** for
+**த**. The reranked queue keeps Tamil first with **ர** at 47.
+
 ## HL-C09O — Tamil ப opens the letter-ledger closure queue
 
 After Telugu anusvara landed, the measured queue put Tamil **ப** first at **61

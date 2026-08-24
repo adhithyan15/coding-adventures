@@ -192,7 +192,7 @@ describe("truetype: reading the vendored fonts", () => {
 
   it("resolves each Tamil letter the writing track teaches to a non-empty outline", () => {
     const f = tamil();
-    for (const ch of ["க", "ப", "ம", "ண", "ன", "ந", "ற", "வ", "அ", "இ", "ல"]) {
+    for (const ch of ["க", "ப", "த", "ம", "ண", "ன", "ந", "ற", "வ", "அ", "இ", "ல"]) {
       const g = f.glyphFor(ch);
       expect(g, ch).toBeDefined();
       expect(g!.contours.length, ch).toBeGreaterThan(0);
@@ -565,7 +565,7 @@ describe("Tamil letter shapes the lessons make claims about", () => {
     // subjects. Deliberately wider than it needs to be: with a bare handful the
     // survivor count sits right on the guard, and a raster-resolution change
     // would flip it.
-    const spreads = ["ம", "வ", "அ", "இ", "ல", "ற", "க", "ய", "ப", "ள", "எ"]
+    const spreads = ["ம", "வ", "அ", "இ", "ல", "ற", "க", "ய", "ப", "த", "ள", "எ"]
       .map((ch) => {
         const cs = f.glyphFor(ch)!.contours;
         return finalStrokeSpread(raster(cs, windowFor(cs)));

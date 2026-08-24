@@ -12141,6 +12141,82 @@ export const DUCTUS: Record<string, LetterDuctus> = {
         "Frame 1 teaches the usual left-to-right and top-to-bottom movement and directly presents ப for copying. Tamil handwriting varies by school; this is one attested continuous order fitted to the bundled Noto Sans Tamil outline.",
     },
   },
+  த: {
+    script: "tamil",
+    glyph: "த",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "down the short left upright",
+            path: [
+              { x: 160, y: 548 },
+              { x: 160, y: 420 },
+              { x: 160, y: 286 },
+            ],
+          },
+          {
+            label: "around the compact left loop",
+            path: [
+              { x: 160, y: 286 },
+              { x: 105, y: 260 },
+              { x: 80, y: 205 },
+              { x: 90, y: 125 },
+              { x: 140, y: 65 },
+              { x: 240, y: 25 },
+              { x: 340, y: 40 },
+              { x: 400, y: 105 },
+              { x: 412, y: 205 },
+              { x: 412, y: 300 },
+            ],
+          },
+          {
+            label: "up the central upright and across the top",
+            path: [
+              { x: 412, y: 300 },
+              { x: 412, y: 420 },
+              { x: 412, y: 518 },
+              { x: 285, y: 518 },
+              { x: 160, y: 518 },
+              { x: 285, y: 518 },
+              { x: 412, y: 518 },
+              { x: 540, y: 518 },
+              { x: 680, y: 518 },
+            ],
+          },
+          {
+            label: "back through the center and around the broad bowl to the tail",
+            path: [
+              { x: 680, y: 518 },
+              { x: 540, y: 518 },
+              { x: 412, y: 518 },
+              { x: 412, y: 360 },
+              { x: 412, y: 300 },
+              { x: 530, y: 290 },
+              { x: 630, y: 255 },
+              { x: 690, y: 190 },
+              { x: 700, y: 90 },
+              { x: 675, y: 5 },
+              { x: 610, y: -55 },
+              { x: 510, y: -95 },
+              { x: 370, y: -115 },
+              { x: 230, y: -115 },
+              { x: 130, y: -135 },
+              { x: 80, y: -205 },
+              { x: 90, y: -315 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: {
+      citation:
+        "Sankaran Radhakrishnan, Tamil Script Learners Manual, Frame 1, த (University of Texas at Austin, 2009)",
+      url: "https://sites.la.utexas.edu/tamilscript/category/3-moduals/module-01",
+      variation:
+        "Frame 1 teaches the usual left-to-right and top-to-bottom movement and directly presents த for copying. Tamil handwriting varies by school; this is one attested continuous order expanded to trace the bundled Noto Sans Tamil outline.",
+    },
+  },
   ம: {
     script: "tamil",
     glyph: "ம",
