@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- Made both BUILD fronts repeatable by clearing the named environment and
+  pinning Python 3.13.
+- Added explicit named-interpreter Ruff, format, strict MyPy, and pytest gates.
+- Modernized the generic implementation to Python 3.12 type-parameter syntax
+  without changing the public API or trie behavior.
+
 ## [0.2.0] — 2026-04-11
 
 ### Added

@@ -116,5 +116,15 @@ DT13: trie          ← [THIS PACKAGE]
 ## Running Tests
 
 ```bash
-uv run python -m pytest tests/ -v
+uv venv .venv --quiet --no-project --clear --python 3.13
+uv pip install --python .venv -e .[dev] --quiet
+.venv/bin/python -m ruff check src tests
+.venv/bin/python -m ruff format --check src tests
+.venv/bin/python -m mypy --strict src tests
+.venv/bin/python -m pytest tests/ -v
 ```
+
+`BUILD_windows` enforces the same gates through
+`.venv\Scripts\python.exe`. Both fronts replace an existing `.venv`, so an
+immediate repeat uses the same Python 3.13 contract instead of failing during
+environment creation.

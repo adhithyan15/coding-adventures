@@ -105,12 +105,9 @@ matching prefix for each incoming packet — O(k) per packet.
 
 from __future__ import annotations
 
+from collections.abc import Hashable, Iterator
 from dataclasses import dataclass, field
-from typing import Any, Generic, Hashable, Iterator, TypeVar
-
-K = TypeVar("K", bound=Hashable)
-V = TypeVar("V")
-
+from typing import Any
 
 # ─── Exceptions ──────────────────────────────────────────────────────────────
 
@@ -127,7 +124,7 @@ class KeyNotFoundError(TrieError):
 
 
 @dataclass
-class _TrieNode(Generic[V]):
+class _TrieNode[V]:
     """
     Internal node of the trie.
 
@@ -141,7 +138,7 @@ class _TrieNode(Generic[V]):
         value:    The value stored for the key ending here (None if is_end=False).
     """
 
-    children: dict[str, "_TrieNode[V]"] = field(default_factory=dict)
+    children: dict[str, _TrieNode[V]] = field(default_factory=dict)
     is_end: bool = False
     value: V | None = None
 
@@ -149,7 +146,7 @@ class _TrieNode(Generic[V]):
 # ─── Main class ───────────────────────────────────────────────────────────────
 
 
-class Trie(Generic[V]):
+class Trie[V]:
     """
     Prefix tree (trie) mapping string keys to values of type V.
 
@@ -575,7 +572,7 @@ class Trie(Generic[V]):
 
 
 @dataclass
-class _CursorNode(Generic[K, V]):
+class _CursorNode[K: Hashable, V]:
     """
     Internal node of a TrieCursor's trie.
 
@@ -588,11 +585,11 @@ class _CursorNode(Generic[K, V]):
         value:    The value stored at this node (None if no value).
     """
 
-    children: dict[Any, "_CursorNode[K, V]"] = field(default_factory=dict)
+    children: dict[Any, _CursorNode[K, V]] = field(default_factory=dict)
     value: V | None = None
 
 
-class TrieCursor(Generic[K, V]):
+class TrieCursor[K: Hashable, V]:
     """
     A cursor for step-by-step trie traversal.
 

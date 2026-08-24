@@ -5666,6 +5666,70 @@ singletons; all high-consensus and middle-band totals remain unchanged, with
 zero collisions and zero unknown buckets. This late identity does not overlap
 or displace the already selected Starlark contract slice.
 
+### Post-#12562 refresh and Python trie selection
+
+Final head `876c19a0c247e4ace99f5017462da0aa11e9e80e` completed all 29
+reported checks with 23 successes, six expected skips, and no failures or
+pending work. GitHub reported PR #12562 clean and mergeable; the loop enabled
+squash auto-merge, and GitHub merged it as
+`707a5d39f8d5c68f769200a9cfc466bd1c231693` at
+2026-08-24T12:02:53Z without a manual merge command.
+
+The collision-checked schema-3 inventory remains identity-neutral through the
+subsequent Devanagari curriculum-only commit at exact main
+`69d816d78994217c72e7d956d5f59872406b6282`: 15 established lanes,
+1,370 implementation identities, 4,563 package slots, 175 high-consensus
+identities with 276 gaps, 122 identities in five to nine lanes with 926 gaps,
+166 identities in two to four lanes with 2,087 gaps, and 907 singletons with
+12,698 gaps. There are 718 Rust singletons, zero canonical collisions, and
+zero unknown buckets. OCaml remains correctly emerging with no packages.
+
+The implementation audit records one new owner before selection. The Starlark
+metering corpus now supplies ten neutral cases and a Python reference oracle,
+but no native build-tool engine consumes the exact fuel, recursion, allocation,
+range, scalar, load-graph, or combined-output limits. The pending
+`build-tool-starlark-metering-remaining-engines` umbrella therefore follows the
+canonical Go oracle and must be decomposed into independent engine children;
+future Dart and JVM engines must consume the same process-free contract.
+
+The dependency/leverage pass selects
+`python-trie-build-front-idempotence`. Trie followed by radix-tree is ready
+behind the merged uv audit, owns the only remaining two-package dependency
+component, and removes two of the seven measured live fronts across six
+components. Six Python manifests consume the pair. Nine live open PRs and 32
+non-main remote heads have zero exact or semantic overlap on the package roots,
+focused regression and audit tests, state, roadmap, or governing uv spec; the
+target branch and prior PR are absent.
+
+The build-tool validation and CLI corpora and the OCaml process-free substrate
+remain strategically stronger but overlap live PRs #12162 and #12149 in Go
+validator and main surfaces. IPP portability is collision-free but is a broader
+all-lane tranche with fewer immediate descendants. The dependency-shaped trie
+repair is therefore the safest serial continuation while those higher-leverage
+owners remain collision-blocked.
+
+The selected repair now gives both trie and radix-tree complete, immediately
+repeatable Python 3.13 recipes. Each front removes its named environment first,
+uses that interpreter for Ruff lint and format checks, strict MyPy, and pytest,
+and preserves the required trie-before-radix install order. On Windows with uv
+0.11.28 and Python 3.13.14, both canonical recipes pass twice consecutively:
+trie passes 95 tests at 99.41% coverage and radix-tree passes 84 tests at
+97.97% coverage. Wheel and source-distribution builds pass for both packages,
+and the focused recipe, live-audit, and Markov regression suites pass all 18
+tests. The measured uv debt therefore falls exactly from seven fronts to five.
+
+The required affected-closure run discovers one further owner rather than
+widening this tranche. The Go build tool passes its complete tests, vet, and
+trimpath compilation; its exact diff plan evaluates 45 Starlark files,
+discovers 494 Python packages, and selects exactly trie, radix-tree, and LZ78.
+The real execution builds both owned packages. LZ78 alone fails before tests
+because its existing Windows front selects ambient Python 3.10.11 while trie
+requires Python 3.12 or newer; an explicit Python 3.13 environment passes all
+48 LZ78 tests at 97.26% coverage. The new pending
+`python-lz78-build-front-python313` owner follows this repair and keeps that
+pinning correction, its complete-recipe regression, and any dormant LZ78
+quality debt in an independently reviewable dependency-shaped slice.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
