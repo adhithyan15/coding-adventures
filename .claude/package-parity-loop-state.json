@@ -11,7 +11,7 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": 12577,
   "last_inventory": {
     "revision": "2bf4896ee63c359e6f04c57cdc9da6a14fcf84b2",
     "schema_version": 3,
@@ -320,10 +320,10 @@
     {
       "id": "build-tool-validation-oracle-corpus",
       "title": "Close the remaining build-tool validation checks with semantic oracles",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-pure-domain-corpus"],
       "branch": "codex/build-tool-validation-oracle-corpus",
-      "pr_number": null,
+      "pr_number": 12577,
       "selection_revision": "21032fe145526085b69a9ffa116c56cb67d558d2",
       "selection_notes": "Selected only after PR #12572 completed all 30 checks, merged through squash auto-merge, the collision-checked exact-main inventory was regenerated, and the implementation and authority deltas were classified without exposing another unowned gap. The schema-3 inventory remains 15 established lanes, 1,370 implementation identities, and 4,563 slots with zero collisions or unknown buckets; OCaml remains correctly emerging at zero packages. This process-free, language-neutral corpus is ready behind the merged pure-domain corpus, directly unlocks three owners, and has 12 unfinished build-tool and OCaml descendants. Nine live open PRs and 35 non-main remote heads have zero exact overlap on the governing conformance spec, schema, neutral fixture surfaces, reference runner, runner/schema tests, state, or roadmap; the target branch and prior PR are absent. PRs #12162 and #12149 still block implementation-coupled Go validator and OCaml integration surfaces, but do not touch this neutral corpus slice. The newly ready LZ78 Python pin is collision-free and remains the smallest immediate package repair, while this validation corpus has substantially greater dependency leverage. Main advances after the trie merge change only human-language and already-owned HTML diagnostic surfaces and do not alter the inventory or selected files.",
       "notes": "Implemented the closed nine-check validation contract in dependency order: governing spec, schema and six language-neutral positive/adversarial cases, independent Python semantic oracles and dishonesty rejection, then fixture README/changelog and loop metadata. The snapshot derives build presence, local and transitive standalone prerequisites, Starlark sources/dependencies, package-root identity, manifest uniqueness, toolchain support, path safety, and Lua Windows sibling parity without workspace, Git, process, or network access. Local validation passes the 75-case corpus, 18 schema tests, 48 runner tests at 88% branch-aware runner coverage, all 121 downstream execution/authority/backend tests with expected platform skips, execution-contract validation, Ruff error-class lint and formatting, compileall, Bandit, Go build-tool tests at 78.3% aggregate coverage plus vet/trimpath build and the 5,070-package BUILD-file plan, the collision-free schema-3 parity report plus 10 reporter tests, seven capability taxonomy tests, five Haskell capability tests, and 46 OCaml lock tests with two expected skips. Strict MyPy remains non-gating for this legacy runner and reports 11 baseline errors only in unchanged lines. The branch rebased cleanly onto exact main 2bf4896ee63c359e6f04c57cdc9da6a14fcf84b2; the post-rebase inventory retains the same counts with zero collisions or unknown buckets."
