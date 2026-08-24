@@ -11,9 +11,9 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 12512,
+  "active_pr": null,
   "last_inventory": {
-    "revision": "19c2cfb6399a2d3513f5db7d1f656dce906a8a3b",
+    "revision": "3513488ff2a263e8bf3062ddff4a25fa89b4d8b9",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1369,
@@ -4363,7 +4363,7 @@
     {
       "id": "python-resp-tcp-build-front-idempotence",
       "title": "Make the Python RESP and TCP BUILD fronts repeatable",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["python-uv-build-front-idempotence-audit"],
       "branch": "codex/python-resp-tcp-build-front-idempotence",
       "pr_number": 12512,
@@ -4372,9 +4372,11 @@
       "selection_revision": "8ca09a9928a113c358a625fe16938b02fb1e38c5",
       "selection_notes": "Selected after PR #12501 completed all 30 checks and GitHub merged it through the requested squash auto-merge command. The collision-checked post-merge inventory remains identity-neutral at 15 established lanes, 1,369 implementation identities, and 4,562 slots with zero collisions or unknown buckets. Before selection, the contract audit added a separately owned follow-up for tcp-server's protocol-agnostic source/README versus its declared RESP dependency; the current generated-standard fixture explicitly preserves RESP-before-TCP order, so that metadata/spec reconciliation depends on this backfill rather than widening it. This coherent two-package repair is dependency-ready and is the sole remaining prerequisite that unlocks the final data-store owner. Nine open PRs and 31 non-main remote heads have zero exact package, state, roadmap, fixture, or recipe-test overlap; the target branch and prior PR were absent before creation.",
       "implementation_revision": "db128fc3aec07c2c9a7e6140873423c21209e897",
-      "final_review_revision": "e791f6fd2f3963b403de689cc1bd32d4ad12a731",
+      "final_review_revision": "0c082d97645ce1f3b1856b641693023f3f8740a4",
+      "merge_revision": "087ec0e50e951a72d181124e9e0e1effcc2dfecc",
+      "merged_at": "2026-08-24T05:54:41Z",
       "validation_notes": "All four complete BUILD recipes are pinned by two focused regressions. On Windows with uv 0.11.28 and Python 3.13.14, every BUILD_windows line passes twice consecutively from a cleared package-local environment: RESP Protocol passes 129 tests at 100% coverage and TCP Server passes 23 tests at 100%, with Ruff, formatting, and strict MyPy clean in both runs. TCP preserves the fixture-required RESP prerequisite order and uses --follow-untyped-imports for the untyped sibling; focused tests make both cleanup exception-suppression paths load-bearing. The canonical Unix recipes are structurally pinned for exact Linux/macOS CI execution. The live uv audit falls from 13 to 11 non-idempotent fronts; the recipe/uv suites pass 15 tests plus 22 subtests, and parity/capability suites pass 17 tests plus 719 subtests. The Go build tool passes all package tests, vet, and trimpath compilation. A freshly compiled binary validates 494 Python BUILD fronts and selects exactly seven affected packages: hash-functions, hyperloglog, in-memory-data-store-protocol, resp-protocol, tcp-server, in-memory-data-store-engine, and in-memory-data-store. With the uv 0.11.28 executable directory on PATH and explicit UV_PYTHON=3.13 plus UV_VENV_CLEAR=1 only for separately owned legacy fronts, real execution builds the first five, then reproduces the unchanged engine front's Windows-invalid quoted editable requirement and dependency-skips the store. Direct local downstream runs with that separately owned requirement spelled unquoted pass the engine's 57 tests at 96.67% coverage and the store's five tests at 100%. After non-overlapping publication-time rebases, the collision-checked schema-3 inventory at exact current main 19c2cfb6399a2d3513f5db7d1f656dce906a8a3b remains 15 lanes, 1,369 identities, and 4,562 slots with zero collisions or unknown buckets; the 430-node, 612-edge state is unique and dependency-complete. Diff, dependency, credential, and production-authority scans are clean; this tranche changes no dependency metadata, capability manifest, protocol behavior, or privileged boundary.",
-      "publication_notes": "Opened ready-for-review PR #12512 from head edaf6f5cf952c633b2b0c327bedbb04d3d99544d after a normal first push from exact origin/main 19c2cfb6399a2d3513f5db7d1f656dce906a8a3b. Final implementation, claim, security, ownership, state, and overlap reviews found no unresolved defect; the state review's stale-main and stale-inventory findings were corrected before publication. GitHub reports the PR mergeable while required checks are queued or in progress, so auto-merge remains disabled until every required check is terminal and acceptable.",
+      "publication_notes": "Opened ready-for-review PR #12512 from head edaf6f5cf952c633b2b0c327bedbb04d3d99544d after a normal first push from exact origin/main 19c2cfb6399a2d3513f5db7d1f656dce906a8a3b. Final implementation, claim, security, ownership, state, and overlap reviews found no unresolved defect; the state review's stale-main and stale-inventory findings were corrected before publication. Final head 0c082d97645ce1f3b1856b641693023f3f8740a4 completed all 30 checks with 24 successes, five expected skips, one neutral CodeQL result, and no failures or pending work. GitHub reported the branch clean and mergeable; the loop requested squash auto-merge, and GitHub merged PR #12512 as 087ec0e50e951a72d181124e9e0e1effcc2dfecc at 2026-08-24T05:54:41Z.",
       "notes": "Dependency-shaped generated-pattern backfill for python/resp-protocol followed by python/tcp-server. Pin and recreate both environments, preserve the RESP prerequisite order, and validate the exact dependent closure on immediate repeat."
     },
     {
@@ -4389,11 +4391,23 @@
     {
       "id": "python-data-store-build-front-idempotence",
       "title": "Make the Python in-memory data-store BUILD fronts repeatable",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["python-uv-build-front-idempotence-audit", "python-hash-functions-build-front-strict-mypy", "python-hash-collections-build-front-idempotence", "python-resp-tcp-build-front-idempotence", "python-in-memory-data-store-protocol-build-front-python313"],
+      "branch": "codex/python-data-store-build-front-idempotence",
+      "pr_number": null,
+      "selection_revision": "3513488ff2a263e8bf3062ddff4a25fa89b4d8b9",
+      "selection_notes": "Selected after PR #12512 completed all 30 checks and merged through the requested squash auto-merge command. The collision-checked exact-main inventory is identity-neutral at 15 established lanes, 1,369 implementation identities, and 4,562 slots with zero collisions or unknown buckets; no new package marker or identity appeared. The audit did discover and register the separately blocked AOF filesystem-authority review before selection. All five dependencies are merged, and this two-package owner now closes the final hash/RESP/data-store dependency chain plus the repeatedly reproduced Windows-invalid quoted editable requirement. Eight open PRs and 31 non-main remote heads have zero exact package, state, roadmap, fixture, or recipe-test overlap; the target remote branch and prior PR were absent before creation. The ready TCP dependency-contract reconciliation and blocked authority review do not widen or block this build-only closure. Pre-selection quality diagnostics show the engine already passes Ruff, formatting, strict MyPy, 57 tests, and 96.67% coverage, while the composed store passes Ruff, formatting, five tests, and 100% coverage but exposes four strict-MyPy findings for bounded behavior-preserving cleanup within the owned root.",
+      "notes": "Backfill for python/in-memory-data-store-engine followed by python/in-memory-data-store after their hash and RESP prerequisites land. In addition to pinning and clearing .venv, reconcile the Windows-invalid quoted editable requirement while preserving the complete local sibling closure."
+    },
+    {
+      "id": "python-in-memory-data-store-filesystem-authority-review",
+      "title": "Review Python in-memory data-store AOF filesystem authority and capability truthfulness",
+      "status": "pending",
+      "depends_on": ["python-data-store-build-front-idempotence"],
       "branch": null,
       "pr_number": null,
-      "notes": "Backfill for python/in-memory-data-store-engine followed by python/in-memory-data-store after their hash and RESP prerequisites land. In addition to pinning and clearing .venv, reconcile the Windows-invalid quoted editable requirement while preserving the complete local sibling closure."
+      "selection_blocked": true,
+      "notes": "Discovered by the post-#12512 pre-selection security audit. python/in-memory-data-store accepts a caller-supplied AOF path, checks, reads, and replays it, creates parent directories, opens and appends to it, writes, flushes, closes, and calls os.fsync while required_capabilities.json declares an empty profile. Review least-privilege fs:read, fs:create, and fs:write targets; path containment; symlink and reparse-point handling; TOCTOU and resource limits; and error behavior. Obtain Layer-5 approval for any truthful nonempty capability profile or split persistence into an injected authority-bearing adapter. Do not fold this privileged contract into the BUILD repeatability repair."
     },
     {
       "id": "python-graph-build-front-idempotence",
