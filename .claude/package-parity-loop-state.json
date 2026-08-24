@@ -11,7 +11,7 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": 12562,
   "last_inventory": {
     "revision": "9eb5934aefd3c5fb216ec8171e803c6f91a6f938",
     "schema_version": 3,
@@ -289,14 +289,18 @@
     {
       "id": "build-tool-starlark-metering-corpus",
       "title": "Add adversarial Starlark evaluator metering fixtures",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-pure-domain-corpus"],
       "branch": "codex/build-tool-starlark-metering-corpus",
-      "pr_number": null,
+      "pr_number": 12562,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/12562",
+      "opened_at": "2026-08-24T11:42:49Z",
+      "opened_revision": "5957c22145633a716e796dd4686c9e1a5e00f347",
       "selection_revision": "35ead36e61adab3bcf8f86a9cf527c633d96012a",
       "selection_notes": "Selected after PR #12549 merged through squash auto-merge, the collision-checked exact-main inventory was regenerated through the subsequent tracked-node_modules validator and Spanish-curriculum merges, and three newly exposed owners were registered before selection. The schema-3 inventory remains 15 established lanes, 1,369 implementation identities, and 4,562 slots with zero collisions or unknown buckets. This process-free, language-neutral metering corpus is dependency-ready behind the merged pure-domain corpus, has zero exact overlap across 11 live open PRs and 33 non-main remote heads, and its target branch and prior PR are absent. It directly unlocks the Go build-tool oracle and seven unfinished build-tool descendants, while the higher raw-leverage validation corpus, CLI parser corpus, and OCaml process-free substrate overlap live PRs #12162 and #12149 on main/validator surfaces. Trie followed by radix-tree remains a collision-free ready uv repair, but closes only two of seven remaining fronts; the metering corpus advances the durable every-language build-tool contract without claiming evaluator execution or host authority.",
       "implementation_revision": "aa2c8998877ead4725aa0df6c0e497e7df809c15",
       "final_review_revision": "aa2c8998877ead4725aa0df6c0e497e7df809c15",
+      "publication_notes": "Opened ready-for-review PR #12562 from clean validated head 5957c22145633a716e796dd4686c9e1a5e00f347 after a normal first push. Before publication, origin/main advanced through already-owned HTML-parser diagnostics, Mermaid XY layout, IPP printer status, and Devanagari curriculum work to 9eb5934aefd3c5fb216ec8171e803c6f91a6f938. The branch rebased conflict-free; the refreshed inventory registered the new pure ipp-protocol singleton under its own portability owner and the focused exact-base corpus, native-consumer, parity, state, diff, and security checks passed. GitHub reports the ready PR mergeable and conflict-free with 16 checks queued, so the loop remains monitor-only and auto-merge stays disabled until every required check is terminal and acceptable.",
       "validation_notes": "The authoritative build-tool contract now defines deterministic fuel events, bounded user-call depth, active-chain load-cycle rejection, entrypoint-inclusive module and edge-depth accounting, cumulative container allocation, per-range and per-scalar ceilings, and combined UTF-8 print/trace bytes. Ten inert cases add one bounded success and stable error oracles for steps, recursion, aggregates, ranges, scalar bytes, load depth, module count, load cycles, and output; the bootstrap corpus grows from 59 to 69 cases without adding execution, process, network, filesystem, environment, clock, or random authority. Schema and focused runner tests pass 63 tests. The full process-free conformance family passes 184 tests with 23 expected authority/platform skips and 87% branch coverage on build_tool_conformance.py. Native Go, Ruby, and Rust fixture consumers pass with zero errors. The Go operational build tool passes all tests, vet, and trimpath build; exact repository validation evaluates 45 Starlark BUILD files and emits a 5,069-package, 9,775-edge plan with orphan-crate validation clean. Package-parity, capability-taxonomy, uv-audit, OCaml-toolchain, JSON, state, diff, dependency, credential, and production-authority checks are clean. The branch rebased conflict-free before publication onto exact main 9eb5934aefd3c5fb216ec8171e803c6f91a6f938; the new Rust-only pure ipp-protocol identity is recorded under its own portable owner.",
       "notes": "Discovered during the pure-domain security review. Cover fuel, recursion, aggregate allocations, range/value sizes, load depth/count/cycles, and print/trace limits before any native evaluator claims final Starlark conformance."
     },
