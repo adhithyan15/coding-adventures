@@ -11,7 +11,12 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 12598,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/12598",
+    "branch": "codex/build-tool-tracked-artifact-validation-corpus",
+    "status": "open"
+  },
   "last_inventory": {
     "revision": "1d5eb7d570ceb011b0d6bd66a4be8e32cac5b395",
     "schema_version": 3,
@@ -4698,15 +4703,18 @@
     {
       "id": "build-tool-tracked-artifact-validation-corpus",
       "title": "Define language-neutral tracked-artifact validation",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-validation-oracle-corpus"],
       "branch": "codex/build-tool-tracked-artifact-validation-corpus",
-      "pr_number": null,
+      "pr_number": 12598,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/12598",
       "selection_revision": "053f6501b9b4b72c89253d198b9de6ad2a52e256",
       "selection_notes": "Selected only after PR #12591 completed all 29 checks and merged through squash auto-merge, the exact-main collision inventory was regenerated, and the newly exposed Go tracked-artifact index authority was registered under its own selection-blocked review. The schema-3 inventory remains 15 established lanes, 1,370 identities, 4,563 slots, 175 high-consensus identities with 276 gaps, 907 singletons with 12,698 gaps, 718 Rust singletons, zero collisions, and zero unknown buckets; OCaml remains correctly emerging at zero packages. Exact tree comparison from the prior inventory revision found no identity, slot, directory-spelling, marker, or unknown-bucket delta and no newly unowned portable package. This bounded process-free corpus is ready behind the merged validation oracle, removes a direct Go-oracle prerequisite, and unlocks every remaining engine's tracked-artifact validator, with eleven unfinished descendants through the Go oracle, build-tool lanes, and OCaml promotion. Eleven live open PRs and 34 non-main remote heads have zero expected-surface overlap; the target branch and prior PR are absent. The newly ready orphan remaining-engine umbrella requires per-engine decomposition and has no descendants, while OCaml's process-free core still intersects PRs #12149 and #12162 on Go validator and main surfaces.",
       "notes": "Discovered after merged PR #12551 added Go-only rejection of tracked node_modules paths. Define closed process-free fixtures for exact and nested tracked artifacts, normalized separators, case and Unicode aliases, dotted traversal, symlink/reparse metadata supplied as data, allowed ordinary source paths, sorted diagnostics, and repository-relative redaction before other build-tool implementations claim the contract. Keep Git enumeration and host filesystem inspection outside this language-neutral validator corpus.",
+      "implementation_revision": "49b510ded78c14cb59bc0d2f8e42f2fae74dffa0",
       "implementation_notes": "Implemented the eleventh closed validation check, tracked_artifact_absence, over bounded inert ordinal/path/entry-kind records. The independent oracle normalizes separators, rejects exact, nested, case-folded, and NFKC-compatible node_modules components, treats regular/symlink/reparse metadata identically, redacts invalid raw paths to repository, and sorts every derived diagnostic without Git, filesystem, process, environment, or network authority. Four cases cover clean paths, exact/nested artifacts, aliases, unsafe paths, dishonest results, conditional schema leakage, stable problem codes, and malformed snapshot ordering.",
-      "validation_notes": "Validated 110 strict corpus cases with 269 staged workspace files; 201 conformance schema/runner/execution/authority/loader/broker/backend tests pass with 23 expected platform skips and 90% branch-aware coverage for build_tool_conformance.py. The Go build tool passes all packages at 78.3% aggregate coverage plus vet and trimpath build; a forced dry plan validates and selects all 5,070 packages. Ten parity-reporter, seven capability-taxonomy, five Haskell-capability, and 46 OCaml-lock tests pass with two expected skips. Ruff error-class lint/format, production Bandit, strict JSON, the 459-owner/638-edge acyclic state graph, collision reporting, and diff checks pass. Strict MyPy reports the same eight pre-existing source findings as exact main and no added finding. A late exact-main inventory at 1d5eb7d570ceb011b0d6bd66a4be8e32cac5b395 remains unchanged with zero collisions and unknown buckets."
+      "validation_notes": "Validated 110 strict corpus cases with 269 staged workspace files; 201 conformance schema/runner/execution/authority/loader/broker/backend tests pass with 23 expected platform skips and 90% branch-aware coverage for build_tool_conformance.py. The Go build tool passes all packages at 78.3% aggregate coverage plus vet and trimpath build; a forced dry plan validates and selects all 5,070 packages. Ten parity-reporter, seven capability-taxonomy, five Haskell-capability, and 46 OCaml-lock tests pass with two expected skips. Ruff error-class lint/format, production Bandit, strict JSON, the 459-owner/638-edge acyclic state graph, collision reporting, and diff checks pass. Strict MyPy reports the same eight pre-existing source findings as exact main and no added finding. A late exact-main inventory at 1d5eb7d570ceb011b0d6bd66a4be8e32cac5b395 remains unchanged with zero collisions and unknown buckets.",
+      "publication_notes": "Opened ready-for-review PR #12598 from clean validated implementation head 49b510ded78c14cb59bc0d2f8e42f2fae74dffa0 after a normal first push. Immediately before publication, remote main remained at exact reviewed base 1d5eb7d570ceb011b0d6bd66a4be8e32cac5b395; nine live open PRs had zero exact overlap across the 14 changed paths. GitHub reports the PR mergeable while required CI and CodeQL checks are queued or in progress, so auto-merge remains disabled. This lifecycle follow-up records #12598 as the sole active parity PR and leaves the loop monitor-only until every required check is terminal and acceptable."
     },
     {
       "id": "build-tool-go-tracked-artifact-index-authority-review",
