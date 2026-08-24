@@ -5348,6 +5348,44 @@ and the real dependent closure. Nine open PRs and 31 non-main remote heads
 have zero exact overlap; the target branch and prior PR were absent before
 creation.
 
+### RESP/TCP BUILD-front implementation and validation
+
+All four complete recipes are now pinned by two focused regressions. On
+Windows with uv 0.11.28 and Python 3.13.14, every `BUILD_windows` line passes
+twice consecutively from a cleared package-local environment: RESP Protocol
+passes 129 tests at 100% coverage and TCP Server passes 23 tests at 100%, with
+Ruff, formatting, and strict MyPy clean in both runs. TCP preserves the
+fixture-required RESP prerequisite order and uses `--follow-untyped-imports`
+for that untyped sibling. Two focused tests make the listening-socket and
+client-unregister cleanup exception paths load-bearing, raising TCP's coverage
+from the fragile pre-repair margin to 100%. The canonical Unix recipes are
+structurally pinned for exact Linux and macOS CI execution.
+
+The live uv audit falls from 13 to 11 non-idempotent fronts. The focused
+recipe/uv suites pass 15 tests plus 22 subtests, and the parity/capability
+suites pass 17 tests plus 719 subtests. The Go build tool passes all package
+tests, vet, and trimpath compilation. A freshly compiled binary validates 494
+Python BUILD fronts and selects exactly seven affected packages:
+`hash-functions`, `hyperloglog`, `in-memory-data-store-protocol`,
+`resp-protocol`, `tcp-server`, `in-memory-data-store-engine`, and
+`in-memory-data-store`.
+
+With the uv 0.11.28 executable directory on `PATH` and explicit
+`UV_PYTHON=3.13` plus `UV_VENV_CLEAR=1` only for separately owned legacy
+fronts, real affected execution builds the first five packages, then
+reproduces the unchanged engine front's Windows-invalid `".[dev]"` parse
+error and dependency-skips the store. Direct local downstream runs with that
+separately owned requirement spelled unquoted pass the engine's 57 tests at
+96.67% coverage and the store's five tests at 100%. After two non-overlapping
+publication-time rebases, the collision-checked schema-3 inventory at exact
+current main `61e48ebfcd5e69f544a4bc89134cf0543b2b8f3f` remains at 15 lanes,
+1,369 identities, and 4,562 slots with zero collisions or unknown buckets; the
+430-node, 612-edge state remains unique and dependency-complete. Dependency,
+capability, credential,
+production-authority, and diff checks are clean. The tranche does not change
+runtime dependencies, capability metadata, protocol behavior, or a privileged
+boundary.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
