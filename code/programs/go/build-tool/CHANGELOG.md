@@ -27,6 +27,13 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Added
 
+- **Tracked `node_modules` paths now fail BUILD validation.** The gate reads
+  Git's NUL-delimited index rather than the working tree, so it catches regular
+  files and symlinks—including an absolute, machine-local symlink—even though
+  the repository's ignore rules correctly exclude newly generated dependency
+  directories. This keeps clean worktrees and CI from inheriting private
+  filesystem paths.
+
 - **Orphan-crate gate: every directory with a `Cargo.toml` must have a `BUILD`
   file or a reasoned exemption.** The build tool discovers work by scanning for
   BUILD files, which means it is structurally blind to a crate that has none:
