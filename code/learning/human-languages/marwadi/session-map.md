@@ -60,6 +60,28 @@ memory demand at a time.
 | S52 | `MW-W07-la` | recall and write **ल** | one consonant only |
 | S53 | `MW-C07-read-later` | assemble **पाछे मिलसू** from known units | delayed phrase writing |
 | S54 | `MW-C07-practice` | distinguish goodbye from see you later in four skills | phrase dictation plus spoken farewell |
+| S55 | `MW-C08-hear-maa` | hear *mā̃* as mother | none; meaning precedes spelling |
+| S56 | `MW-C08-maa` | read **मां** from known signs | delayed copy, then hidden-model recall |
+| S57 | `MW-C08-hear-baap` | hear *bāp* as father | none; the new sign stays hidden |
+| S58 | `MW-W08-ba` | distinguish **ब** from familiar **भ** | observe, trace, copy one sign |
+| S59 | `MW-C08-baap` | assemble **बाप** | dictation of one word |
+| S60 | `MW-C08-hear-bhai` | hear *bhāī* as brother | none; meaning precedes spelling |
+| S61 | `MW-C08-bhai` | assemble **भाई** from known signs | delayed copy and word dictation |
+| S62 | `MW-C08-hear-bahan` | hear *bahan* as sister | none; meaning precedes spelling |
+| S63 | `MW-C08-bahan` | assemble **बहन** from known signs | delayed copy and word dictation |
+| S64 | `MW-C08-family-four` | retrieve mother, father, brother, and sister separately in four skills | independent two-word dictation |
+| S65 | `MW-C08-hear-dada` | hear *dādā* as paternal grandfather | none; meaning precedes spelling |
+| S66 | `MW-W08-da` | form **द** once before a doubled word | observe, trace, copy one sign |
+| S67 | `MW-C08-dada` | assemble **दादा** and revisit earlier family words | dictation of one repeated word |
+| S68 | `MW-C08-hear-dadi` | hear *dādī* as paternal grandmother | none; contrast the final vowel by ear |
+| S69 | `MW-C08-dadi` | change **दादा** to **दादी** | delayed copy and word dictation |
+| S70 | `MW-C08-hear-parivaar` | hear *parivār* as family | none; meaning precedes spelling |
+| S71 | `MW-W08-va` | isolate the only new sign in **परिवार** | observe, trace, copy one sign |
+| S72 | `MW-C08-parivaar` | assemble **परिवार** from one new and familiar signs | delayed copy and word dictation |
+| S73 | `MW-R08-family-foundation` | retrieve three family words after a gap | independent mixed recall |
+| S74 | `MW-R08-family-map` | rebuild the seven-word meaning map | write selected labels without a model |
+| S75 | `MW-C08-family-seven` | pass a seven-label four-skill payoff | independent listening, speaking, reading, and writing |
+| S76 | `MW-R08-script-close` | close the script loop for **ब**, **द**, and **व** | write all three from sound cues |
 
 Reviews use expanding spacing: repeat S7 the next day, after three days, after
 one week, and after two weeks. A failed written recall sends the learner back to

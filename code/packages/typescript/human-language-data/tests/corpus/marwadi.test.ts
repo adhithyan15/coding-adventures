@@ -1,6 +1,7 @@
 import { expect, it } from "vitest";
 import { compileLessonActivities } from "../../src/activity.js";
 import { loadTrackLessons } from "../../src/loader.js";
+import { measureScriptClosure } from "../../src/script-closure.js";
 import {
   expectLanguageContinuity,
   expectLanguageModality,
@@ -50,20 +51,26 @@ it("pins Marwadi's complete pre-A1 writing ramp", () => {
     "observe-trace",
     "delayed-copy",
     "dictation-transcription",
+    "delayed-copy",
+    "delayed-copy",
+    "delayed-copy",
+    "dictation-transcription",
+    "delayed-copy",
+    "dictation-transcription",
+    "delayed-copy",
   ]);
 });
 
 it("pins Marwadi-owned chapters and objective activities", () => {
   const lessons = loadTrackLessons("marwadi");
+  expect(lessons).toHaveLength(76);
   expect(new Set(lessons.map((lesson) => Number(lesson.frontmatter.chapter)))).toEqual(
-    new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]),
+    new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]),
   );
-  expect(
-    lessons
-      .flatMap((lesson) => compileLessonActivities(lesson.blocks))
-      .map((activity) => activity.id)
-      .sort(),
-  ).toEqual([
+  const activities = lessons.flatMap((lesson) => compileLessonActivities(lesson.blocks));
+  expect(activities).toHaveLength(76);
+  expect(lessons.every((lesson) => compileLessonActivities(lesson.blocks).length === 1)).toBe(true);
+  expect(activities.map((activity) => activity.id).sort()).toEqual([
     "MW-C01-practice-answer",
     "MW-C01-raam-raam-saa-greeting-cue",
     "MW-C02-aabhaar-build",
@@ -93,6 +100,25 @@ it("pins Marwadi-owned chapters and objective activities", () => {
     "MW-C07-hear-later-meaning",
     "MW-C07-practice-later",
     "MW-C07-read-later-build",
+    "MW-C08-baap-pair",
+    "MW-C08-bahan-siblings",
+    "MW-C08-bhai-dictation",
+    "MW-C08-dada-dictation",
+    "MW-C08-dadi-grandparent-pair",
+    "MW-C08-family-four-payoff",
+    "MW-C08-family-seven-payoff",
+    "MW-C08-hear-baap-meaning",
+    "MW-C08-hear-bahan-meaning",
+    "MW-C08-hear-bhai-meaning",
+    "MW-C08-hear-dada-meaning",
+    "MW-C08-hear-dadi-meaning",
+    "MW-C08-hear-maa-meaning",
+    "MW-C08-hear-parivaar-meaning",
+    "MW-C08-maa-dictation",
+    "MW-C08-parivaar-dictation",
+    "MW-R08-family-foundation-three",
+    "MW-R08-family-map-four",
+    "MW-R08-script-close-three",
     "MW-W01-aa-matra-change",
     "MW-W01-ra-read",
     "MW-W01-raam-build",
@@ -118,5 +144,16 @@ it("pins Marwadi-owned chapters and objective activities", () => {
     "MW-W07-e-matra-build",
     "MW-W07-i-matra-order",
     "MW-W07-la-write",
+    "MW-W08-ba-write",
+    "MW-W08-da-write",
+    "MW-W08-va-write",
   ]);
+
+  const closure = measureScriptClosure(lessons);
+  expect(closure.violations.filter((violation) => violation.language === "marwadi")).toEqual([]);
+  expect(closure.tracks.find((track) => track.language === "marwadi")).toMatchObject({
+    lessonCount: 76,
+    neverTaughtGlyphs: 0,
+    violations: 0,
+  });
 });

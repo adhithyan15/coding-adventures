@@ -173,6 +173,54 @@
       "json": "marwadi/narration/ch09.json",
       "textHash": "fnv1a64:eef02c40d84fb6ec",
       "jsonHash": "fnv1a64:103d3a96fa314257"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:af7dedf43105a26b",
+      "lessonIds": [
+        "MW-C08-hear-maa",
+        "MW-C08-maa",
+        "MW-C08-hear-baap",
+        "MW-W08-ba",
+        "MW-C08-baap",
+        "MW-C08-hear-bhai",
+        "MW-C08-bhai",
+        "MW-C08-hear-bahan",
+        "MW-C08-bahan",
+        "MW-C08-family-four"
+      ],
+      "voiceLessons": 7,
+      "drivablePrefix": 1,
+      "text": "marwadi/narration/ch10.txt",
+      "json": "marwadi/narration/ch10.json",
+      "textHash": "fnv1a64:5b4764ed576614a4",
+      "jsonHash": "fnv1a64:409694221c8a3157"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:147840a93646591c",
+      "lessonIds": [
+        "MW-C08-hear-dada",
+        "MW-W08-da",
+        "MW-C08-dada",
+        "MW-C08-hear-dadi",
+        "MW-C08-dadi",
+        "MW-C08-hear-parivaar",
+        "MW-W08-va",
+        "MW-C08-parivaar",
+        "MW-R08-family-foundation",
+        "MW-R08-family-map",
+        "MW-C08-family-seven",
+        "MW-R08-script-close"
+      ],
+      "voiceLessons": 8,
+      "drivablePrefix": 1,
+      "text": "marwadi/narration/ch11.txt",
+      "json": "marwadi/narration/ch11.json",
+      "textHash": "fnv1a64:9ed1bd32ff94f393",
+      "jsonHash": "fnv1a64:ceec82fdf603dcce"
     }
   ],
   "findings": []

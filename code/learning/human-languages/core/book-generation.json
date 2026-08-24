@@ -2903,6 +2903,18 @@
       "scriptSet": "marwadi-main"
     },
     {
+      "language": "marwadi",
+      "chapter": 10,
+      "output": "marwadi/book/chapters/ch10-family-four.tex",
+      "scriptSet": "marwadi-main"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 11,
+      "output": "marwadi/book/chapters/ch11-family-seven.tex",
+      "scriptSet": "marwadi-main"
+    },
+    {
       "language": "persian",
       "chapter": 2,
       "output": "persian/book/chapters/ch02-give-your-name.tex",

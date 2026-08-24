@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased — first family vocabulary tranche
+
+- Added 22 <=5-minute sessions across Chapters 10–11 for **मां, बाप, भाई,
+  बहन, दादा, दादी, परिवार**, bringing the track to 76 lessons and 18 distinct
+  taught headwords.
+- Secured every meaning by ear before spelling, reused the existing Devanagari
+  inventory, and introduced only **ब**, **द**, and **व** in isolated writing steps.
+- Closed with independent four-skill payoffs and exact expanding-window recalls;
+  the strict gentle-ramp and script-closure reports have no findings.
+- Grounded the forms in Marwari Pathshala, the SIL dictionary archive, and the
+  Marwari Swadesh list while naming regional and household variation explicitly.
+
 ## Unreleased — see you later
 
 - Added seven <=5-minute sessions for **पाछे मिलसू**: sound and meaning first,
