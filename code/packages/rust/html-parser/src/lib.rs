@@ -7583,12 +7583,15 @@ impl HtmlParser {
             && self.current_last_child_element_is("col")
             && name != "template"
         {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-end-tag-in-template-column-group",
-                format!(
-                    "end tag `</{name}>` was ignored at a template column-group boundary"
-                ),
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-end-tag-in-template-column-group",
+                    format!(
+                        "end tag `</{name}>` was ignored at a template column-group boundary"
+                    ),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             return;
         }
         if name == "table"
@@ -27211,6 +27214,17 @@ mod tests {
         .at_emission(Some(start_tag_position(source, name)))
     }
 
+    fn end_tag_in_template_column_group_recovery(
+        source: &str,
+        name: &str,
+    ) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-end-tag-in-template-column-group",
+            format!("end tag `</{name}>` was ignored at a template column-group boundary"),
+        )
+        .at_emission(Some(end_tag_position(source, name)))
+    }
+
     fn li_start_tag_in_table_recovery(source: &str, occurrence: usize) -> ParserDiagnostic {
         let prefix = "<li";
         let start = source
@@ -40838,6 +40852,8 @@ mod tests {
 
     #[test]
     fn reports_end_tags_rejected_at_a_template_column_group_boundary() {
+        let unicode_source =
+            "<!doctype html><!--é-->\r\n<template><col></span></template>";
         for (source, name) in [
             (
                 "<!doctype html><template><col></colgroup></template>",
@@ -40850,26 +40866,19 @@ mod tests {
             ),
             ("<!doctype html><template><col></div></template>", "div"),
             ("<!doctype html><template><col></br></template>", "br"),
-            (
-                "<!doctype html><table><colgroup><template><col></span></template></colgroup></table>",
-                "span",
-            ),
+            (unicode_source, "span"),
         ] {
             let output = parse_html_with_diagnostics(source).unwrap();
             assert_eq!(
                 output.parser_diagnostics,
-                vec![ParserDiagnostic::new(
-                    "unexpected-end-tag-in-template-column-group",
-                    format!(
-                        "end tag `</{name}>` was ignored at a template column-group boundary"
-                    ),
-                )],
+                vec![end_tag_in_template_column_group_recovery(source, name)],
                 "source {source:?}"
             );
 
             let control = parse_html(&source.replace(&format!("</{name}>"), "")).unwrap();
             assert_eq!(output.document, control, "source {source:?}");
         }
+        assert!(unicode_source.len() > unicode_source.chars().count());
 
         for source in [
             "<!doctype html><table><colgroup><col></colgroup></table>",
@@ -40877,6 +40886,7 @@ mod tests {
             "<!doctype html><div></span></div>",
             "<!doctype html><template><div><col></col></div></template>",
             "<!doctype html><svg><template><col></col></template></svg>",
+            "<!doctype html><template><col></",
         ] {
             let output = parse_html_with_diagnostics(source).unwrap();
             assert!(
@@ -40895,6 +40905,34 @@ mod tests {
                 diagnostic.code != "unexpected-end-tag-in-template-column-group"
             }));
         }
+
+        let mut unpositioned = HtmlParser::new();
+        for token in [
+            Token::StartTag {
+                name: "template".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "col".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::EndTag {
+                name: "div".to_string(),
+            },
+        ] {
+            unpositioned.process_token(token);
+        }
+        let diagnostics = unpositioned
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| {
+                diagnostic.code == "unexpected-end-tag-in-template-column-group"
+            })
+            .collect::<Vec<_>>();
+        assert_eq!(diagnostics.len(), 1);
+        assert_eq!(diagnostics[0].position, None);
     }
 
     #[test]
