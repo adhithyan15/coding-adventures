@@ -1,5 +1,11 @@
 # Changelog — `lang-aot`
 
+## 0.228.1 - 2026-08-20 (ALGOL ten-level selector dependencies)
+
+The seven-backend ALGOL matrix now proves ten bounded nested predicates can
+select preserving conditional-assignment leaves through a selector dependency
+chain.
+
 ## 0.228.0 - 2026-08-18 (macsyma-iir-vm.md Wave 4 — Macsyma on NativeAOT/LLVM/WASM/JVM/CLR)
 
 Wired `Language::Macsyma` into the frontend dispatch — one `compile_source_to_iir`

@@ -7748,7 +7748,7 @@ const MAX_STATIC_REAL_FOR_ITERATIONS: usize = 4_096;
 const MAX_STATIC_WHILE_ITERATIONS: usize = 4_096;
 
 /// Bound nested selector-dependency proofs so cyclic assignments fail closed.
-const MAX_STATIC_SELECTOR_DEPENDENCY_DEPTH: usize = 9;
+const MAX_STATIC_SELECTOR_DEPENDENCY_DEPTH: usize = 10;
 
 /// Hard cap for the number of switch-list arms emitted while lowering one IIR
 /// function. Nested switch designators form a graph; without this cap an
@@ -10243,12 +10243,21 @@ mod tests {
     }
 
     #[test]
-    fn al4_tenth_nested_selector_dependency_remains_conservative() {
-        let err = compile_source(
+    fn al4_tenth_nested_selector_dependency_stays_stable() {
+        compile_source(
             "begin integer i, n, limit, choose; boolean other, flag, gate, key, last, final, ultimate, terminal, horizon, frontier, boundary; n := 3; limit := 3; choose := 1; other := true; flag := true; gate := true; key := true; last := true; final := true; ultimate := true; terminal := true; horizon := true; frontier := true; boundary := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := if flag then other else false; flag := if gate then flag else false; gate := if key then gate else false; key := if last then key else false; last := if final then last else false; final := if ultimate then final else false; ultimate := if terminal then ultimate else false; terminal := if horizon then terminal else false; horizon := if frontier then horizon else false; frontier := if boundary then frontier else false; boundary := boundary end; print(i + 0.25) end",
             "test",
         )
-        .expect_err("selector dependency proofs beyond the nine-level cap must fail closed");
+        .expect("the tenth bounded selector dependency may choose its preserving leaf");
+    }
+
+    #[test]
+    fn al4_eleventh_nested_selector_dependency_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n, limit, choose; boolean other, flag, gate, key, last, final, ultimate, terminal, horizon, frontier, boundary, threshold; n := 3; limit := 3; choose := 1; other := true; flag := true; gate := true; key := true; last := true; final := true; ultimate := true; terminal := true; horizon := true; frontier := true; boundary := true; threshold := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := if flag then other else false; flag := if gate then flag else false; gate := if key then gate else false; key := if last then key else false; last := if final then last else false; final := if ultimate then final else false; ultimate := if terminal then ultimate else false; terminal := if horizon then terminal else false; horizon := if frontier then horizon else false; frontier := if boundary then frontier else false; boundary := if threshold then boundary else false; threshold := threshold end; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("selector dependency proofs beyond the ten-level cap must fail closed");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
