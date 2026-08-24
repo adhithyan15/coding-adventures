@@ -5091,6 +5091,15 @@ credential, dependency, and production-authority checks are clean; the tranche
 changes no production behavior, dependency metadata, capability manifest, or
 privileged boundary.
 
+### Python hash-functions BUILD-front publication
+
+Ready-for-review PR #12482 opened from independently reviewed head
+`6be901dbae2716252eec572208e05052106ecc5b` after a normal first push from exact
+`origin/main` `352edb288887b47098958106f907f0113cd3b891`. The target branch and exact
+implementation surfaces were absent before publication. GitHub reports the PR
+open, non-draft, and mergeable. Required checks are pending, so the loop is
+monitoring only and has not requested auto-merge.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
