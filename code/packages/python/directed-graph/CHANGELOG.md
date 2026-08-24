@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+### Changed
+
+- Canonical and Windows BUILD fronts now recreate a pinned Python 3.13
+  package-local environment, install DT00 before DT01, and run Ruff,
+  formatting, strict MyPy, and pytest through the explicit interpreter.
+- Iterative DFS stack typing, generic syntax, exports, and tests now satisfy
+  the enforced quality gates without changing graph algorithms or metadata.
+
 ### Added
 
 - Inherited DT00 graph and node property bags on `DirectedGraph`.

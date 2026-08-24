@@ -38,6 +38,16 @@ EXPECTED_PACKAGES = [
     "trie",
 ]
 
+EXPECTED_LIVE_PACKAGES = [
+    "caesar-cipher",
+    "fenwick-tree",
+    "ls00",
+    "radix-tree",
+    "skip-list",
+    "tree-set",
+    "trie",
+]
+
 
 class FrontParserTests(unittest.TestCase):
     def test_parser_classifies_repeatability_pin_and_named_environment(self) -> None:
@@ -131,8 +141,7 @@ class RepositoryAuditTests(unittest.TestCase):
 
     def test_report_finds_the_exact_non_idempotent_corpus(self) -> None:
         packages = [row["package"] for row in self.report["fronts"]]
-        self.assertEqual(packages, sorted(packages))
-        self.assertTrue(set(packages) <= set(EXPECTED_PACKAGES))
+        self.assertEqual(packages, EXPECTED_LIVE_PACKAGES)
         self.assertEqual(self.report["schema_version"], 1)
         self.assertEqual(self.report["python_package_count"], 481)
         summary = self.report["summary"]

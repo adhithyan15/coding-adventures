@@ -71,7 +71,7 @@ annotated dependency graphs (e.g., "requires", "imports", "extends").
 
 from __future__ import annotations
 
-from typing import Generic, TypeVar
+from typing import TypeVar
 
 from graph import Graph, GraphRepr, PropertyBag, PropertyValue
 
@@ -477,10 +477,7 @@ class DirectedGraph(Graph[T]):
 
     def __repr__(self) -> str:
         loops = ", allow_self_loops=True" if self._allow_self_loops else ""
-        return (
-            f"DirectedGraph(nodes={len(self)}, "
-            f"edges={len(self.edges())}{loops})"
-        )
+        return f"DirectedGraph(nodes={len(self)}, edges={len(self.edges())}{loops})"
 
 
 # ---------------------------------------------------------------------------
@@ -488,7 +485,7 @@ class DirectedGraph(Graph[T]):
 # ---------------------------------------------------------------------------
 
 
-class LabeledDirectedGraph(Generic[T]):
+class LabeledDirectedGraph[T]:
     """A directed graph where every edge carries a string label.
 
     Implemented by COMPOSITION over DirectedGraph (not inheritance), because
@@ -524,9 +521,7 @@ class LabeledDirectedGraph(Generic[T]):
     """
 
     def __init__(self, allow_self_loops: bool = False) -> None:
-        self._graph: DirectedGraph[T] = DirectedGraph(
-            allow_self_loops=allow_self_loops
-        )
+        self._graph: DirectedGraph[T] = DirectedGraph(allow_self_loops=allow_self_loops)
         # Maps (u, v) edge tuples to their string labels.
         self._labels: dict[tuple[T, T], str] = {}
 
@@ -547,9 +542,7 @@ class LabeledDirectedGraph(Generic[T]):
             raise KeyError(node)
 
         # Clean up all labels for edges incident to this node BEFORE removing.
-        edges_to_remove = [
-            (u, v) for (u, v) in self._labels if u == node or v == node
-        ]
+        edges_to_remove = [(u, v) for (u, v) in self._labels if u == node or v == node]
         for edge in edges_to_remove:
             del self._labels[edge]
 
@@ -644,6 +637,5 @@ class LabeledDirectedGraph(Generic[T]):
 
     def __repr__(self) -> str:
         return (
-            f"LabeledDirectedGraph(nodes={len(self._graph)}, "
-            f"edges={len(self._labels)})"
+            f"LabeledDirectedGraph(nodes={len(self._graph)}, edges={len(self._labels)})"
         )

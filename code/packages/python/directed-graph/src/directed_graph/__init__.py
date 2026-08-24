@@ -59,7 +59,6 @@ Custom exception for self-loops::
     g4.add_edge("A", "A")           # OK
 """
 
-from directed_graph.directed_graph import DirectedGraph, LabeledDirectedGraph
 from directed_graph.algorithms import (
     affected_nodes,
     has_cycle,
@@ -69,6 +68,7 @@ from directed_graph.algorithms import (
     transitive_closure,
     transitive_dependents,
 )
+from directed_graph.directed_graph import DirectedGraph, LabeledDirectedGraph
 
 # CycleError is now just ValueError (per DT01 spec — algorithms raise ValueError).
 # We keep a CycleError alias for backwards compatibility with code that caught it.
@@ -77,17 +77,14 @@ CycleError = ValueError
 __version__ = "0.1.0"
 
 __all__ = [
-    # Data structures
+    "CycleError",
     "DirectedGraph",
     "LabeledDirectedGraph",
-    # Algorithms
-    "topological_sort",
+    "affected_nodes",
     "has_cycle",
+    "independent_groups",
+    "strongly_connected_components",
+    "topological_sort",
     "transitive_closure",
     "transitive_dependents",
-    "independent_groups",
-    "affected_nodes",
-    "strongly_connected_components",
-    # Exceptions
-    "CycleError",
 ]

@@ -26,7 +26,6 @@ from graph import (
     shortest_path,
 )
 
-
 # ---------------------------------------------------------------------------
 # Fixtures
 # ---------------------------------------------------------------------------
@@ -41,15 +40,15 @@ def empty_graph(request: pytest.FixtureRequest) -> Graph[str]:
 def make_graph(repr: GraphRepr = GraphRepr.ADJACENCY_LIST) -> Graph[str]:
     """Helper: build a city graph for tests.
 
-       London —300— Paris
-          |               |
-         520             878
-          |               |
-       Amsterdam —655— Berlin
-          |
-         180
-          |
-       Brussels
+    London —300— Paris
+       |               |
+      520             878
+       |               |
+    Amsterdam —655— Berlin
+       |
+      180
+       |
+    Brussels
     """
     g: Graph[str] = Graph(repr=repr)
     g.add_edge("London", "Paris", weight=300)
@@ -330,6 +329,18 @@ class TestPropertyBags:
         with pytest.raises(KeyError):
             g.edge_properties("A", "B")
 
+    @pytest.mark.parametrize("repr", list(GraphRepr))
+    def test_weight_property_validation_and_reset(self, repr: GraphRepr) -> None:
+        g: Graph[str] = Graph(repr=repr)
+        g.add_edge("A", "B", weight=3)
+
+        with pytest.raises(ValueError, match="must be numeric"):
+            g.set_edge_property("A", "B", "weight", True)
+
+        g.remove_edge_property("B", "A", "weight")
+        assert g.edge_weight("A", "B") == 1.0
+        assert g.edge_properties("A", "B")["weight"] == 1.0
+
 
 # ---------------------------------------------------------------------------
 # TestNeighborhood
@@ -342,9 +353,7 @@ class TestNeighborhood:
     @pytest.mark.parametrize("repr", list(GraphRepr))
     def test_neighbors(self, repr: GraphRepr) -> None:
         g = make_graph(repr)
-        assert g.neighbors("Amsterdam") == frozenset(
-            {"London", "Berlin", "Brussels"}
-        )
+        assert g.neighbors("Amsterdam") == frozenset({"London", "Berlin", "Brussels"})
 
     @pytest.mark.parametrize("repr", list(GraphRepr))
     def test_neighbors_weighted(self, repr: GraphRepr) -> None:
@@ -583,7 +592,7 @@ class TestShortestPath:
 
     @pytest.mark.parametrize("repr", list(GraphRepr))
     def test_weighted_city_graph(self, repr: GraphRepr) -> None:
-        """London to Berlin: via Amsterdam (520+655=1175) beats via Paris (300+878=1178)."""
+        """The lower-weight London-to-Berlin route goes through Amsterdam."""
         g = make_graph(repr)
         path = shortest_path(g, "London", "Berlin")
         assert path == ["London", "Amsterdam", "Berlin"]

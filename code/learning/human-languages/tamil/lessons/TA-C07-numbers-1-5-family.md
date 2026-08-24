@@ -8,7 +8,7 @@ type: etymology
 headword: இரண்டு மூன்று நான்கு ஐந்து
 gloss: two through five remain visible cousins across the Dravidian family while one is less tidy
 romanization: "iraṇṭu mūṉṟu nāṉku aintu"
-prerequisites: [TA-C07-numbers-1-5]
+prerequisites: [TA-W07-numbers-1-5-dictation]
 sounds: [alveolar-n-r-cluster]
 roots: [proto-dravidian-numbers]
 duration:
@@ -24,7 +24,7 @@ modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [TA-C07-numbers-1-5, TA-C01-vanakkam-family-register]
+reviews_of: [TA-W07-numbers-1-5-dictation, TA-C07-numbers-1-5, TA-C01-vanakkam-family-register]
 ---
 
 # Two to five — one family in four regional coats

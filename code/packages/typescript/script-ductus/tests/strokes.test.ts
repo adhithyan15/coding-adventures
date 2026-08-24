@@ -391,6 +391,14 @@ describe("handwriting ductus", () => {
     expect(chinese.letters.every((letter) => letter.strokeOrderSource !== undefined)).toBe(true);
   });
 
+  it("covers the shared Devanagari corpus's candrabindu and visarga marks", () => {
+    const devanagari = SCRIPTS.find((script) => script.script === "devanagari")!;
+    expect(devanagari.marks?.map((mark) => mark.mark)).toContain("ँ");
+    expect(devanagari.marks?.map((mark) => mark.mark)).toContain("ः");
+    expect(devanagari.marks).toHaveLength(14);
+    expect(devanagari.complete).toBe(false);
+  });
+
   it("keeps taa marbuta word-final and body-first", () => {
     const arabic = SCRIPTS.find((script) => script.script === "arabic")!;
     const ending = arabic.letters.find((letter) => letter.glyph === "ة")!;
