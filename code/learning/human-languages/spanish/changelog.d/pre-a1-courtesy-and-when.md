@@ -84,7 +84,9 @@ by `ES-LEX-PRONTO`.
   `ES-EXT-323-WHEN`, and the four new path ids appended to the
   `SPINE-COURTESY-THANK` and `SPINE-TAKE-LEAVE` segment ledgers.
 - `core/book-generation.json` — four targets, kept inside the Spanish group.
-- `spanish/book/book.tex` — four `\input` lines.
+- `spanish/book/book.tex` — no hand-edit. HL21 4/4 made this file generated, so
+  the four `\input` lines are re-derived from the `book-generation.json` targets
+  above.
 
-Spanish at-or-below-pre-A1 vocabulary moves 209/300 → 229/300 on this branch's
-base; with the family and repair tranches in flight it reaches 249/300.
+Spanish at-or-below-pre-A1 vocabulary moves 229/300 → **249/300** (407 → 427
+total), measured on top of the kinship tranche.
