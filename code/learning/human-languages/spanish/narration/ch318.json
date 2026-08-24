@@ -1,0 +1,774 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 318,
+  "title": "Review --- Four Things Worth Saying Twice",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:77152a9df18ee825",
+  "lessons": [
+    {
+      "id": "ES-C318-repaso-despedirse",
+      "sequence": 5020,
+      "title": "Review — hasta pronto, and the word inside it",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "the soonest of the three goodbyes, and the one word inside it that English also borrowed",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:445d91e379ef9b82",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two words, and you have had both for a long time. What does hasta mean? (Until.) And pronto? (Soon — and also \"quickly\", and \"ready\".)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say it once, slowly: hasta pronto, AHS-tah PRON-toh. \"Until soon.\""
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now take the second half on its own. Pronto came from Latin promptus, \"brought forth, ready at hand\". Something prompt is brought out without delay — and that is the whole distance between \"ready\" and \"soon\"."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "English has the same word, unchanged in the root: prompt, promptly, and the computer prompt that sits there ready for you to type. Italian took it too, and says Pronto! — \"Ready!\" — when it answers the phone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hasta pronto, then pronto on its own",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hasta pronto*, then *pronto* on its own]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pronto, then English prompt, promptly — one word, two languages",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pronto*, then English *prompt*, *promptly* — one word, two languages]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C318-repaso-despedirse-soon",
+              "prompt": "Say see you soon in Spanish.",
+              "assesses": [
+                "ES-LEX-HASTA-PRONTO"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "hasta pronto",
+                "¡hasta pronto!",
+                "hasta pronto."
+              ],
+              "feedback": {
+                "correct": "Until soon.",
+                "incorrect": "Hasta pronto — until soon."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C318-repaso-despedirse-latin",
+              "prompt": "What Latin word is pronto from, and what did it mean?",
+              "assesses": [
+                "ES-ETYMON-PROMPTUS",
+                "ES-LEX-PRONTO"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "promptus, brought forth or ready at hand",
+                "promptus, ready",
+                "promptus"
+              ],
+              "feedback": {
+                "correct": "Ready at hand, and from there, soon.",
+                "incorrect": "Promptus — brought forth, ready at hand."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of your goodbyes says you expect to meet again shortly? (Hasta pronto.) And what is pronto on its own? (Soon, and \"ready\" — the sense English kept in prompt.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C318-repaso-disculparse",
+      "sequence": 5030,
+      "title": "Review — two sorries, and how to tell them apart",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "the two sorries side by side — one names your feeling, the other asks for their forgiveness",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a47c9d7bba449f61",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does lo siento say, word for word? (\"I feel it\" — siento from Latin sentīre, \"to feel\".)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English has one word where Spanish has two, and the split follows the etymologies you already hold."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "phrase",
+                "word for word",
+                "points at"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "phrase: lo siento. word for word: \"I feel it\". points at: your feeling.",
+                "phrase: perdón. word for word: \"give [it] completely\". points at: their forgiveness."
+              ]
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Lo siento names a feeling — regret, sympathy — and stretches from stepping on a foot to hearing that someone has died. Perdón asks for something back, which is why it is also what you say squeezing past a stranger in a corridor."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Be honest about the edges, as the first pass was: speakers reach for whichever fits, the boundary is soft, and mixing them is a shade off rather than a mistake."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lo siento, then perdón — feeling, then request",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lo siento*, then *perdón* — feeling, then request]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lo siento mucho — I feel it a lot",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lo siento mucho* — I feel it a lot]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C318-repaso-disculparse-corridor",
+              "prompt": "You need to get past somebody in a narrow corridor. Which word?",
+              "assesses": [
+                "ES-PRAGMATICS-SORRY-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "perdon",
+                "perdón",
+                "perdon, it asks for something back"
+              ],
+              "feedback": {
+                "correct": "Perdón — you are asking for something.",
+                "incorrect": "Perdón. It asks for their pardon; lo siento only reports your feeling."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C318-repaso-disculparse-literal",
+              "prompt": "What does lo siento mean word for word?",
+              "assesses": [
+                "ES-LEX-LO-SIENTO-01",
+                "ES-ETYMON-SENTIR-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "i feel it",
+                "i feel it, from sentire",
+                "i feel this"
+              ],
+              "feedback": {
+                "correct": "A feeling named, not a state claimed.",
+                "incorrect": "I feel it — siento is from Latin sentire, to feel."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C318-repaso-disculparse-donare",
+              "prompt": "What are the two Latin pieces inside perdonar?",
+              "assesses": [
+                "ES-ETYMON-PERDON-04"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "per- thoroughly and donare to give",
+                "per and donare",
+                "per, thoroughly, plus donare, to give"
+              ],
+              "feedback": {
+                "correct": "To give completely.",
+                "incorrect": "Per-, thoroughly, and donare, to give — the donare of donate and condone."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which one leans toward sympathy rather than fault? (Lo siento.) Which one is asking the other person for something? (Perdón — a pardon is a thing granted.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C318-repaso-genero",
+      "sequence": 5040,
+      "title": "Review — four nouns, easiest gender to hardest",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "four nouns you already have, arranged from the easiest gender to the hardest, and the one test that settles the hard one",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:90cdb3d939ae5d6f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two you can answer without thinking. Say \"the head.\" (La cabeza.) Say \"the wine.\" (El vino.) The ending told you both times."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Line up four nouns you already own, in order of how much the ending can be trusted."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "noun",
+                "ending",
+                "gender"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "noun: la cabeza. ending: -a. gender: feminine, as expected.",
+                "noun: el vino. ending: -o. gender: masculine, as expected.",
+                "noun: la mano. ending: -o. gender: feminine anyway."
+              ]
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Cabeza and vino are the ordinary case, and they are worth saying out loud precisely because nothing about them is interesting: the ending points one way and the article agrees."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "La mano is the famous one. Latin manus sat in the fourth declension, whose -us nouns were mostly masculine — and manus was one of the handful that were feminine instead. So it broke the pattern twice: once inside Latin, and once again against Spanish's usual -o."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: when the ending will not tell you",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The fourth noun is the one where even the article is unhelpful."
+            },
+            {
+              "kind": "speech",
+              "text": "Bebo el agua. — I drink the water. La bebo. — I drink it."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The article said el to keep two a sounds from colliding, which is a fact about sound and not about gender. The object pronoun is under no such pressure, so it reports the gender straight — and it reports la."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "That is a test you can run on any noun whose article looks suspicious: listen for which pronoun a speaker reaches for."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la cabeza, el vino, la mano — two obedient, one not",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la cabeza*, *el vino*, *la mano* — two obedient, one not]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el agua, then la bebo — the article, then the witness",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el agua*, then *la bebo* — the article, then the witness]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C318-repaso-genero-hand",
+              "prompt": "Say the hand in Spanish, with its article.",
+              "assesses": [
+                "ES-LEX-MANO-01",
+                "ES-GRAMMAR-MANO-GENDER-02"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "la mano",
+                "la mano, feminine despite the -o"
+              ],
+              "feedback": {
+                "correct": "Feminine, despite the -o.",
+                "incorrect": "La mano. The -o is not doing its usual job here."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C318-repaso-genero-witness",
+              "prompt": "An article looks like it is hiding a noun's gender. What can you listen for instead?",
+              "assesses": [
+                "ES-GRAMMAR-PRONOUN-REVEALS-GENDER"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "the object pronoun",
+                "whether they say lo or la",
+                "the pronoun, lo or la"
+              ],
+              "feedback": {
+                "correct": "Nothing pushes on a pronoun, so it does not bend.",
+                "incorrect": "The object pronoun — lo or la. It reports the gender without interference."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C318-repaso-genero-wine",
+              "prompt": "Give the article and noun for the wine, then for the head.",
+              "assesses": [
+                "ES-LEX-VINO-04",
+                "ES-LEX-CABEZA-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "el vino, la cabeza",
+                "el vino and la cabeza"
+              ],
+              "feedback": {
+                "correct": "Two ordinary endings, doing exactly what they say.",
+                "incorrect": "El vino, la cabeza."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of the four nouns ends in -o and is feminine anyway? (La mano.) El agua — which pronoun replaces it? (La.) And why does that not contradict the article? (The article changed for sound, not gender.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C318-repaso-marcas",
+      "sequence": 5050,
+      "title": "Review — two marks that were added, and when",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "two marks on the page with dates attached — one the Academy added in 1754, one added by scribes and never spoken at all",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:45e68d2b5e7df452",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why does Spanish open a question with ¿? (Because the words do not move — so the reader needs an early warning to lift their voice.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The ¿ is younger than the language, and it has a date."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The Spanish Royal Academy made the opening mark official in 1754. English can usually tell you a question is coming by reordering the words — Are you…, Do you… — so its final? arrives late and costs nothing. Spanish does not reorder: Tienes hambre and ¿Tienes hambre? are the same words. Something had to carry the warning, and the Academy put it at the front."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A melody cue placed before the melody. That is the whole idea, and it is the same instinct as the written accent showing a stress you could not otherwise see."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: a letter that was never a sound",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Now the second mark, and it is quieter."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Latin germānus is stressed on its third syllable, which leaves the opening ger- unstressed — and there the g simply fell away, giving Old Spanish ermano, with no h at all. The h on today's hermano was added later, in spelling only, to point back at the Latin g-."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Keep it apart from the other silent h. In hijo and hacer the h stands where Latin had an f, and that h really was breathed aloud for centuries. Hermano's never was. Same silent letter, two histories, and only one of them ever involved a sound."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "germānus, then ermano, then hermano — the three stages",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *germānus*, then *ermano*, then *hermano* — the three stages]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a question of your own, and start lifting your voice where the ¿ sits",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a question of your own, and start lifting your voice where the ¿ sits]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C318-repaso-marcas-year",
+              "prompt": "Who made the opening question mark official, and in what year?",
+              "assesses": [
+                "ES-HISTORY-RAE-INVERTED-MARKS"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "the spanish royal academy in 1754",
+                "the royal academy, 1754",
+                "1754, the spanish royal academy"
+              ],
+              "feedback": {
+                "correct": "1754, and for a practical reason.",
+                "incorrect": "The Spanish Royal Academy, in 1754."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C318-repaso-marcas-h",
+              "prompt": "Was the h in hermano ever pronounced?",
+              "assesses": [
+                "ES-SOUND-HERMANO-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "no",
+                "no, it was added in spelling only",
+                "never"
+              ],
+              "feedback": {
+                "correct": "Spelling only, added to mark the Latin g-.",
+                "incorrect": "No. Germanus lost its g outright, giving ermano; the h came later, on the page."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What year did the Academy make ¿ official? (1754.) And what happened to germānus's opening letter? (Its g dropped away in an unstressed syllable — the h was put on the page afterwards, and never spoken.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -15,11 +15,11 @@ etymology_hook: "the regular -ar preterite continues Latin first-conjugation per
 duration:
   max_seconds: 290
 requires:
-  knowledge: [ES-LEX-HABLAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-LEX-ESPANOL, ES-SOUND-WRITTEN-ACCENT]
+  knowledge: [ES-LEX-HABLAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-LEX-ESPANOL, ES-SOUND-WRITTEN-ACCENT, ES-LEX-HABLO-ESPANOL, ES-GRAMMAR-BARE-LANGUAGE]
 introduces:
   knowledge: [ES-GRAMMAR-AR-PRETERITE-SINGULAR, ES-ORTHOGRAPHY-AR-PRETERITE-FINAL-STRESS, ES-HISTORY-AR-PRETERITE-LATIN-PERFECT]
 practises:
-  knowledge: [ES-LEX-HABLAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-LEX-ESPANOL, ES-SOUND-WRITTEN-ACCENT, ES-GRAMMAR-AR-PRETERITE-SINGULAR, ES-ORTHOGRAPHY-AR-PRETERITE-FINAL-STRESS, ES-HISTORY-AR-PRETERITE-LATIN-PERFECT]
+  knowledge: [ES-LEX-HABLAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-LEX-ESPANOL, ES-SOUND-WRITTEN-ACCENT, ES-GRAMMAR-AR-PRETERITE-SINGULAR, ES-ORTHOGRAPHY-AR-PRETERITE-FINAL-STRESS, ES-HISTORY-AR-PRETERITE-LATIN-PERFECT, ES-LEX-HABLO-ESPANOL, ES-GRAMMAR-BARE-LANGUAGE]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -78,7 +78,7 @@ history explains a family resemblance; it is not one tidy letter-by-letter
 erosion for every modern ending.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-AR-PRETERITE-SINGULAR, ES-ORTHOGRAPHY-AR-PRETERITE-FINAL-STRESS, ES-HISTORY-AR-PRETERITE-LATIN-PERFECT, ES-LEX-HABLAR, ES-LEX-ESPANOL, ES-GRAMMAR-AR-PRESENT-SINGULAR] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-AR-PRETERITE-SINGULAR, ES-ORTHOGRAPHY-AR-PRETERITE-FINAL-STRESS, ES-HISTORY-AR-PRETERITE-LATIN-PERFECT, ES-LEX-HABLAR, ES-LEX-ESPANOL, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-LEX-HABLO-ESPANOL, ES-GRAMMAR-BARE-LANGUAGE] -->
 <!-- hl-activity: {"id":"ES-C14-hablar-preterite-singular-forms","kind":"text","assesses":["ES-LEX-HABLAR","ES-GRAMMAR-AR-PRETERITE-SINGULAR"],"prompt":"Give the singular completed-past forms of hablar: yo, tú, then él/ella/usted.","answer":"hablé, hablaste, habló","accepted":["hablé hablaste habló","hablé / hablaste / habló"],"feedback":{"correct":"Right: hablé, hablaste, habló.","incorrect":"Keep habl- and retrieve -é, -aste, -ó."},"response_seconds":10} -->
 <!-- hl-activity: {"id":"ES-C14-hablar-preterite-hable-espanol","kind":"text","assesses":["ES-LEX-HABLAR","ES-GRAMMAR-AR-PRETERITE-SINGULAR","ES-LEX-ESPANOL","ES-ORTHOGRAPHY-AR-PRETERITE-FINAL-STRESS"],"prompt":"Say 'I spoke Spanish' in Spanish.","answer":"Hablé español.","accepted":["Hablé español"],"feedback":{"correct":"Right: Hablé español.","incorrect":"Use hablé with its final written accent, then known español."},"response_seconds":8} -->
 <!-- hl-activity: {"id":"ES-C14-hablar-preterite-present-past","kind":"text","assesses":["ES-GRAMMAR-AR-PRESENT-SINGULAR","ES-GRAMMAR-AR-PRETERITE-SINGULAR","ES-ORTHOGRAPHY-AR-PRETERITE-FINAL-STRESS"],"prompt":"Which form means 'I spoke' as a completed event: hablo or hablé?","answer":"hablé","accepted":[],"feedback":{"correct":"Right: hablé is the completed-past yo form.","incorrect":"Hablo is present; hablé is the completed-past form."},"response_seconds":6} -->

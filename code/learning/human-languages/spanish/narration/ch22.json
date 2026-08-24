@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "Espanol, and Your First Built Sentence",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:ae8b60d00038d8c5",
+  "sourceHash": "fnv1a64:fd716df1951a00d7",
   "lessons": [
     {
       "id": "ES-C06-espanol",
@@ -134,7 +134,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:917176c3997dd95f",
+      "sourceHash": "fnv1a64:9afec1ea9dfee22f",
       "notice": null,
       "blocks": [
         {

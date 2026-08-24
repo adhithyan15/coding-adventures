@@ -15,11 +15,11 @@ etymology_hook: "café came through Italian caffè and Turkish kahve from Arabic
 duration:
   max_seconds: 180
 requires:
-  knowledge: [ES-SOUND-WRITTEN-ACCENT, ES-SCRIPT-ACUTE-ACCENT]
+  knowledge: [ES-SOUND-WRITTEN-ACCENT, ES-SCRIPT-ACUTE-ACCENT, ES-GRAMMAR-STRESS-EXCEPTION]
 introduces:
   knowledge: [ES-LEX-CAFE, ES-ETYMON-QAHWA, ES-GRAMMAR-CAFE-MASCULINE]
 practises:
-  knowledge: [ES-LEX-CAFE, ES-SCRIPT-ACUTE-ACCENT, ES-ETYMON-QAHWA, ES-GRAMMAR-CAFE-MASCULINE]
+  knowledge: [ES-LEX-CAFE, ES-SCRIPT-ACUTE-ACCENT, ES-GRAMMAR-STRESS-EXCEPTION, ES-ETYMON-QAHWA, ES-GRAMMAR-CAFE-MASCULINE]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -56,7 +56,7 @@ different European route. The drink and the word both crossed languages.
 **café** divide those jobs. It is masculine: **el café**.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-CAFE, ES-SCRIPT-ACUTE-ACCENT, ES-ETYMON-QAHWA, ES-GRAMMAR-CAFE-MASCULINE] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-CAFE, ES-SCRIPT-ACUTE-ACCENT, ES-GRAMMAR-STRESS-EXCEPTION, ES-ETYMON-QAHWA, ES-GRAMMAR-CAFE-MASCULINE] -->
 
 [PAUSE 1s]
 - [YOU SAY: “café” — final stress]
@@ -64,7 +64,7 @@ different European route. The drink and the word both crossed languages.
 - [YOU SAY: the route — “qahwah → kahve → caffè → café”]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-CAFE, ES-SCRIPT-ACUTE-ACCENT, ES-ETYMON-QAHWA, ES-GRAMMAR-CAFE-MASCULINE] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-CAFE, ES-SCRIPT-ACUTE-ACCENT, ES-GRAMMAR-STRESS-EXCEPTION, ES-ETYMON-QAHWA, ES-GRAMMAR-CAFE-MASCULINE] -->
 
 [PAUSE 3s] Where does the stress fall? (**On the final é.**) Why is the
 accent written? (**It overrides the usual vowel-final stress.**) What route

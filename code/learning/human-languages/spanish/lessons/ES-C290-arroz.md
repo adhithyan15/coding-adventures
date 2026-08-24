@@ -15,11 +15,11 @@ etymology_hook: "arroz is Arabic ar-ruzz with the article stuck on, the way azú
 duration:
   max_seconds: 240
 requires:
-  knowledge: [ES-LEX-C290-FOOD-01]
+  knowledge: [ES-LEX-C290-FOOD-01, ES-HISTORY-AL-ANDALUS-LOANS]
 introduces:
   knowledge: [ES-LEX-C290-FOOD-02]
 practises:
-  knowledge: [ES-LEX-C289-SKY-05, ES-LEX-C290-FOOD-01, ES-LEX-C290-FOOD-02]
+  knowledge: [ES-LEX-C289-SKY-05, ES-LEX-C290-FOOD-01, ES-LEX-C290-FOOD-02, ES-HISTORY-AL-ANDALUS-LOANS]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -75,7 +75,7 @@ That is Spanish in miniature: a Latin skeleton with a large Arabic vocabulary
 laid over the top, and the joins still visible when you know where to look.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C289-SKY-05, ES-LEX-C290-FOOD-01, ES-LEX-C290-FOOD-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C289-SKY-05, ES-LEX-C290-FOOD-01, ES-LEX-C290-FOOD-02, ES-HISTORY-AL-ANDALUS-LOANS] -->
 
 [PAUSE 1s]
 - [YOU SAY: *el arroz*]
@@ -83,7 +83,7 @@ laid over the top, and the joins still visible when you know where to look.
 - [YOU SAY: *arroz*, *azúcar*, *aceite* — three words carrying an Arabic *al-*]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C289-SKY-05, ES-LEX-C290-FOOD-01, ES-LEX-C290-FOOD-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C289-SKY-05, ES-LEX-C290-FOOD-01, ES-LEX-C290-FOOD-02, ES-HISTORY-AL-ANDALUS-LOANS] -->
 
 [PAUSE 3s] What does the *ar-* in *arroz* already mean? (The.) Name two more
 Spanish words carrying an Arabic article. (*Azúcar*, *aceite*, *almohada*.) And

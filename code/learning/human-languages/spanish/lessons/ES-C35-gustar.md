@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ES-LEX-GUSTAR-07, ES-ETYMON-GUSTAR-08, ES-GRAMMAR-GUSTAR-INVERSION-09]
 practises:
-  knowledge: [ES-LEX-TOMAR-01, ES-LEX-AYUDAR-05, ES-LEX-GUSTAR-07, ES-ETYMON-GUSTAR-08, ES-GRAMMAR-GUSTAR-INVERSION-09]
+  knowledge: [ES-LEX-TOMAR-01, ES-LEX-AYUDAR-05, ES-LEX-GUSTO, ES-LEX-GUSTAR-07, ES-ETYMON-GUSTAR-08, ES-GRAMMAR-GUSTAR-INVERSION-09]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -45,7 +45,7 @@ speakers up hardest.
 - `s-clear` — a clean hissing *s*, never a *z* buzz.
 
 ## The word, taken apart: gustar
-<!-- hl-knowledge: introduces=[ES-LEX-GUSTAR-07, ES-ETYMON-GUSTAR-08]; assesses=[] -->
+<!-- hl-knowledge: introduces=[ES-LEX-GUSTAR-07, ES-ETYMON-GUSTAR-08]; assesses=[ES-LEX-GUSTO] -->
 
 **gustar** ← Latin **gustāre**, "**to taste**". English kept the root and stayed
 close to the tongue:

@@ -15,11 +15,11 @@ etymology_hook: "amanecer holds Latin mane, in the morning; mañana holds the sa
 duration:
   max_seconds: 240
 requires:
-  knowledge: [ES-LEX-C288-LEAVE-05]
+  knowledge: [ES-LEX-C288-LEAVE-05, ES-LEX-HASTA-MANANA, ES-FORM-MANANA]
 introduces:
   knowledge: [ES-LEX-C289-SKY-01]
 practises:
-  knowledge: [ES-LEX-C288-LEAVE-04, ES-LEX-C288-LEAVE-05, ES-LEX-C289-SKY-01]
+  knowledge: [ES-LEX-C288-LEAVE-04, ES-LEX-C288-LEAVE-05, ES-LEX-C289-SKY-01, ES-LEX-HASTA-MANANA, ES-FORM-MANANA]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -77,7 +77,7 @@ two stop being separate things to remember and become one thing wearing two
 coats.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C288-LEAVE-04, ES-LEX-C288-LEAVE-05, ES-LEX-C289-SKY-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C288-LEAVE-04, ES-LEX-C288-LEAVE-05, ES-LEX-C289-SKY-01, ES-LEX-HASTA-MANANA, ES-FORM-MANANA] -->
 
 [PAUSE 1s]
 - [YOU SAY: *el amanecer*]

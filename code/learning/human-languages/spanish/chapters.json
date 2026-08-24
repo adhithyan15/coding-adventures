@@ -6030,6 +6030,50 @@
           "ES-LEX-C317-ANSW-20"
         ]
       }
+    },
+    {
+      "chapter": 318,
+      "title": "Review --- Four Things Worth Saying Twice",
+      "label": "ch:repaso-pre-a1",
+      "canDo": "I can say goodbye for the short term, pick the right sorry, and say which noun's ending is lying to me.",
+      "spineNodes": [
+        "SPINE-TAKE-LEAVE",
+        "SPINE-POLITE-REQUEST-REPAIR",
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "ES-C318-repaso-genero",
+        "kind": "task",
+        "summary": "Complete ES-C318-repaso-genero: place la cabeza, el vino and la mano by gender, then use the object pronoun to settle el agua.",
+        "assesses": [
+          "ES-LEX-MANO-01",
+          "ES-GRAMMAR-MANO-GENDER-02",
+          "ES-GRAMMAR-PRONOUN-REVEALS-GENDER"
+        ]
+      }
+    },
+    {
+      "chapter": 319,
+      "title": "Review --- Second Looks",
+      "label": "ch:repaso-la-superficie",
+      "canDo": "I can check a Spanish surface against better evidence, name the five stages of a leaving, run an introduction start to finish, and use the five answering words.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR",
+        "SPINE-TAKE-LEAVE",
+        "SPINE-EXCHANGE-NAMES",
+        "SPINE-RESPOND-BASIC"
+      ],
+      "payoff": {
+        "lesson": "ES-C319-repaso-la-superficie",
+        "kind": "task",
+        "summary": "Complete ES-C319-repaso-la-superficie: name the honest witness to a noun's gender, choose between the two sorries, and date the opening question mark.",
+        "assesses": [
+          "ES-GRAMMAR-PRONOUN-REVEALS-GENDER",
+          "ES-PRAGMATICS-SORRY-03",
+          "ES-HISTORY-RAE-INVERTED-MARKS",
+          "ES-SOUND-HERMANO-04"
+        ]
+      }
     }
   ]
 }
