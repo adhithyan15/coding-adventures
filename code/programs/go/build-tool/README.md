@@ -69,6 +69,11 @@ On Windows, use the compiled `.exe`:
 | `-language` | all | Filter to any canonical discovery bucket, or `all` |
 | `-diff-base` | origin/main | Git ref to diff against for change detection |
 | `-cache-file` | .build-cache.json | Path to the build cache file |
+| `-validate-build-files` | true | Validate BUILD dependency metadata, crate coverage, and tracked artifacts |
+
+`-validate-build-files` also fails closed when Git tracks any `node_modules`
+path. Dependency directories are machine-local build products; committing one
+can hide an absolute symlink that works only in its author's checkout.
 
 ## Metadata safety
 
