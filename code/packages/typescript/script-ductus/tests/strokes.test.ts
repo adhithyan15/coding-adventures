@@ -85,6 +85,7 @@ const DEVANAGARI_MA = DUCTUS[ductusKey("devanagari", "म")];
 const DEVANAGARI_YA = DUCTUS[ductusKey("devanagari", "य")];
 const DEVANAGARI_RA = DUCTUS[ductusKey("devanagari", "र")];
 const DEVANAGARI_LA = DUCTUS[ductusKey("devanagari", "ल")];
+const DEVANAGARI_LLA = DUCTUS[ductusKey("devanagari", "ळ")];
 const DEVANAGARI_VA = DUCTUS[ductusKey("devanagari", "व")];
 const DEVANAGARI_SHA = DUCTUS[ductusKey("devanagari", "श")];
 const DEVANAGARI_SSA = DUCTUS[ductusKey("devanagari", "ष")];
@@ -410,7 +411,7 @@ describe("handwriting ductus", () => {
     expect(devanagari.marks?.map((mark) => mark.mark)).toContain("ँ");
     expect(devanagari.marks?.map((mark) => mark.mark)).toContain("ः");
     expect(devanagari.marks).toHaveLength(15);
-    expect(devanagari.complete).toBe(false);
+    expect(devanagari.complete).toBe(true);
   });
 
   it("models Devanagari nukta as one sourced below-base carrier composition", () => {
@@ -1576,6 +1577,22 @@ describe("handwriting ductus", () => {
     const stem = penPath(DEVANAGARI_LA.strokes[2]);
     expect(stem[0].y).toBeGreaterThan(stem.at(-1)!.y);
     const headline = penPath(DEVANAGARI_LA.strokes[3]);
+    expect(headline[0].x).toBeLessThan(headline.at(-1)!.x);
+  });
+
+  it("Devanagari ळ joins both loops before the short stem and headline", () => {
+    expect(DEVANAGARI_LLA.script).toBe("devanagari");
+    expect(penLifts(DEVANAGARI_LLA)).toBe(2);
+    expect(DEVANAGARI_LLA.strokes).toHaveLength(3);
+    expect(DEVANAGARI_LLA.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 1, 1]);
+    const body = penPath(DEVANAGARI_LLA.strokes[0]);
+    expect(Math.min(...body.map((point) => point.x))).toBeLessThan(body[0].x);
+    expect(Math.max(...body.map((point) => point.x))).toBeGreaterThan(body[0].x);
+    expect(Math.min(...body.map((point) => point.x))).toBeLessThan(100);
+    expect(Math.max(...body.map((point) => point.x))).toBeGreaterThan(650);
+    const stem = penPath(DEVANAGARI_LLA.strokes[1]);
+    expect(stem[0].y).toBeGreaterThan(stem.at(-1)!.y);
+    const headline = penPath(DEVANAGARI_LLA.strokes[2]);
     expect(headline[0].x).toBeLessThan(headline.at(-1)!.x);
   });
 
@@ -4834,6 +4851,19 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /23-frame animation.*four ordered pen-down runs.*gray guide.*frames 2–9.*open lower-left tip.*curve up and clockwise around the left loop.*inner junction.*frames 10–12.*restart at that junction.*diagonal arm up-right.*right stem.*frames 13–17.*right stem's headline junction.*descend top-to-bottom.*frames 18–21.*headline's left edge.*shirorekhā left-to-right.*three intervening lifts.*250 ms holds.*frames 9, 12, and 17.*one-second completed frame 22.*Central Hindi Directorate.*2019 Deskbook on Orthography of Devanagari Script.*Lesson 2.*Unit VIII.*p\. 43.*left loop.*diagonal arm.*right stem.*headline buildup.*JackPotte.*12-frame.*Devanagari l ल\.gif.*29 March 2009.*right stem first.*frames 0–2.*diagonal arm.*frames 3–5.*left loop.*frames 6–8.*headline.*frames 9–10.*all frames last 100 ms.*loop-first four-run form.*Noto Sans Devanagari.*stem-first order.*simplify the loop/i,
+    );
+  });
+
+  it("Devanagari ळ traces the published three-array figure-eight order", () => {
+    const src = DEVANAGARI_LLA.source;
+    expect(src.url).toBe(
+      "https://helanomad.com/indic-script-explorer/assets/strokes/deva/consonants/U0933.json",
+    );
+    expect(src.citation).toMatch(
+      /Hela Nomad.*U0933\.json.*Devanagari ळ stroke data.*strokes 1–3.*Indic Script Explorer.*accessed 24 August 2026/i,
+    );
+    expect(src.variation).toMatch(
+      /published data.*letter ळ.*three ordered path arrays.*Stroke 1.*128 points.*center junction.*left.*complete left loop.*back through the center.*right.*complete right loop.*return.*without lifting.*Stroke 2.*10 points.*one x-position.*descends.*headline area.*top of the right loop.*Stroke 3.*36 points.*headline's left edge.*right edge.*two intervening lifts.*companion Devanagari Alphabet page.*stroke-by-stroke visualization.*Martel Sans.*three-array order.*Noto Sans Devanagari.*handwriting.*narrow, tilt, or join/i,
     );
   });
 
