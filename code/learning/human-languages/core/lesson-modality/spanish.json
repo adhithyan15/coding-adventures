@@ -7,31 +7,31 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:daa8487e7b68b233",
+  "sourceHash": "fnv1a64:7b3d64bad26fbe6b",
   "summary": {
-    "totalLessons": 635,
-    "voice": 578,
-    "sight": 46,
+    "totalLessons": 655,
+    "voice": 594,
+    "sight": 50,
     "pen": 11,
-    "drivableLessons": 578,
+    "drivableLessons": 594,
     "drivablePercent": 91,
     "trackCount": 1,
-    "chapterCount": 311,
-    "drivablePrefixTotal": 551,
-    "fullyDrivableChapters": 263,
-    "unstartableChapters": 38,
+    "chapterCount": 315,
+    "drivablePrefixTotal": 566,
+    "fullyDrivableChapters": 266,
+    "unstartableChapters": 39,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
   "tracks": [
     {
       "language": "spanish",
-      "lessonCount": 635,
-      "voice": 578,
-      "sight": 46,
+      "lessonCount": 655,
+      "voice": 594,
+      "sight": 50,
       "pen": 11,
       "drivablePercent": 91,
-      "drivablePrefixTotal": 551,
+      "drivablePrefixTotal": 566,
       "modalities": [
         "voice",
         "sight",
@@ -5113,6 +5113,81 @@
             "ES-C305-senor",
             "ES-C305-senora",
             "ES-C305-encantado"
+          ]
+        },
+        {
+          "chapter": 310,
+          "lessonCount": 5,
+          "voice": 1,
+          "sight": 4,
+          "pen": 0,
+          "modalities": [
+            "voice",
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "ES-C310-llave",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 311,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C311-tienda",
+            "ES-C311-cuenta",
+            "ES-C311-precio",
+            "ES-C311-bolsa",
+            "ES-C311-asiento"
+          ]
+        },
+        {
+          "chapter": 312,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C312-reloj",
+            "ES-C312-telefono",
+            "ES-C312-maleta",
+            "ES-C312-mapa",
+            "ES-C312-carta"
+          ]
+        },
+        {
+          "chapter": 313,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C313-boleto",
+            "ES-C313-moneda",
+            "ES-C313-pasaporte",
+            "ES-C313-entrada",
+            "ES-C313-cambio"
           ]
         },
         {
@@ -16158,6 +16233,366 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:2a3d92b90c924438"
+    },
+    {
+      "id": "ES-C310-llave",
+      "language": "spanish",
+      "chapter": 310,
+      "sequence": 4620,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "sight-cue"
+      ],
+      "coreModality": "sight",
+      "coreReasons": [
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:e98f3377eda8e14e"
+    },
+    {
+      "id": "ES-C310-ducha",
+      "language": "spanish",
+      "chapter": 310,
+      "sequence": 4630,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:6aae5ad8036d9e80"
+    },
+    {
+      "id": "ES-C310-mesa",
+      "language": "spanish",
+      "chapter": 310,
+      "sequence": 4640,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "sight-cue"
+      ],
+      "coreModality": "sight",
+      "coreReasons": [
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:20b290cb967425df"
+    },
+    {
+      "id": "ES-C310-luz",
+      "language": "spanish",
+      "chapter": 310,
+      "sequence": 4650,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "sight-cue"
+      ],
+      "coreModality": "sight",
+      "coreReasons": [
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:cb3bf11b5bac7062"
+    },
+    {
+      "id": "ES-C310-bano",
+      "language": "spanish",
+      "chapter": 310,
+      "sequence": 4660,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "sight-cue"
+      ],
+      "coreModality": "sight",
+      "coreReasons": [
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:41095b2109cbcd60"
+    },
+    {
+      "id": "ES-C311-tienda",
+      "language": "spanish",
+      "chapter": 311,
+      "sequence": 4670,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:1bfeeb5b3f17f374"
+    },
+    {
+      "id": "ES-C311-cuenta",
+      "language": "spanish",
+      "chapter": 311,
+      "sequence": 4680,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:13d3cdb21154738f"
+    },
+    {
+      "id": "ES-C311-precio",
+      "language": "spanish",
+      "chapter": 311,
+      "sequence": 4690,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:b71825386e733bb2"
+    },
+    {
+      "id": "ES-C311-bolsa",
+      "language": "spanish",
+      "chapter": 311,
+      "sequence": 4700,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a9090824df8fc9c6"
+    },
+    {
+      "id": "ES-C311-asiento",
+      "language": "spanish",
+      "chapter": 311,
+      "sequence": 4710,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:838f387328b691fa"
+    },
+    {
+      "id": "ES-C312-reloj",
+      "language": "spanish",
+      "chapter": 312,
+      "sequence": 4720,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:b300cbcf8759eb5c"
+    },
+    {
+      "id": "ES-C312-telefono",
+      "language": "spanish",
+      "chapter": 312,
+      "sequence": 4730,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:fb5af56b71eac8c5"
+    },
+    {
+      "id": "ES-C312-maleta",
+      "language": "spanish",
+      "chapter": 312,
+      "sequence": 4740,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:dc14ada53418b9ea"
+    },
+    {
+      "id": "ES-C312-mapa",
+      "language": "spanish",
+      "chapter": 312,
+      "sequence": 4750,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:11144f37d215bf0c"
+    },
+    {
+      "id": "ES-C312-carta",
+      "language": "spanish",
+      "chapter": 312,
+      "sequence": 4760,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:c9787eb0c06ceb64"
+    },
+    {
+      "id": "ES-C313-boleto",
+      "language": "spanish",
+      "chapter": 313,
+      "sequence": 4770,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:d7a8cbbf5c14793b"
+    },
+    {
+      "id": "ES-C313-moneda",
+      "language": "spanish",
+      "chapter": 313,
+      "sequence": 4780,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:ea60690ad3ef5967"
+    },
+    {
+      "id": "ES-C313-pasaporte",
+      "language": "spanish",
+      "chapter": 313,
+      "sequence": 4790,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:5d99825a57695c49"
+    },
+    {
+      "id": "ES-C313-entrada",
+      "language": "spanish",
+      "chapter": 313,
+      "sequence": 4800,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:0a25be6ef367cd78"
+    },
+    {
+      "id": "ES-C313-cambio",
+      "language": "spanish",
+      "chapter": 313,
+      "sequence": 4810,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:346931538d6b85df"
     },
     {
       "id": "ES-C314-brazo",
