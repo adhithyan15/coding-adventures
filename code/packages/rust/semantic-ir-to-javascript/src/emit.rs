@@ -818,6 +818,16 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             emit_expr(out, value, indent);
             out.push_str(");\n");
         }
+        // SIR29 nominal-OOP statements — `NominalClasses` / `Interfaces` /
+        // `VirtualDispatch` not accepted by this backend; unreachable in a
+        // validated module (capability check rejects it).
+        Stmt::NominalClassDef { span, .. }
+        | Stmt::InterfaceDef { span, .. }
+        | Stmt::MethodDef { span, .. } => {
+            panic!(
+                "javascript backend reached a SIR29 nominal-OOP node at {span} — capability check should have rejected it"
+            );
+        }
     }
 }
 
@@ -1336,6 +1346,14 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
                 emit_sym_operand(out, r, indent);
             }
             out.push_str("]))");
+        }
+        // SIR29 `VirtualCall` — `VirtualDispatch` not accepted; unreachable
+        // in a validated module (capability check rejects it).
+        Expr::VirtualCall { span, .. } => {
+            panic!(
+                "javascript backend reached a SIR29 nominal-OOP node ({}) at {span} — capability check should have rejected it",
+                e.kind_name()
+            );
         }
     }
 }

@@ -660,6 +660,21 @@ impl Scan {
                 })
             })
             .or_else(|| self.expr(value)),
+        // SIR29 static/nominal-OOP statements (`Feature::NominalClasses` /
+        // `Feature::Interfaces` / `Feature::VirtualDispatch` — NOT in this
+        // backend's `ACCEPTED_FEATURES`, so the capability check already
+        // rejects any module using them). Handled here anyway, same reasoning
+        // as `SingletonClassDef`/`ModuleDef` above: a hand-built module
+        // carrying one of these regardless must not reach the emitter's
+        // `unreachable!` (a DoS) — reject it cleanly in the scan instead. This
+        // backend implements only the dynamic-OOP `ClassDef` profile; the
+        // nominal-OOP profile is unimplemented here, not merely deferred.
+        Stmt::NominalClassDef { span, .. }
+        | Stmt::InterfaceDef { span, .. }
+        | Stmt::MethodDef { span, .. } => Some(ScanHit::Unsupported(
+            "a SIR29 nominal-OOP statement (class/interface/method definition)".to_string(),
+            span.clone(),
+        )),
     }
     }
 }

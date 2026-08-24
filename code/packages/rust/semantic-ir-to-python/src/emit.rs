@@ -190,6 +190,17 @@ fn collect_ancestry_in_stmt(
             }
             collect_ancestry_in_expr(value, pairs, seen);
         }
+        // SIR29 static/nominal-OOP nodes — a distinct capability profile
+        // this backend does not accept (see `ACCEPTED_FEATURES`); a
+        // validated module never reaches here.
+        Stmt::NominalClassDef { span, .. }
+        | Stmt::InterfaceDef { span, .. }
+        | Stmt::MethodDef { span, .. } => {
+            panic!(
+                "python backend reached a SIR29 nominal-OOP node at {} — capability check should have rejected it",
+                span
+            );
+        }
     }
 }
 
@@ -368,6 +379,17 @@ fn stmt_uses_builtin(s: &Stmt, name: &str) -> bool {
                     .as_deref()
                     .is_some_and(|e| stmts_use_builtin(e, name))
         }
+        // SIR29 static/nominal-OOP nodes — a distinct capability profile
+        // this backend does not accept (see `ACCEPTED_FEATURES`); a
+        // validated module never reaches here.
+        Stmt::NominalClassDef { span, .. }
+        | Stmt::InterfaceDef { span, .. }
+        | Stmt::MethodDef { span, .. } => {
+            panic!(
+                "python backend reached a SIR29 nominal-OOP node at {} — capability check should have rejected it",
+                span
+            );
+        }
     }
 }
 
@@ -490,6 +512,15 @@ fn expr_uses_builtin(e: &Expr, name: &str) -> bool {
         | Expr::SymLit { .. }
         | Expr::StrLit { .. }
         | Expr::VarRef { .. } => false,
+        // SIR29 static/nominal-OOP node — a distinct capability profile
+        // this backend does not accept (see `ACCEPTED_FEATURES`); a
+        // validated module never reaches here.
+        Expr::VirtualCall { span, .. } => {
+            panic!(
+                "python backend reached a SIR29 nominal-OOP node at {} — capability check should have rejected it",
+                span
+            );
+        }
     }
 }
 
@@ -1119,6 +1150,17 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize, env: &mut TypeEnv)
             emit_expr(out, value, indent, env);
             out.push_str(")\n");
         }
+        // SIR29 static/nominal-OOP nodes — a distinct capability profile
+        // this backend does not accept (see `ACCEPTED_FEATURES`); a
+        // validated module never reaches here.
+        Stmt::NominalClassDef { span, .. }
+        | Stmt::InterfaceDef { span, .. }
+        | Stmt::MethodDef { span, .. } => {
+            panic!(
+                "python backend reached a SIR29 nominal-OOP node at {} — capability check should have rejected it",
+                span
+            );
+        }
     }
 }
 
@@ -1289,6 +1331,15 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize, env: &mut TypeEnv) {
             panic!(
                 "emit reached an Intrinsic `{}` at {} — backend should have rejected it",
                 name, span
+            );
+        }
+        // SIR29 static/nominal-OOP node — a distinct capability profile
+        // this backend does not accept (see `ACCEPTED_FEATURES`); a
+        // validated module never reaches here.
+        Expr::VirtualCall { span, .. } => {
+            panic!(
+                "python backend reached a SIR29 nominal-OOP node at {} — capability check should have rejected it",
+                span
             );
         }
         // ── SIR16 expression kinds — native Python ──────────────────
@@ -2336,6 +2387,17 @@ fn emit_block_as_expr(out: &mut String, b: &Block, indent: usize, env: &mut Type
                 out.push_str("], ");
                 emit_expr(out, value, indent, env);
                 out.push_str(")), ");
+            }
+            // SIR29 static/nominal-OOP nodes — a distinct capability profile
+            // this backend does not accept (see `ACCEPTED_FEATURES`); a
+            // validated module never reaches here.
+            Stmt::NominalClassDef { span, .. }
+            | Stmt::InterfaceDef { span, .. }
+            | Stmt::MethodDef { span, .. } => {
+                panic!(
+                    "python backend reached a SIR29 nominal-OOP node at {} — capability check should have rejected it",
+                    span
+                );
             }
         }
     }

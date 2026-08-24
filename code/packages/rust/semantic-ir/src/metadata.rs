@@ -56,7 +56,19 @@ use std::fmt;
 ///   same "adding a feature is a v.bump" policy bumps `"3"` → `"4"`.  No
 ///   frontend crate consumes these yet — `apl-to-semantic-ir` is a
 ///   follow-up task that will set `metadata.sir_version` to this value.
-pub const CURRENT_SIR_VERSION: &str = "4";
+/// - `"5"` — SIR29: the nominal/static-dispatch OOP profile.  Three new
+///   `Stmt` variants (`NominalClassDef`/`InterfaceDef`/`MethodDef`), one
+///   new `Expr` variant (`VirtualCall`), two new `SirType` variants
+///   (`Nominal`/`TypeParam`), and four new `Feature` flags
+///   (`NominalClasses`/`Interfaces`/`VirtualDispatch`/`ErasedGenerics`).
+///   A sibling profile alongside SIR17's dynamic-OOP `ClassDef`/
+///   `Feature::Classes` — additive, not a replacement: a module may use
+///   either, both, or neither.  Same "adding a feature is a v.bump"
+///   policy bumps `"4"` → `"5"`.  No frontend crate consumes this yet —
+///   `java-to-semantic-ir` (not yet started) is the first planned
+///   consumer.  See
+///   [SIR29](../../../../specs/SIR29-nominal-static-oop-profile.md).
+pub const CURRENT_SIR_VERSION: &str = "5";
 
 /// Advisory metadata.  All fields are optional.
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
@@ -147,7 +159,7 @@ mod tests {
             .with_sir_version(CURRENT_SIR_VERSION);
         assert_eq!(m.source_language.as_deref(), Some("twig"));
         assert_eq!(m.source_version.as_deref(), Some("0.7"));
-        assert_eq!(m.sir_version.as_deref(), Some("4"));
+        assert_eq!(m.sir_version.as_deref(), Some("5"));
         assert!(!m.is_empty());
     }
 
@@ -172,11 +184,13 @@ mod tests {
     }
 
     #[test]
-    fn current_sir_version_is_four() {
-        // Bumped 3 → 4 in the SIR22 addendum (nine new APL-primitive
-        // `Expr` variants + eight new `ElementwiseOpKind` variants: new
+    fn current_sir_version_is_five() {
+        // Bumped 4 → 5 in SIR29 (the nominal/static-dispatch OOP
+        // profile: three new `Stmt` variants, one new `Expr` variant,
+        // two new `SirType` variants, four new `Feature` flags — new
         // SIR text tokens), following the same "adding a feature is a
-        // v.bump" policy that moved 2 → 3 in SIR23 and 1 → 2 in SIR22.
-        assert_eq!(CURRENT_SIR_VERSION, "4");
+        // v.bump" policy that moved 3 → 4 in the SIR22 addendum, 2 → 3
+        // in SIR23, and 1 → 2 in SIR22.
+        assert_eq!(CURRENT_SIR_VERSION, "5");
     }
 }

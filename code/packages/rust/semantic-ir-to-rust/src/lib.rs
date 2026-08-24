@@ -562,7 +562,20 @@ fn const_ref_in_stmt(s: &Stmt) -> Option<BackendError> {
             .or_else(|| const_ref_in_expr(value)),
         Stmt::ClassDef { body, .. }
         | Stmt::ModuleDef { body, .. }
-        | Stmt::SingletonClassDef { body, .. } => const_ref_in_stmts(body),
+        | Stmt::SingletonClassDef { body, .. }
+        | Stmt::NominalClassDef { body, .. } => const_ref_in_stmts(body),
+        // SIR29: `Feature::NominalClasses`/`Interfaces`/`VirtualDispatch`
+        // are not in this backend's accepted-features list, so
+        // `check_module` rejects any module using these nodes before this
+        // analysis ever runs. Still scan faithfully — same "never takes a
+        // rejected elsewhere shortcut" style as the `IndexSet` arm below.
+        // `InterfaceDef` carries only bodyless `MethodSig`s (no nested
+        // `Stmt`/`Expr`), so there is nothing to scan.
+        Stmt::InterfaceDef { .. } => None,
+        // `MethodDef` carries a real `Block` body — scan it exactly like
+        // any other block (mirrors `const_ref_in_block`'s own treatment
+        // of a function body).
+        Stmt::MethodDef { body, .. } => const_ref_in_block(body),
         Stmt::TryCatch {
             body,
             rescues,

@@ -281,6 +281,8 @@ impl fmt::Display for IntSpec {
 /// | `Rational`                  | exact rational scalar       (SIR22/SIR23) |
 /// | `Complex`                   | complex scalar `{re, im}`   (SIR22/SIR23) |
 /// | `SymExpr`                   | opaque symbolic-expression handle (SIR23) |
+/// | `Nominal { name }`          | advisory reference to a declared class/interface (SIR29) |
+/// | `TypeParam { name, bound }` | erased generic type parameter (SIR29)  |
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub enum SirType {
     /// Top type — unknown/any.  The default; renamed from `Any` in SIR21.
@@ -367,6 +369,32 @@ pub enum SirType {
     /// the type carrier). See
     /// [SIR23](../../../../specs/SIR23-symbolic-pattern-semantic-ir.md).
     SymExpr,
+    // ── SIR29 (nominal/static-dispatch OOP profile) ──────────────────
+    /// A reference to a declared nominal class or interface by name —
+    /// e.g. a field, parameter, or return type of type `Foo`.  Advisory
+    /// only: SIR v0 has no class/interface symbol table, so the
+    /// validator does not resolve `name` against a declared
+    /// `Stmt::NominalClassDef`/`Stmt::InterfaceDef` (mirrors how
+    /// `Stmt::ClassDef.superclass` is an unresolved advisory name under
+    /// the §2 dynamic-OOP profile). See
+    /// [SIR29](../../../../specs/SIR29-nominal-static-oop-profile.md).
+    Nominal { name: String },
+    /// An **erased** generic type parameter — Java/C# `<T extends
+    /// Bound>`, TypeScript `<T extends Bound>`.  Carries no runtime
+    /// representation (no reification, no `sizeof`, no runtime type
+    /// token) — a backend targeting a reified-generics language (a
+    /// future C# extension) would need a sibling variant or a
+    /// `reified: bool` flag rather than repurposing this one, so this
+    /// shape is deliberately left erasure-only rather than guessing at
+    /// reification up front. `bound` is `None` for an unbounded
+    /// parameter (`<T>`) and `Some(t)` for a bounded one (`<T extends
+    /// t>`); a bound is advisory, like `Nominal.name` above — the
+    /// validator does not check that a value's runtime type actually
+    /// satisfies it.
+    TypeParam {
+        name: String,
+        bound: Option<Box<SirType>>,
+    },
 }
 
 impl SirType {
@@ -483,6 +511,14 @@ impl fmt::Display for SirType {
             // SIR23 token — a bare keyword, no fields, same shape as
             // `Rational`/`Complex` above.
             SirType::SymExpr => write!(f, "sym-expr"),
+            // SIR29 tokens.  `Nominal` prints `(nominal Name)`;
+            // `TypeParam` prints `(type-param T)` or, when bounded,
+            // `(type-param T Bound)`.
+            SirType::Nominal { name } => write!(f, "(nominal {})", name),
+            SirType::TypeParam { name, bound } => match bound {
+                Some(b) => write!(f, "(type-param {} {})", name, b),
+                None => write!(f, "(type-param {})", name),
+            },
         }
     }
 }

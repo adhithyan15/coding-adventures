@@ -4047,11 +4047,20 @@ fn expr_may_have_effects(expr: &Expr) -> bool {
         }
 
         // Calls, closures, and intrinsics may do anything → keep.
+        //
+        // SIR29 compile-compat stub: this frontend never emits
+        // `Expr::VirtualCall` today (this crate only lowers to the dynamic-
+        // OOP `Stmt::ClassDef` profile, not SIR29's static/nominal one), so
+        // this arm is unreachable in practice. It is still classified
+        // exactly like the other call forms above — a virtual dispatch can
+        // run arbitrary callee code, so it must stay conservatively
+        // effectful — in case a future lowering path ever produces one.
         Expr::DirectCall { .. }
         | Expr::IndirectCall { .. }
         | Expr::BuiltinCall { .. }
         | Expr::MakeClosure { .. }
-        | Expr::Intrinsic { .. } => true,
+        | Expr::Intrinsic { .. }
+        | Expr::VirtualCall { .. } => true,
 
         // SIR23 symbolic-expression/pattern nodes: the spec's "Effects"
         // section marks every one of these `Pure` too — same treatment as

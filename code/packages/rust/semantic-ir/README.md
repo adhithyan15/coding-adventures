@@ -132,6 +132,21 @@ What's covered:
   `stream`/`terminator` are `StrLit`s from a closed set and `unpack_arrays` is a `BoolLit`. Not
   yet emitted by any frontend or implemented by any backend — see
   [SIR28](../../../specs/SIR28-syscall-primitives.md).
+- SIR29 nominal/static-dispatch OOP profile (additive, a *sibling* of
+  SIR25 §2's dynamic-OOP `Feature::Classes` — not a replacement; the
+  substrate a future `java-to-semantic-ir` frontend and
+  `semantic-ir-to-java` backend need, later reused by C#/Kotlin without
+  redesign): `Stmt::NominalClassDef` (methods nest directly in `body`,
+  unlike `ClassDef`'s hoist-to-top-level convention), `Stmt::InterfaceDef`
+  (bodyless `MethodSig`s), `Stmt::MethodDef` (nested method definition,
+  `vtable_slot: Option<u32>`), `Expr::VirtualCall` (the one new dispatch
+  primitive — an index-based sibling of SIR25 §2.2's string-based table
+  lookup; `slot` is the real dispatch key, `method` is display-only). New
+  types: `SirType::Nominal`, `SirType::TypeParam` (erased generics). New
+  features: `NominalClasses`/`Interfaces`/`VirtualDispatch`/
+  `ErasedGenerics`. Not yet emitted by any frontend or implemented by any
+  backend — see
+  [SIR29](../../../specs/SIR29-nominal-static-oop-profile.md).
 - EffectSet bitset
 - FeatureManifest
 - Textual form (printer; parser deferred)

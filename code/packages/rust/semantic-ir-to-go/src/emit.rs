@@ -549,6 +549,18 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             emit_expr(out, value, indent);
             out.push_str(")\n");
         }
+        // ── SIR29 static/nominal OOP profile ─────────────────────────
+        // `NominalClassDef`/`InterfaceDef`/`MethodDef` belong to the new
+        // additive nominal-OOP IR profile; this backend does not accept
+        // `Feature::NominalClasses` / `Interfaces` / `VirtualDispatch` /
+        // `ErasedGenerics`, so the capability check rejects any module
+        // using them before it ever reaches codegen. This arm exists only
+        // for match-exhaustiveness.
+        Stmt::NominalClassDef { span, .. }
+        | Stmt::InterfaceDef { span, .. }
+        | Stmt::MethodDef { span, .. } => {
+            panic!("go backend reached a SIR29 nominal-OOP node at {} — capability check should have rejected it", span);
+        }
     }
 }
 
@@ -1181,6 +1193,14 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
                 out.push_str(", sirCasMaxIterationsDefault");
             }
             out.push(')');
+        }
+        // ── SIR29 static/nominal OOP profile ─────────────────────────
+        // `VirtualCall` belongs to the new additive nominal-OOP IR profile;
+        // this backend does not accept `Feature::VirtualDispatch`, so the
+        // capability check rejects any module using it before it ever
+        // reaches codegen. This arm exists only for match-exhaustiveness.
+        Expr::VirtualCall { span, .. } => {
+            panic!("go backend reached a SIR29 nominal-OOP node at {} — capability check should have rejected it", span);
         }
     }
 }

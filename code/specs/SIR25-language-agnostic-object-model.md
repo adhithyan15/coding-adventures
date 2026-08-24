@@ -216,10 +216,15 @@ implementation work following this spec, not part of the spec itself.
 
 - **A second, structurally different OOP profile** (nominally-typed,
   interface/generic-based, static-dispatch — e.g. what a Java/C# frontend
-  would need). Not designed here. If pursued, it should be a new `Feature`
-  set and dispatch primitive alongside §2, the same relationship SIR22/23
-  have to the base leaf features, not a replacement or a parameterization of
-  §2's dispatch algorithm.
+  would need). **Designed** — see
+  [SIR29](SIR29-nominal-static-oop-profile.md), a new `Feature` set
+  (`NominalClasses`/`Interfaces`/`VirtualDispatch`/`ErasedGenerics`) and
+  dispatch primitive (`Expr::VirtualCall`, an index-based sibling of this
+  section's string-based table lookup) alongside §2, the same relationship
+  SIR22/23 have to the base leaf features — not a replacement or a
+  parameterization of §2's dispatch algorithm. As of SIR29's own PR this is
+  a pure-additive IR diff only; no frontend produces it and no backend
+  implements it yet (both are tracked, separate follow-up work).
 - **True per-object/per-thread `self` binding**, metaprogramming
   (`method_missing`, runtime `define_method`, `send`), singleton methods on
   arbitrary objects, reopening built-in classes — all already out of scope
