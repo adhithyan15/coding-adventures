@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.122.0";
+pub const VERSION: &str = "0.123.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -510,13 +510,13 @@ fn token_name(token: &Token) -> &str {
 // ============================================================================
 
 use diagram_ir::{
-    Axis, AxisKind, ChartDiagram, ChartKind, ChartOrientation, ChartSeries, Compartment,
-    CompartmentKind, GanttDiagram, GanttSection, GanttTask, GitBranch, GitCommitType, GitDiagram,
-    GitEvent, JourneyConfig, JourneyDiagram, JourneySection, JourneyTask, PieSlice, QuadrantConfig,
-    QuadrantPoint, RelKind, RequirementElementMetadata, RequirementKind, RequirementMetadata,
-    RequirementRisk, RequirementVerifyMethod, SankeyFlow, SankeyNode, SequenceArrowhead,
-    SequenceBlockKind, SequenceCentralConnection, SequenceDiagram, SequenceEvent,
-    SequenceLineStyle, SequenceLink, SequenceNotePlacement, SequenceParticipant,
+    Axis, AxisKind, ChartDataPoint, ChartDiagram, ChartKind, ChartOrientation, ChartSeries,
+    Compartment, CompartmentKind, GanttDiagram, GanttSection, GanttTask, GitBranch, GitCommitType,
+    GitDiagram, GitEvent, JourneyConfig, JourneyDiagram, JourneySection, JourneyTask, PieSlice,
+    QuadrantConfig, QuadrantPoint, RelKind, RequirementElementMetadata, RequirementKind,
+    RequirementMetadata, RequirementRisk, RequirementVerifyMethod, SankeyFlow, SankeyNode,
+    SequenceArrowhead, SequenceBlockKind, SequenceCentralConnection, SequenceDiagram,
+    SequenceEvent, SequenceLineStyle, SequenceLink, SequenceNotePlacement, SequenceParticipant,
     SequenceParticipantGroup, SequenceParticipantKind, SequenceProperty, SequenceTextWrap,
     SeriesKind, StructuralDiagram, StructuralGroup, StructuralKind, StructuralNode,
     StructuralNodeKind, StructuralNodeMetadata, StructuralRelationship, TaskStart, TaskStatus,
@@ -1953,18 +1953,7 @@ fn parse_xychart_series(token: &Token, kind: SeriesKind) -> Result<ChartSeries, 
     if !rest[close + 1..].trim().is_empty() {
         return Err(token_error(token, "unexpected content after XY-chart data"));
     }
-    let mut data = Vec::new();
-    for point in rest[open + 1..close].split(',') {
-        let number = point
-            .split_whitespace()
-            .next()
-            .ok_or_else(|| token_error(token, "XY-chart data point cannot be empty"))?;
-        data.push(
-            number.parse::<f64>().map_err(|_| {
-                token_error(token, format!("invalid XY-chart data point {number:?}"))
-            })?,
-        );
-    }
+    let data = parse_xychart_data_points(token, &rest[open + 1..close])?;
     if data.is_empty() {
         return Err(token_error(token, "XY-chart series cannot be empty"));
     }
@@ -1973,6 +1962,59 @@ fn parse_xychart_series(token: &Token, kind: SeriesKind) -> Result<ChartSeries, 
         label: xychart_optional_text(&rest[..open]),
         data,
     })
+}
+
+fn parse_xychart_data_points(
+    token: &Token,
+    source: &str,
+) -> Result<Vec<ChartDataPoint>, ParseError> {
+    let mut points = Vec::new();
+    let mut start = 0;
+    let mut quoted = false;
+    for (index, ch) in source.char_indices() {
+        match ch {
+            '"' => quoted = !quoted,
+            ',' if !quoted => {
+                points.push(parse_xychart_data_point(token, &source[start..index])?);
+                start = index + ch.len_utf8();
+            }
+            _ => {}
+        }
+    }
+    if quoted {
+        return Err(token_error(token, "unterminated XY-chart point label"));
+    }
+    points.push(parse_xychart_data_point(token, &source[start..])?);
+    Ok(points)
+}
+
+fn parse_xychart_data_point(token: &Token, source: &str) -> Result<ChartDataPoint, ParseError> {
+    let source = source.trim();
+    if source.is_empty() {
+        return Err(token_error(token, "XY-chart data point cannot be empty"));
+    }
+    let number_end = source
+        .find(|ch: char| ch.is_whitespace() || ch == '"')
+        .unwrap_or(source.len());
+    let number = &source[..number_end];
+    let value = number
+        .parse::<f64>()
+        .map_err(|_| token_error(token, format!("invalid XY-chart data point {number:?}")))?;
+    let remainder = source[number_end..].trim();
+    let label = if remainder.is_empty() {
+        None
+    } else if let Some(quoted_label) = remainder.strip_prefix('"') {
+        let close = quoted_label
+            .find('"')
+            .ok_or_else(|| token_error(token, "unterminated XY-chart point label"))?;
+        if !quoted_label[close + 1..].trim().is_empty() {
+            return Err(token_error(token, "unexpected content after XY-chart point label"));
+        }
+        Some(quoted_label[..close].to_string())
+    } else {
+        return Err(token_error(token, "invalid XY-chart point label"));
+    };
+    Ok(ChartDataPoint { value, label })
 }
 
 /// Parse the grammar-backed native subset of Mermaid `quadrantChart`.
@@ -5880,7 +5922,10 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         let d = parse_xychart(XYCHART_SRC).unwrap();
         assert_eq!(d.series.len(), 2);
         let bar = d.series.iter().find(|s| s.kind == SeriesKind::Bar).unwrap();
-        assert_eq!(bar.data, vec![40.0, 60.0, 45.0]);
+        assert_eq!(
+            bar.data.iter().map(|point| point.value).collect::<Vec<_>>(),
+            vec![40.0, 60.0, 45.0]
+        );
     }
 
     #[test]
@@ -5901,7 +5946,14 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         assert_eq!(y_axis.title.as_deref(), Some("Revenue"));
         assert_eq!((y_axis.min, y_axis.max), (-10.0, 50.0));
         assert_eq!(diagram.series[0].label.as_deref(), Some("Forecast"));
-        assert_eq!(diagram.series[0].data, [12.0, -4.0]);
+        assert_eq!(
+            diagram.series[0]
+                .data
+                .iter()
+                .map(|point| point.value)
+                .collect::<Vec<_>>(),
+            [12.0, -4.0]
+        );
     }
 
     #[test]
@@ -5918,6 +5970,19 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
             diagram.accessibility_description.as_deref(),
             Some("Forecast and actuals")
         );
+    }
+
+    #[test]
+    fn xychart_preserves_mixed_point_labels() {
+        let diagram = parse_xychart(
+            "xychart\nx-axis [A, B, C]\nline \"Models\" [3.8 \"Phi-3\", 7, 540 \"PaLM, 2\"]\nbar [1 \"One\", 2, 3 \"Three\"]\n",
+        )
+        .unwrap();
+        assert_eq!(diagram.series[0].data[0].value, 3.8);
+        assert_eq!(diagram.series[0].data[0].label.as_deref(), Some("Phi-3"));
+        assert_eq!(diagram.series[0].data[1].label, None);
+        assert_eq!(diagram.series[0].data[2].label.as_deref(), Some("PaLM, 2"));
+        assert_eq!(diagram.series[1].data[2].label.as_deref(), Some("Three"));
     }
 
     #[test]
@@ -7834,7 +7899,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.122.0");
+        assert_eq!(crate::VERSION, "0.123.0");
     }
 
     #[test]

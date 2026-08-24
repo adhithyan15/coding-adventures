@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.123.0
+
+- Parse Mermaid 11.16.1 XY line and bar data-point labels into typed semantic chart points.
+
 ## 0.122.0
 
 - Parse XY-chart orientation, axis forms, named series, and accessibility metadata through a dedicated Mermaid 11.16.1 grammar.

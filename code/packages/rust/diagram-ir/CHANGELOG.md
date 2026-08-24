@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.66.0
+
+- Preserve optional Mermaid XY-chart labels with each semantic series data point and add resolved point-label geometry.
+
 ## 0.63.0
 
 - Preserve resolved GitGraph commit IDs and parent topology and generalize cross-branch history arcs.
