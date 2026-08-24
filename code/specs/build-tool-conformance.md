@@ -808,11 +808,13 @@ Validation v1 uses the stable diagnostic registry
 `STARLARK_DEPENDENCY_INVALID`, `IDENTITY_AMBIGUOUS`, `MANIFEST_AMBIGUOUS`,
 `TOOLCHAIN_UNSUPPORTED`, `PATH_UNSAFE`, `ORPHAN_CRATE_UNLISTED`,
 `ORPHAN_CRATE_EMPTY_BUILD`, `ORPHAN_EXEMPTION_INVALID`, and
-`ORPHAN_EXEMPTION_STALE`. The closed check registry is
+`ORPHAN_EXEMPTION_STALE`, `TRACKED_ARTIFACT_FORBIDDEN`, and
+`TRACKED_ARTIFACT_PATH_INVALID`. The closed check registry is
 `build_file_presence`, `local_dependency_declarations`,
 `standalone_prerequisites`, `starlark_declarations`, `identity_uniqueness`,
 `manifest_uniqueness`, `toolchain_support`, `path_safety`, and
-`lua_windows_sibling_parity`, plus `orphan_crate_coverage`.
+`lua_windows_sibling_parity`, plus `orphan_crate_coverage` and
+`tracked_artifact_absence`.
 
 Every validation package carries one normalized snapshot: canonical package
 identity and root, implementation language, selected BUILD state and local
@@ -911,6 +913,38 @@ even when there are no diagnostics. Diagnostics are independently derived,
 retain only safe paths, and sort by the normal validation ordering. The snapshot and
 expected result provide no filesystem, Git, process, environment, or network
 authority.
+
+The process-free `tracked_artifact_absence` check consumes one closed
+`tracked_artifact_snapshot`. Its `entries` are bounded inert records with a
+strictly increasing positive `ordinal`, a bounded raw `path`, and an
+`entry_kind` of `regular`, `symlink`, or `reparse`. Entry kind is metadata, not
+authority: every kind follows the same policy, and no path is opened or
+followed. Native adapters may populate this snapshot from a retained Git index
+or another reviewed source, but Git discovery, repository-root selection,
+filesystem inspection, symlink resolution, and reparse-point inspection all
+remain outside this oracle.
+
+For each entry, the validator first replaces backslash separators with `/`.
+The resulting path must be NFC, repository-relative, at most 512 characters,
+and satisfy the shared portable-path rules: no absolute, drive-qualified, UNC,
+empty, dot, traversal, trailing-dot/space, control, reserved-character, or
+Windows-reserved segments. Invalid records produce
+`TRACKED_ARTIFACT_PATH_INVALID` at the fixed redacted path `repository`; details
+contain only `ordinal`, `entry_kind`, and one stable problem from `EMPTY`,
+`TOO_LONG`, `NON_NFC`, `ABSOLUTE`, `DRIVE_QUALIFIED`, `EMPTY_SEGMENT`,
+`DOT_SEGMENT`, `TRAILING_DOT_OR_SPACE`, `UNSAFE_CHARACTER`, or
+`RESERVED_BASENAME`. The raw invalid path is never emitted.
+
+A valid normalized path is forbidden when any component has NFKC-casefolded
+identity `node_modules`. This rejects the exact component, nested components,
+case aliases, and Unicode compatibility aliases while allowing similarly
+named components such as `node_modules-cache`. The diagnostic is
+`TRACKED_ARTIFACT_FORBIDDEN` at the safe slash-normalized path with only the
+entry ordinal and kind in details. Multiple diagnostics use the normal
+`(code, path, package, canonical details)` ordering, so snapshot enumeration
+order cannot change the result. Expected results are not evidence for either
+classification, and the neutral validator has no filesystem, Git, process,
+environment, or network authority.
 
 Canonical result ordering is domain-aware:
 

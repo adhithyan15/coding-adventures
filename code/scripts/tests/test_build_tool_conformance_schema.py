@@ -366,6 +366,7 @@ class BuildToolConformanceSchemaTests(unittest.TestCase):
                 "standalone_prerequisites",
                 "starlark_declarations",
                 "toolchain_support",
+                "tracked_artifact_absence",
             ],
         )
 
@@ -391,7 +392,7 @@ class BuildToolConformanceSchemaTests(unittest.TestCase):
             self.pure_schema["$defs"]["validation_input"]["properties"]["options"][
                 "properties"
             ]["checks"]["maxItems"],
-            10,
+            11,
         )
 
         example = next(
@@ -413,6 +414,41 @@ class BuildToolConformanceSchemaTests(unittest.TestCase):
         self.assertTrue(list(validator.iter_errors(record)))
         del record["input"]["options"]["orphan_snapshot"]
         record["result"]["pending_exemption_count"] = 0
+        self.assertTrue(list(validator.iter_errors(record)))
+
+    def test_tracked_artifact_snapshot_is_closed_and_conditionally_bound(self) -> None:
+        import jsonschema
+
+        snapshot = self.pure_schema["$defs"]["tracked_artifact_snapshot"]
+        self.assertFalse(snapshot["additionalProperties"])
+        self.assertEqual(snapshot["required"], ["entries"])
+        self.assertEqual(snapshot["properties"]["entries"]["maxItems"], 16384)
+        entry = self.pure_schema["$defs"]["tracked_artifact_entry"]
+        self.assertFalse(entry["additionalProperties"])
+        self.assertEqual(
+            set(entry["required"]),
+            {"ordinal", "path", "entry_kind"},
+        )
+        self.assertEqual(
+            entry["properties"]["entry_kind"]["enum"],
+            ["regular", "symlink", "reparse"],
+        )
+
+        example = next(
+            item for item in self.examples if item["id"] == "validation/clean-full"
+        )
+        record = {
+            "domain": example["domain"],
+            "outcome": example["expected"]["outcome"],
+            "input": copy.deepcopy(example["input"]),
+            "result": copy.deepcopy(example["expected"]["result"]),
+        }
+        validator = jsonschema.Draft202012Validator(self.pure_schema)
+        record["input"]["options"]["tracked_artifact_snapshot"] = {"entries": []}
+        self.assertTrue(list(validator.iter_errors(record)))
+        record["input"]["options"]["checks"].append("tracked_artifact_absence")
+        self.assertEqual(list(validator.iter_errors(record)), [])
+        del record["input"]["options"]["tracked_artifact_snapshot"]
         self.assertTrue(list(validator.iter_errors(record)))
 
     def test_cli_schema_bounds_argv_and_closes_the_typed_parse_result(self) -> None:

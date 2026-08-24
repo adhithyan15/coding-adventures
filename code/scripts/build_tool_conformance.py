@@ -174,6 +174,8 @@ ORPHAN_SKIP_COMPONENTS = frozenset(
         ".cargo",
     }
 )
+TRACKED_ARTIFACT_COMPONENT_IDENTITY = "node_modules"
+TRACKED_ARTIFACT_REDACTED_PATH = "repository"
 DISPLAY_SAFE_TOKEN = re.compile(r"^[A-Za-z0-9_@%+=:,./-]+$")
 WINDOWS_RESERVED_BASENAMES = {
     "CON",
@@ -1221,6 +1223,42 @@ def _validate_orphan_snapshot(snapshot: dict[str, Any]) -> None:
         )
 
 
+def _normalize_tracked_artifact_path(path: str) -> tuple[str | None, str | None]:
+    normalized = path.replace("\\", "/")
+    if not normalized:
+        return None, "EMPTY"
+    if len(normalized) > 512:
+        return None, "TOO_LONG"
+    if normalized != unicodedata.normalize("NFC", normalized):
+        return None, "NON_NFC"
+    if normalized.startswith("/"):
+        return None, "ABSOLUTE"
+    if re.match(r"^[A-Za-z]:", normalized):
+        return None, "DRIVE_QUALIFIED"
+    if "//" in normalized:
+        return None, "EMPTY_SEGMENT"
+    if any(ord(character) < 32 or character in '<>:"|?*' for character in normalized):
+        return None, "UNSAFE_CHARACTER"
+    for segment in normalized.split("/"):
+        if segment in {".", ".."}:
+            return None, "DOT_SEGMENT"
+        if segment.endswith((" ", ".")):
+            return None, "TRAILING_DOT_OR_SPACE"
+        basename = segment.split(".", 1)[0].upper()
+        if basename in WINDOWS_RESERVED_BASENAMES:
+            return None, "RESERVED_BASENAME"
+    return normalized, None
+
+
+def _validate_tracked_artifact_snapshot(snapshot: dict[str, Any]) -> None:
+    ordinals = [entry["ordinal"] for entry in snapshot["entries"]]
+    if ordinals != sorted(ordinals) or len(ordinals) != len(set(ordinals)):
+        raise ConformanceError(
+            "CASE_VALIDATION_SNAPSHOT_INCONSISTENT",
+            "tracked artifact ordinals must be strictly increasing and unique",
+        )
+
+
 def _toolchain_for_language(language: str) -> str:
     toolchain = LANGUAGE_TOOLCHAINS.get(language)
     if toolchain is None:
@@ -1325,6 +1363,8 @@ def _validate_pure_case_semantics(
         starlark_declarations = "starlark_declarations" in checks
         if "orphan_crate_coverage" in checks:
             _validate_orphan_snapshot(options["orphan_snapshot"])
+        if "tracked_artifact_absence" in checks:
+            _validate_tracked_artifact_snapshot(options["tracked_artifact_snapshot"])
         _validate_unique_paths(
             [package["rel_path"] for package in by_name.values()],
             "CASE_NESTED_PATH_UNSAFE",
@@ -1861,6 +1901,56 @@ def _expected_orphan_validation(
     return diagnostics, pending_exemption_count
 
 
+def _expected_tracked_artifact_validation(
+    options: dict[str, Any],
+) -> list[dict[str, Any]]:
+    diagnostics: list[dict[str, Any]] = []
+    for entry in options["tracked_artifact_snapshot"]["entries"]:
+        normalized_path, problem = _normalize_tracked_artifact_path(entry["path"])
+        details = {
+            "ordinal": entry["ordinal"],
+            "entry_kind": entry["entry_kind"],
+        }
+        if problem is not None:
+            details["problem"] = problem
+            diagnostics.append(
+                {
+                    "code": "TRACKED_ARTIFACT_PATH_INVALID",
+                    "severity": "error",
+                    "path": TRACKED_ARTIFACT_REDACTED_PATH,
+                    "details": details,
+                }
+            )
+            continue
+        if normalized_path is None:
+            raise ConformanceError(
+                "CASE_VALIDATION_SNAPSHOT_INCONSISTENT",
+                "valid tracked artifact path did not normalize",
+            )
+        if any(
+            unicodedata.normalize("NFKC", component).casefold()
+            == TRACKED_ARTIFACT_COMPONENT_IDENTITY
+            for component in normalized_path.split("/")
+        ):
+            diagnostics.append(
+                {
+                    "code": "TRACKED_ARTIFACT_FORBIDDEN",
+                    "severity": "error",
+                    "path": normalized_path,
+                    "details": details,
+                }
+            )
+    return sorted(
+        diagnostics,
+        key=lambda item: (
+            item["code"],
+            item.get("path", ""),
+            item.get("package", ""),
+            json.dumps(item.get("details", {}), sort_keys=True),
+        ),
+    )
+
+
 def _expected_validation_diagnostics(
     options: dict[str, Any],
 ) -> list[dict[str, Any]]:
@@ -2057,6 +2147,8 @@ def _expected_validation_diagnostics(
     if "orphan_crate_coverage" in checks:
         orphan_diagnostics, _ = _expected_orphan_validation(options)
         diagnostics.extend(orphan_diagnostics)
+    if "tracked_artifact_absence" in checks:
+        diagnostics.extend(_expected_tracked_artifact_validation(options))
     return sorted(
         diagnostics,
         key=lambda item: (
