@@ -1,0 +1,1291 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 11,
+  "title": "Seven Body Words, No New Guessing",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:30691b733e4fffd2",
+  "lessons": [
+    {
+      "id": "JA-W11-small-tsu",
+      "sequence": 690,
+      "title": "っ (small tsu) — one small held beat",
+      "headword": "っ",
+      "romanization": "small tsu",
+      "gloss": "the small hiragana sign that holds the following consonant",
+      "script": "japanese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:033672f13beb98d1",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 35,
+              "perItem": false,
+              "source": "[PAUSE 35s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Point here and say koko. Count one time with ichido. Ask for the line a little more slowly, then isolate yukkuri and itte kudasai. Hold the silence before each second consonant; do not add a vowel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "っ — small tsu — one beat of consonant closure."
+            },
+            {
+              "kind": "speech",
+              "text": "It has the same family shape as full-sized つ, but it is smaller and sits lower. Copy only the small form today. In ゆっくり, it holds before k; in いって, it holds before t."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace っ (small tsu) once and copy it once."
+            },
+            {
+              "kind": "speech",
+              "text": "Hide it; write the small sign after ten seconds."
+            },
+            {
+              "kind": "speech",
+              "text": "Read ゆっくり and いって with one silent beat at っ (small tsu)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Stop after one accurate small form."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Hiragana chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-W11-small-tsu-write",
+              "prompt": "Write the small hiragana sign that holds the following consonant.",
+              "assesses": [
+                "JA-SCRIPT-SMALL-TSU-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "っ",
+                "small tsu"
+              ],
+              "feedback": {
+                "correct": "Right: っ marks one held beat before the next consonant.",
+                "incorrect": "Write a small, low っ — not the full-sized sign."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-W11-te",
+      "sequence": 700,
+      "title": "て — close itte",
+      "headword": "て",
+      "romanization": "te",
+      "gloss": "the hiragana sign for the mora te",
+      "script": "japanese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:28ed9c40ca5bea68",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 20,
+              "perItem": false,
+              "source": "[PAUSE 20s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write もうすこし, say itte kudasai, then write the small っ (small tsu) that holds before t."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "て — te."
+            },
+            {
+              "kind": "speech",
+              "text": "One continuous stroke: begin across the top, turn back, then sweep down and right. Keep the lower curve open."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace て (te) once."
+            },
+            {
+              "kind": "speech",
+              "text": "Copy it once, then retrieve it after ten seconds."
+            },
+            {
+              "kind": "speech",
+              "text": "Join the earned ending: い | っ (small tsu) | て (te)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read いって once without romanization."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Hiragana chart; stroke order per Hitsujun Shido no Tebiki (Japanese Ministry of Education, 1958)."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-W11-te-write",
+              "prompt": "Write the hiragana sign for te.",
+              "assesses": [
+                "JA-SCRIPT-TE-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "て",
+                "hiragana te"
+              ],
+              "feedback": {
+                "correct": "Right: て closes the readable block いって.",
+                "incorrect": "Use one turning stroke with an open lower curve: て."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-W11-ta",
+      "sequence": 710,
+      "title": "た — close wakarimashita",
+      "headword": "た",
+      "romanization": "ta",
+      "gloss": "the hiragana sign for the mora ta",
+      "script": "japanese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:7e4878bdd2c4435a",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say wakarimashita. Write と and notice that today's ta belongs to the same consonant row but has its own shape."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "た — ta."
+            },
+            {
+              "kind": "speech",
+              "text": "Four strokes: a short top stroke, a crossing vertical curve, then two small right-side strokes. Keep the right pair separate."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace た (ta) once and copy it once."
+            },
+            {
+              "kind": "speech",
+              "text": "Hide it; write it after ten seconds."
+            },
+            {
+              "kind": "speech",
+              "text": "Add it to the known final block し | た (ta)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read the ending した once."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Hiragana chart; stroke order per Hitsujun Shido no Tebiki (Japanese Ministry of Education, 1958)."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-W11-ta-write",
+              "prompt": "Write the hiragana sign for ta.",
+              "assesses": [
+                "JA-SCRIPT-TA-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "た",
+                "hiragana ta"
+              ],
+              "feedback": {
+                "correct": "Right: た closes the final mora of わかりました.",
+                "incorrect": "Write た with the left crossing form and two separate right strokes."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-W11-da",
+      "sequence": 720,
+      "title": "だ (da) — voice the known base",
+      "headword": "だ",
+      "romanization": "da",
+      "gloss": "ta voiced with dakuten to make da",
+      "script": "japanese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:e668dcb831eadc4a",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the change"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the change until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write た (ta), then add the two-stroke dakuten without changing the base. Say the da in kudasai."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the change",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "た + dakuten becomes だ — ta becomes da."
+            },
+            {
+              "kind": "speech",
+              "text": "The voicing mark does the same job it did before. This is transfer, not a new complex shape."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Write た (ta) once."
+            },
+            {
+              "kind": "speech",
+              "text": "Add dakuten to make だ."
+            },
+            {
+              "kind": "speech",
+              "text": "Point to だ while saying the middle of kudasai."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read ください once, attending to だ (da)."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Hiragana chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-W11-da-write",
+              "prompt": "Voice た (ta) with dakuten. Write the result.",
+              "assesses": [
+                "JA-SCRIPT-DA-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "だ",
+                "hiragana da"
+              ],
+              "feedback": {
+                "correct": "Right: た plus dakuten is だ.",
+                "incorrect": "Keep た and add the two-stroke voicing mark: だ."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C11-te-hand",
+      "sequence": 730,
+      "title": "て (te) — hand",
+      "headword": "て",
+      "romanization": "te",
+      "gloss": "hand",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9587ff0cdfcf4b43",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 25,
+              "perItem": false,
+              "source": "[PAUSE 25s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write て and だ (da). Point here and say koko, then ask for the line a little more slowly."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "て — te — hand."
+            },
+            {
+              "kind": "speech",
+              "text": "The one-sign word names the hand. Sound, meaning, reading, and writing can meet without adding another shape."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear te; touch one hand."
+            },
+            {
+              "kind": "speech",
+              "text": "See て (te); say “hand.”"
+            },
+            {
+              "kind": "speech",
+              "text": "Hide the word and write its one sign."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Stop after one clean retrieval."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Japan Foundation Marugoto A1 vocabulary database."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C11-te-hand-meaning",
+              "prompt": "Write the Japanese word for hand.",
+              "assesses": [
+                "JA-LEX-TE-HAND"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "て",
+                "te"
+              ],
+              "feedback": {
+                "correct": "Right: て is hand.",
+                "incorrect": "The one-mora word is て — te."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C11-mimi",
+      "sequence": 740,
+      "title": "みみ (mimi) — ear",
+      "headword": "みみ",
+      "romanization": "mimi",
+      "gloss": "ear; ears",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:59c9751fbff9420b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 10,
+              "perItem": false,
+              "source": "[PAUSE 10s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write み once, then retrieve て — hand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "みみ — mimi — ear; ears."
+            },
+            {
+              "kind": "speech",
+              "text": "No new sign: repeat み on two even morae."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear mimi; point to an ear."
+            },
+            {
+              "kind": "speech",
+              "text": "Read み | み aloud."
+            },
+            {
+              "kind": "speech",
+              "text": "Hide it and write the repeated sign twice."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep the two morae even."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Japan Foundation Marugoto A1 vocabulary database."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C11-mimi-meaning",
+              "prompt": "Write the Japanese word for ear.",
+              "assesses": [
+                "JA-LEX-MIMI"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "みみ",
+                "mimi"
+              ],
+              "feedback": {
+                "correct": "Right: みみ names the ear or ears.",
+                "incorrect": "Repeat the known sign: みみ — mimi."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C11-kuchi",
+      "sequence": 750,
+      "title": "くち (kuchi) — mouth",
+      "headword": "くち",
+      "romanization": "kuchi",
+      "gloss": "mouth",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e43acd579124b51b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write く and ち separately. Retrieve みみ (mimi)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "くち — kuchi — mouth."
+            },
+            {
+              "kind": "speech",
+              "text": "Join two earned signs; keep two even morae."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear kuchi; point to the mouth."
+            },
+            {
+              "kind": "speech",
+              "text": "Read く | ち."
+            },
+            {
+              "kind": "speech",
+              "text": "Hide it and write the two signs in order."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Contrast mimi and kuchi once."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Japan Foundation Marugoto A1 vocabulary database."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C11-kuchi-meaning",
+              "prompt": "Write the Japanese word for mouth.",
+              "assesses": [
+                "JA-LEX-KUCHI"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "くち",
+                "kuchi"
+              ],
+              "feedback": {
+                "correct": "Right: くち is mouth.",
+                "incorrect": "Join known く and ち: くち — kuchi."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C11-ashi",
+      "sequence": 760,
+      "title": "あし (ashi) — foot or leg",
+      "headword": "あし",
+      "romanization": "ashi",
+      "gloss": "foot; leg",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bf6a68ce72e674a6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write あ and し. Retrieve くち (kuchi) — mouth."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あし — ashi — foot; leg."
+            },
+            {
+              "kind": "speech",
+              "text": "Context chooses the narrower English translation. The Japanese word stays the same."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear ashi; touch a foot or leg."
+            },
+            {
+              "kind": "speech",
+              "text": "Read あ | し."
+            },
+            {
+              "kind": "speech",
+              "text": "Hide it and write both known signs."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Stop after one accurate retrieval."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Japan Foundation Marugoto A1 vocabulary database."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C11-ashi-meaning",
+              "prompt": "Write the Japanese word for foot or leg.",
+              "assesses": [
+                "JA-LEX-ASHI"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "あし",
+                "ashi"
+              ],
+              "feedback": {
+                "correct": "Right: あし covers foot or leg by context.",
+                "incorrect": "Use the two known signs あ and し: あし."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C11-hana",
+      "sequence": 770,
+      "title": "はな (hana) — nose",
+      "headword": "はな",
+      "romanization": "hana",
+      "gloss": "nose",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:733e698c1f9a37b4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write は and な. Retrieve あし (ashi)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はな — hana — nose."
+            },
+            {
+              "kind": "speech",
+              "text": "Read は as ha inside this word. Its wa reading was tied to the topic marker job, not to every appearance of the sign."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear hana; point to the nose."
+            },
+            {
+              "kind": "speech",
+              "text": "Read は | な as ha-na."
+            },
+            {
+              "kind": "speech",
+              "text": "Hide it and write both signs."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say hana once without turning the first mora into wa."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Japan Foundation Marugoto A1 vocabulary database."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C11-hana-meaning",
+              "prompt": "Write the Japanese word for nose.",
+              "assesses": [
+                "JA-LEX-HANA-NOSE"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "はな",
+                "hana"
+              ],
+              "feedback": {
+                "correct": "Right: はな is nose, with は read ha here.",
+                "incorrect": "Write はな and read it ha-na."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C11-kao",
+      "sequence": 780,
+      "title": "かお (kao) — face",
+      "headword": "かお",
+      "romanization": "kao",
+      "gloss": "face",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:094965451bf946a4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write か and お. Retrieve はな (hana) — nose."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かお — kao — face."
+            },
+            {
+              "kind": "speech",
+              "text": "Give か and お one mora each: ka-o."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear two beats, ka-o; point to the face."
+            },
+            {
+              "kind": "speech",
+              "text": "Read か | お."
+            },
+            {
+              "kind": "speech",
+              "text": "Hide it and write the two signs."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Contrast はな (hana) inside the かお (kao) once."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Japan Foundation Marugoto A1 vocabulary database."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C11-kao-meaning",
+              "prompt": "Write the Japanese word for face.",
+              "assesses": [
+                "JA-LEX-KAO"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "かお",
+                "kao"
+              ],
+              "feedback": {
+                "correct": "Right: かお is face, on two morae.",
+                "incorrect": "Keep the vowels separate: かお — ka-o."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C11-me-eye",
+      "sequence": 790,
+      "title": "め (me) — eye",
+      "headword": "め",
+      "romanization": "me",
+      "gloss": "eye; eyes",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a0370f691f349711",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write め (me). Retrieve かお (kao) and みみ (mimi)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "め — me — eye; eyes."
+            },
+            {
+              "kind": "speech",
+              "text": "One learned sign is the complete everyday word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear me; point to an eye."
+            },
+            {
+              "kind": "speech",
+              "text": "See め; say the meaning."
+            },
+            {
+              "kind": "speech",
+              "text": "Hide it and write the one-sign word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep め (me) and みみ (mimi) distinct."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Japan Foundation Marugoto A1 vocabulary database."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C11-me-eye-meaning",
+              "prompt": "Write the Japanese word for eye.",
+              "assesses": [
+                "JA-LEX-ME-EYE"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "め",
+                "me"
+              ],
+              "feedback": {
+                "correct": "Right: め is eye or eyes.",
+                "incorrect": "The one-sign word is め — me."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C11-body-map",
+      "sequence": 800,
+      "title": "Seven readable body words",
+      "headword": "て・みみ・くち・あし・はな・かお・め",
+      "romanization": "te, mimi, kuchi, ashi, hana, kao, me",
+      "gloss": "hand, ear, mouth, foot or leg, nose, face, eye",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ebbd9d7427a67484",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 25,
+              "perItem": false,
+              "source": "[PAUSE 25s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write っ (small tsu), て, た (ta), だ (da). Read ゆっくり, いって, わかりました, and ください once; the old repair exposure is now closed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "て (te) ・ みみ (mimi) ・ くち (kuchi) ・ あし (ashi) ・ はな (hana) ・ かお (kao) ・ め (me)."
+            },
+            {
+              "kind": "speech",
+              "text": "This is a reading-and-writing map, not a new-word dump. Every word arrived in its own lesson, and every sign was already earned."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Listen: point to the named body part."
+            },
+            {
+              "kind": "speech",
+              "text": "Speak: name any three without reading."
+            },
+            {
+              "kind": "speech",
+              "text": "Read: read all seven from left to right."
+            },
+            {
+              "kind": "speech",
+              "text": "Write: choose any three and write them from memory."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Stop after one accurate three-word dictation."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Japan Foundation Marugoto A1 vocabulary database."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C11-body-map-recall",
+              "prompt": "Write the Japanese words for hand, ear, and mouth, in that order.",
+              "assesses": [
+                "JA-PERFORMANCE-BODY-SEVEN-01",
+                "JA-LEX-TE-HAND",
+                "JA-LEX-MIMI",
+                "JA-LEX-KUCHI",
+                "JA-LEX-ASHI",
+                "JA-LEX-HANA-NOSE",
+                "JA-LEX-KAO",
+                "JA-LEX-ME-EYE"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "て、みみ、くち",
+                "て みみ くち",
+                "te mimi kuchi"
+              ],
+              "feedback": {
+                "correct": "Complete: て, みみ, くち — all independently writable.",
+                "incorrect": "Retrieve the three earned words in order: て, みみ, くち."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1781,6 +1781,30 @@
       "scriptSet": "japanese-main"
     },
     {
+      "language": "japanese",
+      "chapter": 9,
+      "output": "japanese/book/chapters/ch09-repeat-please.tex",
+      "scriptSet": "japanese-main"
+    },
+    {
+      "language": "japanese",
+      "chapter": 10,
+      "output": "japanese/book/chapters/ch10-slower-please.tex",
+      "scriptSet": "japanese-main"
+    },
+    {
+      "language": "japanese",
+      "chapter": 11,
+      "output": "japanese/book/chapters/ch11-body-seven.tex",
+      "scriptSet": "japanese-main"
+    },
+    {
+      "language": "japanese",
+      "chapter": 12,
+      "output": "japanese/book/chapters/ch12-body-seven-more.tex",
+      "scriptSet": "japanese-main"
+    },
+    {
       "language": "kannada",
       "chapter": 6,
       "output": "kannada/book/chapters/ch06-dative-case.tex",

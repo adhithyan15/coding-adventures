@@ -1,0 +1,1567 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 12,
+  "title": "Seven More Body Words, Spaced on Purpose",
+  "drivablePrefix": 20,
+  "sourceHash": "fnv1a64:f110edc8c99be2b4",
+  "lessons": [
+    {
+      "id": "JA-R12-foundation-01",
+      "sequence": 810,
+      "title": "Retrieval 1 — mora, politeness, and し",
+      "headword": "い・し・ありがとうございます",
+      "romanization": "i, shi, arigatō gozaimasu",
+      "gloss": "first long-distance script and politeness retrieval",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f78ed65ac74a7a3a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 80,
+              "perItem": false,
+              "source": "[PAUSE 80s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Tap one mora for い, then write い and し from memory. Hear, say, read, and write the first seven-word body map; finish by isolating あし."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear a polite thank-you, say it, read ありがとうございます, and choose it for someone outside your close circle."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Stop after one accurate card."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-R12-foundation-01-card",
+              "prompt": "Write i, shi, the polite thank-you, and the seven-word body map; label each spoken unit a mora.",
+              "assesses": [
+                "JA-SCRIPT-HIRAGANA-MORA",
+                "JA-SCRIPT-I-01",
+                "JA-LEX-ARIGATOU-GOZAIMASU",
+                "JA-REGISTER-TEINEIGO",
+                "JA-SCRIPT-SHI-01",
+                "JA-PERFORMANCE-BODY-SEVEN-01",
+                "JA-LEX-ASHI"
+              ],
+              "responseSeconds": 40,
+              "acceptedResponses": [
+                "い・し・ありがとうございます・て・みみ・くち・あし・はな・かお・め; mora; polite",
+                "い し ありがとうございます て みみ くち あし はな かお め mora polite"
+              ],
+              "feedback": {
+                "correct": "The distant and recent returns are in place.",
+                "incorrect": "Retrieve い, し, the polite thank-you, and the first seven body words."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C12-atama",
+      "sequence": 820,
+      "title": "あたま (atama) — head",
+      "headword": "あたま",
+      "romanization": "atama",
+      "gloss": "head",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:21ecac7fb83a7cb0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 48,
+              "perItem": false,
+              "source": "[PAUSE 48s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write は (ha) and 日. Read ございます, say yukkuri, then retrieve はな."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あたま (atama) — a-ta-ma — head."
+            },
+            {
+              "kind": "speech",
+              "text": "Every sign is earned. Keep three even morae."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear, point, say, read, then hide and write あたま (atama)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Japan Foundation Marugoto A1 vocabulary database."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C12-atama-write",
+              "prompt": "Write the Japanese word for head.",
+              "assesses": [
+                "JA-LEX-ATAMA"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "あたま",
+                "atama"
+              ],
+              "feedback": {
+                "correct": "Right: あたま is head.",
+                "incorrect": "Build three earned signs: あ・た・ま."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C12-kami",
+      "sequence": 830,
+      "title": "かみ (kami) — hair",
+      "headword": "かみ",
+      "romanization": "kami",
+      "gloss": "hair",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c800a0e2cff0d785",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 55,
+              "perItem": false,
+              "source": "[PAUSE 55s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write あたま (atama), read はい, write 本, sketch the speech component, write ゆ, and finish with かお."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かみ (kami) — ka-mi — hair."
+            },
+            {
+              "kind": "speech",
+              "text": "Two known signs, two morae."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear, point, say, read, then write かみ (kami) from memory."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Japan Foundation Marugoto A1 vocabulary database."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C12-kami-write",
+              "prompt": "Write the Japanese word for hair.",
+              "assesses": [
+                "JA-LEX-KAMI-HAIR"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "かみ",
+                "kami"
+              ],
+              "feedback": {
+                "correct": "Right: かみ is hair here.",
+                "incorrect": "Join か and み: かみ."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R12-foundation-02",
+      "sequence": 840,
+      "title": "Retrieval 2 — old signs, recent request",
+      "headword": "え・いってください・かみ",
+      "romanization": "e, itte kudasai, kami",
+      "gloss": "vowel, request, and hair retrieval",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:98de8dc153e838a8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 70,
+              "perItem": false,
+              "source": "[PAUSE 70s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write え and かみ (kami). Build the five and mouth components of 語. Then ask someone to say it with itte kudasai and write め."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Stop after one pass."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-R12-foundation-02-card",
+              "prompt": "Record the retrieval string: e, five, mouth, please say it, hair, eye.",
+              "assesses": [
+                "JA-SCRIPT-E-01",
+                "JA-SCRIPT-KANJI-FIVE-COMPONENT-01",
+                "JA-SCRIPT-KANJI-MOUTH-COMPONENT-01",
+                "JA-LEX-ITTE-KUDASAI",
+                "JA-LEX-KAMI-HAIR",
+                "JA-LEX-ME-EYE"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "え・五・口・いってください・かみ・め",
+                "え 五 口 いってください かみ め"
+              ],
+              "feedback": {
+                "correct": "All six retrievals landed.",
+                "incorrect": "Return in order: え, 五, 口, いってください, かみ, め."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C12-ha-tooth",
+      "sequence": 850,
+      "title": "は (ha) — tooth",
+      "headword": "は",
+      "romanization": "ha",
+      "gloss": "tooth; teeth",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c36cfb827ba99761",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 80,
+              "perItem": false,
+              "source": "[PAUSE 80s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say はい, write 語, recall its Chinese-derived bridge, and write もうすこし. Then hear, say, read, and write the first seven body words."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "は — ha — tooth; teeth."
+            },
+            {
+              "kind": "speech",
+              "text": "One sign is the complete word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear, point, say, read, and write は (ha)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Japan Foundation Marugoto A1 vocabulary database."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C12-ha-tooth-write",
+              "prompt": "Write the Japanese word for tooth.",
+              "assesses": [
+                "JA-LEX-HA-TOOTH"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "は",
+                "ha"
+              ],
+              "feedback": {
+                "correct": "Right: は is tooth or teeth.",
+                "incorrect": "The one-sign word is は — ha."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C12-kata",
+      "sequence": 860,
+      "title": "かた (kata) — shoulder",
+      "headword": "かた",
+      "romanization": "kata",
+      "gloss": "shoulder",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5243f05aeb3eff3a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 60,
+              "perItem": false,
+              "source": "[PAUSE 60s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write は (ha). Say いいえ with its full vowel length. Read 日本語 with its learned readings, then close with wakarimashita."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かた (kata) — ka-ta — shoulder."
+            },
+            {
+              "kind": "speech",
+              "text": "Two known signs, two even morae."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear, point, say, read, then write かた (kata)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Japan Foundation Marugoto A1 vocabulary database."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C12-kata-write",
+              "prompt": "Write the Japanese word for shoulder.",
+              "assesses": [
+                "JA-LEX-KATA-SHOULDER"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "かた",
+                "kata"
+              ],
+              "feedback": {
+                "correct": "Right: かた is shoulder.",
+                "incorrect": "Join か and た: かた."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R12-mixed-scripts",
+      "sequence": 870,
+      "title": "Retrieval 3 — keep the scripts apart",
+      "headword": "こ・コー・ここ・かた・あたま",
+      "romanization": "ko, kō, koko, kata, atama",
+      "gloss": "mixed-script and body retrieval",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0e86cdb9426dcf62",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 75,
+              "perItem": false,
+              "source": "[PAUSE 75s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write hiragana こ, then katakana コー and hold the vowel. Point here with ここ. Name shoulder, then retrieve head after the longer gap."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Stop after one pass."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-R12-mixed-scripts-card",
+              "prompt": "Write the retrieval string: hiragana ko, long katakana kō, here, shoulder, head.",
+              "assesses": [
+                "JA-SCRIPT-KO-01",
+                "JA-SCRIPT-KATAKANA-KO-01",
+                "JA-SCRIPT-CHOUON",
+                "JA-LEX-KOKO",
+                "JA-LEX-KATA-SHOULDER",
+                "JA-LEX-ATAMA"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "こ・コー・ここ・かた・あたま",
+                "こ コー ここ かた あたま"
+              ],
+              "feedback": {
+                "correct": "The scripts and body words stayed distinct.",
+                "incorrect": "Return in order: こ, コー, ここ, かた, あたま."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C12-onaka",
+      "sequence": 880,
+      "title": "おなか (onaka) — belly",
+      "headword": "おなか",
+      "romanization": "onaka",
+      "gloss": "belly; stomach area",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b77d40bf1d0c2c53",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 55,
+              "perItem": false,
+              "source": "[PAUSE 55s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write ん, ー, and ヒ. Ask for slower speech, then write かみ (kami) after its longer gap."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おなか (onaka) — o-na-ka — belly; stomach area."
+            },
+            {
+              "kind": "speech",
+              "text": "Keep three morae."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear, point, say, read, then write おなか (onaka)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Japan Foundation Marugoto A1 vocabulary database."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C12-onaka-write",
+              "prompt": "Write the Japanese word for the belly or stomach area.",
+              "assesses": [
+                "JA-LEX-ONAKA"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "おなか",
+                "onaka"
+              ],
+              "feedback": {
+                "correct": "Right: おなか names the belly area.",
+                "incorrect": "Use three known signs: お・な・か."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C12-senaka",
+      "sequence": 890,
+      "title": "せなか (senaka) — back",
+      "headword": "せなか",
+      "romanization": "senaka",
+      "gloss": "back",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e6ae2bddfc7fbf75",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 55,
+              "perItem": false,
+              "source": "[PAUSE 55s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write おなか (onaka) and に. Read コーヒー as a katakana loan, then write small っ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "せなか (senaka) — se-na-ka — back."
+            },
+            {
+              "kind": "speech",
+              "text": "Only the opening changes from おなか (onaka)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear, point, say, read, then write せなか (senaka)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Japan Foundation Marugoto A1 vocabulary database."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C12-senaka-write",
+              "prompt": "Write the Japanese word for back.",
+              "assesses": [
+                "JA-LEX-SENAKA"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "せなか",
+                "senaka"
+              ],
+              "feedback": {
+                "correct": "Right: せなか is back.",
+                "incorrect": "Change the opening of おなか: せなか."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R12-doorway",
+      "sequence": 900,
+      "title": "Retrieval 4 — leave the body-word topic",
+      "headword": "ち・さようなら・て・せなか・は",
+      "romanization": "chi, sayōnara, te, senaka, ha",
+      "gloss": "doorway, writing, and body retrieval",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3932609c8724eeba",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 80,
+              "perItem": false,
+              "source": "[PAUSE 80s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write ち. Run the old doorway exchange and end with さようなら. Write て. Retrieve せなか (senaka), then は after five lessons."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Stop after one pass."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-R12-doorway-card",
+              "prompt": "Write the final retrieval string: chi, goodbye, hand-sign te, back, tooth.",
+              "assesses": [
+                "JA-SCRIPT-CHI-01",
+                "JA-DIALOGUE-DOORWAY",
+                "JA-LEX-SAYOUNARA",
+                "JA-SCRIPT-TE-01",
+                "JA-LEX-SENAKA",
+                "JA-LEX-HA-TOOTH"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "ち・さようなら・て・せなか・は",
+                "ち さようなら て せなか は"
+              ],
+              "feedback": {
+                "correct": "The distant doorway and recent body words both returned.",
+                "incorrect": "Return in order: ち, さようなら, て, せなか, は."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C12-koshi",
+      "sequence": 910,
+      "title": "こし (koshi) — waist or lower back",
+      "headword": "こし",
+      "romanization": "koshi",
+      "gloss": "waist; lower back",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e7c79d3af79e4327",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 70,
+              "perItem": false,
+              "source": "[PAUSE 70s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write わ, then explain why topic は (ha) can sound wa. Hear sayōnara, write its ら, write た, and retrieve かた (kata)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こし (koshi) — ko-shi — waist; lower back."
+            },
+            {
+              "kind": "speech",
+              "text": "Two signs, two morae."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear, point, say, read, then write こし (koshi)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Japan Foundation Marugoto A1 vocabulary database."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C12-koshi-write",
+              "prompt": "Write the Japanese word for waist or lower back.",
+              "assesses": [
+                "JA-LEX-KOSHI"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "こし",
+                "koshi"
+              ],
+              "feedback": {
+                "correct": "Right: こし names the waist or lower back.",
+                "incorrect": "Join こ and し: こし."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R12-farewell",
+      "sequence": 920,
+      "title": "Retrieval 5 — enter, leave, voice",
+      "headword": "こんにちは・さようなら・だ・こし",
+      "romanization": "konnichiwa, sayōnara, da, koshi",
+      "gloss": "greeting, farewell, voicing, and waist retrieval",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5dc7062b9534c21d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 85,
+              "perItem": false,
+              "source": "[PAUSE 85s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read こんにちは. Hear, say, read, and write さようなら. Write だ, then retrieve こし (koshi) without looking back."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Stop after one pass."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-R12-farewell-card",
+              "prompt": "Write the greeting, farewell, voiced da, and waist word.",
+              "assesses": [
+                "JA-SCRIPT-KONNICHIWA-READ-01",
+                "JA-SCRIPT-SAYOUNARA-READ-01",
+                "JA-PERFORMANCE-SAYOUNARA-FOUR-SKILL-01",
+                "JA-SCRIPT-DA-01",
+                "JA-LEX-KOSHI"
+              ],
+              "responseSeconds": 35,
+              "acceptedResponses": [
+                "こんにちは・さようなら・だ・こし",
+                "こんにちは さようなら だ こし"
+              ],
+              "feedback": {
+                "correct": "All four returns landed.",
+                "incorrect": "Return in order: こんにちは, さようなら, だ, こし."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R12-repair-01",
+      "sequence": 930,
+      "title": "Retrieval 6 — greet, repair, point",
+      "headword": "こんにちは・よくわかりません・て・おなか",
+      "romanization": "konnichiwa, yoku wakarimasen, te, onaka",
+      "gloss": "distant greeting and repair retrieval",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4348fae8accad20e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 80,
+              "perItem": false,
+              "source": "[PAUSE 80s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Greet, say that you do not understand well, write て, and retrieve おなか (onaka) after five lessons."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Stop after one pass."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-R12-repair-01-card",
+              "prompt": "Write the greeting, I do not understand well, hand, and belly.",
+              "assesses": [
+                "JA-LEX-KONNICHIWA",
+                "JA-LEX-YOKU",
+                "JA-LEX-WAKARIMASEN",
+                "JA-LEX-TE-HAND",
+                "JA-LEX-ONAKA"
+              ],
+              "responseSeconds": 35,
+              "acceptedResponses": [
+                "こんにちは・よくわかりません・て・おなか",
+                "こんにちは よくわかりません て おなか"
+              ],
+              "feedback": {
+                "correct": "The four-age retrieval succeeded.",
+                "incorrect": "Return in order: こんにちは, よくわかりません, て, おなか."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R12-repair-02",
+      "sequence": 940,
+      "title": "Retrieval 7 — from あ to せなか (senaka)",
+      "headword": "あ・ど・もう・みみ・せなか",
+      "romanization": "a, do, mō, mimi, senaka",
+      "gloss": "script, repair, ear, and back retrieval",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bd14a3160019841e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 70,
+              "perItem": false,
+              "source": "[PAUSE 70s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write あ and ど. Say mō on two morae. Write みみ, then retrieve せなか (senaka) after five lessons."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Stop after one pass."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-R12-repair-02-card",
+              "prompt": "Write a, do, again, ear, and back in Japanese.",
+              "assesses": [
+                "JA-SCRIPT-A-01",
+                "JA-SCRIPT-DO-01",
+                "JA-LEX-MOU",
+                "JA-LEX-MIMI",
+                "JA-LEX-SENAKA"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "あ・ど・もう・みみ・せなか",
+                "あ ど もう みみ せなか"
+              ],
+              "feedback": {
+                "correct": "All five returns landed.",
+                "incorrect": "Return in order: あ, ど, もう, みみ, せなか."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R12-repair-03",
+      "sequence": 950,
+      "title": "Retrieval 8 — り, も, いちど, くち",
+      "headword": "り・も・いちど・くち",
+      "romanization": "ri, mo, ichido, kuchi",
+      "gloss": "sign, repetition, and mouth retrieval",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:899576b5170a5b29",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 60,
+              "perItem": false,
+              "source": "[PAUSE 60s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write り and も. Say and write いちど, then retrieve くち."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Stop after one pass."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-R12-repair-03-card",
+              "prompt": "Write ri, mo, once, and mouth in Japanese.",
+              "assesses": [
+                "JA-SCRIPT-RI-01",
+                "JA-SCRIPT-MO-01",
+                "JA-LEX-ICHIDO",
+                "JA-LEX-KUCHI"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "り・も・いちど・くち",
+                "り も いちど くち"
+              ],
+              "feedback": {
+                "correct": "All four returns landed.",
+                "incorrect": "Return in order: り, も, いちど, くち."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R12-repair-04",
+      "sequence": 960,
+      "title": "Retrieval 9 — request, leg, waist",
+      "headword": "か・おねがいします・もういちどおねがいします・あし・こし",
+      "romanization": "ka, onegaishimasu, mō ichido onegaishimasu, ashi, koshi",
+      "gloss": "request and body retrieval",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:90cf85caac41fc22",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 85,
+              "perItem": false,
+              "source": "[PAUSE 85s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write か. Say onegaishimasu, then the complete repetition request. Write あし, then retrieve こし (koshi) after five lessons."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Stop after one pass."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-R12-repair-04-card",
+              "prompt": "Write ka, please, the repetition request, leg, and waist.",
+              "assesses": [
+                "JA-SCRIPT-KA-01",
+                "JA-LEX-ONEGAI-SHIMASU",
+                "JA-LEX-MOU-ICHIDO-ONEGAI-SHIMASU",
+                "JA-LEX-ASHI",
+                "JA-LEX-KOSHI"
+              ],
+              "responseSeconds": 35,
+              "acceptedResponses": [
+                "か・おねがいします・もういちどおねがいします・あし・こし",
+                "か おねがいします もういちどおねがいします あし こし"
+              ],
+              "feedback": {
+                "correct": "All five retrievals landed.",
+                "incorrect": "Return in order: か, おねがいします, the full repetition request, あし, こし."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R12-writing-01",
+      "sequence": 970,
+      "title": "Retrieval 10 — mark, signs, nose",
+      "headword": "゛・せ・ね・はな",
+      "romanization": "dakuten, se, ne, hana",
+      "gloss": "voicing and body-sign retrieval",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d1d71c813b302381",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 55,
+              "perItem": false,
+              "source": "[PAUSE 55s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Add dakuten to a known base, write せ and ね, then write はな from memory."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Stop after one pass."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-R12-writing-01-card",
+              "prompt": "Write voiced da, se, ne, and nose.",
+              "assesses": [
+                "JA-SCRIPT-DAKUTEN-01",
+                "JA-SCRIPT-SE-01",
+                "JA-SCRIPT-NE-01",
+                "JA-LEX-HANA-NOSE"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "だ・せ・ね・はな",
+                "だ せ ね はな"
+              ],
+              "feedback": {
+                "correct": "The voicing mark and three returns landed.",
+                "incorrect": "Return in order: だ, せ, ね, はな."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R12-writing-02",
+      "sequence": 980,
+      "title": "Retrieval 11 — と, すこし, かお",
+      "headword": "と・すこし・かお",
+      "romanization": "to, sukoshi, kao",
+      "gloss": "sign, quantity, and face retrieval",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bf6bd3229afb3368",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 45,
+              "perItem": false,
+              "source": "[PAUSE 45s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write と, then すこし. Finish with かお, keeping ka-o on two morae."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Stop after one pass."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-R12-writing-02-card",
+              "prompt": "Write to, a little, and face in Japanese.",
+              "assesses": [
+                "JA-SCRIPT-TO-01",
+                "JA-LEX-SUKOSHI",
+                "JA-LEX-KAO"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "と・すこし・かお",
+                "と すこし かお"
+              ],
+              "feedback": {
+                "correct": "All three returns landed.",
+                "incorrect": "Return in order: と, すこし, かお."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R12-body-01",
+      "sequence": 990,
+      "title": "Retrieval 12 — う and め",
+      "headword": "う・め",
+      "romanization": "u, me",
+      "gloss": "distant vowel and recent eye retrieval",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:794492ee7d6bf665",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 25,
+              "perItem": false,
+              "source": "[PAUSE 25s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write う, then hear, say, read, and write め."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Stop after one pass."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-R12-body-01-card",
+              "prompt": "Write u and eye in Japanese.",
+              "assesses": [
+                "JA-SCRIPT-U-01",
+                "JA-LEX-ME-EYE"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "う・め",
+                "う め"
+              ],
+              "feedback": {
+                "correct": "Both one-sign returns landed.",
+                "incorrect": "Write う, then め."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C12-body-map-two",
+      "sequence": 1000,
+      "title": "Seven more body words, spaced on purpose",
+      "headword": "あたま・かみ・は・かた・おなか・せなか・こし",
+      "romanization": "atama, kami, ha, kata, onaka, senaka, koshi",
+      "gloss": "head, hair, tooth, shoulder, belly, back, waist",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:093da5377d668e95",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 55,
+              "perItem": false,
+              "source": "[PAUSE 55s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read ありがとう. Then hear, say, read, and write any three words from the first seven-word body map."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あたま・かみ・は・かた・おなか・せなか・こし (atama, kami, ha, kata, onaka, senaka, koshi)."
+            },
+            {
+              "kind": "speech",
+              "text": "Every sign is earned, and every new word has already had short and medium retrieval scheduled in this chapter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Listen and point; say all seven; read all seven; then write any four from memory."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Stop after one accurate seven-word map."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Japan Foundation Marugoto A1 vocabulary database."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C12-body-map-two-dictation",
+              "prompt": "Write head, hair, tooth, shoulder, belly, back, and waist in Japanese.",
+              "assesses": [
+                "JA-PERFORMANCE-BODY-FOURTEEN-01",
+                "JA-LEX-ATAMA",
+                "JA-LEX-KAMI-HAIR",
+                "JA-LEX-HA-TOOTH",
+                "JA-LEX-KATA-SHOULDER",
+                "JA-LEX-ONAKA",
+                "JA-LEX-SENAKA",
+                "JA-LEX-KOSHI"
+              ],
+              "responseSeconds": 40,
+              "acceptedResponses": [
+                "あたま・かみ・は・かた・おなか・せなか・こし",
+                "あたま かみ は かた おなか せなか こし"
+              ],
+              "feedback": {
+                "correct": "All seven are independently retrievable.",
+                "incorrect": "Return in order: あたま, かみ, は, かた, おなか, せなか, こし."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

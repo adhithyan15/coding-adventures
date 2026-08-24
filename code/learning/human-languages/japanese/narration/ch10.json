@@ -1,0 +1,1396 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 10,
+  "title": "A Little More Slowly",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:7bcb77ff93c3d224",
+  "lessons": [
+    {
+      "id": "JA-W10-se",
+      "sequence": 570,
+      "title": "せ — close the opener",
+      "headword": "せ",
+      "romanization": "se",
+      "gloss": "the hiragana sign for the mora se",
+      "script": "japanese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:543ba16b7afc4d71",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 40,
+              "perItem": false,
+              "source": "[PAUSE 40s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask for one repetition. Then hear the farewell in your mind, say it, read さようなら, and write its final ら. Write known す, み, ま, ん separately. Only the fourth sign of sumimasen is still missing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "せ — se."
+            },
+            {
+              "kind": "speech",
+              "text": "Three strokes: a short horizontal, a longer crossing horizontal with a small hook, then a vertical curve through the right side. Keep the two horizontals separate."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy せ (se) once."
+            },
+            {
+              "kind": "speech",
+              "text": "Hide it and write it after ten seconds."
+            },
+            {
+              "kind": "speech",
+              "text": "Join the five known blocks: す | み | ま | せ (se) | ん."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read すみません once without romanization."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Hiragana chart; stroke order per Hitsujun Shido no Tebiki (Japanese Ministry of Education, 1958)."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-W10-se-write",
+              "prompt": "Write the hiragana sign for se.",
+              "assesses": [
+                "JA-SCRIPT-SE-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "せ",
+                "hiragana se"
+              ],
+              "feedback": {
+                "correct": "Right: せ closes the fourth mora of すみません.",
+                "incorrect": "Write せ: two horizontals, then the right-side curve."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-W10-o",
+      "sequence": 580,
+      "title": "お — the respectful opening sign",
+      "headword": "お",
+      "romanization": "o",
+      "gloss": "the hiragana sign for the mora o",
+      "script": "japanese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:0c334f9f43fa0d34",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say onegaishimasu, write せ (se), then retrieve yoku as “well.”"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "お — o."
+            },
+            {
+              "kind": "speech",
+              "text": "Three strokes. Write the short top horizontal, then the long central stroke that curves left and loops right. Finish with the small separate mark at upper right."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "お once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: **お** once]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COPY",
+              "instruction": "お once with the model visible",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COPY: **お** once with the model visible]"
+            },
+            {
+              "kind": "prompt",
+              "action": "FIND",
+              "instruction": "point to the first sign in おねがいします",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU FIND: point to the first sign in **おねがいします**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover the model and air-write all three strokes."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Hiragana chart; stroke order per Hitsujun Shido no Tebiki (Japanese Ministry of Education, 1958)."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-W10-o-first",
+              "prompt": "Write the first hiragana sign in onegaishimasu.",
+              "assesses": [
+                "JA-SCRIPT-O-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "お",
+                "hiragana o"
+              ],
+              "feedback": {
+                "correct": "Right: お opens おねがいします.",
+                "incorrect": "The opening sign is お."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-W10-ne",
+      "sequence": 590,
+      "title": "ね (ne) — finish the polite request",
+      "headword": "ね",
+      "romanization": "ne",
+      "gloss": "the hiragana sign for the mora ne",
+      "script": "japanese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:e74c1a01ec7b3e04",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 18,
+              "perItem": false,
+              "source": "[PAUSE 18s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write お, then known が, い, し (shi), ま, す. Say the whole request ending once. One written mora remains between お and が."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ね — ne."
+            },
+            {
+              "kind": "speech",
+              "text": "Two strokes. First a short vertical. Second, cross it from the upper right, hook left, sweep down, and finish with a small loop at the lower right."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy ね (ne) once."
+            },
+            {
+              "kind": "speech",
+              "text": "Hide it and write it from ne."
+            },
+            {
+              "kind": "speech",
+              "text": "Assemble お (o) | ね (ne) | が | い | し (shi) | ま | す."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read おねがいします without romanization, then stop."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Hiragana chart; stroke order per Hitsujun Shido no Tebiki (Japanese Ministry of Education, 1958)."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-W10-ne-write",
+              "prompt": "Write the hiragana sign for ne.",
+              "assesses": [
+                "JA-SCRIPT-NE-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ね",
+                "hiragana ne"
+              ],
+              "feedback": {
+                "correct": "Right: ね completes the readable request ending.",
+                "incorrect": "Write ね: short vertical, then the crossing sweep and loop."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C10-sukoshi",
+      "sequence": 600,
+      "title": "すこし (sukoshi) — ask for a small change",
+      "headword": "すこし",
+      "romanization": "sukoshi",
+      "gloss": "a little; a small amount",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cb790edfcb9ac1d1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 18,
+              "perItem": false,
+              "source": "[PAUSE 18s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask for one repetition, then write known す, こ, and ね."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "すこし (sukoshi) — su-ko-shi — a little."
+            },
+            {
+              "kind": "speech",
+              "text": "Three morae. This word makes a request smaller and gentler: not a completely different explanation, only a little adjustment. The last sign is exposure for one lesson; its own writing step comes next."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "sukoshi becomes choose a little",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *sukoshi* → choose **a little**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "su | ko | shi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *su | ko | shi*]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "known す, known こ, supported final sign",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: known **す**, known **こ**, supported final sign]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep it to three even beats."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Japan Foundation Irodori Starter lesson 2, pp. 1–3."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C10-sukoshi-meaning",
+              "prompt": "What Japanese word makes the requested change only a little?",
+              "assesses": [
+                "JA-LEX-SUKOSHI"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "すこし",
+                "sukoshi"
+              ],
+              "feedback": {
+                "correct": "Right: すこし means a little.",
+                "incorrect": "Use すこし — su-ko-shi."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-W10-shi",
+      "sequence": 610,
+      "title": "し (shi) — one falling curve",
+      "headword": "し",
+      "romanization": "shi",
+      "gloss": "the hiragana sign for the mora shi",
+      "script": "japanese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:48feb4a16e4f5fda",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say sukoshi. Write す, こ, and review み."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "し — shi."
+            },
+            {
+              "kind": "speech",
+              "text": "One stroke. Begin high, descend almost vertically, then curve gently up and to the right. Do not add a second stroke or close the curve."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace し (shi) once."
+            },
+            {
+              "kind": "speech",
+              "text": "Hide it and write the single curve."
+            },
+            {
+              "kind": "speech",
+              "text": "Join す | こ | し (shi) and read the three morae."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read すこし (sukoshi) once without support."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Hiragana chart; stroke order per Hitsujun Shido no Tebiki (Japanese Ministry of Education, 1958)."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-W10-shi-write",
+              "prompt": "Write the one-stroke hiragana sign for shi.",
+              "assesses": [
+                "JA-SCRIPT-SHI-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "し",
+                "hiragana shi"
+              ],
+              "feedback": {
+                "correct": "Right: し is one falling curve.",
+                "incorrect": "Write one falling stroke that curves up to the right: し."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C10-yukkuri",
+      "sequence": 620,
+      "title": "ゆっくり (yukkuri) — slowly, with a held beat",
+      "headword": "ゆっくり",
+      "romanization": "yukkuri",
+      "gloss": "slowly; without rushing",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6f92189da5f38aa4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 15,
+              "perItem": false,
+              "source": "[PAUSE 15s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read すこし (sukoshi), then write known く, り, and し."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ゆっくり (yukkuri) — yu-k-ku-ri — slowly."
+            },
+            {
+              "kind": "speech",
+              "text": "Do not squeeze the middle. The small っ holds one beat of closure before ku. The spelling is exposure today; this lesson earns the sound and practical job without pretending the two new shapes are already readable."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "yukkuri becomes choose slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *yukkuri* → choose **slowly**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TAP",
+              "instruction": "yu | hold | ku | ri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TAP: *yu | hold | ku | ri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yukkuri slowly, without adding a vowel in the held beat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yukkuri* slowly, without adding a vowel in the held beat]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Meaning and timing are enough. The new opening sign comes next."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Japan Foundation Irodori Starter lesson 2, pp. 1–3."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C10-yukkuri-timing",
+              "prompt": "Say slowly and mark the held beat in yukkuri.",
+              "assesses": [
+                "JA-LEX-YUKKURI"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "yu | hold | ku | ri",
+                "yukkuri",
+                "yu-k-ku-ri"
+              ],
+              "feedback": {
+                "correct": "Right: the held beat comes before ku.",
+                "incorrect": "Use four timing slots: yu | hold | ku | ri."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-W10-yu",
+      "sequence": 630,
+      "title": "ゆ — open yukkuri",
+      "headword": "ゆ",
+      "romanization": "yu",
+      "gloss": "the hiragana sign for the mora yu",
+      "script": "japanese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:08bae1d7f2e81135",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Tap yu | hold | ku | ri, then write known よ and も."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ゆ — yu."
+            },
+            {
+              "kind": "speech",
+              "text": "Two strokes. First a short curved vertical on the left. Second, begin at the upper right, sweep left through the middle, loop around, and finish to the right."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ゆ (yu) once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: **ゆ** once]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COPY",
+              "instruction": "ゆ (yu) once",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COPY: **ゆ** once]"
+            },
+            {
+              "kind": "prompt",
+              "action": "FIND",
+              "instruction": "point to ゆ at the start of ゆっくり (yukkuri)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU FIND: point to **ゆ** at the start of **ゆっくり**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The small っ remains supported; do not decode past what you own."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Hiragana chart; stroke order per Hitsujun Shido no Tebiki (Japanese Ministry of Education, 1958)."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-W10-yu-write",
+              "prompt": "Write the hiragana sign for yu.",
+              "assesses": [
+                "JA-SCRIPT-YU-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ゆ",
+                "hiragana yu"
+              ],
+              "feedback": {
+                "correct": "Right: ゆ opens ゆっくり.",
+                "incorrect": "Write ゆ: short left curve, then the looping second stroke."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C10-itte-kudasai",
+      "sequence": 640,
+      "title": "いってください (itte kudasai) — please say it",
+      "headword": "いってください",
+      "romanization": "itte kudasai",
+      "gloss": "please say it",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0f515a833f0d4e37",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 15,
+              "perItem": false,
+              "source": "[PAUSE 15s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say yukkuri. Retrieve onegaishimasu, then write い, く, さ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いってください。 — itte kudasai — please say it."
+            },
+            {
+              "kind": "speech",
+              "text": "The first part is the request-linking form of iu, “to say.” Kudasai makes the requested action polite. Learn the whole spoken frame now. Its small っ, て, and voiced だ receive separate writing steps later."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "itte kudasai becomes choose please say it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *itte kudasai* → choose **please say it**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it-te ku-da-sa-i",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *it-te ku-da-sa-i*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "JOIN",
+              "instruction": "yukkuri itte kudasai — please say it slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU JOIN: *yukkuri itte kudasai* — please say it slowly]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Do not write the supported signs from memory yet."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Japan Foundation Irodori Starter lesson 2, pp. 1–3."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C10-itte-kudasai-request",
+              "prompt": "Ask politely: please say it.",
+              "assesses": [
+                "JA-LEX-ITTE-KUDASAI"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "いってください",
+                "itte kudasai",
+                "いってください。"
+              ],
+              "feedback": {
+                "correct": "Right: いってください asks for the action politely.",
+                "incorrect": "Use いってください — itte kudasai."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C10-mou-sukoshi",
+      "sequence": 650,
+      "title": "もうすこし (mō sukoshi) — a little more",
+      "headword": "もうすこし",
+      "romanization": "mō sukoshi",
+      "gloss": "a little more",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c2410108830f66ea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 28,
+              "perItem": false,
+              "source": "[PAUSE 28s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say itte kudasai, write ゆ (yu), then write もう and すこし (sukoshi) separately. Read both."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "もうすこし — mō sukoshi — a little more."
+            },
+            {
+              "kind": "speech",
+              "text": "No new grammar is hiding here. もう points beyond the present amount; すこし (sukoshi) keeps the requested change small. Every sign is already earned."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read もう | すこし (sukoshi)."
+            },
+            {
+              "kind": "speech",
+              "text": "Say mō sukoshi, keeping the extra beat in もう."
+            },
+            {
+              "kind": "speech",
+              "text": "Hear the phrase, wait ten seconds, and write it from memory."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Circle う, the second beat of mō."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Japan Foundation Irodori Starter lesson 2, pp. 1–3."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C10-mou-sukoshi-write",
+              "prompt": "From sound alone, write a little more in hiragana.",
+              "assesses": [
+                "JA-LEX-MOU-SUKOSHI"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "もうすこし",
+                "もうすこし。"
+              ],
+              "feedback": {
+                "correct": "Right: もうすこし joins two fully earned words.",
+                "incorrect": "Build it as もう + すこし."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C10-wakarimashita",
+      "sequence": 660,
+      "title": "わかりました (wakarimashita) — the repair worked",
+      "headword": "わかりました",
+      "romanization": "wakarimashita",
+      "gloss": "I understand; understood",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b22a98bdbfceef5c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 15,
+              "perItem": false,
+              "source": "[PAUSE 15s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say “I do not understand,” then read もうすこし (mō sukoshi). Write み and し."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "わかりました。 — wakarimashita — I understand; understood."
+            },
+            {
+              "kind": "speech",
+              "text": "The familiar wakari- stem returns. Polite -mashita presents the change as achieved: the explanation landed. The final た is supported exposure until its own sign lesson."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "wakarimasen becomes not understood",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *wakarimasen* → not understood]"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "wakarimashita becomes understood now",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *wakarimashita* → understood now]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wakarimashita after a successful repetition",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wakarimashita* after a successful repetition]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep -masen and -mashita distinct; one reports a problem, the other success."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Japan Foundation Irodori Starter lesson 2, pp. 2–3."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C10-wakarimashita-success",
+              "prompt": "The repetition worked. Respond politely: understood.",
+              "assesses": [
+                "JA-LEX-WAKARIMASHITA"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "わかりました",
+                "wakarimashita",
+                "わかりました。"
+              ],
+              "feedback": {
+                "correct": "Right: わかりました marks the repair as successful.",
+                "incorrect": "Use わかりました — wakarimashita."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C10-koko",
+      "sequence": 670,
+      "title": "ここ (koko) — here, with one known sign twice",
+      "headword": "ここ",
+      "romanization": "koko",
+      "gloss": "here; this place",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2fe1f85c60d89d19",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write こ, say wakarimashita, then retrieve sumimasen."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ここ (koko) — ko-ko — here; this place."
+            },
+            {
+              "kind": "speech",
+              "text": "One owned sign appears twice. The word belongs to a larger pointing family that will later contrast near me, near you, and over there. Today, keep only the speaker-near place: here."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Point beside yourself and say koko."
+            },
+            {
+              "kind": "speech",
+              "text": "Read こ | こ."
+            },
+            {
+              "kind": "speech",
+              "text": "Hear ko-ko, wait ten seconds, and write both signs."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "No new shape was needed; the payoff is recombination."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Japan Foundation Irodori Starter lesson 2, p. 2."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C10-koko-write",
+              "prompt": "Write here in hiragana using the same known sign twice.",
+              "assesses": [
+                "JA-LEX-KOKO"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ここ",
+                "ここ。"
+              ],
+              "feedback": {
+                "correct": "Right: ここ is こ twice.",
+                "incorrect": "Write the known sign twice: こ + こ."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C10-slower-please",
+      "sequence": 680,
+      "title": "もうすこし、ゆっくりいってください (mō sukoshi, yukkuri itte kudasai) — slower, please",
+      "headword": "もうすこし、ゆっくりいってください",
+      "romanization": "mō sukoshi, yukkuri itte kudasai",
+      "gloss": "please say it a little more slowly",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6d3edf7c32640ac2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 30,
+              "perItem": false,
+              "source": "[PAUSE 30s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write せ, お, ね, し, ゆ. Read sumimasen and onegaishimasu. Retrieve the repetition request, then the three new spoken pieces mō sukoshi, yukkuri, and itte kudasai."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "もうすこし、ゆっくりいってください。 mō sukoshi, yukkuri itte kudasai — please say it a little more slowly."
+            },
+            {
+              "kind": "speech",
+              "text": "No new rule arrives here. The first block is independently readable and writable. The second and third remain sound-first exposure where their small っ, て, and だ have not yet received individual writing lessons."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Listen: choose repetition or slower speech from the request you hear."
+            },
+            {
+              "kind": "speech",
+              "text": "Speak: sumimasen + the slower request."
+            },
+            {
+              "kind": "speech",
+              "text": "Read/write: independently retrieve only もうすこし (mō sukoshi)."
+            },
+            {
+              "kind": "speech",
+              "text": "Close: after the repeated line, say wakarimashita."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Stop after one accurate repair and one wakarimashita."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Japan Foundation Irodori Starter lesson 2, pp. 1–3."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C10-slower-please-performance",
+              "prompt": "Ask politely for the line a little more slowly.",
+              "assesses": [
+                "JA-LEX-SLOWER-PLEASE"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "もうすこし、ゆっくりいってください。",
+                "mō sukoshi, yukkuri itte kudasai",
+                "mou sukoshi yukkuri itte kudasai",
+                "もうすこしゆっくりいってください"
+              ],
+              "feedback": {
+                "correct": "Complete: a little more + slowly + please say it.",
+                "incorrect": "Build the three learned pieces: mō sukoshi + yukkuri + itte kudasai."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
