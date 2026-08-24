@@ -4,7 +4,7 @@
   "chapter": 174,
   "title": "Waiting, Answering, Buying",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:f32b7df84ab00103",
+  "sourceHash": "fnv1a64:31885c09ed839704",
   "lessons": [
     {
       "id": "ES-C40-esperar",
@@ -332,7 +332,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3e7399468f1b5db2",
+      "sourceHash": "fnv1a64:06e99e37e2ac6756",
       "notice": null,
       "blocks": [
         {

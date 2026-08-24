@@ -3795,6 +3795,71 @@
         "ES-EXT-302-CALLE"
       ],
       "after": []
+    },
+    {
+      "id": "ES-PATH-318-01",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "ES-C318-repaso-despedirse"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-318-REPASO"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-318-02",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "ES-C318-repaso-disculparse"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-318-03",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "ES-C318-repaso-genero"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-318-04",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "ES-C318-repaso-marcas"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-319-01",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "ES-C319-repaso-la-superficie"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-319-REPASO"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-319-02",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "ES-C319-repaso-salir",
+        "ES-C319-despedida"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
     }
   ],
   "spine": {
@@ -3866,7 +3931,9 @@
         "ES-PATH-022",
         "ES-PATH-286-01",
         "ES-PATH-293-01",
-        "ES-PATH-300-01"
+        "ES-PATH-300-01",
+        "ES-PATH-318-03",
+        "ES-PATH-318-04"
       ],
       "omits": [
         "WORD-GOOD"
@@ -3881,7 +3948,9 @@
         "ES-PATH-024-PRONOUN-EVIDENCE",
         "ES-PATH-287-01",
         "ES-PATH-294-01",
-        "ES-PATH-301-01"
+        "ES-PATH-301-01",
+        "ES-PATH-318-02",
+        "ES-PATH-319-01"
       ],
       "omits": [],
       "relocates": {}
@@ -3891,7 +3960,9 @@
         "ES-PATH-012",
         "ES-PATH-288-01",
         "ES-PATH-295-01",
-        "ES-PATH-302-01"
+        "ES-PATH-302-01",
+        "ES-PATH-318-01",
+        "ES-PATH-319-02"
       ],
       "omits": [
         "FAREWELL-CASUAL"
@@ -7722,6 +7793,28 @@
         "ES-C302-huella",
         "ES-C302-puerto",
         "ES-C302-faro"
+      ]
+    },
+    {
+      "id": "ES-EXT-318-REPASO",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "review",
+      "canDo": "I can say goodbye for the short term, with the word inside the goodbye.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C318-repaso-despedirse"
+      ]
+    },
+    {
+      "id": "ES-EXT-319-REPASO",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "review",
+      "canDo": "I can check a Spanish surface against better evidence.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C319-repaso-la-superficie"
       ]
     }
   ],

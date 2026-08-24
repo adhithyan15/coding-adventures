@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ES-LEX-MANANA, ES-LEX-HASTA-MANANA, ES-ETYMON-MANEANA]
 practises:
-  knowledge: [ES-LEX-HASTA, ES-LEX-MANANA, ES-LEX-HASTA-MANANA, ES-SCRIPT-ENYE, ES-ETYMON-MANEANA]
+  knowledge: [ES-LEX-HASTA, ES-LEX-MANANA, ES-LEX-HASTA-MANANA, ES-SCRIPT-ENYE, ES-FORM-MANANA, ES-ETYMON-MANEANA]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -67,7 +67,7 @@ little historical fossil sitting in the middle of "tomorrow."
 with *hasta*, it's always **tomorrow**: *hasta mañana*, "until tomorrow."
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HASTA, ES-LEX-MANANA, ES-LEX-HASTA-MANANA, ES-SCRIPT-ENYE, ES-ETYMON-MANEANA] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HASTA, ES-LEX-MANANA, ES-LEX-HASTA-MANANA, ES-SCRIPT-ENYE, ES-FORM-MANANA, ES-ETYMON-MANEANA] -->
 
 [PAUSE 1s]
 - [YOU SAY: "mañana" — *mah-NYAH-nah*, squished *ñ*]
@@ -75,7 +75,7 @@ with *hasta*, it's always **tomorrow**: *hasta mañana*, "until tomorrow."
 - [YOU SAY: “mañana” once as “morning,” then once as “tomorrow” — context decides]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HASTA, ES-LEX-MANANA, ES-LEX-HASTA-MANANA, ES-SCRIPT-ENYE, ES-ETYMON-MANEANA] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HASTA, ES-LEX-MANANA, ES-LEX-HASTA-MANANA, ES-SCRIPT-ENYE, ES-FORM-MANANA, ES-ETYMON-MANEANA] -->
 
 [PAUSE 3s] What two meanings does *mañana* carry? (Morning; tomorrow.) With
 *hasta*, which one? (Tomorrow.) What sound is the *ñ*, and what is its tilde,

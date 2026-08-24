@@ -15,11 +15,11 @@ etymology_hook: "sentarse ← sentar ← Vulgar Latin *sedentāre, from sedēns,
 duration:
   max_seconds: 250
 requires:
-  knowledge: [ES-LEX-CERRAR-04, ES-ETYMON-CERRAR-05, ES-GRAMMAR-REFLEXIVE-FIRST-PERSON, ES-LEX-ME-LLAMO, ES-ETYMON-PARENTS-SOUND-LAW-03]
+  knowledge: [ES-LEX-CERRAR-04, ES-ETYMON-CERRAR-05, ES-GRAMMAR-REFLEXIVE-FIRST-PERSON, ES-LEX-ME-LLAMO, ES-ETYMON-PARENTS-SOUND-LAW-03, ES-LEX-PARENTS-01]
 introduces:
   knowledge: [ES-LEX-SENTARSE-07, ES-ETYMON-SENTARSE-08]
 practises:
-  knowledge: [ES-LEX-CERRAR-04, ES-ETYMON-CERRAR-05, ES-GRAMMAR-REFLEXIVE-FIRST-PERSON, ES-LEX-ME-LLAMO, ES-ETYMON-PARENTS-SOUND-LAW-03, ES-LEX-SENTARSE-07, ES-ETYMON-SENTARSE-08]
+  knowledge: [ES-LEX-CERRAR-04, ES-ETYMON-CERRAR-05, ES-GRAMMAR-REFLEXIVE-FIRST-PERSON, ES-LEX-ME-LLAMO, ES-ETYMON-PARENTS-SOUND-LAW-03, ES-LEX-PARENTS-01, ES-LEX-SENTARSE-07, ES-ETYMON-SENTARSE-08]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -93,7 +93,7 @@ conjugated verb and clips onto an infinitive, hence the name **sentarse**.
 - [YOU SAY: "sentarse" then English "session, sedentary, preside"]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-SENTARSE-07, ES-ETYMON-SENTARSE-08, ES-GRAMMAR-REFLEXIVE-FIRST-PERSON, ES-ETYMON-PARENTS-SOUND-LAW-03, ES-LEX-CERRAR-04, ES-ETYMON-CERRAR-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-SENTARSE-07, ES-ETYMON-SENTARSE-08, ES-GRAMMAR-REFLEXIVE-FIRST-PERSON, ES-ETYMON-PARENTS-SOUND-LAW-03, ES-LEX-PARENTS-01, ES-LEX-CERRAR-04, ES-ETYMON-CERRAR-05] -->
 
 [PAUSE 3s] What does *sentarse* say literally, and which Latin form was it built
 on? (**To seat oneself**; the participle *sedēns*.) Are English *sit* and Latin

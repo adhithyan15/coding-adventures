@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "A Coffee, Please",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:095e5d40b15456d2",
+  "sourceHash": "fnv1a64:5709849dd20fd8a0",
   "lessons": [
     {
       "id": "ES-C06-cafe",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:40a3b88295e15b63",
+      "sourceHash": "fnv1a64:d564b7dff853bb39",
       "notice": null,
       "blocks": [
         {

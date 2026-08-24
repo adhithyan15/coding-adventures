@@ -15,11 +15,11 @@ etymology_hook: "the locus etymology is already yours from hasta luego; what thi
 duration:
   max_seconds: 220
 requires:
-  knowledge: [ES-LEX-LUEGO, ES-ETYMON-LOCUS, ES-LEX-SENTARSE-07, ES-LEX-LEVANTARSE-09]
+  knowledge: [ES-LEX-LUEGO, ES-LEX-HASTA-LUEGO, ES-ETYMON-LOCUS, ES-LEX-SENTARSE-07, ES-LEX-LEVANTARSE-09]
 introduces:
   knowledge: [ES-GRAMMAR-LUEGO-CONNECTIVE-01]
 practises:
-  knowledge: [ES-LEX-LUEGO, ES-ETYMON-LOCUS, ES-LEX-SENTARSE-07, ES-LEX-LEVANTARSE-09, ES-GRAMMAR-LUEGO-CONNECTIVE-01]
+  knowledge: [ES-LEX-LUEGO, ES-LEX-HASTA-LUEGO, ES-ETYMON-LOCUS, ES-LEX-SENTARSE-07, ES-LEX-LEVANTARSE-09, ES-GRAMMAR-LUEGO-CONNECTIVE-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -45,7 +45,7 @@ and put them in order.
   hard stop English puts in *go*.
 
 ## The word, taken apart: luego
-<!-- hl-knowledge: introduces=[]; assesses=[ES-ETYMON-LOCUS, ES-LEX-LUEGO] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-ETYMON-LOCUS, ES-LEX-LUEGO, ES-LEX-HASTA-LUEGO] -->
 
 You already know where it comes from: Latin **locō**, the ablative of ***locus***,
 "place" — "in that place", a word about *where* that slid into a word about
@@ -77,7 +77,7 @@ Two events, in order, with one word doing the ordering — and it is a word you
 have been saying since chapter five.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-LUEGO-CONNECTIVE-01, ES-ETYMON-LOCUS, ES-LEX-SENTARSE-07, ES-LEX-LEVANTARSE-09] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-LUEGO-CONNECTIVE-01, ES-ETYMON-LOCUS, ES-LEX-HASTA-LUEGO, ES-LEX-SENTARSE-07, ES-LEX-LEVANTARSE-09] -->
 
 [PAUSE 1s]
 - [YOU SAY: "hasta luego" then just "luego" — same word, standing alone]
@@ -86,7 +86,7 @@ have been saying since chapter five.
 - [YOU SAY: "luego" then English "local, locate, lieutenant"]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-LUEGO-CONNECTIVE-01, ES-ETYMON-LOCUS, ES-LEX-LUEGO, ES-LEX-SENTARSE-07] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-LUEGO-CONNECTIVE-01, ES-ETYMON-LOCUS, ES-LEX-LUEGO, ES-LEX-HASTA-LUEGO, ES-LEX-SENTARSE-07] -->
 
 [PAUSE 3s] What job does *luego* do here that it does not do in *hasta luego*?
 (It **joins two events in order**, instead of sitting inside a fixed farewell.)

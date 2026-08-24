@@ -5883,6 +5883,16 @@
       "output": "spanish/book/chapters/ch302-calle-y-faro.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 318,
+      "output": "spanish/book/chapters/ch318-repaso-pre-a1.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 319,
+      "output": "spanish/book/chapters/ch319-repaso-la-superficie.tex"
+    },
+    {
       "language": "hindi",
       "chapter": 52,
       "output": "hindi/book/chapters/ch52-in-the-kitchen.tex",

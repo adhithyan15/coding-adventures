@@ -4,7 +4,7 @@
   "chapter": 289,
   "title": "Overhead --- Daybreak, Sky, Cloud, Star, Shade",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:967257a65cd68899",
+  "sourceHash": "fnv1a64:13cb45048b842d33",
   "lessons": [
     {
       "id": "ES-C289-amanecer",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:71806202f6af4fb0",
+      "sourceHash": "fnv1a64:dcc7daccd7607fa6",
       "notice": null,
       "blocks": [
         {

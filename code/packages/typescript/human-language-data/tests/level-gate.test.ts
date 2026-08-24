@@ -76,7 +76,17 @@ describe("the gate that would have caught the A2 claim", () => {
 
     // A bare `false` would move the argument rather than settle it.
     expect(vocab.detail).toContain(String(LEVEL_VOCABULARY["pre-A1"]));
-    expect(spanish.blockers.map((b) => b.criterion)).toContain("reinforcement");
+    // This used to assert Spanish also carried a `reinforcement` blocker. It no
+    // longer does: the pre-A1 reinforcement tranche closed all 24 of its
+    // under-reinforced atoms, and Spanish is now the only track in the corpus with
+    // criterion 4 clean. Pinning WHICH criteria are open would make this test a
+    // ledger of unfinished work that every closing tranche has to edit, so what is
+    // asserted instead is the property the test is named for: every blocker names
+    // its criterion AND quantifies it.
+    for (const blocker of spanish.blockers) {
+      expect(blocker.detail.trim()).not.toBe("");
+      expect(blocker.shortfall).toBeGreaterThan(0);
+    }
 
     // The criterion counts vocabulary AT OR BELOW the level, not the whole track.
     // Spanish teaches 135 headwords in total but only 46 at or below pre-A1, so the
@@ -142,22 +152,70 @@ describe("etymology is a hook, not a skill", () => {
     // gate demanded every atom be revisited twice, and the only way to satisfy that
     // for an etymon was to re-state it in the Guided Practice and again in the
     // Wrap-up Recall -- so the GATE was manufacturing the repetition.
+    //
+    // This test used to read Spanish and pin `reinforcement.shortfall` to 24. Spanish
+    // no longer HAS a reinforcement blocker -- closing all 24 is what the pre-A1
+    // reinforcement tranche did -- so the subject moved, and with it the shape of the
+    // assertion. A pinned integer on one track's unfinished work serialises every
+    // parallel authoring tranche behind this file, and it names a number that is
+    // supposed to fall to zero. What is checked now is the waiver itself.
     const gate = realReport().levelGate!;
-    const spanish = gate.tracks.find((t) => t.language === "spanish")!;
-    const reinforcement = spanish.blockers.find((b) => b.criterion === "reinforcement")!;
-
+    const waiving = gate.tracks.filter((track) =>
+      track.blockers.some(
+        (b) => b.criterion === "reinforcement" && /etymology hook\(s\) waived/.test(b.detail),
+      ),
+    );
     // The waiver must be VISIBLE. A silently loosened gate is worse than a strict one.
-    expect(reinforcement.detail).toMatch(/etymology hook\(s\) waived/);
-    // And it must BITE, which needs a number the waiver actually changes. Two earlier
-    // versions of this assertion did not: `shortfall < shortfall + waived` is true of
-    // any number, and comparing against a whole-track count could not fail because the
-    // gate scopes to pre-A1. Both passed with the waiver deleted. So pin the figure:
-    // Chapter 9 revisits its origin atoms in both the location contrast and terminal
-    // checkpoint, so the pre-A1 shortfall falls from 49 to 48. Chapter 10 revisits
-    // another older atom and lowers the shortfall again. Its etymon atoms sit above
-    // pre-A1, so this level-specific waiver count correctly stays unchanged.
-    expect(reinforcement.shortfall).toBe(24); // -1: HL-C98 closes a reinforcement gap // -1: HL-C113 -- ES-C55-si revisits ES-LEX-SI-01 and ES-GRAMMAR-DIACRITIC-ACCENT from pre-A1
-    expect(reinforcement.detail).toContain("atom(s) at or below pre-A1 are rev"); // +2: the repair kit's two etymons // -1: HL-C98
+    expect(waiving.length).toBeGreaterThan(0);
+    for (const track of waiving) {
+      const reinforcement = track.blockers.find((b) => b.criterion === "reinforcement")!;
+      expect(reinforcement.detail).toContain(`atom(s) at or below ${track.inProgressAt} are rev`);
+    }
+
+    // And it must BITE. Two earlier versions of this assertion did not: `shortfall <
+    // shortfall + waived` is true of any number, and comparing against a whole-track
+    // count could not fail because the gate scopes to a level. Both passed with the
+    // waiver deleted.
+    //
+    // So the bite is a COUNTERFACTUAL rather than a constant. Run the same gate over a
+    // continuity report whose etymology atoms have been renamed out of the convention
+    // `isEtymologyAtom` matches. With the waiver in place those atoms stop being
+    // waived and some track's reinforcement shortfall must rise; with the waiver
+    // deleted the rename changes nothing at all and this fails. No corpus figure is
+    // pinned, so no authoring tranche has to edit it.
+    const e = loadEverything();
+    const base = measureContinuity(e.lessons);
+    const gateInputs = {
+      lessons: e.lessons,
+      levels: summarizeLevels(e.lessons, e.curricula, e.spine),
+      curricula: e.curricula,
+      spine: e.spine,
+      ramp: measureRamp(e.lessons, loadChapterPolicy()),
+    };
+    const renamed: ContinuityReport = {
+      ...base,
+      reinforcement: base.reinforcement.map((defect) =>
+        isEtymologyAtom(defect.atom)
+          ? { ...defect, atom: defect.atom.replace("-ETYMON-", "-HOOK-") }
+          : defect,
+      ),
+    };
+    const shortfalls = (report: ContinuityReport) =>
+      new Map(
+        runLevelGate({ ...gateInputs, continuity: report }).tracks.map((track) => [
+          track.language,
+          track.blockers.find((b) => b.criterion === "reinforcement")?.shortfall ?? 0,
+        ]),
+      );
+    const waived = shortfalls(base);
+    const unwaived = shortfalls(renamed);
+    let bit = false;
+    for (const [language, shortfall] of waived) {
+      // The waiver can only ever REMOVE failures, never add them.
+      expect(unwaived.get(language)!).toBeGreaterThanOrEqual(shortfall);
+      if (unwaived.get(language)! > shortfall) bit = true;
+    }
+    expect(bit).toBe(true);
   });
 
   it("leaves continuity's own numbers alone", () => {

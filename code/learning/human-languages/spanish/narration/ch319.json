@@ -1,0 +1,608 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 319,
+  "title": "Review --- Second Looks",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:2cfcfd4ab10db218",
+  "lessons": [
+    {
+      "id": "ES-C319-repaso-la-superficie",
+      "sequence": 5060,
+      "title": "Review — what the surface does not tell you",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "a second pass over four facts that the surface of a word or a page will not give you — an ending, an article, a letter, and a punctuation mark",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3168ce1b43accbed",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One word to start. What does pronto mean on its own? (Soon — and \"ready\", the sense English kept in prompt.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four things you met separately, gathered because they share a shape: in each one, the part you can see is not the part you should trust."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "First. Pronto looks like a word about right now. It is about readiness, from promptus, \"brought forth\" — and \"soon\" is where readiness ended up."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Second. Lo siento and perdón both come out as English \"sorry\". The English does not divide them; the Latin does. One names your feeling, the other asks for their pardon."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Third. El agua looks masculine and is not. The article moved for sound; the object pronoun did not, and says la."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Fourth. The h on hermano looks like the h on hijo. It is not the same letter's history: one stood where a Latin f was breathed aloud for centuries, the other was put on the page long after the sound had gone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the mark that was designed, not inherited",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The ¿ belongs on that list too, from the other side."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "It is not a survival. It was decided — the Spanish Royal Academy made it official in 1754, because Spanish leaves the words of a question where they were and something had to warn the reader in advance."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "So the page is carrying a job that English hands to word order. Four inherited surfaces that mislead, and one deliberate surface that helps: worth holding together, because reading a language well is mostly knowing which surfaces to believe."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pronto, then English prompt — readiness in both",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pronto*, then English *prompt* — readiness in both]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el agua, then la bebo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el agua*, then *la bebo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hermano, and remember the letter you are not pronouncing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hermano*, and remember the letter you are not pronouncing]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C319-repaso-la-superficie-sorry",
+              "prompt": "Which of the two sorries asks the other person for something?",
+              "assesses": [
+                "ES-PRAGMATICS-SORRY-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "perdon",
+                "perdón",
+                "perdon, a pardon is granted"
+              ],
+              "feedback": {
+                "correct": "Perdón asks; lo siento reports.",
+                "incorrect": "Perdón — it asks for their pardon."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C319-repaso-la-superficie-pronoun",
+              "prompt": "El agua takes el. Which pronoun replaces it, and what does that prove?",
+              "assesses": [
+                "ES-GRAMMAR-PRONOUN-REVEALS-GENDER"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "la, and that agua is feminine",
+                "la, agua is feminine underneath",
+                "la"
+              ],
+              "feedback": {
+                "correct": "The article bent for sound; the pronoun did not bend at all.",
+                "incorrect": "La. The el is a sound rule, so the pronoun is the honest witness."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C319-repaso-la-superficie-hache",
+              "prompt": "Hijo and hermano both start with a silent h. Which one was once spoken aloud?",
+              "assesses": [
+                "ES-SOUND-HERMANO-04"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "hijo",
+                "hijo, where the h stands for a latin f",
+                "hijo and hacer"
+              ],
+              "feedback": {
+                "correct": "Hijo's h was a real breath; hermano's never was.",
+                "incorrect": "Hijo. Its h replaced a Latin f that was genuinely pronounced; hermano's h is spelling only."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C319-repaso-la-superficie-academy",
+              "prompt": "Was the opening mark inherited from Latin, or decided by somebody?",
+              "assesses": [
+                "ES-HISTORY-RAE-INVERTED-MARKS"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "decided",
+                "decided, by the spanish royal academy in 1754",
+                "the royal academy decided it in 1754"
+              ],
+              "feedback": {
+                "correct": "1754, on purpose.",
+                "incorrect": "Decided — the Spanish Royal Academy made it official in 1754."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which is the honest witness to a noun's gender — the article or the object pronoun? (The pronoun.) Which of Spanish's two sorries is about fault and getting past people? (Perdón.) When was ¿ made official? (1754.) Was hermano's h ever a sound? (No.) And what does pronto mean on its own? (Soon, from \"ready\".)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C319-repaso-salir",
+      "sequence": 5070,
+      "title": "Review — the five words of a leaving",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "the five words of a leaving, said again in order, and the five different places they came from",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4348724ce244d3d2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two to start. Say \"the street.\" (La calle.) Say \"the corner.\" (La esquina.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say the five in order and hear the distance grow at every step: la calle, la esquina, la huella, el puerto, el faro — the street, its corner, the mark left in the dirt, the water's edge, and the light still visible when the town is not."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now the part worth a second visit. Not one of the five was built for this list. Calle was a cattle track, callis. Esquina is a shinbone, Germanic skina. Huella comes from a day spent treading wool, fullāre. Puerto is the Roman harbour, portus, twin to the puerta on land. And faro was an island, Pharos, with a fire on top of a tower."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Five ordinary nouns out of five unrelated quarries. That is the ratio you should expect from here on."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order — la calle, la esquina, la huella, el puerto, el faro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order — *la calle*, *la esquina*, *la huella*, *el puerto*, *el faro*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la puerta, then el puerto — the gate on land, the gate off the sea",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la puerta*, then *el puerto* — the gate on land, the gate off the sea]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C319-repaso-salir-order",
+              "prompt": "Name the five words of the leaving, in order from the street outwards.",
+              "assesses": [
+                "ES-LEX-C302-AWAY-01",
+                "ES-LEX-C302-AWAY-02",
+                "ES-LEX-C302-AWAY-03",
+                "ES-LEX-C302-AWAY-04",
+                "ES-LEX-C302-AWAY-05"
+              ],
+              "responseSeconds": 18,
+              "acceptedResponses": [
+                "la calle, la esquina, la huella, el puerto, el faro",
+                "calle, esquina, huella, puerto, faro"
+              ],
+              "feedback": {
+                "correct": "Each one further out than the last.",
+                "incorrect": "La calle, la esquina, la huella, el puerto, el faro."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C319-repaso-salir-shin",
+              "prompt": "Which body part is hiding inside esquina?",
+              "assesses": [
+                "ES-LEX-C302-AWAY-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "the shin",
+                "the shinbone",
+                "shin, from skina"
+              ],
+              "feedback": {
+                "correct": "A corner is an edge, and so is a shin.",
+                "incorrect": "The shin — Germanic skina."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C319-repaso-salir-island",
+              "prompt": "El faro was a place before it was a thing. Which place?",
+              "assesses": [
+                "ES-LEX-C302-AWAY-05"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "pharos",
+                "pharos, the island off alexandria",
+                "the island of pharos"
+              ],
+              "feedback": {
+                "correct": "The name swallowed the object.",
+                "incorrect": "Pharos, the island off Alexandria."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was fullāre? (Treading cloth in a vat — the trampling that gave huella its footprint.) What does ob portum describe? (A wind standing toward harbour — an opportunity.) And what is a faro in a car park today? (A headlight.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C319-despedida",
+      "sequence": 5080,
+      "title": "Review — the harbour, the light, and see you soon",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "the harbour, the light at its mouth, and the goodbye that says you will be back shortly",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e7910e0b56f46448",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The last two nouns of the run. Say \"the harbour.\" (El puerto.) Say \"the lighthouse.\" (El faro.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A leaving needs a place and a time, and you have both."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The place: el puerto, the gate off the sea, and el faro, the light standing at its mouth. The time: hasta pronto — hasta, \"until\", and pronto, \"soon\"."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the whole thing once, slowly, as one leaving:"
+            },
+            {
+              "kind": "speech",
+              "text": "El puerto. El faro. Hasta pronto."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three words out of three different centuries and two different languages — a Roman harbour, a Greek island, and an Arabic preposition holding a Latin adjective. You can hear all of that now, which you could not at the start."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el puerto, el faro, hasta pronto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el puerto*, *el faro*, *hasta pronto*]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C319-despedida-harbour",
+              "prompt": "Name the harbour and the lighthouse in Spanish, in that order.",
+              "assesses": [
+                "ES-LEX-C302-AWAY-04",
+                "ES-LEX-C302-AWAY-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "el puerto, el faro",
+                "el puerto and el faro"
+              ],
+              "feedback": {
+                "correct": "The gate off the sea, and the light at its mouth.",
+                "incorrect": "El puerto, el faro."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C319-despedida-soon",
+              "prompt": "Say see you soon, and give the two words it is made of.",
+              "assesses": [
+                "ES-LEX-HASTA-PRONTO",
+                "ES-LEX-HASTA",
+                "ES-LEX-PRONTO"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "hasta pronto: hasta, until, and pronto, soon",
+                "hasta pronto, until and soon"
+              ],
+              "feedback": {
+                "correct": "Arabic until, Latin soon.",
+                "incorrect": "Hasta pronto — hasta is until, pronto is soon."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of the two is the light, and which is the water? (El faro; el puerto.) And what does pronto promise? (Soon — you will be back shortly.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
