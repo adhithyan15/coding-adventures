@@ -154,3 +154,26 @@ platform recipes twice consecutively from clean package copies, confirm the
 second run replaces the existing environment, rerun the audit, and prove the
 live non-idempotent corpus shrinks by exactly the repaired package set while
 the original owner decomposition remains complete.
+
+## Legacy named-environment repair profile
+
+The separately owned `python/in-memory-data-store-protocol` front was not in
+the uv audit corpus because its Windows recipe creates a standard-library venv.
+It is nevertheless an affected-plan prerequisite and MUST converge on the same
+named-environment guarantees. Both fronts MUST:
+
+1. create package-local `.venv` with
+   `uv venv .venv --quiet --no-project --clear --python 3.13`;
+2. install the editable package through `uv pip --python .venv`, using the
+   Windows no-dependency package/tool split so resolution cannot escape into a
+   workspace or an unavailable registry dependency;
+3. invoke Ruff lint, Ruff format checking, strict MyPy, and pytest through the
+   explicit platform interpreter; and
+4. retain the package's short-traceback pytest contract.
+
+No active line may invoke ambient `python`, a pip console launcher, or `uv run`.
+The regression MUST compare both complete recipes exactly. Windows runtime
+validation MUST execute every active line twice consecutively, verify Python
+3.13, and prove the second run clears and replaces the first environment. The
+canonical recipe MUST run on Unix CI and remain structurally identical apart
+from platform interpreter paths and the Windows install split.

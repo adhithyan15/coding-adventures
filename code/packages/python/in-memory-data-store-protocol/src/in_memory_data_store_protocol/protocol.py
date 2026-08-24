@@ -20,7 +20,9 @@ class CommandFrame:
     args: tuple[bytes, ...] = ()
 
     @classmethod
-    def new(cls, command: str, args: list[bytes] | tuple[bytes, ...] = ()) -> CommandFrame:
+    def new(
+        cls, command: str, args: list[bytes] | tuple[bytes, ...] = ()
+    ) -> CommandFrame:
         return cls(command, tuple(bytes(arg) for arg in args))
 
     @classmethod
@@ -52,11 +54,15 @@ class EngineResponse:
         return cls("integer", value)
 
     @classmethod
-    def bulk_string(cls, value: bytes | None) -> EngineResponse:
+    def bulk_string(
+        cls, value: bytes | bytearray | memoryview | None
+    ) -> EngineResponse:
         return cls("bulk_string", None if value is None else bytes(value))
 
     @classmethod
-    def array(cls, value: list[EngineResponse] | tuple[EngineResponse, ...] | None) -> EngineResponse:
+    def array(
+        cls, value: list[EngineResponse] | tuple[EngineResponse, ...] | None
+    ) -> EngineResponse:
         return cls("array", None if value is None else tuple(value))
 
     @classmethod

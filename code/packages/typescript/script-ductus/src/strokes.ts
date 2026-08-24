@@ -336,6 +336,8 @@ export const ductusKey = (script: string, glyph: string): string => `${script}:$
 // Its independent form stays distinct from the adjacent dotted Ghayn lesson.
 // The page's dedicated غ clip repeats that complete one-run body before lifting
 // once to place its upper dot. The dot-last order is independently observed.
+// The following ف ق page's Faa clip loops around the small head, flows directly
+// left through the independent bowl, then lifts once for the single upper dot.
 // The next page's Arabic ك clip descends the main upright and turns left along
 // the baseline without lifting, then restarts once for the inner arm. Its
 // Arabic identity stays distinct from the separately sourced Urdu ک glyph.
@@ -9008,6 +9010,64 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: arabicAlphabetSource("غ"),
+  },
+  [ductusKey("arabic", "ف")]: {
+    script: "arabic",
+    glyph: "ف",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "loop counterclockwise around the small closed head",
+            path: [
+              { x: 735, y: 250 },
+              { x: 750, y: 330 },
+              { x: 710, y: 400 },
+              { x: 640, y: 435 },
+              { x: 570, y: 410 },
+              { x: 520, y: 350 },
+              { x: 520, y: 285 },
+              { x: 560, y: 230 },
+              { x: 640, y: 215 },
+              { x: 715, y: 240 },
+              { x: 735, y: 250 },
+            ],
+          },
+          {
+            label: "continue left through the broad bowl without lifting",
+            path: [
+              { x: 735, y: 250 },
+              { x: 775, y: 230 },
+              { x: 785, y: 180 },
+              { x: 760, y: 110 },
+              { x: 700, y: 80 },
+              { x: 600, y: 60 },
+              { x: 480, y: 55 },
+              { x: 350, y: 40 },
+              { x: 230, y: 55 },
+              { x: 140, y: 105 },
+              { x: 95, y: 170 },
+              { x: 90, y: 240 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift once, then place the upper dot last",
+            path: [
+              { x: 615, y: 550 },
+              { x: 560, y: 607 },
+              { x: 615, y: 664 },
+              { x: 670, y: 607 },
+              { x: 615, y: 550 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: arabicAlphabetSource("ف"),
   },
   [ductusKey("arabic", "ك")]: {
     script: "arabic",
