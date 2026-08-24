@@ -185,6 +185,7 @@ const ARABIC_KHAA = DUCTUS[ductusKey("arabic", "خ")];
 const ARABIC_DAAL = DUCTUS[ductusKey("arabic", "د")];
 const ARABIC_DHAAL = DUCTUS[ductusKey("arabic", "ذ")];
 const ARABIC_RAA = DUCTUS[ductusKey("arabic", "ر")];
+const ARABIC_ZAY = DUCTUS[ductusKey("arabic", "ز")];
 const ARABIC_SEEN = DUCTUS[ductusKey("arabic", "س")];
 const ARABIC_SHIIN = DUCTUS[ductusKey("arabic", "ش")];
 const ARABIC_SAAD = DUCTUS[ductusKey("arabic", "ص")];
@@ -348,10 +349,10 @@ describe("handwriting ductus", () => {
     expect(gujarati.letters.every((letter) => letter.strokeOrderSource !== undefined)).toBe(true);
   });
 
-  it("keeps all 23 unique Arabic rows sourced without overstating completion", () => {
+  it("keeps all 24 unique Arabic rows sourced without overstating completion", () => {
     const arabic = SCRIPTS.find((script) => script.script === "arabic")!;
     expect(arabic.complete).toBe(false);
-    expect(arabic.letters).toHaveLength(23);
+    expect(arabic.letters).toHaveLength(24);
     expect(arabic.letters.every((letter) => letter.strokeOrderSource !== undefined)).toBe(true);
   });
 
@@ -2986,6 +2987,17 @@ describe("handwriting ductus", () => {
     expect(curve[0].x).toBeGreaterThan(curve.at(-1)!.x);
   });
 
+  it("Arabic independent ز preserves the Raa body before placing its upper dot", () => {
+    expect(penLifts(ARABIC_ZAY)).toBe(1);
+    expect(ARABIC_ZAY.strokes).toHaveLength(2);
+    expect(ARABIC_ZAY.strokes[0]).toEqual(ARABIC_RAA.strokes[0]);
+    const body = ARABIC_ZAY.strokes[0].segments.flatMap((segment) => segment.path);
+    const dot = ARABIC_ZAY.strokes[1].segments[0].path;
+    expect(Math.min(...dot.map((point) => point.y))).toBeGreaterThan(
+      Math.max(...body.map((point) => point.y)),
+    );
+  });
+
   it("Arabic independent س joins its three close teeth directly to the final bowl", () => {
     expect(ARABIC_SEEN.script).toBe("arabic");
     expect(penLifts(ARABIC_SEEN)).toBe(0);
@@ -3553,6 +3565,9 @@ describe("handwriting ductus", () => {
       "_fonts/NotoNaskhArabic-Static.ttf",
     );
     expect(verifiedLetterFont("ر", ARABIC_RAA.source.url)).toBe(
+      "_fonts/NotoNaskhArabic-Static.ttf",
+    );
+    expect(verifiedLetterFont("ز", ARABIC_ZAY.source.url)).toBe(
       "_fonts/NotoNaskhArabic-Static.ttf",
     );
     expect(verifiedLetterFont("و", "https://example.invalid/wrong-source")).toBeUndefined();
@@ -5440,6 +5455,19 @@ describe("handwriting ductus", () => {
       /one continuous pen-down run.*00:08.8–00:09.3.*upper tip.*descends through the short stroke.*sweeps left.*lower curve.*without lifting.*one-way connector.*independent and final forms.*Noto Naskh.*scoped to Arabic.*Urdu ر source.*same Unicode glyph/i,
     );
     expect(src.url).not.toBe(URDU_RE.source.url);
+  });
+
+  it("Arabic independent ز traces its body-first dot-last order to the University of Oregon", () => {
+    const src = ARABIC_ZAY.source;
+    expect(src.url).toBe(
+      "https://opentext.uoregon.edu/introarabic/chapter/alphabet-%D8%B1-%D8%B2-%D9%88/",
+    );
+    expect(src.citation).toMatch(
+      /Introduction to Arabic.*Alphabet ر ز و.*Zay.*Oregon.*2023.*2026-08-23/i,
+    );
+    expect(src.variation).toMatch(
+      /directly linked zaay\.mp4.*body-first.*upper tip.*descends through the short stroke.*sweeps left.*lower curve.*without lifting.*complete Raa-shaped body.*lifts once.*single dot above.*one-way connector.*English z sound.*\/z\/ transliteration.*independent and final forms.*two-stroke.*one-lift.*Noto Naskh.*shares its body with ر.*own video.*rather than inferred/i,
+    );
   });
 
   it("Arabic independent س traces its continuous teeth and bowl to the University of Oregon", () => {
