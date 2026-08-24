@@ -33,6 +33,7 @@
       "packages": ["in-memory-data-store-engine", "in-memory-data-store"],
       "depends_on": [
         "python-uv-build-front-idempotence-audit",
+        "python-hash-functions-build-front-strict-mypy",
         "python-hash-collections-build-front-idempotence",
         "python-resp-tcp-build-front-idempotence",
         "python-in-memory-data-store-protocol-build-front-python313"
