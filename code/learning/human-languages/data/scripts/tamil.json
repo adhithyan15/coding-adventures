@@ -279,6 +279,22 @@
       "example": { "base": "ற", "combined": "றி", "sound": "ṟi" }
     },
     {
+      "mark": "ு",
+      "sound": "u",
+      "role": "vowel-sign",
+      "attachesAs": "a dependent vowel sign that normally ligates with the consonant carrier",
+      "example": { "base": "க", "combined": "கு", "sound": "ku" },
+      "compositionOrder": [
+        "write the Tamil consonant carrier first",
+        "add the u vowel sign to replace its inherent vowel"
+      ],
+      "compositionSource": {
+        "citation": "The Unicode Standard, Version 17.0, §12.6.3 Tamil Ligatures, Ligatures with Vowel u and Table 12-28: U+0BC1 TAMIL VOWEL SIGN U normally ligates with its consonant; க + ு → கு (2025)",
+        "url": "https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-12/",
+        "variation": "Unicode specifies encoded carrier-first composition and rendering that normally ligates; this is not a universal handwriting direction, and the source supports no standalone ductus claim or pen-lift count."
+      }
+    },
+    {
       "mark": "ை",
       "sound": "ai",
       "role": "vowel-sign",
