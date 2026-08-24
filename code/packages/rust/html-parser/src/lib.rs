@@ -5366,10 +5366,13 @@ impl HtmlParser {
             )
         {
             if self.first_authored_open_template_index().is_some() {
-                self.diagnostics.push(ParserDiagnostic::new(
-                    "unexpected-table-start-tag-in-template-body",
-                    format!("start tag `<{name}>` in template body content was ignored"),
-                ));
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-table-start-tag-in-template-body",
+                        format!("start tag `<{name}>` in template body content was ignored"),
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
             }
             return;
         }
@@ -27350,6 +27353,18 @@ mod tests {
         .at_emission(Some(start_tag_position_at(source, "tr", occurrence)))
     }
 
+    fn table_start_tag_in_template_body_recovery(
+        source: &str,
+        name: &str,
+        occurrence: usize,
+    ) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-table-start-tag-in-template-body",
+            format!("start tag `<{name}>` in template body content was ignored"),
+        )
+        .at_emission(Some(start_tag_position_at(source, name, occurrence)))
+    }
+
     fn end_tag_in_template_column_group_recovery(
         source: &str,
         name: &str,
@@ -42243,9 +42258,8 @@ mod tests {
                 let output = parse_html_with_diagnostics(&source).unwrap();
                 assert_eq!(
                     output.parser_diagnostics,
-                    vec![ParserDiagnostic::new(
-                        "unexpected-table-start-tag-in-template-body",
-                        format!("start tag `<{name}>` in template body content was ignored"),
+                    vec![table_start_tag_in_template_body_recovery(
+                        &source, name, 0,
                     )],
                     "source {source:?}"
                 );
@@ -42283,6 +42297,87 @@ mod tests {
         assert!(fragment.parser_diagnostics.iter().all(|diagnostic| {
             diagnostic.code != "unexpected-table-start-tag-in-template-body"
         }));
+    }
+
+    #[test]
+    fn positions_table_starts_ignored_in_authored_template_body_content() {
+        let repeated_source =
+            "<!doctype html><template><div><td><td><span>x</span></div></template>";
+        let repeated = parse_html_with_diagnostics(repeated_source).unwrap();
+        assert_eq!(
+            repeated
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| {
+                    diagnostic.code == "unexpected-table-start-tag-in-template-body"
+                })
+                .cloned()
+                .collect::<Vec<_>>(),
+            vec![
+                table_start_tag_in_template_body_recovery(repeated_source, "td", 0),
+                table_start_tag_in_template_body_recovery(repeated_source, "td", 1),
+            ]
+        );
+
+        let unicode_source =
+            "<!doctype html>\r\n<p>雪</p>\r\n<template><div><thead><span>x</span></div></template>";
+        let unicode = parse_html_with_diagnostics(unicode_source).unwrap();
+        assert_eq!(
+            unicode
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| {
+                    diagnostic.code == "unexpected-table-start-tag-in-template-body"
+                })
+                .cloned()
+                .collect::<Vec<_>>(),
+            vec![table_start_tag_in_template_body_recovery(
+                unicode_source,
+                "thead",
+                0,
+            )]
+        );
+
+        let incomplete =
+            parse_html_with_diagnostics("<!doctype html><template><div><td data-name=x").unwrap();
+        assert!(incomplete.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-table-start-tag-in-template-body"
+        }));
+
+        let mut unpositioned = HtmlParser::new();
+        for token in [
+            Token::StartTag {
+                name: "template".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "div".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "td".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "td".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+        ] {
+            unpositioned.process_token(token);
+        }
+        let diagnostics = unpositioned
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| {
+                diagnostic.code == "unexpected-table-start-tag-in-template-body"
+            })
+            .collect::<Vec<_>>();
+        assert_eq!(diagnostics.len(), 2);
+        assert!(diagnostics.iter().all(|diagnostic| diagnostic.position.is_none()));
     }
 
     #[test]
