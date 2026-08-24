@@ -6233,6 +6233,36 @@ Ready-for-review PR #12615 opened from validated head
 reports it mergeable while required checks are pending, so auto-merge remains
 disabled until every required check reaches a terminal acceptable conclusion.
 
+### Post-#12615 refresh and F# tracked-artifact selection
+
+Cross-runtime tracked-artifact hardening PR #12615 completed all 30 reported
+checks with 24 successes, five expected skips, one neutral aggregate, and no
+failures or pending work. GitHub reported the branch clean and mergeable; the
+loop enabled squash auto-merge, and GitHub merged final head
+`bea09c2a425ab559ff60e5b06374dc7b49a84d4e` as
+`2f50248a87521d15b069b6daa8b6e1c25d693d85` at 2026-08-24T21:26:43Z
+without a manual merge command.
+
+The collision-checked exact-main inventory was regenerated at that merge. It
+remains 15 established lanes, 1,370 implementation identities, 4,563 slots,
+175 identities in ten to fifteen lanes with 276 gaps, 122 identities in five
+to nine lanes with 926 gaps, 166 identities in two to four lanes with 2,087
+gaps, and 907 singletons with 12,698 gaps. There are 718 Rust singletons, zero
+collisions, zero unknown buckets, no newly unowned portable package or fixture
+contract, and OCaml remains correctly emerging at zero packages.
+
+The dependency/leverage pass selects
+`build-tool-fsharp-tracked-artifact-validation-conformance` on branch
+`codex/build-tool-fsharp-tracked-artifact-validation-conformance`. Its corpus,
+C# engine, and Unicode-hardening prerequisites are all merged. This bounded
+process-free facade tranche closes the second supported .NET build-tool lane,
+tests the F# entry surface independently against all five neutral fixtures,
+and adds no Git, filesystem, process, environment, or network authority. Ten
+live open PRs have zero exact overlap on the selected F# package, state, or
+roadmap surfaces; the target remote branch was absent, and `origin/main`
+remained at exact selected base `2f50248a87521d15b069b6daa8b6e1c25d693d85`
+before the fresh clean branch was created.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
