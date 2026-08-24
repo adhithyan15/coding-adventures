@@ -8,11 +8,11 @@ pieces taught before the whole; and a book you can read straight through.
 
 ## What's different about the Malayalam track
 
-- **The script is taught inside the word lessons — no reading course.** Each
-  word lesson has a *"The letters in this word"* section introducing exactly
-  the letters that word needs (നമസ്കാരം brings the chandrakkala, the സ്ക
-  conjunct, and the anusvāram ം). A reader who already reads Malayalam skims
-  those notes.
+- **The script is taught through useful words, with a writing runway.** Hear and
+  use *namaskāram* first; then meet only two or three shapes at a time. The
+  meaningful unit **നമ** moves from tracing through dictation before the whole
+  written greeting appears. A reader who already reads Malayalam can skim the
+  tiny script steps.
 - **Malayalam as Tamil's closest sister — with a Sanskrit overlay.** The two
   split only ~1000 years ago, so the everyday core is strikingly Tamil-like:
   *nandi* (= Tamil *naṉṟi*), *illa* (= Tamil *illai*), *śari* (= *sari*), and
@@ -27,9 +27,10 @@ pieces taught before the whole; and a book you can read straight through.
 
 ## Progress
 
-- **Chapter 1 — Greetings** ([`lessons/ML-C01-*`](./lessons/)): namaskāram →
-  nandi → athe → illa → śari → practice (with the *pōyi varām* farewell).
-  Malayalam script taught inline; Dravidian cognates traced. In the book.
+- **Chapter 1 — Greetings** ([`lessons/ML-C01-*`](./lessons/)): hear and use
+  *namaskāram* → eight sub-five-minute reading/writing steps → nandi → athe →
+  illa → śari → practice. The first unit reaches tracing, guided copy, delayed
+  copy, and dictation before whole-word writing. In the book.
 - **Chapter 2 — Introducing Yourself** ([`lessons/ML-C02-*`](./lessons/)):
   peru, enṟe, **āṇŭ** ("is" — the copula), **enṟe pēru … āṇŭ** ("my name is"),
   nī/niṅṅaḷ, entŭ, **ninṟe pēru entāṇŭ?** ("what's your name?"), santōṣam,
@@ -127,10 +128,10 @@ The file is **authored intent**, not a derived cache — no validator may rewrit
 it, and it is derived from the lessons themselves rather than from `roadmap.md`,
 which still lags Chapters 6–40. Chapters 6–40 are covered, including
 Chapters 35–40's HL09 pre-A1 vocabulary tranche (family, face, hearts, and
-drinks). Chapters 1–5 are deliberately left out: their recap lessons are
-still schema v1 with no declared knowledge atoms, so a payoff there could
-only be invented. That absence is honest, measurable debt and is reported
-as such.
+drinks). Chapter 1's payoff now has typed greeting and script atoms and directly
+checks reading plus dictation. Chapters 2–5 retain only the typed atoms their
+canonical lessons genuinely introduce; remaining migration debt stays explicit
+rather than being filled with invented atoms.
 
 ## Files
 

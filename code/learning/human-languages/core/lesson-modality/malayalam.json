@@ -7,31 +7,31 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:e5f168764350268e",
+  "sourceHash": "fnv1a64:b38ebc4359dbe967",
   "summary": {
-    "totalLessons": 249,
-    "voice": 181,
-    "sight": 41,
-    "pen": 27,
-    "drivableLessons": 181,
-    "drivablePercent": 73,
+    "totalLessons": 257,
+    "voice": 182,
+    "sight": 39,
+    "pen": 36,
+    "drivableLessons": 182,
+    "drivablePercent": 71,
     "trackCount": 1,
     "chapterCount": 66,
-    "drivablePrefixTotal": 172,
+    "drivablePrefixTotal": 173,
     "fullyDrivableChapters": 39,
-    "unstartableChapters": 11,
+    "unstartableChapters": 10,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
   "tracks": [
     {
       "language": "malayalam",
-      "lessonCount": 249,
-      "voice": 181,
-      "sight": 41,
-      "pen": 27,
-      "drivablePercent": 73,
-      "drivablePrefixTotal": 172,
+      "lessonCount": 257,
+      "voice": 182,
+      "sight": 39,
+      "pen": 36,
+      "drivablePercent": 71,
+      "drivablePrefixTotal": 173,
       "modalities": [
         "voice",
         "sight",
@@ -40,17 +40,21 @@
       "chapters": [
         {
           "chapter": 1,
-          "lessonCount": 6,
-          "voice": 0,
-          "sight": 6,
-          "pen": 0,
+          "lessonCount": 14,
+          "voice": 1,
+          "sight": 4,
+          "pen": 9,
           "modalities": [
-            "sight"
+            "voice",
+            "sight",
+            "pen"
           ],
-          "drivablePrefix": 0,
-          "firstNonVoiceLesson": "ML-C01-namaskaram",
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": "ML-W01-na-ma-trace",
           "drivable": false,
-          "drivableLessonIds": []
+          "drivableLessonIds": [
+            "ML-C01-namaskaram"
+          ]
         },
         {
           "chapter": 2,
@@ -1236,21 +1240,212 @@
       "language": "malayalam",
       "chapter": 1,
       "sequence": 10,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
       "coreModality": "voice",
       "coreReasons": [
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:0af09810bf1e9da8",
+      "sourceHash": "fnv1a64:fca098842d146074"
+    },
+    {
+      "id": "ML-W01-na-ma-trace",
+      "language": "malayalam",
+      "chapter": 1,
+      "sequence": 11,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:d2f5d736a6a7c30f",
       "detachableSegments": [
-        "The letters in this word"
-      ]
+        "Script",
+        "Writing — observe and trace"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "ML-W01-na-ma-guided-copy",
+      "language": "malayalam",
+      "chapter": 1,
+      "sequence": 12,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:d3ae5d0f8d3005d2",
+      "detachableSegments": [
+        "Writing — copy with help"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "ML-W01-na-ma-delayed-copy",
+      "language": "malayalam",
+      "chapter": 1,
+      "sequence": 13,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "sight-cue"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type",
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:856154e0f1a300db",
+      "detachableSegments": [
+        "Writing — retrieve after a delay"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "ML-W01-na-ma-dictation",
+      "language": "malayalam",
+      "chapter": 1,
+      "sequence": 14,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:43883e1f85196ce2",
+      "detachableSegments": [
+        "Writing — short dictation"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "ML-W01-sa-chandrakkala-ka",
+      "language": "malayalam",
+      "chapter": 1,
+      "sequence": 15,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:8149161f62ab272f",
+      "detachableSegments": [
+        "Script",
+        "Writing — observe and trace three pieces"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "ML-W01-aa-ra-anusvaram",
+      "language": "malayalam",
+      "chapter": 1,
+      "sequence": 16,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:7b99c3705651c108",
+      "detachableSegments": [
+        "Script",
+        "Writing — observe and trace the last three"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "ML-W01-namaskaram-read",
+      "language": "malayalam",
+      "chapter": 1,
+      "sequence": 17,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:798422534f54186b",
+      "detachableSegments": [
+        "Script — assemble and read",
+        "Writing — one visible whole-word copy"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "ML-W01-namaskaram-dictation",
+      "language": "malayalam",
+      "chapter": 1,
+      "sequence": 18,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:336d7d27b37f5be5",
+      "detachableSegments": [
+        "Writing — whole-word dictation"
+      ],
+      "delivery": "script"
     },
     {
       "id": "ML-C01-nandi",
@@ -1341,10 +1536,12 @@
       "language": "malayalam",
       "chapter": 1,
       "sequence": 60,
-      "modality": "sight",
-      "derived": "sight",
+      "modality": "pen",
+      "derived": "pen",
       "drivable": false,
       "reasons": [
+        "writing-block",
+        "sight-cue",
         "wide-table"
       ],
       "coreModality": "sight",
@@ -1352,7 +1549,10 @@
         "wide-table"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:5a03202775f4a9a5"
+      "sourceHash": "fnv1a64:32cc5f4165be8d72",
+      "detachableSegments": [
+        "Writing checkpoint"
+      ]
     },
     {
       "id": "ML-C02-peru",

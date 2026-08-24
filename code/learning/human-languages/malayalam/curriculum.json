@@ -6,7 +6,15 @@
       "id": "ML-PATH-001",
       "spine_node": "SPINE-MEET-GREET",
       "lessons": [
-        "ML-C01-namaskaram"
+        "ML-C01-namaskaram",
+        "ML-W01-na-ma-trace",
+        "ML-W01-na-ma-guided-copy",
+        "ML-W01-na-ma-delayed-copy",
+        "ML-W01-na-ma-dictation",
+        "ML-W01-sa-chandrakkala-ka",
+        "ML-W01-aa-ra-anusvaram",
+        "ML-W01-namaskaram-read",
+        "ML-W01-namaskaram-dictation"
       ],
       "before": [],
       "inline": [
@@ -74,10 +82,13 @@
       "id": "ML-PATH-004",
       "spine_node": "SPINE-RESPOND-BASIC",
       "lessons": [
-        "ML-C01-sari"
+        "ML-C01-sari",
+        "ML-C01-practice"
       ],
       "before": [],
-      "inline": [],
+      "inline": [
+        "ML-EXT-004-CHECKPOINT"
+      ],
       "after": []
     },
     {
@@ -1641,14 +1652,35 @@
       ]
     },
     {
+      "id": "ML-EXT-004-CHECKPOINT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "consolidation",
+      "canDo": "I can greet and respond, read namaskāram, and write the greeting from sound at the Chapter 1 checkpoint.",
+      "prerequisites": [
+        "ML-EXT-001-INLINE-SCRIPT"
+      ],
+      "lessons": [
+        "ML-C01-practice"
+      ]
+    },
+    {
       "id": "ML-EXT-001-INLINE-SCRIPT",
       "stage": "pre-A1",
       "kind": "required",
       "category": "script",
-      "canDo": "I can recognize the first Malayalam script pattern inside a greeting I already understand.",
+      "canDo": "I can hear namaskāram before decoding it, learn no more than three Malayalam shapes at a time, carry നമ from tracing through dictation, and then read and write the complete greeting independently.",
       "prerequisites": [],
       "lessons": [
-        "ML-C01-namaskaram"
+        "ML-C01-namaskaram",
+        "ML-W01-na-ma-trace",
+        "ML-W01-na-ma-guided-copy",
+        "ML-W01-na-ma-delayed-copy",
+        "ML-W01-na-ma-dictation",
+        "ML-W01-sa-chandrakkala-ka",
+        "ML-W01-aa-ra-anusvaram",
+        "ML-W01-namaskaram-read",
+        "ML-W01-namaskaram-dictation"
       ]
     },
     {
