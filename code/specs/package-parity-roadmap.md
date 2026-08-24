@@ -5908,6 +5908,42 @@ separately. The live reviewed exemption ledger contains five active entries,
 so the neutral contract must preserve reasoned exceptions and countable
 PENDING debt rather than treating every missing BUILD as equivalent.
 
+The implemented neutral contract now derives orphan coverage from one closed,
+bounded snapshot rather than trusting per-crate coverage assertions. Four new
+cases cover direct and ancestor BUILDs, all platform BUILD names, package and
+program roots, sibling noncoverage, exact artifact components, empty BUILDs,
+virtual workspaces, compile-only and foreign-toolchain exclusions, active
+PENDING debt, unsafe redacted entries, invalid-entry non-suppression, and all
+three stale-ledger states. Exact portable paths join the snapshot; NFC/casefold
+identities are used only to reject collisions and duplicate aliases. The
+result exposes a derived `pending_exemption_count`, and schema conditionals
+forbid both the snapshot and count when the orphan check is absent.
+
+Final local validation passes the 106-case, 269-file corpus and 75 focused
+Python 3.13 schema/runner tests at 89% branch-aware runner coverage. Python
+3.10 passes the complete 196-test execution, authority, loader, broker,
+backend, schema, and runner family with 23 expected platform skips. The Go
+build tool passes all tests at 78.3% aggregate coverage plus vet and a trimpath
+build; a real forced dry plan evaluates 45 Starlark BUILD files, discovers
+5,070 packages, verifies the five-entry orphan ledger, and emits 9,778 edges.
+Ten parity-reporter, seven capability-taxonomy, five Haskell-capability, and 46
+OCaml-lock tests pass with two expected skips. Ruff error-class lint/format,
+compileall, production Bandit, strict JSON, state/DAG, diff, dependency and
+capability-manifest scope, production-authority, and added-line credential
+checks pass. Strict MyPy retains ten findings only in unchanged legacy lines.
+
+Before publication, the implementation rebased three times without conflict as
+`main` advanced through two HTML-parser diagnostics and additional Devanagari
+curriculum work to exact `origin/main`
+`9d40f14652dabc95b698d092c275bff9e57200c5`. The refreshed schema-3
+inventory retains all recorded counts with zero collisions and unknown
+buckets. Ten live open PRs and 35 non-main remote heads have zero exact overlap
+across the 14 changed paths; the locally unavailable `gh-pages` object was
+checked through GitHub's tree API and also has no overlap. Three independent
+read-only reviews found and verified closure of conditional-schema,
+program-root, exact-join, redaction, generated-artifact, state, roadmap, and
+host-authority ownership issues.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
