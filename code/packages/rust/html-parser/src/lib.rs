@@ -5428,12 +5428,15 @@ impl HtmlParser {
                 || self.current_last_child_element_is("tr")
                 || self.current_last_child_element_is("col"))
         {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-start-tag-in-template-table-mode",
-                format!(
-                    "start tag `<{name}>` was ignored because its required table row or body was not in scope"
-                ),
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-start-tag-in-template-table-mode",
+                    format!(
+                        "start tag `<{name}>` was ignored because its required table row or body was not in scope"
+                    ),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             return;
         }
 
@@ -27316,6 +27319,20 @@ mod tests {
         .at_emission(Some(start_tag_position(source, name)))
     }
 
+    fn start_tag_in_template_table_mode_recovery(
+        source: &str,
+        name: &str,
+        occurrence: usize,
+    ) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-start-tag-in-template-table-mode",
+            format!(
+                "start tag `<{name}>` was ignored because its required table row or body was not in scope"
+            ),
+        )
+        .at_emission(Some(start_tag_position_at(source, name, occurrence)))
+    }
+
     fn end_tag_in_template_column_group_recovery(
         source: &str,
         name: &str,
@@ -41726,12 +41743,7 @@ mod tests {
             let output = parse_html_with_diagnostics(source).unwrap();
             assert_eq!(
                 output.parser_diagnostics,
-                vec![ParserDiagnostic::new(
-                    "unexpected-start-tag-in-template-table-mode",
-                    format!(
-                        "start tag `<{name}>` was ignored because its required table row or body was not in scope"
-                    ),
-                )],
+                vec![start_tag_in_template_table_mode_recovery(source, name, 0)],
                 "source {source:?}"
             );
 
@@ -41762,6 +41774,82 @@ mod tests {
         assert!(fragment.parser_diagnostics.iter().all(|diagnostic| {
             diagnostic.code != "unexpected-start-tag-in-template-table-mode"
         }));
+    }
+
+    #[test]
+    fn positions_start_tags_rejected_after_template_owned_rows_or_cells() {
+        let repeated_source =
+            "<!doctype html><template><tbody></tbody><tr></tr><tbody></template>";
+        let unicode_source =
+            "<!doctype html><!--é-->\r\n<template><th></th><colgroup data-name='é'>";
+        for (source, name, occurrence) in [
+            (repeated_source, "tbody", 1),
+            (unicode_source, "colgroup", 0),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .filter(|diagnostic| {
+                        diagnostic.code == "unexpected-start-tag-in-template-table-mode"
+                    })
+                    .collect::<Vec<_>>(),
+                vec![&start_tag_in_template_table_mode_recovery(
+                    source, name, occurrence,
+                )],
+                "source {source:?}"
+            );
+        }
+        assert!(unicode_source.len() > unicode_source.chars().count());
+
+        let incomplete = parse_html_with_diagnostics(
+            "<!doctype html><template><tr></tr><tbody data-name='unfinished'",
+        )
+        .unwrap();
+        assert!(incomplete.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-start-tag-in-template-table-mode"
+        }));
+
+        let fragment =
+            parse_html_fragment_for_context_with_diagnostics("<tr></tr><tbody>", "template")
+                .unwrap();
+        assert!(fragment.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-start-tag-in-template-table-mode"
+        }));
+
+        let mut unpositioned = HtmlParser::new();
+        for token in [
+            Token::StartTag {
+                name: "template".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "tr".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::EndTag {
+                name: "tr".to_string(),
+            },
+            Token::StartTag {
+                name: "tbody".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+        ] {
+            unpositioned.process_token(token);
+        }
+        let diagnostics = unpositioned
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| {
+                diagnostic.code == "unexpected-start-tag-in-template-table-mode"
+            })
+            .collect::<Vec<_>>();
+        assert_eq!(diagnostics.len(), 1);
+        assert_eq!(diagnostics[0].position, None);
     }
 
     #[test]
