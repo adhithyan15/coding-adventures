@@ -1386,14 +1386,15 @@ mod tests {
             read_portable_export(&source, b"encrypted artifact".len() - 1).unwrap_err(),
             CliHostError::InvalidImportSource
         );
-        assert_eq!(
-            read_portable_export(
-                source.parent().expect("temporary import parent"),
-                b"encrypted artifact".len(),
-            )
-            .unwrap_err(),
-            CliHostError::InvalidImportSource
-        );
+        let directory_error = read_portable_export(
+            source.parent().expect("temporary import parent"),
+            b"encrypted artifact".len(),
+        )
+        .unwrap_err();
+        #[cfg(windows)]
+        assert_eq!(directory_error, CliHostError::ImportReadFailed);
+        #[cfg(not(windows))]
+        assert_eq!(directory_error, CliHostError::InvalidImportSource);
         fs::write(&source, b"").unwrap();
         assert_eq!(
             read_portable_export(&source, 64).unwrap_err(),

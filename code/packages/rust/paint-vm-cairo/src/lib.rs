@@ -1955,7 +1955,7 @@ mod tests {
 
         assert!(pixels
             .data
-            .chunks_exact(4)
+            .as_chunks::<4>().0.iter()
             .any(|pixel| pixel[2] > pixel[0] && pixel[2] > pixel[1] && pixel[3] > 0));
     }
 
@@ -2174,6 +2174,6 @@ mod tests {
                 },
             )
             .expect("degraded text opt-in should render");
-        assert!(pixels.data.chunks_exact(4).any(|pixel| pixel[3] != 0));
+        assert!(pixels.data.as_chunks::<4>().0.iter().any(|pixel| pixel[3] != 0));
     }
 }

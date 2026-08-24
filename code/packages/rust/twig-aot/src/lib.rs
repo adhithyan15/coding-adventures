@@ -144,7 +144,7 @@ struct FnStackMap {
 /// wrapper carries no inline data, so every 4-byte word is a real instruction.
 fn call_return_offsets(code: &[u8]) -> Vec<u32> {
     let mut out = Vec::new();
-    for (i, word) in code.chunks_exact(4).enumerate() {
+    for (i, word) in code.as_chunks::<4>().0.iter().enumerate() {
         let w = u32::from_le_bytes([word[0], word[1], word[2], word[3]]);
         let is_bl = (w >> 26) == 0b100101; // BL imm26
         let is_blr = (w & 0xFFFF_FC1F) == 0xD63F_0000; // BLR Rn
@@ -1839,9 +1839,18 @@ pub fn compile_module_to_windows_executable(
     link_windows_x86_64_executable(&obj_bytes, stem, out)
 }
 
+#[cfg(any(target_os = "windows", test))]
+const MSVC_DYNAMIC_CRT_LIBRARIES: [&str; 5] = [
+    "msvcrt.lib",
+    "vcruntime.lib",
+    "ucrt.lib",
+    "libvcruntime.lib",
+    "legacy_stdio_definitions.lib",
+];
+
 /// Link a Windows x86-64 PE/COFF object file into a runnable `.exe` via
 /// the first system linker found on `PATH` (`link.exe` → `lld-link.exe`
-/// → `gcc.exe`).  Embeds the twig-aot runtime archive.
+/// → `gcc.exe`). Embeds the twig-aot runtime archive.
 #[cfg(target_os = "windows")]
 pub fn link_windows_x86_64_executable(
     obj_bytes: &[u8],
@@ -1909,14 +1918,18 @@ pub fn link_windows_x86_64_executable(
                 // on this target (no `/MT`), so the runtime archive and
                 // gc-core-capi's staticlib both carry `__imp_`-style
                 // dllimport references (malloc/memcpy/abort/...) that only
-                // ucrt.lib/vcruntime.lib/msvcrt.lib satisfy -- libcmt.lib
-                // (the static CRT) does not define those import thunks at
-                // all. kernel32/ws2_32/userenv/advapi32/bcrypt/ntdll cover
-                // the Win32 API surface gc-core-capi's Rust std pulls in.
-                .arg("ucrt.lib")
-                .arg("vcruntime.lib")
-                .arg("msvcrt.lib")
-                .arg("legacy_stdio_definitions.lib")
+                // msvcrt.lib/vcruntime.lib/ucrt.lib satisfy -- libcmt.lib
+                // (the static CRT) does not define those import thunks at all.
+                // Keep the startup library first. Its utility.obj introduces
+                // internal __vcrt_* and __acrt_* references; because this
+                // custom /ENTRY link bypasses the compiler driver's normal CRT
+                // startup selection, libvcruntime.lib must follow the DLL
+                // import libraries to complete that initialization chain.
+                // Do not add libucrt.lib: it is the static UCRT and duplicates
+                // symbols already supplied by the dynamic ucrt.lib above.
+                // kernel32/ws2_32/userenv/advapi32/bcrypt/ntdll cover the
+                // Win32 API surface gc-core-capi's Rust std pulls in.
+                .args(MSVC_DYNAMIC_CRT_LIBRARIES)
                 .arg("kernel32.lib")
                 .arg("ws2_32.lib")
                 .arg("userenv.lib")
@@ -3617,6 +3630,20 @@ mod dynval_runtime_golden;
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn msvc_dynamic_crt_libraries_follow_dependency_order() {
+        assert_eq!(
+            MSVC_DYNAMIC_CRT_LIBRARIES,
+            [
+                "msvcrt.lib",
+                "vcruntime.lib",
+                "ucrt.lib",
+                "libvcruntime.lib",
+                "legacy_stdio_definitions.lib",
+            ],
+        );
+    }
 
     // ── AOT00-T1 x86_64 PR-x2: GC entry wrapper + no-op init ──────────────────
 
