@@ -5853,6 +5853,14 @@ still discover `code/packages/haskell/dist-newstyle` as a package on Windows.
 That pre-existing engine discovery debt is now explicit behind the merged Ruby
 and Rust identity registries and remains outside the neutral CLI-parser change.
 
+Ready-for-review PR #12584 opened from reviewed head
+`df678cc47f147aac265449723c10bc0b3554195d` on exact main
+`561cbd2a9365bc5093fdd6189fd2e0e065e16506`. Nine live open PRs have no
+exact changed-file overlap; the only remote-head overlap is the already merged
+squash source branch for PR #12577. GitHub reports #12584 mergeable with checks
+queued, so auto-merge remains disabled until every required check is terminal
+and acceptable.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
