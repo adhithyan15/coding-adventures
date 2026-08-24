@@ -5147,10 +5147,11 @@ capability taxonomy suites pass ten and seven tests, and the collision gate is
 clean. The Go build tool passes all tests, vet, and compilation. Its exact dry
 plan evaluates 45 Starlark files, discovers 494 Python packages, and selects
 the three changed packages plus five prerequisites and dependents. A full
-eight-node local execution exceeded the five-minute ceiling without a terminal
-report, so the selected fronts and immediate runtime downstream were executed
-directly; the canonical Unix recipes remain structurally pinned for Linux and
-macOS CI.
+eight-node local execution reached the unchanged in-memory-data-store-protocol
+prerequisite and reproduced its separately owned recursive pip-launcher hang;
+the runaway validation process was stopped after five minutes. The selected
+fronts and immediate runtime downstream were executed directly, while the
+canonical Unix recipes remain structurally pinned for Linux and macOS CI.
 
 ## Autonomous Loop Protocol
 
