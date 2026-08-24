@@ -4,6 +4,7 @@ use chief_of_staff_trust_checker::{
     AuthorizationBasis, TrustChecker, TrustCheckerError, TrustRequest, TrustResource,
 };
 use std::env;
+use std::ffi::OsStr;
 use std::io::{self, BufRead, Write};
 use std::process;
 use std::thread;
@@ -123,8 +124,32 @@ fn bulk_request(request_id: &str) -> TrustRequest {
     .unwrap()
 }
 
+/// The helper must observe ONLY the protocol variable the provider hands it.
+///
+/// `src/lib.rs` calls `Command::env_clear()` before spawning precisely so that a
+/// Tier 2 biometric helper can never read the daemon's secrets, tokens, or paths.
+/// This assertion is the test that guards that property: if `env_clear()` ever
+/// regressed, `PATH`, `HOME`, and every `CARGO_*` variable would show up here
+/// and trip it.
+///
+/// Exactly one additional name is tolerated, and only because the child sets it
+/// on ITSELF. When this crate is built with `-C instrument-coverage` -- which is
+/// what `cargo tarpaulin --engine llvm` does in order to measure coverage of
+/// this very file -- compiler-rt's profile runtime runs a startup constructor
+/// that calls `setenv("__LLVM_PROFILE_RT_INIT_ONCE", ...)` as a one-time-init
+/// guard. That happens in the child, after `exec`, so no `env_clear()` on the
+/// parent side can suppress it, and its presence is not evidence that the
+/// parent's environment leaked. Uninstrumented production builds never link
+/// that runtime and never contain the variable.
+///
+/// Tolerating this one exact name keeps the security assertion intact: any
+/// genuinely inherited variable still fails the check.
+fn is_expected_helper_variable(name: &OsStr) -> bool {
+    name == "CHIEF_APPROVAL_PROTOCOL" || name == "__LLVM_PROFILE_RT_INIT_ONCE"
+}
+
 fn helper_main() {
-    assert!(env::vars_os().all(|(name, _)| name == "CHIEF_APPROVAL_PROTOCOL"));
+    assert!(env::vars_os().all(|(name, _)| is_expected_helper_variable(&name)));
     let stdin = io::stdin();
     let mut lines = stdin.lock().lines();
     assert_eq!(
