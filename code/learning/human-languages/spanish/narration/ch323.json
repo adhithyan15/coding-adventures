@@ -1,0 +1,712 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 323,
+  "title": "Before, After, and While",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b95080fe5e585dd1",
+  "lessons": [
+    {
+      "id": "ES-C323-ya",
+      "sequence": 5270,
+      "title": "ya — two letters, and the opposite of todavía",
+      "headword": "ya",
+      "romanization": "ya",
+      "gloss": "already, now — Latin iam; English borrowed it without knowing, in the déjà of déjà vu",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2e3302e307e47291",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say right away, then not yet. (Enseguida; todavía no.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "YA, one beat. The y is the same sound that opens ayuda. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ya — \"already,\" and sometimes \"now.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin iam meant already. Its i was said like a y, so iam was close to yam, and the m dropped. Two letters left."
+            },
+            {
+              "kind": "speech",
+              "text": "An English speaker has been carrying this word without knowing it. French wore iam down to ja and put de in front of it: déjà — already. English borrowed the phrase whole and never translated it. Every time somebody says déjà vu, already seen, the jà in the middle is ya."
+            },
+            {
+              "kind": "speech",
+              "text": "Now set it against the word from last time. Todavía says the thing has not stopped. Ya says the thing has arrived. Todavía no is not yet; ya is it's done. They are the two ends of one line, and Spanish speakers swap between them constantly."
+            },
+            {
+              "kind": "speech",
+              "text": "Ya also does a job English needs a whole tone of voice for. Said alone — ¡ya! — it means that's enough, stop there. Two letters, and the timing is the whole message."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The shortest word in the run, and the one that closes a door."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ya está",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ya está*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "todavía no — ya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *todavía no — ya*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which borrowed French phrase hides ya inside it? (Déjà vu — already seen.) And what is the opposite of todavía no? (Ya.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C323-entonces",
+      "sequence": 5280,
+      "title": "entonces — pointing at a time the way you point at a chair",
+      "headword": "entonces",
+      "romanization": "entonces",
+      "gloss": "then — Latin in tunc, \"at that time\"; tunc and English then both grow out of the old pointing word that also gives the, that and there",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d91f05b865113410",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say still, then already. (Todavía; ya.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "en-TON-ces, stress in the middle, and a clear s on the end. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "entonces — \"then.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Inside it are two pieces you can nearly see. En is the en you know, from Latin in. Tunc was Latin for at that time. In tunc — at that time — ran together, and Spanish added an -s on the end, the way it likes to."
+            },
+            {
+              "kind": "speech",
+              "text": "Tunc was itself built out of something older and much shorter: the pointing stem that English still runs on. That, there, then, the — all of them are that one small sound, put to work in different directions. So Spanish entonces and English then are cousins, arriving by different roads from a word whose only job was to point away from here."
+            },
+            {
+              "kind": "speech",
+              "text": "That is what entonces does. It points at a time the way ese points at a chair. It is also the word that carries an argument along — entonces, ¿qué?, so, what then? — because and at that time is how a story keeps moving."
+            },
+            {
+              "kind": "speech",
+              "text": "Two other jobs, one word: entonces is a then on a clock, and a so in a sentence."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A word that can push a conversation forward when you have run out of others."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "entonces",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *entonces*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "entonces, ¿qué?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *entonces, ¿qué?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ya — entonces",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ya — entonces*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What two Latin words are inside entonces? (In and tunc — at that time.) Which English words share that old pointing sound? (That, there, then, the.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C323-antes",
+      "sequence": 5290,
+      "title": "antes — the one that goes in front",
+      "headword": "antes",
+      "romanization": "antes",
+      "gloss": "before — Latin ante; English ante-, antique, ancient and ancestor all come off it, and an ancestor is one who went before",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ae998d8aec71a3df",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say already, then then. (Ya; entonces.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "AN-tes, stress on the first beat, and the s on the end is not swallowed. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "antes — \"before.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin ante meant in front of, in space first and in time afterwards. The -s on the end is Spanish, not Latin: it is the ending Spanish keeps hanging on words that say when. You saw it on entonces, and it is coming again."
+            },
+            {
+              "kind": "speech",
+              "text": "English took ante and mostly left it alone. An antechamber is the room in front of the room. To antedate is to be earlier than. In a card game you ante up — you put in before you play. Antique and ancient are both ante grown old, which is what they mean."
+            },
+            {
+              "kind": "speech",
+              "text": "The best one is ancestor. Latin antecessor is ante plus cedere, to go: one who went before. Not an old relative — a walker who was on the road first."
+            },
+            {
+              "kind": "speech",
+              "text": "To say before something, Spanish puts de after it: antes de. The word by itself means only earlier: antes, no — not before now."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Half of a pair. The other half arrives next."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "antes",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *antes*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "antes de comer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *antes de comer*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "entonces — antes",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *entonces — antes*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is an antecessor, word for word? (One who went before.) Which other when word carries the same -s on the end? (Entonces.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C323-despues",
+      "sequence": 5300,
+      "title": "después — three words that stopped being three",
+      "headword": "después",
+      "romanization": "después",
+      "gloss": "after — Latin de ex post, three little words run together; the post in it is English postpone, postscript and posterior",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9abc8f9cf9c7f60b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say then, then before. (Entonces; antes.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "des-PUÉS, stress on the last beat — the written accent says so, and the ué is one glide. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "después — \"after,\" \"afterwards.\""
+            },
+            {
+              "kind": "speech",
+              "text": "This one is a pile-up. Latin had post, after. Speakers put ex in front of it for emphasis, then de in front of that, and de ex post was said so often it fused: despost, depués, después. Three words to say one thing, and now nobody hears the seams."
+            },
+            {
+              "kind": "speech",
+              "text": "The post is the piece English kept. To postpone is to place after. A postscript is written after. Something posterior is at the back. Post-war is after the war. And preposterous is prae plus posterus — before-after — a thing with its front where its back should be, which is a very exact way of saying absurd."
+            },
+            {
+              "kind": "speech",
+              "text": "Set the pair together now. Antes and después. Both are Latin place-words that learned to talk about time; both end in that same Spanish -s, like entonces. To hang either on a thing, you use de: antes de, después de."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A pair that can put two events in order without a clock."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "después",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *después*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "después de comer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *después de comer*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "antes — después",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *antes — después*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many Latin words are inside después? (Three — de, ex, post.) What does preposterous mean, piece by piece? (Before-after, back to front.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C323-mientras",
+      "sequence": 5310,
+      "title": "mientras — twenty words, and one ending they share",
+      "headword": "mientras",
+      "romanization": "mientras",
+      "gloss": "while — Latin dum interim, \"for the time between\"; the inter in it is English interim, interval and international",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:69a3ee0641d17702",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say before eating, then after eating. (Antes de comer; después de comer.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "MIEN-tras, stress on the first beat. The ie is one glide, as in tiempo. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mientras — \"while.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin said dum interim: while, in the meantime. Interim is inter, between, with an ending — the time in between. Old Spanish had it as demientre; the pieces slid, the -s arrived, and mientras was left."
+            },
+            {
+              "kind": "speech",
+              "text": "That inter is one of the most visible Latin pieces in English. An interim report covers the time between. An interval is the gap between. Something interior is between the walls. International is between nations. And meanwhile is English building the same idea out of its own bricks."
+            },
+            {
+              "kind": "speech",
+              "text": "Now the ending, because it is the point of this chapter. Take the four together: entonces, antes, después, mientras. Every one of them ends in -s, and not one of them is more than one thing. That -s is not a plural. Spanish grew a habit of finishing its when-words that way, and once you hear it you will spot the next one before anyone explains it."
+            },
+            {
+              "kind": "speech",
+              "text": "Mientras joins two things happening at once: mientras como — while I eat."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Twenty words. Ten name what courtesy is made of; ten put things in time — a night behind you, a week to count in, a place in the day, the next instant, a thing not finished, a thing already done, a then, a before, an after, and a while. Between them you can say a good deal more at a door than hasta luego."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mientras",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mientras*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mientras como",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mientras como*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "antes — después — mientras",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *antes — después — mientras*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does inter mean? (Between.) What do entonces, antes, después and mientras all share on the end? (An -s that is not a plural.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

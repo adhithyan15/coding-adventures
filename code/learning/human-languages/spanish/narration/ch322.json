@@ -1,0 +1,771 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 322,
+  "title": "Five Sizes of When",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:50381c02681a6507",
+  "lessons": [
+    {
+      "id": "ES-C322-anoche",
+      "sequence": 5220,
+      "title": "anoche — a word with another word inside it",
+      "headword": "anoche",
+      "romanization": "anoche",
+      "gloss": "last night — Latin ad noctem, toward night, worn into one word; the same noctem gives English nocturnal and equinox",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f14efd373d34e611",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say patience, please, then a piece of advice. (Paciencia, por favor; un consejo.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la noche — you can hear it inside this word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a-NO-che, stress on the middle. The ch is one sound, as in church. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "anoche — \"last night.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Say it slowly and the seam shows: a plus noche. Latin said ad noctem, toward night. Two words, spoken together for centuries, until the d fell out and nobody heard a join any more."
+            },
+            {
+              "kind": "speech",
+              "text": "That noctem is one of the easiest Latin words to spot in English. Something nocturnal happens at night. A nocturne is a night piece of music. An equinox is aequi-nox, the day when night is equal to the light."
+            },
+            {
+              "kind": "speech",
+              "text": "Here is the thing to hold on to. Anoche has no other form. It does not become anocha for a woman or anoches for two nights. Words like contento and ocupado switch their last letter because they are describing somebody. Anoche is not describing anybody — it is saying when — so there is nothing for it to agree with, and it never moves."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first of five words that place a thing in time."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anoche",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anoche*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anoche, en casa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anoche, en casa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un consejo — anoche",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un consejo — anoche*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What two Latin words are inside anoche? (Ad and noctem — toward night.) Why does anoche never change its ending? (It says when, not what somebody is like.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C322-semana",
+      "sequence": 5230,
+      "title": "la semana — a number wearing a different coat",
+      "headword": "la semana",
+      "romanization": "la semana",
+      "gloss": "week — Latin septimana, the set of seven; the same septem gives English September and, down the Germanic road, seven",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a522f088a8c70b08",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say a piece of advice, then last night. (Un consejo; anoche.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "seis, siete, ocho, nueve, diez — one of these is hiding here."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "se-MA-na, three even beats with the stress in the middle. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la semana — \"the week.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin septimāna meant the set of seven, from septem, seven. A week is not named for anything it does. It is named for how many days are in it."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish already shows you the seven: siete. Put siete and semana side by side and you can watch the same Latin septem go two ways — the p holding on in one word and dropping out of the other."
+            },
+            {
+              "kind": "speech",
+              "text": "English got the seven three times over. September was the seventh month back when the year began in March, and the name stayed on after the count moved. A septet is seven players. And English seven itself is the very same root coming down the Germanic road instead of the Latin one."
+            },
+            {
+              "kind": "speech",
+              "text": "Semana takes la, and for more than one you add the ending you know: semanas."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A stretch of time you can count in, sitting next to a night you can point at."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la semana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la semana*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dos semanas",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dos semanas*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anoche — esta semana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anoche — esta semana*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What number is inside semana? (Seven — septem, siete.) Why is September not the ninth month by name? (The year once began in March.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C322-temprano",
+      "sequence": 5240,
+      "title": "temprano — an -o that stays put",
+      "headword": "temprano",
+      "romanization": "temprano",
+      "gloss": "early — Latin temporanus, in good time, built on tempus; English temporary, tempo and contemporary share the root, and so does el tiempo",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8aa6a42e22acd9e2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say last night, then two weeks. (Anoche; dos semanas.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el tiempo — the same Latin word, differently worn."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tem-PRA-no, stress on the middle. The pr runs straight together. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "temprano — \"early.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin tempus, in its longer form tempor-, was time. Temporānus meant in good time, in season — said of fruit that ripened when it should."
+            },
+            {
+              "kind": "speech",
+              "text": "You already have that root once. El tiempo is tempus after the -por- fell out and the e broke into ie. Temprano is the same tempus with the -por- still there, squeezed down to -pr-. One Latin word, two Spanish shapes, and you can hear the middle of it in only one of them."
+            },
+            {
+              "kind": "speech",
+              "text": "English keeps it plainly: a tempo is a rate of time, something temporary lasts only a while, temporal means belonging to time, and a contemporary shares your time."
+            },
+            {
+              "kind": "speech",
+              "text": "Now the ending, which is a trap worth walking into on purpose. Temprano ends in -o. You have seen -o switch to -a: contento and contenta, ocupado and ocupada. This one does not switch. A woman does not arrive temprana. She arrives temprano, because the word is not saying what she is like — it is saying when she got there. The -o/-a switch belongs to words that describe somebody. This word describes when a thing happened, and a when is not a he or a she."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Proof that an -o on the end is not a promise."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "temprano",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *temprano*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "María come temprano",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *María come temprano*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anoche — esta semana — temprano",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anoche — esta semana — temprano*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which everyday word shares tempus with temprano? (El tiempo.) And does temprano become temprana for a woman? (No — it says when, not what she is like.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C322-enseguida",
+      "sequence": 5250,
+      "title": "enseguida — the next thing, and nothing between",
+      "headword": "enseguida",
+      "romanization": "enseguida",
+      "gloss": "right away — en seguida, \"in what follows,\" from Latin sequi, to follow; English sequence, sequel and pursue come off the same verb",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4162709d29ae3d1e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say two weeks, then early. (Dos semanas; temprano.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "conseguir — the same following is inside it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "en-se-GUI-da. The u after g is silent: it is there to keep the g hard. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "enseguida — \"right away.\""
+            },
+            {
+              "kind": "speech",
+              "text": "It is en plus seguida: in what follows. Not soon — next. Whatever comes after this comes with nothing in between, and that is why it means immediately."
+            },
+            {
+              "kind": "speech",
+              "text": "Underneath is Latin sequī, to follow, one of the great root verbs. You have it already in conseguir, to get something by following after it, and in según, which is secundum — following along."
+            },
+            {
+              "kind": "speech",
+              "text": "English is thick with it. A sequence is one thing following another. A sequel follows a story. A consequence is what follows from a cause. To pursue is to follow forward. And second is secundus, the following one — the number two is named for coming after the one."
+            },
+            {
+              "kind": "speech",
+              "text": "The spelling carries a silent passenger. In gui, the u makes no sound at all. Without it the g would soften before that i, and the word would not be seguida any more."
+            },
+            {
+              "kind": "speech",
+              "text": "Like anoche and temprano, enseguida never changes."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The answer somebody gives you when they mean now, not later."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "enseguida",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *enseguida*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "enseguida, por favor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *enseguida, por favor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "temprano — enseguida",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *temprano — enseguida*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does en seguida mean, piece by piece? (In what follows.) Why is the u in seguida written at all? (To keep the g hard before the i.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C322-todavia",
+      "sequence": 5260,
+      "title": "todavía — all the road, and still going",
+      "headword": "todavía",
+      "romanization": "todavía",
+      "gloss": "still, yet — literally toda vía, \"all the road\"; the via in it is English via, viaduct, deviate and obvious",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8dfd0d3ecd2f8644",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say early, then right away. (Temprano; enseguida.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "todo — the first half of this word is yours already."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "to-da-VÍ-a, four beats. The accent on the í pulls the i and the a apart, so they are two beats and not one glide. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "todavía — \"still,\" and with no in front of it, \"not yet.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Break it where it wants to break: toda vía. Toda is the todo you have, in its -a shape. Vía is Latin via, a road."
+            },
+            {
+              "kind": "speech",
+              "text": "All the road. That was the whole sense once: the thing has gone the entire way and is going still. Old Spanish used it for always, and it narrowed into still — which is what always becomes when you point it at one moment."
+            },
+            {
+              "kind": "speech",
+              "text": "The via is easy to find in English. You travel via somewhere. A viaduct carries a road. To deviate is to go off the road. Trivial comes from tri-via, a place where three roads meet — the kind of gossip exchanged at a crossroads. And obvious is ob viam, lying in the road: what you cannot help meeting."
+            },
+            {
+              "kind": "speech",
+              "text": "Todavía no is the pair you will need most. No comes first: todavía no."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five ways to place a thing in time: a night behind you, a stretch you can count, a position in the day, the very next moment, and a thing that has not stopped. Only one of the five ends in -o, and even that one refuses to change."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "todavía",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *todavía*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "todavía no",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *todavía no*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "temprano — enseguida — todavía",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *temprano — enseguida — todavía*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What are the two words inside todavía? (Toda and vía — all the road.) What does obvious mean, word for word? (Lying in the road.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -4824,6 +4824,78 @@
       "json": "spanish/narration/ch319.json",
       "textHash": "fnv1a64:ed1e0dc04606120b",
       "jsonHash": "fnv1a64:186e4b0f8d3cebef"
+    },
+    {
+      "language": "spanish",
+      "chapter": 320,
+      "sourceHash": "fnv1a64:070acfb9284810a0",
+      "lessonIds": [
+        "ES-C320-favor",
+        "ES-C320-molestia",
+        "ES-C320-pena",
+        "ES-C320-suerte",
+        "ES-C320-culpa"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch320.txt",
+      "json": "spanish/narration/ch320.json",
+      "textHash": "fnv1a64:50e4557dad4c6541",
+      "jsonHash": "fnv1a64:a9addab3d5eaeea9"
+    },
+    {
+      "language": "spanish",
+      "chapter": 321,
+      "sourceHash": "fnv1a64:fbb5a6f40a71e02b",
+      "lessonIds": [
+        "ES-C321-placer",
+        "ES-C321-razon",
+        "ES-C321-respeto",
+        "ES-C321-paciencia",
+        "ES-C321-consejo"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch321.txt",
+      "json": "spanish/narration/ch321.json",
+      "textHash": "fnv1a64:f317d1229cb6853e",
+      "jsonHash": "fnv1a64:b5d63b5196a04a0f"
+    },
+    {
+      "language": "spanish",
+      "chapter": 322,
+      "sourceHash": "fnv1a64:50381c02681a6507",
+      "lessonIds": [
+        "ES-C322-anoche",
+        "ES-C322-semana",
+        "ES-C322-temprano",
+        "ES-C322-enseguida",
+        "ES-C322-todavia"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch322.txt",
+      "json": "spanish/narration/ch322.json",
+      "textHash": "fnv1a64:13009b95c20c76c1",
+      "jsonHash": "fnv1a64:d347f9147cdf21d4"
+    },
+    {
+      "language": "spanish",
+      "chapter": 323,
+      "sourceHash": "fnv1a64:b95080fe5e585dd1",
+      "lessonIds": [
+        "ES-C323-ya",
+        "ES-C323-entonces",
+        "ES-C323-antes",
+        "ES-C323-despues",
+        "ES-C323-mientras"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch323.txt",
+      "json": "spanish/narration/ch323.json",
+      "textHash": "fnv1a64:a7ef93b48647e06f",
+      "jsonHash": "fnv1a64:8de8138c31f6287c"
     }
   ],
   "findings": []

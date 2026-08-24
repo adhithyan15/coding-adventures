@@ -6242,6 +6242,90 @@
           "ES-SOUND-HERMANO-04"
         ]
       }
+    },
+    {
+      "chapter": 320,
+      "title": "The Words Behind Please and Sorry",
+      "label": "ch:favor-y-culpa",
+      "canDo": "I can name the favour, the trouble, the shame, the luck and the fault behind a Spanish courtesy.",
+      "spineNodes": [
+        "SPINE-COURTESY-THANK"
+      ],
+      "payoff": {
+        "lesson": "ES-C320-culpa",
+        "kind": "production",
+        "summary": "Complete ES-C320-culpa: open por favor into el favor, answer thanks with no es molestia, and place a fault with es mi culpa.",
+        "assesses": [
+          "ES-LEX-C320-COURT-01",
+          "ES-LEX-C320-COURT-02",
+          "ES-LEX-C320-COURT-03",
+          "ES-LEX-C320-COURT-04",
+          "ES-LEX-C320-COURT-05"
+        ]
+      }
+    },
+    {
+      "chapter": 321,
+      "title": "Pleasure, Reason, Respect",
+      "label": "ch:placer-y-consejo",
+      "canDo": "I can answer a first meeting with un placer, agree with tienes razon, and ask for patience, respect or advice in Spanish.",
+      "spineNodes": [
+        "SPINE-COURTESY-THANK"
+      ],
+      "payoff": {
+        "lesson": "ES-C321-consejo",
+        "kind": "production",
+        "summary": "Complete ES-C321-consejo: answer mucho gusto with un placer, hand somebody razon, and ask for paciencia and un consejo.",
+        "assesses": [
+          "ES-LEX-C321-COURT-06",
+          "ES-LEX-C321-COURT-07",
+          "ES-LEX-C321-COURT-08",
+          "ES-LEX-C321-COURT-09",
+          "ES-LEX-C321-COURT-10"
+        ]
+      }
+    },
+    {
+      "chapter": 322,
+      "title": "Five Sizes of When",
+      "label": "ch:anoche-y-todavia",
+      "canDo": "I can say last night, the week, early, right away and still in Spanish, and say why an -o on the end of temprano never becomes an -a.",
+      "spineNodes": [
+        "SPINE-TAKE-LEAVE"
+      ],
+      "payoff": {
+        "lesson": "ES-C322-todavia",
+        "kind": "production",
+        "summary": "Complete ES-C322-todavia: place a thing at anoche, count in semanas, arrive temprano, answer enseguida, and say todavia no.",
+        "assesses": [
+          "ES-LEX-C322-WHEN-11",
+          "ES-LEX-C322-WHEN-12",
+          "ES-LEX-C322-WHEN-13",
+          "ES-LEX-C322-WHEN-14",
+          "ES-LEX-C322-WHEN-15"
+        ]
+      }
+    },
+    {
+      "chapter": 323,
+      "title": "Before, After, and While",
+      "label": "ch:antes-y-despues",
+      "canDo": "I can put two events in order with antes, despues, entonces and mientras, and say that a thing is already done with ya.",
+      "spineNodes": [
+        "SPINE-TAKE-LEAVE"
+      ],
+      "payoff": {
+        "lesson": "ES-C323-mientras",
+        "kind": "production",
+        "summary": "Complete ES-C323-mientras: close todavia no with ya, order two events with antes de and despues de, and join them with mientras.",
+        "assesses": [
+          "ES-LEX-C323-WHEN-16",
+          "ES-LEX-C323-WHEN-17",
+          "ES-LEX-C323-WHEN-18",
+          "ES-LEX-C323-WHEN-19",
+          "ES-LEX-C323-WHEN-20"
+        ]
+      }
     }
   ]
 }
