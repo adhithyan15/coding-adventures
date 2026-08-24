@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- Canonical and Windows BUILD fronts now recreate a pinned Python 3.13
+  package-local environment, install the local graph dependency chain, and run
+  Ruff, formatting, strict MyPy, and pytest through its explicit interpreter.
+- Generic annotations and test formatting were brought through the newly
+  enforced quality gates without changing Markov-chain behavior or package
+  metadata.
+
 ## [0.1.0] - 2026-04-13
 
 ### Added

@@ -127,7 +127,7 @@ class MarkovChain:
         self,
         order: int = 1,
         smoothing: float = 0.0,
-        states: list | None = None,
+        states: list[Any] | None = None,
     ) -> None:
         # k — how many previous states form the context key.
         # order=1 → context is a single state (most common case).
@@ -161,13 +161,13 @@ class MarkovChain:
         # _graph — DirectedGraph with allow_self_loops=True (a state can
         # transition to itself, e.g., "aa" in text). Used for topology
         # queries; edge existence tracks non-zero probability transitions.
-        self._graph: DirectedGraph = DirectedGraph(allow_self_loops=True)
+        self._graph: DirectedGraph[Any] = DirectedGraph(allow_self_loops=True)
 
     # ------------------------------------------------------------------
     # Training
     # ------------------------------------------------------------------
 
-    def train(self, sequence: list) -> None:
+    def train(self, sequence: list[Any]) -> None:
         """Train the chain on a sequence of states.
 
         Slides a window of size (order + 1) over the sequence. For each
@@ -371,7 +371,7 @@ class MarkovChain:
         # Return the last target as a safe fallback — it has non-zero probability.
         return next(reversed(list(row.keys())))
 
-    def generate(self, start: Any, length: int) -> list:
+    def generate(self, start: Any, length: int) -> list[Any]:
         """Generate a sequence of exactly ``length`` states.
 
         Starts from ``start`` and repeatedly calls ``next_state`` to extend
@@ -611,7 +611,7 @@ class MarkovChain:
     # Inspection
     # ------------------------------------------------------------------
 
-    def states(self) -> list:
+    def states(self) -> list[Any]:
         """Return the list of all known atomic states.
 
         Includes states that were:

@@ -583,7 +583,7 @@ func run() int {
 	}
 
 	if *validateBuildFiles {
-		// Both validations run before either can fail the process. They answer
+		// All validations run before any can fail the process. They answer
 		// different questions and a repo can be wrong in both ways at once;
 		// reporting one at a time would mean two round-trips through CI to see
 		// the full punch list.
@@ -594,6 +594,7 @@ func run() int {
 		// instead, and is the only check that can see that gap.
 		buildErr := validator.ValidateBuildFiles(packages, graph)
 		orphanErr := validator.ValidateNoOrphanCrates(repoRoot)
+		artifactErr := validator.ValidateNoTrackedNodeModules(repoRoot)
 
 		if buildErr != nil {
 			fmt.Fprintln(os.Stderr, buildErr)
@@ -601,7 +602,10 @@ func run() int {
 		if orphanErr != nil {
 			fmt.Fprintln(os.Stderr, orphanErr)
 		}
-		if buildErr != nil || orphanErr != nil {
+		if artifactErr != nil {
+			fmt.Fprintln(os.Stderr, artifactErr)
+		}
+		if buildErr != nil || orphanErr != nil || artifactErr != nil {
 			return 1
 		}
 

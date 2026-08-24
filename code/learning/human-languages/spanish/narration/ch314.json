@@ -1,0 +1,823 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 314,
+  "title": "The Body, Further Down --- Arm, Leg, Foot, Tooth, Ear",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a3a011f6dd4f02ce",
+  "lessons": [
+    {
+      "id": "ES-C314-brazo",
+      "sequence": 4820,
+      "title": "el brazo — the arm that was only ever the shorter one",
+      "headword": "el brazo",
+      "romanization": "el brazo",
+      "gloss": "the arm — Greek brakhion, \"the shorter one\", taken into Latin as bracchium; an embrace and a bracelet are both built on it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e114ea518a37b5a3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two from last time, before a new run starts. Which of your five answers refuses to change for a woman? (Triste — it ends in -e.) And which one means your hands are full? (Ocupado.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la mano — one end of it."
+            },
+            {
+              "kind": "speech",
+              "text": "el hombro — the other end."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "BRA-zo, two beats, stress on the first. The r is a single tap against the ridge behind your teeth. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el brazo — \"the arm.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Greek brakhion was a comparative. It meant \"the shorter one.\" Greek anatomists used it for the upper arm — the shorter half of the limb — and the name stuck to a body part for a reason nobody feels any more."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin borrowed it as bracchium and dropped the comparison entirely. By the time Spanish had it, brazo was the whole arm, shoulder to hand."
+            },
+            {
+              "kind": "speech",
+              "text": "English holds three pieces of it. A brace was armour for the arm before it was anything that holds a thing steady. A bracelet is a little brace. And to embrace somebody is to put them in your arms: em- is in, and brace is this word."
+            },
+            {
+              "kind": "speech",
+              "text": "So el hombro, then el brazo, then la mano. You have the whole limb now, top to bottom."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five more of the body begin here."
+            },
+            {
+              "kind": "speech",
+              "text": "The first three walk you from the shoulder to the ground; the last two are smaller and harder to point at."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el brazo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el brazo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el brazo y la mano",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el brazo y la mano*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el hombro, then el brazo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el hombro*, then *el brazo*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did brakhion mean before it meant an arm? (The shorter one.) And what are you doing when you embrace somebody? (Putting them in your arms.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C314-pierna",
+      "sequence": 4830,
+      "title": "la pierna — a ham, put back on the body",
+      "headword": "la pierna",
+      "romanization": "la pierna",
+      "gloss": "the leg — Latin perna, a ham; Spanish named the living leg after the butcher's cut",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d7378d2a22fe0d01",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which English word is bracchium, worn down and put on a wrist? (Bracelet.) And why does triste not change for a woman? (It ends in -e.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el brazo — the same idea, upper storey."
+            },
+            {
+              "kind": "speech",
+              "text": "la rodilla — the hinge in the middle of this one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "PIER-na, two beats. The ie is one slide, not two vowels. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la pierna — \"the leg.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin perna was a ham. Not a leg: a cut. The haunch of a pig, salted and hung from a beam. Spanish took the butcher's word and put it back on the living body — which is the opposite of the usual direction, where a piece of an animal gets named after the human part it resembles."
+            },
+            {
+              "kind": "speech",
+              "text": "Watch the e break to ie on the way: perna becomes pierna. That is the same crack you tracked through cielo, miel and piel. A stressed e in Latin, an ie in Spanish, every time."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish is nearly alone in using this word. Italian says gamba and French says jambe, both from Late Latin camba, a hock. English quietly holds that one instead: the jamb of a door is its leg, and to gambol is to kick yours about."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two of the limb, and a second sighting of the ie crack."
+            },
+            {
+              "kind": "speech",
+              "text": "Piel, pierna: put an e back where the ie is and the Latin usually shows itself. It will happen twice more before this chapter is out."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la pierna",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la pierna*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la pierna y la rodilla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la pierna y la rodilla*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el brazo, then la pierna",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el brazo*, then *la pierna*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was a perna? (A ham — the cut.) What happened to its e? (It broke into ie.) And which English door-part is the other Latin word for a leg? (The jamb.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C314-pie",
+      "sequence": 4840,
+      "title": "el pie — one syllable, and half the world says it",
+      "headword": "el pie",
+      "romanization": "el pie",
+      "gloss": "the foot — Latin pedem, from a root so old that Hindi pair, Persian pa and English foot are all the same word",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:98d0410afff5c339",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which body part is a ham? (La pierna.) And what is em-brace doing, literally? (Putting somebody in your arms.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la pierna — what this one is on the end of."
+            },
+            {
+              "kind": "speech",
+              "text": "el tobillo — the joint just above it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "PIE, one beat. Two letters of vowel, one slide, no second syllable. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el pie — \"the foot.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin pedem — and pedem goes back a very long way before Latin. The root under it is ped-, and it is one of the oldest things anybody can reconstruct: old enough that it survives, recognisably, across most of Europe and a good part of Asia."
+            },
+            {
+              "kind": "speech",
+              "text": "English took it three separate times."
+            },
+            {
+              "kind": "speech",
+              "text": "Through Latin: pedal, pedestrian, pedestal, and pedigree, which is French pied de grue, \"a crane's foot\" — the three-line mark that shows descent on a family tree."
+            },
+            {
+              "kind": "speech",
+              "text": "Through Greek, where ped- had become pod-: podium, tripod, octopus."
+            },
+            {
+              "kind": "speech",
+              "text": "And through Germanic, where an old sound shift turned every p into an f: foot."
+            },
+            {
+              "kind": "speech",
+              "text": "So pie, foot, podium and pedal are four faces of one word."
+            },
+            {
+              "kind": "speech",
+              "text": "It reaches further than Europe. Hindi says pair. Persian says pa. Those are not borrowings from anybody — they are cousins, descended in parallel from the same root, and they have been apart for perhaps five thousand years."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin pedem lost its ending and broke its e, exactly as perna did."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The bottom of the body, and the widest-travelled word you have met."
+            },
+            {
+              "kind": "speech",
+              "text": "Most words here connect Spanish to English. This one connects Spanish to Hindi and Persian as well."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el pie",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el pie*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el tobillo y el pie",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el tobillo y el pie*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la pierna, then el pie",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la pierna*, then *el pie*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which English word is ped- after the Germanic p turned to f? (Foot.) What is a pedigree named after? (A crane's foot.) And name one language outside Europe that kept the root. (Hindi pair, or Persian pa.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C314-diente",
+      "sequence": 4850,
+      "title": "el diente — the tooth in the dandelion",
+      "headword": "el diente",
+      "romanization": "el diente",
+      "gloss": "the tooth — Latin dentem, with the e broken to ie; a dandelion is a dent de lion, a lion's tooth",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c28d463367060b7a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which one word is Spanish, Hindi and Persian all at once? (Pie.) And what was a perna? (A ham.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la boca — where these live."
+            },
+            {
+              "kind": "speech",
+              "text": "el dolor — what sends you to somebody about one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "DIEN-te, two beats. The d is soft, tongue against the very teeth it names. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el diente — \"the tooth.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin dentem, and the e breaks to ie one more time. That is the fourth time in two chapters. It is not a coincidence and it is not a list to memorise — it is one rule, doing its work."
+            },
+            {
+              "kind": "speech",
+              "text": "English has the Latin form wherever teeth are being discussed carefully: dental, dentist, denture. It also has it where nobody notices. To indent a line is to put a tooth in the margin. A dent in a car door is a tooth-mark."
+            },
+            {
+              "kind": "speech",
+              "text": "And then there is the flower. French called it dent de lion, \"lion's tooth\", for the row of jagged points down each leaf. English heard the French and wrote it down the way it sounded: dandelion."
+            },
+            {
+              "kind": "speech",
+              "text": "Meanwhile Germanic did to dent- exactly what it did to ped-. The d softened, the ending wore away, and out came tooth. Diente and tooth are the same word, two sound shifts apart — the same trick you saw one lesson ago with pie and foot."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four of the body, and a second matched pair."
+            },
+            {
+              "kind": "speech",
+              "text": "Pie and foot. Diente and tooth. Once you can hear that shift, the Germanic half of English stops looking unrelated to the Latin half."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el diente",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el diente*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la boca y el diente",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la boca y el diente*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el pie, then el diente",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el pie*, then *el diente*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is a dandelion named for? (A lion's tooth — the jagged leaf.) What does indent put in the margin? (A tooth.) And which English word is diente after the Germanic shift? (Tooth.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C314-oido",
+      "sequence": 4860,
+      "title": "el oído — the hearing, made into a thing",
+      "headword": "el oído",
+      "romanization": "el oído",
+      "gloss": "the hearing, the inner ear — the past participle of oír made into a noun; Latin audire is under audio, audience and obedient",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0f4590a364c3316c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is a dandelion? (A lion's tooth.) And which Spanish word do Hindi and Persian also say? (Pie.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "oír — the verb this is the past participle of."
+            },
+            {
+              "kind": "speech",
+              "text": "la garganta — another part you cannot see."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "o-Í-do, three beats. The accent on the í holds the o and the í apart, so this is not a diphthong. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el oído — \"the ear,\" or more exactly, \"the hearing.\""
+            },
+            {
+              "kind": "speech",
+              "text": "You already have the verb oír, \"to hear.\" Oído is its past participle — \"heard\" — and Spanish has taken that participle and stood it up as a noun."
+            },
+            {
+              "kind": "speech",
+              "text": "So el oído is not the flap on the side of your head. Spanish has a separate word for that. El oído is the inner ear and the sense itself: the hearing, the thing that works or does not."
+            },
+            {
+              "kind": "speech",
+              "text": "Under both of them sits Latin audire, one of the most productive roots English owns. Audio is \"I hear.\" An audience is a hearing. An audition is a hearing. An auditorium is a room for hearing in. An auditor checks accounts by listening to them read aloud, which is how it was done before most people could read."
+            },
+            {
+              "kind": "speech",
+              "text": "The best of them is obedient. It is ob-audire: to listen toward somebody. Obedience, in Latin, was never more than paying close attention."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five of the body, and the chapter closes."
+            },
+            {
+              "kind": "speech",
+              "text": "Four of them you can point at. The fifth is a faculty — and it is the one carrying the largest family in English."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el oído",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el oído*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el diente, then el oído",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el diente*, then *el oído*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el brazo, la pierna, el pie, el diente, el oído",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el brazo, la pierna, el pie, el diente, el oído*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What part of speech was oído before it was a noun? (A past participle — \"heard\".) What is an auditor doing, in the old sense? (Listening to the accounts read aloud.) And what is obedient, taken apart? (Listening toward somebody.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

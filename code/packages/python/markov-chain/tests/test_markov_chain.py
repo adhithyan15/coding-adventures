@@ -21,8 +21,8 @@ Test organisation
 """
 
 import pytest
-from coding_adventures_markov_chain import MarkovChain
 
+from coding_adventures_markov_chain import MarkovChain
 
 # ---------------------------------------------------------------------------
 # 1. Construction
@@ -142,11 +142,15 @@ class TestTrainSequence:
 
     def test_row_sums_to_one_for_a(self, trained_chain: MarkovChain) -> None:
         # P(A→B) + P(A→C) = 1.0
-        total = trained_chain.probability("A", "B") + trained_chain.probability("A", "C")
+        total = trained_chain.probability("A", "B") + trained_chain.probability(
+            "A", "C"
+        )
         assert total == pytest.approx(1.0, abs=1e-6)
 
     def test_row_sums_to_one_for_b(self, trained_chain: MarkovChain) -> None:
-        total = trained_chain.probability("B", "A") + trained_chain.probability("B", "B")
+        total = trained_chain.probability("B", "A") + trained_chain.probability(
+            "B", "B"
+        )
         assert total == pytest.approx(1.0, abs=1e-6)
 
     def test_c_to_a_is_one(self, trained_chain: MarkovChain) -> None:
@@ -164,7 +168,7 @@ class TestTrainSequence:
 
 class TestLaplaceSmoothing:
     """Test 4: MarkovChain(smoothing=1.0, states=["A","B","C"]) + train([A,B])
-               → probability(A, C) == 0.25"""
+    → probability(A, C) == 0.25"""
 
     def test_probability_a_to_c_with_laplace(self) -> None:
         chain = MarkovChain(order=1, smoothing=1.0, states=["A", "B", "C"])
@@ -378,7 +382,7 @@ class TestStationaryDistribution:
             + [("Rainy", "Rainy")] * 5
         )
         # Build a flat sequence from pairs (each pair [s1, s2] contributes s1→s2).
-        flat: list = []
+        flat: list[str] = []
         for a, b in pairs:
             flat.extend([a, b])
         chain2.train(flat)
@@ -733,9 +737,7 @@ class TestNumericalAccuracy:
         tm = chain.transition_matrix()
         for ctx, row in tm.items():
             total = sum(row.values())
-            assert total == pytest.approx(1.0, abs=1e-9), (
-                f"Row {ctx!r} sums to {total}"
-            )
+            assert total == pytest.approx(1.0, abs=1e-9), f"Row {ctx!r} sums to {total}"
 
     def test_all_probabilities_non_negative(self) -> None:
         chain = MarkovChain(smoothing=1.0, states=list("abcde"))

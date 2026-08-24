@@ -4,7 +4,7 @@
   "chapter": 319,
   "title": "Review --- Second Looks",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:eb75d291edd426f3",
+  "sourceHash": "fnv1a64:5612a1032b01bf83",
   "lessons": [
     {
       "id": "ES-C319-repaso-la-superficie",
@@ -920,6 +920,400 @@
             {
               "kind": "speech",
               "text": "Which answer changes its ending for the speaker? (Encantado / encantada.) And which one names a pleasure instead of a spell? (Mucho gusto.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C319-repaso-respuestas",
+      "sequence": 5105,
+      "title": "Review — five answering words, and where they came from",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "five small answering words, and the two Latin pieces that built four of them",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:44e20177273a7596",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two to open. Which word answers for a thing? (Algo.) And which for a person? (Alguien.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say the five: algo, alguien, nadie, otro, poco."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now the part worth a second look. Four of them are built out of two Latin pieces, and once you see the seams the list stops being a list."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The ali- pair. Algo is aliquod, \"some other what\". Alguien is aliquem, \"some other whom\". One for things, one for people — a line Latin drew and Spanish kept exactly. And otro is alter, the same neighbourhood: Latin's word for the other of two, which is why English alter, alternate and alter ego all carry a pair inside them."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The born ones. Nadie is nati, \"people born\", out of homines nati. Its twin nada was \"a thing born\". One Latin participle, collapsed twice, into two words for absence."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And the fifth. Poco is paucus, \"few\" — English paucity straight from the Latin, and English few the same root down the Germanic road after p turned to f. You already carried poco inside tampoco, which is tan plus poco: \"so little.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five — algo, alguien, nadie, otro, poco",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five — *algo*, *alguien*, *nadie*, *otro*, *poco*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "otro, then otra; poco, then poca — both agree",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *otro*, then *otra*; *poco*, then *poca* — both agree]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C319-repaso-respuestas-pair",
+              "prompt": "Which of algo and alguien is for people?",
+              "assesses": [
+                "ES-LEX-C317-ANSW-16",
+                "ES-LEX-C317-ANSW-17"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "alguien",
+                "alguien, from aliquem"
+              ],
+              "feedback": {
+                "correct": "Whom, not what.",
+                "incorrect": "Alguien — aliquem, some other whom."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C319-repaso-respuestas-born",
+              "prompt": "What did the Latin behind nadie literally mean?",
+              "assesses": [
+                "ES-LEX-C317-ANSW-18"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "born ones",
+                "people born",
+                "nati, born ones"
+              ],
+              "feedback": {
+                "correct": "Homines nati — people born.",
+                "incorrect": "Born ones — nati, the same participle that gave nada."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C319-repaso-respuestas-two",
+              "prompt": "Latin alter, behind otro, meant the other of how many?",
+              "assesses": [
+                "ES-LEX-C317-ANSW-19"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "two",
+                "two, a pair",
+                "the other of a pair"
+              ],
+              "feedback": {
+                "correct": "A pair, which is why alternate alternates.",
+                "incorrect": "Two — the other of exactly a pair."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C319-repaso-respuestas-few",
+              "prompt": "Which word you already had has poco hiding inside it?",
+              "assesses": [
+                "ES-LEX-C317-ANSW-20"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "tampoco",
+                "tampoco, tan plus poco"
+              ],
+              "feedback": {
+                "correct": "Tan plus poco — so little.",
+                "incorrect": "Tampoco."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many did alter mean? (Two.) What is inside tampoco? (Tan and poco.) And what were the nati of nadie? (People born.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C319-otro-y-poco",
+      "sequence": 5110,
+      "title": "Review — the two that agree, and the p that becomes an f",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "the two answering words that agree with what they measure, and the p that keeps turning into an f",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bd665043c1e72176",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"another book,\" then \"another house.\" (Otro libro; otra casa.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Of the five answering words, exactly two change their ending: otro and poco. Both are measuring a thing, so both match the thing."
+            },
+            {
+              "kind": "speech",
+              "text": "otro / otra — another poco / poca — a little."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Algo, alguien and nadie never move, because none of them is describing a noun. They are the noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: the same road, a third time",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Poco is Latin paucus, and English few is the same root arriving by the Germanic road, after p turned to f."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "That shift is not a one-off. Pie and foot. Diente and tooth. Poco and few. Three pairs, one sound law — and once you can hear a Spanish p behind an English f, a large part of English stops looking foreign."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "otro, otra, poco, poca",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *otro*, *otra*, *poco*, *poca*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poco and few, then pie and foot",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *poco* and *few*, then *pie* and *foot*]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C319-otro-y-poco-agree",
+              "prompt": "Which two of the five answering words change their ending?",
+              "assesses": [
+                "ES-LEX-C317-ANSW-19",
+                "ES-LEX-C317-ANSW-20"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "otro and poco",
+                "otro, poco",
+                "otro and poco, because they measure a thing"
+              ],
+              "feedback": {
+                "correct": "They describe a noun, so they match it.",
+                "incorrect": "Otro and poco."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C319-otro-y-poco-shift",
+              "prompt": "Poco and few are the same root. What happened to the p?",
+              "assesses": [
+                "ES-LEX-C317-ANSW-20"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "it turned into an f",
+                "p became f down the germanic road",
+                "p to f"
+              ],
+              "feedback": {
+                "correct": "The same road as pie/foot and diente/tooth.",
+                "incorrect": "It turned into an f on the Germanic road."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why do otro and poco change while nadie does not? (They describe a noun; nadie is one.) And name the three p-to-f pairs. (Pie/foot, diente/tooth, poco/few.)"
             }
           ]
         }

@@ -50,9 +50,14 @@
     {
       "language": "tamil",
       "chapter": 8,
-      "sourceHash": "fnv1a64:3b3551fd8731d48b",
+      "sourceHash": "fnv1a64:4a851a53a2461202",
       "lessonIds": [
         "TA-C08-tayavuseytu",
+        "TA-C08-sollungal",
+        "TA-W08-short-o-observe",
+        "TA-W08-sollungal-guided-copy",
+        "TA-W08-sollungal-delayed-copy",
+        "TA-W08-sollungal-dictation",
         "TA-C08-please-register",
         "TA-S04-na",
         "TA-W03-write-vanakkam",

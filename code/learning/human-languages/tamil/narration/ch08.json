@@ -3,8 +3,8 @@
   "language": "tamil",
   "chapter": 8,
   "title": "Please",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:6b3f6334a1ce6dd2",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:ea7959a569399c22",
   "lessons": [
     {
       "id": "TA-C08-tayavuseytu",
@@ -148,6 +148,406 @@
       ]
     },
     {
+      "id": "TA-C08-sollungal",
+      "sequence": 471,
+      "title": "Solluṅgaḷ — please tell me",
+      "headword": "solluṅgaḷ",
+      "romanization": "solluṅgaḷ",
+      "gloss": "please tell me",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:44c8d81b0076277c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You know tayavu seytu, the weightier “do me the kindness.” Now learn one ordinary respectful request by ear before meeting its written shape."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: one useful request",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Solluṅgaḷ means please tell me. The ending -uṅgaḷ makes the request respectful. For now, keep the whole expression together: one sound, one useful meaning."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it in three easy pulses: sol, luṅ, gaḷ. Then say it smoothly once: solluṅgaḷ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "solluṅgaḷ becomes YOU CHOOSE: “please tell me”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *solluṅgaḷ* → YOU CHOOSE: “please tell me”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sol, luṅ, gaḷ — then solluṅgaḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sol · luṅ · gaḷ* — then *solluṅgaḷ*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you respectfully ask someone to tell you? (Solluṅgaḷ.) Keep that sound and meaning in mind. Next you will uncover just one new written sign inside this already-familiar request."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-W08-short-o-observe",
+      "sequence": 472,
+      "title": "சொ (so) — one new sign in a familiar request",
+      "headword": "சொ",
+      "romanization": "so",
+      "gloss": "meet the short-o sign inside familiar solluṅgaḷ",
+      "script": "tamil",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:1f47f1837c8e5d14",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ொ"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script you'll notice: ொ until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say solluṅgaḷ: please tell me. Its first sound is so. You already know the sound and meaning; today only its written vowel sign is new."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ொ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The consonant ச begins with ca. Add the short-o sign ொ, and it reads so:"
+            },
+            {
+              "kind": "speech",
+              "text": "ச + ொ becomes சொ (so)."
+            },
+            {
+              "kind": "speech",
+              "text": "The short-o sign reaches around its consonant. Part appears on the left and part on the right, but together they are one vowel sign. Read the whole joined shape as one syllable: சொ, so."
+            },
+            {
+              "kind": "speech",
+              "text": "Do not invent a stroke order from the printed font. Follow the model as one shape today."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — observe and trace",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace சொ once with the model visible. Say so as your finger reaches the vowel sign. Then point to the first syllable in சொல்லுங்கள் and say the whole familiar request, solluṅgaḷ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read சொ. (So.) What does the whole spoken request solluṅgaḷ mean? (Please tell me.) One new sign is enough for today."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-W08-sollungal-guided-copy",
+      "sequence": 473,
+      "title": "சொல்லுங்கள் (solluṅgaḷ) — one visible copy",
+      "headword": "சொல்லுங்கள்",
+      "romanization": "solluṅgaḷ",
+      "gloss": "copy familiar solluṅgaḷ with the short-o model visible",
+      "script": "tamil",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:e59aea8c1e91fd32",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Point to சொ at the start of சொல்லுங்கள். Read so, then say the whole request: solluṅgaḷ, please tell me."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — guided copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy சொல்லுங்கள் (solluṅgaḷ) once beneath its visible model. Pause after சொ and check that the short-o sign reaches around ச. Look back after every piece if needed. Say the request once when you finish."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Point to the short-o syllable in சொல்லுங்கள் (solluṅgaḷ). (சொ.) What does the word ask? (Please tell me.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-W08-sollungal-delayed-copy",
+      "sequence": 474,
+      "title": "Solluṅgaḷ — hide, then write",
+      "headword": "சொல்லுங்கள்",
+      "romanization": "solluṅgaḷ",
+      "gloss": "retrieve familiar solluṅgaḷ after hiding its model",
+      "script": "tamil",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:0d641de6db0212b5",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Study சொல்லுங்கள் for five seconds. Point to சொ, say solluṅgaḷ, then cover the model."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — delayed copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Write சொ (so) while the model is hidden. If that feels secure, continue and write the whole request. Peek once if needed, cover it again, and finish. Then uncover the model and repair only the short-o syllable."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What changed from the previous step? (The model was hidden before writing.) Say what your word means. (Please tell me.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-W08-sollungal-dictation",
+      "sequence": 475,
+      "title": "One heard request — write it",
+      "headword": "சொல்லுங்கள்",
+      "romanization": "solluṅgaḷ",
+      "gloss": "write familiar solluṅgaḷ from sound alone",
+      "script": "tamil",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:9b45aff374e63b4c",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover every Tamil model. You will hear the same useful request you have already said, traced, copied, and retrieved."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — dictation",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "solluṅgaḷ — please tell me",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *solluṅgaḷ* — **please tell me**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write the request from sound alone. Then uncover சொல்லுங்கள் (solluṅgaḷ). Check சொ first: the short-o sign should reach around ச. Repair one place if needed; do not rewrite the whole word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Without looking, write only the opening syllable of solluṅgaḷ. (சொ.) You are ready to compare this ordinary respectful request with the weightier tayavu seytu."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "TA-C08-please-register",
       "sequence": 480,
       "title": "தயவுசெய்து (tayavu seytu) or -உங்கள்? — politeness in phrase or verb",
@@ -160,7 +560,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7f8aae22027949eb",
+      "sourceHash": "fnv1a64:3da0ddc4024e92ff",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -204,7 +604,7 @@
             },
             {
               "kind": "speech",
-              "text": "சொல்லுங்கள் solluṅgaḷ — please tell me."
+              "text": "சொல்லுங்கள் solluṅgaḷ — please tell me — the request you can now say, read, and write from hearing."
             },
             {
               "kind": "speech",
@@ -251,6 +651,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU CHOOSE: ordinary \"please sit\" → **உட்காருங்கள்**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "சொல்லுங்கள் (solluṅgaḷ) — and point to சொ, the short-o syllable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **சொல்லுங்கள்** — and point to **சொ**, the short-*o* syllable]"
             },
             {
               "kind": "prompt",

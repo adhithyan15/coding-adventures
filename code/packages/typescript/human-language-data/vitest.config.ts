@@ -20,6 +20,17 @@ export default defineConfig({
     // If a test ever legitimately needs more than 30s, that is a signal about the test,
     // not about this number. Do not raise it to rescue a genuinely slow assertion.
     testTimeout: 30_000,
+    // Hooks need the same treatment, for a sharper version of the same reason.
+    // `plan-cli.test.ts` copies the WHOLE curriculum into a temp dir per case and
+    // deletes it again in `afterEach`; that recursive delete is thousands of files,
+    // and it is the hook, not the test, that pays for it. Vitest's hook budget
+    // defaults to 10s and never moved when `testTimeout` did, so the growing corpus
+    // reached it here first — the file passes in isolation and fails only under
+    // full-suite parallel load, which is exactly the signature described above.
+    // Raising this is the same declarative fix for the same cause, not a new waiver:
+    // the hook is doing real filesystem work that scales with the corpus. The
+    // durable fix is for that test to stop copying the entire corpus per case.
+    hookTimeout: 30_000,
     coverage: {
       provider: "v8",
       include: ["src/**/*.ts"],

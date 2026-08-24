@@ -4574,6 +4574,78 @@
     },
     {
       "language": "spanish",
+      "chapter": 314,
+      "sourceHash": "fnv1a64:a3a011f6dd4f02ce",
+      "lessonIds": [
+        "ES-C314-brazo",
+        "ES-C314-pierna",
+        "ES-C314-pie",
+        "ES-C314-diente",
+        "ES-C314-oido"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch314.txt",
+      "json": "spanish/narration/ch314.json",
+      "textHash": "fnv1a64:d3c050bf7a71b2da",
+      "jsonHash": "fnv1a64:2b0bf62bcfe2ab9d"
+    },
+    {
+      "language": "spanish",
+      "chapter": 315,
+      "sourceHash": "fnv1a64:4af5a7c0cb829461",
+      "lessonIds": [
+        "ES-C315-pecho",
+        "ES-C315-fuerza",
+        "ES-C315-descanso",
+        "ES-C315-miedo",
+        "ES-C315-risa"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch315.txt",
+      "json": "spanish/narration/ch315.json",
+      "textHash": "fnv1a64:9abc7e5ac45f606c",
+      "jsonHash": "fnv1a64:12a301311294224c"
+    },
+    {
+      "language": "spanish",
+      "chapter": 316,
+      "sourceHash": "fnv1a64:83c1fe9adb8e1f44",
+      "lessonIds": [
+        "ES-C316-llanto",
+        "ES-C316-nunca",
+        "ES-C316-siempre",
+        "ES-C316-todo",
+        "ES-C316-nada"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch316.txt",
+      "json": "spanish/narration/ch316.json",
+      "textHash": "fnv1a64:4bf9b010226ab060",
+      "jsonHash": "fnv1a64:9a1888bc4b1fab4b"
+    },
+    {
+      "language": "spanish",
+      "chapter": 317,
+      "sourceHash": "fnv1a64:1bb743b976672367",
+      "lessonIds": [
+        "ES-C317-algo",
+        "ES-C317-alguien",
+        "ES-C317-nadie",
+        "ES-C317-otro",
+        "ES-C317-poco"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch317.txt",
+      "json": "spanish/narration/ch317.json",
+      "textHash": "fnv1a64:fb6b0e77c7cdb63c",
+      "jsonHash": "fnv1a64:737bdb3f5b4b4c6d"
+    },
+    {
+      "language": "spanish",
       "chapter": 318,
       "sourceHash": "fnv1a64:77152a9df18ee825",
       "lessonIds": [
@@ -4592,20 +4664,22 @@
     {
       "language": "spanish",
       "chapter": 319,
-      "sourceHash": "fnv1a64:eb75d291edd426f3",
+      "sourceHash": "fnv1a64:5612a1032b01bf83",
       "lessonIds": [
         "ES-C319-repaso-la-superficie",
         "ES-C319-repaso-salir",
         "ES-C319-despedida",
         "ES-C319-repaso-presentarse",
-        "ES-C319-dos-respuestas"
+        "ES-C319-dos-respuestas",
+        "ES-C319-repaso-respuestas",
+        "ES-C319-otro-y-poco"
       ],
-      "voiceLessons": 5,
+      "voiceLessons": 6,
       "drivablePrefix": 5,
       "text": "spanish/narration/ch319.txt",
       "json": "spanish/narration/ch319.json",
-      "textHash": "fnv1a64:6944672c706636f1",
-      "jsonHash": "fnv1a64:3b9f1531b76e74fa"
+      "textHash": "fnv1a64:ed1e0dc04606120b",
+      "jsonHash": "fnv1a64:186e4b0f8d3cebef"
     }
   ],
   "findings": []

@@ -5899,6 +5899,26 @@
     },
     {
       "language": "spanish",
+      "chapter": 314,
+      "output": "spanish/book/chapters/ch314-brazo-y-pie.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 315,
+      "output": "spanish/book/chapters/ch315-fuerza-y-risa.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 316,
+      "output": "spanish/book/chapters/ch316-nunca-y-siempre.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 317,
+      "output": "spanish/book/chapters/ch317-algo-y-nadie.tex"
+    },
+    {
+      "language": "spanish",
       "chapter": 318,
       "output": "spanish/book/chapters/ch318-repaso-pre-a1.tex"
     },
