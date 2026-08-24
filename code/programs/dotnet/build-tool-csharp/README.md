@@ -38,4 +38,6 @@ dotnet run -- --emit-plan --plan-file build-plan.json
   the shared build-tool conformance corpus. It rejects unsafe portable paths,
   redacts hostile path text, and detects Unicode compatibility aliases of an
   exact `node_modules` component for regular files, symlinks, and reparse
-  entries alike.
+  entries alike. Length limits and path ordering use Unicode scalar values,
+  while Windows reserved basenames use full Unicode uppercase mapping before
+  comparison.

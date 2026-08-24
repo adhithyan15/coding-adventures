@@ -185,6 +185,7 @@ public sealed class BuildToolTests : IDisposable
     [InlineData("validation-tracked-artifacts-forbidden.json")]
     [InlineData("validation-tracked-artifacts-aliases.json")]
     [InlineData("validation-tracked-artifacts-invalid.json")]
+    [InlineData("validation-tracked-artifacts-unicode-boundaries.json")]
     public void TrackedArtifactValidationMatchesSharedConformanceFixtures(string fixtureName)
     {
         var fixturePath = Path.Combine(

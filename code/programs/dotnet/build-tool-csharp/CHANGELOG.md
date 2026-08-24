@@ -10,5 +10,6 @@
   plan behavior.
 - Added pure tracked-artifact snapshot validation with portable-path safety,
   redacted invalid-path diagnostics, Unicode-aware `node_modules` alias
-  detection, deterministic ordering, and direct coverage of the shared
+  detection, Unicode-scalar length and ordering, full-uppercase Windows
+  reserved-basename matching, and direct coverage of all five shared
   language-neutral conformance fixtures.

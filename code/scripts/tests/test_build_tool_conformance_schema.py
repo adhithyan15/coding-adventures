@@ -433,6 +433,33 @@ class BuildToolConformanceSchemaTests(unittest.TestCase):
             entry["properties"]["entry_kind"]["enum"],
             ["regular", "symlink", "reparse"],
         )
+        path_schema = entry["properties"]["path"]
+        self.assertNotIn("minLength", path_schema)
+        self.assertEqual(path_schema["maxLength"], 513)
+        entry_validator = jsonschema.Draft202012Validator(entry)
+        self.assertEqual(
+            list(
+                entry_validator.iter_errors(
+                    {"ordinal": 1, "path": "", "entry_kind": "regular"}
+                )
+            ),
+            [],
+        )
+        self.assertEqual(
+            list(
+                entry_validator.iter_errors(
+                    {"ordinal": 1, "path": "😀" * 513, "entry_kind": "regular"}
+                )
+            ),
+            [],
+        )
+        self.assertTrue(
+            list(
+                entry_validator.iter_errors(
+                    {"ordinal": 1, "path": "😀" * 514, "entry_kind": "regular"}
+                )
+            )
+        )
 
         example = next(
             item for item in self.examples if item["id"] == "validation/clean-full"

@@ -916,7 +916,8 @@ authority.
 
 The process-free `tracked_artifact_absence` check consumes one closed
 `tracked_artifact_snapshot`. Its `entries` are bounded inert records with a
-strictly increasing positive `ordinal`, a bounded raw `path`, and an
+strictly increasing positive `ordinal`, a raw `path` of zero through 513
+Unicode scalar values, and an
 `entry_kind` of `regular`, `symlink`, or `reparse`. Entry kind is metadata, not
 authority: every kind follows the same policy, and no path is opened or
 followed. Native adapters may populate this snapshot from a retained Git index
@@ -925,7 +926,8 @@ filesystem inspection, symlink resolution, and reparse-point inspection all
 remain outside this oracle.
 
 For each entry, the validator first replaces backslash separators with `/`.
-The resulting path must be NFC, repository-relative, at most 512 characters,
+The resulting path must be NFC, repository-relative, at most 512 Unicode
+scalar values,
 and satisfy the shared portable-path rules: no absolute, drive-qualified, UNC,
 empty, dot, traversal, trailing-dot/space, control, reserved-character, or
 Windows-reserved segments. Invalid records produce
@@ -933,7 +935,10 @@ Windows-reserved segments. Invalid records produce
 contain only `ordinal`, `entry_kind`, and one stable problem from `EMPTY`,
 `TOO_LONG`, `NON_NFC`, `ABSOLUTE`, `DRIVE_QUALIFIED`, `EMPTY_SEGMENT`,
 `DOT_SEGMENT`, `TRAILING_DOT_OR_SPACE`, `UNSAFE_CHARACTER`, or
-`RESERVED_BASENAME`. The raw invalid path is never emitted.
+`RESERVED_BASENAME`. Windows-reserved basenames are compared with the closed
+ASCII reserved-name set after full Unicode uppercase mapping; this includes
+the U+0131 DOTLESS I mapping needed to recognize `CONIN$`. The raw invalid path
+is never emitted.
 
 A valid normalized path is forbidden when any component has NFKC-casefolded
 identity `node_modules`. This rejects the exact component, nested components,
@@ -941,8 +946,10 @@ case aliases, and Unicode compatibility aliases while allowing similarly
 named components such as `node_modules-cache`. The diagnostic is
 `TRACKED_ARTIFACT_FORBIDDEN` at the safe slash-normalized path with only the
 entry ordinal and kind in details. Multiple diagnostics use the normal
-`(code, path, package, canonical details)` ordering, so snapshot enumeration
-order cannot change the result. Expected results are not evidence for either
+`(code, path, package, canonical details)` ordering, where path comparison is
+lexicographic by Unicode scalar value rather than UTF-8, UTF-16, or locale
+order, so snapshot enumeration and runtime string representation cannot change
+the result. Expected results are not evidence for either
 classification, and the neutral validator has no filesystem, Git, process,
 environment, or network authority.
 

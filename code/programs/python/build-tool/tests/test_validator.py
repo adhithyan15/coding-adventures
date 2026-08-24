@@ -26,6 +26,7 @@ TRACKED_ARTIFACT_CASES = (
     "validation-tracked-artifacts-forbidden.json",
     "validation-tracked-artifacts-aliases.json",
     "validation-tracked-artifacts-invalid.json",
+    "validation-tracked-artifacts-unicode-boundaries.json",
 )
 
 

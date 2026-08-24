@@ -6157,6 +6157,82 @@ established lanes, 1,370 identities, 4,563 slots, 175 high-consensus packages
 with 276 gaps, 907 singletons with 12,698 gaps, 718 Rust singletons, zero
 collisions, and zero unknown buckets; OCaml remains correctly emerging at zero.
 
+### Post-#12608 refresh and cross-runtime hardening discovery
+
+C# tracked-artifact consumer PR #12608 completed all 29 reported checks with
+23 successes, six expected skips, and no failures or pending work. GitHub
+reported the branch clean and mergeable; the loop enabled squash auto-merge,
+and GitHub merged final head `af6521706441c9171a56aef5994d5b4fbf0318e9`
+as `977b44f41124b36a59c6a73978eeb1153eb67c37` at
+2026-08-24T20:05:44Z without a manual merge command.
+
+The collision-checked exact-main inventory was regenerated after the subsequent
+Tamil- and Telugu-curriculum and HTML-parser merges at
+`3a758a6973ea74ff14b6617098e1ad042fa5621c`. It remains 15 established
+lanes, 1,370 implementation identities, 4,563 slots, 175 high-consensus
+identities with 276 gaps, 122 identities in five to nine lanes with 926 gaps,
+166 identities in two to four lanes with 2,087 gaps, and 907 singletons with
+12,698 gaps. There are 718 Rust singletons, zero collisions, zero unknown
+buckets, no newly unowned portable package, and OCaml remains correctly
+emerging at zero packages.
+
+The required cross-runtime audit found that three corrections discovered while
+reviewing C# remain pinned only by C#-local tests: Unicode-scalar 512/513 path
+lengths, cross-plane Unicode-scalar diagnostic ordering, and full-uppercase
+Windows reserved-basename membership for a dotless-i alias. The shared schema
+also requires tracked paths to contain one through 512 characters, making the
+advertised `EMPTY` and `TOO_LONG` diagnostics unreachable from every valid
+fixture. The loop therefore registers
+`build-tool-tracked-artifact-unicode-cross-runtime-corpus-hardening` before
+selecting another engine child, and makes it a prerequisite of all nine
+unmerged consumers. The F# tracked and orphan children also now explicitly
+depend on the C# shared engine surfaces they expose rather than relying on an
+unstated facade dependency. The Go oracle and future JVM and Dart build tools
+also depend explicitly on this repair, while OCaml receives it transitively
+through the Go substrate. The reconciled state has 482 owners and 699 edges;
+all IDs and dependencies remain unique, present, and acyclic.
+
+The dependency/leverage pass selects
+`build-tool-tracked-artifact-unicode-cross-runtime-corpus-hardening` on branch
+`codex/build-tool-tracked-artifact-unicode-corpus-hardening`. It is the only
+newly exposed portable prerequisite, stays entirely within inert schema,
+fixture, and pure-validator data, and directly gates nine extant engine
+children, the Go oracle, the future JVM and Dart build tools, and OCaml through
+the Go substrate. Nine live open PRs and 34 current non-main remote heads have
+zero exact overlap on the selected schema, fixture, reference-runner, Python,
+C#, state, or roadmap surfaces; the target branch and prior PR were absent
+before the fresh exact-main worktree was created. F# tracked-artifact remains
+the preferred next engine child after this shared contract is closed.
+
+The implementation closes the reachability gap without widening the validator:
+the schema admits only the exact zero-through-513-scalar fixture envelope while
+the pure oracle continues to reject empty and longer-than-512 paths. One new
+shared case proves the 512/513 astral boundary, Unicode-scalar diagnostic order
+across U+E000 and U+10000, and the U+0131 dotless-i `CONIN$` reserved-basename
+alias. Python and C# both consume all five tracked-artifact cases. The complete
+neutral schema and runner suites pass 80 tests plus 119 subtests; the 111-case,
+269-file corpus validates; Python passes 424 package tests at 90.01% total
+coverage and 97% validator coverage; and C# passes all 27 release tests. The
+corpus remains process-free and adds no Git, filesystem, environment, process,
+or network authority.
+
+Before publication, the branch rebased without conflict over the unrelated
+Rust HTML-parser fix in PR #12613 to exact `origin/main`
+`6378b33b42714a66eb09964acb2682adfe830738`. A fresh collision-checked report
+at that base is unchanged at 15 established lanes, 1,370 identities, 4,563
+slots, zero collisions, and zero unknown buckets. All 178 build-tool
+conformance tests pass with 23 expected platform skips and 225 subtests; both
+canonical Python BUILD fronts pass 424 tests at 90.06% total coverage and the
+C# BUILD front passes 27 tests with no compiler warning. Three independent
+read-only fixture, security/authority, and state/roadmap reviews found no
+remaining implementation or publication-scope defect. F# tracked-artifact
+therefore remains the correct next owner after merge.
+
+Ready-for-review PR #12615 opened from validated head
+`5c6cdd8df36fe9a490d251e707b379221b48bf72` after a normal first push. GitHub
+reports it mergeable while required checks are pending, so auto-merge remains
+disabled until every required check reaches a terminal acceptable conclusion.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
