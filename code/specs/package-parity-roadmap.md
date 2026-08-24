@@ -6067,6 +6067,21 @@ overlap; the target branch is absent. The OCaml process-free core remains
 dependency-ready but collision-unsafe while PRs #12149 and #12162 touch the Go
 validator and main surfaces.
 
+The implementation adds one pure Python validator over inert snapshot entries,
+tests it against every shared tracked-artifact fixture, and documents the
+public result shape without widening the reviewed authority boundary. After
+three unrelated human-language and HTML-parser commits reached `main`, the two
+implementation commits rebased without conflict onto exact revision
+`b42ae77fd298bf33c3ee354c369e36d5979f4d7d`. The collision-checked inventory is
+unchanged at 15 established lanes, 1,370 identities, 4,563 slots, zero
+collisions, and zero unknown buckets. Both complete Python build-tool fronts
+pass from cleared Python 3.13 environments with 423 tests and 90.06% coverage;
+the shared corpus, Python 3.10 conformance family, Go oracle and forced dry
+repository plan, package-parity/capability/OCaml gates, focused quality and
+security checks, build artifacts, dependency check, state DAG, and diff checks
+also pass. Full-package strict MyPy retains exactly the same 11 findings in
+seven unchanged files as exact `main`; the new validator is strict-MyPy clean.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
