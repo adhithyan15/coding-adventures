@@ -7437,10 +7437,13 @@ impl HtmlParser {
                 )
                 .at_emission(self.current_token_emission_position),
             );
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-p-end-tag",
-                "end tag `</p>` created and closed an implied `p` element",
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-p-end-tag",
+                    "end tag `</p>` created and closed an implied `p` element",
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             self.append_node(Node::element("p".to_string(), Vec::new()));
             return;
         }
@@ -7810,28 +7813,37 @@ impl HtmlParser {
             "p" if self.current_parent_has_table_cell_ancestor()
                 && !self.current_parent_has_element_in_table_scope("p") =>
             {
-                self.diagnostics.push(ParserDiagnostic::new(
-                    "unexpected-p-end-tag",
-                    "end tag `</p>` created and closed an implied `p` element",
-                ));
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-p-end-tag",
+                        "end tag `</p>` created and closed an implied `p` element",
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
                 self.append_node(Node::element("p".to_string(), Vec::new()));
             }
             "p" if self.current_parent_has_table_ancestor()
                 && !self.current_parent_has_element_in_table_scope("p") =>
             {
-                self.diagnostics.push(ParserDiagnostic::new(
-                    "unexpected-p-end-tag",
-                    "end tag `</p>` created and closed an implied `p` element",
-                ));
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-p-end-tag",
+                        "end tag `</p>` created and closed an implied `p` element",
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
                 self.insert_node_before_open_table(Node::element("p".to_string(), Vec::new()));
             }
             "p" if self.has_open_element("p")
                 && !self.has_open_element_before_namespace_boundary("p") =>
             {
-                self.diagnostics.push(ParserDiagnostic::new(
-                    "unexpected-p-end-tag",
-                    "end tag `</p>` created and closed an implied `p` element",
-                ));
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-p-end-tag",
+                        "end tag `</p>` created and closed an implied `p` element",
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
                 self.append_node(Node::element("p".to_string(), Vec::new()));
             }
             "p" if self.has_authored_open_html_element("p")
@@ -7839,10 +7851,13 @@ impl HtmlParser {
                     != Some(TemplateInsertionMode::Template)
                 && self.open_html_element_in_button_scope_index("p").is_none() =>
             {
-                self.diagnostics.push(ParserDiagnostic::new(
-                    "unexpected-p-end-tag",
-                    "end tag `</p>` created and closed an implied `p` element",
-                ));
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-p-end-tag",
+                        "end tag `</p>` created and closed an implied `p` element",
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
                 self.append_node(Node::element("p".to_string(), Vec::new()));
             }
             "p" if !self.has_open_element("p")
@@ -7851,17 +7866,23 @@ impl HtmlParser {
                     .current_element_name()
                     .is_some_and(is_formatting_element) =>
             {
-                self.diagnostics.push(ParserDiagnostic::new(
-                    "unexpected-p-end-tag",
-                    "end tag `</p>` created and closed an implied `p` element",
-                ));
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-p-end-tag",
+                        "end tag `</p>` created and closed an implied `p` element",
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
                 self.append_node(Node::element("p".to_string(), Vec::new()));
             }
             "p" if !self.has_open_element("p") => {
-                self.diagnostics.push(ParserDiagnostic::new(
-                    "unexpected-p-end-tag",
-                    "end tag `</p>` created and closed an implied `p` element",
-                ));
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-p-end-tag",
+                        "end tag `</p>` created and closed an implied `p` element",
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
                 self.append_start_tag("p".to_string(), Vec::new(), false);
                 self.close_element("p");
             }
@@ -27323,6 +27344,14 @@ mod tests {
         .at_emission(Some(end_tag_position(source, name)))
     }
 
+    fn unexpected_p_end_tag(source: &str) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-p-end-tag",
+            "end tag `</p>` created and closed an implied `p` element",
+        )
+        .at_emission(Some(end_tag_position(source, "p")))
+    }
+
     fn scoped_block_end_tag_outside_scope(source: &str, name: &str) -> ParserDiagnostic {
         ParserDiagnostic::new(
             "unexpected-block-end-tag-outside-scope",
@@ -32552,6 +32581,11 @@ mod tests {
             ),
         ] {
             let output = parse_html_with_diagnostics(source).unwrap();
+            let diagnostic = output
+                .parser_diagnostics
+                .iter()
+                .find(|diagnostic| diagnostic.code == "unexpected-p-end-tag")
+                .unwrap();
             assert_eq!(
                 output
                     .parser_diagnostics
@@ -32561,6 +32595,11 @@ mod tests {
                 1,
                 "boundary {boundary_name:?}: {:?}",
                 output.parser_diagnostics
+            );
+            assert_eq!(
+                diagnostic.position,
+                Some(end_tag_position(source, "p")),
+                "boundary {boundary_name:?}"
             );
             let outer = find_element_by_id(&output.document.children, "outer")
                 .expect("the blocked end tag should leave the outer paragraph open");
@@ -32581,16 +32620,20 @@ mod tests {
             ),
         ] {
             let output = parse_html_with_diagnostics(source).unwrap();
+            let diagnostics = output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-p-end-tag")
+                .collect::<Vec<_>>();
             assert_eq!(
-                output
-                    .parser_diagnostics
-                    .iter()
-                    .filter(|diagnostic| diagnostic.code == "unexpected-p-end-tag")
-                    .count(),
+                diagnostics.len(),
                 expected_count,
                 "source {source:?}: {:?}",
                 output.parser_diagnostics
             );
+            if let Some(diagnostic) = diagnostics.first() {
+                assert_eq!(diagnostic.position, Some(end_tag_position(source, "p")));
+            }
         }
 
         let template = parse_html_with_diagnostics(
@@ -32650,10 +32693,7 @@ mod tests {
                 output.parser_diagnostics,
                 vec![
                     generic_foreign_end_tag_mismatch(&source, "p"),
-                    ParserDiagnostic::new(
-                        "unexpected-p-end-tag",
-                        "end tag `</p>` created and closed an implied `p` element"
-                    ),
+                    unexpected_p_end_tag(&source),
                 ],
                 "source {source:?}"
             );
@@ -32689,9 +32729,8 @@ mod tests {
                     "<!doctype html><svg><foreignObject id=boundary></p>X</foreignObject></svg>",
                     "p",
                 ),
-                ParserDiagnostic::new(
-                    "unexpected-p-end-tag",
-                    "end tag `</p>` created and closed an implied `p` element"
+                unexpected_p_end_tag(
+                    "<!doctype html><svg><foreignObject id=boundary></p>X</foreignObject></svg>",
                 ),
             ]
         );
@@ -32739,10 +32778,7 @@ mod tests {
             output.parser_diagnostics,
             vec![
                 generic_foreign_end_tag_mismatch(source, "p"),
-                ParserDiagnostic::new(
-                    "unexpected-p-end-tag",
-                    "end tag `</p>` created and closed an implied `p` element"
-                ),
+                unexpected_p_end_tag(source),
             ]
         );
         assert!(source.len() > source.chars().count());
@@ -39903,11 +39939,23 @@ mod tests {
         assert_eq!(element(&outer.children[0]).name, "math");
         assert_eq!(body(&output.document).children.last(), Some(&Node::text("X")));
 
-        for source in [
-            "<!doctype html><p><object><math><mrow></p>X</object></p>",
-            "<!doctype html><p><button><math><mrow></p>X</button></p>",
-            "<!doctype html><p><template><math><mrow></p>X</template></p>",
-            "<!doctype html><table><tbody><tr><td><p><math><mrow></p>X</td></tr></tbody></table>",
+        for (source, expected_companion_count) in [
+            (
+                "<!doctype html><p><object><math><mrow></p>X</object></p>",
+                1,
+            ),
+            (
+                "<!doctype html><p><button><math><mrow></p>X</button></p>",
+                1,
+            ),
+            (
+                "<!doctype html><p><template><math><mrow></p>X</template></p>",
+                1,
+            ),
+            (
+                "<!doctype html><table><tbody><tr><td><p><math><mrow></p>X</td></tr></tbody></table>",
+                0,
+            ),
         ] {
             let scoped = parse_html_with_diagnostics(source).unwrap();
             let recoveries = scoped
@@ -39922,14 +39970,21 @@ mod tests {
                 vec![&paragraph_foreign_end_tag_recovery(source)],
                 "source {source:?}"
             );
+            let companions = scoped
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-p-end-tag")
+                .collect::<Vec<_>>();
+            assert_eq!(
+                companions.len(),
+                expected_companion_count,
+                "source {source:?}: {:?}",
+                scoped.parser_diagnostics
+            );
             assert!(
-                scoped
-                    .parser_diagnostics
+                companions
                     .iter()
-                    .filter(|diagnostic| {
-                        diagnostic.code != "unexpected-p-end-tag-in-foreign-content"
-                    })
-                    .all(|diagnostic| diagnostic.position.is_none()),
+                    .all(|diagnostic| **diagnostic == unexpected_p_end_tag(source)),
                 "source {source:?}: {:?}",
                 scoped.parser_diagnostics
             );
@@ -45444,16 +45499,13 @@ mod tests {
 
     #[test]
     fn recovers_special_p_and_br_end_tags() {
-        let output =
-            parse_html_with_diagnostics("<!doctype html>Before</p>Middle</br>After").unwrap();
+        let source = "<!doctype html>Before</p>Middle</br>After";
+        let output = parse_html_with_diagnostics(source).unwrap();
 
         assert_eq!(
             output.parser_diagnostics,
             vec![
-                ParserDiagnostic::new(
-                    "unexpected-p-end-tag",
-                    "end tag `</p>` created and closed an implied `p` element"
-                ),
+                unexpected_p_end_tag(source),
                 ParserDiagnostic::new(
                     "unexpected-br-end-tag",
                     "end tag `</br>` was recovered as a `br` start tag"
