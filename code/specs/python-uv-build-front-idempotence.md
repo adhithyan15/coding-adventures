@@ -175,6 +175,44 @@ relying on that fragile margin or lowering the threshold. It MUST NOT change
 runtime dependency metadata, capability declarations, protocol semantics, or
 the DT23/DT24 behavior boundary.
 
+## Data-store quoted-editable repair profile
+
+The `windows-quoted-editable` owner MUST repair
+`in-memory-data-store-engine` before `in-memory-data-store`. Both packages MUST
+adopt the generated named-environment guarantees above while preserving their
+leaf-to-root repository-local dependency order:
+
+1. the engine installs `hash-functions`, then `hyperloglog` and
+   `in-memory-data-store-protocol`, then itself; and
+2. the composed store installs `hash-functions`, then `hyperloglog`,
+   `in-memory-data-store-protocol`, and `resp-protocol`, then
+   `in-memory-data-store-engine`, then itself.
+
+The Windows fronts MUST replace the invalid quoted editable requirement
+`".[dev]"` with the unquoted `.[dev]` token and retain the existing
+`--no-deps` editable-package plus explicit development-tool split. Canonical
+fronts MUST install their own unquoted `.[dev]` requirement through the named
+environment. Every strict MyPy command MUST use `--follow-untyped-imports`
+because the installed `hash-functions` package, and the composed store's
+installed `resp-protocol` package, lack PEP 561 markers.
+
+Dormant type-check findings MAY receive only bounded, behavior-preserving
+cleanup: discriminate each scalar `EngineResponse` kind before narrowing its
+value, and prove decoded AOF frame and element shapes before typed test use.
+The composed store's broad `ignore_missing_imports` configuration MUST be
+removed once the complete local closure is installed and followed. Existing
+95% coverage thresholds MUST remain unchanged. The repair MUST NOT change
+runtime dependency metadata, versions, capability manifests, RESP semantics,
+data-store behavior, or AOF filesystem authority. The separately registered
+filesystem-authority review remains selection-blocked and outside this repair.
+
+The regression MUST compare all four complete recipes exactly. Windows
+runtime validation MUST run both fronts twice consecutively from clean
+package-local copies with uv 0.11.28 and Python 3.13, then prove the audit
+shrinks only by these two packages. Validation MUST also build distributable
+artifacts, exercise the store's direct dependent closure, and run the Go build
+tool's dry plan and real affected closure.
+
 ## Legacy named-environment repair profile
 
 The separately owned `python/in-memory-data-store-protocol` front was not in
