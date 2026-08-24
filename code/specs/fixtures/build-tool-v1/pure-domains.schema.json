@@ -1616,32 +1616,176 @@
           "type": "object",
           "additionalProperties": false,
           "required": [
-            "action",
-            "condition",
+            "argv",
+            "dispatch_outcome",
             "requires_execution"
           ],
           "properties": {
-            "action": {
-              "enum": [
-                "build",
-                "validate",
-                "dry_run",
-                "emit_plan"
-              ]
+            "argv": {
+              "type": "array",
+              "maxItems": 65,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 257
+              }
             },
-            "condition": {
+            "dispatch_outcome": {
               "enum": [
                 "success",
                 "package_failure",
-                "validation_failure",
-                "invalid_usage",
-                "unsafe_input"
+                "validation_failure"
               ]
             },
             "requires_execution": {
               "const": false
             }
           }
+        }
+      }
+    },
+    "cli_language": {
+      "enum": [
+        "all",
+        "c",
+        "cpp",
+        "csharp",
+        "dart",
+        "dotnet",
+        "elixir",
+        "fsharp",
+        "go",
+        "haskell",
+        "java",
+        "kotlin",
+        "lua",
+        "mosaic",
+        "ocaml",
+        "perl",
+        "python",
+        "ruby",
+        "rust",
+        "starlark",
+        "swift",
+        "twig",
+        "typescript",
+        "wasm"
+      ]
+    },
+    "cli_nullable_path": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/safe_path"
+        }
+      ]
+    },
+    "cli_parsed_options": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cache_file",
+        "clippy",
+        "detect_languages",
+        "diff_base",
+        "dry_run",
+        "emit_plan",
+        "emit_shard_matrix",
+        "force",
+        "jobs",
+        "language",
+        "plan_file",
+        "root",
+        "shard_count",
+        "shard_index",
+        "validate_build_files"
+      ],
+      "properties": {
+        "cache_file": {
+          "$ref": "#/$defs/safe_path"
+        },
+        "clippy": {
+          "type": "boolean"
+        },
+        "detect_languages": {
+          "type": "boolean"
+        },
+        "diff_base": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "emit_plan": {
+          "$ref": "#/$defs/cli_nullable_path"
+        },
+        "emit_shard_matrix": {
+          "type": "boolean"
+        },
+        "force": {
+          "type": "boolean"
+        },
+        "jobs": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 256
+            }
+          ]
+        },
+        "language": {
+          "$ref": "#/$defs/cli_language"
+        },
+        "plan_file": {
+          "$ref": "#/$defs/cli_nullable_path"
+        },
+        "root": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "const": "."
+            },
+            {
+              "$ref": "#/$defs/safe_path"
+            }
+          ]
+        },
+        "shard_count": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 256
+            }
+          ]
+        },
+        "shard_index": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 255
+            }
+          ]
+        },
+        "validate_build_files": {
+          "type": "boolean"
         }
       }
     },
@@ -1658,8 +1802,37 @@
             1,
             2
           ]
+        },
+        "parsed": {
+          "$ref": "#/$defs/cli_parsed_options"
         }
-      }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "exit_code": {
+                "const": 2
+              }
+            },
+            "required": [
+              "exit_code"
+            ]
+          },
+          "then": {
+            "not": {
+              "required": [
+                "parsed"
+              ]
+            }
+          },
+          "else": {
+            "required": [
+              "parsed"
+            ]
+          }
+        }
+      ]
     },
     "cli_record": {
       "type": "object",

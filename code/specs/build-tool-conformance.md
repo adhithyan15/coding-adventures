@@ -699,8 +699,9 @@ These records intentionally model decisions, not host operations:
 - Starlark receives inline source and context; it never executes a command;
 - validation inspects inline repository data only;
 - toolchain detection never probes installed programs; and
-- CLI fixtures classify exit decisions without standardizing native argument
-  grammar, invoking a front door, or launching a build.
+- CLI fixtures parse a bounded, language-neutral `argv` grammar into a closed
+  typed record and then classify an explicitly supplied post-parse outcome.
+  They never invoke a front door or launch a build.
 
 Hashing v1 uses SHA-256 over an unambiguous byte stream. Included files are
 sorted by normalized forward-slash path. For each file, append the unsigned
@@ -884,18 +885,71 @@ toolchains are stable validation errors rather than new result-map keys.
 `scheduled_packages: null` selects every supplied package, while `[]` selects
 none. Forced toolchains are unioned into the derived set.
 
-The process-free CLI record is a decision table only:
+The process-free CLI record standardizes a canonical parser surface. Its input
+contains `argv`, `dispatch_outcome`, and `requires_execution: false`. `argv`
+accepts at most 64 non-empty UTF-8 tokens, each at most 256 Unicode scalar
+values and at most 4,096 encoded bytes in aggregate. The fixture envelope
+admits only the exact one-over boundaries of 65 tokens and 257 scalar values so
+portable cases can prove their rejection without admitting unbounded input.
+Only the following long-form spellings are accepted; a value flag accepts
+either `--name value` or `--name=value`:
+
+| Kind | Flags |
+|---|---|
+| Boolean | `--force`, `--dry-run`, `--validate-build-files`, `--no-validate-build-files`, `--detect-languages`, `--emit-shard-matrix`, `--clippy` |
+| Integer | `--jobs`, `--shard-count`, `--shard-index` |
+| Language | `--language` |
+| Portable repository-relative path | `--root`, `--cache-file`, `--emit-plan`, `--plan-file` |
+| Git ref data | `--diff-base` |
+
+Every logical flag may occur at most once. Boolean flags do not accept values.
+`jobs` and `shard-count` are in `1..256`; `shard-index` is in `0..255`.
+`emit-plan` and `plan-file` are mutually exclusive. `shard-count` requires
+`emit-plan`; `shard-index` requires `plan-file`; and `emit-shard-matrix`
+requires both `emit-plan` and `shard-count`. The language value is `all` or a
+closed discovery identifier: `c`, `cpp`, `csharp`, `dart`, `dotnet`, `elixir`,
+`fsharp`, `go`, `haskell`, `java`, `kotlin`, `lua`, `mosaic`, `ocaml`, `perl`,
+`python`, `ruby`, `rust`, `starlark`, `swift`, `twig`, `typescript`, or `wasm`.
+
+The typed result always supplies deterministic normalized defaults after a
+successful parse: absent `root`, `jobs`, plan paths, and shard values are
+`null`; `language` is `all`; `diff_base` is `origin/main`; `cache_file` is
+`.build-cache.json`; `validate_build_files` is true; and other booleans are
+false. A literal `.` is accepted only for `root`; every other path is checked
+lexically by the shared portable-path rules. No default may inspect the current
+directory, CPU count, environment, platform, clock, or filesystem.
+
+Argument-count, token-length, and aggregate-byte overflow is
+`CLI_ARGUMENT_LIMIT`. The adapter-reserved flags `--conformance`,
+`--workspace-root`, and `--output`
+(including `--name=value`) are `CLI_ARGUMENT_RESERVED`. Response-file tokens
+beginning with `@`, environment-assignment positionals, environment expansions,
+shell metacharacters, redirection, and command substitution are
+`CLI_ARGUMENT_UNSAFE`. Shell syntax includes grouping parentheses and the
+Windows command escape `^`. Unsafe path values, including non-NFC and trailing-
+slash forms, are `CLI_PATH_UNSAFE`. Git refs are slash-separated ASCII ref data;
+no component may be empty, a dot form, begin with `.`, or end with `.` or
+`.lock`, and range or trailing-slash forms are forbidden. One optional `~`
+suffix must contain a canonical non-negative integer. Unknown,
+duplicate, incomplete, out-of-range, positional, or inconsistent arguments are
+`CLI_USAGE_INVALID`. Every parser rejection has exit code 2, omits the typed
+parse record, emits exactly one stable error diagnostic, and does not echo the
+rejected token. Overlapping failures use this precedence: argument limit,
+reserved adapter flag, shell/environment/response-file syntax, path safety,
+then ordinary usage. Once parsing succeeds, the supplied decision table
+remains:
 
 | Condition | Exit code |
 |---|---:|
 | `success` | `0` |
 | `package_failure`, `validation_failure` | `1` |
-| `invalid_usage`, `unsafe_input` | `2` |
+| parser rejection | `2` |
 
 Every process-free CLI case requires `requires_execution: false`; a true value
-is rejected before workspace decoding. Native argument parsing and
-machine-output compatibility become conformance claims only when a later
-sandbox executes each language front door.
+is rejected before workspace decoding. The reference runner independently
+re-parses `argv` and rejects dishonest typed results. Native front-door
+invocation and machine-output compatibility become conformance claims only
+when a later sandbox executes each language front door.
 
 ## Security and trust boundary
 

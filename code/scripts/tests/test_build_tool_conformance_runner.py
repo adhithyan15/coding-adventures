@@ -131,7 +131,7 @@ class CorpusTests(unittest.TestCase):
         summary = runner.validate_corpus(FIXTURE_ROOT)
 
         self.assertEqual(summary["schema_version"], 1)
-        self.assertEqual(summary["case_count"], 75)
+        self.assertEqual(summary["case_count"], 102)
         self.assertEqual(summary["implementation_count"], 16)
         self.assertEqual(summary["established_languages"], 15)
         self.assertEqual(summary["execution_case_count"], 0)
@@ -584,6 +584,117 @@ class PureDomainValidationTests(unittest.TestCase):
             ),
         }
 
+    def test_cli_parser_normalizes_defaults_and_typed_values(self) -> None:
+        parsed, diagnostic = runner._parse_cli_argv(
+            [
+                "--root=code",
+                "--language",
+                "ocaml",
+                "--jobs=256",
+                "--force",
+                "--no-validate-build-files",
+                "--clippy",
+                "--diff-base",
+                "HEAD~1",
+                "--cache-file=artifacts/cache.json",
+                "--emit-plan",
+                "artifacts/plan.json",
+                "--shard-count=256",
+                "--emit-shard-matrix",
+            ]
+        )
+        self.assertIsNone(diagnostic)
+        self.assertEqual(
+            parsed,
+            {
+                "cache_file": "artifacts/cache.json",
+                "clippy": True,
+                "detect_languages": False,
+                "diff_base": "HEAD~1",
+                "dry_run": False,
+                "emit_plan": "artifacts/plan.json",
+                "emit_shard_matrix": True,
+                "force": True,
+                "jobs": 256,
+                "language": "ocaml",
+                "plan_file": None,
+                "root": "code",
+                "shard_count": 256,
+                "shard_index": None,
+                "validate_build_files": False,
+            },
+        )
+
+        plan_parse, plan_diagnostic = runner._parse_cli_argv(
+            [
+                "--root",
+                ".",
+                "--plan-file=artifacts/plan.json",
+                "--shard-index",
+                "0",
+                "--detect-languages",
+                "--validate-build-files",
+            ]
+        )
+        self.assertIsNone(plan_diagnostic)
+        if plan_parse is None:
+            self.fail("valid plan-consumption arguments did not produce a parse")
+        self.assertEqual(plan_parse["root"], ".")
+        self.assertEqual(plan_parse["plan_file"], "artifacts/plan.json")
+        self.assertEqual(plan_parse["shard_index"], 0)
+        self.assertTrue(plan_parse["detect_languages"])
+        self.assertTrue(plan_parse["validate_build_files"])
+
+    def test_cli_parser_rejects_reserved_and_inert_host_syntax(self) -> None:
+        cases = {
+            ("--workspace-root=repo",): "CLI_ARGUMENT_RESERVED",
+            ("@args.txt",): "CLI_ARGUMENT_UNSAFE",
+            ("TOKEN=value",): "CLI_ARGUMENT_UNSAFE",
+            ("--root=$HOME",): "CLI_ARGUMENT_UNSAFE",
+            ("--diff-base=$(whoami)",): "CLI_ARGUMENT_UNSAFE",
+            ("--root=repo>outside",): "CLI_ARGUMENT_UNSAFE",
+            ("--language=python;whoami",): "CLI_ARGUMENT_UNSAFE",
+            ("--language=e\u0301",): "CLI_USAGE_INVALID",
+            ("--root=repo\nx",): "CLI_ARGUMENT_UNSAFE",
+            ("\ud800",): "CLI_ARGUMENT_UNSAFE",
+            ("--emit-plan", "../outside.json"): "CLI_PATH_UNSAFE",
+            ("--jobs=0",): "CLI_USAGE_INVALID",
+            ("--jobs=01",): "CLI_USAGE_INVALID",
+            ("--language=",): "CLI_USAGE_INVALID",
+            ("--language=zig",): "CLI_USAGE_INVALID",
+            ("--diff-base=../main",): "CLI_USAGE_INVALID",
+            ("--diff-base=refs/foo.lock/bar",): "CLI_USAGE_INVALID",
+            ("--diff-base=refs/.hidden/main",): "CLI_USAGE_INVALID",
+            ("--diff-base=refs/main.",): "CLI_USAGE_INVALID",
+            ("--dry-run", "--dry-run"): "CLI_USAGE_INVALID",
+            ("--plan-file=plan.json", "--emit-plan=other.json"): "CLI_USAGE_INVALID",
+            ("--shard-count=2",): "CLI_USAGE_INVALID",
+            ("--shard-index=0",): "CLI_USAGE_INVALID",
+            ("--emit-shard-matrix",): "CLI_USAGE_INVALID",
+            tuple("--force" for _ in range(65)): "CLI_ARGUMENT_LIMIT",
+            ("x" * 257,): "CLI_ARGUMENT_LIMIT",
+            tuple("é" * 64 for _ in range(64)): "CLI_ARGUMENT_LIMIT",
+        }
+        for argv, expected in cases.items():
+            with self.subTest(argv=argv):
+                parsed, diagnostic = runner._parse_cli_argv(list(argv))
+                self.assertIsNone(parsed)
+                self.assertEqual(diagnostic, expected)
+
+    def test_cli_parse_error_precedes_a_modeled_dispatch_failure(self) -> None:
+        case = load_case("cli-package-failure.json")
+        invalid_usage = load_case("cli-invalid-usage.json")
+        case["input"]["options"]["argv"] = ["--unknown"]
+        case["expected"] = copy.deepcopy(invalid_usage["expected"])
+        case["expected"]["case_id"] = case["id"]
+
+        runner.validate_case_document(case, **self._schema_args())
+        runner.assert_result_matches(
+            case,
+            copy.deepcopy(case["expected"]),
+            pure_domain_schema=self._schema_args()["pure_domain_schema"],
+        )
+
     def test_validation_allows_repeated_envelope_diagnostic_codes(self) -> None:
         case = load_case("validation-missing-build.json")
         case["input"]["options"]["packages"].append(
@@ -887,8 +998,20 @@ class PureDomainValidationTests(unittest.TestCase):
             ),
             (
                 "cli-dry-run-success.json",
-                lambda result: result["result"].__setitem__("exit_code", 2),
+                lambda result: result["result"].__setitem__("exit_code", 1),
                 "RESULT_CLI_EXIT_MISMATCH",
+            ),
+            (
+                "cli-explicit-options-success.json",
+                lambda result: result["result"]["parsed"].__setitem__("jobs", 7),
+                "RESULT_CLI_PARSE_MISMATCH",
+            ),
+            (
+                "cli-dry-run-success.json",
+                lambda result: result["diagnostics"].append(
+                    {"code": "CLI_USAGE_INVALID", "severity": "error"}
+                ),
+                "RESULT_CLI_DIAGNOSTIC_MISMATCH",
             ),
         )
         for filename, mutate, code in mutations:
@@ -985,11 +1108,13 @@ class PureDomainValidationTests(unittest.TestCase):
             for path in sorted(CASES_ROOT.glob("*.json"))
             if runner.load_document(path)["domain"] in pure_domains
         ]
+        guarded_os = mock.Mock(wraps=os)
 
         with (
             mock.patch.object(tempfile, "TemporaryDirectory") as temporary,
             mock.patch.object(subprocess, "run") as process,
             mock.patch.object(subprocess, "Popen") as popen,
+            mock.patch.object(runner, "os", guarded_os),
             mock.patch.object(os, "system") as system,
             mock.patch.object(os, "chmod") as chmod,
             mock.patch("urllib.request.urlopen") as retrieve,
@@ -1002,6 +1127,10 @@ class PureDomainValidationTests(unittest.TestCase):
         temporary.assert_not_called()
         process.assert_not_called()
         popen.assert_not_called()
+        guarded_os.getcwd.assert_not_called()
+        guarded_os.cpu_count.assert_not_called()
+        guarded_os.getenv.assert_not_called()
+        self.assertEqual(guarded_os.environ.mock_calls, [])
         system.assert_not_called()
         chmod.assert_not_called()
         retrieve.assert_not_called()
@@ -1019,7 +1148,7 @@ class CommandLineTests(unittest.TestCase):
 
         self.assertEqual(exit_code, 0)
         summary = json.loads(stdout.getvalue())
-        self.assertEqual(summary["case_count"], 75)
+        self.assertEqual(summary["case_count"], 102)
 
     def test_validate_result_reports_match_and_rejects_execution_override(self) -> None:
         case_path = CASES_ROOT / "graph-diamond.json"

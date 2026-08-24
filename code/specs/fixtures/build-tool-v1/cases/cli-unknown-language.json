@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "id": "cli/invalid-usage",
+  "id": "cli/unknown-language",
   "domain": "cli",
-  "summary": "An unknown CLI flag maps to a stable usage error without calling the build dispatcher.",
+  "summary": "A non-registry language is a stable usage error.",
   "platforms": [
     "darwin",
     "linux",
@@ -18,7 +18,7 @@
     "operation": "cli",
     "options": {
       "argv": [
-        "--unknown"
+        "--language=zig"
       ],
       "dispatch_outcome": "success",
       "requires_execution": false
@@ -26,7 +26,7 @@
   },
   "expected": {
     "schema_version": 1,
-    "case_id": "cli/invalid-usage",
+    "case_id": "cli/unknown-language",
     "domain": "cli",
     "outcome": "error",
     "result": {

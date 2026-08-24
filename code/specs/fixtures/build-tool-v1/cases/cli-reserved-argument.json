@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "id": "cli/reserved-argument",
+  "domain": "cli",
+  "summary": "Adapter-owned flags are rejected literally before portable CLI parsing.",
+  "platforms": ["darwin", "linux", "windows"],
+  "capabilities": ["cli"],
+  "workspace": {"files": []},
+  "input": {
+    "operation": "cli",
+    "options": {
+      "argv": ["--workspace-root=repo"],
+      "dispatch_outcome": "success",
+      "requires_execution": false
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "cli/reserved-argument",
+    "domain": "cli",
+    "outcome": "error",
+    "result": {"exit_code": 2},
+    "diagnostics": [{"code": "CLI_ARGUMENT_RESERVED", "severity": "error"}]
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}

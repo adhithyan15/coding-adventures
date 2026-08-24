@@ -185,7 +185,14 @@ If a package fails to build, all packages that transitively depend on it are mar
 
 ## CLI Interface
 
-The implementations intentionally share the same overall CLI shape, but they are not perfectly feature-identical. The Go tool is the reference behavior used in CI.
+The implementations intentionally share the same overall CLI shape, but they
+are not perfectly feature-identical. The Go tool is the reference behavior used
+in CI. The portable parser subset is the bounded long-form grammar in
+[`build-tool-conformance.md`](build-tool-conformance.md#12-cli-and-reporting).
+That subset is a process-free contract: it normalizes supplied tokens and
+deterministic null/default sentinels without consulting the host. Native tools
+may retain additional spellings, but portable conformance is measured only
+against that closed grammar.
 
 ```
 build-tool [flags]
@@ -199,6 +206,14 @@ Flags:
   -language <lang>      Filter: implementation-dependent; Go supports python, ruby, go, rust, typescript, elixir, all
   -cache-file <path>    Path to cache file (default: .build-cache.json)
 ```
+
+The portable form uses `--root`, `--diff-base`, `--force`, `--dry-run`,
+`--jobs`, `--language`, `--cache-file`, `--validate-build-files`,
+`--no-validate-build-files`, `--detect-languages`, `--emit-plan`,
+`--plan-file`, `--shard-count`, `--shard-index`, `--emit-shard-matrix`, and
+`--clippy`. Reserved adapter flags and shell, environment, redirection,
+command-substitution, and response-file syntax are data errors; parsers must
+not expand or execute them.
 
 ## Implementations
 

@@ -37,6 +37,35 @@ MAX_JSON_DEPTH = 64
 MAX_WORKSPACE_FILES = 4096
 MAX_WORKSPACE_BYTES = 268_435_456
 RESERVED_ADAPTER_FLAGS = ("--conformance", "--workspace-root", "--output")
+CLI_MAX_ARGUMENTS = 64
+CLI_MAX_ARGUMENT_CHARACTERS = 256
+CLI_MAX_ARGUMENT_BYTES = 4096
+CLI_LANGUAGES = (
+    "all",
+    "c",
+    "cpp",
+    "csharp",
+    "dart",
+    "dotnet",
+    "elixir",
+    "fsharp",
+    "go",
+    "haskell",
+    "java",
+    "kotlin",
+    "lua",
+    "mosaic",
+    "ocaml",
+    "perl",
+    "python",
+    "ruby",
+    "rust",
+    "starlark",
+    "swift",
+    "twig",
+    "typescript",
+    "wasm",
+)
 EXECUTION_CAPABILITIES = {"execution", "trusted_execution"}
 PURE_DOMAINS = {
     "cli",
@@ -437,8 +466,8 @@ def portable_path_error(path: Any) -> str | None:
     ):
         return "path is not a portable relative path"
     for segment in path.split("/"):
-        if segment in {".", ".."}:
-            return "path contains a dot segment"
+        if segment in {"", ".", ".."}:
+            return "path contains an empty or dot segment"
         if segment.endswith((" ", ".")):
             return "path segment has a trailing dot or space"
         basename = segment.split(".", 1)[0].upper()
@@ -472,6 +501,185 @@ def portable_glob_error(value: Any) -> str | None:
             if basename in WINDOWS_RESERVED_BASENAMES:
                 return "glob segment uses a Windows reserved basename"
     return None
+
+
+def _cli_argument_is_unsafe(argument: str) -> bool:
+    if argument.startswith("@"):
+        return True
+    if not argument.startswith("--") and re.match(
+        r"^[A-Za-z_][A-Za-z0-9_]*=", argument
+    ):
+        return True
+    if any(ord(character) < 32 for character in argument):
+        return True
+    return any(
+        marker in argument
+        for marker in (
+            ";",
+            "&",
+            "|",
+            "<",
+            ">",
+            "`",
+            "$",
+            "%",
+            "!",
+            "(",
+            ")",
+            "^",
+        )
+    )
+
+
+def _cli_git_ref_is_valid(value: str) -> bool:
+    base, separator, ancestry = value.partition("~")
+    segments = base.split("/")
+    return bool(
+        len(value) <= 128
+        and re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._/-]*", base)
+        and (not separator or bool(re.fullmatch(r"0|[1-9][0-9]*", ancestry)))
+        and "~" not in ancestry
+        and "//" not in base
+        and ".." not in base
+        and not base.endswith(("/", ".lock"))
+        and not any(
+            segment in {"", ".", ".."}
+            or segment.startswith(".")
+            or segment.endswith((".", ".lock"))
+            for segment in segments
+        )
+    )
+
+
+def _parse_cli_argv(argv: list[Any]) -> tuple[dict[str, Any] | None, str | None]:
+    """Parse the inert portable CLI grammar without consulting host state."""
+
+    if len(argv) > CLI_MAX_ARGUMENTS:
+        return None, "CLI_ARGUMENT_LIMIT"
+    if any(
+        not isinstance(argument, str)
+        or not argument
+        or len(argument) > CLI_MAX_ARGUMENT_CHARACTERS
+        for argument in argv
+    ):
+        return None, "CLI_ARGUMENT_LIMIT"
+    try:
+        encoded_bytes = sum(len(argument.encode("utf-8")) for argument in argv)
+    except UnicodeEncodeError:
+        return None, "CLI_ARGUMENT_UNSAFE"
+    if encoded_bytes > CLI_MAX_ARGUMENT_BYTES:
+        return None, "CLI_ARGUMENT_LIMIT"
+
+    for argument in argv:
+        if any(
+            argument == flag or argument.startswith(f"{flag}=")
+            for flag in RESERVED_ADAPTER_FLAGS
+        ):
+            return None, "CLI_ARGUMENT_RESERVED"
+    if any(_cli_argument_is_unsafe(argument) for argument in argv):
+        return None, "CLI_ARGUMENT_UNSAFE"
+
+    parsed: dict[str, Any] = {
+        "cache_file": ".build-cache.json",
+        "clippy": False,
+        "detect_languages": False,
+        "diff_base": "origin/main",
+        "dry_run": False,
+        "emit_plan": None,
+        "emit_shard_matrix": False,
+        "force": False,
+        "jobs": None,
+        "language": "all",
+        "plan_file": None,
+        "root": None,
+        "shard_count": None,
+        "shard_index": None,
+        "validate_build_files": True,
+    }
+    boolean_flags = {
+        "--clippy": ("clippy", True),
+        "--detect-languages": ("detect_languages", True),
+        "--dry-run": ("dry_run", True),
+        "--emit-shard-matrix": ("emit_shard_matrix", True),
+        "--force": ("force", True),
+        "--no-validate-build-files": ("validate_build_files", False),
+        "--validate-build-files": ("validate_build_files", True),
+    }
+    value_flags = {
+        "--cache-file": "cache_file",
+        "--diff-base": "diff_base",
+        "--emit-plan": "emit_plan",
+        "--jobs": "jobs",
+        "--language": "language",
+        "--plan-file": "plan_file",
+        "--root": "root",
+        "--shard-count": "shard_count",
+        "--shard-index": "shard_index",
+    }
+    seen: set[str] = set()
+    index = 0
+    while index < len(argv):
+        argument = argv[index]
+        flag, separator, attached = argument.partition("=")
+        if flag in boolean_flags:
+            field, value = boolean_flags[flag]
+            if separator or field in seen:
+                return None, "CLI_USAGE_INVALID"
+            seen.add(field)
+            parsed[field] = value
+            index += 1
+            continue
+        option_field = value_flags.get(flag)
+        if option_field is None or option_field in seen:
+            return None, "CLI_USAGE_INVALID"
+        if separator:
+            value = attached
+        else:
+            index += 1
+            if index >= len(argv) or argv[index].startswith("--"):
+                return None, "CLI_USAGE_INVALID"
+            value = argv[index]
+        if not value:
+            return None, "CLI_USAGE_INVALID"
+        seen.add(option_field)
+
+        if option_field in {"jobs", "shard_count", "shard_index"}:
+            if not re.fullmatch(r"0|[1-9][0-9]*", value):
+                return None, "CLI_USAGE_INVALID"
+            integer = int(value)
+            minimum = 0 if option_field == "shard_index" else 1
+            maximum = 255 if option_field == "shard_index" else 256
+            if not minimum <= integer <= maximum:
+                return None, "CLI_USAGE_INVALID"
+            parsed[option_field] = integer
+        elif option_field == "language":
+            if value not in CLI_LANGUAGES:
+                return None, "CLI_USAGE_INVALID"
+            parsed[option_field] = value
+        elif option_field == "diff_base":
+            if not _cli_git_ref_is_valid(value):
+                return None, "CLI_USAGE_INVALID"
+            parsed[option_field] = value
+        else:
+            if option_field == "root" and value == ".":
+                parsed[option_field] = value
+            elif portable_path_error(value) is not None:
+                return None, "CLI_PATH_UNSAFE"
+            else:
+                parsed[option_field] = value
+        index += 1
+
+    if parsed["emit_plan"] is not None and parsed["plan_file"] is not None:
+        return None, "CLI_USAGE_INVALID"
+    if parsed["shard_count"] is not None and parsed["emit_plan"] is None:
+        return None, "CLI_USAGE_INVALID"
+    if parsed["shard_index"] is not None and parsed["plan_file"] is None:
+        return None, "CLI_USAGE_INVALID"
+    if parsed["emit_shard_matrix"] and (
+        parsed["emit_plan"] is None or parsed["shard_count"] is None
+    ):
+        return None, "CLI_USAGE_INVALID"
+    return parsed, None
 
 
 def reject_execution_intent(case: dict[str, Any]) -> None:
@@ -1804,18 +2012,45 @@ def _validate_pure_result_semantics(
                 "toolchain map does not match the selected packages",
             )
     elif domain == "cli":
+        parsed, parser_diagnostic = _parse_cli_argv(options["argv"])
         expected_exit = {
             "success": 0,
             "package_failure": 1,
             "validation_failure": 1,
-            "invalid_usage": 2,
-            "unsafe_input": 2,
-        }[options["condition"]]
+        }[options["dispatch_outcome"]]
+        cli_expected_diagnostics: list[dict[str, str]] = []
+        expected_payload: dict[str, Any]
+        if parser_diagnostic is not None:
+            expected_exit = 2
+            expected_payload = {"exit_code": 2}
+            cli_expected_diagnostics = [
+                {"code": parser_diagnostic, "severity": "error"}
+            ]
+        else:
+            expected_payload = {"exit_code": expected_exit, "parsed": parsed}
+            if options["dispatch_outcome"] == "package_failure":
+                cli_expected_diagnostics = [
+                    {"code": "CLI_PACKAGE_FAILED", "severity": "error"}
+                ]
+            elif options["dispatch_outcome"] == "validation_failure":
+                cli_expected_diagnostics = [
+                    {"code": "CLI_VALIDATION_FAILED", "severity": "error"}
+                ]
         expected_outcome = "ok" if expected_exit == 0 else "error"
         if payload["exit_code"] != expected_exit or outcome != expected_outcome:
             raise ConformanceError(
                 f"{prefix}_CLI_EXIT_MISMATCH",
-                "CLI condition, outcome, and exit code disagree",
+                "CLI parse/dispatch outcome and exit code disagree",
+            )
+        if payload.get("parsed") != expected_payload.get("parsed"):
+            raise ConformanceError(
+                f"{prefix}_CLI_PARSE_MISMATCH",
+                "CLI typed parse result does not match the inert argv oracle",
+            )
+        if result["diagnostics"] != cli_expected_diagnostics:
+            raise ConformanceError(
+                f"{prefix}_CLI_DIAGNOSTIC_MISMATCH",
+                "CLI diagnostics do not match the inert argv oracle",
             )
 
 

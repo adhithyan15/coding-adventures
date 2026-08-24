@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "id": "cli/explicit-options-success",
+  "domain": "cli",
+  "summary": "Separated and equals-form flags normalize into one closed typed CLI record.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "cli"
+  ],
+  "workspace": {
+    "files": []
+  },
+  "input": {
+    "operation": "cli",
+    "options": {
+      "argv": [
+        "--root=code",
+        "--language",
+        "ocaml",
+        "--jobs=256",
+        "--force",
+        "--no-validate-build-files",
+        "--clippy",
+        "--diff-base",
+        "HEAD~1",
+        "--cache-file=artifacts/cache.json",
+        "--emit-plan",
+        "artifacts/plan.json",
+        "--shard-count=256",
+        "--emit-shard-matrix"
+      ],
+      "dispatch_outcome": "success",
+      "requires_execution": false
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "cli/explicit-options-success",
+    "domain": "cli",
+    "outcome": "ok",
+    "result": {
+      "exit_code": 0,
+      "parsed": {
+        "cache_file": "artifacts/cache.json",
+        "clippy": true,
+        "detect_languages": false,
+        "diff_base": "HEAD~1",
+        "dry_run": false,
+        "emit_plan": "artifacts/plan.json",
+        "emit_shard_matrix": true,
+        "force": true,
+        "jobs": 256,
+        "language": "ocaml",
+        "plan_file": null,
+        "root": "code",
+        "shard_count": 256,
+        "shard_index": null,
+        "validate_build_files": false
+      }
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}

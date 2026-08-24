@@ -2,7 +2,7 @@
   "schema_version": 1,
   "id": "cli/dry-run-success",
   "domain": "cli",
-  "summary": "A successful dry-run decision returns the stable success exit code without dispatching work.",
+  "summary": "The inert CLI parser normalizes a dry-run flag and host-neutral defaults without dispatching work.",
   "platforms": [
     "darwin",
     "linux",
@@ -17,8 +17,10 @@
   "input": {
     "operation": "cli",
     "options": {
-      "action": "dry_run",
-      "condition": "success",
+      "argv": [
+        "--dry-run"
+      ],
+      "dispatch_outcome": "success",
       "requires_execution": false
     }
   },
@@ -28,7 +30,24 @@
     "domain": "cli",
     "outcome": "ok",
     "result": {
-      "exit_code": 0
+      "exit_code": 0,
+      "parsed": {
+        "cache_file": ".build-cache.json",
+        "clippy": false,
+        "detect_languages": false,
+        "diff_base": "origin/main",
+        "dry_run": true,
+        "emit_plan": null,
+        "emit_shard_matrix": false,
+        "force": false,
+        "jobs": null,
+        "language": "all",
+        "plan_file": null,
+        "root": null,
+        "shard_count": null,
+        "shard_index": null,
+        "validate_build_files": true
+      }
     },
     "diagnostics": []
   },

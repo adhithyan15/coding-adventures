@@ -4,6 +4,7 @@ import base64
 import copy
 import json
 import re
+import sys
 import unicodedata
 import unittest
 from pathlib import Path
@@ -11,6 +12,11 @@ from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[3]
+sys.path.insert(0, str(ROOT / "code" / "scripts"))
+
+import build_tool_conformance as runner  # noqa: E402
+
+
 FIXTURE_ROOT = ROOT / "code" / "specs" / "fixtures" / "build-tool-v1"
 SCHEMA_PATH = FIXTURE_ROOT / "schema.json"
 PURE_SCHEMA_PATH = FIXTURE_ROOT / "pure-domains.schema.json"
@@ -109,8 +115,8 @@ def portable_path_error(path: str) -> str | None:
     ):
         return "path is not a portable relative path"
     for segment in path.split("/"):
-        if segment in {".", ".."}:
-            return "path contains a dot segment"
+        if segment in {"", ".", ".."}:
+            return "path contains an empty or dot segment"
         if segment.endswith((" ", ".")):
             return "path segment has a trailing dot or space"
         basename = segment.split(".", 1)[0].upper()
@@ -361,6 +367,73 @@ class BuildToolConformanceSchemaTests(unittest.TestCase):
                 "toolchain_support",
             ],
         )
+
+    def test_cli_schema_bounds_argv_and_closes_the_typed_parse_result(self) -> None:
+        options = self.pure_schema["$defs"]["cli_input"]["properties"]["options"]
+        self.assertFalse(options["additionalProperties"])
+        self.assertEqual(
+            set(options["required"]),
+            {"argv", "dispatch_outcome", "requires_execution"},
+        )
+        self.assertEqual(options["properties"]["argv"]["maxItems"], 65)
+        self.assertEqual(
+            options["properties"]["argv"]["items"],
+            {"type": "string", "minLength": 1, "maxLength": 257},
+        )
+
+        parsed = self.pure_schema["$defs"]["cli_parsed_options"]
+        self.assertFalse(parsed["additionalProperties"])
+        self.assertEqual(set(parsed["required"]), set(parsed["properties"]))
+
+        result = self.pure_schema["$defs"]["cli_result"]
+        self.assertFalse(result["additionalProperties"])
+        self.assertEqual(result["properties"]["exit_code"]["enum"], [0, 1, 2])
+        self.assertEqual(
+            tuple(self.pure_schema["$defs"]["cli_language"]["enum"]),
+            runner.CLI_LANGUAGES,
+        )
+
+    def test_cli_result_schema_binds_parsed_options_to_exit_class(self) -> None:
+        import jsonschema
+
+        validator = jsonschema.Draft202012Validator(self.pure_schema)
+        success = next(
+            example
+            for example in self.examples
+            if example["id"] == "cli/dry-run-success"
+        )
+        failure = next(
+            example
+            for example in self.examples
+            if example["id"] == "cli/package-failure"
+        )
+        invalid = next(
+            example for example in self.examples if example["id"] == "cli/invalid-usage"
+        )
+
+        def record(example: dict[str, Any]) -> dict[str, Any]:
+            return {
+                "domain": "cli",
+                "outcome": example["expected"]["outcome"],
+                "input": copy.deepcopy(example["input"]),
+                "result": copy.deepcopy(example["expected"]["result"]),
+            }
+
+        invalid_with_parsed = record(invalid)
+        invalid_with_parsed["result"]["parsed"] = copy.deepcopy(
+            success["expected"]["result"]["parsed"]
+        )
+        success_without_parsed = record(success)
+        del success_without_parsed["result"]["parsed"]
+        failure_without_parsed = record(failure)
+        del failure_without_parsed["result"]["parsed"]
+
+        for malformed in (
+            invalid_with_parsed,
+            success_without_parsed,
+            failure_without_parsed,
+        ):
+            self.assertTrue(list(validator.iter_errors(malformed)))
 
     def test_package_names_require_nonempty_safe_segments(self) -> None:
         pattern = re.compile(self.pure_schema["$defs"]["package_name"]["pattern"])

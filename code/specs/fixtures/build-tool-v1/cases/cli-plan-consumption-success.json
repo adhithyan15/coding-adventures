@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "id": "cli/validation-failure",
+  "id": "cli/plan-consumption-success",
   "domain": "cli",
-  "summary": "A valid typed parse remains available when a modeled validation decision maps to exit code one.",
+  "summary": "Plan consumption normalizes root, host-neutral jobs, detection, validation, and the upper shard index.",
   "platforms": [
     "darwin",
     "linux",
@@ -18,44 +18,44 @@
     "operation": "cli",
     "options": {
       "argv": [
-        "--language",
-        "python"
+        "--root",
+        ".",
+        "--jobs=1",
+        "--detect-languages",
+        "--validate-build-files",
+        "--plan-file=artifacts/plan.json",
+        "--shard-index=255"
       ],
-      "dispatch_outcome": "validation_failure",
+      "dispatch_outcome": "success",
       "requires_execution": false
     }
   },
   "expected": {
     "schema_version": 1,
-    "case_id": "cli/validation-failure",
+    "case_id": "cli/plan-consumption-success",
     "domain": "cli",
-    "outcome": "error",
+    "outcome": "ok",
     "result": {
-      "exit_code": 1,
+      "exit_code": 0,
       "parsed": {
         "cache_file": ".build-cache.json",
         "clippy": false,
-        "detect_languages": false,
+        "detect_languages": true,
         "diff_base": "origin/main",
         "dry_run": false,
         "emit_plan": null,
         "emit_shard_matrix": false,
         "force": false,
-        "jobs": null,
-        "language": "python",
-        "plan_file": null,
-        "root": null,
+        "jobs": 1,
+        "language": "all",
+        "plan_file": "artifacts/plan.json",
+        "root": ".",
         "shard_count": null,
-        "shard_index": null,
+        "shard_index": 255,
         "validate_build_files": true
       }
     },
-    "diagnostics": [
-      {
-        "code": "CLI_VALIDATION_FAILED",
-        "severity": "error"
-      }
-    ]
+    "diagnostics": []
   },
   "limits": {
     "wall_time_ms": 1000,
