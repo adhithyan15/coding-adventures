@@ -64,6 +64,39 @@ function reviewLesson(
   );
 }
 
+function writingRetrievalLesson(
+  id: string,
+  options: {
+    schemaVersion?: number;
+    type?: "writing" | "word";
+    introductions?: "empty" | "missing";
+    practises?: string[];
+    stage?: string | "missing";
+    assesses?: string[];
+    blockKnowledge?: "present" | "missing";
+  } = {},
+) {
+  const schemaVersion = options.schemaVersion ?? 2;
+  const type = options.type ?? "writing";
+  const introductions = options.introductions === "missing" ? "" : "introduces:\n  knowledge: []\n";
+  const practises = options.practises ?? ["KNOWN-ATOM"];
+  const assesses = options.assesses ?? practises;
+  const stage = options.stage ?? "delayed-copy";
+  const stageDirective = stage === "missing" ? "" : `<!-- hl-writing-stage: ${stage} -->\n`;
+  const blockKnowledge =
+    options.blockKnowledge === "missing"
+      ? ""
+      : `<!-- hl-knowledge: introduces=[]; assesses=[${assesses.join(", ")}] -->\n`;
+  return parseLesson(
+    `---\nschema_version: ${schemaVersion}\nid: ${id}\nchapter: 1\ntype: ${type}\n` +
+      `headword: x\ngloss: x\nconcept_tag: GREETING-HELLO\nskills: [writing]\n${introductions}` +
+      `practises:\n  knowledge: [${practises.join(", ")}]\n---\n\n# ${id}\n\n` +
+      `## Writing\n\n${blockKnowledge}` +
+      `${stageDirective}\nRetrieve it with a pen.\n`,
+    "spanish",
+  );
+}
+
 describe("the lesson budget", () => {
   it("flags a lesson above the budget and leaves one at it alone", () => {
     const report = measureRamp(
@@ -121,6 +154,42 @@ describe("what the measurement cannot see", () => {
     expect(report.summary.unmeasurableLessons).toBe(0);
     expect(report.summary.measurablePercent).toBe(100);
     expect(report.tracks[0]).toMatchObject({ measurable: 3, unmeasurable: 0 });
+  });
+
+  it("measures explicit zero-new-atom writing retrieval without changing its modality type", () => {
+    const lessons = [
+      writingRetrievalLesson("ES-W1", { stage: "guided-copy" }),
+      writingRetrievalLesson("ES-W2", { stage: "delayed-copy" }),
+      writingRetrievalLesson("ES-W3", { stage: "dictation-transcription" }),
+    ];
+    const report = measureRamp(lessons, POLICY);
+
+    expect(lessons.map((item) => item.frontmatter.type)).toEqual(["writing", "writing", "writing"]);
+    expect(report.summary.unmeasurableLessons).toBe(0);
+    expect(report.summary.measurablePercent).toBe(100);
+    expect(report.tracks[0]).toMatchObject({ measurable: 3, unmeasurable: 0 });
+  });
+
+  it("keeps incomplete, malformed, or composition-shaped writing contracts fail-closed", () => {
+    const report = measureRamp(
+      [
+        writingRetrievalLesson("ES-W-NO-INTRO", { introductions: "missing" }),
+        writingRetrievalLesson("ES-W-NO-PRACTICE", { practises: [] }),
+        writingRetrievalLesson("ES-W-LEGACY", { schemaVersion: 1 }),
+        writingRetrievalLesson("ES-W-WORD", { type: "word" }),
+        writingRetrievalLesson("ES-W-NO-STAGE", { stage: "missing" }),
+        writingRetrievalLesson("ES-W-BAD-STAGE", { stage: "guided copy" }),
+        writingRetrievalLesson("ES-W-UNKNOWN-STAGE", { stage: "mystery-stage" }),
+        writingRetrievalLesson("ES-W-NO-BLOCK-KNOWLEDGE", { blockKnowledge: "missing" }),
+        writingRetrievalLesson("ES-W-OBSERVE", { stage: "observe-trace" }),
+        writingRetrievalLesson("ES-W-COMPOSE", { stage: "controlled-composition" }),
+        writingRetrievalLesson("ES-W-TIMED", { stage: "timed-assessment-production" }),
+        writingRetrievalLesson("ES-W-MISMATCH", { assesses: ["OTHER-ATOM"] }),
+      ],
+      POLICY,
+    );
+    expect(report.summary.unmeasurableLessons).toBe(12);
+    expect(report.summary.measurablePercent).toBe(0);
   });
 
   it("keeps incomplete or ineligible zero-atom contracts fail-closed", () => {

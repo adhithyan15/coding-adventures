@@ -1,8 +1,8 @@
 {
   "language": "gujarati",
   "lessonCount": 72,
-  "atomMeasurableLessons": 69,
-  "atomMeasurementBlindLessons": 3,
+  "atomMeasurableLessons": 72,
+  "atomMeasurementBlindLessons": 0,
   "durationViolations": 0,
   "atomLessonSpikes": 2,
   "atomChapterSpikes": 1,
@@ -71,13 +71,6 @@
       "count": 148,
       "unit": "missed window(s)",
       "detail": "add retrieval at the expanding R1-R4 intervals"
-    },
-    {
-      "language": "gujarati",
-      "kind": "measurement-blind",
-      "count": 3,
-      "unit": "lesson(s)",
-      "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
     }
   ],
   "next": {
