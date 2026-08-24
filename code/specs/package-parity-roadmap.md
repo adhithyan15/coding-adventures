@@ -6157,6 +6157,41 @@ established lanes, 1,370 identities, 4,563 slots, 175 high-consensus packages
 with 276 gaps, 907 singletons with 12,698 gaps, 718 Rust singletons, zero
 collisions, and zero unknown buckets; OCaml remains correctly emerging at zero.
 
+### Post-#12608 refresh and cross-runtime hardening discovery
+
+C# tracked-artifact consumer PR #12608 completed all 29 reported checks with
+23 successes, six expected skips, and no failures or pending work. GitHub
+reported the branch clean and mergeable; the loop enabled squash auto-merge,
+and GitHub merged final head `af6521706441c9171a56aef5994d5b4fbf0318e9`
+as `977b44f41124b36a59c6a73978eeb1153eb67c37` at
+2026-08-24T20:05:44Z without a manual merge command.
+
+The collision-checked exact-main inventory was regenerated after the subsequent
+Tamil- and Telugu-curriculum and HTML-parser merges at
+`3a758a6973ea74ff14b6617098e1ad042fa5621c`. It remains 15 established
+lanes, 1,370 implementation identities, 4,563 slots, 175 high-consensus
+identities with 276 gaps, 122 identities in five to nine lanes with 926 gaps,
+166 identities in two to four lanes with 2,087 gaps, and 907 singletons with
+12,698 gaps. There are 718 Rust singletons, zero collisions, zero unknown
+buckets, no newly unowned portable package, and OCaml remains correctly
+emerging at zero packages.
+
+The required cross-runtime audit found that three corrections discovered while
+reviewing C# remain pinned only by C#-local tests: Unicode-scalar 512/513 path
+lengths, cross-plane Unicode-scalar diagnostic ordering, and full-uppercase
+Windows reserved-basename membership for a dotless-i alias. The shared schema
+also requires tracked paths to contain one through 512 characters, making the
+advertised `EMPTY` and `TOO_LONG` diagnostics unreachable from every valid
+fixture. The loop therefore registers
+`build-tool-tracked-artifact-unicode-cross-runtime-corpus-hardening` before
+selecting another engine child, and makes it a prerequisite of all nine
+unmerged consumers. The F# tracked and orphan children also now explicitly
+depend on the C# shared engine surfaces they expose rather than relying on an
+unstated facade dependency. The Go oracle and future JVM and Dart build tools
+also depend explicitly on this repair, while OCaml receives it transitively
+through the Go substrate. The reconciled state has 482 owners and 699 edges;
+all IDs and dependencies remain unique, present, and acyclic.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

@@ -11,14 +11,9 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 12608,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/12608",
-    "branch": "codex/build-tool-csharp-tracked-artifact-validation-conformance",
-    "status": "open"
-  },
+  "active_pr": null,
   "last_inventory": {
-    "revision": "1d482dc49a5c791b326e0b073cf6469c46d67ef8",
+    "revision": "3a758a6973ea74ff14b6617098e1ad042fa5621c",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1370,
@@ -1141,6 +1136,7 @@
         "build-tool-validation-oracle-corpus",
         "build-tool-orphan-crate-validation-corpus",
         "build-tool-tracked-artifact-validation-corpus",
+        "build-tool-tracked-artifact-unicode-cross-runtime-corpus-hardening",
         "build-tool-execution-semantics-corpus"
       ],
       "branch": null,
@@ -1162,6 +1158,7 @@
       "status": "pending",
       "depends_on": [
         "build-tool-pure-domain-corpus",
+        "build-tool-tracked-artifact-unicode-cross-runtime-corpus-hardening",
         "build-tool-execution-semantics-corpus"
       ],
       "branch": null,
@@ -1174,6 +1171,7 @@
       "status": "pending",
       "depends_on": [
         "build-tool-pure-domain-corpus",
+        "build-tool-tracked-artifact-unicode-cross-runtime-corpus-hardening",
         "build-tool-execution-semantics-corpus"
       ],
       "branch": null,
@@ -4717,7 +4715,10 @@
       "id": "build-tool-fsharp-orphan-crate-validation-conformance",
       "title": "Make the F# build tool consume orphan-crate validation",
       "status": "pending",
-      "depends_on": ["build-tool-orphan-crate-validation-corpus"],
+      "depends_on": [
+        "build-tool-orphan-crate-validation-corpus",
+        "build-tool-csharp-orphan-crate-validation-conformance"
+      ],
       "branch": null,
       "pr_number": null,
       "notes": "Consume the closed process-free orphan-crate snapshot and diagnostics through the supported F# build-tool lane without assuming the C# engine or facade supplies unreviewed parity, and without adding filesystem enumeration or process authority."
@@ -4844,6 +4845,19 @@
       "notes": "Discovered before selecting the process-free tracked-artifact corpus. Review the native Go scanner's PATH-resolved Git execution, repository-root trust, bounded index output, timeout and process-tree cleanup, malformed-index handling, symlink-mode interpretation, raw stderr and indexed-path redaction, and deterministic failure behavior. This is host process and Git-index authority rather than a portable pure-domain port, so it must not widen the neutral corpus and remains excluded from autonomous parity selection."
     },
     {
+      "id": "build-tool-tracked-artifact-unicode-cross-runtime-corpus-hardening",
+      "title": "Pin tracked-artifact Unicode and path-boundary behavior across runtimes",
+      "status": "pending",
+      "depends_on": [
+        "build-tool-tracked-artifact-validation-corpus",
+        "build-tool-python-tracked-artifact-validation-conformance",
+        "build-tool-csharp-tracked-artifact-validation-conformance"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-#12608 cross-runtime audit. Make EMPTY and TOO_LONG reachable through the closed schema, then pin Unicode-scalar 512/513 length semantics, cross-plane Unicode-scalar diagnostic ordering, and full-uppercase Windows reserved-basename membership for dotless-i aliases in shared fixtures and both reviewed Python and C# consumers. Preserve hostile-path redaction, bounded inert input, and the no-Git/no-filesystem/no-process authority boundary before any remaining engine child proceeds."
+    },
+    {
       "id": "build-tool-tracked-artifact-validation-remaining-engines",
       "title": "Enforce tracked-artifact validation in every supported build tool",
       "status": "pending",
@@ -4869,7 +4883,7 @@
     {
       "id": "build-tool-csharp-tracked-artifact-validation-conformance",
       "title": "Make the C# build tool consume tracked-artifact validation",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-tracked-artifact-validation-corpus"],
       "branch": "codex/build-tool-csharp-tracked-artifact-validation-conformance",
       "pr_number": 12608,
@@ -4879,6 +4893,10 @@
       "implementation_revision": "06e9b4f374697a571537be65bfe67c54be1278e8",
       "final_review_revision": "06e9b4f374697a571537be65bfe67c54be1278e8",
       "final_revision": "444b64fc92c573c17e08fd61ac4c34d246acf006",
+      "merged_head_revision": "af6521706441c9171a56aef5994d5b4fbf0318e9",
+      "merge_revision": "977b44f41124b36a59c6a73978eeb1153eb67c37",
+      "merged_at": "2026-08-24T20:05:44Z",
+      "merge_notes": "All 29 reported checks reached terminal acceptable conclusions: 23 successes and six expected skips, with no failures or pending work. GitHub reported the branch clean and mergeable; the loop enabled squash auto-merge, and GitHub merged PR #12608 without a manual merge command.",
       "validation_notes": "The C# engine now exposes one pure tracked-artifact snapshot validator and exactly matches all four shared fixtures plus adversarial Unicode boundary probes for separator normalization, ten closed portable-path failures with hostile-path redaction, scalar-counted length limits, NFKC plus full-fold-equivalent node_modules aliases, Python-equivalent reserved-name uppercase membership, Unicode-scalar path ordering, inert regular/symlink/reparse kinds, and canonical deterministic diagnostic sorting. The canonical .NET 9 BUILD front door passes with 26 xUnit tests; the focused validator reaches 79/79 lines and 50/50 branches, while the complete literate build-tool file reports 49.69% line, 33.79% branch, and 68.33% method coverage. The language-neutral corpus validates 110 cases and 269 files; 269 focused parity, capability, OCaml-lock, and conformance tests pass with 25 expected platform skips. The Go oracle passes all packages with coverage, vet, and trimpath compilation, then a fresh binary evaluates 45 Starlark BUILD files, discovers 5,070 packages, preserves the five-entry orphan ledger, and validates a diff-based dry plan with exactly one changed and two affected packages. NuGet reports no vulnerable direct or transitive packages; no dependency changed. Analyzer and style gates pass. The source-wide dotnet-format whitespace gate retains the exact same 18 findings in unchanged pre-existing ranges as the clean selected-main baseline, while diff check is clean. Three independent read-only reviews found and verified the corrections for UTF-16 length, ordinal path sort, and dotless-i uppercase divergence, then found no remaining implementation, authority, ownership, state-graph, or publication-scope defect. After a conflict-free rebase, the exact-main collision inventory at 1d482dc49a5c791b326e0b073cf6469c46d67ef8 remains 15 lanes, 1,370 identities, 4,563 slots, zero collisions, and zero unknown buckets. This tranche adds no fixture, schema, capability-manifest, package dependency, Git, filesystem, process, environment, or network authority.",
       "publication_notes": "Opened ready-for-review PR #12608 from clean validated head 444b64fc92c573c17e08fd61ac4c34d246acf006 after a normal first push. Immediately before publication, remote main remained at exact reviewed base 1d482dc49a5c791b326e0b073cf6469c46d67ef8 and the target remote branch was absent. The post-open collision refresh found zero exact candidate-path overlap across nine other live open PRs and 36 other non-main remote heads. GitHub reports the PR mergeable while required checks are pending; auto-merge remains disabled until every required check is terminal and acceptable.",
       "notes": "Consume the closed process-free tracked-artifact snapshot and diagnostics in the C# engine without adding Git, filesystem, or process authority."
@@ -4887,7 +4905,11 @@
       "id": "build-tool-fsharp-tracked-artifact-validation-conformance",
       "title": "Make the F# build tool consume tracked-artifact validation",
       "status": "pending",
-      "depends_on": ["build-tool-tracked-artifact-validation-corpus"],
+      "depends_on": [
+        "build-tool-tracked-artifact-validation-corpus",
+        "build-tool-csharp-tracked-artifact-validation-conformance",
+        "build-tool-tracked-artifact-unicode-cross-runtime-corpus-hardening"
+      ],
       "branch": null,
       "pr_number": null,
       "notes": "Consume the closed process-free tracked-artifact snapshot and diagnostics through the supported F# build-tool lane without assuming the C# engine or facade supplies unreviewed parity, and without adding Git, filesystem, or process authority."
@@ -4896,7 +4918,10 @@
       "id": "build-tool-elixir-tracked-artifact-validation-conformance",
       "title": "Make the Elixir build tool consume tracked-artifact validation",
       "status": "pending",
-      "depends_on": ["build-tool-tracked-artifact-validation-corpus"],
+      "depends_on": [
+        "build-tool-tracked-artifact-validation-corpus",
+        "build-tool-tracked-artifact-unicode-cross-runtime-corpus-hardening"
+      ],
       "branch": null,
       "pr_number": null,
       "notes": "Consume the closed process-free tracked-artifact snapshot and diagnostics in the Elixir engine without adding Git, filesystem, or process authority."
@@ -4905,7 +4930,10 @@
       "id": "build-tool-haskell-tracked-artifact-validation-conformance",
       "title": "Make the Haskell build tool consume tracked-artifact validation",
       "status": "pending",
-      "depends_on": ["build-tool-tracked-artifact-validation-corpus"],
+      "depends_on": [
+        "build-tool-tracked-artifact-validation-corpus",
+        "build-tool-tracked-artifact-unicode-cross-runtime-corpus-hardening"
+      ],
       "branch": null,
       "pr_number": null,
       "notes": "Consume the closed process-free tracked-artifact snapshot and diagnostics in the Haskell engine without adding Git, filesystem, or process authority."
@@ -4914,7 +4942,10 @@
       "id": "build-tool-lua-tracked-artifact-validation-conformance",
       "title": "Make the Lua build tool consume tracked-artifact validation",
       "status": "pending",
-      "depends_on": ["build-tool-tracked-artifact-validation-corpus"],
+      "depends_on": [
+        "build-tool-tracked-artifact-validation-corpus",
+        "build-tool-tracked-artifact-unicode-cross-runtime-corpus-hardening"
+      ],
       "branch": null,
       "pr_number": null,
       "notes": "Consume the closed process-free tracked-artifact snapshot and diagnostics in the Lua engine without adding Git, filesystem, or process authority."
@@ -4923,7 +4954,10 @@
       "id": "build-tool-perl-tracked-artifact-validation-conformance",
       "title": "Make the Perl build tool consume tracked-artifact validation",
       "status": "pending",
-      "depends_on": ["build-tool-tracked-artifact-validation-corpus"],
+      "depends_on": [
+        "build-tool-tracked-artifact-validation-corpus",
+        "build-tool-tracked-artifact-unicode-cross-runtime-corpus-hardening"
+      ],
       "branch": null,
       "pr_number": null,
       "notes": "Consume the closed process-free tracked-artifact snapshot and diagnostics in the Perl engine without adding Git, filesystem, or process authority."
@@ -4952,7 +4986,10 @@
       "id": "build-tool-ruby-tracked-artifact-validation-conformance",
       "title": "Make the Ruby build tool consume tracked-artifact validation",
       "status": "pending",
-      "depends_on": ["build-tool-tracked-artifact-validation-corpus"],
+      "depends_on": [
+        "build-tool-tracked-artifact-validation-corpus",
+        "build-tool-tracked-artifact-unicode-cross-runtime-corpus-hardening"
+      ],
       "branch": null,
       "pr_number": null,
       "notes": "Consume the closed process-free tracked-artifact snapshot and diagnostics in the Ruby engine without adding Git, filesystem, or process authority."
@@ -4961,7 +4998,10 @@
       "id": "build-tool-rust-tracked-artifact-validation-conformance",
       "title": "Make the Rust build tool consume tracked-artifact validation",
       "status": "pending",
-      "depends_on": ["build-tool-tracked-artifact-validation-corpus"],
+      "depends_on": [
+        "build-tool-tracked-artifact-validation-corpus",
+        "build-tool-tracked-artifact-unicode-cross-runtime-corpus-hardening"
+      ],
       "branch": null,
       "pr_number": null,
       "notes": "Consume the closed process-free tracked-artifact snapshot and diagnostics in the Rust engine without adding Git, filesystem, or process authority."
@@ -4970,7 +5010,10 @@
       "id": "build-tool-swift-tracked-artifact-validation-conformance",
       "title": "Make the Swift build tool consume tracked-artifact validation",
       "status": "pending",
-      "depends_on": ["build-tool-tracked-artifact-validation-corpus"],
+      "depends_on": [
+        "build-tool-tracked-artifact-validation-corpus",
+        "build-tool-tracked-artifact-unicode-cross-runtime-corpus-hardening"
+      ],
       "branch": null,
       "pr_number": null,
       "notes": "Consume the closed process-free tracked-artifact snapshot and diagnostics in the Swift engine without adding Git, filesystem, or process authority."
@@ -4979,7 +5022,10 @@
       "id": "build-tool-typescript-tracked-artifact-validation-conformance",
       "title": "Make the TypeScript build tool consume tracked-artifact validation",
       "status": "pending",
-      "depends_on": ["build-tool-tracked-artifact-validation-corpus"],
+      "depends_on": [
+        "build-tool-tracked-artifact-validation-corpus",
+        "build-tool-tracked-artifact-unicode-cross-runtime-corpus-hardening"
+      ],
       "branch": null,
       "pr_number": null,
       "notes": "Consume the closed process-free tracked-artifact snapshot and diagnostics in the TypeScript engine without adding Git, filesystem, or process authority."
