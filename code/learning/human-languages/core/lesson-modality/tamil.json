@@ -7,17 +7,17 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:a2724d400b2904f9",
+  "sourceHash": "fnv1a64:c2ecca48ceb85f40",
   "summary": {
-    "totalLessons": 296,
-    "voice": 203,
+    "totalLessons": 301,
+    "voice": 204,
     "sight": 30,
-    "pen": 63,
-    "drivableLessons": 203,
-    "drivablePercent": 69,
+    "pen": 67,
+    "drivableLessons": 204,
+    "drivablePercent": 68,
     "trackCount": 1,
     "chapterCount": 64,
-    "drivablePrefixTotal": 178,
+    "drivablePrefixTotal": 179,
     "fullyDrivableChapters": 32,
     "unstartableChapters": 9,
     "overriddenLessons": 0,
@@ -26,12 +26,12 @@
   "tracks": [
     {
       "language": "tamil",
-      "lessonCount": 296,
-      "voice": 203,
+      "lessonCount": 301,
+      "voice": 204,
       "sight": 30,
-      "pen": 63,
-      "drivablePercent": 69,
-      "drivablePrefixTotal": 178,
+      "pen": 67,
+      "drivablePercent": 68,
+      "drivablePrefixTotal": 179,
       "modalities": [
         "voice",
         "sight",
@@ -171,20 +171,21 @@
         },
         {
           "chapter": 8,
-          "lessonCount": 5,
-          "voice": 1,
+          "lessonCount": 10,
+          "voice": 2,
           "sight": 1,
-          "pen": 3,
+          "pen": 7,
           "modalities": [
             "voice",
             "sight",
             "pen"
           ],
-          "drivablePrefix": 1,
-          "firstNonVoiceLesson": "TA-C08-please-register",
+          "drivablePrefix": 2,
+          "firstNonVoiceLesson": "TA-W08-short-o-observe",
           "drivable": false,
           "drivableLessonIds": [
-            "TA-C08-tayavuseytu"
+            "TA-C08-tayavuseytu",
+            "TA-C08-sollungal"
           ]
         },
         {
@@ -2568,6 +2569,118 @@
       "sourceHash": "fnv1a64:f617ae89e5cbc693"
     },
     {
+      "id": "TA-C08-sollungal",
+      "language": "tamil",
+      "chapter": 8,
+      "sequence": 471,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:44c8d81b0076277c"
+    },
+    {
+      "id": "TA-W08-short-o-observe",
+      "language": "tamil",
+      "chapter": 8,
+      "sequence": 472,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:1f47f1837c8e5d14",
+      "detachableSegments": [
+        "Script you'll notice: ொ",
+        "Writing — observe and trace"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-W08-sollungal-guided-copy",
+      "language": "tamil",
+      "chapter": 8,
+      "sequence": 473,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:e59aea8c1e91fd32",
+      "detachableSegments": [
+        "Writing — guided copy"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-W08-sollungal-delayed-copy",
+      "language": "tamil",
+      "chapter": 8,
+      "sequence": 474,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:0d641de6db0212b5",
+      "detachableSegments": [
+        "Writing — delayed copy"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-W08-sollungal-dictation",
+      "language": "tamil",
+      "chapter": 8,
+      "sequence": 475,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:9b45aff374e63b4c",
+      "detachableSegments": [
+        "Writing — dictation"
+      ],
+      "delivery": "script"
+    },
+    {
       "id": "TA-C08-please-register",
       "language": "tamil",
       "chapter": 8,
@@ -2583,7 +2696,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7f8aae22027949eb",
+      "sourceHash": "fnv1a64:3da0ddc4024e92ff",
       "detachableSegments": [
         "Script you'll notice: Read the join in செய்து"
       ]

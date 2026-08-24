@@ -1,32 +1,32 @@
 {
   "language": "tamil",
-  "lessonCount": 296,
-  "atomMeasurableLessons": 258,
+  "lessonCount": 301,
+  "atomMeasurableLessons": 263,
   "atomMeasurementBlindLessons": 38,
   "durationViolations": 0,
   "atomLessonSpikes": 1,
   "atomChapterSpikes": 0,
   "glyphLessonSpikes": 3,
   "scriptSystemSpikes": 0,
-  "scriptClosureViolations": 31,
-  "neverTaughtGlyphs": 1,
+  "scriptClosureViolations": 29,
+  "neverTaughtGlyphs": 0,
   "orderDefects": 0,
   "lessonsWithoutSequence": 0,
   "unknownPrerequisites": 0,
   "forwardPrerequisites": 0,
   "forwardReviews": 0,
   "forwardReferences": 13,
-  "atomsTaught": 351,
+  "atomsTaught": 354,
   "atomsNeverRevisited": 51,
-  "reinforcementWindowMisses": 943,
+  "reinforcementWindowMisses": 949,
   "reinforcementMissesByWindow": {
     "R1": 131,
-    "R2": 278,
-    "R3": 295,
-    "R4": 239
+    "R2": 279,
+    "R3": 298,
+    "R4": 241
   },
-  "payoffSurprises": 12,
-  "writingPracticeLessons": 90,
+  "payoffSurprises": 11,
+  "writingPracticeLessons": 94,
   "firstWritingPracticeAt": 0,
   "lessonsBeforeWritingPractice": 0,
   "findings": [
@@ -36,13 +36,6 @@
       "count": 13,
       "unit": "use(s)",
       "detail": "teach target-language material before load-bearing use"
-    },
-    {
-      "language": "tamil",
-      "kind": "script-closure",
-      "count": 1,
-      "unit": "glyph(s)",
-      "detail": "teach every load-bearing glyph before asking the learner to decode it"
     },
     {
       "language": "tamil",
@@ -61,14 +54,14 @@
     {
       "language": "tamil",
       "kind": "reinforcement",
-      "count": 943,
+      "count": 949,
       "unit": "missed window(s)",
       "detail": "add retrieval at the expanding R1-R4 intervals"
     },
     {
       "language": "tamil",
       "kind": "payoff-surprise",
-      "count": 12,
+      "count": 11,
       "unit": "chapter payoff finding(s)",
       "detail": "make each chapter payoff assess only taught, representative material"
     },

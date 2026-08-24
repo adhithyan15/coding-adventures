@@ -58,9 +58,45 @@ it("keeps Tamil Chapter 7 meaning-first and below the three-glyph step budget", 
   ]));
 });
 
-it("teaches all ten Tamil numeral glyphs and leaves only the separate short-o sign debt", () => {
-  const track = measureScriptClosure(loadTrackLessons("tamil")).tracks.find(
+it("teaches short o by meaning, then retrieves it before Chapter 8 uses it", () => {
+  const lessons = loadTrackLessons("tamil").sort(readingOrder);
+  const chapter = lessons.filter((lesson) =>
+    /^TA-(?:C08-(?:tayavuseytu|sollungal|please-register)|W08-(?:short-o|sollungal))/.test(
+      lesson.realization.lessonId,
+    ),
+  );
+  expect(chapter.map((lesson) => lesson.realization.lessonId)).toEqual([
+    "TA-C08-tayavuseytu",
+    "TA-C08-sollungal",
+    "TA-W08-short-o-observe",
+    "TA-W08-sollungal-guided-copy",
+    "TA-W08-sollungal-delayed-copy",
+    "TA-W08-sollungal-dictation",
+    "TA-C08-please-register",
+  ]);
+
+  const spoken = chapter.find((lesson) => lesson.realization.lessonId === "TA-C08-sollungal");
+  expect(spoken?.body.match(/\p{Script=Tamil}/u)).toBeNull();
+  expect(spoken?.frontmatter.skills?.join(",")).toBe("listening,speaking");
+  expect(new Set(chapter.flatMap((lesson) =>
+    [...lesson.body.matchAll(/hl-writing-stage:\s*([a-z-]+)/g)].map((match) => match[1]),
+  ))).toEqual(new Set([
+    "observe-trace",
+    "guided-copy",
+    "delayed-copy",
+    "dictation-transcription",
+  ]));
+
+  const closure = measureScriptClosure(lessons);
+  const track = closure.tracks.find(
     (candidate) => candidate.language === "tamil",
   );
-  expect(track?.neverTaughtGlyphs).toBe(1);
+  expect(track?.neverTaughtGlyphs).toBe(0);
+  expect(track?.violations).toBe(29);
+  expect(closure.violations.filter((violation) =>
+    violation.language === "tamil" && (
+      violation.glyphs.includes("ொ") ||
+      ["TA-C08-please-register", "TA-C20-pathinondru-irupathu"].includes(violation.lessonId)
+    )
+  )).toEqual([]);
 });
