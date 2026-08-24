@@ -8428,20 +8428,26 @@ impl HtmlParser {
             if !self.current_empty_select_is_nested_in_option() {
                 let closed_option = self.close_open_element_if(|name| name == "option");
                 if closed_option && self.has_open_element("select") {
-                    self.diagnostics.push(ParserDiagnostic::new(
-                        "unexpected-option-start-tag-in-select",
-                        "start tag `<option>` implied the end of an option in select scope",
-                    ));
+                    self.diagnostics.push(
+                        ParserDiagnostic::new(
+                            "unexpected-option-start-tag-in-select",
+                            "start tag `<option>` implied the end of an option in select scope",
+                        )
+                        .at_emission(self.current_token_emission_position),
+                    );
                 }
             }
         } else if incoming_name == "optgroup" {
             let closed_option = self.close_open_element_if(|name| name == "option");
             let closed_optgroup = self.close_open_element_if(|name| name == "optgroup");
             if (closed_option || closed_optgroup) && self.has_open_element("select") {
-                self.diagnostics.push(ParserDiagnostic::new(
-                    "unexpected-optgroup-start-tag-in-select",
-                    "start tag `<optgroup>` implied the end of an option or optgroup in select scope",
-                ));
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-optgroup-start-tag-in-select",
+                        "start tag `<optgroup>` implied the end of an option or optgroup in select scope",
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
             }
         } else if matches!(incoming_name, "rb" | "rtc" | "rp" | "rt") {
             self.apply_ruby_implied_end_tags(incoming_name);
@@ -27395,6 +27401,30 @@ mod tests {
         .at_emission(Some(start_tag_position_at(source, "li", occurrence)))
     }
 
+    fn unexpected_option_start_tag(source: &str, occurrence: usize) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-option-start-tag-in-select",
+            "start tag `<option>` implied the end of an option in select scope",
+        )
+        .at_emission(Some(start_tag_position_at(
+            source,
+            "option",
+            occurrence,
+        )))
+    }
+
+    fn unexpected_optgroup_start_tag(source: &str, occurrence: usize) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-optgroup-start-tag-in-select",
+            "start tag `<optgroup>` implied the end of an option or optgroup in select scope",
+        )
+        .at_emission(Some(start_tag_position_at(
+            source,
+            "optgroup",
+            occurrence,
+        )))
+    }
+
     fn unexpected_description_item_end_tag(source: &str, name: &str) -> ParserDiagnostic {
         ParserDiagnostic::new(
             "unexpected-description-item-end-tag",
@@ -42183,23 +42213,30 @@ mod tests {
         for (source, diagnostic) in [
             (
                 "<!doctype html><select><option><option>",
-                ParserDiagnostic::new(
-                    "unexpected-option-start-tag-in-select",
-                    "start tag `<option>` implied the end of an option in select scope",
+                unexpected_option_start_tag(
+                    "<!doctype html><select><option><option>",
+                    1,
                 ),
             ),
             (
                 "<!doctype html><select><optgroup><option><optgroup>",
-                ParserDiagnostic::new(
-                    "unexpected-optgroup-start-tag-in-select",
-                    "start tag `<optgroup>` implied the end of an option or optgroup in select scope",
+                unexpected_optgroup_start_tag(
+                    "<!doctype html><select><optgroup><option><optgroup>",
+                    1,
                 ),
             ),
             (
                 "<!doctype html><select><optgroup><optgroup>",
-                ParserDiagnostic::new(
-                    "unexpected-optgroup-start-tag-in-select",
-                    "start tag `<optgroup>` implied the end of an option or optgroup in select scope",
+                unexpected_optgroup_start_tag(
+                    "<!doctype html><select><optgroup><optgroup>",
+                    1,
+                ),
+            ),
+            (
+                "<!doctype html><!--é-->\r\n<select><option>A<option>B</select>",
+                unexpected_option_start_tag(
+                    "<!doctype html><!--é-->\r\n<select><option>A<option>B</select>",
+                    1,
                 ),
             ),
         ] {
@@ -42213,6 +42250,8 @@ mod tests {
         for source in [
             "<!doctype html><select><option></select><option>",
             "<!doctype html><select><optgroup></select><optgroup>",
+            "<!doctype html><select><option><option",
+            "<!doctype html><select><optgroup><optgroup",
         ] {
             let output = parse_html_with_diagnostics(source).unwrap();
             assert!(output.parser_diagnostics.iter().all(|diagnostic| {
@@ -42223,6 +42262,53 @@ mod tests {
                 )
             }));
         }
+
+        let mut unpositioned = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        for token in [
+            Token::StartTag {
+                name: "select".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "option".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "option".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "optgroup".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "optgroup".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Eof,
+        ] {
+            unpositioned.process_token(token);
+        }
+        let diagnostics = unpositioned
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| {
+                matches!(
+                    diagnostic.code.as_str(),
+                    "unexpected-option-start-tag-in-select"
+                        | "unexpected-optgroup-start-tag-in-select"
+                )
+            })
+            .collect::<Vec<_>>();
+        assert_eq!(diagnostics.len(), 3);
+        assert!(diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
     }
 
     #[test]
