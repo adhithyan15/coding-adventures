@@ -225,7 +225,7 @@ export function readShards<T = unknown>(monolithPath: string): Shard<T>[] | null
       // files tells the reader nothing they can open an editor on.
       throw new Error(
         `shard '${name}' in '${dir}': malformed JSON — ${describeParseFailure(cause)}`,
-        { cause },
+        { cause: scrubbedCause(cause) },
       );
     }
     rejectDangerousKeys(value, `shard '${name}' in '${dir}'`);
@@ -276,7 +276,7 @@ export function readMaybeSharded<T>(
     value = JSON.parse(text) as T;
   } catch (cause) {
     throw new Error(`'${monolithPath}': malformed JSON — ${describeParseFailure(cause)}`, {
-      cause,
+      cause: scrubbedCause(cause),
     });
   }
   rejectDangerousKeys(value, `'${monolithPath}'`);
@@ -400,6 +400,31 @@ function describeParseFailure(cause: unknown): string {
   return /^Unexpected token\b/.test(message)
     ? "unexpected token (contents elided)"
     : message;
+}
+
+/**
+ * The parse failure as a `cause`, holding back the same bytes the message does.
+ *
+ * Sanitising the message alone was not enough, and this is the fourth attempt at
+ * the same control — which is itself the lesson. `new Error(msg, { cause })`
+ * keeps the ORIGINAL `SyntaxError`, V8's spliced bytes and all, and almost
+ * nothing prints `.message` on its own:
+ *
+ *   * Node's default handler for an uncaught throw prints the whole chain,
+ *     including `[cause]`. `report-cli`, `gentle-ramp-cli` and `plan-cli` each
+ *     wrap only `parseOptions` in a try/catch — the `loadEverything` call that
+ *     reaches this code is on the next line, OUTSIDE the handler.
+ *   * Vitest prints `Caused by:` under a failing test, and `BUILD` runs Vitest.
+ *
+ * So both of the CI channels the elision was written to protect printed the
+ * bytes anyway, straight past a message that was scrupulously clean.
+ *
+ * Only the PARSE paths are scrubbed. Read failures keep their cause untouched —
+ * an fs error carries a path and an errno, which is exactly what a reader needs
+ * and contains nothing the file was hiding.
+ */
+function scrubbedCause(cause: unknown): unknown {
+  return cause instanceof SyntaxError ? new SyntaxError(describeParseFailure(cause)) : cause;
 }
 
 /**

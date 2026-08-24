@@ -1,5 +1,6 @@
 import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
+import { inspect } from "node:util";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
@@ -342,7 +343,7 @@ describe("hostile shard contents", () => {
     try {
       readMaybeSharded(monolith, mergeItems);
     } catch (error) {
-      message = (error as Error).message;
+      message = inspect(error);
     }
     expect(message).toMatch(/0010-ALPHA\.json/);
     expect(message).toMatch(/malformed JSON/);
@@ -364,7 +365,7 @@ describe("hostile shard contents", () => {
     try {
       readMaybeSharded(monolith, mergeItems);
     } catch (error) {
-      message = (error as Error).message;
+      message = inspect(error);
     }
     expect(message).toMatch(/0010-ALPHA\.json/);
     expect(message).not.toMatch(/AKIA/);
@@ -389,7 +390,7 @@ describe("hostile shard contents", () => {
     try {
       readMaybeSharded(monolith, mergeItems);
     } catch (error) {
-      message = (error as Error).message;
+      message = inspect(error);
     }
     expect(message).toMatch(/0010-ALPHA\.json/);
     expect(message).not.toMatch(/ghp_|s3cr3t|canDo/);
@@ -411,7 +412,7 @@ describe("hostile shard contents", () => {
       try {
         readMaybeSharded(monolith, mergeItems);
       } catch (error) {
-        const message = (error as Error).message;
+        const message = inspect(error);
         if (message.includes(marker)) leaked.push(`0x${byte.toString(16)}`);
       }
     }
@@ -431,7 +432,7 @@ describe("hostile shard contents", () => {
     try {
       readMaybeSharded(monolith, mergeItems);
     } catch (error) {
-      message = (error as Error).message;
+      message = inspect(error);
     }
     expect(message).toMatch(/position|Unterminated|JSON/i);
   });
