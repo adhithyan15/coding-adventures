@@ -9745,10 +9745,13 @@ impl HtmlParser {
 
     fn report_authored_template_shell_start(&mut self, name: &str) {
         if self.first_authored_open_template_index().is_some() {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-shell-start-tag-in-template",
-                format!("start tag `<{name}>` in template body content was ignored"),
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-shell-start-tag-in-template",
+                    format!("start tag `<{name}>` in template body content was ignored"),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
         }
     }
 
@@ -27365,6 +27368,18 @@ mod tests {
         .at_emission(Some(start_tag_position_at(source, name, occurrence)))
     }
 
+    fn shell_start_tag_in_template_recovery(
+        source: &str,
+        name: &str,
+        occurrence: usize,
+    ) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-shell-start-tag-in-template",
+            format!("start tag `<{name}>` in template body content was ignored"),
+        )
+        .at_emission(Some(start_tag_position_at(source, name, occurrence)))
+    }
+
     fn end_tag_in_template_column_group_recovery(
         source: &str,
         name: &str,
@@ -42389,10 +42404,7 @@ mod tests {
             let output = parse_html_with_diagnostics(&source).unwrap();
             assert_eq!(
                 output.parser_diagnostics,
-                vec![ParserDiagnostic::new(
-                    "unexpected-shell-start-tag-in-template",
-                    format!("start tag `<{name}>` in template body content was ignored"),
-                )],
+                vec![shell_start_tag_in_template_recovery(&source, name, 0)],
                 "source {source:?}"
             );
             assert_eq!(
@@ -42412,6 +42424,70 @@ mod tests {
             "frameset"
         )
         .is_some());
+    }
+
+    #[test]
+    fn positions_shell_start_tags_ignored_in_authored_template_content() {
+        let repeated_source =
+            "<!doctype html><template><div><html><html><span>x</span></div></template>";
+        let repeated = parse_html_with_diagnostics(repeated_source).unwrap();
+        assert_eq!(
+            repeated
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| {
+                    diagnostic.code == "unexpected-shell-start-tag-in-template"
+                })
+                .cloned()
+                .collect::<Vec<_>>(),
+            vec![
+                shell_start_tag_in_template_recovery(repeated_source, "html", 0),
+                shell_start_tag_in_template_recovery(repeated_source, "html", 1),
+            ]
+        );
+
+        let unicode_source =
+            "<!doctype html>\r\n<p>雪</p>\r\n<template><div><body><span>x</span></div></template>";
+        let unicode = parse_html_with_diagnostics(unicode_source).unwrap();
+        assert_eq!(
+            unicode
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| {
+                    diagnostic.code == "unexpected-shell-start-tag-in-template"
+                })
+                .cloned()
+                .collect::<Vec<_>>(),
+            vec![shell_start_tag_in_template_recovery(
+                unicode_source,
+                "body",
+                0,
+            )]
+        );
+
+        let incomplete = parse_html_with_diagnostics(
+            "<!doctype html><template><div><frameset data-name=x",
+        )
+        .unwrap();
+        assert!(incomplete.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-shell-start-tag-in-template"
+        }));
+
+        let mut unpositioned = HtmlParser::new();
+        for name in ["template", "div", "html", "body", "frameset"] {
+            unpositioned.process_token(Token::StartTag {
+                name: name.to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            });
+        }
+        let diagnostics = unpositioned
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-shell-start-tag-in-template")
+            .collect::<Vec<_>>();
+        assert_eq!(diagnostics.len(), 3);
+        assert!(diagnostics.iter().all(|diagnostic| diagnostic.position.is_none()));
     }
 
     #[test]
