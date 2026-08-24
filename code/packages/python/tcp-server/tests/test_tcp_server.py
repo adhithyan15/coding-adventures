@@ -31,6 +31,7 @@ from __future__ import annotations
 import socket
 import threading
 import time
+from unittest.mock import MagicMock
 
 import pytest
 
@@ -513,6 +514,39 @@ class TestErrorHandling:
             client.close()
 
         assert not t.is_alive(), "serve() did not exit after stop()"
+
+    def test_cleanup_suppresses_listening_socket_unregister_failure(self) -> None:
+        """A stale selector registration must not prevent socket cleanup."""
+        server = TcpServer()
+        server_socket = MagicMock(spec=socket.socket)
+        selector = MagicMock()
+        selector.unregister.side_effect = RuntimeError("stale registration")
+        selector.get_map.return_value = {}
+        server._server_socket = server_socket
+        server._sel = selector
+
+        server._cleanup()
+
+        selector.unregister.assert_called_once_with(server_socket)
+        server_socket.close.assert_called_once_with()
+        selector.close.assert_called_once_with()
+        assert server._server_socket is None
+
+    def test_cleanup_suppresses_client_unregister_failure(self) -> None:
+        """One stale client registration must not abort selector cleanup."""
+        server = TcpServer()
+        client = MagicMock(spec=socket.socket)
+        key = MagicMock(data={"addr": ("127.0.0.1", 1)}, fileobj=client)
+        selector = MagicMock()
+        selector.get_map.return_value = {1: key}
+        selector.unregister.side_effect = RuntimeError("stale registration")
+        server._sel = selector
+
+        server._cleanup()
+
+        selector.unregister.assert_called_once_with(client)
+        client.close.assert_not_called()
+        selector.close.assert_called_once_with()
 
 
 class TestConfiguration:
