@@ -2927,6 +2927,18 @@
         "scriptSet": "marwadi-main"
       },
       {
+        "language": "marwadi",
+        "chapter": 14,
+        "output": "marwadi/book/chapters/ch14-three-places.tex",
+        "scriptSet": "marwadi-main"
+      },
+      {
+        "language": "marwadi",
+        "chapter": 15,
+        "output": "marwadi/book/chapters/ch15-hand-and-money.tex",
+        "scriptSet": "marwadi-main"
+      },
+      {
         "language": "persian",
       "chapter": 2,
       "output": "persian/book/chapters/ch02-give-your-name.tex",

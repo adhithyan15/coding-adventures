@@ -17,7 +17,7 @@ it without a visible model. Five more isolate **ह** and **ं**, build respect
 and hand. Six further sessions teach *pāṇī* ("water") by ear before showing its
 spelling, then isolate **प**, **ण**, and **ी** before assembling and independently
 writing **पाणी**. Chapters 5–9 add a name exchange, a wellbeing exchange, and
-**पाछे मिलसू** (*pāchhe milsū*, "see you later"). Chapters 10–11 then secure
+**पाछे मिलसू** (*pāchhe milsū*, "see you later"). Chapters 10–13 then secure
 twelve family and relationship labels by ear before their spelling, add only
 **ब**, **द**, **व**, **त**, and **च**, and end in independent listening, speaking,
 reading, and writing. Every lesson is at most five minutes.
@@ -30,8 +30,10 @@ They can also answer yes respectfully with **हां सा**, and retrieve **
 as the Marwadi word for water in all four skills. They can exchange one name,
 ask and answer how someone is, take leave, and retrieve **मां, बाप, भाई, बहन,
 दादा, दादी, परिवार, नाना, नानी, पति, पत्नी, बच्चा** without assuming that every
-household or region uses the same labels. The track now contains 92 canonical
-lessons and 23 distinct taught headwords. That is still a small pre-A1
+household or region uses the same labels. They can also retrieve **बाजार, घर,
+मंदिर, हाथ, पैसा** as a first direction-and-travel vocabulary map without
+pretending that the still-untaught location question is complete. The track now
+contains 108 canonical lessons and 28 distinct taught headwords. That is still a small pre-A1
 capability, not completion of pre-A1 and not exam readiness. The curriculum map
 records every untouched spine concept explicitly so the remaining work stays
 measurable.
@@ -62,6 +64,9 @@ naming the documented variation instead of silently declaring one universal
 form. The source also records **बाई सा** alongside **पत्नी**; the lesson begins
 with one form while preserving the alternative. The Society for Endangered Languages Swadesh list independently
 corroborates the close-family domain.
+Marwari Pathshala Lesson 5 supplies the five direction-and-travel words in
+Chapters 14–15, including **हाथ** inside right/left direction cues and **पैसा**
+inside a travel-cost question.
 
 - [Rajasthan Foundation: Rajasthani Language](https://foundation.rajasthan.gov.in/RajasthaniLanguage.aspx)
 - [Rajasthan State Archives: learning Rajasthani (Marwari)](https://rsad.artandculture.rajasthan.gov.in/content/raj/art-and-culture/rajasthan-state-archives-bikaner/en/download.html)

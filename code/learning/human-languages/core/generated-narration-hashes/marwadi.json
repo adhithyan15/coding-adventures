@@ -263,6 +263,48 @@
       "json": "marwadi/narration/ch13.json",
       "textHash": "fnv1a64:0a22373f86472011",
       "jsonHash": "fnv1a64:b8ccc31d5b07e98a"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 14,
+      "sourceHash": "fnv1a64:18d4d914eed0ebaa",
+      "lessonIds": [
+        "MW-C10-hear-bajar",
+        "MW-W10-ja",
+        "MW-C10-bajar",
+        "MW-C10-hear-ghar",
+        "MW-W10-gha",
+        "MW-C10-ghar",
+        "MW-C10-hear-mandir",
+        "MW-C10-mandir",
+        "MW-R10-places-three"
+      ],
+      "voiceLessons": 7,
+      "drivablePrefix": 1,
+      "text": "marwadi/narration/ch14.txt",
+      "json": "marwadi/narration/ch14.json",
+      "textHash": "fnv1a64:46ee49039aecb597",
+      "jsonHash": "fnv1a64:f3aedf99001ca55c"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 15,
+      "sourceHash": "fnv1a64:5b84d801b2e5095b",
+      "lessonIds": [
+        "MW-C10-hear-haath",
+        "MW-C10-haath",
+        "MW-C10-hear-paisa",
+        "MW-C10-paisa",
+        "MW-R10-travel-five",
+        "MW-C10-travel-five",
+        "MW-R10-script-close"
+      ],
+      "voiceLessons": 7,
+      "drivablePrefix": 7,
+      "text": "marwadi/narration/ch15.txt",
+      "json": "marwadi/narration/ch15.json",
+      "textHash": "fnv1a64:f90774706001d7df",
+      "jsonHash": "fnv1a64:dee8b8693c3e3673"
     }
   ],
   "findings": []

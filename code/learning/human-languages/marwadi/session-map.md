@@ -98,6 +98,22 @@ memory demand at a time.
 | S90 | `MW-R09-family-new-five` | retrieve all five new labels after a gap | mixed four-skill recall |
 | S91 | `MW-C09-family-twelve` | pass a twelve-label family map | non-compensatory listening, speaking, reading, and writing |
 | S92 | `MW-R09-script-close` | close the writing loop for **त** and **च** | write both signs and their load-bearing words |
+| S93 | `MW-C10-hear-bajar` | hear *bājār* as market | none; meaning precedes the new sign |
+| S94 | `MW-W10-ja` | isolate **ज** | observe, trace, copy one sign |
+| S95 | `MW-C10-bajar` | assemble **बाजार** | delayed copy and dictation |
+| S96 | `MW-C10-hear-ghar` | hear *ghar* as home | none; meaning precedes the new sign |
+| S97 | `MW-W10-gha` | isolate aspirated **घ** | observe, trace, copy one sign |
+| S98 | `MW-C10-ghar` | assemble **घर** | delayed copy and dictation |
+| S99 | `MW-C10-hear-mandir` | hear *mandir* as temple | none; meaning precedes spelling |
+| S100 | `MW-C10-mandir` | assemble **मंदिर** from known signs | delayed copy and dictation |
+| S101 | `MW-R10-places-three` | retrieve market, home, and temple | independent four-skill checkpoint |
+| S102 | `MW-C10-hear-haath` | hear *hāth* as hand in direction cues | none; meaning precedes spelling |
+| S103 | `MW-C10-haath` | assemble **हाथ** from known signs | delayed copy and dictation |
+| S104 | `MW-C10-hear-paisa` | hear *paisā* as money in a travel-cost cue | none; meaning precedes spelling |
+| S105 | `MW-C10-paisa` | assemble **पैसा** from known signs | delayed copy and dictation |
+| S106 | `MW-R10-travel-five` | retrieve all five words after a gap | mixed four-skill recall |
+| S107 | `MW-C10-travel-five` | pass the five-word travel map | non-compensatory listening, speaking, reading, and writing |
+| S108 | `MW-R10-script-close` | close the writing loop for **ज** and **घ** | write both signs and their load-bearing words |
 
 Reviews use expanding spacing: repeat S7 the next day, after three days, after
 one week, and after two weeks. A failed written recall sends the learner back to

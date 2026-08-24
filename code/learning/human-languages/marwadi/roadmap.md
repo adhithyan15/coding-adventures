@@ -32,12 +32,14 @@ add 38 lessons and twelve relationship labels: **मां, बाप, भाई
 meaning, writing adds only **ब**, **द**, **व**, **त**, and **च** one at a time, and
 the slice closes with separately scored listening, speaking, reading, and
 writing. The strict gentle-ramp report is all-zero at 92 lessons: no duration,
-load, script closure, ordering,
-forward-reference, or reinforcement-window findings.
+load, script closure, ordering, forward-reference, or reinforcement-window
+findings. Chapters 14–15 add 16 more meaning-first lessons for **बाजार, घर,
+मंदिर, हाथ, पैसा**, with only **ज** and **घ** new and the same independently
+scored four-skill close. The strict report remains all-zero at 108 lessons.
 
-This brings the first vocabulary expansion from 11 to 23 distinct taught
-headwords: 12 of the issue's intended 35 new headwords are complete, leaving 23
-new headwords in this tranche. The earlier 17-word figure counted toward a
+This brings the first vocabulary expansion from 11 to 28 distinct taught
+headwords: 17 of the issue's intended 35 new headwords are complete, leaving 18
+new headwords in this tranche. The earlier 17-word remaining figure counted toward a
 35-word total rather than the issue's explicit allowance of 35 additions and is
 superseded here. The next independent slice should favor high-frequency
 survival nouns that reuse the current script inventory. The contrasting no response before a complete yes/no
