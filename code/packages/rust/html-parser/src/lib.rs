@@ -7680,10 +7680,13 @@ impl HtmlParser {
             && self.current_namespace().is_none()
             && !self.has_open_element("table")
         {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-shell-end-tag-in-template",
-                format!("end tag `</{name}>` in template content was ignored"),
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-shell-end-tag-in-template",
+                    format!("end tag `</{name}>` in template content was ignored"),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             return;
         }
         if name == "b" && self.adopt_b_end_tag_across_cite_div() {
@@ -27082,9 +27085,11 @@ mod tests {
         .at_emission(Some(eof_position(source)))
     }
 
-    fn end_tag_position(source: &str, name: &str) -> SourcePosition {
+    fn end_tag_position_at(source: &str, name: &str, occurrence: usize) -> SourcePosition {
         let delimiter = source
-            .find(&format!("</{name}>"))
+            .match_indices(&format!("</{name}>"))
+            .nth(occurrence)
+            .map(|(start, _)| start)
             .map(|start| start + name.len() + 2)
             .expect("source should contain the end tag");
         let line_start = source[..delimiter]
@@ -27096,6 +27101,10 @@ mod tests {
             line: source[..delimiter].lines().count(),
             column: source[line_start..delimiter].chars().count() + 1,
         }
+    }
+
+    fn end_tag_position(source: &str, name: &str) -> SourcePosition {
+        end_tag_position_at(source, name, 0)
     }
 
     fn shell_end_tag_outside_scope(source: &str, name: &str) -> ParserDiagnostic {
@@ -27378,6 +27387,18 @@ mod tests {
             format!("start tag `<{name}>` in template body content was ignored"),
         )
         .at_emission(Some(start_tag_position_at(source, name, occurrence)))
+    }
+
+    fn shell_end_tag_in_template_recovery(
+        source: &str,
+        name: &str,
+        occurrence: usize,
+    ) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-shell-end-tag-in-template",
+            format!("end tag `</{name}>` in template content was ignored"),
+        )
+        .at_emission(Some(end_tag_position_at(source, name, occurrence)))
     }
 
     fn end_tag_in_template_column_group_recovery(
@@ -42542,10 +42563,7 @@ mod tests {
                 let output = parse_html_with_diagnostics(&source).unwrap();
                 assert_eq!(
                     output.parser_diagnostics,
-                    vec![ParserDiagnostic::new(
-                        "unexpected-shell-end-tag-in-template",
-                        format!("end tag `</{name}>` in template content was ignored"),
-                    )],
+                    vec![shell_end_tag_in_template_recovery(&source, name, 0)],
                     "source {source:?}"
                 );
                 assert_eq!(
@@ -42567,8 +42585,13 @@ mod tests {
                 .filter(|diagnostic| {
                     diagnostic.code == "unexpected-shell-end-tag-in-template"
                 })
-                .count(),
-            1
+                .cloned()
+                .collect::<Vec<_>>(),
+            vec![shell_end_tag_in_template_recovery(
+                "<!doctype html><template><div><template></head><span>x</span></template></div></template>",
+                "head",
+                0,
+            )]
         );
 
         for source in [
@@ -42590,6 +42613,76 @@ mod tests {
         assert!(fragment.parser_diagnostics.iter().all(|diagnostic| {
             diagnostic.code != "unexpected-shell-end-tag-in-template"
         }));
+    }
+
+    #[test]
+    fn positions_shell_end_tags_ignored_in_authored_template_content() {
+        let repeated_source =
+            "<!doctype html><template><div></head></head><span>x</span></div></template>";
+        let repeated = parse_html_with_diagnostics(repeated_source).unwrap();
+        assert_eq!(
+            repeated
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| {
+                    diagnostic.code == "unexpected-shell-end-tag-in-template"
+                })
+                .cloned()
+                .collect::<Vec<_>>(),
+            vec![
+                shell_end_tag_in_template_recovery(repeated_source, "head", 0),
+                shell_end_tag_in_template_recovery(repeated_source, "head", 1),
+            ]
+        );
+
+        let unicode_source =
+            "<!doctype html>\r\n<p>雪</p>\r\n<template><div></frameset><span>x</span></div></template>";
+        let unicode = parse_html_with_diagnostics(unicode_source).unwrap();
+        assert_eq!(
+            unicode
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| {
+                    diagnostic.code == "unexpected-shell-end-tag-in-template"
+                })
+                .cloned()
+                .collect::<Vec<_>>(),
+            vec![shell_end_tag_in_template_recovery(
+                unicode_source,
+                "frameset",
+                0,
+            )]
+        );
+
+        let incomplete =
+            parse_html_with_diagnostics("<!doctype html><template><div></head").unwrap();
+        assert!(incomplete.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-shell-end-tag-in-template"
+        }));
+
+        let mut unpositioned = HtmlParser::new();
+        unpositioned.process_token(Token::StartTag {
+            name: "template".to_string(),
+            attributes: Vec::new(),
+            self_closing: false,
+        });
+        unpositioned.process_token(Token::StartTag {
+            name: "div".to_string(),
+            attributes: Vec::new(),
+            self_closing: false,
+        });
+        for name in ["head", "frameset"] {
+            unpositioned.process_token(Token::EndTag {
+                name: name.to_string(),
+            });
+        }
+        let diagnostics = unpositioned
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-shell-end-tag-in-template")
+            .collect::<Vec<_>>();
+        assert_eq!(diagnostics.len(), 2);
+        assert!(diagnostics.iter().all(|diagnostic| diagnostic.position.is_none()));
     }
 
     #[test]
