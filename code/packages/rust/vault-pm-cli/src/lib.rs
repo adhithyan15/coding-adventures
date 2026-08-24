@@ -14633,8 +14633,13 @@ mod tests {
         // raw spelling on every supported platform.
         let traversal_anchor = root.child("traversal-anchor");
         fs::create_dir_all(&traversal_anchor).unwrap();
-        let via_parent = traversal_anchor.join("..").join(real.file_name().unwrap());
-        let alternate_spelling = StorageLocation::new(via_parent.to_str().unwrap()).unwrap();
+        let separator = std::path::MAIN_SEPARATOR;
+        let via_parent = format!(
+            "{}{separator}..{separator}{}",
+            traversal_anchor.display(),
+            real.file_name().unwrap().to_string_lossy()
+        );
+        let alternate_spelling = StorageLocation::new(via_parent).unwrap();
         assert_ne!(exact.as_str(), alternate_spelling.as_str());
         assert!(same_local_directory(&exact, &alternate_spelling));
 

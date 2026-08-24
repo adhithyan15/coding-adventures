@@ -1840,12 +1840,11 @@ pub fn compile_module_to_windows_executable(
 }
 
 #[cfg(any(target_os = "windows", test))]
-const MSVC_DYNAMIC_CRT_LIBRARIES: [&str; 6] = [
+const MSVC_DYNAMIC_CRT_LIBRARIES: [&str; 5] = [
     "msvcrt.lib",
     "vcruntime.lib",
     "ucrt.lib",
     "libvcruntime.lib",
-    "libucrt.lib",
     "legacy_stdio_definitions.lib",
 ];
 
@@ -1924,9 +1923,10 @@ pub fn link_windows_x86_64_executable(
                 // Keep the startup library first. Its utility.obj introduces
                 // internal __vcrt_* and __acrt_* references; because this
                 // custom /ENTRY link bypasses the compiler driver's normal CRT
-                // startup selection, the static support libraries must follow
-                // the DLL import libraries to complete that initialization
-                // chain without replacing their __imp_* definitions.
+                // startup selection, libvcruntime.lib must follow the DLL
+                // import libraries to complete that initialization chain.
+                // Do not add libucrt.lib: it is the static UCRT and duplicates
+                // symbols already supplied by the dynamic ucrt.lib above.
                 // kernel32/ws2_32/userenv/advapi32/bcrypt/ntdll cover the
                 // Win32 API surface gc-core-capi's Rust std pulls in.
                 .args(MSVC_DYNAMIC_CRT_LIBRARIES)
@@ -3640,7 +3640,6 @@ mod tests {
                 "vcruntime.lib",
                 "ucrt.lib",
                 "libvcruntime.lib",
-                "libucrt.lib",
                 "legacy_stdio_definitions.lib",
             ],
         );
