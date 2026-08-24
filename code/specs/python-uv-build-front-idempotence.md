@@ -250,6 +250,42 @@ distributable artifacts, exercise a representative selection from the direct
 dependent closure, and run the Go build tool's dry plan and real affected
 closure.
 
+## Markov affected-closure Python pin profile
+
+The separately discovered `python-markov-chain-build-front-python313` owner
+closes the failure exposed when the graph repair's real affected build reached
+`markov-chain`. This package is not part of the live non-idempotent audit
+because both existing fronts already clear their environment. The failure is
+nevertheless deterministic when uv selects ambient Python 3.10: graph and
+directed-graph declare Python >=3.12, so dependency installation stops before
+the Markov tests run.
+
+Both Markov fronts MUST converge on one package-local Python 3.13 environment:
+
+1. create `.venv` with `--quiet --no-project --clear --python 3.13`;
+2. install `graph` before `directed-graph`, then the Markov development
+   requirement, with every pip operation explicitly targeting `.venv`;
+3. preserve the Windows unquoted `.[dev]` token and platform-native explicit
+   interpreter paths; and
+4. run Ruff lint, Ruff formatting verification, strict MyPy, and pytest through
+   that interpreter rather than an ambient executable or `uv run`.
+
+The exact-recipe regression MUST compare every active line on both platforms,
+not isolated flags. It MUST also prove the Markov owner depends on the merged
+graph owner and that the live seven-front uv audit remains unchanged: this
+repair closes a separate already-clear affected-plan prerequisite rather than
+claiming another audit-corpus reduction.
+
+Dormant formatting, import-order, and missing-generic-argument findings MAY
+receive bounded behavior-preserving corrections inside the Markov package so
+the newly explicit quality gates pass. Such cleanup MUST retain the public
+runtime API, stochastic algorithms, package name and version, dependency
+metadata, 90% coverage threshold, PEP 561 marker, capability profile, and the
+graph -> directed-graph -> Markov boundary. Runtime validation MUST execute the
+Windows front twice consecutively with uv 0.11.28 and Python 3.13, build wheel
+and source distributions, exercise a Markov smoke from a fresh installation,
+and rerun the real three-package affected closure through the Go build tool.
+
 ## Legacy named-environment repair profile
 
 The separately owned `python/in-memory-data-store-protocol` front was not in
