@@ -16,7 +16,7 @@ use diagram_ir::{
 };
 use std::collections::{HashMap, VecDeque};
 
-pub const VERSION: &str = "0.11.0";
+pub const VERSION: &str = "0.12.0";
 
 const MARGIN: f64 = 24.0;
 const TITLE_H: f64 = 32.0;
@@ -62,6 +62,13 @@ fn resolve_y_range(diagram: &ChartDiagram) -> (f64, f64) {
 }
 
 fn layout_xy(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagram {
+    match diagram.orientation {
+        diagram_ir::ChartOrientation::Vertical => layout_xy_vertical(diagram, cw, ch),
+        diagram_ir::ChartOrientation::Horizontal => layout_xy_horizontal(diagram, cw, ch),
+    }
+}
+
+fn layout_xy_vertical(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagram {
     let has_title = diagram.title.is_some();
     let has_series = !diagram.series.is_empty();
     let has_x_title = diagram
@@ -237,6 +244,180 @@ fn layout_xy(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagram {
         items.push(LayoutedChartItem::Legend {
             x: pl,
             y: ch - lh / 2.0,
+            entries: legend_entries,
+        });
+    }
+
+    LayoutedChartDiagram {
+        width: cw,
+        height: ch,
+        accessibility_title: diagram.accessibility_title.clone(),
+        accessibility_description: diagram.accessibility_description.clone(),
+        title_box: None,
+        items,
+    }
+}
+
+fn layout_xy_horizontal(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagram {
+    let has_title = diagram.title.is_some();
+    let has_series = !diagram.series.is_empty();
+    let has_x_title = diagram
+        .x_axis
+        .as_ref()
+        .and_then(|axis| axis.title.as_ref())
+        .is_some();
+    let has_y_title = diagram
+        .y_axis
+        .as_ref()
+        .and_then(|axis| axis.title.as_ref())
+        .is_some();
+    let legend_height = if has_series { LEGEND_H } else { 0.0 };
+
+    let top = MARGIN + if has_title { TITLE_H } else { 0.0 };
+    let left = MARGIN + Y_LBL_W + if has_x_title { X_LBL_H } else { 0.0 };
+    let bottom = ch - MARGIN - X_LBL_H - legend_height - if has_y_title { X_LBL_H } else { 0.0 };
+    let right = cw - MARGIN;
+    let plot_width = (right - left).max(1.0);
+    let plot_height = (bottom - top).max(1.0);
+
+    let (minimum, maximum) = resolve_y_range(diagram);
+    let range = (maximum - minimum).max(1.0);
+    let categories = diagram
+        .x_axis
+        .as_ref()
+        .map(|axis| axis.categories.clone())
+        .unwrap_or_default();
+    let category_count = categories.len().max(1);
+    let bar_series_count = diagram
+        .series
+        .iter()
+        .filter(|series| series.kind == SeriesKind::Bar)
+        .count();
+    let category_height = plot_height / category_count as f64;
+    let bar_height = if bar_series_count > 0 {
+        (category_height * 0.7 / bar_series_count as f64).max(4.0)
+    } else {
+        category_height * 0.7
+    };
+    let mut items = Vec::new();
+
+    if let Some(title) = &diagram.title {
+        items.push(LayoutedChartItem::DataLabel {
+            x: cw / 2.0,
+            y: MARGIN + TITLE_H * 0.5,
+            text: title.clone(),
+            font_size: None,
+            color: None,
+        });
+    }
+    if let Some(axis_title) = diagram.x_axis.as_ref().and_then(|axis| axis.title.as_ref()) {
+        items.push(LayoutedChartItem::DataLabel {
+            x: MARGIN + 8.0,
+            y: (top + bottom) / 2.0,
+            text: axis_title.clone(),
+            font_size: Some(14.0),
+            color: None,
+        });
+    }
+    if let Some(axis_title) = diagram.y_axis.as_ref().and_then(|axis| axis.title.as_ref()) {
+        items.push(LayoutedChartItem::DataLabel {
+            x: (left + right) / 2.0,
+            y: bottom + X_LBL_H + 8.0,
+            text: axis_title.clone(),
+            font_size: Some(14.0),
+            color: None,
+        });
+    }
+
+    for index in 0..=GRID_COUNT {
+        let fraction = index as f64 / GRID_COUNT as f64;
+        let value = minimum + fraction * range;
+        let x = left + fraction * plot_width;
+        items.push(LayoutedChartItem::GridLine {
+            x1: x,
+            y1: top,
+            x2: x,
+            y2: bottom,
+        });
+        items.push(LayoutedChartItem::AxisTick {
+            x,
+            y: bottom + TICK_LEN + 4.0,
+            label: format!("{value:.0}"),
+            orientation: Orientation::Vertical,
+        });
+    }
+    for (index, category) in categories.iter().enumerate() {
+        items.push(LayoutedChartItem::AxisTick {
+            x: left - TICK_LEN - 4.0,
+            y: top + (index as f64 + 0.5) * category_height,
+            label: category.clone(),
+            orientation: Orientation::Horizontal,
+        });
+    }
+    items.push(LayoutedChartItem::AxisSpine {
+        x1: left,
+        y1: bottom,
+        x2: right,
+        y2: bottom,
+        orientation: Orientation::Horizontal,
+    });
+    items.push(LayoutedChartItem::AxisSpine {
+        x1: left,
+        y1: top,
+        x2: left,
+        y2: bottom,
+        orientation: Orientation::Vertical,
+    });
+
+    let mut bar_series_index = 0usize;
+    let mut legend_entries = Vec::new();
+    for (series_index, series) in diagram.series.iter().enumerate() {
+        let color = SERIES_COLORS[series_index % SERIES_COLORS.len()].to_string();
+        if let Some(label) = &series.label {
+            legend_entries.push(LegendEntry {
+                color: color.clone(),
+                label: label.clone(),
+            });
+        }
+        match series.kind {
+            SeriesKind::Bar => {
+                for (category_index, value) in series.data.iter().copied().enumerate() {
+                    let width = ((value - minimum) / range * plot_width).max(0.0);
+                    let y = top
+                        + category_index as f64 * category_height
+                        + category_height * 0.15
+                        + bar_series_index as f64 * bar_height;
+                    items.push(LayoutedChartItem::Bar {
+                        x: left,
+                        y,
+                        width,
+                        height: bar_height,
+                        color: color.clone(),
+                    });
+                }
+                bar_series_index += 1;
+            }
+            SeriesKind::Line => {
+                let points = series
+                    .data
+                    .iter()
+                    .copied()
+                    .enumerate()
+                    .map(|(category_index, value)| Point {
+                        x: left + (value - minimum) / range * plot_width,
+                        y: top + (category_index as f64 + 0.5) * category_height,
+                    })
+                    .collect::<Vec<_>>();
+                if !points.is_empty() {
+                    items.push(LayoutedChartItem::LinePath { points, color });
+                }
+            }
+        }
+    }
+    if !legend_entries.is_empty() {
+        items.push(LayoutedChartItem::Legend {
+            x: left,
+            y: ch - legend_height / 2.0,
             entries: legend_entries,
         });
     }
@@ -666,7 +847,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.11.0");
+        assert_eq!(crate::VERSION, "0.12.0");
     }
 
     #[test]
@@ -688,6 +869,41 @@ mod tests {
                 LayoutedChartItem::DataLabel { text, .. } if text == expected
             )));
         }
+    }
+
+    #[test]
+    fn horizontal_xy_layout_maps_values_to_x_and_categories_to_y() {
+        let mut diagram = xy_diagram();
+        diagram.orientation = ChartOrientation::Horizontal;
+        let layout = layout_chart_diagram(&diagram, 600.0, 400.0);
+        let bars = layout
+            .items
+            .iter()
+            .filter_map(|item| match item {
+                LayoutedChartItem::Bar {
+                    x,
+                    y,
+                    width,
+                    height,
+                    ..
+                } => Some((*x, *y, *width, *height)),
+                _ => None,
+            })
+            .collect::<Vec<_>>();
+        assert_eq!(bars.len(), 3);
+        assert!(bars.iter().all(|(_, _, width, height)| width > height));
+        assert!(bars[0].1 < bars[1].1 && bars[1].1 < bars[2].1);
+
+        let points = layout
+            .items
+            .iter()
+            .find_map(|item| match item {
+                LayoutedChartItem::LinePath { points, .. } => Some(points),
+                _ => None,
+            })
+            .expect("horizontal line path");
+        assert!(points[0].y < points[1].y && points[1].y < points[2].y);
+        assert!(points[0].x < points[1].x);
     }
 
     #[test]
