@@ -310,6 +310,9 @@ export const ductusKey = (script: string, glyph: string): string => `${script}:$
 // descends through its short stroke, and sweeps left through the lower curve
 // without lifting. Its scoped source stays distinct from Urdu ر even though
 // both paths fit the same vendored Noto Naskh glyph.
+// The following ر ز و page's Arabic ز clip repeats the complete Raa-shaped
+// body first, then lifts once to place its single upper dot. Its dedicated
+// evidence keeps that dot-last order from being inferred from the shared body.
 // The next page's Arabic س clip shapes all three close teeth right-to-left and
 // flows directly into the final bowl in one uninterrupted run. Its scoped
 // evidence stays distinct from the already-authored Persian and Urdu س paths.
@@ -8423,6 +8426,58 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: arabicAlphabetSource("ر"),
+  },
+  [ductusKey("arabic", "ز")]: {
+    script: "arabic",
+    glyph: "ز",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "begin at the upper tip and descend through the short stroke",
+            path: [
+              { x: 250, y: 320 },
+              { x: 248, y: 280 },
+              { x: 255, y: 235 },
+              { x: 270, y: 190 },
+              { x: 287, y: 145 },
+              { x: 300, y: 95 },
+              { x: 304, y: 48 },
+            ],
+          },
+          {
+            label: "sweep left through the lower curve without lifting",
+            path: [
+              { x: 304, y: 48 },
+              { x: 298, y: 8 },
+              { x: 284, y: -30 },
+              { x: 260, y: -68 },
+              { x: 226, y: -103 },
+              { x: 185, y: -130 },
+              { x: 140, y: -146 },
+              { x: 95, y: -151 },
+              { x: 52, y: -147 },
+              { x: 10, y: -136 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift once, then place the dot above",
+            path: [
+              { x: 200, y: 405 },
+              { x: 140, y: 465 },
+              { x: 200, y: 525 },
+              { x: 260, y: 465 },
+              { x: 200, y: 405 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: arabicAlphabetSource("ز"),
   },
   [ductusKey("arabic", "س")]: {
     script: "arabic",

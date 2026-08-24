@@ -1234,9 +1234,11 @@ upper head and the second continues from its lower-left end through the lower
 diagonal without lifting. The source's accepted lifted alternative remains
 recorded in the metadata. Arabic **ذ** then grows the canonical inventory to 23
 unique sourced rows: its filmstrip preserves the complete **د** body in the
-first run and places the single upper dot after one lift. Arabic remains
-incomplete because later lessons still use six absent base letters; those rows
-must be added rather than hidden by a premature completion flag.
+first run and places the single upper dot after one lift. Arabic **ز** follows
+with the same evidence rule: its dedicated Oregon clip completes the **ر** body
+before one lift places the upper dot, growing the inventory to 24 rows. Arabic
+remains incomplete because later lessons still use five absent base letters;
+those rows must be added rather than hidden by a premature completion flag.
 The canonical script-data group is capped at 250 kB per cacheable batch, so
 these growing source notes stay within the app's enforced 500 kB eager-chunk
 budget without removing learner-facing evidence.
