@@ -42,6 +42,28 @@ function lesson(id: string, chapter: number, atoms: string[]) {
   );
 }
 
+function reviewLesson(
+  id: string,
+  options: {
+    schemaVersion?: number;
+    type?: "review" | "practice" | "practice-mix" | "word";
+    introductions?: "empty" | "missing";
+    practises?: string[];
+  } = {},
+) {
+  const schemaVersion = options.schemaVersion ?? 2;
+  const type = options.type ?? "review";
+  const introductions = options.introductions === "missing" ? "" : "introduces:\n  knowledge: []\n";
+  const practises = options.practises ?? ["KNOWN-ATOM"];
+  return parseLesson(
+    `---\nschema_version: ${schemaVersion}\nid: ${id}\nchapter: 1\ntype: ${type}\n` +
+      `headword: x\ngloss: x\nconcept_tag: GREETING-HELLO\n${introductions}` +
+      `practises:\n  knowledge: [${practises.join(", ")}]\n---\n\n# ${id}\n\n` +
+      `## Recall\n\n<!-- hl-knowledge: introduces=[]; assesses=[${practises.join(", ")}] -->\n\nRetrieve it.\n`,
+    "spanish",
+  );
+}
+
 describe("the lesson budget", () => {
   it("flags a lesson above the budget and leaves one at it alone", () => {
     const report = measureRamp(
@@ -79,12 +101,40 @@ describe("the chapter budget", () => {
 
 describe("what the measurement cannot see", () => {
   it("reports atom-less lessons as unmeasurable, never as compliant", () => {
-    // A schema-v1 lesson declares no atoms. Counting it as 0-and-therefore-fine would
-    // let an unmigrated track look perfectly gentle.
+    // A lesson with no explicit atom frontier cannot prove that zero is intentional.
+    // Counting it as 0-and-therefore-fine would let an unmigrated track look gentle.
     const report = measureRamp([lesson("ES-1", 1, []), lesson("ES-2", 1, ["A", "B", "C", "D"])], POLICY);
     expect(report.summary.unmeasurableLessons).toBe(1);
     expect(report.summary.measurablePercent).toBe(50);
     expect(report.summary.lessonViolations).toBe(1);
+  });
+
+  it("measures explicit schema-v2 review and practice lessons as intentional zero-new-atom steps", () => {
+    const report = measureRamp(
+      [
+        reviewLesson("ES-R1"),
+        reviewLesson("ES-P1", { type: "practice" }),
+        reviewLesson("ES-M1", { type: "practice-mix" }),
+      ],
+      POLICY,
+    );
+    expect(report.summary.unmeasurableLessons).toBe(0);
+    expect(report.summary.measurablePercent).toBe(100);
+    expect(report.tracks[0]).toMatchObject({ measurable: 3, unmeasurable: 0 });
+  });
+
+  it("keeps incomplete or ineligible zero-atom contracts fail-closed", () => {
+    const report = measureRamp(
+      [
+        reviewLesson("ES-NO-INTRO", { introductions: "missing" }),
+        reviewLesson("ES-NO-PRACTICE", { practises: [] }),
+        reviewLesson("ES-LEGACY", { schemaVersion: 1 }),
+        reviewLesson("ES-WORD", { type: "word" }),
+      ],
+      POLICY,
+    );
+    expect(report.summary.unmeasurableLessons).toBe(4);
+    expect(report.summary.measurablePercent).toBe(0);
   });
 });
 
@@ -114,43 +164,14 @@ describe("corpus snapshot", () => {
       report.tracks.reduce((sum, track) => sum + track.chapterViolations, 0),
     );
 
-    // HALF THE CORPUS IS INVISIBLE HERE. 572 lessons declare no atoms, so they are
-    // neither compliant nor violating — they are unmigrated. A track with few violations
-    // and many unmeasurable lessons has not proved it is gentle. Ratchet this DOWN as
-    // schema-v2 migration lands; the violation count will rise as it does, and that is
-    // the measurement improving rather than the corpus worsening.
-    // Five Chapter-7 teaching lessons now declare atoms; its practice lesson remains
-    // correctly atom-free, so the blind spot falls by five rather than six.
-    // Four Chapter-8 teaching lessons now declare atoms; Chapter 9 migrates four more.
-    // Chapter 10 migrates three teaching lessons; Chapter 11 migrates four more;
-    // Chapters 12 and 13 each migrate three teaching lessons.
-    // Their terminal practices remain correctly atom-free, so only teaching lessons
-    // leave the blind spot.
-    // Chapter 14 migrates two teaching lessons; its terminal practice correctly
-    // remains atom-free, so two more lessons leave the blind spot. Chapter 15
-    // replaces two legacy teaching lessons with five measurable steps; its terminal
-    // practice remains atom-free, so the blind spot falls by two more net of the
-    // three added lessons.
-    // Chapter 16 replaces two legacy teaching lessons with seven measurable
-    // singular steps; its terminal checkpoint remains correctly atom-free.
-    // Chapter 17 replaces three legacy teaching lessons with seven measurable
-    // singular steps; its terminal checkpoint remains correctly atom-free.
-    // Chapter 18 replaces nine legacy teaching lessons with eight measurable
-    // singular steps; its terminal checkpoint remains correctly atom-free.
-    // HL-C88 slice 8 moves this UP by two, which is the one direction this
-    // ratchet is not supposed to travel, so it needs saying: the two lessons are
-    // chapter 64's review and chapter 65's synthesis, and a review or a synthesis
-    // introduces no atoms BY DESIGN -- it re-practises what the teaching chapters
-    // introduced. They are terminal lessons of exactly the kind every note above
-    // calls "correctly atom-free". The blind spot they add is real but it is not
-    // unmigrated corpus, and migrating them would mean inventing atoms for lessons
-    // whose whole job is to revisit.
-    //
-    // HL-C113 adds one more for the same reason: ES-C55-sintesis-condicion
-    // closes the B1 si-condition rung and declares no atoms, because a
-    // synthesis re-practises what the two teaching chapters introduced. A
-    // ratchet that only moves down should not accept a cross-reference in
-    // place of its own justification, so it is written out here.
+    // The blind spot is the corpus whose introduced-atom frontier is UNKNOWN,
+    // not every lesson whose known frontier is zero. Legacy prose and incomplete
+    // schema-v2 contracts remain neither compliant nor violating. Explicit
+    // schema-v2 review/practice steps with `introduces.knowledge: []` and a
+    // non-empty practice contract are measurable zero-new-atom steps, because
+    // inventing introductions for retrieval lessons would make the ramp false.
+    // Synthesis and other lesson types remain fail-closed until their semantics
+    // receive an equally explicit policy.
     expect(report.summary.unmeasurableLessons).toBe(
       report.tracks.reduce((sum, track) => sum + track.unmeasurable, 0),
     );

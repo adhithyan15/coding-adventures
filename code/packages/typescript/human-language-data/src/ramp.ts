@@ -16,10 +16,12 @@
 // failure on a corpus nobody regressed.
 //
 // THE HONEST LIMIT, stated because it changes how the number should be read: a lesson only
-// counts atoms it declares. Schema-v1 lessons declare none, so they read as 0 and are
-// reported separately as `unmeasurable` rather than silently counted as compliant. A track
-// with a low violation count and a high unmeasurable count has not proved it is gentle; it
-// has proved it is unmigrated.
+// counts atoms it declares. Schema-v1 lessons declare none, so they are reported separately
+// as `unmeasurable` rather than silently counted as compliant. An explicit schema-v2
+// review/practice contract can prove that zero introductions is intentional by naming an
+// empty introduction list and the atoms being practised. A track with a low violation count
+// and a high unmeasurable count has not proved it is gentle; it has proved its frontier is
+// still unknown.
 
 // ─────────────────────────────────────────────────────────────────────────────
 // THE SECOND RAMP: script.
@@ -310,7 +312,7 @@ export interface RampReport {
     lessonViolations: number;
     /** Chapters above `maxNewAtomsPerChapter`, so splitting cannot game the lesson rule. */
     chapterViolations: number;
-    /** Lessons declaring no atoms at all — the measurement's blind spot, named. */
+    /** Lessons whose introduced-atom frontier is unknown — the measurement's blind spot, named. */
     unmeasurableLessons: number;
     /** Share of the corpus this measurement can actually see. */
     measurablePercent: number;
@@ -339,6 +341,28 @@ export function introducedAtoms(lesson: ParsedLesson): string[] {
     for (const atom of block.knowledge?.introduces ?? []) atoms.add(atom);
   }
   return [...atoms];
+}
+
+/**
+ * Whether a zero-introduction lesson proves that zero is intentional.
+ *
+ * An empty atom set is ambiguous in legacy prose: it can mean "this lesson
+ * introduces nothing" or "nobody has migrated its knowledge contract yet."
+ * Schema-v2 review and practice lessons can remove that ambiguity by explicitly
+ * declaring an empty introduction list and a non-empty practice list. Both
+ * declarations are load-bearing. Missing/malformed fields and other lesson types
+ * remain fail-closed as measurement-blind.
+ */
+function isExplicitReviewOnlyLesson(lesson: ParsedLesson): boolean {
+  const type = lesson.frontmatter.type;
+  const introduces = lesson.frontmatter["introduces.knowledge"];
+  return (
+    lesson.frontmatter.schema_version === "2" &&
+    (type === "review" || type === "practice" || type === "practice-mix") &&
+    Array.isArray(introduces) &&
+    introduces.length === 0 &&
+    frontmatterList(lesson, "practises.knowledge").length > 0
+  );
 }
 
 /**
@@ -500,7 +524,7 @@ export function measureRamp(lessons: ParsedLesson[], policy: ChapterPolicy): Ram
       tracks.set(language, track);
     }
     track.lessonCount += 1;
-    if (atoms.length === 0) track.unmeasurable += 1;
+    if (atoms.length === 0 && !isExplicitReviewOnlyLesson(lesson)) track.unmeasurable += 1;
     else track.measurable += 1;
 
     if (atoms.length > perLesson) {
