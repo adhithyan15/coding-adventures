@@ -6373,8 +6373,8 @@ vet, trimpath compilation, BUILD validation, and a real no-change dry run over
 57 dependencies, and dependency, credential, diff, capability-manifest, and
 production-authority reviews are clean.
 
-The branch rebased without conflict over eight unrelated main commits to exact
-`origin/main` `c587a9071ff294acb33f9b5234f9815b69e78d2a`. A fresh schema-3
+The branch rebased without conflict over nine unrelated main commits to exact
+`origin/main` `d0d6ab3846ca56175b8d2e66b901d1facf32202a`. A fresh schema-3
 collision report at that revision remains 15 established lanes, 1,370
 identities, 4,563 slots, 718 Rust singletons, zero collisions, and zero unknown
 buckets. The state graph contains 486 unique owners with complete dependencies
