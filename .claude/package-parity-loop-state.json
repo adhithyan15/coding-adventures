@@ -11,7 +11,7 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": 12538,
   "last_inventory": {
     "revision": "e5eb4be0c234456a3a5c0ae627ed88a723b066b6",
     "schema_version": 3,
@@ -4431,13 +4431,19 @@
     {
       "id": "python-graph-build-front-idempotence",
       "title": "Make the Python graph BUILD fronts repeatable",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["python-uv-build-front-idempotence-audit"],
       "branch": "codex/python-graph-build-front-idempotence",
-      "pr_number": null,
+      "pr_number": 12538,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/12538",
+      "opened_at": "2026-08-24T09:14:44Z",
+      "opened_revision": "8e2c73966fda12ec71e727ea7555cb8d0bd19155",
       "selection_revision": "e5eb4be0c234456a3a5c0ae627ed88a723b066b6",
       "selection_notes": "Selected only after PR #12520 merged through squash auto-merge, the collision-checked exact-main inventory was regenerated, and the newly discovered Wemo native-authority review was registered as selection-blocked. The schema-3 inventory remains 15 established lanes, 1,369 implementation identities, and 4,562 slots with zero collisions or unknown buckets; the uv audit reports exactly nine remaining fronts across seven components. Graph followed by directed-graph is the highest-leverage zero-overlap ready build-front owner: 97 Python pyproject files and 118 unique direct BUILD consumers reference graph or directed-graph, while trie/radix reaches six pyproject consumers. Eight open PRs and 29 non-main remote source heads have zero exact overlap on the two package roots, focused recipe/audit tests, state, roadmap, or repair profile; the target remote branch and prior PR are absent. The strategically important OCaml process-free build substrate is dependency-ready but currently overlaps three live build-tool PRs on validator/main/change surfaces, so this conflict-free dependency chain is selected first without changing OCaml priority. Pre-selection diagnostics pass 132 graph tests at 95.04% coverage and 129 directed-graph tests at 97.62%; strict MyPy is already clean for graph, while the selected generated-standard quality gates expose bounded Ruff/format cleanup plus seven directed-graph strict-MyPy findings that must be resolved without behavioral or dependency changes.",
+      "implementation_revision": "5be1330617c780835ebf1e6710888056c306bb09",
+      "final_review_revision": "8e2c73966fda12ec71e727ea7555cb8d0bd19155",
       "validation_notes": "All four canonical and Windows BUILD recipes now recreate .venv with --clear, pin Python 3.13, preserve graph-before-directed installation order, and invoke the named interpreter for Ruff lint, Ruff formatting, strict MyPy, and pytest. Three focused regressions pin the complete recipe profile and the uv audit falls exactly from nine to seven live fronts. On Windows with uv 0.11.28 and Python 3.13.14, both BUILD_windows fronts pass twice consecutively: graph passes 134 tests at 96.14% coverage and directed-graph passes 129 tests at 97.63%, with all quality gates clean. Behavior-preserving typing cleanup retains the public runtime PropertyValue and PropertyBag aliases, narrows DFS iterators, adopts Python 3.12 generic syntax, and adds a graph-property weight reset proof without changing dependency metadata or versions. Both packages build wheel and source distributions whose wheels retain py.typed. Direct downstreams pass state-machine's 161 tests at 99.02% coverage and tree's 137 tests at 100%. The Go build tool passes all tests, vet, trimpath compilation, BUILD validation, and a real exact-plan Windows execution over 4,982 packages and 9,489 edges: 205 affected packages were attempted, graph and directed-graph built successfully, 196 packages built, 289 skipped, four failed, and five dependency-skipped. Actual replay classifies the four failures as pre-existing and separately owned: Markov's unpinned Python front, Windows symlink privilege tests in ir-to-jvm-class-file and unix-tools, and scaffold-generator temporary-directory cleanup while the process current directory remains inside the tree. The collision inventory, parity reporter, capability taxonomy, state graph, diff, dependency, credential, and production-authority reviews are clean; this tranche adds no privileged authority or production dependency.",
+      "publication_notes": "Opened ready-for-review PR #12538 from clean validated head 8e2c73966fda12ec71e727ea7555cb8d0bd19155 after a normal first push. Immediately before publication, origin/main advanced from the exact selection revision through ten human-language and parser commits to 3700e712315674c2fad7e34e917dd123d3e4ea8c; the changed-file intersection and package-marker delta were both zero, so the unpublished branch rebased normally without conflicts or force push. Post-rebase focused tests, parity inventory, Go build-tool tests and vet, diff checks, and a second independent security review pass. GitHub reports PR #12538 ready for review, mergeable, and conflict-free while required CI and CodeQL checks are queued or running, so the loop remains monitor-only and auto-merge stays disabled until every required check is terminal and acceptable.",
       "notes": "Dependency-shaped generated-pattern backfill for python/graph followed by python/directed-graph. Validate both canonical and Windows fronts twice and preserve the graph prerequisite order."
     },
     {
