@@ -5946,6 +5946,90 @@
           "ES-LEX-C305-NAME-05"
         ]
       }
+    },
+    {
+      "chapter": 314,
+      "title": "The Body, Further Down --- Arm, Leg, Foot, Tooth, Ear",
+      "label": "ch:brazo-y-pie",
+      "canDo": "I can name the arm, the leg, the foot, the tooth and the hearing in Spanish.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "ES-C314-oido",
+        "kind": "production",
+        "summary": "Complete ES-C314-oido: name all five in order, from the arm at the top to the hearing you cannot point at.",
+        "assesses": [
+          "ES-LEX-C314-BODY-01",
+          "ES-LEX-C314-BODY-02",
+          "ES-LEX-C314-BODY-03",
+          "ES-LEX-C314-BODY-04",
+          "ES-LEX-C314-BODY-05"
+        ]
+      }
+    },
+    {
+      "chapter": 315,
+      "title": "What the Body Feels --- Chest, Strength, Rest, Fear, Laughter",
+      "label": "ch:fuerza-y-risa",
+      "canDo": "I can name the chest, and say strength, rest, fear and laughter in Spanish.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "ES-C315-risa",
+        "kind": "production",
+        "summary": "Complete ES-C315-risa: name all five, and say which two of them are opposites.",
+        "assesses": [
+          "ES-LEX-C315-BODY-06",
+          "ES-LEX-C315-BODY-07",
+          "ES-LEX-C315-BODY-08",
+          "ES-LEX-C315-BODY-09",
+          "ES-LEX-C315-BODY-10"
+        ]
+      }
+    },
+    {
+      "chapter": 316,
+      "title": "Never, Always, All, Nothing",
+      "label": "ch:nunca-y-siempre",
+      "canDo": "I can answer with never, always, all and nothing in Spanish.",
+      "spineNodes": [
+        "SPINE-RESPOND-BASIC"
+      ],
+      "payoff": {
+        "lesson": "ES-C316-nada",
+        "kind": "production",
+        "summary": "Complete ES-C316-nada: put nunca and siempre against la risa and el llanto, then close the line with todo and nada.",
+        "assesses": [
+          "ES-LEX-C316-ANSW-11",
+          "ES-LEX-C316-ANSW-12",
+          "ES-LEX-C316-ANSW-13",
+          "ES-LEX-C316-ANSW-14",
+          "ES-LEX-C316-ANSW-15"
+        ]
+      }
+    },
+    {
+      "chapter": 317,
+      "title": "Something, Somebody, Nobody",
+      "label": "ch:algo-y-nadie",
+      "canDo": "I can answer with something, somebody, nobody, another and a little in Spanish.",
+      "spineNodes": [
+        "SPINE-RESPOND-BASIC"
+      ],
+      "payoff": {
+        "lesson": "ES-C317-poco",
+        "kind": "production",
+        "summary": "Complete ES-C317-poco: run algo/nada and alguien/nadie as matched pairs, then add otro and poco with both endings.",
+        "assesses": [
+          "ES-LEX-C317-ANSW-16",
+          "ES-LEX-C317-ANSW-17",
+          "ES-LEX-C317-ANSW-18",
+          "ES-LEX-C317-ANSW-19",
+          "ES-LEX-C317-ANSW-20"
+        ]
+      }
     }
   ]
 }

@@ -5898,6 +5898,26 @@
       "output": "spanish/book/chapters/ch305-nombre-y-apellido.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 314,
+      "output": "spanish/book/chapters/ch314-brazo-y-pie.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 315,
+      "output": "spanish/book/chapters/ch315-fuerza-y-risa.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 316,
+      "output": "spanish/book/chapters/ch316-nunca-y-siempre.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 317,
+      "output": "spanish/book/chapters/ch317-algo-y-nadie.tex"
+    },
+    {
       "language": "hindi",
       "chapter": 52,
       "output": "hindi/book/chapters/ch52-in-the-kitchen.tex",
