@@ -11,9 +11,9 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 12538,
+  "active_pr": null,
   "last_inventory": {
-    "revision": "e5eb4be0c234456a3a5c0ae627ed88a723b066b6",
+    "revision": "78efa57321d11eb7a72674f2c16dca56eea6e519",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1369,
@@ -1117,7 +1117,7 @@
       "depends_on": ["ocaml-infrastructure", "ocaml-ci-toolchain", "build-tool-pure-domain-corpus"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered during the 41622fa7 post-merge security and leverage audit. Deliver the repository-owned, process-free OCaml build substrate now: language detection, package discovery, opam/Dune dependency resolution, source hashing, validator support, shard cost, affected-node behavior, and CI workflow markers. Do not claim execution conformance, opam-switch serialization, or promotion; those remain gated on the canonical Go oracle and execution contract."
+      "notes": "Discovered during the 41622fa7 post-merge security and leverage audit. Deliver the repository-owned, process-free OCaml build substrate now: language detection, package discovery, opam/Dune dependency resolution, source hashing, validator support, shard cost, affected-node behavior, and CI workflow markers. Correct code/specs/OCAML03-ci-toolchain.md from its stale in-progress label to the already merged PR #9354 status within this owner; the documentation drift does not need a separate implementation node. Do not claim execution conformance, opam-switch serialization, or promotion; those remain gated on the canonical Go oracle and execution contract."
     },
     {
       "id": "ocaml-build-substrate",
@@ -4431,7 +4431,7 @@
     {
       "id": "python-graph-build-front-idempotence",
       "title": "Make the Python graph BUILD fronts repeatable",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["python-uv-build-front-idempotence-audit"],
       "branch": "codex/python-graph-build-front-idempotence",
       "pr_number": 12538,
@@ -4442,17 +4442,23 @@
       "selection_notes": "Selected only after PR #12520 merged through squash auto-merge, the collision-checked exact-main inventory was regenerated, and the newly discovered Wemo native-authority review was registered as selection-blocked. The schema-3 inventory remains 15 established lanes, 1,369 implementation identities, and 4,562 slots with zero collisions or unknown buckets; the uv audit reports exactly nine remaining fronts across seven components. Graph followed by directed-graph is the highest-leverage zero-overlap ready build-front owner: 97 Python pyproject files and 118 unique direct BUILD consumers reference graph or directed-graph, while trie/radix reaches six pyproject consumers. Eight open PRs and 29 non-main remote source heads have zero exact overlap on the two package roots, focused recipe/audit tests, state, roadmap, or repair profile; the target remote branch and prior PR are absent. The strategically important OCaml process-free build substrate is dependency-ready but currently overlaps three live build-tool PRs on validator/main/change surfaces, so this conflict-free dependency chain is selected first without changing OCaml priority. Pre-selection diagnostics pass 132 graph tests at 95.04% coverage and 129 directed-graph tests at 97.62%; strict MyPy is already clean for graph, while the selected generated-standard quality gates expose bounded Ruff/format cleanup plus seven directed-graph strict-MyPy findings that must be resolved without behavioral or dependency changes.",
       "implementation_revision": "5be1330617c780835ebf1e6710888056c306bb09",
       "final_review_revision": "8e2c73966fda12ec71e727ea7555cb8d0bd19155",
+      "merged_head_revision": "0db73720dea50544fdcf90f4c437bfa5b2c1c841",
+      "merged_at": "2026-08-24T09:49:20Z",
+      "merge_revision": "6f4f3dad8c3740577813e13990069c452b7246ce",
+      "merge_notes": "All 30 reported checks reached terminal acceptable conclusions: 24 successes, five expected skips, and one neutral aggregate CodeQL result, with no failures or pending work. GitHub reported the branch clean and mergeable; the loop enabled squash auto-merge, and GitHub merged PR #12538 without a manual merge command.",
       "validation_notes": "All four canonical and Windows BUILD recipes now recreate .venv with --clear, pin Python 3.13, preserve graph-before-directed installation order, and invoke the named interpreter for Ruff lint, Ruff formatting, strict MyPy, and pytest. Three focused regressions pin the complete recipe profile and the uv audit falls exactly from nine to seven live fronts. On Windows with uv 0.11.28 and Python 3.13.14, both BUILD_windows fronts pass twice consecutively: graph passes 134 tests at 96.14% coverage and directed-graph passes 129 tests at 97.63%, with all quality gates clean. Behavior-preserving typing cleanup retains the public runtime PropertyValue and PropertyBag aliases, narrows DFS iterators, adopts Python 3.12 generic syntax, and adds a graph-property weight reset proof without changing dependency metadata or versions. Both packages build wheel and source distributions whose wheels retain py.typed. Direct downstreams pass state-machine's 161 tests at 99.02% coverage and tree's 137 tests at 100%. The Go build tool passes all tests, vet, trimpath compilation, BUILD validation, and a real exact-plan Windows execution over 4,982 packages and 9,489 edges: 205 affected packages were attempted, graph and directed-graph built successfully, 196 packages built, 289 skipped, four failed, and five dependency-skipped. Actual replay classifies the four failures as pre-existing and separately owned: Markov's unpinned Python front, Windows symlink privilege tests in ir-to-jvm-class-file and unix-tools, and scaffold-generator temporary-directory cleanup while the process current directory remains inside the tree. The collision inventory, parity reporter, capability taxonomy, state graph, diff, dependency, credential, and production-authority reviews are clean; this tranche adds no privileged authority or production dependency.",
-      "publication_notes": "Opened ready-for-review PR #12538 from clean validated head 8e2c73966fda12ec71e727ea7555cb8d0bd19155 after a normal first push. Immediately before publication, origin/main advanced from the exact selection revision through ten human-language and parser commits to 3700e712315674c2fad7e34e917dd123d3e4ea8c; the changed-file intersection and package-marker delta were both zero, so the unpublished branch rebased normally without conflicts or force push. Post-rebase focused tests, parity inventory, Go build-tool tests and vet, diff checks, and a second independent security review pass. GitHub reports PR #12538 ready for review, mergeable, and conflict-free while required CI and CodeQL checks are queued or running, so the loop remains monitor-only and auto-merge stays disabled until every required check is terminal and acceptable.",
+      "publication_notes": "Opened ready-for-review PR #12538 from clean validated head 8e2c73966fda12ec71e727ea7555cb8d0bd19155 after a normal first push. Immediately before publication, origin/main advanced from the exact selection revision through ten human-language and parser commits to 3700e712315674c2fad7e34e917dd123d3e4ea8c; the changed-file intersection and package-marker delta were both zero, so the unpublished branch rebased normally without conflicts or force push. Post-rebase focused tests, parity inventory, Go build-tool tests and vet, diff checks, and a second independent security review pass. Final head 0db73720dea50544fdcf90f4c437bfa5b2c1c841 completed all 30 reported checks with 24 successes, five expected skips, one neutral aggregate CodeQL result, and no failures or pending work. GitHub reported the branch clean and mergeable; the loop enabled squash auto-merge, and GitHub merged PR #12538 as 6f4f3dad8c3740577813e13990069c452b7246ce at 2026-08-24T09:49:20Z without a manual merge command.",
       "notes": "Dependency-shaped generated-pattern backfill for python/graph followed by python/directed-graph. Validate both canonical and Windows fronts twice and preserve the graph prerequisite order."
     },
     {
       "id": "python-markov-chain-build-front-python313",
       "title": "Pin the Python Markov chain BUILD fronts to Python 3.13",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["python-graph-build-front-idempotence"],
-      "branch": null,
+      "branch": "codex/python-markov-chain-build-front-python313",
       "pr_number": null,
+      "selection_revision": "78efa57321d11eb7a72674f2c16dca56eea6e519",
+      "selection_notes": "Selected only after PR #12538 merged through squash auto-merge, the exact collision-checked inventory was refreshed, and ten newly discovered owners were registered for orphan-crate validation parity, the five explicit Rust BUILD-exemption gaps, and the BACnet telemetry portability/authority chain. Markov is the only owner newly unblocked by the graph merge and closes a reproduced failure in the real 205-package affected closure: both fronts clear their environment but omit a Python pin, so ambient Python 3.10 rejects graph's Python >=3.12 floor, while UV_PYTHON=3.13 passes all 91 tests at 97.62% coverage. Seven live PRs and 30 non-main remote heads have zero exact overlap on the Markov root, focused regression, state, roadmap, or governing uv spec; the target branch and prior PR are absent. Trie/radix and the five remaining uv components stay ready, Windows symlink portability overlaps PR #12162, and the higher-strategic-leverage OCaml process-free substrate still overlaps live build-tool PRs #12162 and #12149. Main advanced after the graph merge only through Tamil and Devanagari curriculum changes to the recorded selection revision, with zero package-marker or candidate-surface changes.",
       "notes": "Discovered by the real affected Windows build for the graph closure. Markov chain already clears its named environment, but neither front pins Python; uv can select ambient Python 3.10 and reject the graph dependency's Python >=3.12 floor before tests. Pin Python 3.13 in both recipes, retain graph followed by directed-graph installation order, add an exact-recipe regression, and prove immediate repeatability. An explicit UV_PYTHON=3.13 replay passes all 91 tests at 97.62% coverage, confirming this is build-front selection debt rather than graph behavior."
     },
     {
@@ -4508,6 +4514,105 @@
       "branch": null,
       "pr_number": null,
       "notes": "Separate legacy-profile backfill for python/ls00. Its fronts omit --no-project, use pip without --python .venv, declare Python >=3.11 rather than the common >=3.12 floor, and use different dev-install/test invocation shapes, so it must not be folded into a generated-pattern patch."
+    },
+    {
+      "id": "build-tool-orphan-crate-validation-corpus",
+      "title": "Define language-neutral orphan-crate BUILD validation",
+      "status": "pending",
+      "depends_on": ["build-tool-validation-oracle-corpus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after merged PR #12153 added Go-only ValidateNoOrphanCrates and the code/BUILD-EXEMPTIONS ledger. Define closed language-neutral fixtures for runnable ancestor coverage, virtual workspaces, foreign-toolchain and compile-only exclusions, required reasons, pending debt, empty-BUILD bypasses, traversal, duplicates, missing paths, and stale exemptions before other build-tool implementations claim the contract. Preserve the ledger as policy data and keep host execution outside this process-free validator corpus."
+    },
+    {
+      "id": "build-tool-orphan-crate-validation-remaining-engines",
+      "title": "Enforce orphan-crate BUILD validation in every supported build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-orphan-crate-validation-corpus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume the closed orphan-crate corpus in the extant C#, Elixir, Haskell, Lua, Perl, Python, Ruby, Rust, Swift, and TypeScript build-tool engines, and route later Dart/JVM engines through the same contract. Decompose into independently reviewable per-engine children before implementation; do not infer coverage from Go's repository gate."
+    },
+    {
+      "id": "rust-jit-loader-macos-build-front",
+      "title": "Add a truthful macOS BUILD front for jit-loader-macos",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered from the five-entry PENDING section of code/BUILD-EXEMPTIONS introduced by PR #12153. The mmap/mprotect JIT loader needs a Darwin-gated BUILD, package tests and lint on a real macOS host, and removal of its stale ledger entry in the same change. The current Windows host cannot supply that evidence, so selection remains blocked until a qualifying macOS worker is available."
+    },
+    {
+      "id": "rust-twig-module-driver-build-front",
+      "title": "Add a Linux-validated BUILD front for twig-module-driver",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered from code/BUILD-EXEMPTIONS after PR #12153. Add one watched front that compiles, tests, lints, and documents the driver while preserving its seven deep-recursion self-compile tests and downstream twig-vm/twigc behavior; then remove the exact ledger entry. The suite requests 768 MiB and 3 GiB thread stacks and fails on Windows, so selection requires a qualifying Linux host and bounded resource validation."
+    },
+    {
+      "id": "rust-sir-conformance-build-front",
+      "title": "Triage and watch the Rust SIR conformance harness",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered from code/BUILD-EXEMPTIONS after PR #12153. Reproduce and classify the cross-backend conformance failures on Linux, repair only repository-owned deterministic debt, add the complete BUILD front, and delete the corresponding ledger entry. Windows is already red and cannot validate the intended host contract, so this owner remains blocked until a qualifying Linux worker is available."
+    },
+    {
+      "id": "rust-paint-vm-cairo-build-front",
+      "title": "Validate and watch the Rust Paint VM Cairo backend",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered from code/BUILD-EXEMPTIONS after PR #12153. Add a BUILD only after a real Linux or macOS host with libcairo and pkg-config proves tests, lint, and the five dependent packages; a Windows pass is non-evidence because cairo-rs is target-gated there. Remove the ledger entry with the verified front and retain truthful native-library toolchain requirements."
+    },
+    {
+      "id": "rust-paint-vm-skia-build-front",
+      "title": "Validate and watch the Rust Paint VM Skia backend",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered from code/BUILD-EXEMPTIONS after PR #12153. Provision and review the skia-safe binary download or source-build toolchain, then add a reproducible BUILD covering the backend and barcode-1d/barcode-2d dependents and remove the exact ledger entry. Selection stays blocked until a qualifying host and immutable dependency plan are available."
+    },
+    {
+      "id": "bacnet-device-read-property-portable-conformance",
+      "title": "Fixture and port bounded BACnet Device ReadProperty telemetry",
+      "status": "pending",
+      "depends_on": ["bacnet-protocol-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after merged PR #12527 added Rust-only fixed Device-object ReadProperty encoding and decoding beyond the existing discovery-only BACnet owner. Define closed neutral fixtures for request invoke IDs, object/property identifiers, confirmed-request and simple-ACK/error/reject/abort paths, application values used by device telemetry, source correlation, exact/trailing lengths, bounds, stable payload-blind errors, and explicit empty portable capability metadata. Do not silently widen the discovery codec or add arbitrary property writes."
+    },
+    {
+      "id": "smart-home-bacnet-device-telemetry-portable-core-conformance",
+      "title": "Extract and port the injected BACnet device telemetry core",
+      "status": "pending",
+      "depends_on": ["bacnet-device-read-property-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Extract the authority-free core introduced by PR #12527: an injected bounded transport, fixed eight-request plan, caller-supplied timeout and time, response/source correlation, partial result semantics, deterministic device snapshot fields, runtime projection, and redacted typed failures. Keep UDP connect/send/receive, endpoint policy, clocks, runtime mutation, and CLI I/O outside the portable contract."
+    },
+    {
+      "id": "smart-home-bacnet-device-telemetry-native-authority-review",
+      "title": "Review BACnet device telemetry UDP and runtime authority",
+      "status": "pending",
+      "depends_on": [
+        "smart-home-bacnet-device-telemetry-portable-core-conformance",
+        "rust-network-substrate-capability-truthfulness"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Excluded from autonomous portable selection. Review concrete UDP connect, send, and receive authority; endpoint and response-source correlation; the fixed eight-request ceiling; the five-second timeout; authorization-before-I/O ordering; payload and diagnostic redaction; truthful runtime/test capability profiles; and runtime projection or mutation. Preserve read-only Device-object telemetry and do not manufacture BACnet writes, arbitrary property access, BBMD, foreign-device registration, BACnet/SC, or all-language sockets."
     },
     {
       "id": "wasm-wast-parser-language-neutral-conformance",

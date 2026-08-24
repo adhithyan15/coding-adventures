@@ -5527,6 +5527,64 @@ file and unix-tools, and scaffold-generator temporary-root cleanup after a
 current-directory change. Those owners preserve the evidence without widening
 this dependency-shaped repair.
 
+### Post-#12538 refresh and Markov chain selection
+
+Final head `0db73720dea50544fdcf90f4c437bfa5b2c1c841` completed all 30
+reported checks with 24 successes, five expected skips, one neutral aggregate
+CodeQL result, and no failures or pending work. GitHub reported PR #12538 clean
+and mergeable; the loop enabled squash auto-merge, and GitHub merged it as
+`6f4f3dad8c3740577813e13990069c452b7246ce` at
+2026-08-24T09:49:20Z without a manual merge command.
+
+The collision-checked schema-3 inventory remains identity-neutral after that
+merge and the subsequent Tamil and Devanagari curriculum-only commits through
+`78efa57321d11eb7a72674f2c16dca56eea6e519`: 15 established lanes,
+1,369 implementation identities, 4,562 package slots, 175 high-consensus
+identities with 276 gaps, 122 identities in five to nine lanes with 926 gaps,
+166 identities in two to four lanes with 2,087 gaps, and 906 singletons with
+12,684 gaps. There are 717 Rust singletons, zero canonical collisions, and
+zero unknown buckets. OCaml remains correctly emerging with no packages, and
+the graph repair reduces the live uv audit exactly from nine fronts to seven
+across six dependency components.
+
+The intervening merges add no implementation identity but expose work that
+must be owned before selection. PR #12153 makes orphan-crate BUILD coverage a
+Go-only validation contract, so the roadmap now records a language-neutral
+orphan-crate validation corpus followed by every remaining supported build-tool
+engine. Its new `code/BUILD-EXEMPTIONS` ledger also records five exact
+host-qualified fronts: `jit-loader-macos`, `twig-module-driver`,
+`sir-conformance`, `paint-vm-cairo`, and `paint-vm-skia`. Each has its own
+pending owner; selection remains blocked until the named macOS, Linux,
+libcairo, large-stack, or Skia toolchain evidence is available.
+
+PR #12527 expands BACnet beyond the existing discovery-only owners with fixed
+Device-object ReadProperty telemetry, an injected snapshot core, and connected
+UDP reads. Three new owners preserve that boundary: first a neutral bounded
+ReadProperty codec contract, then the authority-free injected telemetry core,
+then a selection-blocked native UDP/runtime authority review. The existing
+BACnet discovery owners continue to exclude property reads and native telemetry
+rather than being silently widened. The OCaml process-free substrate also owns
+the stale `OCAML03-ci-toolchain.md` status correction when that tranche becomes
+collision-free.
+
+The dependency/leverage pass selects
+`python-markov-chain-build-front-python313`. It is the only owner newly
+unblocked by the graph merge and directly closes a reproduced failure in the
+real 205-package affected closure: both Markov fronts clear their environment
+but omit a Python pin, so ambient Python 3.10 rejects graph's Python >=3.12
+floor. Replaying with `UV_PYTHON=3.13` passes all 91 tests at 97.62% coverage,
+isolating build-front interpreter selection rather than graph behavior. Seven
+open PRs and 30 non-main remote heads have zero exact overlap on the Markov
+root, its focused regression, state, roadmap, or governing uv spec; the target
+branch and prior PR are absent.
+
+Trie/radix and the remaining independent uv components stay ready follow-ups.
+Windows symlink portability overlaps live PR #12162, while the strategically
+important OCaml process-free substrate still overlaps live build-tool PRs
+#12162 and #12149 in `validator.go`, validator tests, and `main.go`. Markov is
+therefore the highest-leverage collision-free serial continuation without
+changing OCaml's durable priority.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
