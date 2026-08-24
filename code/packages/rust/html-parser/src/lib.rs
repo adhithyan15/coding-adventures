@@ -8480,10 +8480,15 @@ impl HtmlParser {
             return false;
         }
 
-        self.diagnostics.push(ParserDiagnostic::new(
-            "unexpected-start-tag-in-select",
-            format!("start tag `<{incoming_name}>` forced recovery from an open select element"),
-        ));
+        self.diagnostics.push(
+            ParserDiagnostic::new(
+                "unexpected-start-tag-in-select",
+                format!(
+                    "start tag `<{incoming_name}>` forced recovery from an open select element"
+                ),
+            )
+            .at_emission(self.current_token_emission_position),
+        );
 
         if incoming_name == "input" && self.current_element_is_marked_fragment_context("select") {
             return true;
@@ -27145,6 +27150,40 @@ mod tests {
         .at_emission(Some(start_tag_position(source, name)))
     }
 
+    fn start_tag_in_select_recovery(
+        source: &str,
+        name: &str,
+        occurrence: usize,
+    ) -> ParserDiagnostic {
+        let prefix = format!("<{name}");
+        let start = source
+            .match_indices(&prefix)
+            .filter_map(|(start, _)| {
+                source[start + prefix.len()..]
+                    .chars()
+                    .next()
+                    .filter(|next| matches!(next, ' ' | '/' | '>'))
+                    .map(|_| start)
+            })
+            .nth(occurrence)
+            .expect("source should contain the requested start tag");
+        let delimiter = start
+            + source[start..]
+                .find('>')
+                .expect("source should contain a complete start tag");
+        let line_start = source[..delimiter].rfind('\n').map_or(0, |index| index + 1);
+        ParserDiagnostic::new(
+            "unexpected-start-tag-in-select",
+            format!("start tag `<{name}>` forced recovery from an open select element"),
+        )
+        .at_emission(Some(SourcePosition {
+            byte_offset: delimiter,
+            char_offset: source[..delimiter].chars().count(),
+            line: source[..delimiter].lines().count(),
+            column: source[line_start..delimiter].chars().count() + 1,
+        }))
+    }
+
     fn li_start_tag_in_table_recovery(source: &str, occurrence: usize) -> ParserDiagnostic {
         let prefix = "<li";
         let start = source
@@ -41436,18 +41475,10 @@ mod tests {
             ),
         ] {
             let output = parse_html_with_diagnostics(source).unwrap();
-            assert!(
-                output.parser_diagnostics.iter().any(|diagnostic| {
-                    diagnostic
-                        == &ParserDiagnostic::new(
-                            "unexpected-start-tag-in-select",
-                            format!(
-                                "start tag `<{name}>` forced recovery from an open select element"
-                            ),
-                        )
-                }),
-                "source {source:?}"
-            );
+            let occurrence = usize::from(name == "select");
+            assert!(output.parser_diagnostics.iter().any(|diagnostic| {
+                diagnostic == &start_tag_in_select_recovery(source, name, occurrence)
+            }), "source {source:?}");
         }
 
         let fragment =
@@ -41455,10 +41486,7 @@ mod tests {
                 .unwrap();
         assert_eq!(
             fragment.parser_diagnostics,
-            vec![ParserDiagnostic::new(
-                "unexpected-start-tag-in-select",
-                "start tag `<input>` forced recovery from an open select element"
-            )]
+            vec![start_tag_in_select_recovery("<input><option>", "input", 0)]
         );
 
         let outside = parse_html_with_diagnostics("<!doctype html><input><select>").unwrap();
@@ -41466,6 +41494,75 @@ mod tests {
             .parser_diagnostics
             .iter()
             .all(|diagnostic| diagnostic.code != "unexpected-start-tag-in-select"));
+    }
+
+    #[test]
+    fn positions_start_tags_that_force_select_recovery_at_token_emission() {
+        for (source, name, occurrence) in [
+            ("<!doctype html><select><input data-name=x>", "input", 0),
+            ("<!doctype html><select><select data-name=x>", "select", 1),
+            (
+                "<!doctype html><select><optgroup><option><input data-name=x>",
+                "input",
+                0,
+            ),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .filter(|diagnostic| diagnostic.code == "unexpected-start-tag-in-select")
+                    .collect::<Vec<_>>(),
+                vec![&start_tag_in_select_recovery(source, name, occurrence)],
+                "source {source:?}"
+            );
+        }
+
+        let fragment_source = "<!--é-->\r\n<input data-name='é'>";
+        let fragment =
+            parse_html_fragment_for_context_with_diagnostics(fragment_source, "select").unwrap();
+        assert!(fragment_source.len() > fragment_source.chars().count());
+        assert_eq!(
+            fragment
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-start-tag-in-select")
+                .collect::<Vec<_>>(),
+            vec![&start_tag_in_select_recovery(fragment_source, "input", 0)]
+        );
+
+        for source in [
+            "<!doctype html><select><input",
+            "<!doctype html><select><select",
+            "<!doctype html><input><select>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .all(|diagnostic| diagnostic.code != "unexpected-start-tag-in-select"),
+                "source {source:?}"
+            );
+        }
+
+        let mut unpositioned = HtmlParser::with_fragment_context_options(
+            HtmlParseOptions::default(),
+            "select",
+        );
+        unpositioned.process_token(Token::StartTag {
+            name: "input".to_string(),
+            attributes: Vec::new(),
+            self_closing: false,
+        });
+        let diagnostics = unpositioned
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-start-tag-in-select")
+            .collect::<Vec<_>>();
+        assert_eq!(diagnostics.len(), 1);
+        assert_eq!(diagnostics[0].position, None);
     }
 
     #[test]
@@ -42093,7 +42190,7 @@ mod tests {
             vec![&select_start_tag_in_table_recovery(nested_source)]
         );
         assert!(nested.parser_diagnostics.iter().any(|diagnostic| {
-            diagnostic.code == "unexpected-start-tag-in-select" && diagnostic.position.is_none()
+            diagnostic == &start_tag_in_select_recovery(nested_source, "select", 1)
         }));
 
         let adjacent = parse_html_with_diagnostics("<!doctype html><table><div>").unwrap();
