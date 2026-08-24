@@ -39,7 +39,7 @@ describe("real curriculum", () => {
     expect(scripts.devanagari!.complete).toBe(true);
   });
 
-  it("keeps the cross-script closure queue measured after Tamil ya", () => {
+  it("keeps the cross-script closure queue measured after Persian and Urdu dal", () => {
     const candrakkala = scripts.malayalam!.marks!.find((mark) => mark.mark === "്")!;
     expect(candrakkala.role).toBe("virama");
     expect(candrakkala.compositionOrder).toEqual([
@@ -201,6 +201,34 @@ describe("real curriculum", () => {
       /six joined movements.*down the left.*central upright.*across the bottom.*up the right.*varies by school.*continuous order.*Noto Sans Tamil/i,
     );
 
+    const persianDal = scripts["perso-arabic"]!.letters.find((letter) => letter.glyph === "د")!;
+    expect(persianDal.strokeOrder).toEqual([
+      "begin at the upper tip and descend through the folded shoulder",
+      "without lifting, turn left along the baseline",
+    ]);
+    expect(persianDal.penLifts).toBe(0);
+    expect(persianDal.strokeOrderSource?.url).toBe(
+      "https://laits.utexas.edu/persian_grammar/video/gr/kooroshalphabet",
+    );
+    expect(persianDal.strokeOrderSource?.citation).toMatch(/Persian Online.*د.*01:04–01:06/i);
+    expect(persianDal.strokeOrderSource?.variation).toMatch(
+      /continuous Naskh.*upper tip.*shoulder.*baseline.*without lifting.*non-connector.*Persian-scoped/i,
+    );
+
+    const urduDal = scripts["urdu-nastaliq"]!.letters.find((letter) => letter.glyph === "د")!;
+    expect(urduDal.strokeOrder).toEqual([
+      "begin at the independent form's upper tip and descend through the folded shoulder",
+      "without lifting, turn left along the baseline",
+    ]);
+    expect(urduDal.penLifts).toBe(0);
+    expect(urduDal.strokeOrderSource?.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/dal-re-and-waw/",
+    );
+    expect(urduDal.strokeOrderSource?.citation).toMatch(/Zer o Zabar.*independent د.*Dāl instructions/i);
+    expect(urduDal.strokeOrderSource?.variation).toMatch(
+      /one uninterrupted stroke.*folded shoulder.*leftward baseline.*90-degree angle.*does not drop below.*Naskh.*Nastaliq.*Urdu-specific/i,
+    );
+
     const gaps = validate({ taxonomy, lessons, scripts }).filter(
       (issue) => issue.level === "warning" && issue.code === "uncovered-glyphs",
     );
@@ -239,10 +267,12 @@ describe("real curriculum", () => {
     expect(affected.get("ം") ?? 0).toBe(0);
     expect(missingByScript.get("tamil.json")?.has("ய")).toBe(false);
     expect(affected.get("ய") ?? 0).toBe(0);
-    expect(affected.get("د")).toBe(33);
+    expect(missingByScript.get("perso-arabic.json")?.has("د")).toBe(false);
+    expect(missingByScript.get("urdu-nastaliq.json")?.has("د")).toBe(false);
+    expect(affected.get("د") ?? 0).toBe(0);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["د", 33]);
+    ).toEqual(["ச", 31]);
   });
 
   it("loaded every track (17+ and growing)", () => {

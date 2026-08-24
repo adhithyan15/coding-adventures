@@ -222,6 +222,7 @@ const ARABIC_HAMZA = DUCTUS[ductusKey("arabic", "ء")];
 const ARABIC_LAM_ALIF = DUCTUS[ductusKey("arabic", "لا")];
 const URDU_ALEF = DUCTUS[ductusKey("urdu-nastaliq", "ا")];
 const URDU_JIM = DUCTUS[ductusKey("urdu-nastaliq", "ج")];
+const URDU_DAL = DUCTUS[ductusKey("urdu-nastaliq", "د")];
 const URDU_RE = DUCTUS[ductusKey("urdu-nastaliq", "ر")];
 const URDU_SIN = DUCTUS[ductusKey("urdu-nastaliq", "س")];
 const URDU_SHIN = DUCTUS[ductusKey("urdu-nastaliq", "ش")];
@@ -3172,6 +3173,18 @@ describe("handwriting ductus", () => {
     expect(bowl[0].y).toBeGreaterThan(bowl.at(-1)!.y);
   });
 
+  it("Urdu independent د folds into its baseline without lifting", () => {
+    expect(URDU_DAL.script).toBe("urdu-nastaliq");
+    expect(penLifts(URDU_DAL)).toBe(0);
+    expect(URDU_DAL.strokes).toHaveLength(1);
+    expect(URDU_DAL.strokes[0].segments).toHaveLength(2);
+    const shoulder = URDU_DAL.strokes[0].segments[0].path;
+    const baseline = URDU_DAL.strokes[0].segments[1].path;
+    expect(baseline[0]).toEqual(shoulder.at(-1));
+    expect(baseline[0].x).toBeGreaterThan(baseline.at(-1)!.x);
+    expect(Math.min(...baseline.map((point) => point.y))).toBeGreaterThanOrEqual(0);
+  });
+
   it("Urdu independent ر joins its downward line directly to the leftward curve", () => {
     expect(URDU_RE.script).toBe("urdu-nastaliq");
     expect(penLifts(URDU_RE)).toBe(0);
@@ -3743,6 +3756,18 @@ describe("handwriting ductus", () => {
     expect(teh.strokes[1].segments[0].path[0].x).toBeLessThan(
       teh.strokes[2].segments[0].path[0].x,
     );
+  });
+
+  it("Persian د folds into its baseline without lifting", () => {
+    const dal = DUCTUS["د"];
+    expect(dal.script).toBe("perso-arabic");
+    expect(penLifts(dal)).toBe(0);
+    expect(dal.strokes).toHaveLength(1);
+    expect(dal.strokes[0].segments).toHaveLength(2);
+    const shoulder = dal.strokes[0].segments[0].path;
+    const baseline = dal.strokes[0].segments[1].path;
+    expect(baseline[0]).toEqual(shoulder.at(-1));
+    expect(baseline[0].x).toBeGreaterThan(baseline.at(-1)!.x);
   });
 
   it("Persian س joins its three teeth directly to the final bowl", () => {
@@ -6103,6 +6128,22 @@ describe("handwriting ductus", () => {
       /independent.*top-to-bottom.*one continuous stroke.*final.*bottom-to-top.*Noto Naskh.*Nastaliq/i,
     );
     expect(src.url).not.toBe(DUCTUS["ا"].source.url);
+  });
+
+  it("Persian and Urdu د keep their independently verified sources", () => {
+    const persian = DUCTUS["د"].source;
+    const urdu = URDU_DAL.source;
+    expect(persian.url).toContain("laits.utexas.edu/persian_grammar/video");
+    expect(persian.citation).toMatch(/Persian Online.*د.*01:04–01:06/i);
+    expect(persian.variation).toMatch(/continuous Naskh.*upper tip.*shoulder.*baseline.*without lifting.*non-connector.*Persian-scoped/i);
+    expect(urdu.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/dal-re-and-waw/",
+    );
+    expect(urdu.citation).toMatch(/Zer o Zabar.*independent د.*Dāl instructions.*Northwestern/i);
+    expect(urdu.variation).toMatch(/one uninterrupted stroke.*folded shoulder.*leftward baseline.*90-degree angle.*does not drop below.*Naskh.*Nastaliq.*Urdu-specific/i);
+    expect(persian.url).not.toBe(urdu.url);
+    expect(persian.url).not.toBe(ARABIC_DAAL.source.url);
+    expect(urdu.url).not.toBe(ARABIC_DAAL.source.url);
   });
 
   it("Arabic independent ا traces to the University of Oregon's top-to-bottom video", () => {
