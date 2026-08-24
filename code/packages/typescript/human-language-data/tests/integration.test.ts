@@ -39,6 +39,49 @@ describe("real curriculum", () => {
     expect(scripts.devanagari!.complete).toBe(true);
   });
 
+  it("keeps the cross-script closure queue measured after Malayalam candrakkala", () => {
+    const candrakkala = scripts.malayalam!.marks!.find((mark) => mark.mark === "്")!;
+    expect(candrakkala.role).toBe("virama");
+    expect(candrakkala.compositionOrder).toEqual([
+      "write the Malayalam carrier first",
+      "add the candrakkala to suppress its inherent vowel or prepare the following conjunct",
+    ]);
+    expect(candrakkala.compositionSource?.url).toBe(
+      "https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-12/",
+    );
+    expect(candrakkala.compositionSource?.citation).toMatch(
+      /Unicode Standard.*Version 17\.0.*12\.9\.3.*Candrakkala.*U\+0D4D/i,
+    );
+    expect(candrakkala.compositionSource?.variation).toMatch(
+      /encoded composition.*not a universal handwriting direction.*no standalone ductus claim/i,
+    );
+
+    const gaps = validate({ taxonomy, lessons, scripts }).filter(
+      (issue) => issue.level === "warning" && issue.code === "uncovered-glyphs",
+    );
+    const affected = new Map<string, number>();
+    const missingByScript = new Map<string, Set<string>>();
+
+    for (const issue of gaps) {
+      const match = issue.message.match(/characters not yet in ([^:]+): (.*)$/);
+      expect(match, issue.message).not.toBeNull();
+      const [, file, characters] = match!;
+      const missing = missingByScript.get(file!) ?? new Set<string>();
+      for (const character of characters!.split(" ")) {
+        missing.add(character);
+        affected.set(character, (affected.get(character) ?? 0) + 1);
+      }
+      missingByScript.set(file!, missing);
+    }
+
+    expect(missingByScript.get("malayalam.json")?.has("്")).toBe(false);
+    expect(affected.get("്") ?? 0).toBe(0);
+    expect(affected.get("్")).toBe(104);
+    expect(
+      [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
+    ).toEqual(["్", 104]);
+  });
+
   it("loaded every track (17+ and growing)", () => {
     expect(dataset.languages.length).toBeGreaterThanOrEqual(20);
     for (const t of ["spanish", "telugu", "arabic", "russian", "persian", "urdu"]) {

@@ -5,6 +5,21 @@ Findings from the pre-A1 tranche work were recorded in commit messages and PR
 bodies, which are durable and searchable, but a reader opening this file found
 nothing. The entries below are the ones that change how the work is done.
 
+## HL-C09J — Malayalam ് starts the cross-script closure queue
+
+The fresh post-Devanagari corpus report found seven incomplete script rows and
+ranked individual missing glyphs by affected realizations. Malayalam
+candrakkala **്** led at **133**, ahead of Telugu virama **్** at 104, Kannada
+virama **್** at 87, and Tamil vowel sign **ு** at 80.
+
+Unicode 17 §12.9.3 identifies U+0D4D as Malayalam's candrakkala, shows it in
+carrier-plus-virama conjunct sequences, and documents both visible meanings:
+suppression of the preceding vowel and the neutral half-u. The inventory now
+models that composition without inventing a handwriting direction or pen-lift
+count that the source does not specify. This removes all **133 affected
+realizations** for **്**. The reranked cross-script queue starts with Telugu
+virama **్** at 104 next.
+
 ## HL-C09I9 — Devanagari ळ closes the measured shared inventory
 
 Hela Nomad's published three-array stroke data supplies the order for **ळ**:
