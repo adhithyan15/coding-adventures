@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.124.0
+
+- Infer Mermaid's one-based numeric x-axis for category-free XY series and truncate categorical plots to visible bands.
+
 ## 0.123.0
 
 - Parse Mermaid 11.16.1 XY line and bar data-point labels into typed semantic chart points.

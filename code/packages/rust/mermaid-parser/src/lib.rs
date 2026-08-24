@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.123.0";
+pub const VERSION: &str = "0.124.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1820,6 +1820,34 @@ pub fn parse_xychart(source: &str) -> Result<ChartDiagram, ParseError> {
                 ))
             }
         }
+    }
+
+    let point_count = series
+        .iter()
+        .map(|series| series.data.len())
+        .max()
+        .unwrap_or(0);
+    match x_axis.as_mut() {
+        Some(axis) if axis.kind == AxisKind::Categorical && !axis.categories.is_empty() => {
+            for plot in &mut series {
+                plot.data.truncate(axis.categories.len());
+            }
+        }
+        Some(axis) if axis.kind == AxisKind::Categorical && point_count > 0 => {
+            axis.kind = AxisKind::Numeric;
+            axis.min = 1.0;
+            axis.max = point_count as f64;
+        }
+        None if point_count > 0 => {
+            x_axis = Some(Axis {
+                kind: AxisKind::Numeric,
+                title: None,
+                categories: vec![],
+                min: 1.0,
+                max: point_count as f64,
+            });
+        }
+        _ => {}
     }
 
     if y_axis.is_none() {
@@ -5986,6 +6014,23 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     }
 
     #[test]
+    fn xychart_infers_numeric_x_positions_and_truncates_categorical_data() {
+        let inferred = parse_xychart("xychart\nx-axis Samples\nline [10, 20, 30]\n").unwrap();
+        let axis = inferred.x_axis.unwrap();
+        assert_eq!(axis.kind, AxisKind::Numeric);
+        assert_eq!((axis.min, axis.max), (1.0, 3.0));
+        assert_eq!(axis.title.as_deref(), Some("Samples"));
+
+        let categorical =
+            parse_xychart("xychart\nx-axis [A, B]\nbar [1, 2, 99]\nline [3, 4, 88]\n")
+                .unwrap();
+        assert!(categorical
+            .series
+            .iter()
+            .all(|series| series.data.len() == 2));
+    }
+
+    #[test]
     fn xychart_grammar_rejects_categorical_y_axis_and_invalid_data() {
         assert!(parse_xychart("xychart\ny-axis [low, high]\nline [1, 2]\n").is_err());
         assert!(parse_xychart("xychart\nline [1, nope]\n").is_err());
@@ -7899,7 +7944,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.123.0");
+        assert_eq!(crate::VERSION, "0.124.0");
     }
 
     #[test]
