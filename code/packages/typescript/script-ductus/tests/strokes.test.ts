@@ -65,6 +65,7 @@ const DEVANAGARI_CA = DUCTUS[ductusKey("devanagari", "च")];
 const DEVANAGARI_CHA = DUCTUS[ductusKey("devanagari", "छ")];
 const DEVANAGARI_JA = DUCTUS[ductusKey("devanagari", "ज")];
 const DEVANAGARI_TTA = DUCTUS[ductusKey("devanagari", "ट")];
+const DEVANAGARI_TTHA = DUCTUS[ductusKey("devanagari", "ठ")];
 const DEVANAGARI_DDA = DUCTUS[ductusKey("devanagari", "ड")];
 const DEVANAGARI_NNA = DUCTUS[ductusKey("devanagari", "ण")];
 const DEVANAGARI_TA = DUCTUS[ductusKey("devanagari", "त")];
@@ -1222,6 +1223,22 @@ describe("handwriting ductus", () => {
     expect(body.at(-1)!.x).toBeGreaterThan(body[0].x);
     expect(body.at(-1)!.y).toBeGreaterThan(Math.min(...body.map((point) => point.y)));
     const headline = penPath(DEVANAGARI_TTA.strokes[1]);
+    expect(headline[0].x).toBeLessThan(headline.at(-1)!.x);
+  });
+
+  it("Devanagari ठ separates its short stem, counterclockwise closed body, and headline", () => {
+    expect(DEVANAGARI_TTHA.script).toBe("devanagari");
+    expect(penLifts(DEVANAGARI_TTHA)).toBe(2);
+    expect(DEVANAGARI_TTHA.strokes).toHaveLength(3);
+    expect(DEVANAGARI_TTHA.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 1, 1]);
+    const stem = penPath(DEVANAGARI_TTHA.strokes[0]);
+    expect(stem[0].y).toBeGreaterThan(stem.at(-1)!.y);
+    const body = penPath(DEVANAGARI_TTHA.strokes[1]);
+    expect(body[0]).toEqual(body.at(-1));
+    expect(Math.min(...body.map((point) => point.x))).toBeLessThan(body[0].x);
+    expect(Math.max(...body.map((point) => point.x))).toBeGreaterThan(body[0].x);
+    expect(Math.min(...body.map((point) => point.y))).toBeLessThan(body[0].y);
+    const headline = penPath(DEVANAGARI_TTHA.strokes[2]);
     expect(headline[0].x).toBeLessThan(headline.at(-1)!.x);
   });
 
@@ -4456,6 +4473,19 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /17-frame animation.*two ordered pen-down runs.*gray guide.*frames 2–11.*central stem's headline junction.*top-to-bottom.*turn left.*upper shoulder.*counterclockwise around the open round body.*up-right tip.*without lifting.*frames 12–15.*headline's left edge.*shirorekhā left-to-right.*one intervening lift.*250 ms hold.*frame 11.*one-second completed frame 16.*Noto Sans Devanagari.*everyday handwriting.*narrow or simplify/i,
+    );
+  });
+
+  it("Devanagari ठ traces the animated stem, counterclockwise closed body, and headline order", () => {
+    const src = DEVANAGARI_TTHA.source;
+    expect(src.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Deva-%E0%A4%A0-order.gif",
+    );
+    expect(src.citation).toMatch(
+      /Opiaterein.*Deva-ठ-order\.gif.*strokes 1–3.*Wikimedia Commons.*10 May 2009/i,
+    );
+    expect(src.variation).toMatch(
+      /18-frame animation.*three ordered pen-down runs.*gray guide.*frames 2–3.*central stem.*top-to-bottom.*frames 4–13.*stem's lower junction.*counterclockwise around the closed.*body.*without lifting.*frames 14–16.*headline's left edge.*shirorekhā left-to-right.*two intervening lifts.*230 ms hold at frame 3.*250 ms hold at frame 13.*one-second completed frame 17.*Noto Sans Devanagari.*everyday handwriting.*narrow or simplify/i,
     );
   });
 
