@@ -63,6 +63,7 @@ const DEVANAGARI_KHA = DUCTUS[ductusKey("devanagari", "ख")];
 const DEVANAGARI_GA = DUCTUS[ductusKey("devanagari", "ग")];
 const DEVANAGARI_CA = DUCTUS[ductusKey("devanagari", "च")];
 const DEVANAGARI_JA = DUCTUS[ductusKey("devanagari", "ज")];
+const DEVANAGARI_NNA = DUCTUS[ductusKey("devanagari", "ण")];
 const DEVANAGARI_TA = DUCTUS[ductusKey("devanagari", "त")];
 const DEVANAGARI_DA = DUCTUS[ductusKey("devanagari", "द")];
 const DEVANAGARI_DHA = DUCTUS[ductusKey("devanagari", "ध")];
@@ -1161,6 +1162,23 @@ describe("handwriting ductus", () => {
     const stem = penPath(DEVANAGARI_JA.strokes[1]);
     expect(stem[0].y).toBeGreaterThan(stem.at(-1)!.y);
     const headline = penPath(DEVANAGARI_JA.strokes[2]);
+    expect(headline[0].x).toBeLessThan(headline.at(-1)!.x);
+  });
+
+  it("Devanagari ण joins its left stem, lower bowl, and inner stem before the outer stem and headline", () => {
+    expect(DEVANAGARI_NNA.script).toBe("devanagari");
+    expect(penLifts(DEVANAGARI_NNA)).toBe(2);
+    expect(DEVANAGARI_NNA.strokes).toHaveLength(3);
+    expect(DEVANAGARI_NNA.strokes.map((stroke) => stroke.segments.length)).toEqual([
+      1, 1, 1,
+    ]);
+    const body = penPath(DEVANAGARI_NNA.strokes[0]);
+    expect(body[0].y).toBeGreaterThan(Math.min(...body.map((point) => point.y)));
+    expect(body.at(-1)!.y).toBeGreaterThan(Math.min(...body.map((point) => point.y)));
+    expect(body.at(-1)!.x).toBeGreaterThan(body[0].x);
+    const stem = penPath(DEVANAGARI_NNA.strokes[1]);
+    expect(stem[0].y).toBeGreaterThan(stem.at(-1)!.y);
+    const headline = penPath(DEVANAGARI_NNA.strokes[2]);
     expect(headline[0].x).toBeLessThan(headline.at(-1)!.x);
   });
 
@@ -4322,6 +4340,19 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /20-frame animation.*three ordered pen-down runs.*gray guide.*frames 2–10.*open upper-left tip.*clockwise around the lower bowl.*inner shoulder.*middle bar.*right-stem junction.*without lifting.*frames 11–15.*right stem's headline junction.*top-to-bottom.*frames 16–18.*headline's left edge.*shirorekhā left-to-right.*two intervening lifts.*250 ms holds.*frames 10 and 15.*one-second completed frame 19.*Noto Sans Devanagari.*everyday handwriting.*narrow or simplify/i,
+    );
+  });
+
+  it("Devanagari ण traces the animated three-run joined bowl, outer stem, and headline order", () => {
+    const src = DEVANAGARI_NNA.source;
+    expect(src.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Deva-%E0%A4%A3-order.gif",
+    );
+    expect(src.citation).toMatch(
+      /Opiaterein.*Deva-ण-order\.gif.*strokes 1–3.*Wikimedia Commons.*10 May 2009/i,
+    );
+    expect(src.variation).toMatch(
+      /19-frame animation.*three ordered pen-down runs.*gray guide.*frames 2–9.*left stem's headline junction.*top-to-bottom.*clockwise around the lower bowl.*inner right stem.*back to the headline.*without lifting.*frames 10–13.*outer right stem's headline junction.*top-to-bottom.*frames 14–17.*headline's left edge.*shirorekhā left-to-right.*two intervening lifts.*250 ms holds.*frames 9 and 13.*one-second completed frame 18.*Noto Sans Devanagari.*everyday handwriting.*narrow or simplify/i,
     );
   });
 
