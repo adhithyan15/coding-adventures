@@ -47,6 +47,21 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd -P)"
 BOOKS="$ROOT/code/learning/human-languages"
 RC="$ROOT/code/scripts/latexmk-safe.rc"
 
+# Belt and braces for the rc.
+#
+# `latexmk-safe.rc` sets `$xelatex`, which is where `-xelatex` routes on latexmk
+# >= ~4.55 (verified on 4.88). Older latexmk implemented `-xelatex` by
+# overwriting `$pdflatex` instead, so `-no-shell-escape` would be silently
+# dropped and shell escape would fall back to RESTRICTED -- a mode the rc's own
+# comment rightly declines to treat as a boundary. Nothing detects that; the
+# gate would go green either way.
+#
+# kpathsea reads `shell_escape` from the environment regardless of which latexmk
+# variable is in play, so exporting it here does not depend on that difference.
+# `-norc` is unaffected and remains the load-bearing control.
+shell_escape=f
+export shell_escape
+
 FAILED=0
 COMPILED=0
 SKIPPED=0

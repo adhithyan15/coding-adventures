@@ -41,6 +41,9 @@
 # million "Missing character" lines.
 set -euo pipefail
 
+# Absolute, so the rc path survives the `cd` into the book directory.
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd -P)"
+
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 books_root="$repo_root/code/learning/human-languages"
 
@@ -79,7 +82,7 @@ for track in "${tracks[@]}"; do
   fi
 
   build_ok=ok
-  if ! (cd "$book_dir" && latexmk -xelatex -interaction=nonstopmode book.tex >/dev/null 2>&1); then
+  if ! (cd "$book_dir" && latexmk -norc -r "$ROOT/code/scripts/latexmk-safe.rc" -xelatex -interaction=nonstopmode book.tex >/dev/null 2>&1); then
     build_ok=FAILED
     status=1
   fi

@@ -1,5 +1,5 @@
 import { existsSync, lstatSync, mkdirSync, readFileSync, realpathSync, writeFileSync } from "node:fs";
-import { dirname, join, normalize, relative as pathRelative, resolve } from "node:path";
+import { dirname, join, normalize, relative as pathRelative, resolve, sep } from "node:path";
 import { assertRelativeManifestPath } from "./manifest-path.js";
 import { pathToFileURL } from "node:url";
 import {
@@ -236,6 +236,21 @@ export function handwrittenBookChapters(
  * copied verbatim into the generated `book.tex` and written into the working
  * tree — where the next `--write` commits it.
  */
+/**
+ * `lstat`, or undefined when the path does not exist.
+ *
+ * Deliberately NOT `existsSync`: that uses `stat`, so it follows symlinks and
+ * reports a dangling one as absent — which silently skips any guard placed
+ * behind it. `shard-cli.ts` carries the same helper for the same reason.
+ */
+function statIfPresent(path: string): ReturnType<typeof lstatSync> | undefined {
+  try {
+    return lstatSync(path);
+  } catch {
+    return undefined;
+  }
+}
+
 function readAuthoredFragment(root: string, path: string): string {
   if (!lstatSync(path).isFile()) {
     throw new Error(`authored book fragment '${path}' is not a regular file`);
@@ -246,8 +261,24 @@ function readAuthoredFragment(root: string, path: string): string {
   // Resolving the whole chain and re-asserting containment is the only check
   // that covers every component at once.
   const real = realpathSync(path);
-  const fromRoot = normalize(pathRelative(realpathSync(root), real)).replaceAll("\\", "/");
-  if (fromRoot === "" || fromRoot === ".." || fromRoot.startsWith("../")) {
+  const realRoot = realpathSync(root);
+  // Compare by PREFIX, not by escape-shape.
+  //
+  // Inferring "escaped" from a leading `../` is the win32 hole this repo has
+  // already fixed three times elsewhere: `path.relative()` cannot express a
+  // journey between two roots as `..` steps, so it returns the target unchanged.
+  // With root `C:\repo\curriculum`, measured on Node 24:
+  //
+  //     "D:\\evil.tex"                -> "D:/evil.tex"             NOT rejected
+  //     "\\\\server\\share\\evil.tex"  -> "//server/share/evil.tex" NOT rejected
+  //     "C:\\Windows\\evil.tex"       -> "../../Windows/evil.tex"   rejected
+  //
+  // `realpathSync` resolves NTFS junctions, so a committed `frontmatter.tex`
+  // pointing at another volume — or at a UNC share, which additionally makes
+  // this an outbound SMB fetch to an attacker-named host — would pass and have
+  // its contents copied verbatim into the generated `book.tex`. Windows is this
+  // repo's primary development platform, so that is the live case.
+  if (real !== realRoot && !real.startsWith(realRoot + sep)) {
     throw new Error(`authored book fragment '${path}' resolves outside the curriculum root`);
   }
   return readFileSync(real, "utf8");
@@ -536,6 +567,22 @@ export function runBookGeneration(
       : safeOutput(root, relative);
     if (mode === "--write") {
       mkdirSync(dirname(output), { recursive: true });
+      // `writeFileSync` FOLLOWS a symlink, and `safeOutput` is purely lexical so
+      // it cannot see one. This matters more than it used to: making
+      // `<track>/book/book.tex` a generated output turns a committed symlink at
+      // that path into an arbitrary-write primitive whose CONTENT is also
+      // attacker-chosen (it is the authored `frontmatter.tex`, verbatim). Target
+      // `~/.bashrc`, `.git/hooks/post-checkout`, a workflow file — and it fires
+      // on an ordinary `npm run generate:books`.
+      //
+      // The read side of this feature already got `lstat` + `realpath`; leaving
+      // the write side lexical would be a strange place to stop.
+      const existing = statIfPresent(output);
+      if (existing && !existing.isFile()) {
+        throw new Error(
+          `generated output '${relative}' is not a regular file — refusing to write through it`,
+        );
+      }
       writeFileSync(output, expected, "utf8");
       process.stdout.write(`generated ${relative}\n`);
       continue;

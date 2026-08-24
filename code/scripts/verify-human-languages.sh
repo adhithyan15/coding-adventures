@@ -103,7 +103,7 @@ if [ "$MODE" != "fast" ]; then
   for dir in "$BOOKS"/*/book; do
     [ -f "$dir/book.tex" ] || continue
     name="$(basename "$(dirname "$dir")")"
-    if ( cd "$dir" && latexmk -xelatex -interaction=nonstopmode -halt-on-error book.tex ) \
+    if ( cd "$dir" && latexmk -norc -r "$ROOT/code/scripts/latexmk-safe.rc" -xelatex -interaction=nonstopmode -halt-on-error book.tex ) \
         >"$RUNLOG" 2>&1; then
       ok "$name"
     else
