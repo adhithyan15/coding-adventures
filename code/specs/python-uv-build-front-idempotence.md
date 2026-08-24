@@ -155,6 +155,14 @@ second run replaces the existing environment, rerun the audit, and prove the
 live non-idempotent corpus shrinks by exactly the repaired package set while
 the original owner decomposition remains complete.
 
+An earlier repeatability repair does not satisfy this profile if its active
+fronts still invoke non-strict MyPy. The separately owned Hash Functions
+correction MUST add `--strict` to both existing named-interpreter commands and
+their complete-recipe expectations. It MUST preserve every other active line,
+package dependency, capability declaration, and runtime behavior. Validation
+MUST prove strict checking on the package's complete `src` and `tests` trees,
+then repeat the Windows front twice and exercise the hash-dependent closure.
+
 ## Legacy named-environment repair profile
 
 The separately owned `python/in-memory-data-store-protocol` front was not in
