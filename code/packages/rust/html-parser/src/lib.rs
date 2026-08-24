@@ -7702,10 +7702,15 @@ impl HtmlParser {
             && (self.current_element_is_table_structure()
                 || self.current_parent_is_fostered_before_open_table())
         {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-end-tag-in-table",
-                format!("end tag `</{name}>` in a table context was processed with a parse error"),
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-end-tag-in-table",
+                    format!(
+                        "end tag `</{name}>` in a table context was processed with a parse error"
+                    ),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
         }
         match name {
             "button"
@@ -27184,6 +27189,14 @@ mod tests {
         }))
     }
 
+    fn end_tag_in_table_recovery(source: &str, name: &str) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-end-tag-in-table",
+            format!("end tag `</{name}>` in a table context was processed with a parse error"),
+        )
+        .at_emission(Some(end_tag_position(source, name)))
+    }
+
     fn li_start_tag_in_table_recovery(source: &str, occurrence: usize) -> ParserDiagnostic {
         let prefix = "<li";
         let start = source
@@ -42754,30 +42767,23 @@ mod tests {
             2
         );
         assert!(output.parser_diagnostics.iter().any(|diagnostic| {
-            diagnostic
-                == &ParserDiagnostic::new(
-                    "unexpected-end-tag-in-table",
-                    "end tag `</div>` in a table context was processed with a parse error",
-                )
+            diagnostic == &end_tag_in_table_recovery(
+                "<!doctype html><table><div>x<div></div>x</span>x</table>",
+                "div",
+            )
         }));
         assert!(output.parser_diagnostics.iter().any(|diagnostic| {
-            diagnostic
-                == &ParserDiagnostic::new(
-                    "unexpected-end-tag-in-table",
-                    "end tag `</span>` in a table context was processed with a parse error",
-                )
+            diagnostic == &end_tag_in_table_recovery(
+                "<!doctype html><table><div>x<div></div>x</span>x</table>",
+                "span",
+            )
         }));
 
-        let center = parse_html_with_diagnostics(
-            "<!doctype html><table><center> <font>a</center> <img> <tr><td> </td> </tr> </table>",
-        )
-        .unwrap();
+        let center_source =
+            "<!doctype html><table><center> <font>a</center> <img> <tr><td> </td> </tr> </table>";
+        let center = parse_html_with_diagnostics(center_source).unwrap();
         assert!(center.parser_diagnostics.iter().any(|diagnostic| {
-            diagnostic
-                == &ParserDiagnostic::new(
-                    "unexpected-end-tag-in-table",
-                    "end tag `</center>` in a table context was processed with a parse error",
-                )
+            diagnostic == &end_tag_in_table_recovery(center_source, "center")
         }));
         assert!(center
             .parser_diagnostics
@@ -42796,6 +42802,73 @@ mod tests {
                 .iter()
                 .all(|diagnostic| diagnostic.code != "unexpected-end-tag-in-table"));
         }
+    }
+
+    #[test]
+    fn positions_generic_end_tags_in_table_at_token_emission() {
+        for (source, name) in [
+            ("<!doctype html><table></center>", "center"),
+            ("<!doctype html><table><colgroup></div>", "div"),
+            ("<!doctype html><table><tbody></span>", "span"),
+            ("<!doctype html><table><thead></center>", "center"),
+            ("<!doctype html><table><tfoot></div>", "div"),
+            ("<!doctype html><table><tbody><tr></span>", "span"),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .filter(|diagnostic| diagnostic.code == "unexpected-end-tag-in-table")
+                    .collect::<Vec<_>>(),
+                vec![&end_tag_in_table_recovery(source, name)],
+                "source {source:?}"
+            );
+        }
+
+        let fragment_source = "<!--é-->\r\n</span>";
+        let fragment =
+            parse_html_fragment_for_context_with_diagnostics(fragment_source, "table").unwrap();
+        assert!(fragment_source.len() > fragment_source.chars().count());
+        assert_eq!(
+            fragment
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-end-tag-in-table")
+                .collect::<Vec<_>>(),
+            vec![&end_tag_in_table_recovery(fragment_source, "span")]
+        );
+
+        for source in [
+            "<!doctype html><table></center",
+            "<!doctype html><table></div",
+            "<!doctype html></span>",
+            "<!doctype html><table><tr><td></center></td></tr></table>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .all(|diagnostic| diagnostic.code != "unexpected-end-tag-in-table"),
+                "source {source:?}"
+            );
+        }
+
+        let mut unpositioned = HtmlParser::with_fragment_context_options(
+            HtmlParseOptions::default(),
+            "table",
+        );
+        unpositioned.process_token(Token::EndTag {
+            name: "span".to_string(),
+        });
+        let diagnostics = unpositioned
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-end-tag-in-table")
+            .collect::<Vec<_>>();
+        assert_eq!(diagnostics.len(), 1);
+        assert_eq!(diagnostics[0].position, None);
     }
 
     #[test]
