@@ -5046,10 +5046,13 @@ impl HtmlParser {
         self_closing: bool,
     ) {
         if name == "image" {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-start-tag-treated-as",
-                "start tag `<image>` was treated as `<img>`",
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-start-tag-treated-as",
+                    "start tag `<image>` was treated as `<img>`",
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             name = "img".to_string();
         }
         let body_element_existed_before_start_tag = self.document_has_body_element();
@@ -37393,8 +37396,8 @@ mod tests {
 
     #[test]
     fn treats_legacy_image_start_tag_as_img() {
-        let output =
-            parse_html_with_diagnostics("<!doctype html><p><image src=hero.png></p>").unwrap();
+        let source = "<!doctype html><p><image src=hero.png></p>";
+        let output = parse_html_with_diagnostics(source).unwrap();
 
         let paragraph = element(&body(&output.document).children[0]);
         assert_eq!(paragraph.name, "p");
@@ -37406,8 +37409,61 @@ mod tests {
             vec![ParserDiagnostic::new(
                 "unexpected-start-tag-treated-as",
                 "start tag `<image>` was treated as `<img>`"
-            )]
+            )
+            .at_emission(Some(start_tag_position(source, "image")))]
         );
+    }
+
+    #[test]
+    fn positions_legacy_image_start_tag_diagnostic_at_token_emission() {
+        for source in ["<image>", "<p><image src=x>", "<table><image>"] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            let diagnostics = output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-start-tag-treated-as")
+                .collect::<Vec<_>>();
+            assert_eq!(diagnostics.len(), 1, "source {source:?}");
+            assert_eq!(
+                diagnostics[0].position,
+                Some(start_tag_position(source, "image")),
+                "source {source:?}"
+            );
+        }
+
+        let unicode_source = "e\u{301}\r\n<image src=x>";
+        let unicode = parse_html_fragment_with_diagnostics(unicode_source).unwrap();
+        let diagnostic = unicode
+            .parser_diagnostics
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-start-tag-treated-as")
+            .unwrap();
+        assert_eq!(
+            diagnostic.position,
+            Some(start_tag_position(unicode_source, "image"))
+        );
+        assert!(unicode_source.len() > unicode_source.chars().count());
+
+        for source in ["<image", "<image src=x"] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "unexpected-start-tag-treated-as"));
+        }
+
+        let mut unpositioned = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        unpositioned.process_token(Token::StartTag {
+            name: "image".to_string(),
+            attributes: Vec::new(),
+            self_closing: false,
+        });
+        let diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-start-tag-treated-as")
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
     }
 
     #[test]
