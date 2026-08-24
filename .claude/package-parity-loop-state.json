@@ -11,7 +11,7 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": 12520,
   "last_inventory": {
     "revision": "4d00a4560805a40ac2147d465f3ecb7b91a4f18b",
     "schema_version": 3,
@@ -4391,15 +4391,19 @@
     {
       "id": "python-data-store-build-front-idempotence",
       "title": "Make the Python in-memory data-store BUILD fronts repeatable",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["python-uv-build-front-idempotence-audit", "python-hash-functions-build-front-strict-mypy", "python-hash-collections-build-front-idempotence", "python-resp-tcp-build-front-idempotence", "python-in-memory-data-store-protocol-build-front-python313"],
       "branch": "codex/python-data-store-build-front-idempotence",
-      "pr_number": null,
+      "pr_number": 12520,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/12520",
+      "opened_at": "2026-08-24T07:06:33Z",
+      "opened_revision": "e5e7e96d4e4a76f1c871bf5116fcd1363a7b2cfc",
       "selection_revision": "4d00a4560805a40ac2147d465f3ecb7b91a4f18b",
       "selection_notes": "Selected after PR #12512 completed all 30 checks and merged through the requested squash auto-merge command. The collision-checked exact-main inventory is identity-neutral at 15 established lanes, 1,369 implementation identities, and 4,562 slots with zero collisions or unknown buckets; no new package marker or identity appeared. The audit did discover and register the separately blocked AOF filesystem-authority review before selection. All five dependencies are merged, and this two-package owner now closes the final hash/RESP/data-store dependency chain plus the repeatedly reproduced Windows-invalid quoted editable requirement. Seven open PRs and 30 non-main remote heads have zero exact package, state, roadmap, fixture, or recipe-test overlap; the target remote branch and prior PR were absent before creation. The ready TCP dependency-contract reconciliation and blocked authority review do not widen or block this build-only closure. Pre-selection quality diagnostics show the engine already passes Ruff, formatting, strict MyPy, 57 tests, and 96.67% coverage, while the composed store passes Ruff, formatting, five tests, and 100% coverage but exposes four strict-MyPy findings for bounded behavior-preserving cleanup within the owned root.",
       "implementation_revision": "ddd55403ade04168ecbd6eba84671076c7c55f68",
       "final_review_revision": "04eba3209cc31f73495f5e936e34b7dbdb2c2bc7",
       "validation_notes": "All four complete BUILD recipes are pinned by three focused regressions. On Windows with uv 0.11.28 and Python 3.13.14, every BUILD_windows line passes twice consecutively from a cleared package-local environment: the engine passes Ruff, formatting, strict MyPy with followed local imports, 57 tests, and 96.67% coverage in both runs; the composed store passes the same gates, five tests, and 100% coverage in both runs. The four dormant strict-MyPy findings are resolved by kind-specific EngineResponse narrowing plus runtime-proved decoded-frame test narrowing, and the broad ignore_missing_imports setting is removed without changing runtime behavior. The live uv audit falls exactly from 11 to nine non-idempotent fronts across seven components; recipe, uv-audit, and parity suites pass 3, 13, and 10 tests, while capability suites pass 7, 5, and 35 tests with ten expected skips in the broker suite. Both environments pass uv dependency checks. Both packages produce wheel and source distributions that install into a fresh Python 3.13 environment with the explicit local closure and pass engine and RESP smoke tests. The Go build tool passes all package tests, vet, and trimpath compilation. A freshly compiled binary validates 4,982 packages, identifies exactly two changed packages and six affected packages (hash-functions, hyperloglog, in-memory-data-store-protocol, resp-protocol, in-memory-data-store-engine, and in-memory-data-store), and completes the real serial closure. After non-overlapping rebases, the collision-checked schema-3 inventory at exact current main 4d00a4560805a40ac2147d465f3ecb7b91a4f18b remains 15 lanes, 1,369 identities, and 4,562 slots with zero collisions or unknown buckets; the 431-node, 613-edge state is unique, complete, and acyclic. Diff, dependency, credential, and production-authority scans are clean. Runtime dependencies, versions, coverage gates, and capability manifests are unchanged. The pre-existing AOF filesystem authority is explicitly classified under a separate selection-blocked owner and is not altered here.",
+      "publication_notes": "Opened ready-for-review PR #12520 from clean validated head e5e7e96d4e4a76f1c871bf5116fcd1363a7b2cfc after a normal first push from exact origin/main 4d00a4560805a40ac2147d465f3ecb7b91a4f18b. Independent security, inventory, implementation, state/roadmap, dependency-graph, and live-ownership reviews found no blocker; all seven open PRs had zero exact file overlap, and the target remote branch and prior PR were absent before publication. GitHub reports the branch mergeable and conflict-free while required CI and CodeQL checks are queued, so the loop remains monitor-only until every required check is terminal and acceptable.",
       "notes": "Backfill for python/in-memory-data-store-engine followed by python/in-memory-data-store after their hash and RESP prerequisites land. In addition to pinning and clearing .venv, reconcile the Windows-invalid quoted editable requirement while preserving the complete local sibling closure."
     },
     {
