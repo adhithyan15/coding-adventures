@@ -29,9 +29,18 @@ pip install coding-adventures-directed-graph
 For development:
 
 ```bash
-uv pip install -e "../graph"   # install DT00 base class first
-uv pip install -e ".[dev]"
+uv venv .venv --quiet --no-project --clear --python 3.13
+uv pip install --python .venv -e ../graph --quiet
+uv pip install --python .venv -e .[dev] --quiet
+.venv/bin/python -m ruff check src tests
+.venv/bin/python -m ruff format --check src tests
+.venv/bin/python -m mypy --strict src tests
+.venv/bin/python -m pytest tests/ -v
 ```
+
+`BUILD_windows` preserves the same DT00-before-DT01 order and invokes the same
+gates through `.venv\Scripts\python.exe`. Both fronts may be repeated
+immediately because they clear and recreate the package-local environment.
 
 ## Quick Start
 
@@ -189,7 +198,7 @@ bfs(g, "A")   # ["A", "B", "C"]  — follows forward edges only
 ## Running Tests
 
 ```bash
-uv run python -m pytest tests/ -v
+.venv/bin/python -m pytest tests/ -v
 ```
 
 Tests require 95%+ coverage (enforced by pytest-cov configuration).

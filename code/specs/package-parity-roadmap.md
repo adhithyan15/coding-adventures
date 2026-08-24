@@ -5458,6 +5458,75 @@ acyclic. Security review finds no new dependency, credential, network,
 process, capability, or production-authority surface; the pre-existing AOF
 filesystem authority remains isolated in its separately blocked owner.
 
+### Post-#12520 refresh and Wemo authority registration
+
+Final head `1df0eee904d1828a9b4858130d843fb15e331b73` completed all 30
+reported checks with 24 successes, five expected skips, one neutral CodeQL
+result, and no failures or pending work. GitHub reported PR #12520 clean and
+mergeable; the loop requested squash auto-merge, and GitHub merged it as
+`e5eb4be0c234456a3a5c0ae627ed88a723b066b6` at 2026-08-24T07:22:29Z.
+
+The collision-checked schema-3 inventory at that exact merged main remains
+identity-neutral: 15 established lanes, 1,369 implementation identities, 4,562
+package slots, 175 high-consensus identities with 276 gaps, 122 identities in
+five to nine lanes with 926 gaps, 166 identities in two to four lanes with
+2,087 gaps, and 906 singletons with 12,684 gaps. There are 717 Rust
+singletons, zero collisions, and zero unknown buckets. OCaml remains correctly
+emerging with no packages; no package marker, identity, or slot changed. The
+live uv audit now reports the expected nine fronts across seven components.
+
+The same audit found one newly unowned privileged contract introduced by
+merged Wemo PR #12515. The Rust Wemo host now performs recognized outlet and
+switch mutations with idempotent pre-read/set/readback execution, concrete
+SSDP/TCP/HTTP endpoint policy, catalog-command capability, CLI effects, and
+runtime mutation, but the crate has no `required_capabilities.json`. New owner
+`smart-home-wemo-upnp-native-authority-review` records that excluded work as
+selection-blocked behind the portable Wemo core and the shared Rust network-
+substrate capability review. The existing portable owner now includes
+recognized-model, endpoint-policy, and pre-read/readback fixtures without
+making native network or CLI authority portable.
+
+The dependency/leverage pass selects
+`python-graph-build-front-idempotence`. Graph followed by directed-graph is the
+largest zero-overlap ready uv-debt component: 97 Python package manifests and
+118 unique direct BUILD consumers reference the pair, versus six manifest
+consumers for trie/radix. Eight live open PRs and 29 non-main source heads have
+zero exact overlap on the package roots, focused recipe/audit tests, state,
+roadmap, or repair profile; the target branch and prior PR are absent. The
+dependency-ready OCaml process-free build substrate remains strategically
+important, but three live build-tool PRs currently overlap its validator,
+main, and changelog surfaces, so the conflict-free graph chain is the safer
+serial delivery choice without changing OCaml's durable priority.
+
+Pre-selection diagnostics pass 132 graph tests at 95.04% coverage and 129
+directed-graph tests at 97.62%. Strict MyPy is already clean for graph. The
+generated-standard quality profile also exposes bounded Ruff and formatting
+debt in both packages plus seven directed-graph strict-MyPy findings; the
+selected repair must resolve those findings without changing behavior,
+runtime dependencies, capabilities, or the graph-before-directed dependency
+order.
+
+The implemented repair pins all four canonical and Windows recipes to Python
+3.13, recreates each named environment with `--clear`, preserves graph before
+directed-graph installation, and invokes that interpreter for Ruff lint and
+format checks, strict MyPy, and pytest. Exact recipe regressions and the uv
+audit now report seven live fronts rather than nine. Both Windows fronts pass
+twice consecutively on uv 0.11.28 and Python 3.13.14: graph passes 134 tests at
+96.14% coverage and directed-graph passes 129 at 97.63%, with every quality
+gate clean. State-machine passes 161 downstream tests at 99.02% coverage and
+tree passes 137 at 100%; both selected packages build wheel and source
+distributions and retain `py.typed` in their wheels.
+
+A real Windows build-tool execution validates the 4,982-package, 9,489-edge
+plan and attempts all 205 affected packages. It builds both selected roots and
+196 packages total, skips 289 unchanged packages, and exposes four unrelated
+pre-existing failures plus five dependent skips. Exact replay classifies them
+under three newly registered pending owners: an unpinned Python 3.13 front for
+Markov chain, truthful Windows symlink-capability testing for ir-to-jvm-class-
+file and unix-tools, and scaffold-generator temporary-root cleanup after a
+current-directory change. Those owners preserve the evidence without widening
+this dependency-shaped repair.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

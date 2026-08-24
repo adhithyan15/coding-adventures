@@ -23,7 +23,7 @@ from __future__ import annotations
 
 import heapq
 from collections import deque
-from typing import Generic, TypeVar
+from typing import TypeVar
 
 from graph.graph import Graph
 
@@ -45,7 +45,7 @@ T = TypeVar("T")
 # With a stack you get DFS instead.
 
 
-def bfs(graph: Graph[T], start: T) -> list[T]:
+def bfs[T](graph: Graph[T], start: T) -> list[T]:
     """Return nodes reachable from start in breadth-first order.
 
     Nodes not reachable from start (in a disconnected graph) are excluded.
@@ -92,7 +92,7 @@ def bfs(graph: Graph[T], start: T) -> list[T]:
 # recently added neighbours are explored first (LIFO order).
 
 
-def dfs(graph: Graph[T], start: T) -> list[T]:
+def dfs[T](graph: Graph[T], start: T) -> list[T]:
     """Return nodes reachable from start in depth-first order.
 
     Nodes not reachable from start (in a disconnected graph) are excluded.
@@ -134,7 +134,7 @@ def dfs(graph: Graph[T], start: T) -> list[T]:
 # One BFS from any starting node visits ALL nodes iff the graph is connected.
 
 
-def is_connected(graph: Graph[T]) -> bool:
+def is_connected[T](graph: Graph[T]) -> bool:
     """Return True if every node can reach every other node.
 
     An empty graph is vacuously connected (True).
@@ -160,7 +160,7 @@ def is_connected(graph: Graph[T]) -> bool:
 # Algorithm: repeatedly BFS from any unvisited node, collecting each component.
 
 
-def connected_components(graph: Graph[T]) -> list[frozenset[T]]:
+def connected_components[T](graph: Graph[T]) -> list[frozenset[T]]:
     """Return a list of connected components, each as a frozenset of nodes.
 
     Example::
@@ -200,7 +200,7 @@ def connected_components(graph: Graph[T]) -> list[frozenset[T]]:
 #   A—B—C    (path)       → has_cycle = False
 
 
-def has_cycle(graph: Graph[T]) -> bool:
+def has_cycle[T](graph: Graph[T]) -> bool:
     """Return True if the graph contains any cycle.
 
     Uses iterative DFS (avoids Python's recursion limit on large graphs).
@@ -253,7 +253,7 @@ def has_cycle(graph: Graph[T]) -> bool:
 # If so, we use BFS.  Otherwise, Dijkstra.
 
 
-def shortest_path(graph: Graph[T], start: T, end: T) -> list[T]:
+def shortest_path[T](graph: Graph[T], start: T, end: T) -> list[T]:
     """Return the shortest (lowest-weight) path from start to end.
 
     Returns an empty list if no path exists.
@@ -286,7 +286,7 @@ def shortest_path(graph: Graph[T], start: T, end: T) -> list[T]:
     return _dijkstra(graph, start, end)
 
 
-def _bfs_path(graph: Graph[T], start: T, end: T) -> list[T]:
+def _bfs_path[T](graph: Graph[T], start: T, end: T) -> list[T]:
     """BFS shortest path (for unweighted graphs)."""
     parent: dict[T, T | None] = {start: None}
     queue: deque[T] = deque([start])
@@ -313,7 +313,7 @@ def _bfs_path(graph: Graph[T], start: T, end: T) -> list[T]:
     return path
 
 
-def _dijkstra(graph: Graph[T], start: T, end: T) -> list[T]:
+def _dijkstra[T](graph: Graph[T], start: T, end: T) -> list[T]:
     """Dijkstra's algorithm for weighted shortest path."""
     INF = float("inf")
     dist: dict[T, float] = {node: INF for node in graph.nodes()}
@@ -390,7 +390,7 @@ def _dijkstra(graph: Graph[T], start: T, end: T) -> list[T]:
 #   Skip (D,E,5) → would create a cycle
 
 
-def minimum_spanning_tree(graph: Graph[T]) -> frozenset[tuple[T, T, float]]:
+def minimum_spanning_tree[T](graph: Graph[T]) -> frozenset[tuple[T, T, float]]:
     """Return the minimum spanning tree as a frozenset of (u, v, weight) triples.
 
     Returns an empty frozenset if the graph is empty or has no edges.
@@ -442,7 +442,7 @@ def minimum_spanning_tree(graph: Graph[T]) -> frozenset[tuple[T, T, float]]:
 #   After find(E):    E → A, D → A  (all point directly to root)
 
 
-class _UnionFind(Generic[T]):
+class _UnionFind[T]:
     """Union-Find with path compression for Kruskal's MST algorithm."""
 
     def __init__(self, nodes: list[T]) -> None:

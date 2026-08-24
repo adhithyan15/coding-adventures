@@ -11,9 +11,9 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 12520,
+  "active_pr": 12538,
   "last_inventory": {
-    "revision": "4d00a4560805a40ac2147d465f3ecb7b91a4f18b",
+    "revision": "e5eb4be0c234456a3a5c0ae627ed88a723b066b6",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1369,
@@ -1972,7 +1972,17 @@
       "depends_on": ["smart-home-switch-entity-command-contract"],
       "branch": null,
       "pr_number": null,
-      "notes": "Share SSDP header parsing, bounded setup/SOAP XML validation, service/device normalization, stable identities/errors, and switch/light command planning. UDP/DNS/TCP and runtime authority are excluded."
+      "notes": "Share SSDP header parsing, bounded setup/SOAP XML validation, service/device normalization, stable identities/errors, recognized outlet/switch model classification, endpoint-policy validation, idempotent pre-read/set/readback fixtures, and switch/light command planning. UDP/DNS/TCP, CLI effects, and runtime mutation authority are excluded. Merged Wemo PR #12515 extends the Rust reference behavior but does not make its native authority portable."
+    },
+    {
+      "id": "smart-home-wemo-upnp-native-authority-review",
+      "title": "Review native Wemo UPnP network, CLI, and mutation authority",
+      "status": "pending",
+      "depends_on": ["smart-home-wemo-upnp-portable-core-extraction-and-conformance", "rust-network-substrate-capability-truthfulness"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered in the post-#12520 exact-main audit after merged Wemo PR #12515 expanded recognized outlet/switch mutation behavior. The Rust host owns idempotent pre-read/set/readback execution, local-IP SSDP/TCP/HTTP endpoint policy, catalog-command capability, CLI effects, and concrete runtime mutation while the crate has no required_capabilities.json. Review truthful least-privilege network, endpoint, CLI/process, and runtime-mutation capabilities plus error redaction after the portable core and shared Rust network-substrate truthfulness owners land. This native-authority work is excluded from autonomous parity selection."
     },
     {
       "id": "smart-home-sonos-upnp-portable-core-extraction-and-conformance",
@@ -4391,7 +4401,7 @@
     {
       "id": "python-data-store-build-front-idempotence",
       "title": "Make the Python in-memory data-store BUILD fronts repeatable",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["python-uv-build-front-idempotence-audit", "python-hash-functions-build-front-strict-mypy", "python-hash-collections-build-front-idempotence", "python-resp-tcp-build-front-idempotence", "python-in-memory-data-store-protocol-build-front-python313"],
       "branch": "codex/python-data-store-build-front-idempotence",
       "pr_number": 12520,
@@ -4402,8 +4412,10 @@
       "selection_notes": "Selected after PR #12512 completed all 30 checks and merged through the requested squash auto-merge command. The collision-checked exact-main inventory is identity-neutral at 15 established lanes, 1,369 implementation identities, and 4,562 slots with zero collisions or unknown buckets; no new package marker or identity appeared. The audit did discover and register the separately blocked AOF filesystem-authority review before selection. All five dependencies are merged, and this two-package owner now closes the final hash/RESP/data-store dependency chain plus the repeatedly reproduced Windows-invalid quoted editable requirement. Seven open PRs and 30 non-main remote heads have zero exact package, state, roadmap, fixture, or recipe-test overlap; the target remote branch and prior PR were absent before creation. The ready TCP dependency-contract reconciliation and blocked authority review do not widen or block this build-only closure. Pre-selection quality diagnostics show the engine already passes Ruff, formatting, strict MyPy, 57 tests, and 96.67% coverage, while the composed store passes Ruff, formatting, five tests, and 100% coverage but exposes four strict-MyPy findings for bounded behavior-preserving cleanup within the owned root.",
       "implementation_revision": "ddd55403ade04168ecbd6eba84671076c7c55f68",
       "final_review_revision": "04eba3209cc31f73495f5e936e34b7dbdb2c2bc7",
+      "merge_revision": "e5eb4be0c234456a3a5c0ae627ed88a723b066b6",
+      "merged_at": "2026-08-24T07:22:29Z",
       "validation_notes": "All four complete BUILD recipes are pinned by three focused regressions. On Windows with uv 0.11.28 and Python 3.13.14, every BUILD_windows line passes twice consecutively from a cleared package-local environment: the engine passes Ruff, formatting, strict MyPy with followed local imports, 57 tests, and 96.67% coverage in both runs; the composed store passes the same gates, five tests, and 100% coverage in both runs. The four dormant strict-MyPy findings are resolved by kind-specific EngineResponse narrowing plus runtime-proved decoded-frame test narrowing, and the broad ignore_missing_imports setting is removed without changing runtime behavior. The live uv audit falls exactly from 11 to nine non-idempotent fronts across seven components; recipe, uv-audit, and parity suites pass 3, 13, and 10 tests, while capability suites pass 7, 5, and 35 tests with ten expected skips in the broker suite. Both environments pass uv dependency checks. Both packages produce wheel and source distributions that install into a fresh Python 3.13 environment with the explicit local closure and pass engine and RESP smoke tests. The Go build tool passes all package tests, vet, and trimpath compilation. A freshly compiled binary validates 4,982 packages, identifies exactly two changed packages and six affected packages (hash-functions, hyperloglog, in-memory-data-store-protocol, resp-protocol, in-memory-data-store-engine, and in-memory-data-store), and completes the real serial closure. After non-overlapping rebases, the collision-checked schema-3 inventory at exact current main 4d00a4560805a40ac2147d465f3ecb7b91a4f18b remains 15 lanes, 1,369 identities, and 4,562 slots with zero collisions or unknown buckets; the 431-node, 613-edge state is unique, complete, and acyclic. Diff, dependency, credential, and production-authority scans are clean. Runtime dependencies, versions, coverage gates, and capability manifests are unchanged. The pre-existing AOF filesystem authority is explicitly classified under a separate selection-blocked owner and is not altered here.",
-      "publication_notes": "Opened ready-for-review PR #12520 from clean validated head e5e7e96d4e4a76f1c871bf5116fcd1363a7b2cfc after a normal first push from exact origin/main 4d00a4560805a40ac2147d465f3ecb7b91a4f18b. Independent security, inventory, implementation, state/roadmap, dependency-graph, and live-ownership reviews found no blocker; all seven open PRs had zero exact file overlap, and the target remote branch and prior PR were absent before publication. GitHub reports the branch mergeable and conflict-free while required CI and CodeQL checks are queued, so the loop remains monitor-only until every required check is terminal and acceptable.",
+      "publication_notes": "Opened ready-for-review PR #12520 from clean validated head e5e7e96d4e4a76f1c871bf5116fcd1363a7b2cfc after a normal first push from exact origin/main 4d00a4560805a40ac2147d465f3ecb7b91a4f18b. Independent security, inventory, implementation, state/roadmap, dependency-graph, and live-ownership reviews found no blocker; all seven open PRs had zero exact file overlap, and the target remote branch and prior PR were absent before publication. Final head 1df0eee904d1828a9b4858130d843fb15e331b73 completed all 30 reported checks with 24 successes, five expected skips, one neutral CodeQL result, and no failures or pending work. GitHub reported the branch clean and mergeable; the loop requested squash auto-merge, and GitHub merged PR #12520 as e5eb4be0c234456a3a5c0ae627ed88a723b066b6 at 2026-08-24T07:22:29Z without a manual merge command.",
       "notes": "Backfill for python/in-memory-data-store-engine followed by python/in-memory-data-store after their hash and RESP prerequisites land. In addition to pinning and clearing .venv, reconcile the Windows-invalid quoted editable requirement while preserving the complete local sibling closure."
     },
     {
@@ -4419,11 +4431,47 @@
     {
       "id": "python-graph-build-front-idempotence",
       "title": "Make the Python graph BUILD fronts repeatable",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["python-uv-build-front-idempotence-audit"],
+      "branch": "codex/python-graph-build-front-idempotence",
+      "pr_number": 12538,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/12538",
+      "opened_at": "2026-08-24T09:14:44Z",
+      "opened_revision": "8e2c73966fda12ec71e727ea7555cb8d0bd19155",
+      "selection_revision": "e5eb4be0c234456a3a5c0ae627ed88a723b066b6",
+      "selection_notes": "Selected only after PR #12520 merged through squash auto-merge, the collision-checked exact-main inventory was regenerated, and the newly discovered Wemo native-authority review was registered as selection-blocked. The schema-3 inventory remains 15 established lanes, 1,369 implementation identities, and 4,562 slots with zero collisions or unknown buckets; the uv audit reports exactly nine remaining fronts across seven components. Graph followed by directed-graph is the highest-leverage zero-overlap ready build-front owner: 97 Python pyproject files and 118 unique direct BUILD consumers reference graph or directed-graph, while trie/radix reaches six pyproject consumers. Eight open PRs and 29 non-main remote source heads have zero exact overlap on the two package roots, focused recipe/audit tests, state, roadmap, or repair profile; the target remote branch and prior PR are absent. The strategically important OCaml process-free build substrate is dependency-ready but currently overlaps three live build-tool PRs on validator/main/change surfaces, so this conflict-free dependency chain is selected first without changing OCaml priority. Pre-selection diagnostics pass 132 graph tests at 95.04% coverage and 129 directed-graph tests at 97.62%; strict MyPy is already clean for graph, while the selected generated-standard quality gates expose bounded Ruff/format cleanup plus seven directed-graph strict-MyPy findings that must be resolved without behavioral or dependency changes.",
+      "implementation_revision": "5be1330617c780835ebf1e6710888056c306bb09",
+      "final_review_revision": "8e2c73966fda12ec71e727ea7555cb8d0bd19155",
+      "validation_notes": "All four canonical and Windows BUILD recipes now recreate .venv with --clear, pin Python 3.13, preserve graph-before-directed installation order, and invoke the named interpreter for Ruff lint, Ruff formatting, strict MyPy, and pytest. Three focused regressions pin the complete recipe profile and the uv audit falls exactly from nine to seven live fronts. On Windows with uv 0.11.28 and Python 3.13.14, both BUILD_windows fronts pass twice consecutively: graph passes 134 tests at 96.14% coverage and directed-graph passes 129 tests at 97.63%, with all quality gates clean. Behavior-preserving typing cleanup retains the public runtime PropertyValue and PropertyBag aliases, narrows DFS iterators, adopts Python 3.12 generic syntax, and adds a graph-property weight reset proof without changing dependency metadata or versions. Both packages build wheel and source distributions whose wheels retain py.typed. Direct downstreams pass state-machine's 161 tests at 99.02% coverage and tree's 137 tests at 100%. The Go build tool passes all tests, vet, trimpath compilation, BUILD validation, and a real exact-plan Windows execution over 4,982 packages and 9,489 edges: 205 affected packages were attempted, graph and directed-graph built successfully, 196 packages built, 289 skipped, four failed, and five dependency-skipped. Actual replay classifies the four failures as pre-existing and separately owned: Markov's unpinned Python front, Windows symlink privilege tests in ir-to-jvm-class-file and unix-tools, and scaffold-generator temporary-directory cleanup while the process current directory remains inside the tree. The collision inventory, parity reporter, capability taxonomy, state graph, diff, dependency, credential, and production-authority reviews are clean; this tranche adds no privileged authority or production dependency.",
+      "publication_notes": "Opened ready-for-review PR #12538 from clean validated head 8e2c73966fda12ec71e727ea7555cb8d0bd19155 after a normal first push. Immediately before publication, origin/main advanced from the exact selection revision through ten human-language and parser commits to 3700e712315674c2fad7e34e917dd123d3e4ea8c; the changed-file intersection and package-marker delta were both zero, so the unpublished branch rebased normally without conflicts or force push. Post-rebase focused tests, parity inventory, Go build-tool tests and vet, diff checks, and a second independent security review pass. GitHub reports PR #12538 ready for review, mergeable, and conflict-free while required CI and CodeQL checks are queued or running, so the loop remains monitor-only and auto-merge stays disabled until every required check is terminal and acceptable.",
+      "notes": "Dependency-shaped generated-pattern backfill for python/graph followed by python/directed-graph. Validate both canonical and Windows fronts twice and preserve the graph prerequisite order."
+    },
+    {
+      "id": "python-markov-chain-build-front-python313",
+      "title": "Pin the Python Markov chain BUILD fronts to Python 3.13",
+      "status": "pending",
+      "depends_on": ["python-graph-build-front-idempotence"],
       "branch": null,
       "pr_number": null,
-      "notes": "Dependency-shaped generated-pattern backfill for python/graph followed by python/directed-graph. Validate both canonical and Windows fronts twice and preserve the graph prerequisite order."
+      "notes": "Discovered by the real affected Windows build for the graph closure. Markov chain already clears its named environment, but neither front pins Python; uv can select ambient Python 3.10 and reject the graph dependency's Python >=3.12 floor before tests. Pin Python 3.13 in both recipes, retain graph followed by directed-graph installation order, add an exact-recipe regression, and prove immediate repeatability. An explicit UV_PYTHON=3.13 replay passes all 91 tests at 97.62% coverage, confirming this is build-front selection debt rather than graph behavior."
+    },
+    {
+      "id": "python-windows-symlink-test-portability",
+      "title": "Make Python symlink security tests truthful on Windows",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the real affected Windows graph build. ir-to-jvm-class-file and programs/unix-tools execute symlink security tests on a host without Windows symlink creation privilege and fail with WinError 1314 before the asserted production behavior is reached. Add an explicit platform/capability probe or equivalent truthful skip while retaining full traversal and symlink coverage on capable Windows hosts and POSIX lanes; do not weaken the production path-containment checks."
+    },
+    {
+      "id": "python-scaffold-generator-temp-root-cleanup-portability",
+      "title": "Restore the process directory before scaffold temporary-root cleanup",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the real affected Windows graph build. Two scaffold-generator repository-root tests change the process current directory into a TemporaryDirectory and let cleanup begin while Windows still holds the directory, producing WinError 32/5; 40 other tests pass. Restore the original directory before the context exits, preserve both .git-directory and worktree .git-file coverage, and validate on Windows plus the established Unix lane."
     },
     {
       "id": "python-trie-build-front-idempotence",
