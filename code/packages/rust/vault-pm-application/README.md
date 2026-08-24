@@ -547,6 +547,25 @@ still cause. That residual is pre-existing and tracked; it needs a decision
 about what a partly-unreadable item looks like to every ceremony, not a local
 fix. See VLT-PM05 section 13.3 and VLT02 *Decoding never re-encodes*.
 
+The `CborValue` trees this codec builds and tears down are also plaintext, and
+two of them used to drop through ordinary, non-wiping `Drop`: `LocalSecretV1`'s
+own `encode`/`decode` — the vault's entire local root key hierarchy, authority
+seed and both device seeds — and `encode_item_revision`, whose live-item branch
+folds an item's already-`encode_record`-produced record bytes (a password, a
+card's PAN and CVV, a TOTP seed, ...) into its own outer map before calling
+`try_encode`. `vault-records`' own `encode_record`/`decode_record` wipe their
+*own* scaffolding (see that package's README), but that never covered what
+happens to the record bytes one layer up, here. Both now build into a local,
+call `try_encode` directly rather than the panicking `encode` wrapper, and wipe
+with this module's own `zeroize_cbor_secrets` before the local drops —
+regardless of whether the encode succeeded, since an oversized item hitting
+`try_encode`'s `BoundExceeded` is a routine, expected failure here (see the
+`BoundExceeded` discussion above), not a rare one. `LocalSecretV1::decode`
+takes its three seeds through `take_secret_fixed` rather than plain
+`take_fixed`, the same distinction `AttachmentManifestV1::decode` already
+draws between an object's secret fields and its public identifiers. See
+VLT-PM05 section 13.7.
+
 ## Attachments, and why they are chunked
 
 An attachment is the one thing a vault-pm item holds that cannot be a field.

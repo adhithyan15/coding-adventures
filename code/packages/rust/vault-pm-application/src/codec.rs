@@ -3,7 +3,7 @@ use crate::{
     MAX_ATTACHMENT_BYTES, MAX_ATTACHMENT_CHUNKS, MAX_ATTACHMENT_NAME_BYTES,
 };
 use coding_adventures_canonical_cbor::{
-    decode, encode, try_encode, CborError, CborValue, MAX_ENCODED_SIZE,
+    decode, try_encode, CborError, CborValue, MAX_ENCODED_SIZE,
 };
 use coding_adventures_vault_attachments::{BlobId, EncryptedChunk};
 use coding_adventures_vault_pm_audit::SignedAuditEventV1;
@@ -27,6 +27,13 @@ const LIVE_STATE: u64 = 1;
 const TOMBSTONE_STATE: u64 = 2;
 pub(crate) const MAX_PLAINTEXT_BYTES: usize = 16 * 1024 * 1024;
 pub(crate) const MAX_CANDIDATES_PER_ITEM: usize = 16;
+
+/// Test-only counter proving [`zeroize_cbor_secrets`] actually ran. See that
+/// function's use of it for why a shared, process-wide, "moved forward"
+/// counter is the right shape here rather than an exact count.
+#[cfg(test)]
+static ZEROIZE_CBOR_SECRETS_CALLS: core::sync::atomic::AtomicUsize =
+    core::sync::atomic::AtomicUsize::new(0);
 
 // ─────────────────────────────────────────────────────────────────────
 // Catalog entry bounds — derived from MAX_ENCODED_SIZE, not eyeballed
@@ -194,27 +201,86 @@ impl LocalSecretV1 {
     /// the same ~150 bytes on every call and cannot approach
     /// canonical-CBOR's 1 MiB ceiling or its depth cap. Nothing here is
     /// caller-sized, so there is no oversized input to report.
+    ///
+    /// # This wipes its own scaffolding
+    ///
+    /// The `CborValue::Map` built below is a fresh heap copy of the
+    /// vault's entire root key hierarchy -- the authority seed and both
+    /// device seeds -- via `bytes(&self.authority_seed)` and its
+    /// siblings, each of which allocates its own `Vec<u8>`. Ordinary
+    /// `Drop` on that map frees those three copies without wiping them,
+    /// which is exactly the gap VLT-PM05 §13.6 closed for the record-
+    /// envelope path in `vault-records` and left open here. The panicking
+    /// `encode` wrapper is deliberately not used: it would call
+    /// `try_encode(...).expect(...)` *around* the still-unwiped map, so a
+    /// hypothetical future encode failure would unwind straight through
+    /// this function with the seeds never wiped. Calling `try_encode`
+    /// directly keeps the map owned by a local this function controls, so
+    /// the wipe below runs before the map is dropped on every return —
+    /// see `AttachmentManifestV1::encode` above for the same shape
+    /// applied to a single, less catastrophic secret (one attachment's
+    /// key rather than the vault's whole root key material).
     pub fn encode(&self) -> Vec<u8> {
-        encode(&CborValue::Map(vec![
+        let mut value = CborValue::Map(vec![
             field(1, CborValue::Unsigned(VERSION)),
             field(2, bytes(self.vault_id.as_bytes())),
             field(3, bytes(self.device_id.as_bytes())),
             field(4, bytes(&self.authority_seed)),
             field(5, bytes(&self.device_signing_seed)),
             field(6, bytes(&self.device_x25519_secret)),
-        ]))
+        ]);
+        let encoded = try_encode(&value);
+        zeroize_cbor_secrets(&mut value);
+        drop(value);
+        encoded.expect("canonical-cbor: LocalSecretV1 encode is provably within bounds")
     }
 
     /// Strictly decode one exact closed canonical V1 record.
+    ///
+    /// # Every exit wipes the decoder's own copies of the seeds
+    ///
+    /// `closed_fields` already wipes everything on a structural decode
+    /// failure (see [`value_fields`]'s doc comment), so the gap this
+    /// closes is narrower and easy to miss: on the *success* path,
+    /// `take_fixed` used to convert each seed's decoded `Vec<u8>` into a
+    /// `[u8; 32]` and drop the vector, leaving that copy of the vault's
+    /// root key material in freed heap even though decoding succeeded.
+    /// `take_secret_fixed` -- already used below by
+    /// `AttachmentManifestV1::decode_fields` for the attachment DEK --
+    /// wipes that same decoder-owned vector unconditionally before
+    /// returning, so the copy never survives past this call regardless
+    /// of whether decoding as a whole goes on to succeed or fail.
+    /// `vault_id` and `device_id` are not secret -- they are the same
+    /// kind of public correlation identifier as `AttachmentManifestV1`'s
+    /// `attachment_id` -- so they stay on the ordinary `take_fixed` path.
     pub fn decode(encoded: &[u8]) -> Result<Self, ApplicationError> {
         let mut fields = closed_fields(encoded, &[1, 2, 3, 4, 5, 6])?;
         check_version(take_uint(&mut fields, 1)?)?;
+        let vault_id = VaultId::new(take_fixed(&mut fields, 2)?);
+        let device_id = DeviceId::new(take_fixed(&mut fields, 3)?);
+        // Each `take_secret_fixed` result stays wrapped in `Zeroizing` all the
+        // way to the final, infallible struct literal below -- not
+        // dereferenced into a plain `[u8; 32]` the moment it is bound. A
+        // plain array's `Drop` is a no-op, so if an *earlier* field here
+        // (say, `authority_seed`) had already been unwrapped into one and a
+        // *later* field then failed to decode, the `?` on that later call
+        // would return early with the earlier seed's copy sitting unwiped in
+        // this frame -- the exact partial-multi-field-decode residual this
+        // function exists to close, just one field later than the case
+        // `take_secret_fixed` itself already covers. Keeping every seed
+        // `Zeroizing`-wrapped until every `?` in this function has already
+        // succeeded means an early return here always still wipes each seed
+        // already taken, the same guarantee `encode` gives on its own exit
+        // paths above.
+        let authority_seed = take_secret_fixed::<32>(&mut fields, 4)?;
+        let device_signing_seed = take_secret_fixed::<32>(&mut fields, 5)?;
+        let device_x25519_secret = take_secret_fixed::<32>(&mut fields, 6)?;
         Ok(Self {
-            vault_id: VaultId::new(take_fixed(&mut fields, 2)?),
-            device_id: DeviceId::new(take_fixed(&mut fields, 3)?),
-            authority_seed: take_fixed(&mut fields, 4)?,
-            device_signing_seed: take_fixed(&mut fields, 5)?,
-            device_x25519_secret: take_fixed(&mut fields, 6)?,
+            vault_id,
+            device_id,
+            authority_seed: *authority_seed,
+            device_signing_seed: *device_signing_seed,
+            device_x25519_secret: *device_x25519_secret,
         })
     }
 }
@@ -491,6 +557,27 @@ impl Debug for CatalogV1 {
 /// The alternative was aborting the process on a record an untrusted
 /// peer is free to author, which would take every later command
 /// against the same vault down with it.
+///
+/// # This wipes its own scaffolding
+///
+/// For a live item, `state` is `encode_live`'s output: a `CborValue`
+/// tree whose eighth field is the item's own record bytes — a Login's
+/// password, a Card's PAN and CVV, a TotpSeed's secret, an ApiKey's
+/// value, a SecureNote's body — already-encoded plaintext that
+/// `encode_record` (in `vault-records`) produced and wiped its *own*
+/// scaffolding around, but which then sits unprotected in *this*
+/// function's outer map for as long as `try_encode` takes to read it.
+/// Every caller of this function already wraps the `Vec<u8>` it
+/// returns in `Zeroizing` (see `mutation.rs`, `restore.rs`,
+/// `export.rs`) — but that only ever protected the final bytes, never
+/// the intermediate tree those bytes were built from, which used to
+/// drop through ordinary `Drop` on every exit: the success path, and
+/// `try_encode`'s own `BoundExceeded` failure path documented above,
+/// which is a *routine*, expected failure for an oversized record, not
+/// a rare one. `try_encode` is called on a local this function keeps
+/// ownership of specifically so the wipe below always runs before that
+/// local is dropped, matching `LocalSecretV1::encode` and
+/// `AttachmentManifestV1::encode` above.
 pub fn encode_item_revision(
     causal_parents: &BTreeSet<RevisionId>,
     item_state: &ItemState,
@@ -506,7 +593,7 @@ pub fn encode_item_revision(
         ItemState::Live(_) => LIVE_STATE,
         ItemState::Tombstone(_) => TOMBSTONE_STATE,
     };
-    let encoded = try_encode(&CborValue::Map(vec![
+    let mut value = CborValue::Map(vec![
         field(1, CborValue::Unsigned(VERSION)),
         field(2, CborValue::Unsigned(ObjectKind::ItemRevision.code())),
         field(
@@ -520,8 +607,11 @@ pub fn encode_item_revision(
         ),
         field(4, CborValue::Unsigned(state_code)),
         field(5, state),
-    ]))
-    .map_err(map_encode_error)?;
+    ]);
+    let encoded = try_encode(&value).map_err(map_encode_error);
+    zeroize_cbor_secrets(&mut value);
+    drop(value);
+    let encoded = encoded?;
     check_plaintext_bound(&encoded)?;
     Ok(encoded)
 }
@@ -868,6 +958,16 @@ pub(crate) fn expected_chunk_count(length: u64) -> usize {
 /// because a function that had to be told *which* field to wipe would be a
 /// function somebody could forget to update when a field moved.
 fn zeroize_cbor_secrets(value: &mut CborValue) {
+    // Test-only, process-wide call counter. It exists so a test can prove a
+    // real production code path (`LocalSecretV1::encode`,
+    // `encode_item_revision`, ...) actually reached this function, the same
+    // way `vault-records`'s `SECRET_CBOR_VALUE_DROPS` proves `SecretCborValue`
+    // dropped: read it before and after the call under test and assert it
+    // moved forward, never an exact value, since every other test that
+    // exercises any secret-bearing encode or decode in this module
+    // increments the same counter concurrently.
+    #[cfg(test)]
+    ZEROIZE_CBOR_SECRETS_CALLS.fetch_add(1, core::sync::atomic::Ordering::Relaxed);
     match value {
         CborValue::Bytes(bytes) => bytes.zeroize(),
         // Text as well as bytes. A record's password arrives here as a UTF-8
@@ -1835,6 +1935,109 @@ mod tests {
         );
     }
 
+    /// `LocalSecretV1::encode` builds a `CborValue::Map` holding fresh heap
+    /// copies of the vault's entire root key hierarchy -- the authority seed
+    /// and both device seeds -- and is supposed to wipe that map before it
+    /// drops (see the doc comment above `encode`). A test cannot look at
+    /// freed heap, so — matching
+    /// `a_rejected_decode_wipes_the_key_material_it_had_already_taken`
+    /// below — this proves the real function actually reaches the wipe by
+    /// watching [`ZEROIZE_CBOR_SECRETS_CALLS`] move forward around a real
+    /// call, not just that the wipe function is correct in isolation.
+    #[test]
+    fn local_secret_encode_wipes_its_own_scaffolding() {
+        use core::sync::atomic::Ordering;
+
+        let secret = LocalSecretV1::new(
+            VaultId::new([1; 16]),
+            DeviceId::new([2; 16]),
+            [0xA1; 32],
+            [0xA2; 32],
+            [0xA3; 32],
+        );
+
+        let before = ZEROIZE_CBOR_SECRETS_CALLS.load(Ordering::Relaxed);
+        let encoded = secret.encode();
+        assert!(
+            ZEROIZE_CBOR_SECRETS_CALLS.load(Ordering::Relaxed) > before,
+            "LocalSecretV1::encode did not wipe its intermediate CborValue tree"
+        );
+        // The wipe ran on the encoder's *own* scaffolding, not on the
+        // output: the real seeds must still be exactly recoverable.
+        let decoded = LocalSecretV1::decode(&encoded).unwrap();
+        assert_eq!(decoded.authority_seed(), &[0xA1; 32]);
+        assert_eq!(decoded.device_signing_seed(), &[0xA2; 32]);
+        assert_eq!(decoded.device_x25519_secret(), &[0xA3; 32]);
+    }
+
+    /// The success path of `LocalSecretV1::decode` is the gap this item
+    /// fixes on the decode side: `closed_fields`/`value_fields` already
+    /// wipe on every *structural* decode failure (wrong map, wrong arity,
+    /// unknown or duplicate key -- see `value_fields`'s doc comment and
+    /// `a_rejected_decode_wipes_the_key_material_it_had_already_taken`
+    /// below), but a decode that succeeds used to convert each seed's
+    /// decoded `Vec<u8>` into a `[u8; 32]` via plain `take_fixed` and drop
+    /// the vector unwiped. `take_secret_fixed` closes that by wiping its own
+    /// copy through the same counted [`zeroize_cbor_secrets`] regardless of
+    /// outcome.
+    #[test]
+    fn local_secret_decode_wipes_its_own_scaffolding_on_success() {
+        use core::sync::atomic::Ordering;
+
+        let secret = LocalSecretV1::new(
+            VaultId::new([1; 16]),
+            DeviceId::new([2; 16]),
+            [0xB1; 32],
+            [0xB2; 32],
+            [0xB3; 32],
+        );
+        let encoded = secret.encode();
+
+        let before = ZEROIZE_CBOR_SECRETS_CALLS.load(Ordering::Relaxed);
+        let decoded = LocalSecretV1::decode(&encoded).unwrap();
+        assert!(
+            ZEROIZE_CBOR_SECRETS_CALLS.load(Ordering::Relaxed) > before,
+            "LocalSecretV1::decode did not wipe its decoder-owned copies of the seeds \
+             on the success path"
+        );
+        assert_eq!(decoded.authority_seed(), &[0xB1; 32]);
+    }
+
+    /// A round-1 security review of this fix flagged the exact scenario
+    /// this pins: `decode_fields` takes its three seeds one `?` at a time,
+    /// so an earlier seed can already have been successfully taken and
+    /// unwrapped by the time a *later* field fails to decode and the `?`
+    /// returns early. Field 4 (`authority_seed`) here is well-formed; field
+    /// 5 (`device_signing_seed`) is one byte short, so `take_secret_fixed`
+    /// fails on it only after `authority_seed` has already succeeded. Every
+    /// `take_secret_fixed` result stays `Zeroizing`-wrapped until the final
+    /// struct literal (see the comment in `decode` above) specifically so
+    /// this early return still wipes `authority_seed`'s already-taken copy,
+    /// not just the field that actually failed.
+    #[test]
+    fn local_secret_decode_wipes_an_earlier_seed_when_a_later_field_fails() {
+        use core::sync::atomic::Ordering;
+
+        let malformed = encode(&CborValue::Map(vec![
+            field(1, CborValue::Unsigned(VERSION)),
+            field(2, bytes(&[1; 16])),
+            field(3, bytes(&[2; 16])),
+            field(4, bytes(&[3; 32])),
+            field(5, bytes(&[4; 31])),
+            field(6, bytes(&[5; 32])),
+        ]));
+
+        let before = ZEROIZE_CBOR_SECRETS_CALLS.load(Ordering::Relaxed);
+        assert_eq!(
+            LocalSecretV1::decode(&malformed),
+            Err(ApplicationError::IntegrityFailure)
+        );
+        assert!(
+            ZEROIZE_CBOR_SECRETS_CALLS.load(Ordering::Relaxed) > before,
+            "an already-taken seed was not wiped when a later field failed to decode"
+        );
+    }
+
     /// Inside this crate's own 16 MiB plaintext gate, outside
     /// canonical-CBOR's 1 MiB encoded ceiling. The shape a record
     /// authored by a peer with a larger framing budget takes.
@@ -2241,6 +2444,65 @@ mod tests {
         assert_eq!(
             encode_item_revision(over.causal_parents(), over.state()),
             Err(ApplicationError::BoundExceeded)
+        );
+    }
+
+    /// `encode_item_revision` folds `encode_live`'s output -- a `CborValue`
+    /// tree whose eighth field is the item's own still-plaintext record
+    /// bytes, a Login's password among them -- into its own outer map, and
+    /// is supposed to wipe that whole tree before it drops, on the success
+    /// path exercised here. This proves the real function reaches the wipe,
+    /// the same way `local_secret_encode_wipes_its_own_scaffolding` above
+    /// does for `LocalSecretV1::encode`: watch [`ZEROIZE_CBOR_SECRETS_CALLS`]
+    /// move forward around one real call, rather than only exercising
+    /// `zeroize_cbor_secrets` in isolation.
+    #[test]
+    fn encode_item_revision_wipes_the_records_plaintext_on_success() {
+        use core::sync::atomic::Ordering;
+
+        let live = live_candidate();
+        let before = ZEROIZE_CBOR_SECRETS_CALLS.load(Ordering::Relaxed);
+        let encoded =
+            encode_item_revision(live.causal_parents(), live.state()).expect("well within size");
+        assert!(
+            ZEROIZE_CBOR_SECRETS_CALLS.load(Ordering::Relaxed) > before,
+            "encode_item_revision did not wipe its intermediate CborValue tree on success"
+        );
+        // The wipe ran on the encoder's own scaffolding, not on the output:
+        // the record's real plaintext must still round-trip exactly.
+        let decoded = decode_item_revision(live.revision_id(), &encoded).unwrap();
+        assert_eq!(decoded, live);
+    }
+
+    /// The companion to the success-path test above: `try_encode`'s
+    /// `BoundExceeded` failure is a *routine*, expected outcome for an
+    /// oversized record (see `encode_item_revision_pins_the_exact_encoded_
+    /// size_boundary` just above, which exercises this exact failure), not
+    /// a rare edge case -- so it is exactly the exit this item's fix has to
+    /// cover, not an afterthought. Before this fix, that failure dropped the
+    /// whole map -- record plaintext included -- through ordinary,
+    /// non-wiping `Drop`.
+    #[test]
+    fn encode_item_revision_wipes_the_records_plaintext_on_bound_exceeded() {
+        use coding_adventures_canonical_cbor::MAX_ENCODED_SIZE;
+        use core::sync::atomic::Ordering;
+
+        let probe = candidate_with_password_len(65_536);
+        let probe_len = encode_item_revision(probe.causal_parents(), probe.state())
+            .expect("the probe is far below the ceiling")
+            .len();
+        let overhead = probe_len - 65_536;
+        let over = candidate_with_password_len(MAX_ENCODED_SIZE - overhead + 1);
+
+        let before = ZEROIZE_CBOR_SECRETS_CALLS.load(Ordering::Relaxed);
+        assert_eq!(
+            encode_item_revision(over.causal_parents(), over.state()),
+            Err(ApplicationError::BoundExceeded)
+        );
+        assert!(
+            ZEROIZE_CBOR_SECRETS_CALLS.load(Ordering::Relaxed) > before,
+            "encode_item_revision did not wipe its intermediate CborValue tree when \
+             try_encode refused an oversized record"
         );
     }
 

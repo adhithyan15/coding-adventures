@@ -2,6 +2,82 @@
 
 All notable changes to this package are documented here.
 
+## [0.68.0] - 2026-08-24
+
+### Fixed
+
+- **`LocalSecretV1::encode`/`decode` and `encode_item_revision` now wipe
+  their own intermediate `CborValue` trees** (VLT-PM05 §13.7), closing a
+  HIGH pre-existing gap in this crate's own codec — the same root pattern
+  §13.6 fixed in `vault-records`, but explicitly left un-swept in this
+  crate by that earlier PR.
+
+  - `LocalSecretV1::encode` built `CborValue::Map(vec![... bytes(&self.
+    authority_seed) ...])` — fresh heap copies of the vault's entire local
+    root key hierarchy, the Ed25519 authority seed and both device seeds —
+    and handed it to the *panicking* `encode` wrapper. The map dropped,
+    unwiped, on every return. `decode` used plain `take_fixed` for the
+    three seed fields, which converts the decoded `Vec<u8>` into a
+    `[u8; 32]` and drops the vector; `value_fields`'s existing wipe-on-
+    structural-failure gate never covered this, because decoding
+    succeeded.
+
+  - `encode_item_revision` folds `encode_live`'s output — a `CborValue`
+    tree whose eighth field is the item's own record bytes (a `Login`'s
+    password, a `Card`'s PAN and CVV, a `TotpSeed`'s secret, ...) — into
+    its own outer map and calls `try_encode` directly. That call's
+    `BoundExceeded` failure for an oversized record is a routine, expected
+    outcome here, not a rare edge case, so the failure path this left open
+    is one real vaults reach in ordinary use, not only a theoretical one.
+    Every caller already wraps the returned `Vec<u8>` in `Zeroizing`, but
+    that only ever protected the final bytes, never the intermediate tree
+    they were built from.
+
+  - Both instances were found by sweeping every `CborValue::Map(vec![...])`
+    construction in this crate for the same pattern. `state.rs`,
+    `export.rs`, and `vault-pm-format` were checked and confirmed clear —
+    each only ever handles already-sealed ciphertext, public identifiers,
+    or KDF/AEAD parameters, never plaintext secret material.
+    `decode_live`/`decode_item_revision` (this gap's decode side) were
+    already correctly hardened and needed no change.
+
+  - Fixed by reusing machinery this module already had for the identical
+    `AttachmentManifestV1` case (`zeroize_cbor_secrets`, `take_secret_fixed`)
+    rather than introducing a new type or reaching into `vault-records`'s
+    `SecretCborValue` — which is `struct`-private to that crate's own
+    module and was never part of its public surface. Both encoders now
+    build into a local, call `try_encode` (never the panicking `encode`),
+    and wipe with `zeroize_cbor_secrets` regardless of outcome before the
+    local drops. `LocalSecretV1::decode` now takes its three seeds through
+    `take_secret_fixed` instead of `take_fixed`; `vault_id`/`device_id`
+    stay on plain `take_fixed`, matching `AttachmentManifestV1`'s existing
+    secret/identifier distinction.
+
+  - **Round-1 security review finding, fixed before push:** the first draft
+    of `decode_fields` dereferenced each `take_secret_fixed` result into a
+    plain `[u8; 32]` local immediately on the line that took it. A plain
+    array's `Drop` is a no-op, so if an earlier seed (say, `authority_seed`)
+    had already been taken and dereferenced by the time a *later* field (5
+    or 6) failed to decode, that early `?` return left the earlier seed's
+    already-extracted copy sitting unwiped — one field later than
+    `take_secret_fixed`'s own per-call guarantee reaches. Fixed by keeping
+    every seed `Zeroizing`-wrapped until the function's one, final,
+    infallible `Ok(Self { ... })` literal, so an early return anywhere
+    before that point still wipes every seed already taken via its own
+    still-live wrapper.
+
+  - New tests: `local_secret_encode_wipes_its_own_scaffolding`,
+    `local_secret_decode_wipes_its_own_scaffolding_on_success`,
+    `local_secret_decode_wipes_an_earlier_seed_when_a_later_field_fails`
+    (pins the round-1 finding above),
+    `encode_item_revision_wipes_the_records_plaintext_on_success`, and
+    `encode_item_revision_wipes_the_records_plaintext_on_bound_exceeded`,
+    each watching a new `#[cfg(test)]` process-wide call counter on
+    `zeroize_cbor_secrets` move forward around a real production call —
+    the same shape as `vault-records`'s `SECRET_CBOR_VALUE_DROPS` — so the
+    tests prove the real code path reached the wipe, not just that the
+    wipe function is correct in isolation.
+
 ## [0.67.0] - 2026-08-19
 
 ### Fixed
