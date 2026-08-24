@@ -1,0 +1,132 @@
+{
+  "schema_version": 1,
+  "id": "validation/tracked-artifacts-unicode-boundaries",
+  "domain": "validation",
+  "summary": "Unicode scalar length, path ordering, and full-uppercase reserved-name boundaries are runtime-neutral.",
+  "platforms": [
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "validation"
+  ],
+  "workspace": {
+    "files": []
+  },
+  "input": {
+    "operation": "validation",
+    "options": {
+      "platform": "linux",
+      "checks": [
+        "tracked_artifact_absence"
+      ],
+      "packages": [],
+      "dependency_edges": [],
+      "tracked_artifact_snapshot": {
+        "entries": [
+          {
+            "ordinal": 1,
+            "path": "",
+            "entry_kind": "regular"
+          },
+          {
+            "ordinal": 2,
+            "path": "😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀",
+            "entry_kind": "regular"
+          },
+          {
+            "ordinal": 3,
+            "path": "😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀",
+            "entry_kind": "regular"
+          },
+          {
+            "ordinal": 4,
+            "path": "𐀀/node_modules/a",
+            "entry_kind": "symlink"
+          },
+          {
+            "ordinal": 5,
+            "path": "/node_modules/b",
+            "entry_kind": "symlink"
+          },
+          {
+            "ordinal": 6,
+            "path": "code/conın$.txt/file.cs",
+            "entry_kind": "reparse"
+          }
+        ]
+      }
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "validation/tracked-artifacts-unicode-boundaries",
+    "domain": "validation",
+    "outcome": "error",
+    "result": {
+      "valid": false,
+      "diagnostic_codes": [
+        "TRACKED_ARTIFACT_FORBIDDEN",
+        "TRACKED_ARTIFACT_PATH_INVALID"
+      ]
+    },
+    "diagnostics": [
+      {
+        "code": "TRACKED_ARTIFACT_FORBIDDEN",
+        "severity": "error",
+        "path": "/node_modules/b",
+        "details": {
+          "ordinal": 5,
+          "entry_kind": "symlink"
+        }
+      },
+      {
+        "code": "TRACKED_ARTIFACT_FORBIDDEN",
+        "severity": "error",
+        "path": "𐀀/node_modules/a",
+        "details": {
+          "ordinal": 4,
+          "entry_kind": "symlink"
+        }
+      },
+      {
+        "code": "TRACKED_ARTIFACT_PATH_INVALID",
+        "severity": "error",
+        "path": "repository",
+        "details": {
+          "ordinal": 1,
+          "entry_kind": "regular",
+          "problem": "EMPTY"
+        }
+      },
+      {
+        "code": "TRACKED_ARTIFACT_PATH_INVALID",
+        "severity": "error",
+        "path": "repository",
+        "details": {
+          "ordinal": 3,
+          "entry_kind": "regular",
+          "problem": "TOO_LONG"
+        }
+      },
+      {
+        "code": "TRACKED_ARTIFACT_PATH_INVALID",
+        "severity": "error",
+        "path": "repository",
+        "details": {
+          "ordinal": 6,
+          "entry_kind": "reparse",
+          "problem": "RESERVED_BASENAME"
+        }
+      }
+    ]
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}

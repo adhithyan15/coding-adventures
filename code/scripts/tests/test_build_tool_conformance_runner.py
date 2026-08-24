@@ -131,7 +131,7 @@ class CorpusTests(unittest.TestCase):
         summary = runner.validate_corpus(FIXTURE_ROOT)
 
         self.assertEqual(summary["schema_version"], 1)
-        self.assertEqual(summary["case_count"], 110)
+        self.assertEqual(summary["case_count"], 111)
         self.assertEqual(summary["implementation_count"], 16)
         self.assertEqual(summary["established_languages"], 15)
         self.assertEqual(summary["execution_case_count"], 0)
@@ -855,6 +855,7 @@ class PureDomainValidationTests(unittest.TestCase):
             "validation-tracked-artifacts-forbidden.json",
             "validation-tracked-artifacts-aliases.json",
             "validation-tracked-artifacts-invalid.json",
+            "validation-tracked-artifacts-unicode-boundaries.json",
         ):
             with self.subTest(filename=filename):
                 case = load_case(filename)
@@ -891,6 +892,23 @@ class PureDomainValidationTests(unittest.TestCase):
             "entries"
         ]:
             self.assertNotIn(entry["path"], serialized)
+
+        boundaries = load_case(
+            "validation-tracked-artifacts-unicode-boundaries.json"
+        )
+        diagnostics = runner._expected_tracked_artifact_validation(
+            boundaries["input"]["options"]
+        )
+        self.assertEqual(diagnostics, boundaries["expected"]["diagnostics"])
+        forbidden = [
+            item["path"]
+            for item in diagnostics
+            if item["code"] == "TRACKED_ARTIFACT_FORBIDDEN"
+        ]
+        self.assertEqual(
+            forbidden,
+            ["\ue000/node_modules/b", "\U00010000/node_modules/a"],
+        )
 
     def test_tracked_artifact_snapshot_requires_increasing_ordinals(self) -> None:
         schema_args = self._schema_args()
@@ -1328,7 +1346,7 @@ class CommandLineTests(unittest.TestCase):
 
         self.assertEqual(exit_code, 0)
         summary = json.loads(stdout.getvalue())
-        self.assertEqual(summary["case_count"], 110)
+        self.assertEqual(summary["case_count"], 111)
 
     def test_validate_result_reports_match_and_rejects_execution_override(self) -> None:
         case_path = CASES_ROOT / "graph-diamond.json"

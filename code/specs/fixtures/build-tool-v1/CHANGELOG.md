@@ -2,6 +2,11 @@
 
 ## 2026-08-24
 
+- Added one process-free tracked-artifact Unicode boundary case. It makes empty
+  and 513-scalar invalid paths schema-reachable, proves the 512-scalar valid
+  boundary with astral input, pins diagnostic path ordering to Unicode scalar
+  values, and exercises full-uppercase Windows reserved-basename matching with
+  U+0131 DOTLESS I.
 - Added four process-free tracked-artifact validation cases for clean source
   paths, exact and nested `node_modules`, separator normalization, case and
   Unicode compatibility aliases, inert symlink/reparse metadata, sorted
