@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Added — source-verified Devanagari ja (HL-C09HV)
+
+- Add the three-run **ज** learner path: joined open hook, lower bowl, and
+  middle bar; descending right stem; and left-to-right headline.
+- Pin its two lifts, frame-by-frame source provenance, and Noto outline fit.
+
 ### Added — source-verified Devanagari kha (HL-C09HU)
 
 - Add the four-run **ख** learner path: joined left body and lower bowl,
