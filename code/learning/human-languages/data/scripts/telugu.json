@@ -5566,6 +5566,28 @@
       "strokeOrderNote": ""
     }
   ],
+  "marks": [
+    {
+      "mark": "్",
+      "sound": "(suppresses the inherent vowel)",
+      "role": "virama",
+      "attachesAs": "the Telugu virama applied after a consonant carrier; it suppresses the inherent vowel and may introduce the subscripted consonant of a following cluster",
+      "example": {
+        "base": "క",
+        "combined": "క్",
+        "sound": "k"
+      },
+      "compositionOrder": [
+        "write the Telugu consonant carrier first",
+        "add the virama to suppress its inherent vowel or prepare the following consonant cluster"
+      ],
+      "compositionSource": {
+        "citation": "The Unicode Consortium, The Unicode Standard, Version 17.0, Core Specification, §12.7.1 ‘Telugu: U+0C00–U+0C7F’, ‘Rendering Behavior’, U+0C4D TELUGU SIGN VIRAMA (2025)",
+        "url": "https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-12/",
+        "variation": "The standard shows U+0C15 KA plus U+0C4D virama producing vowelless క్ and shows consonant-plus-virama-plus-consonant sequences producing Telugu clusters with a commonly subscripted second consonant. It also notes that adding virama replaces the carrier's v-shaped headstroke. Unicode specifies encoded composition and rendering behavior, not a universal handwriting direction or pen-lift count; the carrier-first instruction is therefore a transparent learner composition convention, and this entry deliberately makes no standalone ductus claim."
+      }
+    }
+  ],
   "digits": [
     {
       "glyph": "౦",
