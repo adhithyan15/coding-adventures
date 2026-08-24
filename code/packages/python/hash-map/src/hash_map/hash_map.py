@@ -28,7 +28,7 @@ Layer position (from spec DT18):
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Any, Generic, Iterator, TypeVar
+from typing import Any, Generic, Iterator, TypeVar, cast
 
 from hash_functions import djb2, fnv1a_32, murmur3_32
 
@@ -460,7 +460,7 @@ class _OpenAddressingStrategy(_HashMapStrategy[K, V]):
             if slot is _EMPTY:
                 return None
             if slot is not _TOMBSTONE and slot[0] == key:
-                return slot[1]
+                return cast(tuple[K, V], slot)[1]
         return None
 
     def delete(self, key: K) -> bool:

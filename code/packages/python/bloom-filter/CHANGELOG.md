@@ -15,6 +15,8 @@ Versioning: [Semantic Versioning](https://semver.org/).
   package-local virtual environment, installing the local hash-functions
   dependency before this package, and running every tool through that exact
   interpreter.
+- Tightened element type annotations from `Any` to `object` while preserving
+  the filter's runtime acceptance behavior.
 
 ## [0.1.0] — 2026-04-08
 
