@@ -191,6 +191,7 @@ const ARABIC_SHIIN = DUCTUS[ductusKey("arabic", "ش")];
 const ARABIC_SAAD = DUCTUS[ductusKey("arabic", "ص")];
 const ARABIC_DAAD = DUCTUS[ductusKey("arabic", "ض")];
 const ARABIC_TAH = DUCTUS[ductusKey("arabic", "ط")];
+const ARABIC_ZAH = DUCTUS[ductusKey("arabic", "ظ")];
 const ARABIC_AYN = DUCTUS[ductusKey("arabic", "ع")];
 const ARABIC_KAF = DUCTUS[ductusKey("arabic", "ك")];
 const ARABIC_LAM = DUCTUS[ductusKey("arabic", "ل")];
@@ -350,17 +351,16 @@ describe("handwriting ductus", () => {
     expect(gujarati.letters.every((letter) => letter.strokeOrderSource !== undefined)).toBe(true);
   });
 
-  it("keeps all 25 unique Arabic rows sourced without overstating completion", () => {
+  it("keeps all 26 unique Arabic rows sourced without overstating completion", () => {
     const arabic = SCRIPTS.find((script) => script.script === "arabic")!;
     expect(arabic.complete).toBe(false);
-    expect(arabic.letters).toHaveLength(25);
+    expect(arabic.letters).toHaveLength(26);
     expect(arabic.letters.every((letter) => letter.strokeOrderSource !== undefined)).toBe(true);
   });
 
   for (const letter of letters) {
     describe(`${letter.glyph}`, () => {
       const glyph = () => fontForDuctus(letter).glyphFor(letter.glyph)!;
-
       it("every stroke's pen path lies on the real letter", () => {
         const inInk = makeInInk(glyph().contours);
         for (let s = 0; s < letter.strokes.length; s++) {
@@ -3073,6 +3073,20 @@ describe("handwriting ductus", () => {
     expect(upright[0].y).toBeGreaterThan(upright.at(-1)!.y);
   });
 
+  it("Arabic independent ظ repeats ط, placing its dot before the upright", () => {
+    expect(ARABIC_ZAH.script).toBe("arabic");
+    expect(penLifts(ARABIC_ZAH)).toBe(2);
+    expect(ARABIC_ZAH.strokes).toHaveLength(3);
+    expect(ARABIC_ZAH.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1, 1]);
+    expect(ARABIC_ZAH.strokes[0]).toEqual(ARABIC_TAH.strokes[0]);
+    expect(ARABIC_ZAH.strokes[2].segments[0].path).toEqual(
+      ARABIC_TAH.strokes[1].segments[0].path,
+    );
+    const dot = ARABIC_ZAH.strokes[1].segments[0].path;
+    expect(dot[0]).toEqual(dot.at(-1));
+    expect(Math.min(...dot.map((point) => point.y))).toBeGreaterThan(ARABIC_ZAH.strokes[0].segments[0].path[0].y);
+  });
+
   it("Arabic independent ع joins its open head directly to the lower bowl", () => {
     expect(ARABIC_AYN.script).toBe("arabic");
     expect(penLifts(ARABIC_AYN)).toBe(0);
@@ -3586,6 +3600,9 @@ describe("handwriting ductus", () => {
       "_fonts/NotoNaskhArabic-Static.ttf",
     );
     expect(verifiedLetterFont("ط", ARABIC_TAH.source.url)).toBe(
+      "_fonts/NotoNaskhArabic-Static.ttf",
+    );
+    expect(verifiedLetterFont("ظ", ARABIC_ZAH.source.url)).toBe(
       "_fonts/NotoNaskhArabic-Static.ttf",
     );
     expect(verifiedLetterFont("و", "https://example.invalid/wrong-source")).toBeUndefined();
@@ -5553,6 +5570,19 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /directly linked taaemphatic\.mov.*embedded Panopto mirror.*two pen-down runs.*00:01.2–00:03.0.*upper-right edge.*counterclockwise.*closed body.*leftward.*baseline.*one lift.*upright's top.*descends.*right junction.*two-way connector.*emphatic t sound.*T transliteration.*contextual shapes.*two-stroke.*one-lift.*Noto Naskh.*retraces.*upper-left arc.*without crossing the counter.*directions stay unchanged.*independent form.*connected examples/i,
+    );
+  });
+
+  it("Arabic independent ظ traces its body-dot-upright order to the Oregon lesson", () => {
+    const src = ARABIC_ZAH.source;
+    expect(src.url).toBe(
+      "https://opentext.uoregon.edu/introarabic/chapter/alphabet-%D8%B7-%D8%B8/",
+    );
+    expect(src.citation).toMatch(
+      /Introduction to Arabic.*Alphabet ط ظ.*emphatic DHaa.*00:01.3–00:02.8.*Oregon.*2023.*2026-08-23/i,
+    );
+    expect(src.variation).toMatch(
+      /directly linked zaa-emphatic\.mov.*embedded Panopto mirror.*three pen-down runs.*00:01.3–00:02.8.*00:01.3–00:02.1.*upper-right edge.*counterclockwise.*ط-shaped body.*leftward.*baseline.*one lift.*upper dot.*00:02.4–00:02.5.*second lift.*00:02.6–00:02.8.*upright's top.*descends.*right junction.*two-way connector.*emphatic dh sound.*DH or Z transliteration.*three-stroke.*two-lift.*Noto Naskh.*body median.*independently evidenced ط body.*dot-before-upright.*separately sourced/i,
     );
   });
 
