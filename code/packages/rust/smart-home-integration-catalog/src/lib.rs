@@ -49574,8 +49574,8 @@ fn upnp_ssdp_entry() -> IntegrationCatalogEntry {
 fn ipp_printer_entry() -> IntegrationCatalogEntry {
     let mut entry = base_entry(
         "ipp_printer",
-        "IPP Printer Discovery",
-        "Bounded local DNS-SD discovery for IPP and IPP Everywhere printers.",
+        "IPP Printer",
+        "Bounded local discovery and read-only status for IPP and IPP Everywhere printers.",
         IntegrationCategory::ProtocolStandard,
         ConnectivityClass::LocalPolling,
         ImplementationStatus::FirstPartyRuntime,
@@ -49584,17 +49584,20 @@ fn ipp_printer_entry() -> IntegrationCatalogEntry {
     )
     .with_protocols(vec![ProtocolFamily::Vendor("ipp_everywhere".to_string())])
     .with_capabilities(&["smart_home.read"])
-    .with_entities(&[EntityKind::Unknown])
+    .with_entities(&[EntityKind::NetworkDiagnostic])
     .with_discovery(&[DiscoveryMechanism::Mdns])
     .with_auth(&[AuthMode::None])
     .with_notes(&[
         "The first-party runtime performs one authorized bounded _ipp._tcp.local scan and validates standard IPP Everywhere identity, access, and capability TXT keys.",
-        "IPP requests, status reads, credential input, print jobs, queue mutation, public endpoints, and long-lived browse sockets remain out of scope.",
+        "One explicitly configured credential-free local-IP endpoint can perform a fixed Get-Printer-Attributes read for identity, state, reasons, job acceptance, queue count, and uptime.",
+        "Print submission, job queries, arbitrary attributes, credentials, IPPS trust exceptions, queue mutation, public endpoints, and long-lived connections remain out of scope.",
     ]);
     entry.required_primitives = vec![
         PrimitiveFamily::DiscoveryIndex,
         PrimitiveFamily::Mdns,
         PrimitiveFamily::Udp,
+        PrimitiveFamily::Tcp,
+        PrimitiveFamily::LocalHttp,
         PrimitiveFamily::NormalizedModel,
         PrimitiveFamily::CapabilityPolicy,
         PrimitiveFamily::Supervision,
@@ -49614,6 +49617,11 @@ fn ipp_printer_entry() -> IntegrationCatalogEntry {
         label: "IETF Internet Printing Protocol".to_string(),
         url: "https://www.rfc-editor.org/rfc/rfc8011.html".to_string(),
         external_id: Some("RFC 8011".to_string()),
+    });
+    entry.source_refs.push(SourceReference {
+        label: "IETF Internet Printing Protocol encoding and transport".to_string(),
+        url: "https://www.rfc-editor.org/rfc/rfc8010.html".to_string(),
+        external_id: Some("RFC 8010".to_string()),
     });
     entry
 }
@@ -82745,7 +82753,7 @@ mod tests {
     }
 
     #[test]
-    fn ipp_printer_entry_exposes_bounded_discovery_only_runtime() {
+    fn ipp_printer_entry_exposes_bounded_discovery_and_status_runtime() {
         let catalog = first_party_catalog();
         let ipp = find_entry(&catalog, &IntegrationId::trusted("ipp_printer")).unwrap();
         assert_eq!(
@@ -82762,11 +82770,13 @@ mod tests {
             ipp.required_capabilities,
             vec![CapabilityId::trusted("smart_home.read")]
         );
-        assert_eq!(ipp.target_entity_kinds, vec![EntityKind::Unknown]);
+        assert_eq!(ipp.target_entity_kinds, vec![EntityKind::NetworkDiagnostic]);
         for primitive in [
             PrimitiveFamily::DiscoveryIndex,
             PrimitiveFamily::Mdns,
             PrimitiveFamily::Udp,
+            PrimitiveFamily::Tcp,
+            PrimitiveFamily::LocalHttp,
             PrimitiveFamily::NormalizedModel,
             PrimitiveFamily::CapabilityPolicy,
             PrimitiveFamily::Supervision,
@@ -82774,12 +82784,7 @@ mod tests {
         ] {
             assert!(ipp.required_primitives.contains(&primitive));
         }
-        for primitive in [
-            PrimitiveFamily::Tcp,
-            PrimitiveFamily::LocalHttp,
-            PrimitiveFamily::CommandMapping,
-            PrimitiveFamily::VaultLease,
-        ] {
+        for primitive in [PrimitiveFamily::CommandMapping, PrimitiveFamily::VaultLease] {
             assert!(!ipp.required_primitives.contains(&primitive));
         }
     }

@@ -2,10 +2,13 @@
 name = "smart-home-ipp-printer-discovery-integration"
 version = "0.1.0"
 edition = "2021"
-description = "Authorized bounded IPP Everywhere mDNS discovery for Smart Home"
+description = "Authorized bounded IPP Everywhere discovery and printer status for Smart Home"
 license = "MIT"
 
 [dependencies]
+http-core = { path = "../http-core" }
+http1 = { path = "../http1" }
+ipp-protocol = { path = "../ipp-protocol" }
 serde_json = "1"
 smart-home-core = { path = "../smart-home-core" }
 smart-home-discovery = { path = "../smart-home-discovery" }

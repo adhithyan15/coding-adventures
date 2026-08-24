@@ -1,5 +1,9 @@
 # Changelog
 
+- Promote IPP printers from discovery-only coverage to bounded credential-free
+  local status inspection while keeping print, job, queue, arbitrary attribute,
+  credential, and IPPS trust surfaces out of scope.
+
 - Register Kodi JSON-RPC as a first-party bounded local media telemetry and
   low-risk play, pause, stop, volume, and mute runtime while keeping
   authentication, subscriptions, browsing, arbitrary RPC, and power actions

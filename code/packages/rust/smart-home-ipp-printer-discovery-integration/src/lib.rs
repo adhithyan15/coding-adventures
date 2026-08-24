@@ -2,7 +2,18 @@
 
 #![forbid(unsafe_code)]
 
-use smart_home_core::{AgentId, BridgeTransport, IntegrationId, ProtocolFamily, SmartHomeTool};
+use http1::{parse_response_head, Http1ParseError};
+use http_core::BodyKind;
+use ipp_protocol::{
+    decode_get_printer_attributes_response, encode_get_printer_attributes, IppProtocolError,
+    PrinterAttributes, PrinterState, MAX_MESSAGE_BYTES,
+};
+use smart_home_core::{
+    AgentId, Bridge, BridgeId, BridgeTransport, Capability, CapabilityId, CapabilityMode, Device,
+    DeviceId, Entity, EntityId, EntityKind, Health, IntegrationId, Metadata, ProtocolFamily,
+    ProtocolIdentifier, SmartHomeTool, StateConfidence, StateSnapshot, StateSource, Value,
+    ValueKind,
+};
 use smart_home_discovery::{
     run_mdns_ipv4_scan, DiscoveryConfidence, DiscoveryError, DiscoveryRecord, DiscoverySource,
     DiscoveryUpsert, MdnsAdvertisement, MdnsScanOptions, MdnsScanResult, PairingRequirement,
@@ -10,6 +21,8 @@ use smart_home_discovery::{
 use smart_home_runtime::{RuntimeError, SmartHomeRuntime};
 use std::collections::{BTreeMap, BTreeSet};
 use std::fmt;
+use std::io::{Read, Write};
+use std::net::{Ipv4Addr, SocketAddrV4, TcpStream};
 use std::time::Duration;
 
 pub const VERSION: &str = "0.1.0";
@@ -18,6 +31,8 @@ pub const PROTOCOL_ID: &str = "ipp_everywhere";
 pub const MDNS_SERVICE_TYPE: &str = "_ipp._tcp.local";
 pub const MAX_RESPONSES: usize = 64;
 const MAX_TXT_VALUE_BYTES: usize = 255;
+pub const DEFAULT_MAX_STATUS_RESPONSE_BYTES: usize = MAX_MESSAGE_BYTES + 16 * 1024;
+pub const MAX_STATUS_TIMEOUT: Duration = Duration::from_secs(5);
 
 #[derive(Debug)]
 pub enum IppPrinterDiscoveryError {
@@ -600,14 +615,541 @@ fn normalized_service_type(value: &str) -> &str {
     value.trim_end_matches('.')
 }
 
+#[derive(Debug)]
+pub enum IppPrinterStatusError {
+    Validation(String),
+    Io(String),
+    Http(String),
+    HttpStatus(u16),
+    AuthenticationRequired,
+    ResponseTooLarge { limit: usize },
+    TruncatedBody { expected: usize, actual: usize },
+    Protocol(IppProtocolError),
+    Runtime(RuntimeError),
+}
+
+impl fmt::Display for IppPrinterStatusError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Validation(message) => {
+                write!(formatter, "invalid IPP printer status input: {message}")
+            }
+            Self::Io(message) => write!(formatter, "IPP printer I/O failed: {message}"),
+            Self::Http(message) => write!(formatter, "invalid IPP HTTP response: {message}"),
+            Self::HttpStatus(status) => write!(formatter, "IPP endpoint returned HTTP {status}"),
+            Self::AuthenticationRequired => {
+                formatter.write_str("IPP endpoint requires unsupported authentication")
+            }
+            Self::ResponseTooLarge { limit } => {
+                write!(formatter, "IPP response exceeds {limit} bytes")
+            }
+            Self::TruncatedBody { expected, actual } => write!(
+                formatter,
+                "IPP response body is truncated: expected {expected} bytes, got {actual}"
+            ),
+            Self::Protocol(error) => error.fmt(formatter),
+            Self::Runtime(error) => error.fmt(formatter),
+        }
+    }
+}
+
+impl std::error::Error for IppPrinterStatusError {}
+
+impl From<IppProtocolError> for IppPrinterStatusError {
+    fn from(error: IppProtocolError) -> Self {
+        Self::Protocol(error)
+    }
+}
+
+impl From<RuntimeError> for IppPrinterStatusError {
+    fn from(error: RuntimeError) -> Self {
+        Self::Runtime(error)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IppPrinterStatusConfig {
+    pub bridge_id: BridgeId,
+    pub endpoint: SocketAddrV4,
+    pub resource_path: String,
+    pub timeout: Duration,
+    pub maximum_response_bytes: usize,
+}
+
+impl IppPrinterStatusConfig {
+    pub fn new(
+        bridge_id: BridgeId,
+        endpoint: SocketAddrV4,
+        resource_path: impl Into<String>,
+    ) -> Result<Self, IppPrinterStatusError> {
+        let config = Self {
+            bridge_id,
+            endpoint,
+            resource_path: resource_path.into(),
+            timeout: Duration::from_secs(5),
+            maximum_response_bytes: DEFAULT_MAX_STATUS_RESPONSE_BYTES,
+        };
+        config.validate()?;
+        Ok(config)
+    }
+
+    pub fn validate(&self) -> Result<(), IppPrinterStatusError> {
+        let bridge_id = self.bridge_id.as_str();
+        let Some(native_id) = bridge_id.strip_prefix("ipp_printer.bridge.printer-") else {
+            return Err(IppPrinterStatusError::Validation(
+                "bridge id must retain the discovered ipp_printer printer identity".to_string(),
+            ));
+        };
+        if native_id.is_empty()
+            || native_id.len() > 220
+            || !native_id
+                .bytes()
+                .all(|byte| byte.is_ascii_lowercase() || byte.is_ascii_digit() || byte == b'-')
+        {
+            return Err(IppPrinterStatusError::Validation(
+                "bridge id must contain a bounded canonical printer identity".to_string(),
+            ));
+        }
+        if self.endpoint.port() == 0 {
+            return Err(IppPrinterStatusError::Validation(
+                "endpoint port must be non-zero".to_string(),
+            ));
+        }
+        if !is_local_ipv4(*self.endpoint.ip()) {
+            return Err(IppPrinterStatusError::Validation(
+                "endpoint must be a private, link-local, or loopback IPv4 literal".to_string(),
+            ));
+        }
+        validate_resource_path(&self.resource_path)
+            .map_err(|error| IppPrinterStatusError::Validation(error.to_string()))?;
+        if self.timeout.is_zero() || self.timeout > MAX_STATUS_TIMEOUT {
+            return Err(IppPrinterStatusError::Validation(
+                "timeout must be non-zero and at most five seconds".to_string(),
+            ));
+        }
+        if !(1024..=DEFAULT_MAX_STATUS_RESPONSE_BYTES).contains(&self.maximum_response_bytes) {
+            return Err(IppPrinterStatusError::Validation(format!(
+                "maximum response bytes must be between 1024 and {DEFAULT_MAX_STATUS_RESPONSE_BYTES}"
+            )));
+        }
+        Ok(())
+    }
+
+    pub fn printer_uri(&self) -> String {
+        format!("ipp://{}/{path}", self.endpoint, path = self.resource_path)
+    }
+
+    pub fn endpoint_url(&self) -> String {
+        format!("http://{}/{path}", self.endpoint, path = self.resource_path)
+    }
+}
+
+pub trait IppPrinterStatusTransport {
+    fn post(
+        &mut self,
+        config: &IppPrinterStatusConfig,
+        body: &[u8],
+    ) -> Result<Vec<u8>, IppPrinterStatusError>;
+}
+
+#[derive(Debug, Clone, Copy, Default)]
+pub struct IppPrinterLanTransport;
+
+impl IppPrinterStatusTransport for IppPrinterLanTransport {
+    fn post(
+        &mut self,
+        config: &IppPrinterStatusConfig,
+        body: &[u8],
+    ) -> Result<Vec<u8>, IppPrinterStatusError> {
+        config.validate()?;
+        if body.len() > MAX_MESSAGE_BYTES {
+            return Err(IppPrinterStatusError::Validation(
+                "IPP request exceeds the protocol message limit".to_string(),
+            ));
+        }
+        let request = encode_status_http_request(config, body)?;
+        let endpoint = std::net::SocketAddr::V4(config.endpoint);
+        let mut stream = TcpStream::connect_timeout(&endpoint, config.timeout)
+            .map_err(|error| IppPrinterStatusError::Io(error.to_string()))?;
+        stream
+            .set_read_timeout(Some(config.timeout))
+            .map_err(|error| IppPrinterStatusError::Io(error.to_string()))?;
+        stream
+            .set_write_timeout(Some(config.timeout))
+            .map_err(|error| IppPrinterStatusError::Io(error.to_string()))?;
+        stream
+            .write_all(&request)
+            .map_err(|error| IppPrinterStatusError::Io(error.to_string()))?;
+        stream
+            .flush()
+            .map_err(|error| IppPrinterStatusError::Io(error.to_string()))?;
+        let response = read_status_http_response(&mut stream, config.maximum_response_bytes)?;
+        decode_status_http_response(&response, config.maximum_response_bytes)
+    }
+}
+
+fn encode_status_http_request(
+    config: &IppPrinterStatusConfig,
+    body: &[u8],
+) -> Result<Vec<u8>, IppPrinterStatusError> {
+    let target = format!("/{}", config.resource_path);
+    let host = config.endpoint.to_string();
+    if target.contains(['\r', '\n', '\0']) || host.contains(['\r', '\n', '\0']) {
+        return Err(IppPrinterStatusError::Validation(
+            "unsafe HTTP request text".to_string(),
+        ));
+    }
+    let head = format!(
+        "POST {target} HTTP/1.1\r\nHost: {host}\r\nAccept: application/ipp\r\nContent-Type: application/ipp\r\nConnection: close\r\nContent-Length: {}\r\n\r\n",
+        body.len()
+    );
+    if head.len().saturating_add(body.len()) > MAX_MESSAGE_BYTES + 4096 {
+        return Err(IppPrinterStatusError::Validation(
+            "IPP HTTP request exceeds the fixed request limit".to_string(),
+        ));
+    }
+    let mut request = head.into_bytes();
+    request.extend_from_slice(body);
+    Ok(request)
+}
+
+fn read_status_http_response(
+    reader: &mut dyn Read,
+    maximum: usize,
+) -> Result<Vec<u8>, IppPrinterStatusError> {
+    let mut bytes = Vec::new();
+    let mut buffer = [0u8; 8192];
+    loop {
+        let read = reader
+            .read(&mut buffer)
+            .map_err(|error| IppPrinterStatusError::Io(error.to_string()))?;
+        if read == 0 {
+            break;
+        }
+        if read > maximum.saturating_sub(bytes.len()) {
+            return Err(IppPrinterStatusError::ResponseTooLarge { limit: maximum });
+        }
+        bytes.extend_from_slice(&buffer[..read]);
+    }
+    Ok(bytes)
+}
+
+fn decode_status_http_response(
+    bytes: &[u8],
+    maximum: usize,
+) -> Result<Vec<u8>, IppPrinterStatusError> {
+    let parsed = parse_response_head(bytes)
+        .map_err(|error: Http1ParseError| IppPrinterStatusError::Http(error.to_string()))?;
+    match parsed.head.status {
+        401 | 403 => return Err(IppPrinterStatusError::AuthenticationRequired),
+        status if !(200..300).contains(&status) => {
+            return Err(IppPrinterStatusError::HttpStatus(status));
+        }
+        _ => {}
+    }
+    let content_type = parsed
+        .head
+        .header("Content-Type")
+        .ok_or_else(|| IppPrinterStatusError::Http("missing Content-Type".to_string()))?;
+    if !content_type.trim().eq_ignore_ascii_case("application/ipp") {
+        return Err(IppPrinterStatusError::Http(
+            "Content-Type must be application/ipp".to_string(),
+        ));
+    }
+    let input = &bytes[parsed.body_offset..];
+    let body = match parsed.body_kind {
+        BodyKind::ContentLength(expected) => {
+            if input.len() < expected {
+                return Err(IppPrinterStatusError::TruncatedBody {
+                    expected,
+                    actual: input.len(),
+                });
+            }
+            if input.len() != expected {
+                return Err(IppPrinterStatusError::Http(
+                    "IPP response contains bytes after Content-Length".to_string(),
+                ));
+            }
+            input.to_vec()
+        }
+        BodyKind::None => {
+            return Err(IppPrinterStatusError::Http(
+                "IPP response body is required".to_string(),
+            ));
+        }
+        BodyKind::UntilEof => input.to_vec(),
+        BodyKind::Chunked => {
+            return Err(IppPrinterStatusError::Http(
+                "chunked IPP responses are unsupported".to_string(),
+            ));
+        }
+    };
+    if body.len() > MAX_MESSAGE_BYTES || bytes.len() > maximum {
+        return Err(IppPrinterStatusError::ResponseTooLarge {
+            limit: maximum.min(MAX_MESSAGE_BYTES),
+        });
+    }
+    Ok(body)
+}
+
+pub struct IppPrinterStatusClient<T> {
+    config: IppPrinterStatusConfig,
+    transport: T,
+    next_request_id: u32,
+}
+
+impl<T: IppPrinterStatusTransport> IppPrinterStatusClient<T> {
+    pub fn new(config: IppPrinterStatusConfig, transport: T) -> Self {
+        Self {
+            config,
+            transport,
+            next_request_id: 1,
+        }
+    }
+
+    pub fn config(&self) -> &IppPrinterStatusConfig {
+        &self.config
+    }
+
+    pub fn transport(&self) -> &T {
+        &self.transport
+    }
+
+    pub fn inspect(&mut self) -> Result<PrinterAttributes, IppPrinterStatusError> {
+        self.config.validate()?;
+        let request_id = self.next_request_id;
+        self.next_request_id = self.next_request_id.checked_add(1).ok_or_else(|| {
+            IppPrinterStatusError::Validation("IPP request id space is exhausted".to_string())
+        })?;
+        let body = encode_get_printer_attributes(request_id, &self.config.printer_uri())?;
+        let response = self.transport.post(&self.config, &body)?;
+        Ok(decode_get_printer_attributes_response(
+            &response, request_id,
+        )?)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct InstalledIppPrinterStatus {
+    pub bridge_id: BridgeId,
+    pub device_id: DeviceId,
+    pub entity_id: EntityId,
+}
+
+pub struct IppPrinterStatusRuntimeIntegration<T> {
+    client: IppPrinterStatusClient<T>,
+}
+
+impl<T: IppPrinterStatusTransport> IppPrinterStatusRuntimeIntegration<T> {
+    pub fn new(client: IppPrinterStatusClient<T>) -> Self {
+        Self { client }
+    }
+
+    pub fn inspect_and_install_authorized(
+        &mut self,
+        runtime: &mut SmartHomeRuntime,
+        principal_id: AgentId,
+        observed_at_ms: u64,
+    ) -> Result<InstalledIppPrinterStatus, IppPrinterStatusError> {
+        authorize_status_read(runtime, principal_id, observed_at_ms)?;
+        let snapshot = self.client.inspect()?;
+        install_printer_status(runtime, &self.client.config, &snapshot, observed_at_ms)
+    }
+}
+
+pub fn install_printer_status(
+    runtime: &mut SmartHomeRuntime,
+    config: &IppPrinterStatusConfig,
+    snapshot: &PrinterAttributes,
+    observed_at_ms: u64,
+) -> Result<InstalledIppPrinterStatus, IppPrinterStatusError> {
+    config.validate()?;
+    let native_id = config
+        .bridge_id
+        .as_str()
+        .strip_prefix("ipp_printer.bridge.")
+        .ok_or_else(|| IppPrinterStatusError::Validation("invalid IPP bridge id".to_string()))?;
+    let device_id = DeviceId::trusted(format!("ipp-printer:{native_id}"));
+    let entity_id = EntityId::trusted(format!("{}:diagnostic:printer", device_id.as_str()));
+    let health = printer_health(snapshot);
+    let protocol = ProtocolFamily::Vendor(PROTOCOL_ID.to_string());
+
+    let mut bridge = Bridge::new(
+        config.bridge_id.clone(),
+        IntegrationId::trusted(INTEGRATION_ID),
+        BridgeTransport::LanHttp,
+    );
+    bridge.address = Some(config.endpoint_url());
+    bridge.hardware_model = Some(snapshot.printer_make_and_model.clone());
+    bridge.health = health;
+    bridge.last_seen_at_ms = Some(observed_at_ms);
+    bridge.identifiers =
+        vec![
+            ProtocolIdentifier::new(protocol.clone(), "ipp_endpoint", config.printer_uri())
+                .map_err(|error| IppPrinterStatusError::Validation(error.to_string()))?,
+        ];
+    bridge.metadata = vec![Metadata::new("ipp.access", "credential_free_read_only")];
+    runtime.upsert_bridge(bridge)?;
+
+    runtime.upsert_device(Device {
+        device_id: device_id.clone(),
+        bridge_id: config.bridge_id.clone(),
+        manufacturer: "Unknown IPP manufacturer".to_string(),
+        model: snapshot.printer_make_and_model.clone(),
+        name: snapshot.printer_name.clone(),
+        serial: None,
+        firmware_version: None,
+        room_id: None,
+        entity_ids: vec![entity_id.clone()],
+        identifiers: vec![
+            ProtocolIdentifier::new(protocol, "printer_identity", native_id)
+                .map_err(|error| IppPrinterStatusError::Validation(error.to_string()))?,
+        ],
+        health,
+        metadata: vec![Metadata::new(
+            "ipp.resource_path",
+            config.resource_path.clone(),
+        )],
+    })?;
+
+    runtime.upsert_entity(Entity {
+        entity_id: entity_id.clone(),
+        device_id: device_id.clone(),
+        kind: EntityKind::NetworkDiagnostic,
+        name: format!("{} Printer Status", snapshot.printer_name),
+        capabilities: vec![Capability::new(
+            CapabilityId::trusted("ipp.printer_status"),
+            CapabilityMode::Observe,
+            ValueKind::Object,
+        )],
+        state: Some(StateSnapshot {
+            entity_id: entity_id.clone(),
+            value: printer_status_value(snapshot),
+            source: StateSource::Poll,
+            observed_at_ms,
+            received_at_ms: observed_at_ms,
+            expires_at_ms: None,
+            confidence: StateConfidence::Confirmed,
+        }),
+        metadata: vec![Metadata::new("ipp.operation", "Get-Printer-Attributes")],
+    })?;
+
+    Ok(InstalledIppPrinterStatus {
+        bridge_id: config.bridge_id.clone(),
+        device_id,
+        entity_id,
+    })
+}
+
+fn authorize_status_read(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+) -> Result<(), IppPrinterStatusError> {
+    let tool = SmartHomeTool::GetState;
+    let decision = runtime.authorize_tool_for_principal(principal_id.clone(), tool, now_ms);
+    if decision.missing_capabilities.is_empty() {
+        Ok(())
+    } else {
+        Err(IppPrinterStatusError::Runtime(
+            RuntimeError::UnauthorizedTool {
+                principal_id,
+                tool,
+                missing_capabilities: decision.missing_capabilities,
+            },
+        ))
+    }
+}
+
+fn printer_health(snapshot: &PrinterAttributes) -> Health {
+    if matches!(snapshot.printer_state, PrinterState::Stopped)
+        || !snapshot.printer_is_accepting_jobs
+        || snapshot
+            .printer_state_reasons
+            .iter()
+            .any(|reason| reason != "none")
+    {
+        Health::Degraded
+    } else {
+        match snapshot.printer_state {
+            PrinterState::Idle | PrinterState::Processing => Health::Online,
+            PrinterState::Stopped => Health::Degraded,
+            PrinterState::Unknown(_) => Health::Unknown,
+        }
+    }
+}
+
+fn printer_status_value(snapshot: &PrinterAttributes) -> Value {
+    Value::Object(vec![
+        (
+            "accepting_jobs".to_string(),
+            Value::Bool(snapshot.printer_is_accepting_jobs),
+        ),
+        (
+            "make_and_model".to_string(),
+            Value::Text(snapshot.printer_make_and_model.clone()),
+        ),
+        (
+            "printer_info".to_string(),
+            snapshot
+                .printer_info
+                .clone()
+                .map_or(Value::Null, Value::Text),
+        ),
+        (
+            "printer_location".to_string(),
+            snapshot
+                .printer_location
+                .clone()
+                .map_or(Value::Null, Value::Text),
+        ),
+        (
+            "printer_name".to_string(),
+            Value::Text(snapshot.printer_name.clone()),
+        ),
+        (
+            "printer_state".to_string(),
+            Value::Text(snapshot.printer_state.as_str().to_string()),
+        ),
+        (
+            "printer_state_code".to_string(),
+            Value::Integer(i64::from(snapshot.printer_state.code())),
+        ),
+        (
+            "printer_state_reasons".to_string(),
+            Value::Array(
+                snapshot
+                    .printer_state_reasons
+                    .iter()
+                    .cloned()
+                    .map(Value::Text)
+                    .collect(),
+            ),
+        ),
+        (
+            "queued_job_count".to_string(),
+            Value::Integer(i64::from(snapshot.queued_job_count)),
+        ),
+        (
+            "uptime_seconds".to_string(),
+            Value::Integer(i64::from(snapshot.printer_up_time_seconds)),
+        ),
+    ])
+}
+
+fn is_local_ipv4(address: Ipv4Addr) -> bool {
+    address.is_private() || address.is_link_local() || address.is_loopback()
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
     use smart_home_core::{CapabilityGrant, CapabilityGrantId, PrivilegeTier};
     use smart_home_discovery::{MdnsResponsePacket, MdnsScanFailure};
-    use std::net::UdpSocket;
+    use std::net::{TcpListener, UdpSocket};
     use std::sync::atomic::{AtomicUsize, Ordering};
     use std::sync::Arc;
+    use std::thread;
 
     const PRINTER_UUID: &str = "12345678-9ABC-DEF0-1234-56789ABCDEF0";
 
@@ -615,6 +1157,23 @@ mod tests {
     struct FakeTransport {
         calls: Arc<AtomicUsize>,
         result: MdnsScanResult,
+    }
+
+    #[derive(Debug)]
+    struct FakeStatusTransport {
+        calls: Arc<AtomicUsize>,
+        response: Vec<u8>,
+    }
+
+    impl IppPrinterStatusTransport for FakeStatusTransport {
+        fn post(
+            &mut self,
+            _config: &IppPrinterStatusConfig,
+            _body: &[u8],
+        ) -> Result<Vec<u8>, IppPrinterStatusError> {
+            self.calls.fetch_add(1, Ordering::SeqCst);
+            Ok(self.response.clone())
+        }
     }
 
     impl IppPrinterMdnsTransport for FakeTransport {
@@ -823,6 +1382,264 @@ mod tests {
             ))
         ));
         assert_eq!(calls.load(Ordering::SeqCst), 0);
+    }
+
+    #[test]
+    fn validates_status_endpoint_identity_and_bounds() {
+        let bridge_id =
+            BridgeId::trusted("ipp_printer.bridge.printer-12345678-9abc-def0-1234-56789abcdef0");
+        assert!(IppPrinterStatusConfig::new(
+            bridge_id.clone(),
+            "127.0.0.1:631".parse().unwrap(),
+            "ipp/print",
+        )
+        .is_ok());
+        assert!(IppPrinterStatusConfig::new(
+            bridge_id.clone(),
+            "8.8.8.8:631".parse().unwrap(),
+            "ipp/print",
+        )
+        .is_err());
+        assert!(IppPrinterStatusConfig::new(
+            BridgeId::trusted("other.bridge.printer-one"),
+            "127.0.0.1:631".parse().unwrap(),
+            "ipp/print",
+        )
+        .is_err());
+        assert!(IppPrinterStatusConfig::new(
+            bridge_id.clone(),
+            "127.0.0.1:631".parse().unwrap(),
+            "../admin",
+        )
+        .is_err());
+        let mut config =
+            IppPrinterStatusConfig::new(bridge_id, "127.0.0.1:631".parse().unwrap(), "ipp/print")
+                .unwrap();
+        config.timeout = Duration::from_secs(6);
+        assert!(config.validate().is_err());
+        config.timeout = Duration::from_secs(1);
+        config.maximum_response_bytes = 1023;
+        assert!(config.validate().is_err());
+    }
+
+    #[test]
+    fn status_read_denies_before_transport_io() {
+        let calls = Arc::new(AtomicUsize::new(0));
+        let config = status_config("127.0.0.1:631".parse().unwrap());
+        let client = IppPrinterStatusClient::new(
+            config,
+            FakeStatusTransport {
+                calls: calls.clone(),
+                response: status_response(1, 3, &["none"], true),
+            },
+        );
+        let mut integration = IppPrinterStatusRuntimeIntegration::new(client);
+        let result = integration.inspect_and_install_authorized(
+            &mut SmartHomeRuntime::new(),
+            AgentId::trusted("agent:ipp-status-denied"),
+            1_000,
+        );
+        assert!(matches!(
+            result,
+            Err(IppPrinterStatusError::Runtime(
+                RuntimeError::UnauthorizedTool { .. }
+            ))
+        ));
+        assert_eq!(calls.load(Ordering::SeqCst), 0);
+    }
+
+    #[test]
+    fn normalizes_fixed_printer_status_and_health() {
+        let config = status_config("127.0.0.1:631".parse().unwrap());
+        let snapshot = PrinterAttributes {
+            printer_name: "Office".to_string(),
+            printer_info: Some("Main printer".to_string()),
+            printer_location: Some("Second floor".to_string()),
+            printer_make_and_model: "Example Laser 2".to_string(),
+            printer_state: PrinterState::Stopped,
+            printer_state_reasons: vec!["media-empty-error".to_string()],
+            printer_is_accepting_jobs: false,
+            queued_job_count: 3,
+            printer_up_time_seconds: 90,
+        };
+        let mut runtime = SmartHomeRuntime::new();
+        let installed = install_printer_status(&mut runtime, &config, &snapshot, 2_000).unwrap();
+        let bridge = runtime.registry().bridge(&installed.bridge_id).unwrap();
+        assert_eq!(bridge.health, Health::Degraded);
+        let entity = runtime.registry().entity(&installed.entity_id).unwrap();
+        assert_eq!(entity.kind, EntityKind::NetworkDiagnostic);
+        assert_eq!(
+            entity.state.as_ref().unwrap().confidence,
+            StateConfidence::Confirmed
+        );
+        assert!(matches!(
+            entity.state.as_ref().unwrap().value,
+            Value::Object(_)
+        ));
+        assert_eq!(
+            entity.capabilities[0].capability_id,
+            CapabilityId::trusted("ipp.printer_status")
+        );
+    }
+
+    #[test]
+    fn live_loopback_status_read_verifies_wire_and_commits() {
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let endpoint = match listener.local_addr().unwrap() {
+            std::net::SocketAddr::V4(endpoint) => endpoint,
+            std::net::SocketAddr::V6(_) => unreachable!(),
+        };
+        let server = thread::spawn(move || {
+            let (mut stream, _) = listener.accept().unwrap();
+            let request = read_http_request(&mut stream);
+            let split = request
+                .windows(4)
+                .position(|window| window == b"\r\n\r\n")
+                .unwrap()
+                + 4;
+            let head = std::str::from_utf8(&request[..split]).unwrap();
+            let body = &request[split..];
+            assert!(head.starts_with("POST /ipp/print HTTP/1.1\r\n"));
+            assert!(head.contains("Content-Type: application/ipp\r\n"));
+            assert!(head.contains("Accept: application/ipp\r\n"));
+            assert!(head.contains("Connection: close\r\n"));
+            assert!(!head.to_ascii_lowercase().contains("authorization:"));
+            assert_eq!(&body[..8], &[1, 1, 0, 11, 0, 0, 0, 1]);
+            for attribute in ipp_protocol::REQUESTED_ATTRIBUTES {
+                assert!(body
+                    .windows(attribute.len())
+                    .any(|window| window == attribute.as_bytes()));
+            }
+
+            let response_body = status_response(1, 4, &["none"], true);
+            let response_head = format!(
+                "HTTP/1.1 200 OK\r\nContent-Type: application/ipp\r\nContent-Length: {}\r\nConnection: close\r\n\r\n",
+                response_body.len()
+            );
+            stream.write_all(response_head.as_bytes()).unwrap();
+            stream.write_all(&response_body).unwrap();
+        });
+
+        let principal = AgentId::trusted("agent:ipp-printer-status");
+        let mut runtime = SmartHomeRuntime::new();
+        grant(&mut runtime, &principal);
+        let client = IppPrinterStatusClient::new(status_config(endpoint), IppPrinterLanTransport);
+        let mut integration = IppPrinterStatusRuntimeIntegration::new(client);
+        let installed = integration
+            .inspect_and_install_authorized(&mut runtime, principal, 3_000)
+            .unwrap();
+        server.join().unwrap();
+
+        let bridge = runtime.registry().bridge(&installed.bridge_id).unwrap();
+        assert_eq!(bridge.health, Health::Online);
+        let expected_url = format!("http://{endpoint}/ipp/print");
+        assert_eq!(bridge.address.as_deref(), Some(expected_url.as_str()));
+        let entity = runtime.registry().entity(&installed.entity_id).unwrap();
+        assert!(entity.state.as_ref().is_some());
+    }
+
+    #[test]
+    fn rejects_authentication_chunking_and_wrong_media_type() {
+        for response in [
+            b"HTTP/1.1 401 Unauthorized\r\nContent-Length: 0\r\n\r\n".as_slice(),
+            b"HTTP/1.1 200 OK\r\nContent-Type: application/ipp\r\nTransfer-Encoding: chunked\r\n\r\n0\r\n\r\n"
+                .as_slice(),
+            b"HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: 2\r\n\r\n{}"
+                .as_slice(),
+        ] {
+            assert!(decode_status_http_response(
+                response,
+                DEFAULT_MAX_STATUS_RESPONSE_BYTES
+            )
+            .is_err());
+        }
+    }
+
+    fn status_config(endpoint: SocketAddrV4) -> IppPrinterStatusConfig {
+        IppPrinterStatusConfig::new(
+            BridgeId::trusted("ipp_printer.bridge.printer-12345678-9abc-def0-1234-56789abcdef0"),
+            endpoint,
+            "ipp/print",
+        )
+        .unwrap()
+    }
+
+    fn status_response(request_id: u32, state: i32, reasons: &[&str], accepting: bool) -> Vec<u8> {
+        let mut bytes = vec![1, 1, 0, 0];
+        bytes.extend_from_slice(&request_id.to_be_bytes());
+        bytes.push(0x01);
+        push_ipp_attribute(&mut bytes, 0x47, "attributes-charset", b"utf-8");
+        push_ipp_attribute(&mut bytes, 0x48, "attributes-natural-language", b"en-us");
+        bytes.push(0x04);
+        push_ipp_attribute(&mut bytes, 0x42, "printer-name", b"Office");
+        push_ipp_attribute(&mut bytes, 0x41, "printer-info", b"Main printer");
+        push_ipp_attribute(&mut bytes, 0x41, "printer-location", b"Second floor");
+        push_ipp_attribute(
+            &mut bytes,
+            0x41,
+            "printer-make-and-model",
+            b"Example Laser 2",
+        );
+        push_ipp_attribute(&mut bytes, 0x23, "printer-state", &state.to_be_bytes());
+        for (index, reason) in reasons.iter().enumerate() {
+            push_ipp_attribute(
+                &mut bytes,
+                0x44,
+                if index == 0 {
+                    "printer-state-reasons"
+                } else {
+                    ""
+                },
+                reason.as_bytes(),
+            );
+        }
+        push_ipp_attribute(
+            &mut bytes,
+            0x22,
+            "printer-is-accepting-jobs",
+            &[u8::from(accepting)],
+        );
+        push_ipp_attribute(&mut bytes, 0x21, "queued-job-count", &2i32.to_be_bytes());
+        push_ipp_attribute(&mut bytes, 0x21, "printer-up-time", &90i32.to_be_bytes());
+        bytes.push(0x03);
+        bytes
+    }
+
+    fn push_ipp_attribute(bytes: &mut Vec<u8>, tag: u8, name: &str, value: &[u8]) {
+        bytes.push(tag);
+        bytes.extend_from_slice(&(name.len() as u16).to_be_bytes());
+        bytes.extend_from_slice(name.as_bytes());
+        bytes.extend_from_slice(&(value.len() as u16).to_be_bytes());
+        bytes.extend_from_slice(value);
+    }
+
+    fn read_http_request(stream: &mut TcpStream) -> Vec<u8> {
+        let mut bytes = Vec::new();
+        let mut buffer = [0u8; 4096];
+        let mut expected = None;
+        loop {
+            let read = stream.read(&mut buffer).unwrap();
+            assert!(read > 0);
+            bytes.extend_from_slice(&buffer[..read]);
+            if expected.is_none() {
+                if let Some(offset) = bytes.windows(4).position(|window| window == b"\r\n\r\n") {
+                    let body_offset = offset + 4;
+                    let head = std::str::from_utf8(&bytes[..body_offset]).unwrap();
+                    let content_length = head
+                        .lines()
+                        .find_map(|line| {
+                            line.strip_prefix("Content-Length: ")
+                                .and_then(|value| value.parse::<usize>().ok())
+                        })
+                        .unwrap();
+                    expected = Some(body_offset + content_length);
+                }
+            }
+            if expected.is_some_and(|length| bytes.len() >= length) {
+                break;
+            }
+        }
+        bytes
     }
 
     #[test]
