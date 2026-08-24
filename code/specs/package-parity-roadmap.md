@@ -5837,7 +5837,7 @@ baseline and this branch under Python 3.13 because the newer interpreter's
 That native filesystem identity debt is outside this inert CLI-parser slice.
 
 Before publication, the completed parser corpus rebased conflict-free onto
-exact `origin/main` `e5bb93ca7e7a54537f109ee6de0926c05565cd5c` after two Devanagari
+exact `origin/main` `561cbd2a9365bc5093fdd6189fd2e0e065e16506` after three Devanagari
 curriculum commits and the merged HTML-parser diagnostic repair. None changes a
 package marker or overlaps this tranche. The collision gate remains at 15
 established lanes, 1,370 implementation identities, 4,563 package slots, 175
