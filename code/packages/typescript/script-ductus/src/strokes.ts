@@ -3163,6 +3163,41 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: devanagariAlphabetSource("झ"),
   },
+  // Opiaterein's animation separately draws the open-left bowl, the rightward
+  // shoulder rising to the headline, the short lower stem, and the headline:
+  // four strokes, three lifts.
+  [ductusKey("devanagari", "ञ")]: {
+    script: "devanagari",
+    glyph: "ञ",
+    strokes: [
+      { segments: [{ label: "sweep clockwise around the open-left bowl", path: [
+        { x: 215, y: 420 }, { x: 255, y: 438 }, { x: 305, y: 442 },
+        { x: 355, y: 432 }, { x: 400, y: 410 }, { x: 435, y: 380 },
+        { x: 455, y: 345 }, { x: 445, y: 315 }, { x: 430, y: 285 },
+        { x: 418, y: 250 }, { x: 400, y: 220 }, { x: 365, y: 190 },
+        { x: 320, y: 165 }, { x: 270, y: 150 }, { x: 220, y: 145 },
+        { x: 180, y: 155 }, { x: 145, y: 175 }, { x: 118, y: 202 },
+        { x: 95, y: 230 }, { x: 78, y: 260 }, { x: 62, y: 290 },
+        { x: 48, y: 320 },
+      ] }] },
+      { segments: [{ label: "lift, then sweep the shoulder right and rise to the headline", path: [
+        { x: 415, y: 275 }, { x: 460, y: 270 }, { x: 505, y: 275 },
+        { x: 545, y: 300 }, { x: 575, y: 330 }, { x: 610, y: 350 },
+        { x: 610, y: 410 }, { x: 610, y: 475 }, { x: 610, y: 551 },
+      ] }] },
+      { segments: [{ label: "lift, then descend the short lower stem", path: [
+        { x: 610, y: 275 }, { x: 610, y: 220 }, { x: 610, y: 165 },
+        { x: 610, y: 110 }, { x: 610, y: 55 }, { x: 610, y: 5 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the shirorekha left-to-right", path: [
+        { x: 5, y: 585 }, { x: 85, y: 585 }, { x: 165, y: 585 },
+        { x: 245, y: 585 }, { x: 325, y: 585 }, { x: 405, y: 585 },
+        { x: 485, y: 585 }, { x: 585, y: 585 }, { x: 675, y: 585 },
+        { x: 750, y: 585 },
+      ] }] },
+    ],
+    source: devanagariAlphabetSource("ञ"),
+  },
   // Opiaterein's animation joins the descending central stem to the
   // counterclockwise open body, then finishes with a separate headline:
   // two strokes, one lift.
