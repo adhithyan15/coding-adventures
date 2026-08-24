@@ -8389,10 +8389,13 @@ impl HtmlParser {
                 self.close_open_element_if(|name| name == "p");
                 if !self.current_element_is("li") && self.open_list_item_in_scope_index().is_some()
                 {
-                    self.diagnostics.push(ParserDiagnostic::new(
-                        "unexpected-li-start-tag",
-                        "start tag `<li>` implied the end of a non-current list item",
-                    ));
+                    self.diagnostics.push(
+                        ParserDiagnostic::new(
+                            "unexpected-li-start-tag",
+                            "start tag `<li>` implied the end of a non-current list item",
+                        )
+                        .at_emission(self.current_token_emission_position),
+                    );
                 }
                 self.close_open_list_item_if_in_scope();
             }
@@ -27068,18 +27071,23 @@ mod tests {
         .at_emission(Some(end_tag_position(source, name)))
     }
 
-    fn start_tag_position(source: &str, name: &str) -> SourcePosition {
+    fn start_tag_position_at(
+        source: &str,
+        name: &str,
+        occurrence: usize,
+    ) -> SourcePosition {
         let prefix = format!("<{name}");
         let start = source
             .match_indices(&prefix)
-            .find_map(|(start, _)| {
+            .filter_map(|(start, _)| {
                 source[start + prefix.len()..]
                     .chars()
                     .next()
                     .filter(|next| matches!(next, ' ' | '/' | '>'))
                     .map(|_| start)
             })
-            .expect("source should contain the start tag");
+            .nth(occurrence)
+            .expect("source should contain the requested start tag");
         let delimiter = start
             + source[start..]
                 .find('>')
@@ -27091,6 +27099,10 @@ mod tests {
             line: source[..delimiter].lines().count(),
             column: source[line_start..delimiter].chars().count() + 1,
         }
+    }
+
+    fn start_tag_position(source: &str, name: &str) -> SourcePosition {
+        start_tag_position_at(source, name, 0)
     }
 
     fn html_foreign_start_tag_recovery(source: &str, name: &str) -> ParserDiagnostic {
@@ -27373,6 +27385,14 @@ mod tests {
             "end tag `</li>` did not match a list item in scope",
         )
         .at_emission(Some(end_tag_position(source, "li")))
+    }
+
+    fn unexpected_li_start_tag(source: &str, occurrence: usize) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-li-start-tag",
+            "start tag `<li>` implied the end of a non-current list item",
+        )
+        .at_emission(Some(start_tag_position_at(source, "li", occurrence)))
     }
 
     fn unexpected_description_item_end_tag(source: &str, name: &str) -> ParserDiagnostic {
@@ -39916,23 +39936,55 @@ mod tests {
         for source in [
             "<!DOCTYPE html><li><menuitem><li>",
             "<!DOCTYPE html><html><head></head><body><ul><li><div><p><li></ul></body></html>",
+            "<!doctype html><!--é-->\r\n<ul><li><div><li>X</li></ul>",
         ] {
             let output = parse_html_with_diagnostics(source).unwrap();
             assert_eq!(
                 output.parser_diagnostics,
-                vec![ParserDiagnostic::new(
-                    "unexpected-li-start-tag",
-                    "start tag `<li>` implied the end of a non-current list item"
-                )],
+                vec![unexpected_li_start_tag(source, 1)],
                 "source {source:?}"
             );
         }
 
-        let adjacent = parse_html_with_diagnostics("<!doctype html><ul><li>one<li>two").unwrap();
-        assert!(!adjacent
-            .parser_diagnostics
+        for source in [
+            "<!doctype html><ul><li>one<li>two",
+            "<!doctype html><ul><li><button><div><li>X",
+            "<!doctype html><ul><li><div><li",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "unexpected-li-start-tag"));
+        }
+
+        let mut unpositioned = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        for token in [
+            Token::StartTag {
+                name: "li".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "div".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "li".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Eof,
+        ] {
+            unpositioned.process_token(token);
+        }
+        let diagnostic = unpositioned
+            .diagnostics()
             .iter()
-            .any(|diagnostic| diagnostic.code == "unexpected-li-start-tag"));
+            .find(|diagnostic| diagnostic.code == "unexpected-li-start-tag")
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
     }
 
     #[test]
