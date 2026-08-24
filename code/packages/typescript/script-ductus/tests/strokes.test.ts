@@ -374,6 +374,15 @@ describe("handwriting ductus", () => {
     expect(cyrillic.letters.every((letter) => letter.strokeOrderSource !== undefined)).toBe(true);
   });
 
+  it("marks Hebrew complete with 22 sourced letters and its corpus niqqud", () => {
+    const hebrew = SCRIPTS.find((script) => script.script === "hebrew")!;
+    expect(hebrew.complete).toBe(true);
+    expect(hebrew.letters).toHaveLength(22);
+    expect(new Set(hebrew.letters.map((letter) => letter.glyph)).size).toBe(22);
+    expect(hebrew.letters.every((letter) => letter.strokeOrderSource !== undefined)).toBe(true);
+    expect(hebrew.marks).toHaveLength(9);
+  });
+
   it("keeps taa marbuta word-final and body-first", () => {
     const arabic = SCRIPTS.find((script) => script.script === "arabic")!;
     const ending = arabic.letters.find((letter) => letter.glyph === "ة")!;
