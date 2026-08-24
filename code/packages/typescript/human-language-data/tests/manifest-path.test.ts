@@ -51,22 +51,48 @@ describe("assertRelativeManifestPath", () => {
     expect(escapesUpward("../../../evil.tex")).toBe(true);
   });
 
-  // The regression. Both of these produce a `fromRoot` that never starts with
-  // `../`, so the old rule accepted them and the write landed outside the root:
-  // on another local volume, or on an SMB share.
-  it("rejects drive-qualified and UNC paths, which the old rule accepted", () => {
-    for (const bypass of [
-      "D:\\evil.tex",
-      "D:/evil.tex",
-      "\\\\server\\share\\evil.tex",
-      "//server/share/evil.tex",
-    ]) {
-      // Demonstrate the old rule was fooled...
-      expect(escapesUpward(bypass), `${bypass} did not escape upward`).toBe(false);
-      // ...and that the new one is not.
+  const BYPASSES = [
+    "D:\\evil.tex",
+    "D:/evil.tex",
+    "\\\\server\\share\\evil.tex",
+    "//server/share/evil.tex",
+  ];
+
+  // The regression, and the part that must hold everywhere.
+  it("rejects drive-qualified and UNC paths", () => {
+    for (const bypass of BYPASSES) {
       expect(() => assertRelativeManifestPath(bypass, `unsafe '${bypass}'`)).toThrow(/unsafe/);
     }
   });
+
+  // The bypass itself is win32-ONLY, and that is the whole reason it survived:
+  // on POSIX these resolve as ordinary absolute paths, `path.relative()` answers
+  // with `../..`-prefixed strings, and the old rule caught them. Linux CI was
+  // therefore green while a Windows developer's `--write` would have escaped the
+  // curriculum root. Asserting the demonstration unconditionally is what made
+  // THIS file red on ubuntu — the same platform blindness, one level up.
+  //
+  // So: pin the demonstration to win32, and keep the guarantee above unpinned.
+  it.runIf(process.platform === "win32")(
+    "demonstrates the old rule was fooled, on the platform where it was fooled",
+    () => {
+      for (const bypass of BYPASSES) {
+        expect(escapesUpward(bypass), `${bypass} did not escape upward`).toBe(false);
+      }
+    },
+  );
+
+  // Deliberately no POSIX counterpart to the assertion above.
+  //
+  // On POSIX these four values are read quite differently — `//server/...` is
+  // absolute and resolves outside the root, while `D:\evil.tex` has no special
+  // meaning at all and lands as an oddly-named file INSIDE it. Neither is the
+  // Windows escape. Pinning that behaviour would mean asserting semantics I
+  // cannot execute here, so it is written down rather than tested.
+  //
+  // The point worth keeping: POSIX was never exposed, which is precisely why
+  // Linux CI stayed green over a live Windows escape — and why the guarantee
+  // above is asserted on every platform rather than only where the bug bit.
 
   // The drive and UNC patterns are applied on EVERY platform, not just win32.
   // A POSIX CI box does not consider `D:\evil.tex` absolute, so a
