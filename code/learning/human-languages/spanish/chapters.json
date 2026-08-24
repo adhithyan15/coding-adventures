@@ -5972,10 +5972,11 @@
       "chapter": 319,
       "title": "Review --- Second Looks",
       "label": "ch:repaso-la-superficie",
-      "canDo": "I can check a Spanish surface against better evidence, and name the five stages of a leaving.",
+      "canDo": "I can check a Spanish surface against better evidence, name the five stages of a leaving, and run an introduction start to finish.",
       "spineNodes": [
         "SPINE-POLITE-REQUEST-REPAIR",
-        "SPINE-TAKE-LEAVE"
+        "SPINE-TAKE-LEAVE",
+        "SPINE-EXCHANGE-NAMES"
       ],
       "payoff": {
         "lesson": "ES-C319-repaso-la-superficie",

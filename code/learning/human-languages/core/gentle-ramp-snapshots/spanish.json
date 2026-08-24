@@ -1,7 +1,7 @@
 {
   "language": "spanish",
-  "lessonCount": 604,
-  "atomMeasurableLessons": 600,
+  "lessonCount": 613,
+  "atomMeasurableLessons": 609,
   "atomMeasurementBlindLessons": 4,
   "durationViolations": 0,
   "atomLessonSpikes": 6,
@@ -17,13 +17,13 @@
   "forwardReviews": 0,
   "forwardReferences": 90,
   "atomsTaught": 892,
-  "atomsNeverRevisited": 128,
-  "reinforcementWindowMisses": 2371,
+  "atomsNeverRevisited": 119,
+  "reinforcementWindowMisses": 2380,
   "reinforcementMissesByWindow": {
-    "R1": 220,
-    "R2": 724,
-    "R3": 751,
-    "R4": 676
+    "R1": 221,
+    "R2": 723,
+    "R3": 754,
+    "R4": 682
   },
   "payoffSurprises": 26,
   "writingPracticeLessons": 11,
@@ -54,7 +54,7 @@
     {
       "language": "spanish",
       "kind": "reinforcement",
-      "count": 2371,
+      "count": 2380,
       "unit": "missed window(s)",
       "detail": "add retrieval at the expanding R1-R4 intervals"
     },

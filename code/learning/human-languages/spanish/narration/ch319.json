@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 319,
   "title": "Review --- Second Looks",
-  "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:2cfcfd4ab10db218",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:eb75d291edd426f3",
   "lessons": [
     {
       "id": "ES-C319-repaso-la-superficie",
@@ -12,14 +12,14 @@
       "title": "Review — what the surface does not tell you",
       "headword": "(review)",
       "romanization": "(review)",
-      "gloss": "a second pass over four facts that the surface of a word or a page will not give you — an ending, an article, a letter, and a punctuation mark",
+      "gloss": "a second pass over five facts that the surface of a word or a page will not give you — an ending, an article, a letter, and a punctuation mark",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3168ce1b43accbed",
+      "sourceHash": "fnv1a64:dbfcdf40f31b96a2",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "One word to start. What does pronto mean on its own? (Soon — and \"ready\", the sense English kept in prompt.)"
+              "text": "What does pronto mean on its own? (Soon — and \"ready\", the sense English kept in prompt.)"
             }
           ]
         },
@@ -46,7 +46,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Four things you met separately, gathered because they share a shape: in each one, the part you can see is not the part you should trust."
+              "text": "Four things you met separately, gathered because they share a shape: the part you can see is not the part to trust."
             },
             {
               "kind": "pause",
@@ -56,7 +56,7 @@
             },
             {
               "kind": "speech",
-              "text": "First. Pronto looks like a word about right now. It is about readiness, from promptus, \"brought forth\" — and \"soon\" is where readiness ended up."
+              "text": "First. Pronto is about readiness, from promptus; \"soon\" is where readiness ended up."
             },
             {
               "kind": "pause",
@@ -86,7 +86,7 @@
             },
             {
               "kind": "speech",
-              "text": "Fourth. The h on hermano looks like the h on hijo. It is not the same letter's history: one stood where a Latin f was breathed aloud for centuries, the other was put on the page long after the sound had gone."
+              "text": "Fourth. The h on hermano looks like the h on hijo. One stood where a Latin f was breathed aloud for centuries; the other went on the page long after the sound had gone."
             }
           ]
         },
@@ -97,7 +97,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The ¿ belongs on that list too, from the other side."
+              "text": "The ¿ belongs on that list from the other side. It is not a survival: the Spanish Royal Academy made it official in 1754, because Spanish leaves the words of a question where they were and something had to warn the reader."
             },
             {
               "kind": "pause",
@@ -107,17 +107,7 @@
             },
             {
               "kind": "speech",
-              "text": "It is not a survival. It was decided — the Spanish Royal Academy made it official in 1754, because Spanish leaves the words of a question where they were and something had to warn the reader in advance."
-            },
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "So the page is carrying a job that English hands to word order. Four inherited surfaces that mislead, and one deliberate surface that helps: worth holding together, because reading a language well is mostly knowing which surfaces to believe."
+              "text": "Four inherited surfaces that mislead, and one deliberate surface that helps."
             }
           ]
         },
@@ -135,11 +125,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "pronto, then English prompt — readiness in both",
+              "instruction": "pronto, then English prompt",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *pronto*, then English *prompt* — readiness in both]"
+              "source": "[YOU SAY: *pronto*, then English *prompt*]"
             },
             {
               "kind": "prompt",
@@ -149,15 +139,6 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *el agua*, then *la bebo*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "hermano, and remember the letter you are not pronouncing",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: *hermano*, and remember the letter you are not pronouncing]"
             },
             {
               "kind": "repeat",
@@ -208,7 +189,8 @@
               "id": "ES-C319-repaso-la-superficie-hache",
               "prompt": "Hijo and hermano both start with a silent h. Which one was once spoken aloud?",
               "assesses": [
-                "ES-SOUND-HERMANO-04"
+                "ES-SOUND-HERMANO-04",
+                "ES-HISTORY-RAE-INVERTED-MARKS"
               ],
               "responseSeconds": 14,
               "acceptedResponses": [
@@ -217,27 +199,8 @@
                 "hijo and hacer"
               ],
               "feedback": {
-                "correct": "Hijo's h was a real breath; hermano's never was.",
+                "correct": "Hijo's h was a real breath; hermano's never was — and like the 1754 opening mark, it is on the page rather than in the mouth.",
                 "incorrect": "Hijo. Its h replaced a Latin f that was genuinely pronounced; hermano's h is spelling only."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C319-repaso-la-superficie-academy",
-              "prompt": "Was the opening mark inherited from Latin, or decided by somebody?",
-              "assesses": [
-                "ES-HISTORY-RAE-INVERTED-MARKS"
-              ],
-              "responseSeconds": 12,
-              "acceptedResponses": [
-                "decided",
-                "decided, by the spanish royal academy in 1754",
-                "the royal academy decided it in 1754"
-              ],
-              "feedback": {
-                "correct": "1754, on purpose.",
-                "incorrect": "Decided — the Spanish Royal Academy made it official in 1754."
               }
             }
           ]
@@ -255,7 +218,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which is the honest witness to a noun's gender — the article or the object pronoun? (The pronoun.) Which of Spanish's two sorries is about fault and getting past people? (Perdón.) When was ¿ made official? (1754.) Was hermano's h ever a sound? (No.) And what does pronto mean on its own? (Soon, from \"ready\".)"
+              "text": "Which is the honest witness to a noun's gender? (The object pronoun.) When was ¿ made official? (1754.) Was hermano's h ever a sound? (No.)"
             }
           ]
         }
@@ -598,6 +561,365 @@
             {
               "kind": "speech",
               "text": "Which of the two is the light, and which is the water? (El faro; el puerto.) And what does pronto promise? (Soon — you will be back shortly.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C319-repaso-presentarse",
+      "sequence": 5090,
+      "title": "Review — an introduction, start to finish",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "a whole introduction in five words — both names, the right form of address, and the reply",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e649aeef1836c830",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two to open. Which word is the first name? (El nombre.) And which is the family one? (El apellido.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five words, and between them a complete first meeting."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can name yourself both ways: el nombre and el apellido. You can address the other person: señor or señora, the same Latin senior wearing the -o/-a switch you have used since bueno and buena. And you can answer the introduction: encantado if you are a man, encantada if you are a woman."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Run it once as one exchange, in your own voice:"
+            },
+            {
+              "kind": "speech",
+              "text": "— Buenos días. Me llamo Ana Ruiz. ¿Cómo se llama usted, señor? — Mi nombre es Luis, y mi apellido es Vargas. Encantado. — Encantada."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el nombre, then el apellido",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el nombre*, then *el apellido*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "señor, then señora",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *señor*, then *señora*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole exchange above, both voices",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole exchange above, both voices]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C319-repaso-presentarse-surname",
+              "prompt": "Which Spanish word is the family name?",
+              "assesses": [
+                "ES-LEX-C305-NAME-02"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "el apellido",
+                "apellido"
+              ],
+              "feedback": {
+                "correct": "The one that came down the family.",
+                "incorrect": "El apellido."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C319-repaso-presentarse-address",
+              "prompt": "Give both forms of address, and the one Latin word behind them.",
+              "assesses": [
+                "ES-LEX-C305-NAME-03",
+                "ES-LEX-C305-NAME-04"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "senor and senora, from senior",
+                "señor, señora — senior",
+                "senor senora senior"
+              ],
+              "feedback": {
+                "correct": "One word, two endings.",
+                "incorrect": "Senor and senora, both from Latin senior."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C319-repaso-presentarse-reply",
+              "prompt": "A woman is answering an introduction. What does she say?",
+              "assesses": [
+                "ES-LEX-C305-NAME-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "encantada",
+                "encantada, with an a"
+              ],
+              "feedback": {
+                "correct": "The ending agrees with the speaker, not the listener.",
+                "incorrect": "Encantada — the -a form."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which Latin word is under señor and señora? (Senior.) Which ending does a woman use to answer an introduction? (-a — encantada.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C319-dos-respuestas",
+      "sequence": 5100,
+      "title": "Review — two ways to answer an introduction",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "the two answers to an introduction — one names the pleasure, one says you have been put under a spell",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:78a6d8afb2b4d850",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does mucho gusto say, word for word? (\"Much pleasure\" — gusto is a taste, and from there a liking.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Somebody has just told you their name. Spanish gives you two answers, and they were minted centuries apart."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "you say",
+                "it literally means"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "you say: mucho gusto. it literally means: much pleasure.",
+                "you say: encantado / encantada. it literally means: put under a spell."
+              ]
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Mucho gusto is the plain one, and it names a feeling: gusto is Latin gustus, a taste. Encantado is Latin incantāre, to sing a spell onto something — English kept it as enchanted, and the raw noun as incantation."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Notice what neither of them does: mention the other person. English says \"pleased to meet you\". Spanish names the pleasure, or names the spell, and leaves you out of it. Either answer is right, and mucho gusto never changes its ending while encantado agrees with whoever is speaking."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mucho gusto, then encantado",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mucho gusto*, then *encantado*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "encantada, and hear the ending follow the speaker",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *encantada*, and hear the ending follow the speaker]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C319-dos-respuestas-spell",
+              "prompt": "Which of the two answers literally says you have been put under a spell?",
+              "assesses": [
+                "ES-LEX-C305-NAME-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "encantado",
+                "encantado or encantada",
+                "encantada"
+              ],
+              "feedback": {
+                "correct": "Incantare — sung onto.",
+                "incorrect": "Encantado, from Latin incantare."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C319-dos-respuestas-taste",
+              "prompt": "What did the gusto of mucho gusto mean first?",
+              "assesses": [
+                "ES-LEX-GUSTO",
+                "ES-LEX-MUCHO-GUSTO"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "a taste",
+                "taste, from gustus",
+                "a tasting"
+              ],
+              "feedback": {
+                "correct": "Taste first, pleasure after.",
+                "incorrect": "A taste — Latin gustus."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which answer changes its ending for the speaker? (Encantado / encantada.) And which one names a pleasure instead of a spell? (Mucho gusto.)"
             }
           ]
         }

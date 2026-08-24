@@ -232,13 +232,16 @@ describe("the committed corpus", () => {
       lessons.filter((lesson) => lesson.language === "spanish"),
       minReuse,
     );
-    // Individual floors/ceilings rather than one `toMatchObject` of exact counts.
-    // Every one of these moves with content: minting a root raises `roots`, and
-    // re-spending one LOWERS `neverSpent`, so an exact object could only ever be
-    // right for whichever parallel tranche merged first.
+    // Individual floors rather than one `toMatchObject` of exact counts. Every one
+    // of these moves with content -- a vocabulary tranche mints roots faster than a
+    // review tranche re-spends them -- so an exact object could only ever be right
+    // for whichever parallel tranche merged first.
     expect(l.summary.roots).toBeGreaterThanOrEqual(470); // FLOOR — content only grows; exact pins serialize parallel tranches
     expect(l.summary.underspent).toBeGreaterThanOrEqual(441); // FLOOR — content only grows; exact pins serialize parallel tranches
-    expect(l.summary.neverSpent).toBeLessThanOrEqual(294); // FLOOR — content only grows; exact pins serialize parallel tranches
+    expect(l.summary.neverSpent).toBeGreaterThanOrEqual(294); // FLOOR — content only grows; exact pins serialize parallel tranches
+    // The share, unlike the counts, is a proportion and does not trend: it is
+    // pinned as a ceiling so a tranche that mints without re-spending is still
+    // visible rather than silently absorbed.
     expect(l.summary.underspentPercent).toBeLessThanOrEqual(94); // FLOOR — content only grows; exact pins serialize parallel tranches
     /* Superseded exact object:
     expect(l.summary).toMatchObject({

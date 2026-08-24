@@ -4,7 +4,7 @@
   "chapter": 318,
   "title": "Review --- Four Things Worth Saying Twice",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:edc7f63a75eecce6",
+  "sourceHash": "fnv1a64:77152a9df18ee825",
   "lessons": [
     {
       "id": "ES-C318-repaso-despedirse",
@@ -368,7 +368,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:67ecce6a927ce723",
+      "sourceHash": "fnv1a64:90cdb3d939ae5d6f",
       "notice": null,
       "blocks": [
         {
@@ -594,7 +594,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ce1acdb1d6c21585",
+      "sourceHash": "fnv1a64:45e68d2b5e7df452",
       "notice": null,
       "blocks": [
         {

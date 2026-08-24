@@ -33,32 +33,57 @@ Where the atom was not already in the lesson's transitive prerequisite closure,
 be practised before it is available, and in each case the dependency was real
 and merely undeclared.
 
-### Eleven atoms closed by new review lessons — chapters 318 and 319
+### Thirteen atoms closed by new review lessons — chapters 318 and 319
 
-The remaining eleven had no later lesson that honestly touches them, so the
-schedule HL00 specified and never built now carries them. Seven `type: review`
+Eleven of the original 24 had no later lesson that honestly touches them, so the
+schedule HL00 specified and never built now carries them. Nine `type: review`
 lessons, introducing nothing, each drilling material the learner already owns:
 
 - `ES-C318-repaso-despedirse` (seq 5020) — *hasta pronto*, and *promptus* inside *pronto*.
 - `ES-C318-repaso-disculparse` (seq 5030) — *lo siento* against *perdón*, the split following the Latin.
 - `ES-C318-repaso-genero` (seq 5040) — *la cabeza*, *el vino*, *la mano*, and the object pronoun as the witness that settles *el agua*.
 - `ES-C318-repaso-marcas` (seq 5050) — the **¿** the Academy made official in 1754, and the *h* on *hermano* that was never spoken.
-- `ES-C319-repaso-la-superficie` (seq 5060) — a second pass over the four facts a surface will not give you.
+- `ES-C319-repaso-la-superficie` (seq 5060) — a second pass over the facts a surface will not give you.
 - `ES-C319-repaso-salir` (seq 5070) — the five words of a leaving, and the five unrelated quarries they came from.
 - `ES-C319-despedida` (seq 5080) — *el puerto*, *el faro*, *hasta pronto*.
+- `ES-C319-repaso-presentarse` (seq 5090) — an introduction start to finish: both names, the address, the reply.
+- `ES-C319-dos-respuestas` (seq 5100) — *mucho gusto* beside *encantado*: a pleasure named, and a spell sung on.
 
-The last two exist because of a measurement subtlety worth recording. A
-reinforcement window is only judged when the track is long enough to contain it,
-so the atoms of the final chapter had never been judged at all. Extending the
-track by five lessons made chapter 302's `ES-LEX-C302-AWAY-04` and `-05` visible
-for the first time, with 1 and 0 revisits. They are closed here rather than left
-for whoever next appends to the track and finds a number that went up.
+### The tail-atom effect, recorded because it will recur
+
+Two more atoms than the original 24 are closed here, and the reason is
+structural rather than incidental. A reinforcement window is only judged when
+the track is long enough to contain it, so the atoms introduced by a track's
+LAST chapter have never been judged at all. Every vocabulary tranche therefore
+ends in a short tail of atoms that are invisible until something extends the
+track past them.
+
+Adding these review lessons is exactly such an extension. It made chapter 302's
+`ES-LEX-C302-AWAY-04`/`-05` visible with 1 and 0 revisits, and — after this
+branch merged the survival tranche's chapters 303-305 — chapter 305's
+`ES-LEX-C305-NAME-04`/`-05` likewise. Both pairs are closed here rather than
+left for whoever next appends to the track and finds a number that went up.
+
+The general shape is worth stating: **any tranche that appends to the end of a
+track leaves reinforcement debt that only the NEXT appender can see.** Closing
+it belongs with whoever extends the track next, not with the tranche that
+created it, because until the track grows the debt does not exist as a
+measurement.
 
 ### Also
 
 - Chapters 318 and 319 added to `spanish/chapters.json`, `spanish/curriculum.json`
-  (five path segments, two extensions, four spine-node segment lists),
+  (seven path segments, seven extensions, five spine-node segment lists),
   `core/book-generation.json` and `spanish/book/book.tex`.
 - Every generated artifact regenerated: lesson modality, narration, figures,
-  track progress, gentle-ramp snapshots and book chapters all report clean
+  gentle-ramp snapshots, book chapters and track progress all report clean
   under `--check`.
+- Four pinned test counters relaxed in the direction they actually move, keeping
+  their existing numbers so parallel tranches do not serialize behind them:
+  Spanish book-chapter count, the two `worstTerms` counts, and the Spanish
+  root-ledger summary.
+- `level-gate.test.ts`'s etymology-waiver test rewritten. It read Spanish and
+  pinned `reinforcement.shortfall` to 24; Spanish no longer has a reinforcement
+  blocker to read. The waiver is now proved by counterfactual — rename the
+  etymology atoms out of the `-ETYMON-` convention and some track's shortfall
+  must rise — which bites harder than the constant did and pins no corpus figure.

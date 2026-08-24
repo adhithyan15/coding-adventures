@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:aa13c61245fdfac1",
+  "sourceHash": "fnv1a64:bc50978e51921529",
   "summary": {
-    "totalLessons": 604,
-    "voice": 548,
+    "totalLessons": 613,
+    "voice": 557,
     "sight": 45,
     "pen": 11,
-    "drivableLessons": 548,
+    "drivableLessons": 557,
     "drivablePercent": 91,
     "trackCount": 1,
-    "chapterCount": 305,
-    "drivablePrefixTotal": 522,
-    "fullyDrivableChapters": 258,
+    "chapterCount": 307,
+    "drivablePrefixTotal": 531,
+    "fullyDrivableChapters": 260,
     "unstartableChapters": 38,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -26,12 +26,12 @@
   "tracks": [
     {
       "language": "spanish",
-      "lessonCount": 604,
-      "voice": 548,
+      "lessonCount": 613,
+      "voice": 557,
       "sight": 45,
       "pen": 11,
       "drivablePercent": 91,
-      "drivablePrefixTotal": 522,
+      "drivablePrefixTotal": 531,
       "modalities": [
         "voice",
         "sight",
@@ -5114,6 +5114,45 @@
             "ES-C305-senora",
             "ES-C305-encantado"
           ]
+        },
+        {
+          "chapter": 318,
+          "lessonCount": 4,
+          "voice": 4,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C318-repaso-despedirse",
+            "ES-C318-repaso-disculparse",
+            "ES-C318-repaso-genero",
+            "ES-C318-repaso-marcas"
+          ]
+        },
+        {
+          "chapter": 319,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C319-repaso-la-superficie",
+            "ES-C319-repaso-salir",
+            "ES-C319-despedida",
+            "ES-C319-repaso-presentarse",
+            "ES-C319-dos-respuestas"
+          ]
         }
       ]
     }
@@ -6331,7 +6370,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:2abb45cb383aafae"
+      "sourceHash": "fnv1a64:38d26730524f6cb4"
     },
     {
       "id": "ES-C05-hasta-pronto",
@@ -6385,7 +6424,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:40a3b88295e15b63"
+      "sourceHash": "fnv1a64:d564b7dff853bb39"
     },
     {
       "id": "ES-C06-por-favor",
@@ -6655,7 +6694,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:917176c3997dd95f"
+      "sourceHash": "fnv1a64:9afec1ea9dfee22f"
     },
     {
       "id": "ES-C56-cion",
@@ -8855,7 +8894,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ff08f8bab71662e4"
+      "sourceHash": "fnv1a64:85595cddc8ade234"
     },
     {
       "id": "ES-C14-practice",
@@ -10601,7 +10640,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:2a77293bdff517fb"
+      "sourceHash": "fnv1a64:80d44bfad46b848a"
     },
     {
       "id": "ES-C35-sintesis-gustar",
@@ -10745,7 +10784,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:90608538c412655f"
+      "sourceHash": "fnv1a64:bf2f054d90f8e7ad"
     },
     {
       "id": "ES-C37-levantarse",
@@ -10781,7 +10820,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:560fcc06478b4bca"
+      "sourceHash": "fnv1a64:cd3a28828f875924"
     },
     {
       "id": "ES-C38-porque",
@@ -10997,7 +11036,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:3e7399468f1b5db2"
+      "sourceHash": "fnv1a64:06e99e37e2ac6756"
     },
     {
       "id": "ES-C41-creer",
@@ -12167,7 +12206,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a159037411994ed6"
+      "sourceHash": "fnv1a64:8a864eee554e80c4"
     },
     {
       "id": "ES-C62-hablando",
@@ -14525,7 +14564,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:71806202f6af4fb0"
+      "sourceHash": "fnv1a64:dcc7daccd7607fa6"
     },
     {
       "id": "ES-C289-cielo",
@@ -14633,7 +14672,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:84f7dee06c783997"
+      "sourceHash": "fnv1a64:2eb906be7dd1659b"
     },
     {
       "id": "ES-C290-cebolla",
@@ -16038,6 +16077,168 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:2a3d92b90c924438"
+    },
+    {
+      "id": "ES-C318-repaso-despedirse",
+      "language": "spanish",
+      "chapter": 318,
+      "sequence": 5020,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:445d91e379ef9b82"
+    },
+    {
+      "id": "ES-C318-repaso-disculparse",
+      "language": "spanish",
+      "chapter": 318,
+      "sequence": 5030,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a47c9d7bba449f61"
+    },
+    {
+      "id": "ES-C318-repaso-genero",
+      "language": "spanish",
+      "chapter": 318,
+      "sequence": 5040,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:90cdb3d939ae5d6f"
+    },
+    {
+      "id": "ES-C318-repaso-marcas",
+      "language": "spanish",
+      "chapter": 318,
+      "sequence": 5050,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:45e68d2b5e7df452"
+    },
+    {
+      "id": "ES-C319-repaso-la-superficie",
+      "language": "spanish",
+      "chapter": 319,
+      "sequence": 5060,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:dbfcdf40f31b96a2"
+    },
+    {
+      "id": "ES-C319-repaso-salir",
+      "language": "spanish",
+      "chapter": 319,
+      "sequence": 5070,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:4348724ce244d3d2"
+    },
+    {
+      "id": "ES-C319-despedida",
+      "language": "spanish",
+      "chapter": 319,
+      "sequence": 5080,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e7910e0b56f46448"
+    },
+    {
+      "id": "ES-C319-repaso-presentarse",
+      "language": "spanish",
+      "chapter": 319,
+      "sequence": 5090,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e649aeef1836c830"
+    },
+    {
+      "id": "ES-C319-dos-respuestas",
+      "language": "spanish",
+      "chapter": 319,
+      "sequence": 5100,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:78a6d8afb2b4d850"
     }
   ],
   "findings": []

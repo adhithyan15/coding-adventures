@@ -3863,7 +3863,9 @@
         "ES-C318-repaso-disculparse"
       ],
       "before": [],
-      "inline": [],
+      "inline": [
+        "ES-EXT-318-DISCULPA"
+      ],
       "after": []
     },
     {
@@ -3873,7 +3875,9 @@
         "ES-C318-repaso-genero"
       ],
       "before": [],
-      "inline": [],
+      "inline": [
+        "ES-EXT-318-GENERO"
+      ],
       "after": []
     },
     {
@@ -3883,7 +3887,9 @@
         "ES-C318-repaso-marcas"
       ],
       "before": [],
-      "inline": [],
+      "inline": [
+        "ES-EXT-318-MARCAS"
+      ],
       "after": []
     },
     {
@@ -3906,7 +3912,22 @@
         "ES-C319-despedida"
       ],
       "before": [],
-      "inline": [],
+      "inline": [
+        "ES-EXT-319-SALIR"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-319-03",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "ES-C319-repaso-presentarse",
+        "ES-C319-dos-respuestas"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-319-PRESENTARSE"
+      ],
       "after": []
     }
   ],
@@ -3961,7 +3982,8 @@
         "ES-PATH-285-01",
         "ES-PATH-292-01",
         "ES-PATH-299-01",
-        "ES-PATH-305-01"
+        "ES-PATH-305-01",
+        "ES-PATH-319-03"
       ],
       "omits": [
         "PRONOUN-I",
@@ -7903,6 +7925,39 @@
       ]
     },
     {
+      "id": "ES-EXT-318-DISCULPA",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "review",
+      "canDo": "I can choose between lo siento and perdon and say why they are not interchangeable.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C318-repaso-disculparse"
+      ]
+    },
+    {
+      "id": "ES-EXT-318-GENERO",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "review",
+      "canDo": "I can place a noun by gender when the ending helps, and use the object pronoun as evidence when it does not.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C318-repaso-genero"
+      ]
+    },
+    {
+      "id": "ES-EXT-318-MARCAS",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "review",
+      "canDo": "I can say when the opening question mark was made official and why the h on hermano was never spoken.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C318-repaso-marcas"
+      ]
+    },
+    {
       "id": "ES-EXT-319-REPASO",
       "stage": "pre-A1",
       "kind": "required",
@@ -7911,6 +7966,30 @@
       "prerequisites": [],
       "lessons": [
         "ES-C319-repaso-la-superficie"
+      ]
+    },
+    {
+      "id": "ES-EXT-319-SALIR",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "review",
+      "canDo": "I can name the five stages of a leaving in order, and close it with a goodbye that says I will be back soon.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C319-repaso-salir",
+        "ES-C319-despedida"
+      ]
+    },
+    {
+      "id": "ES-EXT-319-PRESENTARSE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "review",
+      "canDo": "I can run a whole introduction in Spanish and answer one two different ways.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C319-repaso-presentarse",
+        "ES-C319-dos-respuestas"
       ]
     }
   ],
