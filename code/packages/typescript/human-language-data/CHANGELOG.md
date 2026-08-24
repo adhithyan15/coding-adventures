@@ -7,6 +7,12 @@
 - Let combining marks carry multiple normalized carrier examples plus a sourced
   carrier-first composition order, initially for Arabic seated Hamza.
 
+### Changed - deterministic continuity complexity regression (#12322)
+
+- Replace the adversarial whole-word matcher's wall-clock budget with exact
+  candidate-check and skipped-run counts, preserving the nonlinear-regression
+  gate without making it sensitive to parallel Windows runner load.
+
 ### Changed - honest zero-new-atom review measurement (#12496)
 
 - Count schema-v2 `review`, `practice`, and `practice-mix` lessons as measurable
