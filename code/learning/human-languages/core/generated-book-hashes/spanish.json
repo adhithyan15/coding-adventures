@@ -3006,6 +3006,45 @@
         "ES-C302-faro"
       ],
       "tex": "spanish/book/chapters/ch302-calle-y-faro.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 303,
+      "sourceHash": "fnv1a64:2436808dfe19056a",
+      "lessonIds": [
+        "ES-C303-ayuda",
+        "ES-C303-momento",
+        "ES-C303-otra-vez",
+        "ES-C303-no-se",
+        "ES-C303-que-significa"
+      ],
+      "tex": "spanish/book/chapters/ch303-reparaciones.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 304,
+      "sourceHash": "fnv1a64:5c469f4a8723fa9f",
+      "lessonIds": [
+        "ES-C304-tranquilo",
+        "ES-C304-enfermo",
+        "ES-C304-contento",
+        "ES-C304-ocupado",
+        "ES-C304-triste"
+      ],
+      "tex": "spanish/book/chapters/ch304-como-estoy.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 305,
+      "sourceHash": "fnv1a64:77977d90461b6ffe",
+      "lessonIds": [
+        "ES-C305-nombre",
+        "ES-C305-apellido",
+        "ES-C305-senor",
+        "ES-C305-senora",
+        "ES-C305-encantado"
+      ],
+      "tex": "spanish/book/chapters/ch305-nombre-y-apellido.tex"
     }
   ]
 }

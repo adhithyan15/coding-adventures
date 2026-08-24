@@ -1,0 +1,700 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 303,
+  "title": "When the Words Run Out --- Help, a Moment, Again, I Don't Know, What Does It Mean",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c04d281c67b8fbac",
+  "lessons": [
+    {
+      "id": "ES-C303-ayuda",
+      "sequence": 4270,
+      "title": "la ayuda — the word that stands beside you",
+      "headword": "la ayuda",
+      "romanization": "la ayuda",
+      "gloss": "help — Latin adiutare, to bring strength toward someone; the same root gives English aid",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1265e7c208d48780",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two from last time, before anything new is added."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say it once slowly, then at speed. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la ayuda — \"help.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin adiutare was built from iuvare, \"to give strength,\" with ad-, \"toward.\" To help was to bring your strength toward somebody. Not to take over, not to fix — to stand beside and add what you have."
+            },
+            {
+              "kind": "speech",
+              "text": "English took the same stem twice. Aid is the plain one. An adjutant is the officer who stands beside a commander and adds capacity."
+            },
+            {
+              "kind": "speech",
+              "text": "Said alone — ayuda — it is a call. Said with por favor, it is a request."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Your first repair word that asks for a person, not a repetition."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la ayuda",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la ayuda*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ayuda, por favor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ayuda, por favor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "disculpe — ayuda, por favor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *disculpe — ayuda, por favor*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did adiutare mean, literally? (To bring strength toward.) Which English word is it, worn down? (Aid.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C303-momento",
+      "sequence": 4280,
+      "title": "el momento — the tilt of a balance",
+      "headword": "el momento",
+      "romanization": "el momento",
+      "gloss": "a moment — Latin momentum, the smallest movement that tips a balance",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:06ab85853527dff2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two from last time, before anything new is added."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say it once slowly, then at speed. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el momento — \"a moment.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin momentum came from movere, \"to move,\" and it did not mean time at all. It meant the smallest movement that tips a balance — the last grain that makes one pan drop."
+            },
+            {
+              "kind": "speech",
+              "text": "That is a weight, not a duration. But the tipping happens in an instant, and the word slid from the movement to the instant. English kept the original sense in momentum and the borrowed sense in moment."
+            },
+            {
+              "kind": "speech",
+              "text": "Un momento, por favor buys you that instant — and it is the politest thing you can say when you need to think."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two repair words now: one asks for a person, one asks for time."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el momento",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el momento*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un momento, por favor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un momento, por favor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un momento — no entiendo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un momento — no entiendo*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did momentum weigh? (The last grain that tips a balance.) What do you say to buy an instant? (Un momento, por favor.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C303-otra-vez",
+      "sequence": 4290,
+      "title": "otra vez — another turn round",
+      "headword": "otra vez",
+      "romanization": "otra vez",
+      "gloss": "again — literally another turn; vez is Latin vicem, a turn taken in rotation",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b661e5e1d9491b7b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two from last time, before anything new is added."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say it once slowly, then at speed. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "otra vez — \"again.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Word by word it is \"another turn.\" Vez is Latin vicem, and vicem meant a turn taken in rotation — your go, coming round again."
+            },
+            {
+              "kind": "speech",
+              "text": "English holds that exact word in several places. Vice versa is \"the turn having been changed.\" A vicar stands in somebody else's turn. A vice-president takes the turn of the president."
+            },
+            {
+              "kind": "speech",
+              "text": "So otra vez does not say \"repeat.\" It says another go round — a kinder thing to ask of a stranger, and it pairs with what you already have."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three ways to repair now — ask for a person, for time, or for another go."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "otra vez",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *otra vez*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "otra vez, por favor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *otra vez, por favor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "más despacio, otra vez, por favor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *más despacio, otra vez, por favor*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is a vez? (A turn, coming round.) Which English phrase hides the same word? (Vice versa.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C303-no-se",
+      "sequence": 4300,
+      "title": "no sé — what you have not tasted",
+      "headword": "no sé",
+      "romanization": "no sé",
+      "gloss": "I do not know — saber is Latin sapere, to taste; knowing began as tasting",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2bb6f70f1588b60a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two from last time, before anything new is added."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say it once slowly, then at speed. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "no sé — \"I do not know.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Sé comes from Latin sapere, and sapere meant to taste — to have flavour, and then to have the discernment that tasting implies."
+            },
+            {
+              "kind": "speech",
+              "text": "Follow it into English and the metaphor is still warm. Savour is the taste itself. Insipid is in- plus sapidus: without flavour. Sapient — and Homo sapiens — is \"the one that has tasted,\" a far more modest name for our species than it usually sounds."
+            },
+            {
+              "kind": "speech",
+              "text": "So no sé is not a failure. It is \"I have not tasted that.\" Note the written mark: sé with an accent is \"I know\"; se without one is a different word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The fourth repair: the honest one, when there is nothing to ask for."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "no sé",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *no sé*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "no sé, lo siento",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *no sé, lo siento*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "no sé — más despacio, por favor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *no sé — más despacio, por favor*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did sapere mean first? (To taste.) What is Homo sapiens, literally? (The one that has tasted.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C303-que-significa",
+      "sequence": 4310,
+      "title": "¿qué significa? — asking for the meaning, not the word",
+      "headword": "¿qué significa?",
+      "romanization": "¿qué significa?",
+      "gloss": "what does it mean — significar is Latin significare, to make a sign",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4b77b6c9c7ac93e8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two from last time, before anything new is added."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say it once slowly, then at speed. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "¿qué significa? — \"what does it mean?\""
+            },
+            {
+              "kind": "speech",
+              "text": "Significar is Latin significare, and it takes apart cleanly: signum, \"a sign,\" plus facere, \"to make.\" To mean something was to make a sign of it."
+            },
+            {
+              "kind": "speech",
+              "text": "English took the whole family: sign, signal, signify, significant, and design — de- plus signare, to mark something out."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the twin of the question you cannot ask yet. One asks for a word you do not have; this one asks for the meaning of a word you have just heard and did not follow. Between them they cover both directions, and either one turns a stranger into a source."
+            },
+            {
+              "kind": "speech",
+              "text": "Point at the written word, or say it back, and ask."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five repairs, and the last one gets you meanings rather than words."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "¿qué significa?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *¿qué significa?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "disculpe, ¿qué significa?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *disculpe, ¿qué significa?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "no entiendo. ¿qué significa?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *no entiendo. ¿qué significa?*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Take significare apart. (Signum a sign, facere to make.) Which English word is de- plus signare? (Design.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
