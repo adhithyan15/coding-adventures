@@ -16,7 +16,7 @@ class PythonHashFunctionsBuildFrontTests(unittest.TestCase):
                 "uv pip install --python .venv -e .[dev] --quiet",
                 ".venv/bin/python -m ruff check src tests",
                 ".venv/bin/python -m ruff format --check src tests",
-                ".venv/bin/python -m mypy src tests",
+                ".venv/bin/python -m mypy --strict src tests",
                 ".venv/bin/python -m pytest tests/ -v",
             ],
         )
@@ -30,7 +30,7 @@ class PythonHashFunctionsBuildFrontTests(unittest.TestCase):
                 "uv pip install --python .venv pytest pytest-cov ruff mypy --quiet",
                 r".venv\Scripts\python.exe -m ruff check src tests",
                 r".venv\Scripts\python.exe -m ruff format --check src tests",
-                r".venv\Scripts\python.exe -m mypy src tests",
+                r".venv\Scripts\python.exe -m mypy --strict src tests",
                 r".venv\Scripts\python.exe -m pytest tests/ -v",
             ],
         )
