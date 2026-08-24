@@ -3025,6 +3025,43 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: devanagariAlphabetSource("च"),
   },
+  // Opiaterein's animation keeps the upper-left loop, lower bowl, outer-right
+  // rise, and inner loop in one continuous run, then separately descends the
+  // short upper stem and finishes the headline: three strokes, two lifts.
+  [ductusKey("devanagari", "छ")]: {
+    script: "devanagari",
+    glyph: "छ",
+    strokes: [
+      { segments: [{ label: "sweep through both left loops, around the lower bowl, and into the inner loop", path: [
+        { x: 275, y: 458 }, { x: 245, y: 478 }, { x: 195, y: 480 },
+        { x: 145, y: 472 }, { x: 100, y: 452 }, { x: 68, y: 420 },
+        { x: 48, y: 382 }, { x: 45, y: 345 }, { x: 58, y: 310 },
+        { x: 85, y: 280 }, { x: 120, y: 258 }, { x: 158, y: 245 },
+        { x: 195, y: 238 }, { x: 170, y: 220 }, { x: 138, y: 195 },
+        { x: 112, y: 165 }, { x: 108, y: 142 }, { x: 120, y: 120 },
+        { x: 145, y: 92 }, { x: 175, y: 65 }, { x: 210, y: 42 },
+        { x: 248, y: 10 }, { x: 305, y: 10 }, { x: 365, y: 20 },
+        { x: 425, y: 42 }, { x: 480, y: 78 }, { x: 528, y: 125 },
+        { x: 565, y: 180 }, { x: 590, y: 240 }, { x: 602, y: 305 },
+        { x: 600, y: 365 }, { x: 585, y: 415 }, { x: 558, y: 452 },
+        { x: 525, y: 474 }, { x: 492, y: 478 }, { x: 465, y: 464 },
+        { x: 435, y: 445 }, { x: 412, y: 420 }, { x: 398, y: 390 },
+        { x: 392, y: 357 }, { x: 398, y: 325 }, { x: 414, y: 295 },
+        { x: 440, y: 270 }, { x: 470, y: 250 }, { x: 500, y: 232 },
+        { x: 525, y: 218 },
+      ] }] },
+      { segments: [{ label: "lift, then descend the short upper stem", path: [
+        { x: 510, y: 551 }, { x: 510, y: 530 }, { x: 510, y: 505 },
+        { x: 510, y: 480 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the shirorekha left-to-right", path: [
+        { x: 5, y: 585 }, { x: 95, y: 585 }, { x: 185, y: 585 },
+        { x: 275, y: 585 }, { x: 365, y: 585 }, { x: 455, y: 585 },
+        { x: 545, y: 585 }, { x: 635, y: 585 }, { x: 715, y: 585 },
+      ] }] },
+    ],
+    source: devanagariAlphabetSource("छ"),
+  },
   // Opiaterein's animation keeps the open hook, clockwise lower bowl, inner
   // shoulder, and middle bar in one run, then separately descends the right
   // stem and finishes the headline: three strokes, two lifts.
