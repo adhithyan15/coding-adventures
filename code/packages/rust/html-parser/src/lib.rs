@@ -8545,10 +8545,13 @@ impl HtmlParser {
 
     fn report_repeated_nobr_start_if_in_scope(&mut self) {
         if self.open_html_element_in_scope_index("nobr").is_some() {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "nested-nobr-start-tag",
-                "start tag `<nobr>` triggered adoption-agency recovery for an active nobr in scope",
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "nested-nobr-start-tag",
+                    "start tag `<nobr>` triggered adoption-agency recovery for an active nobr in scope",
+                )
+                .at_emission(self.current_token_emission_position),
+            );
         }
     }
 
@@ -27457,6 +27460,14 @@ mod tests {
         )))
     }
 
+    fn nested_nobr_start_tag(source: &str, occurrence: usize) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "nested-nobr-start-tag",
+            "start tag `<nobr>` triggered adoption-agency recovery for an active nobr in scope",
+        )
+        .at_emission(Some(start_tag_position_at(source, "nobr", occurrence)))
+    }
+
     fn unexpected_description_item_end_tag(source: &str, name: &str) -> ParserDiagnostic {
         ParserDiagnostic::new(
             "unexpected-description-item-end-tag",
@@ -33843,15 +33854,41 @@ mod tests {
             );
         }
 
+        let repeated_source = "<!doctype html><nobr>1<nobr>2<nobr>3";
+        let repeated = parse_html_with_diagnostics(repeated_source).unwrap();
+        assert_eq!(
+            repeated
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "nested-nobr-start-tag")
+                .collect::<Vec<_>>(),
+            vec![
+                &nested_nobr_start_tag(repeated_source, 1),
+                &nested_nobr_start_tag(repeated_source, 2),
+            ],
+        );
+
+        let unicode_source = "<!doctype html><!--é-->\r\n<nobr>1<nobr>2";
+        let unicode = parse_html_with_diagnostics(unicode_source).unwrap();
+        assert_eq!(
+            unicode
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "nested-nobr-start-tag")
+                .collect::<Vec<_>>(),
+            vec![&nested_nobr_start_tag(unicode_source, 1)],
+        );
+
+        let fragment_source = "<nobr>1<nobr>2";
         let fragment =
-            parse_html_fragment_for_context_with_diagnostics("<nobr>1<nobr>2", "div").unwrap();
+            parse_html_fragment_for_context_with_diagnostics(fragment_source, "div").unwrap();
         assert_eq!(
             fragment
                 .parser_diagnostics
                 .iter()
                 .filter(|diagnostic| diagnostic.code == "nested-nobr-start-tag")
-                .count(),
-            1,
+                .collect::<Vec<_>>(),
+            vec![&nested_nobr_start_tag(fragment_source, 1)],
         );
 
         let synthetic_nobr =
@@ -33860,6 +33897,35 @@ mod tests {
             .parser_diagnostics
             .iter()
             .all(|diagnostic| diagnostic.code != "nested-nobr-start-tag"));
+
+        let incomplete = parse_html_with_diagnostics("<!doctype html><nobr>1<nobr").unwrap();
+        assert!(incomplete
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "nested-nobr-start-tag"));
+
+        let mut unpositioned = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        for token in [
+            Token::StartTag {
+                name: "nobr".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "nobr".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Eof,
+        ] {
+            unpositioned.process_token(token);
+        }
+        let diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| diagnostic.code == "nested-nobr-start-tag")
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
     }
 
     #[test]
