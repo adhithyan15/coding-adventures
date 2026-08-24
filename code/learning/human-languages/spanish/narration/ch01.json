@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 1,
   "title": "Hola and Buenos Días",
-  "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:7f767862168ad0bf",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:fd4772569c89d1eb",
   "lessons": [
     {
       "id": "ES-C01-hola",
@@ -137,6 +137,434 @@
             {
               "kind": "speech",
               "text": "Two things to lock in: what sound does the h make? (None.) And is hola actually related to English hello? (No — a coincidence, a false friend.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-W00-hola-observe",
+      "sequence": 11,
+      "title": "hola — let your eye and your hand meet the word",
+      "headword": "hola",
+      "romanization": "hola",
+      "gloss": "notice and trace the written shape of the first greeting",
+      "script": "latin",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:fc3c480f7549f656",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the greeting you already know: hola, OH-la. Today adds no new Spanish at all. You will only look at how that one familiar word sits on a page, and let your hand follow it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built — one written word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "h o l a becomes hola."
+            },
+            {
+              "kind": "speech",
+              "text": "Count them: four written letters."
+            },
+            {
+              "kind": "speech",
+              "text": "Now count what your mouth does: OH-la — three sounds."
+            },
+            {
+              "kind": "speech",
+              "text": "The extra letter is the one at the front. You met it in the very first lesson: the h is written and says nothing. Here is the same fact seen from the other side — when you listen, the h is missing; when you write, it must be there."
+            },
+            {
+              "kind": "speech",
+              "text": "Point to each letter from left to right, once: h, o, l, a."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — trace with the model visible",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep hola visible in front of you the whole time."
+            },
+            {
+              "kind": "speech",
+              "text": "Slowly finger-trace the four letters once, left to right. Then trace the word once more in the air."
+            },
+            {
+              "kind": "speech",
+              "text": "Say OH-la only after your finger has passed the silent h and reached the final a."
+            },
+            {
+              "kind": "speech",
+              "text": "This is noticing, not a handwriting test. Use the letter shapes you already write. There is no new alphabet here — Spanish uses the letters you have written all your life."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Touch the silent letter. Stop here — copying comes in the next tiny lesson."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-W00-hola-observe-final",
+              "prompt": "How many letters are written in hola, and which one makes no sound?",
+              "assesses": [
+                "ES-ORTHO-HOLA-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "four letters; the h",
+                "4",
+                "four",
+                "h",
+                "the h",
+                "four, h"
+              ],
+              "feedback": {
+                "correct": "Right: four written letters, and the h is silent.",
+                "incorrect": "Count h-o-l-a: four letters. The first one, h, says nothing."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-W00-hola-guided-copy",
+      "sequence": 12,
+      "title": "hola — one supported copy",
+      "headword": "hola",
+      "romanization": "hola",
+      "gloss": "copy the first greeting once with the model visible",
+      "script": "latin",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:4ee94029c5e4024d",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Point to the first letter in hola. It is written h and it is said as silence."
+            },
+            {
+              "kind": "speech",
+              "text": "Keep the model on the page for the whole of this lesson. You are not being asked to remember anything today."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — guided copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy hola once. You may look back at the model after every single letter — that is what \"guided\" means here."
+            },
+            {
+              "kind": "speech",
+              "text": "When you finish, touch your own h-o-l-a and say OH-la."
+            },
+            {
+              "kind": "speech",
+              "text": "Your eye checks four letters. Your voice makes three sounds. The hand writes one letter the mouth never says."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Compare only the order of the four letters and whether the h is there. Repair one letter if you need to, then stop. The model stays visible today."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-W00-hola-guided-copy-check",
+              "prompt": "Copy the visible word hola once, then report how many letters you wrote.",
+              "assesses": [
+                "ES-ORTHO-HOLA-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "hola — four letters",
+                "hola",
+                "4",
+                "four"
+              ],
+              "feedback": {
+                "correct": "Good: one supported four-letter copy is enough today.",
+                "incorrect": "Look back at the model and copy h-o-l-a once."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-W00-hola-delayed-copy",
+      "sequence": 13,
+      "title": "hola — look, hide, write, compare",
+      "headword": "hola",
+      "romanization": "hola",
+      "gloss": "look, hide, write, compare, and repair the first greeting",
+      "script": "latin",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:b5f9bee794d5ff68",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at hola for five seconds. Touch the silent h at the front. Do not copy it yet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — delayed copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cover hola."
+            },
+            {
+              "kind": "speech",
+              "text": "wait five seconds."
+            },
+            {
+              "kind": "speech",
+              "text": "write the word once from memory."
+            },
+            {
+              "kind": "speech",
+              "text": "uncover the model and compare h-o-l-a."
+            },
+            {
+              "kind": "speech",
+              "text": "The place to check first is the front of the word. When the model disappears, the letter your voice never says is the one most likely to go with it."
+            },
+            {
+              "kind": "speech",
+              "text": "If one letter differs, circle that place and repair only that letter. A repair is part of the exercise, not a failure."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read your repaired word aloud as OH-la. Stop after one memory attempt."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-W00-hola-delayed-copy-check",
+              "prompt": "After hiding the model for five seconds, write the greeting and then compare it.",
+              "assesses": [
+                "ES-ORTHO-HOLA-01"
+              ],
+              "responseSeconds": 18,
+              "acceptedResponses": [
+                "hola"
+              ],
+              "feedback": {
+                "correct": "Yes: hola, with its written silent h at the front.",
+                "incorrect": "Uncover the model, repair only the differing letter, and try once more tomorrow."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-W00-hola-dictation",
+      "sequence": 14,
+      "title": "One heard greeting — write what you know",
+      "headword": "hola",
+      "romanization": "hola",
+      "gloss": "write the first greeting from a heard cue with no visible model",
+      "script": "latin",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:f29a69320cfa9052",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover the answer line lower on this page. You will hear one familiar greeting. No new Spanish is hiding in this lesson."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — short dictation",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "OH-la",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *OH-la*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write the Spanish greeting from that sound alone."
+            },
+            {
+              "kind": "speech",
+              "text": "Three sounds reached your ear. Four letters belong on your page. Your pen has to supply a letter that the sound never gave you — and it goes first."
+            },
+            {
+              "kind": "speech",
+              "text": "Now uncover and compare: hola. Check the four letters and the h at the front. Repair one place if you need to."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Writing from sound is the last step of this four-step runway. It is not a DELE task yet; later lessons grow this from one known word to names, numbers, forms, and short practical messages."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-W00-hola-dictation-answer",
+              "prompt": "From the heard cue OH-la alone, write the known greeting.",
+              "assesses": [
+                "ES-ORTHO-HOLA-01"
+              ],
+              "responseSeconds": 18,
+              "acceptedResponses": [
+                "hola"
+              ],
+              "feedback": {
+                "correct": "hola — four written letters, and the h at the front is silent.",
+                "incorrect": "The sound begins on OH, but the spelling begins with a silent h: hola."
+              }
             }
           ]
         }

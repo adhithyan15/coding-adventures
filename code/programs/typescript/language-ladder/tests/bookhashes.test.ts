@@ -60,7 +60,11 @@ describe("generated book source hashes", () => {
     // HL-C105 gave ser its plural. Spanish runs 1..103.
     // HL-C105 gave estar its plural, beside ser. Spanish runs 1..104.
     // HL-C105 completed tener and ir in the plural. Spanish runs 1..106.
-    [1, 7],
+    // HL19 put the pre-A1 writing runway into chapter 1: ES-W00-hola-observe,
+    // -guided-copy, -delayed-copy and -dictation. Spanish had no
+    // `hl-writing-stage` evidence at all before this, so those four are its
+    // whole observe-trace -> dictation ladder. Chapter 1 goes 7 -> 11.
+    [1, 11],
     [2, 6],
     [3, 3],
     [4, 4],

@@ -6,11 +6,17 @@
       "id": "ES-PATH-001",
       "spine_node": "SPINE-MEET-GREET",
       "lessons": [
-        "ES-C01-hola"
+        "ES-C01-hola",
+        "ES-W00-hola-observe",
+        "ES-W00-hola-guided-copy",
+        "ES-W00-hola-delayed-copy",
+        "ES-W00-hola-dictation"
       ],
       "before": [],
       "inline": [],
-      "after": []
+      "after": [
+        "ES-EXT-001-WRITING-RUNWAY"
+      ]
     },
     {
       "id": "ES-PATH-002",
@@ -4333,6 +4339,20 @@
     }
   },
   "extensions": [
+    {
+      "id": "ES-EXT-001-WRITING-RUNWAY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can trace, copy, recall, and write hola from a heard cue while supplying its silent h.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-W00-hola-observe",
+        "ES-W00-hola-guided-copy",
+        "ES-W00-hola-delayed-copy",
+        "ES-W00-hola-dictation"
+      ]
+    },
     {
       "id": "ES-EXT-003-GRAMMAR",
       "stage": "A1",

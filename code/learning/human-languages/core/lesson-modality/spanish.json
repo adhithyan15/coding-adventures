@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:aba45f05333889de",
+  "sourceHash": "fnv1a64:cd212e3dd59e0542",
   "summary": {
-    "totalLessons": 585,
+    "totalLessons": 589,
     "voice": 533,
     "sight": 45,
-    "pen": 7,
+    "pen": 11,
     "drivableLessons": 533,
-    "drivablePercent": 91,
+    "drivablePercent": 90,
     "trackCount": 1,
     "chapterCount": 302,
-    "drivablePrefixTotal": 513,
-    "fullyDrivableChapters": 256,
+    "drivablePrefixTotal": 507,
+    "fullyDrivableChapters": 255,
     "unstartableChapters": 38,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -26,12 +26,12 @@
   "tracks": [
     {
       "language": "spanish",
-      "lessonCount": 585,
+      "lessonCount": 589,
       "voice": 533,
       "sight": 45,
-      "pen": 7,
-      "drivablePercent": 91,
-      "drivablePrefixTotal": 513,
+      "pen": 11,
+      "drivablePercent": 90,
+      "drivablePrefixTotal": 507,
       "modalities": [
         "voice",
         "sight",
@@ -40,24 +40,20 @@
       "chapters": [
         {
           "chapter": 1,
-          "lessonCount": 7,
+          "lessonCount": 11,
           "voice": 7,
           "sight": 0,
-          "pen": 0,
+          "pen": 4,
           "modalities": [
-            "voice"
+            "voice",
+            "sight",
+            "pen"
           ],
-          "drivablePrefix": 7,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": "ES-W00-hola-observe",
+          "drivable": false,
           "drivableLessonIds": [
-            "ES-C01-hola",
-            "ES-C01-bien",
-            "ES-C01-el-la",
-            "ES-C01-genero-gramatical",
-            "ES-C01-dia",
-            "ES-C01-buenos-dias",
-            "ES-C01-practice"
+            "ES-C01-hola"
           ]
         },
         {
@@ -5080,6 +5076,98 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:7a030311d9732cc3"
+    },
+    {
+      "id": "ES-W00-hola-observe",
+      "language": "spanish",
+      "chapter": 1,
+      "sequence": 11,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "sight-cue"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type",
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:fc3c480f7549f656",
+      "detachableSegments": [
+        "Writing — trace with the model visible"
+      ]
+    },
+    {
+      "id": "ES-W00-hola-guided-copy",
+      "language": "spanish",
+      "chapter": 1,
+      "sequence": 12,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:4ee94029c5e4024d",
+      "detachableSegments": [
+        "Writing — guided copy"
+      ]
+    },
+    {
+      "id": "ES-W00-hola-delayed-copy",
+      "language": "spanish",
+      "chapter": 1,
+      "sequence": 13,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "sight-cue"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type",
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:b5f9bee794d5ff68",
+      "detachableSegments": [
+        "Writing — delayed copy"
+      ]
+    },
+    {
+      "id": "ES-W00-hola-dictation",
+      "language": "spanish",
+      "chapter": 1,
+      "sequence": 14,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:f29a69320cfa9052",
+      "detachableSegments": [
+        "Writing — short dictation"
+      ]
     },
     {
       "id": "ES-C01-bien",

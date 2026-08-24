@@ -211,7 +211,11 @@ describe("real curriculum", () => {
     // Range widened 1-3 -> 1-4 when HL-C100 inserted `un`/`una` as a new chapter 3:
     // narrowing the count instead would have quietly dropped the original chapter 3
     // (`me llamo`) out of the pilot's coverage, which is the thing this guards.
-    expect(pilot).toHaveLength(20) // HL-C94: these chapters are short on purpose;
+    // 20 -> 24 when the pre-A1 writing runway (HL19) put ES-W00-hola-observe /
+    // -guided-copy / -delayed-copy / -dictation into chapter 1. Spanish had zero
+    // `hl-writing-stage` evidence before that, so the four are the whole of its
+    // observe-trace -> dictation ladder, not padding.
+    expect(pilot).toHaveLength(24) // HL-C94: these chapters are short on purpose;
     expect(pilot.every((lesson) => lesson.frontmatter.schema_version === "2")).toBe(true);
     expect(
       report.duration.violations.filter(
