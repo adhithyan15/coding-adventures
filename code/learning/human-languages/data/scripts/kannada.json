@@ -5566,6 +5566,28 @@
       "strokeOrderNote": ""
     }
   ],
+  "marks": [
+    {
+      "mark": "್",
+      "sound": "(suppresses the inherent vowel)",
+      "role": "virama",
+      "attachesAs": "the Kannada halant applied after a consonant carrier; it suppresses the inherent vowel and may introduce a following conjunct",
+      "example": {
+        "base": "ಕ",
+        "combined": "ಕ್",
+        "sound": "k"
+      },
+      "compositionOrder": [
+        "write the Kannada consonant carrier first",
+        "add the halant to suppress its inherent vowel or prepare the following conjunct"
+      ],
+      "compositionSource": {
+        "citation": "The Unicode Consortium, The Unicode Standard, Version 17.0, Core Specification, §12.8.2 ‘Principles of the Kannada Script’, U+0CCD KANNADA SIGN VIRAMA (2025)",
+        "url": "https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-12/",
+        "variation": "The standard identifies U+0CCD as Kannada's halant, virama, or vowel-omission sign; defines a dead consonant as consonant plus halant; and explains that the full consonant's horn is replaced by the bound halant sign. Section 12.8.3 further explains that such dead consonants normally combine with later consonants into conjuncts. Unicode specifies encoded composition and rendering behavior, not a universal handwriting direction or pen-lift count; the carrier-first instruction is therefore a transparent learner composition convention, and this entry deliberately makes no standalone ductus claim."
+      }
+    }
+  ],
   "digits": [
     {
       "glyph": "೦",
