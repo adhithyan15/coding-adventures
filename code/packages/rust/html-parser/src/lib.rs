@@ -8511,10 +8511,13 @@ impl HtmlParser {
             }
             "button" => {
                 if self.open_html_element_in_scope_index("button").is_some() {
-                    self.diagnostics.push(ParserDiagnostic::new(
-                        "nested-button-start-tag",
-                        "start tag `<button>` implied the end of an open button in scope",
-                    ));
+                    self.diagnostics.push(
+                        ParserDiagnostic::new(
+                            "nested-button-start-tag",
+                            "start tag `<button>` implied the end of an open button in scope",
+                        )
+                        .at_emission(self.current_token_emission_position),
+                    );
                 }
                 self.close_open_element_silently("button");
                 false
@@ -27442,6 +27445,18 @@ mod tests {
         .at_emission(Some(start_tag_position_at(source, name, occurrence)))
     }
 
+    fn nested_button_start_tag(source: &str, occurrence: usize) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "nested-button-start-tag",
+            "start tag `<button>` implied the end of an open button in scope",
+        )
+        .at_emission(Some(start_tag_position_at(
+            source,
+            "button",
+            occurrence,
+        )))
+    }
+
     fn unexpected_description_item_end_tag(source: &str, name: &str) -> ParserDiagnostic {
         ParserDiagnostic::new(
             "unexpected-description-item-end-tag",
@@ -32561,14 +32576,11 @@ mod tests {
 
     #[test]
     fn reports_repeated_button_starts_only_for_an_authored_button_in_scope() {
-        for (source, expected_count) in [
-            ("<!doctype html><button><button>", 1),
-            ("<!doctype html><p><button><button>", 1),
-            ("<!doctype html><button>x", 0),
-            ("<!doctype html><button></button><button>", 0),
-            ("<!doctype html><button><object><button>", 0),
-            ("<!doctype html><table><tr><td><button>x", 0),
-            ("<!doctype html><table><tr><td><button><button>", 1),
+        for source in [
+            "<!doctype html><button><button>",
+            "<!doctype html><p><button><button>",
+            "<!doctype html><table><tr><td><button><button>",
+            "<!doctype html><!--é-->\r\n<button>one<button>two",
         ] {
             let output = parse_html_with_diagnostics(source).unwrap();
             assert_eq!(
@@ -32576,21 +32588,39 @@ mod tests {
                     .parser_diagnostics
                     .iter()
                     .filter(|diagnostic| diagnostic.code == "nested-button-start-tag")
-                    .count(),
-                expected_count,
+                    .collect::<Vec<_>>(),
+                vec![&nested_button_start_tag(source, 1)],
                 "source {source:?}"
             );
         }
 
+        for source in [
+            "<!doctype html><button>x",
+            "<!doctype html><button></button><button>",
+            "<!doctype html><button><object><button>",
+            "<!doctype html><table><tr><td><button>x",
+            "<!doctype html><button><button",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .all(|diagnostic| diagnostic.code != "nested-button-start-tag"),
+                "source {source:?}"
+            );
+        }
+
+        let fragment_source = "<button><button>";
         let fragment =
-            parse_html_fragment_for_context_with_diagnostics("<button><button>", "div").unwrap();
+            parse_html_fragment_for_context_with_diagnostics(fragment_source, "div").unwrap();
         assert_eq!(
             fragment
                 .parser_diagnostics
                 .iter()
                 .filter(|diagnostic| diagnostic.code == "nested-button-start-tag")
-                .count(),
-            1,
+                .collect::<Vec<_>>(),
+            vec![&nested_button_start_tag(fragment_source, 1)],
         );
 
         let synthetic_button =
@@ -32599,6 +32629,29 @@ mod tests {
             .parser_diagnostics
             .iter()
             .all(|diagnostic| diagnostic.code != "nested-button-start-tag"));
+
+        let mut unpositioned = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        for token in [
+            Token::StartTag {
+                name: "button".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "button".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Eof,
+        ] {
+            unpositioned.process_token(token);
+        }
+        let diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| diagnostic.code == "nested-button-start-tag")
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
     }
 
     #[test]
