@@ -304,6 +304,30 @@ describe("hostile shard contents", () => {
     expect(Object.prototype).not.toHaveProperty("polluted");
   });
 
+  it("refuses __proto__ in an element shard, not just in _meta", () => {
+    const monolith = join(root, "spine.json");
+    const dir = join(root, "spine.d");
+    mkdirSync(dir);
+    writeJson(join(dir, "_meta.json"), { version: 1 });
+    writeFileSync(
+      join(dir, "0010-ALPHA.json"),
+      '{ "id": "ALPHA", "constructor": { "prototype": {} } }\n',
+      "utf8",
+    );
+
+    expect(() => readMaybeSharded(monolith, (s) => mergeMetaAndList(s, "nodes"))).toThrow(
+      /0010-ALPHA\.json.*must not carry 'constructor'/s,
+    );
+  });
+
+  it("refuses __proto__ in the monolith too", () => {
+    const monolith = join(root, "spine.json");
+    writeFileSync(monolith, '{ "version": 1, "__proto__": { "polluted": "yes" } }\n', "utf8");
+
+    expect(() => readMaybeSharded(monolith, mergeItems)).toThrow(/must not carry '__proto__'/);
+    expect(({} as Record<string, unknown>).polluted).toBeUndefined();
+  });
+
   it("keeps the offending file's bytes out of the error message", () => {
     // V8 quotes the bytes it choked on straight into the message. Shards are repo
     // files and symlinks out of the tree are refused, so this is defence in
@@ -323,6 +347,45 @@ describe("hostile shard contents", () => {
     expect(message).toMatch(/0010-ALPHA\.json/);
     expect(message).toMatch(/malformed JSON/);
     expect(message).not.toMatch(/hunter2|AWS_SECRET/);
+  });
+
+  it("elides the bytes even when the file itself contains a quote", () => {
+    // The regression that killed the first version of this filter. V8 splices
+    // the offending bytes in RAW, so a `"` in the file mis-pairs the delimiters
+    // and a quote-matching elision leaves the tail of the secret behind:
+    // `ab"cd AKIA…` produced `Unexpected token 'a', "ab"cd AKIA"...`, of which a
+    // naive filter elided only `"ab"`.
+    const monolith = join(root, "spine.json");
+    const dir = join(root, "spine.d");
+    mkdirSync(dir);
+    writeFileSync(join(dir, "0010-ALPHA.json"), 'ab"cd AKIAIOSFODNN7EXAMPLE\n', "utf8");
+
+    let message = "";
+    try {
+      readMaybeSharded(monolith, mergeItems);
+    } catch (error) {
+      message = (error as Error).message;
+    }
+    expect(message).toMatch(/0010-ALPHA\.json/);
+    expect(message).not.toMatch(/AKIA/);
+  });
+
+  it("keeps the part of a parse error that helps", () => {
+    // Elision must not reduce every failure to "malformed JSON". The forms that
+    // carry no snippet name the position, and that is what a reader opens the
+    // file to.
+    const monolith = join(root, "spine.json");
+    const dir = join(root, "spine.d");
+    mkdirSync(dir);
+    writeFileSync(join(dir, "0010-ALPHA.json"), '{ "id": "unterminated\n', "utf8");
+
+    let message = "";
+    try {
+      readMaybeSharded(monolith, mergeItems);
+    } catch (error) {
+      message = (error as Error).message;
+    }
+    expect(message).toMatch(/position|Unterminated|JSON/i);
   });
 });
 

@@ -228,6 +228,7 @@ export function readShards<T = unknown>(monolithPath: string): Shard<T>[] | null
         { cause },
       );
     }
+    rejectDangerousKeys(value, `shard '${name}' in '${dir}'`);
     return { name, path, value };
   });
 }
@@ -247,19 +248,39 @@ export function readMaybeSharded<T>(
 ): T {
   const shards = readShards(monolithPath);
   if (shards !== null) return merge(shards);
+
+  // The monolith gets the same symlink refusal as the shard directory. It would
+  // be an odd threat model that blocked `core/spine.d -> ~/.aws` and waved
+  // through `core/spine.json -> ~/.aws/credentials`, and the round trip in
+  // `shard-cli` reads this file too.
+  let stat;
+  try {
+    stat = lstatSync(monolithPath);
+  } catch (cause) {
+    throw new Error(`'${monolithPath}': cannot be read — ${describe(cause)}`, { cause });
+  }
+  if (stat.isSymbolicLink()) {
+    throw new Error(
+      `'${monolithPath}' is a symbolic link — a ledger must be a real file in the tree`,
+    );
+  }
+
   let text: string;
   try {
     text = readFileSync(monolithPath, "utf8");
   } catch (cause) {
     throw new Error(`'${monolithPath}': cannot be read — ${describe(cause)}`, { cause });
   }
+  let value: T;
   try {
-    return JSON.parse(text) as T;
+    value = JSON.parse(text) as T;
   } catch (cause) {
     throw new Error(`'${monolithPath}': malformed JSON — ${describeParseFailure(cause)}`, {
       cause,
     });
   }
+  rejectDangerousKeys(value, `'${monolithPath}'`);
+  return value;
 }
 
 /**
@@ -301,27 +322,15 @@ export function mergeMetaAndList<T = unknown>(
   if (typeof meta.value !== "object" || meta.value === null || Array.isArray(meta.value)) {
     throw new Error(`shard '${META_SHARD}' in '${meta.path}': must be a JSON object`);
   }
-  // Not a live vulnerability today, and blocked here anyway.
-  //
+  // `__proto__` and friends are refused in `readShards`, on every shard, before
+  // anything reaches here. Worth knowing why the spread below is safe anyway:
   // `JSON.parse` defines `__proto__` as an OWN data property rather than
   // invoking the setter, and object spread copies it with CreateDataProperty
-  // rather than Set — so the spread below cannot pollute `Object.prototype`, and
-  // this was checked rather than assumed. What it CAN do is leave a literal
-  // `__proto__` key on the merged document, which survives `JSON.stringify`.
-  // The day some future consumer folds this with `Object.assign` or a recursive
-  // deep merge — both of which go through `[[Set]]` and so do hit the setter —
-  // that dormant key becomes real pollution, in a module far from this one.
-  //
-  // This function is the choke point every untrusted parsed shard passes
-  // through, so the guard belongs here, where it protects callers that have not
-  // been written yet.
-  for (const dangerous of ["__proto__", "constructor", "prototype"]) {
-    if (Object.hasOwn(meta.value as object, dangerous)) {
-      throw new Error(
-        `shard '${META_SHARD}' in '${meta.path}': must not carry '${dangerous}'`,
-      );
-    }
-  }
+  // rather than Set, so neither step can reach `Object.prototype`. That was
+  // checked rather than assumed. What an unguarded parse WOULD leave is a
+  // literal `__proto__` key on the merged document, dormant until some future
+  // consumer folds it with `Object.assign` or a deep merge — both of which go
+  // through `[[Set]]` and do hit the setter.
   if (Object.hasOwn(meta.value as object, listKey)) {
     // Otherwise the merge order silently decides whether the meta copy or the
     // shards win, and one of those is always a stale duplicate of the other.
@@ -354,9 +363,45 @@ function describe(cause: unknown): string {
  * repo, and the quoted snippet adds nothing a reader needs: the filename says
  * where to look and the position says where in it.
  *
- * So the quoted runs are elided and the rest — "Unexpected token", "in JSON at
- * position 412" — is kept, which is the part that helps.
+ * The elision does NOT try to match the quotes around the snippet, which is the
+ * obvious approach and a broken one: V8 splices the bytes in RAW and unescaped,
+ * so a file whose first few bytes contain a `"` mis-pairs the delimiters and
+ * walks content straight through the filter. (`ab"cd AKIA…` yields
+ * `Unexpected token 'a', "ab"cd AKIA"...`, and a quote-matching regex helpfully
+ * elides `"ab"` and leaves ` cd AKIA` behind.) A sanitiser whose correctness
+ * depends on the bytes it is sanitising is not one.
+ *
+ * V8 always introduces the snippet with `, "` and always runs it to the end of
+ * the message, so cutting there is independent of the content. The leading
+ * `Unexpected token 'A'` quotes one byte too, and is elided for the same reason.
+ * Everything that carries no snippet — "Unterminated string in JSON at position
+ * 22", "Expected ',' or ']' after array element" — survives untouched, which is
+ * the part a reader actually needs.
  */
 function describeParseFailure(cause: unknown): string {
-  return describe(cause).replace(/"(?:[^"\\]|\\.)*"/g, '"…"');
+  return describe(cause)
+    .replace(/, ".*$/s, " (contents elided)")
+    .replace(/^Unexpected token '.'/u, "Unexpected token '…'");
+}
+
+/**
+ * Refuse the three keys that turn a parsed document into prototype pollution.
+ *
+ * Applied to EVERY parsed shard and to the monolith, not just to `_meta.json`.
+ * The narrower placement was a comment claiming this module was the choke point
+ * for untrusted JSON while two of the three paths through it went unchecked —
+ * and a guard that is documented as total but is not is worse than none, because
+ * the next author reads the comment instead of the code.
+ *
+ * Nothing in this package deep-merges these values today, so this is defence in
+ * depth for the consumer that has not been written yet. See `mergeMetaAndList`
+ * for why `JSON.parse` plus spread is not itself pollution.
+ */
+function rejectDangerousKeys(value: unknown, where: string): void {
+  if (typeof value !== "object" || value === null) return;
+  for (const dangerous of ["__proto__", "constructor", "prototype"]) {
+    if (Object.hasOwn(value, dangerous)) {
+      throw new Error(`${where}: must not carry '${dangerous}'`);
+    }
+  }
 }
