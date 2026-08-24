@@ -864,7 +864,17 @@ jobs:
         with:
           # dtolnay/rust-toolchain installs the minimal profile, which omits
           # clippy; the -clippy gate needs it, so request it explicitly.
-          components: clippy
+          #
+          # llvm-tools is required for the same reason. The chief-of-staff
+          # approval adapters measure coverage with `cargo tarpaulin --engine
+          # llvm` (their integration tests re-exec their own binary, which
+          # tarpaulin's default ptrace engine cannot instrument without raising
+          # SIGILL). That engine shells out to `llvm-profdata` and `llvm-cov`
+          # from the toolchain's sysroot, and the minimal profile ships
+          # neither. Declared here rather than left to chance: a developer
+          # machine usually has the component installed already, so omitting it
+          # fails only on CI.
+          components: clippy,llvm-tools
 
       - name: Install native Paint VM dependencies
         if: (needs.detect.outputs.needs_rust == 'true' || needs.detect.outputs.needs_venture_windows == 'true') && runner.os == 'Linux'

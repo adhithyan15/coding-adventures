@@ -98,6 +98,13 @@ build_output.txt
 .claude/settings.local.json
 .claude/scheduled_tasks.lock
 
+# Rust coverage (`cargo tarpaulin --engine llvm`, i.e. `-C instrument-coverage`).
+# An instrumented process whose environment was cleared has no LLVM_PROFILE_FILE
+# to write to, so its profile runtime falls back to `default_*.profraw` in the
+# working directory. The chief-of-staff approval adapters spawn exactly such
+# children, so measuring their coverage leaves these behind in the crate dir.
+*.profraw
+
 # Elixir
 _build/
 deps/
