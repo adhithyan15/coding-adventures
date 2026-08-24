@@ -14,6 +14,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   Unicode 17.0.0 normalization/casing snapshot, and preserves Unicode-scalar
   diagnostic ordering across regular, symlink, and reparse metadata.
 
+### Fixed
+
+- Skip Cabal `dist-newstyle` output during discovery so generated Haskell
+  artifacts cannot become packages or fail the shared language-registry case.
+
 ## [0.2.4] - 2026-08-02
 
 ### Fixed

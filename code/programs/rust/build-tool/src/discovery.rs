@@ -135,6 +135,7 @@ const SKIP_DIRS: &[&str] = &[
     "node_modules",
     "vendor",
     "dist",
+    "dist-newstyle",
     "build",
     "target",
     ".claude",

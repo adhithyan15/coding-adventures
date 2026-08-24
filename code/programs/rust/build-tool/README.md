@@ -4,7 +4,7 @@ A **Rust port** of the Go build tool for the coding-adventures monorepo. It disc
 
 ## What it does
 
-This tool discovers packages in the monorepo via recursive `BUILD` file walking, resolves inter-package dependencies, hashes source files for change detection, and only rebuilds packages whose source or dependency inputs changed. Independent packages are built in parallel. Discovery uses the repository's canonical language registry, and programs retain a `programs` identity segment so a library and program with the same basename stay distinct. Text metadata is decoded deterministically: Lua `.rockspec` files must be strict UTF-8, and invalid bytes fail closed instead of silently deleting dependency edges.
+This tool discovers packages in the monorepo via recursive `BUILD` file walking, resolves inter-package dependencies, hashes source files for change detection, and only rebuilds packages whose source or dependency inputs changed. Independent packages are built in parallel. Discovery uses the repository's canonical language registry, skips generated artifact trees such as Cabal `dist-newstyle`, and preserves a `programs` identity segment so a library and program with the same basename stay distinct. Text metadata is decoded deterministically: Lua `.rockspec` files must be strict UTF-8, and invalid bytes fail closed instead of silently deleting dependency edges.
 
 ## Building
 
