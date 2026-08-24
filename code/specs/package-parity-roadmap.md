@@ -6082,6 +6082,41 @@ security checks, build artifacts, dependency check, state DAG, and diff checks
 also pass. Full-package strict MyPy retains exactly the same 11 findings in
 seven unchanged files as exact `main`; the new validator is strict-MyPy clean.
 
+### Post-#12602 refresh and C# tracked-artifact selection
+
+Python tracked-artifact consumer PR #12602 completed 30 terminal acceptable
+checks (24 successes, five expected skips, and one neutral CodeQL gate) and
+merged through squash auto-merge as
+`b4ffbccc5bef0a436bd5af006f5c9bf0aab799ba` at 2026-08-24T19:02:44Z. The
+collision-checked exact-main inventory is unchanged: 15 established lanes,
+1,370 identities, 4,563 present slots, 175 high-consensus identities with 276
+gaps, 122 identities in five to nine lanes with 926 gaps, 166 identities in
+two to four lanes with 2,087 gaps, and 907 singletons with 12,698 gaps. There
+are 718 Rust singletons, zero collisions, zero unknown buckets, and no newly
+unowned portable package. OCaml remains correctly emerging with no package.
+
+The required ownership audit found that the supported F# build-tool facade was
+omitted from both remaining-engine validation decompositions and from three
+future rollout notes. The state now registers independent F# orphan-crate and
+tracked-artifact consumers, adds both to their completion umbrellas, and names
+F# beside C# in the future CLI-parser, Starlark-metering, and validation-oracle
+rollouts. This yields 481 explicit owners and 682 dependency edges; facade
+reuse no longer stands in for reviewed F# coverage.
+
+The dependency/leverage pass selects
+`build-tool-csharp-tracked-artifact-validation-conformance` on branch
+`codex/build-tool-csharp-tracked-artifact-validation-conformance`. All eleven
+tracked-artifact engine children are dependency-ready, but C# is the best
+immediate dependency-shaped slice: its existing bounded `Validator` and
+`--validate-build-files` path can consume the four process-free cases without
+authority, and the reviewed .NET data/result pattern directly prepares the
+separately owned F# facade follow-up without combining engines. Rust has the
+largest package footprint and Ruby is the smallest standalone implementation,
+but neither unlocks a second explicitly supported lane. Ten live open PRs and
+33 non-main remote heads have zero exact overlap on the C#/F# build-tool,
+state, or roadmap surfaces; the target branch was absent before the clean
+worktree was created.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
