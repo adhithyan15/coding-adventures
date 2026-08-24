@@ -7751,10 +7751,13 @@ impl HtmlParser {
             && self.has_open_element("body")
             && self.has_disallowed_open_element_for_body_end_tag()
         {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "shell-end-tag-with-unclosed-elements",
-                format!("end tag `</{name}>` was seen with disallowed open elements"),
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "shell-end-tag-with-unclosed-elements",
+                    format!("end tag `</{name}>` was seen with disallowed open elements"),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
         }
         if matches!(name, "center" | "div" | "span")
             && self.has_open_table_context()
@@ -27124,6 +27127,18 @@ mod tests {
         .at_emission(Some(end_tag_position(source, name)))
     }
 
+    fn shell_end_tag_with_unclosed_elements(
+        source: &str,
+        name: &str,
+        occurrence: usize,
+    ) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "shell-end-tag-with-unclosed-elements",
+            format!("end tag `</{name}>` was seen with disallowed open elements"),
+        )
+        .at_emission(Some(end_tag_position_at(source, name, occurrence)))
+    }
+
     fn start_tag_position_at(
         source: &str,
         name: &str,
@@ -39399,10 +39414,7 @@ mod tests {
             let output = parse_html_with_diagnostics(source).unwrap();
             assert_eq!(
                 output.parser_diagnostics,
-                vec![ParserDiagnostic::new(
-                    "shell-end-tag-with-unclosed-elements",
-                    format!("end tag `</{end_tag}>` was seen with disallowed open elements")
-                )],
+                vec![shell_end_tag_with_unclosed_elements(source, end_tag, 0)],
                 "source {source:?}"
             );
         }
@@ -39419,6 +39431,106 @@ mod tests {
 
         let allowed = parse_html_with_diagnostics("<!doctype html><p></body>").unwrap();
         assert!(allowed.parser_diagnostics.is_empty());
+    }
+
+    #[test]
+    fn positions_shell_end_tags_with_disallowed_open_elements_at_token_emission() {
+        let repeated_source =
+            "<!doctype html><object></body></object><menuitem></body>";
+        let repeated = parse_html_with_diagnostics(repeated_source).unwrap();
+        assert_eq!(
+            repeated
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| {
+                    diagnostic.code == "shell-end-tag-with-unclosed-elements"
+                })
+                .cloned()
+                .collect::<Vec<_>>(),
+            vec![shell_end_tag_with_unclosed_elements(
+                repeated_source,
+                "body",
+                1,
+            )]
+        );
+
+        let unicode_source = "<!doctype html><!--é-->\r\n<menuitem></body>";
+        let unicode = parse_html_with_diagnostics(unicode_source).unwrap();
+        assert_eq!(
+            unicode
+                .parser_diagnostics
+                .iter()
+                .find(|diagnostic| {
+                    diagnostic.code == "shell-end-tag-with-unclosed-elements"
+                })
+                .unwrap(),
+            &shell_end_tag_with_unclosed_elements(unicode_source, "body", 0)
+        );
+        assert!(unicode_source.len() > unicode_source.chars().count());
+
+        let incomplete = parse_html_with_diagnostics(
+            "<!doctype html><menuitem></body",
+        )
+        .unwrap();
+        assert!(incomplete.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "shell-end-tag-with-unclosed-elements"
+        }));
+
+        let fragment_source = "<menuitem></body>";
+        let fragment = parse_html_fragment_with_diagnostics(fragment_source).unwrap();
+        assert_eq!(
+            fragment
+                .parser_diagnostics
+                .iter()
+                .find(|diagnostic| {
+                    diagnostic.code == "shell-end-tag-with-unclosed-elements"
+                })
+                .unwrap(),
+            &shell_end_tag_with_unclosed_elements(fragment_source, "body", 0)
+        );
+        let body_context = parse_html_fragment_for_context_with_diagnostics(
+            fragment_source,
+            "body",
+        )
+        .unwrap();
+        assert!(body_context.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "shell-end-tag-with-unclosed-elements"
+        }));
+
+        let mut unpositioned = HtmlParser::new();
+        for token in [
+            Token::StartTag {
+                name: "html".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "body".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "menuitem".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::EndTag {
+                name: "body".to_string(),
+            },
+        ] {
+            unpositioned.process_token(token);
+        }
+        assert_eq!(
+            unpositioned
+                .diagnostics()
+                .iter()
+                .find(|diagnostic| {
+                    diagnostic.code == "shell-end-tag-with-unclosed-elements"
+                })
+                .unwrap()
+                .position,
+            None
+        );
     }
 
     #[test]
@@ -46787,17 +46899,13 @@ mod tests {
 
     #[test]
     fn recovers_omitted_shell_end_tag_boundaries() {
-        let output = parse_html_with_diagnostics(
-            "<!doctype html><title>T</title></head><p>before</body>after<section>next</html>tail",
-        )
-        .unwrap();
+        let source =
+            "<!doctype html><title>T</title></head><p>before</body>after<section>next</html>tail";
+        let output = parse_html_with_diagnostics(source).unwrap();
 
         assert_eq!(
             output.parser_diagnostics,
-            vec![ParserDiagnostic::new(
-                "shell-end-tag-with-unclosed-elements",
-                "end tag `</html>` was seen with disallowed open elements"
-            )]
+            vec![shell_end_tag_with_unclosed_elements(source, "html", 0)]
         );
         assert_eq!(element(&head(&output.document).children[0]).name, "title");
 
