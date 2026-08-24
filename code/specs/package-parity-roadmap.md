@@ -5124,6 +5124,34 @@ in-memory data-store closure. Independent live audits across nine open PRs and
 32 remote heads find zero overlap on the three package roots, audit fixtures,
 state, or roadmap; the selected remote branch was absent before creation.
 
+### Python hash-collections BUILD-front implementation and validation
+
+All six complete recipes are now pinned by one focused regression. Each front
+clears and recreates its package-local environment with Python 3.13, installs
+the local hash-functions prerequisite before the package, and invokes Ruff,
+formatting, strict MyPy, and pytest through that exact interpreter. The
+generated-standard contract explicitly covers local dependencies without a
+PEP 561 marker by analyzing them with MyPy's `--follow-untyped-imports`; no
+dependency metadata or capability boundary changes.
+
+On Windows with uv 0.12.1 and Python 3.13.14, every literal front passes twice
+consecutively: Bloom Filter passes 47 tests at 96.15% coverage, Hash Map passes
+116 tests at 96.04%, and HyperLogLog passes 61 tests at 98.88%. Dormant Ruff
+and MyPy findings required only formatting, unused-test cleanup, stronger type
+annotations, and the behavior-equivalent register maximum expression. The
+immediate HyperLogLog downstream store engine passes 57 tests at 96.67%
+coverage against editable local dependencies.
+
+Focused recipe and uv-audit suites pass two and 13 tests; parity reporter and
+capability taxonomy suites pass ten and seven tests, and the collision gate is
+clean. The Go build tool passes all tests, vet, and compilation. Its exact dry
+plan evaluates 45 Starlark files, discovers 494 Python packages, and selects
+the three changed packages plus five prerequisites and dependents. A full
+eight-node local execution exceeded the five-minute ceiling without a terminal
+report, so the selected fronts and immediate runtime downstream were executed
+directly; the canonical Unix recipes remain structurally pinned for Linux and
+macOS CI.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
