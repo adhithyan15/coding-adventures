@@ -3843,6 +3843,70 @@
         "ES-EXT-305-PRESENTARSE"
       ],
       "after": []
+    },
+    {
+      "id": "ES-PATH-314-01",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "ES-C314-brazo",
+        "ES-C314-pierna",
+        "ES-C314-pie",
+        "ES-C314-diente",
+        "ES-C314-oido"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-314-BODY"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-315-01",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "ES-C315-pecho",
+        "ES-C315-fuerza",
+        "ES-C315-descanso",
+        "ES-C315-miedo",
+        "ES-C315-risa"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-315-BODY"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-316-01",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "ES-C316-llanto",
+        "ES-C316-nunca",
+        "ES-C316-siempre",
+        "ES-C316-todo",
+        "ES-C316-nada"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-316-ANSW"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-317-01",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "ES-C317-algo",
+        "ES-C317-alguien",
+        "ES-C317-nadie",
+        "ES-C317-otro",
+        "ES-C317-poco"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-317-ANSW"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -3878,7 +3942,9 @@
         "ES-PATH-017",
         "ES-PATH-284-01",
         "ES-PATH-291-01",
-        "ES-PATH-298-01"
+        "ES-PATH-298-01",
+        "ES-PATH-316-01",
+        "ES-PATH-317-01"
       ],
       "omits": [
         "RESPONSE-YESNO",
@@ -3916,7 +3982,9 @@
         "ES-PATH-286-01",
         "ES-PATH-293-01",
         "ES-PATH-300-01",
-        "ES-PATH-304-01"
+        "ES-PATH-304-01",
+        "ES-PATH-314-01",
+        "ES-PATH-315-01"
       ],
       "omits": [
         "WORD-GOOD"
@@ -7818,6 +7886,66 @@
         "ES-C305-senor",
         "ES-C305-senora",
         "ES-C305-encantado"
+      ]
+    },
+    {
+      "id": "ES-EXT-314-BODY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name the arm, the leg, the foot, the tooth and the hearing in Spanish.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C314-brazo",
+        "ES-C314-pierna",
+        "ES-C314-pie",
+        "ES-C314-diente",
+        "ES-C314-oido"
+      ]
+    },
+    {
+      "id": "ES-EXT-315-BODY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name the chest, and say strength, rest, fear and laughter in Spanish.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C315-pecho",
+        "ES-C315-fuerza",
+        "ES-C315-descanso",
+        "ES-C315-miedo",
+        "ES-C315-risa"
+      ]
+    },
+    {
+      "id": "ES-EXT-316-ANSW",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can answer with never, always, all and nothing in Spanish.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C316-llanto",
+        "ES-C316-nunca",
+        "ES-C316-siempre",
+        "ES-C316-todo",
+        "ES-C316-nada"
+      ]
+    },
+    {
+      "id": "ES-EXT-317-ANSW",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can answer with something, somebody, nobody, another and a little in Spanish.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C317-algo",
+        "ES-C317-alguien",
+        "ES-C317-nadie",
+        "ES-C317-otro",
+        "ES-C317-poco"
       ]
     }
   ],
