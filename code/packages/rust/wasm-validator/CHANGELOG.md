@@ -2,6 +2,24 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.41] - 2026-08-24 (task #202-204 — SIMD widen PR29: f32x4 add/sub/div/neg/sqrt type rules)
+
+### Added
+
+- `SimdOpKind::NegF32x4`/`SqrtF32x4` join the existing UNARY `v128` op
+  type-check arm (pop one `V128`, push `V128`) alongside `AbsF32x4` --
+  their sign-flip/IEEE-754-sqrt runtime behavior is entirely invisible
+  to the type checker, still just pop-one-push-one `V128`.
+- `SimdOpKind::AddF32x4`/`SubF32x4`/`DivF32x4` join the existing BINARY
+  `v128,v128->v128` type-check arm alongside `MulF32x4`/`MinF32x4` --
+  ordinary IEEE-754 arithmetic (including `div`'s TOTAL, non-trapping
+  behavior on a zero divisor) is entirely a runtime concern, invisible
+  here.
+- New tests: `valid_f32x4_arith_family`,
+  `invalid_f32x4_add_given_an_i32_operand_instead_of_v128`,
+  `invalid_f32x4_sqrt_given_an_i32_operand_instead_of_v128`,
+  `invalid_f32x4_neg_given_no_operand_at_all`.
+
 ## [0.2.40] - 2026-08-19 (task #199-201 — SIMD widen PR28: promote/demote/convert_low family type rules)
 
 ### Added

@@ -1039,6 +1039,46 @@ fn invalid_f32x4_mul_given_an_i32_operand_instead_of_v128() {
 }
 
 #[test]
+fn valid_f32x4_arith_family() {
+    // SIMD widen PR29 (task #202-204): f32x4.neg/sqrt/add/sub/div --
+    // closes the last remaining gap in f32x4's core arithmetic family
+    // (abs/mul/min landed in PR19 above). `neg`/`sqrt` are UNARY (pop
+    // one v128, push one); `add`/`sub`/`div` are BINARY (pop two, push
+    // one) -- same shapes as `abs`/`mul`/`min`. Their IEEE-754 runtime
+    // semantics (including `div`'s TOTAL behavior on a zero divisor --
+    // no trap) are entirely invisible to the type checker.
+    assert_valid(
+        r#"(module
+             (func (param v128) (result v128) (f32x4.neg (local.get 0)))
+             (func (param v128) (result v128) (f32x4.sqrt (local.get 0)))
+             (func (param v128 v128) (result v128) (f32x4.add (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (f32x4.sub (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (f32x4.div (local.get 0) (local.get 1))))"#,
+    );
+}
+
+#[test]
+fn invalid_f32x4_add_given_an_i32_operand_instead_of_v128() {
+    // Confirms the type checker actually enforces V128 in both operand
+    // slots, not just accepting whatever's on the stack -- one operand
+    // here is a plain i32, so the pop (expecting V128) must reject it.
+    assert_invalid("(module (func (param v128 i32) (result v128) (f32x4.add (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn invalid_f32x4_sqrt_given_an_i32_operand_instead_of_v128() {
+    assert_invalid("(module (func (param i32) (result v128) (f32x4.sqrt (local.get 0))))");
+}
+
+#[test]
+fn invalid_f32x4_neg_given_no_operand_at_all() {
+    // An empty operand stack must be rejected cleanly, not panic --
+    // mirrors `invalid_f32x4_demote_f64x2_zero_given_no_operand_at_all`
+    // below for a different unary f32x4 op.
+    assert_invalid("(module (func (result v128) (f32x4.neg)))");
+}
+
+#[test]
 fn valid_i32x4_f32x4_conversion_family() {
     // SIMD widen PR20 (task #177-179): i32x4.trunc_sat_f32x4_s/_u,
     // f32x4.convert_i32x4_s/_u -- the FIRST i32x4<->f32x4 CONVERSION

@@ -1306,6 +1306,46 @@ pub enum SimdOpKind {
     /// discipline fixes (`min(NaN, -0.0)` silently returning `-0.0`
     /// instead of `NaN` under Rust's native `.min()`).
     MinF32x4,
+    /// `f32x4.neg` -- pop one `v128`, flip the sign bit of each of the 4
+    /// `f32` lanes (`-v` in Rust is a pure bit operation here, same "no
+    /// NaN/signed-zero subtlety" discipline as [`Self::AbsF32x4`] --
+    /// `-NaN` is still NaN, just with its sign bit flipped, which is the
+    /// spec-correct result, not an error case to special-case). Same
+    /// UNARY "pop v128, push v128" shape as [`Self::AbsF32x4`], just
+    /// negating instead of clearing the sign bit.
+    NegF32x4,
+    /// `f32x4.sqrt` -- pop one `v128`, take the IEEE-754 square root of
+    /// each of the 4 `f32` lanes (`f32::sqrt()` in Rust is directly
+    /// correct here: it's already IEEE-754 compliant, including
+    /// `sqrt(negative) == NaN` and `sqrt(-0.0) == -0.0`, so -- like
+    /// [`Self::MulF32x4`] below, and UNLIKE [`Self::MinF32x4`] above --
+    /// no bespoke NaN/signed-zero handling is needed). Same UNARY "pop
+    /// v128, push v128" shape as [`Self::AbsF32x4`]/[`Self::NegF32x4`],
+    /// the first genuinely non-bitwise unary `f32x4` arithmetic op in
+    /// this table.
+    SqrtF32x4,
+    /// `f32x4.add` -- pop two `v128`s, add each of the 4 `f32` lane pairs
+    /// with standard IEEE-754 float addition (Rust's `+` on `f32` is
+    /// correct here -- ordinary addition has no WASM-specific deviation
+    /// from IEEE-754, unlike `min`/`max`). Same BINARY "pop two v128s,
+    /// push one" shape as [`Self::MulF32x4`], just addition instead of
+    /// multiplication.
+    AddF32x4,
+    /// `f32x4.sub` -- same BINARY shape as [`Self::AddF32x4`], but
+    /// standard IEEE-754 float subtraction (Rust's `-` on `f32`) of each
+    /// of the 4 `f32` lane pairs instead of addition.
+    SubF32x4,
+    /// `f32x4.div` -- same BINARY shape as [`Self::AddF32x4`]/
+    /// [`Self::SubF32x4`], but standard IEEE-754 float division (Rust's
+    /// `/` on `f32`) of each of the 4 `f32` lane pairs. IEEE-754 division
+    /// is TOTAL, not partial: a finite lane divided by `0.0` produces
+    /// `+/-infinity` (sign per the usual sign-of-quotient rule, including
+    /// signed zero divisors), and `0.0 / 0.0` produces `NaN` -- Rust's
+    /// native `f32` division already implements this exactly, so there is
+    /// NO trap and NO panic on a zero divisor (unlike this crate's
+    /// integer division opcodes, which do trap on divide-by-zero -- float
+    /// division is a fundamentally different, total operation).
+    DivF32x4,
     /// `i32x4.trunc_sat_f32x4_s` -- pop one `v128`, convert each of the 4
     /// `f32` lanes to a SIGNED SATURATING `i32`, push one `v128`. This is
     /// the SIMD counterpart of the `0xFC`-prefixed scalar
@@ -1721,6 +1761,24 @@ pub struct SimdOpInfo {
 /// (`0xBC`)/`i64x2.abs` (`0xC0`)/`i64x2.ge_s` (`0xDB`) entries (all three
 /// matched exactly, confirming `0xDC`-`0xDF` sits immediately past
 /// `i64x2`'s own comparison family with no gap).
+/// `f32x4.neg`/`sqrt`/`add`/`sub`/`div` (SIMD widen PR29, task #202-204)
+/// close the last remaining gap in `f32x4`'s core arithmetic family --
+/// `abs`/`mul`/`min` landed in PR19, leaving `neg`/`sqrt`/`add`/`sub`/
+/// `div`/`max`/`pmin`/`pmax` (this PR covers the first 5; `max`/`pmin`/
+/// `pmax` remain future work). Each sub-opcode byte fetched live from
+/// `BinarySIMD.md` and cross-checked against the already-implemented
+/// `f32x4.abs` (`0xE0`)/`f32x4.mul` (`0xE6`)/`f32x4.min` (`0xE8`)
+/// entries: `neg` (`0xE1`) sits immediately past `abs`, `sqrt` (`0xE3`)
+/// two past that (`0xE2` is unassigned in the SIMD proposal's own binary
+/// encoding -- confirmed by its absence from `BinarySIMD.md` entirely,
+/// not a placeholder for a future op this crate is skipping), `add`/
+/// `sub` (`0xE4`/`0xE5`) sit immediately before `mul`, and `div`
+/// (`0xE7`) sits immediately between `mul` and `min` -- all five
+/// confirmed free of collision with every existing `SIMD_OPS` entry.
+/// This PR also vendors `simd_f32x4_arith.wast`, the single biggest
+/// directive-count win in this campaign so far -- see
+/// `code/packages/rust/wasm-conformance/tests/fixtures/
+/// fetch_testsuite.py`.
 pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "v128.const", sub_opcode: 0x0C, kind: SimdOpKind::Const },
     SimdOpInfo { name: "i32x4.extract_lane", sub_opcode: 0x1B, kind: SimdOpKind::ExtractLane },
@@ -1849,6 +1907,20 @@ pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "f32x4.abs", sub_opcode: 0xE0, kind: SimdOpKind::AbsF32x4 },
     SimdOpInfo { name: "f32x4.mul", sub_opcode: 0xE6, kind: SimdOpKind::MulF32x4 },
     SimdOpInfo { name: "f32x4.min", sub_opcode: 0xE8, kind: SimdOpKind::MinF32x4 },
+    // SIMD widen PR29 (task #202-204): f32x4.neg/sqrt/add/sub/div --
+    // closes the last remaining gap in f32x4's core arithmetic family
+    // (abs/mul/min landed in PR19). Each sub-opcode byte fetched live
+    // from BinarySIMD.md and cross-checked against the already-
+    // implemented f32x4.abs (0xE0)/f32x4.mul (0xE6)/f32x4.min (0xE8)
+    // entries (all matched exactly) -- see this table's own doc comment
+    // above for the full gap analysis. Also vendors
+    // simd_f32x4_arith.wast, the single biggest directive-count win in
+    // this campaign so far.
+    SimdOpInfo { name: "f32x4.neg", sub_opcode: 0xE1, kind: SimdOpKind::NegF32x4 },
+    SimdOpInfo { name: "f32x4.sqrt", sub_opcode: 0xE3, kind: SimdOpKind::SqrtF32x4 },
+    SimdOpInfo { name: "f32x4.add", sub_opcode: 0xE4, kind: SimdOpKind::AddF32x4 },
+    SimdOpInfo { name: "f32x4.sub", sub_opcode: 0xE5, kind: SimdOpKind::SubF32x4 },
+    SimdOpInfo { name: "f32x4.div", sub_opcode: 0xE7, kind: SimdOpKind::DivF32x4 },
     SimdOpInfo { name: "i32x4.trunc_sat_f32x4_s", sub_opcode: 0xF8, kind: SimdOpKind::TruncSatF32x4S },
     SimdOpInfo { name: "i32x4.trunc_sat_f32x4_u", sub_opcode: 0xF9, kind: SimdOpKind::TruncSatF32x4U },
     SimdOpInfo { name: "f32x4.convert_i32x4_s", sub_opcode: 0xFA, kind: SimdOpKind::ConvertI32x4S },
@@ -2359,8 +2431,8 @@ mod tests {
     // ── SIMD (0xFD prefix, v128 first slice) ─────────────────────────────────
 
     #[test]
-    fn simd_ops_table_has_the_expected_154_entries_and_no_duplicates() {
-        assert_eq!(SIMD_OPS.len(), 154);
+    fn simd_ops_table_has_the_expected_159_entries_and_no_duplicates() {
+        assert_eq!(SIMD_OPS.len(), 159);
 
         let mut seen_sub_opcodes = std::collections::HashSet::new();
         let mut seen_names = std::collections::HashSet::new();
@@ -2886,6 +2958,30 @@ mod tests {
             ("f32x4.abs", 0xE0, SimdOpKind::AbsF32x4),
             ("f32x4.mul", 0xE6, SimdOpKind::MulF32x4),
             ("f32x4.min", 0xE8, SimdOpKind::MinF32x4),
+        ] {
+            let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
+            assert_eq!(op.name, name);
+            assert_eq!(op.kind, kind);
+            assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
+        }
+    }
+
+    #[test]
+    fn simd_f32x4_arith_family_has_the_real_verified_sub_opcode_values() {
+        // SIMD widen PR29 (task #202-204): f32x4.neg (0xE1), f32x4.sqrt
+        // (0xE3), f32x4.add (0xE4), f32x4.sub (0xE5), f32x4.div (0xE7) --
+        // closes the last remaining gap in f32x4's core arithmetic family
+        // (abs/mul/min landed in PR19 above). Each sub-opcode fetched
+        // live from BinarySIMD.md and cross-checked against the
+        // already-implemented f32x4.abs/mul/min entries -- see this
+        // table's own doc comment for the full gap analysis (0xE2 is
+        // genuinely unassigned in the spec, not a skipped op).
+        for (name, sub_opcode, kind) in [
+            ("f32x4.neg", 0xE1, SimdOpKind::NegF32x4),
+            ("f32x4.sqrt", 0xE3, SimdOpKind::SqrtF32x4),
+            ("f32x4.add", 0xE4, SimdOpKind::AddF32x4),
+            ("f32x4.sub", 0xE5, SimdOpKind::SubF32x4),
+            ("f32x4.div", 0xE7, SimdOpKind::DivF32x4),
         ] {
             let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
             assert_eq!(op.name, name);

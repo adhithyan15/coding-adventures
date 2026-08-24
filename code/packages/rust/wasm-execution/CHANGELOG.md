@@ -2,6 +2,35 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.39] - 2026-08-24 (task #202-204 — SIMD widen PR29: f32x4 add/sub/div/neg/sqrt)
+
+### Added
+
+- `register_simd` gains five new dispatch arms, closing the last
+  remaining gap in `f32x4`'s core arithmetic family (`abs`/`mul`/`min`
+  landed in PR19):
+  - `SimdOpKind::NegF32x4` (`f32x4.neg`): UNARY, flips the sign bit of
+    each of the 4 `f32` lanes (`-v`) -- same shape as `AbsF32x4`, no
+    bespoke NaN handling needed (`-NaN` is still NaN, just sign-flipped).
+  - `SimdOpKind::SqrtF32x4` (`f32x4.sqrt`): UNARY, IEEE-754 square root
+    per lane via Rust's native `f32::sqrt()`, already spec-compliant
+    (`sqrt(negative) == NaN`, `sqrt(-0.0) == -0.0`), no bespoke handling
+    needed.
+  - `SimdOpKind::AddF32x4` / `SubF32x4` / `DivF32x4` (`f32x4.add`/`sub`/
+    `div`): BINARY, ordinary IEEE-754 `+`/`-`/`/` per lane pair, same
+    shape as `MulF32x4`. `div` is TOTAL, not partial -- a finite lane
+    divided by `0.0` produces `+/-infinity` (sign per the usual
+    sign-of-quotient rule), `0.0/0.0` produces `NaN`, and there is NO
+    trap and NO panic on a zero divisor, unlike this crate's integer
+    division opcodes.
+- New unit tests: `f32x4_neg_flips_sign_bit_and_leaves_nan_lane_nan`,
+  `f32x4_sqrt_computes_ieee754_square_root_per_lane`,
+  `f32x4_add_adds_each_lane_pair`, `f32x4_sub_subtracts_each_lane_pair`,
+  `f32x4_div_divides_each_lane_pair`,
+  `f32x4_div_by_zero_produces_signed_infinity_not_a_trap`,
+  `f32x4_div_zero_by_zero_produces_nan`,
+  `f32x4_add_sub_div_propagate_nan_in_either_operand`.
+
 ## [0.9.38] - 2026-08-19 (task #199-201 — SIMD widen PR28: promote/demote/convert_low family)
 
 ### Added
