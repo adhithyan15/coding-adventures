@@ -52,7 +52,8 @@ The machine-readable layer alongside the tracks is:
 
 ```text
 core/languages.json             complete active-language registry and default mix order
-core/spine.json                 ordered, language-independent can-do spine
+core/spine.d/*.json             ordered, language-independent can-do spine: one file per node
+core/spine.json                 generated from core/spine.d/ — do not hand-edit (see below)
 core/latex-warning-baseline.json  per-track LaTeX warning debt the book gate holds the line on
 core/lesson-modality/*.json     generated per-language voice/sight/pen and chapter prefixes
 core/generated-book-hashes/*.json generated per-language book source-hash ledgers
@@ -63,6 +64,38 @@ core/generated-figure-hashes.json generated: figure source/SVG drift fingerprint
 concepts/taxonomy.json          cross-language semantic join keys
 data/scripts/*.json             writing-system inventories and teaching metadata
 ```
+
+### Sharded ledgers: `X.d/` (HL21)
+
+A ledger that many people append to at once is a ledger that everybody conflicts
+on. So the shared spine is stored as a DIRECTORY, one file per node:
+
+```text
+core/spine.d/_meta.json                    version, stages, strands
+core/spine.d/0010-SPINE-MEET-GREET.json    one node
+core/spine.d/0020-SPINE-COURTESY-THANK.json
+```
+
+Two people adding two nodes now write two different filenames, and git merges
+them without noticing there was ever a question. The loader reads `X.d/` when it
+exists and falls back to `X.json` when it does not, so ledgers migrate one at a
+time.
+
+The ordinal prefix is what makes sorted filename order reproduce AUTHORED order —
+the spine is a ladder from pre-A1 to C2 and is not alphabetical. Ordinals are
+spaced by ten so a node can be inserted as `0015` without renaming its
+neighbours, which would be its own merge conflict.
+
+`core/spine.json` still exists, as a GENERATED artifact. It survives only because
+Language Ladder's browser bundle statically imports it and a browser cannot read
+a directory. Edit the shards, then:
+
+```sh
+npm run unshard core/spine.json    # rebuild the monolith
+npm run check:shards               # what CI runs; fails on a stale monolith
+```
+
+Never hand-edit `core/spine.json`, and never hand-merge it — regenerate it.
 
 Generated Class-B figures live beside the book that consumes them under
 `<language>/book/figures/`. The data package renders them from canonical lesson

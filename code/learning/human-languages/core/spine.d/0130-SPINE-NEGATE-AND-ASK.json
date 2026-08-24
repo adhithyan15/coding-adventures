@@ -1,0 +1,15 @@
+{
+  "id": "SPINE-NEGATE-AND-ASK",
+  "stage": "A2",
+  "strand": "GRAMMAR",
+  "canDo": "I can say that something is not so, and ask a question that can be answered yes or no.",
+  "prerequisites": [
+    "SPINE-SAY-WHAT-I-DO",
+    "SPINE-RESPOND-BASIC"
+  ],
+  "core": true,
+  "concepts": [
+    "VERB-NEGATE",
+    "QUESTION-POLAR"
+  ]
+}

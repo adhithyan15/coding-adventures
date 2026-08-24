@@ -1,0 +1,16 @@
+{
+  "id": "SPINE-INFER-IMPLICIT-MEANING",
+  "stage": "C1",
+  "strand": "TEXT",
+  "canDo": "I can grasp what a speaker implies without saying it.",
+  "prerequisites": [
+    "SPINE-DISCUSS-ABSTRACT"
+  ],
+  "core": true,
+  "concepts": [
+    "IMPLICATURE",
+    "IRONY-MARKER",
+    "IDIOM-COMMON",
+    "TONE-SHIFT"
+  ]
+}

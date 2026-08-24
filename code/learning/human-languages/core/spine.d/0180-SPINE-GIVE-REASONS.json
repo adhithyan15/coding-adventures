@@ -1,0 +1,17 @@
+{
+  "id": "SPINE-GIVE-REASONS",
+  "stage": "B1",
+  "strand": "FUNCTION",
+  "canDo": "I can give reasons and explanations for my opinions and plans.",
+  "prerequisites": [
+    "SPINE-NEGATE-AND-ASK",
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "core": true,
+  "concepts": [
+    "OPINION-I-THINK",
+    "CONNECTIVE-SO",
+    "MODAL-SHOULD",
+    "EXPLANATION-GIVE"
+  ]
+}

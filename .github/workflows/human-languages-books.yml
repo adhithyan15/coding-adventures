@@ -176,6 +176,13 @@ jobs:
           # teaching a lesson that no longer exists, to someone driving who cannot
           # check. Byte-for-byte, before anything expensive runs.
           npm run check:narration
+          # HL21: core/spine.d/ is the source of truth and core/spine.json is
+          # generated from it. The monolith survives only because
+          # language-ladder's browser bundle statically imports it and a browser
+          # cannot read a directory. A derived file nothing verifies is worse
+          # than no file, so a stale monolith fails here rather than quietly
+          # serving the app an old spine. Regenerate with `npm run unshard`.
+          npm run check:shards
           mkdir -p "$GITHUB_WORKSPACE/dist/human-languages/books"
           npm run --silent report -- --format json \
             > "$GITHUB_WORKSPACE/dist/human-languages/books/curriculum-gaps.json"
