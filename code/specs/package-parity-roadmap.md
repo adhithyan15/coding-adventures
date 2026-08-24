@@ -5045,6 +5045,50 @@ inspect the exact affected build plan. Live open-PR and remote-branch audits
 found no overlapping owner on `python/hash-functions`, parity state, or this
 roadmap, and the selected branch was absent before creation.
 
+### Python hash-functions BUILD-front implementation and validation
+
+Both `hash-functions` fronts now recreate `.venv` with `--clear`, pin Python
+3.13, install through that environment, and invoke its interpreter explicitly
+for Ruff, formatting, strict MyPy, and pytest. The package's previously dormant
+quality gates exposed only mechanical test hygiene and formatting debt, which
+is now clean without changing hash behavior. A repository regression pins both
+complete recipes. The audit contract and tests preserve the original 17-owner
+decomposition while treating the live non-idempotent corpus as a shrinking
+set, so each selected owner can advance through the normal lifecycle without
+invalidating the merged audit.
+
+The exact Windows front passes twice consecutively in clean validation
+worktrees on Python 3.13.14 with every quality gate clean and all 88 tests at
+100% coverage. The canonical recipe is structurally pinned for exact Linux and
+macOS CI execution because this Windows host has neither WSL nor a container
+runtime. The Go build tool passes all tests, vet, and trimpath compilation. Its
+exact Windows dry plan evaluates 45 Starlark files, discovers 494 Python
+packages, and selects one changed and eight affected nodes:
+`hash-functions`, `bloom-filter`, `hash-map`, `hyperloglog`,
+`in-memory-data-store-protocol`, `resp-protocol`,
+`in-memory-data-store-engine`, and `in-memory-data-store`, with 486 skipped.
+
+The exact build execution exposed an out-of-scope prerequisite front before it
+could complete that plan. `in-memory-data-store-protocol` creates its Windows
+venv through ambient `python` and invokes the `pip` console launcher directly;
+the launcher recursively re-entered the environment and did not reach tests.
+This distinct non-uv recipe is now owned by
+`python-in-memory-data-store-protocol-build-front-python313`, and the existing
+data-store owner depends on it. The protocol source passes five tests at 100%
+coverage when install and pytest use its named Python 3.13 interpreter.
+
+The remaining real downstream Windows fronts pass under the explicit
+`UV_PYTHON=3.13` and `UV_VENV_CLEAR=1` compatibility settings already owned by
+their pending backfills: RESP Protocol passes 129 tests at 100% coverage,
+Bloom Filter 47 at 96.19%, Hash Map 116 at 96.04%, HyperLogLog 61 at 98.89%,
+the store engine 57 at 96.67%, and the composed store five at 100%. Focused
+build-front, uv-audit, parity reporter, and capability taxonomy suites pass 2,
+13, 10, and 7 tests. The schema-3 inventory remains 15 lanes, 1,369 identities,
+and 4,562 slots with zero collisions or unknown buckets. State, diff,
+credential, dependency, and production-authority checks are clean; the tranche
+changes no production behavior, dependency metadata, capability manifest, or
+privileged boundary.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
