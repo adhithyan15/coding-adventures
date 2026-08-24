@@ -1847,8 +1847,40 @@ public static class CiWorkflow
     }
 }
 
+public sealed record TrackedArtifactEntry(
+    int Ordinal,
+    string Path,
+    string EntryKind);
+
+public sealed record TrackedArtifactDiagnosticDetails(
+    [property: JsonPropertyName("ordinal")] int Ordinal,
+    [property: JsonPropertyName("entry_kind")] string EntryKind,
+    [property: JsonPropertyName("problem")]
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    string? Problem = null);
+
+public sealed record TrackedArtifactDiagnostic(
+    [property: JsonPropertyName("code")] string Code,
+    [property: JsonPropertyName("severity")] string Severity,
+    [property: JsonPropertyName("path")] string Path,
+    [property: JsonPropertyName("details")] TrackedArtifactDiagnosticDetails Details);
+
 public static class Validator
 {
+    private const string ForbiddenTrackedArtifactComponent = "node_modules";
+    private const string RedactedTrackedArtifactPath = "repository";
+
+    private static readonly IComparer<string> UnicodeScalarOrdinalComparer =
+        Comparer<string>.Create(CompareUnicodeScalars);
+
+    private static readonly HashSet<string> WindowsReservedBasenames = new(StringComparer.Ordinal)
+    {
+        "CON", "PRN", "AUX", "NUL", "CONIN$", "CONOUT$", "CLOCK$",
+        "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9",
+        "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9",
+        "COM¹", "COM²", "COM³", "LPT¹", "LPT²", "LPT³",
+    };
+
     private static readonly HashSet<string> CiManagedToolchainLanguages = new(StringComparer.Ordinal)
     {
         "python", "ruby", "typescript", "rust", "elixir", "lua", "perl", "java", "kotlin", "haskell", "dart", "dotnet",
@@ -1857,6 +1889,47 @@ public static class Validator
     public static string? ValidateBuildContracts(string repoRoot, IReadOnlyList<PackageSpec> packages)
     {
         return ValidateCiFullBuildToolchains(repoRoot, packages);
+    }
+
+    public static IReadOnlyList<TrackedArtifactDiagnostic> ValidateTrackedArtifactSnapshot(
+        IReadOnlyList<TrackedArtifactEntry> entries)
+    {
+        var diagnostics = new List<TrackedArtifactDiagnostic>();
+        foreach (var entry in entries)
+        {
+            var (normalizedPath, problem) = NormalizeTrackedArtifactPath(entry.Path);
+            var details = new TrackedArtifactDiagnosticDetails(
+                entry.Ordinal,
+                entry.EntryKind,
+                problem);
+
+            if (problem is not null)
+            {
+                diagnostics.Add(new TrackedArtifactDiagnostic(
+                    "TRACKED_ARTIFACT_PATH_INVALID",
+                    "error",
+                    RedactedTrackedArtifactPath,
+                    details));
+                continue;
+            }
+
+            if (normalizedPath is not null && normalizedPath
+                    .Split('/')
+                    .Any(IsForbiddenTrackedArtifactComponent))
+            {
+                diagnostics.Add(new TrackedArtifactDiagnostic(
+                    "TRACKED_ARTIFACT_FORBIDDEN",
+                    "error",
+                    normalizedPath,
+                    details));
+            }
+        }
+
+        return diagnostics
+            .OrderBy(diagnostic => diagnostic.Code, StringComparer.Ordinal)
+            .ThenBy(diagnostic => diagnostic.Path, UnicodeScalarOrdinalComparer)
+            .ThenBy(diagnostic => CanonicalDetails(diagnostic.Details), StringComparer.Ordinal)
+            .ToArray();
     }
 
     public static string? ValidateCiFullBuildToolchains(string repoRoot, IReadOnlyList<PackageSpec> packages)
@@ -1914,6 +1987,126 @@ public static class Validator
         }
 
         return $"{ciPath.Replace('\\', '/')}: {string.Join("; ", parts)}";
+    }
+
+    private static (string? Path, string? Problem) NormalizeTrackedArtifactPath(string path)
+    {
+        var normalized = path.Replace('\\', '/');
+        if (normalized.Length == 0)
+        {
+            return (null, "EMPTY");
+        }
+
+        if (normalized.EnumerateRunes().Count() > 512)
+        {
+            return (null, "TOO_LONG");
+        }
+
+        if (!normalized.IsNormalized(NormalizationForm.FormC))
+        {
+            return (null, "NON_NFC");
+        }
+
+        if (normalized.StartsWith('/'))
+        {
+            return (null, "ABSOLUTE");
+        }
+
+        if (normalized.Length >= 2 &&
+            char.IsAsciiLetter(normalized[0]) &&
+            normalized[1] == ':')
+        {
+            return (null, "DRIVE_QUALIFIED");
+        }
+
+        if (normalized.Contains("//", StringComparison.Ordinal))
+        {
+            return (null, "EMPTY_SEGMENT");
+        }
+
+        if (normalized.Any(character => character < 32 || "<>:\"|?*".Contains(character)))
+        {
+            return (null, "UNSAFE_CHARACTER");
+        }
+
+        foreach (var segment in normalized.Split('/'))
+        {
+            if (segment is "." or "..")
+            {
+                return (null, "DOT_SEGMENT");
+            }
+
+            if (segment.EndsWith(' ') || segment.EndsWith('.'))
+            {
+                return (null, "TRAILING_DOT_OR_SPACE");
+            }
+
+            var basename = FullUppercaseForReservedBasename(segment.Split('.', 2)[0]);
+            if (WindowsReservedBasenames.Contains(basename))
+            {
+                return (null, "RESERVED_BASENAME");
+            }
+        }
+
+        return (normalized, null);
+    }
+
+    private static bool IsForbiddenTrackedArtifactComponent(string component)
+    {
+        // NFKC resolves compatibility characters such as full-width letters,
+        // mathematical script letters, and ligatures before invariant folding.
+        // Sharp-s is the remaining full case-fold expansion that can produce
+        // ASCII-only output after NFKC, so handle it explicitly.
+        var identity = component
+            .Normalize(NormalizationForm.FormKC)
+            .Replace("\u00df", "ss", StringComparison.Ordinal)
+            .Replace("\u1e9e", "ss", StringComparison.Ordinal)
+            .ToLowerInvariant();
+        return string.Equals(identity, ForbiddenTrackedArtifactComponent, StringComparison.Ordinal);
+    }
+
+    private static string FullUppercaseForReservedBasename(string value)
+    {
+        // The closed reserved-name set is ASCII. U+0131 DOTLESS I is the only
+        // full-uppercase-to-ASCII mapping that can participate in one of those
+        // names and differs from .NET's invariant single-scalar casing.
+        return value.Replace('\u0131', 'i').ToUpperInvariant();
+    }
+
+    private static int CompareUnicodeScalars(string left, string right)
+    {
+        var leftIndex = 0;
+        var rightIndex = 0;
+        while (leftIndex < left.Length && rightIndex < right.Length)
+        {
+            var leftRune = Rune.GetRuneAt(left, leftIndex);
+            var rightRune = Rune.GetRuneAt(right, rightIndex);
+            var comparison = leftRune.Value.CompareTo(rightRune.Value);
+            if (comparison != 0)
+            {
+                return comparison;
+            }
+
+            leftIndex += leftRune.Utf16SequenceLength;
+            rightIndex += rightRune.Utf16SequenceLength;
+        }
+
+        return (left.Length - leftIndex).CompareTo(right.Length - rightIndex);
+    }
+
+    private static string CanonicalDetails(TrackedArtifactDiagnosticDetails details)
+    {
+        var canonical = new SortedDictionary<string, object>(StringComparer.Ordinal)
+        {
+            ["entry_kind"] = details.EntryKind,
+            ["ordinal"] = details.Ordinal,
+        };
+        if (details.Problem is not null)
+        {
+            canonical["problem"] = details.Problem;
+        }
+
+        return JsonSerializer.Serialize(canonical);
     }
 }
 

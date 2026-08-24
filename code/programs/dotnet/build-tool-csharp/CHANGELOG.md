@@ -8,3 +8,7 @@
   parallel execution.
 - Added xUnit coverage for discovery, resolver, hashing, cache, executor, and
   plan behavior.
+- Added pure tracked-artifact snapshot validation with portable-path safety,
+  redacted invalid-path diagnostics, Unicode-aware `node_modules` alias
+  detection, deterministic ordering, and direct coverage of the shared
+  language-neutral conformance fixtures.

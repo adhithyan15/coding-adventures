@@ -6082,6 +6082,81 @@ security checks, build artifacts, dependency check, state DAG, and diff checks
 also pass. Full-package strict MyPy retains exactly the same 11 findings in
 seven unchanged files as exact `main`; the new validator is strict-MyPy clean.
 
+### Post-#12602 refresh and C# tracked-artifact selection
+
+Python tracked-artifact consumer PR #12602 completed 30 terminal acceptable
+checks (24 successes, five expected skips, and one neutral CodeQL gate) and
+merged through squash auto-merge as
+`b4ffbccc5bef0a436bd5af006f5c9bf0aab799ba` at 2026-08-24T19:02:44Z. The
+collision-checked exact-main inventory is unchanged: 15 established lanes,
+1,370 identities, 4,563 present slots, 175 high-consensus identities with 276
+gaps, 122 identities in five to nine lanes with 926 gaps, 166 identities in
+two to four lanes with 2,087 gaps, and 907 singletons with 12,698 gaps. There
+are 718 Rust singletons, zero collisions, zero unknown buckets, and no newly
+unowned portable package. OCaml remains correctly emerging with no package.
+
+The required ownership audit found that the supported F# build-tool facade was
+omitted from both remaining-engine validation decompositions and from three
+future rollout notes. The state now registers independent F# orphan-crate and
+tracked-artifact consumers, adds both to their completion umbrellas, and names
+F# beside C# in the future CLI-parser, Starlark-metering, and validation-oracle
+rollouts. This yields 481 explicit owners and 682 dependency edges; facade
+reuse no longer stands in for reviewed F# coverage.
+
+The dependency/leverage pass selects
+`build-tool-csharp-tracked-artifact-validation-conformance` on branch
+`codex/build-tool-csharp-tracked-artifact-validation-conformance`. All eleven
+tracked-artifact engine children are dependency-ready, but C# is the best
+immediate dependency-shaped slice: its existing bounded `Validator` and
+`--validate-build-files` path can consume the four process-free cases without
+authority, and the reviewed .NET data/result pattern directly prepares the
+separately owned F# facade follow-up without combining engines. Rust has the
+largest package footprint and Ruby is the smallest standalone implementation,
+but neither unlocks a second explicitly supported lane. Ten live open PRs and
+33 non-main remote heads have zero exact overlap on the C#/F# build-tool,
+state, or roadmap surfaces; the target branch was absent before the clean
+worktree was created.
+
+### C# tracked-artifact implementation
+
+The C# child implements one pure validator over caller-supplied inert snapshot
+entries. It slash-normalizes separators, fails closed on the ten reviewed
+portable-path defects without echoing hostile text, detects exact
+`node_modules` components after NFKC and the full-fold expansions relevant to
+an ASCII identity, treats regular, symlink, and reparse kinds identically, and
+sorts complete diagnostics by the neutral oracle's canonical keys. The public
+entry and diagnostic records serialize directly to the shared result shape;
+the implementation adds no Git, filesystem, process, environment, or network
+authority and changes no fixture, schema, capability manifest, or dependency.
+
+All four shared fixtures pass through the C# API. Focused hostile-path and
+Unicode boundary tests cover every stable problem code, both unsafe-character
+branches, scalar-counted 512/513 limits, cross-plane scalar ordering, and the
+dotless-i uppercase expansion used by a reserved basename. The canonical .NET
+9 BUILD front door passes 26 xUnit tests. The new validator is fully covered at
+79 of 79 lines and 50 of 50 branches; complete-package coverage is 49.69% line,
+33.79% branch, and 68.33% method. The neutral corpus
+validates 110 cases and 269 files, while 269 focused package-parity,
+capability-taxonomy, OCaml-lock, and conformance tests pass with 25 expected
+platform skips. The Go oracle passes all packages with coverage, vet, and
+trimpath compilation. A fresh binary evaluates 45 Starlark BUILD files,
+discovers 5,070 packages, preserves the five-entry orphan ledger, and validates
+a diff-based dry plan with one changed and two affected packages. NuGet reports no vulnerable direct or
+transitive dependency. The source-wide `dotnet format` whitespace gate retains
+the exact same 18 findings in unchanged pre-existing ranges as the clean
+selected-main baseline; the new ranges and complete diff are clean.
+
+Three independent read-only reviews caught and drove corrections for UTF-16
+length counting, UTF-16 ordinal path sorting, and dotless-i reserved-name
+uppercase behavior, then found no remaining implementation, authority,
+ownership, state-graph, or publication-scope defect. The branch rebased without
+conflict over four unrelated human-language and HTML-parser commits to exact
+`origin/main` `1d482dc49a5c791b326e0b073cf6469c46d67ef8`. A fresh collision-checked
+report at that revision is tree-equivalent to the post-#12602 inventory: 15
+established lanes, 1,370 identities, 4,563 slots, 175 high-consensus packages
+with 276 gaps, 907 singletons with 12,698 gaps, 718 Rust singletons, zero
+collisions, and zero unknown buckets; OCaml remains correctly emerging at zero.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

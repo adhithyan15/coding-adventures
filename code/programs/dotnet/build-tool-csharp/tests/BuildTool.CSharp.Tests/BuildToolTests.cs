@@ -4,6 +4,7 @@ using System.Text.Json;
 
 public sealed class BuildToolTests : IDisposable
 {
+    private static readonly string RepositoryRoot = FindRepositoryRoot();
     private readonly string _tempRoot = Path.Combine(Path.GetTempPath(), $"build-tool-csharp-{Guid.NewGuid():N}");
 
     public BuildToolTests()
@@ -179,6 +180,120 @@ public sealed class BuildToolTests : IDisposable
         Assert.Equal(PlanFile.CurrentSchemaVersion, document.RootElement.GetProperty("schema_version").GetInt32());
     }
 
+    [Theory]
+    [InlineData("validation-tracked-artifacts-clean.json")]
+    [InlineData("validation-tracked-artifacts-forbidden.json")]
+    [InlineData("validation-tracked-artifacts-aliases.json")]
+    [InlineData("validation-tracked-artifacts-invalid.json")]
+    public void TrackedArtifactValidationMatchesSharedConformanceFixtures(string fixtureName)
+    {
+        var fixturePath = Path.Combine(
+            RepositoryRoot,
+            "code",
+            "specs",
+            "fixtures",
+            "build-tool-v1",
+            "cases",
+            fixtureName);
+        using var fixture = JsonDocument.Parse(File.ReadAllText(fixturePath));
+        var entries = fixture.RootElement
+            .GetProperty("input")
+            .GetProperty("options")
+            .GetProperty("tracked_artifact_snapshot")
+            .GetProperty("entries")
+            .EnumerateArray()
+            .Select(entry => new TrackedArtifactEntry(
+                entry.GetProperty("ordinal").GetInt32(),
+                entry.GetProperty("path").GetString()!,
+                entry.GetProperty("entry_kind").GetString()!))
+            .ToArray();
+
+        var actual = JsonSerializer.SerializeToElement(Validator.ValidateTrackedArtifactSnapshot(entries));
+        var expected = fixture.RootElement.GetProperty("expected").GetProperty("diagnostics");
+
+        Assert.True(
+            JsonElement.DeepEquals(expected, actual),
+            $"Expected {expected.GetRawText()}, but received {actual.GetRawText()}.");
+    }
+
+    public static TheoryData<string, string> InvalidTrackedArtifactPaths => new()
+    {
+        { string.Empty, "EMPTY" },
+        { new string('a', 513), "TOO_LONG" },
+        { "code/packages/e\u0301/file.cs", "NON_NFC" },
+        { "/absolute/file.cs", "ABSOLUTE" },
+        { "C:\\repo\\file.cs", "DRIVE_QUALIFIED" },
+        { "code//file.cs", "EMPTY_SEGMENT" },
+        { "code/<unsafe>/file.cs", "UNSAFE_CHARACTER" },
+        { "code/\u001f/file.cs", "UNSAFE_CHARACTER" },
+        { "code/../file.cs", "DOT_SEGMENT" },
+        { "code/trailing./file.cs", "TRAILING_DOT_OR_SPACE" },
+        { "code/CON.txt/file.cs", "RESERVED_BASENAME" },
+    };
+
+    [Theory]
+    [MemberData(nameof(InvalidTrackedArtifactPaths))]
+    public void TrackedArtifactValidationRejectsEveryUnsafePathClassWithoutEchoingInput(
+        string unsafePath,
+        string expectedProblem)
+    {
+        var diagnostic = Assert.Single(Validator.ValidateTrackedArtifactSnapshot(
+        [
+            new TrackedArtifactEntry(7, unsafePath, "regular"),
+        ]));
+
+        Assert.Equal("TRACKED_ARTIFACT_PATH_INVALID", diagnostic.Code);
+        Assert.Equal("repository", diagnostic.Path);
+        Assert.Equal(expectedProblem, diagnostic.Details.Problem);
+        if (unsafePath.Length > 0)
+        {
+            Assert.DoesNotContain(unsafePath, JsonSerializer.Serialize(diagnostic), StringComparison.Ordinal);
+        }
+    }
+
+    [Fact]
+    public void TrackedArtifactLengthLimitCountsUnicodeScalarsRatherThanUtf16Units()
+    {
+        var allowed = string.Concat(Enumerable.Repeat("\U0001f600", 512));
+        var tooLong = string.Concat(Enumerable.Repeat("\U0001f600", 513));
+
+        Assert.Empty(Validator.ValidateTrackedArtifactSnapshot(
+        [
+            new TrackedArtifactEntry(1, allowed, "regular"),
+        ]));
+        var diagnostic = Assert.Single(Validator.ValidateTrackedArtifactSnapshot(
+        [
+            new TrackedArtifactEntry(1, tooLong, "regular"),
+        ]));
+        Assert.Equal("TOO_LONG", diagnostic.Details.Problem);
+    }
+
+    [Fact]
+    public void TrackedArtifactDiagnosticsSortPathsByUnicodeScalarValue()
+    {
+        var diagnostics = Validator.ValidateTrackedArtifactSnapshot(
+        [
+            new TrackedArtifactEntry(1, "\U00010000/node_modules/a", "regular"),
+            new TrackedArtifactEntry(2, "\ue000/node_modules/b", "regular"),
+        ]);
+
+        Assert.Equal("\ue000/node_modules/b", diagnostics[0].Path);
+        Assert.Equal("\U00010000/node_modules/a", diagnostics[1].Path);
+    }
+
+    [Fact]
+    public void TrackedArtifactValidationUsesFullUppercaseForReservedBasenames()
+    {
+        var diagnostic = Assert.Single(Validator.ValidateTrackedArtifactSnapshot(
+        [
+            new TrackedArtifactEntry(1, "code/con\u0131n$.txt/file.cs", "regular"),
+        ]));
+
+        Assert.Equal("TRACKED_ARTIFACT_PATH_INVALID", diagnostic.Code);
+        Assert.Equal("RESERVED_BASENAME", diagnostic.Details.Problem);
+        Assert.Equal("repository", diagnostic.Path);
+    }
+
     public void Dispose()
     {
         if (Directory.Exists(_tempRoot))
@@ -192,5 +307,26 @@ public sealed class BuildToolTests : IDisposable
         var fullPath = Path.Combine(_tempRoot, relativePath.Replace('/', Path.DirectorySeparatorChar));
         Directory.CreateDirectory(Path.GetDirectoryName(fullPath)!);
         File.WriteAllText(fullPath, content);
+    }
+
+    private static string FindRepositoryRoot()
+    {
+        for (var directory = new DirectoryInfo(AppContext.BaseDirectory);
+             directory is not null;
+             directory = directory.Parent)
+        {
+            if (File.Exists(Path.Combine(
+                    directory.FullName,
+                    "code",
+                    "specs",
+                    "fixtures",
+                    "build-tool-v1",
+                    "pure-domains.schema.json")))
+            {
+                return directory.FullName;
+            }
+        }
+
+        throw new DirectoryNotFoundException("Could not locate the coding-adventures repository root.");
     }
 }
