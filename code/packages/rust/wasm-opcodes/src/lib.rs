@@ -1649,6 +1649,50 @@ pub enum SimdOpKind {
     /// NaN-is-false discipline as [`Self::LtF32x4`]. Native Rust `f32`
     /// `>=` already implements this correctly.
     GeF32x4,
+    /// `f64x2.neg` -- pop one `v128`, flip the sign bit of each of the 2
+    /// `f64` lanes (`-v` in Rust is a pure bit operation here, same "no
+    /// NaN/signed-zero subtlety" discipline as [`Self::NegF32x4`] --
+    /// `-NaN` is still NaN, just with its sign bit flipped, the
+    /// spec-correct result). Same UNARY "pop v128, push v128" shape as
+    /// [`Self::NegF32x4`], just at `f64x2`'s lane width (2 lanes of 8
+    /// bytes each instead of 4 lanes of 4 bytes).
+    NegF64x2,
+    /// `f64x2.sqrt` -- pop one `v128`, take the IEEE-754 square root of
+    /// each of the 2 `f64` lanes (`f64::sqrt()` in Rust is directly
+    /// correct here: already IEEE-754 compliant, including
+    /// `sqrt(negative) == NaN` and `sqrt(-0.0) == -0.0`, so -- like
+    /// [`Self::SqrtF32x4`] -- no bespoke NaN/signed-zero handling is
+    /// needed). Same UNARY shape as [`Self::NegF64x2`].
+    SqrtF64x2,
+    /// `f64x2.add` -- pop two `v128`s, add each of the 2 `f64` lane pairs
+    /// with standard IEEE-754 float addition (Rust's `+` on `f64` is
+    /// correct here -- ordinary addition has no WASM-specific deviation
+    /// from IEEE-754, unlike `min`/`max`). Same BINARY "pop two v128s,
+    /// push one" shape as [`Self::AddF32x4`], just at `f64x2`'s lane
+    /// width.
+    AddF64x2,
+    /// `f64x2.sub` -- same BINARY shape as [`Self::AddF64x2`], but
+    /// standard IEEE-754 float subtraction (Rust's `-` on `f64`) of each
+    /// of the 2 `f64` lane pairs instead of addition.
+    SubF64x2,
+    /// `f64x2.mul` -- same BINARY shape as [`Self::AddF64x2`], but
+    /// standard IEEE-754 float multiplication (Rust's `*` on `f64`) of
+    /// each of the 2 `f64` lane pairs. Unlike [`Self::AddF64x2`]/
+    /// [`Self::SubF64x2`]/[`Self::DivF64x2`], this is the first `f64x2`
+    /// PR to introduce `mul` -- `f32x4.mul` already existed before the
+    /// `f32x4` arithmetic-family PR, but no `f64x2.mul` existed until now,
+    /// so it rides along here using the exact same binary-op boilerplate.
+    MulF64x2,
+    /// `f64x2.div` -- same BINARY shape as [`Self::AddF64x2`]/
+    /// [`Self::SubF64x2`]/[`Self::MulF64x2`], but standard IEEE-754 float
+    /// division (Rust's `/` on `f64`) of each of the 2 `f64` lane pairs.
+    /// IEEE-754 division is TOTAL, not partial: a finite lane divided by
+    /// `0.0` produces `+/-infinity` (sign per the usual sign-of-quotient
+    /// rule, including signed zero divisors), and `0.0 / 0.0` produces
+    /// `NaN` -- Rust's native `f64` division already implements this
+    /// exactly, so there is NO trap and NO panic on a zero divisor, same
+    /// discipline as [`Self::DivF32x4`].
+    DivF64x2,
 }
 
 /// One entry in the SIMD opcode table: everything a consumer needs to
@@ -2082,6 +2126,30 @@ pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "f64x2.promote_low_f32x4", sub_opcode: 0x5F, kind: SimdOpKind::PromoteLowF32x4 },
     SimdOpInfo { name: "f64x2.convert_low_i32x4_s", sub_opcode: 0xFE, kind: SimdOpKind::ConvertLowI32x4S },
     SimdOpInfo { name: "f64x2.convert_low_i32x4_u", sub_opcode: 0xFF, kind: SimdOpKind::ConvertLowI32x4U },
+    // SIMD widen PR31 (task #208-210): f64x2.neg/sqrt/add/sub/mul/div --
+    // the f64x2 core arithmetic family, a direct structural mirror of
+    // PR29's f32x4.neg/sqrt/add/sub/div, just at f64x2's 2-lane width,
+    // plus `mul` (f32x4.mul already existed pre-PR29; f64x2.mul did not
+    // exist yet, so it rides along here on the same binary-op
+    // boilerplate as add/sub/div). Each sub-opcode byte fetched live
+    // from BinarySIMD.md and cross-checked against every existing
+    // `SIMD_OPS` entry: 0xEC (f64x2.abs, still unimplemented) precedes
+    // this run, 0xED is `neg`, 0xEE (f64x2.sqrt's slot minus one) is
+    // unassigned in the SIMD proposal's own binary encoding -- same gap
+    // shape as f32x4's own 0xE2 gap between abs/neg and sqrt -- 0xEF is
+    // `sqrt`, 0xF0-0xF3 are `add`/`sub`/`mul`/`div` in that order, and
+    // 0xF4/0xF5 (f64x2.min/max, still unimplemented) sit immediately
+    // past this run with no overlap. All six confirmed free of collision
+    // with every existing `SIMD_OPS` entry. This PR also vendors
+    // `simd_f64x2_arith.wast` -- see
+    // `code/packages/rust/wasm-conformance/tests/fixtures/
+    // fetch_testsuite.py`.
+    SimdOpInfo { name: "f64x2.neg", sub_opcode: 0xED, kind: SimdOpKind::NegF64x2 },
+    SimdOpInfo { name: "f64x2.sqrt", sub_opcode: 0xEF, kind: SimdOpKind::SqrtF64x2 },
+    SimdOpInfo { name: "f64x2.add", sub_opcode: 0xF0, kind: SimdOpKind::AddF64x2 },
+    SimdOpInfo { name: "f64x2.sub", sub_opcode: 0xF1, kind: SimdOpKind::SubF64x2 },
+    SimdOpInfo { name: "f64x2.mul", sub_opcode: 0xF2, kind: SimdOpKind::MulF64x2 },
+    SimdOpInfo { name: "f64x2.div", sub_opcode: 0xF3, kind: SimdOpKind::DivF64x2 },
 ];
 
 /// Look up a SIMD opcode by its LEB128-decoded sub-opcode value (the
@@ -2500,8 +2568,8 @@ mod tests {
     // ── SIMD (0xFD prefix, v128 first slice) ─────────────────────────────────
 
     #[test]
-    fn simd_ops_table_has_the_expected_165_entries_and_no_duplicates() {
-        assert_eq!(SIMD_OPS.len(), 165);
+    fn simd_ops_table_has_the_expected_171_entries_and_no_duplicates() {
+        assert_eq!(SIMD_OPS.len(), 171);
 
         let mut seen_sub_opcodes = std::collections::HashSet::new();
         let mut seen_names = std::collections::HashSet::new();
@@ -3243,5 +3311,36 @@ mod tests {
             assert_eq!(op.kind, kind);
             assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
         }
+    }
+
+    #[test]
+    fn simd_f64x2_arith_family_has_the_real_verified_sub_opcode_values() {
+        // SIMD widen PR31 (task #208-210): f64x2.neg (0xED), f64x2.sqrt
+        // (0xEF), f64x2.add (0xF0), f64x2.sub (0xF1), f64x2.mul (0xF2),
+        // f64x2.div (0xF3) -- fetched live from BinarySIMD.md and
+        // cross-checked against the still-unimplemented f64x2.abs
+        // (0xEC, immediately before this run) and f64x2.min/max (0xF4/
+        // 0xF5, immediately after), confirming this run is exactly
+        // 0xED, 0xEF-0xF3 with a real gap at 0xEE -- a direct structural
+        // mirror of PR29's f32x4.neg/sqrt/add/sub/div, at f64x2's
+        // 2-lane width, plus `mul` riding along on the same binary-op
+        // shape (f64x2.mul didn't exist before this PR).
+        for (name, sub_opcode, kind) in [
+            ("f64x2.neg", 0xED, SimdOpKind::NegF64x2),
+            ("f64x2.sqrt", 0xEF, SimdOpKind::SqrtF64x2),
+            ("f64x2.add", 0xF0, SimdOpKind::AddF64x2),
+            ("f64x2.sub", 0xF1, SimdOpKind::SubF64x2),
+            ("f64x2.mul", 0xF2, SimdOpKind::MulF64x2),
+            ("f64x2.div", 0xF3, SimdOpKind::DivF64x2),
+        ] {
+            let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
+            assert_eq!(op.name, name);
+            assert_eq!(op.kind, kind);
+            assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
+        }
+        // 0xEE is a real gap (unassigned in the SIMD proposal's own
+        // binary encoding), not a placeholder for a future op this PR
+        // is skipping -- same shape as f32x4's own 0xE2 gap.
+        assert!(get_simd_op(0xEE).is_none(), "0xEE is an unassigned gap between f64x2.neg and f64x2.sqrt");
     }
 }

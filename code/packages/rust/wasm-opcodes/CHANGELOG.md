@@ -2,6 +2,28 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.34] - 2026-08-24 - SIMD widen PR31: f64x2 neg/sqrt/add/sub/mul/div (task #208-210)
+
+### Added
+
+- 6 new `SIMD_OPS` entries: `f64x2.neg` (`0xED`), `f64x2.sqrt` (`0xEF`),
+  `f64x2.add` (`0xF0`), `f64x2.sub` (`0xF1`), `f64x2.mul` (`0xF2`),
+  `f64x2.div` (`0xF3`) -- a direct structural mirror of PR29's `f32x4`
+  arithmetic family, at `f64x2`'s 2-lane width, plus `mul` (`f32x4.mul`
+  already existed pre-PR29; `f64x2.mul` did not exist until now). 171
+  SIMD opcodes total, up from 165. Each sub-opcode byte fetched live
+  from the SIMD proposal's own `BinarySIMD.md` and cross-checked against
+  every existing `SIMD_OPS` entry: `f64x2.abs` (`0xEC`, still
+  unimplemented) precedes this run, `0xEE` is genuinely unassigned (same
+  "real gap" shape as `f32x4`'s own `0xE2`), and `f64x2.min`/`max`
+  (`0xF4`/`0xF5`, still unimplemented) sit immediately past this run
+  with no overlap.
+- 6 new `SimdOpKind` variants: `NegF64x2`, `SqrtF64x2`, `AddF64x2`,
+  `SubF64x2`, `MulF64x2`, `DivF64x2`.
+- New tests: `simd_f64x2_arith_family_has_the_real_verified_sub_opcode_values`
+  (all six sub-opcode values, plus the `0xEE` gap). Table-size test
+  updated 165 -> 171.
+
 ## [0.2.33] - 2026-08-24 - SIMD widen PR30: f32x4 eq/ne/lt/gt/le/ge (task #205-207)
 
 ### Added

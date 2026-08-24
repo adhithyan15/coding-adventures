@@ -1400,6 +1400,59 @@ fn invalid_f64x2_convert_low_i32x4_s_given_no_operand_at_all() {
 }
 
 #[test]
+fn valid_f64x2_arith_family() {
+    // SIMD widen PR31 (task #208-210): f64x2.neg/sqrt/add/sub/mul/div --
+    // a direct structural mirror of PR29's f32x4.neg/sqrt/add/sub/div,
+    // at f64x2's 2-lane width, plus `mul` (f32x4.mul already existed
+    // pre-PR29; f64x2.mul did not exist until this PR). `neg`/`sqrt` are
+    // UNARY (pop one v128, push one); `add`/`sub`/`mul`/`div` are BINARY
+    // (pop two, push one) -- same shapes as the f32x4 family. Their
+    // IEEE-754 runtime semantics (including `div`'s TOTAL behavior on a
+    // zero divisor -- no trap) are entirely invisible to the type
+    // checker.
+    assert_valid(
+        r#"(module
+             (func (param v128) (result v128) (f64x2.neg (local.get 0)))
+             (func (param v128) (result v128) (f64x2.sqrt (local.get 0)))
+             (func (param v128 v128) (result v128) (f64x2.add (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (f64x2.sub (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (f64x2.mul (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (f64x2.div (local.get 0) (local.get 1))))"#,
+    );
+}
+
+#[test]
+fn invalid_f64x2_add_given_an_i32_operand_instead_of_v128() {
+    // Confirms the type checker actually enforces V128 in both operand
+    // slots, not just accepting whatever's on the stack -- one operand
+    // here is a plain i32, so the pop (expecting V128) must reject it.
+    assert_invalid("(module (func (param v128 i32) (result v128) (f64x2.add (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn invalid_f64x2_mul_given_an_i32_operand_instead_of_v128() {
+    assert_invalid("(module (func (param v128 i32) (result v128) (f64x2.mul (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn invalid_f64x2_sqrt_given_an_i32_operand_instead_of_v128() {
+    assert_invalid("(module (func (param i32) (result v128) (f64x2.sqrt (local.get 0))))");
+}
+
+#[test]
+fn invalid_f64x2_neg_given_no_operand_at_all() {
+    // An empty operand stack must be rejected cleanly, not panic --
+    // mirrors `invalid_f32x4_neg_given_no_operand_at_all` above for the
+    // f64x2 sibling.
+    assert_invalid("(module (func (result v128) (f64x2.neg)))");
+}
+
+#[test]
+fn invalid_f64x2_div_given_no_operands_at_all() {
+    assert_invalid("(module (func (result v128) (f64x2.div)))");
+}
+
+#[test]
 fn valid_v128_local_and_global_round_trip() {
     // `ValueType::V128` used as a local type and a global type, not just
     // a param/result -- proves the value-type parser and validator agree

@@ -487,6 +487,12 @@ TESTSUITE_FILES = [
     # simd_f32x4_arith.wast -- see the NOTICE file for the real vendored/
     # pass counts.
     "simd_f32x4_cmp.wast",
+    # SIMD widen PR31 (task #208-210): simd_f64x2_arith.wast -- vendors
+    # the dedicated upstream file for f64x2.neg/sqrt/add/sub/mul/div
+    # (0xED, 0xEF-0xF3), this PR's 6 new opcodes -- a direct structural
+    # mirror of PR29's simd_f32x4_arith.wast, at f64x2's 2-lane width.
+    # See the NOTICE file for the real vendored/pass counts.
+    "simd_f64x2_arith.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under

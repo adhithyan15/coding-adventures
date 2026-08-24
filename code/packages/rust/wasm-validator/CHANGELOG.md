@@ -2,6 +2,26 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.43] - 2026-08-24 (task #208-210 — SIMD widen PR31: f64x2 neg/sqrt/add/sub/mul/div type rules)
+
+### Added
+
+- `SimdOpKind::NegF64x2`/`SqrtF64x2` join the existing UNARY
+  `v128->v128` type-check arm alongside `NegF32x4`/`SqrtF32x4` -- direct
+  2-lane mirrors, same pop-one-push-one `V128` shape.
+- `SimdOpKind::AddF64x2`/`SubF64x2`/`MulF64x2`/`DivF64x2` join the
+  existing BINARY `v128,v128->v128` type-check arm alongside
+  `AddF32x4`/`SubF32x4`/`DivF32x4` -- direct 2-lane mirrors plus `mul`
+  on the same shape, still just two `V128` pops, one `V128` push. The
+  IEEE-754 arithmetic semantics (including `div`'s TOTAL behavior on a
+  zero divisor) are entirely a runtime concern, invisible here.
+- New tests: `valid_f64x2_arith_family`,
+  `invalid_f64x2_add_given_an_i32_operand_instead_of_v128`,
+  `invalid_f64x2_mul_given_an_i32_operand_instead_of_v128`,
+  `invalid_f64x2_sqrt_given_an_i32_operand_instead_of_v128`,
+  `invalid_f64x2_neg_given_no_operand_at_all`,
+  `invalid_f64x2_div_given_no_operands_at_all`.
+
 ## [0.2.42] - 2026-08-24 (task #205-207 — SIMD widen PR30: f32x4 eq/ne/lt/gt/le/ge type rules)
 
 ### Added
