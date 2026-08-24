@@ -759,6 +759,48 @@ JSON string; tokens are joined by one ASCII space. Trusted execution MUST use
 the structured `program` and `args` through the platform executor rather than
 executing this display string.
 
+Starlark metering is deterministic behavior, not an implementation-specific
+timeout. The `evaluation_limits` record has these meanings:
+
+- `step_count` is a shared fuel budget. Entering a statement, evaluating an
+  expression, attempting a function or built-in call, and producing one loop
+  or comprehension iteration each consumes one step. Load evaluation consumes
+  from the same budget. Exhaustion reports `STARLARK_STEP_LIMIT` before the
+  next event and produces no target result.
+- `recursion_depth` counts active user-function calls, including the first
+  call. Crossing the limit reports `STARLARK_RECURSION_LIMIT`. Implementations
+  that reject every recursive cycle earlier may report the same code; they
+  MUST NOT overflow a native stack first.
+- `load_depth` counts load edges from the entrypoint, whose depth is zero.
+  Crossing it reports `STARLARK_LOAD_DEPTH_LIMIT`. `module_count` counts unique
+  modules including the entrypoint and reports `STARLARK_MODULE_LIMIT` before
+  evaluating the first module beyond the limit. A cycle in the active load
+  chain reports `STARLARK_LOAD_CYCLE`, even when every member was already
+  observed; completed-module caching is not permission to hide a cycle.
+- `value_items` is a cumulative allocation budget. Each item materialized into
+  a list, tuple, or dictionary consumes one unit; replacing a dictionary value
+  does not refund or duplicate the key unit. Exhaustion reports
+  `STARLARK_AGGREGATE_LIMIT` before the item becomes visible.
+- optional `range_items` bounds the logical cardinality of any one `range`
+  before iteration or allocation and reports `STARLARK_RANGE_LIMIT`. Optional
+  `value_bytes` bounds the UTF-8 byte length of one string or the exact length
+  of one bytes value and reports `STARLARK_VALUE_LIMIT`. For backward-compatible
+  v1 inputs that omit either field, `value_items` supplies that ceiling.
+- `output_bytes` bounds the combined UTF-8 bytes of `print` and evaluator trace
+  events, including one line-feed byte per event. The implementation measures
+  the complete event before emission; an event that would cross the ceiling is
+  not partially emitted and reports `STARLARK_OUTPUT_LIMIT`.
+
+All limit failures use `outcome: "error"`, an empty result, severity `error`,
+and the repository-relative module path at which the next charged event was
+rejected. No limit failure may fall back to legacy shell interpretation. Fuel,
+allocation, and diagnostic budgets are independent: exhausting one cannot be
+masked by unused capacity in another. The adversarial corpus includes one
+positive case that reaches, but does not cross, every requested ceiling plus
+negative cases for steps, recursion, aggregate allocation, range size, scalar
+value size, load depth, module count, load cycles, and combined print/trace
+output.
+
 Validation v1 uses the stable diagnostic registry
 `BUILD_FILE_MISSING`, `BUILD_FILE_EMPTY`, `LOCAL_DEPENDENCY_UNDECLARED`,
 `STANDALONE_PREREQUISITE_MISSING`, `STARLARK_SOURCE_INVALID`,
