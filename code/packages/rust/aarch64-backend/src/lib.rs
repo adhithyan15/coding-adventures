@@ -640,7 +640,7 @@ fn is_gc_root_ty(ty: &str) -> bool {
 /// the only effect is an inert record at a PC no return address ever equals.)
 fn call_return_offsets(code: &[u8]) -> Vec<u32> {
     let mut out = Vec::new();
-    for (i, word) in code.chunks_exact(4).enumerate() {
+    for (i, word) in code.as_chunks::<4>().0.iter().enumerate() {
         let w = u32::from_le_bytes([word[0], word[1], word[2], word[3]]);
         let is_bl = (w >> 26) == 0b100101;
         let is_blr = (w & 0xFFFF_FC1F) == 0xD63F_0000;
