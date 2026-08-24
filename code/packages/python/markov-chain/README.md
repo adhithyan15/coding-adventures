@@ -177,12 +177,25 @@ For `order > 1`:
 - `generate(start, n)` expects a k-tuple as `start`.
 - `generate_string(seed, n)` accepts a string; uses the last `order` characters as the context window.
 
-## Running the tests
+## Development
 
 ```bash
-uv pip install -e ".[dev]"
-uv run pytest
+cd code/packages/python/markov-chain
+uv venv .venv --quiet --no-project --clear --python 3.13
+uv pip install --python .venv -e ../graph -e ../directed-graph --quiet
+uv pip install --python .venv -e .[dev] --quiet
+.venv/bin/python -m ruff check src tests
+.venv/bin/python -m ruff format --check src tests
+.venv/bin/python -m mypy --strict src tests
+.venv/bin/python -m pytest tests/ -v
 ```
+
+`BUILD_windows` provides the same gates through
+`.venv\Scripts\python.exe`. Both recipes clear and recreate the package-local
+environment, so an immediate repeat is supported. The project version and
+dependency metadata are unchanged because this repair only makes the existing
+Python 3.12-or-newer contract deterministic under the repository's Python 3.13
+build profile.
 
 ## Connection to CMP06 (Brotli)
 
