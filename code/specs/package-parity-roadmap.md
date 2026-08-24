@@ -5405,7 +5405,7 @@ the loop requested squash auto-merge, and GitHub merged PR #12512 as
 ### Post-#12512 refresh and data-store selection
 
 The collision-checked schema-3 inventory at exact current main
-`3513488ff2a263e8bf3062ddff4a25fa89b4d8b9` remains identity-neutral: 15
+`7166af25cc4b9756c4a2c366e0e6ee428e27669d` remains identity-neutral: 15
 established lanes, 1,369 implementation identities, 4,562 package slots, 175
 high-consensus identities with 276 gaps, 122 identities in five to nine lanes
 with 926 gaps, 166 identities in two to four lanes with 2,087 gaps, and 906
@@ -5425,8 +5425,8 @@ not widen the build-front repair.
 `python-data-store-build-front-idempotence` is now dependency-ready after all
 five prerequisites merged. It repairs exactly the engine then composed-store
 fronts, closes the final hash/RESP/data-store dependency chain, and owns the
-repeatedly reproduced Windows-invalid quoted editable requirement. Eight open
-PRs and 31 non-main remote heads have zero exact overlap; the target branch
+repeatedly reproduced Windows-invalid quoted editable requirement. Seven open
+PRs and 30 non-main remote heads have zero exact overlap; the target branch
 and prior PR were absent before creation. The ready TCP dependency-contract
 reconciliation does not block this closure.
 
@@ -5436,6 +5436,27 @@ passes Ruff, formatting, five tests, and 100% coverage, while strict MyPy
 exposes four findings across its response conversion and response-shape test;
 the selected owner must bound any cleanup to behavior-preserving typing and
 test narrowing within the two owned roots.
+
+The implemented repair pins all four complete recipes. On Windows with uv
+0.11.28 and Python 3.13.14, each BUILD_windows front passes twice from a
+cleared environment: the engine passes 57 tests at 96.67% coverage and the
+store passes five tests at 100%, with Ruff, formatting, strict MyPy, and
+dependency checks clean throughout. Kind-specific response narrowing and
+runtime-proved decoded-frame test narrowing resolve the store's four dormant
+type errors, allowing removal of the broad missing-import suppression without
+changing behavior.
+
+The uv audit shrinks exactly from 11 to nine fronts across seven components.
+Focused recipe, audit, parity, and capability suites pass. Both packages build
+wheel and source distributions, install with their explicit closure into a
+fresh Python 3.13 environment, and pass engine and RESP smoke tests. The Go
+build tool passes tests, vet, and trimpath compilation; its fresh binary
+validates 4,982 packages, selects exactly the six-package hash/protocol/data-
+store closure, and completes the real serial build. The rebased schema-3
+inventory and 431-node, 613-edge state remain collision-free, complete, and
+acyclic. Security review finds no new dependency, credential, network,
+process, capability, or production-authority surface; the pre-existing AOF
+filesystem authority remains isolated in its separately blocked owner.
 
 ## Autonomous Loop Protocol
 
