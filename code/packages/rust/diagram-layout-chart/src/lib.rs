@@ -11,12 +11,12 @@
 //!   * **Sankey** — left-to-right proportional bands
 
 use diagram_ir::{
-    ChartDiagram, ChartKind, LayoutedChartDiagram, LayoutedChartItem, LegendEntry, Orientation,
-    Point, SeriesKind,
+    AxisKind, ChartDiagram, ChartKind, LayoutedChartDiagram, LayoutedChartItem, LegendEntry,
+    Orientation, Point, SeriesKind,
 };
 use std::collections::{HashMap, VecDeque};
 
-pub const VERSION: &str = "0.13.0";
+pub const VERSION: &str = "0.14.0";
 
 const MARGIN: f64 = 24.0;
 const TITLE_H: f64 = 32.0;
@@ -29,6 +29,34 @@ const POINT_LABEL_FONT_SIZE: f64 = 12.0;
 
 fn point_label_size(label: &str) -> (f64, f64) {
     ((label.chars().count() as f64 * 7.0 + 4.0).max(12.0), 14.4)
+}
+
+fn maximum_series_len(diagram: &ChartDiagram) -> usize {
+    diagram
+        .series
+        .iter()
+        .map(|series| series.data.len())
+        .max()
+        .unwrap_or(0)
+}
+
+fn indexed_axis_position(
+    start: f64,
+    length: f64,
+    index: usize,
+    count: usize,
+    numeric: bool,
+) -> f64 {
+    if numeric {
+        let fraction = if count <= 1 {
+            0.0
+        } else {
+            index as f64 / (count - 1) as f64
+        };
+        start + fraction * length
+    } else {
+        start + (index as f64 + 0.5) * length / count.max(1) as f64
+    }
 }
 
 const SERIES_COLORS: &[&str] = &[
@@ -104,13 +132,22 @@ fn layout_xy_vertical(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChart
         .as_ref()
         .map(|a| a.categories.clone())
         .unwrap_or_default();
-    let nc = cats.len().max(1);
+    let numeric_x_axis = diagram
+        .x_axis
+        .as_ref()
+        .is_some_and(|axis| axis.kind == AxisKind::Numeric);
+    let point_count = maximum_series_len(diagram).max(1);
+    let slot_count = if numeric_x_axis {
+        point_count
+    } else {
+        cats.len().max(1)
+    };
     let nb = diagram
         .series
         .iter()
         .filter(|s| s.kind == SeriesKind::Bar)
         .count();
-    let cat_w = pw / nc as f64;
+    let cat_w = pw / slot_count as f64;
     let bar_w = if nb > 0 {
         (cat_w * 0.7 / nb as f64).max(4.0)
     } else {
@@ -168,15 +205,27 @@ fn layout_xy_vertical(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChart
         });
     }
 
-    // X-axis category labels
-    for (i, cat) in cats.iter().enumerate() {
-        let cx = pl + (i as f64 + 0.5) * cat_w;
-        items.push(LayoutedChartItem::AxisTick {
-            x: cx,
-            y: pb + TICK_LEN + 4.0,
-            label: cat.clone(),
-            orientation: Orientation::Vertical,
-        });
+    if numeric_x_axis {
+        let axis = diagram.x_axis.as_ref().expect("numeric x-axis");
+        for index in 0..=GRID_COUNT {
+            let fraction = index as f64 / GRID_COUNT as f64;
+            items.push(LayoutedChartItem::AxisTick {
+                x: pl + fraction * pw,
+                y: pb + TICK_LEN + 4.0,
+                label: format!("{:.0}", axis.min + fraction * (axis.max - axis.min)),
+                orientation: Orientation::Vertical,
+            });
+        }
+    } else {
+        for (i, cat) in cats.iter().enumerate() {
+            let cx = indexed_axis_position(pl, pw, i, cats.len(), false);
+            items.push(LayoutedChartItem::AxisTick {
+                x: cx,
+                y: pb + TICK_LEN + 4.0,
+                label: cat.clone(),
+                orientation: Orientation::Vertical,
+            });
+        }
     }
 
     // Axis spines
@@ -209,10 +258,24 @@ fn layout_xy_vertical(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChart
         }
         match series.kind {
             SeriesKind::Bar => {
+                let group_width = bar_w * nb as f64;
                 for (ci, point) in series.data.iter().enumerate() {
                     let val = point.value;
                     let bh = ((val - ym) / yr * ph).max(0.0);
-                    let bx = pl + ci as f64 * cat_w + cat_w * 0.15 + bar_series_idx as f64 * bar_w;
+                    let center = indexed_axis_position(
+                        pl,
+                        pw,
+                        ci,
+                        if numeric_x_axis {
+                            series.data.len()
+                        } else {
+                            cats.len()
+                        },
+                        numeric_x_axis,
+                    );
+                    let group_x =
+                        (center - group_width / 2.0).clamp(pl, (pr - group_width).max(pl));
+                    let bx = group_x + bar_series_idx as f64 * bar_w;
                     let by = pb - bh;
                     items.push(LayoutedChartItem::Bar {
                         x: bx,
@@ -230,7 +293,17 @@ fn layout_xy_vertical(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChart
                     .iter()
                     .enumerate()
                     .map(|(ci, point)| {
-                        let lx = pl + (ci as f64 + 0.5) * cat_w;
+                        let lx = indexed_axis_position(
+                            pl,
+                            pw,
+                            ci,
+                            if numeric_x_axis {
+                                series.data.len()
+                            } else {
+                                cats.len()
+                            },
+                            numeric_x_axis,
+                        );
                         let ly = pb - (point.value - ym) / yr * ph;
                         Point { x: lx, y: ly }
                     })
@@ -307,7 +380,16 @@ fn layout_xy_horizontal(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedCha
         .as_ref()
         .map(|axis| axis.categories.clone())
         .unwrap_or_default();
-    let category_count = categories.len().max(1);
+    let numeric_x_axis = diagram
+        .x_axis
+        .as_ref()
+        .is_some_and(|axis| axis.kind == AxisKind::Numeric);
+    let point_count = maximum_series_len(diagram).max(1);
+    let category_count = if numeric_x_axis {
+        point_count
+    } else {
+        categories.len().max(1)
+    };
     let bar_series_count = diagram
         .series
         .iter()
@@ -366,13 +448,26 @@ fn layout_xy_horizontal(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedCha
             orientation: Orientation::Vertical,
         });
     }
-    for (index, category) in categories.iter().enumerate() {
-        items.push(LayoutedChartItem::AxisTick {
-            x: left - TICK_LEN - 4.0,
-            y: top + (index as f64 + 0.5) * category_height,
-            label: category.clone(),
-            orientation: Orientation::Horizontal,
-        });
+    if numeric_x_axis {
+        let axis = diagram.x_axis.as_ref().expect("numeric x-axis");
+        for index in 0..=GRID_COUNT {
+            let fraction = index as f64 / GRID_COUNT as f64;
+            items.push(LayoutedChartItem::AxisTick {
+                x: left - TICK_LEN - 4.0,
+                y: top + fraction * plot_height,
+                label: format!("{:.0}", axis.min + fraction * (axis.max - axis.min)),
+                orientation: Orientation::Horizontal,
+            });
+        }
+    } else {
+        for (index, category) in categories.iter().enumerate() {
+            items.push(LayoutedChartItem::AxisTick {
+                x: left - TICK_LEN - 4.0,
+                y: indexed_axis_position(top, plot_height, index, categories.len(), false),
+                label: category.clone(),
+                orientation: Orientation::Horizontal,
+            });
+        }
     }
     items.push(LayoutedChartItem::AxisSpine {
         x1: left,
@@ -401,12 +496,23 @@ fn layout_xy_horizontal(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedCha
         }
         match series.kind {
             SeriesKind::Bar => {
+                let group_height = bar_height * bar_series_count as f64;
                 for (category_index, point) in series.data.iter().enumerate() {
                     let width = ((point.value - minimum) / range * plot_width).max(0.0);
-                    let y = top
-                        + category_index as f64 * category_height
-                        + category_height * 0.15
-                        + bar_series_index as f64 * bar_height;
+                    let center = indexed_axis_position(
+                        top,
+                        plot_height,
+                        category_index,
+                        if numeric_x_axis {
+                            series.data.len()
+                        } else {
+                            categories.len()
+                        },
+                        numeric_x_axis,
+                    );
+                    let group_y = (center - group_height / 2.0)
+                        .clamp(top, (bottom - group_height).max(top));
+                    let y = group_y + bar_series_index as f64 * bar_height;
                     items.push(LayoutedChartItem::Bar {
                         x: left,
                         y,
@@ -424,7 +530,17 @@ fn layout_xy_horizontal(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedCha
                     .enumerate()
                     .map(|(category_index, point)| Point {
                         x: left + (point.value - minimum) / range * plot_width,
-                        y: top + (category_index as f64 + 0.5) * category_height,
+                        y: indexed_axis_position(
+                            top,
+                            plot_height,
+                            category_index,
+                            if numeric_x_axis {
+                                series.data.len()
+                            } else {
+                                categories.len()
+                            },
+                            numeric_x_axis,
+                        ),
                     })
                     .collect::<Vec<_>>();
                 if !points.is_empty() {
@@ -899,7 +1015,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.13.0");
+        assert_eq!(crate::VERSION, "0.14.0");
     }
 
     #[test]
@@ -962,6 +1078,44 @@ mod tests {
             .filter(|item| matches!(item, LayoutedChartItem::PointLabel { .. }))
             .count();
         assert_eq!(labels, 2);
+    }
+
+    #[test]
+    fn numeric_x_axis_evenly_distributes_points_in_both_orientations() {
+        let mut diagram = xy_diagram();
+        diagram.x_axis = Some(Axis {
+            kind: AxisKind::Numeric,
+            title: Some("Sample".into()),
+            categories: vec![],
+            min: 10.0,
+            max: 20.0,
+        });
+
+        let vertical = layout_chart_diagram(&diagram, 600.0, 400.0);
+        let vertical_points = vertical
+            .items
+            .iter()
+            .find_map(|item| match item {
+                LayoutedChartItem::LinePath { points, .. } => Some(points),
+                _ => None,
+            })
+            .unwrap();
+        assert!(vertical_points[2].x - vertical_points[0].x > 300.0);
+        assert!(vertical.items.iter().any(|item| {
+            matches!(item, LayoutedChartItem::AxisTick { label, .. } if label == "10")
+        }));
+
+        diagram.orientation = ChartOrientation::Horizontal;
+        let horizontal = layout_chart_diagram(&diagram, 600.0, 400.0);
+        let horizontal_points = horizontal
+            .items
+            .iter()
+            .find_map(|item| match item {
+                LayoutedChartItem::LinePath { points, .. } => Some(points),
+                _ => None,
+            })
+            .unwrap();
+        assert!(horizontal_points[2].y - horizontal_points[0].y > 200.0);
     }
 
     #[test]

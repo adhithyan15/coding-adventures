@@ -25,7 +25,9 @@ The current native pipeline supports documented subsets of:
 The `xychart` subset preserves chart orientation, titles, accessibility
 metadata, categorical and numeric axes, named bar and line series, and optional
 labels on individual data points. Line point labels resolve into positioned,
-backend-neutral text for both vertical and horizontal charts.
+backend-neutral text for both vertical and horizontal charts. When categories
+are omitted, series receive Mermaid's inferred one-based numeric x-axis;
+explicit numeric x-axis ranges distribute data points evenly across that range.
 
 Each supported family lowers into the shared Diagram IR and can continue
 through its family layout package:

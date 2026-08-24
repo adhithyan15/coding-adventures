@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.14.0
+
+- Lay out inferred and explicit numeric Mermaid XY x-axes with evenly distributed series positions and numeric ticks.
+
 ## 0.13.0
 
 - Resolve Mermaid XY line point labels into backend-neutral text bounds for vertical and horizontal charts.
