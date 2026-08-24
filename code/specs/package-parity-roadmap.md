@@ -6348,6 +6348,40 @@ was removed, and `build-tool-rust-windows-isolated-target-artifact-hygiene`
 owns the durable build-front fix and repeated-clean-run proof without widening
 the process-free validator tranche.
 
+The implemented Rust validator is a pure in-memory consumer of the closed
+snapshot schema. It independently loads all five neutral cases and matches the
+contract's slash normalization, closed path-error precedence, hostile-input
+redaction, Unicode-scalar length and sorting, NFKC plus full default folding,
+full-uppercase reserved-name membership, inert entry kinds, and canonical
+diagnostic ordering. One exact `oxixml-unicode` 0.1.2 dependency supplies NFC,
+NFKC, full folding, and full uppercase from the same Unicode 17.0.0 snapshot;
+the dependency is Apache-2.0, has no transitives, and forbids unsafe code.
+
+Focused tests pass 2/2 at 98.97% validator line and 100% function coverage;
+Clippy passes all targets with warnings denied. Both canonical BUILD fronts
+compile successfully and then reproduce only the unchanged
+`test_language_registry_conformance_fixture` failure caused by the intentional
+Haskell `dist-newstyle` decoy: 141 other tests pass, and exact selected main
+reproduces the same failure. The existing
+`build-tool-dist-newstyle-discovery-exclusion-remaining-engines` owner remains
+responsible for that separate discovery fix. Neutral schema and runner suites
+pass 80 tests plus 119 subtests, and all 111 corpus cases across 269 files
+validate. Parity, capability, Haskell-capability, and OCaml-lock suites pass 68
+tests with two expected Windows symlink skips. The Go build tool passes tests,
+vet, trimpath compilation, BUILD validation, and a real no-change dry run over
+45 Starlark files and 5,070 packages. Cargo audit reports no vulnerability in
+57 dependencies, and dependency, credential, diff, capability-manifest, and
+production-authority reviews are clean.
+
+The branch rebased without conflict over seven unrelated main commits to exact
+`origin/main` `6244f8c75392c389c0a0cd6a8ade6e6ef5b3533d`. A fresh schema-3
+collision report at that revision remains 15 established lanes, 1,370
+identities, 4,563 slots, 718 Rust singletons, zero collisions, and zero unknown
+buckets. The state graph contains 486 unique owners with complete dependencies
+and no cycle. The 467,707,645-byte `target_isolated/` validation artifact was
+removed after the exact Windows front ran; its durable cleanliness repair stays
+with the separately registered owner.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

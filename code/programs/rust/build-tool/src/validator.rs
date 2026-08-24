@@ -110,7 +110,7 @@ fn normalize_tracked_artifact_path(path: &str) -> Result<String, &'static str> {
     if normalized.chars().count() > 512 {
         return Err("TOO_LONG");
     }
-    if !norm::is_nfc(&normalized) {
+    if !norm::is_nfc(&normalized) && norm::nfc(&normalized) != normalized {
         return Err("NON_NFC");
     }
     if normalized.starts_with('/') {
@@ -567,6 +567,17 @@ mod tests {
                 assert!(!serde_json::to_string(diagnostic).unwrap().contains(&path));
             }
         }
+
+        // U+0300 has NFC_QC=Maybe, so the fast check is inconclusive even
+        // when no canonical composition exists. Only an exact normalization
+        // comparison may reject the already-normalized path.
+        let nfc_quick_check_maybe = "code/packages/q\u{0300}/file.rs";
+        assert!(validate_tracked_artifact_snapshot(&[TrackedArtifactEntry {
+            ordinal: 8,
+            path: nfc_quick_check_maybe.to_string(),
+            entry_kind: "regular".to_string(),
+        }])
+        .is_empty());
     }
 
     fn make_package(root: &std::path::Path, rel_path: &str, language: &str) -> Package {
