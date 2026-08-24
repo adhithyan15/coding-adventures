@@ -127,3 +127,27 @@ order. A legacy recipe with a different repair shape may not be hidden inside
 a generated-pattern bulk edit. Each backfill must later prove both canonical
 and Windows fronts from clean state and on an immediate repeat, then run its
 real affected downstream closure.
+
+## Generated-standard repair profile
+
+An owner marked `generated-standard` in the backfill fixture repairs only its
+listed package roots and MUST preserve the fixture's dependency order. Each
+canonical and Windows front MUST:
+
+1. recreate the package-local environment with
+   `uv venv .venv --quiet --no-project --clear --python 3.13`;
+2. install every repository-local prerequisite through `uv pip --python
+   .venv` before installing the package itself;
+3. install the editable package and development tools through that same named
+   environment, retaining the Windows `--no-deps` package/tool split where the
+   checked-in recipe already needs it; and
+4. invoke Ruff lint, Ruff format checking, strict MyPy, and pytest through the
+   explicit platform interpreter (`.venv/bin/python` or
+   `.venv\Scripts\python.exe`), never ambient `python` or `uv run`.
+
+The repair regression MUST compare the complete active recipe for every owned
+front, not search for isolated substrings. Runtime validation MUST run both
+platform recipes twice consecutively from clean package copies, confirm the
+second run replaces the existing environment, rerun the audit, and prove the
+live non-idempotent corpus shrinks by exactly the repaired package set while
+the original owner decomposition remains complete.
