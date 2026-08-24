@@ -1,5 +1,6 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, normalize, relative as pathRelative, resolve } from "node:path";
+import { assertRelativeManifestPath } from "./manifest-path.js";
 import { pathToFileURL } from "node:url";
 import {
   renderBookAnswerKey,
@@ -166,6 +167,7 @@ function requireChapterCapability(
 }
 
 function safeOutput(root: string, relative: string): string {
+  assertRelativeManifestPath(relative, `unsafe generated book output '${relative}'`);
   const output = resolve(root, relative);
   const fromRoot = normalize(pathRelative(resolve(root), output)).replaceAll("\\", "/");
   if (
@@ -180,6 +182,7 @@ function safeOutput(root: string, relative: string): string {
 }
 
 function safeMarkdownSource(root: string, relative: string): string {
+  assertRelativeManifestPath(relative, `unsafe generated book source '${relative}'`);
   const source = resolve(root, relative);
   const fromRoot = normalize(pathRelative(resolve(root), source)).replaceAll("\\", "/");
   if (

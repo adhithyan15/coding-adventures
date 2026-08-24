@@ -39,6 +39,7 @@
 
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, normalize, relative as pathRelative, resolve } from "node:path";
+import { assertRelativeManifestPath } from "./manifest-path.js";
 import { pathToFileURL } from "node:url";
 import { fnv1a64 } from "./hash.js";
 import {
@@ -98,6 +99,7 @@ interface GeneratedNarrationManifest {
  * be for a function that writes files.
  */
 export function safeOutput(root: string, relative: string): string {
+  assertRelativeManifestPath(relative, `unsafe generated narration output '${relative}'`);
   const output = resolve(root, relative);
   const fromRoot = normalize(pathRelative(resolve(root), output)).replaceAll("\\", "/");
   if (

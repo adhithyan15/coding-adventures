@@ -1,5 +1,6 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, normalize, relative as pathRelative, resolve } from "node:path";
+import { assertRelativeManifestPath } from "./manifest-path.js";
 import { pathToFileURL } from "node:url";
 import { defaultCurriculumRoot, loadLessons } from "./loader.js";
 import { renderFigure, type FigureTarget } from "./figure.js";
@@ -30,6 +31,7 @@ function loadConfig(root: string): FigureGenerationConfig {
 
 /** Every generated SVG must remain under one track's book/figures directory. */
 export function safeFigureOutput(root: string, relative: string): string {
+  assertRelativeManifestPath(relative, `unsafe generated figure output '${relative}'`);
   const output = resolve(root, relative);
   const fromRoot = normalize(pathRelative(resolve(root), output)).replaceAll("\\", "/");
   if (
