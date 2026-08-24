@@ -398,8 +398,34 @@ describe("handwriting ductus", () => {
     const devanagari = SCRIPTS.find((script) => script.script === "devanagari")!;
     expect(devanagari.marks?.map((mark) => mark.mark)).toContain("ँ");
     expect(devanagari.marks?.map((mark) => mark.mark)).toContain("ः");
-    expect(devanagari.marks).toHaveLength(14);
+    expect(devanagari.marks).toHaveLength(15);
     expect(devanagari.complete).toBe(false);
+  });
+
+  it("models Devanagari nukta as one sourced below-base carrier composition", () => {
+    const devanagari = SCRIPTS.find((script) => script.script === "devanagari")!;
+    const nukta = devanagari.marks!.find((mark) => mark.mark === "़")!;
+    expect(nukta.role).toBe("diacritic");
+    expect(nukta.attachesAs).toMatch(/dot below a consonant.*modified sound/i);
+    expect(nukta.examples?.map((example) => example.combined)).toEqual([
+      "क़", "ख़", "ग़", "ज़", "ड़", "ढ़", "फ़",
+    ]);
+    for (const example of nukta.examples!) {
+      expect(example.combined.normalize("NFD")).toBe(`${example.base}${nukta.mark}`);
+    }
+    expect(nukta.compositionOrder).toEqual([
+      "write the consonant carrier first",
+      "add the nukta as a single subscript dot below the consonant",
+    ]);
+    expect(nukta.compositionSource?.url).toBe(
+      "https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-12/#G71127",
+    );
+    expect(nukta.compositionSource?.citation).toMatch(
+      /Unicode Standard.*Version 17\.0.*12\.1\.3.*U\+093C.*NUKTA/i,
+    );
+    expect(nukta.compositionSource?.variation).toMatch(
+      /true diacritic.*subscript dot.*seven carrier combinations.*not a universal handwriting sequence.*learner convention/i,
+    );
   });
 
   it("keeps taa marbuta word-final and body-first", () => {
