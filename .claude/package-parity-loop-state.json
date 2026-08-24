@@ -11,7 +11,7 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": 12492,
   "last_inventory": {
     "revision": "d491ed654f31c43f01e429a96eb5cbaaae4cc85c",
     "schema_version": 3,
@@ -4308,14 +4308,18 @@
     {
       "id": "python-hash-collections-build-front-idempotence",
       "title": "Make the Python hash-dependent collection BUILD fronts repeatable",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["python-uv-build-front-idempotence-audit", "python-hash-functions-build-front-idempotence"],
       "branch": "codex/python-hash-collections-build-front-idempotence",
-      "pr_number": null,
+      "pr_number": 12492,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/12492",
+      "opened_at": "2026-08-24T02:45:21Z",
+      "opened_revision": "6a3b5fb04a5016e66164787db6de8aac1e85b118",
       "selection_revision": "e9d55a4265f4894228f2b595b6ce4c17daf1eb70",
       "implementation_revision": "4cad3acef9c5bbf0ec8ff1e46d5b77fcd032a870",
       "selection_notes": "Selected immediately after hash-functions PR #12482 completed all 30 checks and merged through the requested auto-merge path. The collision-checked post-merge inventory is identity-neutral at 15 established lanes, 1,369 canonical identities, and 4,562 implementation slots with zero collisions or unknown buckets. With both prerequisites merged, this homogeneous three-package generated-standard repair is the highest-leverage ready Python owner: bloom-filter, hash-map, and hyperloglog all consume hash-functions, and HyperLogLog continues into the in-memory data-store closure. Independent live audits across nine open PRs and 32 remote heads find zero overlap on the three package roots, uv audit fixtures, state, or roadmap; the selected remote branch was absent before creation.",
       "validation_notes": "All six complete BUILD recipes are pinned by a focused regression. On Windows with uv 0.12.1 and Python 3.13.14, every BUILD_windows line passes twice consecutively from a cleared package-local environment: Bloom Filter passes 47 tests at 96.15% coverage, Hash Map passes 116 tests at 96.04%, and HyperLogLog passes 61 tests at 98.88%, with Ruff, formatting, and strict MyPy clean in both runs. The repository uv audit now removes these three repaired fronts from the live debt corpus while preserving dependency assertions for remaining owners; its 13 tests and the two exact-recipe tests pass. The direct HyperLogLog downstream engine passes 57 tests at 96.67% coverage against editable local dependencies. The Go build tool passes all package tests, vet, and compilation, and its exact dry plan evaluates 45 Starlark files, discovers 494 Python packages, and selects three changed plus five dependency-closure packages. A full eight-node build-tool execution reached the unchanged in-memory-data-store-protocol prerequisite and reproduced its separately owned recursive pip-launcher hang; the runaway validation process was stopped after five minutes. Selected recipes and the immediate runtime downstream were therefore validated directly, and the canonical Unix recipes remain structurally pinned for Linux/macOS CI. Package parity and capability suites pass 10 and seven tests, and the collision gate remains clean.",
+      "publication_notes": "Opened ready-for-review PR #12492 from independently reviewed head 6a3b5fb04a5016e66164787db6de8aac1e85b118 after a normal first push from exact origin/main d491ed654f31c43f01e429a96eb5cbaaae4cc85c. Live audits found zero overlap across 11 open PRs and 32 remote source heads; the target remote branch was absent before publication. GitHub reports the branch mergeable, while required checks are queued, so the loop returns to monitor-only behavior.",
       "notes": "Homogeneous generated-pattern backfill for python/bloom-filter, python/hash-map, and python/hyperloglog after the shared hash-functions prerequisite is repaired. Preserve exact sibling dependency order and validate the three fronts twice before the data-store closure."
     },
     {
