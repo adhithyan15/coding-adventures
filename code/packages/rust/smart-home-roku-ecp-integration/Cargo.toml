@@ -2,7 +2,7 @@
 name = "smart-home-roku-ecp-integration"
 version = "0.1.0"
 edition = "2021"
-description = "Roku External Control Protocol discovery and inspection for the smart-home runtime"
+description = "Bounded Roku ECP discovery, telemetry, and media control for the smart-home runtime"
 license = "MIT"
 
 [dependencies]

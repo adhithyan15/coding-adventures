@@ -2758,6 +2758,30 @@ This broadens local media telemetry and low-risk control beyond proprietary
 player protocols while preserving explicit endpoint, authorization, lifetime,
 and secret boundaries.
 
+## Current Roku ECP Media Control Breadth Slice
+
+The next breadth slice applies the completed D23 media command contract to the
+existing local Roku ECP runtime without opening its broad remote-control API:
+
+- Explicit configuration accepts only credential-free HTTP URLs whose hosts
+  are private, link-local, or loopback IP literals. SSDP remains bounded to the
+  `roku:ecp` search target, and all HTTP requests, responses, and timeouts stay
+  bounded and connection-scoped.
+- Inspection adds the official `query/media-player` state to normalized Roku
+  telemetry. D23 read authorization still runs before any network I/O.
+- Low-risk D23 media authorization runs before native command I/O and maps only
+  `play` and `pause` to the fixed ECP `Play` key. Because the key is a toggle,
+  the runtime first reads an exact `play` or `pause` state, sends no key when the
+  requested state already holds, toggles only from the exact opposite state,
+  and requires a second query to prove the requested postcondition.
+- The runtime accepts no credentials and exposes no stop claim, app launch,
+  arbitrary keypress, browse, input, power, volume, media transfer, recording,
+  public endpoint, DNS resolution, or long-lived connection.
+
+This closes the Roku control prerequisite made executable by the Kodi slice
+while preserving explicit endpoint, authorization, lifetime, and secret
+boundaries.
+
 The protocol- and vendor-specific backlog below remains valid after these
 breadth steps:
 
