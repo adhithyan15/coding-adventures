@@ -193,6 +193,7 @@ const ARABIC_DAAD = DUCTUS[ductusKey("arabic", "ض")];
 const ARABIC_TAH = DUCTUS[ductusKey("arabic", "ط")];
 const ARABIC_ZAH = DUCTUS[ductusKey("arabic", "ظ")];
 const ARABIC_AYN = DUCTUS[ductusKey("arabic", "ع")];
+const ARABIC_GHAYN = DUCTUS[ductusKey("arabic", "غ")];
 const ARABIC_KAF = DUCTUS[ductusKey("arabic", "ك")];
 const ARABIC_LAM = DUCTUS[ductusKey("arabic", "ل")];
 const ARABIC_MEEM = DUCTUS[ductusKey("arabic", "م")];
@@ -351,10 +352,10 @@ describe("handwriting ductus", () => {
     expect(gujarati.letters.every((letter) => letter.strokeOrderSource !== undefined)).toBe(true);
   });
 
-  it("keeps all 26 unique Arabic rows sourced without overstating completion", () => {
+  it("keeps all 27 unique Arabic rows sourced without overstating completion", () => {
     const arabic = SCRIPTS.find((script) => script.script === "arabic")!;
     expect(arabic.complete).toBe(false);
-    expect(arabic.letters).toHaveLength(26);
+    expect(arabic.letters).toHaveLength(27);
     expect(arabic.letters.every((letter) => letter.strokeOrderSource !== undefined)).toBe(true);
   });
 
@@ -3100,6 +3101,19 @@ describe("handwriting ductus", () => {
     expect(bowl.at(-1)!.x).toBeGreaterThan(bowl[0].x);
   });
 
+  it("Arabic independent غ repeats the complete ع body before placing its dot", () => {
+    expect(ARABIC_GHAYN.script).toBe("arabic");
+    expect(penLifts(ARABIC_GHAYN)).toBe(1);
+    expect(ARABIC_GHAYN.strokes).toHaveLength(2);
+    expect(ARABIC_GHAYN.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1]);
+    expect(ARABIC_GHAYN.strokes[0]).toEqual(ARABIC_AYN.strokes[0]);
+    const dot = ARABIC_GHAYN.strokes[1].segments[0].path;
+    expect(dot[0]).toEqual(dot.at(-1));
+    expect(Math.min(...dot.map((point) => point.y))).toBeGreaterThan(
+      Math.max(...ARABIC_GHAYN.strokes[0].segments[0].path.map((point) => point.y)),
+    );
+  });
+
   it("Arabic independent ك turns along its base before lifting for the inner arm", () => {
     expect(ARABIC_KAF.script).toBe("arabic");
     expect(penLifts(ARABIC_KAF)).toBe(1);
@@ -3603,6 +3617,9 @@ describe("handwriting ductus", () => {
       "_fonts/NotoNaskhArabic-Static.ttf",
     );
     expect(verifiedLetterFont("ظ", ARABIC_ZAH.source.url)).toBe(
+      "_fonts/NotoNaskhArabic-Static.ttf",
+    );
+    expect(verifiedLetterFont("غ", ARABIC_GHAYN.source.url)).toBe(
       "_fonts/NotoNaskhArabic-Static.ttf",
     );
     expect(verifiedLetterFont("و", "https://example.invalid/wrong-source")).toBeUndefined();
@@ -5596,6 +5613,19 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /directly linked ayn.mov.*one continuous pen-down run.*00:03.1–00:04.0.*00:03.1–00:03.5.*upper-right tip.*sweeps left.*hooks downward.*open head.*without lifting.*00:03.5–00:04.0.*left side.*lower bowl.*floor.*finishes toward the right.*two-way connector.*contextual shapes.*one-stroke.*zero-lift.*Noto Naskh.*distinct from.*Ghayn.*upper dot/i,
+    );
+  });
+
+  it("Arabic independent غ traces its complete body and final dot to the Oregon MOV", () => {
+    const src = ARABIC_GHAYN.source;
+    expect(src.url).toBe(
+      "https://opentext.uoregon.edu/introarabic/chapter/%D8%B9-%D8%BA/",
+    );
+    expect(src.citation).toMatch(
+      /Introduction to Arabic.*Alphabet ع غ.*Ghayn.*00:02.4–00:04.0.*Oregon.*2023.*2026-08-23/i,
+    );
+    expect(src.variation).toMatch(
+      /directly linked ghayn\.mov.*two pen-down runs.*00:02.4–00:04.0.*00:02.4–00:03.2.*upper-right tip.*sweeps left.*open ع head.*without lifting.*broad lower bowl.*finish toward the right.*one lift.*upper dot.*00:03.9–00:04.0.*two-way connector.*no English equivalent.*gh transliteration.*two-stroke.*one-lift.*Noto Naskh.*independently evidenced dot-last order.*distinct from.*Ayn/i,
     );
   });
 
