@@ -5708,6 +5708,28 @@ all-lane tranche with fewer immediate descendants. The dependency-shaped trie
 repair is therefore the safest serial continuation while those higher-leverage
 owners remain collision-blocked.
 
+The selected repair now gives both trie and radix-tree complete, immediately
+repeatable Python 3.13 recipes. Each front removes its named environment first,
+uses that interpreter for Ruff lint and format checks, strict MyPy, and pytest,
+and preserves the required trie-before-radix install order. On Windows with uv
+0.11.28 and Python 3.13.14, both canonical recipes pass twice consecutively:
+trie passes 95 tests at 99.41% coverage and radix-tree passes 84 tests at
+97.97% coverage. Wheel and source-distribution builds pass for both packages,
+and the focused recipe, live-audit, and Markov regression suites pass all 18
+tests. The measured uv debt therefore falls exactly from seven fronts to five.
+
+The required affected-closure run discovers one further owner rather than
+widening this tranche. The Go build tool passes its complete tests, vet, and
+trimpath compilation; its exact diff plan evaluates 45 Starlark files,
+discovers 494 Python packages, and selects exactly trie, radix-tree, and LZ78.
+The real execution builds both owned packages. LZ78 alone fails before tests
+because its existing Windows front selects ambient Python 3.10.11 while trie
+requires Python 3.12 or newer; an explicit Python 3.13 environment passes all
+48 LZ78 tests at 97.26% coverage. The new pending
+`python-lz78-build-front-python313` owner follows this repair and keeps that
+pinning correction, its complete-recipe regression, and any dormant LZ78
+quality debt in an independently reviewable dependency-shaped slice.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
