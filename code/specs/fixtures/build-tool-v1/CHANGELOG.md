@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-08-24
+
+- Added one bounded positive Starlark metering case plus stable adversarial
+  oracles for step fuel, recursion, aggregate allocations, range cardinality,
+  scalar bytes, load depth, module count, load cycles, and combined print/trace
+  output. The closed v1 limit record now accepts optional per-range and
+  per-value ceilings while older records inherit `value_items`.
+
 ## 2026-08-13
 
 - Added a language-neutral repeated plan-write case that requires atomic

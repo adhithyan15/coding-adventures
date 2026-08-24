@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "id": "starlark/meter-boundary",
+  "domain": "starlark",
+  "summary": "A bounded evaluation at or below every requested meter succeeds without execution.",
+  "platforms": ["darwin", "linux", "windows"],
+  "capabilities": ["starlark"],
+  "workspace": {
+    "files": [
+      {
+        "path": "code/packages/python/demo/BUILD",
+        "content_utf8": "def leaf(value):\n    return value\nitems = [leaf(\"ok\")]\nindices = range(1)\nprint(\"\")\n_targets = []\n"
+      }
+    ]
+  },
+  "input": {
+    "operation": "starlark",
+    "options": {
+      "entrypoint": "code/packages/python/demo/BUILD",
+      "context": {"version": 1, "os": "linux", "arch": "amd64", "cpu_count": 1, "ci": true},
+      "legacy_fallback": "error",
+      "evaluation_limits": {
+        "step_count": 64,
+        "recursion_depth": 1,
+        "load_depth": 1,
+        "module_count": 1,
+        "value_items": 1,
+        "range_items": 1,
+        "value_bytes": 2,
+        "output_bytes": 1
+      }
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "starlark/meter-boundary",
+    "domain": "starlark",
+    "outcome": "ok",
+    "result": {"targets": []},
+    "diagnostics": []
+  },
+  "limits": {"wall_time_ms": 1000, "output_bytes": 1048576, "workspace_bytes": 1048576, "process_count": 1, "memory_mib": 128, "cpu_time_ms": 1000}
+}

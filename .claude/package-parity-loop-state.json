@@ -11,18 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 12549,
+  "active_pr": 12562,
   "last_inventory": {
-    "revision": "78efa57321d11eb7a72674f2c16dca56eea6e519",
+    "revision": "9eb5934aefd3c5fb216ec8171e803c6f91a6f938",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1369,
-    "implementation_package_slots": 4562,
+    "implementation_identities": 1370,
+    "implementation_package_slots": 4563,
     "high_consensus_packages": 175,
     "high_consensus_missing_slots": 276,
-    "singleton_packages": 906,
-    "singleton_missing_slots": 12684,
-    "rust_singletons": 717,
+    "singleton_packages": 907,
+    "singleton_missing_slots": 12698,
+    "rust_singletons": 718,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -289,10 +289,19 @@
     {
       "id": "build-tool-starlark-metering-corpus",
       "title": "Add adversarial Starlark evaluator metering fixtures",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["build-tool-pure-domain-corpus"],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/build-tool-starlark-metering-corpus",
+      "pr_number": 12562,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/12562",
+      "opened_at": "2026-08-24T11:42:49Z",
+      "opened_revision": "5957c22145633a716e796dd4686c9e1a5e00f347",
+      "selection_revision": "35ead36e61adab3bcf8f86a9cf527c633d96012a",
+      "selection_notes": "Selected after PR #12549 merged through squash auto-merge, the collision-checked exact-main inventory was regenerated through the subsequent tracked-node_modules validator and Spanish-curriculum merges, and three newly exposed owners were registered before selection. The schema-3 inventory remains 15 established lanes, 1,369 implementation identities, and 4,562 slots with zero collisions or unknown buckets. This process-free, language-neutral metering corpus is dependency-ready behind the merged pure-domain corpus, has zero exact overlap across 11 live open PRs and 33 non-main remote heads, and its target branch and prior PR are absent. It directly unlocks the Go build-tool oracle and seven unfinished build-tool descendants, while the higher raw-leverage validation corpus, CLI parser corpus, and OCaml process-free substrate overlap live PRs #12162 and #12149 on main/validator surfaces. Trie followed by radix-tree remains a collision-free ready uv repair, but closes only two of seven remaining fronts; the metering corpus advances the durable every-language build-tool contract without claiming evaluator execution or host authority.",
+      "implementation_revision": "aa2c8998877ead4725aa0df6c0e497e7df809c15",
+      "final_review_revision": "aa2c8998877ead4725aa0df6c0e497e7df809c15",
+      "publication_notes": "Opened ready-for-review PR #12562 from clean validated head 5957c22145633a716e796dd4686c9e1a5e00f347 after a normal first push. Before publication, origin/main advanced through already-owned HTML-parser diagnostics, Mermaid XY layout, IPP printer status, and Devanagari curriculum work to 9eb5934aefd3c5fb216ec8171e803c6f91a6f938. The branch rebased conflict-free; the refreshed inventory registered the new pure ipp-protocol singleton under its own portability owner and the focused exact-base corpus, native-consumer, parity, state, diff, and security checks passed. GitHub reports the ready PR mergeable and conflict-free with 16 checks queued, so the loop remains monitor-only and auto-merge stays disabled until every required check is terminal and acceptable.",
+      "validation_notes": "The authoritative build-tool contract now defines deterministic fuel events, bounded user-call depth, active-chain load-cycle rejection, entrypoint-inclusive module and edge-depth accounting, cumulative container allocation, per-range and per-scalar ceilings, and combined UTF-8 print/trace bytes. Ten inert cases add one bounded success and stable error oracles for steps, recursion, aggregates, ranges, scalar bytes, load depth, module count, load cycles, and output; the bootstrap corpus grows from 59 to 69 cases without adding execution, process, network, filesystem, environment, clock, or random authority. Schema and focused runner tests pass 63 tests. The full process-free conformance family passes 184 tests with 23 expected authority/platform skips and 87% branch coverage on build_tool_conformance.py. Native Go, Ruby, and Rust fixture consumers pass with zero errors. The Go operational build tool passes all tests, vet, and trimpath build; exact repository validation evaluates 45 Starlark BUILD files and emits a 5,069-package, 9,775-edge plan with orphan-crate validation clean. Package-parity, capability-taxonomy, uv-audit, OCaml-toolchain, JSON, state, diff, dependency, credential, and production-authority checks are clean. The branch rebased conflict-free before publication onto exact main 9eb5934aefd3c5fb216ec8171e803c6f91a6f938; the new Rust-only pure ipp-protocol identity is recorded under its own portable owner.",
       "notes": "Discovered during the pure-domain security review. Cover fuel, recursion, aggregate allocations, range/value sizes, load depth/count/cycles, and print/trace limits before any native evaluator claims final Starlark conformance."
     },
     {
@@ -3454,13 +3463,22 @@
       "notes": "Excluded from autonomous portable selection. Review mDNS bind/send/receive, timeouts, peer and origin policy, response bounds, authorization before transport, truthful runtime/test capabilities, redacted diagnostics, CLI I/O, and sequential mutation risk."
     },
     {
-      "id": "smart-home-ipp-printer-discovery-portable-core-conformance",
-      "title": "Extract and port the injected IPP printer discovery core",
+      "id": "ipp-protocol-portable-conformance",
+      "title": "Fixture and port the bounded IPP printer-status codec",
       "status": "pending",
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered after afa7975 added smart-home-ipp-printer-discovery-integration. Fixture injected discovery-result validation, service and TXT normalization, bounded printer identity and endpoint planning, deterministic deduplication, authorization ordering, stable failures, and D23 projection. Native DNS-SD, HTTP/IPP transport, printing, credentials, and CLI effects stay out of scope."
+      "notes": "Discovered after merged PR #12546 added the Rust-only pure ipp-protocol singleton. Define closed neutral fixtures and established-lane ports for IPP/1.1 Get-Printer-Attributes request framing with the fixed nine-attribute allowlist and strict correlated response decoding: version, status, request id, group and value tags, duplicate and missing attributes, text and aggregate bounds, state/reason normalization, exact consumption, trailing-data rejection, stable payload-blind errors, and explicit empty capability metadata. Keep HTTP/TLS, discovery, authentication, credentials, sessions, clocks, print submission, job queries, and queue mutation outside this zero-authority byte codec."
+    },
+    {
+      "id": "smart-home-ipp-printer-discovery-portable-core-conformance",
+      "title": "Extract and port the injected IPP printer discovery core",
+      "status": "pending",
+      "depends_on": ["ipp-protocol-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after afa7975 added smart-home-ipp-printer-discovery-integration and expanded after PR #12546 added bounded printer-status projection. Fixture injected discovery-result validation, service and TXT normalization, bounded printer identity and endpoint planning, deterministic deduplication, authorization ordering, fixed status snapshot projection, stable failures, and D23 projection. Consume the separately owned pure IPP codec; native DNS-SD, HTTP/IPP transport, printing, credentials, and CLI effects stay out of scope."
     },
     {
       "id": "smart-home-ipp-printer-discovery-native-authority-review",
@@ -4453,7 +4471,7 @@
     {
       "id": "python-markov-chain-build-front-python313",
       "title": "Pin the Python Markov chain BUILD fronts to Python 3.13",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["python-graph-build-front-idempotence"],
       "branch": "codex/python-markov-chain-build-front-python313",
       "pr_number": 12549,
@@ -4464,7 +4482,11 @@
     "selection_notes": "Selected only after PR #12538 merged through squash auto-merge, the exact collision-checked inventory was refreshed, and ten newly discovered owners were registered for orphan-crate validation parity, the five explicit Rust BUILD-exemption gaps, and the BACnet telemetry portability/authority chain. Markov is the only owner newly unblocked by the graph merge and closes a reproduced failure in the real 205-package affected closure: both fronts clear their environment but omit a Python pin, so ambient Python 3.10 rejects graph's Python >=3.12 floor, while UV_PYTHON=3.13 passes all 91 tests at 97.62% coverage. Seven live PRs and 30 non-main remote heads have zero exact overlap on the Markov root, focused regression, state, roadmap, or governing uv spec; the target branch and prior PR are absent. Trie/radix and the five remaining uv components stay ready, Windows symlink portability overlaps PR #12162, and the higher-strategic-leverage OCaml process-free substrate still overlaps live build-tool PRs #12162 and #12149. Main advanced after the graph merge only through Tamil and Devanagari curriculum changes to the recorded selection revision, with zero package-marker or candidate-surface changes.",
     "implementation_revision": "4bc93655e6414314ede927a628a75ea9c8be117b",
     "final_review_revision": "b2013cdcb23fb524857d861119a277e252c3753f",
-    "publication_notes": "Opened ready-for-review PR #12549 from clean validated head 07296decb97302fa85eeba52c9e23cb5768a4989 after a normal first push. Immediately before the first push, origin/main advanced through one Rust HTML-parser diagnostic commit and one human-language Devanagari lesson commit to 20ecda723cf8e6c82d10de7f2857d378e5ec0b19. Their changed-file intersection with this branch was empty and they changed no package marker, so the unpublished branch rebased normally twice without conflict or force push. Post-rebase focused recipe, uv-audit, parity-reporter, Go build-tool tests and vet, diff checks, and state checks pass. An independent final-diff security review found no credential, dependency, capability, production-authority, unsafe command, or scope findings; pyproject.toml remains byte-identical to origin/main. GitHub reports PR #12549 ready for review, mergeable, and conflict-free while required CI and CodeQL checks are queued or running, so the loop remains monitor-only and auto-merge stays disabled until every required check is terminal and acceptable.",
+    "merged_head_revision": "cfc70cf12374e60f4c87d67631647f5ff851b2af",
+    "merged_at": "2026-08-24T11:08:17Z",
+    "merge_revision": "0978453133ed2e40b94c549a3737440a8b67116e",
+    "merge_notes": "All 30 reported checks reached terminal acceptable conclusions: 24 successes, five expected skips, and one neutral aggregate CodeQL result, with no failures or pending work. GitHub reported the branch clean and mergeable; the loop enabled squash auto-merge, and GitHub merged PR #12549 without a manual merge command.",
+    "publication_notes": "Opened ready-for-review PR #12549 from clean validated head 07296decb97302fa85eeba52c9e23cb5768a4989 after a normal first push. Immediately before the first push, origin/main advanced through one Rust HTML-parser diagnostic commit and one human-language Devanagari lesson commit to 20ecda723cf8e6c82d10de7f2857d378e5ec0b19. Their changed-file intersection with this branch was empty and they changed no package marker, so the unpublished branch rebased normally twice without conflict or force push. Post-rebase focused recipe, uv-audit, parity-reporter, Go build-tool tests and vet, diff checks, and state checks pass. An independent final-diff security review found no credential, dependency, capability, production-authority, unsafe command, or scope findings; pyproject.toml remains byte-identical to origin/main. Final head cfc70cf12374e60f4c87d67631647f5ff851b2af completed all 30 checks with 24 successes, five expected skips, one neutral aggregate CodeQL result, and no failures or pending work. GitHub reported the branch clean and mergeable; the loop enabled squash auto-merge, and GitHub merged PR #12549 as 0978453133ed2e40b94c549a3737440a8b67116e at 2026-08-24T11:08:17Z without a manual merge command.",
     "validation_notes": "Both BUILD fronts now recreate an explicit named environment with --clear and --python 3.13, install graph before directed-graph, and invoke that interpreter for Ruff lint, Ruff formatting, strict MyPy, and pytest. The exact-recipe regression passes and intentionally leaves the corpus-wide uv audit at seven fronts across six components because Markov was selected from the real downstream failure rather than the live audit corpus. On Windows with uv 0.11.28 and Python 3.13.14, BUILD_windows passes twice consecutively; each run passes all quality gates and 91 tests at 97.62% coverage. Bounded generic annotations and test formatting add no behavior or metadata change. Wheel and source distributions build successfully, the wheel retains py.typed, and a fresh isolated install of the exact wheel passes a deterministic generation smoke. The Go build tool passes all tests, vet, trimpath compilation, repository-wide BUILD validation over 494 discovered packages, and an exact origin/main Windows execution that identifies one changed package, expands it to the graph, directed-graph, and Markov closure, and builds all three with no failures. The collision-checked schema-3 reporter remains at 1,369 implementation identities and 4,562 slots with 15 established lanes, zero canonical collisions, zero unknown language buckets, and OCaml emerging with zero packages. Package-parity, uv-audit, capability-taxonomy, state-graph, diff, dependency, credential, and production-authority checks are clean; the tranche adds no privileged authority or production dependency.",
     "notes": "Discovered by the real affected Windows build for the graph closure. Markov chain already clears its named environment, but neither front pins Python; uv can select ambient Python 3.10 and reject the graph dependency's Python >=3.12 floor before tests. Pin Python 3.13 in both recipes, retain graph followed by directed-graph installation order, add an exact-recipe regression, and prove immediate repeatability. An explicit UV_PYTHON=3.13 replay passes all 91 tests at 97.62% coverage, confirming this is build-front selection debt rather than graph behavior."
     },
@@ -4539,6 +4561,34 @@
       "branch": null,
       "pr_number": null,
       "notes": "Consume the closed orphan-crate corpus in the extant C#, Elixir, Haskell, Lua, Perl, Python, Ruby, Rust, Swift, and TypeScript build-tool engines, and route later Dart/JVM engines through the same contract. Decompose into independently reviewable per-engine children before implementation; do not infer coverage from Go's repository gate."
+    },
+    {
+      "id": "build-tool-tracked-artifact-validation-corpus",
+      "title": "Define language-neutral tracked-artifact validation",
+      "status": "pending",
+      "depends_on": ["build-tool-validation-oracle-corpus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after merged PR #12551 added Go-only rejection of tracked node_modules paths. Define closed process-free fixtures for exact and nested tracked artifacts, normalized separators, case and Unicode aliases, dotted traversal, symlink/reparse metadata supplied as data, allowed ordinary source paths, sorted diagnostics, and repository-relative redaction before other build-tool implementations claim the contract. Keep Git enumeration and host filesystem inspection outside this language-neutral validator corpus."
+    },
+    {
+      "id": "build-tool-tracked-artifact-validation-remaining-engines",
+      "title": "Enforce tracked-artifact validation in every supported build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-tracked-artifact-validation-corpus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume the closed tracked-artifact corpus in the extant C#, Elixir, Haskell, Lua, Perl, Python, Ruby, Rust, Swift, and TypeScript build-tool engines, and route later Dart/JVM engines through the same contract. Decompose into independently reviewable per-engine children before implementation; do not infer coverage from the Go repository gate."
+    },
+    {
+      "id": "human-language-data-generator-filesystem-authority-review",
+      "title": "Review human-language data-generator filesystem authority and capability truthfulness",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered after merged PR #12543 exposed six manifest-driven filesystem writer CLIs. Review the exact read, list, create, and write targets; figure-SVG and gentle-ramp snapshot outputs; configured output allowlists; symlink, junction, reparse, traversal, drive, UNC, and TOCTOU containment; check-versus-write separation; diagnostics and path redaction; and no-network/no-process truthfulness. This is a native generator-shell authority review rather than a portable all-language port, so selection remains blocked in the parity loop; any pure string/path guard may stay an internal implementation detail."
     },
     {
       "id": "rust-jit-loader-macos-build-front",

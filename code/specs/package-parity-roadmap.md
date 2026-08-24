@@ -5606,6 +5606,66 @@ checks are clean. The live uv audit intentionally remains at seven fronts
 across six components because Markov was discovered through the previous real
 affected closure rather than the already-clear audit corpus.
 
+### Post-#12549 refresh and Starlark metering selection
+
+Final head `cfc70cf12374e60f4c87d67631647f5ff851b2af` completed all 30
+reported checks with 24 successes, five expected skips, one neutral aggregate
+CodeQL result, and no failures or pending work. GitHub reported PR #12549 clean
+and mergeable; the loop enabled squash auto-merge, and GitHub merged it as
+`0978453133ed2e40b94c549a3737440a8b67116e` at
+2026-08-24T11:08:17Z without a manual merge command.
+
+The collision-checked schema-3 inventory remains identity-neutral through the
+subsequent tracked-artifact validator and Spanish-curriculum merges at exact
+main `35ead36e61adab3bcf8f86a9cf527c633d96012a`: 15 established
+lanes, 1,369 implementation identities, 4,562 package slots, 175
+high-consensus identities with 276 gaps, 122 identities in five to nine lanes
+with 926 gaps, 166 identities in two to four lanes with 2,087 gaps, and 906
+singletons with 12,684 gaps. There are 717 Rust singletons, zero canonical
+collisions, and zero unknown buckets. OCaml remains correctly emerging with no
+packages, and the live uv audit remains at seven fronts across six components.
+
+The intervening work adds no implementation identity but exposes three owners
+that are recorded before selection. The new Go-only tracked-`node_modules`
+gate requires a closed language-neutral tracked-artifact validation corpus and
+a remaining-engine rollout; neither Git enumeration nor host filesystem access
+belongs in that process-free oracle. The six manifest-driven human-language
+writer CLIs also require a selection-blocked filesystem-authority and
+capability review covering their exact outputs and containment boundary; that
+native generator-shell review is not a portable all-language port.
+
+The dependency/leverage pass selects `build-tool-starlark-metering-corpus`.
+It is ready behind the merged pure-domain corpus, process-free, and has zero
+exact overlap across 11 live open PRs and 33 non-main remote heads; its target
+branch and prior PR are absent. The fixtures must close fuel, recursion,
+aggregate allocation, range and value size, module count and load depth,
+load-cycle, and print/trace-output behavior before any native evaluator claims
+final Starlark conformance. This owner is a direct prerequisite of the Go
+build-tool oracle and has seven unfinished descendants, so it advances the
+durable every-language build-tool contract more broadly than the collision-free
+trie/radix uv repair.
+
+The validation corpus, CLI parser corpus, and OCaml process-free substrate have
+higher raw strategic reach but remain unsafe to select while PRs #12162 and
+#12149 overlap their canonical Go `main.go` and validator surfaces. Trie
+followed by radix-tree remains the highest-leverage collision-free uv follow-up
+and would remove the only remaining two-node dependency component. Selecting
+the neutral Starlark corpus now therefore preserves implementation-PR
+serialization without changing the durable OCaml or Python priorities.
+
+Before publication, main advanced again through the already-owned HTML parser,
+Mermaid XY layout, IPP printer-status runtime, and Devanagari curriculum work.
+The branch rebased conflict-free onto exact main
+`9eb5934aefd3c5fb216ec8171e803c6f91a6f938`. The refreshed inventory adds one
+identity and one slot: the pure Rust-only `ipp-protocol` singleton introduced
+by the status runtime. The roadmap now owns that zero-authority codec through a
+neutral fixture and established-lane port, and makes the existing injected IPP
+printer core consume it. Exact-main totals are therefore 1,370 implementation
+identities, 4,563 slots, 907 singletons with 12,698 missing slots, and 718 Rust
+singletons; all high-consensus and middle-band totals remain unchanged, with
+zero collisions and zero unknown buckets. This late identity does not overlap
+or displace the already selected Starlark contract slice.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

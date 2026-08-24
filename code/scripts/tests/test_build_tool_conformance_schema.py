@@ -334,6 +334,18 @@ class BuildToolConformanceSchemaTests(unittest.TestCase):
         )
         self.assertEqual(errors, [])
 
+    def test_starlark_metering_schema_closes_scalar_and_range_limits(self) -> None:
+        limits = self.pure_schema["$defs"]["starlark_evaluation_limits"]
+        self.assertFalse(limits["additionalProperties"])
+        self.assertEqual(
+            limits["properties"]["range_items"],
+            {"type": "integer", "minimum": 1, "maximum": 1000000},
+        )
+        self.assertEqual(
+            limits["properties"]["value_bytes"],
+            {"type": "integer", "minimum": 1, "maximum": 1048576},
+        )
+
     def test_validation_v1_exposes_only_checks_with_semantic_oracles(self) -> None:
         self.assertEqual(
             self.pure_schema["$defs"]["validation_check"]["enum"],
