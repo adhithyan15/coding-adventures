@@ -18,10 +18,11 @@
 // THE HONEST LIMIT, stated because it changes how the number should be read: a lesson only
 // counts atoms it declares. Schema-v1 lessons declare none, so they are reported separately
 // as `unmeasurable` rather than silently counted as compliant. An explicit schema-v2
-// review/practice contract can prove that zero introductions is intentional by naming an
-// empty introduction list and the atoms being practised. A track with a low violation count
-// and a high unmeasurable count has not proved it is gentle; it has proved its frontier is
-// still unknown.
+// retrieval contract can prove that zero introductions is intentional by naming an empty
+// introduction list and the atoms being practised. Writing retrieval has one more burden:
+// an aligned, explicit stage claim that distinguishes copying and transcription from new
+// composition. A track with a low violation count and a high unmeasurable count has not
+// proved it is gentle; it has proved its frontier is still unknown.
 
 // ─────────────────────────────────────────────────────────────────────────────
 // THE SECOND RAMP: script.
@@ -349,19 +350,60 @@ export function introducedAtoms(lesson: ParsedLesson): string[] {
  * An empty atom set is ambiguous in legacy prose: it can mean "this lesson
  * introduces nothing" or "nobody has migrated its knowledge contract yet."
  * Schema-v2 review and practice lessons can remove that ambiguity by explicitly
- * declaring an empty introduction list and a non-empty practice list. Both
- * declarations are load-bearing. Missing/malformed fields and other lesson types
- * remain fail-closed as measurement-blind.
+ * declaring an empty introduction list and a non-empty practice list. Writing
+ * retrieval may do the same only when its parsed stage evidence is narrow and
+ * atom-aligned: guided copy, delayed copy, or dictation/transcription, never
+ * composition presented as retrieval. Missing/malformed fields and other lesson
+ * types remain fail-closed as measurement-blind.
  */
-function isExplicitReviewOnlyLesson(lesson: ParsedLesson): boolean {
+const WRITING_RETRIEVAL_STAGES = new Set([
+  "guided-copy",
+  "delayed-copy",
+  "dictation-transcription",
+]);
+
+function hasExplicitWritingRetrievalContract(
+  lesson: ParsedLesson,
+  practises: readonly string[],
+): boolean {
+  if (lesson.frontmatter.type !== "writing") return false;
+  if (lesson.blocks.some((block) => block.writingStageDirectiveError !== undefined)) return false;
+
+  const stagedBlocks = lesson.blocks.filter((block) => block.writingStage !== undefined);
+  if (stagedBlocks.length === 0) return false;
+  if (stagedBlocks.some((block) => !WRITING_RETRIEVAL_STAGES.has(block.writingStage!))) return false;
+
+  const assessed = new Set<string>();
+  for (const block of stagedBlocks) {
+    if (
+      !block.knowledge ||
+      block.knowledge.introduces.length > 0 ||
+      block.knowledge.assesses.length === 0
+    ) {
+      return false;
+    }
+    for (const atom of block.knowledge.assesses) assessed.add(atom);
+  }
+
+  const practised = new Set(practises);
+  return assessed.size === practised.size && [...assessed].every((atom) => practised.has(atom));
+}
+
+function isExplicitRetrievalOnlyLesson(lesson: ParsedLesson): boolean {
   const type = lesson.frontmatter.type;
   const introduces = lesson.frontmatter["introduces.knowledge"];
+  const practises = frontmatterList(lesson, "practises.knowledge");
   return (
     lesson.frontmatter.schema_version === "2" &&
-    (type === "review" || type === "practice" || type === "practice-mix") &&
     Array.isArray(introduces) &&
     introduces.length === 0 &&
-    frontmatterList(lesson, "practises.knowledge").length > 0
+    practises.length > 0 &&
+    (
+      type === "review" ||
+      type === "practice" ||
+      type === "practice-mix" ||
+      hasExplicitWritingRetrievalContract(lesson, practises)
+    )
   );
 }
 
@@ -524,7 +566,7 @@ export function measureRamp(lessons: ParsedLesson[], policy: ChapterPolicy): Ram
       tracks.set(language, track);
     }
     track.lessonCount += 1;
-    if (atoms.length === 0 && !isExplicitReviewOnlyLesson(lesson)) track.unmeasurable += 1;
+    if (atoms.length === 0 && !isExplicitRetrievalOnlyLesson(lesson)) track.unmeasurable += 1;
     else track.measurable += 1;
 
     if (atoms.length > perLesson) {
