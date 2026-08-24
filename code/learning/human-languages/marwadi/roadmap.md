@@ -25,7 +25,13 @@ practice, writing progression, full mocks, answer keys, rubrics, and a pass rule
 
 ## Current tranche
 
-Chapter 1 teaches **राम-राम सा** through seven lessons. The next independent
-content tranche should add a basic reply contrast and a name exchange. The
-assessment contract is deliberately separate so it can inherit the corpus-wide
-policy foundation without blocking this track's matrix and writing-ramp work.
+Chapter 1 teaches **राम-राम सा** through seven lessons. Chapter 2 adds formal
+**आभार** through four more sessions: independent **आ**, then **भ**, then the
+whole word, then a hidden-model four-skill response. Chapter 3 adds polite
+**हां सा** through two sign-sized steps, assembly, ear/voice retrieval, and an
+independent four-skill check. Chapter 4 adds **पाणी**, "water": meaning is
+secured by ear first, then **प**, **ण**, and **ी** arrive one at a time before
+delayed copy and dictation. The next independent content tranche should add the
+contrasting no response before a complete yes/no exchange; okay, casual
+gratitude, a you're-welcome response, and a full request for water remain
+explicit debt.

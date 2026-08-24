@@ -24,7 +24,7 @@ modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: standard-bengali
-reviews_of: [BN-C05-bola, BN-C05-thaka]
+reviews_of: [BN-C05-bola]
 ---
 
 # কাজ করা (kāj kôrā) — "to work"

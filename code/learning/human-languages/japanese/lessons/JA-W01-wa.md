@@ -2,7 +2,7 @@
 schema_version: 2
 id: JA-W01-wa
 spine_node: SPINE-MEET-GREET
-sequence: 170
+sequence: 110
 delivery: script
 chapter: 2
 type: writing
@@ -16,17 +16,17 @@ etymology_hook: わ is the sign for the sound wa; the greeting ends in a differe
 duration:
   max_seconds: 200
 requires:
-  knowledge: [JA-SCRIPT-CHI-01, JA-SCRIPT-HA-01, JA-PARTICLE-WA-SPELLING]
+  knowledge: [JA-SCRIPT-CHI-01, JA-SCRIPT-HA-01]
 introduces:
-  knowledge: [JA-SCRIPT-WA-01]
+  knowledge: [JA-SCRIPT-WA-01, JA-PARTICLE-WA-SPELLING]
 practises:
-  knowledge: [JA-SCRIPT-WA-01, JA-SCRIPT-HA-01, JA-PARTICLE-WA-SPELLING]
+  knowledge: [JA-SCRIPT-WA-01, JA-SCRIPT-HA-01, JA-PARTICLE-WA-SPELLING, JA-LEX-IIE, JA-SCRIPT-MORA-LENGTH]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
 register: neutral-across-levels
 variety: standard-japanese-tokyo
-reviews_of: [JA-W01-chi, JA-W01-ha, JA-C01-konnichiwa]
+reviews_of: [JA-W01-chi, JA-W01-ha]
 ---
 
 # わ — the sign for *wa*, and the trap beside it
@@ -50,7 +50,7 @@ Two strokes:
 Read **wa**: like English *wa* in *wander*, one beat.
 
 ## What you've built — and the trap
-<!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-WA-01, JA-PARTICLE-WA-SPELLING] -->
+<!-- hl-knowledge: introduces=[JA-PARTICLE-WA-SPELLING]; assesses=[JA-SCRIPT-WA-01] -->
 
 Here is the thing this sign exists in this lesson to protect you from.
 
@@ -79,6 +79,11 @@ attached rather than be quietly assumed.
 - [YOU WRITE: わ, then は beside it — two signs, one shared sound, different jobs]
 - [YOU DECIDE: hearing *wa* at the end of the daytime greeting, which sign do you
   write?]
+
+## Guided Practice — review pulse
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-IIE, JA-SCRIPT-MORA-LENGTH] -->
+
+[PAUSE 15s] Say ??? again, keeping the two opening morae distinct.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-WA-01, JA-PARTICLE-WA-SPELLING] -->

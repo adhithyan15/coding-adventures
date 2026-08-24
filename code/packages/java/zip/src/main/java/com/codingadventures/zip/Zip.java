@@ -360,27 +360,6 @@ public final class Zip {
         }
 
         /**
-         * Read {@code nbits} bits and bit-reverse the result.
-         *
-         * <p>Used when decoding Huffman codes, which are logically MSB-first.</p>
-         *
-         * @param nbits number of bits to read
-         * @return bit-reversed extracted value, or -1 on EOF
-         */
-        int readMsb(int nbits) {
-            int v = readLsb(nbits);
-            if (v < 0) return -1;
-            // Reverse the bottom nbits bits.
-            int rev = 0;
-            int u = v;
-            for (int i = 0; i < nbits; i++) {
-                rev = (rev << 1) | (u & 1);
-                u >>>= 1;
-            }
-            return rev;
-        }
-
-        /**
          * Discard partial-byte bits, aligning to the next byte boundary.
          *
          * <p>Required before reading stored-block length fields (RFC 1951 §3.2.4).</p>
@@ -391,6 +370,11 @@ public final class Zip {
                 buf >>>= discard;
                 bits -= discard;
             }
+        }
+
+        /** Exact number of source bytes fetched, including a partial final byte. */
+        int position() {
+            return pos;
         }
     }
 
@@ -410,7 +394,7 @@ public final class Zip {
     //
     // Distance codes: 5-bit codes equal to the code number (0–29).
 
-    /** Encode/decode helpers for the RFC 1951 fixed Huffman alphabet. */
+    /** Encoding helper for the RFC 1951 fixed Huffman alphabet. */
     static final class FixedHuffman {
 
         private FixedHuffman() {}
@@ -442,51 +426,6 @@ public final class Zip {
             }
         }
 
-        /**
-         * Decode one literal/length symbol from {@code br} using the fixed table.
-         *
-         * <p>Reads incrementally: 7 bits first (covers 256–279), then 8 bits
-         * (covers 0–143, 280–287), then 9 bits (covers 144–255).</p>
-         *
-         * @param br source bit reader
-         * @return decoded symbol (0–287), or -1 on EOF
-         */
-        static int decodeLL(BitReader br) {
-            // Try 7 bits first (covers symbols 256–279, codes 0–23).
-            int v7 = br.readMsb(7);
-            if (v7 < 0) return -1;
-
-            if (v7 <= 23) {
-                // 7-bit code → symbols 256–279 (EOB + length codes).
-                return v7 + 256;
-            }
-
-            // Need one more bit to reach 8-bit codes.
-            int extra1 = br.readLsb(1);
-            if (extra1 < 0) return -1;
-            int v8 = (v7 << 1) | extra1;
-
-            if (v8 >= 48 && v8 <= 191) {
-                // 8-bit codes: literals 0–143  (0x30 … 0xBF).
-                return v8 - 48;
-            }
-            if (v8 >= 192 && v8 <= 199) {
-                // 8-bit codes: symbols 280–287 (0xC0 … 0xC7).
-                return v8 + 88;
-            }
-
-            // Need one more bit for 9-bit codes (literals 144–255).
-            int extra2 = br.readLsb(1);
-            if (extra2 < 0) return -1;
-            int v9 = (v8 << 1) | extra2;
-
-            if (v9 >= 400 && v9 <= 511) {
-                // 9-bit codes: literals 144–255 (0x190 … 0x1FF).
-                return v9 - 256;
-            }
-
-            return -1; // malformed bit-stream
-        }
     }
 
     // =============================================================================
@@ -651,151 +590,6 @@ public final class Zip {
     }
 
     // =============================================================================
-    // RFC 1951 DEFLATE — Decompressor
-    // =============================================================================
-    //
-    // Handles stored blocks (BTYPE=00) and fixed Huffman blocks (BTYPE=01).
-    // Dynamic Huffman blocks (BTYPE=10) throw IOException — we only write
-    // BTYPE=01 ourselves, but stored blocks from other tools must be accepted.
-    //
-    // Security limits:
-    //   - Maximum output: 256 MB (decompression bomb guard)
-    //   - LEN/NLEN validation on stored blocks
-
-    /**
-     * Decompresses raw RFC 1951 DEFLATE bytes.
-     *
-     * <p>Security limits: output is capped at 256 MB to guard against
-     * decompression bombs.  LEN/NLEN fields on stored blocks are validated.</p>
-     */
-    static final class DeflateDecompressor {
-
-        /** Maximum allowed decompressed output size (decompression bomb guard). */
-        private static final int MAX_OUTPUT_BYTES = 256 * 1024 * 1024;
-
-        private DeflateDecompressor() {}
-
-        /**
-         * Decompress raw DEFLATE bytes into the original data.
-         *
-         * @param data raw DEFLATE-compressed bytes
-         * @return decompressed bytes
-         * @throws IOException for corrupt or unsupported input
-         */
-        static byte[] decompress(byte[] data) throws IOException {
-            BitReader br = new BitReader(data);
-            List<Byte> output = new ArrayList<>();
-
-            while (true) {
-                int bfinal = br.readLsb(1);
-                if (bfinal < 0) throw new IOException("deflate: unexpected EOF reading BFINAL");
-                int btype = br.readLsb(2);
-                if (btype < 0) throw new IOException("deflate: unexpected EOF reading BTYPE");
-
-                if (btype == 0b00) {
-                    // ── Stored block ──────────────────────────────────────────
-                    // Align to byte boundary before reading the length fields.
-                    br.align();
-                    int len  = br.readLsb(16);
-                    int nlen = br.readLsb(16);
-                    if (len < 0) throw new IOException("deflate: EOF reading stored LEN");
-                    if (nlen < 0) throw new IOException("deflate: EOF reading stored NLEN");
-                    // RFC 1951 §3.2.4: NLEN must be the one's complement of LEN.
-                    if ((nlen ^ 0xFFFF) != len) {
-                        throw new IOException(
-                            "deflate: stored LEN/NLEN mismatch (" + len + " vs " + nlen + ")");
-                    }
-                    if (output.size() + len > MAX_OUTPUT_BYTES) {
-                        throw new IOException("deflate: output size limit exceeded");
-                    }
-                    for (int i = 0; i < len; i++) {
-                        int b = br.readLsb(8);
-                        if (b < 0) throw new IOException("deflate: EOF inside stored block");
-                        output.add((byte) b);
-                    }
-
-                } else if (btype == 0b01) {
-                    // ── Fixed Huffman block ───────────────────────────────────
-                    while (true) {
-                        int sym = FixedHuffman.decodeLL(br);
-                        if (sym < 0) throw new IOException("deflate: EOF decoding LL symbol");
-
-                        if (sym >= 0 && sym <= 255) {
-                            if (output.size() >= MAX_OUTPUT_BYTES) {
-                                throw new IOException("deflate: output size limit exceeded");
-                            }
-                            output.add((byte) sym);
-
-                        } else if (sym == 256) {
-                            // End-of-block: leave the inner loop.
-                            break;
-
-                        } else if (sym >= 257 && sym <= 285) {
-                            // Back-reference: decode length then distance.
-                            int idx = sym - 257;
-                            if (idx >= DeflateTable.LENGTH.length) {
-                                throw new IOException("deflate: invalid length sym " + sym);
-                            }
-
-                            int baseLen = DeflateTable.LENGTH[idx][0];
-                            int extraLenBits = DeflateTable.LENGTH[idx][1];
-                            int extraLen = (extraLenBits > 0) ? br.readLsb(extraLenBits) : 0;
-                            if (extraLen < 0) throw new IOException("deflate: EOF reading length extra");
-                            int matchLen = baseLen + extraLen;
-
-                            // Distance code is always 5 bits, read MSB-first.
-                            int distCode = br.readMsb(5);
-                            if (distCode < 0) throw new IOException("deflate: EOF reading distance code");
-                            if (distCode >= DeflateTable.DIST.length) {
-                                throw new IOException("deflate: invalid dist code " + distCode);
-                            }
-
-                            int baseDist = DeflateTable.DIST[distCode][0];
-                            int extraDistBits = DeflateTable.DIST[distCode][1];
-                            int extraDist = (extraDistBits > 0) ? br.readLsb(extraDistBits) : 0;
-                            if (extraDist < 0) throw new IOException("deflate: EOF reading distance extra");
-                            int offset = baseDist + extraDist;
-
-                            if (offset > output.size()) {
-                                throw new IOException(
-                                    "deflate: back-ref offset " + offset +
-                                    " > output len " + output.size());
-                            }
-                            if (output.size() + matchLen > MAX_OUTPUT_BYTES) {
-                                throw new IOException("deflate: output size limit exceeded");
-                            }
-
-                            // Copy byte-by-byte to handle overlapping matches.
-                            // Example: offset=1, length=4 expands one byte into a run of 4.
-                            for (int i = 0; i < matchLen; i++) {
-                                output.add(output.get(output.size() - offset));
-                            }
-
-                        } else {
-                            throw new IOException("deflate: invalid LL symbol " + sym);
-                        }
-                    }
-
-                } else if (btype == 0b10) {
-                    throw new IOException(
-                        "deflate: dynamic Huffman blocks (BTYPE=10) not supported");
-                } else {
-                    throw new IOException("deflate: reserved BTYPE=11");
-                }
-
-                if (bfinal == 1) break;
-            }
-
-            // Materialise List<Byte> → byte[].
-            byte[] result = new byte[output.size()];
-            for (int i = 0; i < result.length; i++) {
-                result[i] = output.get(i);
-            }
-            return result;
-        }
-    }
-
-    // =============================================================================
     // Public API — ZipEntry
     // =============================================================================
 
@@ -900,7 +694,7 @@ public final class Zip {
             byte[] fileData;
 
             if (compress && data.length > 0) {
-                byte[] compressed = DeflateCompressor.compress(data);
+                byte[] compressed = RawRfc1951.rawDeflate(data);
                 if (compressed.length < data.length) {
                     method = METHOD_DEFLATE;
                     fileData = compressed;
@@ -1180,6 +974,14 @@ public final class Zip {
             return List.copyOf(entryList);
         }
 
+        /** Return the Central Directory's declared uncompressed size without decoding. */
+        int declaredUncompressedSize(String name) throws IOException {
+            for (EntryMeta m : meta) {
+                if (m.name.equals(name)) return m.uncompressedSize;
+            }
+            throw new IOException("zip: entry '" + name + "' not found");
+        }
+
         /**
          * Decompress and return the data for the named entry.
          *
@@ -1243,22 +1045,31 @@ public final class Zip {
             byte[] decompressed;
             int method = em.method & 0xFFFF;
             if (method == 0) {
-                // Stored — verbatim copy.
+                if (em.compressedSize != em.uncompressedSize) {
+                    throw new IOException("zip: stored entry sizes do not match");
+                }
                 decompressed = compressed;
             } else if (method == 8) {
-                // DEFLATE.
-                decompressed = DeflateDecompressor.decompress(compressed);
+                if (em.uncompressedSize > RawRfc1951.MAX_OUTPUT) {
+                    throw new IOException("zip: uncompressed size exceeds the raw inflate ceiling");
+                }
+                RawRfc1951.InflateResult inflated;
+                try {
+                    inflated = RawRfc1951.rawInflateCounted(compressed, em.uncompressedSize);
+                } catch (RawRfc1951.RawInflateException error) {
+                    throw new IOException("zip: raw inflate failed: " + error.code(), error);
+                }
+                if (inflated.bytesConsumed() != compressed.length) {
+                    throw new IOException("zip: compressed payload contains trailing bytes");
+                }
+                decompressed = inflated.output();
+                if (decompressed.length != em.uncompressedSize) {
+                    throw new IOException("zip: uncompressed size does not match the directory");
+                }
             } else {
                 throw new IOException(
                     "zip: unsupported compression method " + method +
                     " for '" + em.name + "'");
-            }
-
-            // Trim to declared uncompressed size to guard against decompressor over-read.
-            if (decompressed.length > em.uncompressedSize) {
-                byte[] trimmed = new byte[em.uncompressedSize];
-                System.arraycopy(decompressed, 0, trimmed, 0, em.uncompressedSize);
-                decompressed = trimmed;
             }
 
             // Verify CRC-32 — detects corruption of the decompressed content.
@@ -1376,13 +1187,37 @@ public final class Zip {
      * @throws IOException on corrupt archive or CRC mismatch
      */
     public static List<ZipEntry> unzip(byte[] data) throws IOException {
+        return unzip(data, RawRfc1951.MAX_OUTPUT);
+    }
+
+    /**
+     * Extract all entries with a caller-lowerable aggregate output ceiling.
+     * Individual DEFLATE entries are independently capped by {@link RawRfc1951}.
+     */
+    public static List<ZipEntry> unzip(byte[] data, long maxTotalBytes) throws IOException {
         if (data == null) throw new NullPointerException("data must not be null");
+        if (maxTotalBytes < 0 || maxTotalBytes > RawRfc1951.MAX_OUTPUT) {
+            throw new IOException("zip: invalid aggregate output limit");
+        }
         ZipReader reader = new ZipReader(data);
         List<ZipEntry> result = new ArrayList<>();
+        long totalBytes = 0;
         for (ZipEntry entry : reader.entries()) {
+            long declaredSize = entry.name().endsWith("/")
+                ? 0
+                : reader.declaredUncompressedSize(entry.name());
+            if (declaredSize > maxTotalBytes - totalBytes) {
+                throw new IOException("zip: aggregate decompressed size exceeds the "
+                    + maxTotalBytes + "-byte limit (decompression bomb guard)");
+            }
             byte[] bytes = entry.name().endsWith("/")
                 ? new byte[0]
                 : reader.read(entry.name());
+            totalBytes += bytes.length;
+            if (totalBytes > maxTotalBytes) {
+                throw new IOException("zip: aggregate decompressed size exceeds the "
+                    + maxTotalBytes + "-byte limit (decompression bomb guard)");
+            }
             result.add(new ZipEntry(entry.name(), bytes));
         }
         return result;

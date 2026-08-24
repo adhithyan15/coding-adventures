@@ -1,5 +1,6 @@
 ---
 id: GE-C04-tschuss
+sequence: 150
 chapter: 4
 type: word
 headword: tschüss

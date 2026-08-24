@@ -1,0 +1,584 @@
+{
+  "version": 1,
+  "algorithm": "fnv1a64",
+  "maxLinearisableTableColumns": 3,
+  "chapters": [
+    {
+      "language": "arabic",
+      "chapter": 1,
+      "sourceHash": "fnv1a64:1e2cf51768b44af2",
+      "lessonIds": [
+        "AR-C01-salam",
+        "AR-W00-sin-lam",
+        "AR-W00-alif-mim-salam",
+        "AR-C01-marhaba",
+        "AR-W00-ra-ha",
+        "AR-W00-ba-family-marhaba",
+        "AR-C01-al",
+        "AR-C01-as-salamu-alaykum",
+        "AR-W00-ayn-ya",
+        "AR-W00-kaf-waw-alaykum",
+        "AR-W00-full-greeting-recall",
+        "AR-C01-sabah-al-khayr",
+        "AR-C01-masa-al-khayr",
+        "AR-C01-shukran",
+        "AR-C01-practice",
+        "AR-W01-direction-and-alif",
+        "AR-W01-abjad-short-vowels",
+        "AR-W02-joining-sin-lam",
+        "AR-W02-lam-alif-joins",
+        "AR-W03-dots-mim-ba-salam",
+        "AR-W03-write-salam"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 0,
+      "text": "arabic/narration/ch01.txt",
+      "json": "arabic/narration/ch01.json",
+      "textHash": "fnv1a64:7bb61b2c461da3f0",
+      "jsonHash": "fnv1a64:3cee96adba00e407"
+    },
+    {
+      "language": "arabic",
+      "chapter": 2,
+      "sourceHash": "fnv1a64:6ab19f4d7131734d",
+      "lessonIds": [
+        "AR-C02-ism",
+        "AR-C02-ii-my",
+        "AR-C02-ismii",
+        "AR-C02-anta-anti",
+        "AR-C02-maa",
+        "AR-C02-maa-ismuka",
+        "AR-C02-tasharrafna",
+        "AR-C02-practice",
+        "AR-W04-dots-family-nun-ta",
+        "AR-W05-ya-and-my-name",
+        "AR-W06-harakat-and-hamza",
+        "AR-W06-sukun-shadda-tanwin",
+        "AR-W06-hamza"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 0,
+      "text": "arabic/narration/ch02.txt",
+      "json": "arabic/narration/ch02.json",
+      "textHash": "fnv1a64:b9fd8aca2944504a",
+      "jsonHash": "fnv1a64:76868b61cac03d0e"
+    },
+    {
+      "language": "arabic",
+      "chapter": 3,
+      "sourceHash": "fnv1a64:e987d72ec0053f7c",
+      "lessonIds": [
+        "AR-W07-hook-family-ha-kha",
+        "AR-W08-kaf-and-ra",
+        "AR-W09-khayr-bikhayr",
+        "AR-C03-kayfa",
+        "AR-C03-hal",
+        "AR-C03-kayfa-haluka",
+        "AR-C03-bi-khayr",
+        "AR-C03-al-hamdu-lillah",
+        "AR-C03-practice"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 0,
+      "text": "arabic/narration/ch03.txt",
+      "json": "arabic/narration/ch03.json",
+      "textHash": "fnv1a64:282b8c0f141baf92",
+      "jsonHash": "fnv1a64:1edf53dd0d3ae355"
+    },
+    {
+      "language": "arabic",
+      "chapter": 4,
+      "sourceHash": "fnv1a64:eb0160369fc7b6f0",
+      "lessonIds": [
+        "AR-W10-ayn",
+        "AR-W11-ha-and-ta-marbuta",
+        "AR-W12-maa-salama",
+        "AR-C04-maa-with",
+        "AR-C04-al-salama",
+        "AR-C04-maa-salama",
+        "AR-C04-ila-liqaa",
+        "AR-C04-practice"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 0,
+      "text": "arabic/narration/ch04.txt",
+      "json": "arabic/narration/ch04.json",
+      "textHash": "fnv1a64:b2a07549bfc696c0",
+      "jsonHash": "fnv1a64:d50a2928a3e97c56"
+    },
+    {
+      "language": "arabic",
+      "chapter": 5,
+      "sourceHash": "fnv1a64:ad8cc04c63058934",
+      "lessonIds": [
+        "AR-C05-naam",
+        "AR-C05-la"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 2,
+      "text": "arabic/narration/ch05.txt",
+      "json": "arabic/narration/ch05.json",
+      "textHash": "fnv1a64:fa3daf4b3ae22aed",
+      "jsonHash": "fnv1a64:5c1514ea6ebf69a3"
+    },
+    {
+      "language": "arabic",
+      "chapter": 6,
+      "sourceHash": "fnv1a64:cc54a0c91344c3bf",
+      "lessonIds": [
+        "AR-C06-min-fadlik"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "arabic/narration/ch06.txt",
+      "json": "arabic/narration/ch06.json",
+      "textHash": "fnv1a64:8bb2fc4854d56d62",
+      "jsonHash": "fnv1a64:758f595005090028"
+    },
+    {
+      "language": "arabic",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:32ec2ab9f42c3187",
+      "lessonIds": [
+        "AR-C07-asif"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "arabic/narration/ch07.txt",
+      "json": "arabic/narration/ch07.json",
+      "textHash": "fnv1a64:45a8d1d23f8414f0",
+      "jsonHash": "fnv1a64:b269969fa20da9b8"
+    },
+    {
+      "language": "arabic",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:0014006ce34f9f4f",
+      "lessonIds": [
+        "AR-C08-al-ahad-al-khamis",
+        "AR-C08-al-jumua-as-sabt"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 0,
+      "text": "arabic/narration/ch08.txt",
+      "json": "arabic/narration/ch08.json",
+      "textHash": "fnv1a64:12a8846284a034cc",
+      "jsonHash": "fnv1a64:7e08d2cb580a7130"
+    },
+    {
+      "language": "arabic",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:929771dbb8260ffd",
+      "lessonIds": [
+        "AR-C09-aswad-abyad",
+        "AR-C09-ahmar-azraq"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 2,
+      "text": "arabic/narration/ch09.txt",
+      "json": "arabic/narration/ch09.json",
+      "textHash": "fnv1a64:f0000ba66a23420b",
+      "jsonHash": "fnv1a64:5fae79a72bd61bb0"
+    },
+    {
+      "language": "arabic",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:a9e69996866b996b",
+      "lessonIds": [
+        "AR-C10-ab-umm",
+        "AR-C10-akh-ukht"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 2,
+      "text": "arabic/narration/ch10.txt",
+      "json": "arabic/narration/ch10.json",
+      "textHash": "fnv1a64:518ff9ef462513fb",
+      "jsonHash": "fnv1a64:e52320680ae8e240"
+    },
+    {
+      "language": "arabic",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:6bb129866c740e2c",
+      "lessonIds": [
+        "AR-C11-ras",
+        "AR-C11-yad"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 2,
+      "text": "arabic/narration/ch11.txt",
+      "json": "arabic/narration/ch11.json",
+      "textHash": "fnv1a64:f3e2b3ffee6fc887",
+      "jsonHash": "fnv1a64:15b1d9c0e31efc53"
+    },
+    {
+      "language": "arabic",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:e9eab09aa7dbde6b",
+      "lessonIds": [
+        "AR-C12-al-fusul"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "arabic/narration/ch12.txt",
+      "json": "arabic/narration/ch12.json",
+      "textHash": "fnv1a64:b0fe0e2b0afef681",
+      "jsonHash": "fnv1a64:6cdec8b8fb1e06a0"
+    },
+    {
+      "language": "arabic",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:9d335ce2306201ce",
+      "lessonIds": [
+        "AR-C13-maa-khubz"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "arabic/narration/ch13.txt",
+      "json": "arabic/narration/ch13.json",
+      "textHash": "fnv1a64:52aa96c8fdbc9737",
+      "jsonHash": "fnv1a64:a809564663ead6b5"
+    },
+    {
+      "language": "arabic",
+      "chapter": 14,
+      "sourceHash": "fnv1a64:bb46ab609d4a7b53",
+      "lessonIds": [
+        "AR-C14-ashhur"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "arabic/narration/ch14.txt",
+      "json": "arabic/narration/ch14.json",
+      "textHash": "fnv1a64:db3d930210f9f4d7",
+      "jsonHash": "fnv1a64:61cbcdbecdf3d8b9"
+    },
+    {
+      "language": "arabic",
+      "chapter": 15,
+      "sourceHash": "fnv1a64:4c5d4820286e2376",
+      "lessonIds": [
+        "AR-C15-ad-duhr-muntasaf-al-layl"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "arabic/narration/ch15.txt",
+      "json": "arabic/narration/ch15.json",
+      "textHash": "fnv1a64:0ca54a03e01bfe2d",
+      "jsonHash": "fnv1a64:d3414ec773d55738"
+    },
+    {
+      "language": "arabic",
+      "chapter": 16,
+      "sourceHash": "fnv1a64:413f30a56fea9570",
+      "lessonIds": [
+        "AR-C16-al-saa"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "arabic/narration/ch16.txt",
+      "json": "arabic/narration/ch16.json",
+      "textHash": "fnv1a64:a5ce05e95ff122c5",
+      "jsonHash": "fnv1a64:6ee42013ca3e943f"
+    },
+    {
+      "language": "arabic",
+      "chapter": 17,
+      "sourceHash": "fnv1a64:7c69d747e1971e1e",
+      "lessonIds": [
+        "AR-C17-kam-umruka"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "arabic/narration/ch17.txt",
+      "json": "arabic/narration/ch17.json",
+      "textHash": "fnv1a64:2863cd0ae9e1a4d0",
+      "jsonHash": "fnv1a64:19791a08f817ea08"
+    },
+    {
+      "language": "arabic",
+      "chapter": 18,
+      "sourceHash": "fnv1a64:28f3803b1a2eb944",
+      "lessonIds": [
+        "AR-C18-al-taqs"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "arabic/narration/ch18.txt",
+      "json": "arabic/narration/ch18.json",
+      "textHash": "fnv1a64:ff3e74430e0a7234",
+      "jsonHash": "fnv1a64:9c1c8802e617f6d9"
+    },
+    {
+      "language": "arabic",
+      "chapter": 19,
+      "sourceHash": "fnv1a64:607084f077915a14",
+      "lessonIds": [
+        "AR-C19-wahid-khamsa"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "arabic/narration/ch19.txt",
+      "json": "arabic/narration/ch19.json",
+      "textHash": "fnv1a64:41586236e4914f90",
+      "jsonHash": "fnv1a64:4d5654c8f4b0940c"
+    },
+    {
+      "language": "arabic",
+      "chapter": 20,
+      "sourceHash": "fnv1a64:02fe68e22e87631c",
+      "lessonIds": [
+        "AR-C20-ahada-ashar-ishrun"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "arabic/narration/ch20.txt",
+      "json": "arabic/narration/ch20.json",
+      "textHash": "fnv1a64:f80d76029941e585",
+      "jsonHash": "fnv1a64:7c73a57662ccc952"
+    },
+    {
+      "language": "arabic",
+      "chapter": 21,
+      "sourceHash": "fnv1a64:be01e1709d18c13b",
+      "lessonIds": [
+        "AR-C21-kalb-qitt"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "arabic/narration/ch21.txt",
+      "json": "arabic/narration/ch21.json",
+      "textHash": "fnv1a64:ca9d48dac76382c6",
+      "jsonHash": "fnv1a64:175dd3840352cc69"
+    },
+    {
+      "language": "arabic",
+      "chapter": 22,
+      "sourceHash": "fnv1a64:ef18ebdf4ff568e8",
+      "lessonIds": [
+        "AR-C22-akhdar-asfar"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "arabic/narration/ch22.txt",
+      "json": "arabic/narration/ch22.json",
+      "textHash": "fnv1a64:cc1c4f5b913e4424",
+      "jsonHash": "fnv1a64:35975531b965a69c"
+    },
+    {
+      "language": "arabic",
+      "chapter": 23,
+      "sourceHash": "fnv1a64:e11413130f677c5e",
+      "lessonIds": [
+        "AR-C23-afwan"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "arabic/narration/ch23.txt",
+      "json": "arabic/narration/ch23.json",
+      "textHash": "fnv1a64:b1f091a29b488635",
+      "jsonHash": "fnv1a64:4248c61b6fb89611"
+    },
+    {
+      "language": "arabic",
+      "chapter": 24,
+      "sourceHash": "fnv1a64:c1fe02cf7cf4d33b",
+      "lessonIds": [
+        "AR-C24-ila-al-ghad"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "arabic/narration/ch24.txt",
+      "json": "arabic/narration/ch24.json",
+      "textHash": "fnv1a64:691ef908377f59fd",
+      "jsonHash": "fnv1a64:42bf5644284a2010"
+    },
+    {
+      "language": "arabic",
+      "chapter": 25,
+      "sourceHash": "fnv1a64:acb8d0310207cdf6",
+      "lessonIds": [
+        "AR-C25-yawm"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "arabic/narration/ch25.txt",
+      "json": "arabic/narration/ch25.json",
+      "textHash": "fnv1a64:d211b044eeca85ed",
+      "jsonHash": "fnv1a64:c654dfb506fd08b8"
+    },
+    {
+      "language": "arabic",
+      "chapter": 26,
+      "sourceHash": "fnv1a64:edb1065ae87c9f6b",
+      "lessonIds": [
+        "AR-C26-layl"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "arabic/narration/ch26.txt",
+      "json": "arabic/narration/ch26.json",
+      "textHash": "fnv1a64:d936dde57dea3ed0",
+      "jsonHash": "fnv1a64:bf045d0953367421"
+    },
+    {
+      "language": "arabic",
+      "chapter": 27,
+      "sourceHash": "fnv1a64:39b23a5f466d7f67",
+      "lessonIds": [
+        "AR-C27-tusbih-ala-khayr"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "arabic/narration/ch27.txt",
+      "json": "arabic/narration/ch27.json",
+      "textHash": "fnv1a64:fd01b7404fca1dc8",
+      "jsonHash": "fnv1a64:20a1104537c9283a"
+    },
+    {
+      "language": "arabic",
+      "chapter": 28,
+      "sourceHash": "fnv1a64:c7782c0d45492fde",
+      "lessonIds": [
+        "AR-C28-dhahaba",
+        "AR-C28-jaa"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 2,
+      "text": "arabic/narration/ch28.txt",
+      "json": "arabic/narration/ch28.json",
+      "textHash": "fnv1a64:e23945113da0309d",
+      "jsonHash": "fnv1a64:3120b315941544a0"
+    },
+    {
+      "language": "arabic",
+      "chapter": 29,
+      "sourceHash": "fnv1a64:3cd401a4e59d594a",
+      "lessonIds": [
+        "AR-C29-qala",
+        "AR-C29-raa"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 2,
+      "text": "arabic/narration/ch29.txt",
+      "json": "arabic/narration/ch29.json",
+      "textHash": "fnv1a64:7d987e7d54adfd9e",
+      "jsonHash": "fnv1a64:19bcdf8872c8ac0c"
+    },
+    {
+      "language": "arabic",
+      "chapter": 30,
+      "sourceHash": "fnv1a64:bd125585f402d92d",
+      "lessonIds": [
+        "AR-C30-arafa",
+        "AR-C30-akala"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 2,
+      "text": "arabic/narration/ch30.txt",
+      "json": "arabic/narration/ch30.json",
+      "textHash": "fnv1a64:8acde7c824bb8d9a",
+      "jsonHash": "fnv1a64:713202450160efc6"
+    },
+    {
+      "language": "arabic",
+      "chapter": 31,
+      "sourceHash": "fnv1a64:7df7901c43337a1a",
+      "lessonIds": [
+        "AR-C31-fahima",
+        "AR-C31-qaraa",
+        "AR-C31-saala",
+        "AR-C31-kataba"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "arabic/narration/ch31.txt",
+      "json": "arabic/narration/ch31.json",
+      "textHash": "fnv1a64:bdcaceaef3e7a7d8",
+      "jsonHash": "fnv1a64:bb16e528e936f72c"
+    },
+    {
+      "language": "arabic",
+      "chapter": 32,
+      "sourceHash": "fnv1a64:464a60e7d5db73b8",
+      "lessonIds": [
+        "AR-C32-akhadha",
+        "AR-C32-fakkara",
+        "AR-C32-saada",
+        "AR-C32-ahabba"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "arabic/narration/ch32.txt",
+      "json": "arabic/narration/ch32.json",
+      "textHash": "fnv1a64:3ca7e79f4affb56d",
+      "jsonHash": "fnv1a64:5fbad3ebf5b3dc89"
+    },
+    {
+      "language": "arabic",
+      "chapter": 33,
+      "sourceHash": "fnv1a64:3e7842268901fc1c",
+      "lessonIds": [
+        "AR-C33-shay",
+        "AR-C33-halib",
+        "AR-C33-sukkar",
+        "AR-C33-qahwa"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "arabic/narration/ch33.txt",
+      "json": "arabic/narration/ch33.json",
+      "textHash": "fnv1a64:3fbe254299914906",
+      "jsonHash": "fnv1a64:b99b8de44fe468da"
+    },
+    {
+      "language": "arabic",
+      "chapter": 34,
+      "sourceHash": "fnv1a64:136f91c8179d610f",
+      "lessonIds": [
+        "AR-C34-milh",
+        "AR-C34-lahm",
+        "AR-C34-jubn",
+        "AR-C34-taam"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "arabic/narration/ch34.txt",
+      "json": "arabic/narration/ch34.json",
+      "textHash": "fnv1a64:e8a2785242d78fca",
+      "jsonHash": "fnv1a64:0f2897564f2861d3"
+    },
+    {
+      "language": "arabic",
+      "chapter": 35,
+      "sourceHash": "fnv1a64:b4d4d18659fdeeb2",
+      "lessonIds": [
+        "AR-C35-jar",
+        "AR-C35-ibn-bint",
+        "AR-C35-sadiq"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "arabic/narration/ch35.txt",
+      "json": "arabic/narration/ch35.json",
+      "textHash": "fnv1a64:20ab0ec36923c3d4",
+      "jsonHash": "fnv1a64:7288bc000dfb5ab4"
+    },
+    {
+      "language": "arabic",
+      "chapter": 36,
+      "sourceHash": "fnv1a64:9e09dda9d25a9e04",
+      "lessonIds": [
+        "AR-C36-zayt",
+        "AR-C36-kub",
+        "AR-C36-tabaq",
+        "AR-C36-milaqa"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "arabic/narration/ch36.txt",
+      "json": "arabic/narration/ch36.json",
+      "textHash": "fnv1a64:6c4026d17057d9f2",
+      "jsonHash": "fnv1a64:5aef7ba16320a2f7"
+    }
+  ],
+  "findings": []
+}

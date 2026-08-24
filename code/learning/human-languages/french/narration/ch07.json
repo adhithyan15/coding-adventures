@@ -4,11 +4,11 @@
   "chapter": 7,
   "title": "The Days of the Week",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:5ec84f262f3c7a49",
+  "sourceHash": "fnv1a64:446ab9036ea79d9f",
   "lessons": [
     {
       "id": "FR-C07-jours-1",
-      "sequence": null,
+      "sequence": 215,
       "title": "lundi to vendredi — the planets of the week",
       "headword": "lundi, mardi, mercredi, jeudi, vendredi",
       "romanization": "lundi, mardi, mercredi, jeudi, vendredi",
@@ -20,7 +20,7 @@
         "sight-cue",
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:5277f68bb1dda755",
+      "sourceHash": "fnv1a64:3f5afe901d56ae5c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -154,7 +154,7 @@
     },
     {
       "id": "FR-C07-jours-2",
-      "sequence": null,
+      "sequence": 220,
       "title": "samedi and dimanche — the week's religious edge",
       "headword": "samedi, dimanche",
       "romanization": "samedi, dimanche",
@@ -165,7 +165,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:06236d3e300701e2",
+      "sourceHash": "fnv1a64:83cac8f4a0c482c9",
       "notice": {
         "modality": "sight",
         "needs": [

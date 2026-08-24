@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "baseline_revision": "a2855409cfa8ebd5923f76a8fb1a0dce8e6ac4b6",
+  "owners": [
+    {
+      "id": "python-hash-functions-build-front-idempotence",
+      "title": "Make the Python hash-functions BUILD fronts repeatable",
+      "repair_profile": "generated-standard",
+      "packages": ["hash-functions"],
+      "depends_on": ["python-uv-build-front-idempotence-audit"]
+    },
+    {
+      "id": "python-hash-collections-build-front-idempotence",
+      "title": "Make the Python hash-dependent collection BUILD fronts repeatable",
+      "repair_profile": "generated-standard",
+      "packages": ["bloom-filter", "hash-map", "hyperloglog"],
+      "depends_on": [
+        "python-uv-build-front-idempotence-audit",
+        "python-hash-functions-build-front-idempotence"
+      ]
+    },
+    {
+      "id": "python-resp-tcp-build-front-idempotence",
+      "title": "Make the Python RESP and TCP BUILD fronts repeatable",
+      "repair_profile": "generated-standard",
+      "packages": ["resp-protocol", "tcp-server"],
+      "depends_on": ["python-uv-build-front-idempotence-audit"]
+    },
+    {
+      "id": "python-data-store-build-front-idempotence",
+      "title": "Make the Python in-memory data-store BUILD fronts repeatable",
+      "repair_profile": "windows-quoted-editable",
+      "packages": ["in-memory-data-store-engine", "in-memory-data-store"],
+      "depends_on": [
+        "python-uv-build-front-idempotence-audit",
+        "python-hash-collections-build-front-idempotence",
+        "python-resp-tcp-build-front-idempotence"
+      ]
+    },
+    {
+      "id": "python-graph-build-front-idempotence",
+      "title": "Make the Python graph BUILD fronts repeatable",
+      "repair_profile": "generated-standard",
+      "packages": ["graph", "directed-graph"],
+      "depends_on": ["python-uv-build-front-idempotence-audit"]
+    },
+    {
+      "id": "python-trie-build-front-idempotence",
+      "title": "Make the Python trie BUILD fronts repeatable",
+      "repair_profile": "generated-standard",
+      "packages": ["trie", "radix-tree"],
+      "depends_on": ["python-uv-build-front-idempotence-audit"]
+    },
+    {
+      "id": "python-caesar-cipher-build-front-idempotence",
+      "title": "Make the Python Caesar cipher BUILD fronts repeatable",
+      "repair_profile": "unsplit-windows-dev-install",
+      "packages": ["caesar-cipher"],
+      "depends_on": ["python-uv-build-front-idempotence-audit"]
+    },
+    {
+      "id": "python-standalone-structures-build-front-idempotence",
+      "title": "Make the standalone Python structure BUILD fronts repeatable",
+      "repair_profile": "generated-standard",
+      "packages": ["fenwick-tree", "skip-list", "tree-set"],
+      "depends_on": ["python-uv-build-front-idempotence-audit"]
+    },
+    {
+      "id": "python-ls00-build-front-idempotence",
+      "title": "Reconcile the legacy Python ls00 BUILD fronts",
+      "repair_profile": "legacy-uv",
+      "packages": ["ls00"],
+      "depends_on": ["python-uv-build-front-idempotence-audit"]
+    }
+  ]
+}

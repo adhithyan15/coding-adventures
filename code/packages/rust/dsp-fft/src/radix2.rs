@@ -362,7 +362,8 @@ pub fn fft_via_runtime(
     // Reinterpret the bytes as a flat [re, im, re, im, ...] f32 vec.
     let mut out: Vec<f32> = Vec::with_capacity(bytes.len() / 4);
     for chunk in bytes.as_chunks::<4>().0 {
-        out.push(f32::from_le_bytes(*chunk));
+        let arr = *chunk;
+        out.push(f32::from_le_bytes(arr));
     }
     Ok(out)
 }

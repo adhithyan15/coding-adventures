@@ -2,7 +2,7 @@
 schema_version: 2
 id: JA-W03-dakuten
 spine_node: SPINE-COURTESY-THANK
-sequence: 220
+sequence: 170
 delivery: script
 chapter: 3
 type: writing
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [JA-SCRIPT-DAKUTEN-01]
 practises:
-  knowledge: [JA-SCRIPT-DAKUTEN-01, JA-SCRIPT-KA-01, JA-SCRIPT-KO-01]
+  knowledge: [JA-SCRIPT-DAKUTEN-01, JA-SCRIPT-KA-01, JA-SCRIPT-KO-01, JA-SCRIPT-KONNICHIWA-READ-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -72,6 +72,11 @@ are in the word this chapter is building.
 - [YOU WRITE: か, then add the two ticks to make が. Say both.]
 - [YOU WRITE: こ, then ご]
 - [YOU SAY: **ka / ga**, then **ko / go** — the same mouth, voice off and on]
+
+## Guided Practice — review pulse
+<!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-KONNICHIWA-READ-01] -->
+
+[PAUSE 15s] Write ????? from its five signs before adding any voice marks.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-DAKUTEN-01] -->

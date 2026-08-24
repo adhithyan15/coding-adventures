@@ -4,11 +4,11 @@
   "chapter": 12,
   "title": "Numbers Eleven to Twenty",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:61f59b165c29bd13",
+  "sourceHash": "fnv1a64:caa28c1b4c8252f2",
   "lessons": [
     {
       "id": "FR-C12-nombres-11-16",
-      "sequence": null,
+      "sequence": 265,
       "title": "onze becomes seize — six numbers welded together",
       "headword": "onze — seize",
       "romanization": "onze — seize",
@@ -20,7 +20,7 @@
         "sight-cue",
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:745c1085c2cc1f62",
+      "sourceHash": "fnv1a64:e8a8f4123ad232b4",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -139,7 +139,7 @@
     },
     {
       "id": "FR-C12-nombres-17-20",
-      "sequence": null,
+      "sequence": 270,
       "title": "dix-sept becomes vingt — where French changes its mind",
       "headword": "dix-sept — vingt",
       "romanization": "dix-sept — vingt",
@@ -150,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:930acd145646d7ba",
+      "sourceHash": "fnv1a64:07ec7e0c95cba680",
       "notice": null,
       "blocks": [
         {

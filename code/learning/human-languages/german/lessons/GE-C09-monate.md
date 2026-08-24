@@ -1,5 +1,6 @@
 ---
 id: GE-C09-monate
+sequence: 245
 chapter: 9
 type: word
 headword: die Monate

@@ -9,6 +9,8 @@ export * from "./constants.js";
 export * from "./cousins.js";
 export * from "./exam-inventory.js";
 export * from "./assessment.js";
+export * from "./task-shapes.js";
+export * from "./writing-stages.js";
 export { splitFrontmatter, type Frontmatter } from "./frontmatter.js";
 export {
   declaredStrands,
@@ -126,6 +128,8 @@ export {
   trackScript,
   loadTaxonomy,
   loadLanguageRegistry,
+  loadTaskShapeInventory,
+  listTaskShapeInventories,
   loadCurriculumSpine,
   loadLanguageCurricula,
   loadTrackChapters,
@@ -138,9 +142,11 @@ export {
   loadScripts,
   loadLetterLedgers,
   loadEverything,
+  loadTrackLessons,
 } from "./loader.js";
 export {
   buildTrackProgress,
+  renderTrackProgressCard,
   renderTrackProgressTable,
   type GeneratedBookChapterRef,
   type TrackProgress,
@@ -221,10 +227,11 @@ export {
   type ChapterNarration,
 } from "./narration.js";
 export {
-  MODALITY_MANIFEST_PATH,
+  MODALITY_MANIFEST_DIR,
   MODALITY_MANIFEST_VERSION,
   modalityCorpusHash,
   buildModalityManifest,
+  mergeModalityManifests,
   serializeModalityManifest,
   type ModalityManifest,
   type ModalityManifestFeatures,
@@ -334,6 +341,7 @@ export {
   buildCompletionPlan,
   renderCompletionPlan,
   CERTIFIABLE_LEVELS,
+  TASK_SHAPE_LEVELS,
   KIND_PRIORITY,
   TRANCHE_SIZE,
   type CompletionPlan,
@@ -351,7 +359,11 @@ export {
   generatedFigureOutputs,
   runFigureGeneration,
 } from "./figure-cli.js";
-export { generatedModalityOutputs, runModalityManifest } from "./modality-cli.js";
+export {
+  generatedModalityOutputs,
+  generatedModalityOutputsFromLessons,
+  runModalityManifest,
+} from "./modality-cli.js";
 
 export {
   validateLetterLedger,

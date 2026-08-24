@@ -36,7 +36,7 @@
 //! V1 of the matrix-runtime ↔ matrix-cpu protocol doesn't yet expose a
 //! "pre-allocate buffer at planner-assigned id" message, so graphs in
 //! this crate embed their runtime inputs as `matrix_ir::Constant`s.
-//! See [`pipeline`](crate::pipeline) for details.  V2 will switch to
+//! See `pipeline` for details.  V2 will switch to
 //! proper graph inputs once the protocol gains that hook.
 
 // Platform-conditional: the Apple/GPU backend code is inactive on non-Apple targets; allow the resulting dead_code/unused lints only where it does not build in.

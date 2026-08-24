@@ -1,8 +1,140 @@
-Japanese, chapter 1: Three Writing Systems in One Doorway.
-8 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Japanese, chapter 1: Two Answers, Sign by Sign.
+6 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 8.
+Lesson 1 of 6.
+い (i) — two strokes, one beat.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+You already know the rule that makes this writing system easy: one sign, one beat. Not one letter one sound, and not one sign one word — one sign, one mora, the even beat Japanese counts time in.
+What you have not had yet is a single sign taught on its own. Here is the first.
+
+Script — the shape.
+い (i).
+Two strokes, both falling, the left one long and the right one short:
+the left stroke — start high, come down, and hook gently to the right at the bottom.
+the right stroke — a short downward tick, higher up and clear of the first.
+It is read i, the vowel of English machine — short, tight, never the eye of English bite.
+Where the shape came from, and why it does not help you. Every hiragana sign began as a Chinese character written fast and cursively until it wore smooth. But those characters were chosen for their sound, not their meaning, so unlike a Chinese component there is nothing inside い to decode. The shape is a signature you learn, not a structure you read. This book will tell you when a shape carries information and when it does not, and this is the second kind.
+
+Guided Practice.
+[once you have stopped driving — trace: follow the visible い once — long stroke first, then the short tick]
+[your turn — say: i, one clean beat]
+[pause 8 seconds for the answer]
+Keep the model visible and stop after one traced sign. Copying without the model comes later; today your hand is only learning the direction of two strokes.
+
+Wrap-up Recall.
+How many beats does one hiragana sign take? (One.)
+Source: Unicode Hiragana chart; stroke order per Hitsujun Shido no Tebiki (Japanese Ministry of Education, 1958).
+[question — say your answer, then pause 8 seconds]
+How many strokes does the hiragana sign for 'i' have?
+
+
+Lesson 2 of 6.
+は (ha) — three strokes.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write the two-stroke sign you met a moment ago. Long stroke, short tick.
+
+Script — the shape.
+は (ha).
+Three strokes. Look at it as a tall left post with a loop tied on its right.
+the vertical, down the left side, with the smallest flick left at the foot.
+a short horizontal crossing that vertical near the top, on its right.
+the loop — down from the right of that crossbar, round to the left, and back up to close.
+Read ha, breathed rather than hard: the h of English hat, then the open a of father.
+It has a second reading, and you have already used it. Keep that in your pocket for now — this sign is doing two jobs in Japanese, and the second one is what makes the greeting look misspelled to a beginner. It gets its own lesson, after you have met the sign it sounds like.
+
+Guided Practice.
+[your turn — copy: keep は (ha) visible and write it once — vertical, crossbar, loop]
+[pause 8 seconds for the answer]
+[your turn — say: ha, one beat, breath not force]
+[pause 8 seconds for the answer]
+Look back at the model between strokes if you need to. This is one guided copy, not a memory test.
+
+Guided Practice — review pulse.
+[pause 15 seconds]
+Say? and tap its one mora before adding another sign.
+
+Wrap-up Recall.
+Which stroke of は (ha) is written first? (The vertical on the left.)
+Source: Unicode Hiragana chart; stroke order per Hitsujun Shido no Tebiki (Japanese Ministry of Education, 1958).
+[question — say your answer, then pause 8 seconds]
+How many strokes does the hiragana sign read 'ha' have?
+
+
+Lesson 3 of 6.
+Two signs, side by side — and a word appears.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script — no new sign at all and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 3 seconds]
+Both signs are yours. Look at them for five seconds:
+は (ha) い (i).
+Cover the model. Write the two signs in that order and say each beat as you finish it. Uncover the model, compare once, and repair at most one stroke. This short look-hide-write-check cycle is the whole delayed-copy step.
+
+Script — no new sign at all.
+Now write them touching:
+は + い becomes はい (hai).
+ha then i. Two beats, even, neither one stressed. You can now decode the sequence hai. The word lesson after the next sign attaches its useful meaning.
+Nothing new was introduced in this lesson. No stroke, no sound, no word. What changed is where the word now lives: you are no longer recalling a shape you were shown, you are reading it — assembling it out of two pieces you can write from memory and sound out in order.
+That is the whole method for this writing system, and it does not get harder. It gets longer. A word of five signs is five signs you already own, in a row.
+
+Guided Practice.
+[your turn — read: はい (hai) — sound each sign in turn, do not recall the word whole]
+[pause 8 seconds for the answer]
+[once you have stopped driving — write: はい (hai) — five strokes in total, three then two]
+
+Wrap-up Recall.
+How many new strokes did you have to learn in this lesson? (None.)
+Source: Unicode Hiragana chart.
+[question — say your answer, then pause 8 seconds]
+How many beats does the written sequence はい (hai) take?
+
+
+Lesson 4 of 6.
+え — two strokes, and a second word for free.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Read the word for yes off the page, sign by sign, out loud.
+
+Script — the shape.
+え (e).
+Two strokes, and the second one does most of the work:
+a short tick at the top, on its own, clear of everything below.
+the body — across to the right, back down and left in a flat zigzag, then out to the lower right in one continuous movement.
+Read e, the vowel of English bed — short, and never the ay of day.
+
+What you've built.
+Three signs are now yours, and they spell more than one word. Put two of them together with the one you just learned:
+い (i) | い (i) | え (e).
+i-i-e. Three beats — and note that the first sign is written twice, because Japanese counts two full beats there. The next lesson attaches its meaning. For now, the whole task is decoding three known signs in order.
+
+Guided Practice.
+Cover the printed え. Have a partner or recording say e once. If you are working alone, read the romanized cue e, cover it, and continue.
+[once you have stopped driving — write from the heard or romanized cue: え — tick first, then the body in one movement]
+[your turn — read: い | い | え — three beats, and do not shorten the doubled sign]
+[pause 8 seconds for the answer]
+Uncover the model only after your one transcription attempt. Compare, repair one stroke if needed, and stop.
+
+Wrap-up Recall.
+Why is the first sign of that word written twice? (Because it is two beats, not one held longer.)
+Source: Unicode Hiragana chart; stroke order per Hitsujun Shido no Tebiki (Japanese Ministry of Education, 1958).
+[question — say your answer, then pause 10 seconds]
+Write the final sign in i-i-e, then count the three visible beats.
+
+
+Lesson 5 of 6.
 はい (hai) — yes, in two equal beats.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — two signs, two beats until you have stopped, and I will say so again when we reach it.
@@ -17,14 +149,14 @@ Japanese runs left to right. はい (hai) is written with two signs of hiragana,
 Five vowels, and they stay pure: a as in father, i as in machine, then u, e, o. So はい (hai) is ha-i, two beats of the same length, and not the single gliding sound of English "high."
 
 The word, taken apart — はい.
-はい means yes, and also "here you are," "I am listening," and "present." Its origin is genuinely unsettled: some accounts tie it to 拝 hai, "a bow"; others treat it as an old interjection. Neither is proven, so hold it as an open question rather than a fact.
+はい means yes, and also "here you are," "I am listening," and "present." Its origin is genuinely unsettled: some accounts tie it to an older word hai, "a bow"; others treat it as an old interjection. Neither is proven, so hold it as an open question rather than a fact. The rare kanji sometimes used in that proposal can wait until a later reading chapter.
 Say plainly what is true here. Japanese shares no ancestor with English, so no cousin word is waiting in your vocabulary to hold はい (hai) in place. What this track offers instead is the writing itself, built up one sign at a time, and — later — the real family Japanese does have, through the characters it borrowed.
 
 Guided Practice.
 [your turn — say: はい (hai) — ha-i, two even beats]
 [pause 8 seconds for the answer]
 [repeat that twice]
-[your turn — read: は, then い, left to right]
+[your turn — read: は (ha), then い, left to right]
 [pause 8 seconds for the answer]
 [your turn — answer: your name is called becomes はい (hai)]
 [pause 8 seconds for the answer]
@@ -36,7 +168,7 @@ Source: Wiktionary: はい (hai).
 Write the Japanese word for 'yes' in hiragana.
 
 
-Lesson 2 of 8.
+Lesson 6 of 6.
 いいえ (iie) — no, and why the extra beat matters.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — one new sign, three beats until you have stopped, and I will say so again when we reach it.
@@ -62,211 +194,12 @@ Guided Practice.
 [your turn — choose: agree becomes はい (hai); decline becomes いいえ (iie)]
 [pause 8 seconds for the answer]
 
+Guided Practice — review pulse.
+[pause 15 seconds]
+Say??, then write? once from memory before learning the contrasting answer.
+
 Wrap-up Recall.
 Which single sign is new here? (え.) What changes when the long i is cut short? (The word becomes いえ, house.)
 Source: Wiktionary: いいえ (iie).
 [question — say your answer, then pause 8 seconds]
 How many beats (morae) does いいえ (iie) hold?
-
-
-Lesson 3 of 8.
-こんにちは (konnichiwa) — hello, and a sign that lies about its sound.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — four new signs, and one you know until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Retrieve はい (hai) and the sign は. You are about to meet は again in the daytime greeting — where it is not pronounced ha.
-
-Script — four new signs, and one you know.
-こんにちは (konnichiwa) — こ ko + ん n + に ni + ち chi + は.
-Four signs are new. こ ko, に ni, and ち chi behave like every hiragana so far: one sign, one consonant-plus-vowel beat.
-ん is the exception worth naming. It is the one hiragana that is a bare consonant, and it still takes a full beat of its own. So こんにちは (konnichiwa) is five signs and five beats: ko-n-ni-chi-wa. Give ん its own beat and the greeting sounds Japanese; swallow it and it does not.
-
-Grammar Lens — the sign は, read wa.
-The last sign is は, which you learned as ha. Here it is read wa.
-That is not an exception to memorize blindly. は is Japanese's topic particle — the little word that marks what a sentence is about, roughly "as for ___." Japanese spelling was reformed in 1946 to follow pronunciation, but three grammatical particles were left at their older spellings because they are so frequent that respelling them would have rewritten every page in the country. は is one of them. Rule to carry forward: は is ha inside a word, and wa when it is doing the job of a particle.
-
-Why it's said this way.
-こんにちは (konnichiwa) is the daytime greeting — roughly midday to dusk, not morning and not evening. It is a sentence that was abandoned halfway. In full it was 今日は… konnichi wa…, "as for today …", opening a longer enquiry after someone's health. The rest fell away and the topic marker stayed, which is why Japan's most common greeting ends on a grammatical particle instead of a word.
-Those two characters, 今日 konnichi "this day," belong to the third writing system, and the next lesson opens it.
-
-Guided Practice.
-[your turn — say: こんにちは (konnichiwa) — ko-n-ni-chi-wa, five beats]
-[pause 8 seconds for the answer]
-[repeat that twice]
-[your turn — decide: は in はい (hai) becomes ha; は ending the greeting becomes wa]
-[pause 8 seconds for the answer]
-[your turn — greet: someone at midday becomes こんにちは (konnichiwa)]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-Which sign takes a beat without a vowel? (ん.) Why does the greeting end in a particle? (It is the opening of a sentence nobody finishes any more.)
-Source: Wiktionary: こんにちは (konnichiwa).
-[question — say your answer, then pause 9 seconds]
-The greeting ends in the sign は. How is it pronounced there?
-
-
-Lesson 4 of 8.
-日本語 (nihongo) — three characters, and no single sound each.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — kanji, and the readings problem until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Say こんにちは (konnichiwa). Its history hid two characters, 今日, that hiragana cannot show you. This lesson opens that second system by naming the language itself.
-
-Script — kanji, and the readings problem.
-日本語 (nihongo) — ni + hon + go.
-These are kanji: characters borrowed from Chinese, each carrying a meaning rather than a sound. 日 is sun or day. 本 is origin or root. 語 is language. So 日本 is "sun-origin" — the country the sun rises from — and 日本語 (nihongo) is its language.
-Now the fact that makes kanji unlike any letter you have learned. A kanji does not have a sound. 日 is read nichi, jitsu, hi, bi, or ka, depending on the word it stands in — and in 日本 it is shortened again, to ni. There is no sensible way to teach "the sound of 日." What a lesson can teach is the word: you learn 日本語 as nihongo, and the reading of each character comes along with it.
-Two families of readings explain the spread. The on reading is Japan's version of the Chinese pronunciation, imported with the character. The kun reading is a native Japanese word written with a borrowed character that already meant the same thing. 日本語 (nihongo) is on-readings throughout; 今日 in the greeting is irregular even by those standards.
-
-The word, taken apart — the real family.
-Here the cousin web finally works — just not toward English. The on-readings nichi, hon, go are borrowings of Middle Chinese, so 日本語 (nihongo) has genuine relatives: Mandarin writes the same three characters and says Rìběnyǔ; Korean borrowed the same compound as ilbon-eo. Same characters, related imported sounds, one meaning, three languages.
-That is a real, checkable connection, and it is the honest replacement for the Latin roots that anchor a European language. English has no share in it.
-
-Guided Practice.
-[your turn — say: 日本語 (nihongo) — ni-ho-n-go, four beats]
-[pause 8 seconds for the answer]
-[repeat that twice]
-[your turn — name: 日 sun or day; 本 origin; 語 language]
-[pause 8 seconds for the answer]
-[your turn — connect: Mandarin Rìběnyǔ, Korean ilbon-eo, same three characters]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-What does 日本 mean literally? (Sun-origin.) Does 日 have one pronunciation? (No — the word it appears in chooses one.)
-Source: Wiktionary: 日本語 (nihongo).
-[question — say your answer, then pause 10 seconds]
-How is the character 日 read inside 日本語 (nihongo)?
-
-
-Lesson 5 of 8.
-コーヒー (kōhī) — the third system, and a word that really is a cousin.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — katakana, the borrowed-word script and Guided Practice until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Recall how hiragana writes a long vowel: it writes the vowel twice, as in いいえ (iie). Katakana does it differently, and this word shows how.
-
-Script — katakana, the borrowed-word script.
-コーヒー (kōhī) — コ ko + ー + ヒ hi + ー.
-This is katakana, the third system, and it is a full twin of hiragana: the same beats, the same five vowels, different shapes. Its job is different too. Katakana marks a word as coming from outside — borrowed vocabulary, foreign names, sound effects, scientific terms.
-The two scripts are siblings by origin as well as by sound. Hiragana came from whole Chinese characters written in flowing cursive; katakana came from fragments of characters, shorthand that monks scribbled beside a text to remember how to read it. こ and コ even trace back to the same character, which is why they still look alike.
-ー is the chōonpu, the long-vowel bar. It holds the previous vowel for one more beat, and it belongs to katakana almost exclusively. So コーヒー (kōhī) is four beats: ko-o-hi-i.
-
-The word, taken apart — a shared borrowing.
-コーヒー (kōhī) is coffee, and it entered Japanese from Dutch koffie through the Nagasaki trade. Dutch had it from Turkish kahve, and Turkish from Arabic qahwa — which is exactly where English coffee comes from as well.
-So this word genuinely is a cousin of one you already own. Notice what kind of cousin: not an inherited relative, but the same borrowed object arriving from the same Arabic source by two different roads. That is the honest shape of most Japanese–English overlap. Other passengers on those roads: パン bread, from Portuguese pão, and アルバイト a part-time job, from German Arbeit.
-
-Guided Practice.
-[your turn — say: コーヒー (kōhī) — ko-o-hi-i, four beats]
-[pause 8 seconds for the answer]
-[repeat that twice]
-[once you have stopped driving — trace: Arabic qahwa becomes Turkish kahve becomes Dutch koffie becomes コーヒー (kōhī)]
-[your turn — decide: a borrowed word is written in katakana, not hiragana]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-Which script signals a borrowed word? (Katakana.) How many beats does コーヒー (kōhī) hold? (Four.)
-Source: Wiktionary: コーヒー (kōhī).
-[question — say your answer, then pause 10 seconds]
-What does the bar ー do in コーヒー (kōhī)?
-
-
-Lesson 6 of 8.
-ありがとう (arigatō) — thanks, from “this hardly ever happens”.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — five signs and two small strokes until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Back to hiragana. Five signs are coming, and one small mark that unlocks a whole second row of sounds.
-
-Script — five signs and two small strokes.
-ありがとう (arigatō) — あ a + り ri + が ga + と to + う.
-あ a, り ri, と to and う u are ordinary hiragana. が is the new idea: it is the sign か ka with two short strokes added at the top right. That mark is the dakuten, and it voices the consonant — the same two strokes turn ka into ga, sa into za, ta into da, ha into ba. One mark, learned once, doubles how much of the script you can read.
-The final う does not sound like u here. After と it stretches the o, so the word ends -tō and holds five beats: a-ri-ga-to-o. Hiragana lengthens a vowel by writing another vowel sign, where katakana used the bar ー.
-
-The word, taken apart — 有り難う.
-Written in kanji, ありがとう (arigatō) is 有り難う: 有る aru "to exist" plus 難し katashi "difficult." Its ancestor 有り難し arigatashi meant literally "hard to exist" — that is, rare. Rare became precious, precious became grateful, and by the Edo period the word had settled into plain thanks. The k of katashi softened to g inside the compound, which is the same voicing the dakuten writes.
-So the memory hook is inside the word, not inside English: saying ありがとう (arigatō) is saying this was not a thing that had to happen. No English cousin exists, and inventing one would be worse than admitting that.
-
-Guided Practice.
-[your turn — say: ありがとう (arigatō) — a-ri-ga-to-o, five beats]
-[pause 8 seconds for the answer]
-[repeat that twice]
-[your turn — build: か plus the dakuten becomes が]
-[pause 8 seconds for the answer]
-[your turn — connect: 有り難し "hard to exist" becomes rare becomes precious becomes thanks]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-What did 有り難し mean literally? (Hard to exist.) What does the last う do? (It lengthens the o.)
-Source: Wiktionary: ありがとう (arigatō).
-[question — say your answer, then pause 8 seconds]
-Which hiragana sign becomes が when the dakuten is added?
-
-
-Lesson 7 of 8.
-ありがとうございます (arigatō gozaimasu) — politeness you cannot leave out.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — five more signs, two of them dakuten until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Say ありがとう (arigatō) once and rebuild が from か. This lesson adds the ending that makes it usable with a stranger, a shopkeeper, or a boss.
-
-Script — five more signs, two of them dakuten.
-ございます — ご go + ざ za + い i + ま ma + す su.
-Two of the five are dakuten forms you can already build: ご is こ with the two strokes, and ざ is さ sa with them. い you have read since はい (hai). Only ま ma and す su are genuinely new.
-The whole phrase is ten beats — a-ri-ga-to-o go-za-i-ma-su — and the final す is normally said with the u barely voiced, close to a plain s.
-
-Grammar Lens — politeness is grammar here, not word choice.
-ございます is a verb. It is the polite form of ある aru, "to be" — the same verb that sits inside ありがとう (arigatō). The route runs ある becomes ござる becomes ございます, where the ending -ます is the general politeness marker Japanese attaches to verbs.
-That is the difference this chapter has to name. In many languages politeness is a choice between two words for "you." Japanese instead marks it on the predicate, and every sentence has one, so every sentence is marked. There is no neutral setting: ありがとう to a friend and ありがとうございます (arigatō gozaimasu) to a stranger are not two styles of the same form, they are two different grammatical levels, and choosing wrongly is heard immediately.
-At the far end of the system, the verb itself is replaced. 言う iu "to say" becomes おっしゃる when the speaker is honouring someone else and 申す when humbling themselves. Same act, three verbs, chosen by who is doing what to whom. That is keigo, and this lesson is only its front door.
-
-Guided Practice.
-[your turn — say: ありがとうございます (arigatō gozaimasu) — ten beats, final su light]
-[pause 8 seconds for the answer]
-[repeat that twice]
-[your turn — choose: a close friend becomes ありがとう; a shop assistant becomes ありがとうございます (arigatō gozaimasu)]
-[pause 8 seconds for the answer]
-[your turn — build: こ becomes ご, さ becomes ざ]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-Which verb hides inside ございます? (ある, "to be.") Can a Japanese sentence avoid marking politeness? (No — the predicate always carries a level.)
-Source: Wiktionary: ございます.
-[question — say your answer, then pause 10 seconds]
-You are thanking a shop assistant you have never met. Which form do you use?
-
-
-Lesson 8 of 8.
-Practice — one daytime exchange, three scripts.
-
-Warm-up.
-[pause 2 seconds]
-Before reading on, retrieve three answers: the daytime greeting, the short yes, and the short no. Nothing new is added here.
-
-The exchange — every line already learned.
-A: こんにちは (konnichiwa)。 — Konnichiwa. B: こんにちは (konnichiwa)。 — Konnichiwa. A: 日本語 (nihongo)? — Nihongo? B: はい (hai)。 — Hai. A: ありがとうございます (arigatō gozaimasu)。 — Arigatō gozaimasu. B: いいえ (iie)。 — Iie.
-Three lines of hiragana, one of kanji, and no word that has not been taught. Japanese lets a bare noun with a rising tone stand as a question, so 日本語 (nihongo) with the voice lifted is a complete and natural way to ask "Japanese, then?" — and はい (hai) answers it. B's closing いいえ (iie) is the modest "not at all" that waves thanks away.
-A single ordinary Japanese sentence mixes the systems: hiragana carries the grammar, kanji carries the content words, katakana carries the borrowings. That is why this chapter opened all three instead of finishing one.
-
-Guided Practice.
-[your turn — run: both voices once with the Japanese, once with romanization only]
-[pause 8 seconds for the answer]
-[your turn — decide: which line would change if B were a close friend]
-[pause 8 seconds for the answer]
-[pause 3 seconds]
-[your turn — swap: take B's part while the other lines are read to you]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-Run the exchange once from memory. If a line stalls, return to that one lesson rather than rereading the chapter.
-[question — say your answer, then pause 9 seconds]
-Someone has just thanked you politely. Give the modest one-word reply this chapter taught.

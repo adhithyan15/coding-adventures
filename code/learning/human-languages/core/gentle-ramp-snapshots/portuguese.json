@@ -1,0 +1,76 @@
+{
+  "language": "portuguese",
+  "lessonCount": 97,
+  "atomMeasurableLessons": 88,
+  "atomMeasurementBlindLessons": 9,
+  "durationViolations": 0,
+  "atomLessonSpikes": 0,
+  "atomChapterSpikes": 2,
+  "glyphLessonSpikes": 0,
+  "scriptSystemSpikes": 0,
+  "scriptClosureViolations": 0,
+  "neverTaughtGlyphs": 0,
+  "orderDefects": 0,
+  "lessonsWithoutSequence": 0,
+  "unknownPrerequisites": 0,
+  "forwardPrerequisites": 0,
+  "forwardReviews": 0,
+  "forwardReferences": 62,
+  "atomsTaught": 192,
+  "atomsNeverRevisited": 8,
+  "reinforcementWindowMisses": 305,
+  "reinforcementMissesByWindow": {
+    "R1": 36,
+    "R2": 149,
+    "R3": 106,
+    "R4": 14
+  },
+  "payoffSurprises": 1,
+  "writingPracticeLessons": 2,
+  "firstWritingPracticeAt": 0,
+  "lessonsBeforeWritingPractice": 0,
+  "findings": [
+    {
+      "language": "portuguese",
+      "kind": "forward-language",
+      "count": 62,
+      "unit": "use(s)",
+      "detail": "teach target-language material before load-bearing use"
+    },
+    {
+      "language": "portuguese",
+      "kind": "atom-step",
+      "count": 2,
+      "unit": "lesson/chapter spike(s)",
+      "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+    },
+    {
+      "language": "portuguese",
+      "kind": "reinforcement",
+      "count": 305,
+      "unit": "missed window(s)",
+      "detail": "add retrieval at the expanding R1-R4 intervals"
+    },
+    {
+      "language": "portuguese",
+      "kind": "payoff-surprise",
+      "count": 1,
+      "unit": "chapter payoff finding(s)",
+      "detail": "make each chapter payoff assess only taught, representative material"
+    },
+    {
+      "language": "portuguese",
+      "kind": "measurement-blind",
+      "count": 9,
+      "unit": "lesson(s)",
+      "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
+    }
+  ],
+  "next": {
+    "language": "portuguese",
+    "kind": "forward-language",
+    "count": 62,
+    "unit": "use(s)",
+    "detail": "teach target-language material before load-bearing use"
+  }
+}

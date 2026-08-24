@@ -73,12 +73,17 @@ not, and this is one of the second kind.
 Use the pairing as a **memory hook**, which it genuinely is. Do not file it as a
 fact about why the word means what it means.
 
-## Guided Practice
+## Guided Practice — from the spoken word to the page
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-HAO-BUILD-01] -->
+<!-- hl-writing-stage: dictation-transcription -->
 
-- [YOU WRITE: 好 — the whole left half first, then the whole right half]
-- [YOU NOTICE: the crossing bar on the left half no longer sweeps all the way
-  across. Why not?]
+Copy **好** once while looking: finish **女**, then **子**. Notice that the
+crossing bar on the left stops before the right half.
+
+Now close the page. Have a person or screen reader say *hǎo* with no character
+visible. Wait ten seconds, write **好** from the spoken cue, then uncover it.
+Compare the left half and right half separately. If one half stalled, revisit
+only its three-stroke lesson before trying the dictation again.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-HAO-BUILD-01, ZH-SCRIPT-NU-01, ZH-SCRIPT-ZI-01, ZH-SCRIPT-NI-BUILD-01] -->

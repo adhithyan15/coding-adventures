@@ -102,6 +102,7 @@ function classifyBlock(title: string): LessonBlockType {
 const KNOWLEDGE_DIRECTIVE =
   /^<!--\s*hl-knowledge:\s*introduces=\[([^\]]*)\];\s*assesses=\[([^\]]*)\]\s*-->$/;
 const ACTIVITY_DIRECTIVE = /^<!--\s*hl-activity:\s*(\{.*\})\s*-->$/;
+const WRITING_STAGE_DIRECTIVE = /^<!--\s*hl-writing-stage:\s*([a-z][a-z0-9-]*)\s*-->$/;
 
 function directiveList(value: string): string[] {
   return value
@@ -116,6 +117,8 @@ function parseBlockMetadata(markdown: string): {
   knowledgeDirectiveError?: string;
   activities?: LessonBodyBlock["activities"];
   activityDirectiveErrors?: string[];
+  writingStage?: string;
+  writingStageDirectiveError?: string;
 } {
   const lines = markdown.split("\n");
   const knowledgeIndexes = lines
@@ -124,7 +127,12 @@ function parseBlockMetadata(markdown: string): {
   const activityIndexes = lines
     .map((line, index) => (line.includes("hl-activity") ? index : -1))
     .filter((index) => index >= 0);
-  if (knowledgeIndexes.length === 0 && activityIndexes.length === 0) return { markdown };
+  const writingStageIndexes = lines
+    .map((line, index) => (line.includes("hl-writing-stage") ? index : -1))
+    .filter((index) => index >= 0);
+  if (knowledgeIndexes.length === 0 && activityIndexes.length === 0 && writingStageIndexes.length === 0) {
+    return { markdown };
+  }
 
   const firstContent = lines.findIndex((line) => line.trim() !== "");
   const knowledgeIndex = knowledgeIndexes[0] ?? -1;
@@ -150,9 +158,37 @@ function parseBlockMetadata(markdown: string): {
 
   const activities: NonNullable<LessonBodyBlock["activities"]> = [];
   const activityDirectiveErrors: string[] = [];
+  let writingStage: string | undefined;
+  let writingStageDirectiveError: string | undefined;
+  if (writingStageIndexes.length > 0) {
+    const writingIndex = writingStageIndexes[0] ?? -1;
+    const firstDisplayIndex = lines.findIndex((line, index) =>
+      line.trim() !== "" &&
+      index !== knowledgeIndex &&
+      !activityIndexes.includes(index) &&
+      !writingStageIndexes.includes(index),
+    );
+    const directive = lines[writingIndex]?.trim() ?? "";
+    const match = WRITING_STAGE_DIRECTIVE.exec(directive);
+    const positionIsValid =
+      validKnowledge &&
+      writingStageIndexes.length === 1 &&
+      writingIndex > knowledgeIndex &&
+      (firstDisplayIndex === -1 || writingIndex < firstDisplayIndex);
+    if (!positionIsValid || !match) {
+      writingStageDirectiveError =
+        "expected one '<!-- hl-writing-stage: stage-id -->' after block knowledge and before learner copy";
+    } else {
+      writingStage = match[1];
+      removeIndexes.add(writingIndex);
+    }
+  }
   if (activityIndexes.length > 0) {
     const firstDisplayIndex = lines.findIndex((line, index) =>
-      line.trim() !== "" && index !== knowledgeIndex && !activityIndexes.includes(index),
+      line.trim() !== "" &&
+      index !== knowledgeIndex &&
+      !activityIndexes.includes(index) &&
+      !writingStageIndexes.includes(index),
     );
     for (const index of activityIndexes) {
       const positionIsValid =
@@ -198,11 +234,15 @@ function parseBlockMetadata(markdown: string): {
     activities: activities.length > 0 ? activities : undefined,
     activityDirectiveErrors:
       activityDirectiveErrors.length > 0 ? activityDirectiveErrors : undefined,
+    writingStage,
+    writingStageDirectiveError,
   };
   if (result.knowledge === undefined) delete result.knowledge;
   if (result.knowledgeDirectiveError === undefined) delete result.knowledgeDirectiveError;
   if (result.activities === undefined) delete result.activities;
   if (result.activityDirectiveErrors === undefined) delete result.activityDirectiveErrors;
+  if (result.writingStage === undefined) delete result.writingStage;
+  if (result.writingStageDirectiveError === undefined) delete result.writingStageDirectiveError;
   return result;
 }
 
@@ -226,10 +266,14 @@ export function parseBodyBlocks(body: string): {
     current.knowledgeDirectiveError = parsedMetadata.knowledgeDirectiveError;
     current.activities = parsedMetadata.activities;
     current.activityDirectiveErrors = parsedMetadata.activityDirectiveErrors;
+    current.writingStage = parsedMetadata.writingStage;
+    current.writingStageDirectiveError = parsedMetadata.writingStageDirectiveError;
     if (current.knowledge === undefined) delete current.knowledge;
     if (current.knowledgeDirectiveError === undefined) delete current.knowledgeDirectiveError;
     if (current.activities === undefined) delete current.activities;
     if (current.activityDirectiveErrors === undefined) delete current.activityDirectiveErrors;
+    if (current.writingStage === undefined) delete current.writingStage;
+    if (current.writingStageDirectiveError === undefined) delete current.writingStageDirectiveError;
     blocks.push(current);
     blockLines.length = 0;
   };

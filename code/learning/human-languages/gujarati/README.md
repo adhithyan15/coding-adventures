@@ -24,10 +24,29 @@ you can read straight through.
 - The language of **Gandhi**, grounded throughout against English + Sanskrit +
   the other Indo-Aryan tracks.
 
+## Assessment destination
+
+The complete book targets the project-defined [Coding Adventures Gujarati
+Assessment](assessment-spec.md) from pre-A1 through C2. Its machine-readable
+[contract](assessment.json) requires separate passes in reading, listening,
+writing, and speaking, the full gentle writing ladder, and two timed mocks at
+every rung. This names the destination; it does not claim that the current book
+or the future certificate is externally accredited. The pre-A1
+[four-skill task inventory](task-shapes/pre-a1.json) now makes that first rung
+executable, including independent writing from memory; it is an assessment
+blueprint, not proof that the current lessons teach every task. A1–C2
+inventories, mocks, rubrics, answer keys, calibration, and book-only human
+validation remain explicit backlog.
+
 ## Progress
 
-- **Chapter 1 — Greetings** ([`lessons/GU-C01-*`](./lessons/)): namaste, ābhār,
-  hā/nā, sārũ, āvjo ("come again"), practice.
+- **Chapter 1 — Greetings, the opening script spine, and the first written answer**
+  ([`lessons/GU-C01-*`](./lessons/), [`lessons/GU-W01-*`](./lessons/)):
+  first hear *namaste* with no decoding demand; then meet the Gujarati abugida
+  one reusable piece at a time and copy the greeting only when all six of its
+  pieces are known. Ābhār, āvjo, and hā/nā follow, then a five-step handoff from
+  tracing **હ** and **ા** separately to copying, recalling, and writing **હા**
+  from a heard cue; sārũ and a four-skill chapter payoff close the chapter.
 - **Chapter 2 — Introducing Yourself** ([`lessons/GU-C02-*`](./lessons/)): nām,
   mārũ, chhe, "my name is…", tũ / tame, shũ, "what's your name?", ānand.
 - **Chapter 3 — How Are You** ([`lessons/GU-C03-*`](./lessons/)): kem, "tame
@@ -84,7 +103,8 @@ you can read straight through.
   while *nāk* shows a neuter noun that does not carry it, and *āṅkh*'s medial
   nasal shows the same mark doing a completely different, non-grammatical job.
 
-Chapters 1–12 are in the book.
+Chapters 1–12 are in the book. The former Chapter 13 script appendix now sits at
+the start of Chapter 1, before its first load-bearing Gujarati read.
 
 ---
 

@@ -172,7 +172,7 @@ sitting upside down on a correct letter.
 **All eleven starter Tamil letters — அ, ஆ, இ, க, ம, வ, ல, ற, ன, ண, and ந —,
 all nine Persian starter letters — ا, ب, ت, س, ل, م, ن, ه, and و —, all
 thirteen Urdu starter entries — ا, ج, ر, س, ش, ک, ل, م, ن, ں, ہ, ی, and ے —,
-all eighteen Arabic starter letters — ا, ب, ت, ج, ح, خ, د, ر, س, ش, ص, ض, ع, ك, ل, ه, و, and ي —,
+all twenty-two Arabic starter entries — ا, ب, ت, ث, ج, ح, خ, د, ر, س, ش, ص, ض, ع, ك, ل, م, ن, ه, و, ي, and ء —,
 all twenty-two Hebrew starter letters א, ב, ג, ד, ה, ו, ז, ח, ט, י, כ, ל,
 מ, נ, ס, ע, פ, צ, ק, ר, ש, and ת, all twenty-four Chinese starter entries 人, 亻, 口, 女, 子, 日, 讠, 氵, 宀, 你, 好, 我, 是, 不, 名, 字, 谢, 请, 再, 见, 什, 么, 早, and 上,
 and Devanagari अ, आ, इ, ई, उ, ऊ, ए, ऐ, ओ, औ, and क
@@ -1037,7 +1037,206 @@ turns through its lower foot. The t30apps.com animation exposes those as two
 ordered SVG paths; the Noto Sans Gujarati fit preserves their order while
 tracing the broader printed lobes and more angular foot. The source's variation
 warning continues to qualify the demonstrated school-hand form; missing **ઙ**
+is next. Its two-frame filmstrip begins at the upper right, sweeps left through
+the upper turn, continues through the middle and rounded lower body, and
+finishes at the lower left. It then lifts once and circles the separate
+upper-right dot. The t30apps.com animation exposes those as two ordered SVG
+paths; the Noto Sans Gujarati fit preserves their order while tracing the
+broader printed turns and larger dot. The source's variation warning continues
+to qualify the demonstrated school-hand form. The two-frame Gujarati **ચ**
+filmstrip circles the upper bowl from its upper-left start, turns through the
+small middle loop, and continues around the broad lower body to its upper-right
+finish. It then lifts once, descends the separate full-height right spine, and
+turns through its lower foot. The t30apps.com animation exposes those as two
+ordered SVG paths; the Noto Sans Gujarati fit preserves their order while
+tracing the broader printed bowls and more angular foot. The source's variation
+warning continues to qualify the demonstrated school-hand form. The one-frame
+Gujarati **છ** filmstrip circles the upper-left lobe, turns through the middle,
+continues around the broad lower body, climbs the tall outer-right curve, and
+circles the upper-right lobe without lifting. The t30apps.com animation exposes
+that as one continuous SVG path; the Noto Sans Gujarati fit preserves its order
+while tracing the broader printed bodies and more angular right lobe. The
+source's variation warning continues to qualify the demonstrated school-hand
+form. The three-frame Gujarati **જ** filmstrip circles the upper-left loop,
+continues diagonally through the crossing body, circles the lower-right loop,
+and sweeps into the long upper-right exit without lifting. The t30apps.com
+animation exposes that as one continuous SVG path; the Noto Sans Gujarati fit
+preserves its order while tracing broader printed loops and a more angular
+crossing. The source's variation warning continues to qualify the demonstrated
+school-hand form; the source-and-font audit then exposes **ઝ** as a missing
+inventory entry. Its three-frame filmstrip circles the rounded left body, lifts
+for the right loop and lower tail, then lifts again to descend the short upper
+stem. The t30apps.com animation exposes those as three ordered SVG paths; the
+Noto Sans Gujarati fit preserves their order while tracing broader printed
+bodies and more angular joins. The source's variation warning continues to
+qualify the demonstrated school-hand form. The three-frame Gujarati **ઞ**
+filmstrip circles the rounded left body, lifts for the short rightward shoulder,
+then lifts again to descend the tall spine and curl through its lower terminal.
+The t30apps.com animation exposes those as three ordered SVG paths; the Noto
+Sans Gujarati fit preserves their order while tracing a broader printed body
+and more angular joins and terminal. The source's variation warning continues
+to qualify the demonstrated school-hand form. The one-frame Gujarati **ટ**
+filmstrip sweeps across the rounded upper turn, bends diagonally down-left
+through the middle, and circles the broad lower bowl to its right side without
+lifting. The t30apps.com animation exposes that as one continuous SVG path; the
+Noto Sans Gujarati fit preserves its order while tracing broader and more
+angular printed turns. The source's variation warning continues to qualify the
+demonstrated school-hand form; missing **ઠ** is next.
+The one-frame Gujarati **ઠ** filmstrip begins at the upper right, sweeps left
+across the high shoulder, descends through the middle and around the broad
+outer lower bowl, then curls inward to its terminal without lifting. The
+t30apps.com animation exposes that order as one continuous SVG path; the Noto
+Sans Gujarati fit preserves it while tracing a tighter printed shoulder and a
+broader, more angular bowl. The source's variation warning continues to qualify
+the demonstrated school-hand form; **ડ** is next.
+The one-frame Gujarati **ડ** filmstrip begins at the upper right, sweeps left
+across the high shoulder, descends through the middle and around the broad
+lower bowl, then finishes at its lower-left terminal without lifting. The
+t30apps.com animation exposes that as one continuous SVG path; the Noto Sans
+Gujarati fit preserves its order while tracing a tighter shoulder and more
+angular bowl. The source's variation warning continues to qualify the
+demonstrated school-hand form; **ઢ** is next.
+The one-frame Gujarati **ઢ** filmstrip begins at the upper left, sweeps right
+across the high shoulder, descends through the middle and around the broad
+outer lower bowl, then continues around the small inner loop without lifting.
+The t30apps.com animation exposes that as one continuous SVG path; the Noto Sans
+Gujarati fit preserves its order while tracing a tighter shoulder and more
+angular bowl and counter. The source's variation warning continues to qualify
+the demonstrated school-hand form; **ણ** is next.
+The three-frame Gujarati **ણ** filmstrip descends the left spine into its hooked
+lower tail, lifts to circle the rounded middle bowl, then lifts again to descend
+the tall right spine and turn through its foot. The t30apps.com animation
+exposes those as three ordered SVG paths; the Noto Sans Gujarati fit preserves
+their order while tracing a broader body and deeper below-baseline tail. The
+source's variation warning continues to qualify the demonstrated school-hand
+form; **ત** is next.
+The two-frame Gujarati **ત** filmstrip begins at the lower terminal, sweeps left
+and upward around the open body, and continues right across the upper shoulder;
+after one lift, it descends the tall right spine and turns through its foot. The
+t30apps.com animation exposes those movements as two ordered SVG paths; the
+Noto Sans Gujarati fit preserves their order while tracing a wider printed body
+and straighter spine. The source's variation warning continues to qualify the
+demonstrated school-hand form; missing **થ** is next.
+The restored two-frame Gujarati **થ** filmstrip circles the small upper loop,
+descends through the middle, sweeps around the broad lower body, and rises into
+the right shoulder; after one lift, it descends the tall right spine into its
+foot. The t30apps.com animation exposes those movements as two ordered SVG
+paths; the Noto Sans Gujarati fit preserves their order while tracing a wider
+printed loop and body and a straighter spine. The source's variation warning
+continues to qualify the demonstrated school-hand form; **દ** is next.
+The one-frame Gujarati **દ** filmstrip circles the rounded upper body, narrows
+through the middle turn, then sweeps around the broad lower body and rises into
+the right terminal without lifting. The t30apps.com animation exposes that
+order as one continuous SVG path; the Noto Sans Gujarati fit preserves it while
+tracing wider printed bowls and a more compact terminal. The source's variation
+warning continues to qualify the demonstrated school-hand form; **ધ** is next.
+The two-frame Gujarati **ધ** filmstrip descends from the high left entry,
+passes through the upper turn and narrow middle, and sweeps around the broad
+lower body into the right shoulder; after one lift, it descends the tall right
+spine into its foot. The t30apps.com animation exposes those movements as two
+ordered SVG paths; the Noto Sans Gujarati fit preserves their order while
+tracing a wider printed body and straighter spine. The source's variation
+warning continues to qualify the demonstrated school-hand form; missing **ન**
 is next.
+The restored two-frame Gujarati **ન** filmstrip circles the small left loop and
+continues right across the long shoulder; after one lift, it descends the tall
+right spine into its foot. The t30apps.com animation exposes those movements as
+two ordered SVG paths; the Noto Sans Gujarati fit preserves their order while
+tracing a wider printed loop and straighter shoulder and spine. The source's
+variation warning continues to qualify the demonstrated school-hand form;
+missing **પ** is next.
+The restored two-frame Gujarati **પ** filmstrip curls over the high left hook,
+descends its left stem, and sweeps around the broad lower body into the right
+shoulder; after one lift, its second frame descends the tall right spine and
+turns through the lower foot. The order is pinned to the teaching app's two
+ordered SVG paths; the Noto Sans Gujarati fit preserves that order while
+tracing a wider printed hook and body and a straighter spine. The source's
+variation warning continues to qualify the demonstrated school-hand form;
+missing **ફ** is next.
+The restored two-frame Gujarati **ફ** filmstrip sweeps left across the high cap,
+winds down and around the body, circles the small lower-left loop, and exits
+through the descending tail; after one lift, its second frame draws the
+diagonal cross-stroke from lower left to upper right. The order is pinned to
+the teaching app's two ordered SVG paths; the Noto Sans Gujarati fit preserves
+that order while tracing a wider, more angular printed body and crossing. The
+source's variation warning continues to qualify the demonstrated school-hand
+form; missing **બ** is next.
+The verified two-frame Gujarati **બ** filmstrip circles the rounded left body,
+winds through its compact inner turn, and exits across the right shoulder;
+after one lift, its second frame descends the separate tall right spine and
+turns through the lower foot. The order is pinned to the teaching app's two
+ordered SVG paths; the Noto Sans Gujarati fit preserves that order while
+tracing a wider, more angular printed body and a straighter spine. The source's
+variation warning continues to qualify the demonstrated school-hand form;
+conventional **ભ** is next.
+The verified two-frame Gujarati **ભ** filmstrip circles the broad left loop,
+winds through its compact inner turn, and exits across the long right shoulder;
+after one lift, the second frame descends the separate tall right spine into
+its foot. The source's two-path order and variation warning remain visible;
+conventional **મ** is next.
+The verified two-frame Gujarati **મ** filmstrip curls through the left body and
+compact inner turn before exiting across the long shoulder; after one lift,
+the second frame descends the tall right spine into its foot. The source's
+two-path order and variation warning remain visible; conventional **ય** is next.
+The verified two-frame Gujarati **ય** filmstrip circles through the rounded
+upper turn, sweeps around the broad lower body, and exits across the long right
+shoulder; after one lift, the second frame descends the tall right spine into
+its foot. The source's two-path order and variation warning remain visible;
+conventional **ર** is next.
+The verified one-frame Gujarati **ર** filmstrip circles the rounded upper body,
+curls through the small middle loop, and descends into the lower-right tail
+without lifting. The source's one-path order and variation warning remain
+visible; conventional **લ** is next.
+The verified three-frame Gujarati **લ** filmstrip circles the broad rounded
+left body, lifts to sweep the middle shoulder from left to right, then lifts
+again to descend the tall right spine into its foot. The source's three-path
+order and variation warning remain visible; conventional **ળ** is next.
+The verified one-frame Gujarati **ળ** filmstrip circles the broad left bowl,
+rises through the narrow middle turn, crosses the high right arch, and descends
+the tall spine into its foot without lifting. The source's one-path order and
+variation warning remain visible; conventional **વ** is next.
+The verified two-frame Gujarati **વ** filmstrip circles the broad rounded left
+body and returns into the right shoulder; after one lift, the second frame
+descends the tall right spine into its foot. The source's two-path order and
+variation warning remain visible; conventional **શ** is next.
+The verified two-frame Gujarati **શ** filmstrip circles the small upper loop
+and continues through the broad lower body into its tail; after one lift, the
+second frame descends the tall right spine into its foot. The source's two-path
+order and variation warning remain visible; conventional **સ** is next.
+The verified two-frame Gujarati **સ** filmstrip circles the rounded upper loop,
+descends through the left body, and sweeps into the long right shoulder; after
+one lift, the second frame descends the tall right spine into its foot. The
+source's two-path order and variation warning remain visible; conventional
+**હ** is next.
+The verified one-frame Gujarati **હ** filmstrip circles the compact upper loop,
+threads through the middle turn, and continues around the broad lower bowl into
+its rightward finish without lifting. The source's one-path order and variation
+warning remain visible. With the stale conventional duplicates of **ન** and
+**પ** removed, Gujarati now exposes one canonical row for each of its **44/44
+source-verified letters** and is marked complete.
+The Arabic **ث** filmstrip then opens the next maintenance tranche: it sweeps
+the shared independent bowl right-to-left and uses three lifted dot frames in
+the two-lower-and-one-centred-upper arrangement documented by the dedicated
+University of Oregon lesson video.
+Arabic **م** follows with a two-frame, zero-lift filmstrip from Waraqa
+Institute's beginner writing lesson: the first movement forms the small closed
+head, and the second continues down-left through the below-baseline tail in the
+same pen-down run. Script-aware lookup keeps this Arabic source independently
+addressable from Persian and Urdu **م** despite their shared Unicode glyph and
+Noto Naskh outline.
+Arabic **ن** then adds a two-frame Waraqa filmstrip: the first run starts at the
+upper-right tip and sweeps down and around the deep below-baseline bowl; after
+one lift, the second frame places the centred upper dot last. Its script-scoped
+source remains separate from Persian and Urdu **ن**.
+Arabic **ء** closes the original 22-row starter inventory with Arabic Language
+Learning Notes' documented one-stroke variant: the first frame shapes the c-like
+upper head and the second continues from its lower-left end through the lower
+diagonal without lifting. The source's accepted lifted alternative remains
+recorded in the metadata. Arabic **ذ** then grows the canonical inventory to 23
+unique sourced rows: its filmstrip preserves the complete **د** body in the
+first run and places the single upper dot after one lift. Arabic remains
+incomplete because later lessons still use six absent base letters; those rows
+must be added rather than hidden by a premature completion flag.
 The canonical script-data group is capped at 250 kB per cacheable batch, so
 these growing source notes stay within the app's enforced 500 kB eager-chunk
 budget without removing learner-facing evidence.

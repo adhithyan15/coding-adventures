@@ -2,12 +2,14 @@ import { describe, expect, it } from "vitest";
 import {
   buildCompletionPlan,
   CERTIFIABLE_LEVELS,
+  TASK_SHAPE_LEVELS,
   renderCompletionPlan,
   type CompletionPlanInput,
 } from "../src/completion-plan.js";
 import { LEVEL_VOCABULARY, type LevelGateReport } from "../src/level-gate.js";
 import type { ScriptClosureReport, TrackClosure } from "../src/script-closure.js";
 import type { CefrLevel } from "../src/levels.js";
+import type { WritingStageReport } from "../src/writing-stages.js";
 
 // A two-track fixture is enough to pin every ordering rule, and it keeps these
 // tests off the corpus — which is the point of `buildCompletionPlan` being pure
@@ -71,6 +73,9 @@ const vocabularyBlocker = (short: number) =>
   [{ criterion: "vocabulary" as const, detail: `teaches ${300 - short} against 300`, shortfall: short }];
 
 function plan(input: Partial<CompletionPlanInput> & Pick<CompletionPlanInput, "levelGate">) {
+  const taskShapes = input.levelGate.tracks.flatMap((track) =>
+    TASK_SHAPE_LEVELS.map((level) => ({ language: track.language, level })),
+  );
   return buildCompletionPlan({
     scriptClosure: closure([]),
     inventories: [],
@@ -78,6 +83,7 @@ function plan(input: Partial<CompletionPlanInput> & Pick<CompletionPlanInput, "l
     // "assessment is not the variable under test", not that the real corpus has
     // paid this debt.
     assessmentContracts: input.levelGate.tracks.map((track) => track.language),
+    taskShapes,
     ...input,
   });
 }
@@ -103,6 +109,99 @@ describe("completion plan", () => {
     });
     expect(built.head.some((item) => item.kind === "assessment-contract")).toBe(false);
     expect(built.projection.find((entry) => entry.kind === "assessment-contract")?.items).toBe(0);
+  });
+
+  it("queues cumulative writing proof before downstream content and projects every missing stage", () => {
+    const writingStages = {
+      stages: [{ id: "observe-trace", firstRequiredAt: "pre-A1", prerequisites: [] }],
+      tracks: [{
+        language: "alpha",
+        evidence: [],
+        validEvidence: [],
+        defects: [],
+        levels: [{
+          level: "pre-A1",
+          requiredStages: ["observe-trace"],
+          evidencedStages: [],
+          missingStages: ["observe-trace"],
+          complete: false,
+        }],
+      }],
+      summary: {
+        tracks: 1,
+        tracksWithAnyEvidence: 0,
+        tracksCompleteAtPreA1: 0,
+        evidenceBlocks: 0,
+        invalidEvidenceBlocks: 0,
+        missingTrackLevelStages: 1,
+      },
+    } satisfies WritingStageReport;
+    const built = plan({
+      levelGate: gate([{
+        language: "alpha",
+        inProgressAt: "pre-A1",
+        blockers: [
+          { criterion: "writing-stage", detail: "observe-trace is unproved", shortfall: 1 },
+          ...vocabularyBlocker(250),
+        ],
+      }]),
+      writingStages,
+    });
+    expect(built.head[0]).toMatchObject({
+      id: "writing-stage/alpha/pre-A1",
+      kind: "writing-stage",
+      outstanding: 1,
+      tranches: 1,
+    });
+    expect(built.projection.find((entry) => entry.kind === "writing-stage")).toMatchObject({
+      items: 1,
+    });
+  });
+
+  it("queues a sourced four-skill task shape and removes exactly one completed pair", () => {
+    const levelGate = gate([{ language: "alpha", inProgressAt: "A1" }]);
+    const missing = plan({ levelGate, taskShapes: [] });
+    expect(missing.head[0]).toMatchObject({
+      id: "task-shape/alpha/A1",
+      kind: "task-shape",
+      language: "alpha",
+    });
+    expect(missing.projection.find((entry) => entry.kind === "task-shape")?.items).toBe(7);
+
+    const withA1 = plan({ levelGate, taskShapes: [{ language: "alpha", level: "A1" }] });
+    expect(withA1.head.some((item) => item.id === "task-shape/alpha/A1")).toBe(false);
+    expect(withA1.head.some((item) => item.id === "task-shape/alpha/A2")).toBe(true);
+    expect(withA1.projection.find((entry) => entry.kind === "task-shape")?.items).toBe(6);
+  });
+
+  it("measures pre-A1 task shapes without inventing a pre-A1 exam inventory", () => {
+    const levelGate = gate([{ language: "alpha", inProgressAt: "pre-A1" }]);
+    const missing = plan({ levelGate, taskShapes: [] });
+    expect(missing.head[0]).toMatchObject({
+      id: "task-shape/alpha/pre-A1",
+      kind: "task-shape",
+      level: "pre-A1",
+    });
+    expect(missing.head.some((item) => item.id === "exam-inventory/alpha/pre-A1")).toBe(false);
+    expect(missing.projection.find((entry) => entry.kind === "task-shape")?.items).toBe(7);
+    expect(missing.projection.find((entry) => entry.kind === "exam-inventory")?.items).toBe(6);
+
+    const present = plan({
+      levelGate,
+      taskShapes: [{ language: "alpha", level: "pre-A1" }],
+    });
+    expect(present.head.some((item) => item.id === "task-shape/alpha/pre-A1")).toBe(false);
+    expect(present.head.some((item) => item.id === "task-shape/alpha/A1")).toBe(true);
+    expect(present.projection.find((entry) => entry.kind === "task-shape")?.items).toBe(6);
+
+    const duplicate = plan({
+      levelGate,
+      taskShapes: [
+        { language: "alpha", level: "pre-A1" },
+        { language: "alpha", level: "pre-A1" },
+      ],
+    });
+    expect(duplicate.projection.find((entry) => entry.kind === "task-shape")?.items).toBe(6);
   });
 
   it("moves every track once before any track moves twice", () => {
@@ -176,6 +275,21 @@ describe("completion plan", () => {
     expect(built.head.map((item) => item.id)).toEqual(["exam-inventory/alpha/A2"]);
   });
 
+  it("keeps a partial inventory in the queue while preserving its measured points", () => {
+    const built = plan({
+      levelGate: gate([{ language: "alpha", inProgressAt: "A1" }]),
+      partialInventories: [{ language: "alpha", level: "A1" }],
+      examCoverage: [{ language: "alpha", level: "A1", enumerated: 10, covered: 6 }],
+    });
+    const item = built.head.find((entry) => entry.id === "exam-inventory/alpha/A1");
+    expect(item?.goal).toContain("complete the partial A1 assessment inventory");
+    expect(built.head).toContainEqual(expect.objectContaining({ id: "exam-point/alpha/A1", outstanding: 4 }));
+    expect(built.projection.find((entry) => entry.kind === "exam-inventory")).toMatchObject({
+      items: 6,
+      detail: expect.stringContaining("0 complete and 1 partial of 6"),
+    });
+  });
+
   it("asks for no inventory once every level up to the ceiling is written", () => {
     const built = plan({
       levelGate: gate([{ language: "alpha", inProgressAt: "A1" }]),
@@ -232,6 +346,10 @@ describe("completion plan", () => {
   it("excludes pre-A1 from the certifiable levels", () => {
     expect(CERTIFIABLE_LEVELS).not.toContain("pre-A1");
     expect(CERTIFIABLE_LEVELS).toHaveLength(6);
+  });
+
+  it("includes pre-A1 in the independently scored task-shape levels", () => {
+    expect(TASK_SHAPE_LEVELS).toEqual(["pre-A1", "A1", "A2", "B1", "B2", "C1", "C2"]);
   });
 
   it("renders a head and a projection", () => {

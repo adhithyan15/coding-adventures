@@ -1,5 +1,36 @@
 # Changelog
 
+## Unreleased — contract the German pre-A1-to-C2 exam ladder
+
+- Added a project-defined pre-A1 bridge followed by the adult Goethe-Zertifikat
+  ladder: A1 Start Deutsch 1, A2, B1, B2, C1, and C2 GDS.
+- Recorded the official whole-exam A1/A2 pass arithmetic and independently
+  passed B1-C2 modules without misattributing the project's stronger per-skill
+  two-mock readiness rule to Goethe.
+- Required the complete cumulative writing ramp, current-form task inventories,
+  two original timed mocks per rung, official-grid-aligned scoring, calibration,
+  and book-only human validation before any exam-readiness claim.
+- Kept every missing artifact explicit. The contract and existing A1 inventory
+  name destinations; they do not prove that the current book reaches them.
+
+## Writing now starts with the first word (#12282)
+
+- Migrate the opening **Hallo** lesson to measurable schema-v2 knowledge.
+- Add one model-visible trace, followed by a two-minute guided copy: no recall,
+  no free composition, and no new word beyond the greeting already taught.
+- Keep the pen block detachable so the voice-first core remains available.
+
+## German chapters 1-16 regain their reading order (#12248)
+
+- Add one global, spaced sequence to all 66 legacy lessons, recovered from the
+  hand-authored book sections and closed against every prerequisite and review.
+- Remove 66 missing-sequence findings plus 30 forward prerequisites and 36
+  forward reviews that alphabetical filename fallback had fabricated. German's
+  order-integrity backlog moves from 132 defects to zero.
+- Keep genuine content-placement debt separate: nine apparent forward-language
+  uses disappear with the real order, while 55 still require teaching or
+  reseating work. No learner content is silently declared taught.
+
 ## Pre-A1 vocabulary tranche — fourteen everyday nouns, four chapters (2026-08-07)
 
 The level gate (`src/level-gate.ts`) reports every track blocked on

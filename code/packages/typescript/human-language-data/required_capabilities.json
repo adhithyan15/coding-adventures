@@ -24,14 +24,14 @@
     {
       "category": "fs",
       "action": "write",
-      "target": "../../learning/human-languages/core/generated-book-hashes.json",
-      "justification": "The explicit generate:books command refreshes the deterministic app/book source-hash manifest; CI normally verifies it without writing."
+      "target": "../../learning/human-languages/core/generated-book-hashes/*.json",
+      "justification": "The explicit generate:books command refreshes one independently mergeable app/book source-hash manifest per language; CI normally verifies them without writing."
     },
     {
       "category": "fs",
       "action": "write",
-      "target": "../../learning/human-languages/core/lesson-modality.json",
-      "justification": "The explicit generate:modality command refreshes the derived per-lesson modality manifest that lets the complete book, the app, and the driving edition be filtered from one source; CI normally uses the read-only check:modality drift gate."
+      "target": "../../learning/human-languages/core/lesson-modality/*.json",
+      "justification": "The explicit generate:modality command refreshes independently mergeable per-language modality manifests that let the complete book, the app, and the driving edition be filtered from one source; CI normally uses the read-only check:modality drift gate."
     },
     {
       "category": "fs",
@@ -48,15 +48,15 @@
     {
       "category": "fs",
       "action": "write",
-      "target": "../../learning/human-languages/core/generated-narration-hashes.json",
-      "justification": "The explicit generate:narration command refreshes the narration source-hash manifest that detects drift between the lessons and the committed voice script; CI normally verifies it without writing."
+      "target": "../../learning/human-languages/core/generated-narration-hashes/*.json",
+      "justification": "The explicit generate:narration command refreshes one independently mergeable source-hash manifest per language to detect drift between lessons and committed voice scripts; CI normally verifies them without writing."
     },
     {
       "category": "fs",
       "action": "write",
-      "target": "../../learning/human-languages/README.md",
-      "justification": "The explicit generate:progress command refreshes only the marked registry-ordered track table; CI normally uses the read-only check:progress drift gate."
+      "target": "../../learning/human-languages/progress/*.md",
+      "justification": "The explicit generate:progress command refreshes one independently mergeable progress card per registered language; CI normally uses the read-only check:progress drift gate."
     }
   ],
-  "justification": "Filesystem access stays in loader-backed CLI entry points. Validation/reporting are read-only; the explicit book, narration, and progress generators write only configured LaTeX chapters, per-chapter narration scripts, shared source-hash manifests, and the marked top-level README table. No network or process access is needed."
+  "justification": "Filesystem access stays in loader-backed CLI entry points. Validation/reporting are read-only; the explicit generators write only configured LaTeX chapters, per-chapter narration scripts, generated manifests, and per-language progress cards. No network or process access is needed."
 }

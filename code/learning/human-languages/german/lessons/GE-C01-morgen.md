@@ -1,5 +1,6 @@
 ---
 id: GE-C01-morgen
+sequence: 30
 chapter: 1
 type: word
 headword: Morgen
@@ -36,10 +37,10 @@ spot it.
 Latin detour; German *Morgen* and English *morning* are the same Germanic
 word, barely changed.
 
-> A small false-friend warning for later: German *Morgen* also means
-> **"tomorrow"** on its own (*bis morgen* = "until tomorrow"). Context tells
-> them apart. English kept the two senses in separate words (*morning* vs
-> *tomorrow*); German lets *Morgen* do both.
+> A small false-friend warning for later: German *Morgen* can also mean
+> **"tomorrow."** A later farewell will reuse it with that meaning. Context
+> tells the two senses apart; English keeps them in separate words (*morning*
+> vs *tomorrow*), while German lets *Morgen* do both jobs.
 
 ## Grammar Lens
 

@@ -1,0 +1,695 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 4,
+  "title": "Paani: Hear Water, Then Write It Sign by Sign",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:6e3cb93f8705c380",
+  "lessons": [
+    {
+      "id": "MW-C04-hear-paani",
+      "sequence": 170,
+      "title": "Hear pāṇī — meaning before spelling",
+      "headword": "pāṇī",
+      "romanization": "pāṇī",
+      "gloss": "water, heard before it is written",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aaccc85dd1586ef0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 15,
+              "perItem": false,
+              "source": "[PAUSE 15s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the Chapter 3 four-skill response once: hear hā(n) sā and identify a respectful yes; say it; read हां सा; then cover and write it. Say ābhār for formal thanks. Now set writing aside: today's new word begins with the ear and voice."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know — one useful word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pāṇī — water."
+            },
+            {
+              "kind": "speech",
+              "text": "Listen for two long vowels: pā-ṇī. The middle sound is made with the tongue curled back a little. Hear the whole word twice, then say it once. Do not try to spell it yet; the next three tiny lessons will give the hand one piece at a time."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice — meaning without letters",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Imagine two cups: one holds water, one holds tea. Hear pāṇī and point to the water. Change the order and do it again. Then say pāṇī while imagining water."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Close the page. Say pāṇī once, then give its meaning."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: SIL International, Marwari–English Dictionary (2015)."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C04-hear-paani-meaning",
+              "prompt": "You hear pāṇī with no written cue. What does it mean?",
+              "assesses": [
+                "MW-LEX-PAANI-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "water",
+                "drinking water"
+              ],
+              "feedback": {
+                "correct": "Right: pāṇī means water.",
+                "incorrect": "The sound pāṇī names water."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-W04-pa",
+      "sequence": 180,
+      "title": "प — pa, the first sign",
+      "headword": "प",
+      "romanization": "pa",
+      "gloss": "the Devanagari consonant pa",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:1a062d35651bf9ed",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Script — one new consonant"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script — one new consonant until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 8,
+              "perItem": false,
+              "source": "[PAUSE 8s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write हां from memory, checking the first sign and the dot. With no new spelling in view, say the Marwadi word for water. Then write the familiar long-ā mark ा once."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — one new consonant",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प — pa."
+            },
+            {
+              "kind": "speech",
+              "text": "Close the lips, release them without a strong puff, and say pa. Today the hand meets only प; the complete word stays hidden."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — observe, trace, copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "look at प (pa) for three seconds."
+            },
+            {
+              "kind": "speech",
+              "text": "finger-trace its left stem, bowl, and headline."
+            },
+            {
+              "kind": "speech",
+              "text": "copy प (pa) twice."
+            },
+            {
+              "kind": "speech",
+              "text": "say pa after each copy."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hide the model for five seconds. Write प (pa), then add ा to make पा."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-W04-pa-build-paa",
+              "prompt": "Write pa, then add the familiar long-ā mark to make pā.",
+              "assesses": [
+                "MW-SCRIPT-PA-01",
+                "MW-SCRIPT-AA-MATRA-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "पा",
+                "प + ा",
+                "paa",
+                "pā"
+              ],
+              "feedback": {
+                "correct": "Yes: प + ा makes पा, pā.",
+                "incorrect": "Write प, then attach ा on its right: पा."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-W04-nna",
+      "sequence": 190,
+      "title": "ण — curled-back ṇa",
+      "headword": "ण",
+      "romanization": "ṇa",
+      "gloss": "the Devanagari retroflex consonant nna",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:20444a4aaebcd2a7",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Script — one new consonant"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script — one new consonant until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 8,
+              "perItem": false,
+              "source": "[PAUSE 8s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write हां as one complete known word. Say pāṇī without looking at its spelling, then write पा from memory."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — one new consonant",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ण — ṇa."
+            },
+            {
+              "kind": "speech",
+              "text": "Curl the tongue tip slightly back for ṇ. Do not replace it with the dental n heard in the Hindi cognate. The Marwadi dictionary spelling in this chapter uses ण (ṇa), so the eye, voice, and hand keep that contrast clear from the beginning."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — observe, trace, copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "look at ण (ṇa) for three seconds."
+            },
+            {
+              "kind": "speech",
+              "text": "finger-trace the lower loop, upright, and headline."
+            },
+            {
+              "kind": "speech",
+              "text": "copy ण (ṇa) twice."
+            },
+            {
+              "kind": "speech",
+              "text": "say ṇa after each copy."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover both models. Write प, then ण (ṇa), with a clear space between them."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-W04-nna-contrast",
+              "prompt": "Write the sign that carries the curled-back ṇ sound in this Marwadi word.",
+              "assesses": [
+                "MW-SCRIPT-NNA-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "ण",
+                "nna",
+                "retroflex n"
+              ],
+              "feedback": {
+                "correct": "Right: ण carries the curled-back ṇ sound.",
+                "incorrect": "Use the curled-back sign taught here: ण."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-W04-ii-matra",
+      "sequence": 200,
+      "title": "ी (long ī mark) — the long-ī mark",
+      "headword": "ी",
+      "romanization": "long ī mark",
+      "gloss": "the Devanagari dependent vowel mark for long ii",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:7c6e12bac8c4fd11",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Script — one new vowel mark"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script — one new vowel mark until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 8,
+              "perItem": false,
+              "source": "[PAUSE 8s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Hear “Will you come?” and answer yes respectfully. Then say pāṇī. Write प (pa), then ण (ṇa), from memory and name the curled-back sound."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — one new vowel mark",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ी (long ī mark) — long ī."
+            },
+            {
+              "kind": "speech",
+              "text": "Like familiar ा, this mark cannot stand alone in a word. It attaches to a consonant. Add it to ण (ṇa) and read णी, ṇī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — attach only the mark",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "copy ण (ṇa) once."
+            },
+            {
+              "kind": "speech",
+              "text": "look at णी."
+            },
+            {
+              "kind": "speech",
+              "text": "add ी (long ī mark) on the right of your copy."
+            },
+            {
+              "kind": "speech",
+              "text": "compare the joined form, then say ṇī."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hide णी for five seconds. Write it once, then uncover and compare."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-W04-ii-matra-build",
+              "prompt": "Add the long-ī mark to ण (ṇa) and write the result.",
+              "assesses": [
+                "MW-SCRIPT-NNA-01",
+                "MW-SCRIPT-II-MATRA-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "णी",
+                "ण + ी",
+                "nnee",
+                "ṇī"
+              ],
+              "feedback": {
+                "correct": "Yes: ण + ी makes णी, ṇī.",
+                "incorrect": "Attach ी on the right of ण: णी."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C04-paani",
+      "sequence": 210,
+      "title": "पाणी (pāṇī) — join the word you already know by ear",
+      "headword": "पाणी",
+      "romanization": "pāṇī",
+      "gloss": "water",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:dccdb7fa2a7dc1c4",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 10,
+              "perItem": false,
+              "source": "[PAUSE 10s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write the first sign of राम from memory. Then say the Marwadi word for water and write पा, then णी, as two separate pieces. Check each piece before going on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The exchange — two familiar pieces",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पा + णी becomes पाणी — pāṇī — water."
+            },
+            {
+              "kind": "speech",
+              "text": "Join the pieces without adding or changing a sign. Keep ण (ṇa), the curled-back sound that distinguishes this source-attested Marwadi spelling from its Hindi cognate."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "Pāṇī taken apart — a small word history",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The word belongs to an old Indo-Aryan family. Sanskrit pānīya meant something for drinking; related regional forms travelled through Middle Indo-Aryan into modern Marwadi पाणी (pāṇī). The history is a memory hook, not a new spelling task."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "writing",
+          "title": "Writing — guided, then delayed",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "copy पाणी (pāṇī) once while saying pā-ṇī."
+            },
+            {
+              "kind": "speech",
+              "text": "point to पा, then णी."
+            },
+            {
+              "kind": "speech",
+              "text": "hide the model for ten seconds."
+            },
+            {
+              "kind": "speech",
+              "text": "write the complete word from memory."
+            },
+            {
+              "kind": "speech",
+              "text": "uncover and compare प, ा, ण (ṇa), and ी (long ī mark) separately."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say पाणी (pāṇī) once without looking, then write it once with the model covered."
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: SIL International, Marwari–English Dictionary (2015) and Turner, A Comparative Dictionary of the Indo-Aryan Languages, entry 8082."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C04-paani-build",
+              "prompt": "Join पा and णी, then give the word's meaning.",
+              "assesses": [
+                "MW-SCRIPT-PAANI-01",
+                "MW-LEX-PAANI-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "पाणी — water",
+                "पाणी",
+                "paani — water",
+                "pāṇī — water"
+              ],
+              "feedback": {
+                "correct": "Right: पा + णी makes पाणी, water.",
+                "incorrect": "Join the two taught pieces: पा + णी = पाणी, water."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C04-practice",
+      "sequence": 220,
+      "title": "Practice — hear, say, read, and write water",
+      "headword": "पाणी",
+      "romanization": "pāṇī",
+      "gloss": "water",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6170378362027045",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 20,
+              "perItem": false,
+              "source": "[PAUSE 20s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the older respectful yes in four quick steps: hear it and name its meaning; say it; read हां सा; then cover and write it. Now say the three meanings in English as you hear ābhār, hā(n) sā, and pāṇī. Write पा, then ण (ṇa) and ी (long ī mark) separately from memory."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice — four independent checks",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Listen: hear pāṇī and identify water, without text."
+            },
+            {
+              "kind": "speech",
+              "text": "Speak: see a picture or imagine a glass of water and say pāṇī, without notes."
+            },
+            {
+              "kind": "speech",
+              "text": "Read: choose पाणी (pāṇī) from आभार, हां, पाणी (pāṇī) and give its meaning."
+            },
+            {
+              "kind": "speech",
+              "text": "Write: hear pāṇī, wait fifteen seconds, then write पाणी with no model."
+            },
+            {
+              "kind": "speech",
+              "text": "Score each line separately. Repeat only the missed line; strong speaking does not compensate for a missing ण (ṇa) or ी (long ī mark) in writing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built — and what remains",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can retrieve one useful word in all four skills. You cannot yet request water in a complete Marwadi sentence; that needs pronouns, a request form, and register choices taught in later small steps."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "If one sign stalled, return only to its two-minute sign lesson before repeating the complete dictation."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C04-practice-paani",
+              "prompt": "From the spoken cue pāṇī alone, write the Marwadi word and give its meaning.",
+              "assesses": [
+                "MW-LEX-PAANI-01",
+                "MW-SCRIPT-PAANI-01",
+                "MW-PERFORMANCE-PAANI-FOUR-SKILL-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "पाणी — water",
+                "पाणी",
+                "पाणी water",
+                "pāṇī — water"
+              ],
+              "feedback": {
+                "correct": "पाणी — water, recalled from sound without a visible model.",
+                "incorrect": "Write पा, then णी: पाणी. It means water."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

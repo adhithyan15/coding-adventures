@@ -10,9 +10,9 @@
 //! actually hits.
 //!
 //! See:
-//! - [`code/specs/MX00-matrix-execution-overview.md`] — architecture
-//! - [`code/specs/MX04-compute-runtime.md`] §"CPU executor" — contract
-//! - [`code/specs/MX03-executor-protocol.md`] §"Backend implementation guide"
+//! - `code/specs/MX00-matrix-execution-overview.md` — architecture
+//! - `code/specs/MX04-compute-runtime.md` §"CPU executor" — contract
+//! - `code/specs/MX03-executor-protocol.md` §"Backend implementation guide"
 //!
 //! ## What lives here
 //!

@@ -1210,13 +1210,6 @@
       "scriptCommand": "gu"
     },
     {
-      "language": "gujarati",
-      "chapter": 13,
-      "output": "gujarati/book/chapters/ch13-script-first.tex",
-      "unicodeScript": "Gujarati",
-      "scriptCommand": "gu"
-    },
-    {
       "language": "hindi",
       "chapter": 4,
       "output": "hindi/book/chapters/ch04-farewells.tex",
@@ -1661,9 +1654,87 @@
       "scriptSet": "japanese-main"
     },
     {
+      "language": "japanese",
+      "chapter": 4,
+      "output": "japanese/book/chapters/ch04-polite-thanks.tex",
+      "scriptSet": "japanese-main"
+    },
+    {
+      "language": "japanese",
+      "chapter": 5,
+      "output": "japanese/book/chapters/ch05-nihongo-kanji.tex",
+      "scriptSet": "japanese-main"
+    },
+    {
+      "language": "japanese",
+      "chapter": 6,
+      "output": "japanese/book/chapters/ch06-koohii-katakana.tex",
+      "scriptSet": "japanese-main"
+    },
+    {
+      "language": "japanese",
+      "chapter": 7,
+      "output": "japanese/book/chapters/ch07-doorway-exchange.tex",
+      "scriptSet": "japanese-main"
+    },
+    {
+      "language": "japanese",
+      "chapter": 8,
+      "output": "japanese/book/chapters/ch08-sayounara.tex",
+      "scriptSet": "japanese-main"
+    },
+    {
       "language": "marwadi",
       "chapter": 1,
       "output": "marwadi/book/chapters/ch01-ram-ram-sa.tex",
+      "scriptSet": "marwadi-main"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 2,
+      "output": "marwadi/book/chapters/ch02-aabhaar.tex",
+      "scriptSet": "marwadi-main"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 3,
+      "output": "marwadi/book/chapters/ch03-haan-saa.tex",
+      "scriptSet": "marwadi-main"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 4,
+      "output": "marwadi/book/chapters/ch04-paani.tex",
+      "scriptSet": "marwadi-main"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 5,
+      "output": "marwadi/book/chapters/ch05-name-answer.tex",
+      "scriptSet": "marwadi-main"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 6,
+      "output": "marwadi/book/chapters/ch06-name-question.tex",
+      "scriptSet": "marwadi-main"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 7,
+      "output": "marwadi/book/chapters/ch07-wellbeing-question.tex",
+      "scriptSet": "marwadi-main"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 8,
+      "output": "marwadi/book/chapters/ch08-wellbeing-answer.tex",
+      "scriptSet": "marwadi-main"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 9,
+      "output": "marwadi/book/chapters/ch09-see-you-later.tex",
       "scriptSet": "marwadi-main"
     },
     {

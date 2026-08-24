@@ -2,9 +2,9 @@
 schema_version: 2
 id: GU-W01-e-matra
 spine_node: SPINE-MEET-GREET
-sequence: 770
+sequence: 9
 delivery: script
-chapter: 13
+chapter: 1
 type: writing
 headword: ે
 romanization: "-e"
@@ -56,8 +56,9 @@ a consonant, not just after it.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01, GU-SCRIPT-NA-01, GU-SCRIPT-MA-01, GU-SCRIPT-SA-01, GU-SCRIPT-TA-01, GU-SCRIPT-E-MATRA-01] -->
+<!-- hl-writing-stage: observe-trace -->
 
-- [YOU WRITE: ે]
+- [YOU TRACE: keep ે visible and trace it once with a finger]
 - [YOU READ: every piece this chapter has given you so far, in order]
 
 ## Wrap-up Recall

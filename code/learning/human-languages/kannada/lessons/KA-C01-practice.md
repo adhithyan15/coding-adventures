@@ -13,13 +13,13 @@ est_minutes: 4
 reviews_of: [KA-C01-namaskara, KA-C01-dhanyavada, KA-C01-haudu, KA-C01-illa, KA-C01-sari]
 ---
 
-# Chapter 1 — recap, and how Kannada says goodbye
+# Chapter 1 — a five-word recap
 
 ## Warm-up
 
 [PAUSE 2s] Five words, and with them a first handful of Kannada letters read
-straight off the page. Let's gather them — and add the farewell, which turns
-out to share its very logic with Tamil.
+straight off the page. Let's gather only what you have already learned and make
+it feel easy.
 
 ## Read them back
 
@@ -43,32 +43,22 @@ Notice the pattern already: the two **greeting/politeness** words are Sanskrit
 loans; the three **everyday grammar** words are native Dravidian — and two of
 them (*illa*, *sari*) are shared almost unchanged with Tamil.
 
-## The farewell — the same "go and come back" as Tamil
+## A promise for later
 
-Kannada, like Tamil, avoids a bare "I'm leaving." The everyday goodbye is:
-
-> **ಹೋಗಿ ಬರುತ್ತೇನೆ** (*hōgi baruttēne*) — literally **"having gone, I [will]
-> come [back]."**
-
-and the reply is **ಹೋಗಿ ಬನ್ನಿ** (*hōgi banni*) — **"go, and come [back]."**
-The very same worldview inside Tamil's *pōy varugiṟēṉ*: you never simply
-depart, you promise a return. (Casually, Kannada also just re-uses *namaskāra*
-to part.)
+Kannada has a warm departure exchange built around going and coming back. It
+belongs in the later chapter where you learn those actions one at a time. For
+now, repeating the greeting is enough when you part.
 
 ## Guided Practice
 
 [PAUSE 1s]
 - [YOU SAY: all five — namaskāra · dhanyavāda · haudu · illa · sari]
 - [YOU SAY: greet and thank — "namaskāra!" … "dhanyavāda."]
-- [YOU SAY: the farewell exchange — "hōgi baruttēne" / "hōgi banni"]
 
 ## Wrap-up Recall
 
 [PAUSE 3s] Read all five words aloud. Which two are Sanskrit loans, and which
 three are native Dravidian? (Loans: *namaskāra*, *dhanyavāda*. Native: *haudu*,
-*illa*, *sari*.) What does the Kannada goodbye literally mean, and which Tamil
-farewell does it echo? ("Having gone, I'll come back" — Tamil *pōy
-varugiṟēṉ*.)
+*illa*, *sari*.) Which one means "okay / correct"? (*sari*.)
 
-Next chapter: introducing yourself — *nanna hesaru…* ("my name…") — and
-Kannada's *nīnu* / *nīvu* (familiar / respectful "you").
+Next chapter starts introducing yourself, one short possession form at a time.

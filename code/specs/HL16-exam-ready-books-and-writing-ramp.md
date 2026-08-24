@@ -79,11 +79,27 @@ contract contains every level and, at each level:
 5. an independent pass threshold for each skill;
 6. the writing stages required at that level;
 7. at least two complete timed mocks;
-8. a rubric and answer key for every mock.
+8. a rubric and answer key for every mock;
+9. every compulsory provider-specific component beyond the four-skill floor.
+
+An external exam may require a separately passed component that is not itself
+one of the four universal skills—for example, TORFL's `Lexis. Grammar`
+subtest. Declare each such part in the level's optional `additionalComponents`
+object, keyed by a lowercase slug. Every declared component has a learner-facing
+name, non-empty task-inventory references, and its own pass threshold. A slug may
+not shadow `reading`, `listening`, `writing`, or `speaking`. Omission means the
+level has no known additional required component; it must never be used to hide
+one that the named provider actually requires.
 
 “No widely-sat ladder” is no longer a terminal answer. It selects the
 project-defined path. The equivalent must be published and reviewable; it may
 not be an unnamed editorial feeling hidden in code.
+
+Every contract reference to `task-shapes/<level>.json` is loadable and measured,
+including pre-A1. Pre-A1 is not an external certificate and therefore does not
+create an `exam-inventory` item, but its project-defined task shape must still
+score reading, listening, writing, and speaking independently. A referenced but
+absent file remains backlog; an unreadable or one-skill-only file fails closed.
 
 ### 4.1 External target
 
@@ -112,6 +128,21 @@ easier placeholder. Its specification must include:
 The label shown to learners is “Coding Adventures <Language> <Level>
 Assessment — project-defined equivalent,” never the name of an official
 qualification the project does not award.
+
+### 4.3 External capstones without a CEFR mapping
+
+An external provider may publish a real proficiency exam without publishing a
+defensible mapping from that exam to A1–C2. The complete book must still prepare
+the learner for that exam when it is an appropriate destination, but the
+contract must not force it into a CEFR rung by editorial guesswork.
+
+Such an exam is declared in the optional root-level `externalCapstones` array.
+Each declaration has a stable lowercase id, an external target and dated source,
+`cefrRelation: not-mapped`, the curriculum level after which the capstone is
+attempted, four independently thresholded skill inventories, any additional
+provider components, and at least two timed mocks with rubrics and answer keys.
+The level is a dependency boundary, not an equivalence claim. Missing referenced
+artifacts remain a computed `external-capstone` work item until they exist.
 
 ## 5. Writing is a full strand, beginning on the first page
 

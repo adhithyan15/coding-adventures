@@ -4,6 +4,61 @@ All notable changes to the Japanese curriculum track are recorded here.
 
 ## [Unreleased]
 
+### Added — one sound-first farewell (#12475)
+
+- Added six <=5-minute sessions for **さようなら**: sound and social job first,
+  then only the three new signs **よ**, **な**, and **ら**, a sign-by-sign
+  assembly, and a four-skill payoff.
+- Reused known **さ** and **う** instead of reteaching them, while preserving a
+  trace-copy-recall writing ramp for the genuinely new shapes.
+- Realized the shared `FAREWELL` function without pretending this one expression
+  covers every relationship or departure context.
+- Grounded the A1 headword and contextual warning in Japan Foundation Marugoto
+  and Irodori materials.
+
+### Changed — script closure before decoding (#12471)
+
+- Reordered the 29 existing lessons so every hiragana writing step precedes the
+  word that asks the learner to decode it; the old content-first order is gone.
+- Split the starter into seven small chapters, keeping hiragana, kanji, and
+  katakana arrivals separate and moving the four-skill doorway exchange to the
+  end of the runway.
+- Added nine <=5-minute writing lessons: `日`, `本`, three components and the
+  assembled `語`, followed by `コ`, the long-vowel mark `ー`, and `ヒ`.
+- Rewrote advanced etymology and keigo examples in romanization so fifteen rare
+  or unrelated signs no longer become accidental pre-A1 decoding tests.
+- Replaced the stale eight-session map with the complete 38-session authored
+  order and its machine-checked review rule.
+
+### Added — cumulative pre-A1 writing evidence (#12365)
+
+- Turned four already gentle Chapter 2 lessons into an explicit cumulative
+  writing ladder: trace one visible sign, copy one visible sign with cues, hide
+  and recall one two-sign word, then transcribe one heard or romanized mora.
+- Kept every action inside its original one-sign load and below five minutes;
+  the evidence metadata now follows the learner action instead of merely tagging
+  lessons that happen to contain handwriting.
+
+### Added — pre-A1 four-skill task shapes (#12363)
+
+- Made the project-defined rung below JLPT/JF A1 executable as four independently
+  scored reading, listening, writing, and speaking sections.
+- Kept writing productive: delayed kana recall, dictation/transcription, and one
+  bounded independent response earn points; tracing and visible copying do not.
+- Recorded exact project-owned timing and length bounds without inventing an
+  external “JLPT N6” or implying that chapter coverage proves readiness.
+
+### Added — pre-A1-to-C2 four-skill assessment contract (#12361)
+
+- Replaced the old unofficial one-level-per-JLPT mapping with the official CEFR
+  reference score bands introduced on JLPT score reports in December 2025.
+- Added a seven-rung assessment target that preserves the official JLPT
+  language-knowledge, reading, and listening pass conditions where they apply,
+  then adds independently scored JF Standard/CEFR-aligned writing and speaking.
+- Kept pre-A1 and C2 explicitly project-defined: JLPT's official CEFR reference
+  range begins at A1 and ends at C1, and JLPT itself tests no production or
+  interaction at any level.
+
 ### Added — Chapter 2, eight hiragana signs, one per lesson (HL-C211)
 
 Ten lessons. **Eight teach one sign each; two introduce nothing at all** and

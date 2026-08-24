@@ -18,72 +18,33 @@ reviews_of: []
 
 ## Warm-up
 
-[PAUSE 2s] The first Kannada word, and the one you'll use most — and, taught
-through it, your first Kannada letters. You'll learn to *read* it and to
-understand it in the same breath.
+[PAUSE 2s] Meet your first Kannada word. Say **namaskāra** with a small bow:
+“hello” or “greetings.” Now read it one small piece at a time.
 
 ## The letters in this word
 
-*(If you already read Kannada, skim this — it's here so the book needs no prior
-knowledge.)* Kannada is written **left to right**, and every consonant carries
-a built-in **"a"** unless something removes it.
+Kannada runs **left to right**. A consonant normally carries a built-in **a**.
 
-- **ನ** = "na" · **ಮ** = "ma" · **ರ** = "ra" — each consonant with its built-in
-  *a*.
-- **ಕಾ** = "kā" — the consonant **ಕ** (ka) plus a **vowel sign** that lengthens
-  the *a* to "ā."
-- **ಸ್ಕ** — here **ಸ** (sa) loses its vowel and **stacks under** the next
-  consonant as a **conjunct** (Kannada writes these *ottakṣara*, a small
-  subscript form): bare *s* + *ka* = "ska."
+- **ನ · ಮ · ರ** = *na · ma · ra*.
+- **ಕಾ** = **ಕ** *ka* plus the long-*ā* vowel sign: *kā*.
+- In **ಸ್ಕ**, **ಸ** loses its vowel and stacks with **ಕ**: *s + ka = ska*.
 
 Left to right: **ನ · ಮ · ಸ್ · ಕಾ · ರ** = *na-ma-s-kā-ra* →
 
 > **ನಮಸ್ಕಾರ** = **namaskāra**
 
-You just read Kannada. Consonants carry *a*; a vowel sign changes it; and a
-vowel-less consonant stacks under the next as a conjunct.
+You just read Kannada.
 
 ## The word, taken apart
 
-**ನಮಸ್ಕಾರ** (*namaskāra*) is **not** a native Kannada word — it is **Sanskrit**,
-from **namas** ("a bow, homage") + **kāra** ("a making, doing," from the root
-*kṛ*, "to do"). Literally **"the making of a bow."** It is the very same word as
-Hindi *namaskār* — Kannada took it whole from Sanskrit.
-
-That points to the theme of this whole book: Kannada, unlike its sister Tamil,
-borrowed **freely** from Sanskrit. Where Tamil kept a home-grown greeting
-(*vaṇakkam*), Kannada reached north for *namaskāra*.
-
-## Across the family — the same idea, five ways
-
-| Language | "Hello" | Source |
-|---|---|---|
-| **Kannada** | *namaskāra* (ನಮಸ್ಕಾರ) | **Sanskrit** (*namas* + *kāra*) |
-| Telugu | *namaskāram* (నమస్కారం) | Sanskrit |
-| Malayalam | *namaskāram* (നമസ്കാരം) | Sanskrit |
-| Hindi | *namaste* (नमस्ते) | Sanskrit |
-| Tamil | *vaṇakkam* (வணக்கம்) | **native Dravidian** |
-| English | *hello* | Germanic |
-
-Tamil alone kept its own word; Kannada, Telugu, Malayalam, and Hindi all lean
-on the Sanskrit *namas-*. Same gesture, different loyalties.
+**ನಮಸ್ಕಾರ** came from Sanskrit **namas** (“a bow”) + **kāra** (“a making,” from
+*kṛ*, “to do”): literally **“the making of a bow.”** Kannada borrowed the whole
+word. Tamil instead kept its native greeting, *vaṇakkam*.
 
 ## Why it's said this way
 
-*namaskāra* is said with the palms pressed together and a small bow of the head
-— the gesture *is* the word. It works as **hello and goodbye**, at any time of
-day, to almost anyone, and it is respectful without being stiff. (The even more
-respectful *namaskāragaḷu* adds a plural-of-honour ending you'll meet later.)
-
-## Sounds you'll need
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
-
-Kannada reads **left to right**, and every consonant carries a built-in
-“a.” ನ na, ಮ ma, ರ ra. A **vowel sign** changes that
-vowel: ಕ ka + the long-“ā” sign → ಕಾ kā. And a vowel-less
-consonant **stacks under** the next as a conjunct (*ottakṣara*):
-ಸ loses its vowel and tucks under *ka* → ಸ್ಕ “ska.” Read
-ನ·ಮ·ಸ್·ಕಾ·ರ → *namaskāra*.
+With palms together and a small bow, *namaskāra* works as **hello or goodbye**.
+It is respectful without being stiff.
 
 ## Guided Practice
 
@@ -91,10 +52,9 @@ consonant **stacks under** the next as a conjunct (*ottakṣara*):
 - [YOU SAY: read it left to right — na · ma · s · kā · ra → "namaskāra"]
 - [YOU SAY: what happens to ಸ in ಸ್ಕ (loses its vowel, stacks under ka)]
 - [YOU SAY: "namaskāra," with a small bow — you are offering respect]
+- [YOU WRITE: trace **ನಮಸ್ಕಾರ** with a finger, then copy it once]
 
 ## Wrap-up Recall
 
-[PAUSE 3s] Read **ನಮಸ್ಕಾರ**. Is it a native Kannada word or a borrowing, and
-what does it literally mean? (Sanskrit *namas* + *kāra*, "the making of a
-bow.") Which Dravidian language kept a *native* word for "hello" instead?
-(Tamil, *vaṇakkam*.)
+[PAUSE 3s] Read **ನಮಸ್ಕಾರ**. What does it mean? (“Greetings.”) What does it
+literally mean? (Sanskrit *namas* + *kāra*: “the making of a bow.”)

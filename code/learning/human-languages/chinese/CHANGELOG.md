@@ -5,6 +5,45 @@ tracks: one entry per authored tranche, describing what was added and why.
 
 ## [Unreleased]
 
+### Changed — complete the pre-A1 writing-stage runway (#12449)
+
+- Made the existing first-character practice an explicit model-visible guided
+  copy rather than leaving the learner to infer how much support was allowed.
+- Turned the already component-safe **你** assembly into a ten-second delayed
+  copy with half-by-half repair.
+- Added sound-only dictation of **好** only after **女** and **子** are secure,
+  without adding a new character or extending any lesson past five minutes.
+
+### Added — project-defined pre-A1 four-skill task shapes (#12369)
+
+- Turned the Chinese assessment contract's pre-A1 target into bounded reading,
+  listening, writing, and speaking tasks without inventing an official HSK
+  level below HSK 3.0 Level 1.
+- Made productive handwriting independently scorable through delayed character
+  recall, dictation/transcription, and a tiny cue-only response. Tracing and
+  visible copying remain teaching steps and cannot satisfy the pass.
+- Kept every response to one doorway-sized turn and every skill independently
+  passable, so future five-minute lessons can approach the mock one atom at a
+  time rather than jumping straight to an exam-length performance.
+
+### Added — transitional HSK 3.0 four-skill assessment contract (#12367)
+
+- Replaced the stale pre-2021 six-band mapping with a dated GF0025-2021 /
+  HSK 3.0 target that distinguishes the 2026 Levels 1–6 trials from the
+  operational combined Levels 7–9 exam.
+- Labelled every CEFR correspondence project-defined rather than presenting it
+  as an awarding-body claim, and added companion skill papers wherever a live
+  external form does not independently score the curriculum's four skills.
+- Contracted the full pre-A1-to-C2 gentle writing ladder, timed mocks,
+  calibration, and book-only human validation without claiming the current
+  chapters meet the target.
+
+### Changed — writing now starts with the first lesson
+
+The opening tone lesson now asks for one model-visible pass over the four pinyin
+tone contours. It does not ask the learner to recall a shape, and the first
+Chinese character remains the following two-stroke lesson.
+
 ### Added — Chapter 2, the components, one glyph per lesson (HL-C209)
 
 Seven writing lessons, each teaching **exactly one** glyph, in the order that

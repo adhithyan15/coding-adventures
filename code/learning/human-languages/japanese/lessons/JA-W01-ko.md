@@ -2,14 +2,14 @@
 schema_version: 2
 id: JA-W01-ko
 spine_node: SPINE-MEET-GREET
-sequence: 130
+sequence: 70
 delivery: script
 chapter: 2
 type: writing
 headword: こ
 romanization: ko
 gloss: the hiragana sign for the mora ko — two strokes, and the start of the greeting
-prerequisites: [JA-W01-e, JA-C01-konnichiwa]
+prerequisites: [JA-C01-iie]
 sounds: [mora]
 roots: []
 etymology_hook: こ opens the daytime greeting, and the four signs after it are the rest of this chapter.
@@ -20,13 +20,13 @@ requires:
 introduces:
   knowledge: [JA-SCRIPT-KO-01]
 practises:
-  knowledge: [JA-SCRIPT-KO-01, JA-SCRIPT-E-01]
+  knowledge: [JA-SCRIPT-KO-01, JA-SCRIPT-E-01, JA-LEX-IIE, JA-SCRIPT-MORA-LENGTH]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
 register: neutral-across-levels
 variety: standard-japanese-tokyo
-reviews_of: [JA-W01-e, JA-C01-konnichiwa]
+reviews_of: [JA-W01-e, JA-C01-hai]
 ---
 
 # こ — two strokes, and the greeting begins
@@ -57,6 +57,11 @@ it and you have a different sign.
 
 - [YOU WRITE: こ — upper stroke, then the longer lower one, and leave the gap]
 - [YOU SAY: **ko**, one beat]
+
+## Guided Practice — review pulse
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-IIE, JA-SCRIPT-MORA-LENGTH] -->
+
+[PAUSE 15s] Say ??? and tap all three morae before writing the new sign.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-KO-01] -->

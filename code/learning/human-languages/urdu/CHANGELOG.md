@@ -1,5 +1,52 @@
 # Changelog
 
+## Unreleased — project-defined pre-A1 four-skill task shapes
+
+- Made the Urdu pre-A1 bridge executable as independent reading, listening,
+  writing, and speaking papers with exact timing, items, replay, aids, scoring,
+  and a 60/100 floor on every skill.
+- Kept writing productive and script-aware: scored work covers delayed recall,
+  dictation, and bounded independent Urdu-script responses with right-to-left
+  order, joins, non-joins, dots, and word-boundary control. Roman Urdu and
+  Devanagari cannot substitute for an Urdu-script response.
+- Kept the construct typographically fair: ordinary legible handwriting is
+  enough, Nastaliq calligraphic imitation is not scored, approved Naskh remains
+  an accessibility presentation, and unwritten short vowels are not errors.
+- This project rung is not an external qualification. Mocks, rubrics, keys,
+  calibration, curriculum coverage, and book-only validation remain required.
+
+## 2026-08-21 — Contract the seven-rung Urdu assessment ladder (#12444)
+
+- Defined pre-A1 through C2 as project-owned four-skill assessments with
+  independent pass floors, cumulative writing stages, and two timed mocks per
+  rung.
+- Kept CEFR as the descriptive framework rather than inventing an external
+  Urdu certificate or implying Council of Europe endorsement.
+- Published Urdu-specific Nastaliq, Naskh fallback, ordinary-handwriting,
+  register, variety, and transliteration boundaries for fair scoring.
+- Fixed executable task envelopes and standard-setting requirements so a level
+  label cannot stand in for task inventories, rubrics, mocks, or human evidence.
+
+## Gentle `shukriyā` writing split (#12261)
+
+- Add a 3.5-minute recognition-and-tracing step for only **ش**, **ک**, and
+  **ر**, then stop before joining or recall from memory.
+- Rewrite the following four-minute `shukriyā` lesson to add only **ی** and
+  final **ہ**, then guide one model-visible copy of the complete word.
+- Keep the opening dependency order intact while reducing its first-seen Urdu
+  script load from five shapes in one lesson to three and then two.
+- Record the first micro-lesson as valid `observe-trace` evidence in the shared
+  cumulative writing-stage ladder.
+- Bind Chapter 1's terminal checkpoint to the six typed atoms it actually
+  retrieves, so the gentler split does not create new chapter-payoff debt.
+
+## Opening chapter reading order (#12260)
+
+- Add sequence 10 through 40 to the four legacy opening lessons in the book's
+  explicit greet, thank, respectful yes, no dependency order.
+- Remove Urdu's missing-sequence and false forward-prerequisite debt without
+  changing the short opening lessons.
+
 ## 0.11.0 — 2026-08-12
 
 Thirteen everyday-noun lessons across three new chapters (13–15), the

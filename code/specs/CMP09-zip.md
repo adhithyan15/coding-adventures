@@ -427,9 +427,15 @@ foreign decoding with the original input rather than pinning one encoding.
 CRC-32 detects accidental corruption; it is not authentication and MUST NOT be
 described or used as a cryptographic integrity check.
 
-**Reference consumer today:** TypeScript (`rawDeflate`, `rawInflate`,
-`rawInflateCounted`, and `crc32`). Remaining lanes are tracked as separate
-dependency-shaped deliveries.
+The portable profile is closed across all 15 established implementation lanes.
+`code/specs/fixtures/zip-raw-rfc1951-v1/consumers.json` is the normative
+adoption registry: every entry binds one established ZIP root to its production
+API source, neutral-corpus test, real BUILD front doors, and explicit empty
+capability manifest. The companion repository test rejects a missing or extra
+lane, a changed path or surface spelling, a non-empty capability profile, or a
+consumer test that stops loading the shared 34-case corpus. C, C++, and OCaml
+remain outside this established-lane denominator until their respective
+promotion gates pass.
 
 ## Package Naming
 
@@ -437,6 +443,7 @@ dependency-shaped deliveries.
 |------------|------------------------------|--------------------------------|
 | Python     | `coding-adventures-zip`      | `coding_adventures_zip`        |
 | Go         | module `…/go/zip`            | package `zip`                  |
+| Java       | `com.codingadventures:zip`   | `com.codingadventures.zip`     |
 | Ruby       | `coding_adventures_zip`      | `CodingAdventures::Zip`        |
 | TypeScript | `@coding-adventures/zip`     | `CodingAdventures.Zip`         |
 | Rust       | `coding-adventures-zip`      | `coding_adventures_zip`        |
@@ -464,15 +471,14 @@ it would produce archives no real `unzip` could open and would be unable to read
 archives from other real-world tools. The CRC-32 implementation is inlined (no separate
 package — it's a trivial table-driven function).
 
-**Divergence (Haskell):** the Haskell package depends on `lzss` (CMP02) rather than
-`deflate` (CMP05). It reimplements the RFC 1951 raw-DEFLATE bitstream itself — fixed
-(BTYPE=01) Huffman tables plus LZ77 match-finding delegated to `LZSS.encodeWith` — instead
-of reusing the sibling `deflate` package's dynamic-Huffman encoder. This is a narrower
-DEFLATE (fixed Huffman only, no BTYPE=10 dynamic tables on the encode side; decode
-rejects BTYPE=10), which is sufficient for producing and reading valid ZIP entries but is
-not a byte-for-byte match with the `deflate` package's output. Documented here rather than
-changed, since the implementation is otherwise complete, tested, and correct for the
-DEFLATE subset it emits.
+**Divergence (Haskell encoder):** the Haskell package depends on `lzss` (CMP02)
+rather than `deflate` (CMP05). It owns the RFC 1951 raw-DEFLATE framing and
+delegates only LZ77 match-finding to `LZSS.encodeWith`. Its encoder deliberately
+emits stored or fixed-Huffman blocks rather than dynamic-Huffman blocks, so its
+bytes are not expected to match the sibling `deflate` package. Its decoder is
+not narrowed by that encoder choice: the ZIP-owned `rawInflate` and
+`rawInflateCounted` APIs accept stored, fixed, and dynamic blocks with the full
+portable profile above, including exact compressed-byte consumption.
 
 **Divergence (C):** the C package depends directly on `deflate` (CMP05, `c/deflate`)
 rather than `lzss` (CMP02), and does not touch `lzss` at all. This is the opposite of the

@@ -1,1 +1,1 @@
-cargo check -p matrix-rust-napi
+cargo check -p matrix-rust-napi --all-targets

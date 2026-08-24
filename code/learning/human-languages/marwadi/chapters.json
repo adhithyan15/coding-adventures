@@ -17,12 +17,173 @@
           "MW-SCRIPT-AA-MATRA-01",
           "MW-SCRIPT-MA-01",
           "MW-SCRIPT-RAAM-01",
+          "MW-LEX-RAAM-01",
           "MW-SCRIPT-SA-01",
           "MW-SCRIPT-SAA-01",
           "MW-LEX-RAAM-RAAM-SAA",
           "MW-REGISTER-SAA",
           "MW-DIALOGUE-GREETING-01"
         ]
+      }
+    },
+    {
+      "chapter": 2,
+      "title": "Aabhaar: Formal Thanks, Two New Signs",
+      "label": "ch:mw-aabhaar",
+      "canDo": "I can recognise, hear, say, copy, and independently write आभार as a short formal gratitude response.",
+      "spineNodes": ["SPINE-COURTESY-THANK"],
+      "payoff": {
+        "lesson": "MW-C02-practice",
+        "kind": "courtesy-response",
+        "summary": "A source-attested formal gratitude word built from two new signs and two signs already taught, followed by independent four-skill retrieval.",
+        "assesses": [
+          "MW-SCRIPT-AA-INDEPENDENT-01",
+          "MW-SCRIPT-BHA-01",
+          "MW-SCRIPT-AA-MATRA-01",
+          "MW-SCRIPT-RA-01",
+          "MW-SCRIPT-AABHAAR-01",
+          "MW-LEX-AABHAAR-01",
+          "MW-COURTESY-AABHAAR-FORMAL-01"
+        ]
+      }
+    },
+    {
+      "chapter": 3,
+      "title": "Haan Sa: A Respectful Yes, Sign by Sign",
+      "label": "ch:mw-haan-saa",
+      "canDo": "I can recognise, hear, say, copy, and independently write हां सा as a respectful affirmative answer.",
+      "spineNodes": ["SPINE-RESPOND-BASIC"],
+      "payoff": {
+        "lesson": "MW-C03-practice",
+        "kind": "basic-response",
+        "summary": "A source-attested polite affirmative built from two tiny script steps and the already-known respect word सा, followed by independently scored four-skill retrieval.",
+        "assesses": [
+          "MW-SCRIPT-HA-01",
+          "MW-SCRIPT-AA-MATRA-01",
+          "MW-SCRIPT-ANUSVARA-01",
+          "MW-SCRIPT-SAA-01",
+          "MW-SCRIPT-HAAN-01",
+          "MW-LEX-HAAN-01",
+          "MW-RESPONSE-HAAN-SAA-POLITE-01",
+          "MW-PERFORMANCE-HAAN-SAA-FOUR-SKILL-01"
+        ]
+      }
+    },
+    {
+      "chapter": 4,
+      "title": "Paani: Hear Water, Then Write It Sign by Sign",
+      "label": "ch:mw-paani",
+      "canDo": "I can recognise, hear, say, read, and independently write पाणी as the Marwadi word for water.",
+      "spineNodes": ["SPINE-POLITE-REQUEST-REPAIR"],
+      "payoff": {
+        "lesson": "MW-C04-practice",
+        "kind": "survival-vocabulary",
+        "summary": "A source-attested everyday noun secured by ear before three new signs are isolated, assembled, and retrieved independently in all four skills.",
+        "assesses": [
+          "MW-LEX-PAANI-01",
+          "MW-SCRIPT-PA-01",
+          "MW-SCRIPT-AA-MATRA-01",
+          "MW-SCRIPT-NNA-01",
+          "MW-SCRIPT-II-MATRA-01",
+          "MW-SCRIPT-PAANI-01",
+          "MW-PERFORMANCE-PAANI-FOUR-SKILL-01"
+        ]
+      }
+    },
+    {
+      "chapter": 5,
+      "title": "Mharo Naam: Give One Name",
+      "label": "ch:mw-name-answer",
+      "canDo": "I can hear, say, read, and independently write म्हारो नाम राम है, then substitute a chosen name in speech.",
+      "spineNodes": ["SPINE-EXCHANGE-NAMES"],
+      "payoff": {
+        "lesson": "MW-C05-answer",
+        "kind": "production",
+        "summary": "A source-attested name statement built by ear before four new signs are isolated and the complete line is retrieved from dictation.",
+        "assesses": [
+          "MW-LEX-MHARO-01",
+          "MW-SCRIPT-MHARO-01",
+          "MW-LEX-NAAM-01",
+          "MW-SCRIPT-NAAM-01",
+          "MW-LEX-HAI-01",
+          "MW-SCRIPT-HAI-01",
+          "MW-PHRASE-MY-NAME-IS-01"
+        ]
+      }
+    },
+    {
+      "chapter": 6,
+      "title": "Tharo Naam: Ask One Name",
+      "label": "ch:mw-name-question",
+      "canDo": "I can ask थारो नाम कांई है and answer with a chosen name in four separately scored skills.",
+      "spineNodes": ["SPINE-EXCHANGE-NAMES"],
+      "payoff": {
+        "lesson": "MW-C05-practice",
+        "kind": "dialogue",
+        "summary": "The question half of the name exchange, built by ear before three new signs are isolated and joined to the already-secure answer.",
+        "assesses": [
+          "MW-PHRASE-MY-NAME-IS-01",
+          "MW-LEX-THARO-01",
+          "MW-SCRIPT-THARO-01",
+          "MW-LEX-KAIN-01",
+          "MW-SCRIPT-KAIN-01",
+          "MW-QUESTION-NAME-01",
+          "MW-DIALOGUE-NAME-EXCHANGE-01"
+        ]
+      }
+    },
+    {
+      "chapter": 7,
+      "title": "Kaiso Ho: Ask How Someone Is",
+      "label": "ch:mw-wellbeing-question",
+      "canDo": "I can recognise, say, read, and write the polite wellbeing question आप कैसो हो?.",
+      "spineNodes": ["SPINE-CHECK-WELLBEING"],
+      "payoff": {
+        "lesson": "MW-C06-question",
+        "kind": "question",
+        "summary": "A source-attested formal wellbeing question heard first and then written entirely with signs from earlier chapters.",
+        "assesses": [
+          "MW-LEX-AAP-01",
+          "MW-LEX-KAISO-01",
+          "MW-QUESTION-WELLBEING-HEARD-01",
+          "MW-SCRIPT-WELLBEING-QUESTION-01"
+        ]
+      }
+    },
+    {
+      "chapter": 8,
+      "title": "Thik Hoon: Answer in Two New Signs",
+      "label": "ch:mw-wellbeing-answer",
+      "canDo": "I can answer हूं ठीक हूं, then complete a polite wellbeing exchange in separately scored listening, speaking, reading, and writing tasks.",
+      "spineNodes": ["SPINE-CHECK-WELLBEING"],
+      "payoff": {
+        "lesson": "MW-C06-practice",
+        "kind": "dialogue",
+        "summary": "A source-attested wellbeing answer whose only new written shapes are isolated before the complete four-skill exchange.",
+        "assesses": [
+          "MW-LEX-HOON-01",
+          "MW-LEX-THIK-01",
+          "MW-ANSWER-WELLBEING-HEARD-01",
+          "MW-SCRIPT-UU-MATRA-01",
+          "MW-SCRIPT-TTHA-01",
+          "MW-SCRIPT-HOON-01",
+          "MW-SCRIPT-THIK-01",
+          "MW-ANSWER-WELLBEING-01",
+          "MW-DIALOGUE-WELLBEING-01"
+        ]
+      }
+    },
+    {
+      "chapter": 9,
+      "title": "Pachhe Milsu: See You Later",
+      "label": "ch:mw-see-you-later",
+      "canDo": "I can hear and say pāchhe milsū, write its four new units, and distinguish it from the common farewell राम राम सा in all four skills.",
+      "spineNodes": ["SPINE-TAKE-LEAVE"],
+      "payoff": {
+        "lesson": "MW-C07-practice",
+        "kind": "dialogue",
+        "summary": "A source-attested see-you-later line taught sound-first, written through four isolated units, and scored separately in all four skills.",
+        "assesses": ["MW-LEX-PACHHE-01", "MW-LEX-MILSOO-01", "MW-FAREWELL-LATER-HEARD-01", "MW-SCRIPT-CHHA-01", "MW-SCRIPT-E-MATRA-01", "MW-SCRIPT-I-MATRA-01", "MW-SCRIPT-LA-01", "MW-SCRIPT-PACHHE-MILSOO-01", "MW-PERFORMANCE-FAREWELL-LATER-FOUR-SKILL-01"]
       }
     }
   ]

@@ -4,80 +4,106 @@
   "chapters": [
     {
       "chapter": 1,
-      "title": "Three Writing Systems in One Doorway",
-      "label": "ch:ja-three-scripts",
-      "canDo": "I can greet someone in the daytime, answer yes or no, and thank them politely, reading each word in the script Japanese actually uses for it.",
-      "spineNodes": [
-        "SPINE-RESPOND-BASIC",
-        "SPINE-MEET-GREET",
-        "SPINE-COURTESY-THANK"
-      ],
+      "title": "Two Answers, Sign by Sign",
+      "label": "ch:ja-two-answers",
+      "canDo": "I can write the three hiragana signs in はい and いいえ, read both answers without romanization, and say each with even mora timing.",
+      "spineNodes": ["SPINE-RESPOND-BASIC"],
       "payoff": {
-        "lesson": "JA-C01-practice",
-        "kind": "dialogue",
-        "summary": "A six-line daytime doorway exchange that mixes hiragana and kanji and uses no untaught word.",
-        "assesses": [
-          "JA-LEX-KONNICHIWA",
-          "JA-LEX-NIHONGO",
-          "JA-LEX-HAI",
-          "JA-LEX-IIE",
-          "JA-LEX-ARIGATOU-GOZAIMASU",
-          "JA-REGISTER-TEINEIGO",
-          "JA-PARTICLE-WA-SPELLING",
-          "JA-SCRIPT-HIRAGANA-MORA",
-          "JA-SCRIPT-KANJI-READINGS",
-          "JA-DIALOGUE-DOORWAY"
-        ]
+        "lesson": "JA-C01-iie",
+        "kind": "reading",
+        "summary": "A yes-or-no choice using only three signs the learner has already traced, copied, recalled, and read.",
+        "assesses": ["JA-LEX-HAI", "JA-LEX-IIE", "JA-SCRIPT-I-01", "JA-SCRIPT-HA-01", "JA-SCRIPT-E-01"]
       }
     },
     {
       "chapter": 2,
-      "title": "Eight Signs, and Three Words You Can Read",
-      "label": "ch:ja-hiragana-eight",
-      "canDo": "I can write eight hiragana signs from memory and read the daytime greeting and both yes-or-no answers by sounding out their signs in order, including the sign that is pronounced wa because it is a topic marker.",
-      "spineNodes": [
-        "SPINE-RESPOND-BASIC",
-        "SPINE-MEET-GREET"
-      ],
+      "title": "A Daytime Greeting, One Sign at a Time",
+      "label": "ch:ja-daytime-greeting",
+      "canDo": "I can write the five distinct signs in こんにちは, read them in order, and remember why final は is pronounced wa.",
+      "spineNodes": ["SPINE-MEET-GREET"],
       "payoff": {
-        "lesson": "JA-W01-konnichiwa-read",
-        "kind": "reading",
-        "summary": "The daytime greeting assembled from five signs the reader can each write from memory, introducing nothing new — including the one read wa because it is a topic marker rather than the sign for that sound.",
-        "assesses": [
-          "JA-SCRIPT-KONNICHIWA-READ-01",
-          "JA-SCRIPT-KO-01",
-          "JA-SCRIPT-N-01",
-          "JA-SCRIPT-NI-01",
-          "JA-SCRIPT-CHI-01",
-          "JA-SCRIPT-HA-01"
-        ]
+        "lesson": "JA-C01-konnichiwa",
+        "kind": "dialogue",
+        "summary": "A one-line daytime greeting whose five signs were each taught before the learner reads it.",
+        "assesses": ["JA-LEX-KONNICHIWA", "JA-PARTICLE-WA-SPELLING", "JA-SCRIPT-KONNICHIWA-READ-01", "JA-SCRIPT-KO-01", "JA-SCRIPT-N-01", "JA-SCRIPT-NI-01", "JA-SCRIPT-CHI-01", "JA-SCRIPT-WA-01"]
       }
     },
     {
       "chapter": 3,
-      "title": "Eight Signs, One Mark, and the Longest Word You Know",
-      "label": "ch:ja-thanks",
-      "canDo": "I can write eight more hiragana from memory, add the dakuten to voice a sign I already know, and read ありがとうございます off the page without the romanization.",
-      "spineNodes": [
-        "SPINE-COURTESY-THANK"
-      ],
+      "title": "Plain Thanks, One Sign at a Time",
+      "label": "ch:ja-plain-thanks",
+      "canDo": "I can write and read ありがとう, build が with the dakuten, and say the five morae without swallowing the long final vowel.",
+      "spineNodes": ["SPINE-COURTESY-THANK"],
+      "payoff": {
+        "lesson": "JA-C01-arigatou",
+        "kind": "dialogue",
+        "summary": "A plain thank-you read only after every distinct hiragana sign and the dakuten have their own small step.",
+        "assesses": ["JA-LEX-ARIGATOU", "JA-SCRIPT-DAKUTEN", "JA-ETYMON-ARIGATASHI", "JA-SCRIPT-ARIGATOU-READ-01", "JA-SCRIPT-A-01", "JA-SCRIPT-RI-01", "JA-SCRIPT-KA-01", "JA-SCRIPT-DAKUTEN-01", "JA-SCRIPT-TO-01", "JA-SCRIPT-U-01"]
+      }
+    },
+    {
+      "chapter": 4,
+      "title": "Polite Thanks, Three More Signs",
+      "label": "ch:ja-polite-thanks",
+      "canDo": "I can add ございます to a known thank-you, read every sign, and choose the polite form for someone outside my close circle.",
+      "spineNodes": ["SPINE-COURTESY-THANK"],
       "payoff": {
         "lesson": "JA-C03-practice",
         "kind": "dialogue",
-        "summary": "The ten signs of the polite thank-you named one by one, three of them earlier signs wearing two ticks, and a short exchange in which every character on the page is one the reader can write.",
-        "assesses": [
-          "JA-SCRIPT-A-01",
-          "JA-SCRIPT-RI-01",
-          "JA-SCRIPT-KA-01",
-          "JA-SCRIPT-TO-01",
-          "JA-SCRIPT-U-01",
-          "JA-SCRIPT-SA-01",
-          "JA-SCRIPT-MA-01",
-          "JA-SCRIPT-SU-01",
-          "JA-SCRIPT-DAKUTEN-01",
-          "JA-SCRIPT-ARIGATOU-READ-01",
-          "JA-SCRIPT-GOZAIMASU-READ-01"
-        ]
+        "summary": "A short casual-versus-polite choice with every sign taught and the register decision checked independently.",
+        "assesses": ["JA-LEX-ARIGATOU-GOZAIMASU", "JA-REGISTER-TEINEIGO", "JA-SCRIPT-GOZAIMASU-READ-01"]
+      }
+    },
+    {
+      "chapter": 5,
+      "title": "Nihongo, Built in Small Blocks",
+      "label": "ch:ja-nihongo-kanji",
+      "canDo": "I can write 日 and 本, assemble 語 from three practised components, and read 日本語 as nihongo.",
+      "spineNodes": ["SPINE-MEET-GREET"],
+      "payoff": {
+        "lesson": "JA-C01-nihongo",
+        "kind": "reading",
+        "summary": "Three kanji read as one known word after the simple signs and the complex sign's components were taught separately.",
+        "assesses": ["JA-LEX-NIHONGO", "JA-SCRIPT-KANJI-READINGS", "JA-SCRIPT-KANJI-NICHI-01", "JA-SCRIPT-KANJI-HON-01", "JA-SCRIPT-KANJI-GO-01"]
+      }
+    },
+    {
+      "chapter": 6,
+      "title": "Coffee in Katakana, Three Shapes",
+      "label": "ch:ja-koohii-katakana",
+      "canDo": "I can write コ, ー, and ヒ, read コーヒー as four morae, and explain that the long mark holds the preceding vowel.",
+      "spineNodes": ["SPINE-MEET-GREET"],
+      "payoff": {
+        "lesson": "JA-C01-koohii",
+        "kind": "reading",
+        "summary": "A borrowed word made from only three distinct katakana shapes, each taught before the full word appears.",
+        "assesses": ["JA-LEX-KOOHII", "JA-SCRIPT-KATAKANA-KO-01", "JA-SCRIPT-KATAKANA-LONG-MARK-01", "JA-SCRIPT-KATAKANA-HI-01", "JA-SCRIPT-CHOUON"]
+      }
+    },
+    {
+      "chapter": 7,
+      "title": "The Doorway Exchange",
+      "label": "ch:ja-doorway-exchange",
+      "canDo": "I can greet, name the language, answer yes or no, and thank someone politely while listening, speaking, reading, and writing independently.",
+      "spineNodes": ["SPINE-RESPOND-BASIC", "SPINE-MEET-GREET", "SPINE-COURTESY-THANK"],
+      "payoff": {
+        "lesson": "JA-C01-practice",
+        "kind": "dialogue",
+        "summary": "A six-line doorway exchange using only words and signs already taught in the preceding six chapters.",
+        "assesses": ["JA-LEX-KONNICHIWA", "JA-LEX-NIHONGO", "JA-LEX-HAI", "JA-LEX-IIE", "JA-LEX-ARIGATOU-GOZAIMASU", "JA-DIALOGUE-DOORWAY"]
+      }
+    },
+    {
+      "chapter": 8,
+      "title": "One Goodbye, Sign by Sign",
+      "label": "ch:ja-sayounara",
+      "canDo": "I can hear and say sayōnara on five morae, write its three new hiragana signs, and read and write the complete farewell independently.",
+      "spineNodes": ["SPINE-TAKE-LEAVE"],
+      "payoff": {
+        "lesson": "JA-C08-sayounara",
+        "kind": "dialogue",
+        "summary": "A context-dependent farewell whose sound and meaning arrive before three separately taught new signs and whose payoff scores all four skills.",
+        "assesses": ["JA-LEX-SAYOUNARA", "JA-SAYOUNARA-HEARD-01", "JA-SCRIPT-YO-01", "JA-SCRIPT-NA-01", "JA-SCRIPT-RA-01", "JA-SCRIPT-SAYOUNARA-READ-01", "JA-PERFORMANCE-SAYOUNARA-FOUR-SKILL-01"]
       }
     }
   ]

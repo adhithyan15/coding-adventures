@@ -1,5 +1,6 @@
 ---
 id: FR-C01-practice
+sequence: 55
 chapter: 1
 type: practice-mix
 headword: (practice)
@@ -46,6 +47,13 @@ Two threads run through it all: **register** (*salut* vs *bonjour*) and
 
 [REPEAT x2] Run bonjour → bonsoir → bonne nuit without hesitating on
 *bon*/*bonne*.
+
+## Writing — close the first runway
+<!-- hl-knowledge: introduces=[]; assesses=[FR-ORTHO-SALUT-01] -->
+
+Cover the word **salut** elsewhere in this chapter. Write the casual greeting
+once from memory, then uncover it and check the silent final **t**. This is a
+chapter-level retrieval of the tiny trace-to-dictation runway, not a new word.
 
 ## Wrap-up Recall
 

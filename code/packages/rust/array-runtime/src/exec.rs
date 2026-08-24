@@ -17,7 +17,7 @@
 //!    answer, agreeing with the reference path in [`crate::ops`] to full `f64`
 //!    precision (a value like `1.0 + 2^-40`, which `f32` cannot represent,
 //!    survives). The historical **`F32`** path (4-byte floats) is kept for `f32`
-//!    callers via [`execute_with_dtype`]; it agrees with the reference only to
+//!    callers via `execute_with_dtype`; it agrees with the reference only to
 //!    `f32` precision, by construction.
 //!
 //! 2. **Memory order.** `array-runtime` stores **column-major**; `matrix-cpu`'s

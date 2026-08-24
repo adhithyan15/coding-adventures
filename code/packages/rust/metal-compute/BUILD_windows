@@ -1,1 +1,1 @@
-cargo check -p metal-compute
+cargo test -p metal-compute -- --nocapture

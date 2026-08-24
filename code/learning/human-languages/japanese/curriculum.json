@@ -6,12 +6,12 @@
       "id": "JA-PATH-001",
       "spine_node": "SPINE-RESPOND-BASIC",
       "lessons": [
-        "JA-C01-hai",
-        "JA-C01-iie",
         "JA-W01-i",
         "JA-W01-ha",
         "JA-W01-hai-read",
-        "JA-W01-e"
+        "JA-W01-e",
+        "JA-C01-hai",
+        "JA-C01-iie"
       ],
       "before": [],
       "inline": [
@@ -25,21 +25,17 @@
       "id": "JA-PATH-002",
       "spine_node": "SPINE-MEET-GREET",
       "lessons": [
-        "JA-C01-konnichiwa",
-        "JA-C01-nihongo",
-        "JA-C01-koohii",
         "JA-W01-ko",
         "JA-W01-n",
         "JA-W01-ni",
         "JA-W01-chi",
         "JA-W01-wa",
-        "JA-W01-konnichiwa-read"
+        "JA-W01-konnichiwa-read",
+        "JA-C01-konnichiwa"
       ],
       "before": [],
       "inline": [
-        "JA-EXT-002-TOPIC-PARTICLE-SPELLING",
-        "JA-EXT-003-KANJI-READINGS",
-        "JA-EXT-004-KATAKANA-LOANWORDS"
+        "JA-EXT-002-TOPIC-PARTICLE-SPELLING"
       ],
       "after": [
         "JA-EXT-009-HIRAGANA-GREETING"
@@ -49,22 +45,6 @@
       "id": "JA-PATH-003",
       "spine_node": "SPINE-COURTESY-THANK",
       "lessons": [
-        "JA-C01-arigatou",
-        "JA-C01-gozaimasu",
-        "JA-C01-practice"
-      ],
-      "before": [],
-      "inline": [
-        "JA-EXT-005-DAKUTEN",
-        "JA-EXT-006-TEINEIGO-REGISTER",
-        "JA-EXT-007-MIXED-SCRIPT-CONSOLIDATION"
-      ],
-      "after": []
-    },
-    {
-      "id": "JA-PATH-004",
-      "spine_node": "SPINE-COURTESY-THANK",
-      "lessons": [
         "JA-W03-a",
         "JA-W03-ri",
         "JA-W03-ka",
@@ -72,16 +52,94 @@
         "JA-W03-to",
         "JA-W03-u",
         "JA-W03-arigatou-read",
+        "JA-C01-arigatou"
+      ],
+      "before": [],
+      "inline": [
+        "JA-EXT-005-DAKUTEN",
+        "JA-EXT-010-HIRAGANA-THANKS"
+      ],
+      "after": []
+    },
+    {
+      "id": "JA-PATH-004",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
         "JA-W03-sa",
         "JA-W03-ma",
         "JA-W03-su",
+        "JA-C01-gozaimasu",
         "JA-C03-practice"
       ],
       "before": [],
       "inline": [
-        "JA-EXT-010-HIRAGANA-THANKS",
+        "JA-EXT-006-TEINEIGO-REGISTER",
         "JA-EXT-011-DAKUTEN-WRITING",
         "JA-EXT-012-POLITE-THANKS-CONSOLIDATION"
+      ],
+      "after": []
+    },
+    {
+      "id": "JA-PATH-005",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "JA-W05-nichi-kanji",
+        "JA-W05-hon-kanji",
+        "JA-W05-gen-component",
+        "JA-W05-five-component",
+        "JA-W05-mouth-component",
+        "JA-W05-go-kanji",
+        "JA-C01-nihongo"
+      ],
+      "before": [],
+      "inline": [
+        "JA-EXT-013-NIHONGO-KANJI",
+        "JA-EXT-003-KANJI-READINGS"
+      ],
+      "after": []
+    },
+    {
+      "id": "JA-PATH-006",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "JA-W06-ko-katakana",
+        "JA-W06-long-mark",
+        "JA-W06-hi-katakana",
+        "JA-C01-koohii"
+      ],
+      "before": [],
+      "inline": [
+        "JA-EXT-014-KOOHII-KATAKANA",
+        "JA-EXT-004-KATAKANA-LOANWORDS"
+      ],
+      "after": []
+    },
+    {
+      "id": "JA-PATH-007",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "JA-C01-practice"
+      ],
+      "before": [],
+      "inline": [
+        "JA-EXT-007-MIXED-SCRIPT-CONSOLIDATION"
+      ],
+      "after": []
+    },
+    {
+      "id": "JA-PATH-008",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "JA-C08-hear-sayounara",
+        "JA-W08-yo",
+        "JA-W08-na",
+        "JA-W08-ra",
+        "JA-W08-sayounara-read",
+        "JA-C08-sayounara"
+      ],
+      "before": [],
+      "inline": [
+        "JA-EXT-015-SAYOUNARA-FAREWELL"
       ],
       "after": []
     }
@@ -89,7 +147,9 @@
   "spine": {
     "SPINE-MEET-GREET": {
       "segments": [
-        "JA-PATH-002"
+        "JA-PATH-002",
+        "JA-PATH-005",
+        "JA-PATH-006"
       ],
       "omits": [
         "GREETING-FORMAL",
@@ -101,7 +161,8 @@
     "SPINE-COURTESY-THANK": {
       "segments": [
         "JA-PATH-003",
-        "JA-PATH-004"
+        "JA-PATH-004",
+        "JA-PATH-007"
       ],
       "omits": [
         "COURTESY-THANKS-CASUAL",
@@ -155,7 +216,9 @@
       "relocates": {}
     },
     "SPINE-TAKE-LEAVE": {
-      "segments": [],
+      "segments": [
+        "JA-PATH-008"
+      ],
       "omits": [
         "FAREWELL",
         "FAREWELL-CASUAL",
@@ -483,7 +546,7 @@
       "category": "script",
       "canDo": "I can read a three-kanji word and explain that a kanji carries a set of readings the word selects from, not one fixed sound.",
       "prerequisites": [
-        "JA-EXT-002-TOPIC-PARTICLE-SPELLING"
+        "JA-EXT-013-NIHONGO-KANJI"
       ],
       "lessons": [
         "JA-C01-nihongo"
@@ -496,7 +559,7 @@
       "category": "script",
       "canDo": "I can read a katakana loanword with its long-vowel bar and recognise katakana as the script that marks a word as borrowed.",
       "prerequisites": [
-        "JA-EXT-003-KANJI-READINGS"
+        "JA-EXT-014-KOOHII-KATAKANA"
       ],
       "lessons": [
         "JA-C01-koohii"
@@ -509,7 +572,7 @@
       "category": "script",
       "canDo": "I can add the dakuten to a hiragana sign to voice it, and read the etymology of arigatou without treating history as a production burden.",
       "prerequisites": [
-        "JA-EXT-004-KATAKANA-LOANWORDS"
+        "JA-EXT-010-HIRAGANA-THANKS"
       ],
       "lessons": [
         "JA-C01-arigatou"
@@ -535,7 +598,8 @@
       "category": "consolidation",
       "canDo": "I can run a short daytime exchange that mixes hiragana and kanji in one conversation using only independently learned lines.",
       "prerequisites": [
-        "JA-EXT-006-TEINEIGO-REGISTER"
+        "JA-EXT-006-TEINEIGO-REGISTER",
+        "JA-EXT-004-KATAKANA-LOANWORDS"
       ],
       "lessons": [
         "JA-C01-practice"
@@ -621,6 +685,57 @@
         "JA-W03-ma",
         "JA-W03-su",
         "JA-C03-practice"
+      ]
+    },
+    {
+      "id": "JA-EXT-013-NIHONGO-KANJI",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can write 日 and 本, build 語 from three separately practised components, and join the three signs without treating fourteen strokes as one jump.",
+      "prerequisites": [
+        "JA-EXT-012-POLITE-THANKS-CONSOLIDATION"
+      ],
+      "lessons": [
+        "JA-W05-nichi-kanji",
+        "JA-W05-hon-kanji",
+        "JA-W05-gen-component",
+        "JA-W05-five-component",
+        "JA-W05-mouth-component",
+        "JA-W05-go-kanji"
+      ]
+    },
+    {
+      "id": "JA-EXT-014-KOOHII-KATAKANA",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can write the three distinct katakana shapes in コーヒー and use the long mark to hold the preceding vowel for one more mora.",
+      "prerequisites": [
+        "JA-EXT-003-KANJI-READINGS"
+      ],
+      "lessons": [
+        "JA-W06-ko-katakana",
+        "JA-W06-long-mark",
+        "JA-W06-hi-katakana"
+      ]
+    },
+    {
+      "id": "JA-EXT-015-SAYOUNARA-FAREWELL",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "communication",
+      "canDo": "I can hear and say one context-dependent farewell, write its three new hiragana signs after a gentle trace-copy-recall ramp, and read and write the complete five-sign word independently.",
+      "prerequisites": [
+        "JA-EXT-007-MIXED-SCRIPT-CONSOLIDATION"
+      ],
+      "lessons": [
+        "JA-C08-hear-sayounara",
+        "JA-W08-yo",
+        "JA-W08-na",
+        "JA-W08-ra",
+        "JA-W08-sayounara-read",
+        "JA-C08-sayounara"
       ]
     }
   ]

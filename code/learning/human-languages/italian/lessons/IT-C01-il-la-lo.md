@@ -1,5 +1,6 @@
 ---
 id: IT-C01-il-la-lo
+sequence: 30
 chapter: 1
 type: word
 headword: il / la / lo
@@ -23,16 +24,16 @@ gender — a habit inherited from Latin.
 
 **il** and **lo** (masculine "the") and **la** (feminine) ← Latin **ille** /
 **illa** ("that one"), the pointing word worn down to "the." The same *ille/illa*
-gave Spanish *el/la* and French *le/la* — and also Italian **lui** / **lei**
-("he/she"). (English "the" is Germanic, unrelated.)
+gave Spanish *el/la* and French *le/la*. English "the" is Germanic and
+unrelated.
 
 ## Grammar Lens: gender, and two masculine "the"s
 
 Every Italian noun is **masculine or feminine** — Latin's three genders (the
 neuter folding into the masculine) collapsed to two. Learn each noun *with* its
 article. Italian has **two** masculine articles: **lo** before tricky clusters
-(*lo studente*, *lo zio*), **il** everywhere else (*il giorno*); feminine is
-always **la**. Meet *il* at your first noun, next.
+at the start of a noun, **il** in the ordinary pattern; feminine is always
+**la**. Your first noun comes next, so you can practise one real pairing then.
 
 ## Guided Practice
 

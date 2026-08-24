@@ -1,53 +1,8 @@
 German, chapter 14: To Have, and How Old You Are.
-2 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
+2 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
 Lesson 1 of 2.
-ich bin zwanzig Jahre alt — being your years.
-
-Warm-up.
-[pause 2 seconds]
-You just learned haben. Here is the everyday sentence where German won't let you use it — and where German and English stand alone against all four Romance languages.
-
-The phrase.
-Wie alt bist du? — literally "How old are you?" Ich bin zwanzig Jahre alt. — "I am twenty years old."
-Word for word, that is the English sentence. Not a coincidence — both languages inherited the same way of saying it.
-You can shorten it to Ich bin zwanzig, exactly as English drops "years old."
-
-The words.
-[a table of 2 rows, read aloud]
-word: Jahr. from: Germanic jēra. English twin: year.
-word: alt. from: Germanic aldaz. English twin: old.
-Alt has a Latin cousin too: alere, "to nourish, grow" — which gives English adult ("grown up") and old itself. Growing and ageing, one idea.
-Note Jahre is the plural (Ch. 9's Jahreszeiten, "year's-times" = seasons, already had it), and German capitalises it as a noun.
-
-The split, laid out.
-[a table of 6 rows, read aloud]
-language: German. how age works: ich bin … Jahre alt. literally: I am …
-language: English. how age works: I am twenty. literally: I am …
-language: French. how age works: j'ai vingt ans. literally: I have …
-language: Spanish. how age works: tengo veinte años. literally: I have …
-language: Italian. how age works: ho venti anni. literally: I have …
-language: Portuguese. how age works: tenho vinte anos. literally: I have …
-Romance has its years; Germanic is its years. Age as something you carry versus age as something you are — and German, which borrowed its months from Latin (Ch. 9), keeps its own logic here.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "Wie alt bist du?"]
-[pause 8 seconds for the answer]
-[your turn — say: "Ich bin zwanzig Jahre alt"]
-[pause 8 seconds for the answer]
-[your turn — say: your own age, using Ch. 12's numbers]
-[pause 8 seconds for the answer]
-[your turn — say: the contrast — "ich bin … / j'ai …"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Which verb does German use for age? (Sein — bin — not haben.) What does wie alt literally ask? ("How old.") What are Jahr and alt in English? (Year and old — direct twins.) Which languages say "I have twenty years"? (All four Romance ones — French, Spanish, Italian, Portuguese.) So who does German side with? (English, alone.)
-
-
-Lesson 2 of 2.
 haben — "to have".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
@@ -91,3 +46,48 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Give the forms of haben. (Habe, hast, hat, haben, habt, haben.) Which two drop the b, and which English forms match? (Du hast, er hat — English has/hast.) Is haben related to Latin habēre? (No — a coincidence.) What is each one actually related to? (Haben becomes capture (via capere); habēre becomes give.) Next: the one everyday thing German refuses to use haben for.
+
+
+Lesson 2 of 2.
+ich bin zwanzig Jahre alt — being your years.
+
+Warm-up.
+[pause 2 seconds]
+You just learned haben. Here is the everyday sentence where German won't let you use it — and where German and English stand alone against all four Romance languages.
+
+The phrase.
+Wie alt bist du? — literally "How old are you?" Ich bin zwanzig Jahre alt. — "I am twenty years old."
+Word for word, that is the English sentence. Not a coincidence — both languages inherited the same way of saying it.
+You can shorten it to Ich bin zwanzig, exactly as English drops "years old."
+
+The words.
+[a table of 2 rows, read aloud]
+word: Jahr. from: Germanic jēra. English twin: year.
+word: alt. from: Germanic aldaz. English twin: old.
+Alt has a Latin cousin too: alere, "to nourish, grow" — which gives English adult ("grown up") and old itself. Growing and ageing, one idea.
+Note Jahre is the plural (Ch. 9's Jahreszeiten, "year's-times" = seasons, already had it), and German capitalises it as a noun.
+
+The split, laid out.
+[a table of 6 rows, read aloud]
+language: German. how age works: ich bin … Jahre alt. literally: I am …
+language: English. how age works: I am twenty. literally: I am …
+language: French. how age works: j'ai vingt ans. literally: I have …
+language: Spanish. how age works: tengo veinte años. literally: I have …
+language: Italian. how age works: ho venti anni. literally: I have …
+language: Portuguese. how age works: tenho vinte anos. literally: I have …
+Romance has its years; Germanic is its years. Age as something you carry versus age as something you are — and German, which borrowed its months from Latin (Ch. 9), keeps its own logic here.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "Wie alt bist du?"]
+[pause 8 seconds for the answer]
+[your turn — say: "Ich bin zwanzig Jahre alt"]
+[pause 8 seconds for the answer]
+[your turn — say: your own age, using Ch. 12's numbers]
+[pause 8 seconds for the answer]
+[your turn — say: the contrast — "ich bin … / j'ai …"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which verb does German use for age? (Sein — bin — not haben.) What does wie alt literally ask? ("How old.") What are Jahr and alt in English? (Year and old — direct twins.) Which languages say "I have twenty years"? (All four Romance ones — French, Spanish, Italian, Portuguese.) So who does German side with? (English, alone.)

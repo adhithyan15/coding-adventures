@@ -1,4 +1,4 @@
-uv venv .venv --quiet --no-project --clear
+uv venv .venv --quiet --no-project --clear --python 3.13
 uv pip install --python .venv -e . --quiet
 uv pip install --python .venv pytest pytest-cov ruff mypy --quiet
 .venv\Scripts\python.exe -m pytest tests/ -v

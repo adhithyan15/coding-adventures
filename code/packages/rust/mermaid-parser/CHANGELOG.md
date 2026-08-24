@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.122.0
+
+- Parse XY-chart orientation, axis forms, named series, and accessibility metadata through a dedicated Mermaid 11.16.1 grammar.
+
 ## 0.115.0
 
 - Resolve GitGraph commit history and validate merge and cherry-pick operations against Mermaid 11.16.1 semantics.

@@ -1,5 +1,6 @@
 ---
 id: FR-C10-freres-soeurs
+sequence: 250
 chapter: 10
 type: word
 headword: le frère, la sœur

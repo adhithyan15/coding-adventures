@@ -1,0 +1,76 @@
+{
+  "language": "italian",
+  "lessonCount": 89,
+  "atomMeasurableLessons": 80,
+  "atomMeasurementBlindLessons": 9,
+  "durationViolations": 0,
+  "atomLessonSpikes": 3,
+  "atomChapterSpikes": 2,
+  "glyphLessonSpikes": 0,
+  "scriptSystemSpikes": 0,
+  "scriptClosureViolations": 0,
+  "neverTaughtGlyphs": 0,
+  "orderDefects": 0,
+  "lessonsWithoutSequence": 0,
+  "unknownPrerequisites": 0,
+  "forwardPrerequisites": 0,
+  "forwardReviews": 0,
+  "forwardReferences": 34,
+  "atomsTaught": 200,
+  "atomsNeverRevisited": 19,
+  "reinforcementWindowMisses": 282,
+  "reinforcementMissesByWindow": {
+    "R1": 34,
+    "R2": 139,
+    "R3": 106,
+    "R4": 3
+  },
+  "payoffSurprises": 1,
+  "writingPracticeLessons": 2,
+  "firstWritingPracticeAt": 0,
+  "lessonsBeforeWritingPractice": 0,
+  "findings": [
+    {
+      "language": "italian",
+      "kind": "forward-language",
+      "count": 34,
+      "unit": "use(s)",
+      "detail": "teach target-language material before load-bearing use"
+    },
+    {
+      "language": "italian",
+      "kind": "atom-step",
+      "count": 5,
+      "unit": "lesson/chapter spike(s)",
+      "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+    },
+    {
+      "language": "italian",
+      "kind": "reinforcement",
+      "count": 282,
+      "unit": "missed window(s)",
+      "detail": "add retrieval at the expanding R1-R4 intervals"
+    },
+    {
+      "language": "italian",
+      "kind": "payoff-surprise",
+      "count": 1,
+      "unit": "chapter payoff finding(s)",
+      "detail": "make each chapter payoff assess only taught, representative material"
+    },
+    {
+      "language": "italian",
+      "kind": "measurement-blind",
+      "count": 9,
+      "unit": "lesson(s)",
+      "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
+    }
+  ],
+  "next": {
+    "language": "italian",
+    "kind": "forward-language",
+    "count": 34,
+    "unit": "use(s)",
+    "detail": "teach target-language material before load-bearing use"
+  }
+}

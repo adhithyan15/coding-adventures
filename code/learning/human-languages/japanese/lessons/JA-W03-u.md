@@ -2,7 +2,7 @@
 schema_version: 2
 id: JA-W03-u
 spine_node: SPINE-COURTESY-THANK
-sequence: 240
+sequence: 190
 delivery: script
 chapter: 3
 type: writing
@@ -56,8 +56,8 @@ rounded than an English speaker expects. Do not push them forward.
 Something happens when う follows と, and it is the reason the written word and
 the spoken word look like they disagree.
 
-Written out, ありがとう ends **と + う** — *to* then *u*, which reads as five
-beats. But nobody says *a-ri-ga-to-u*. What you hear is a long **o**:
+The five-sign sequence you are building ends **と + う** — *to* then *u*, which
+reads as five beats. But the final two signs are heard as a long **o**:
 
 > written: a-ri-ga-to-u
 >
@@ -68,8 +68,8 @@ second beat.** The beat is still there — Japanese counts it, and dropping it
 makes the word sound clipped and wrong — but it is the same vowel continuing,
 not a new one.
 
-You met this once already without being told: the katakana word コーヒー uses a
-long bar for the same job. Hiragana uses う.
+Katakana will later receive a separate one-stroke length mark for the same job.
+Here the only written cue is the **う** you have just learned.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-U-01] -->

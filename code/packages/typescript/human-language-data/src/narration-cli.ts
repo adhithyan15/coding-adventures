@@ -55,8 +55,15 @@ import {
 } from "./narration.js";
 import { DEFAULT_LINEARISABLE_TABLE_COLUMNS } from "./speech.js";
 
-/** Where the manifest lives, beside the book's own hash manifest. */
-const MANIFEST_PATH = "core/generated-narration-hashes.json";
+/** One independently mergeable narration manifest per language. */
+export const NARRATION_HASH_MANIFEST_DIR = "core/generated-narration-hashes";
+
+function manifestPath(language: string): string {
+  if (!/^[a-z0-9-]+$/.test(language)) {
+    throw new Error(`unsafe generated narration manifest language '${language}'`);
+  }
+  return `${NARRATION_HASH_MANIFEST_DIR}/${language}.json`;
+}
 
 interface GeneratedNarrationManifest {
   version: 1;
@@ -157,13 +164,7 @@ export function narrationOutputs(root = defaultCurriculumRoot()): Map<string, st
 
   const chapters = narrationChapters(lessons, { maxLinearisableTableColumns, titles });
   const outputs = new Map<string, string>();
-  const manifest: GeneratedNarrationManifest = {
-    version: 1,
-    algorithm: "fnv1a64",
-    maxLinearisableTableColumns,
-    chapters: [],
-    findings: [],
-  };
+  const manifests = new Map<string, GeneratedNarrationManifest>();
 
   for (const chapter of chapters) {
     const slug = chapterSlug(chapter.chapter);
@@ -176,6 +177,17 @@ export function narrationOutputs(root = defaultCurriculumRoot()): Map<string, st
     const json = `${JSON.stringify(serializeChapter(chapter), null, 2)}\n`;
     outputs.set(textPath, text);
     outputs.set(jsonPath, json);
+    let manifest = manifests.get(chapter.language);
+    if (!manifest) {
+      manifest = {
+        version: 1,
+        algorithm: "fnv1a64",
+        maxLinearisableTableColumns,
+        chapters: [],
+        findings: [],
+      };
+      manifests.set(chapter.language, manifest);
+    }
     manifest.chapters.push({
       language: chapter.language,
       chapter: chapter.chapter,
@@ -191,16 +203,13 @@ export function narrationOutputs(root = defaultCurriculumRoot()): Map<string, st
     manifest.findings.push(...chapter.findings);
   }
 
-  manifest.chapters.sort(
-    (left, right) => left.language.localeCompare(right.language) || left.chapter - right.chapter,
-  );
-  manifest.findings.sort(
-    (left, right) =>
-      left.language.localeCompare(right.language) ||
-      left.lessonId.localeCompare(right.lessonId) ||
-      left.code.localeCompare(right.code),
-  );
-  outputs.set(MANIFEST_PATH, `${JSON.stringify(manifest, null, 2)}\n`);
+  for (const [language, manifest] of [...manifests].sort(([left], [right]) => left.localeCompare(right))) {
+    manifest.chapters.sort((left, right) => left.chapter - right.chapter);
+    manifest.findings.sort(
+      (left, right) => left.lessonId.localeCompare(right.lessonId) || left.code.localeCompare(right.code),
+    );
+    outputs.set(manifestPath(language), `${JSON.stringify(manifest, null, 2)}\n`);
+  }
   return outputs;
 }
 
@@ -256,9 +265,9 @@ export function runNarrationGeneration(
   }
   let mismatch = false;
   for (const [relative, expected] of outputs) {
-    // The manifest lives at a fixed path we control, so it does not go through the
-    // extension check — exactly as `book-cli.ts` treats its own manifest.
-    const output = relative === MANIFEST_PATH ? join(root, relative) : safeOutput(root, relative);
+    const output = relative.startsWith(`${NARRATION_HASH_MANIFEST_DIR}/`)
+      ? join(root, relative)
+      : safeOutput(root, relative);
     if (mode === "--write") {
       mkdirSync(dirname(output), { recursive: true });
       writeFileSync(output, expected, "utf8");

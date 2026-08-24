@@ -1,5 +1,6 @@
 ---
 id: GE-C01-der-die-das
+sequence: 15
 chapter: 1
 type: word
 headword: der / die / das
@@ -44,9 +45,9 @@ Here's the twist. Latin had three genders (masculine, feminine, neuter);
 Spanish and French **collapsed to two**, folding neuter into masculine.
 German **kept all three**: *der* (masc.), *die* (fem.), *das* (neut.). So a
 German noun is one of *three* classes, not two — and, as everywhere, the
-gender is unpredictable and must be learned *with* the noun (*der Tag*, *die
-Nacht*, *das Kind* "the child"). English, meanwhile, threw gender out
-entirely and kept a single "the" — the opposite extreme.
+gender is unpredictable and must be learned *with* the noun and its article.
+English, meanwhile, threw gender out entirely and kept a single "the" — the
+opposite extreme. Your next nouns will let you practise that pairing.
 
 One more thing coming later: German articles also change by **case** (their
 job in the sentence), so *der* has other forms (*den, dem, des*). Ignore that
@@ -57,7 +58,7 @@ for now; just learn *der / die / das* as the three "the"s.
 [PAUSE 1s]
 - [YOU SAY: "der", "die", "das"]
 - [YOU SAY: "das" then English "that" — the t→s shift]
-- [YOU SAY: "der Tag" (masc.), "die Nacht" (fem.) — the nouns are coming]
+- [YOU SAY: "der" for masculine, "die" for feminine, "das" for neuter]
 
 ## Wrap-up Recall
 

@@ -2016,13 +2016,28 @@ pub fn run_mdns_ipv6_scan(options: MdnsScanOptions) -> Result<MdnsScanResult, Di
 pub struct MdnsTxtEntry {
     pub key: String,
     pub value: String,
+    pub raw_value: Vec<u8>,
 }
 
 impl MdnsTxtEntry {
     pub fn new(key: impl Into<String>, value: impl Into<String>) -> Result<Self, DiscoveryError> {
+        let value = value.into();
         Ok(Self {
             key: non_empty("txt.key", key)?,
-            value: value.into(),
+            raw_value: value.as_bytes().to_vec(),
+            value,
+        })
+    }
+
+    pub fn new_raw(
+        key: impl Into<String>,
+        raw_value: impl Into<Vec<u8>>,
+    ) -> Result<Self, DiscoveryError> {
+        let raw_value = raw_value.into();
+        Ok(Self {
+            key: non_empty("txt.key", key)?,
+            value: String::from_utf8_lossy(&raw_value).to_string(),
+            raw_value,
         })
     }
 }
@@ -2075,11 +2090,31 @@ impl MdnsAdvertisement {
         Ok(self)
     }
 
+    pub fn with_raw_txt(
+        mut self,
+        key: impl Into<String>,
+        value: impl Into<Vec<u8>>,
+    ) -> Result<Self, DiscoveryError> {
+        let entry = MdnsTxtEntry::new_raw(key, value)?;
+        if self.txt.iter().any(|existing| existing.key == entry.key) {
+            return Err(DiscoveryError::DuplicateTxtKey { key: entry.key });
+        }
+        self.txt.push(entry);
+        Ok(self)
+    }
+
     pub fn txt_value(&self, key: &str) -> Option<&str> {
         self.txt
             .iter()
             .find(|entry| entry.key == key)
             .map(|entry| entry.value.as_str())
+    }
+
+    pub fn raw_txt_value(&self, key: &str) -> Option<&[u8]> {
+        self.txt
+            .iter()
+            .find(|entry| entry.key == key)
+            .map(|entry| entry.raw_value.as_slice())
     }
 
     pub fn preferred_address(&self) -> &str {
@@ -2574,7 +2609,7 @@ fn mdns_advertisements_from_response(
             advertisement = advertisement.with_address(address)?;
         }
         for entry in txt {
-            advertisement = advertisement.with_txt(entry.key, entry.value)?;
+            advertisement = advertisement.with_raw_txt(entry.key, entry.raw_value)?;
         }
         advertisements.push(advertisement);
     }
@@ -2690,9 +2725,16 @@ fn parse_txt_record(
             .filter(|end| *end <= data_end)
             .ok_or_else(|| invalid_mdns_message("TXT entry extends beyond record"))?;
         if len > 0 {
-            let entry = String::from_utf8_lossy(&packet[offset..entry_end]).to_string();
-            let (key, value) = entry.split_once('=').unwrap_or((entry.as_str(), ""));
-            entries.push(MdnsTxtEntry::new(key, value)?);
+            let entry = &packet[offset..entry_end];
+            let separator = entry.iter().position(|byte| *byte == b'=');
+            let (key, value) = match separator {
+                Some(index) => (&entry[..index], &entry[index + 1..]),
+                None => (entry, &[][..]),
+            };
+            entries.push(MdnsTxtEntry::new_raw(
+                String::from_utf8_lossy(key),
+                value.to_vec(),
+            )?);
         }
         offset = entry_end;
     }
@@ -3258,6 +3300,10 @@ mod tests {
             Some("001788fffeabcdef")
         );
         assert_eq!(advertisement.txt_value("modelid"), Some("BSB002"));
+        assert_eq!(
+            advertisement.raw_txt_value("binary"),
+            Some(&[0x00, 0x80, 0xff][..])
+        );
         assert_eq!(advertisement.discovered_at_ms, 5_000);
     }
 
@@ -4078,6 +4124,7 @@ mod tests {
         let txt_len_offset = reserve_rdlength(&mut packet);
         push_txt_entry(&mut packet, "bridgeid", "001788fffeabcdef");
         push_txt_entry(&mut packet, "modelid", "BSB002");
+        push_txt_entry_raw(&mut packet, "binary", &[0x00, 0x80, 0xff]);
         fill_rdlength(&mut packet, txt_len_offset);
 
         push_name_pointer(&mut packet, host_offset);
@@ -4115,10 +4162,16 @@ mod tests {
     }
 
     fn push_txt_entry(packet: &mut Vec<u8>, key: &str, value: &str) {
-        let entry = format!("{key}={value}");
-        assert!(entry.len() <= u8::MAX as usize);
-        packet.push(entry.len() as u8);
-        packet.extend_from_slice(entry.as_bytes());
+        push_txt_entry_raw(packet, key, value.as_bytes());
+    }
+
+    fn push_txt_entry_raw(packet: &mut Vec<u8>, key: &str, value: &[u8]) {
+        let len = key.len() + 1 + value.len();
+        assert!(len <= u8::MAX as usize);
+        packet.push(len as u8);
+        packet.extend_from_slice(key.as_bytes());
+        packet.push(b'=');
+        packet.extend_from_slice(value);
     }
 
     fn push_u16(packet: &mut Vec<u8>, value: u16) {

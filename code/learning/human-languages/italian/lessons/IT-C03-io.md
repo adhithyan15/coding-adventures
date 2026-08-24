@@ -25,7 +25,7 @@ modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: standard-contemporary
-reviews_of: [IT-C04-arrivederci]
+reviews_of: []
 ---
 # io — "I," the pronoun Italian loves to leave out
 

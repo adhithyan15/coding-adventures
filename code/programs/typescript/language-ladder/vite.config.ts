@@ -83,7 +83,7 @@ export default defineConfig({
             },
             {
               name: "book-ledgers",
-              test: /(?:chapters\.json|generated-book-hashes\.json)$/,
+              test: /(?:chapters\.json|generated-book-hashes[\\/][^/\\]+\.json)$/,
             },
             {
               // Handwriting grows one cited path at a time. Keep its model,

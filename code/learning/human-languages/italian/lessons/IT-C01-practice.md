@@ -1,5 +1,6 @@
 ---
 id: IT-C01-practice
+sequence: 90
 chapter: 1
 type: practice
 headword: (recap)
@@ -49,5 +50,6 @@ vowel** (*giorno* → *giorni*), not adding *-s*.
 (*ciao*.) What sound-rule turns Latin *noctem* into Italian *notte*? (*-ct-* →
 *-tt-*.)
 
-Next chapter: introducing yourself — *mi chiamo…* ("my name is…") — and Italian's
-*tu* vs. *Lei* (familiar / formal "you").
+Next chapter, you will learn how to introduce yourself and how to address
+someone in a familiar or respectful way. Those new Italian forms can wait for
+their own small lessons.

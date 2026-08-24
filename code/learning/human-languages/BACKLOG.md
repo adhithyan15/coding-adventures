@@ -5,6 +5,525 @@ Findings from the pre-A1 tranche work were recorded in commit messages and PR
 bodies, which are durable and searchable, but a reader opening this file found
 nothing. The entries below are the ones that change how the work is done.
 
+## HL-C09HD — Arabic ذ keeps Daal's body and adds its dot last
+
+The University of Oregon's dedicated Dhaal video now extends the canonical
+Arabic inventory beyond the greeting-era starter set. Independent **ذ** draws
+the complete **د** body first — down-right through the shoulder and left along
+the baseline in one run — then lifts once to place the single upper dot. Its
+own video supplies that order rather than treating a shared skeleton as proof.
+
+Arabic is now **23 unique source-verified rows** and remains deliberately
+incomplete. The lesson-corpus audit still requires six base letters: **ز, ط, ظ,
+غ, ف, and ق**. Continue in source order with **ز** next; separately account for
+seated Hamza and ending variants instead of conflating them with new base
+letters. The production `script-data` batch must remain below the 250 kB
+authored-data target; the current build measures **34.28 kB**.
+
+## HL-C09HC — Arabic ء closes the source-backed starter inventory
+
+Arabic Language Learning Notes' Naskh lesson replaces Arabic's final
+conventional placeholder with
+an explicitly documented one-stroke variant. Independent **ء** sweeps through
+its c-shaped upper head, then continues without lifting from the lower-left end
+through the lower diagonal. The source also records the accepted two-stroke
+alternative, so the learner path does not erase real instructional variation.
+
+The completion audit confirms **22/22 unique Arabic starter rows are
+source-verified**, but Arabic must remain incomplete: the lesson corpus still
+uses base letters absent from this starter inventory. Continue in source order
+with **ذ** next, then **ز, ط, ظ, غ, ف, and ق**; separately account for seated
+Hamza and ending variants instead of conflating them with new base letters.
+The production `script-data` batch must remain below the 250 kB authored-data
+target; the current build measures **32.71 kB**.
+
+## HL-C09HB — Arabic ن sweeps its deep bowl before placing the dot
+
+Waraqa Institute's adjacent beginner lesson now replaces the final body-and-dot
+placeholder in Arabic's canonical sequence. Independent **ن** starts at the
+upper-right tip, sweeps down and around its deep below-baseline bowl, then lifts
+once to place the centred upper dot last. Arabic, Persian, and Urdu retain
+independent source records for the shared glyph.
+
+Arabic is now **21/22 verified, 1 remaining**. Finish the inventory with **ء**
+next, then audit Arabic for canonical uniqueness and completion before moving to
+the next script. The production `script-data` batch must remain below the 250 kB
+authored-data target; the current build measures **31.46 kB**.
+
+## HL-C09HA — Arabic م keeps its closed head and descending tail in one run
+
+The next Arabic placeholder is now source-backed by Waraqa Institute's explicit
+beginner writing lesson. Independent **م** forms its small, tightly closed head
+first and continues down-left through the below-baseline tail without lifting.
+The Arabic-scoped path remains independently addressable from the existing
+Persian and Urdu records for the same Unicode glyph.
+
+Arabic is now **20/22 verified, 2 remaining**. Continue in source order with
+**ن** next. Arabic remains incomplete until each learner-facing row has its own
+source-backed, font-checked path. Its `script-data` batch must remain below the
+250 kB authored-data target; the production build measures **30.38 kB**.
+
+## HL-C09GZ — Arabic ث adds its three dots after the shared bowl
+
+The post-Gujarati audit promoted Arabic's earliest conventional placeholder.
+The University of Oregon lesson's dedicated **ث** video draws the independent
+shallow bowl right-to-left before its three separate upper dots. The fitted
+Noto Naskh path preserves that body-first, four-run sequence.
+
+Arabic is now **19/22 verified, 3 remaining**. Continue in source order with
+**م** next. Arabic remains incomplete until each learner-facing row has its own
+source-backed, font-checked path. Its `script-data` batch measures **29.33 kB**,
+below the 250 kB authored-batch target.
+
+## HL-C09GY — Gujarati closes with one canonical row per letter
+
+The completion audit found that restored **ન** and **પ** still had their old
+conventional placeholders later in `gujarati.json`. Those duplicate rows made
+the inventory appear to contain 46 letters even though the teaching-app
+sequence and the font-backed ductus cover 44 unique letters. The stale rows are
+removed, and a cross-script uniqueness gate now rejects this class of drift.
+
+Gujarati is now **44/44 source-verified and complete**. Future work should treat
+this track as maintenance: repair source, font-fit, rendering, or curriculum
+defects when evidence finds one, rather than manufacturing a 45th letter.
+The deduplicated Gujarati-bearing `script-data` batch measures **82.13 kB**,
+below its 250 kB target.
+
+## HL-C09GX — Gujarati હ flows from its upper loop around the lower bowl
+
+The source-and-font audit replaced **હ**'s conventional placeholder. The
+t30apps.com animation gives it one populated SVG path: a continuous run circles
+the compact upper loop, threads through the middle turn, and continues around
+the broad lower bowl into its rightward finish. Noto Sans Gujarati prints those
+features as two disconnected contours, so the fitted learner median uses the
+source-backed connecting bridge to preserve that zero-lift order.
+
+Gujarati is now **44/46 verified, 2 remaining**. Return to source order with
+**ન** next, the earliest remaining conventional placeholder. The Gujarati-
+bearing `script-data` batch measures **82.36 kB**, below its 250 kB target.
+
+## HL-C09GW — Gujarati સ carries its looped body into the long shoulder
+
+The source-and-font audit replaced **સ**'s conventional placeholder. The
+t30apps.com animation gives it two populated SVG paths: one run circles the
+rounded upper loop, descends through the left body, and sweeps across the long
+right shoulder; after one lift, the tall right spine descends into its lower
+foot. The fitted Noto Sans Gujarati medians preserve that order.
+
+Gujarati is now **43/46 verified, 3 remaining**. Continue in source order with
+**હ** next, the next conventional placeholder. The Gujarati-bearing
+`script-data` batch measures **80.92 kB**, below its 250 kB target.
+
+## HL-C09GV — Gujarati શ joins its upper loop to the lower body before the spine
+
+The source-and-font audit replaced **શ**'s conventional placeholder. The
+t30apps.com animation gives it two populated SVG paths: one run circles the
+small upper loop and continues through the broad lower body into its tail;
+after one lift, the tall right spine descends into its lower foot. The fitted
+Noto Sans Gujarati medians preserve that order.
+
+Gujarati is now **42/46 verified, 4 remaining**. Continue in source order with
+**સ** next, the next conventional placeholder. The Gujarati-bearing
+`script-data` batch measures **79.30 kB**, below its 250 kB target.
+
+## HL-C09GU — Gujarati વ completes its rounded body before the right spine
+
+The source-and-font audit replaced **વ**'s conventional placeholder. The
+t30apps.com animation gives it two populated SVG paths: one run circles the
+broad rounded left body and returns into the right shoulder; after one lift,
+the tall right spine descends into its lower foot. The fitted Noto Sans Gujarati
+medians preserve that order.
+
+Gujarati is now **41/46 verified, 5 remaining**. Continue in source order with
+**શ** next, the next conventional placeholder. The Gujarati-bearing
+`script-data` batch measures **77.74 kB**, below its 250 kB target.
+
+## HL-C09GT — Gujarati ળ keeps its bowl, arch, and spine in one run
+
+The source-and-font audit replaced **ળ**'s conventional placeholder. The
+t30apps.com animation gives it one populated SVG path: one continuous run
+circles the broad left bowl, rises through the narrow middle turn, crosses the
+high right arch, and descends the tall spine into its foot. The fitted Noto Sans
+Gujarati median preserves that zero-lift order.
+
+Gujarati is now **40/46 verified, 6 remaining**. Continue in source order with
+**વ** next, the next conventional placeholder. The Gujarati-bearing
+`script-data` batch measures **76.18 kB** after the deterministic group split,
+below its 250 kB target.
+
+## HL-C09GS — Gujarati લ separates its rounded body, shoulder, and spine
+
+The source-and-font audit replaced **લ**'s conventional placeholder. The
+t30apps.com animation gives it three populated SVG paths: the broad rounded
+left body is drawn first, the separate middle shoulder follows after one lift,
+and the tall right spine descends into its foot after a second lift. The fitted
+Noto Sans Gujarati medians preserve that order.
+
+Gujarati is now **39/46 verified, 7 remaining**. Continue in source order with
+**ળ** next, the next conventional placeholder. The Gujarati-bearing
+`script-data` batch measures **244.77 kB**, below its 250 kB target.
+
+## HL-C09GR — Gujarati ર keeps its upper body, loop, and tail continuous
+
+The source-and-font audit replaced **ર**'s conventional placeholder. The
+t30apps.com animation gives it one populated SVG path: one continuous run
+circles the rounded upper body, narrows through the middle loop, and descends
+into the lower-right tail. The fitted Noto Sans Gujarati median preserves that
+zero-lift order.
+
+Gujarati is now **38/46 verified, 8 remaining**. Continue in source order with
+**લ** next, the next conventional placeholder. The Gujarati-bearing
+`script-data` batch measures **242.99 kB**, below its 250 kB target.
+
+## HL-C09GQ — Gujarati ય completes its rounded body before the right spine
+
+The source-and-font audit replaced **ય**'s conventional placeholder. The
+t30apps.com animation gives it two populated SVG paths: one run circles through
+the rounded upper turn, sweeps around the broad lower body, and exits across the
+long right shoulder; after one lift, the tall right spine descends into its
+lower foot. The fitted Noto Sans Gujarati medians preserve that order.
+
+Gujarati is now **37/46 verified, 9 remaining**. Continue in source order with
+**ર** next, the next conventional placeholder. The Gujarati-bearing
+`script-data` batch measures **241.54 kB**, below its 250 kB target.
+
+## HL-C09GP — Gujarati મ joins its left turn to the shoulder before the spine
+
+The source-and-font audit replaced **મ**'s conventional placeholder. The
+t30apps.com animation gives it two populated SVG paths: one run curls through
+the left body and compact inner turn before exiting across the long shoulder;
+after one lift, the tall right spine descends into its lower foot. Gujarati is
+now **36/46 verified, 10 remaining**; continue in source order with **ય** next.
+The Gujarati `script-data` batch measures **239.91 kB**, below its 250 kB target.
+
+## HL-C09GO — Gujarati ભ joins its loop and inner turn before the right spine
+
+The source-and-font audit replaced **ભ**'s conventional placeholder. The
+t30apps.com animation gives it two populated SVG paths: one continuous run
+circles the broad left loop, winds through the compact inner turn, and exits
+across the long right shoulder; after one lift, the separate tall right spine
+descends into its lower foot. The fitted Noto Sans Gujarati medians preserve
+that order.
+
+Gujarati is now **35/46 verified, 11 remaining**. Continue in source order with
+**મ** next, the next conventional placeholder. The Gujarati-bearing
+`script-data` batch measures **238.35 kB**, below its 250 kB target.
+
+## HL-C09GN — Gujarati બ completes its rounded body before the right spine
+
+The source-and-font audit found **બ** represented only by a conventional
+placeholder. The t30apps.com animation gives it two populated SVG paths: one continuous run
+circles the rounded left body, winds through the compact inner turn, and exits
+across the right shoulder; after one lift, the separate tall right spine
+descends into its lower foot. The restored entry and fitted Noto Sans Gujarati
+medians preserve that order.
+
+Gujarati is now **34/46 verified, 12 remaining**. Continue in source order with
+**ભ** next; it is the next conventional placeholder. A correctness defect
+still outranks coverage if one appears during fitting or validation.
+
+The Gujarati-bearing `script-data` batch must remain below its 250 kB authored-
+batch target. The production build measures it at **236.70 kB** after this
+addition. Split the batch rather than weakening learner-facing provenance if
+this or a later entry crosses the target.
+
+## HL-C09GM — Gujarati ફ completes its winding body before the cross-stroke
+
+The source-and-font audit found **ફ** missing from `gujarati.json`. The
+t30apps.com animation gives it two populated SVG paths: one continuous run
+sweeps left across the high cap, winds down and around the body, circles the
+small lower-left loop, and exits through the descending tail; after one lift,
+a separate diagonal cross-stroke rises from lower left to upper right. The
+restored entry and fitted Noto Sans Gujarati medians preserve that order.
+
+Gujarati is now **33/46 verified, 13 remaining**. Continue in source order with
+**બ** next; it is also missing from the current inventory and therefore
+outranks later conventional placeholders. A correctness defect still outranks
+coverage if one appears during fitting or validation.
+
+The Gujarati-bearing `script-data` batch must remain below its 250 kB authored-
+batch target. The production build measures it at **235.05 kB** after this
+addition. Split the batch rather than weakening learner-facing provenance if
+this or a later entry crosses the target.
+
+## HL-C09GL — Gujarati પ joins its high left hook to the lower body
+
+The source-and-font audit found **પ** missing from `gujarati.json`. The
+t30apps.com animation gives it two populated SVG paths: one run curls through
+the high left hook, descends the left stem, and sweeps around the broad lower
+body into the right shoulder; after one lift, the separate tall right spine
+descends into its lower foot. The restored entry and fitted Noto Sans Gujarati
+medians preserve that order and the observed lift.
+
+Gujarati is now **32/45 verified, 13 remaining**. Continue in source order with
+**ફ** next; it is also missing from the current inventory and therefore
+outranks later conventional placeholders. A correctness defect still outranks
+coverage if one appears during fitting or validation.
+
+The Gujarati-bearing `script-data` batch must remain below its 250 kB authored-
+batch target. The production build measures it at **233.10 kB** after this
+addition. Split the batch rather than weakening learner-facing provenance if
+this or a later entry crosses the target.
+
+## HL-C09GK — Gujarati ન restores its loop, shoulder, and tall spine
+
+The source-and-font audit found **ન** missing from `gujarati.json`. The
+t30apps.com animation gives it two populated SVG paths: one run circles the
+small left loop and continues right across the long shoulder; after one lift,
+the separate tall right spine descends into its lower foot. The restored entry
+and fitted Noto Sans Gujarati medians preserve that order and the observed lift.
+
+Gujarati is now **31/44 verified, 13 remaining**. Continue in source order with
+**પ** next; it is also missing from the current inventory and therefore
+outranks later conventional placeholders. A correctness defect still outranks
+coverage if one appears during fitting or validation.
+
+The Gujarati-bearing `script-data` batch must remain below its 250 kB authored-
+batch target. The production build measures it at **231.24 kB** after this
+addition. Split the batch rather than weakening learner-facing provenance if
+this or a later entry crosses the target.
+
+## HL-C09GJ — Gujarati ધ separates its joined body from the tall spine
+
+The t30apps.com animation gives **ધ** two populated SVG paths: first a joined
+run descends from the high left entry, curls through the upper turn, narrows
+through the middle, and sweeps around the broad lower body into the right
+shoulder; after one lift, the tall right spine descends into its foot. The
+fitted Noto Sans Gujarati medians preserve that order and the observed lift.
+
+Gujarati is now **30/43 verified, 13 remaining**. Continue in source order with
+**ન** next; it is missing from the current inventory and therefore outranks
+later conventional placeholders. A correctness defect still outranks coverage
+if one appears during fitting or validation.
+
+The Gujarati-bearing `script-data` batch is **229.51 kB** in this production
+build, below its 250 kB authored-batch target. Recheck it on every source note;
+split the batch rather than weakening learner-facing provenance if a later
+entry crosses the target.
+
+## HL-C09GI — Gujarati દ keeps its upper and lower turns continuous
+
+The t30apps.com animation gives **દ** one populated SVG path. The pen circles
+the rounded upper body from its upper-right start, narrows through the middle
+turn without lifting, then sweeps around the broad lower body and rises into
+the lower-right terminal. The fitted Noto Sans Gujarati median preserves that
+continuous order while following the printed glyph's wider bowls and compact
+terminal.
+
+Gujarati is now **29/43 verified, 14 remaining**. Continue in source order with
+**ધ** next; it is present in the inventory but still has only a conventional
+placeholder. A correctness defect still outranks coverage if one appears
+during fitting or validation.
+
+The Gujarati-bearing `script-data` batch is **227.79 kB** in this production
+build, below its 250 kB authored-batch target. Recheck it on every source note;
+split the batch rather than weakening learner-facing provenance if a later
+entry crosses the target.
+
+## HL-C09GH — Gujarati થ restores its looped body and tall spine
+
+The source-and-font audit found **થ** missing from `gujarati.json`. The
+t30apps.com animation gives it two populated SVG paths: one continuous run
+circles the small upper loop, descends through the middle, sweeps around the
+broad lower body, and rises into the right shoulder; after one lift, a separate
+tall spine descends into its lower foot. The restored entry and fitted Noto Sans
+Gujarati medians preserve that order and the observed lift.
+
+Gujarati is now **28/43 verified, 15 remaining**. Continue in source order with
+**દ** next; it is present in the inventory but still has only a conventional
+placeholder. A correctness defect still outranks coverage if one appears
+during fitting or validation.
+
+The Gujarati-bearing `script-data` batch is **226.28 kB** in this production
+build, below its 250 kB authored-batch target. Recheck it on every source note;
+split the batch rather than weakening learner-facing provenance if a later
+entry crosses the target.
+
+## HL-C09GG — Gujarati ત separates its open body from the tall spine
+
+The t30apps.com animation gives **ત** two populated SVG paths: first the pen
+starts at the lower terminal, sweeps left and upward around the open body, and
+continues right across the upper shoulder; after one lift, it descends the tall
+right spine and turns through the lower foot. The fitted Noto Sans Gujarati
+medians preserve that order while following the printed glyph's wider body and
+straighter spine.
+
+Gujarati is now **27/42 verified, 15 remaining**. Continue in source order with
+**થ** next; it is missing from the current inventory and therefore outranks
+later conventional placeholders. A correctness defect still outranks coverage
+if one appears during fitting or validation.
+
+The Gujarati-bearing `script-data` batch is **224.41 kB** in this production
+build, below its 250 kB authored-batch target. Recheck it on every source note;
+split the batch rather than weakening learner-facing provenance if a later
+entry crosses the target.
+
+## HL-C09GF — Gujarati ણ separates its hooked body, bowl, and spine
+
+The t30apps.com animation gives **ણ** three populated SVG paths: first the left
+spine flowing into its hooked lower tail, then the separate rounded middle
+bowl, and finally the tall right spine and lower foot. The fitted Noto Sans
+Gujarati medians preserve that order and the two observed lifts, including the
+printed body's deeper below-baseline tail.
+
+Gujarati is now **26/42 verified, 16 remaining**. Continue in source order with
+**ત** next; it is present in the current inventory but still needs cited ductus
+verification. A correctness defect still outranks coverage if one appears
+during fitting or validation.
+
+The Gujarati-bearing `script-data` batch is **222.85 kB** in this production
+build, below its 250 kB authored-batch target. Recheck it on every source note;
+split the batch rather than weakening learner-facing provenance if a later
+entry crosses the target.
+
+## HL-C09GE — Gujarati ઢ keeps its outer bowl and inner loop continuous
+
+The t30apps.com animation gives **ઢ** one populated SVG path: the pen begins at
+the upper left, sweeps right across the high shoulder, descends through the
+middle and around the broad outer lower bowl, then continues directly around
+the small inner loop without lifting. The fitted Noto Sans Gujarati median
+preserves that shoulder-to-bowl-to-loop order and zero-lift evidence.
+
+Gujarati is now **25/42 verified, 17 remaining**. Continue in source order with
+**ણ** next; it is present in the current inventory but still needs cited ductus
+verification. A correctness defect still outranks coverage if one appears
+during fitting or validation.
+
+The Gujarati-bearing `script-data` batch is **221.24 kB** in this production
+build, below its 250 kB authored-batch target. Recheck it on every source note;
+split the batch rather than weakening learner-facing provenance if a later
+entry crosses the target.
+
+## HL-C09GD — Gujarati ડ repairs the adjacent retroflex inventory gap
+
+The canonical-order audit found **ડ** in both the t30apps.com source and bundled
+Noto Sans Gujarati font but absent from `gujarati.json`; the prior backlog note
+incorrectly called it present. Its animation uses one populated SVG path: the
+pen begins at the upper right, sweeps left across the high shoulder, descends
+through the middle and around the broad lower bowl, then finishes at the lower
+left without lifting. The restored entry and fitted median preserve that order.
+
+Gujarati is now **24/42 verified, 18 remaining**. Continue in source order with
+**ઢ** next; it is present in the current inventory but still needs cited ductus
+verification. A correctness defect still outranks coverage if one appears
+during fitting or validation.
+
+The Gujarati-bearing `script-data` batch is **219.74 kB** in this production
+build, below its 250 kB authored-batch target. Recheck it on every added source
+note; split the batch rather than weakening learner-facing provenance if a
+later entry crosses the target.
+
+## HL-C09GC — Gujarati ઠ closes the next consonant inventory gap
+
+The canonical-order audit found **ઠ** in both the t30apps.com source and bundled
+Noto Sans Gujarati font but absent from `gujarati.json`. Its animation uses one
+populated SVG path: the pen begins at the upper right, sweeps left across the
+high shoulder, descends through the middle and around the broad outer lower
+bowl, then curls back inward to its terminal without lifting. The restored
+inventory entry and fitted median preserve that order and zero-lift evidence.
+
+Gujarati is now **23/41 verified, 18 remaining**. Continue in source order with
+**ડ** next; it is present in the source and current inventory but still needs
+cited ductus verification. A correctness defect still outranks coverage if one
+appears during fitting or validation.
+
+The Gujarati-bearing `script-data` batch is **217.89 kB** in this production
+build, below its 250 kB authored-batch target. Keep rechecking it as the cited
+inventory grows; split the batch rather than weakening or deleting learner-
+facing provenance if a later entry crosses the target.
+
+## HL-C09GB — Gujarati ટ keeps its upper turn and lower bowl continuous
+
+The t30apps.com animation gives **ટ** one populated SVG path: the pen begins at
+the upper left, sweeps across the upper turn, bends diagonally down-left through
+the middle, then circles the broad lower bowl and finishes on its right side
+without lifting. The fitted Noto Sans Gujarati median preserves that zero-lift
+order.
+
+Gujarati is now **22/40 verified, 18 remaining**. Continue in source order with
+**ઠ** next; it is present in the source and font but absent from the inventory.
+A correctness defect still outranks coverage if one appears during fitting or
+validation.
+
+The Gujarati-bearing `script-data` batch is now **244.12 kB** against its
+250 kB authored-batch target. Recheck the production bundle before publishing
+the next source note; split that batch rather than weakening or deleting
+learner-facing provenance if the next entry crosses the target.
+
+## HL-C09GA — Gujarati ઞ restores its body, shoulder, and tall spine
+
+The canonical-order audit found **ઞ** in both the t30apps.com source and bundled
+Noto Sans Gujarati font but absent from `gujarati.json`. Its animation uses
+three populated SVG paths: the rounded left body, a short separate rightward
+shoulder, and a final tall descending spine that curls into its lower terminal.
+The restored entry and fitted medians preserve that order and the two observed
+lifts.
+
+Gujarati is now **21/40 verified, 19 remaining**. Continue in source order with
+**ટ** next; it already has a conventional inventory entry but still needs cited
+ductus verification. A correctness defect still outranks coverage if one
+appears during fitting or validation.
+
+## HL-C09FZ — Gujarati ઝ repairs the next consonant inventory gap
+
+The canonical-order audit found **ઝ** in both the t30apps.com source and bundled
+Noto Sans Gujarati font but absent from `gujarati.json`. Its animation uses
+three populated SVG paths: the rounded left body, a separate right loop-and-tail
+run, and a final short descending upper stem. The restored entry and fitted
+medians preserve that order and the two observed lifts.
+
+Gujarati is now **20/39 verified, 19 remaining**. Continue in source order with
+**ઞ** next; it is also absent from the current inventory. A correctness defect
+still outranks coverage if one appears during fitting or validation.
+
+## HL-C09FY — Gujarati જ keeps its left loop, crossing body, and right loop joined
+
+The t30apps.com animation gives **જ** one populated SVG path: the pen circles
+the upper-left loop, continues diagonally through the crossing body, circles
+the lower-right loop, and sweeps into the long upper-right exit without lifting.
+The fitted Noto Sans Gujarati median preserves that zero-lift order.
+
+Gujarati is now **19/38 verified, 19 remaining**. Continue in source order with
+**ઝ** next; it is absent from the current inventory. A correctness defect still
+outranks coverage if one appears during fitting or validation.
+
+## HL-C09FX — Gujarati છ keeps both rounded bodies in one continuous run
+
+The t30apps.com animation gives **છ** one populated SVG path: the pen circles
+the upper-left lobe, turns back through the middle, continues around the broad
+lower body, climbs the outer right curve, and finishes by circling the
+upper-right lobe without lifting. The fitted Noto Sans Gujarati median preserves
+that zero-lift order.
+
+Gujarati is now **18/38 verified, 20 remaining**. Continue in source and
+inventory order with **જ** next. A correctness defect still outranks coverage
+if one appears during fitting or validation.
+
+## HL-C09FW — Gujarati ચ joins its upper bowl, middle loop, and lower body
+
+The t30apps.com animation gives **ચ** two populated SVG paths: one continuous
+run circles the upper bowl, turns through the small middle loop, and continues
+around the broad lower body; after one lift, a separate run descends the full
+right spine and turns through its lower foot. The fitted Noto Sans Gujarati
+medians preserve that joined-body-before-spine order.
+
+Gujarati is now **17/38 verified, 21 remaining**. Continue in source and
+inventory order with **છ** next. A correctness defect still outranks coverage
+if one appears during fitting or validation.
+
+## HL-C09FV — Gujarati ઙ repairs the adjacent consonant inventory gap
+
+The canonical-order audit found **ઙ** in both the t30apps.com source and bundled
+Noto Sans Gujarati font but absent from `gujarati.json`. Its animation uses two
+populated SVG paths: one long S-like run flows from the upper-right through the
+upper turn and rounded lower body to the lower-left; after one lift, a compact
+separate loop draws the upper-right dot. The restored entry and fitted medians
+preserve that body-before-dot order.
+
+Gujarati is now **16/38 verified, 22 remaining**. With the adjacent consonant
+inventory gaps repaired, continue in source order with existing **ચ** next. A
+correctness defect still outranks coverage if one appears during validation.
+
 ## HL-C09FU — Gujarati ઘ repairs the first consonant inventory gap
 
 The canonical-order audit found **ઘ** in both the t30apps.com source and bundled

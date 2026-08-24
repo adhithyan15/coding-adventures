@@ -1,0 +1,26 @@
+# @version 1
+# @case_insensitive true
+#
+# Mermaid 11.16.1 XY-chart token grammar.
+#
+# Upstream grammar:
+# https://github.com/mermaid-js/mermaid/blob/mermaid%4011.16.1/packages/mermaid/src/diagrams/xychart/parser/xychart.jison
+
+case_sensitive: false
+
+skip:
+  WHITESPACE         = /[ \t]+/
+  COMMENT            = /%%[^\r\n]*/
+
+NEWLINE              = /\r?\n/
+SEMICOLON            = ";"
+HEADER               = /xychart(?:-beta)?/
+ORIENTATION          = /vertical|horizontal/
+ACC_DESCR_BLOCK      = /accDescr[ \t]*\{[^}]*\}/
+ACC_TITLE_STATEMENT  = /accTitle[ \t]*:[^\r\n;%]+/
+ACC_DESCR_STATEMENT  = /accDescr[ \t]*:[^\r\n;%]+/
+TITLE_STATEMENT      = /title[ \t]+[^\r\n;%]+/
+X_AXIS_STATEMENT     = /x-axis[ \t]+[^\r\n;%]+/
+Y_AXIS_STATEMENT     = /y-axis[ \t]+[^\r\n;%]+/
+LINE_STATEMENT       = /line[ \t]+[^\r\n;%]+/
+BAR_STATEMENT        = /bar[ \t]+[^\r\n;%]+/

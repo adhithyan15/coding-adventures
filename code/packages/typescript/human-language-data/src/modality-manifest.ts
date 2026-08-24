@@ -13,11 +13,11 @@
 //   * the complete book, which keeps everything, handwriting drills included; and
 //   * a dictation-friendly driving edition, which keeps only what a driver can do —
 //
-// the derivation had to become *data*. This module is that data: a single JSON
-// artifact, keyed by lesson, that any renderer can read and filter without importing
+// the derivation had to become *data*. This module is that data: independently
+// mergeable per-language JSON shards, keyed by lesson, that any renderer can read and filter without importing
 // TypeScript, without a Markdown parser, and without re-deriving anything.
 //
-// It is a **derived artifact**, in exactly the sense `core/generated-book-hashes.json`
+// It is a **derived artifact**, in exactly the sense `core/generated-book-hashes/*.json`
 // is. Nobody edits it by hand. The alternative — adding `modality:` to 1,096
 // frontmatter files — was considered and deliberately rejected by HL08, because 1,096
 // authored copies of a computed fact are 1,096 places for it to go stale. Authored
@@ -73,8 +73,8 @@ import {
 } from "./modality.js";
 import type { ParsedLesson } from "./parse.js";
 
-/** Where the emitted manifest lives, relative to the curriculum root. */
-export const MODALITY_MANIFEST_PATH = "core/lesson-modality.json";
+/** One independently mergeable manifest per language lives here. */
+export const MODALITY_MANIFEST_DIR = "core/lesson-modality";
 
 /**
  * Bumped only for a change no existing reader can survive.
@@ -322,11 +322,17 @@ function compareLessons(left: LessonModality, right: LessonModality): number {
  * whose input order depends on the filesystem is not a fingerprint, it is a coin flip.
  * Sorting by id is total and stable, so the same corpus always hashes the same.
  */
-export function modalityCorpusHash(lessons: readonly ParsedLesson[]): string {
-  const entries = lessons
-    .map((lesson) => [lesson.realization.lessonId, lesson.sourceHash] as const)
+function modalityRowsHash(rows: readonly Pick<ModalityManifestLesson, "id" | "sourceHash">[]): string {
+  const entries = rows
+    .map((row) => [row.id, row.sourceHash] as const)
     .sort((left, right) => left[0].localeCompare(right[0]));
   return fnv1a64(JSON.stringify(entries));
+}
+
+export function modalityCorpusHash(lessons: readonly ParsedLesson[]): string {
+  return modalityRowsHash(
+    lessons.map((lesson) => ({ id: lesson.realization.lessonId, sourceHash: lesson.sourceHash })),
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -520,11 +526,81 @@ export function buildModalityManifest(
 /**
  * The manifest's canonical on-disk bytes.
  *
- * Two-space indent and a trailing newline, matching `core/generated-book-hashes.json`
+ * Two-space indent and a trailing newline, matching `core/generated-book-hashes/*.json`
  * — a generated JSON file a human will nonetheless open in a diff, so it is formatted
  * for reading. Having exactly one definition of the bytes is what makes `--write` and
  * `--check` structurally incapable of disagreeing about formatting.
  */
 export function serializeModalityManifest(manifest: ModalityManifest): string {
   return `${JSON.stringify(manifest, null, 2)}\n`;
+}
+
+/**
+ * Reassemble the public corpus view from independently committed language shards.
+ *
+ * The aggregate is derived at read time so no language PR ever rewrites a shared
+ * summary line. Every field is reconstructed from the shard rows; a stale or missing
+ * shard still fails `check:modality` rather than being papered over here.
+ */
+export function mergeModalityManifests(
+  manifests: readonly ModalityManifest[],
+): ModalityManifest {
+  if (manifests.length === 0) throw new Error("no modality manifest shards found");
+  const first = manifests[0]!;
+  for (const manifest of manifests.slice(1)) {
+    if (
+      manifest.version !== first.version ||
+      manifest.algorithm !== first.algorithm ||
+      manifest.features.blockModality !== first.features.blockModality ||
+      manifest.policy.maxLinearisableTableColumns !== first.policy.maxLinearisableTableColumns
+    ) {
+      throw new Error("incompatible modality manifest shards");
+    }
+  }
+
+  const tracks = manifests.flatMap((manifest) => manifest.tracks)
+    .sort((left, right) => left.language.localeCompare(right.language));
+  const lessons = manifests.flatMap((manifest) => manifest.lessons)
+    .sort((left, right) =>
+      left.language.localeCompare(right.language) ||
+      (left.chapter ?? Number.POSITIVE_INFINITY) -
+        (right.chapter ?? Number.POSITIVE_INFINITY) ||
+      (left.sequence ?? Number.POSITIVE_INFINITY) -
+        (right.sequence ?? Number.POSITIVE_INFINITY) ||
+      left.id.localeCompare(right.id),
+    );
+  const findings = manifests.flatMap((manifest) => manifest.findings)
+    .sort((left, right) =>
+      left.language.localeCompare(right.language) ||
+      left.lessonId.localeCompare(right.lessonId) ||
+      left.code.localeCompare(right.code),
+    );
+  const chapters = tracks.flatMap((track) => track.chapters);
+  const voice = lessons.filter((entry) => entry.modality === "voice").length;
+
+  return {
+    version: first.version,
+    algorithm: first.algorithm,
+    features: first.features,
+    policy: first.policy,
+    sourceHash: modalityRowsHash(lessons),
+    summary: {
+      totalLessons: lessons.length,
+      voice,
+      sight: lessons.filter((entry) => entry.modality === "sight").length,
+      pen: lessons.filter((entry) => entry.modality === "pen").length,
+      drivableLessons: voice,
+      drivablePercent: percent(voice, lessons.length),
+      trackCount: tracks.length,
+      chapterCount: chapters.length,
+      drivablePrefixTotal: chapters.reduce((sum, chapter) => sum + chapter.drivablePrefix, 0),
+      fullyDrivableChapters: chapters.filter((chapter) => chapter.drivable).length,
+      unstartableChapters: chapters.filter((chapter) => chapter.drivablePrefix === 0).length,
+      overriddenLessons: lessons.filter((entry) => entry.overridden).length,
+      lessonsWithoutChapter: lessons.filter((entry) => entry.chapter === null).length,
+    },
+    tracks,
+    lessons,
+    findings,
+  };
 }

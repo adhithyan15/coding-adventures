@@ -1,65 +1,8 @@
-Gujarati, chapter 13: The Headless Script, One Piece at a Time.
-10 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Gujarati, chapter 13: The Headless Script, Piece by Piece.
+8 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 10.
-હ — the consonant ha.
-
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Nothing is assumed but the words you can already say. This chapter turns them into words you can read.
-
-Script.
-Gujarati is written with an abugida, and that word is doing a lot of work. It is not an alphabet, where each letter is one sound. It is a system where a consonant already carries a vowel, and you only write a vowel when you want a different one.
-Here is the first consonant:
-હ (ha).
-That is not h. It is ha — the consonant h with an a already inside it, the a of English about. Nobody wrote that vowel. It is there because a bare consonant in this script is understood to carry it, and this is called the inherent vowel.
-Look at the shape while you say it. Notice what is not there: no line across the top. Gujarati is Devanagari's sister and the two share most of their skeleton, but Devanagari hangs its letters from a horizontal bar and Gujarati has erased it. The letters float. That single missing line is how you tell the two scripts apart at a glance, and it is why Gujarati is sometimes called the headless script.
-
-Guided Practice.
-[once you have stopped driving — write: હ (ha)]
-[your turn — read: every piece this chapter has given you so far, in order]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What vowel does a bare consonant carry? (a — the inherent vowel, unwritten.) And what is the one visible difference from Devanagari? (No line across the top.)
-Source: Unicode Gujarati chart.
-
-
-Lesson 2 of 10.
-ા (-ā) — the vowel sign that replaces the inherent a.
-
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Write the piece from the previous lesson before adding another.
-
-Script.
-The inherent a is a default. To get a different vowel you replace it, and you replace it with a mark called a mātrā.
-Here is the first one:
-ા (-ā).
-On its own it is nothing — a vertical stroke you would never write alone. It only means anything attached to a consonant, where it swaps the inherent short a for a long ā, the a of English father.
-Put it on the consonant you just learned:
-હ (ha) + ા (-ā) becomes હા.
-hā. And that is a word — it is yes, and you have been saying it since your first lesson in this language.
-Take the measure of that. You learned one consonant and one mark, and a word you already knew how to say became a word you can read. Nothing was memorised as a picture.
-
-Guided Practice.
-[once you have stopped driving — write: ા (-ā)]
-[your turn — read: every piece this chapter has given you so far, in order]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What does a mātrā do to the inherent vowel? (Replaces it.) What word did those two pieces make? (હા — hā, "yes".)
-Source: Unicode Gujarati chart.
-
-
-Lesson 3 of 10.
+Lesson 1 of 8.
 આ (ā) — the SAME vowel standing alone.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -77,7 +20,7 @@ That is ā as well — the same sound — but it is an independent vowel, a full
 These are two different characters, not two styles of one. They look related because they are, and a computer, a font and this book all treat them as completely separate. Confusing them is the commonest spelling error in the script.
 So what decides which one you write is position, not sound:
 આ (ā) begins a word.
-ા (-ā) rides on a consonant.
+ા rides on a consonant.
 You already know a word that opens with the independent one — the word for thanks — and you will be able to read the whole of it shortly.
 
 Guided Practice.
@@ -87,11 +30,11 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which of the two starts a word? (આ, the independent vowel.) Which one attaches to a consonant? (ા (-ā), the mātrā.) And are they the same character? (No — two separate characters for one sound.)
+Which of the two starts a word? (આ, the independent vowel.) Which one attaches to a consonant? (ા, the mātrā.) And are they the same character? (No — two separate characters for one sound.)
 Source: Unicode Gujarati chart.
 
 
-Lesson 4 of 10.
+Lesson 2 of 8.
 ન — the consonant na.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -104,7 +47,7 @@ Script.
 ન (na).
 na, with the same inherent a inside it. The n of English net, then the vowel nobody wrote.
 Now put the mātrā on it, exactly as you did with the first consonant:
-ન (na) + ા (-ā) becomes ના.
+ન (na) + ા becomes ના.
 nā — and that is no.
 You now hold both answers to a yes-or-no question, and you can read them both off the page:
 હા ના.
@@ -121,7 +64,7 @@ What is ના? (No.) How many separate pieces did it take? (Two — a consonant
 Source: Unicode Gujarati chart.
 
 
-Lesson 5 of 10.
+Lesson 3 of 8.
 મ — the consonant ma.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -148,7 +91,7 @@ What vowel is inside મ (ma) when nothing is attached? (a.) And what would મ 
 Source: Unicode Gujarati chart.
 
 
-Lesson 6 of 10.
+Lesson 4 of 8.
 સ — the consonant sa.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -161,7 +104,7 @@ Script.
 સ (sa).
 sa. The s of English sit, plus the inherent vowel.
 You are four consonants and one mātrā into this script, and every one of them has behaved the same way. Say the four aloud in the order you met them, each with its inherent vowel:
-હ (ha) ન (na) મ (ma) સ (sa).
+હ ન (na) મ (ma) સ (sa).
 ha, na, ma, sa. Four beats, four shapes, no bar across any of them.
 
 Guided Practice.
@@ -175,7 +118,7 @@ Say the four consonants you now hold, each with its inherent vowel. (ha, na, ma,
 Source: Unicode Gujarati chart.
 
 
-Lesson 7 of 10.
+Lesson 5 of 8.
 ત — the consonant ta.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -201,7 +144,7 @@ Where does the tongue go for ત? (Against the back of the upper teeth — denta
 Source: Unicode Gujarati chart.
 
 
-Lesson 8 of 10.
+Lesson 6 of 8.
 ે (-e) — a mātrā that sits ABOVE the letter, not beside it.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -229,7 +172,7 @@ Where does this mātrā sit? (Above the consonant.) Does it add a beat? (No — 
 Source: Unicode Gujarati chart.
 
 
-Lesson 9 of 10.
+Lesson 7 of 8.
 ્ ((virama)) — the mark that DELETES the inherent vowel, and glues two consonants together.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -259,7 +202,7 @@ What does the virama do? (Removes the inherent vowel.) And what usually happens 
 Source: Unicode Gujarati chart.
 
 
-Lesson 10 of 10.
+Lesson 8 of 8.
 નમસ્તે (namaste) — five pieces, all of them already yours.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.

@@ -1,5 +1,6 @@
 ---
 id: FR-C01-salut
+sequence: 5
 chapter: 1
 type: word
 headword: salut

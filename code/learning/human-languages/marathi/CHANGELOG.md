@@ -1,6 +1,57 @@
 # Changelog
 
+## Unreleased — complete the pre-A1 writing runway with one word
+
+- Move familiar **हो** through four explicit <=3-minute stages: trace only
+  **ह**, guided-copy the two-piece word, hide it for delayed copy, then write
+  it from a heard cue with no visible or romanized answer model.
+- Add no glyphs in the independent stages and preserve the one-new-shape ceiling
+  in the supported stages, so writing difficulty rises without a script jump.
+- Put the two new steps into the actual curriculum, book, and narration before
+  the next consonant rather than claiming writing-stage credit from metadata.
+- Record the five Chapter 11 R3 reviews that become measurable when the track
+  grows; #12467 will first reconcile declared and learner-visible order, then
+  place those reviews at honest durable distances instead of hiding the debt.
+- This proves instruction, not assessment readiness; timed production, mocks,
+  calibration, and book-only learner evidence remain separate work.
+
+## 2026-08-21 — Enumerate the pre-A1 assessment task shapes (#12430)
+
+- Turned the project-defined pre-A1 contract into executable reading,
+  listening, writing, and speaking parts with exact timing, item, replay, aid,
+  and scoring boundaries.
+- Preserved four separate 100-point papers and the requirement to reach 60% in
+  every skill without aggregate compensation.
+- Kept writing productive but gentle: delayed recall, short dictation, and
+  bounded independent responses earn points, while tracing and visible copying
+  remain instructional supports only.
+
 ## [Unreleased]
+
+### Added — pre-A1-to-C2 assessment contract (HL16)
+
+- Added a clearly labelled project-defined Marathi assessment ladder at
+  pre-A1, A1, A2, B1, B2, C1, and C2 rather than treating Maharashtra's
+  role-specific government-employee examinations as a general proficiency
+  certificate.
+- Every rung requires independent reading, listening, writing, and speaking
+  passes at 60%, with no stronger skill compensating for a weaker one.
+- The contract carries Devanagari writing from observe/trace and copying through
+  delayed recall, dictation, connected composition, and timed exam production.
+- Two timed mocks, rubrics, answer keys, calibration, and book-only human
+  validation remain explicit dependencies, so a named destination cannot be
+  mistaken for pass-readiness evidence.
+
+## Marathi chapters 1-5 regain their reading order (#12251)
+
+- Add one global, spaced sequence to all 33 legacy lessons, recovered from the
+  hand-authored book sections and closed against every prerequisite and review.
+- Remove 33 missing-sequence findings plus 15 forward prerequisites and 19
+  forward reviews that alphabetical filename fallback had fabricated. Marathi's
+  order-integrity backlog moves from 67 defects to zero.
+- Keep distinct learner debt honest: forward-language uses move from 12 to 3,
+  and one glyph spike disappears in the real order, while the remaining script
+  closure and glyph-ramp work stays measurable.
 
 ### Added — Chapter 14, the first ten pieces of Devanagari (HL-C216)
 

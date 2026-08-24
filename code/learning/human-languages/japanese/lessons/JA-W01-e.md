@@ -2,9 +2,9 @@
 schema_version: 2
 id: JA-W01-e
 spine_node: SPINE-RESPOND-BASIC
-sequence: 120
+sequence: 40
 delivery: script
-chapter: 2
+chapter: 1
 type: writing
 headword: え
 romanization: e
@@ -20,13 +20,13 @@ requires:
 introduces:
   knowledge: [JA-SCRIPT-E-01]
 practises:
-  knowledge: [JA-SCRIPT-E-01, JA-SCRIPT-I-01, JA-LEX-IIE, JA-SCRIPT-HAI-READ-01]
+  knowledge: [JA-SCRIPT-E-01, JA-SCRIPT-I-01, JA-SCRIPT-HAI-READ-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
 register: neutral-across-levels
 variety: standard-japanese-tokyo
-reviews_of: [JA-W01-i, JA-C01-iie]
+reviews_of: [JA-W01-i]
 ---
 
 # え — two strokes, and a second word for free
@@ -50,28 +50,33 @@ Two strokes, and the second one does most of the work:
 Read **e**, the vowel of English *bed* — short, and never the *ay* of *day*.
 
 ## What you've built
-<!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-E-01, JA-SCRIPT-I-01, JA-LEX-IIE] -->
+<!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-E-01, JA-SCRIPT-I-01] -->
 
 Three signs are now yours, and they spell more than one word. Put two of them
 together with the one you just learned:
 
-> **い** + **い** + **え** → **いいえ**
+> **い** | **い** | **え**
 
 **i-i-e.** Three beats — and note that the first sign is written **twice**,
-because Japanese counts two full beats there. That is the word for **no**.
-
-You have now read both answers to a yes-or-no question, from the signs up. Neither
-of them was memorised as a picture.
+because Japanese counts two full beats there. The next lesson attaches its
+meaning. For now, the whole task is decoding three known signs in order.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-E-01, JA-LEX-IIE] -->
+<!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-E-01, JA-SCRIPT-I-01] -->
+<!-- hl-writing-stage: dictation-transcription -->
 
-- [YOU WRITE: え — tick first, then the body in one movement]
-- [YOU READ: いいえ — three beats, and do not shorten the doubled sign]
+- Cover the printed **え**. Have a partner or recording say **e** once. If you
+  are working alone, read the romanized cue *e*, cover it, and continue.
+- [YOU WRITE FROM THE HEARD OR ROMANIZED CUE: え — tick first, then the body in
+  one movement]
+- [YOU READ: **い | い | え** — three beats, and do not shorten the doubled sign]
+
+Uncover the model only after your one transcription attempt. Compare, repair
+one stroke if needed, and stop.
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-E-01, JA-LEX-IIE] -->
-<!-- hl-activity: {"id":"JA-W01-e-beats","kind":"text","assesses":["JA-LEX-IIE"],"prompt":"How many beats (morae) does the written word for 'no' take?","answer":"3","accepted":["three","3 beats","three beats"],"feedback":{"correct":"Three — the first sign is written twice and gets two full beats.","incorrect":"Three: the doubled sign carries two beats, not one long one."},"response_seconds":10} -->
+<!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-E-01, JA-SCRIPT-I-01] -->
+<!-- hl-activity: {"id":"JA-W01-e-beats","kind":"text","assesses":["JA-SCRIPT-E-01"],"prompt":"Write the final sign in i-i-e, then count the three visible beats.","answer":"え; 3","accepted":["え","え, three","e; 3"],"feedback":{"correct":"Right: え finishes the three-sign sequence.","incorrect":"Write え: top tick, then the longer body. The full sequence has three beats."},"response_seconds":10} -->
 
 Why is the first sign of that word written twice? (Because it is **two beats**,
 not one held longer.)

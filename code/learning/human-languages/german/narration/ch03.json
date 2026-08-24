@@ -4,161 +4,11 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:9c052e4af0dd40f4",
+  "sourceHash": "fnv1a64:4cb03e23d3d38e6f",
   "lessons": [
     {
-      "id": "GE-C03-bitte",
-      "sequence": null,
-      "title": "bitte — the Swiss-army word: please and you're welcome",
-      "headword": "bitte",
-      "romanization": "bitte",
-      "gloss": "please — and also \"you're welcome\" (and \"here you go,\" and \"pardon?\")",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:48aad6df3ed4ede2",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "If German gives you one word to overwork, it's bitte. It's \"please.\" It's also \"you're welcome.\" Also \"here you go,\" and even \"pardon?\" One word, and it comes straight from asking."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "bitte = BIT-tuh — short crisp i, a clear double-t, soft -uh end."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "bitte is the plea-form of bitten, \"to ask, to request, to pray.\" When you say bitte you are, at root, making a request — \"I ask (this of you).\""
-            },
-            {
-              "kind": "speech",
-              "text": "That verb bitten is a close cousin of two English words:"
-            },
-            {
-              "kind": "speech",
-              "text": "bid — as in \"I bid you welcome,\" \"do as you're bidden\" — to ask/command."
-            },
-            {
-              "kind": "speech",
-              "text": "bead — astonishingly, yes: a bead was originally a prayer. People counted their prayers (Old English gebed) on a string, and the name of the prayer slid onto the little ball you counted it with. So a rosary bead is a frozen request — exactly what bitte still is."
-            },
-            {
-              "kind": "speech",
-              "text": "How one word covers so much."
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "you say bitte when…",
-                "it means",
-                "why (it's all \"I ask\")"
-              ],
-              "columns": 3,
-              "rowCount": 4,
-              "utterances": [
-                "you say bitte when…: making a request. it means: please. why (it's all \"I ask\"): \"I ask you…\"",
-                "you say bitte when…: answering danke. it means: you're welcome. why (it's all \"I ask\"): \"(don't mention it,) I ask nothing back\".",
-                "you say bitte when…: handing something over. it means: here you go. why (it's all \"I ask\"): \"I offer, at your request\".",
-                "you say bitte when…: you didn't hear. it means: pardon? why (it's all \"I ask\"): \"I ask you to repeat\"."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "For this chapter, the key pairing is the courtesy loop: Danke. — Bitte. (\"Thanks.\" — \"You're welcome.\") — the German twin of de nada / de rien."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"danke\" … \"bitte\" — the full thanks/you're-welcome exchange",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"danke\" … \"bitte\" — the full thanks/you're-welcome exchange]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"bitte\" as please, then as you're welcome — same word, tone does the work",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"bitte\" as *please*, then as *you're welcome* — same word, tone does the work]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "German bitte corresponds to English bid / bead — a prayer you can hold",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: German *bitte* ↔ English *bid* / *bead* — a prayer you can hold]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What verb is bitte from? (bitten, \"to ask / to pray.\") What two English words are its cousins? (Bid and bead — a bead was a prayer.) Name two different jobs bitte does. (please; you're welcome; here-you-go; pardon.) Next: the verb behind \"how are you?\" — and like French, it's to go."
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "GE-C03-danke",
-      "sequence": null,
+      "sequence": 105,
       "title": "danke — \"thank you,\" which is really \"I think of you\"",
       "headword": "danke",
       "romanization": "danke",
@@ -169,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bbb7f015dc775493",
+      "sourceHash": "fnv1a64:7bb22827ed3f023a",
       "notice": null,
       "blocks": [
         {
@@ -313,19 +163,19 @@
       ]
     },
     {
-      "id": "GE-C03-es-geht",
-      "sequence": null,
-      "title": "es geht — the German shrug: \"it goes\"",
-      "headword": "es geht",
-      "romanization": "es geht",
-      "gloss": "so-so / okay (literally \"it goes\"); also \"so lala\"",
+      "id": "GE-C03-bitte",
+      "sequence": 110,
+      "title": "bitte — the Swiss-army word: please and you're welcome",
+      "headword": "bitte",
+      "romanization": "bitte",
+      "gloss": "please — and also \"you're welcome\" (and \"here you go,\" and \"pardon?\")",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9c622b2ea1c89fc0",
+      "sourceHash": "fnv1a64:0b6aedffb7a6d409",
       "notice": null,
       "blocks": [
         {
@@ -341,24 +191,18 @@
             },
             {
               "kind": "speech",
-              "text": "Someone asks Wie geht's? You're neither great nor terrible. German's answer is beautifully understated: es geht — just \"it goes.\" Not well, not badly — it simply goes. That bareness is the shrug."
+              "text": "If German gives you one word to overwork, it's bitte. It's \"please.\" It's also \"you're welcome.\" Also \"here you go,\" and even \"pardon?\" One word, and it comes straight from asking."
             }
           ]
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "Review first (20 seconds)",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
               "kind": "speech",
-              "text": "From Chapter 1: gut — \"well / good\" (cognate of English good). So Es geht mir gut = \"it goes well for me.\" Now drop the gut, and watch what happens to the meaning."
+              "text": "bitte = BIT-tuh — short crisp i, a clear double-t, soft -uh end."
             }
           ]
         },
@@ -369,34 +213,43 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "es geht = literally \"it goes.\" In the last lesson you added gut to make it positive. Say it with nothing added — \"es geht\" — and the very absence of a \"well\" or \"badly\" makes it mean \"eh, so-so, it's going, I'm getting by.\" The understatement carries the whole meaning."
+              "text": "bitte is the plea-form of bitten, \"to ask, to request, to pray.\" When you say bitte you are, at root, making a request — \"I ask (this of you).\""
             },
             {
               "kind": "speech",
-              "text": "Your German answer ladder for Wie geht's?:"
+              "text": "That verb bitten is a close cousin of two English words:"
+            },
+            {
+              "kind": "speech",
+              "text": "bid — as in \"I bid you welcome,\" \"do as you're bidden\" — to ask/command."
+            },
+            {
+              "kind": "speech",
+              "text": "bead — astonishingly, yes: a bead was originally a prayer. People counted their prayers (Old English gebed) on a string, and the name of the prayer slid onto the little ball you counted it with. So a rosary bead is a frozen request — exactly what bitte still is."
+            },
+            {
+              "kind": "speech",
+              "text": "How one word covers so much."
             },
             {
               "kind": "table",
               "headers": [
-                "answer",
-                "sense"
+                "you say bitte when…",
+                "it means",
+                "why (it's all \"I ask\")"
               ],
-              "columns": 2,
+              "columns": 3,
               "rowCount": 4,
               "utterances": [
-                "Sehr gut! / Gut, danke means very well / well, thanks.",
-                "Es geht means so-so, okay-ish.",
-                "So lala means so-so (a sing-song \"meh\"; lala is just a filler singsong).",
-                "Nicht so gut means not so well."
+                "you say bitte when…: making a request. it means: please. why (it's all \"I ask\"): \"I ask you…\"",
+                "you say bitte when…: answering danke. it means: you're welcome. why (it's all \"I ask\"): \"(don't mention it,) I ask nothing back\".",
+                "you say bitte when…: handing something over. it means: here you go. why (it's all \"I ask\"): \"I offer, at your request\".",
+                "you say bitte when…: you didn't hear. it means: pardon? why (it's all \"I ask\"): \"I ask you to repeat\"."
               ]
             },
             {
               "kind": "speech",
-              "text": "And the cross-track shrug collection, now four deep:"
-            },
-            {
-              "kind": "speech",
-              "text": "German es geht (\"it goes\"), French comme ci, comme ça (\"like this, like that\"), Spanish más o menos (\"more or less\") / regular, Italian così così (\"so so\")."
+              "text": "For this chapter, the key pairing is the courtesy loop: Danke. — Bitte. (\"Thanks.\" — \"You're welcome.\") — the German twin of de nada / de rien."
             }
           ]
         },
@@ -414,29 +267,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"es geht\" — flat, understated, a shrug in the voice",
+              "instruction": "\"danke\" … \"bitte\" — the full thanks/you're-welcome exchange",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"es geht\" — flat, understated, a shrug in the voice]"
+              "source": "[YOU SAY: \"danke\" … \"bitte\" — the full thanks/you're-welcome exchange]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "answer \"Wie geht's?\" three ways — \"Gut!\" / \"Es geht\" / \"So lala\"",
+              "instruction": "\"bitte\" as please, then as you're welcome — same word, tone does the work",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: answer \"Wie geht's?\" three ways — \"Gut!\" / \"Es geht\" / \"So lala\"]"
+              "source": "[YOU SAY: \"bitte\" as *please*, then as *you're welcome* — same word, tone does the work]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the four shrugs — es geht / comme ci comme ça / más o menos / così così",
+              "instruction": "German bitte corresponds to English bid / bead — a prayer you can hold",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the four shrugs — es geht / comme ci comme ça / más o menos / così così]"
+              "source": "[YOU SAY: German *bitte* ↔ English *bid* / *bead* — a prayer you can hold]"
             }
           ]
         },
@@ -453,116 +306,7 @@
             },
             {
               "kind": "speech",
-              "text": "Why does bare es geht (\"it goes\") mean \"so-so\"? (Because it adds no well or badly — the understatement is the shrug.) What do you add to make it positive? (gut becomes es geht mir gut.) Next chapter: farewells — auf Wiedersehen, tschüss, bis bald."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C03-formal-practice",
-      "sequence": null,
-      "title": "Formal practice — Wie geht es Ihnen?",
-      "headword": "Wie geht es Ihnen?",
-      "romanization": "Wie geht es Ihnen?",
-      "gloss": "the formal wellbeing exchange",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:0ec4a4a2adff25f5",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Keep the casual exchange’s structure and replace dir with formal Ihnen."
-            },
-            {
-              "kind": "speech",
-              "text": "— Guten Tag. Wie geht es Ihnen? — Danke, gut. Und Ihnen? — Es geht. — [after a favour] Danke! — Bitte."
-            },
-            {
-              "kind": "speech",
-              "text": "The capital letter matters: Ihnen belongs to respectful Sie. The verb phrase does not change; only the dative listener word does."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the formal exchange, both voices",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the formal exchange, both voices]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“Wie geht es Ihnen? — Danke, gut.”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “Wie geht es Ihnen? — Danke, gut.”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“Und Ihnen? — Es geht.”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “Und Ihnen? — Es geht.”]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "“Wie geht es Ihnen? — Danke, gut. Und Ihnen?”"
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Which greeting opens the formal exchange? (Guten Tag.) Which dative pronoun appears twice? (Ihnen.) What changes from the casual version? (Dir becomes Ihnen.) You can now run the Chapter 3 exchange in either register."
+              "text": "What verb is bitte from? (bitten, \"to ask / to pray.\") What two English words are its cousins? (Bid and bead — a bead was a prayer.) Name two different jobs bitte does. (please; you're welcome; here-you-go; pardon.) Next: the verb behind \"how are you?\" — and like French, it's to go."
             }
           ]
         }
@@ -570,7 +314,7 @@
     },
     {
       "id": "GE-C03-gehen",
-      "sequence": null,
+      "sequence": 115,
       "title": "gehen — \"to go,\" and it's just English go",
       "headword": "gehen",
       "romanization": "gehen",
@@ -581,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2a5f813dc0845297",
+      "sourceHash": "fnv1a64:58b1addca54a1127",
       "notice": null,
       "blocks": [
         {
@@ -722,140 +466,8 @@
       ]
     },
     {
-      "id": "GE-C03-practice",
-      "sequence": null,
-      "title": "Practice — Wie geht’s?, casually",
-      "headword": "(practice)",
-      "romanization": "(practice)",
-      "gloss": "the casual Wie geht's? exchange",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:9737b1fcb573ffad",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Assemble the chapter’s atoms into one exchange with a friend. No new words."
-            },
-            {
-              "kind": "speech",
-              "text": "— Hallo! Wie geht’s? — Gut, danke, und dir? — Es geht. — [after a favour] Danke! — Bitte."
-            },
-            {
-              "kind": "speech",
-              "text": "The dative dir remains because the full question means “How goes it to you?” The shortened und dir? keeps that same grammar."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "What you are retrieving",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "danke — thanks, related to denken, “think”;"
-            },
-            {
-              "kind": "speech",
-              "text": "bitte — please / you’re welcome, from bitten, “ask”;"
-            },
-            {
-              "kind": "speech",
-              "text": "wie geht’s? — how are you?;"
-            },
-            {
-              "kind": "speech",
-              "text": "gut / es geht — well / so-so."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the whole exchange, both voices",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the whole exchange, both voices]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“Wie geht’s? — Gut, danke.”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “Wie geht’s? — Gut, danke.”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“Und dir? — Es geht.”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “Und dir? — Es geht.”]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "“Wie geht’s? — Gut, danke, und dir?”"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Run the casual exchange without looking. Which answer is neutral or so-so? (Es geht.) Which word answers thanks? (Bitte.) Why dir? (The question is literally “How goes it to you?”) Next: perform the formal version."
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "GE-C03-wie-geht-es",
-      "sequence": null,
+      "sequence": 120,
       "title": "Wie geht es dir? — “how are you?”",
       "headword": "Wie geht es dir?",
       "romanization": "Wie geht es dir?",
@@ -866,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:24ef390ee824208c",
+      "sourceHash": "fnv1a64:909da91a2d33162e",
       "notice": null,
       "blocks": [
         {
@@ -992,7 +604,7 @@
     },
     {
       "id": "GE-C03-wie-geht-register",
-      "sequence": null,
+      "sequence": 125,
       "title": "Wie geht es Ihnen? — formal “how are you?”",
       "headword": "Wie geht es Ihnen?",
       "romanization": "Wie geht es Ihnen?",
@@ -1003,7 +615,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8dc5e2521c199718",
+      "sourceHash": "fnv1a64:45d6c5767b70b9eb",
       "notice": null,
       "blocks": [
         {
@@ -1119,6 +731,394 @@
             {
               "kind": "speech",
               "text": "Which word means informal “to you”? (Dir.) Which is formal? (Ihnen, capitalised.) What stays the same? (Wie geht es and the “go” metaphor.) Next: practise the casual exchange before the formal one."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C03-es-geht",
+      "sequence": 130,
+      "title": "es geht — the German shrug: \"it goes\"",
+      "headword": "es geht",
+      "romanization": "es geht",
+      "gloss": "so-so / okay (literally \"it goes\"); also \"so lala\"",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dbfde709aebc02a3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Someone asks Wie geht's? You're neither great nor terrible. German's answer is beautifully understated: es geht — just \"it goes.\" Not well, not badly — it simply goes. That bareness is the shrug."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "Review first (20 seconds)",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "From Chapter 1: gut — \"well / good\" (cognate of English good). So Es geht mir gut = \"it goes well for me.\" Now drop the gut, and watch what happens to the meaning."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "es geht = literally \"it goes.\" In the last lesson you added gut to make it positive. Say it with nothing added — \"es geht\" — and the very absence of a \"well\" or \"badly\" makes it mean \"eh, so-so, it's going, I'm getting by.\" The understatement carries the whole meaning."
+            },
+            {
+              "kind": "speech",
+              "text": "Your German answer ladder for Wie geht's?:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "answer",
+                "sense"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "Sehr gut! / Gut, danke means very well / well, thanks.",
+                "Es geht means so-so, okay-ish.",
+                "So lala means so-so (a sing-song \"meh\"; lala is just a filler singsong).",
+                "Nicht so gut means not so well."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "And the cross-track shrug collection, now four deep:"
+            },
+            {
+              "kind": "speech",
+              "text": "German es geht (\"it goes\"), French comme ci, comme ça (\"like this, like that\"), Spanish más o menos (\"more or less\") / regular, Italian così così (\"so so\")."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"es geht\" — flat, understated, a shrug in the voice",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"es geht\" — flat, understated, a shrug in the voice]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "answer \"Wie geht's?\" three ways — \"Gut!\" / \"Es geht\" / \"So lala\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: answer \"Wie geht's?\" three ways — \"Gut!\" / \"Es geht\" / \"So lala\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the four shrugs — es geht / comme ci comme ça / más o menos / così così",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the four shrugs — es geht / comme ci comme ça / más o menos / così così]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why does bare es geht (\"it goes\") mean \"so-so\"? (Because it adds no well or badly — the understatement is the shrug.) What do you add to make it positive? (gut becomes es geht mir gut.) Next chapter: farewells — auf Wiedersehen, tschüss, bis bald."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C03-practice",
+      "sequence": 135,
+      "title": "Practice — Wie geht’s?, casually",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "the casual Wie geht's? exchange",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aed52fa8c957a179",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Assemble the chapter’s atoms into one exchange with a friend. No new words."
+            },
+            {
+              "kind": "speech",
+              "text": "— Hallo! Wie geht’s? — Gut, danke, und dir? — Es geht. — [after a favour] Danke! — Bitte."
+            },
+            {
+              "kind": "speech",
+              "text": "The dative dir remains because the full question means “How goes it to you?” The shortened und dir? keeps that same grammar."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "What you are retrieving",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "danke — thanks, related to denken, “think”;"
+            },
+            {
+              "kind": "speech",
+              "text": "bitte — please / you’re welcome, from bitten, “ask”;"
+            },
+            {
+              "kind": "speech",
+              "text": "wie geht’s? — how are you?;"
+            },
+            {
+              "kind": "speech",
+              "text": "gut / es geht — well / so-so."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole exchange, both voices",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole exchange, both voices]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“Wie geht’s? — Gut, danke.”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “Wie geht’s? — Gut, danke.”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“Und dir? — Es geht.”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “Und dir? — Es geht.”]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "“Wie geht’s? — Gut, danke, und dir?”"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Run the casual exchange without looking. Which answer is neutral or so-so? (Es geht.) Which word answers thanks? (Bitte.) Why dir? (The question is literally “How goes it to you?”) Next: perform the formal version."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C03-formal-practice",
+      "sequence": 140,
+      "title": "Formal practice — Wie geht es Ihnen?",
+      "headword": "Wie geht es Ihnen?",
+      "romanization": "Wie geht es Ihnen?",
+      "gloss": "the formal wellbeing exchange",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3930dec72203ef3f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Keep the casual exchange’s structure and replace dir with formal Ihnen."
+            },
+            {
+              "kind": "speech",
+              "text": "— Guten Tag. Wie geht es Ihnen? — Danke, gut. Und Ihnen? — Es geht. — [after a favour] Danke! — Bitte."
+            },
+            {
+              "kind": "speech",
+              "text": "The capital letter matters: Ihnen belongs to respectful Sie. The verb phrase does not change; only the dative listener word does."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the formal exchange, both voices",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the formal exchange, both voices]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“Wie geht es Ihnen? — Danke, gut.”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “Wie geht es Ihnen? — Danke, gut.”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“Und Ihnen? — Es geht.”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “Und Ihnen? — Es geht.”]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "“Wie geht es Ihnen? — Danke, gut. Und Ihnen?”"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which greeting opens the formal exchange? (Guten Tag.) Which dative pronoun appears twice? (Ihnen.) What changes from the casual version? (Dir becomes Ihnen.) You can now run the Chapter 3 exchange in either register."
             }
           ]
         }

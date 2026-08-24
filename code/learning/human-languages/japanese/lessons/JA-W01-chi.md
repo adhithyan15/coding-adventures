@@ -2,7 +2,7 @@
 schema_version: 2
 id: JA-W01-chi
 spine_node: SPINE-MEET-GREET
-sequence: 160
+sequence: 100
 delivery: script
 chapter: 2
 type: writing

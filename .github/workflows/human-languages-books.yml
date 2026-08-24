@@ -153,13 +153,17 @@ jobs:
           # A stale vector must fail before it reaches rsvg or XeLaTeX.
           npm run check:figures
           npm run check:books
-          # The top-level track table is a generated view over the registry,
-          # curriculum maps, lessons, and book manifest. Keep every registered
-          # language visible without hand-maintained chapter or lesson claims.
+          # One progress card per language is generated from the registry,
+          # curriculum maps, lessons, and book manifest. Independent curriculum
+          # PRs never rewrite a shared README table.
           # Regenerate with `npm run generate:progress`.
           npm run check:progress
-          # The modality manifest (core/lesson-modality.json) is derived from the
-          # lessons and is what lets the complete book, the app, and the future
+          # Corpus debt stays exact, but each language owns a separate generated
+          # snapshot so independent curriculum PRs do not collide on one test line.
+          # Regenerate with `npm run generate:gentle-snapshots`.
+          npm run check:gentle-snapshots
+          # The per-language modality shards (core/lesson-modality/*.json) are
+          # derived from the lessons and let the complete book, the app, and the future
           # dictation-friendly driving edition be filtered out of one source. A stale
           # manifest is not cosmetic: a lesson that gained a paradigm table would still
           # read `drivable: true`, and the driving edition would tell somebody at 70mph

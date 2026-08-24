@@ -4,11 +4,11 @@
   "chapter": 8,
   "title": "Telling the Time",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:82538ce167e89fcb",
+  "sourceHash": "fnv1a64:2dab988c5a7db51b",
   "lessons": [
     {
       "id": "FR-C08-heure",
-      "sequence": null,
+      "sequence": 225,
       "title": "heure — the hour, and telling the time",
       "headword": "heure",
       "romanization": "heure",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:64d1db65f1168841",
+      "sourceHash": "fnv1a64:93a082b1f4ec4ef7",
       "notice": null,
       "blocks": [
         {
@@ -145,7 +145,7 @@
     },
     {
       "id": "FR-C08-midi-minuit",
-      "sequence": null,
+      "sequence": 230,
       "title": "midi and minuit — noon and midnight",
       "headword": "midi, minuit",
       "romanization": "midi, minuit",
@@ -156,7 +156,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:22f7f3eadbc1fe83",
+      "sourceHash": "fnv1a64:c7cace6b91674b15",
       "notice": null,
       "blocks": [
         {

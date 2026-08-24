@@ -1,5 +1,6 @@
 ---
 id: FR-C05-habiter
+sequence: 185
 chapter: 5
 type: word
 headword: habiter

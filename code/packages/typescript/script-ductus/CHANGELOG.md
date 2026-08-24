@@ -2,6 +2,218 @@
 
 ## Unreleased
 
+### Added — source-verified Arabic ذ ductus (HL-C09HD)
+
+- Extend Arabic's canonical inventory to 23 unique source-backed rows.
+- Preserve the complete **د** body before lifting once for **ذ**'s upper dot.
+- Keep Arabic incomplete while six lesson-corpus base letters remain absent.
+
+### Added — source-verified Arabic ء ductus and starter audit
+
+- Replace Arabic **ء**'s final conventional placeholder with a cited path.
+- Follow the demonstrated one-stroke head-to-diagonal variant while recording
+  the source's accepted lifted alternative.
+- Gate the 22-row starter inventory's uniqueness and source verification while
+  keeping Arabic incomplete until its missing lesson-corpus letters are added.
+
+### Added — source-verified Arabic ن ductus
+
+- Replace Arabic **ن**'s conventional bowl-and-dot summary with a cited path.
+- Sweep the deep below-baseline bowl before lifting once for its centred dot.
+- Keep the Arabic source independent from Persian and Urdu **ن**.
+
+### Added — source-verified Arabic م ductus
+
+- Replace Arabic **م**'s conventional head-and-tail summary with a cited path.
+- Keep its small closed head and below-baseline tail in one continuous run.
+- Cover the Arabic-scoped path independently from Persian and Urdu **م**.
+
+### Added — source-verified Arabic ث ductus
+
+- Replace Arabic **ث**'s conventional placeholder with the dedicated Oregon video.
+- Reuse the verified right-to-left bowl, then place its three upper dots separately.
+- Cover the four-run, three-lift path with font-fit and provenance gates.
+
+### Fixed — canonical Gujarati inventory completion (HL-C09GY)
+
+- Remove stale conventional duplicates of already verified **ન** and **પ**.
+- Mark the 44-letter Gujarati teaching sequence complete and source-verified.
+- Reject duplicate glyph rows across every canonical script inventory.
+
+### Added — cited Gujarati હ ductus (HL-C09GX)
+
+- Replace Gujarati **હ**'s conventional placeholder with a cited one-run variant.
+- Render its upper loop, middle turn, and broad lower bowl continuously.
+- Cover provenance and exact-outline rendering while returning to **ન** next.
+
+### Added — cited Gujarati સ ductus (HL-C09GW)
+
+- Replace Gujarati **સ**'s conventional placeholder with a cited two-run variant.
+- Render its rounded loop, left body, and shoulder before the tall right spine.
+- Cover provenance and exact-outline rendering while queuing **હ** next.
+
+### Added — cited Gujarati શ ductus (HL-C09GV)
+
+- Replace Gujarati **શ**'s conventional placeholder with a cited two-run variant.
+- Render its upper loop and lower body before the separate tall right spine.
+- Cover provenance and exact-outline rendering while queuing **સ** next.
+
+### Added — cited Gujarati વ ductus (HL-C09GU)
+
+- Replace Gujarati **વ**'s conventional placeholder with a cited two-run variant.
+- Render its rounded body and shoulder before the separate tall right spine.
+- Cover provenance and exact-outline rendering while queuing **શ** next.
+
+### Added — cited Gujarati ળ ductus (HL-C09GT)
+
+- Replace Gujarati **ળ**'s conventional placeholder with a cited one-run variant.
+- Render its left bowl, middle turn, right arch, and tall spine continuously.
+- Cover provenance and exact-outline rendering while queuing **વ** next.
+
+### Added — cited Gujarati લ ductus (HL-C09GS)
+
+- Replace Gujarati **લ**'s conventional placeholder with a cited three-run variant.
+- Render its rounded body, separate shoulder, and tall right spine in source order.
+- Cover provenance and exact-outline rendering while queuing **ળ** next.
+
+### Added — cited Gujarati ર ductus (HL-C09GR)
+
+- Replace Gujarati **ર**'s conventional placeholder with a cited one-run variant.
+- Render its rounded upper body, middle loop, and lower-right tail continuously.
+- Cover provenance and exact-outline rendering while queuing **લ** next.
+
+### Added — cited Gujarati ય ductus (HL-C09GQ)
+
+- Replace Gujarati **ય**'s conventional placeholder with a cited two-run variant.
+- Render its rounded body and long shoulder before the separate tall right spine.
+- Cover provenance and exact-outline rendering while queuing **ર** next.
+
+### Added — cited Gujarati મ ductus (HL-C09GP)
+
+- Replace Gujarati **મ**'s conventional placeholder with a cited two-run variant.
+- Render its left body and inner turn before the separate tall right spine.
+- Cover provenance and exact-outline rendering while queuing **ય** next.
+
+### Added — cited Gujarati ભ ductus (HL-C09GO)
+
+- Replace Gujarati **ભ**'s conventional placeholder with a cited two-run variant.
+- Render the broad loop and inner turn before the separate tall right spine.
+- Cover provenance and exact-outline rendering while queuing **મ** next.
+
+### Added — cited Gujarati બ ductus (HL-C09GN)
+
+- Replace Gujarati **બ**'s conventional placeholder and render its rounded body and inner turn before the separate tall right spine.
+- Pin the t30apps.com two-path order, lift evidence, and variation warning to the bundled Noto Sans Gujarati fit.
+- Cover source provenance and exact-outline filmstrip rendering while queuing conventional **ભ** next.
+
+### Added — cited Gujarati ફ ductus (HL-C09GM)
+
+- Restore missing Gujarati **ફ** and render its winding body and tail before the separate diagonal cross-stroke.
+- Pin the t30apps.com two-path order, lift evidence, and variation warning to the bundled Noto Sans Gujarati fit.
+- Cover source provenance and exact-outline filmstrip rendering while queuing missing **બ** next.
+
+### Added — cited Gujarati પ ductus (HL-C09GL)
+
+- Restore missing Gujarati **પ** and render its hooked left stem and broad lower body plus separate tall spine with one lift.
+- Pin the t30apps.com two-path order, lift evidence, and variation warning to the bundled Noto Sans Gujarati fit.
+- Cover source provenance and exact-outline filmstrip rendering while queuing missing **ફ** next.
+
+### Added — cited Gujarati ન ductus (HL-C09GK)
+
+- Restore missing Gujarati **ન** and render its loop-and-shoulder body plus separate tall spine with one lift.
+- Pin the t30apps.com two-path order, lift evidence, and variation warning to the bundled Noto Sans Gujarati fit.
+- Cover source provenance and exact-outline filmstrip rendering while queuing missing **પ** next.
+
+### Added — cited Gujarati ધ ductus (HL-C09GJ)
+
+- Render Gujarati **ધ** as a joined high-entry body and separate tall right spine with one lift.
+- Pin the t30apps.com two-path order, lift evidence, and variation warning to the bundled Noto Sans Gujarati fit.
+- Cover source provenance and exact-outline filmstrip rendering while queuing missing **ન** next.
+
+### Added — cited Gujarati દ ductus (HL-C09GI)
+
+- Render Gujarati **દ** as one continuous upper-body, middle-turn, and lower-body run with no lift.
+- Pin the t30apps.com path order, zero-lift evidence, and variation warning to the bundled Noto Sans Gujarati fit.
+- Cover source provenance and exact-outline filmstrip rendering while queuing **ધ** next.
+
+### Added — cited Gujarati થ ductus (HL-C09GH)
+
+- Restore missing Gujarati **થ** and render its looped body and separate tall right spine with one lift.
+- Pin the t30apps.com two-path order, lift evidence, and variation warning to the bundled Noto Sans Gujarati fit.
+- Cover source provenance and exact-outline filmstrip rendering while queuing **દ** next.
+
+### Added — cited Gujarati ત ductus (HL-C09GG)
+
+- Render Gujarati **ત** as an open left body and separate tall right spine with one lift.
+- Pin the t30apps.com two-path order, lift evidence, and variation warning to the bundled Noto Sans Gujarati fit.
+- Cover source provenance and exact-outline filmstrip rendering while queuing missing **થ** next.
+
+### Added — cited Gujarati ણ ductus (HL-C09GF)
+
+- Render Gujarati **ણ** as a hooked left body, separate middle bowl, and tall right spine with two lifts.
+- Pin the t30apps.com three-path order, lift evidence, and variation warning to the bundled Noto Sans Gujarati fit.
+- Cover source provenance and exact-outline filmstrip rendering while queuing **ત** next.
+
+### Added — cited Gujarati ઢ ductus (HL-C09GE)
+
+- Render Gujarati **ઢ** as one continuous high-shoulder, outer-bowl, and inner-loop run with no lift.
+- Pin the t30apps.com path order, zero-lift evidence, and variation warning to the bundled Noto Sans Gujarati fit.
+- Cover source provenance and exact-outline filmstrip rendering while queuing **ણ** next.
+
+### Added — cited Gujarati ડ ductus (HL-C09GD)
+
+- Restore missing Gujarati **ડ** and trace its high shoulder, middle descent, and lower bowl as one continuous run.
+- Pin the t30apps.com path order, zero-lift evidence, and variation warning to the bundled Noto Sans Gujarati fit.
+- Cover source provenance and exact-outline filmstrip rendering while queuing **ઢ** next.
+
+### Added — cited Gujarati ઠ ductus (HL-C09GC)
+
+- Restore missing Gujarati **ઠ** and trace its high shoulder, outer bowl, and inward terminal as one continuous run.
+- Pin the t30apps.com path order, zero-lift evidence, and variation warning to the bundled Noto Sans Gujarati fit.
+- Cover source provenance and exact-outline filmstrip rendering while queuing **ડ** next.
+
+### Added — cited Gujarati ટ ductus (HL-C09GB)
+
+- Render **ટ** as one continuous upper-turn, diagonal-middle, and lower-bowl run with no lift.
+- Preserve t30apps.com's version-1.0 first-path order while fitting the median to Noto Sans Gujarati.
+- Add source, font-routing, on-ink, whole-glyph, and one-frame filmstrip coverage; the focused suite now passes 1,371 tests.
+
+### Added — cited Gujarati ઞ ductus (HL-C09GA)
+
+- Restore missing **ઞ** to the inventory and render its left body, short rightward shoulder, and tall spine with lower terminal as three runs with two lifts.
+- Preserve t30apps.com's version-1.0 first-through-third-path order while fitting all medians to Noto Sans Gujarati.
+- Add source, font-routing, on-ink, whole-glyph, and three-frame filmstrip coverage; the focused suite now passes 1,364 tests.
+
+### Added — cited Gujarati ઝ ductus (HL-C09FZ)
+
+- Restore missing **ઝ** to the inventory and render its left body, right loop-and-tail, and upper stem as three runs with two lifts.
+- Preserve t30apps.com's version-1.0 first-through-third-path order while fitting all medians to Noto Sans Gujarati.
+- Add source, font-routing, on-ink, whole-glyph, and three-frame filmstrip coverage; the focused suite now passes 1,357 tests.
+
+### Added — cited Gujarati જ ductus (HL-C09FY)
+
+- Render **જ** as one continuous left-loop, crossing-body, right-loop, and upper-right-exit run with no lift.
+- Preserve t30apps.com's version-1.0 first-path order while fitting the median to Noto Sans Gujarati.
+- Add source, font-routing, on-ink, whole-glyph, and three-frame filmstrip coverage; the focused suite now passes 1,350 tests.
+
+### Added — cited Gujarati છ ductus (HL-C09FX)
+
+- Render **છ** as one continuous upper-left-lobe, lower-body, outer-curve, and upper-right-lobe run with no lift.
+- Preserve t30apps.com's version-1.0 first-path order while fitting the median to Noto Sans Gujarati.
+- Add source, font-routing, on-ink, whole-glyph, and one-frame filmstrip coverage; the focused suite now passes 1,343 tests.
+
+### Added — cited Gujarati ચ ductus (HL-C09FW)
+
+- Render **ચ** as one joined upper-bowl, middle-loop, and lower-body run followed by its separate right spine and lower foot with one lift.
+- Preserve t30apps.com's version-1.0 first-and-second-path order while fitting both medians to Noto Sans Gujarati.
+- Add source, font-routing, on-ink, whole-glyph, and two-frame filmstrip coverage; the focused suite now passes 1,336 tests.
+
+### Added — cited Gujarati ઙ ductus (HL-C09FV)
+
+- Restore missing **ઙ** to the inventory and render its S-like body before the separate upper-right dot with one lift.
+- Preserve t30apps.com's version-1.0 first-and-second-path order while fitting both medians to Noto Sans Gujarati.
+- Add source, font-routing, on-ink, whole-glyph, and two-frame filmstrip coverage; the focused suite now passes 1,329 tests.
+
 ### Added — cited Gujarati ઘ ductus (HL-C09FU)
 
 - Restore missing **ઘ** to the inventory and render its joined upper-and-lower body before the separate right spine and lower foot with one lift.

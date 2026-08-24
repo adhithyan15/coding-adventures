@@ -1,5 +1,6 @@
 ---
 id: FR-C05-travailler
+sequence: 190
 chapter: 5
 type: word
 headword: travailler

@@ -1,0 +1,1139 @@
+{
+  "version": 1,
+  "algorithm": "fnv1a64",
+  "maxLinearisableTableColumns": 3,
+  "chapters": [
+    {
+      "language": "hindi",
+      "chapter": 1,
+      "sourceHash": "fnv1a64:641e4be8d43b233f",
+      "lessonIds": [
+        "HI-C01-namaste",
+        "HI-C01-namaskar",
+        "HI-C01-dhanyavad",
+        "HI-C01-shukriya",
+        "HI-C01-alvida",
+        "HI-W01-shirorekha-na-ma",
+        "HI-W01-na-ma",
+        "HI-W02-abugida-ka-ta",
+        "HI-W02-ka-ta-mouth-order",
+        "HI-C01-practice"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 0,
+      "text": "hindi/narration/ch01.txt",
+      "json": "hindi/narration/ch01.json",
+      "textHash": "fnv1a64:94be560338c90796",
+      "jsonHash": "fnv1a64:938df7e54481e748"
+    },
+    {
+      "language": "hindi",
+      "chapter": 2,
+      "sourceHash": "fnv1a64:30b74a8bd8da4912",
+      "lessonIds": [
+        "HI-C02-naam",
+        "HI-C02-meraa",
+        "HI-C02-hai",
+        "HI-C02-mera-naam-hai",
+        "HI-C02-aap-tum",
+        "HI-C02-kya",
+        "HI-C02-aapka-naam-kya-hai",
+        "HI-C02-khushi",
+        "HI-W03-matras-naam",
+        "HI-W03-preposed-i",
+        "HI-W04-ra-sa-mera-naam",
+        "HI-W04-write-mera-naam",
+        "HI-W05-virama-namaste",
+        "HI-W05-conjuncts",
+        "HI-W05-write-namaste",
+        "HI-C02-practice"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 0,
+      "text": "hindi/narration/ch02.txt",
+      "json": "hindi/narration/ch02.json",
+      "textHash": "fnv1a64:f67f045838e41941",
+      "jsonHash": "fnv1a64:033082f174c8ca95"
+    },
+    {
+      "language": "hindi",
+      "chapter": 3,
+      "sourceHash": "fnv1a64:d0a0b12d0cf96cf3",
+      "lessonIds": [
+        "HI-C03-kaise",
+        "HI-C03-aap-kaise-hain",
+        "HI-C03-main",
+        "HI-C03-hun",
+        "HI-C03-thik",
+        "HI-C03-aapka-swagat-hai",
+        "HI-C03-practice"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 0,
+      "text": "hindi/narration/ch03.txt",
+      "json": "hindi/narration/ch03.json",
+      "textHash": "fnv1a64:c4610cfa9f0cbd23",
+      "jsonHash": "fnv1a64:bcf8439b85119517"
+    },
+    {
+      "language": "hindi",
+      "chapter": 4,
+      "sourceHash": "fnv1a64:254b0713b9b6a859",
+      "lessonIds": [
+        "HI-C04-phir",
+        "HI-C04-milenge",
+        "HI-C04-phir-milenge",
+        "HI-C04-kal-milte-hain",
+        "HI-C04-chalta-hun",
+        "HI-C04-practice"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 0,
+      "text": "hindi/narration/ch04.txt",
+      "json": "hindi/narration/ch04.json",
+      "textHash": "fnv1a64:fb80ac347f9fde84",
+      "jsonHash": "fnv1a64:dcec2d80d7123310"
+    },
+    {
+      "language": "hindi",
+      "chapter": 5,
+      "sourceHash": "fnv1a64:5d90c350329583d4",
+      "lessonIds": [
+        "HI-C05-bolna",
+        "HI-C05-rahna",
+        "HI-C05-karna",
+        "HI-C05-bolta-hun",
+        "HI-C05-main-hindi-bolta-hun",
+        "HI-C05-practice"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 0,
+      "text": "hindi/narration/ch05.txt",
+      "json": "hindi/narration/ch05.json",
+      "textHash": "fnv1a64:ed05b74f37ece7e7",
+      "jsonHash": "fnv1a64:7072cbf12ea872df"
+    },
+    {
+      "language": "hindi",
+      "chapter": 6,
+      "sourceHash": "fnv1a64:866f9c8f103ba49d",
+      "lessonIds": [
+        "HI-C06-numbers-1-5",
+        "HI-C06-tin-char-history",
+        "HI-C06-paanch-nasal",
+        "HI-S01-letter-ma",
+        "HI-S110-letter-ra"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 3,
+      "text": "hindi/narration/ch06.txt",
+      "json": "hindi/narration/ch06.json",
+      "textHash": "fnv1a64:488cfa86d6ad7d9f",
+      "jsonHash": "fnv1a64:b570ee124f6e04f7"
+    },
+    {
+      "language": "hindi",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:86c2dfaa869d26e8",
+      "lessonIds": [
+        "HI-C07-haan",
+        "HI-C07-nahin",
+        "HI-S02-letter-na",
+        "HI-S111-letter-ka"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 2,
+      "text": "hindi/narration/ch07.txt",
+      "json": "hindi/narration/ch07.json",
+      "textHash": "fnv1a64:8f53b2fc7fdf0607",
+      "jsonHash": "fnv1a64:52dc35b99045fd33"
+    },
+    {
+      "language": "hindi",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:6de850852f3d8ed5",
+      "lessonIds": [
+        "HI-C08-kripaya",
+        "HI-S03-letter-a",
+        "HI-S112-vowel-sign-e"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "hindi/narration/ch08.txt",
+      "json": "hindi/narration/ch08.json",
+      "textHash": "fnv1a64:dd4af85fa40f11e9",
+      "jsonHash": "fnv1a64:9dde267fe6cb1132"
+    },
+    {
+      "language": "hindi",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:17432207a080938f",
+      "lessonIds": [
+        "HI-C09-maaf-kijiye",
+        "HI-S04-letter-aa",
+        "HI-S113-letter-pa"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "hindi/narration/ch09.txt",
+      "json": "hindi/narration/ch09.json",
+      "textHash": "fnv1a64:fb458b4f4991eaa2",
+      "jsonHash": "fnv1a64:b53e33e129d55c23"
+    },
+    {
+      "language": "hindi",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:6e3a74eac1695fa0",
+      "lessonIds": [
+        "HI-C10-somavaar-shukravaar",
+        "HI-C10-shanivaar-ravivaar",
+        "HI-S05-sign-virama",
+        "HI-S114-letter-ha"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 0,
+      "text": "hindi/narration/ch10.txt",
+      "json": "hindi/narration/ch10.json",
+      "textHash": "fnv1a64:b57607900b0aad2e",
+      "jsonHash": "fnv1a64:07cd6293eddeac9a"
+    },
+    {
+      "language": "hindi",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:c60e3d4deecc516f",
+      "lessonIds": [
+        "HI-C11-kaalaa-safed",
+        "HI-C11-laal-niila",
+        "HI-S06-vowel-sign-aa",
+        "HI-S115-letter-ya"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 2,
+      "text": "hindi/narration/ch11.txt",
+      "json": "hindi/narration/ch11.json",
+      "textHash": "fnv1a64:2649c3ebcd1242ea",
+      "jsonHash": "fnv1a64:146ca5358972b5f9"
+    },
+    {
+      "language": "hindi",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:79e0bfe1f909b421",
+      "lessonIds": [
+        "HI-C12-pitaa-maataa",
+        "HI-C12-bhaai-bahin",
+        "HI-S07-letter-ta",
+        "HI-S116-vowel-sign-ii"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 2,
+      "text": "hindi/narration/ch12.txt",
+      "json": "hindi/narration/ch12.json",
+      "textHash": "fnv1a64:c29c43fe9328b01a",
+      "jsonHash": "fnv1a64:61f9b61959353f82"
+    },
+    {
+      "language": "hindi",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:ca44d3565fa1715f",
+      "lessonIds": [
+        "HI-C13-sir",
+        "HI-C13-haath",
+        "HI-S08-letter-sa",
+        "HI-S117-letter-ca"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 2,
+      "text": "hindi/narration/ch13.txt",
+      "json": "hindi/narration/ch13.json",
+      "textHash": "fnv1a64:8752ddf5376ceb80",
+      "jsonHash": "fnv1a64:f02307ac990dab41"
+    },
+    {
+      "language": "hindi",
+      "chapter": 14,
+      "sourceHash": "fnv1a64:d7040781be8f2a6f",
+      "lessonIds": [
+        "HI-C14-ritu",
+        "HI-S118-sign-candrabindu"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "hindi/narration/ch14.txt",
+      "json": "hindi/narration/ch14.json",
+      "textHash": "fnv1a64:eda54473dfb07d8a",
+      "jsonHash": "fnv1a64:45ff53c8e1973764"
+    },
+    {
+      "language": "hindi",
+      "chapter": 15,
+      "sourceHash": "fnv1a64:ef1888ef577a0508",
+      "lessonIds": [
+        "HI-C15-paani-roti",
+        "HI-S119-letter-ssa"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "hindi/narration/ch15.txt",
+      "json": "hindi/narration/ch15.json",
+      "textHash": "fnv1a64:1078578c3936e33f",
+      "jsonHash": "fnv1a64:a67119d1fca1f1cd"
+    },
+    {
+      "language": "hindi",
+      "chapter": 16,
+      "sourceHash": "fnv1a64:36b9d36d11bbabd0",
+      "lessonIds": [
+        "HI-C16-mahine",
+        "HI-S120-vowel-sign-u"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "hindi/narration/ch16.txt",
+      "json": "hindi/narration/ch16.json",
+      "textHash": "fnv1a64:83b3d076ca0a3a9e",
+      "jsonHash": "fnv1a64:d00bf1c8b45210ad"
+    },
+    {
+      "language": "hindi",
+      "chapter": 17,
+      "sourceHash": "fnv1a64:d582b7cf4ba60753",
+      "lessonIds": [
+        "HI-C17-dopahar-aadhi-raat",
+        "HI-S121-letter-la"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "hindi/narration/ch17.txt",
+      "json": "hindi/narration/ch17.json",
+      "textHash": "fnv1a64:e0eb0c7aff784383",
+      "jsonHash": "fnv1a64:71b0a894b719d2ba"
+    },
+    {
+      "language": "hindi",
+      "chapter": 18,
+      "sourceHash": "fnv1a64:1766b732bf6f00a9",
+      "lessonIds": [
+        "HI-C18-ghanta",
+        "HI-S122-letter-kha"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "hindi/narration/ch18.txt",
+      "json": "hindi/narration/ch18.json",
+      "textHash": "fnv1a64:46298aad89cc13b6",
+      "jsonHash": "fnv1a64:e7533caf36ae0d2f"
+    },
+    {
+      "language": "hindi",
+      "chapter": 19,
+      "sourceHash": "fnv1a64:de603f927a0a6e77",
+      "lessonIds": [
+        "HI-C19-umr",
+        "HI-C19-age-grammar",
+        "HI-S123-letter-da"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 2,
+      "text": "hindi/narration/ch19.txt",
+      "json": "hindi/narration/ch19.json",
+      "textHash": "fnv1a64:1f7a1be93cdc7d7d",
+      "jsonHash": "fnv1a64:4b6f5906f3b5b0b0"
+    },
+    {
+      "language": "hindi",
+      "chapter": 20,
+      "sourceHash": "fnv1a64:c58bc12fdfc2b69c",
+      "lessonIds": [
+        "HI-C20-mausam",
+        "HI-S124-letter-dha"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "hindi/narration/ch20.txt",
+      "json": "hindi/narration/ch20.json",
+      "textHash": "fnv1a64:483a3e3a3df2ceb3",
+      "jsonHash": "fnv1a64:3e8143ce01c397a4"
+    },
+    {
+      "language": "hindi",
+      "chapter": 21,
+      "sourceHash": "fnv1a64:ecaddd9f9884f0f7",
+      "lessonIds": [
+        "HI-C21-numbers-6-10",
+        "HI-C21-six-nine-ten-history"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 2,
+      "text": "hindi/narration/ch21.txt",
+      "json": "hindi/narration/ch21.json",
+      "textHash": "fnv1a64:1b85496b6481418e",
+      "jsonHash": "fnv1a64:a879f80521ddd710"
+    },
+    {
+      "language": "hindi",
+      "chapter": 22,
+      "sourceHash": "fnv1a64:3d53759c519dce7d",
+      "lessonIds": [
+        "HI-C22-gyarah-bees"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "hindi/narration/ch22.txt",
+      "json": "hindi/narration/ch22.json",
+      "textHash": "fnv1a64:a1d3af22574fe7df",
+      "jsonHash": "fnv1a64:edb0293429fa5798"
+    },
+    {
+      "language": "hindi",
+      "chapter": 23,
+      "sourceHash": "fnv1a64:bf9bb056e218a1cd",
+      "lessonIds": [
+        "HI-C23-kutta-billi",
+        "HI-C23-billi-history"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 2,
+      "text": "hindi/narration/ch23.txt",
+      "json": "hindi/narration/ch23.json",
+      "textHash": "fnv1a64:d4025caa0b67bbea",
+      "jsonHash": "fnv1a64:6f072057d541a29f"
+    },
+    {
+      "language": "hindi",
+      "chapter": 24,
+      "sourceHash": "fnv1a64:23b5644f154e5450",
+      "lessonIds": [
+        "HI-C24-hara-pila",
+        "HI-C24-pila-history"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 2,
+      "text": "hindi/narration/ch24.txt",
+      "json": "hindi/narration/ch24.json",
+      "textHash": "fnv1a64:a7d9732f7302e573",
+      "jsonHash": "fnv1a64:905d65a00b5e0a01"
+    },
+    {
+      "language": "hindi",
+      "chapter": 25,
+      "sourceHash": "fnv1a64:866d523f59639e08",
+      "lessonIds": [
+        "HI-C25-din"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "hindi/narration/ch25.txt",
+      "json": "hindi/narration/ch25.json",
+      "textHash": "fnv1a64:801931df369a3979",
+      "jsonHash": "fnv1a64:016b7c8a99180b8a"
+    },
+    {
+      "language": "hindi",
+      "chapter": 26,
+      "sourceHash": "fnv1a64:647517f166ff3077",
+      "lessonIds": [
+        "HI-C26-raat"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "hindi/narration/ch26.txt",
+      "json": "hindi/narration/ch26.json",
+      "textHash": "fnv1a64:586d43eb6258cc41",
+      "jsonHash": "fnv1a64:5afd2646a7acc5ba"
+    },
+    {
+      "language": "hindi",
+      "chapter": 27,
+      "sourceHash": "fnv1a64:fd695bdb907dc7b6",
+      "lessonIds": [
+        "HI-C27-shubh-raatri"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "hindi/narration/ch27.txt",
+      "json": "hindi/narration/ch27.json",
+      "textHash": "fnv1a64:9964998052ec83e1",
+      "jsonHash": "fnv1a64:e46aa53f3152914a"
+    },
+    {
+      "language": "hindi",
+      "chapter": 28,
+      "sourceHash": "fnv1a64:8a4c730f2f560ab9",
+      "lessonIds": [
+        "HI-C28-subah"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "hindi/narration/ch28.txt",
+      "json": "hindi/narration/ch28.json",
+      "textHash": "fnv1a64:dd8dafe533f15766",
+      "jsonHash": "fnv1a64:f9c95dd751d89c67"
+    },
+    {
+      "language": "hindi",
+      "chapter": 29,
+      "sourceHash": "fnv1a64:1c9e0f1751013b5b",
+      "lessonIds": [
+        "HI-C29-shaam"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "hindi/narration/ch29.txt",
+      "json": "hindi/narration/ch29.json",
+      "textHash": "fnv1a64:7d6c1e42b6f5a781",
+      "jsonHash": "fnv1a64:2968bd86e1fc6d26"
+    },
+    {
+      "language": "hindi",
+      "chapter": 30,
+      "sourceHash": "fnv1a64:c0a2f7cfa602ad7e",
+      "lessonIds": [
+        "HI-C30-dopahar-widened"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "hindi/narration/ch30.txt",
+      "json": "hindi/narration/ch30.json",
+      "textHash": "fnv1a64:931fb99146b343b7",
+      "jsonHash": "fnv1a64:a04571f120b2a7c9"
+    },
+    {
+      "language": "hindi",
+      "chapter": 31,
+      "sourceHash": "fnv1a64:1c5480f813e94c2b",
+      "lessonIds": [
+        "HI-C31-suprabhat"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "hindi/narration/ch31.txt",
+      "json": "hindi/narration/ch31.json",
+      "textHash": "fnv1a64:fc6c2015a2054560",
+      "jsonHash": "fnv1a64:bce184d70b01748c"
+    },
+    {
+      "language": "hindi",
+      "chapter": 32,
+      "sourceHash": "fnv1a64:f2fa269d801f0a4f",
+      "lessonIds": [
+        "HI-C32-shubh-sandhya",
+        "HI-C32-evening-register"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 2,
+      "text": "hindi/narration/ch32.txt",
+      "json": "hindi/narration/ch32.json",
+      "textHash": "fnv1a64:9eebce271d08fac0",
+      "jsonHash": "fnv1a64:08a8829c7602eff5"
+    },
+    {
+      "language": "hindi",
+      "chapter": 33,
+      "sourceHash": "fnv1a64:62e659a8f3fef824",
+      "lessonIds": [
+        "HI-C33-shubh-dopahar"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "hindi/narration/ch33.txt",
+      "json": "hindi/narration/ch33.json",
+      "textHash": "fnv1a64:749b59cbbde21161",
+      "jsonHash": "fnv1a64:cdce441391d6f8ae"
+    },
+    {
+      "language": "hindi",
+      "chapter": 34,
+      "sourceHash": "fnv1a64:4b57f7f3ccbc871d",
+      "lessonIds": [
+        "HI-C34-sochna",
+        "HI-C34-samajhna",
+        "HI-C34-padhna",
+        "HI-C34-likhna"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "hindi/narration/ch34.txt",
+      "json": "hindi/narration/ch34.json",
+      "textHash": "fnv1a64:98ebd2cf135f6039",
+      "jsonHash": "fnv1a64:8bcd3194e3b526f5"
+    },
+    {
+      "language": "hindi",
+      "chapter": 35,
+      "sourceHash": "fnv1a64:6d1e198f9be4d685",
+      "lessonIds": [
+        "HI-C35-lena",
+        "HI-C35-puchna",
+        "HI-C35-madad",
+        "HI-C35-pasand"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 1,
+      "text": "hindi/narration/ch35.txt",
+      "json": "hindi/narration/ch35.json",
+      "textHash": "fnv1a64:1757a90c9de0992c",
+      "jsonHash": "fnv1a64:7b91673f53a32af3"
+    },
+    {
+      "language": "hindi",
+      "chapter": 36,
+      "sourceHash": "fnv1a64:21e94bfc2692c481",
+      "lessonIds": [
+        "HI-C36-ghar",
+        "HI-C36-darvaaza",
+        "HI-C36-kamra",
+        "HI-C36-kursi"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "hindi/narration/ch36.txt",
+      "json": "hindi/narration/ch36.json",
+      "textHash": "fnv1a64:5a67d1c7fef3b179",
+      "jsonHash": "fnv1a64:249dcc39108ef541"
+    },
+    {
+      "language": "hindi",
+      "chapter": 37,
+      "sourceHash": "fnv1a64:7afc0a7ba6dbaf84",
+      "lessonIds": [
+        "HI-C37-chai",
+        "HI-C37-dudh",
+        "HI-C37-khaana",
+        "HI-C37-kitaab"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 2,
+      "text": "hindi/narration/ch37.txt",
+      "json": "hindi/narration/ch37.json",
+      "textHash": "fnv1a64:77904f5a4d83f9d7",
+      "jsonHash": "fnv1a64:77c0e23d761ccd26"
+    },
+    {
+      "language": "hindi",
+      "chapter": 38,
+      "sourceHash": "fnv1a64:f180ca06271bbf4e",
+      "lessonIds": [
+        "HI-C38-aankh",
+        "HI-C38-daant",
+        "HI-C38-pair",
+        "HI-C38-pet"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 0,
+      "text": "hindi/narration/ch38.txt",
+      "json": "hindi/narration/ch38.json",
+      "textHash": "fnv1a64:4ac7037b230e02be",
+      "jsonHash": "fnv1a64:cf0eb0b2a5b15cb3"
+    },
+    {
+      "language": "hindi",
+      "chapter": 39,
+      "sourceHash": "fnv1a64:15308ea7c5833105",
+      "lessonIds": [
+        "HI-C39-dost",
+        "HI-C39-baccha",
+        "HI-C39-aadmi",
+        "HI-C39-aurat"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 0,
+      "text": "hindi/narration/ch39.txt",
+      "json": "hindi/narration/ch39.json",
+      "textHash": "fnv1a64:76833c0d1bb45710",
+      "jsonHash": "fnv1a64:aec58f4f3a99b66c"
+    },
+    {
+      "language": "hindi",
+      "chapter": 40,
+      "sourceHash": "fnv1a64:55728eb26e67792e",
+      "lessonIds": [
+        "HI-C40-this",
+        "HI-C40-that",
+        "HI-C40-here",
+        "HI-C40-there",
+        "HI-C40-who",
+        "HI-C40-where",
+        "HI-C40-deixis-system"
+      ],
+      "voiceLessons": 7,
+      "drivablePrefix": 7,
+      "text": "hindi/narration/ch40.txt",
+      "json": "hindi/narration/ch40.json",
+      "textHash": "fnv1a64:9b8a9afbed6cfcee",
+      "jsonHash": "fnv1a64:1e9a1c8b96b6207c"
+    },
+    {
+      "language": "hindi",
+      "chapter": 41,
+      "sourceHash": "fnv1a64:9944553efc69c580",
+      "lessonIds": [
+        "HI-C41-big",
+        "HI-C41-small",
+        "HI-C41-good",
+        "HI-C41-new",
+        "HI-C41-old",
+        "HI-C41-adjective-system"
+      ],
+      "voiceLessons": 6,
+      "drivablePrefix": 6,
+      "text": "hindi/narration/ch41.txt",
+      "json": "hindi/narration/ch41.json",
+      "textHash": "fnv1a64:c41962000bc9cd77",
+      "jsonHash": "fnv1a64:14223ea517a2f780"
+    },
+    {
+      "language": "hindi",
+      "chapter": 42,
+      "sourceHash": "fnv1a64:7d0dd0587582a1b3",
+      "lessonIds": [
+        "HI-C42-come",
+        "HI-C42-sit",
+        "HI-C42-stand",
+        "HI-C42-give"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "hindi/narration/ch42.txt",
+      "json": "hindi/narration/ch42.json",
+      "textHash": "fnv1a64:89da4f5aaa9502eb",
+      "jsonHash": "fnv1a64:1d2dce0752a7b2c3"
+    },
+    {
+      "language": "hindi",
+      "chapter": 43,
+      "sourceHash": "fnv1a64:dd2d5c7fa6dbd18c",
+      "lessonIds": [
+        "HI-C43-look",
+        "HI-C43-listen",
+        "HI-C43-speak",
+        "HI-C43-write"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "hindi/narration/ch43.txt",
+      "json": "hindi/narration/ch43.json",
+      "textHash": "fnv1a64:6671fb58d17ab73f",
+      "jsonHash": "fnv1a64:4baa0f6a77813e68"
+    },
+    {
+      "language": "hindi",
+      "chapter": 44,
+      "sourceHash": "fnv1a64:4798dbb915aa746d",
+      "lessonIds": [
+        "HI-C44-son",
+        "HI-C44-daughter",
+        "HI-C44-family",
+        "HI-C44-people"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "hindi/narration/ch44.txt",
+      "json": "hindi/narration/ch44.json",
+      "textHash": "fnv1a64:d222320e2e5c078c",
+      "jsonHash": "fnv1a64:25374706625b2a9a"
+    },
+    {
+      "language": "hindi",
+      "chapter": 45,
+      "sourceHash": "fnv1a64:1209d4e5f87fc0dc",
+      "lessonIds": [
+        "HI-C45-fruit",
+        "HI-C45-cloth",
+        "HI-C45-lamp",
+        "HI-C45-salt",
+        "HI-C45-soap"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "hindi/narration/ch45.txt",
+      "json": "hindi/narration/ch45.json",
+      "textHash": "fnv1a64:25a18fb2c072f8d0",
+      "jsonHash": "fnv1a64:2cbba22e99287d03"
+    },
+    {
+      "language": "hindi",
+      "chapter": 46,
+      "sourceHash": "fnv1a64:940fd9319f463f9b",
+      "lessonIds": [
+        "HI-C46-hair",
+        "HI-C46-finger",
+        "HI-C46-ear",
+        "HI-C46-nose",
+        "HI-C46-throat"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "hindi/narration/ch46.txt",
+      "json": "hindi/narration/ch46.json",
+      "textHash": "fnv1a64:b00b6b07ee6afde4",
+      "jsonHash": "fnv1a64:11c2cfaa453471df"
+    },
+    {
+      "language": "hindi",
+      "chapter": 47,
+      "sourceHash": "fnv1a64:69bd0c1b96ca2d0a",
+      "lessonIds": [
+        "HI-C47-teacher",
+        "HI-C47-student",
+        "HI-C47-farmer",
+        "HI-C47-guest",
+        "HI-C47-neighbour"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "hindi/narration/ch47.txt",
+      "json": "hindi/narration/ch47.json",
+      "textHash": "fnv1a64:6690fd414194da57",
+      "jsonHash": "fnv1a64:94c3cb232207d303"
+    },
+    {
+      "language": "hindi",
+      "chapter": 48,
+      "sourceHash": "fnv1a64:95b14ebe3fa00fa8",
+      "lessonIds": [
+        "HI-C48-true",
+        "HI-C48-enough",
+        "HI-C48-certainly",
+        "HI-C48-perhaps",
+        "HI-C48-absolutely"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "hindi/narration/ch48.txt",
+      "json": "hindi/narration/ch48.json",
+      "textHash": "fnv1a64:da48d1529b393908",
+      "jsonHash": "fnv1a64:29ef68e54d4df839"
+    },
+    {
+      "language": "hindi",
+      "chapter": 49,
+      "sourceHash": "fnv1a64:56764eb1be8fc968",
+      "lessonIds": [
+        "HI-C49-now",
+        "HI-C49-day-after",
+        "HI-C49-journey",
+        "HI-C49-set-out",
+        "HI-C49-meeting"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "hindi/narration/ch49.txt",
+      "json": "hindi/narration/ch49.json",
+      "textHash": "fnv1a64:12a270684ee87aeb",
+      "jsonHash": "fnv1a64:c692110fef56ae58"
+    },
+    {
+      "language": "hindi",
+      "chapter": 50,
+      "sourceHash": "fnv1a64:62e3fc6e3fc19078",
+      "lessonIds": [
+        "HI-C50-gratitude",
+        "HI-C50-favour",
+        "HI-C50-respect",
+        "HI-C50-blessing",
+        "HI-C50-salutation"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "hindi/narration/ch50.txt",
+      "json": "hindi/narration/ch50.json",
+      "textHash": "fnv1a64:eeb9ddb1acbca007",
+      "jsonHash": "fnv1a64:ec12c21c8a88930d"
+    },
+    {
+      "language": "hindi",
+      "chapter": 51,
+      "sourceHash": "fnv1a64:9c9d075b1b211d3c",
+      "lessonIds": [
+        "HI-C51-flower",
+        "HI-C51-garland",
+        "HI-C51-courtyard",
+        "HI-C51-table",
+        "HI-C51-sweet"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "hindi/narration/ch51.txt",
+      "json": "hindi/narration/ch51.json",
+      "textHash": "fnv1a64:913e09d42235b894",
+      "jsonHash": "fnv1a64:1bc0788dd86193e4"
+    },
+    {
+      "language": "hindi",
+      "chapter": 52,
+      "sourceHash": "fnv1a64:13550d1f85bf5d6c",
+      "lessonIds": [
+        "HI-C52-rice",
+        "HI-C52-lentils",
+        "HI-C52-oil",
+        "HI-C52-sugar",
+        "HI-C52-vegetable"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "hindi/narration/ch52.txt",
+      "json": "hindi/narration/ch52.json",
+      "textHash": "fnv1a64:96aec961eb9f1d02",
+      "jsonHash": "fnv1a64:ffad7a77118406db"
+    },
+    {
+      "language": "hindi",
+      "chapter": 53,
+      "sourceHash": "fnv1a64:92b48fc24df9b33d",
+      "lessonIds": [
+        "HI-C53-shoulder",
+        "HI-C53-knee",
+        "HI-C53-forehead",
+        "HI-C53-back",
+        "HI-C53-lip"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "hindi/narration/ch53.txt",
+      "json": "hindi/narration/ch53.json",
+      "textHash": "fnv1a64:4291dabbf9d40b68",
+      "jsonHash": "fnv1a64:c93eaea901d2358d"
+    },
+    {
+      "language": "hindi",
+      "chapter": 54,
+      "sourceHash": "fnv1a64:b5fce6ba6d7c7f5b",
+      "lessonIds": [
+        "HI-C54-cow",
+        "HI-C54-horse",
+        "HI-C54-fish",
+        "HI-C54-bird",
+        "HI-C54-goat"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "hindi/narration/ch54.txt",
+      "json": "hindi/narration/ch54.json",
+      "textHash": "fnv1a64:0fa46e4036438a44",
+      "jsonHash": "fnv1a64:e33aafc2222b4aff"
+    },
+    {
+      "language": "hindi",
+      "chapter": 55,
+      "sourceHash": "fnv1a64:4d66dd8fc2787ed3",
+      "lessonIds": [
+        "HI-C55-sun",
+        "HI-C55-moon",
+        "HI-C55-star",
+        "HI-C55-cloud",
+        "HI-C55-sky"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "hindi/narration/ch55.txt",
+      "json": "hindi/narration/ch55.json",
+      "textHash": "fnv1a64:8f567bf203311605",
+      "jsonHash": "fnv1a64:98755880625d78b9"
+    },
+    {
+      "language": "hindi",
+      "chapter": 56,
+      "sourceHash": "fnv1a64:a9fe12878b752301",
+      "lessonIds": [
+        "HI-C56-road",
+        "HI-C56-village",
+        "HI-C56-market",
+        "HI-C56-shop",
+        "HI-C56-field"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "hindi/narration/ch56.txt",
+      "json": "hindi/narration/ch56.json",
+      "textHash": "fnv1a64:4767c14d898f0b47",
+      "jsonHash": "fnv1a64:969fe35134f9de6a"
+    },
+    {
+      "language": "hindi",
+      "chapter": 57,
+      "sourceHash": "fnv1a64:2a1a6a6de2d54e00",
+      "lessonIds": [
+        "HI-C57-present",
+        "HI-C57-feast",
+        "HI-C57-platter",
+        "HI-C57-fragrance",
+        "HI-C57-sweetness"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "hindi/narration/ch57.txt",
+      "json": "hindi/narration/ch57.json",
+      "textHash": "fnv1a64:aa8dcc761abbe88b",
+      "jsonHash": "fnv1a64:00a24797b7c01983"
+    },
+    {
+      "language": "hindi",
+      "chapter": 58,
+      "sourceHash": "fnv1a64:5fc3ceb880c84204",
+      "lessonIds": [
+        "HI-C58-wall",
+        "HI-C58-roof",
+        "HI-C58-window",
+        "HI-C58-stairs",
+        "HI-C58-sheet"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "hindi/narration/ch58.txt",
+      "json": "hindi/narration/ch58.json",
+      "textHash": "fnv1a64:399611870c8efd98",
+      "jsonHash": "fnv1a64:12189f331c19b02b"
+    },
+    {
+      "language": "hindi",
+      "chapter": 59,
+      "sourceHash": "fnv1a64:7a9745d5b38f0017",
+      "lessonIds": [
+        "HI-W12-schwa-drop",
+        "HI-W12-ii-matra",
+        "HI-W12-u-matra",
+        "HI-W12-ai-matra",
+        "HI-W12-aa",
+        "HI-W12-ii",
+        "HI-W12-chandrabindu",
+        "HI-W12-bha",
+        "HI-W12-ya",
+        "HI-W12-ba",
+        "HI-W12-da-retroflex"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "hindi/narration/ch59.txt",
+      "json": "hindi/narration/ch59.json",
+      "textHash": "fnv1a64:00a2135b6717e737",
+      "jsonHash": "fnv1a64:1bdd0b6905f60c0e"
+    },
+    {
+      "language": "hindi",
+      "chapter": 60,
+      "sourceHash": "fnv1a64:f2c83bd0cde13f9a",
+      "lessonIds": [
+        "HI-C60-monkey",
+        "HI-C60-snake",
+        "HI-C60-hen",
+        "HI-C60-buffalo",
+        "HI-C60-peacock"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "hindi/narration/ch60.txt",
+      "json": "hindi/narration/ch60.json",
+      "textHash": "fnv1a64:536891dc2552ac8b",
+      "jsonHash": "fnv1a64:0205756a571975b8"
+    },
+    {
+      "language": "hindi",
+      "chapter": 61,
+      "sourceHash": "fnv1a64:c1de04e43cfe9e0e",
+      "lessonIds": [
+        "HI-C61-vessel",
+        "HI-C61-spoon",
+        "HI-C61-tumbler",
+        "HI-C61-griddle",
+        "HI-C61-stove"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "hindi/narration/ch61.txt",
+      "json": "hindi/narration/ch61.json",
+      "textHash": "fnv1a64:796376d0fa109d58",
+      "jsonHash": "fnv1a64:ea9ba6e7a0052d9d"
+    },
+    {
+      "language": "hindi",
+      "chapter": 62,
+      "sourceHash": "fnv1a64:82c5aef2b02fc633",
+      "lessonIds": [
+        "HI-C62-rope",
+        "HI-C62-needle",
+        "HI-C62-basket",
+        "HI-C62-clay",
+        "HI-C62-wood"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "hindi/narration/ch62.txt",
+      "json": "hindi/narration/ch62.json",
+      "textHash": "fnv1a64:8b11d09b6ee9ee81",
+      "jsonHash": "fnv1a64:662aa4a26539c25e"
+    },
+    {
+      "language": "hindi",
+      "chapter": 63,
+      "sourceHash": "fnv1a64:7b4cf6d7f73efefd",
+      "lessonIds": [
+        "HI-C63-hunger",
+        "HI-C63-thirst",
+        "HI-C63-sleep",
+        "HI-C63-fever",
+        "HI-C63-pain"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "hindi/narration/ch63.txt",
+      "json": "hindi/narration/ch63.json",
+      "textHash": "fnv1a64:a8c848733ac8d964",
+      "jsonHash": "fnv1a64:d851d75598e8dd60"
+    },
+    {
+      "language": "hindi",
+      "chapter": 64,
+      "sourceHash": "fnv1a64:409567282553f4de",
+      "lessonIds": [
+        "HI-C64-now",
+        "HI-C64-quickly",
+        "HI-C64-slowly",
+        "HI-C64-little",
+        "HI-C64-more"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "hindi/narration/ch64.txt",
+      "json": "hindi/narration/ch64.json",
+      "textHash": "fnv1a64:3c75d97a8c4ff25b",
+      "jsonHash": "fnv1a64:bc2ffa22eca3aecc"
+    },
+    {
+      "language": "hindi",
+      "chapter": 65,
+      "sourceHash": "fnv1a64:202dac5979ee5bb1",
+      "lessonIds": [
+        "HI-C65-kindness",
+        "HI-C65-entreaty",
+        "HI-C65-permission",
+        "HI-C65-trust",
+        "HI-C65-manners"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "hindi/narration/ch65.txt",
+      "json": "hindi/narration/ch65.json",
+      "textHash": "fnv1a64:a983e2119b40040d",
+      "jsonHash": "fnv1a64:b5f4d77b6962a2ea"
+    },
+    {
+      "language": "hindi",
+      "chapter": 66,
+      "sourceHash": "fnv1a64:a7181f2d7972b24f",
+      "lessonIds": [
+        "HI-C66-seed",
+        "HI-C66-crop",
+        "HI-C66-grain",
+        "HI-C66-grass",
+        "HI-C66-well"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "hindi/narration/ch66.txt",
+      "json": "hindi/narration/ch66.json",
+      "textHash": "fnv1a64:24d787644697334f",
+      "jsonHash": "fnv1a64:1ed0199368e6c4d5"
+    }
+  ],
+  "findings": []
+}

@@ -1,5 +1,6 @@
 ---
 id: AR-W06-harakat-and-hamza
+sequence: 250
 chapter: 2
 type: writing
 headword: "َ ِ ُ"
@@ -33,10 +34,9 @@ right. On the letter *bāʾ* (**ب**):
 | **ِ** | *kasra* | a slash **below** | "i" | **بِ** = *bi* |
 | **ُ** | *ḍamma* | a tiny *wāw* **above** | "u" | **بُ** = *bu* |
 
-Two more you will see: **ْ** *sukūn* (a small circle = "no vowel here") and **ّ**
-*shadda* (a small *w* = "double this consonant"). In everyday text they all vanish
-— the reader supplies them from knowing the word — but they are the abjad's
-"training wheels," and the tail on *shukran* (**شكرًا**) is one of them.
+Stop at these three vowel marks. The next four-minute micro-lesson adds the
+separate ideas “no vowel,” “double this consonant,” and the *-an* ending. Their
+shapes wait there so this page never asks you to absorb two writing steps at once.
 
 ## The payoff — أنتَ vs أنتِ
 

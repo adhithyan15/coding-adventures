@@ -1,5 +1,6 @@
 ---
 id: MR-C03-practice
+sequence: 110
 chapter: 3
 type: practice
 headword: (recap)

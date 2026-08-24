@@ -1,5 +1,6 @@
 ---
 id: GE-C15-praeteritum-map
+sequence: 315
 chapter: 15
 type: etymology
 headword: Präteritum north and south

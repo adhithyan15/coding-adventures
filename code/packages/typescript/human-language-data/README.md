@@ -72,6 +72,83 @@ mixedCurriculumFrontier(
 );
 ```
 
+### Cumulative writing evidence (HL19)
+
+Writing practice and writing capability are measured separately. A qualifying
+block places an assessed response on the HL16 ladder with an explicit directive:
+
+```markdown
+## Writing — delayed recall
+<!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-RAAM-01] -->
+<!-- hl-writing-stage: delayed-copy -->
+```
+
+`measureWritingStages()` checks that the lesson declares writing, the block
+assesses knowledge, the lesson has a level and sequence, and every earlier stage
+has valid evidence first. Missing stages block level attainment. The initial
+23-track baseline is intentionally migration-shaped: Marwadi proves the four
+pre-A1 stages; 1,007 cumulative track/level/stage pairs remain open.
+
+### Exam task shapes (HL18)
+
+`<track>/task-shapes/<level>.json` records the sourced performance target behind
+an exam-ready claim: what the learner reads or hears, what they must write or
+say, timing, interaction, replay, scoring and aids for all four skills. Unknown
+source measurements remain explicit rather than being guessed.
+
+```ts
+import {
+  buildTaskShapeBacklog,
+  listTaskShapeInventories,
+  loadLanguageRegistry,
+  loadTaskShapeInventory,
+} from "@coding-adventures/human-language-data";
+
+const frenchA1 = loadTaskShapeInventory("french", "A1");
+const germanA1 = loadTaskShapeInventory("german", "A1");
+const latinA1 = loadTaskShapeInventory("latin", "A1");
+const present = listTaskShapeInventories();
+const missing = buildTaskShapeBacklog(
+  loadLanguageRegistry().languages.map((track) => track.id),
+  present,
+);
+```
+
+The first five inventories are official DELE Spanish A1, official DELF French
+A1, official Goethe German A1, a clearly labelled project-defined Latin A1
+equivalent, and Avant STAMP 4S Arabic with a project mapping to Level 3 /
+Novice-High in every skill. They are targets for later five-minute lesson
+decomposition and mocks, not claims that any current book is pass-ready. DELE's
+paired-skill rule, Latin's independent floors, Arabic's adaptive counts,
+alternate DELF forms, open-ended lengths, and duration ranges remain distinct
+rather than being collapsed into invented single values.
+
+### Source-bounded exam inventories (HL20)
+
+An exam inventory is complete only when it accounts for all four content
+dimensions: communicative functions, grammar, phonology/orthography, and
+lexicon. Each dimension carries its own `complete` or `partial` status, source,
+and a plain-language boundary note. Completeness is derived; it is never inferred
+from a file merely existing.
+
+```ts
+import {
+  isExamInventoryComplete,
+  loadExamInventory,
+  measureExamCoverage,
+} from "@coding-adventures/human-language-data";
+
+const inventory = loadExamInventory("german", "A1");
+isExamInventoryComplete(inventory); // false until every dimension is source-closed
+measureExamCoverage(inventory, lessons); // its enumerated points still count
+```
+
+A partial inventory remains useful evidence and still generates named exam-point
+gaps. It also remains an `exam-inventory` backlog item. Thus 100% coverage means
+"all currently enumerated points are taught," never "the whole exam construct is
+known." The initial baseline is deliberately honest: zero complete and three
+partial inventories across 138 track/level targets.
+
 ### Chapter capabilities (HL05)
 
 A chapter used to be nothing but an integer on each lesson, so nothing could check
@@ -147,9 +224,10 @@ gate.tracks.find((t) => t.language === "spanish");
 ```
 
 `touches` is the highest level any lesson **sits at** — one lesson pointing at one A2
-node is enough to move it. `attained` is the highest level where all four §3.1 criteria
-hold, here and below: spine nodes realized, cumulative vocabulary met, no lesson over
-the atom budget, every atom revisited twice. Every criterion is scoped **at or below
+node is enough to move it. `attained` is the highest level where every gate criterion
+holds, here and below: spine nodes realized, cumulative vocabulary met, no lesson over
+the atom budget, every atom revisited twice, and every required cumulative writing
+stage proved. Every criterion is scoped **at or below
 the level** — Spanish teaches 113 headwords in total but only **44** at or below
 pre-A1, and it is the 44 the gate judges.
 
@@ -168,7 +246,7 @@ The gate above says what is *wrong*. This says what to *do* about it, and it is 
 pure function of the same measurements rather than a list somebody maintains:
 
 ```text
-23 tracks, 0 done; 123 enumerable item(s) today, ~10,654 projected to C2
+23 tracks, 0 done; 146 enumerable item(s) today, ~10,791 projected to C2
 
     1. [pre-A1] assessment-contract — marwadi
        require independent four-skill passes, a writing ramp, and timed full mocks
@@ -182,8 +260,8 @@ Three ordering rules, all mechanical. **The floor is universal** — every pre-A
 outranks every A1 item in any track, because a track that climbs while its floor is
 missing has built a cliff with upper-level lessons on top. **Family priority** then
 decides what a track's next action is: the complete pass-ready assessment contract
-first, then its external/project content inventory, script closure, exam points, and
-vocabulary. And the
+first, then its sourced four-skill task shape, external/project content inventory,
+script closure, exam points, and vocabulary. And the
 queue **rotates across tracks**, furthest-behind first, so every language moves once
 before any language moves twice.
 
@@ -213,6 +291,19 @@ seconds, lessons, glyphs, dependency edges or retrieval windows — so a severe
 opening defect cannot be averaged away. Writing exposure does not count as writing
 practice, and the report names how many opening lessons precede the first real
 writing/script lesson or block.
+
+The exact corpus regression lives in one generated snapshot per language rather
+than six hand-edited totals in the test body:
+
+```bash
+npm run generate:gentle-snapshots  # write core/gentle-ramp-snapshots/*.json
+npm run check:gentle-snapshots     # fail if any language shard is stale or orphaned
+```
+
+The test reconstructs the global summary and priority queue from those full track
+snapshots. A Tamil-only change therefore updates `tamil.json`; it cannot collide
+with a simultaneous Punjabi-only change, while a hidden debt increase still changes
+the responsible shard and fails the byte-for-byte drift gate.
 
 ### Continuity — does the course have a memory of itself? (HL09)
 
@@ -534,7 +625,7 @@ introduced. Pairing is whole-word only: the Arabic track teaches ا (*alif*) as 
 lesson, and a substring replace once turned سلام into `سلا (alif)م`.
 
 The export is hash-gated exactly like the generated `.tex`:
-`core/generated-narration-hashes.json` records an FNV-1a fingerprint of each chapter's
+`core/generated-narration-hashes/<language>.json` records an FNV-1a fingerprint of each chapter's
 lesson AST and of the two files generated from it, so a lesson edited without
 re-running the exporter fails `--check` instead of leaving a voice assistant
 confidently teaching a lesson that no longer exists.
@@ -550,14 +641,14 @@ derivation currently moves no number; the regression test pins that.
 
 ### The modality manifest — two editions from one source (HL-C44)
 
-The derivation above is only useful to a *program* if it is a *file*. `core/lesson-modality.json`
-is that file: one row per lesson, generated and drift-gated, so the complete book, the
+The derivation above is only useful to a *program* if it is data. `core/lesson-modality/*.json`
+holds one independently mergeable shard per language: one row per lesson, generated and drift-gated, so the complete book, the
 app, and the forthcoming dictation-friendly driving edition can each filter the same
 canonical corpus instead of maintaining three copies of it.
 
 ```bash
 npm run build
-npm run generate:modality   # write core/lesson-modality.json
+npm run generate:modality   # write core/lesson-modality/*.json
 npm run check:modality      # fail (exit 1) if it drifted from the lessons
 ```
 
@@ -588,7 +679,7 @@ Two design decisions are worth knowing before consuming it:
   driving edition, which is the safe direction to be wrong in. `features.blockModality`
   in the header says whether a given build carries block data.
 - **Nothing is authored.** The manifest is derived, exactly like
-  `core/generated-book-hashes.json`. HL08 deliberately refused to put `modality:` in
+  `core/generated-book-hashes/<language>.json`. HL08 deliberately refused to put `modality:` in
   1,096 frontmatter files, because 1,096 authored copies of a computed fact are 1,096
   places for it to go stale. `check:modality` runs in CI beside `check:books` so the
   manifest cannot drift from the lessons it describes.
@@ -642,7 +733,7 @@ track's `chapters.json` capability ledger; the config is rejected if it tries to
 repeat either field, and a declaration without canonical chapter metadata fails
 closed. The generator orders schema-v2 lessons by `sequence`, writes the LaTeX
 chapter, and records a stable FNV-1a fingerprint in
-`core/generated-book-hashes.json`. The fingerprint covers the chapter's lessons
+`core/generated-book-hashes/<language>.json`. The fingerprint covers the chapter's lessons
 **and the capability fields the book prints** (`title`, `label`, `canDo`, and
 `payoff.summary`), so an
 edit to `chapters.json` moves it. It does not cover `payoff.note`, which the book
@@ -683,10 +774,10 @@ until the existing corpus has been split.
 | `cli.ts` | `validate` command + report | ⛔ (fs) |
 | `report-cli.ts` | prints JSON or text for CI artifact capture | ⛔ (fs) |
 | `book-cli.ts` | writes or checks generated chapters and their hash manifest | ⛔ (fs) |
-| `modality-cli.ts` | writes or checks `core/lesson-modality.json` | ⛔ (fs) |
+| `modality-cli.ts` | writes or checks `core/lesson-modality/*.json` | ⛔ (fs) |
 | `narration-cli.ts` | writes or checks the narration export and its hash manifest | ⛔ (fs) |
-| `track-progress.ts` | registry/curriculum/book facts → top-level progress rows | ✅ |
-| `track-progress-cli.ts` | rewrites or checks the marked README track table | ⛔ (fs) |
+| `track-progress.ts` | registry/curriculum/book facts → per-language progress cards | ✅ |
+| `track-progress-cli.ts` | writes or checks `progress/*.md` | ⛔ (fs) |
 
 Only the modules marked `fs` touch the filesystem (declared in
 `required_capabilities.json`); everything the app relies on is pure and unit-tested

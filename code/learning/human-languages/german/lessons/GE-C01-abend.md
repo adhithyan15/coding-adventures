@@ -1,5 +1,6 @@
 ---
 id: GE-C01-abend
+sequence: 40
 chapter: 1
 type: word
 headword: Abend
@@ -45,7 +46,8 @@ real one.
 
 *Abend* is **masculine** (*der Abend*) — so, again, *guten* in the greeting.
 Three masculine day-parts in a row (*Tag*, *Morgen*, *Abend*) all take
-*guten*; the feminine *Nacht*, next, will break the streak.
+*guten*. The next day-part is feminine, so it will gently show you a different
+ending without adding a new rule to memorize now.
 
 ## Guided Practice
 

@@ -672,7 +672,7 @@ mod tests {
             .as_chunks::<4>()
             .0
             .iter()
-            .map(|c| f32::from_le_bytes(*c))
+            .map(|c| f32::from_le_bytes([c[0], c[1], c[2], c[3]]))
             .collect();
         assert_eq!(floats, vec![11.0, 22.0, 33.0]);
     }

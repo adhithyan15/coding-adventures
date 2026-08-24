@@ -11,11 +11,27 @@ Gujarati's distinctives — the **headless script** (no *shirorekhā*), the **th
 genders** (*-o / -ī / -ũ*), its **own copula** *chhe*, and the **Perso-Arabic
 trade layer**. The script is taught **inline**, never as a gated reading course.
 
+## Assessment destination
+
+The complete book must prepare a book-only learner for the project-defined
+Gujarati assessment ladder from pre-A1 through C2. See
+[assessment-spec.md](assessment-spec.md) for the level envelopes, independent
+four-skill pass rule, and validation boundary, and [assessment.json](assessment.json)
+for the machine-readable seven-rung contract. Lessons stay at five minutes or
+less and writing grows one action at a time; full mocks keep continuous target
+timing. The contract records a target, not present-tense readiness evidence.
+The project-defined pre-A1 [task-shape inventory](task-shapes/pre-a1.json)
+specifies the first executable reading, listening, writing, and speaking papers.
+Its presence closes inventory debt only: curriculum coverage, mocks, scoring
+materials, and human pass evidence remain separate gates.
+
 ## Authored
 
-- **Ch. 1 — Greetings**: namaste → ābhār → hā/nā → sārũ → āvjo → practice.
-  Gujarati script introduced through the words; the missing top line and three
-  genders foregrounded.
+- **Ch. 1 — Greetings and the first written answer**: namaste → ābhār → āvjo →
+  hā/nā → **હ** → **ા** → guided copy → delayed copy → dictation → sārũ →
+  practice. The writing runway spends one piece at a time before the whole word
+  and keeps every step under five minutes; the payoff retrieves **હા** from
+  sound with no visible model.
 - **Ch. 2 — Introducing Yourself**: nām → mārũ → chhe → "my name is…" → tũ/tame
   → shũ → "what's your name?" → ānand → practice. The copula *chhe* and gender
   agreement.

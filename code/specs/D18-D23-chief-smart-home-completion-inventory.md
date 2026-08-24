@@ -2634,6 +2634,130 @@ claiming ownership of credentials, print data, queues, or printer sessions:
 This broadens common local equipment discovery using the same reusable DNS-SD
 and D23 boundaries as the existing ESPHome, Cast, and HomeKit slices.
 
+## Current IPP Scan Service mDNS Discovery Breadth Slice
+
+The next breadth slice adds standards-based local scanner discovery without
+claiming ownership of credentials, scan jobs, documents, destinations, or
+scanner sessions:
+
+- `smart-home-ipp-scanner-discovery-integration` browses the PWG-required
+  `_scan._sub._ipp._tcp.local` service through the shared production mDNS
+  scanner and validates the scan resource path, TXT version, optional canonical
+  scanner UUID, model, location, authentication requirement, maximum TLS
+  version, document formats, automatic document feeder, transparency adaptor,
+  push-destination schemes, and endpoint.
+- Canonical scanner UUIDs provide stable identity when advertised; otherwise
+  the resolved host, port, and scan resource form a deterministic endpoint
+  identity. The PWG defaults for `rs`, `ADF`, `TMA`, and `Scan2` are explicit;
+  optional printer `rp` resources are validated and preserved for multifunction
+  devices; and conflicting duplicate identities remain isolated partial
+  failures.
+- D23 discovery authorization runs before socket I/O. One browse accepts at
+  most 64 replies, uses a bounded timeout and record TTL, preserves parser
+  failures, and maps advertised authentication to an explicit pairing
+  requirement without accepting or materializing a secret.
+- The runtime opens no IPP TCP connection and performs no scanner-status read,
+  credential input, scan submission, document retrieval, push-destination
+  access, public-endpoint access, or long-lived browse. Those require separately
+  supervised transport, secret-custody, data-governance, destination-policy,
+  and operation-policy owners.
+
+This broadens common local multifunction and standalone scanner discovery while
+reusing the same DNS-SD and D23 boundaries as the printer discovery slice.
+
+## Current Thread Border Agent mDNS Discovery Breadth Slice
+
+The next breadth slice adds standards-based Thread Border Agent discovery
+without claiming ownership of commissioner credentials, operational datasets,
+radio transport, or a MeshCoP session:
+
+- `smart-home-discovery` now preserves raw DNS-SD TXT value bytes alongside
+  its existing text view, so binary MeshCoP identity and state fields are not
+  corrupted by lossy UTF-8 conversion while existing text consumers retain
+  their current API.
+- `smart-home-thread-border-agent-discovery-integration` browses the
+  Thread-required `_meshcop._udp.local` service through the shared production
+  mDNS scanner and validates TXT record version 1, optional 128-bit Border
+  Agent identity, Thread version, the four-byte state bitmap, extended address,
+  endpoint, and optional network, backbone-router, OMR, and vendor fields.
+- A canonical Border Agent id provides stable identity when advertised;
+  otherwise the required extended address provides a deterministic fallback.
+  First observations win while conflicting endpoints and malformed or
+  over-limit advertisements remain isolated partial failures.
+- D23 discovery authorization runs before socket I/O. One browse accepts at
+  most 64 replies, uses a bounded timeout and record TTL, preserves parser
+  failures, and records only non-secret advertised state and capability facts.
+- The runtime opens no Border Agent UDP session and accepts no PSKc, ePSKc,
+  operational dataset, network key, commissioner credential, or joiner code.
+  MeshCoP exchange, commissioning, Thread transport, dataset reads, network
+  mutation, and control require separately supervised session, secret-custody,
+  transport, and operation-policy owners.
+
+This broadens Thread infrastructure visibility while preserving the existing
+block on a production Thread network host and commissioning stack.
+
+## Current Matter Operational DNS-SD Discovery Breadth Slice
+
+The next breadth slice adds standards-based visibility into commissioned Matter
+nodes without claiming ownership of fabric credentials, secure sessions, or
+the Interaction Model:
+
+- `smart-home-matter-operational-discovery-integration` browses the Matter
+  `_matter._tcp.local` operational service through the shared production mDNS
+  scanner and strictly validates the 16-hex-digit compressed fabric id and
+  16-hex-digit node id encoded in each instance name, the resolved local host,
+  address, and non-zero endpoint port.
+- Optional common Matter TXT fields are parsed with the official canonical
+  decimal and range rules: MRP idle and active retry intervals, active
+  threshold, supported TCP client/server roles, and intermittently connected
+  device status. Case-insensitive duplicate fields, reserved TCP flags, and
+  malformed values remain isolated partial failures.
+- Fabric and node identity provide deterministic D23 candidate identity.
+  First observations win while conflicting endpoints and over-limit
+  advertisements are reported without discarding valid peers.
+- D23 discovery authorization runs before socket I/O. One browse accepts at
+  most 64 replies, uses a bounded timeout and record TTL, preserves parser
+  failures, and records only public DNS-SD facts.
+- The runtime does not browse `_matterc._udp` commissionable nodes, accept
+  fabric credentials, validate fabric membership, or open the advertised
+  endpoint. PASE, CASE, certificate validation, secure-session lifetime,
+  Interaction Model reads, subscriptions, commands, and control require
+  separately supervised commissioning, secret-custody, session, transport,
+  and operation-policy owners.
+
+This broadens Matter fabric visibility while preserving the existing block on
+a production commissioning and secure-session host.
+
+## Current Kodi JSON-RPC Media Breadth Slice
+
+The next breadth slice adds a common local media telemetry and control surface
+without accepting Kodi credentials or exposing its broad administrative API:
+
+- `smart-home-kodi-jsonrpc-integration` connects only to one explicit private,
+  link-local, or loopback IP literal and non-zero port. HTTP requests, response
+  bodies, timeouts, and active-player count are bounded, and redirects,
+  chunked responses, authentication challenges, public endpoints, and DNS
+  resolution are rejected.
+- The fixed read allowlist uses Kodi's official `Application.GetProperties`,
+  `Player.GetActivePlayers`, and `Player.GetProperties` contracts to normalize
+  application identity and version, volume, mute state, active player type and
+  runtime, speed, elapsed and total time, percentage, repeat, shuffle, seek,
+  and live-state facts into one D23 media entity. It requests no item metadata,
+  filenames, library records, or playback URLs.
+- D23 read authorization runs before TCP connection. Low-risk D23 media command
+  authorization runs before native I/O and maps only play, pause, stop, volume,
+  and mute to `Player.PlayPause`, `Player.Stop`, `Application.SetVolume`, and
+  `Application.SetMute`; each native response must prove the requested result.
+- The runtime accepts no username, password, token, cookie, or TLS exception
+  and exposes no WebSocket subscription, library or item browse, queue change,
+  arbitrary JSON-RPC method, input action, add-on execution, power action,
+  public endpoint, or long-lived connection. Credentialed deployments require
+  a separately supervised Vault-leased authentication and session owner.
+
+This broadens local media telemetry and low-risk control beyond proprietary
+player protocols while preserving explicit endpoint, authorization, lifetime,
+and secret boundaries.
+
 The protocol- and vendor-specific backlog below remains valid after these
 breadth steps:
 

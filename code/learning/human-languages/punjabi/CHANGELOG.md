@@ -1,5 +1,40 @@
 # Changelog
 
+## 2026-08-21 — Enumerate the pre-A1 assessment task shapes (#12432)
+
+- Turned the project-defined pre-A1 contract into executable reading,
+  listening, writing, and speaking parts with exact timing, item, replay, aid,
+  and scoring boundaries.
+- Preserved four separate 100-point papers and the requirement to reach 60% in
+  every skill without aggregate compensation.
+- Kept Gurmukhi writing productive but gentle: delayed recall, short dictation,
+  and bounded independent responses earn points, while tracing and visible
+  copying remain instructional supports only.
+
+## [Unreleased] — assessment contract
+
+### Added — pre-A1-to-C2 assessment contract (HL16)
+
+- Added a clearly labelled, non-accredited Punjabi assessment ladder at pre-A1,
+  A1, A2, B1, B2, C1, and C2, with Gurmukhi as this track's writing contract.
+- Every rung requires independent reading, listening, writing, and speaking
+  passes at 60%, with no stronger skill compensating for a weaker one.
+- The contract carries writing from observe/trace and guided copying through
+  delayed recall, dictation, connected composition, and timed production.
+- Two timed mocks, rubrics, answer keys, calibration, regional-form review, and
+  book-only human validation remain explicit dependencies, so a named
+  destination cannot be mistaken for pass-readiness evidence.
+
+## Punjabi chapters 1-5 regain their reading order (#12252)
+
+- Add one global, spaced sequence to all 31 legacy lessons, recovered from the
+  hand-authored book sections and closed against every prerequisite and review.
+- Remove 31 missing-sequence findings plus the 31 forward prerequisite/review
+  references that alphabetical filename fallback had fabricated. Punjabi's
+  order-integrity backlog moves from 62 defects to zero.
+- Keep the remaining learner debt visible: this metadata repair does not claim
+  that Punjabi's script, writing, or exam-preparation strands are complete.
+
 ## [Unreleased]
 
 ### Added — Chapter 14, the first nine pieces of Gurmukhi (HL-C218)

@@ -1,0 +1,705 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 8,
+  "title": "One Goodbye, Sign by Sign",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:bd93a1ad38841025",
+  "lessons": [
+    {
+      "id": "JA-C08-hear-sayounara",
+      "sequence": 390,
+      "title": "Hear sayōnara — one way to say goodbye",
+      "headword": "sayōnara",
+      "romanization": "sayōnara",
+      "gloss": "goodbye; one farewell used at a parting",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fe8f2516981477bf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 10,
+              "perItem": false,
+              "source": "[PAUSE 10s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write katakana コ, give the daytime greeting, then run one doorway exchange aloud. Close the text before the new expression begins."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sa-yō-na-ra — goodbye, at a parting."
+            },
+            {
+              "kind": "speech",
+              "text": "Hear five morae: sa | yo | o | na | ra. The held ō occupies two beats, just as the final long vowel did in arigatō. Listen twice. Tap five even beats, then say the expression once. Its writing waits for the next four tiny sessions."
+            },
+            {
+              "kind": "speech",
+              "text": "This is one Japanese farewell, not a universal line for every departure. Relationship and situation can call for other expressions; those will receive their own lessons rather than being smuggled into this one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Choose the parting cue rather than the meeting cue. Say sayōnara on five beats, then stop before trying to spell it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say the five beats once with no writing visible."
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Japan Foundation Marugoto A1 vocabulary and Japan Foundation Irodori Starter lesson 1."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C08-hear-sayounara-meaning",
+              "prompt": "You hear sa-yō-na-ra at a parting. What social job does it do, and how many morae do you tap?",
+              "assesses": [
+                "JA-LEX-SAYOUNARA",
+                "JA-SAYOUNARA-HEARD-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "it says goodbye; five morae.",
+                "goodbye, five",
+                "farewell, five morae",
+                "goodbye; 5"
+              ],
+              "feedback": {
+                "correct": "Right: a farewell on five even morae.",
+                "incorrect": "It is one way to say goodbye: sa | yo | o | na | ra, five morae."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-W08-yo",
+      "sequence": 400,
+      "title": "よ (yo) — the second sound gets a shape",
+      "headword": "よ",
+      "romanization": "yo",
+      "gloss": "the hiragana sign for the mora yo",
+      "script": "japanese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:7adf3796c5f5cfbd",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — one sign",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — one sign and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read ありがとう, then point to ー in コーヒー and say what it does. Tap sayōnara on five beats. Today adds one shape only."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — one sign",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "よ — yo."
+            },
+            {
+              "kind": "speech",
+              "text": "Keep the printed sign visible. Notice the short upper mark, then the longer line that falls, turns, and loops at the lower right. Finger-trace the whole route slowly. Say yo only after the finger stops."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "よ (yo), once with the model visible",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: **よ**, once with the model visible]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COPY",
+              "instruction": "よ (yo), once beside the model",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COPY: **よ**, once beside the model]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yo, one mora",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yo*, one mora]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover the model, wait five seconds, and write よ (yo) once."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Hiragana chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-W08-yo-read",
+              "prompt": "Which mora does よ (yo) write?",
+              "assesses": [
+                "JA-SCRIPT-YO-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "yo",
+                "よ is yo",
+                "yo, one mora"
+              ],
+              "feedback": {
+                "correct": "Right: よ writes yo, one mora.",
+                "incorrect": "Read this sign as yo."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-W08-na",
+      "sequence": 410,
+      "title": "な — one sign for na",
+      "headword": "な",
+      "romanization": "na",
+      "gloss": "the hiragana sign for the mora na",
+      "script": "japanese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:f8702b9da343b4be",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — one sign"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — one sign until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 15,
+              "perItem": false,
+              "source": "[PAUSE 15s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write よ (yo) from memory. Say why arigatō once meant “hard to exist,” then point to the dakuten in が. One new hiragana sign follows."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — one sign",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "な — na."
+            },
+            {
+              "kind": "speech",
+              "text": "Keep な (na) visible. Find its compact left side first, then the separate right side with the small crossing mark and low loop. Trace each part without rushing; the two sides must not collapse into one blob."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "COPY",
+              "instruction": "な (na), with the model visible",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COPY: **な**, with the model visible]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CHECK",
+              "instruction": "compact left side; open right side",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CHECK: compact left side; open right side]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "na, one mora",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *na*, one mora]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look away, say na, and write な once."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Hiragana chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-W08-na-read",
+              "prompt": "Read な (na) as one mora.",
+              "assesses": [
+                "JA-SCRIPT-NA-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "na",
+                "な is na",
+                "na, one mora"
+              ],
+              "feedback": {
+                "correct": "Right: な writes na.",
+                "incorrect": "This sign is na."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-W08-ra",
+      "sequence": 420,
+      "title": "ら (ra) — the last new shape",
+      "headword": "ら",
+      "romanization": "ra",
+      "gloss": "the hiragana sign for the mora ra",
+      "script": "japanese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:d24535b05993d433",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Script — one sign"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script — one sign until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 15,
+              "perItem": false,
+              "source": "[PAUSE 15s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write よ (yo) and な from memory, then write katakana ヒ and say why コーヒー uses katakana. Do not force the new hiragana into that borrowed-word script."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — one sign",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ら — ra."
+            },
+            {
+              "kind": "speech",
+              "text": "Keep ら visible. It begins with a short top mark. The lower stroke starts separately, descends, bends right, and opens rather than closing into a circle. Japanese r is a light tongue tap; one careful tap is enough here."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at ら (ra) for five seconds. Cover it, wait five seconds, and write it once. Uncover only to compare the open lower curve."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read the sign once, then stop."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Hiragana chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-W08-ra-write",
+              "prompt": "After a five-second delay, write the hiragana for ra.",
+              "assesses": [
+                "JA-SCRIPT-RA-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "ら",
+                "ら ra"
+              ],
+              "feedback": {
+                "correct": "Right: the top mark and open lower curve make ら.",
+                "incorrect": "Repair one feature at a time: short top mark, then the open lower stroke."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-W08-sayounara-read",
+      "sequence": 430,
+      "title": "さようなら (sayōnara) — assemble what the hand already knows",
+      "headword": "さようなら",
+      "romanization": "sayōnara",
+      "gloss": "goodbye, assembled from five known hiragana signs",
+      "script": "japanese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:4fa49efb9d3a15fc",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — join five known signs"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — join five known signs until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 18,
+              "perItem": false,
+              "source": "[PAUSE 18s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Run the doorway exchange once, write ま, then say the farewell on five beats. Write よ (yo), な (na), and ら separately."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — join five known signs",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さ | よ | う | な | ら sa | yo | o | na | ra."
+            },
+            {
+              "kind": "speech",
+              "text": "The five signs are all known. さ and う return from the thank-you chapters; よ, な (na), and ら are the three new shapes. In this word, よう carries the held yō: the written う owns the extra beat."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Point and read: さ | よ (yo) | う | な (na) | ら (ra)."
+            },
+            {
+              "kind": "speech",
+              "text": "Cover the romanization and read さようなら (sayōnara)."
+            },
+            {
+              "kind": "speech",
+              "text": "Cover everything, wait ten seconds, and write the five signs."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Circle う and tap the beat it contributes."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Japan Foundation Marugoto A1 vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-W08-sayounara-read-build",
+              "prompt": "From the five heard morae sa | yo | o | na | ra, write the complete word.",
+              "assesses": [
+                "JA-LEX-SAYOUNARA",
+                "JA-SCRIPT-SAYOUNARA-READ-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "さようなら",
+                "さようなら。"
+              ],
+              "feedback": {
+                "correct": "All five signs are in order, including う for the held vowel.",
+                "incorrect": "Repair one known block at a time: さ | よ | う | な | ら."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C08-sayounara",
+      "sequence": 440,
+      "title": "Practice — meet, thank, then part",
+      "headword": "さようなら",
+      "romanization": "sayōnara",
+      "gloss": "goodbye; one context-dependent farewell",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c45ebbecebac9936",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write す, then give the daytime greeting and plain thanks. Those two social jobs are already secure. The new third job is leaving."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さようなら (sayōnara)。"
+            },
+            {
+              "kind": "speech",
+              "text": "Use this line for the parting situation practised here. Japanese has other exit formulae for other relationships and settings; success means choosing and producing this taught farewell, not claiming that it fits every goodbye."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Listen: hear konnichiwa or sayōnara and identify meeting or parting."
+            },
+            {
+              "kind": "speech",
+              "text": "Speak: answer a parting cue with sayōnara on five morae."
+            },
+            {
+              "kind": "speech",
+              "text": "Read: cover the romanization and read さようなら (sayōnara) sign by sign."
+            },
+            {
+              "kind": "speech",
+              "text": "Write: hear the word, wait ten seconds, and write all five signs."
+            },
+            {
+              "kind": "speech",
+              "text": "Score the four actions separately. A remembered sound cannot cover missing writing, and a copied form cannot cover a missing spoken response."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Stop after one accurate four-skill pass. Speed and alternate farewells come later."
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Japan Foundation Marugoto A1 vocabulary and Japan Foundation Irodori Starter lesson 1."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C08-sayounara-four-skills",
+              "prompt": "From sound alone, write the taught farewell, then say it once on five morae for a parting cue.",
+              "assesses": [
+                "JA-LEX-SAYOUNARA",
+                "JA-SCRIPT-SAYOUNARA-READ-01",
+                "JA-PERFORMANCE-SAYOUNARA-FOUR-SKILL-01"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "さようなら。; sa | yo | o | na | ra",
+                "さようなら",
+                "さようなら。"
+              ],
+              "feedback": {
+                "correct": "Writing and speech both complete the farewell.",
+                "incorrect": "Repair the written blocks さ | よ | う | な | ら, then say the five morae."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

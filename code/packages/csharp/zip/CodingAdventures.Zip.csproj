@@ -1,12 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
+    <AssemblyName>CodingAdventures.Zip.CSharp</AssemblyName>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);1591</NoWarn>
     <PackageId>CodingAdventures.Zip.CSharp</PackageId>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
     <Authors>Adhithya Rajasekaran</Authors>
     <Description>Pure C# ZIP archive format (CMP09) — read and write .zip files</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

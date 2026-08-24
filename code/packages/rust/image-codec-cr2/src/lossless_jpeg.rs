@@ -85,18 +85,18 @@ pub struct HuffTable {
     pub bits: [usize; 17],
     /// All Huffman values in canonical code order.
     pub huffval: Vec<u8>,
-    /// min_code[len]: smallest code of bit-length `len` (0 if no codes of that length).
+    /// `min_code[len]`: smallest code of bit-length `len` (0 if no codes of that length).
     pub min_code: [u32; 17],
-    /// max_code[len]: largest code of bit-length `len` (-1 if no codes of that length).
+    /// `max_code[len]`: largest code of bit-length `len` (-1 if no codes of that length).
     pub max_code: [i64; 17],
-    /// val_ptr[len]: index into `huffval` for the first code of length `len`.
+    /// `val_ptr[len]`: index into `huffval` for the first code of length `len`.
     pub val_ptr: [usize; 17],
 }
 
 impl HuffTable {
     /// Build a canonical Huffman table from the raw DHT segment data.
     ///
-    /// `bits` — 16-byte array: bits[i] = number of codes with length i+1.
+    /// `bits` — 16-byte array: `bits[i]` = number of codes with length i+1.
     /// `huffval` — flat list of values in canonical code order.
     ///
     /// Returns `Err` if the table is malformed (too many codes for the length, etc.)

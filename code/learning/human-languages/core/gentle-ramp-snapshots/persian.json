@@ -1,0 +1,90 @@
+{
+  "language": "persian",
+  "lessonCount": 71,
+  "atomMeasurableLessons": 66,
+  "atomMeasurementBlindLessons": 5,
+  "durationViolations": 0,
+  "atomLessonSpikes": 2,
+  "atomChapterSpikes": 3,
+  "glyphLessonSpikes": 1,
+  "scriptSystemSpikes": 0,
+  "scriptClosureViolations": 47,
+  "neverTaughtGlyphs": 25,
+  "orderDefects": 0,
+  "lessonsWithoutSequence": 0,
+  "unknownPrerequisites": 0,
+  "forwardPrerequisites": 0,
+  "forwardReviews": 0,
+  "forwardReferences": 9,
+  "atomsTaught": 150,
+  "atomsNeverRevisited": 7,
+  "reinforcementWindowMisses": 209,
+  "reinforcementMissesByWindow": {
+    "R1": 27,
+    "R2": 93,
+    "R3": 89,
+    "R4": 0
+  },
+  "payoffSurprises": 2,
+  "writingPracticeLessons": 13,
+  "firstWritingPracticeAt": 0,
+  "lessonsBeforeWritingPractice": 0,
+  "findings": [
+    {
+      "language": "persian",
+      "kind": "forward-language",
+      "count": 9,
+      "unit": "use(s)",
+      "detail": "teach target-language material before load-bearing use"
+    },
+    {
+      "language": "persian",
+      "kind": "script-closure",
+      "count": 25,
+      "unit": "glyph(s)",
+      "detail": "teach every load-bearing glyph before asking the learner to decode it"
+    },
+    {
+      "language": "persian",
+      "kind": "atom-step",
+      "count": 5,
+      "unit": "lesson/chapter spike(s)",
+      "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+    },
+    {
+      "language": "persian",
+      "kind": "glyph-step",
+      "count": 1,
+      "unit": "lesson/system spike(s)",
+      "detail": "split new glyphs and writing systems across gentler steps"
+    },
+    {
+      "language": "persian",
+      "kind": "reinforcement",
+      "count": 209,
+      "unit": "missed window(s)",
+      "detail": "add retrieval at the expanding R1-R4 intervals"
+    },
+    {
+      "language": "persian",
+      "kind": "payoff-surprise",
+      "count": 2,
+      "unit": "chapter payoff finding(s)",
+      "detail": "make each chapter payoff assess only taught, representative material"
+    },
+    {
+      "language": "persian",
+      "kind": "measurement-blind",
+      "count": 5,
+      "unit": "lesson(s)",
+      "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
+    }
+  ],
+  "next": {
+    "language": "persian",
+    "kind": "forward-language",
+    "count": 9,
+    "unit": "use(s)",
+    "detail": "teach target-language material before load-bearing use"
+  }
+}

@@ -1,131 +1,8 @@
-Japanese, chapter 2: Eight Signs, and Three Words You Can Read.
-10 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Japanese, chapter 2: A Daytime Greeting, One Sign at a Time.
+7 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 10.
-い (i) — two strokes, one beat.
-
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-You already know the rule that makes this writing system easy: one sign, one beat. Not one letter one sound, and not one sign one word — one sign, one mora, the even beat Japanese counts time in.
-What you have not had yet is a single sign taught on its own. Here is the first.
-
-Script — the shape.
-い (i).
-Two strokes, both falling, the left one long and the right one short:
-the left stroke — start high, come down, and hook gently to the right at the bottom.
-the right stroke — a short downward tick, higher up and clear of the first.
-It is read i, the vowel of English machine — short, tight, never the eye of English bite.
-Where the shape came from, and why it does not help you. Every hiragana sign began as a Chinese character written fast and cursively until it wore smooth. But those characters were chosen for their sound, not their meaning, so unlike a Chinese component there is nothing inside い to decode. The shape is a signature you learn, not a structure you read. This book will tell you when a shape carries information and when it does not, and this is the second kind.
-
-Guided Practice.
-[once you have stopped driving — write: い — long stroke first, then the short tick]
-[your turn — say: i, one clean beat]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-How many beats does one hiragana sign take? (One.)
-Source: Unicode Hiragana chart; stroke order per Hitsujun Shido no Tebiki (Japanese Ministry of Education, 1958).
-[question — say your answer, then pause 8 seconds]
-How many strokes does the hiragana sign for 'i' have?
-
-
-Lesson 2 of 10.
-は (ha) — three strokes.
-
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Write the two-stroke sign you met a moment ago. Long stroke, short tick.
-
-Script — the shape.
-は (ha).
-Three strokes. Look at it as a tall left post with a loop tied on its right.
-the vertical, down the left side, with the smallest flick left at the foot.
-a short horizontal crossing that vertical near the top, on its right.
-the loop — down from the right of that crossbar, round to the left, and back up to close.
-Read ha, breathed rather than hard: the h of English hat, then the open a of father.
-It has a second reading, and you have already used it. Keep that in your pocket for now — this sign is doing two jobs in Japanese, and the second one is what makes the greeting look misspelled to a beginner. It gets its own lesson, after you have met the sign it sounds like.
-
-Guided Practice.
-[once you have stopped driving — write: は (ha) — vertical, crossbar, loop]
-[your turn — say: ha, one beat, breath not force]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-Which stroke of は (ha) is written first? (The vertical on the left.)
-Source: Unicode Hiragana chart; stroke order per Hitsujun Shido no Tebiki (Japanese Ministry of Education, 1958).
-[question — say your answer, then pause 8 seconds]
-How many strokes does the hiragana sign read 'ha' have?
-
-
-Lesson 3 of 10.
-Two signs, side by side — and a word appears.
-
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — no new sign at all and Guided Practice until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 3 seconds]
-Both signs are yours. Write them, in this order, and say each beat as you finish it:
-は (ha) い (i).
-
-Script — no new sign at all.
-Now write them touching:
-は + い becomes はい (hai).
-ha then i. Two beats, even, neither one stressed. That is the word for yes, and it is the one you have been saying since your first minute in this language.
-Nothing new was introduced in this lesson. No stroke, no sound, no word. What changed is where the word now lives: you are no longer recalling a shape you were shown, you are reading it — assembling it out of two pieces you can write from memory and sound out in order.
-That is the whole method for this writing system, and it does not get harder. It gets longer. A word of five signs is five signs you already own, in a row.
-
-Guided Practice.
-[your turn — read: はい (hai) — sound each sign in turn, do not recall the word whole]
-[pause 8 seconds for the answer]
-[once you have stopped driving — write: はい (hai) — five strokes in total, three then two]
-
-Wrap-up Recall.
-How many new strokes did you have to learn in this lesson? (None.)
-Source: Unicode Hiragana chart.
-[question — say your answer, then pause 8 seconds]
-How many beats (morae) does the written word for 'yes' take?
-
-
-Lesson 4 of 10.
-え — two strokes, and a second word for free.
-
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Read the word for yes off the page, sign by sign, out loud.
-
-Script — the shape.
-え (e).
-Two strokes, and the second one does most of the work:
-a short tick at the top, on its own, clear of everything below.
-the body — across to the right, back down and left in a flat zigzag, then out to the lower right in one continuous movement.
-Read e, the vowel of English bed — short, and never the ay of day.
-
-What you've built.
-Three signs are now yours, and they spell more than one word. Put two of them together with the one you just learned:
-い (i) + い (i) + え becomes いいえ.
-i-i-e. Three beats — and note that the first sign is written twice, because Japanese counts two full beats there. That is the word for no.
-You have now read both answers to a yes-or-no question, from the signs up. Neither of them was memorised as a picture.
-
-Guided Practice.
-[once you have stopped driving — write: え — tick first, then the body in one movement]
-[your turn — read: いいえ — three beats, and do not shorten the doubled sign]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-Why is the first sign of that word written twice? (Because it is two beats, not one held longer.)
-Source: Unicode Hiragana chart; stroke order per Hitsujun Shido no Tebiki (Japanese Ministry of Education, 1958).
-[question — say your answer, then pause 10 seconds]
-How many beats (morae) does the written word for 'no' take?
-
-
-Lesson 5 of 10.
+Lesson 1 of 7.
 こ (ko) — two strokes, and the greeting begins.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -147,6 +24,10 @@ Guided Practice.
 [your turn — say: ko, one beat]
 [pause 8 seconds for the answer]
 
+Guided Practice — review pulse.
+[pause 15 seconds]
+Say??? and tap all three morae before writing the new sign.
+
 Wrap-up Recall.
 Which of the two strokes is longer? (The lower one.)
 Source: Unicode Hiragana chart; stroke order per Hitsujun Shido no Tebiki (Japanese Ministry of Education, 1958).
@@ -154,7 +35,7 @@ Source: Unicode Hiragana chart; stroke order per Hitsujun Shido no Tebiki (Japan
 How many strokes does the hiragana sign read 'ko' have?
 
 
-Lesson 6 of 10.
+Lesson 2 of 7.
 ん — one stroke, one beat, no vowel.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape, and the exception and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -174,6 +55,10 @@ Guided Practice.
 [your turn — say: hold it for a full beat, as long as any other sign takes]
 [pause 8 seconds for the answer]
 
+Guided Practice — review pulse.
+[pause 15 seconds]
+Cover the model and write?? from its two known signs.
+
 Wrap-up Recall.
 If this sign has no vowel, how long is it held? (A full beat — the same as every other sign.)
 Source: Unicode Hiragana chart; stroke order per Hitsujun Shido no Tebiki (Japanese Ministry of Education, 1958).
@@ -181,7 +66,7 @@ Source: Unicode Hiragana chart; stroke order per Hitsujun Shido no Tebiki (Japan
 Which vowel does this sign carry?
 
 
-Lesson 7 of 10.
+Lesson 3 of 7.
 に (ni) — three strokes, and a shape you half know.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -201,8 +86,12 @@ This is the first time two signs share a visible part, and it is worth naming, b
 
 Guided Practice.
 [once you have stopped driving — write: に (ni) — vertical, short bar, long bar]
-[your turn — notice: write it beside は (ha) and compare only the left post]
+[your turn — notice: write it beside は and compare only the left post]
 [pause 8 seconds for the answer]
+
+Guided Practice — review pulse.
+[pause 15 seconds]
+Before the new sign, write? once and then? once from memory.
 
 Wrap-up Recall.
 Which stroke of this sign comes first? (The vertical.)
@@ -211,7 +100,7 @@ Source: Unicode Hiragana chart; stroke order per Hitsujun Shido no Tebiki (Japan
 Two signs so far share a similar left-hand vertical. Does that shared shape tell you anything about their sound or meaning?
 
 
-Lesson 8 of 10.
+Lesson 4 of 7.
 ち (chi) — two strokes, four roman letters, one beat.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -241,7 +130,7 @@ Source: Unicode Hiragana chart; stroke order per Hitsujun Shido no Tebiki (Japan
 This sign is romanised with four letters. How many beats does it take?
 
 
-Lesson 9 of 10.
+Lesson 5 of 7.
 わ — the sign for wa, and the trap beside it.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -271,6 +160,10 @@ Guided Practice.
 [your turn — decide: hearing wa at the end of the daytime greeting, which sign do you write?]
 [pause 8 seconds for the answer]
 
+Guided Practice — review pulse.
+[pause 15 seconds]
+Say??? again, keeping the two opening morae distinct.
+
 Wrap-up Recall.
 Which of the two is a fact about grammar rather than about sound? (The one where は is read wa.)
 Source: Unicode Hiragana chart; stroke order per Hitsujun Shido no Tebiki (Japanese Ministry of Education, 1958).
@@ -278,7 +171,7 @@ Source: Unicode Hiragana chart; stroke order per Hitsujun Shido no Tebiki (Japan
 The daytime greeting ends in a sound like 'wa'. Is it written with the sign for wa, or the sign for ha?
 
 
-Lesson 10 of 10.
+Lesson 6 of 7.
 Five signs in a row — and the greeting is readable.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the assembly and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -290,12 +183,12 @@ Four signs, one after another, from memory. Say each beat as you finish writing 
 
 Script — the assembly.
 Add the fifth — the one that is read wa because it is a topic marker — and the greeting is on the page:
-こ + ん + に + ち + は (ha) becomes こんにちは (konnichiwa).
+こ + ん + に + ち + は becomes こんにちは (konnichiwa).
 ko-n-ni-chi-wa. Five signs, five beats, all even. Say it against a steady tap and you will hear that the second beat, the one with no vowel, takes exactly as long as the four around it.
-Nothing new was introduced in this lesson. You have not learned a stroke, a sound or a word here. You have read a word you already knew how to say — from five pieces you can each write from memory, in order, including the one that sounds like something other than its name.
+No new stroke appears here. You have decoded five pieces you can each write from memory, in order, including the one that sounds like something other than its name. The next lesson attaches the daytime-greeting meaning to the line.
 
 What you've built.
-Eight signs, taught one at a time, and with them you can now read three whole words off the page: the greeting, and both answers to a yes-or-no question.
+Eight signs, taught one at a time, and with them you can now decode three whole sequences off the page. Two already carry useful answers; the five-sign sequence gets its daytime-greeting job in the next lesson.
 Hiragana has forty-six basic signs. You hold eight. The rest arrive the same way, one per lesson, and the words they unlock arrive free — because a word in this script is never more than the signs you already own, in a row.
 
 Guided Practice.
@@ -303,8 +196,53 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [once you have stopped driving — write: the greeting, then say it once at speaking pace]
 
+Guided Practice — review pulse.
+[pause 15 seconds]
+Write? once, then set it beside? and name which one closes the greeting.
+
 Wrap-up Recall.
 How many of the greeting's five signs were new in this lesson? (None.)
 Source: Unicode Hiragana chart.
 [question — say your answer, then pause 10 seconds]
 How many beats (morae) does the written daytime greeting take?
+
+
+Lesson 7 of 7.
+こんにちは (konnichiwa) — hello, and a sign that lies about its sound.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — five familiar signs until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Retrieve はい and the sign は. You are about to meet は again in the daytime greeting — where it is not pronounced ha.
+
+Script — five familiar signs.
+こんにちは (konnichiwa) — こ ko + ん n + に ni + ち chi + は.
+You have written every sign separately. こ, に, and ち each carry a consonant and vowel. ん is the exception: a bare consonant with a full beat of its own. Read five signs in five beats: ko-n-ni-chi-wa. Do not swallow ん.
+
+Grammar Lens — the sign は, read wa.
+The last sign is は, which you learned as ha. Here it is read wa.
+Here は is the topic particle, roughly "as for ___." It keeps an older spelling. Carry one small rule forward: read は as ha inside a word and as wa when it is the particle.
+
+Why it's said this way.
+こんにちは (konnichiwa) is the daytime greeting. It began as an unfinished sentence: konnichi wa…, "as for today …" The rest fell away and the topic marker stayed.
+The older phrase is often written with two kanji for "this day." You do not need to decode those yet. This chapter keeps the whole greeting in the hiragana signs you have already learned.
+
+Guided Practice.
+[your turn — say: こんにちは (konnichiwa) — ko-n-ni-chi-wa, five beats]
+[pause 8 seconds for the answer]
+[repeat that twice]
+[your turn — decide: は in はい becomes ha; は ending the greeting becomes wa]
+[pause 8 seconds for the answer]
+[your turn — greet: someone at midday becomes こんにちは (konnichiwa)]
+[pause 8 seconds for the answer]
+
+Guided Practice — review pulse.
+[pause 15 seconds]
+Write? from memory and give it one full mora.
+
+Wrap-up Recall.
+Which sign takes a beat without a vowel? (ん.) Why does the greeting end in a particle? (It is the opening of a sentence nobody finishes any more.)
+Source: Wiktionary: こんにちは (konnichiwa).
+[question — say your answer, then pause 9 seconds]
+The greeting ends in the sign は. How is it pronounced there?

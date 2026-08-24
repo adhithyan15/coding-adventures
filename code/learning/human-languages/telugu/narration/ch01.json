@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:1a3b4076a4e03286",
+  "sourceHash": "fnv1a64:3c5406c0ec971779",
   "lessons": [
     {
       "id": "TE-C01-namaskaram",
@@ -19,16 +19,17 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b99ff55344bd5f7f",
+      "sourceHash": "fnv1a64:7c3bf19b7a099589",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -44,7 +45,7 @@
             },
             {
               "kind": "speech",
-              "text": "The first Telugu word, and your first Telugu letters. You'll learn to read it and to understand it in the same breath."
+              "text": "Meet your first Telugu word. Say namaskāram with a small bow: “hello” or “greetings.” Now read it one small piece at a time."
             }
           ]
         },
@@ -55,23 +56,23 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "(If you already read Telugu, skim this — it's here so the book needs no prior knowledge.) Telugu is written left to right, and every consonant carries a built-in \"a\" unless something removes it."
+              "text": "Telugu runs left to right. A consonant normally carries a built-in a."
             },
             {
               "kind": "speech",
-              "text": "న = \"na\", మ = \"ma\", ర = \"ra\" — each with its built-in a. (Notice the little check-mark hat, the talakaṭṭu, riding many letters — a visual signature of Telugu.)"
+              "text": "న, మ, ర = na, ma, ra."
             },
             {
               "kind": "speech",
-              "text": "కా = \"kā\" — క (ka) plus the long-\"ā\" vowel sign."
+              "text": "కా = క ka plus the long-ā vowel sign: kā."
             },
             {
               "kind": "speech",
-              "text": "స్క — స (sa) loses its vowel and the bare s stacks below ka as a subscript conjunct (Telugu, like Kannada, tucks conjuncts under the line)."
+              "text": "In స్క, స loses its vowel and stacks below క: s + ka = ska."
             },
             {
               "kind": "speech",
-              "text": "ం — the anusvāra, a dot that adds a nasal \"-m/-ṁ\" at the end: …rā + ం becomes \"rāṁ.\""
+              "text": "The dot ం adds the final nasal sound ṁ."
             },
             {
               "kind": "speech",
@@ -90,67 +91,23 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "నమస్కారం (namaskāram) is not native Telugu — it is Sanskrit, from namas (\"a bow, homage\") + kāra (\"a making,\" from the root kṛ, \"to do\"), with a Telugu ending. Literally \"the making of a bow\" — the same word as Hindi namaskār and Kannada namaskāra."
-            },
-            {
-              "kind": "speech",
-              "text": "Telugu, like Kannada, borrowed heavily from Sanskrit — so much that it's been called the most Sanskritised of the Dravidian tongues. Where its sister Tamil kept a home-grown greeting (vaṇakkam), Telugu reached north."
+              "text": "నమస్కారం (namaskāram) came from Sanskrit namas (“a bow”) + kāra (“a making,” from kṛ, “to do”): literally “the making of a bow.” Telugu added its own final sound. Tamil instead kept its native greeting, vaṇakkam."
             }
           ]
         },
         {
           "index": 3,
-          "type": "unknown",
-          "title": "Across the family — the same idea, five ways",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "Language",
-                "\"Hello\"",
-                "Source"
-              ],
-              "columns": 3,
-              "rowCount": 6,
-              "utterances": [
-                "Language: Telugu. \"Hello\": namaskāram (నమస్కారం). Source: Sanskrit.",
-                "Language: Kannada. \"Hello\": namaskāra (ನಮಸ್ಕಾರ). Source: Sanskrit.",
-                "Language: Malayalam. \"Hello\": namaskāram (നമസ്കാരം). Source: Sanskrit.",
-                "Language: Hindi. \"Hello\": namaste (नमस्ते). Source: Sanskrit.",
-                "Language: Tamil. \"Hello\": vaṇakkam (வணக்கம்). Source: native Dravidian.",
-                "Language: English. \"Hello\": hello. Source: Germanic."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Tamil alone kept its own word; Telugu sits firmly on the Sanskrit-borrowing side of the family."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "culture-pragmatics",
           "title": "Why it's said this way",
           "segments": [
             {
               "kind": "speech",
-              "text": "namaskāram is said with the palms pressed together and a small bow — the gesture is the word. It serves as both hello and goodbye, any time, to almost anyone, respectful without being stiff."
+              "text": "With palms together and a small bow, namaskāram works as hello or goodbye. It is respectful without being stiff."
             }
           ]
         },
         {
-          "index": 5,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Telugu reads left to right, and every consonant carries a built-in “a” (many under a little check-mark hat, the talakaṭṭu). న na, మ ma, ర ra. A vowel sign changes it: క ka + long-ā becomes కా kā. A vowel-less consonant stacks below the next as a conjunct: స tucks under ka becomes స్క “ska.” And the anusvāra ం adds a final nasal “-ṁ.” Read న, మ, స్, కా, ర, ం becomes namaskāram."
-            }
-          ]
-        },
-        {
-          "index": 6,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -186,11 +143,20 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: \"namaskāram,\" with a small bow]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "trace నమస్కారం (namaskāram) with a finger, then copy it once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: trace **నమస్కారం** with a finger, then copy it once]"
             }
           ]
         },
         {
-          "index": 7,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -202,7 +168,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read నమస్కారం (namaskāram). Native Telugu or a borrowing, and what does it literally mean? (Sanskrit namas + kāra, \"the making of a bow.\") What does the dot ం (anusvāra) do? (Adds a final nasal.) Which Dravidian language kept a native \"hello\"? (Tamil, vaṇakkam.)"
+              "text": "Read నమస్కారం (namaskāram). What does it mean? (“Greetings.”) What does the dot ం add? (A final nasal.) What does the whole word literally mean? (“The making of a bow.”)"
             }
           ]
         }
@@ -929,7 +895,7 @@
     {
       "id": "TE-C01-practice",
       "sequence": 60,
-      "title": "Chapter 1 — recap, and how Telugu says goodbye",
+      "title": "Chapter 1 — a five-word recap",
       "headword": "(recap)",
       "romanization": "",
       "gloss": "Chapter 1 recap + the Telugu farewell",
@@ -939,7 +905,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:72cfb8497206d816",
+      "sourceHash": "fnv1a64:c593b7c329fbf4cc",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -964,7 +930,7 @@
             },
             {
               "kind": "speech",
-              "text": "Five words, and a first handful of Telugu letters read straight off the page. Let's gather them — and add the farewell, which shares its logic with the rest of the family."
+              "text": "Five words, and a first handful of Telugu letters read straight off the page. Let's gather only what you have already learned and make it feel easy."
             }
           ]
         },
@@ -1003,35 +969,16 @@
         {
           "index": 2,
           "type": "unknown",
-          "title": "The farewell — the same \"go and come back\"",
+          "title": "A promise for later",
           "segments": [
             {
               "kind": "speech",
-              "text": "Telugu, too, avoids a bare \"I'm leaving.\" The everyday goodbye is:"
-            },
-            {
-              "kind": "speech",
-              "text": "వెళ్ళి వస్తాను (veḷḷi vastānu) — literally \"having gone, I [will] come [back].\""
-            },
-            {
-              "kind": "speech",
-              "text": "and the reply is వెళ్ళి రండి (veḷḷi raṇḍi) — \"go, and come [back].\" The same worldview inside Tamil's pōy varugiṟēṉ and Kannada's hōgi baruttēne: never simply depart — promise a return. (Casually, Telugu also just says veḷtānu, \"I'll go,\" or re-uses namaskāram.)"
+              "text": "Telugu has a warm departure exchange built around going and coming back. It belongs in the later chapter where you learn those actions one at a time. For now, repeating the greeting is enough when you part."
             }
           ]
         },
         {
           "index": 3,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The same “go and come back.” Telugu, too, avoids a bare “I'm leaving.” The everyday goodbye is వెళ్ళి వస్తాను (veḷḷi vastānu), “having gone, I [will] come [back],” with the reply వెళ్ళి రండి (veḷḷi raṇḍi), “go, and come back” — the worldview inside Tamil's pōy varugiṟēṉ and Kannada's hōgi baruttēne."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1058,20 +1005,11 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: greet and thank — \"namaskāram!\" … \"dhanyavādamulu.\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the farewell exchange — \"veḷḷi vastānu\" / \"veḷḷi raṇḍi\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the farewell exchange — \"veḷḷi vastānu\" / \"veḷḷi raṇḍi\"]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1083,11 +1021,11 @@
             },
             {
               "kind": "speech",
-              "text": "Read all five aloud. Which two are Sanskrit, which three native? (Sanskrit: namaskāram, dhanyavādamulu. Native: avunu, lēdu, sarē.) How does Telugu's \"no\" differ from its sisters'? (Different root — lē- / kā-, not il-.) What does the Telugu goodbye literally mean? (\"Having gone, I'll come back.\")"
+              "text": "Read all five aloud. Which two are Sanskrit, which three native? (Sanskrit: namaskāram, dhanyavādamulu. Native: avunu, lēdu, sarē.) How does Telugu's \"no\" differ from its sisters'? (Different root — lē- / kā-, not il-.) Which word means \"okay\"? (sarē.)"
             },
             {
               "kind": "speech",
-              "text": "Next chapter: introducing yourself — nā pēru… (\"my name…\") — and Telugu's nuvvu / mīru (familiar / respectful \"you\")."
+              "text": "Next chapter starts introducing yourself, one short possession form at a time."
             }
           ]
         }

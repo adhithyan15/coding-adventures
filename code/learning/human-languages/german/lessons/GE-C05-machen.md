@@ -1,5 +1,6 @@
 ---
 id: GE-C05-machen
+sequence: 195
 chapter: 5
 type: word
 headword: machen

@@ -1,5 +1,6 @@
 ---
 id: PA-C02-ki
+sequence: 120
 chapter: 2
 type: word
 headword: ਕੀ

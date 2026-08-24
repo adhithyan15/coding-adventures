@@ -6,11 +6,11 @@ type: practice
 headword: (dialogue)
 gloss: Chapter 2 recap — the introduction exchange
 concept_tag: REVIEW
-prerequisites: [ML-C02-enre-peru-aanu, ML-C02-ninre-peru-entaanu, ML-C02-santosham]
+prerequisites: [ML-C02-enre-peru-aanu, ML-C02-ninre-peru-entaanu, ML-C02-santosham, ML-W02-santosham-guided-copy]
 sounds: []
 roots: []
-est_minutes: 4
-reviews_of: [ML-C02-peru, ML-C02-enre, ML-C02-aanu, ML-C02-enre-peru-aanu, ML-C02-nii-ningal, ML-C02-entu, ML-C02-ninre-peru-entaanu, ML-C02-santosham]
+est_minutes: 5
+reviews_of: [ML-C02-peru, ML-C02-enre, ML-C02-aanu, ML-C02-enre-peru-aanu, ML-C02-nii-ningal, ML-C02-entu, ML-C02-ninre-peru-entaanu, ML-C02-santosham, ML-W02-santosham-guided-copy]
 ---
 
 # Chapter 2 — the introduction, whole
@@ -27,7 +27,7 @@ reviews_of: [ML-C02-peru, ML-C02-enre, ML-C02-aanu, ML-C02-enre-peru-aanu, ML-C0
 Every atom traced:
 
 - **pēru** ← Dravidian *\*pēr* (*not* *name*; twin of Tamil *peyar*)
-- **enṟe** ← *ñāṉ* ("I")
+- **enṟe** — the native Dravidian possessive "my"
 - **āṇŭ** ← the verb *āka* ("to be") — Malayalam's **copula**
 - **entŭ** ← Dravidian question-stem *\*yā-/\*e-*
 - **santōṣam** ← **Sanskrit** (borrowed even in native-loving Malayalam)
@@ -43,10 +43,18 @@ closest of sisters.
 - [YOU SAY: your own introduction — "enṟe pēru … āṇŭ"]
 - [YOU SAY: ask it back — "ninṟe pēru entāṇŭ?"]
 
+## Writing check — keep the model visible
+<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-GUIDED-COPY-SANTOSHAM-02] -->
+
+Keep the dialogue table open. Copy **സന്തോഷം** once from its visible row,
+then compare your two new shapes, **ഷ** and **ോ**, with the model. This is
+supported checkpoint writing, not spelling from memory.
+
 ## Wrap-up Recall
 
 [PAUSE 3s] Give your name, ask someone else's, say you're pleased. (*Enṟe pēru
 … āṇŭ. / Ninṟe pēru entāṇŭ? / Santōṣam.*) What grammatical word does Malayalam
 have that Tamil, Kannada, and Telugu lack? (A copula — *āṇŭ*, "is.")
 
-Next chapter: *sukhamāṇō?* ("are you well?") — the responding cycle.
+Next chapter begins the responding cycle, one short question and answer at a
+time.

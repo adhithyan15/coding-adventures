@@ -102,8 +102,8 @@ pub enum IfdValue {
 /// # Key fields for decoding
 ///
 /// - `width`, `height`: pixel dimensions
-/// - `bits_per_sample`: depth per channel (e.g., [8, 8, 8] for RGB, [16] for
-///   16-bit grayscale, [12] for a 12-bit RAW)
+/// - `bits_per_sample`: depth per channel (e.g., `[8, 8, 8]` for RGB, `[16]` for
+///   16-bit grayscale, `[12]` for a 12-bit RAW)
 /// - `compression`: 1=uncompressed, 5=LZW, 32773=PackBits
 /// - `photometric`: colour space (1=grayscale, 2=RGB, 32803=CFA/Bayer)
 /// - `strip_offsets` + `strip_byte_counts`: where compressed strips live
@@ -115,7 +115,7 @@ pub struct Ifd {
     /// Image height in pixels (tag 257).
     pub height: u32,
     /// Bits per sample, one entry per channel (tag 258).
-    /// E.g. [8, 8, 8] for 24-bit RGB, [16] for 16-bit gray, [12] for 12-bit CFA.
+    /// E.g. `[8, 8, 8]` for 24-bit RGB, `[16]` for 16-bit gray, `[12]` for 12-bit CFA.
     pub bits_per_sample: Vec<u16>,
     /// Compression scheme (tag 259).
     /// 1=uncompressed, 5=LZW, 32773=PackBits, 7=JPEG.

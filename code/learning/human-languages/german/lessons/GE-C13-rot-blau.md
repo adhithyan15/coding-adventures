@@ -1,5 +1,6 @@
 ---
 id: GE-C13-rot-blau
+sequence: 290
 chapter: 13
 type: word
 headword: rot, blau

@@ -116,14 +116,19 @@ Sub for 5, and compresses 96,000 bytes to 2,123 — **45:1**.
 | multiple `IDAT` chunks | writes one | ✅ reads any number |
 | unknown **ancillary** chunks (`gAMA`, `tEXt`, …) | — | ✅ skipped |
 | unknown **critical** chunks | — | ❌ refused, as the spec requires |
+| suggested `PLTE` on truecolour types 2/6 | — | ✅ validated and ignored |
+| `tRNS` transparency on types 0/2 | — | ✅ applied to output alpha |
 
 Encoding always writes colour type 6, because that is exactly what a
 `PixelContainer` holds: no channel is dropped and no palette is guessed at, so
 the round trip is lossless by construction rather than by luck.
 
 **Refused by name, never half-supported:** palette images (type 3), bit depths
-other than 8, Adam7 interlacing, APNG animation. A decoder that silently
-mis-reads a palette image is worse than one that says it cannot read it.
+other than 8, Adam7 interlacing, and APNG animation (`acTL`, `fcTL`, and
+`fdAT`). APNG's chunks are ancillary by letter case but semantic, so they are
+refused only after their ordinary type and CRC checks instead of being skipped.
+A decoder that silently mis-reads a palette image is worse than one that says it
+cannot read it.
 
 ## Reading bytes you did not write
 
@@ -143,7 +148,9 @@ mis-reads a palette image is worse than one that says it cannot read it.
   `decodePng(bytes, { maxPixels })` or `new PngCodec({ maxPixels })` — decoding
   costs about three times the pixel buffer, so the default admits roughly
   400 MB of peak allocation, and a caller who knows its images are small should
-  say so.
+  say so. The supplied ceiling must be a positive safe integer no larger than
+  the 32 mebipixel default: callers may lower the budget, never raise or
+  fractionalize it.
 - **`IHDR` must be first, `IEND` must be empty and last, `IDAT` chunks must be
   consecutive, and the compressed data must end exactly where the Adler-32
   begins.** Each of those
@@ -170,6 +177,13 @@ round-trip perfectly. So the suite also:
   covering all five filter types in one image and each supported colour type;
 - checks `adler32` against the RFC's worked example and against the trailer zlib
   itself writes, including across the 5552-byte chunking boundary.
+- consumes all 85 cases in the
+  [`image-codec-png-v1`](../../../specs/fixtures/image-codec-png-v1/README.md)
+  language-neutral corpus through the public API, including every stable error
+  code, all supported colour forms and filters, and stored/fixed/dynamic
+  DEFLATE;
+- decodes the encoder's output with test-only `pngjs`, a foreign PNG
+  implementation, rather than trusting this package's own decoder.
 
 The written file has been confirmed readable by `file`, macOS `sips`, and
 Python's `zlib`.
@@ -187,3 +201,6 @@ npx vitest run --coverage
 | `decodePng(bytes, opts?)` | PNG bytes → `PixelContainer`. `opts.maxPixels` lowers the ceiling. |
 | `PngCodec` | `ImageCodec` implementation, mime type `image/png`. Takes the same options. |
 | `adler32(data)` | RFC 1950 checksum, exported because it is testable alone |
+| `PngError` / `PngErrorCode` | Stable portable failure code plus explanatory message |
+| `PNG_ERROR_CODES` | Closed IC18 error-code list shared with the neutral corpus |
+| `PNG_MAX_DIMENSION` / `PNG_MAX_PIXELS` | Public fixed default resource ceilings |

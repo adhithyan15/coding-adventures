@@ -1,5 +1,27 @@
 # Changelog — Russian track
 
+## Unreleased
+
+### Added — pre-A1 bridge and A1-to-C2 TORFL contract (HL16)
+
+- Added a non-accredited project-defined pre-A1 checkpoint followed by the real
+  TORFL/ТРКИ destinations: ТЭУ/A1, ТБУ/A2, and ТРКИ-I through IV at B1–C2.
+- Every rung requires independent reading, listening, writing, and speaking
+  passes. A1–C2 readiness also requires TORFL's fifth Lexis/Grammar subtest at
+  66%, even though the universal HL16 schema cannot yet encode that extra part.
+- Cyrillic writing grows cumulatively from trace and guided copy through delayed
+  recall, dictation, connected composition, and timed exam production.
+- Two complete mocks, current official task inventories, provider-drift review,
+  rubrics, keys, calibration, and book-only human validation remain explicit
+  dependencies rather than implied completion.
+
+### Fixed — the final false forward-review claim
+
+`RU-C01-da` now reviews the two greetings its warm-up actually recalls:
+`RU-C01-privet` and the earlier formal `RU-C01-zdravstvuyte`. The removed
+`RU-C01-spasibo` claim pointed two lessons into the future. Authored order and
+the 180-second cap remain unchanged; Russian's order-integrity debt is now zero.
+
 ## 0.11.0 — 2026-08-12
 
 Pre-A1 vocabulary tranche, round 2 (wave 6 of the cross-track vocabulary
@@ -507,6 +529,18 @@ Ch. 2 plan the roadmap already set out.
   those four has been taught.
 
 ## [Unreleased]
+
+### Added — project-defined pre-A1 four-skill task shapes
+
+- Made the Russian pre-A1 bridge executable as separate reading, listening,
+  writing, and speaking papers with exact items, timing, replay, aids, scoring,
+  and an independent 60/100 floor for every skill.
+- Kept the writing evidence honest: delayed recall, heard-word Cyrillic
+  transcription, and bounded independent production are scored; visible
+  tracing and copying remain lesson supports and cannot earn exam credit.
+- This inventory is not a readiness claim. Two full mocks, rubrics, answer
+  keys, calibration, curriculum task coverage, and book-only human validation
+  remain required before even project pre-A1 readiness can be claimed.
 
 ### Added — Chapter 14, eleven letters sorted into three kinds (HL-C219)
 

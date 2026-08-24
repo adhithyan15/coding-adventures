@@ -6,15 +6,23 @@ import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { join, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
-  MODALITY_MANIFEST_PATH,
+  MODALITY_MANIFEST_DIR,
+  mergeModalityManifests,
   type ModalityManifest,
   type ModalityManifestLesson,
 } from "./modality-manifest.js";
 import { buildDataset, parseLesson, type ParsedLesson } from "./parse.js";
-import type { ExamInventory } from "./exam-inventory.js";
+import {
+  EXAM_CONTENT_DIMENSIONS,
+  type ExamContentDimension,
+  type ExamInventory,
+} from "./exam-inventory.js";
+import { parseTaskShapeInventory, type TaskShapeInventory } from "./task-shapes.js";
+import { CEFR_LEVELS, type CefrLevel } from "./levels.js";
 import {
   parseAssessmentContract,
   parseAssessmentPolicy,
+  type AssessmentContract,
   type AssessmentPolicy,
 } from "./assessment.js";
 import type { LedgerLetter, LetterLedger } from "./letter-ledger.js";
@@ -97,6 +105,85 @@ export function listAssessmentContracts(root = defaultCurriculumRoot()): string[
     out.push(track.id);
   }
   return out;
+}
+
+export interface ExternalExamCapstoneStatus {
+  language: string;
+  id: string;
+  requiredAfterLevel: CefrLevel;
+  name: string;
+  complete: boolean;
+  missingArtifacts: string[];
+}
+
+/** Declared non-CEFR-mapped external capstones and whether their artifacts exist. */
+export function listExternalExamCapstones(root = defaultCurriculumRoot()): ExternalExamCapstoneStatus[] {
+  const policy = loadAssessmentPolicy(root);
+  const registry = loadLanguageRegistry(root);
+  const out: ExternalExamCapstoneStatus[] = [];
+  for (const track of registry.languages) {
+    const contractPath = join(root, track.id, "assessment.json");
+    if (!existsSync(contractPath)) continue;
+    const contract: AssessmentContract = parseAssessmentContract(
+      JSON.parse(readFileSync(contractPath, "utf8")),
+      track.id,
+      policy,
+    );
+    for (const capstone of contract.externalCapstones) {
+      const references = [
+        ...Object.values(capstone.skills).flatMap((skill) => skill.taskInventory),
+        ...Object.values(capstone.additionalComponents).flatMap((component) => component.taskInventory),
+        ...capstone.fullMocks.flatMap((mock) => [mock.rubric, mock.answerKey]),
+      ];
+      const missingArtifacts = [...new Set(references
+        .map((reference) => reference.split("#", 1)[0]!)
+        .filter((reference) => !existsSync(join(root, track.id, reference))))];
+      out.push({
+        language: track.id,
+        id: capstone.id,
+        requiredAfterLevel: capstone.requiredAfterLevel,
+        name: capstone.target.name,
+        complete: missingArtifacts.length === 0,
+        missingArtifacts,
+      });
+    }
+  }
+  return out;
+}
+
+/** Load and validate one `<track>/task-shapes/<level>.json` inventory. */
+export function loadTaskShapeInventory(
+  language: string,
+  level: string,
+  root = defaultCurriculumRoot(),
+): TaskShapeInventory {
+  if (!/^[a-z][a-z0-9-]*$/.test(language) || !/^(pre-a1|a1|a2|b1|b2|c1|c2)$/i.test(level)) {
+    throw new Error("task shapes: unsafe language or level path");
+  }
+  const path = join(root, language, "task-shapes", `${level.toLowerCase()}.json`);
+  const inventory = parseTaskShapeInventory(JSON.parse(readFileSync(path, "utf8")), language);
+  if (inventory.level.toLowerCase() !== level.toLowerCase()) {
+    throw new Error(`task shapes: ${language}/${level} file declares level ${inventory.level}`);
+  }
+  return inventory;
+}
+
+/** Valid task-shape inventories present in the registry, ordered by track and level. */
+export function listTaskShapeInventories(root = defaultCurriculumRoot()): Array<{ language: string; level: CefrLevel }> {
+  const registry = loadLanguageRegistry(root);
+  const found: Array<{ language: string; level: CefrLevel }> = [];
+  for (const track of registry.languages) {
+    for (const current of CEFR_LEVELS) {
+      const path = join(root, track.id, "task-shapes", `${current.toLowerCase()}.json`);
+      if (!existsSync(path)) continue;
+      const inventory = loadTaskShapeInventory(track.id, current, root);
+      if (inventory.level !== current) {
+        throw new Error(`task shapes: ${track.id}/${current} file declares level ${inventory.level}`);
+      }
+      found.push({ language: track.id, level: current });
+    }
+  }
+  return found;
 }
 
 export function loadCurriculumSpine(root = defaultCurriculumRoot()): CurriculumSpine {
@@ -299,18 +386,25 @@ export function trackScript(root: string, trackName: string): Script | undefined
 }
 
 /** Read every track's lessons/*.md into parsed lessons. */
+export function loadTrackLessons(
+  language: string,
+  root = defaultCurriculumRoot(),
+): ParsedLesson[] {
+  const lessonsDir = join(root, language, "lessons");
+  if (!existsSync(lessonsDir)) return [];
+  if (!/^[a-z0-9-]+$/.test(language)) throw new Error(`unsafe language id '${language}'`);
+  const script = trackScript(root, language);
+  return readdirSync(lessonsDir)
+    .sort()
+    .filter((file) => file.endsWith(".md"))
+    .map((file) => parseLesson(readFileSync(join(lessonsDir, file), "utf8"), language, script));
+}
+
 export function loadLessons(root = defaultCurriculumRoot()): ParsedLesson[] {
   const out: ParsedLesson[] = [];
   for (const track of sortedEntries(root)) {
     if (!track.isDirectory()) continue;
-    const lessonsDir = join(root, track.name, "lessons");
-    if (!existsSync(lessonsDir)) continue;
-    const script = trackScript(root, track.name);
-    for (const file of readdirSync(lessonsDir).sort()) {
-      if (!file.endsWith(".md")) continue;
-      const source = readFileSync(join(lessonsDir, file), "utf8");
-      out.push(parseLesson(source, track.name, script));
-    }
+    out.push(...loadTrackLessons(track.name, root));
   }
   return out;
 }
@@ -329,7 +423,15 @@ export function loadLessons(root = defaultCurriculumRoot()): ParsedLesson[] {
  * and current, so the throw is unreachable in a healthy checkout.
  */
 export function loadModalityManifest(root = defaultCurriculumRoot()): ModalityManifest {
-  return JSON.parse(readFileSync(join(root, MODALITY_MANIFEST_PATH), "utf8")) as ModalityManifest;
+  const directory = join(root, MODALITY_MANIFEST_DIR);
+  const manifests = readdirSync(directory)
+    .filter((name) => name.endsWith(".json"))
+    .sort()
+    .map(
+      (name) =>
+        JSON.parse(readFileSync(join(directory, name), "utf8")) as ModalityManifest,
+    );
+  return mergeModalityManifests(manifests);
 }
 
 /**
@@ -482,6 +584,47 @@ export function loadEverything(root = defaultCurriculumRoot()): {
  */
 const SAFE_INVENTORY_SEGMENT = /^[A-Za-z0-9]+$/;
 
+function declaredInventoryComplete(value: unknown): boolean {
+  if (typeof value !== "object" || value === null || Array.isArray(value)) return false;
+  const scope = (value as { scope?: unknown }).scope;
+  if (typeof scope !== "object" || scope === null || Array.isArray(scope)) return false;
+  return EXAM_CONTENT_DIMENSIONS.every((dimension) => {
+    const entry = (scope as Record<string, unknown>)[dimension];
+    return typeof entry === "object" && entry !== null && !Array.isArray(entry) &&
+      (entry as { status?: unknown }).status === "complete";
+  });
+}
+
+function validateInventoryScope(inventory: ExamInventory): void {
+  if (typeof inventory.scope !== "object" || inventory.scope === null || Array.isArray(inventory.scope)) {
+    throw new Error("exam inventory: scope must be an object covering every required content dimension");
+  }
+  const keys = Object.keys(inventory.scope);
+  const extras = keys.filter((key) => !EXAM_CONTENT_DIMENSIONS.includes(key as ExamContentDimension));
+  const missing = EXAM_CONTENT_DIMENSIONS.filter((dimension) => !Object.hasOwn(inventory.scope, dimension));
+  if (missing.length > 0 || extras.length > 0) {
+    throw new Error(
+      `exam inventory: scope must contain exactly ${EXAM_CONTENT_DIMENSIONS.join(", ")}; ` +
+      `missing [${missing.join(", ")}], extra [${extras.join(", ")}]`,
+    );
+  }
+  for (const dimension of EXAM_CONTENT_DIMENSIONS) {
+    const entry = inventory.scope[dimension];
+    if (typeof entry !== "object" || entry === null || Array.isArray(entry)) {
+      throw new Error(`exam inventory: scope.${dimension} must be an object`);
+    }
+    if (entry.status !== "complete" && entry.status !== "partial") {
+      throw new Error(`exam inventory: scope.${dimension}.status must be complete or partial`);
+    }
+    if (typeof entry.source !== "string" || entry.source.trim() === "") {
+      throw new Error(`exam inventory: scope.${dimension}.source must name its provenance`);
+    }
+    if (typeof entry.note !== "string" || entry.note.trim() === "") {
+      throw new Error(`exam inventory: scope.${dimension}.note must state the coverage boundary`);
+    }
+  }
+}
+
 export function loadExamInventory(
   language: string,
   level: string,
@@ -525,8 +668,37 @@ export function loadExamInventory(
     throw new Error(`exam inventory: ${file} has no non-empty 'points' array`);
   }
   const inventory = parsed as ExamInventory;
+  if (inventory.version !== 1) throw new Error("exam inventory: version must be 1");
+  if (
+    typeof inventory.language !== "string" ||
+    typeof inventory.level !== "string" ||
+    inventory.language !== normalized ||
+    inventory.level.toLowerCase() !== level.toLowerCase()
+  ) {
+    throw new Error(
+      `exam inventory: requested ${normalized}/${level} but file declares ${String(inventory.language)}/${String(inventory.level)}`,
+    );
+  }
+  for (const [field, value] of [
+    ["about", inventory.about],
+    ["source", inventory.source],
+    ["probeSemantics", inventory.probeSemantics],
+  ] as const) {
+    if (typeof value !== "string" || value.trim() === "") {
+      throw new Error(`exam inventory: ${field} must be a non-empty string`);
+    }
+  }
+  validateInventoryScope(inventory);
   const seen = new Set<string>();
   for (const point of inventory.points) {
+    if (
+      typeof point !== "object" || point === null ||
+      typeof point.id !== "string" || point.id.trim() === "" ||
+      typeof point.category !== "string" || point.category.trim() === "" ||
+      typeof point.label !== "string" || point.label.trim() === ""
+    ) {
+      throw new Error("exam inventory: every point must have non-empty id, category, and label strings");
+    }
     if (seen.has(point.id)) throw new Error(`exam inventory: duplicate point id '${point.id}'`);
     seen.add(point.id);
     // `__proto__` and friends as a category would pollute the accumulator in
@@ -565,16 +737,22 @@ export function loadExamInventory(
  * whole plan from being computed — `loadExamInventory` is still the strict door
  * that anything actually measuring coverage has to come through.
  */
-export function listExamInventories(root = defaultCurriculumRoot()): { language: string; level: string }[] {
+export function listExamInventories(
+  root = defaultCurriculumRoot(),
+): { language: string; level: string; complete: boolean }[] {
   const directory = resolve(root, "core");
   if (!existsSync(directory)) return [];
-  const found: { language: string; level: string }[] = [];
+  const found: { language: string; level: string; complete: boolean }[] = [];
   for (const file of readdirSync(directory).sort()) {
     if (!file.startsWith("exam-inventory-") || !file.endsWith(".json")) continue;
     try {
       const parsed = JSON.parse(readFileSync(resolve(directory, file), "utf8")) as Partial<ExamInventory>;
       if (typeof parsed.language === "string" && typeof parsed.level === "string") {
-        found.push({ language: parsed.language, level: parsed.level });
+        found.push({
+          language: parsed.language,
+          level: parsed.level,
+          complete: declaredInventoryComplete(parsed),
+        });
       }
     } catch {
       // Skipped on purpose — see the note above.

@@ -44926,6 +44926,9 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
         nut_entry(),
         upnp_ssdp_entry(),
         ipp_printer_entry(),
+        ipp_scanner_entry(),
+        thread_border_agent_entry(),
+        matter_operational_discovery_entry(),
         protocol_entry(
             "matter",
             "Matter",
@@ -45179,6 +45182,7 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
         .with_notes(&[
             "Account-backed source browsing remains separate work; local playback, volume, grouping, and queue controls are available without HEOS account credentials.",
         ]),
+        kodi_entry(),
         google_cast_entry(),
         camera_entry(
             "onvif",
@@ -49220,6 +49224,152 @@ fn homekit_controller_entry() -> IntegrationCatalogEntry {
     entry
 }
 
+fn thread_border_agent_entry() -> IntegrationCatalogEntry {
+    let mut entry = base_entry(
+        "thread_border_agent",
+        "Thread Border Agent Discovery",
+        "Bounded mDNS discovery for Thread Border Agents on the local infrastructure link.",
+        IntegrationCategory::ProtocolStandard,
+        ConnectivityClass::LocalPolling,
+        ImplementationStatus::FirstPartyRuntime,
+        1,
+        "thread",
+    )
+    .with_protocols(vec![ProtocolFamily::Thread])
+    .with_capabilities(&["smart_home.read"])
+    .with_entities(&[EntityKind::NetworkDiagnostic])
+    .with_discovery(&[DiscoveryMechanism::Mdns])
+    .with_auth(&[AuthMode::None])
+    .with_notes(&[
+        "The first-party runtime supports only authorized bounded _meshcop._udp mDNS identity, state, network, topology, and endpoint discovery.",
+        "PSKc, ePSKc, operational datasets, MeshCoP exchanges, commissioning, Thread transport, network mutation, and control remain out of scope.",
+    ]);
+    entry.required_primitives = vec![
+        PrimitiveFamily::DiscoveryIndex,
+        PrimitiveFamily::Mdns,
+        PrimitiveFamily::Udp,
+        PrimitiveFamily::NormalizedModel,
+        PrimitiveFamily::CapabilityPolicy,
+        PrimitiveFamily::Supervision,
+        PrimitiveFamily::TestSimulator,
+    ];
+    entry.source_refs.push(SourceReference {
+        label: "OpenThread Border Router mDNS discovery".to_string(),
+        url: "https://openthread.io/guides/border-router/mdns-discovery".to_string(),
+        external_id: Some("_meshcop._udp".to_string()),
+    });
+    entry.source_refs.push(SourceReference {
+        label: "OpenThread Border Agent TXT data API".to_string(),
+        url: "https://github.com/openthread/openthread/blob/main/include/openthread/border_agent_txt_data.h".to_string(),
+        external_id: Some("otBorderAgentTxtDataInfo".to_string()),
+    });
+    entry.source_refs.push(SourceReference {
+        label: "Thread Border Router white paper".to_string(),
+        url: "https://www.threadgroup.org/Portals/0/documents/support/ThreadBorderRouterWhitePaper_07192022_4001_1.pdf".to_string(),
+        external_id: None,
+    });
+    entry
+}
+
+fn matter_operational_discovery_entry() -> IntegrationCatalogEntry {
+    let mut entry = base_entry(
+        "matter_operational_discovery",
+        "Matter Operational Discovery",
+        "Bounded DNS-SD discovery for commissioned Matter nodes on the local infrastructure link.",
+        IntegrationCategory::ProtocolStandard,
+        ConnectivityClass::LocalPolling,
+        ImplementationStatus::FirstPartyRuntime,
+        1,
+        "matter",
+    )
+    .with_protocols(vec![ProtocolFamily::Matter])
+    .with_capabilities(&["smart_home.read"])
+    .with_entities(&[])
+    .with_discovery(&[DiscoveryMechanism::Mdns])
+    .with_auth(&[AuthMode::None])
+    .with_notes(&[
+        "The first-party runtime supports only authorized bounded _matter._tcp operational identity, endpoint, MRP, TCP-capability, and ICD discovery.",
+        "Commissionable discovery, fabric credentials, PASE, CASE, certificate validation, secure sessions, Interaction Model traffic, and control remain out of scope.",
+    ]);
+    entry.required_primitives = vec![
+        PrimitiveFamily::DiscoveryIndex,
+        PrimitiveFamily::Mdns,
+        PrimitiveFamily::NormalizedModel,
+        PrimitiveFamily::CapabilityPolicy,
+        PrimitiveFamily::Supervision,
+        PrimitiveFamily::TestSimulator,
+    ];
+    entry.source_refs.push(SourceReference {
+        label: "Matter DNS-SD service naming".to_string(),
+        url: "https://github.com/project-chip/connectedhomeip/blob/master/src/lib/dnssd/ServiceNaming.h".to_string(),
+        external_id: Some("_matter._tcp".to_string()),
+    });
+    entry.source_refs.push(SourceReference {
+        label: "Matter operational instance-name parsing".to_string(),
+        url: "https://github.com/project-chip/connectedhomeip/blob/master/src/lib/dnssd/ServiceNaming.cpp".to_string(),
+        external_id: Some("ExtractIdFromInstanceName".to_string()),
+    });
+    entry.source_refs.push(SourceReference {
+        label: "Matter DNS-SD TXT field bounds".to_string(),
+        url:
+            "https://github.com/project-chip/connectedhomeip/blob/master/src/lib/dnssd/TxtFields.h"
+                .to_string(),
+        external_id: Some("CommonTxtKey".to_string()),
+    });
+    entry
+}
+
+fn kodi_entry() -> IntegrationCatalogEntry {
+    let mut entry = base_entry(
+        "kodi",
+        "Kodi JSON-RPC",
+        "Bounded local Kodi application and active-player telemetry with low-risk media control.",
+        IntegrationCategory::CameraMedia,
+        ConnectivityClass::LocalPolling,
+        ImplementationStatus::FirstPartyRuntime,
+        2,
+        "kodi",
+    )
+    .with_protocols(vec![ProtocolFamily::Vendor("kodi_jsonrpc".to_string())])
+    .with_capabilities(&["smart_home.read", "smart_home.command.media"])
+    .with_entities(&[EntityKind::Unknown])
+    .with_discovery(&[DiscoveryMechanism::Manual])
+    .with_auth(&[AuthMode::None])
+    .with_notes(&[
+        "The first-party runtime accepts one explicit local IP endpoint and fixed JSON-RPC methods for application state, active-player state, play, pause, stop, volume, and mute.",
+        "Credentialed endpoints, WebSocket subscriptions, library or item browsing, playback URLs, arbitrary JSON-RPC, input, add-on, queue, and power operations remain out of scope.",
+    ]);
+    entry.required_primitives = vec![
+        PrimitiveFamily::NormalizedModel,
+        PrimitiveFamily::DiscoveryIndex,
+        PrimitiveFamily::LocalHttp,
+        PrimitiveFamily::Tcp,
+        PrimitiveFamily::CapabilityPolicy,
+        PrimitiveFamily::CommandMapping,
+        PrimitiveFamily::Supervision,
+        PrimitiveFamily::TestSimulator,
+    ];
+    entry.source_refs.push(SourceReference {
+        label: "Kodi JSON-RPC method schema".to_string(),
+        url:
+            "https://github.com/xbmc/xbmc/blob/master/xbmc/interfaces/json-rpc/schema/methods.json"
+                .to_string(),
+        external_id: Some("Application.GetProperties / Player.GetProperties".to_string()),
+    });
+    entry.source_refs.push(SourceReference {
+        label: "Kodi JSON-RPC type schema".to_string(),
+        url: "https://github.com/xbmc/xbmc/blob/master/xbmc/interfaces/json-rpc/schema/types.json"
+            .to_string(),
+        external_id: Some("Application.Property.Value / Player.Property.Value".to_string()),
+    });
+    entry.source_refs.push(SourceReference {
+        label: "Kodi JSON-RPC examples".to_string(),
+        url: "https://kodi.wiki/view/JSON-RPC_API/Examples".to_string(),
+        external_id: None,
+    });
+    entry
+}
+
 fn modbus_tcp_entry() -> IntegrationCatalogEntry {
     base_entry(
         "modbus_tcp",
@@ -49441,6 +49591,55 @@ fn ipp_printer_entry() -> IntegrationCatalogEntry {
         label: "PWG IPP Everywhere 1.1".to_string(),
         url: "https://ftp.pwg.org/pub/pwg/candidates/cs-ippeve11-20200515-5100.14.pdf".to_string(),
         external_id: Some("PWG 5100.14-2020".to_string()),
+    });
+    entry.source_refs.push(SourceReference {
+        label: "IETF DNS-Based Service Discovery".to_string(),
+        url: "https://www.rfc-editor.org/rfc/rfc6763.html".to_string(),
+        external_id: Some("RFC 6763".to_string()),
+    });
+    entry.source_refs.push(SourceReference {
+        label: "IETF Internet Printing Protocol".to_string(),
+        url: "https://www.rfc-editor.org/rfc/rfc8011.html".to_string(),
+        external_id: Some("RFC 8011".to_string()),
+    });
+    entry
+}
+
+fn ipp_scanner_entry() -> IntegrationCatalogEntry {
+    let mut entry = base_entry(
+        "ipp_scanner",
+        "IPP Scanner Discovery",
+        "Bounded local DNS-SD discovery for IPP Scan Service scanners.",
+        IntegrationCategory::ProtocolStandard,
+        ConnectivityClass::LocalPolling,
+        ImplementationStatus::FirstPartyRuntime,
+        1,
+        "ipp_scanner",
+    )
+    .with_protocols(vec![ProtocolFamily::Vendor(
+        "ipp_scan_service".to_string(),
+    )])
+    .with_capabilities(&["smart_home.read"])
+    .with_entities(&[EntityKind::Unknown])
+    .with_discovery(&[DiscoveryMechanism::Mdns])
+    .with_auth(&[AuthMode::None])
+    .with_notes(&[
+        "The first-party runtime performs one authorized bounded _scan._sub._ipp._tcp.local browse and validates IPP Scan Service identity, access, and capability TXT keys.",
+        "IPP requests, status reads, credential input, scan submission, document retrieval, push-destination access, public endpoints, and long-lived browse sockets remain out of scope.",
+    ]);
+    entry.required_primitives = vec![
+        PrimitiveFamily::DiscoveryIndex,
+        PrimitiveFamily::Mdns,
+        PrimitiveFamily::Udp,
+        PrimitiveFamily::NormalizedModel,
+        PrimitiveFamily::CapabilityPolicy,
+        PrimitiveFamily::Supervision,
+        PrimitiveFamily::TestSimulator,
+    ];
+    entry.source_refs.push(SourceReference {
+        label: "PWG IPP Scan Service 1.0".to_string(),
+        url: "https://ftp.pwg.org/pub/pwg/candidates/cs-ippscan10-20140918-5100.17.pdf".to_string(),
+        external_id: Some("PWG 5100.17-2014".to_string()),
     });
     entry.source_refs.push(SourceReference {
         label: "IETF DNS-Based Service Discovery".to_string(),
@@ -59757,7 +59956,8 @@ mod tests {
 
     #[test]
     fn activation_sentinel_alerts_roll_up_activation_attention() {
-        let reports = [IntegrationReadinessReport {
+        let reports = [
+            IntegrationReadinessReport {
                 requested_integration_id: IntegrationId::trusted("review_ready_bridge"),
                 display_name: "Review Ready Bridge".to_string(),
                 activation_target: IntegrationActivationTarget::Direct,
@@ -59797,7 +59997,8 @@ mod tests {
                 highest_policy_tier: PrivilegeTier::ReadOnly,
                 local_only: true,
                 cloud_required: false,
-        }];
+            },
+        ];
         let candidates = activation_candidates_from_reports(reports.iter());
         let risks = activation_risk_from_candidates(&[], candidates.iter());
         let sections = activation_command_center_sections_from_candidates(&[], candidates, &[]);
@@ -59875,7 +60076,8 @@ mod tests {
 
     #[test]
     fn activation_audit_records_join_sentinel_attention_to_evidence() {
-        let reports = [IntegrationReadinessReport {
+        let reports = [
+            IntegrationReadinessReport {
                 requested_integration_id: IntegrationId::trusted("review_ready_bridge"),
                 display_name: "Review Ready Bridge".to_string(),
                 activation_target: IntegrationActivationTarget::Direct,
@@ -59915,7 +60117,8 @@ mod tests {
                 highest_policy_tier: PrivilegeTier::ReadOnly,
                 local_only: true,
                 cloud_required: false,
-        }];
+            },
+        ];
         let candidates = activation_candidates_from_reports(reports.iter());
         let risks = activation_risk_from_candidates(&[], candidates.iter());
         let sections =
@@ -59993,7 +60196,8 @@ mod tests {
 
     #[test]
     fn activation_runbook_entries_join_playbook_steps_to_audit_context() {
-        let reports = [IntegrationReadinessReport {
+        let reports = [
+            IntegrationReadinessReport {
                 requested_integration_id: IntegrationId::trusted("review_ready_bridge"),
                 display_name: "Review Ready Bridge".to_string(),
                 activation_target: IntegrationActivationTarget::Direct,
@@ -60033,7 +60237,8 @@ mod tests {
                 highest_policy_tier: PrivilegeTier::ReadOnly,
                 local_only: true,
                 cloud_required: false,
-        }];
+            },
+        ];
         let candidates = activation_candidates_from_reports(reports.iter());
         let steps = activation_playbook_steps_from_candidates(&[], candidates.clone(), &[]);
         let risks = activation_risk_from_candidates(&[], candidates.iter());
@@ -81439,7 +81644,10 @@ mod tests {
         let catalog = first_party_catalog();
         let onvif = find_entry(&catalog, &IntegrationId::trusted("onvif")).unwrap();
 
-        assert_eq!(onvif.implementation_status, ImplementationStatus::FirstPartyRuntime);
+        assert_eq!(
+            onvif.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
         assert_eq!(onvif.supported_protocols, vec![ProtocolFamily::Onvif]);
         assert!(onvif.target_entity_kinds.contains(&EntityKind::Camera));
         assert!(onvif
@@ -81588,7 +81796,10 @@ mod tests {
             .required_capabilities
             .contains(&CapabilityId::trusted("smart_home.command.device")));
         assert_eq!(blue_iris.target_entity_kinds, vec![EntityKind::Camera]);
-        assert_eq!(blue_iris.discovery_mechanisms, vec![DiscoveryMechanism::Manual]);
+        assert_eq!(
+            blue_iris.discovery_mechanisms,
+            vec![DiscoveryMechanism::Manual]
+        );
         assert!(blue_iris
             .required_primitives
             .contains(&PrimitiveFamily::LocalHttp));
@@ -81849,12 +82060,8 @@ mod tests {
             vec![ProtocolFamily::Vendor("nanoleaf_local".to_string())]
         );
         assert_eq!(nanoleaf.connectivity, ConnectivityClass::LocalPolling);
-        assert!(nanoleaf
-            .auth_modes
-            .contains(&AuthMode::LocalPairing));
-        assert!(nanoleaf
-            .auth_modes
-            .contains(&AuthMode::LocalToken));
+        assert!(nanoleaf.auth_modes.contains(&AuthMode::LocalPairing));
+        assert!(nanoleaf.auth_modes.contains(&AuthMode::LocalToken));
         for primitive in [
             PrimitiveFamily::Mdns,
             PrimitiveFamily::LocalHttp,
@@ -81902,6 +82109,48 @@ mod tests {
     }
 
     #[test]
+    fn kodi_entry_exposes_bounded_local_jsonrpc_media_runtime() {
+        let catalog = first_party_catalog();
+        let kodi = find_entry(&catalog, &IntegrationId::trusted("kodi")).unwrap();
+
+        assert_eq!(
+            kodi.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(kodi.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(kodi.auth_modes, vec![AuthMode::None]);
+        assert_eq!(
+            kodi.supported_protocols,
+            vec![ProtocolFamily::Vendor("kodi_jsonrpc".to_string())]
+        );
+        assert_eq!(
+            kodi.required_capabilities,
+            vec![
+                CapabilityId::trusted("smart_home.read"),
+                CapabilityId::trusted("smart_home.command.media"),
+            ]
+        );
+        assert_eq!(kodi.discovery_mechanisms, vec![DiscoveryMechanism::Manual]);
+        for primitive in [
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::Tcp,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::CommandMapping,
+            PrimitiveFamily::Supervision,
+            PrimitiveFamily::TestSimulator,
+        ] {
+            assert!(kodi.required_primitives.contains(&primitive));
+        }
+        for primitive in [
+            PrimitiveFamily::Mdns,
+            PrimitiveFamily::VaultLease,
+            PrimitiveFamily::WebSocket,
+        ] {
+            assert!(!kodi.required_primitives.contains(&primitive));
+        }
+    }
+
+    #[test]
     fn tasmota_entry_exposes_mqtt_and_native_local_http_runtime_paths() {
         let catalog = first_party_catalog();
         let tasmota = find_entry(&catalog, &IntegrationId::trusted("tasmota")).unwrap();
@@ -81932,8 +82181,7 @@ mod tests {
     #[test]
     fn enphase_entry_exposes_authenticated_local_meter_telemetry_runtime() {
         let catalog = first_party_catalog();
-        let enphase =
-            find_entry(&catalog, &IntegrationId::trusted("enphase_envoy")).unwrap();
+        let enphase = find_entry(&catalog, &IntegrationId::trusted("enphase_envoy")).unwrap();
 
         assert_eq!(
             enphase.implementation_status,
@@ -81979,9 +82227,7 @@ mod tests {
         assert_eq!(fronius.auth_modes, vec![AuthMode::None]);
         assert_eq!(
             fronius.supported_protocols,
-            vec![ProtocolFamily::Vendor(
-                "fronius_solar_api_v1".to_string()
-            )]
+            vec![ProtocolFamily::Vendor("fronius_solar_api_v1".to_string())]
         );
         assert_eq!(
             fronius.required_capabilities,
@@ -82001,11 +82247,8 @@ mod tests {
     #[test]
     fn homewizard_entry_exposes_read_only_local_utility_telemetry_runtime() {
         let catalog = first_party_catalog();
-        let homewizard = find_entry(
-            &catalog,
-            &IntegrationId::trusted("homewizard_energy"),
-        )
-        .unwrap();
+        let homewizard =
+            find_entry(&catalog, &IntegrationId::trusted("homewizard_energy")).unwrap();
 
         assert_eq!(
             homewizard.implementation_status,
@@ -82208,6 +82451,87 @@ mod tests {
             PrimitiveFamily::VaultLease,
         ] {
             assert!(!homekit.required_primitives.contains(&primitive));
+        }
+    }
+
+    #[test]
+    fn thread_border_agent_entry_exposes_bounded_mdns_discovery_only_runtime() {
+        let catalog = first_party_catalog();
+        let thread = find_entry(&catalog, &IntegrationId::trusted("thread_border_agent")).unwrap();
+        assert_eq!(
+            thread.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(thread.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(thread.auth_modes, vec![AuthMode::None]);
+        assert_eq!(thread.supported_protocols, vec![ProtocolFamily::Thread]);
+        assert_eq!(
+            thread.required_capabilities,
+            vec![CapabilityId::trusted("smart_home.read")]
+        );
+        assert_eq!(
+            thread.target_entity_kinds,
+            vec![EntityKind::NetworkDiagnostic]
+        );
+        for primitive in [
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::Mdns,
+            PrimitiveFamily::Udp,
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+            PrimitiveFamily::TestSimulator,
+        ] {
+            assert!(thread.required_primitives.contains(&primitive));
+        }
+        for primitive in [
+            PrimitiveFamily::CommandMapping,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::LocalPairing,
+            PrimitiveFamily::VaultLease,
+        ] {
+            assert!(!thread.required_primitives.contains(&primitive));
+        }
+    }
+
+    #[test]
+    fn matter_operational_entry_exposes_bounded_mdns_discovery_only_runtime() {
+        let catalog = first_party_catalog();
+        let matter = find_entry(
+            &catalog,
+            &IntegrationId::trusted("matter_operational_discovery"),
+        )
+        .unwrap();
+        assert_eq!(
+            matter.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(matter.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(matter.auth_modes, vec![AuthMode::None]);
+        assert_eq!(matter.supported_protocols, vec![ProtocolFamily::Matter]);
+        assert_eq!(
+            matter.required_capabilities,
+            vec![CapabilityId::trusted("smart_home.read")]
+        );
+        assert!(matter.target_entity_kinds.is_empty());
+        for primitive in [
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::Mdns,
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+            PrimitiveFamily::TestSimulator,
+        ] {
+            assert!(matter.required_primitives.contains(&primitive));
+        }
+        for primitive in [
+            PrimitiveFamily::CommandMapping,
+            PrimitiveFamily::MatterCommissioning,
+            PrimitiveFamily::CertificatePairing,
+            PrimitiveFamily::Tcp,
+            PrimitiveFamily::VaultLease,
+        ] {
+            assert!(!matter.required_primitives.contains(&primitive));
         }
     }
 
@@ -82436,6 +82760,46 @@ mod tests {
     }
 
     #[test]
+    fn ipp_scanner_entry_exposes_bounded_discovery_only_runtime() {
+        let catalog = first_party_catalog();
+        let ipp = find_entry(&catalog, &IntegrationId::trusted("ipp_scanner")).unwrap();
+        assert_eq!(
+            ipp.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(ipp.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(ipp.auth_modes, vec![AuthMode::None]);
+        assert_eq!(
+            ipp.supported_protocols,
+            vec![ProtocolFamily::Vendor("ipp_scan_service".to_string())]
+        );
+        assert_eq!(
+            ipp.required_capabilities,
+            vec![CapabilityId::trusted("smart_home.read")]
+        );
+        assert_eq!(ipp.target_entity_kinds, vec![EntityKind::Unknown]);
+        for primitive in [
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::Mdns,
+            PrimitiveFamily::Udp,
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+            PrimitiveFamily::TestSimulator,
+        ] {
+            assert!(ipp.required_primitives.contains(&primitive));
+        }
+        for primitive in [
+            PrimitiveFamily::Tcp,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::CommandMapping,
+            PrimitiveFamily::VaultLease,
+        ] {
+            assert!(!ipp.required_primitives.contains(&primitive));
+        }
+    }
+
+    #[test]
     fn airgradient_entry_exposes_authorized_local_environmental_runtime() {
         let catalog = first_party_catalog();
         let airgradient = find_entry(&catalog, &IntegrationId::trusted("airgradient")).unwrap();
@@ -82474,11 +82838,7 @@ mod tests {
     #[test]
     fn govee_entry_exposes_executable_udp_runtime_primitives() {
         let catalog = first_party_catalog();
-        let govee = find_entry(
-            &catalog,
-            &IntegrationId::trusted("govee_light_local"),
-        )
-        .unwrap();
+        let govee = find_entry(&catalog, &IntegrationId::trusted("govee_light_local")).unwrap();
 
         assert_eq!(
             govee.implementation_status,

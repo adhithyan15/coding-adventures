@@ -4,11 +4,352 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:1078ff046e54595b",
+  "sourceHash": "fnv1a64:6ab19f4d7131734d",
   "lessons": [
     {
+      "id": "AR-C02-ism",
+      "sequence": 150,
+      "title": "اسم (ism) — \"name\"",
+      "headword": "اسم",
+      "romanization": "",
+      "gloss": "name",
+      "script": "arabic",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:dc715ca1a66c3498",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To introduce yourself you need \"name\" — and it needs no new letters."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "(Skim if you read Arabic.) All three are from Chapter 1: ا (alif), س (sīn), م (mīm). Read اسم right to left becomes ism."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اسم (ism, \"name\"), root s–m–w. It is a Semitic word, cousin of Hebrew shem (\"name\") — the same pairing you saw with salām / shalom. It has no tie to the Indo-European name / Latin nōmen: Arabic is a different family entirely, and its word for \"name\" is its own."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "read right to left — \"ism\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: read right to left — \"ism\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "its Hebrew cousin — shem",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: its Hebrew cousin — *shem*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What family does اسم belong to, and what Hebrew word is its cousin? (Semitic; shem. Not related to English name.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C02-ii-my",
+      "sequence": 160,
+      "title": "ي (yāʾ) (-ī) — \"my,\" a letter stuck on the end",
+      "headword": "ي",
+      "romanization": "",
+      "gloss": "my (possessive suffix -ī)",
+      "script": "arabic",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:b988e9d1cbfd8cf2",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Arabic has no separate word for \"my\" — it glues one letter onto the noun."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "(Skim if you read Arabic.) ي (yāʾ), met in ʿalaykum — here it does a new job: attached to the end of a noun, it means \"my.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Arabic builds \"my\" by suffix, not a separate word: اسم (ism, \"name\") + ي (yāʾ) (-ī, \"my\") = اسمي (ismī, \"my name\"). This is the same trick as the attached al- (\"the\") from Chapter 1 — Arabic loves to fasten little pieces onto a word rather than string separate words together."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ism\" + \"-ī\" becomes \"ismī\" (\"my name\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ism\" + \"-ī\" → \"ismī\" (\"my name\")]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pattern — Arabic glues \"my\" on, like it glued \"the\" (al-)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pattern — Arabic glues \"my\" on, like it glued \"the\" (*al-*)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How does Arabic say \"my,\" and what is \"my name\"? (A suffix ي (yāʾ) (-ī) glued on; ismī.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C02-ismii",
+      "sequence": 170,
+      "title": "اسمي … (ismī …) — \"my name is…,\" with no \"is\"",
+      "headword": "اسمي …",
+      "romanization": "",
+      "gloss": "my name is… (with no \"is\")",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:32ddedf7cab88e39",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Assemble it — and notice the missing word."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The phrase, assembled",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ism (name) + -ī (my) + your name."
+            },
+            {
+              "kind": "speech",
+              "text": "اسمي … = \"my-name …\" becomes \"my name is…\""
+            },
+            {
+              "kind": "speech",
+              "text": "Ismī Arun. becomes \"My name is Arun.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: no word for \"is\" — again",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Recall from as-salāmu ʿalaykum (Ch. 1) that Arabic sets two words side by side and lets \"is\" be understood. So ismī Arun is literally \"my-name Arun.\" Arabic shares this zero copula with the Dravidian languages (Tamil eṉ peyar Arun) — two unrelated families meeting on the same habit."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ismī …\" with your name",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ismī …\" with your name]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "notice — no word for \"is\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: notice — no word for \"is\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give your name in Arabic. (Ismī ….) What does Arabic leave out, and which other family does the same? (The verb \"is\" — the zero copula, shared with the Dravidian languages.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "AR-C02-anta-anti",
-      "sequence": null,
+      "sequence": 180,
       "title": "أنت (anta / anti) — \"you,\" marked by gender",
       "headword": "أنت",
       "romanization": "",
@@ -19,7 +360,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:2d97705045b6d7b0",
+      "sourceHash": "fnv1a64:0282512439f77104",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -132,349 +473,8 @@
       ]
     },
     {
-      "id": "AR-C02-ii-my",
-      "sequence": null,
-      "title": "ي (yāʾ) (-ī) — \"my,\" a letter stuck on the end",
-      "headword": "ي",
-      "romanization": "",
-      "gloss": "my (possessive suffix -ī)",
-      "script": "arabic",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:c938ceadba398f9e",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Arabic has no separate word for \"my\" — it glues one letter onto the noun."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "(Skim if you read Arabic.) ي (yāʾ), met in ʿalaykum — here it does a new job: attached to the end of a noun, it means \"my.\""
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Arabic builds \"my\" by suffix, not a separate word: اسم (ism, \"name\") + ي (yāʾ) (-ī, \"my\") = اسمي (ismī, \"my name\"). This is the same trick as the attached al- (\"the\") from Chapter 1 — Arabic loves to fasten little pieces onto a word rather than string separate words together."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"ism\" + \"-ī\" becomes \"ismī\" (\"my name\")",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"ism\" + \"-ī\" → \"ismī\" (\"my name\")]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the pattern — Arabic glues \"my\" on, like it glued \"the\" (al-)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the pattern — Arabic glues \"my\" on, like it glued \"the\" (*al-*)]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "How does Arabic say \"my,\" and what is \"my name\"? (A suffix ي (yāʾ) (-ī) glued on; ismī.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "AR-C02-ism",
-      "sequence": null,
-      "title": "اسم (ism) — \"name\"",
-      "headword": "اسم",
-      "romanization": "",
-      "gloss": "name",
-      "script": "arabic",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:7f07aaa91a92ea81",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "To introduce yourself you need \"name\" — and it needs no new letters."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "(Skim if you read Arabic.) All three are from Chapter 1: ا (alif), س (sīn), م (mīm). Read اسم right to left becomes ism."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "اسم (ism, \"name\"), root s–m–w. It is a Semitic word, cousin of Hebrew shem (\"name\") — the same pairing you saw with salām / shalom. It has no tie to the Indo-European name / Latin nōmen: Arabic is a different family entirely, and its word for \"name\" is its own."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "read right to left — \"ism\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: read right to left — \"ism\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "its Hebrew cousin — shem",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: its Hebrew cousin — *shem*]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What family does اسم belong to, and what Hebrew word is its cousin? (Semitic; shem. Not related to English name.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "AR-C02-ismii",
-      "sequence": null,
-      "title": "اسمي … (ismī …) — \"my name is…,\" with no \"is\"",
-      "headword": "اسمي …",
-      "romanization": "",
-      "gloss": "my name is… (with no \"is\")",
-      "script": "arabic",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:66ae5f617a129840",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Assemble it — and notice the missing word."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "The phrase, assembled",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ism (name) + -ī (my) + your name."
-            },
-            {
-              "kind": "speech",
-              "text": "اسمي … = \"my-name …\" becomes \"my name is…\""
-            },
-            {
-              "kind": "speech",
-              "text": "Ismī Arun. becomes \"My name is Arun.\""
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: no word for \"is\" — again",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Recall from as-salāmu ʿalaykum (Ch. 1) that Arabic sets two words side by side and lets \"is\" be understood. So ismī Arun is literally \"my-name Arun.\" Arabic shares this zero copula with the Dravidian languages (Tamil eṉ peyar Arun) — two unrelated families meeting on the same habit."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"ismī …\" with your name",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"ismī …\" with your name]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "notice — no word for \"is\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: notice — no word for \"is\"]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Give your name in Arabic. (Ismī ….) What does Arabic leave out, and which other family does the same? (The verb \"is\" — the zero copula, shared with the Dravidian languages.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "AR-C02-maa",
-      "sequence": null,
+      "sequence": 190,
       "title": "ما (mā) — \"what\"",
       "headword": "ما",
       "romanization": "",
@@ -485,7 +485,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:dbd1e0cf51386345",
+      "sourceHash": "fnv1a64:87ddbb55d75eeb82",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -588,7 +588,7 @@
     },
     {
       "id": "AR-C02-maa-ismuka",
-      "sequence": null,
+      "sequence": 200,
       "title": "ما اسمك؟ (mā ismuka / ismuki) — \"what's your name?\"",
       "headword": "ما اسمك؟",
       "romanization": "",
@@ -599,7 +599,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a98c1b04a4da2876",
+      "sourceHash": "fnv1a64:83673cdfda088a5d",
       "notice": null,
       "blocks": [
         {
@@ -700,8 +700,122 @@
       ]
     },
     {
+      "id": "AR-C02-tasharrafna",
+      "sequence": 210,
+      "title": "تشرفنا (tasharrafnā) — \"pleased to meet you\"",
+      "headword": "تشرفنا",
+      "romanization": "",
+      "gloss": "pleased to meet you (literally \"we have been honoured\")",
+      "script": "arabic",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:8eb0ac9f7834c6c3",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The warm close — and it presents the meeting as an honour."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "(Skim if you read Arabic.) Uses ت (tāʾ, just met), ش (shīn) and ر (rāʾ) from Ch. 1, plus ف (fāʾ, \"f\")."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تشرفنا (tasharrafnā), root sh–r–f (honour, nobility): sharaf (\"honour\"), sharīf (\"noble\" — the Sharif of Mecca, and distantly the title behind English sheriff). tasharrafnā means literally \"we have been honoured\" — to meet you is presented as an honour received. A more literal option is فرصة سعيدة (furṣa saʿīda, \"a happy occasion\")."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"tasharrafnā\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"tasharrafnā\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the root family — sharaf (honour), sharīf (noble)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the root family — *sharaf* (honour), *sharīf* (noble)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تشرفنا literally mean, and from what root? (\"We have been honoured\"; sh–r–f, \"honour.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "AR-C02-practice",
-      "sequence": null,
+      "sequence": 220,
       "title": "Chapter 2 — the introduction, whole",
       "headword": "(dialogue)",
       "romanization": "",
@@ -712,7 +826,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8f6913bf948bd70b",
+      "sourceHash": "fnv1a64:b3ce81a1896011ec",
       "notice": null,
       "blocks": [
         {
@@ -825,122 +939,8 @@
       ]
     },
     {
-      "id": "AR-C02-tasharrafna",
-      "sequence": null,
-      "title": "تشرفنا (tasharrafnā) — \"pleased to meet you\"",
-      "headword": "تشرفنا",
-      "romanization": "",
-      "gloss": "pleased to meet you (literally \"we have been honoured\")",
-      "script": "arabic",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:3e43ab7585f164eb",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The warm close — and it presents the meeting as an honour."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "(Skim if you read Arabic.) Uses ت (tāʾ, just met), ش (shīn) and ر (rāʾ) from Ch. 1, plus ف (fāʾ, \"f\")."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "تشرفنا (tasharrafnā), root sh–r–f (honour, nobility): sharaf (\"honour\"), sharīf (\"noble\" — the Sharif of Mecca, and distantly the title behind English sheriff). tasharrafnā means literally \"we have been honoured\" — to meet you is presented as an honour received. A more literal option is فرصة سعيدة (furṣa saʿīda, \"a happy occasion\")."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"tasharrafnā\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"tasharrafnā\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the root family — sharaf (honour), sharīf (noble)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the root family — *sharaf* (honour), *sharīf* (noble)]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does تشرفنا literally mean, and from what root? (\"We have been honoured\"; sh–r–f, \"honour.\")"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "AR-W04-dots-family-nun-ta",
-      "sequence": null,
+      "sequence": 230,
       "title": "ن، ت، ث (nūn, tāʾ, thāʾ) — one bowl, four dot-patterns",
       "headword": "ن، ت، ث",
       "romanization": "nūn, tāʾ, thāʾ",
@@ -951,7 +951,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:f5c066d586c0d093",
+      "sourceHash": "fnv1a64:d053baf1837e3241",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1103,7 +1103,7 @@
     },
     {
       "id": "AR-W05-ya-and-my-name",
-      "sequence": null,
+      "sequence": 240,
       "title": "ي (yāʾ) — the last dot-letter, and \"my name\"",
       "headword": "ي",
       "romanization": "yāʾ",
@@ -1114,7 +1114,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:8e93235a7b7ab596",
+      "sourceHash": "fnv1a64:9812c788ff106819",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1280,8 +1280,300 @@
       ]
     },
     {
+      "id": "AR-W06-harakat-and-hamza",
+      "sequence": 250,
+      "title": "َ ِ ُ (fatḥa, kasra, ḍamma; hamza) — the short vowels the abjad usually hides",
+      "headword": "َ ِ ُ",
+      "romanization": "fatḥa, kasra, ḍamma; hamza",
+      "gloss": "the abjad's optional short-vowel marks, where one tiny dash flips anta to anti",
+      "script": "arabic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "wide-table"
+      ],
+      "sourceHash": "fnv1a64:13bced16a8854a06",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes for one table that cannot be read aloud"
+        ],
+        "waitUntilStopped": [
+          "The ḥarakāt — three short-vowel marks",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the sections called The ḥarakāt — three short-vowel marks and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "In the first writing cluster you learned Arabic is an abjad: short vowels are usually left out. This lesson shows the marks that a beginner's book does print when it wants to be clear—the ḥarakāt—and one of them delivers the neatest payoff in the whole set: the difference between \"you (m.)\" and \"you (f.)\" is a single dash."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The ḥarakāt — three short-vowel marks",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "These are small marks written around a consonant, not letters in their own right. On the letter bāʾ (ب):"
+            },
+            {
+              "kind": "table-skipped",
+              "reason": "too-wide",
+              "columns": 5,
+              "rowCount": 3,
+              "headers": [
+                "mark",
+                "name",
+                "where",
+                "sound",
+                "example"
+              ],
+              "text": "There is a table here I cannot read to you — 5 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: mark, name, where, sound, example. Come back and look at it when you have stopped."
+            },
+            {
+              "kind": "speech",
+              "text": "Stop at these three vowel marks. The next four-minute micro-lesson adds the separate ideas “no vowel,” “double this consonant,” and the -an ending. Their shapes wait there so this page never asks you to absorb two writing steps at once."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "unknown",
+          "title": "The payoff — أنتَ vs أنتِ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Here is why the marks matter. The Chapter 2 word أنت (\"you\") is the same consonant skeleton for a man and a woman — alif, nūn, tāʾ. What splits them is a single ḥaraka on the final ت:"
+            },
+            {
+              "kind": "speech",
+              "text": "أنتَ — tāʾ + fatḥa (the \"a\" slash above) = anta, \"you\" to a man."
+            },
+            {
+              "kind": "speech",
+              "text": "أنتِ — tāʾ + kasra (the \"i\" slash below) = anti, \"you\" to a woman."
+            },
+            {
+              "kind": "speech",
+              "text": "One dash up or down carries the whole gender distinction you learned in the introductions chapter. Leave the mark off — as normal Arabic does — and أنت serves both, the reader deciding from context."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "on ب — fatḥa above (ba), kasra below (bi), ḍamma above (bu)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: on **ب** — *fatḥa* above (*ba*), *kasra* below (*bi*), *ḍamma* above (*bu*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the flip — \"أنتَ anta (man, slash above) vs أنتِ anti (woman, slash below)\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the flip — \"أنتَ *anta* (man, slash above) vs أنتِ *anti* (woman, slash below)\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What are the ḥarakāt, and does everyday text show them? (The short- vowel marks — fatḥa/kasra/ḍamma; normally left off, since Arabic is an abjad.) Which mark, and where, turns anta into anti? (A kasra — the \"i\" slash—below the final tāʾ, instead of the fatḥa above.) You have now made one consonant skeleton say anta or anti with one tiny mark."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-W06-sukun-shadda-tanwin",
+      "sequence": 255,
+      "title": "ْ ّ ً (sukūn, shadda, fatḥatan) — stop, double, or add -an",
+      "headword": "ْ ّ ً",
+      "romanization": "sukūn, shadda, fatḥatan",
+      "gloss": "no vowel, doubled consonant, and the -an ending — three marks in one gentle step",
+      "script": "arabic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:5be0d04de4f8d163",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Script — Three marks, three instructions",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script — Three marks, three instructions and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You already know the three short-vowel marks. Keep those shapes in mind. This lesson adds exactly three more marks, one job at a time."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — Three marks, three instructions",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Each mark sits around a consonant. It changes how you read that consonant; it is not another full letter."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "mark",
+                "name",
+                "instruction"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "mark: ْ. name: sukūn. instruction: stop: no vowel follows this consonant.",
+                "mark: ّ. name: shadda. instruction: hold or double this consonant.",
+                "mark: ً. name: fatḥatan. instruction: add the ending -an."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Look at the last mark in شكرًا (shukran, “thank you”). The small doubled stroke above the final letter supplies -an. You have seen the word before; today you are learning what that one mark tells the reader."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "draw ْ once — a small circle above the line; say “no vowel”",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: draw **ْ** once — a small circle above the line; say “no vowel”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "draw ّ once — a small w above the line; say “double”",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: draw **ّ** once — a small *w* above the line; say “double”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "draw ً once — two light slashes above the line; say “-an”",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: draw **ً** once — two light slashes above the line; say “-an”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "point in order — sukūn, shadda, fatḥatan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: point in order — *sukūn*, *shadda*, *fatḥatan*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which mark means “no vowel”? (ْ, sukūn.) Which doubles a consonant? (ّ, shadda.) Which gives shukran its -an ending? (ً, fatḥatan.) Trace each once more without rushing."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "AR-W06-hamza",
-      "sequence": null,
+      "sequence": 260,
       "title": "ء and أ — the glottal catch",
       "headword": "ء، أ",
       "romanization": "hamza",
@@ -1292,7 +1584,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:b3f5a5be0439833c",
+      "sourceHash": "fnv1a64:2b2be3970ae44451",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1406,153 +1698,6 @@
             {
               "kind": "speech",
               "text": "Is hamza a vowel mark? (No.) What sound does it write? (A glottal stop.) What is أ? (Hamza riding on an alif seat.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "AR-W06-harakat-and-hamza",
-      "sequence": null,
-      "title": "َ ِ ُ (fatḥa, kasra, ḍamma; hamza) — the short vowels the abjad usually hides",
-      "headword": "َ ِ ُ",
-      "romanization": "fatḥa, kasra, ḍamma; hamza",
-      "gloss": "the abjad's optional short-vowel marks, where one tiny dash flips anta to anti",
-      "script": "arabic",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "wide-table"
-      ],
-      "sourceHash": "fnv1a64:d442889100e30ce8",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on",
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "The ḥarakāt — three short-vowel marks",
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the sections called The ḥarakāt — three short-vowel marks and Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "In the first writing cluster you learned Arabic is an abjad: short vowels are usually left out. This lesson shows the marks that a beginner's book does print when it wants to be clear—the ḥarakāt—and one of them delivers the neatest payoff in the whole set: the difference between \"you (m.)\" and \"you (f.)\" is a single dash."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "The ḥarakāt — three short-vowel marks",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "These are small marks written around a consonant, not letters in their own right. On the letter bāʾ (ب):"
-            },
-            {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 5,
-              "rowCount": 3,
-              "headers": [
-                "mark",
-                "name",
-                "where",
-                "sound",
-                "example"
-              ],
-              "text": "There is a table here I cannot read to you — 5 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: mark, name, where, sound, example. Come back and look at it when you have stopped."
-            },
-            {
-              "kind": "speech",
-              "text": "Two more you will see: ْ sukūn (a small circle = \"no vowel here\") and ّ shadda (a small w = \"double this consonant\"). In everyday text they all vanish — the reader supplies them from knowing the word — but they are the abjad's \"training wheels,\" and the tail on shukran (شكرًا) is one of them."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "unknown",
-          "title": "The payoff — أنتَ vs أنتِ",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Here is why the marks matter. The Chapter 2 word أنت (\"you\") is the same consonant skeleton for a man and a woman — alif, nūn, tāʾ. What splits them is a single ḥaraka on the final ت:"
-            },
-            {
-              "kind": "speech",
-              "text": "أنتَ — tāʾ + fatḥa (the \"a\" slash above) = anta, \"you\" to a man."
-            },
-            {
-              "kind": "speech",
-              "text": "أنتِ — tāʾ + kasra (the \"i\" slash below) = anti, \"you\" to a woman."
-            },
-            {
-              "kind": "speech",
-              "text": "One dash up or down carries the whole gender distinction you learned in the introductions chapter. Leave the mark off — as normal Arabic does — and أنت serves both, the reader deciding from context."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "on ب — fatḥa above (ba), kasra below (bi), ḍamma above (bu)",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: on **ب** — *fatḥa* above (*ba*), *kasra* below (*bi*), *ḍamma* above (*bu*)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the flip — \"أنتَ anta (man, slash above) vs أنتِ anti (woman, slash below)\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the flip — \"أنتَ *anta* (man, slash above) vs أنتِ *anti* (woman, slash below)\"]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What are the ḥarakāt, and does everyday text show them? (The short- vowel marks — fatḥa/kasra/ḍamma; normally left off, since Arabic is an abjad.) Which mark, and where, turns anta into anti? (A kasra — the \"i\" slash—below the final tāʾ, instead of the fatḥa above.) You have now made one consonant skeleton say anta or anti with one tiny mark."
             }
           ]
         }

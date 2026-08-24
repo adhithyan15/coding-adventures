@@ -9,7 +9,7 @@
 // what happens when the ordering lives in prose that nothing recomputes.
 //
 // Meanwhile every number needed to order the work is computed on every run.
-// `level-gate.ts` says which of four criteria each track fails and by how much.
+// `level-gate.ts` says which attainment criteria each track fails and by how much.
 // `script-closure.ts` says exactly how many glyphs a track shows its reader and
 // never taught. `exam-inventory.ts` measures against the named external exam or
 // clearly labelled project-defined equivalent.
@@ -36,10 +36,14 @@ import type { CefrLevel } from "./levels.js";
 import { CEFR_LEVELS, levelRank } from "./levels.js";
 import { LEVEL_VOCABULARY, type LevelGateReport } from "./level-gate.js";
 import type { ScriptClosureReport } from "./script-closure.js";
+import type { WritingStageReport } from "./writing-stages.js";
 
-/** The eight families of work. Every item belongs to exactly one. */
+/** The eleven families of work. Every item belongs to exactly one. */
 export type WorkKind =
   | "assessment-contract"
+  | "external-capstone"
+  | "task-shape"
+  | "writing-stage"
   | "exam-inventory"
   | "script-closure"
   | "vocabulary"
@@ -51,7 +55,12 @@ export type WorkKind =
 /**
  * Sort key 2 — see HL15 §4.2. Lower goes first.
  *
- * The two entries worth defending:
+ * The entries worth defending:
+ *
+ * `task-shape` sits immediately after the outer assessment contract. The
+ * contract says evidence must exist; the shape says what a candidate actually
+ * reads, hears, writes and says. Content cannot be decomposed gently toward a
+ * performance target that has not been named.
  *
  * `exam-inventory` follows because until the target list exists, every other
  * number for that level is a proxy for something nobody is graded on. It is also
@@ -81,13 +90,16 @@ export type WorkKind =
  */
 export const KIND_PRIORITY: Readonly<Record<WorkKind, number>> = Object.freeze({
   "assessment-contract": 1,
-  "exam-inventory": 2,
-  "script-closure": 3,
-  "exam-point": 4,
-  vocabulary: 5,
-  reinforcement: 6,
-  "atom-budget": 7,
-  "spine-nodes": 8,
+  "external-capstone": 2,
+  "task-shape": 3,
+  "writing-stage": 4,
+  "exam-inventory": 5,
+  "script-closure": 6,
+  "exam-point": 7,
+  vocabulary: 8,
+  reinforcement: 9,
+  "atom-budget": 10,
+  "spine-nodes": 11,
 });
 
 /**
@@ -101,6 +113,9 @@ export const KIND_PRIORITY: Readonly<Record<WorkKind, number>> = Object.freeze({
  */
 export const TRANCHE_SIZE: Readonly<Record<WorkKind, number>> = Object.freeze({
   "assessment-contract": 1,
+  "external-capstone": 1,
+  "task-shape": 1,
+  "writing-stage": 1,
   "exam-inventory": 1,
   "script-closure": 10,
   vocabulary: 35,
@@ -121,6 +136,9 @@ export const TRANCHE_SIZE: Readonly<Record<WorkKind, number>> = Object.freeze({
  * `level-gate.ts` already applies.
  */
 export const CERTIFIABLE_LEVELS: readonly CefrLevel[] = CEFR_LEVELS.filter((level) => level !== "pre-A1");
+
+/** Curriculum rungs that require a four-skill performance target. */
+export const TASK_SHAPE_LEVELS: readonly CefrLevel[] = CEFR_LEVELS;
 
 /** One unit of pickup-able work. */
 export interface WorkItem {
@@ -181,10 +199,25 @@ export interface ExamCoverageSummary {
 export interface CompletionPlanInput {
   levelGate: LevelGateReport;
   scriptClosure: ScriptClosureReport;
+  /** HL19 cumulative stage proof. Without it the projection is unmeasured, not zero. */
+  writingStages?: WritingStageReport;
   /** Tracks with a validated `<track>/assessment.json` covering the whole ladder. */
   assessmentContracts?: readonly string[];
-  /** Which target inventories exist. Absent ones become `exam-inventory` items. */
+  /** Declared external exams that intentionally have no CEFR equivalence. */
+  externalCapstones?: ReadonlyArray<{
+    language: string;
+    id: string;
+    requiredAfterLevel: CefrLevel;
+    name: string;
+    complete: boolean;
+    missingArtifacts: readonly string[];
+  }>;
+  /** Which target inventories are complete. Every other rung becomes an `exam-inventory` item. */
   inventories: readonly InventoryPresence[];
+  /** Valid but incomplete source inventories. Their points count; their presence does not close the item. */
+  partialInventories?: readonly InventoryPresence[];
+  /** Which sourced four-skill performance shapes exist. Absent pairs become `task-shape` items. */
+  taskShapes?: readonly InventoryPresence[];
   /**
    * Measured coverage for every inventory that exists.
    *
@@ -215,23 +248,22 @@ function tranchesFor(outstanding: number, kind: WorkKind): number {
 }
 
 /**
- * The lowest certifiable level at or above `from` that has no inventory yet.
+ * The lowest requested level at or above `from` that has no inventory yet.
  *
  * Called with the level a track is IN PROGRESS at, so a track working pre-A1 is
- * asked for its A1 inventory. That is deliberate: the external exam or
- * project-defined target for the next rung
- * has to be written down before the climb reaches it, or the climb is once again
- * aimed at a number this repository invented. HL-C184's Phase 0 made exactly
- * this point and it is the reason the item is ordered at the IN-PROGRESS level
- * rather than at the level it describes.
+ * Task shapes pass all seven curriculum rungs, so a track working at pre-A1 is
+ * first asked for pre-A1. Exam inventories pass only certifiable levels and
+ * therefore still look ahead from pre-A1 to A1. In both cases the target has to
+ * be written before the climb reaches or leaves that rung.
  */
 function nextMissingInventory(
   language: string,
   from: CefrLevel,
   ceiling: CefrLevel,
   have: ReadonlySet<string>,
+  levels: readonly CefrLevel[],
 ): CefrLevel | null {
-  for (const level of CERTIFIABLE_LEVELS) {
+  for (const level of levels) {
     if (levelRank(level) < levelRank(from)) continue;
     if (levelRank(level) > levelRank(ceiling)) break;
     if (!have.has(`${language}/${level}`)) return level;
@@ -249,6 +281,8 @@ export function buildCompletionPlan(input: CompletionPlanInput): CompletionPlan 
   const ceiling = input.ceiling ?? "C2";
   const headSize = input.headSize ?? 25;
   const have = new Set(input.inventories.map((entry) => `${entry.language}/${entry.level}`));
+  const partial = new Set((input.partialInventories ?? []).map((entry) => `${entry.language}/${entry.level}`));
+  const haveTaskShapes = new Set((input.taskShapes ?? []).map((entry) => `${entry.language}/${entry.level}`));
   const closureByLanguage = new Map(input.scriptClosure.tracks.map((track) => [track.language, track]));
   const contracted = new Set(input.assessmentContracts ?? []);
 
@@ -293,23 +327,64 @@ export function buildCompletionPlan(input: CompletionPlanInput): CompletionPlan 
       });
     }
 
-    // 1. The external target for the next certifiable rung, if it is not written.
-    const missing = nextMissingInventory(track.language, level, ceiling, have);
+    for (const capstone of input.externalCapstones ?? []) {
+      if (capstone.language !== track.language || capstone.complete) continue;
+      if (levelRank(capstone.requiredAfterLevel) > levelRank(ceiling)) continue;
+      mine.push({
+        id: `external-capstone/${track.language}/${capstone.id}`,
+        kind: "external-capstone",
+        language: track.language,
+        level: capstone.requiredAfterLevel,
+        goal:
+          `complete the non-CEFR-mapped external capstone '${capstone.name}' after ` +
+          `${capstone.requiredAfterLevel}: add ${capstone.missingArtifacts.length} missing task, rubric, or answer-key ` +
+          `artifact(s) without inventing a CEFR equivalence`,
+        outstanding: capstone.missingArtifacts.length,
+        tranches: Math.max(1, capstone.missingArtifacts.length),
+      });
+    }
+
+    // The finite performance target between a contract and its language-point
+    // inventory. Without it, "writing A1" can still collapse into one vague
+    // terminal exercise rather than a sourced chain of response lengths,
+    // interaction modes, timings and scoring shapes that five-minute lessons
+    // can approach one dimension at a time.
+    const missingTaskShape = nextMissingInventory(track.language, level, ceiling, haveTaskShapes, TASK_SHAPE_LEVELS);
+    if (missingTaskShape !== null) {
+      mine.push({
+        id: `task-shape/${track.language}/${missingTaskShape}`,
+        kind: "task-shape",
+        language: track.language,
+        level,
+        goal:
+          `inventory the sourced ${missingTaskShape} reading, listening, writing and speaking task shapes ` +
+          `for ${track.language}; keep unpublished speed and length measurements explicitly unknown`,
+        outstanding: 1,
+        tranches: 1,
+      });
+    }
+
+    // The external language-point target for the next certifiable rung, if it is not written.
+    const missing = nextMissingInventory(track.language, level, ceiling, have, CERTIFIABLE_LEVELS);
     if (missing !== null) {
+      const partialKey = `${track.language}/${missing}`;
+      const action = partial.has(partialKey)
+        ? `complete the partial ${missing}`
+        : `write the external or project-defined ${missing}`;
       mine.push({
         id: `exam-inventory/${track.language}/${missing}`,
         kind: "exam-inventory",
         language: track.language,
         level,
         goal:
-          `write the external or project-defined ${missing} assessment inventory for ${track.language}; ` +
+          `${action} assessment inventory for ${track.language}; ` +
           `until it exists, every ${track.language} number at ${missing} is a proxy`,
         outstanding: 1,
         tranches: 1,
       });
     }
 
-    // 2. The script. `violations` is the symptom — lessons that ask for an
+    // The script. `violations` is the symptom — lessons that ask for an
     // untaught glyph — but the WORK is teaching the glyphs, so the outstanding
     // count is `neverTaughtGlyphs`. Counting violations instead would make the
     // queue shrink by deleting a lesson, which is not progress.
@@ -328,7 +403,7 @@ export function buildCompletionPlan(input: CompletionPlanInput): CompletionPlan 
       });
     }
 
-    // 3. Points the external list enumerates and the corpus does not cover.
+    // Points the external list enumerates and the corpus does not cover.
     //
     // Ranked at the track's IN-PROGRESS level rather than at the level the
     // inventory describes, so it competes with that track's floor work instead
@@ -358,7 +433,7 @@ export function buildCompletionPlan(input: CompletionPlanInput): CompletionPlan 
       });
     }
 
-    // 4..7. Whatever the level gate says is short, in its own units. The gate
+    // Whatever the level gate says is short, in its own units. The gate
     // already scopes each criterion to at-or-below the level, which is the bug
     // HL09 recorded and this module must not reintroduce by re-deriving them.
     for (const blocker of track.blockers) {
@@ -417,8 +492,11 @@ export function buildCompletionPlan(input: CompletionPlanInput): CompletionPlan 
  * a precondition for the climb; it stops being a precondition for the floor.
  */
 function effectivePriority(item: WorkItem): number {
-  if (item.kind === "exam-inventory" && !CERTIFIABLE_LEVELS.includes(item.level)) {
-    return KIND_PRIORITY["spine-nodes"] + 1;
+  if (item.kind === "task-shape" || item.kind === "exam-inventory") {
+    const target = item.id.split("/").at(-1) as CefrLevel | undefined;
+    if (target !== undefined && levelRank(target) > levelRank(item.level)) {
+      return KIND_PRIORITY["spine-nodes"] + 1;
+    }
   }
   return KIND_PRIORITY[item.kind];
 }
@@ -481,8 +559,9 @@ function interleave(byTrack: ReadonlyMap<string, readonly WorkItem[]>, gate: Lev
 /**
  * The tail, counted per family.
  *
- * Five families can honestly be projected to the ceiling. Assessment contracts
- * are exactly one per track. Vocabulary can be counted because `LEVEL_VOCABULARY`
+ * Six families can honestly be projected to the ceiling. Assessment contracts
+ * are exactly one per track. Task shapes and exam inventories are exactly one
+ * per certifiable (track, level). Vocabulary can be counted because `LEVEL_VOCABULARY`
  * states the cumulative target at every level. Exam inventories are exactly one
  * per track and certifiable level. Script closure counts a finite observed glyph
  * set, and exam points are projectable over the inventories that already exist.
@@ -504,15 +583,43 @@ function project(input: CompletionPlanInput, ceiling: CefrLevel, items: readonly
   }
   const vocabularyItems = Math.ceil(words / TRANCHE_SIZE.vocabulary);
 
-  const wanted = input.levelGate.tracks.length * CERTIFIABLE_LEVELS.filter((level) => levelRank(level) <= levelRank(ceiling)).length;
-  const inventoryItems = Math.max(0, wanted - input.inventories.length);
   const trackNames = new Set(input.levelGate.tracks.map((track) => track.language));
+  const wantedInventories = input.levelGate.tracks.length * CERTIFIABLE_LEVELS.filter(
+    (level) => levelRank(level) <= levelRank(ceiling),
+  ).length;
+  const wantedTaskShapes = input.levelGate.tracks.length * TASK_SHAPE_LEVELS.filter(
+    (level) => levelRank(level) <= levelRank(ceiling),
+  ).length;
+  const inventoryItems = Math.max(0, wantedInventories - input.inventories.length);
+  const partialInventoryItems = (input.partialInventories ?? []).filter(
+    (entry) => levelRank(entry.level) <= levelRank(ceiling),
+  ).length;
+  const validTaskShapePairs = new Set(
+    (input.taskShapes ?? [])
+      .filter((entry) => trackNames.has(entry.language) && levelRank(entry.level) <= levelRank(ceiling))
+      .map((entry) => `${entry.language}/${entry.level}`),
+  );
+  const taskShapeItems = Math.max(0, wantedTaskShapes - validTaskShapePairs.size);
   const validAssessmentContracts = new Set(
     (input.assessmentContracts ?? []).filter((language) => trackNames.has(language)),
   );
   const assessmentItems = Math.max(0, input.levelGate.tracks.length - validAssessmentContracts.size);
+  const relevantCapstones = (input.externalCapstones ?? []).filter(
+    (capstone) =>
+      trackNames.has(capstone.language)
+      && levelRank(capstone.requiredAfterLevel) <= levelRank(ceiling),
+  );
+  const incompleteCapstones = relevantCapstones.filter((capstone) => !capstone.complete);
 
   const glyphs = input.scriptClosure.tracks.reduce((sum, track) => sum + track.neverTaughtGlyphs, 0);
+  const writingStagePairs = input.writingStages
+    ? input.writingStages.tracks.reduce(
+        (sum, track) => sum + track.levels
+          .filter((entry) => levelRank(entry.level) <= levelRank(ceiling))
+          .reduce((trackSum, entry) => trackSum + entry.missingStages.length, 0),
+        0,
+      )
+    : null;
 
   const counted = (kind: WorkKind) => items.filter((item) => item.kind === kind).length;
 
@@ -540,6 +647,28 @@ function project(input: CompletionPlanInput, ceiling: CefrLevel, items: readonly
         `four-skill, writing-ramp and timed-mock contract`,
     },
     {
+      kind: "external-capstone",
+      items: incompleteCapstones.length,
+      detail:
+        `${relevantCapstones.length - incompleteCapstones.length} of ${relevantCapstones.length} declared ` +
+        `non-CEFR-mapped external capstone(s) have every task, rubric and answer-key artifact`,
+    },
+    {
+      kind: "task-shape",
+      items: taskShapeItems,
+      detail: `${validTaskShapePairs.size} of ${wantedTaskShapes} (track x curriculum level) four-skill task shapes written`,
+    },
+    {
+      kind: "writing-stage",
+      items: writingStagePairs,
+      detail:
+        writingStagePairs === null
+          ? "not measured — no cumulative writing-stage report was supplied"
+          : `${writingStagePairs} missing (track x level x required stage) proof(s) through ${ceiling}; ` +
+            `${input.writingStages!.summary.tracksCompleteAtPreA1} of ` +
+            `${input.writingStages!.summary.tracks} track(s) currently prove pre-A1`,
+    },
+    {
       kind: "vocabulary",
       items: vocabularyItems,
       detail:
@@ -549,7 +678,9 @@ function project(input: CompletionPlanInput, ceiling: CefrLevel, items: readonly
     {
       kind: "exam-inventory",
       items: inventoryItems,
-      detail: `${input.inventories.length} of ${wanted} (track x certifiable level) inventories written`,
+      detail:
+        `${input.inventories.length} complete and ${partialInventoryItems} partial of ${wantedInventories} ` +
+        `(track x certifiable level) inventories written; partial never counts as complete`,
     },
     {
       kind: "script-closure",

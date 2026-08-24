@@ -2,13 +2,13 @@
 schema_version: 2
 id: GU-W01-na
 spine_node: SPINE-MEET-GREET
-sequence: 730
+sequence: 5
 delivery: script
-chapter: 13
+chapter: 1
 type: writing
 headword: ન
 romanization: "na"
-gloss: "the consonant na — and the second word you can read"
+gloss: "the consonant na — the first piece of the greeting"
 prerequisites: [GU-W01-aa]
 sounds: []
 roots: []
@@ -43,32 +43,26 @@ reviews_of: [GU-W01-aa]
 **na**, with the same inherent **a** inside it. The *n* of English *net*, then the
 vowel nobody wrote.
 
-Now put the mātrā on it, exactly as you did with the first consonant:
+This is also the first written piece of the greeting you already know by ear.
+Keep the whole greeting hidden for now. One consonant is enough work for one
+tiny lesson.
 
-> **ન** + **ા** → **ના**
-
-**nā** — and that is **no**.
-
-You now hold both answers to a yes-or-no question, and you can read them both off
-the page:
-
-> **હા**   **ના**
-
-Two consonants and one mark. That is the arithmetic of an abugida: consonants and
-vowel signs multiply, so a small number of pieces reaches a large number of
-syllables very quickly.
+If you later attach the long-aa sign, the sound becomes *nā*. That is the
+arithmetic of an abugida: consonants and vowel signs multiply, so a small number
+of pieces reaches a large number of syllables. Today you only trace bare **ન**.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01, GU-SCRIPT-NA-01] -->
+<!-- hl-writing-stage: observe-trace -->
 
-- [YOU WRITE: ન]
+- [YOU TRACE: keep ન visible and trace it once with a finger]
 - [YOU READ: every piece this chapter has given you so far, in order]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01, GU-SCRIPT-NA-01] -->
 
-[PAUSE 3s] What is **ના**? (**No**.) How many separate pieces did it take? (**Two** — a
-consonant and a mātrā.) And what does the bare consonant sound like on its own?
-(***na***, with the inherent vowel.)
+[PAUSE 3s] What does the bare consonant sound like on its own? (***Na***, with
+the inherent vowel.) What happens if a vowel sign is attached later? (It
+**replaces** that inherent vowel.)
 
 Source: [Unicode Gujarati chart](https://www.unicode.org/charts/PDF/U0A80.pdf).

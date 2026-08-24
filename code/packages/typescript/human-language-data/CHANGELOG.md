@@ -2,6 +2,185 @@
 
 ## Unreleased
 
+### Changed - language-owned corpus ledgers and generated docs
+
+- Split modality output into `core/lesson-modality/<language>.json` shards and
+  reconstruct the compatible corpus manifest at read time.
+- Move exact continuity and modality regressions into 23 independently discovered
+  `tests/corpus/<language>.test.ts` files backed by language-owned ledgers.
+- Replace the generated top-level README table with `progress/<language>.md` cards,
+  so curriculum PRs no longer serialize on shared test or documentation lines.
+
+### Changed - Arabic chapter-1 glyph ramp (#12315)
+
+- Split three four-to-five-glyph greeting cliffs into seven writing-after-voice
+  micro-lessons: six introduce no more than three Arabic shapes at a time, and
+  the seventh retrieves the complete greeting without adding a shape.
+- Keep each spoken greeting before whole-form decoding and require tracing,
+  guided copy, delayed recall, and correction in the writing strand.
+
+### Added - measurable pre-A1 four-skill task shapes (#12325)
+
+- Extend safe task-shape paths, parsing, registry enumeration, and completion
+  planning from A1–C2 to the curriculum's full pre-A1–C2 ladder while keeping
+  external exam inventories correctly limited to certifiable levels.
+- Add Marwadi's project-defined pre-A1 target with independently scored reading,
+  listening, writing, and speaking; writing includes delayed recall, dictation,
+  and bounded independent production rather than counting visible copying.
+- Prove that one valid file removes exactly one backlog pair, while absence,
+  malformed paths, and one-skill-only inventories continue to fail closed.
+
+### Added - Marwadi pre-A1-to-C2 assessment contract (#12216)
+
+- Define the project-owned seven-rung target for a track with no identified
+  complete external ladder, without presenting it as an official qualification.
+- Require independent 60% reading, listening, writing, and speaking passes,
+  cumulative writing stages, and two timed mocks with rubrics and answer keys at
+  every rung.
+- Publish exact input, response, timing, replay, interaction, variety, scoring,
+  standard-setting, and human-validation boundaries while keeping every missing
+  execution artifact explicit backlog rather than a readiness claim.
+
+### Added - conflict-resistant gentle-ramp corpus snapshots (#12320)
+
+- Replace the hand-maintained global gentle-ramp totals and queue head with one
+  deterministic, full-fidelity snapshot per language.
+- Rebuild and verify the global summary and work queue from the shards so exact
+  regression coverage remains fail-closed without making unrelated language PRs
+  edit the same test lines.
+- Add write/check commands, CI and local verification wiring, stale-file detection,
+  and a regression proving a one-language change alters exactly one output shard.
+
+### Added - Arabic STAMP 4S A1 performance target (#12290)
+
+- Inventory Avant's current four-skill STAMP 4S format for second-language
+  learners of Modern Standard Arabic: adaptive receptive sections, three
+  writing prompts, three recorded speaking prompts, timing, replay, and aids.
+- Preserve approximate question counts and unpublished genre, speed, length,
+  and raw-score details as evidence gaps instead of manufacturing a fixed form.
+- Label Level 3 / Novice-High in every skill as this project's A1 readiness floor;
+  STAMP reports proficiency levels and does not publish an A1 pass/fail rule.
+
+### Added - official DELE A1 four-skill target (#12285)
+
+- Inventory all 13 reading, listening, writing, and speaking task families in
+  the current DELE A1 format from official Instituto Cervantes sources.
+- Preserve exact item counts, stimulus and response bounds, two-play listening,
+  oral preparation, and the three-part live speaking sequence.
+- Record DELE's two 30/50 paired-skill pass thresholds without inventing four
+  independent skill floors. This is a target for gentle lesson decomposition,
+  not a claim that the Spanish book is already pass-ready.
+
+### Added - project-defined Latin A1 four-skill target (#12288)
+
+- Define twelve reading, listening, writing, and speaking task families for the
+  track whose registry correctly says there is no modern proficiency exam.
+- Preserve Latin's reading-first reality while requiring 15/25 independently in
+  every skill, so an aggregate cannot hide absent writing or interaction.
+- Fix task counts, lengths, listening speeds and replay, interlocutor protocol,
+  timing, aids, orthographic treatment, and analytic point ceilings. This is the
+  assessment target; later work must still decompose it into gentle lessons and
+  supply mocks and human validation.
+
+### Added - official DELF A1 four-skill target (#12237)
+
+- Inventory all four DELF A1 tout public skills from France Education
+  international's official overview, candidate manual, example formats, oral
+  candidate material and oral scoring grid.
+- Preserve the two circulating receptive forms, the published 5-7 minute oral
+  range, and the open-ended minimum 40-word writing task without inventing
+  counts, ceilings or lengths the official sources do not publish.
+- Record the real 50/100 aggregate pass mark and eliminatory 5/25 per-skill
+  floors. This defines the target; it does not claim the current French book is
+  ready for that exam.
+
+### Changed - preserve open-ended published task lengths (#12241)
+
+- Allow a task length to carry only a minimum or only a maximum when that is all
+  the awarding body publishes; at least one finite non-negative bound remains
+  mandatory.
+- Keep closed ranges backward compatible and reject reversed or wholly unknown
+  bounds.
+- Require the existing `notPublished` boundary note for an open length, so a
+  missing maximum remains evidence rather than becoming an accidental default.
+
+### Added - alternate official task-shape variants (#12240)
+
+- Let a skill section name multiple official forms as exact part-ID sets with
+  their own source and boundary note. The union remains inspectable without
+  claiming every optional exercise appears in one administration.
+- Keep existing inventories backward compatible as one implicit form containing
+  every listed part.
+- Reject duplicate or unknown part IDs, unknown sources, duplicate variant IDs,
+  and union parts stranded outside every declared form.
+
+### Changed - preserve published task-duration ranges (#12238)
+
+- Accept either an exact positive minute count or an exact positive
+  `{ minimum, maximum }` range for task-shape administrations and sections.
+- Compare normalized duration ranges when checking written totals and speaking
+  duration, while keeping existing exact-number inventories backward compatible.
+- Reject reversed and mismatched ranges rather than rounding an awarding body's
+  published range to one invented minute.
+
+### Added - first source-bounded German A2 content tranche (#12217)
+
+- Add 51 project-owned content points grounded in the official Goethe A2 adult
+  model set and word-list publication: communicative purposes, text handling,
+  grammar, orthography/phonology, and thirteen lexical domains.
+- Keep all four source dimensions explicitly partial. The official word list is
+  finite evidence, but this tranche neither reproduces nor probes all roughly
+  1,300 lexical units, and the model paper is not a closed grammar or phonology
+  syllabus.
+- Measure the result without flattering it: 3/51 points already have exact
+  German atoms, 48 remain named gaps, and German A2 continues to generate an
+  `exam-inventory` completion item.
+
+### Changed - source-bounded exam inventory completeness (#12230)
+
+- Require every inventory to declare sourced boundaries for communicative
+  functions, grammar, phonology/orthography, and lexicon. A file is complete
+  only when all four dimensions are complete.
+- Keep valid partial inventories measurable: their enumerated exam points still
+  generate coverage work, while their presence no longer suppresses the
+  `exam-inventory` backlog item.
+- Migrate the Spanish, French, and German A1 inventories without inflating their
+  claims. The measured baseline is now 0 complete and 3 partial of 138 targets;
+  Spanish still covers 85/85 currently enumerated points, but that 100% is not
+  misreported as a complete A1 construct.
+- Reject missing dimensions, extra dimensions, empty provenance, empty boundary
+  notes, identity mismatches, malformed metadata, and malformed point labels at
+  the strict loader boundary.
+
+### Added - cumulative writing-stage evidence (#12211)
+
+- Add HL19 and the exact `hl-writing-stage` block directive. Evidence must name
+  a policy stage, assess knowledge in a writing lesson, have a derived level and
+  sequence, and arrive only after its gentler prerequisites.
+- Measure every registered track at every level, including absent evidence, and
+  make missing cumulative stages a level-attainment blocker rather than giving
+  incidental writing practice exam-readiness credit.
+- Annotate Marwadi's existing micro-lessons as the first real pre-A1 proof path:
+  observe/trace, guided copy, delayed copy, then dictation/transcription. The
+  honest 23-track baseline is 1/23 pre-A1 complete with 1,007 stage pairs open.
+
+### Added - source-backed four-skill task shapes (#12212)
+
+- Add HL18 and a strict `<track>/task-shapes/<level>.json` parser. Reading,
+  listening, writing and speaking parts now name their prompt, response,
+  interaction, timing, replay, scoring, aid and source shapes; unpublished
+  speed or length data stays explicitly unknown instead of becoming an estimate.
+- Add the first complete proof inventory: the eleven task parts of the official
+  Goethe-Zertifikat A1: Start Deutsch 1, including its 65-minute written exam,
+  15-minute group speaking exam, approximately 30-word writing task, and real
+  aggregate 60/100 pass rule.
+- Preserve the distinction between Goethe's aggregate award rule and this
+  project's stricter independent-skill evidence. Goethe does not publish four
+  independent pass thresholds, so the inventory records four nulls and directs
+  the later assessment contract to add internal thresholds explicitly.
+- Add a finite, round-robin `task-shape/<language>/<level>` backlog. One valid
+  inventory removes one item; absent or invalid data can never read as clean.
+
 ### Added - one super-gentle ramp queue for every language (#12219)
 
 - Add HL17 and a per-track `gentleRamp` report that joins the existing duration,

@@ -123,16 +123,22 @@
  * lost or invented.
  *
  * Reads: 8-bit greyscale, truecolour, greyscale+alpha and truecolour+alpha
- * (types 0, 2, 4, 6), non-interlaced, with unknown ancillary chunks skipped.
- * Palette (type 3), 16-bit depths and Adam7 interlacing are refused by name
- * rather than half-supported.
+ * (types 0, 2, 4, 6), non-interlaced, with suggested PLTE validated, tRNS
+ * transparency applied, and unknown non-semantic ancillary chunks skipped.
+ * Palette (type 3), 16-bit depths, Adam7 interlacing, and APNG's
+ * `acTL`/`fcTL`/`fdAT` chunks are refused by name rather than half-supported.
  */
 import {
   type PixelContainer,
   type ImageCodec,
   createPixelContainer,
 } from "@coding-adventures/pixel-container";
-import { crc32, rawDeflate, rawInflateCounted } from "@coding-adventures/zip";
+import {
+  RawInflateError,
+  crc32,
+  rawDeflate,
+  rawInflateCounted,
+} from "@coding-adventures/zip";
 
 export { type PixelContainer, type ImageCodec };
 
@@ -146,7 +152,7 @@ export { type PixelContainer, type ImageCodec };
  * A PNG header is eight bytes of attacker-controlled integers claiming a size,
  * and `width * height * 4` is allocated on the strength of it.
  */
-const MAX_DIMENSION = 16384;
+export const PNG_MAX_DIMENSION = 16384;
 
 /**
  * Largest total pixel count this codec will decode by default: 32 mebipixels,
@@ -171,16 +177,66 @@ const MAX_DIMENSION = 16384;
  * embedder that knows its images are small should say so: this package's own
  * caller draws single letters and passes a ceiling in the thousands.
  */
-const MAX_PIXELS = 32 * 1024 * 1024;
+export const PNG_MAX_PIXELS = 32 * 1024 * 1024;
+
+/** Closed, language-neutral IC18 error identifiers. */
+export const PNG_ERROR_CODES = [
+  "invalid-max-pixels",
+  "invalid-image-dimensions",
+  "invalid-pixel-data-length",
+  "file-too-short",
+  "invalid-signature",
+  "truncated-chunk",
+  "invalid-chunk-type",
+  "chunk-crc-mismatch",
+  "chunk-before-ihdr",
+  "duplicate-ihdr",
+  "invalid-ihdr-length",
+  "invalid-dimensions",
+  "dimension-limit",
+  "pixel-limit",
+  "unsupported-feature",
+  "invalid-plte",
+  "invalid-trns",
+  "nonconsecutive-idat",
+  "invalid-iend",
+  "trailing-data",
+  "unknown-critical-chunk",
+  "missing-required-chunk",
+  "invalid-zlib-header",
+  "preset-dictionary",
+  "inflate-failed",
+  "inflated-length-mismatch",
+  "idat-cavity",
+  "adler-mismatch",
+  "invalid-filter",
+] as const;
+
+export type PngErrorCode = (typeof PNG_ERROR_CODES)[number];
+
+/** A portable PNG failure with a stable code independent of its message. */
+export class PngError extends Error {
+  constructor(
+    public readonly code: PngErrorCode,
+    message: string,
+  ) {
+    super(message);
+    this.name = "PngError";
+  }
+}
+
+function fail(code: PngErrorCode, message: string): never {
+  throw new PngError(code, message);
+}
 
 /** Options for {@link decodePng}. */
 export interface DecodePngOptions {
   /**
-   * Largest total pixel count to accept, defaulting to {@link MAX_PIXELS}.
+   * Largest total pixel count to accept, defaulting to {@link PNG_MAX_PIXELS}.
    *
    * Lower it whenever you know roughly how big the images should be -- a
    * library reading files from strangers cannot know its embedder's budget.
-   * Must be a positive finite number.
+   * Must be a positive safe integer no larger than {@link PNG_MAX_PIXELS}.
    */
   maxPixels?: number;
 }
@@ -323,7 +379,7 @@ function undoFilter(type: number, row: Uint8Array, prior: Uint8Array, bpp: numbe
       }
       break;
     default:
-      throw new Error(`PNG: unknown filter type ${type}`);
+      fail("invalid-filter", `PNG: unknown filter type ${type}`);
   }
 }
 
@@ -364,8 +420,11 @@ function chooseFilter(
 /** Reject a ceiling that is not a usable number, wherever it is supplied. */
 function validateMaxPixels(value: number | undefined): void {
   if (value === undefined) return;
-  if (!Number.isFinite(value) || value <= 0) {
-    throw new Error("PNG: maxPixels must be a positive finite number");
+  if (!Number.isSafeInteger(value) || value <= 0 || value > PNG_MAX_PIXELS) {
+    fail(
+      "invalid-max-pixels",
+      `PNG: maxPixels must be a positive safe integer no greater than ${PNG_MAX_PIXELS}`,
+    );
   }
 }
 
@@ -478,13 +537,17 @@ export class PngCodec implements ImageCodec {
 export function encodePng(pixels: PixelContainer): Uint8Array {
   const { width, height } = pixels;
   if (!Number.isInteger(width) || !Number.isInteger(height) || width < 0 || height < 0) {
-    throw new Error("PNG: width and height must be non-negative integers");
+    fail("invalid-image-dimensions", "PNG: width and height must be non-negative integers");
   }
   if (width === 0 || height === 0) {
-    throw new Error("PNG: an image must have at least one pixel in each dimension");
+    fail(
+      "invalid-image-dimensions",
+      "PNG: an image must have at least one pixel in each dimension",
+    );
   }
   if (pixels.data.length !== width * height * 4) {
-    throw new Error(
+    fail(
+      "invalid-pixel-data-length",
       `PNG: pixel data is ${pixels.data.length} bytes, expected ${width * height * 4}`,
     );
   }
@@ -551,10 +614,10 @@ export function encodePng(pixels: PixelContainer): Uint8Array {
  */
 export function decodePng(bytes: Uint8Array, options: DecodePngOptions = {}): PixelContainer {
   validateMaxPixels(options.maxPixels);
-  const maxPixels = options.maxPixels ?? MAX_PIXELS;
-  if (bytes.length < SIGNATURE.length) throw new Error("PNG: file too short");
+  const maxPixels = options.maxPixels ?? PNG_MAX_PIXELS;
+  if (bytes.length < SIGNATURE.length) fail("file-too-short", "PNG: file too short");
   for (let i = 0; i < SIGNATURE.length; i++) {
-    if (bytes[i] !== SIGNATURE[i]) throw new Error("PNG: invalid signature");
+    if (bytes[i] !== SIGNATURE[i]) fail("invalid-signature", "PNG: invalid signature");
   }
 
   let width = 0;
@@ -563,6 +626,10 @@ export function decodePng(bytes: Uint8Array, options: DecodePngOptions = {}): Pi
   let colourType = 0;
   let sawIHDR = false;
   let sawIEND = false;
+  let sawPLTE = false;
+  let sawTRNS = false;
+  let transparentGrey: number | undefined;
+  let transparentRgb: readonly [number, number, number] | undefined;
   const idatParts: Uint8Array[] = [];
   // Tracks the IDAT run: once it has started and then stopped, no further IDAT
   // may appear.
@@ -571,16 +638,28 @@ export function decodePng(bytes: Uint8Array, options: DecodePngOptions = {}): Pi
 
   let pos = SIGNATURE.length;
   while (pos < bytes.length) {
-    if (pos + 8 > bytes.length) throw new Error("PNG: truncated chunk header");
+    if (pos + 8 > bytes.length) fail("truncated-chunk", "PNG: truncated chunk header");
     const length =
       ((bytes[pos]! << 24) | (bytes[pos + 1]! << 16) | (bytes[pos + 2]! << 8) | bytes[pos + 3]!) >>> 0;
     // Guard before using `length` in any arithmetic: the field is four
     // attacker-chosen bytes and can claim four gigabytes.
-    if (length > bytes.length) throw new Error("PNG: chunk length exceeds file size");
+    if (length > bytes.length) {
+      fail("truncated-chunk", "PNG: chunk length exceeds file size");
+    }
     const typeStart = pos + 4;
     const dataStart = typeStart + 4;
     const dataEnd = dataStart + length;
-    if (dataEnd + 4 > bytes.length) throw new Error("PNG: truncated chunk data");
+    if (dataEnd + 4 > bytes.length) fail("truncated-chunk", "PNG: truncated chunk data");
+
+    const typeBytes = bytes.subarray(typeStart, typeStart + 4);
+    const hasOnlyLetters = typeBytes.every(
+      (byte) =>
+        (byte >= 0x41 && byte <= 0x5a) ||
+        (byte >= 0x61 && byte <= 0x7a),
+    );
+    if (!hasOnlyLetters || (typeBytes[2]! & 0x20) !== 0) {
+      fail("invalid-chunk-type", "PNG: invalid chunk type");
+    }
 
     const type = String.fromCharCode(
       bytes[typeStart]!, bytes[typeStart + 1]!, bytes[typeStart + 2]!, bytes[typeStart + 3]!,
@@ -590,7 +669,7 @@ export function decodePng(bytes: Uint8Array, options: DecodePngOptions = {}): Pi
       ((bytes[dataEnd]! << 24) | (bytes[dataEnd + 1]! << 16) | (bytes[dataEnd + 2]! << 8) | bytes[dataEnd + 3]!) >>> 0;
     const actualCRC = crc32(bytes.subarray(typeStart, dataEnd));
     if (declaredCRC !== actualCRC) {
-      throw new Error(`PNG: CRC-32 mismatch in '${type}' chunk`);
+      fail("chunk-crc-mismatch", `PNG: CRC-32 mismatch in '${type}' chunk`);
     }
 
     const data = bytes.subarray(dataStart, dataEnd);
@@ -600,12 +679,14 @@ export function decodePng(bytes: Uint8Array, options: DecodePngOptions = {}): Pi
     // place, libpng refuses it, and accepting what the reference implementation
     // rejects is the differential this decoder exists not to have.
     if (!sawIHDR && type !== "IHDR") {
-      throw new Error(`PNG: '${type}' chunk before IHDR`);
+      fail("chunk-before-ihdr", `PNG: '${type}' chunk before IHDR`);
     }
 
     if (type === "IHDR") {
-      if (sawIHDR) throw new Error("PNG: more than one IHDR chunk");
-      if (length !== 13) throw new Error(`PNG: IHDR must be 13 bytes, got ${length}`);
+      if (sawIHDR) fail("duplicate-ihdr", "PNG: more than one IHDR chunk");
+      if (length !== 13) {
+        fail("invalid-ihdr-length", `PNG: IHDR must be 13 bytes, got ${length}`);
+      }
       width = ((data[0]! << 24) | (data[1]! << 16) | (data[2]! << 8) | data[3]!) >>> 0;
       height = ((data[4]! << 24) | (data[5]! << 16) | (data[6]! << 8) | data[7]!) >>> 0;
       bitDepth = data[8]!;
@@ -614,34 +695,88 @@ export function decodePng(bytes: Uint8Array, options: DecodePngOptions = {}): Pi
       const filterMethod = data[11]!;
       const interlace = data[12]!;
 
-      if (width === 0 || height === 0) throw new Error("PNG: zero width or height");
-      if (width > MAX_DIMENSION || height > MAX_DIMENSION) {
-        throw new Error(`PNG: dimensions ${width}x${height} exceed maximum ${MAX_DIMENSION}`);
+      if (width === 0 || height === 0) fail("invalid-dimensions", "PNG: zero width or height");
+      if (width > PNG_MAX_DIMENSION || height > PNG_MAX_DIMENSION) {
+        fail(
+          "dimension-limit",
+          `PNG: dimensions ${width}x${height} exceed maximum ${PNG_MAX_DIMENSION}`,
+        );
       }
       // Checked here, before anything derived from the dimensions is computed
       // or allocated. Both operands are already below 16384, so the product
       // cannot leave the exactly-representable range.
       if (width * height > maxPixels) {
-        throw new Error(
+        fail(
+          "pixel-limit",
           `PNG: ${width}x${height} is ${width * height} pixels, above the limit of ${maxPixels}`,
         );
       }
-      if (compression !== 0) throw new Error(`PNG: unsupported compression method ${compression}`);
-      if (filterMethod !== 0) throw new Error(`PNG: unsupported filter method ${filterMethod}`);
-      if (interlace !== 0) throw new Error("PNG: Adam7 interlacing is not supported");
-      if (colourType === 3) throw new Error("PNG: palette images (colour type 3) are not supported");
+      if (compression !== 0) {
+        fail("unsupported-feature", `PNG: unsupported compression method ${compression}`);
+      }
+      if (filterMethod !== 0) {
+        fail("unsupported-feature", `PNG: unsupported filter method ${filterMethod}`);
+      }
+      if (interlace !== 0) fail("unsupported-feature", "PNG: Adam7 interlacing is not supported");
+      if (colourType === 3) {
+        fail("unsupported-feature", "PNG: palette images (colour type 3) are not supported");
+      }
       if (colourType !== 0 && colourType !== 2 && colourType !== 4 && colourType !== 6) {
-        throw new Error(`PNG: unknown colour type ${colourType}`);
+        fail("unsupported-feature", `PNG: unknown colour type ${colourType}`);
       }
       if (bitDepth !== 8) {
-        throw new Error(`PNG: unsupported bit depth ${bitDepth}, only 8 is supported`);
+        fail("unsupported-feature", `PNG: unsupported bit depth ${bitDepth}, only 8 is supported`);
       }
       sawIHDR = true;
+    } else if (type === "acTL" || type === "fcTL" || type === "fdAT") {
+      // These names are ancillary by PNG's case bit, but they carry APNG's
+      // animation semantics and therefore are not safe for the generic
+      // ancillary skip below. CRC and the first-chunk rule have already been
+      // validated, so the stable failure is specifically the refused feature.
+      fail("unsupported-feature", `PNG: APNG chunk '${type}' is not supported`);
+    } else if (type === "PLTE") {
+      // PLTE is required for palette images, but it is also a legal suggested
+      // palette for truecolour images. Palette images themselves remain out of
+      // scope; for types 2 and 6 we validate the bounded table and ignore it.
+      if (sawPLTE) fail("invalid-plte", "PNG: more than one PLTE chunk");
+      if (idatParts.length > 0) fail("invalid-plte", "PNG: PLTE must precede IDAT");
+      if (sawTRNS) fail("invalid-plte", "PNG: PLTE must precede tRNS");
+      if (colourType !== 2 && colourType !== 6) {
+        fail("invalid-plte", `PNG: PLTE is not allowed for colour type ${colourType}`);
+      }
+      if (length < 3 || length > 768 || length % 3 !== 0) {
+        fail("invalid-plte", `PNG: PLTE length ${length} is not 1 to 256 RGB entries`);
+      }
+      sawPLTE = true;
+    } else if (type === "tRNS") {
+      // tRNS changes rendered alpha, so it is a known ancillary chunk rather
+      // than something the generic ancillary skip may ignore.
+      if (sawTRNS) fail("invalid-trns", "PNG: more than one tRNS chunk");
+      if (idatParts.length > 0) fail("invalid-trns", "PNG: tRNS must precede IDAT");
+      if (colourType === 0) {
+        if (length !== 2) fail("invalid-trns", "PNG: greyscale tRNS must be 2 bytes");
+        transparentGrey = (data[0]! << 8) | data[1]!;
+        if (transparentGrey > 0xff) {
+          fail("invalid-trns", "PNG: greyscale tRNS sample exceeds 8-bit depth");
+        }
+      } else if (colourType === 2) {
+        if (length !== 6) fail("invalid-trns", "PNG: truecolour tRNS must be 6 bytes");
+        const red = (data[0]! << 8) | data[1]!;
+        const green = (data[2]! << 8) | data[3]!;
+        const blue = (data[4]! << 8) | data[5]!;
+        if (red > 0xff || green > 0xff || blue > 0xff) {
+          fail("invalid-trns", "PNG: truecolour tRNS sample exceeds 8-bit depth");
+        }
+        transparentRgb = [red, green, blue];
+      } else {
+        fail("invalid-trns", `PNG: tRNS is not allowed for colour type ${colourType}`);
+      }
+      sawTRNS = true;
     } else if (type === "IDAT") {
       // RFC 2083: multiple IDATs "shall appear consecutively with no other
       // intervening chunks". They are one stream cut into pieces, so a chunk
       // between them is either corruption or someone using the gap.
-      if (idatEnded) throw new Error("PNG: IDAT chunks are not consecutive");
+      if (idatEnded) fail("nonconsecutive-idat", "PNG: IDAT chunks are not consecutive");
       idatParts.push(data);
       inIdat = true;
     } else if (type === "IEND") {
@@ -649,9 +784,9 @@ export function decodePng(bytes: Uint8Array, options: DecodePngOptions = {}): Pi
       // both are checked because a decoder that stops reading at IEND and looks
       // no further turns the rest of the file into free carriage: bytes that
       // travel inside something every tool calls a valid PNG.
-      if (length !== 0) throw new Error(`PNG: IEND must be empty, got ${length} bytes`);
+      if (length !== 0) fail("invalid-iend", `PNG: IEND must be empty, got ${length} bytes`);
       if (dataEnd + 4 !== bytes.length) {
-        throw new Error(`PNG: ${bytes.length - (dataEnd + 4)} bytes follow IEND`);
+        fail("trailing-data", `PNG: ${bytes.length - (dataEnd + 4)} bytes follow IEND`);
       }
       sawIEND = true;
       pos = dataEnd + 4;
@@ -660,7 +795,7 @@ export function decodePng(bytes: Uint8Array, options: DecodePngOptions = {}): Pi
       // Uppercase first letter: a CRITICAL chunk. The spec says a decoder that
       // does not understand one must refuse the file, because ignoring it would
       // mean showing the user something other than what the file describes.
-      throw new Error(`PNG: unsupported critical chunk '${type}'`);
+      fail("unknown-critical-chunk", `PNG: unsupported critical chunk '${type}'`);
     }
     // Anything else is ancillary (lowercase) -- gAMA, pHYs, tEXt and so on --
     // and is skipped by design.
@@ -673,9 +808,9 @@ export function decodePng(bytes: Uint8Array, options: DecodePngOptions = {}): Pi
     pos = dataEnd + 4;
   }
 
-  if (!sawIHDR) throw new Error("PNG: no IHDR chunk");
-  if (!sawIEND) throw new Error("PNG: no IEND chunk");
-  if (idatParts.length === 0) throw new Error("PNG: no IDAT chunk");
+  if (!sawIHDR) fail("missing-required-chunk", "PNG: no IHDR chunk");
+  if (!sawIEND) fail("missing-required-chunk", "PNG: no IEND chunk");
+  if (idatParts.length === 0) fail("missing-required-chunk", "PNG: no IDAT chunk");
 
   // The IDATs are one zlib stream that happens to be split across chunks, so
   // they are joined BEFORE anything is parsed. A split may fall anywhere,
@@ -691,12 +826,23 @@ export function decodePng(bytes: Uint8Array, options: DecodePngOptions = {}): Pi
     }
   }
 
-  if (zlib.length < 6) throw new Error("PNG: IDAT too short to be a zlib stream");
+  if (zlib.length < 6) {
+    fail("invalid-zlib-header", "PNG: IDAT too short to be a zlib stream");
+  }
   const cmf = zlib[0]!;
   const flg = zlib[1]!;
-  if ((cmf & 0x0f) !== 8) throw new Error(`PNG: zlib compression method ${cmf & 0x0f}, expected 8`);
-  if (((cmf << 8) | flg) % 31 !== 0) throw new Error("PNG: corrupt zlib header");
-  if ((flg & 0x20) !== 0) throw new Error("PNG: zlib preset dictionary is not supported");
+  if ((cmf & 0x0f) !== 8) {
+    fail("invalid-zlib-header", `PNG: zlib compression method ${cmf & 0x0f}, expected 8`);
+  }
+  if ((cmf >> 4) > 7) {
+    fail("invalid-zlib-header", `PNG: zlib CINFO ${cmf >> 4} exceeds the maximum 7`);
+  }
+  if (((cmf << 8) | flg) % 31 !== 0) {
+    fail("invalid-zlib-header", "PNG: corrupt zlib header");
+  }
+  if ((flg & 0x20) !== 0) {
+    fail("preset-dictionary", "PNG: zlib preset dictionary is not supported");
+  }
 
   const channels = colourType === 0 ? 1 : colourType === 2 ? 3 : colourType === 4 ? 2 : 4;
   const stride = width * channels;
@@ -706,9 +852,21 @@ export function decodePng(bytes: Uint8Array, options: DecodePngOptions = {}): Pi
   // stopped at the size this image could possibly need rather than at a
   // generic ceiling.
   const deflateStream = zlib.subarray(2, zlib.length - 4);
-  const { output: filtered, bytesConsumed } = rawInflateCounted(deflateStream, expected);
+  let inflateResult: { output: Uint8Array; bytesConsumed: number };
+  try {
+    inflateResult = rawInflateCounted(deflateStream, expected);
+  } catch (error: unknown) {
+    if (error instanceof RawInflateError && error.code === "output-limit-exceeded") {
+      fail("inflated-length-mismatch", "PNG: decompressed data exceeds the expected length");
+    }
+    fail("inflate-failed", "PNG: invalid DEFLATE stream");
+  }
+  const { output: filtered, bytesConsumed } = inflateResult;
   if (filtered.length !== expected) {
-    throw new Error(`PNG: decompressed ${filtered.length} bytes, expected ${expected}`);
+    fail(
+      "inflated-length-mismatch",
+      `PNG: decompressed ${filtered.length} bytes, expected ${expected}`,
+    );
   }
   // DEFLATE says where it ends -- the last block sets BFINAL -- so a stream can
   // finish well before the Adler-32 that follows it, and everything in between
@@ -718,7 +876,8 @@ export function decodePng(bytes: Uint8Array, options: DecodePngOptions = {}): Pi
   // identical either way, which is exactly why it has to be rejected rather
   // than tolerated.
   if (bytesConsumed !== deflateStream.length) {
-    throw new Error(
+    fail(
+      "idat-cavity",
       `PNG: ${deflateStream.length - bytesConsumed} unused bytes between the ` +
       `compressed data and its checksum`,
     );
@@ -727,7 +886,9 @@ export function decodePng(bytes: Uint8Array, options: DecodePngOptions = {}): Pi
   const declaredAdler =
     ((zlib[zlib.length - 4]! << 24) | (zlib[zlib.length - 3]! << 16) |
      (zlib[zlib.length - 2]! << 8) | zlib[zlib.length - 1]!) >>> 0;
-  if (adler32(filtered) !== declaredAdler) throw new Error("PNG: Adler-32 mismatch");
+  if (adler32(filtered) !== declaredAdler) {
+    fail("adler-mismatch", "PNG: Adler-32 mismatch");
+  }
 
   // Unfilter in place, row by row, each against the row already restored above.
   const bpp = channels; // 8-bit, so one byte per channel
@@ -752,7 +913,7 @@ export function decodePng(bytes: Uint8Array, options: DecodePngOptions = {}): Pi
         container.data[dest] = v;
         container.data[dest + 1] = v;
         container.data[dest + 2] = v;
-        container.data[dest + 3] = 255;
+        container.data[dest + 3] = v === transparentGrey ? 0 : 255;
       } else if (channels === 2) {
         const v = row[src]!;
         container.data[dest] = v;
@@ -760,10 +921,19 @@ export function decodePng(bytes: Uint8Array, options: DecodePngOptions = {}): Pi
         container.data[dest + 2] = v;
         container.data[dest + 3] = row[src + 1]!;
       } else if (channels === 3) {
-        container.data[dest] = row[src]!;
-        container.data[dest + 1] = row[src + 1]!;
-        container.data[dest + 2] = row[src + 2]!;
-        container.data[dest + 3] = 255;
+        const red = row[src]!;
+        const green = row[src + 1]!;
+        const blue = row[src + 2]!;
+        container.data[dest] = red;
+        container.data[dest + 1] = green;
+        container.data[dest + 2] = blue;
+        container.data[dest + 3] =
+          transparentRgb !== undefined &&
+          red === transparentRgb[0] &&
+          green === transparentRgb[1] &&
+          blue === transparentRgb[2]
+            ? 0
+            : 255;
       } else {
         container.data[dest] = row[src]!;
         container.data[dest + 1] = row[src + 1]!;

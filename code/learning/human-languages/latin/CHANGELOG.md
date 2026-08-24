@@ -2,6 +2,40 @@
 
 ## [Unreleased]
 
+### Added — project-defined pre-A1 four-skill task shapes
+
+- Made the Latin pre-A1 bridge executable as independently scored reading,
+  listening, writing, and speaking papers with exact timing, item counts,
+  replay, aids, and a 60/100 floor on every skill.
+- Kept scored writing productive: delayed recall, short dictation, and bounded
+  independent Latin responses count; tracing and visible copying remain gentle
+  lesson supports. Consistent `u/v` and `i/j` conventions receive credit, and
+  macrons are required only when a prompt explicitly tests quantity.
+- This inventory is project-defined and does not imply ELEX equivalence. Mocks,
+  rubrics, keys, calibration, curriculum coverage, and book-only human
+  validation remain required before readiness can be claimed.
+
+### Added — pre-A1-to-C2 four-skill assessment contract (#12435)
+
+- Defined seven project-owned Latin assessment rungs with independently passed
+  reading, listening, writing, and speaking papers, two timed mocks per rung,
+  and the complete cumulative writing ramp.
+- Kept Euroclassica's curriculum and ELEX archive as valuable contextual
+  evidence without presenting them as a four-skill CEFR accreditation.
+- Published exact level envelopes, pronunciation and orthography policy,
+  standard-setting requirements, and the evidence boundary between an
+  inventory, mock readiness, and book-only human validation.
+
+### Added — writing begins with the first greeting (#12292)
+
+- Add a short observe-and-trace microstep to `LA-C01-salve`, then one separate
+  two-minute guided copy of **salvē** while the model remains visible.
+- Make the macron a gentle eye-to-hand cue for the long final vowel; neither
+  step asks for spelling from memory, a second word, or free composition.
+- Record both HL19 writing stages and place the atom-free copy lesson directly
+  after the three-atom opener. This closes only Latin's no-writing-at-all cliff,
+  not the rest of its pre-A1-to-C2 writing backlog.
+
 ### Added — twenty pre-A1 nouns, four themed chapters (HL-C212)
 
 Chapters 44–47, five words each, one word per lesson:

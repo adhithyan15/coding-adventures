@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:dc1b0406cbf54722",
+  "sourceHash": "fnv1a64:ab7ba438421d31a2",
   "lessons": [
     {
       "id": "KA-C01-namaskara",
@@ -19,16 +19,17 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:96291071711dcce0",
+      "sourceHash": "fnv1a64:00091f24b7f9059e",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -44,7 +45,7 @@
             },
             {
               "kind": "speech",
-              "text": "The first Kannada word, and the one you'll use most — and, taught through it, your first Kannada letters. You'll learn to read it and to understand it in the same breath."
+              "text": "Meet your first Kannada word. Say namaskāra with a small bow: “hello” or “greetings.” Now read it one small piece at a time."
             }
           ]
         },
@@ -55,19 +56,19 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "(If you already read Kannada, skim this — it's here so the book needs no prior knowledge.) Kannada is written left to right, and every consonant carries a built-in \"a\" unless something removes it."
+              "text": "Kannada runs left to right. A consonant normally carries a built-in a."
             },
             {
               "kind": "speech",
-              "text": "ನ = \"na\", ಮ = \"ma\", ರ = \"ra\" — each consonant with its built-in a."
+              "text": "ನ, ಮ, ರ = na, ma, ra."
             },
             {
               "kind": "speech",
-              "text": "ಕಾ = \"kā\" — the consonant ಕ (ka) plus a vowel sign that lengthens the a to \"ā.\""
+              "text": "ಕಾ = ಕ ka plus the long-ā vowel sign: kā."
             },
             {
               "kind": "speech",
-              "text": "ಸ್ಕ — here ಸ (sa) loses its vowel and stacks under the next consonant as a conjunct (Kannada writes these ottakṣara, a small subscript form): bare s + ka = \"ska.\""
+              "text": "In ಸ್ಕ, ಸ loses its vowel and stacks with ಕ: s + ka = ska."
             },
             {
               "kind": "speech",
@@ -79,7 +80,7 @@
             },
             {
               "kind": "speech",
-              "text": "You just read Kannada. Consonants carry a; a vowel sign changes it; and a vowel-less consonant stacks under the next as a conjunct."
+              "text": "You just read Kannada."
             }
           ]
         },
@@ -90,67 +91,23 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ನಮಸ್ಕಾರ (namaskāra) is not a native Kannada word — it is Sanskrit, from namas (\"a bow, homage\") + kāra (\"a making, doing,\" from the root kṛ, \"to do\"). Literally \"the making of a bow.\" It is the very same word as Hindi namaskār — Kannada took it whole from Sanskrit."
-            },
-            {
-              "kind": "speech",
-              "text": "That points to the theme of this whole book: Kannada, unlike its sister Tamil, borrowed freely from Sanskrit. Where Tamil kept a home-grown greeting (vaṇakkam), Kannada reached north for namaskāra."
+              "text": "ನಮಸ್ಕಾರ (namaskāra) came from Sanskrit namas (“a bow”) + kāra (“a making,” from kṛ, “to do”): literally “the making of a bow.” Kannada borrowed the whole word. Tamil instead kept its native greeting, vaṇakkam."
             }
           ]
         },
         {
           "index": 3,
-          "type": "unknown",
-          "title": "Across the family — the same idea, five ways",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "Language",
-                "\"Hello\"",
-                "Source"
-              ],
-              "columns": 3,
-              "rowCount": 6,
-              "utterances": [
-                "Language: Kannada. \"Hello\": namaskāra (ನಮಸ್ಕಾರ). Source: Sanskrit (namas + kāra).",
-                "Language: Telugu. \"Hello\": namaskāram (నమస్కారం). Source: Sanskrit.",
-                "Language: Malayalam. \"Hello\": namaskāram (നമസ്കാരം). Source: Sanskrit.",
-                "Language: Hindi. \"Hello\": namaste (नमस्ते). Source: Sanskrit.",
-                "Language: Tamil. \"Hello\": vaṇakkam (வணக்கம்). Source: native Dravidian.",
-                "Language: English. \"Hello\": hello. Source: Germanic."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Tamil alone kept its own word; Kannada, Telugu, Malayalam, and Hindi all lean on the Sanskrit namas-. Same gesture, different loyalties."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "culture-pragmatics",
           "title": "Why it's said this way",
           "segments": [
             {
               "kind": "speech",
-              "text": "namaskāra is said with the palms pressed together and a small bow of the head — the gesture is the word. It works as hello and goodbye, at any time of day, to almost anyone, and it is respectful without being stiff. (The even more respectful namaskāragaḷu adds a plural-of-honour ending you'll meet later.)"
+              "text": "With palms together and a small bow, namaskāra works as hello or goodbye. It is respectful without being stiff."
             }
           ]
         },
         {
-          "index": 5,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Kannada reads left to right, and every consonant carries a built-in “a.” ನ na, ಮ ma, ರ ra. A vowel sign changes that vowel: ಕ ka + the long-“ā” sign becomes ಕಾ kā. And a vowel-less consonant stacks under the next as a conjunct (ottakṣara): ಸ loses its vowel and tucks under ka becomes ಸ್ಕ “ska.” Read ನ, ಮ, ಸ್, ಕಾ, ರ becomes namaskāra."
-            }
-          ]
-        },
-        {
-          "index": 6,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -186,11 +143,20 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: \"namaskāra,\" with a small bow — you are offering respect]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "trace ನಮಸ್ಕಾರ (namaskāra) with a finger, then copy it once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: trace **ನಮಸ್ಕಾರ** with a finger, then copy it once]"
             }
           ]
         },
         {
-          "index": 7,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -202,7 +168,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read ನಮಸ್ಕಾರ (namaskāra). Is it a native Kannada word or a borrowing, and what does it literally mean? (Sanskrit namas + kāra, \"the making of a bow.\") Which Dravidian language kept a native word for \"hello\" instead? (Tamil, vaṇakkam.)"
+              "text": "Read ನಮಸ್ಕಾರ (namaskāra). What does it mean? (“Greetings.”) What does it literally mean? (Sanskrit namas + kāra: “the making of a bow.”)"
             }
           ]
         }
@@ -937,7 +903,7 @@
     {
       "id": "KA-C01-practice",
       "sequence": 60,
-      "title": "Chapter 1 — recap, and how Kannada says goodbye",
+      "title": "Chapter 1 — a five-word recap",
       "headword": "(recap)",
       "romanization": "",
       "gloss": "Chapter 1 recap + the Kannada farewell",
@@ -947,7 +913,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:b336cceba80b40d1",
+      "sourceHash": "fnv1a64:b636e9a11d60267f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -972,7 +938,7 @@
             },
             {
               "kind": "speech",
-              "text": "Five words, and with them a first handful of Kannada letters read straight off the page. Let's gather them — and add the farewell, which turns out to share its very logic with Tamil."
+              "text": "Five words, and with them a first handful of Kannada letters read straight off the page. Let's gather only what you have already learned and make it feel easy."
             }
           ]
         },
@@ -1011,19 +977,11 @@
         {
           "index": 2,
           "type": "unknown",
-          "title": "The farewell — the same \"go and come back\" as Tamil",
+          "title": "A promise for later",
           "segments": [
             {
               "kind": "speech",
-              "text": "Kannada, like Tamil, avoids a bare \"I'm leaving.\" The everyday goodbye is:"
-            },
-            {
-              "kind": "speech",
-              "text": "ಹೋಗಿ ಬರುತ್ತೇನೆ (hōgi baruttēne) — literally \"having gone, I [will] come [back].\""
-            },
-            {
-              "kind": "speech",
-              "text": "and the reply is ಹೋಗಿ ಬನ್ನಿ (hōgi banni) — \"go, and come [back].\" The very same worldview inside Tamil's pōy varugiṟēṉ: you never simply depart, you promise a return. (Casually, Kannada also just re-uses namaskāra to part.)"
+              "text": "Kannada has a warm departure exchange built around going and coming back. It belongs in the later chapter where you learn those actions one at a time. For now, repeating the greeting is enough when you part."
             }
           ]
         },
@@ -1055,15 +1013,6 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: greet and thank — \"namaskāra!\" … \"dhanyavāda.\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the farewell exchange — \"hōgi baruttēne\" / \"hōgi banni\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the farewell exchange — \"hōgi baruttēne\" / \"hōgi banni\"]"
             }
           ]
         },
@@ -1080,11 +1029,11 @@
             },
             {
               "kind": "speech",
-              "text": "Read all five words aloud. Which two are Sanskrit loans, and which three are native Dravidian? (Loans: namaskāra, dhanyavāda. Native: haudu, illa, sari.) What does the Kannada goodbye literally mean, and which Tamil farewell does it echo? (\"Having gone, I'll come back\" — Tamil pōy varugiṟēṉ.)"
+              "text": "Read all five words aloud. Which two are Sanskrit loans, and which three are native Dravidian? (Loans: namaskāra, dhanyavāda. Native: haudu, illa, sari.) Which one means \"okay / correct\"? (sari.)"
             },
             {
               "kind": "speech",
-              "text": "Next chapter: introducing yourself — nanna hesaru… (\"my name…\") — and Kannada's nīnu / nīvu (familiar / respectful \"you\")."
+              "text": "Next chapter starts introducing yourself, one short possession form at a time."
             }
           ]
         }

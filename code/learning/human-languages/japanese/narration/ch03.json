@@ -2,13 +2,13 @@
   "version": 1,
   "language": "japanese",
   "chapter": 3,
-  "title": "Eight Signs, One Mark, and the Longest Word You Know",
+  "title": "Plain Thanks, One Sign at a Time",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:1a25d37b069264b0",
+  "sourceHash": "fnv1a64:7832024c6b7ac24d",
   "lessons": [
     {
       "id": "JA-W03-a",
-      "sequence": 190,
+      "sequence": 140,
       "title": "あ — three strokes, and the thank-you begins",
       "headword": "あ",
       "romanization": "a",
@@ -20,7 +20,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9fb48f537aa8a915",
+      "sourceHash": "fnv1a64:8215b0106d85d878",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -51,7 +51,7 @@
             },
             {
               "kind": "speech",
-              "text": "You have been saying ありがとう (arigatou) since Chapter 1 and reading it from the romanization. This chapter hands you the signs, one at a time, until the word is yours on the page as well as in the mouth."
+              "text": "This chapter builds the five-sign plain thank-you from the page up. Its meaning arrives only after every sign is yours, so this first lesson asks for one shape: あ."
             }
           ]
         },
@@ -117,6 +117,23 @@
         },
         {
           "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice — review pulse",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 15,
+              "perItem": false,
+              "source": "[PAUSE 15s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the daytime greeting, then write? from memory."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -154,7 +171,7 @@
     },
     {
       "id": "JA-W03-ri",
-      "sequence": 200,
+      "sequence": 150,
       "title": "り (ri) — two strokes, and a tap rather than an r",
       "headword": "り",
       "romanization": "ri",
@@ -166,7 +183,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5caa787ea1875f95",
+      "sourceHash": "fnv1a64:aaa2265c474bc377",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -268,6 +285,23 @@
         },
         {
           "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice — review pulse",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 15,
+              "perItem": false,
+              "source": "[PAUSE 15s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write? from memory before tracing?."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -306,7 +340,7 @@
     },
     {
       "id": "JA-W03-ka",
-      "sequence": 210,
+      "sequence": 160,
       "title": "か (ka) — three strokes, and a shape you will reuse",
       "headword": "か",
       "romanization": "ka",
@@ -318,7 +352,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6f3edd66798c67f7",
+      "sourceHash": "fnv1a64:dd39d35f40faff27",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -411,6 +445,23 @@
         },
         {
           "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice — review pulse",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 15,
+              "perItem": false,
+              "source": "[PAUSE 15s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write?, then write the different sign that closes????? and explain its particle reading."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -448,7 +499,7 @@
     },
     {
       "id": "JA-W03-dakuten",
-      "sequence": 220,
+      "sequence": 170,
       "title": "゛ (dakuten)— two ticks, and every sign you know doubles",
       "headword": "゛",
       "romanization": "dakuten",
@@ -460,7 +511,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d9f194e131fd2166",
+      "sourceHash": "fnv1a64:fca3eb6654e313a2",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -570,6 +621,23 @@
         },
         {
           "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice — review pulse",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 15,
+              "perItem": false,
+              "source": "[PAUSE 15s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write????? from its five signs before adding any voice marks."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -609,7 +677,7 @@
     },
     {
       "id": "JA-W03-to",
-      "sequence": 230,
+      "sequence": 180,
       "title": "と (to) — two strokes, and they never meet",
       "headword": "と",
       "romanization": "to",
@@ -621,7 +689,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:38088b8286fa102a",
+      "sourceHash": "fnv1a64:c92d1840828e1feb",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -710,6 +778,23 @@
         },
         {
           "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice — review pulse",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 15,
+              "perItem": false,
+              "source": "[PAUSE 15s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the daytime greeting once without looking."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -748,7 +833,7 @@
     },
     {
       "id": "JA-W03-u",
-      "sequence": 240,
+      "sequence": 190,
       "title": "う (u) — two strokes, and a vowel that stretches",
       "headword": "う",
       "romanization": "u",
@@ -760,7 +845,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:eb053cfd07df4fd1",
+      "sourceHash": "fnv1a64:95b897c6b964299f",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -829,7 +914,7 @@
             },
             {
               "kind": "speech",
-              "text": "Written out, ありがとう (arigatou) ends と + う — to then u, which reads as five beats. But nobody says a-ri-ga-to-u. What you hear is a long o:"
+              "text": "The five-sign sequence you are building ends と + う — to then u, which reads as five beats. But the final two signs are heard as a long o:"
             },
             {
               "kind": "speech",
@@ -841,7 +926,7 @@
             },
             {
               "kind": "speech",
-              "text": "You met this once already without being told: the katakana word コーヒー uses a long bar for the same job. Hiragana uses う."
+              "text": "Katakana will later receive a separate one-stroke length mark for the same job. Here the only written cue is the う you have just learned."
             }
           ]
         },
@@ -910,8 +995,8 @@
     },
     {
       "id": "JA-W03-arigatou-read",
-      "sequence": 250,
-      "title": "ありがとう (arigatou) — no new sign, and a whole word",
+      "sequence": 200,
+      "title": "ありがとう (arigatou) (arigatō) — no new sign, and a whole word",
       "headword": "ありがとう",
       "romanization": "arigatou",
       "gloss": "five signs, all of them now yours — the thank-you read rather than recalled",
@@ -922,7 +1007,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:605a237f83ea2d81",
+      "sourceHash": "fnv1a64:a4649118286c6353",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -964,7 +1049,7 @@
             },
             {
               "kind": "speech",
-              "text": "ありがとう (arigatou)."
+              "text": "ありがとう (arigatou) (arigatō)."
             },
             {
               "kind": "speech",
@@ -1012,7 +1097,7 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "ありがとう (arigatou) — name each sign before you say the word",
+              "instruction": "ありがとう (arigatou) (arigatō) — name each sign before you say the word",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
@@ -1021,7 +1106,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "ありがとう (arigatou) — all five, in order, without looking above",
+              "instruction": "ありがとう (arigatou) (arigatō) — all five, in order, without looking above",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -1055,7 +1140,7 @@
               "kind": "activity",
               "scored": true,
               "id": "JA-W03-arigatou-read-ga",
-              "prompt": "Which sign in ありがとう (arigatou) is another sign plus the dakuten, and what is underneath it?",
+              "prompt": "Which sign in ありがとう (arigatou) (arigatō) is another sign plus the dakuten, and what is underneath it?",
               "assesses": [
                 "JA-SCRIPT-ARIGATOU-READ-01"
               ],
@@ -1078,492 +1163,28 @@
       ]
     },
     {
-      "id": "JA-W03-sa",
-      "sequence": 260,
-      "title": "さ (sa) — two strokes, and the ticks work here too",
-      "headword": "さ",
-      "romanization": "sa",
-      "gloss": "the hiragana sign for the mora sa — two strokes, and the base of za",
-      "script": "japanese",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:f00367d39fd8befa",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "Script — the shape",
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Write ありがとう (arigatou). All five signs, no help."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "Script — the shape",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "さ (sa)."
-            },
-            {
-              "kind": "speech",
-              "text": "Three strokes:"
-            },
-            {
-              "kind": "speech",
-              "text": "a short horizontal, near the top."
-            },
-            {
-              "kind": "speech",
-              "text": "a short curving stroke below it, falling down and left."
-            },
-            {
-              "kind": "speech",
-              "text": "a separate small curve at the foot, opening left — not joined to the stroke above it."
-            },
-            {
-              "kind": "speech",
-              "text": "Watch that gap. Most printed fonts join the second and third strokes into one continuous descender, so the さ you see on a screen looks like two strokes. By hand it is three, and the break is real. The same split makes き four strokes by hand and three in print."
-            },
-            {
-              "kind": "speech",
-              "text": "Read sa: a clean s, then the short a. One beat."
-            },
-            {
-              "kind": "speech",
-              "text": "And now the bargain again — さ (sa) takes the dakuten:"
-            },
-            {
-              "kind": "speech",
-              "text": "さ sa becomes ざ za."
-            },
-            {
-              "kind": "speech",
-              "text": "Same mouth, voice switched on, two ticks at the upper right. That is the third sign you have got for free, and it is the second sign of ございます."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "さ (sa) — horizontal, the short curve, then the detached foot curve",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: さ — horizontal, the short curve, then the detached foot curve]"
-            },
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "ざ — the same, with two ticks",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: ざ — the same, with two ticks]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "sa / za",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: **sa / za**]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "How many signs have the two ticks given you so far? (Three — が, ご and ざ.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Source: Unicode Hiragana chart."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "JA-W03-sa-za",
-              "prompt": "What does the sign read 'sa' become when the dakuten is added?",
-              "assesses": [
-                "JA-SCRIPT-SA-01"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "za",
-                "ざ",
-                "it becomes za"
-              ],
-              "feedback": {
-                "correct": "ざ za — same shape, voice switched on.",
-                "incorrect": "It becomes ざ, read za."
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "JA-W03-ma",
-      "sequence": 270,
-      "title": "ま (ma) — three strokes, and a loop you have drawn before",
-      "headword": "ま",
-      "romanization": "ma",
-      "gloss": "the hiragana sign for the mora ma — three strokes, two of them horizontal",
-      "script": "japanese",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:ea2d765801bc327c",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "Script — the shape",
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Write さ (sa), then ざ."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "Script — the shape",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ま (ma)."
-            },
-            {
-              "kind": "speech",
-              "text": "Three strokes, and the order is top-down as always:"
-            },
-            {
-              "kind": "speech",
-              "text": "an upper horizontal, short."
-            },
-            {
-              "kind": "speech",
-              "text": "a lower horizontal, a little wider, below and parallel to it."
-            },
-            {
-              "kind": "speech",
-              "text": "a looping vertical that crosses both, falls, and curls left at the bottom."
-            },
-            {
-              "kind": "speech",
-              "text": "The third stroke is the same movement you learned on あ — down through what you have written, then a small loop at the foot. If あ's loop is comfortable, this one is already yours."
-            },
-            {
-              "kind": "speech",
-              "text": "Read ma: as in English mother, shortened. One beat."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "ま (ma) — two horizontals, then the looping vertical through them",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: ま — two horizontals, then the looping vertical through them]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "ma, one beat",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: **ma**, one beat]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Which earlier sign uses the same looping last stroke? (あ.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Source: Unicode Hiragana chart."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "JA-W03-ma-strokes",
-              "prompt": "How many strokes does the hiragana sign read 'ma' have?",
-              "assesses": [
-                "JA-SCRIPT-MA-01"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "3",
-                "three",
-                "3 strokes",
-                "three strokes"
-              ],
-              "feedback": {
-                "correct": "Three — two horizontals and the looping vertical.",
-                "incorrect": "Three: two horizontal strokes, then the looping vertical."
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "JA-W03-su",
-      "sequence": 280,
-      "title": "す (su) — two strokes, and a vowel you barely hear",
-      "headword": "す",
-      "romanization": "su",
-      "gloss": "the hiragana sign for the mora su — two strokes, and a vowel that often goes quiet",
-      "script": "japanese",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:0610ff38f0840af8",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "Script — the shape",
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Write ま (ma). Two horizontals, then the loop."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "Script — the shape",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "す (su)."
-            },
-            {
-              "kind": "speech",
-              "text": "Two strokes:"
-            },
-            {
-              "kind": "speech",
-              "text": "a short horizontal, near the top."
-            },
-            {
-              "kind": "speech",
-              "text": "a vertical crossing it, falling, and finishing in a loop that closes back on itself before tailing away."
-            },
-            {
-              "kind": "speech",
-              "text": "The loop in す (su) is tighter than ま (ma)'s — it comes back and crosses its own line."
-            },
-            {
-              "kind": "speech",
-              "text": "Read su: an s, then the u you met in う."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way — the vowel that goes quiet",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "At the end of a word, and especially in ございます, that final u is usually devoiced — the mouth makes the shape, the beat is counted, but the vocal cords never switch on. What a listener hears is closer to -mass than -masu."
-            },
-            {
-              "kind": "speech",
-              "text": "This is not sloppiness or fast speech. It is what standard Tokyo Japanese does, and saying a full clear u there is one of the most recognisable marks of a learner reading off a page."
-            },
-            {
-              "kind": "speech",
-              "text": "The sign is still written. The beat is still counted. Only the voice drops out."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "す (su) — horizontal, then the vertical with its closing loop",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: す — horizontal, then the vertical with its closing loop]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "su, then the same with the voice off — a whispered ending",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: **su**, then the same with the voice off — a whispered ending]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Is the beat dropped along with the voice? (No — the beat is still counted.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Source: Unicode Hiragana chart."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "JA-W03-su-devoice",
-              "prompt": "At the end of gozaimasu, what happens to the final u?",
-              "assesses": [
-                "JA-SCRIPT-SU-01"
-              ],
-              "responseSeconds": 12,
-              "acceptedResponses": [
-                "it is devoiced",
-                "it goes quiet",
-                "devoiced",
-                "you barely hear it",
-                "the voice drops out",
-                "it is almost silent"
-              ],
-              "feedback": {
-                "correct": "Devoiced — the beat is counted, the voice is not.",
-                "incorrect": "It is DEVOICED: the beat stays, the vocal cords do not switch on."
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "JA-C03-practice",
-      "sequence": 290,
-      "title": "Practice — the whole thank-you, off the page",
-      "headword": "ありがとうございます",
-      "romanization": "arigatou gozaimasu",
-      "gloss": "ten signs, every one of them yours — the polite thank-you read off the page",
+      "id": "JA-C01-arigatou",
+      "sequence": 210,
+      "title": "ありがとう (arigatou) (arigatō) — thanks, from “this hardly ever happens”",
+      "headword": "ありがとう",
+      "romanization": "arigatō",
+      "gloss": "thank you (plain)",
       "script": "japanese",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:dcf1861ce20f29aa",
+      "sourceHash": "fnv1a64:d8f0b0bb450a2f2b",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script — the second half",
-          "Guided Practice"
+          "Script — five signs and two small strokes"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the second half and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — five signs and two small strokes until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -1579,173 +1200,130 @@
             },
             {
               "kind": "speech",
-              "text": "Write ありがとう (arigatou). Five signs, no help."
+              "text": "Back to hiragana. Five signs are coming, and one small mark that unlocks a whole second row of sounds."
             }
           ]
         },
         {
           "index": 1,
           "type": "script",
-          "title": "Script — the second half",
+          "title": "Script — five signs and two small strokes",
           "segments": [
             {
               "kind": "speech",
-              "text": "ございます."
+              "text": "ありがとう (arigatou) (arigatō) — あ a + り ri + が ga + と to + う."
             },
             {
               "kind": "speech",
-              "text": "Five more signs, and again nothing here is new:"
+              "text": "あ a, り ri, と to and う u are ordinary hiragana. が is the new idea: it is the sign か ka with two short strokes added at the top right. That mark is the dakuten, and it voices the consonant — the same two strokes turn ka into ga, sa into za, ta into da, ha into ba. One mark, learned once, doubles how much of the script you can read."
             },
             {
               "kind": "speech",
-              "text": "ご — こ from Chapter 2, with the dakuten."
-            },
-            {
-              "kind": "speech",
-              "text": "ざ — さ (sa) from this chapter, with the dakuten."
-            },
-            {
-              "kind": "speech",
-              "text": "い — from Chapter 2."
-            },
-            {
-              "kind": "speech",
-              "text": "ま (ma) — from this chapter."
-            },
-            {
-              "kind": "speech",
-              "text": "す (su) — from this chapter, its u devoiced."
-            },
-            {
-              "kind": "speech",
-              "text": "Two of the five are signs you already had, wearing two ticks."
+              "text": "The final う does not sound like u here. After と it stretches the o, so the word ends -tō and holds five beats: a-ri-ga-to-o. Hiragana lengthens a vowel here by writing another vowel sign. Katakana will get its own tiny length lesson later."
             }
           ]
         },
         {
           "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way — what the long form is doing",
+          "type": "etymology",
+          "title": "The word, taken apart — arigatashi",
           "segments": [
             {
               "kind": "speech",
-              "text": "ありがとう on its own is warm and ordinary — friends, family, a shopkeeper you know. ありがとうございます (arigatou gozaimasu) is the same thanks in polite form, and it is what you want for a stranger, a colleague, anyone serving you."
+              "text": "The older form combines aru, \"to exist,\" with katashi, \"difficult.\" Arigatashi therefore meant literally \"hard to exist\" — that is, rare. Rare became precious, precious became grateful, and by the Edo period the word had settled into plain thanks. The k of katashi softened to g inside the compound, which is the same voicing the dakuten writes. Its historical kanji spelling can wait until those signs receive their own lessons."
             },
             {
               "kind": "speech",
-              "text": "The difference is not strength. Adding ございます does not mean you are more grateful; it means you are being more formal about it. Getting that wrong in either direction is the commonest register mistake a beginner makes."
-            },
-            {
-              "kind": "speech",
-              "text": "If you are unsure which to use, use the long one. Being slightly too polite in Japanese costs you nothing."
+              "text": "So the memory hook is inside the word, not inside English: saying ありがとう (arigatou) (arigatō) is saying this was not a thing that had to happen. No English cousin exists, and inventing one would be worse than admitting that."
             }
           ]
         },
         {
           "index": 3,
-          "type": "input",
-          "title": "The exchange",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Two voices, and every sign on the page is one you can write:"
-            },
-            {
-              "kind": "speech",
-              "text": "A: こんにちは B: こんにちは A: ありがとうございます (arigatou gozaimasu) B: はい."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "notice",
-          "title": "What you've built this chapter",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Eight new signs and one mark. The mark is the part worth remembering:"
-            },
-            {
-              "kind": "speech",
-              "text": "eight shapes — あ り (ri) か (ka) と (to) う さ (sa) ま (ma) す (su)."
-            },
-            {
-              "kind": "speech",
-              "text": "one mark — ゛ (dakuten), which turned か (ka) into が, こ into ご, さ (sa) into ざ."
-            },
-            {
-              "kind": "speech",
-              "text": "Ten signs in ありがとうございます (arigatou gozaimasu), and only eight of them cost you a shape. The dakuten is the first thing in this book that made the job smaller the further you went into it, and it keeps doing that: every k, s, t and h sign you ever learn arrives with a voiced twin already attached."
-            }
-          ]
-        },
-        {
-          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
             {
               "kind": "prompt",
-              "action": "READ",
-              "instruction": "ありがとうございます (arigatou gozaimasu) — name each of the ten signs, then say it",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU READ: ありがとうございます — name each of the ten signs, then say it]"
-            },
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "ございます — five signs, two of them with ticks",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: ございます — five signs, two of them with ticks]"
-            },
-            {
-              "kind": "prompt",
               "action": "SAY",
-              "instruction": "arigatou gozaimasu — and let the final u go quiet",
+              "instruction": "ありがとう (arigatou) (arigatō) — a-ri-ga-to-o, five beats",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: **arigatou gozaimasu** — and let the final u go quiet]"
+              "source": "[YOU SAY: **ありがとう** — *a-ri-ga-to-o*, five beats]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "prompt",
+              "action": "BUILD",
+              "instruction": "か (ka) plus the dakuten becomes が",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU BUILD: **か** plus the dakuten → **が**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONNECT",
+              "instruction": "arigatashi \"hard to exist\" becomes rare becomes precious becomes thanks",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONNECT: *arigatashi* \"hard to exist\" → rare → precious → thanks]"
             }
           ]
         },
         {
-          "index": 6,
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice — review pulse",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 15,
+              "perItem": false,
+              "source": "[PAUSE 15s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write? once from memory, then add the two dakuten strokes."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
             {
               "kind": "speech",
-              "text": "Which form would you use with a stranger — the short one or the long one? (The long one; being slightly too polite costs nothing.)"
+              "text": "What did arigatashi mean literally? (Hard to exist.) What does the last う (u) do? (It lengthens the o.)"
             },
             {
               "kind": "speech",
-              "text": "Source: Unicode Hiragana chart."
+              "text": "Source: Wiktionary: ありがとう (arigatou) (arigatō)."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "JA-C03-practice-ticks",
-              "prompt": "In ありがとうございます (arigatou gozaimasu), how many signs are an earlier sign plus the dakuten?",
+              "id": "JA-C01-arigatou-dakuten",
+              "prompt": "Which hiragana sign becomes が when the dakuten is added?",
               "assesses": [
-                "JA-SCRIPT-GOZAIMASU-READ-01"
+                "JA-SCRIPT-DAKUTEN"
               ],
-              "responseSeconds": 12,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "3",
-                "three",
-                "3 signs",
-                "three signs",
-                "ga za and go",
-                "が ご ざ"
+                "か",
+                "ka",
+                "か ka"
               ],
               "feedback": {
-                "correct": "Three — が, ご and ざ, from か, こ and さ.",
-                "incorrect": "Three: が from か, ご from こ, and ざ from さ."
+                "correct": "Right: か plus the two strokes is が.",
+                "incorrect": "It is か — the dakuten voices ka into ga."
               }
             }
           ]

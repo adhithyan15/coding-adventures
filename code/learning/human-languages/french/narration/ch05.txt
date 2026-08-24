@@ -1,80 +1,8 @@
 French, chapter 5: The First Verbs.
-5 lessons. You can do the first 2 of them in the car; after that you will want to have stopped.
+5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
 Lesson 1 of 5.
-habiter — "to live," and it's about having a place.
-
-Warm-up.
-[pause 2 seconds]
-A second -er verb — snap it into the exact template you just learned. habiter ("to live, to dwell") lets you say where you live, the answer to a où ("where") question.
-
-Sounds you'll need.
-silent-final — the h is silent (French h never sounds): habiter = a-bee-TAY. Same -er = ay ending as parler.
-
-The word, taken apart.
-habiter comes from Latin habitāre, "to dwell, to keep on having [a place]" — the frequentative of habēre, "to have." To dwell somewhere is to keep having it as your place. That root is thoroughly English:
-habitat — the place a creature dwells.
-inhabit, inhabitant, habitation — to dwell in / one who dwells.
-and (via habēre, "have") habit — what you "keep having," and able, ability (what you "have" it in you to do).
-
-Grammar Lens: same -er template.
-Drop -er, add the endings — identical to parler, silent trap and all:
-[a table of 2 rows, read aloud]
-j'habite, tu habites, il habite, (all a-BEET).
-nous habitons, vous habitez, (a-bee-TON, a-bee-TAY).
-Note j'habite — je elides to j' before the vowel of habite (the h is silent, so it counts as a vowel). Now you can answer où questions:
-J'habite à Paris. — "I live in Paris."
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "habiter" — a-bee-TAY, silent h]
-[pause 8 seconds for the answer]
-[your turn — say: "j'habite, tu habites, il habite" — all a-BEET]
-[pause 8 seconds for the answer]
-[your turn — say: "habiter" then English "habitat, inhabit" — the habitāre root]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What Latin verb is habiter from, and what does it literally involve? (habitāre, "keep having a place" — from habēre, "to have.") English cousins? (Habitat, inhabit, habitation.) Say "I live in Paris." (J'habite à Paris.) Next: travailler, "to work."
-
-
-Lesson 2 of 5.
-Je parle français — your first real sentence.
-
-Warm-up.
-[pause 2 seconds]
-The moment it all pays off: you take a verb you conjugated and a noun, and build a sentence no one handed you pre-made — Je parle français, "I speak French."
-
-The new word: français.
-français = "French" (the language, and a French person), from Francia, "land of the Franks" — the Germanic people who settled Roman Gaul and gave France its name. And here's the twist: the Franks' own name meant "free" — which is why English frank / frankly means open and unguarded, and why the coin was a franc. Say it frahn-SEH (soft-c-s: the ç-less c before nothing here is soft s; the ai is a nasal-ish eh).
-
-The sentence, assembled.
-Snap together two things you own:
-Je (I, from ego) + parle (speak, from parler) = Je parle français.
-A complete, grammatical French sentence. Now note the contrast that defines French:
-You keep the je. Spanish drops it (hablo español), because the Spanish ending -o says "I". But French parle / parles / parlent all sound the same (parl) — the ear can't tell who — so the pronoun must stay to carry the person. This is the single biggest structural difference between French and its Iberian cousins.
-No article on the language: je parle français, not "le français" (here).
-Swap the pieces and it generates:
-J'habite à Paris. — "I live in Paris."
-Tu parles français? — "Do you speak French?" (just raise the tone).
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "Je parle français" — zhuh parl frahn-SEH]
-[pause 8 seconds for the answer]
-[your turn — say: keep the je — French can't drop it (unlike Spanish hablo)]
-[pause 8 seconds for the answer]
-[your turn — say: swap — "Tu parles français?", "J'habite à Paris"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Where does français come from, and what did the Franks' name mean? (Francia, "land of the Franks"; the name meant "free" — English frank.) Why must French keep je where Spanish drops yo? (French endings are silent, so the pronoun carries the person.) Next: practice.
-
-
-Lesson 3 of 5.
 parler — "to speak," and the great regular French verb.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called Grammar Lens: the -er present tense (and its silent trap) until you have stopped, and I will say so again when we reach it.
@@ -112,7 +40,117 @@ Wrap-up Recall.
 What Latin word is parler from, and its English cousins? (parabolāre from parabola — parable, parole.) Which three present-tense endings are silent? (-e, -es, -ent — je/tu/ils all sound parl.) Why does French keep je/tu when Spanish drops yo/tú? (The endings are silent, so the pronoun carries the person.) Next: habiter, "to live."
 
 
+Lesson 2 of 5.
+habiter — "to live," and it's about having a place.
+
+Warm-up.
+[pause 2 seconds]
+A second -er verb — snap it into the exact template you just learned. habiter ("to live, to dwell") lets you say where you live, the answer to a où ("where") question.
+
+Sounds you'll need.
+silent-final — the h is silent (French h never sounds): habiter = a-bee-TAY. Same -er = ay ending as parler.
+
+The word, taken apart.
+habiter comes from Latin habitāre, "to dwell, to keep on having [a place]" — the frequentative of habēre, "to have." To dwell somewhere is to keep having it as your place. That root is thoroughly English:
+habitat — the place a creature dwells.
+inhabit, inhabitant, habitation — to dwell in / one who dwells.
+and (via habēre, "have") habit — what you "keep having," and able, ability (what you "have" it in you to do).
+
+Grammar Lens: same -er template.
+Drop -er, add the endings — identical to parler, silent trap and all:
+[a table of 2 rows, read aloud]
+j'habite, tu habites, il habite, (all a-BEET).
+nous habitons, vous habitez, (a-bee-TON, a-bee-TAY).
+Note j'habite — je elides to j' before the vowel of habite (the h is silent, so it counts as a vowel). Now you can answer où questions:
+J'habite à Paris. — "I live in Paris."
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "habiter" — a-bee-TAY, silent h]
+[pause 8 seconds for the answer]
+[your turn — say: "j'habite, tu habites, il habite" — all a-BEET]
+[pause 8 seconds for the answer]
+[your turn — say: "habiter" then English "habitat, inhabit" — the habitāre root]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What Latin verb is habiter from, and what does it literally involve? (habitāre, "keep having a place" — from habēre, "to have.") English cousins? (Habitat, inhabit, habitation.) Say "I live in Paris." (J'habite à Paris.) Next: travailler, "to work."
+
+
+Lesson 3 of 5.
+travailler — "to work," and the torture behind "travel".
+
+Warm-up.
+[pause 2 seconds]
+A third -er verb, and it shares its dark, delightful origin with a Spanish word you may already know: travailler ("to work") began as a word for torture, and it's the secret ancestor of English travel.
+
+Sounds you'll need.
+ai-y — the -ill- is a y glide: travailler = tra-va-YAY. Same -er = ay ending.
+
+The word, taken apart.
+travailler comes from Vulgar Latin tripaliāre, "to torture" — from tripalium, a Roman instrument of torture made of three stakes (tri- "three" + pālus "stake" becomes English pale, impale).
+The slide of meaning is grim and logical: torture becomes painful toil becomes work. And two English words came down the same road:
+travail — painful, laborious effort.
+travel — journeying was once such an ordeal that travail (toil) became travel (to make a journey). You are, etymologically, tortured every time you travel.
+This is the exact same word as Spanish trabajar (from the same tripaliāre) — the -al- stayed in French (travail) and softened to -aj- in Spanish (trabajo). A perfect cross-language twin, torture and all.
+
+Grammar Lens: same -er template.
+[a table of 2 rows, read aloud]
+je travaille, tu travailles, il travaille, (all tra-VYE).
+nous travaillons, vous travaillez, blank.
+Je travaille à Paris. — "I work in Paris."
+Nothing new to learn — that's the point. One template, every -er verb.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "travailler" — tra-va-YAY]
+[pause 8 seconds for the answer]
+[your turn — say: "je travaille" — je tra-VYE, "I work"]
+[pause 8 seconds for the answer]
+[your turn — say: travailler becomes travail becomes travel — torture became a journey; twin of Spanish trabajar]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What did travailler originally mean, and from what device? ("To torture," from tripalium, three stakes.) What two English words share the root? (Travail and travel.) Its Spanish twin? (Trabajar — same tripaliāre.) Next: build your first full sentence — Je parle français.
+
+
 Lesson 4 of 5.
+Je parle français — your first real sentence.
+
+Warm-up.
+[pause 2 seconds]
+The moment it all pays off: you take a verb you conjugated and a noun, and build a sentence no one handed you pre-made — Je parle français, "I speak French."
+
+The new word: français.
+français = "French" (the language, and a French person), from Francia, "land of the Franks" — the Germanic people who settled Roman Gaul and gave France its name. And here's the twist: the Franks' own name meant "free" — which is why English frank / frankly means open and unguarded, and why the coin was a franc. Say it frahn-SEH (soft-c-s: the ç-less c before nothing here is soft s; the ai is a nasal-ish eh).
+
+The sentence, assembled.
+Snap together two things you own:
+Je (I, from ego) + parle (speak, from parler) = Je parle français.
+A complete, grammatical French sentence. Now note the contrast that defines French:
+You keep the je. Spanish drops it (hablo español), because the Spanish ending -o says "I". But French parle / parles / parlent all sound the same (parl) — the ear can't tell who — so the pronoun must stay to carry the person. This is the single biggest structural difference between French and its Iberian cousins.
+No article on the language: je parle français, not "le français" (here).
+Swap the pieces and it generates:
+J'habite à Paris. — "I live in Paris."
+Tu parles français? — "Do you speak French?" (just raise the tone).
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "Je parle français" — zhuh parl frahn-SEH]
+[pause 8 seconds for the answer]
+[your turn — say: keep the je — French can't drop it (unlike Spanish hablo)]
+[pause 8 seconds for the answer]
+[your turn — say: swap — "Tu parles français?", "J'habite à Paris"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Where does français come from, and what did the Franks' name mean? (Francia, "land of the Franks"; the name meant "free" — English frank.) Why must French keep je where Spanish drops yo? (French endings are silent, so the pronoun carries the person.) Next: practice.
+
+
+Lesson 5 of 5.
 Practice — making sentences with -er verbs.
 
 Warm-up.
@@ -149,41 +187,3 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Which -er endings are silent, and what follows from that? (-e, -es, -ent — so French keeps its subject pronouns.) Give "I" forms of the three verbs. (Je parle, j'habite, je travaille.) Say "I live in Paris and I work in Lyon." (J'habite à Paris et je travaille à Lyon.) French now moves in real sentences.
-
-
-Lesson 5 of 5.
-travailler — "to work," and the torture behind "travel".
-
-Warm-up.
-[pause 2 seconds]
-A third -er verb, and it shares its dark, delightful origin with a Spanish word you may already know: travailler ("to work") began as a word for torture, and it's the secret ancestor of English travel.
-
-Sounds you'll need.
-ai-y — the -ill- is a y glide: travailler = tra-va-YAY. Same -er = ay ending.
-
-The word, taken apart.
-travailler comes from Vulgar Latin tripaliāre, "to torture" — from tripalium, a Roman instrument of torture made of three stakes (tri- "three" + pālus "stake" becomes English pale, impale).
-The slide of meaning is grim and logical: torture becomes painful toil becomes work. And two English words came down the same road:
-travail — painful, laborious effort.
-travel — journeying was once such an ordeal that travail (toil) became travel (to make a journey). You are, etymologically, tortured every time you travel.
-This is the exact same word as Spanish trabajar (from the same tripaliāre) — the -al- stayed in French (travail) and softened to -aj- in Spanish (trabajo). A perfect cross-language twin, torture and all.
-
-Grammar Lens: same -er template.
-[a table of 2 rows, read aloud]
-je travaille, tu travailles, il travaille, (all tra-VYE).
-nous travaillons, vous travaillez, blank.
-Je travaille à Paris. — "I work in Paris."
-Nothing new to learn — that's the point. One template, every -er verb.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "travailler" — tra-va-YAY]
-[pause 8 seconds for the answer]
-[your turn — say: "je travaille" — je tra-VYE, "I work"]
-[pause 8 seconds for the answer]
-[your turn — say: travailler becomes travail becomes travel — torture became a journey; twin of Spanish trabajar]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What did travailler originally mean, and from what device? ("To torture," from tripalium, three stakes.) What two English words share the root? (Travail and travel.) Its Spanish twin? (Trabajar — same tripaliāre.) Next: build your first full sentence — Je parle français.

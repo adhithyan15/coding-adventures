@@ -1,5 +1,6 @@
 ---
 id: GE-C10-eltern
+sequence: 255
 chapter: 10
 type: word
 headword: der Vater, die Mutter

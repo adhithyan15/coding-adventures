@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.115.0";
+pub const VERSION: &str = "0.122.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -21,7 +21,7 @@ use mermaid_lexer::{
     tokenize_mermaid, tokenize_mermaid_c4, tokenize_mermaid_er, tokenize_mermaid_gitgraph,
     tokenize_mermaid_pie, tokenize_mermaid_sankey, tokenize_mermaid_sequence,
     tokenize_mermaid_state, try_tokenize_mermaid_journey, try_tokenize_mermaid_quadrant,
-    try_tokenize_mermaid_requirement,
+    try_tokenize_mermaid_requirement, try_tokenize_mermaid_xychart,
 };
 use parser::grammar_parser::{GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
 
@@ -43,6 +43,8 @@ const JOURNEY_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/journey.grammar");
 const REQUIREMENT_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/requirement.grammar");
+const XYCHART_PARSER_GRAMMAR_SOURCE: &str =
+    include_str!("../../../../grammars/mermaid/xychart.grammar");
 
 /// Recursion-depth cap for the Mermaid [`GrammarParser`] — see
 /// [`GrammarParser::with_max_depth`] for why this guard exists at all (deep
@@ -293,6 +295,22 @@ pub fn parse_mermaid_quadrant_ast(source: &str) -> Result<GrammarASTNode, ParseE
     })?;
     let grammar = parse_parser_grammar(QUADRANT_PARSER_GRAMMAR_SOURCE)
         .unwrap_or_else(|e| panic!("Failed to parse quadrant.grammar: {e}"));
+    let mut parser = GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH);
+    parser.parse().map_err(|e| ParseError {
+        message: e.message,
+        line: e.token.line,
+        col: e.token.column,
+    })
+}
+
+pub fn parse_mermaid_xychart_ast(source: &str) -> Result<GrammarASTNode, ParseError> {
+    let tokens = try_tokenize_mermaid_xychart(source).map_err(|message| ParseError {
+        message,
+        line: 1,
+        col: 1,
+    })?;
+    let grammar = parse_parser_grammar(XYCHART_PARSER_GRAMMAR_SOURCE)
+        .unwrap_or_else(|e| panic!("Failed to parse xychart.grammar: {e}"));
     let mut parser = GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH);
     parser.parse().map_err(|e| ParseError {
         message: e.message,
@@ -626,8 +644,7 @@ pub fn detect_mermaid_type(source: &str) -> Result<MermaidDiagramType, ParseErro
     if first.eq_ignore_ascii_case("journey") {
         return Ok(MermaidDiagramType::Journey);
     }
-    if first.eq_ignore_ascii_case("requirement")
-        || first.eq_ignore_ascii_case("requirementDiagram")
+    if first.eq_ignore_ascii_case("requirement") || first.eq_ignore_ascii_case("requirementDiagram")
     {
         return Ok(MermaidDiagramType::Requirement);
     }
@@ -1741,92 +1758,84 @@ fn parse_class_relationship(line: &str) -> Option<StructuralRelationship> {
 ///   line [35, 55, 48]
 /// ```
 pub fn parse_xychart(source: &str) -> Result<ChartDiagram, ParseError> {
+    parse_mermaid_xychart_ast(source)?;
+    let tokens = try_tokenize_mermaid_xychart(source).map_err(|message| ParseError {
+        message,
+        line: 1,
+        col: 1,
+    })?;
+    let mut cursor = TokenCursor::new(tokens);
+    cursor.skip_terminators();
+    cursor
+        .consume_if("HEADER")
+        .ok_or_else(|| token_error(cursor.current(), "expected xychart header"))?;
+
     let mut title: Option<String> = None;
-    let mut x_cats: Vec<String> = Vec::new();
-    let mut y_min = 0.0_f64;
-    let mut y_max = 100.0_f64;
+    let mut accessibility_title = None;
+    let mut accessibility_description = None;
+    let mut orientation = ChartOrientation::Vertical;
+    if let Some(token) = cursor.consume_if("ORIENTATION") {
+        orientation = if token.value.eq_ignore_ascii_case("horizontal") {
+            ChartOrientation::Horizontal
+        } else {
+            ChartOrientation::Vertical
+        };
+    }
+    cursor.skip_terminators();
+
+    let mut x_axis = None;
+    let mut y_axis = None;
     let mut series: Vec<ChartSeries> = Vec::new();
 
-    let mut past_header = false;
-    for line in source.lines() {
-        let t = line.trim();
-        if t.is_empty() || t.starts_with("%%") {
-            continue;
-        }
-        if !past_header {
-            if t.starts_with("xychart") {
-                past_header = true;
+    while !cursor.at_eof() {
+        let token = cursor.advance().clone();
+        match token_name(&token) {
+            "ACC_TITLE_STATEMENT" => {
+                accessibility_title = Some(xychart_metadata_value(&token));
             }
-            continue;
-        }
-        if t.starts_with("title") {
-            title = Some(t[5..].trim().trim_matches('"').to_string());
-        } else if t.starts_with("x-axis") {
-            x_cats = parse_bracket_list(&t[6..]);
-        } else if t.starts_with("y-axis") {
-            let rest = t[6..].trim();
-            // Strip optional quoted label before numbers.
-            let rest = if rest.starts_with('"') {
-                if let Some(end) = rest[1..].find('"') {
-                    rest[end + 2..].trim()
-                } else {
-                    rest
-                }
-            } else {
-                rest
-            };
-            let nums: Vec<f64> = rest
-                .split_whitespace()
-                .filter(|s| {
-                    s.chars()
-                        .all(|c| c.is_ascii_digit() || c == '-' || c == '.')
-                })
-                .filter_map(|s| s.parse().ok())
-                .collect();
-            if nums.len() >= 2 {
-                y_min = nums[0];
-                y_max = nums[nums.len() - 1];
+            "ACC_DESCR_STATEMENT" => {
+                accessibility_description = Some(xychart_metadata_value(&token));
             }
-        } else if t.starts_with("bar") {
-            let data = parse_data_list(&t[3..]);
-            series.push(ChartSeries {
-                kind: SeriesKind::Bar,
-                label: Some("bar".into()),
-                data,
-            });
-        } else if t.starts_with("line") {
-            let data = parse_data_list(&t[4..]);
-            series.push(ChartSeries {
-                kind: SeriesKind::Line,
-                label: Some("line".into()),
-                data,
-            });
+            "ACC_DESCR_BLOCK" => {
+                let open = token.value.find('{').expect("grammar requires '{'");
+                let close = token.value.rfind('}').expect("grammar requires '}'");
+                accessibility_description = Some(token.value[open + 1..close].trim().to_string());
+            }
+            "TITLE_STATEMENT" => {
+                title = Some(unquote_mermaid_string(token.value["title".len()..].trim()));
+            }
+            "X_AXIS_STATEMENT" => {
+                x_axis = Some(parse_xychart_axis(&token, true)?);
+            }
+            "Y_AXIS_STATEMENT" => {
+                y_axis = Some(parse_xychart_axis(&token, false)?);
+            }
+            "BAR_STATEMENT" => series.push(parse_xychart_series(&token, SeriesKind::Bar)?),
+            "LINE_STATEMENT" => series.push(parse_xychart_series(&token, SeriesKind::Line)?),
+            "NEWLINE" | "SEMICOLON" => {}
+            other => {
+                return Err(token_error(
+                    &token,
+                    format!("unexpected XY-chart token {other}"),
+                ))
+            }
         }
     }
 
-    let x_axis = if !x_cats.is_empty() {
-        Some(Axis {
-            kind: AxisKind::Categorical,
+    if y_axis.is_none() {
+        y_axis = Some(Axis {
+            kind: AxisKind::Numeric,
             title: None,
-            categories: x_cats,
+            categories: vec![],
             min: 0.0,
             max: 0.0,
-        })
-    } else {
-        None
-    };
-    let y_axis = Some(Axis {
-        kind: AxisKind::Numeric,
-        title: None,
-        categories: vec![],
-        min: y_min,
-        max: y_max,
-    });
+        });
+    }
 
     Ok(ChartDiagram {
         title,
-        accessibility_title: None,
-        accessibility_description: None,
+        accessibility_title,
+        accessibility_description,
         kind: ChartKind::Xy,
         show_data: false,
         x_axis,
@@ -1838,7 +1847,131 @@ pub fn parse_xychart(source: &str) -> Result<ChartDiagram, ParseError> {
         quadrant_labels: [None, None, None, None],
         quadrant_points: vec![],
         quadrant_config: QuadrantConfig::default(),
-        orientation: ChartOrientation::Vertical,
+        orientation,
+    })
+}
+
+fn xychart_metadata_value(token: &Token) -> String {
+    token
+        .value
+        .split_once(':')
+        .expect("metadata token requires ':'")
+        .1
+        .trim()
+        .to_string()
+}
+
+fn parse_xychart_axis(token: &Token, is_x: bool) -> Result<Axis, ParseError> {
+    let keyword_len = "x-axis".len();
+    let rest = token.value[keyword_len..].trim();
+    if let Some(open) = rest.find('[') {
+        if !is_x {
+            return Err(token_error(
+                token,
+                "Mermaid XY y-axis cannot be categorical",
+            ));
+        }
+        let close = rest
+            .rfind(']')
+            .ok_or_else(|| token_error(token, "expected ']'"))?;
+        if !rest[close + 1..].trim().is_empty() {
+            return Err(token_error(
+                token,
+                "unexpected content after axis categories",
+            ));
+        }
+        let categories = parse_bracket_list(&rest[open..=close]);
+        if categories.is_empty() {
+            return Err(token_error(token, "XY-chart categories cannot be empty"));
+        }
+        return Ok(Axis {
+            kind: AxisKind::Categorical,
+            title: xychart_optional_text(&rest[..open]),
+            categories,
+            min: 0.0,
+            max: 0.0,
+        });
+    }
+
+    if let Some((left, right)) = rest.split_once("-->") {
+        let (title, min_text) = xychart_title_and_number(left);
+        let max_text = right.trim();
+        let min = min_text
+            .parse::<f64>()
+            .map_err(|_| token_error(token, "invalid XY-chart axis minimum"))?;
+        let max = max_text
+            .parse::<f64>()
+            .map_err(|_| token_error(token, "invalid XY-chart axis maximum"))?;
+        return Ok(Axis {
+            kind: AxisKind::Numeric,
+            title,
+            categories: vec![],
+            min,
+            max,
+        });
+    }
+
+    Ok(Axis {
+        kind: if is_x {
+            AxisKind::Categorical
+        } else {
+            AxisKind::Numeric
+        },
+        title: xychart_optional_text(rest),
+        categories: vec![],
+        min: 0.0,
+        max: 0.0,
+    })
+}
+
+fn xychart_title_and_number(value: &str) -> (Option<String>, &str) {
+    let value = value.trim();
+    let Some(split) = value.rfind(char::is_whitespace) else {
+        return (None, value);
+    };
+    let title = xychart_optional_text(&value[..split]);
+    (title, value[split..].trim())
+}
+
+fn xychart_optional_text(value: &str) -> Option<String> {
+    let value = value.trim();
+    (!value.is_empty()).then(|| unquote_mermaid_string(value))
+}
+
+fn parse_xychart_series(token: &Token, kind: SeriesKind) -> Result<ChartSeries, ParseError> {
+    let keyword_len = match kind {
+        SeriesKind::Bar => "bar".len(),
+        SeriesKind::Line => "line".len(),
+    };
+    let rest = token.value[keyword_len..].trim();
+    let open = rest
+        .find('[')
+        .ok_or_else(|| token_error(token, "expected '['"))?;
+    let close = rest
+        .rfind(']')
+        .ok_or_else(|| token_error(token, "expected ']'"))?;
+    if !rest[close + 1..].trim().is_empty() {
+        return Err(token_error(token, "unexpected content after XY-chart data"));
+    }
+    let mut data = Vec::new();
+    for point in rest[open + 1..close].split(',') {
+        let number = point
+            .split_whitespace()
+            .next()
+            .ok_or_else(|| token_error(token, "XY-chart data point cannot be empty"))?;
+        data.push(
+            number.parse::<f64>().map_err(|_| {
+                token_error(token, format!("invalid XY-chart data point {number:?}"))
+            })?,
+        );
+    }
+    if data.is_empty() {
+        return Err(token_error(token, "XY-chart series cannot be empty"));
+    }
+    Ok(ChartSeries {
+        kind,
+        label: xychart_optional_text(&rest[..open]),
+        data,
     })
 }
 
@@ -2189,19 +2322,6 @@ fn parse_bracket_list(s: &str) -> Vec<String> {
         .split(',')
         .map(|x| x.trim().trim_matches('"').to_string())
         .filter(|x| !x.is_empty())
-        .collect()
-}
-
-fn parse_data_list(s: &str) -> Vec<f64> {
-    let s = s.trim();
-    let inner = if let (Some(l), Some(r)) = (s.find('['), s.rfind(']')) {
-        &s[l + 1..r]
-    } else {
-        s
-    };
-    inner
-        .split(',')
-        .filter_map(|x| x.trim().parse().ok())
         .collect()
 }
 
@@ -4800,7 +4920,9 @@ pub fn parse_gitgraph(source: &str) -> Result<GitDiagram, ParseError> {
                         _ => return Err(token_error(cursor.current(), "invalid commit attribute")),
                     }
                 }
-                let resolved_id = id.clone().unwrap_or_else(|| format!("{sequence}-generated"));
+                let resolved_id = id
+                    .clone()
+                    .unwrap_or_else(|| format!("{sequence}-generated"));
                 sequence += 1;
                 let parents = branch_heads
                     .get(&current_branch)
@@ -4841,9 +4963,7 @@ pub fn parse_gitgraph(source: &str) -> Result<GitDiagram, ParseError> {
                     name: branch.clone(),
                     order,
                 });
-                let head = branch_heads
-                    .get(&current_branch)
-                    .and_then(Clone::clone);
+                let head = branch_heads.get(&current_branch).and_then(Clone::clone);
                 branch_heads.insert(branch.clone(), head);
                 current_branch = branch.clone();
                 events.push(GitEvent::Checkout { branch });
@@ -4884,24 +5004,44 @@ pub fn parse_gitgraph(source: &str) -> Result<GitDiagram, ParseError> {
                     }
                 }
                 if from == current_branch {
-                    return Err(token_error(&command, "cannot merge a GitGraph branch into itself"));
+                    return Err(token_error(
+                        &command,
+                        "cannot merge a GitGraph branch into itself",
+                    ));
                 }
                 let current_head = branch_heads
                     .get(&current_branch)
                     .and_then(Clone::clone)
-                    .ok_or_else(|| token_error(&command, "current GitGraph branch has no commits"))?;
+                    .ok_or_else(|| {
+                        token_error(&command, "current GitGraph branch has no commits")
+                    })?;
                 let from_head = branch_heads
                     .get(&from)
-                    .ok_or_else(|| token_error(&command, format!("unknown GitGraph branch {from:?}")))?
+                    .ok_or_else(|| {
+                        token_error(&command, format!("unknown GitGraph branch {from:?}"))
+                    })?
                     .clone()
-                    .ok_or_else(|| token_error(&command, "merged GitGraph branch has no commits"))?;
+                    .ok_or_else(|| {
+                        token_error(&command, "merged GitGraph branch has no commits")
+                    })?;
                 if current_head == from_head {
-                    return Err(token_error(&command, "GitGraph branches have the same head"));
+                    return Err(token_error(
+                        &command,
+                        "GitGraph branches have the same head",
+                    ));
                 }
-                if id.as_ref().is_some_and(|id| commit_parents.contains_key(id)) {
-                    return Err(token_error(&command, "GitGraph merge commit id already exists"));
+                if id
+                    .as_ref()
+                    .is_some_and(|id| commit_parents.contains_key(id))
+                {
+                    return Err(token_error(
+                        &command,
+                        "GitGraph merge commit id already exists",
+                    ));
                 }
-                let resolved_id = id.clone().unwrap_or_else(|| format!("{sequence}-generated"));
+                let resolved_id = id
+                    .clone()
+                    .unwrap_or_else(|| format!("{sequence}-generated"));
                 sequence += 1;
                 let parents = vec![current_head, from_head];
                 commit_parents.insert(resolved_id.clone(), parents.clone());
@@ -4949,7 +5089,10 @@ pub fn parse_gitgraph(source: &str) -> Result<GitDiagram, ParseError> {
                     token_error(&command, "GitGraph cherry-pick requires an id attribute")
                 })?;
                 let source_parents = commit_parents.get(&id).ok_or_else(|| {
-                    token_error(&command, "GitGraph cherry-pick source commit does not exist")
+                    token_error(
+                        &command,
+                        "GitGraph cherry-pick source commit does not exist",
+                    )
                 })?;
                 if let Some(parent) = &parent {
                     if !source_parents.contains(parent) {
@@ -4973,14 +5116,19 @@ pub fn parse_gitgraph(source: &str) -> Result<GitDiagram, ParseError> {
                 let current_head = branch_heads
                     .get(&current_branch)
                     .and_then(Clone::clone)
-                    .ok_or_else(|| token_error(&command, "current GitGraph branch has no commits"))?;
+                    .ok_or_else(|| {
+                        token_error(&command, "current GitGraph branch has no commits")
+                    })?;
                 let resolved_id = format!("{sequence}-generated");
                 sequence += 1;
                 let parents = vec![current_head, id.clone()];
                 if tags.is_empty() {
                     tags.push(format!(
                         "cherry-pick:{id}{}",
-                        parent.as_ref().map(|parent| format!("|parent:{parent}")).unwrap_or_default()
+                        parent
+                            .as_ref()
+                            .map(|parent| format!("|parent:{parent}"))
+                            .unwrap_or_default()
                     ));
                 }
                 commit_parents.insert(resolved_id.clone(), parents.clone());
@@ -5024,11 +5172,7 @@ fn parse_gitgraph_reference(cursor: &mut TokenCursor) -> Result<String, ParseErr
     let token = cursor.current().clone();
     if !matches!(
         token_name(&token),
-        "REFERENCE"
-            | "PREFIXED_REFERENCE"
-            | "NUMERIC_REFERENCE"
-            | "INT"
-            | "STRING"
+        "REFERENCE" | "PREFIXED_REFERENCE" | "NUMERIC_REFERENCE" | "INT" | "STRING"
     ) {
         return Err(token_error(&token, "expected GitGraph reference"));
     }
@@ -5740,6 +5884,49 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     }
 
     #[test]
+    fn xychart_grammar_preserves_orientation_axis_titles_and_series_names() {
+        let diagram = parse_xychart(
+            "xychart horizontal\n\
+             x-axis \"Quarter\" [Q1, Q2]\n\
+             y-axis Revenue -10 --> 50\n\
+             bar \"Forecast\" [+12, -4]\n",
+        )
+        .unwrap();
+        assert_eq!(diagram.orientation, ChartOrientation::Horizontal);
+        assert_eq!(
+            diagram.x_axis.as_ref().unwrap().title.as_deref(),
+            Some("Quarter")
+        );
+        let y_axis = diagram.y_axis.as_ref().unwrap();
+        assert_eq!(y_axis.title.as_deref(), Some("Revenue"));
+        assert_eq!((y_axis.min, y_axis.max), (-10.0, 50.0));
+        assert_eq!(diagram.series[0].label.as_deref(), Some("Forecast"));
+        assert_eq!(diagram.series[0].data, [12.0, -4.0]);
+    }
+
+    #[test]
+    fn xychart_grammar_preserves_accessibility_metadata() {
+        let diagram = parse_xychart(
+            "xychart\naccTitle: Quarterly revenue\naccDescr {\n  Forecast and actuals\n}\nline [1, 2]\n",
+        )
+        .unwrap();
+        assert_eq!(
+            diagram.accessibility_title.as_deref(),
+            Some("Quarterly revenue")
+        );
+        assert_eq!(
+            diagram.accessibility_description.as_deref(),
+            Some("Forecast and actuals")
+        );
+    }
+
+    #[test]
+    fn xychart_grammar_rejects_categorical_y_axis_and_invalid_data() {
+        assert!(parse_xychart("xychart\ny-axis [low, high]\nline [1, 2]\n").is_err());
+        assert!(parse_xychart("xychart\nline [1, nope]\n").is_err());
+    }
+
+    #[test]
     fn quadrant_parses_labels_and_normalized_points() {
         let diagram = parse_quadrant_chart(
             "quadrantChart\n\
@@ -6035,10 +6222,9 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
 
     #[test]
     fn gitgraph_branch_creation_checks_out_the_new_branch() {
-        let d = parse_gitgraph(
-            "gitGraph\ncommit id: \"root\"\nbranch feature\ncommit id: \"work\"",
-        )
-        .unwrap();
+        let d =
+            parse_gitgraph("gitGraph\ncommit id: \"root\"\nbranch feature\ncommit id: \"work\"")
+                .unwrap();
         assert!(matches!(
             &d.events[1],
             GitEvent::Checkout { branch } if branch == "feature"
@@ -6108,15 +6294,24 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         .unwrap();
         assert!(matches!(
             &d.events[0],
-            GitEvent::Commit { type_: GitCommitType::Normal, .. }
+            GitEvent::Commit {
+                type_: GitCommitType::Normal,
+                ..
+            }
         ));
         assert!(matches!(
             &d.events[1],
-            GitEvent::Commit { type_: GitCommitType::Reverse, .. }
+            GitEvent::Commit {
+                type_: GitCommitType::Reverse,
+                ..
+            }
         ));
         assert!(matches!(
             &d.events[2],
-            GitEvent::Commit { type_: GitCommitType::Highlight, .. }
+            GitEvent::Commit {
+                type_: GitCommitType::Highlight,
+                ..
+            }
         ));
     }
 
@@ -7639,7 +7834,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.115.0");
+        assert_eq!(crate::VERSION, "0.122.0");
     }
 
     #[test]

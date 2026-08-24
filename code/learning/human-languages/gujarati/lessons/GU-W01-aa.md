@@ -2,9 +2,9 @@
 schema_version: 2
 id: GU-W01-aa
 spine_node: SPINE-MEET-GREET
-sequence: 720
+sequence: 4
 delivery: script
-chapter: 13
+chapter: 1
 type: writing
 headword: આ
 romanization: "ā"
@@ -66,8 +66,9 @@ You already know a word that opens with the independent one — the word for
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01] -->
+<!-- hl-writing-stage: observe-trace -->
 
-- [YOU WRITE: આ]
+- [YOU TRACE: keep આ visible and trace it once with a finger]
 - [YOU READ: every piece this chapter has given you so far, in order]
 
 ## Wrap-up Recall

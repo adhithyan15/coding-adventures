@@ -1,5 +1,10 @@
 # Changelog
 
+- Register Kodi JSON-RPC as a first-party bounded local media telemetry and
+  low-risk play, pause, stop, volume, and mute runtime while keeping
+  authentication, subscriptions, browsing, arbitrary RPC, and power actions
+  out of scope.
+
 - Promote SNMPv2c to a first-party bounded read-only local UDP telemetry
   runtime with redacted live-host community ownership while keeping SET,
   notifications, public endpoints, and SNMPv3 sessions out of scope.
@@ -60,6 +65,9 @@
 
 ## Unreleased
 
+- Add a first-party bounded Matter `_matter._tcp` operational discovery entry
+  while keeping commissionable discovery, fabric credentials, secure sessions,
+  Interaction Model traffic, and control out of scope.
 - Record AirGradient's exact-consent, readback-verified credential-free MQTT
   broker and coupled custom HTTPS-domain controls.
 - Add the reusable data-governance primitive family and require it for

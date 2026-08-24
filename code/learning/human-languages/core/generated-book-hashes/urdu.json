@@ -1,0 +1,190 @@
+{
+  "version": 1,
+  "algorithm": "fnv1a64",
+  "chapters": [
+    {
+      "language": "urdu",
+      "chapter": 2,
+      "sourceHash": "fnv1a64:7b41c53b478676a3",
+      "lessonIds": [
+        "UR-C02-mera-naam"
+      ],
+      "tex": "urdu/book/chapters/ch02-give-your-name.tex"
+    },
+    {
+      "language": "urdu",
+      "chapter": 3,
+      "sourceHash": "fnv1a64:a44cf4254a0c8425",
+      "lessonIds": [
+        "UR-C03-aap-tum-tu",
+        "UR-C03-kya",
+        "UR-C03-aap-ka-naam-kya-hai",
+        "UR-C03-khushi-hui",
+        "UR-C03-practice"
+      ],
+      "tex": "urdu/book/chapters/ch03-ask-and-answer-names.tex"
+    },
+    {
+      "language": "urdu",
+      "chapter": 4,
+      "sourceHash": "fnv1a64:e7dcefdaf094531f",
+      "lessonIds": [
+        "UR-C04-kaise-kaisi",
+        "UR-C04-aap-kaise-hain",
+        "UR-C04-main-hun",
+        "UR-C04-thik",
+        "UR-C04-main-thik-hun",
+        "UR-C04-practice"
+      ],
+      "tex": "urdu/book/chapters/ch04-how-are-you.tex"
+    },
+    {
+      "language": "urdu",
+      "chapter": 5,
+      "sourceHash": "fnv1a64:67170056f0b53792",
+      "lessonIds": [
+        "UR-C05-khuda",
+        "UR-C05-hafiz",
+        "UR-C05-khuda-hafiz",
+        "UR-C05-practice"
+      ],
+      "tex": "urdu/book/chapters/ch05-take-leave.tex"
+    },
+    {
+      "language": "urdu",
+      "chapter": 6,
+      "sourceHash": "fnv1a64:48b49ad010e2f801",
+      "lessonIds": [
+        "UR-C06-hona",
+        "UR-C06-jana",
+        "UR-C06-ana",
+        "UR-C06-bolna",
+        "UR-C06-janna"
+      ],
+      "tex": "urdu/book/chapters/ch06-core-verbs.tex"
+    },
+    {
+      "language": "urdu",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:4ec1329420d0f9c6",
+      "lessonIds": [
+        "UR-C07-sochna",
+        "UR-C07-samajhna",
+        "UR-C07-parhna",
+        "UR-C07-likhna"
+      ],
+      "tex": "urdu/book/chapters/ch07-mind-verbs.tex"
+    },
+    {
+      "language": "urdu",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:1e01f2fb736b26c4",
+      "lessonIds": [
+        "UR-C08-lena",
+        "UR-C08-puchhna",
+        "UR-C08-madad",
+        "UR-C08-pasand"
+      ],
+      "tex": "urdu/book/chapters/ch08-social-verbs.tex"
+    },
+    {
+      "language": "urdu",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:340213801ea754ca",
+      "lessonIds": [
+        "UR-C09-bhai",
+        "UR-C09-bahan",
+        "UR-C09-dost",
+        "UR-C09-khandan"
+      ],
+      "tex": "urdu/book/chapters/ch09-people.tex"
+    },
+    {
+      "language": "urdu",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:3f4066d663f306fe",
+      "lessonIds": [
+        "UR-C10-kaan",
+        "UR-C10-naak",
+        "UR-C10-aankh",
+        "UR-C10-munh"
+      ],
+      "tex": "urdu/book/chapters/ch10-face-words.tex"
+    },
+    {
+      "language": "urdu",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:666dcf5aec4a143c",
+      "lessonIds": [
+        "UR-C11-dil"
+      ],
+      "tex": "urdu/book/chapters/ch11-heart.tex"
+    },
+    {
+      "language": "urdu",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:7ef0e0f99ce1e9ae",
+      "lessonIds": [
+        "UR-C12-pani",
+        "UR-C12-chai",
+        "UR-C12-doodh",
+        "UR-C12-roti"
+      ],
+      "tex": "urdu/book/chapters/ch12-food-words.tex"
+    },
+    {
+      "language": "urdu",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:fde7f58004def645",
+      "lessonIds": [
+        "UR-C13-lal",
+        "UR-C13-safed",
+        "UR-C13-kala",
+        "UR-C13-nila"
+      ],
+      "tex": "urdu/book/chapters/ch13-colors.tex"
+    },
+    {
+      "language": "urdu",
+      "chapter": 14,
+      "sourceHash": "fnv1a64:79ba217ced73dd76",
+      "lessonIds": [
+        "UR-C14-qamiz",
+        "UR-C14-juta",
+        "UR-C14-topi",
+        "UR-C14-koat"
+      ],
+      "tex": "urdu/book/chapters/ch14-clothing.tex"
+    },
+    {
+      "language": "urdu",
+      "chapter": 15,
+      "sourceHash": "fnv1a64:67d202f016620697",
+      "lessonIds": [
+        "UR-C15-barish",
+        "UR-C15-dhoop",
+        "UR-C15-hawa",
+        "UR-C15-garmi",
+        "UR-C15-sardi"
+      ],
+      "tex": "urdu/book/chapters/ch15-weather.tex"
+    },
+    {
+      "language": "urdu",
+      "chapter": 16,
+      "sourceHash": "fnv1a64:2fcf9e68075991d4",
+      "lessonIds": [
+        "UR-W16-alef",
+        "UR-W16-lam",
+        "UR-W16-sin",
+        "UR-W16-mim",
+        "UR-W16-joining",
+        "UR-W16-kaf",
+        "UR-W16-nun",
+        "UR-W16-ye",
+        "UR-C16-practice"
+      ],
+      "tex": "urdu/book/chapters/ch16-script-seven.tex"
+    }
+  ]
+}

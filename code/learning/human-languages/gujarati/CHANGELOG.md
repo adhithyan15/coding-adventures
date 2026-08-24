@@ -2,6 +2,79 @@
 
 ## [Unreleased]
 
+### Fixed — opening script prerequisites now precede the first read
+
+- Turned the first *namaste* encounter into a meaning-first listening and
+  speaking lesson. Its Gujarati headword is exposure with romanization; the
+  body makes no decoding or copying demand.
+- Moved the ten existing <=5-minute script micro-lessons out of the end-of-book
+  Chapter 13 appendix and into the opening of Chapter 1 in authored sequence.
+  Nine signs remain model-visible observe/trace work; the whole greeting is a
+  supported guided copy only after every load-bearing sign is known.
+- Removed the now-empty Chapter 13 book slot. This is a prerequisite-order
+  repair, not a claim that Gujarati's remaining script or exam backlog is done.
+- The measurable result is honest rather than cosmetic: load-bearing script
+  violations fall **49 → 46**, forward-language uses **8 → 7**, and missed
+  reinforcement windows **164 → 148**; the 32 never-taught signs remain future
+  work. Consolidating 19 tiny lessons in Chapter 1 raises the aggregate
+  chapter-atom spike count **1 → 2**, so #12452 records the prerequisite-safe
+  learner-visible chapter split rather than hiding that debt.
+
+### Added — Chapter 1 pre-A1 writing runway
+
+- Moved the existing **હ** and **ા** piece lessons from the late script chapter
+  into Chapter 1, immediately after spoken **હા / ના**. Each piece is traced
+  with the model visible before the whole word is written.
+- Added three bounded whole-word micro-lessons: one 90-second guided copy, one
+  120-second delayed copy, and one 120-second heard-word dictation. The chapter
+  payoff retrieves **હા** again without a visible model.
+- Gujarati now proves all four cumulative pre-A1 writing stages: observe/trace,
+  guided copy, delayed copy, and dictation/transcription. The track's writing
+  gap falls by 28 cumulative track-level-stage pairs without claiming mock or
+  exam readiness.
+- Moving the two script atoms forward and retrieving them repeatedly improves
+  the wider continuity-window debt by three. The three new whole-word steps
+  introduce no atoms; their job is deliberate practice, not disguised content.
+
+### Added — project-defined pre-A1 four-skill task shapes (HL18)
+
+- Made the pre-A1 target executable as reading, listening, writing, and
+  speaking papers with exact prompts, responses, timing, replay, aids, and
+  scoring boundaries.
+- Kept the assessment contract's point model literal: four separate 100-point
+  papers, a 60-point floor on each, and no aggregate compensation.
+- Writing assesses delayed recall, dictation/transcription, and bounded
+  independent production. Tracing and visible copying remain gentle lesson
+  supports and cannot earn exam credit.
+- The inventory is not a readiness claim. Curriculum task coverage, two full
+  mocks, rubrics, answer keys, calibration, and book-only human validation are
+  still required.
+
+### Added — pre-A1-to-C2 assessment contract (HL16)
+
+- Added a clearly labelled project-defined Gujarati assessment ladder at
+  pre-A1, A1, A2, B1, B2, C1, and C2 rather than implying an external
+  qualification exists.
+- Every rung requires independent reading, listening, writing, and speaking
+  passes at 60%, with no stronger skill compensating for a weaker one.
+- The contract carries writing from observe/trace and copying through delayed
+  recall, dictation, connected composition, and timed exam production.
+- Two timed mocks, rubrics, answer keys, calibration, and book-only human
+  validation remain explicit dependencies, so the track cannot mistake a named
+  destination for pass-readiness evidence.
+
+### Fixed — three false forward-review claims
+
+- `GU-C02-anand` now records the earlier name statement that its warm-up and
+  knowledge directives actually rehearse.
+- `GU-C04-kaale` now records its real `malishun` review instead of pointing
+  ahead to the chapter's later assembled farewell.
+- `GU-C05-kaam-karvun` no longer claims to review the following `rahevun`
+  lesson; its exercises revisit `GU-C05-bolvun`.
+
+The authored order and lesson durations do not change. Gujarati's three
+order-integrity defects are now zero.
+
 ### Added — Chapter 13, the first nine pieces of the script (HL-C215)
 
 Ten lessons. **Nine teach one piece each; one introduces nothing** and assembles

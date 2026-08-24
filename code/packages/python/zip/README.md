@@ -89,6 +89,13 @@ reject trailing bytes. Its `max_output` may lower, but never raise, the public
 256 MiB hard ceiling. Malformed streams raise `RawInflateError`; both `.code`
 and the exception message are one of the 14 stable payload-blind error IDs.
 
+For inputs larger than 4 KiB, `raw_deflate` uses a bounded-memory encoder:
+incompressible chunks receive RFC 1951 stored framing, and repetitive chunks
+use fixed Huffman coding with a fixed-size match table. The educational LZSS
+tokenizer remains load-bearing for small examples, while large callers avoid
+boxed per-byte tokens and exhaustive 32 KiB match scans. `bytes`, `bytearray`,
+and byte-oriented `memoryview` inputs are accepted directly.
+
 ### CRC-32
 
 ```python

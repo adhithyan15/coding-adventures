@@ -1,5 +1,6 @@
 ---
 id: FR-C03-comment-registers
+sequence: 125
 chapter: 3
 type: grammar
 headword: Comment vas-tu ? / Comment allez-vous ?

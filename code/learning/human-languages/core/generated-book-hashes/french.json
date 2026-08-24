@@ -1,0 +1,196 @@
+{
+  "version": 1,
+  "algorithm": "fnv1a64",
+  "chapters": [
+    {
+      "language": "french",
+      "chapter": 17,
+      "sourceHash": "fnv1a64:e82573b5bfc33017",
+      "lessonIds": [
+        "FR-C17-tete",
+        "FR-C17-main"
+      ],
+      "tex": "french/book/chapters/ch17-head-and-hand.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 18,
+      "sourceHash": "fnv1a64:447a84035bce7f32",
+      "lessonIds": [
+        "FR-C18-oui",
+        "FR-C18-non"
+      ],
+      "tex": "french/book/chapters/ch18-yes-and-no.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 19,
+      "sourceHash": "fnv1a64:7b0e60c925c1f93b",
+      "lessonIds": [
+        "FR-C19-sil-vous-plait"
+      ],
+      "tex": "french/book/chapters/ch19-please.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 20,
+      "sourceHash": "fnv1a64:6e56e082362dff9b",
+      "lessonIds": [
+        "FR-C20-je-suis-desole"
+      ],
+      "tex": "french/book/chapters/ch20-sorry.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 21,
+      "sourceHash": "fnv1a64:ccc02a6296c9b1ce",
+      "lessonIds": [
+        "FR-C21-le-temps"
+      ],
+      "tex": "french/book/chapters/ch21-weather.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 22,
+      "sourceHash": "fnv1a64:8fda576460f0e796",
+      "lessonIds": [
+        "FR-C22-chien-chat"
+      ],
+      "tex": "french/book/chapters/ch22-dog-and-cat.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 23,
+      "sourceHash": "fnv1a64:e639587f37730d15",
+      "lessonIds": [
+        "FR-C23-vert-jaune"
+      ],
+      "tex": "french/book/chapters/ch23-green-and-yellow.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 24,
+      "sourceHash": "fnv1a64:cdf4ac80e468b227",
+      "lessonIds": [
+        "FR-C24-prendre",
+        "FR-C24-demander",
+        "FR-C24-aider",
+        "FR-C24-aimer"
+      ],
+      "tex": "french/book/chapters/ch24-taking-asking-helping-loving.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 25,
+      "sourceHash": "fnv1a64:2ee6a8641be4c3ba",
+      "lessonIds": [
+        "FR-C25-comprendre",
+        "FR-C25-penser",
+        "FR-C25-lire",
+        "FR-C25-ecrire"
+      ],
+      "tex": "french/book/chapters/ch25-verbs-of-the-mind.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 26,
+      "sourceHash": "fnv1a64:d2146af0a0416ac4",
+      "lessonIds": [
+        "FR-C26-entendre",
+        "FR-C26-dormir",
+        "FR-C26-marcher",
+        "FR-C26-courir"
+      ],
+      "tex": "french/book/chapters/ch26-hearing-sleeping-walking-running.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 27,
+      "sourceHash": "fnv1a64:995aa77551dfdcdb",
+      "lessonIds": [
+        "FR-C27-sasseoir",
+        "FR-C27-se-lever",
+        "FR-C27-ouvrir",
+        "FR-C27-fermer"
+      ],
+      "tex": "french/book/chapters/ch27-sitting-standing-opening-closing.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 28,
+      "sourceHash": "fnv1a64:a92990ca7abb814c",
+      "lessonIds": [
+        "FR-C28-cafe",
+        "FR-C28-the",
+        "FR-C28-lait",
+        "FR-C28-sucre"
+      ],
+      "tex": "french/book/chapters/ch28-coffee-tea-milk-sugar.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 29,
+      "sourceHash": "fnv1a64:e036c23eaa61d6e3",
+      "lessonIds": [
+        "FR-C29-ami",
+        "FR-C29-famille",
+        "FR-C29-enfant",
+        "FR-C29-personne"
+      ],
+      "tex": "french/book/chapters/ch29-the-people-you-introduce.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 30,
+      "sourceHash": "fnv1a64:0dd3b9d6844a05d4",
+      "lessonIds": [
+        "FR-C30-fromage",
+        "FR-C30-beurre",
+        "FR-C30-sel",
+        "FR-C30-oeuf"
+      ],
+      "tex": "french/book/chapters/ch30-cheese-butter-salt-egg.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 31,
+      "sourceHash": "fnv1a64:a19533a9208a54b6",
+      "lessonIds": [
+        "FR-C31-oeil",
+        "FR-C31-nez",
+        "FR-C31-bouche",
+        "FR-C31-ventre"
+      ],
+      "tex": "french/book/chapters/ch31-eyes-nose-mouth-stomach.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 32,
+      "sourceHash": "fnv1a64:161058a80338ec76",
+      "lessonIds": [
+        "FR-C32-intonation",
+        "FR-C32-est-ce-que",
+        "FR-C32-ou",
+        "FR-C32-quand",
+        "FR-C32-comment",
+        "FR-C32-combien",
+        "FR-C32-pourquoi",
+        "FR-C32-inversion",
+        "FR-C32-quel"
+      ],
+      "tex": "french/book/chapters/ch32-questions.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 33,
+      "sourceHash": "fnv1a64:35ea0518c5abb30c",
+      "lessonIds": [
+        "FR-C33-vouloir",
+        "FR-C33-pouvoir",
+        "FR-C33-devoir",
+        "FR-C33-practice"
+      ],
+      "tex": "french/book/chapters/ch33-modaux.tex"
+    }
+  ]
+}

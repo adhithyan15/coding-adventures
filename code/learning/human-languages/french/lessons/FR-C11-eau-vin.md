@@ -1,5 +1,6 @@
 ---
 id: FR-C11-eau-vin
+sequence: 260
 chapter: 11
 type: word
 headword: l'eau, le vin

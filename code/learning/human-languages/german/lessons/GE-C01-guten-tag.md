@@ -1,5 +1,6 @@
 ---
 id: GE-C01-guten-tag
+sequence: 25
 chapter: 1
 type: word
 headword: Guten Tag
@@ -34,16 +35,16 @@ polite "hello" for daytime. Said *GOO-ten tahk*.
 Like every Germanic and Romance adjective, German *gut* **agrees** with its
 noun — but German adjectives agree in *more* dimensions than Spanish or
 French: not just gender and number, but **case** (the noun's job in the
-sentence). *Guten Tag* is a frozen leftover of a fuller phrase — *"[ich
-wünsche Ihnen einen] guten Tag,"* "[I wish you a] good day" — where "a good
-day" is the *object* of the wish (the accusative case). For a masculine noun
-in that role, *gut* takes the ending **-en**: *guten*.
+sentence). *Guten Tag* is a frozen piece of a fuller phrase meaning "I wish
+you a good day." In that fuller thought, "a good day" is the *object* of the
+wish (the accusative case). For a masculine noun in that role, *gut* takes the
+ending **-en**: *guten*.
 
 Don't try to master German's ending system now — it's a later chapter. Just
 bank two things: (1) German adjectives take endings that shift with gender,
 number, *and* case; (2) the greeting is really "(I wish you a) good day,"
-which is why it's *guten*. You'll see the contrast next: *Gute Nacht*, with a
-different ending, because *Nacht* is feminine.
+which is why it's *guten*. A later bedtime greeting will give you a gentle
+contrast with a feminine noun and a different ending.
 
 ## Guided Practice
 

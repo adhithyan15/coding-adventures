@@ -28,6 +28,33 @@ export interface AssessmentPolicy {
 export interface AssessmentContract {
   version: number;
   language: string;
+  externalCapstones: Array<{
+    id: string;
+    target: {
+      name: string;
+      basis: "external";
+      source: string;
+      edition: string;
+      accessed: string;
+    };
+    requiredAfterLevel: CefrLevel;
+    cefrRelation: "not-mapped";
+    skills: Record<AssessmentSkill, {
+      taskInventory: string[];
+      passThreshold: number;
+    }>;
+    additionalComponents: Record<string, {
+      name: string;
+      taskInventory: string[];
+      passThreshold: number;
+    }>;
+    fullMocks: Array<{
+      id: string;
+      timed: boolean;
+      rubric: string;
+      answerKey: string;
+    }>;
+  }>;
   levels: Array<{
     level: CefrLevel;
     target: {
@@ -36,6 +63,11 @@ export interface AssessmentContract {
       source: string;
     };
     skills: Record<AssessmentSkill, {
+      taskInventory: string[];
+      passThreshold: number;
+    }>;
+    additionalComponents: Record<string, {
+      name: string;
       taskInventory: string[];
       passThreshold: number;
     }>;
@@ -77,6 +109,23 @@ function exactStrings(value: unknown, expected: readonly string[], where: string
     throw new Error(`assessment: ${where} must contain exactly ${expected.join(", ")}`);
   }
   return [...value] as string[];
+}
+
+function artifactReference(value: unknown, where: string): string {
+  const reference = nonEmpty(value, where);
+  const path = reference.split("#", 1)[0] ?? "";
+  if (
+    path === ""
+    || path.startsWith("/")
+    || path.startsWith("\\")
+    || /^[A-Za-z]:/.test(path)
+    || path.includes("\\")
+    || path.split("/").includes("..")
+    || /^[a-z][a-z0-9+.-]*:/i.test(path)
+  ) {
+    throw new Error(`assessment: ${where} must be a safe relative artifact reference`);
+  }
+  return reference;
 }
 
 export function parseAssessmentPolicy(value: unknown): AssessmentPolicy {
@@ -158,6 +207,51 @@ export function parseAssessmentContract(
       }
       return [skill, { taskInventory: [...skillRaw.taskInventory], passThreshold: skillRaw.passThreshold }];
     })) as AssessmentContract["levels"][number]["skills"];
+    const additionalRaw = item.additionalComponents === undefined
+      ? {}
+      : object(item.additionalComponents, `${expectedLanguage}.${current}.additionalComponents`);
+    const additionalComponents = Object.fromEntries(Object.entries(additionalRaw).map(([id, component]) => {
+      if (!/^[a-z][a-z0-9-]*$/.test(id)) {
+        throw new Error(
+          `assessment: ${expectedLanguage}.${current}.additionalComponents key '${id}' must be a lowercase slug`,
+        );
+      }
+      if (ASSESSMENT_SKILLS.includes(id as AssessmentSkill)) {
+        throw new Error(
+          `assessment: ${expectedLanguage}.${current}.additionalComponents '${id}' duplicates a universal skill`,
+        );
+      }
+      const componentRaw = object(
+        component,
+        `${expectedLanguage}.${current}.additionalComponents.${id}`,
+      );
+      if (
+        !Array.isArray(componentRaw.taskInventory)
+        || componentRaw.taskInventory.length === 0
+        || componentRaw.taskInventory.some((task) => typeof task !== "string" || task.trim() === "")
+      ) {
+        throw new Error(
+          `assessment: ${expectedLanguage}.${current}.additionalComponents.${id}.taskInventory must be a non-empty string array`,
+        );
+      }
+      if (
+        typeof componentRaw.passThreshold !== "number"
+        || componentRaw.passThreshold <= 0
+        || componentRaw.passThreshold > 1
+      ) {
+        throw new Error(
+          `assessment: ${expectedLanguage}.${current}.additionalComponents.${id}.passThreshold must be in (0, 1]`,
+        );
+      }
+      return [id, {
+        name: nonEmpty(
+          componentRaw.name,
+          `${expectedLanguage}.${current}.additionalComponents.${id}.name`,
+        ),
+        taskInventory: [...componentRaw.taskInventory],
+        passThreshold: componentRaw.passThreshold,
+      }];
+    }));
     if (!Array.isArray(item.writingStages) || item.writingStages.some((stage) => typeof stage !== "string")) {
       throw new Error(`assessment: ${expectedLanguage}.${current}.writingStages must be a string array`);
     }
@@ -192,6 +286,7 @@ export function parseAssessmentContract(
         source: nonEmpty(target.source, `${expectedLanguage}.${current}.target.source`),
       },
       skills: parsedSkills,
+      additionalComponents,
       writingStages: [...item.writingStages] as string[],
       fullMocks,
     };
@@ -199,5 +294,113 @@ export function parseAssessmentContract(
   for (const required of policy.levels) {
     if (!seen.has(required)) throw new Error(`assessment: ${expectedLanguage} is missing level ${required}`);
   }
-  return { version: 1, language: expectedLanguage, levels };
+
+  const capstonesRaw = raw.externalCapstones === undefined ? [] : raw.externalCapstones;
+  if (!Array.isArray(capstonesRaw)) {
+    throw new Error(`assessment: ${expectedLanguage}.externalCapstones must be an array`);
+  }
+  const capstoneIds = new Set<string>();
+  const externalCapstones = capstonesRaw.map((entry, index) => {
+    const where = `${expectedLanguage}.externalCapstones[${index}]`;
+    const item = object(entry, where);
+    const id = nonEmpty(item.id, `${where}.id`);
+    if (!/^[a-z][a-z0-9-]*$/.test(id)) {
+      throw new Error(`assessment: ${where}.id must be a lowercase slug`);
+    }
+    if (capstoneIds.has(id)) throw new Error(`assessment: ${expectedLanguage} duplicates capstone '${id}'`);
+    capstoneIds.add(id);
+
+    const target = object(item.target, `${where}.target`);
+    if (target.basis !== "external") {
+      throw new Error(`assessment: ${where}.target.basis must be external`);
+    }
+    if (item.cefrRelation !== "not-mapped") {
+      throw new Error(`assessment: ${where}.cefrRelation must be 'not-mapped'`);
+    }
+
+    const skills = object(item.skills, `${where}.skills`);
+    const parsedSkills = Object.fromEntries(ASSESSMENT_SKILLS.map((skill) => {
+      const skillRaw = object(skills[skill], `${where}.skills.${skill}`);
+      if (!Array.isArray(skillRaw.taskInventory) || skillRaw.taskInventory.length === 0) {
+        throw new Error(`assessment: ${where}.skills.${skill}.taskInventory must be a non-empty array`);
+      }
+      const taskInventory = skillRaw.taskInventory.map((reference, referenceIndex) =>
+        artifactReference(reference, `${where}.skills.${skill}.taskInventory[${referenceIndex}]`)
+      );
+      if (typeof skillRaw.passThreshold !== "number" || skillRaw.passThreshold <= 0 || skillRaw.passThreshold > 1) {
+        throw new Error(`assessment: ${where}.skills.${skill}.passThreshold must be in (0, 1]`);
+      }
+      return [skill, { taskInventory, passThreshold: skillRaw.passThreshold }];
+    })) as AssessmentContract["externalCapstones"][number]["skills"];
+
+    const additionalRaw = item.additionalComponents === undefined
+      ? {}
+      : object(item.additionalComponents, `${where}.additionalComponents`);
+    const additionalComponents = Object.fromEntries(Object.entries(additionalRaw).map(([componentId, component]) => {
+      if (!/^[a-z][a-z0-9-]*$/.test(componentId)) {
+        throw new Error(`assessment: ${where}.additionalComponents key '${componentId}' must be a lowercase slug`);
+      }
+      if (ASSESSMENT_SKILLS.includes(componentId as AssessmentSkill)) {
+        throw new Error(`assessment: ${where}.additionalComponents '${componentId}' duplicates a universal skill`);
+      }
+      const componentRaw = object(component, `${where}.additionalComponents.${componentId}`);
+      if (!Array.isArray(componentRaw.taskInventory) || componentRaw.taskInventory.length === 0) {
+        throw new Error(
+          `assessment: ${where}.additionalComponents.${componentId}.taskInventory must be a non-empty array`,
+        );
+      }
+      const taskInventory = componentRaw.taskInventory.map((reference, referenceIndex) =>
+        artifactReference(
+          reference,
+          `${where}.additionalComponents.${componentId}.taskInventory[${referenceIndex}]`,
+        )
+      );
+      if (
+        typeof componentRaw.passThreshold !== "number"
+        || componentRaw.passThreshold <= 0
+        || componentRaw.passThreshold > 1
+      ) {
+        throw new Error(`assessment: ${where}.additionalComponents.${componentId}.passThreshold must be in (0, 1]`);
+      }
+      return [componentId, {
+        name: nonEmpty(componentRaw.name, `${where}.additionalComponents.${componentId}.name`),
+        taskInventory,
+        passThreshold: componentRaw.passThreshold,
+      }];
+    }));
+
+    if (!Array.isArray(item.fullMocks) || item.fullMocks.length < policy.passEvidence.minimumFullMocksPerLevel) {
+      throw new Error(
+        `assessment: ${where} needs at least ${policy.passEvidence.minimumFullMocksPerLevel} full mocks`,
+      );
+    }
+    const fullMocks = item.fullMocks.map((mock, mockIndex) => {
+      const mockRaw = object(mock, `${where}.fullMocks[${mockIndex}]`);
+      if (mockRaw.timed !== true) throw new Error(`assessment: ${where} mock must be timed`);
+      return {
+        id: nonEmpty(mockRaw.id, `${where}.fullMocks[${mockIndex}].id`),
+        timed: true,
+        rubric: artifactReference(mockRaw.rubric, `${where}.fullMocks[${mockIndex}].rubric`),
+        answerKey: artifactReference(mockRaw.answerKey, `${where}.fullMocks[${mockIndex}].answerKey`),
+      };
+    });
+
+    return {
+      id,
+      target: {
+        name: nonEmpty(target.name, `${where}.target.name`),
+        basis: "external" as const,
+        source: nonEmpty(target.source, `${where}.target.source`),
+        edition: nonEmpty(target.edition, `${where}.target.edition`),
+        accessed: nonEmpty(target.accessed, `${where}.target.accessed`),
+      },
+      requiredAfterLevel: level(item.requiredAfterLevel, `${where}.requiredAfterLevel`),
+      cefrRelation: "not-mapped" as const,
+      skills: parsedSkills,
+      additionalComponents,
+      fullMocks,
+    };
+  });
+
+  return { version: 1, language: expectedLanguage, externalCapstones, levels };
 }

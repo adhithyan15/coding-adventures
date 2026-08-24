@@ -104,6 +104,8 @@ jobs:
           cargo build --manifest-path code/packages/rust/adj-lang-cli/Cargo.toml --bin adj-formula-inventory
           cargo build --manifest-path code/packages/rust/adj-lang-cli/Cargo.toml --bin adj-formula-audit
           python3 -m unittest discover -s code/scripts/tests -p 'test_package_parity_report.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_zip_raw_rfc1951_portable_coverage.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_image_codec_png_fixtures.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_typescript_tsconfig_portability.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_haskell_required_capabilities.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_ocaml_toolchain_lock.py'
@@ -792,6 +794,8 @@ jobs:
           luarocks install "$tmpdir/lua-term-0.8-1.rockspec"
           rm -rf "$tmpdir"
           luarocks install busted
+          luarocks install dkjson
+          luarocks install libdeflate 1.0.2-1
           luarocks install luacov
           luarocks install luacheck
           luarocks install luasocket 2>/dev/null || true
@@ -802,6 +806,8 @@ jobs:
         run: |
           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
           luarocks install busted
+          luarocks install dkjson
+          luarocks install libdeflate 1.0.2-1
           luarocks install luacov
           luarocks install luacheck
           for /f "delims=" %%i in ('luarocks path --lr-bin') do echo %%i>> %GITHUB_PATH%

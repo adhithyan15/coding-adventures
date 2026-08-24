@@ -3,301 +3,12 @@
   "language": "german",
   "chapter": 16,
   "title": "To Be, and the Past That Takes It",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:830f5bd79326d776",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:3e3201f79e13dc35",
   "lessons": [
     {
-      "id": "GE-C16-perfekt-sein",
-      "sequence": null,
-      "title": "Ich bin gegangen — the perfect with sein",
-      "headword": "ich bin gegangen",
-      "romanization": "ich bin gegangen",
-      "gloss": "the perfect with sein for motion, arrival, and change of state",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:30c73f516de1fde3",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Chapter 15 built ich habe gelernt with haben. A smaller family uses sein."
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "",
-                ""
-              ],
-              "columns": 2,
-              "rowCount": 4,
-              "utterances": [
-                "ich bin gegangen, I went / have gone.",
-                "du bist gegangen, you went.",
-                "er ist gegangen, he went.",
-                "wir sind gegangen, we went."
-              ]
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "The family",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The centre is a change of place or state with a clear result:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "verb",
-                "perfect",
-                "meaning"
-              ],
-              "columns": 3,
-              "rowCount": 4,
-              "utterances": [
-                "verb: gehen. perfect: bin gegangen. meaning: went.",
-                "verb: kommen. perfect: bin gekommen. meaning: came.",
-                "verb: fahren. perfect: bin gefahren. meaning: travelled.",
-                "verb: werden. perfect: bin geworden. meaning: became."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Ordinary activity without that result usually keeps haben: ich habe gearbeitet, ich habe getanzt."
-            },
-            {
-              "kind": "speech",
-              "text": "A small learned group also takes sein: sein itself (bin gewesen), bleiben (bin geblieben), plus verbs such as gelingen (succeed), geschehen / passieren (happen), and begegnen (meet)."
-            },
-            {
-              "kind": "speech",
-              "text": "Build each perfect as:"
-            },
-            {
-              "kind": "speech",
-              "text": "present form of sein + past participle."
-            },
-            {
-              "kind": "speech",
-              "text": "The participle stays at the end, just as it did with haben."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“ich bin gegangen; wir sind gegangen”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “ich bin gegangen; wir sind gegangen”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“ich habe gelernt; ich bin gegangen”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “ich habe gelernt; ich bin gegangen”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“bin gekommen; bin geworden; bin geblieben”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “bin gekommen; bin geworden; bin geblieben”]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Which broad family takes sein? (Resultative motion/change.) Say “I went.” (Ich bin gegangen.) Name two learned exceptions. (Sein, bleiben, or geschehen.) Where does the participle go? (At the end.) Next: compare German agreement with French."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C16-perfekt-sein-agreement",
-      "sequence": null,
-      "title": "Gegangen — no agreement in the perfect",
-      "headword": "gegangen — no agreement in the perfect",
-      "romanization": "gegangen — no agreement in the perfect",
-      "gloss": "German keeps one participle form for every subject",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:f363f912fec06714",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "German and French both split their compound past between “have” and “be,” but their participles behave differently."
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "subject",
-                "French",
-                "German"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "subject: he. French: il est allé. German: er ist gegangen.",
-                "subject: she. French: elle est allée. German: sie ist gegangen.",
-                "subject: they. French: ils sont allés. German: sie sind gegangen."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "In the German perfect, gegangen never changes for person, number, or gender. French preserves adjective-like agreement; German lost it in this position."
-            },
-            {
-              "kind": "speech",
-              "text": "German participles still inflect when they stand before a noun as adjectives:"
-            },
-            {
-              "kind": "speech",
-              "text": "der angekommene Zug — the arrived train;"
-            },
-            {
-              "kind": "speech",
-              "text": "die eingeschlafene Katze — the fallen-asleep cat."
-            },
-            {
-              "kind": "speech",
-              "text": "So the participle did not lose every adjective ending everywhere. It is specifically the perfect construction where agreement disappeared."
-            },
-            {
-              "kind": "speech",
-              "text": "Old High German varied in this position. Modern German simplified it to one unchanging form."
-            },
-            {
-              "kind": "speech",
-              "text": "The haben/sein split is a native Germanic development, not a borrowing from Latin. It grew alongside neighbouring Romance systems through centuries of contact. The auxiliary split is parallel; the agreement outcome differs."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“er ist gegangen; sie ist gegangen”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “er ist gegangen; sie ist gegangen”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“wir sind gegangen — same participle”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “wir sind gegangen — same participle”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“der angekommene Zug — adjective ending returns”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “der angekommene Zug — adjective ending returns”]"
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Does the participle agree inside the German perfect? (No.) Where can it still take endings? (Before a noun as an adjective.) Does French agree? (Yes.) Did German inherit its split from Latin? (No; it developed in parallel.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "GE-C16-sein",
-      "sequence": null,
+      "sequence": 320,
       "title": "sein — \"to be\"",
       "headword": "sein",
       "romanization": "sein",
@@ -308,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:290823f98679e2c6",
+      "sourceHash": "fnv1a64:10dee65ff2b7c83c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -476,6 +187,295 @@
             {
               "kind": "speech",
               "text": "Give the six present forms of sein. (Bin, bist, ist, sind, seid, sind.) How many ancient roots is sein built from? (Three.) Which root do bin/bist come from, and which Spanish word shares it? (bʰuH- — Spanish fui.) Which root gives English was/were? (wes-, the same one as German war.) Why are \"be\" verbs so irregular everywhere? (They're too common to be regularized by analogy.) Next: the perfect tense built on sein."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C16-perfekt-sein",
+      "sequence": 325,
+      "title": "Ich bin gegangen — the perfect with sein",
+      "headword": "ich bin gegangen",
+      "romanization": "ich bin gegangen",
+      "gloss": "the perfect with sein for motion, arrival, and change of state",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:68c72208a52919a6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Chapter 15 built ich habe gelernt with haben. A smaller family uses sein."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "ich bin gegangen, I went / have gone.",
+                "du bist gegangen, you went.",
+                "er ist gegangen, he went.",
+                "wir sind gegangen, we went."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The family",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The centre is a change of place or state with a clear result:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "verb",
+                "perfect",
+                "meaning"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "verb: gehen. perfect: bin gegangen. meaning: went.",
+                "verb: kommen. perfect: bin gekommen. meaning: came.",
+                "verb: fahren. perfect: bin gefahren. meaning: travelled.",
+                "verb: werden. perfect: bin geworden. meaning: became."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Ordinary activity without that result usually keeps haben: ich habe gearbeitet, ich habe getanzt."
+            },
+            {
+              "kind": "speech",
+              "text": "A small learned group also takes sein: sein itself (bin gewesen), bleiben (bin geblieben), plus verbs such as gelingen (succeed), geschehen / passieren (happen), and begegnen (meet)."
+            },
+            {
+              "kind": "speech",
+              "text": "Build each perfect as:"
+            },
+            {
+              "kind": "speech",
+              "text": "present form of sein + past participle."
+            },
+            {
+              "kind": "speech",
+              "text": "The participle stays at the end, just as it did with haben."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“ich bin gegangen; wir sind gegangen”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “ich bin gegangen; wir sind gegangen”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“ich habe gelernt; ich bin gegangen”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “ich habe gelernt; ich bin gegangen”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“bin gekommen; bin geworden; bin geblieben”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “bin gekommen; bin geworden; bin geblieben”]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which broad family takes sein? (Resultative motion/change.) Say “I went.” (Ich bin gegangen.) Name two learned exceptions. (Sein, bleiben, or geschehen.) Where does the participle go? (At the end.) Next: compare German agreement with French."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C16-perfekt-sein-agreement",
+      "sequence": 330,
+      "title": "Gegangen — no agreement in the perfect",
+      "headword": "gegangen — no agreement in the perfect",
+      "romanization": "gegangen — no agreement in the perfect",
+      "gloss": "German keeps one participle form for every subject",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7e64984baa6e6707",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "German and French both split their compound past between “have” and “be,” but their participles behave differently."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "subject",
+                "French",
+                "German"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "subject: he. French: il est allé. German: er ist gegangen.",
+                "subject: she. French: elle est allée. German: sie ist gegangen.",
+                "subject: they. French: ils sont allés. German: sie sind gegangen."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "In the German perfect, gegangen never changes for person, number, or gender. French preserves adjective-like agreement; German lost it in this position."
+            },
+            {
+              "kind": "speech",
+              "text": "German participles still inflect when they stand before a noun as adjectives:"
+            },
+            {
+              "kind": "speech",
+              "text": "der angekommene Zug — the arrived train;"
+            },
+            {
+              "kind": "speech",
+              "text": "die eingeschlafene Katze — the fallen-asleep cat."
+            },
+            {
+              "kind": "speech",
+              "text": "So the participle did not lose every adjective ending everywhere. It is specifically the perfect construction where agreement disappeared."
+            },
+            {
+              "kind": "speech",
+              "text": "Old High German varied in this position. Modern German simplified it to one unchanging form."
+            },
+            {
+              "kind": "speech",
+              "text": "The haben/sein split is a native Germanic development, not a borrowing from Latin. It grew alongside neighbouring Romance systems through centuries of contact. The auxiliary split is parallel; the agreement outcome differs."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“er ist gegangen; sie ist gegangen”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “er ist gegangen; sie ist gegangen”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“wir sind gegangen — same participle”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “wir sind gegangen — same participle”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“der angekommene Zug — adjective ending returns”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “der angekommene Zug — adjective ending returns”]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Does the participle agree inside the German perfect? (No.) Where can it still take endings? (Before a noun as an adjective.) Does French agree? (Yes.) Did German inherit its split from Latin? (No; it developed in parallel.)"
             }
           ]
         }

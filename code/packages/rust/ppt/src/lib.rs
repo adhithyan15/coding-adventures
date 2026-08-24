@@ -250,13 +250,13 @@ fn decode_text_bytes(body: &[u8]) -> String {
 /// U+FFFD rather than an error — hostile input must never make us panic. A
 /// single trailing NUL code unit is stripped.
 fn decode_text_chars(body: &[u8]) -> String {
-    // `as_chunks::<2>().0` yields only whole pairs and silently drops a lone
+    // `chunks_exact(2)` yields only whole pairs and silently drops a lone
     // trailing byte, which is exactly the lenient behaviour we want.
     let mut units: Vec<u16> = body
         .as_chunks::<2>()
         .0
         .iter()
-        .map(|c| u16::from_le_bytes([c[0], c[1]]))
+        .map(|chunk| u16::from_le_bytes(*chunk))
         .collect();
     if units.last() == Some(&0) {
         units.pop();

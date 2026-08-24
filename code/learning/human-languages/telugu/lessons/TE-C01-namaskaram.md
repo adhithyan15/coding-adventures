@@ -18,24 +18,17 @@ reviews_of: []
 
 ## Warm-up
 
-[PAUSE 2s] The first Telugu word, and your first Telugu letters. You'll learn
-to *read* it and to understand it in the same breath.
+[PAUSE 2s] Meet your first Telugu word. Say **namaskāram** with a small bow:
+“hello” or “greetings.” Now read it one small piece at a time.
 
 ## The letters in this word
 
-*(If you already read Telugu, skim this — it's here so the book needs no prior
-knowledge.)* Telugu is written **left to right**, and every consonant carries a
-built-in **"a"** unless something removes it.
+Telugu runs **left to right**. A consonant normally carries a built-in **a**.
 
-- **న** = "na" · **మ** = "ma" · **ర** = "ra" — each with its built-in *a*.
-  (Notice the little check-mark hat, the *talakaṭṭu*, riding many letters — a
-  visual signature of Telugu.)
-- **కా** = "kā" — **క** (ka) plus the long-"ā" **vowel sign**.
-- **స్క** — **స** (sa) loses its vowel and the bare *s* **stacks below** *ka*
-  as a subscript conjunct (Telugu, like Kannada, tucks conjuncts *under* the
-  line).
-- **ం** — the **anusvāra**, a dot that adds a nasal "-m/-ṁ" at the end:
-  *…rā* + **ం** → "rāṁ."
+- **న · మ · ర** = *na · ma · ra*.
+- **కా** = **క** *ka* plus the long-*ā* vowel sign: *kā*.
+- In **స్క**, **స** loses its vowel and stacks below **క**: *s + ka = ska*.
+- The dot **ం** adds the final nasal sound *ṁ*.
 
 Left to right: **న · మ · స్ · కా · ర · ం** = *na-ma-s-kā-raṁ* →
 
@@ -43,45 +36,14 @@ Left to right: **న · మ · స్ · కా · ర · ం** = *na-ma-s-kā-r
 
 ## The word, taken apart
 
-**నమస్కారం** (*namaskāram*) is **not** native Telugu — it is **Sanskrit**, from
-**namas** ("a bow, homage") + **kāra** ("a making," from the root *kṛ*, "to
-do"), with a Telugu ending. Literally **"the making of a bow"** — the same word
-as Hindi *namaskār* and Kannada *namaskāra*.
-
-Telugu, like Kannada, borrowed **heavily** from Sanskrit — so much that it's
-been called the most Sanskritised of the Dravidian tongues. Where its sister
-Tamil kept a home-grown greeting (*vaṇakkam*), Telugu reached north.
-
-## Across the family — the same idea, five ways
-
-| Language | "Hello" | Source |
-|---|---|---|
-| **Telugu** | *namaskāram* (నమస్కారం) | **Sanskrit** |
-| Kannada | *namaskāra* (ನಮಸ್ಕಾರ) | Sanskrit |
-| Malayalam | *namaskāram* (നമസ്കാരം) | Sanskrit |
-| Hindi | *namaste* (नमस्ते) | Sanskrit |
-| Tamil | *vaṇakkam* (வணக்கம்) | **native Dravidian** |
-| English | *hello* | Germanic |
-
-Tamil alone kept its own word; Telugu sits firmly on the Sanskrit-borrowing
-side of the family.
+**నమస్కారం** came from Sanskrit **namas** (“a bow”) + **kāra** (“a making,” from
+*kṛ*, “to do”): literally **“the making of a bow.”** Telugu added its own final
+sound. Tamil instead kept its native greeting, *vaṇakkam*.
 
 ## Why it's said this way
 
-*namaskāram* is said with the palms pressed together and a small bow — the
-gesture *is* the word. It serves as both **hello and goodbye**, any time, to
-almost anyone, respectful without being stiff.
-
-## Sounds you'll need
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
-
-Telugu reads **left to right**, and every consonant carries a built-in
-“a” (many under a little check-mark hat, the *talakaṭṭu*). న na,
-మ ma, ర ra. A **vowel sign** changes it: క ka + long-ā
-→ కా kā. A vowel-less consonant **stacks below** the next as a
-conjunct: స tucks under *ka* → స్క “ska.” And the
-**anusvāra** ం adds a final nasal “-ṁ.” Read
-న·మ·స్·కా·ర·ం → *namaskāram*.
+With palms together and a small bow, *namaskāram* works as **hello or goodbye**.
+It is respectful without being stiff.
 
 ## Guided Practice
 
@@ -89,10 +51,10 @@ conjunct: స tucks under *ka* → స్క “ska.” And the
 - [YOU SAY: na · ma · s · kā · raṁ → "namaskāram"]
 - [YOU SAY: what the anusvāra ం adds (a final nasal, "-ṁ")]
 - [YOU SAY: "namaskāram," with a small bow]
+- [YOU WRITE: trace **నమస్కారం** with a finger, then copy it once]
 
 ## Wrap-up Recall
 
-[PAUSE 3s] Read **నమస్కారం**. Native Telugu or a borrowing, and what does it
-literally mean? (Sanskrit *namas* + *kāra*, "the making of a bow.") What does
-the dot ం (anusvāra) do? (Adds a final nasal.) Which Dravidian language kept a
-*native* "hello"? (Tamil, *vaṇakkam*.)
+[PAUSE 3s] Read **నమస్కారం**. What does it mean? (“Greetings.”) What does the dot
+**ం** add? (A final nasal.) What does the whole word literally mean? (“The
+making of a bow.”)

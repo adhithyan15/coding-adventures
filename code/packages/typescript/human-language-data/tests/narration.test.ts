@@ -656,6 +656,8 @@ describe("the whole corpus", () => {
     // singular comparisons. Publishing Chapters 7-18 from the canonical AST
     // also replaces the Chapter-15 and Chapter-16 terminal recap tables with
     // speakable person rows. Chapter 18 removes its remaining refused wide table.
-    expect(refusals).toBe(65); // HL-C113: unchanged -- ch204 has no table for the narrator to refuse // HL-C157: ayer + hablare close A2
+    // #12352 removes Italian Chapter 1's five-language sound-change table: the
+    // pre-A1 lesson now asks the learner to hear one noctem -> notte change.
+    expect(refusals).toBe(64); // HL-C113: unchanged -- ch204 has no table for the narrator to refuse // HL-C157: ayer + hablare close A2
   });
 });

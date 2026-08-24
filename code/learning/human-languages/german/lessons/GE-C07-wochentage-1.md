@@ -1,5 +1,6 @@
 ---
 id: GE-C07-wochentage-1
+sequence: 225
 chapter: 7
 type: word
 headword: Montag, Dienstag, Mittwoch, Donnerstag, Freitag

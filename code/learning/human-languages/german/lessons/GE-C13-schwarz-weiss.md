@@ -1,5 +1,6 @@
 ---
 id: GE-C13-schwarz-weiss
+sequence: 285
 chapter: 13
 type: word
 headword: schwarz, weiß

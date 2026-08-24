@@ -1,0 +1,83 @@
+{
+  "language": "spanish",
+  "lessonCount": 585,
+  "atomMeasurableLessons": 489,
+  "atomMeasurementBlindLessons": 96,
+  "durationViolations": 0,
+  "atomLessonSpikes": 6,
+  "atomChapterSpikes": 0,
+  "glyphLessonSpikes": 0,
+  "scriptSystemSpikes": 0,
+  "scriptClosureViolations": 0,
+  "neverTaughtGlyphs": 0,
+  "orderDefects": 0,
+  "lessonsWithoutSequence": 0,
+  "unknownPrerequisites": 0,
+  "forwardPrerequisites": 0,
+  "forwardReviews": 0,
+  "forwardReferences": 86,
+  "atomsTaught": 876,
+  "atomsNeverRevisited": 128,
+  "reinforcementWindowMisses": 2324,
+  "reinforcementMissesByWindow": {
+    "R1": 221,
+    "R2": 708,
+    "R3": 735,
+    "R4": 660
+  },
+  "payoffSurprises": 26,
+  "writingPracticeLessons": 7,
+  "firstWritingPracticeAt": 27,
+  "lessonsBeforeWritingPractice": 27,
+  "findings": [
+    {
+      "language": "spanish",
+      "kind": "forward-language",
+      "count": 86,
+      "unit": "use(s)",
+      "detail": "teach target-language material before load-bearing use"
+    },
+    {
+      "language": "spanish",
+      "kind": "writing-ramp",
+      "count": 27,
+      "unit": "opening lesson(s)",
+      "detail": "move the first gentle writing microstep to lesson one"
+    },
+    {
+      "language": "spanish",
+      "kind": "atom-step",
+      "count": 6,
+      "unit": "lesson/chapter spike(s)",
+      "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+    },
+    {
+      "language": "spanish",
+      "kind": "reinforcement",
+      "count": 2324,
+      "unit": "missed window(s)",
+      "detail": "add retrieval at the expanding R1-R4 intervals"
+    },
+    {
+      "language": "spanish",
+      "kind": "payoff-surprise",
+      "count": 26,
+      "unit": "chapter payoff finding(s)",
+      "detail": "make each chapter payoff assess only taught, representative material"
+    },
+    {
+      "language": "spanish",
+      "kind": "measurement-blind",
+      "count": 96,
+      "unit": "lesson(s)",
+      "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
+    }
+  ],
+  "next": {
+    "language": "spanish",
+    "kind": "forward-language",
+    "count": 86,
+    "unit": "use(s)",
+    "detail": "teach target-language material before load-bearing use"
+  }
+}

@@ -429,7 +429,7 @@ fn decode_utf16le(slice: &[u8], out: &mut String) -> Result<(), DocError> {
         .as_chunks::<2>()
         .0
         .iter()
-        .map(|c| u16::from_le_bytes([c[0], c[1]]));
+        .map(|chunk| u16::from_le_bytes(*chunk));
     for unit in char::decode_utf16(units) {
         match unit {
             Ok(c) => out.push(c),

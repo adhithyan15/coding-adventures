@@ -1,5 +1,6 @@
 ---
 id: GE-C02-wie
+sequence: 85
 chapter: 2
 type: word
 headword: wie

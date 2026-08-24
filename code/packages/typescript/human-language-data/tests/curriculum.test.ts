@@ -410,6 +410,20 @@ Recall it.`,
     }).map((issue) => issue.code)).toContain("schema-v2-invalid-activity-directive");
   });
 
+  it("rejects a malformed or learner-copy-first writing-stage directive", () => {
+    const malformed = sourceV2("A", 10, [], [], ["TEST-LEX-HELLO"], ["TEST-LEX-HELLO"])
+      .replace(
+        "Say hello once.",
+        "Say hello once.\n<!-- hl-writing-stage: guided copy -->",
+      );
+    expect(validateCurriculum({
+      registry,
+      taxonomy,
+      spine,
+      lessons: [parseLesson(malformed, "test")],
+    }).map((issue) => issue.code)).toContain("schema-v2-invalid-writing-stage-directive");
+  });
+
   it("rejects malformed duration, coverage, sequence, and body blocks", () => {
     const malformed = sourceV2("A", 10, [], [], ["TEST-LEX-HELLO"], [])
       .replace("sequence: 10", "sequence: 0")

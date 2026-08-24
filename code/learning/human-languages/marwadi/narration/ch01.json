@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Ram-Ram Sa: A Greeting the Hand Can Make",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:7c9d337e5a69ce25",
+  "sourceHash": "fnv1a64:ac69312516661d42",
   "lessons": [
     {
       "id": "MW-W01-ra",
@@ -21,7 +21,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:25a9dffbb61fa98c",
+      "sourceHash": "fnv1a64:b78e4f5768fbc249",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -128,7 +128,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:58dce2d58482f3ae",
+      "sourceHash": "fnv1a64:f27c34dde7229fbb",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -239,26 +239,24 @@
       "title": "राम (rām) — your first whole written word",
       "headword": "राम",
       "romanization": "rām",
-      "gloss": "राम, built and written from र + ा + म",
+      "gloss": "Ram, the name repeated in the greeting राम-राम सा, built and written from र + ा + म",
       "script": "devanagari",
       "modality": "pen",
       "derivedModality": "pen",
       "modalityReasons": [
-        "writing-type",
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:927def5fab545df8",
+      "sourceHash": "fnv1a64:e6652ecc529a071f",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on",
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
           "Script — add म"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — add म until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — add म until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -297,7 +295,7 @@
             },
             {
               "kind": "speech",
-              "text": "At the end of this word, the built-in vowel of म is not pronounced in ordinary speech. Read the whole word rām."
+              "text": "At the end of this word, the built-in vowel of म is not pronounced in ordinary speech. Read the whole word rām. राम is the name Ram. The Marwadi greeting you are building will repeat this name. Today you only need the one word राम; the complete greeting still comes later."
             }
           ]
         },
@@ -335,25 +333,27 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Read राम (rām) without using the romanization. Then write it once more."
+              "text": "Read राम (rām) without using the romanization, say that it is the name Ram, then write it once more."
             },
             {
               "kind": "activity",
               "scored": true,
               "id": "MW-W01-raam-build",
-              "prompt": "Build the written word rām from its three visible pieces.",
+              "prompt": "Build and name the written word rām from its three visible pieces.",
               "assesses": [
-                "MW-SCRIPT-RAAM-01"
+                "MW-SCRIPT-RAAM-01",
+                "MW-LEX-RAAM-01"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
+                "राम — ram",
                 "राम",
                 "र + ा + म",
                 "रा + म"
               ],
               "feedback": {
-                "correct": "Right: र + ा + म makes राम.",
-                "incorrect": "Start with र, add ा on its right, then म: राम."
+                "correct": "Right: र + ा + म makes राम, the name Ram.",
+                "incorrect": "Start with र, add ा on its right, then म: राम, Ram."
               }
             }
           ]
@@ -374,7 +374,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:558bfae057c1134d",
+      "sourceHash": "fnv1a64:8d376cf0652b9fbf",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -400,7 +400,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read राम (rām), then write it from memory."
+              "text": "Read राम (rām), say what it means, then write it from memory. Check that your last sign is म."
             }
           ]
         },
@@ -474,7 +474,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:553047dd213b091b",
+      "sourceHash": "fnv1a64:9f7b7e40a12feb9f",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -526,7 +526,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Copy सा once. Look away for ten seconds, say sā, and write it again. Then copy the two pieces with a space:"
+              "text": "Copy सा once. Look away for ten seconds, say sā, and write it again. Then retrieve the two known pieces separately rather than using them as a phrase before the next lesson teaches the greeting:"
             },
             {
               "kind": "speech",
@@ -541,7 +541,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Read राम (rām) सा (sā). Circle the two copies of ा."
+              "text": "Read राम (rām), then सा (sā). Circle the copy of ा in each separate word."
             },
             {
               "kind": "activity",
@@ -579,7 +579,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5fd7a2ec7e405405",
+      "sourceHash": "fnv1a64:3e647aa08c287903",
       "notice": null,
       "blocks": [
         {
@@ -725,7 +725,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:783d01e78084f62c",
+      "sourceHash": "fnv1a64:3dcad37b006211fd",
       "notice": null,
       "blocks": [
         {

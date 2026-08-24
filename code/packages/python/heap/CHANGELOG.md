@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+- Recreate the local virtual environment on every BUILD invocation, pin Python
+  3.13, and run lint, formatting, type checking, and tests through that exact
+  environment on Unix and Windows.
+
 ## 0.1.0 — 2026-04-08
 
 ### Added

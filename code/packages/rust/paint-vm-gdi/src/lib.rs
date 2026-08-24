@@ -1023,7 +1023,7 @@ unsafe fn finalize_surface_alpha(color_surface: &mut GdiSurface, coverage_surfac
         .as_chunks_mut::<4>()
         .0
         .iter_mut()
-        .zip(coverage.as_chunks::<4>().0.iter())
+        .zip(coverage.as_chunks::<4>().0)
     {
         let alpha = coverage_px[0].max(coverage_px[1]).max(coverage_px[2]);
         color_px[3] = alpha;

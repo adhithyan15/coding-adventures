@@ -1,5 +1,94 @@
 # Changelog
 
+## Unreleased — source-verified Arabic ذ ductus
+
+- Extend Arabic's canonical inventory from 22 to 23 unique sourced rows.
+- Show Dhaal's complete Daal-shaped body before its separately placed upper dot.
+- Keep the completion flag false until the six remaining corpus letters land.
+
+## Unreleased — source-verified Arabic ء ductus and starter audit
+
+- Replace Arabic **ء**'s conventional metadata with the cited one-stroke
+  head-to-diagonal variant.
+- Confirm all 22 starter rows are unique and sourced while keeping Arabic
+  incomplete until its missing lesson-corpus letters are added.
+
+## Unreleased — source-verified Arabic ن ductus
+
+- Replace Arabic **ن**'s conventional metadata with a cited two-run path.
+- Preserve the completed deep bowl while the upper dot is placed last.
+
+## Unreleased — source-verified Arabic م ductus
+
+- Replace Arabic **م**'s conventional metadata with a cited one-run path.
+- Show its closed head flowing into the down-left tail without a pen lift.
+
+## Unreleased — source-verified Arabic ث ductus
+
+- Replace Arabic **ث**'s conventional bowl-and-dots summary with a cited path.
+- Show its right-to-left bowl followed by three separately lifted upper dots.
+
+## Unreleased — canonical Gujarati inventory completion (HL-C09GY)
+
+- Remove duplicate conventional **ન** and **પ** rows from the learner inventory.
+- Present Gujarati as a complete 44-letter source-verified teaching sequence.
+
+## Unreleased — cited Gujarati હ ductus (HL-C09GX)
+
+- Replace Gujarati **હ**'s conventional metadata with a cited one-run variant.
+- Show its upper loop flowing through the broad lower bowl without a lift.
+
+## Unreleased — cited Gujarati સ ductus (HL-C09GW)
+
+- Replace Gujarati **સ**'s conventional metadata with a cited two-run variant.
+- Show its rounded loop and shoulder before the lifted tall right spine.
+
+## Unreleased — cited Gujarati શ ductus (HL-C09GV)
+
+- Replace Gujarati **શ**'s conventional metadata with a cited two-run variant.
+- Show its upper loop and lower body before the lifted tall right spine.
+
+## Unreleased — cited Gujarati વ ductus (HL-C09GU)
+
+- Replace Gujarati **વ**'s conventional metadata with a cited two-run variant.
+- Show its rounded body before the lifted tall right spine.
+
+## Unreleased — cited Gujarati ળ ductus (HL-C09GT)
+
+- Replace Gujarati **ળ**'s conventional metadata with a cited one-run variant.
+- Show its left bowl flowing through the high arch into the tall right spine.
+
+## Unreleased — cited Gujarati લ ductus (HL-C09GS)
+
+- Replace Gujarati **લ**'s conventional metadata with a cited three-run variant.
+- Show its rounded body before the lifted shoulder and tall right spine.
+
+## Unreleased — cited Gujarati ર ductus (HL-C09GR)
+
+- Replace Gujarati **ર**'s conventional metadata with a cited one-run variant.
+- Show its rounded upper body, middle loop, and descending tail without a lift.
+
+## Unreleased — cited Gujarati ય ductus (HL-C09GQ)
+
+- Replace Gujarati **ય**'s conventional metadata with a cited two-run variant.
+- Show its rounded body and long shoulder before the lifted tall right spine.
+
+## Unreleased — cited Gujarati મ ductus (HL-C09GP)
+
+- Replace Gujarati **મ**'s conventional metadata with a cited two-run variant.
+- Show its left body and inner turn before the lifted tall right spine.
+
+## Unreleased — cited Gujarati ભ ductus (HL-C09GO)
+
+- Replace Gujarati **ભ**'s conventional metadata with a cited two-run variant.
+- Show its broad loop and inner turn before the lifted tall right spine.
+
+## Unreleased — cited Gujarati બ ductus (HL-C09GN)
+
+- Replace Gujarati **બ**'s conventional metadata with a cited two-run variant.
+- Show its rounded body and compact inner turn before the lifted tall right spine.
+- Preserve the teaching app's two-path evidence and variation warning in the learner-visible metadata.
+
 ## Unreleased — the curriculum plans leave the first-paint path
 
 CI failed the eager-bundle gate at **502,251 bytes against a 500,000 limit**.
@@ -68,6 +157,114 @@ at the package. `scriptdata` stays out of that chunk on purpose — the shell ne
 `SCRIPTS` on first paint.
 
 ## Unreleased — schema-v2 lesson compatibility
+
+### Added — cited Gujarati ફ ductus (HL-C09GM)
+
+- Restore missing Gujarati **ફ** and render its winding body and tail before the separate diagonal cross-stroke.
+- Keep the source's two-path evidence and variation caveat alongside the learner-facing order.
+- Show the exact Noto Sans Gujarati glyph behind both filmstrip frames and queue missing **બ** next.
+
+### Added — cited Gujarati પ ductus (HL-C09GL)
+
+- Restore missing Gujarati **પ** and render its hooked left stem and broad lower body plus separate tall spine with one lift.
+- Keep the source's two-path evidence and variation caveat alongside the learner-facing order.
+- Show the exact Noto Sans Gujarati glyph behind both filmstrip frames and queue missing **ફ** next.
+
+### Added — cited Gujarati ન ductus (HL-C09GK)
+
+- Restore missing Gujarati **ન** and render its loop-and-shoulder body plus separate tall spine with one lift.
+- Keep the source's two-path evidence and variation caveat alongside the learner-facing order.
+- Show the exact Noto Sans Gujarati glyph behind both filmstrip frames and queue missing **પ** next.
+
+### Added — cited Gujarati ધ ductus (HL-C09GJ)
+
+- Render Gujarati **ધ** as a joined high-entry body and separate tall right spine with one lift.
+- Keep the source's two-path evidence and variation caveat alongside the learner-facing order.
+- Show the exact Noto Sans Gujarati glyph behind both filmstrip frames and queue missing **ન** next.
+
+### Added — cited Gujarati દ ductus (HL-C09GI)
+
+- Render Gujarati **દ** as one continuous upper-body, middle-turn, and lower-body run with no lift.
+- Keep the source's zero-lift evidence and variation caveat alongside the learner-facing order.
+- Show the exact Noto Sans Gujarati glyph behind the filmstrip frame and queue **ધ** next.
+
+### Added — cited Gujarati થ ductus (HL-C09GH)
+
+- Restore missing Gujarati **થ** and render its looped body and separate tall right spine with one lift.
+- Keep the source's two-path evidence and variation caveat alongside the learner-facing order.
+- Show the exact Noto Sans Gujarati glyph behind both filmstrip frames and queue **દ** next.
+
+### Added — cited Gujarati ત ductus (HL-C09GG)
+
+- Render Gujarati **ત** as an open left body and separate tall right spine with one lift.
+- Keep the source's two-path evidence and variation caveat alongside the learner-facing order.
+- Show the exact Noto Sans Gujarati glyph behind both filmstrip frames and queue missing **થ** next.
+
+### Added — cited Gujarati ણ ductus (HL-C09GF)
+
+- Render Gujarati **ણ** as a hooked left body, separate middle bowl, and tall right spine with two lifts.
+- Keep the source's three-path evidence and variation caveat alongside the learner-facing order.
+- Show the exact Noto Sans Gujarati glyph behind all filmstrip frames and queue **ત** next.
+
+### Added — cited Gujarati ઢ ductus (HL-C09GE)
+
+- Render Gujarati **ઢ** as one continuous high-shoulder, outer-bowl, and inner-loop run with no lift.
+- Keep the source's zero-lift evidence and variation caveat alongside the learner-facing order.
+- Show the exact Noto Sans Gujarati glyph behind the filmstrip frame and queue **ણ** next.
+
+### Added — cited Gujarati ડ ductus (HL-C09GD)
+
+- Restore missing Gujarati **ડ** and render its high shoulder, middle descent, and lower bowl as one continuous run.
+- Keep the source's zero-lift evidence and variation caveat alongside the learner-facing order.
+- Show the exact Noto Sans Gujarati glyph behind the filmstrip frame and queue **ઢ** next.
+
+### Added — cited Gujarati ઠ ductus (HL-C09GC)
+
+- Restore missing Gujarati **ઠ** and render its high shoulder, broad outer bowl, and inward terminal as one continuous run.
+- Keep the source's zero-lift evidence and variation caveat alongside the learner-facing order.
+- Show the exact Noto Sans Gujarati glyph behind the filmstrip frame and queue **ડ** next.
+
+### Added — cited Gujarati ટ ductus (HL-C09GB)
+
+- Render **ટ** as one continuous upper-turn, diagonal-middle, and lower-bowl run with no lift.
+- Preserve t30apps.com's version-1.0 one-path teaching order while retaining the source's explicit variation warning.
+- Show the exact Noto Sans Gujarati glyph behind the filmstrip frame and queue missing **ઠ** next.
+
+### Added — cited Gujarati ઞ ductus (HL-C09GA)
+
+- Restore missing **ઞ** to the inventory and render its left body, short rightward shoulder, and tall spine with lower terminal as three runs with two lifts.
+- Preserve t30apps.com's version-1.0 three-path teaching order while retaining the source's explicit variation warning.
+- Show the exact Noto Sans Gujarati glyph behind every filmstrip frame and queue conventional **ટ** for cited verification next.
+
+### Added — cited Gujarati ઝ ductus (HL-C09FZ)
+
+- Restore missing **ઝ** to the inventory and render its left body, right loop-and-tail, and upper stem as three runs with two lifts.
+- Preserve t30apps.com's version-1.0 three-path teaching order while retaining the source's explicit variation warning.
+- Show the exact Noto Sans Gujarati glyph behind every filmstrip frame and queue missing **ઞ** next.
+
+### Added — cited Gujarati જ ductus (HL-C09FY)
+
+- Render **જ** as one continuous left-loop, crossing-body, right-loop, and upper-right-exit run with no lift.
+- Preserve t30apps.com's version-1.0 one-path teaching order while retaining the source's explicit variation warning.
+- Show the exact Noto Sans Gujarati glyph behind every filmstrip frame and queue missing **ઝ** next.
+
+### Added — cited Gujarati છ ductus (HL-C09FX)
+
+- Render **છ** as one continuous upper-left-lobe, lower-body, outer-curve, and upper-right-lobe run with no lift.
+- Preserve t30apps.com's version-1.0 one-path teaching order while retaining the source's explicit variation warning.
+- Show the exact Noto Sans Gujarati glyph behind the filmstrip frame and queue **જ** next.
+
+### Added — cited Gujarati ચ ductus (HL-C09FW)
+
+- Render **ચ** as one joined upper-bowl, middle-loop, and lower-body run followed by its separate right spine and lower foot with one lift.
+- Preserve t30apps.com's version-1.0 two-path teaching order while retaining the source's explicit variation warning.
+- Show the exact Noto Sans Gujarati glyph behind every filmstrip frame and queue **છ** next.
+
+### Added — cited Gujarati ઙ ductus (HL-C09FV)
+
+- Restore missing **ઙ** to the inventory and render its S-like body before the separate upper-right dot with one lift.
+- Preserve t30apps.com's version-1.0 two-path teaching order while retaining the source's explicit variation warning.
+- Show the exact Noto Sans Gujarati glyph behind every filmstrip frame and queue **ચ** next.
 
 ### Added — cited Gujarati ઘ ductus (HL-C09FU)
 

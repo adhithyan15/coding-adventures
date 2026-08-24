@@ -1,5 +1,20 @@
 # Changelog — coding-adventures-zip
 
+## [0.2.1] — 2026-08-21
+
+### Changed
+
+- Large raw-DEFLATE inputs now avoid the educational boxed LZSS token path.
+  Incompressible blocks use RFC 1951 stored framing, while repetitive blocks
+  use fixed-Huffman output with constant-size match state. This keeps PNG and
+  other bounded consumers from turning byte-sized ceilings into multi-gigabyte
+  token allocations or exhaustive match scans.
+- `raw_deflate` now accepts `bytes`, `bytearray`, and byte-oriented
+  `memoryview` inputs without requiring callers to copy large buffers first.
+- A deterministic 2 MiB incompressible regression proves that the large-input
+  path bypasses LZSS token materialization and remains compatible with a
+  foreign zlib inflater.
+
 ## [0.2.0] — 2026-08-13
 
 ### Added

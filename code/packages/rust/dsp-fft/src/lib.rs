@@ -21,7 +21,7 @@
 //! - **Phase 4a** — scalar Bluestein ([`bluestein_scalar`])
 //!   handles arbitrary (non-power-of-two) lengths.  The public
 //!   [`fft`] / [`ifft`] now accept any `N ≥ 1`.
-//! - **Phase 4b** — [`rfft`] / [`irfft`] half-spectrum API for
+//! - **Phase 4b** — [`rfft()`] / [`irfft()`] half-spectrum API for
 //!   real inputs (returns `⌊N / 2⌋ + 1` complex bins via
 //!   conjugate symmetry).
 //! - **Phase 4c (this release)** — matrix-ir-lowered Bluestein
@@ -123,14 +123,14 @@ pub fn ifft_scalar(spectrum: &[f32]) -> Result<Vec<f32>, FftError> {
 /// - If `signal` has length `N` (real input):
 ///   - **Power-of-two `N ≥ 2`** routes through the matrix-ir-lowered
 ///     FFT graph via
-///     [`fft_via_runtime`](crate::radix2::fft_via_runtime) — the
+///     [`fft_via_runtime`] — the
 ///     FFT actually runs on the matrix execution layer.  When
 ///     `matrix-metal` / `matrix-cuda` claim `Slice` + `Concat` in
 ///     their `supported_ops` bitsets, the call lifts to GPU
 ///     automatically with no `dsp-fft` change required.
 ///   - **Non-power-of-two `N`** (new in Phase 4a) falls back to the
 ///     scalar Bluestein algorithm
-///     ([`bluestein_scalar`](crate::bluestein::bluestein_scalar)).
+///     ([`bluestein_scalar`]).
 ///     Still CPU-only; Phase 4c will lower it to matrix-ir.
 ///   - **`N = 1`** is the identity, handled by the scalar path.
 /// - If `signal` has length `2N` (interleaved complex), pass

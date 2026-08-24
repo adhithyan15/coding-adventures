@@ -1,5 +1,45 @@
 # Changelog
 
+## Unreleased — project-defined pre-A1 four-skill task shapes
+
+- Made the Persian pre-A1 bridge executable as independent reading, listening,
+  writing, and speaking papers with exact timing, items, replay, aids, scoring,
+  and a 60/100 floor on every skill.
+- Kept writing productive and script-aware: scored work covers delayed recall,
+  dictation, and bounded independent responses with right-to-left order,
+  joining, dots, spacing, and ZWNJ control. Unicode-equivalent Arabic yeh/kaf
+  forms are normalized, readable variants receive credit, and short vowels are
+  not required unless explicitly tested.
+- This project rung has no claimed CEFR mapping to SAMFA. Mocks, rubrics, keys,
+  calibration, curriculum coverage, and book-only validation remain required.
+
+## Unreleased — writing begins with one alef in lesson one
+
+- Rewrote the opening `salâm` lesson as a schema-v2, four-atom introduction:
+  one greeting, its peace-root, its neutral use, and right-to-left direction.
+  The old four-letter and joining explanation now waits for the script strand.
+- Added a two-minute observe-then-copy bridge for **ا** with the model visible.
+  The learner makes one top-to-bottom stroke and stops; no joined word, hidden
+  model, or second letter appears in the task.
+- Added a three-minute chapter-1 payoff that revisits the exchange, direction,
+  root, and one supported alef. The later chapter-15 alef lesson now reviews and
+  consolidates these atoms instead of introducing them a second time.
+- Declared the chapter-1 authored order and extended the existing required
+  inline-script outcome, closing the seven-lesson delay before writing begins.
+
+## 2026-08-21 — Contract the seven-rung ladder and SAMFA capstone (#12437)
+
+- Defined pre-A1 through C2 as project-owned four-skill assessments with
+  independent pass floors, cumulative writing stages, and two timed mocks per
+  rung.
+- Added SAMFA Academic as a real external exam after C2 while explicitly
+  refusing to invent a CEFR equivalence the provider does not publish.
+- Pinned the published 2025 SAMFA timing, item counts, four 60-point skills, and
+  50% per-skill institutional threshold, while leaving unpublished task details
+  visibly unknown and backlogged.
+- Published Persian script, diglossia, variety, standard-setting, and book-only
+  human-validation policies so a level label cannot masquerade as readiness.
+
 ## 0.11.0 — 2026-08-12
 
 - Added fourteen schema-v2 word lessons across three new chapters (12-14),

@@ -1,5 +1,6 @@
 ---
 id: GE-C05-lernen
+sequence: 200
 chapter: 5
 type: word
 headword: lernen

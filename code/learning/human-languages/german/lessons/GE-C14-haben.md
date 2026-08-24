@@ -1,5 +1,6 @@
 ---
 id: GE-C14-haben
+sequence: 295
 chapter: 14
 type: word
 headword: haben

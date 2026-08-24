@@ -1,51 +1,8 @@
 French, chapter 14: To Have, and How Old You Are.
-2 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
+2 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
 Lesson 1 of 2.
-j'ai vingt ans — having your years.
-
-Warm-up.
-[pause 2 seconds]
-Ask a French speaker their age and the answer uses avoir. Not "I am twenty" — "I have twenty years." English can't do this; Spanish and Italian do exactly the same thing.
-
-The phrase.
-Quel âge as-tu? — "What age do you have?" J'ai vingt ans. — "I have twenty years."
-Two things to notice:
-The verb is avoir, never être. Je suis vingt ans is simply wrong.
-ans is compulsory. English drops it ("I'm twenty"); French cannot.
-
-an from annus.
-an ("year") from Latin annus, which gives English annual, anniversary, annals, and per annum. You have already met its descendants: Chapter 9's month names came from the same calendar.
-Careful with the sound: an is nasal, and in vingt ans the silent t of vingt wakes up and links — vin-t-an. That's liaison, French's habit of reviving a dead consonant when a vowel follows.
-
-Who else does it this way.
-[a table of 6 rows, read aloud]
-language: French. "I am 20": j'ai vingt ans — have.
-language: Spanish. "I am 20": tengo veinte años — have.
-language: Italian. "I am 20": ho venti anni — have.
-language: Portuguese. "I am 20": tenho vinte anos — have.
-language: German. "I am 20": ich bin zwanzig Jahre alt — be.
-language: English. "I am 20": I am twenty — be.
-A clean split: Romance has its years; Germanic is its years. Age as something you carry versus age as something you are.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "Quel âge as-tu?"]
-[pause 8 seconds for the answer]
-[your turn — say: "J'ai vingt ans" — with the liaison, vin-t-an]
-[pause 8 seconds for the answer]
-[your turn — say: your own age, using Ch. 12's numbers]
-[pause 8 seconds for the answer]
-[your turn — say: the split — "French a ses ans; English is its years"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Which verb does French use for age? (Avoir — never être.) What does j'ai vingt ans literally say? ("I have twenty years.") Can you drop ans? (No — French requires it.) Where does an come from? (Latin annus becomes annual, anniversary.) What happens to the t of vingt before ans? (It links — liaison.) Which languages side with English here? (German — and only German, of the five.)
-
-
-Lesson 2 of 2.
 avoir — "to have".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
@@ -88,3 +45,46 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Give the six forms of avoir. (J'ai, tu as, il a, nous avons, vous avez, ils ont.) Which three sound identical? (Ai, as, a.) What root is avoir from? (Latin habēre.) Which verb from Chapter 5 shares it? (Habiter from habitāre.) Why is it j'ai and not je ai? (Elision — je drops its e before a vowel.) Next: what French does with avoir that English would never do.
+
+
+Lesson 2 of 2.
+j'ai vingt ans — having your years.
+
+Warm-up.
+[pause 2 seconds]
+Ask a French speaker their age and the answer uses avoir. Not "I am twenty" — "I have twenty years." English can't do this; Spanish and Italian do exactly the same thing.
+
+The phrase.
+Quel âge as-tu? — "What age do you have?" J'ai vingt ans. — "I have twenty years."
+Two things to notice:
+The verb is avoir, never être. Je suis vingt ans is simply wrong.
+ans is compulsory. English drops it ("I'm twenty"); French cannot.
+
+an from annus.
+an ("year") from Latin annus, which gives English annual, anniversary, annals, and per annum. You have already met its descendants: Chapter 9's month names came from the same calendar.
+Careful with the sound: an is nasal, and in vingt ans the silent t of vingt wakes up and links — vin-t-an. That's liaison, French's habit of reviving a dead consonant when a vowel follows.
+
+Who else does it this way.
+[a table of 6 rows, read aloud]
+language: French. "I am 20": j'ai vingt ans — have.
+language: Spanish. "I am 20": tengo veinte años — have.
+language: Italian. "I am 20": ho venti anni — have.
+language: Portuguese. "I am 20": tenho vinte anos — have.
+language: German. "I am 20": ich bin zwanzig Jahre alt — be.
+language: English. "I am 20": I am twenty — be.
+A clean split: Romance has its years; Germanic is its years. Age as something you carry versus age as something you are.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "Quel âge as-tu?"]
+[pause 8 seconds for the answer]
+[your turn — say: "J'ai vingt ans" — with the liaison, vin-t-an]
+[pause 8 seconds for the answer]
+[your turn — say: your own age, using Ch. 12's numbers]
+[pause 8 seconds for the answer]
+[your turn — say: the split — "French a ses ans; English is its years"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which verb does French use for age? (Avoir — never être.) What does j'ai vingt ans literally say? ("I have twenty years.") Can you drop ans? (No — French requires it.) Where does an come from? (Latin annus becomes annual, anniversary.) What happens to the t of vingt before ans? (It links — liaison.) Which languages side with English here? (German — and only German, of the five.)

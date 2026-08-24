@@ -121,7 +121,11 @@ impl PixelContainer {
             data.len(),
             expected
         );
-        Self { width, height, data }
+        Self {
+            width,
+            height,
+            data,
+        }
     }
 
     /// Read the RGBA components of the pixel at `(x, y)`.
@@ -144,7 +148,12 @@ impl PixelContainer {
         }
         // Use usize arithmetic to avoid u32 overflow on large images in release mode.
         let i = (y as usize * self.width as usize + x as usize) * 4;
-        (self.data[i], self.data[i + 1], self.data[i + 2], self.data[i + 3])
+        (
+            self.data[i],
+            self.data[i + 1],
+            self.data[i + 2],
+            self.data[i + 3],
+        )
     }
 
     /// The number of pixels in the buffer (`width * height`).
@@ -194,7 +203,7 @@ impl PixelContainer {
         }
         // Use usize arithmetic to avoid u32 overflow on large images in release mode.
         let i = (y as usize * self.width as usize + x as usize) * 4;
-        self.data[i]     = r;
+        self.data[i] = r;
         self.data[i + 1] = g;
         self.data[i + 2] = b;
         self.data[i + 3] = a;
@@ -216,10 +225,7 @@ impl PixelContainer {
     pub fn fill(&mut self, r: u8, g: u8, b: u8, a: u8) {
         // Write the RGBA pattern into every four-byte group.
         for chunk in self.data.as_chunks_mut::<4>().0 {
-            chunk[0] = r;
-            chunk[1] = g;
-            chunk[2] = b;
-            chunk[3] = a;
+            *chunk = [r, g, b, a];
         }
     }
 }

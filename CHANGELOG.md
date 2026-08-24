@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added - Python uv BUILD-front idempotence audit
+
+- Added a versioned specification, deterministic JSON/Markdown reporter, and
+  repository regression for Python package fronts that recreate `.venv`
+  without `--clear` or a compatible interpreter pin.
+- Classified the exact 17-front corpus without modifying package recipes, and
+  decomposed it into nine dependency-shaped follow-up owners with complete,
+  machine-checked coverage.
+
 ### Added — HL-C136: pre-A1 lexicon wave I, "Pointing, and Asking"
 - **42 lessons and 6 new chapters**, one in each Indic track — the first tranche
   of the drive order, and the first time all six move together on vocabulary.

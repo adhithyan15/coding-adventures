@@ -1,5 +1,6 @@
 ---
 id: IT-C01-grazie
+sequence: 80
 chapter: 1
 type: word
 headword: grazie
@@ -32,19 +33,16 @@ in**grat**iate. So *grazie* literally wishes someone **grace**.
 
 ## Why it's said this way
 
-The reply is **prego** ("you're welcome") — literally "I pray [it's nothing],"
-from Latin *precari* ("to pray," → English *pray*, *precarious*). You give
-thanks/grace; they wave it off with a prayer.
+Think of **grazie** as offering someone "graces" for what they did. In the next
+chapter, you will learn the short reply people use after hearing it.
 
 ## Guided Practice
 
 [PAUSE 1s]
 - [YOU SAY: "grazie" (*GRAH-tsyeh*)]
 - [YOU SAY: the cousins — *grace*, *gratitude*, *gratis*]
-- [YOU SAY: the reply — "prego"]
 
 ## Wrap-up Recall
 
 [PAUSE 3s] What Latin word is **grazie** from, and three English cousins?
-(*gratia*, "grace"; *grace*, *gratitude*, *gratis*.) The reply to *grazie*?
-(*prego*.)
+(*gratia*, "grace"; *grace*, *gratitude*, *gratis*.)

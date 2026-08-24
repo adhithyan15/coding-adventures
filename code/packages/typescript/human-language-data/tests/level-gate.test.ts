@@ -2,11 +2,14 @@
 
 import { describe, expect, it } from "vitest";
 import { loadEverything, loadChapterPolicy, loadTrackChapters } from "../src/loader.js";
+import { parseLesson } from "../src/parse.js";
 import { buildCurriculumGapReport } from "../src/report.js";
 import { LEVEL_VOCABULARY, runLevelGate, isEtymologyAtom } from "../src/level-gate.js";
 import { summarizeLevels } from "../src/levels.js";
 import { measureRamp } from "../src/ramp.js";
 import { measureContinuity } from "../src/continuity.js";
+import type { ContinuityReport } from "../src/continuity.js";
+import type { WritingStageReport } from "../src/writing-stages.js";
 
 // Built ONCE for the file, not once per test. The gap report now walks continuity
 // (~900ms) and the level gate on top of everything else, so rebuilding an identical
@@ -81,7 +84,7 @@ describe("the gate that would have caught the A2 claim", () => {
     // was the first version of this module committing the very error it exists to
     // catch — a number meaning "everything taught" published against one meaning
     // "by the end of pre-A1".
-    expect(vocab.shortfall).toBe(147); // -2 more: the repair kit adds two pre-A1 headwords // +1: HL-C98 // spanish pre-A1 tranche: +35 lessons, +7 chapters (chapters 282-288) // spanish pre-A1 round 2: +35 lessons, +7 chapters (chapters 289-295) // spanish pre-A1 round 3: +35 lessons, +7 chapters (chapters 296-302) -- 118/300 to 153/300, a drop of exactly the lesson count
+    expect(vocab.shortfall).toBe(146); // -1: quien now has its own pre-A1 voice-first lesson // -2 more: the repair kit adds two pre-A1 headwords // +1: HL-C98 // spanish pre-A1 tranche: +35 lessons, +7 chapters (chapters 282-288) // spanish pre-A1 round 2: +35 lessons, +7 chapters (chapters 289-295) // spanish pre-A1 round 3: +35 lessons, +7 chapters (chapters 296-302) -- 118/300 to 153/300, a drop of exactly the lesson count
     // Chapter 16 reclassifies two paradigm bundles as grammar and adds ver;
     // Chapter 17 correctly reclassifies its two tense bundles as grammar.
     // Chapter 18 likewise replaces two word/phrase bundles with typed grammar.
@@ -198,6 +201,93 @@ describe("the criteria themselves", () => {
     expect(new Set(worst!.blockers.map((b) => b.criterion)).size).toBe(
       worst!.blockers.length,
     );
+  });
+
+  it("cannot attain an otherwise complete level while its required writing stage is unproved", () => {
+    const lessons = Array.from({ length: LEVEL_VOCABULARY["pre-A1"] }, (_, index) =>
+      parseLesson(`---
+id: AA-${String(index + 1).padStart(3, "0")}
+chapter: 1
+type: word
+headword: word-${index + 1}
+gloss: word ${index + 1}
+concept_tag: AA-WORD-${index + 1}
+---
+
+word ${index + 1}
+`, "alpha"),
+    );
+    const curriculum = [{
+      version: 1,
+      language: "alpha",
+      path: [{
+        id: "alpha-pre-a1",
+        spine_node: "PRE",
+        lessons: lessons.map((lesson) => lesson.realization.lessonId),
+        before: [],
+        inline: [],
+        after: [],
+      }],
+      spine: { PRE: { segments: ["alpha-pre-a1"], omits: [], relocates: {} } },
+      extensions: [],
+    }];
+    const spine = {
+      version: 1,
+      stages: ["pre-A1", "A1", "A2", "B1", "B2", "C1", "C2"],
+      nodes: [{
+        id: "PRE",
+        stage: "pre-A1",
+        strand: "FUNCTION",
+        canDo: "write a word",
+        prerequisites: [],
+        core: true,
+        concepts: [],
+      }],
+    };
+    const levels = summarizeLevels(lessons, curriculum, spine);
+    const ramp = measureRamp(lessons, loadChapterPolicy());
+    const continuity = { reinforcement: [] } as unknown as ContinuityReport;
+    const withoutWritingGate = runLevelGate({ lessons, levels, curricula: curriculum, spine, ramp, continuity });
+    expect(withoutWritingGate.tracks[0]?.attained).toBe("pre-A1");
+
+    const writingStages = {
+      stages: [{ id: "observe-trace", firstRequiredAt: "pre-A1", prerequisites: [] }],
+      tracks: [{
+        language: "alpha",
+        evidence: [],
+        validEvidence: [],
+        defects: [],
+        levels: [{
+          level: "pre-A1",
+          requiredStages: ["observe-trace"],
+          evidencedStages: [],
+          missingStages: ["observe-trace"],
+          complete: false,
+        }],
+      }],
+      summary: {
+        tracks: 1,
+        tracksWithAnyEvidence: 0,
+        tracksCompleteAtPreA1: 0,
+        evidenceBlocks: 0,
+        invalidEvidenceBlocks: 0,
+        missingTrackLevelStages: 1,
+      },
+    } satisfies WritingStageReport;
+    const gated = runLevelGate({
+      lessons,
+      levels,
+      curricula: curriculum,
+      spine,
+      ramp,
+      continuity,
+      writingStages,
+    });
+    expect(gated.tracks[0]).toMatchObject({
+      attained: null,
+      inProgressAt: "pre-A1",
+      blockers: [{ criterion: "writing-stage", shortfall: 1 }],
+    });
   });
 
   it("keeps the vocabulary targets ascending, since they are cumulative", () => {

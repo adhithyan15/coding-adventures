@@ -5,7 +5,7 @@ import type {
   LanguageRegistry,
 } from "./types.js";
 
-/** The small part of generated-book-hashes.json needed by the progress table. */
+/** The small part of a generated-book-hashes language shard needed by the progress table. */
 export interface GeneratedBookChapterRef {
   language: string;
   chapter: number;
@@ -103,6 +103,22 @@ function bookProgress(track: TrackProgress): string {
   if (track.latestBookChapter === undefined) return "No authored chapters";
   const chapterWord = track.bookChapters === 1 ? "chapter" : "chapters";
   return `${track.bookChapters} ${chapterWord}; through Ch. ${track.latestBookChapter}; ${track.generatedBookChapters} generated`;
+}
+
+/** One independently mergeable Markdown progress card. */
+export function renderTrackProgressCard(track: TrackProgress): string {
+  return [
+    `# ${track.name} progress`,
+    "",
+    `- Track: [${track.name}](../${track.id}/README.md)`,
+    `- Family / script: ${track.family} / ${titleCaseScript(track.script)}`,
+    `- Canonical lessons: ${track.canonicalLessons}`,
+    `- Mapped lessons: ${track.mappedLessons}`,
+    `- Book progress: ${bookProgress(track)}`,
+    "",
+    "This file is generated from canonical curriculum data. Do not edit it by hand.",
+    "",
+  ].join("\n");
 }
 
 /** Render only facts that can be recomputed; prose distinctions belong below the table. */

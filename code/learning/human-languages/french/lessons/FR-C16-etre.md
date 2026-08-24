@@ -1,5 +1,6 @@
 ---
 id: FR-C16-etre
+sequence: 305
 chapter: 16
 type: word
 headword: être

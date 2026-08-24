@@ -1,5 +1,6 @@
 ---
 id: GE-C11-brot
+sequence: 265
 chapter: 11
 type: word
 headword: das Brot

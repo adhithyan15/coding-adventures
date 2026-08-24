@@ -35,7 +35,7 @@ fn decode_f32s(bytes: &[u8]) -> Vec<f32> {
         .as_chunks::<4>()
         .0
         .iter()
-        .map(|chunk| f32::from_le_bytes(*chunk))
+        .map(|chunk| f32::from_le_bytes([chunk[0], chunk[1], chunk[2], chunk[3]]))
         .collect()
 }
 
