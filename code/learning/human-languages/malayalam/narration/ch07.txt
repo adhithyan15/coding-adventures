@@ -1,85 +1,361 @@
 Malayalam, chapter 7: Numbers One to Ten.
-4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+17 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 4.
-ഒന്ന്, രണ്ട്, മൂന്ന്, നാല്, അഞ്ച് — one to five.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called You'll want to know until you have stopped, and I will say so again when we reach it.
+Lesson 1 of 17.
+One to five — voice first.
 
 Warm-up.
 [pause 2 seconds]
-Of all the Dravidian cousins, Malayalam is Tamil's closest — they were one language a thousand years ago — and its numbers show it.
+This lesson has no Malayalam writing to decode. Hear the five words, attach each one to a quantity, and say them before your eyes meet the script.
 
-You'll want to know.
-There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: one with no heading, numeral, word, said. Come back and look at it when you have stopped.
-The symbols ൧ ൨ ൩ ൪ ൫ are Malayalam's own digits.
+Sounds you'll need.
+[a table of 5 rows, read aloud]
+quantity: 1. said: onnu.
+quantity: 2. said: randu.
+quantity: 3. said: moonnu.
+quantity: 4. said: naalu.
+quantity: 5. said: anchu.
+Point to one finger and say onnu. Add one finger at a time: randu, moonnu, naalu, anchu.
+[repeat that twice]
 
-The word, taken apart.
-Where Telugu breaks the family with okaṭi, Malayalam stays loyal: its one is onnu, the direct cousin of Tamil oṉṟu (both from the old oṉ-). Laid beside Tamil, the whole row is barely changed:
-[a table of 4 rows, read aloud]
-1. Tamil: oṉṟu. Malayalam: onnu.
-2. Tamil: iraṇṭu. Malayalam: raṇṭu.
-3. Tamil: mūṉṟu. Malayalam: mūnnu.
-4. Tamil: nāṉku. Malayalam: nālu.
-The one that moved most is five: Tamil aintu softened its nt to a palatal, giving Malayalam añcu — the same shift English feels between nature said stiffly and said naturally.
+Why it's said this way.
+Malayalam and Tamil were once one language, and the family resemblance is still audible. Malayalam onnu sits beside Tamil onru; randu beside irandu; moonnu beside moonru; and naalu beside naanku. You do not need to learn the Tamil forms. Listen only for the shared bones.
 
-The word, taken apart.
-Every word here ends in chandrakkala — the little hook ് (virama) on the last letter (ഒന്ന്, നാല്) — which trims the final vowel down to a half-heard ŭ. It's why these read onn', nāl' rather than a full onnu, nālu. And the doubled letters (onnu, mūnnu) are real held consonants — linger on the nn.
+Why it's said this way — one sound change.
+Five moved furthest: an older aintu softened toward Malayalam anchu. Say an-chu slowly, then normally. The sound comes before its spelling.
 
 Guided Practice.
-[pause 1 second]
-[your turn — say: "onnu, raṇṭu, mūnnu, nālu, añcu"]
+[your turn — say: onnu, randu, moonnu, naalu, anchu while raising one more finger]
 [pause 8 seconds for the answer]
-[your turn — say: the near-identity — "oṉṟu corresponds to onnu", "iraṇṭu corresponds to raṇṭu"]
+[your turn — hear: moonnu; YOU SHOW: 3]
 [pause 8 seconds for the answer]
-[your turn — say: the one that shifted — "aintu becomes añcu"]
+[your turn — hear: anchu; YOU SHOW: 5]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Count to five in Malayalam. (Onnu, raṇṭu, mūnnu, nālu, añcu.) Does Malayalam's one follow Tamil or break away like Telugu? (Follows Tamil — onnu corresponds to oṉṟu.) Which number changed most from Tamil, and how? (Five — aintu's nt palatalised to añcu.) What does the chandrakkala ് (virama) do to a word's last sound? (Trims its vowel to a half-heard ŭ.) Next: six to ten.
+Count from one to five without looking. Which word means three? (Moonnu.) Which one changed furthest from its older Tamil cousin? (Anchu, five.) Next, the first three numeral shapes arrive one small step at a time.
 
 
-Lesson 2 of 4.
-ആറ്, ഏഴ്, എട്ട്, ഒമ്പത്, പത്ത് — six to ten.
+Lesson 2 of 17.
+൧, ൨, ൩ — three numeral shapes.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called You'll want to know until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-Malayalam holds onto a Tamil sound the other cousins let go — and you'll hear it in seven.
+Say onnu, randu, moonnu. You already own the meanings and sounds; this lesson adds only their three numeral shapes.
 
-You'll want to know.
-There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: one with no heading, numeral, word, said. Come back and look at it when you have stopped.
+Script.
+൧ means 1: onnu.
+൨ means 2: randu.
+൩ means 3: moonnu.
+Point in order, then out of order: ൩ ൧ ൨.
 
-The word, taken apart.
-Watch seven travel across the three sister scripts:
-[a table of 4 rows, read aloud]
-Tamil. word: ēḻu. its 7-letter: ழ (ḻ).
-Malayalam. word: ēḻu. its 7-letter: ഴ (ḻ) — kept.
-Kannada. word: ēḷu. its 7-letter: ḷ — hardened.
-Telugu. word: ēḍu. its 7-letter: ḍ — hardened further.
-Malayalam, alone with Tamil, keeps the ḻ — the rare retroflex sound that sits in the name Tamiḻ itself. (The name Malayāḷam, by contrast, carries the hardened cousin ḷ — ള — the very sound Kannada's ēḷu shows; the two letters ഴ ḻ and ള ḷ are worth keeping apart.) Six (āṟu), eight (eṭṭu) and ten (pattu) are likewise almost letter-for-letter Tamil: this is the closest of all the cousin-columns.
+Writing — observe and trace.
+Keep the models visible. Finger-trace ൧, ൨, and ൩ once each. Say the number word only after your finger stops. Do not copy from memory yet.
 
-The word, taken apart.
-Nine comes, exactly as in Tamil, from the old oṉ ("one") + patu ("ten") — one short of ten. But before the p, the n shifts to an m: so the underlying oṉpatu is both written ഒമ്പത് and said ompatu (say "onpatu" fast and you'll do it yourself). Kannada does the same in ombattu.
+Wrap-up Recall.
+[pause 3 seconds]
+Point to ൨ and say it. (Randu.) Which shape means three? (൩.) How many new shapes arrived? (Three.)
+
+
+Lesson 3 of 17.
+൪, ൫ — finish the first five numerals.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Read ൧ ൨ ൩ (one, two, three). Two shapes remain in the first group.
+
+Script.
+൪ means 4: naalu.
+൫ means 5: anchu.
+Now point through ൧ ൨ ൩ (one, two, three) ൪ ൫ (four, five) (one to five). The first five numeral shapes are complete.
+
+Writing — observe and trace.
+Keep both models visible. Trace ൪ once and ൫ once. Then circle the one you hear:
+[your turn — hear: anchu]
+[pause 8 seconds for the answer]
+. (൫.)
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which shape means four? (൪.) Read ൫. (Anchu.) How many new shapes did this lesson add? (Two.)
+
+
+Lesson 4 of 17.
+ഒ (independent o) — one new letter unlocks five familiar words.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Say one to five, then read their numerals: ൧ ൨ ൩ (one, two, three) ൪ ൫ (four, five). The words themselves need only one letter you have not met.
+
+Script.
+ഒ (independent o) is independent short o. It begins ഒന്ന്, onnu, one.
+Every other shape in this row is already familiar:
+[a table of 5 rows, read aloud]
+numeral: ൧. word: ഒന്ന്. said: onnu.
+numeral: ൨. word: രണ്ട്. said: randu.
+numeral: ൩. word: മൂന്ന്. said: moonnu.
+numeral: ൪. word: നാല്. said: naalu.
+numeral: ൫. word: അഞ്ച്. said: anchu.
+
+Writing — observe and trace.
+Trace ഒ (independent o) once with its model visible. Then point from ൧ to ഒന്ന് and say onnu. Read the remaining four rows; do not copy the whole row yet.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which new letter begins onnu? (ഒ (independent o).) Read ൩ and മൂന്ന്. (Moonnu, three.) How many new letters appeared? (One.)
+
+
+Lesson 5 of 17.
+൧ ൨ ൩ (one, two, three) ൪ ൫ (four, five) (one to five) — one visible copy.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+Point through ൧ ൨ ൩ (one, two, three) ൪ ൫ (four, five) (one to five) and say the five words. Keep the model visible.
+
+Writing — guided copy.
+Copy the row once directly beneath its model. Look back after every shape if you need to. Say onnu through anchu as you check your copy. Repair only one shape.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Read ൪. (Naalu.) Which written word begins with the new letter ഒ (independent o)? (ഒന്ന്, onnu.) No new shape was added here.
+
+
+Lesson 6 of 17.
+Five numerals — hide, then write.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+Study ൧ ൨ ൩ (one, two, three) ൪ ൫ (four, five) (one to five) for five seconds. Say each number, then cover the row.
+
+Writing — delayed copy.
+Write the five numerals in order while the model is hidden. If one will not come, peek once, cover it again, and continue. Uncover and repair one place.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say the row without looking. What made this harder than the previous lesson? (The model was hidden before writing.)
+
+
+Lesson 7 of 17.
+Three heard numbers — write their numerals.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+Cover the answer line. You will hear familiar words, never an untaught form.
+
+Writing — dictation.
+[your turn — hear: randu — anchu — moonnu]
+[pause 8 seconds for the answer]
+Write the three numeral shapes from sound alone. Then uncover and compare: ൨ ൫ ൩. Repair one shape if needed; do not rewrite the whole line.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Write the numeral for naalu from sound alone. (൪.) You are now ready to hear six through ten before meeting any of their shapes.
+
+
+Lesson 8 of 17.
+Six to ten — voice first.
+
+Warm-up.
+[pause 2 seconds]
+Count onnu through anchu. Keep your pencil down: the next five meanings and sounds come before their shapes.
+
+Sounds you'll need.
+[a table of 5 rows, read aloud]
+quantity: 6. said: aaru.
+quantity: 7. said: ezhu.
+quantity: 8. said: ettu.
+quantity: 9. said: ompathu.
+quantity: 10. said: pathu.
+Say the row once slowly, then once at counting speed.
+[repeat that twice]
+
+Why it's said this way — seven keeps a rare sound.
+The middle sound of ezhu is the curled zh heard in the name Tamil in its native form. Malayalam and Tamil kept it; Kannada and Telugu hardened it. Practise only the sound now: e-zhu. The written letter waits for a later micro-lesson.
+
+The word, taken apart — nine is one short of ten.
+Ompathu grew from an old word for one plus pathu, ten: one short of ten. Before p, the older n becomes m. Say on-pathu slowly, then let it settle into ompathu.
 
 Guided Practice.
-[pause 1 second]
-[your turn — say: "āṟu, ēḻu, eṭṭu, onpatu, pattu"]
+[your turn — say: aaru, ezhu, ettu, ompathu, pathu]
 [pause 8 seconds for the answer]
-[your turn — say: seven's kept sound — "ēḻu", the ḻ of Tamiḻ (not the ḷ of Malayāḷam)]
+[your turn — hear: ezhu; YOU SHOW: 7]
 [pause 8 seconds for the answer]
-[your turn — say: nine taken apart — "oṉ + patu becomes ompatu", one short of ten]
+[your turn — hear: ompathu; YOU SHOW: 9]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Count six to ten in Malayalam. (Āṟu, ēḻu, eṭṭu, onpatu, pattu.) Which sister languages keep Tamil's rare ḻ in seven, and which hardened it? (Malayalam keeps it; Kannada becomes ḷ, Telugu becomes ḍ.) How is ompatu built, and why the m? (oṉ "one" + patu "ten"; the n becomes m before p.) Which of these numbers is furthest from Tamil? (None much — this is the closest cousin-set.)
+Count six to ten. Which word preserves the rare zh? (Ezhu.) How is ompathu built? (One plus ten: one short of ten.) Next, the numeral shapes arrive in groups of three or fewer.
 
 
-Lesson 3 of 4.
+Lesson 9 of 17.
+൬, ൭, ൮ — three more numeral shapes.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Say aaru, ezhu, ettu. Their sounds and quantities are familiar; only the shapes are new.
+
+Script.
+൬ means 6: aaru.
+൭ means 7: ezhu.
+൮ means 8: ettu.
+Point out of order: ൮ ൬ ൭.
+
+Writing — observe and trace.
+Keep the models visible. Trace ൬, ൭, and ൮ once each. Say the word after each trace. Memory writing waits.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which shape means seven? (൭.) Read ൮. (Ettu.) How many new shapes arrived? (Three.)
+
+
+Lesson 10 of 17.
+൯, ൰ — nine and ten.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Read ൬ ൭ ൮ (six, seven, eight). Two shapes finish the sequence.
+
+Script.
+൯ means 9: ompathu.
+൰ means 10: pathu.
+Point through ൬ ൭ ൮ (six, seven, eight) ൯ ൰ (nine, ten) (six to ten) and say the words once.
+
+Writing — observe and trace.
+Trace ൯ once and ൰ once with their models visible. Circle the one you hear:
+[your turn — hear: ompathu]
+[pause 8 seconds for the answer]
+. (൯.)
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which shape means ten? (൰.) Read ൯. (Ompathu.) This lesson added two shapes, not five.
+
+
+Lesson 11 of 17.
+ഏ, ഴ — two letters unlock the second row.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Say six to ten, then read ൬ ൭ ൮ (six, seven, eight) ൯ ൰ (nine, ten). Two letters remain before every written word in the row is decodable.
+
+Script.
+ഏ is independent long e.
+ഴ is the curled zh you already heard in ezhu.
+Together with the familiar chandrakkala, they begin and finish ഏഴ്, ezhu.
+[a table of 5 rows, read aloud]
+numeral: ൬. word: ആറ്. said: aaru.
+numeral: ൭. word: ഏഴ്. said: ezhu.
+numeral: ൮. word: എട്ട്. said: ettu.
+numeral: ൯. word: ഒമ്പത്. said: ompathu.
+numeral: ൰. word: പത്ത്. said: pathu.
+
+Writing — observe and trace.
+Trace ഏ once and ഴ once with the models visible. Then point through ഏഴ് and say ezhu. Whole-word memory writing waits.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which letter carries the rare zh? (ഴ.) Read ൭ — ഏഴ്. (Ezhu, seven.) How many new letters appeared? (Two.)
+
+
+Lesson 12 of 17.
+൬ ൭ ൮ (six, seven, eight) ൯ ൰ (nine, ten) (six to ten) — one supported copy.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+Read ൬ ൭ ൮ (six, seven, eight) ൯ ൰ (nine, ten) (six to ten). Keep both models below visible.
+
+Writing — guided copy.
+Copy ൬ ൭ ൮ (six, seven, eight) ൯ ൰ (nine, ten) (six to ten) once. Then copy ഏഴ് — ൭ once. Look back whenever you need. Check only the two new letters ഏ and ഴ, then stop.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Read your copied word. (Ezhu, seven.) Which numeral belongs beside it? (൭.) No new shape was added here.
+
+
+Lesson 13 of 17.
+ഏഴ് — hide, then write.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+Study ഏഴ് — ൭ for five seconds. Say ezhu, then cover both forms.
+
+Writing — delayed copy.
+Write the word and numeral while the model is hidden. Peek once if needed, cover again, and finish. Uncover and repair one shape rather than rewriting.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which letter carries the curled sound? (ഴ.) What changed from the guided copy? (The model was hidden before writing.)
+
+
+Lesson 14 of 17.
+Heard numbers — write without a model.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+Cover the answer line. Every sound and shape has already had a supported turn.
+
+Writing — dictation and transcription.
+[your turn — hear: aaru — ezhu — ompathu]
+[pause 8 seconds for the answer]
+Write the three numerals from sound alone. For ezhu, also write the word. Then uncover: ൬ — ൭ ഏഴ് — ൯. Compare and repair one place.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Write the numeral for pathu. (൰.) Write the word you practised for seven. (ഏഴ്.) Next comes a cumulative, no-new-shape payoff.
+
+
+Lesson 15 of 17.
+One to ten — the cumulative payoff.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+Count from onnu to pathu once without looking. No new word or shape appears in this lesson.
+
+Guided Practice — read, not recite.
+Read these shuffled numerals before looking back at the ordered row:
+൭ ൨ ൰ ൫ ൮ ൩ ൯ ൧ ൬ ൪.
+Now check against ൧ ൨ ൩ (one, two, three) ൪ ൫ (four, five) (one to five) ൬ ൭ ൮ (six, seven, eight) ൯ ൰ (nine, ten) (six to ten) (onnu through pathu).
+
+Why it's said this way — meaning and history.
+Which word preserves the rare zh? (ഏഴ്, ezhu, seven.)
+Which word means one short of ten? (ഒമ്പത്, ompathu, nine.)
+Which first-five word shifted furthest from older aintu? (അഞ്ച്, anchu.)
+
+Writing — independent dictation.
+Cover the answer.
+[your turn — hear: ezhu]
+[pause 8 seconds for the answer]
+Write its numeral and word from sound alone. Uncover and compare: ൭ — ഏഴ്. Repair one shape if needed.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Count one to ten, then read ൯ ൪ ൭ out of order. You can now hear, say, read, and write a representative part of the complete number sequence.
+
+
+Lesson 16 of 17.
 ◌് (virama) — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌് and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -117,7 +393,7 @@ Wrap-up Recall.
 Which character is this — ◌് (virama)? What does it do to the consonant it sits on? (Takes away the built-in a.) Name one word you already say that contains it.
 
 
-Lesson 4 of 4.
+Lesson 17 of 17.
 വ (va) — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: വ and Guided Practice until you have stopped, and I will say so again when we reach it.

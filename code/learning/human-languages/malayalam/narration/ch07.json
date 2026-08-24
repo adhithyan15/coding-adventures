@@ -3,33 +3,24 @@
   "language": "malayalam",
   "chapter": 7,
   "title": "Numbers One to Ten",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:aa0ee430a7514ecd",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:6d96acb259f9524e",
   "lessons": [
     {
       "id": "ML-C07-numbers-1-5",
       "sequence": 340,
-      "title": "ഒന്ന്, രണ്ട്, മൂന്ന്, നാല്, അഞ്ച് — one to five",
-      "headword": "ഒന്ന് രണ്ട് മൂന്ന് നാല് അഞ്ച്",
+      "title": "One to five — voice first",
+      "headword": "onnu randu moonnu naalu anchu",
       "romanization": "",
-      "gloss": "one to five — Tamil's closest sister, its numbers almost unchanged",
+      "gloss": "hear and say one to five before meeting their written forms",
       "script": "malayalam",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2a9ed4236164b68a",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "You'll want to know"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called You'll want to know until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:cb52d90ce2936a14",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -44,73 +35,61 @@
             },
             {
               "kind": "speech",
-              "text": "Of all the Dravidian cousins, Malayalam is Tamil's closest — they were one language a thousand years ago — and its numbers show it."
+              "text": "This lesson has no Malayalam writing to decode. Hear the five words, attach each one to a quantity, and say them before your eyes meet the script."
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "You'll want to know",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 5,
+              "kind": "table",
               "headers": [
-                "",
-                "numeral",
-                "word",
+                "quantity",
                 "said"
               ],
-              "text": "There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: one with no heading, numeral, word, said. Come back and look at it when you have stopped."
+              "columns": 2,
+              "rowCount": 5,
+              "utterances": [
+                "quantity: 1. said: onnu.",
+                "quantity: 2. said: randu.",
+                "quantity: 3. said: moonnu.",
+                "quantity: 4. said: naalu.",
+                "quantity: 5. said: anchu."
+              ]
             },
             {
               "kind": "speech",
-              "text": "The symbols ൧ ൨ ൩ ൪ ൫ are Malayalam's own digits."
+              "text": "Point to one finger and say onnu. Add one finger at a time: randu, moonnu, naalu, anchu."
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
           "segments": [
             {
               "kind": "speech",
-              "text": "Where Telugu breaks the family with okaṭi, Malayalam stays loyal: its one is onnu, the direct cousin of Tamil oṉṟu (both from the old oṉ-). Laid beside Tamil, the whole row is barely changed:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "",
-                "Tamil",
-                "Malayalam"
-              ],
-              "columns": 3,
-              "rowCount": 4,
-              "utterances": [
-                "1. Tamil: oṉṟu. Malayalam: onnu.",
-                "2. Tamil: iraṇṭu. Malayalam: raṇṭu.",
-                "3. Tamil: mūṉṟu. Malayalam: mūnnu.",
-                "4. Tamil: nāṉku. Malayalam: nālu."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "The one that moved most is five: Tamil aintu softened its nt to a palatal, giving Malayalam añcu — the same shift English feels between nature said stiffly and said naturally."
+              "text": "Malayalam and Tamil were once one language, and the family resemblance is still audible. Malayalam onnu sits beside Tamil onru; randu beside irandu; moonnu beside moonru; and naalu beside naanku. You do not need to learn the Tamil forms. Listen only for the shared bones."
             }
           ]
         },
         {
           "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way — one sound change",
           "segments": [
             {
               "kind": "speech",
-              "text": "Every word here ends in chandrakkala — the little hook ് (virama) on the last letter (ഒന്ന്, നാല്) — which trims the final vowel down to a half-heard ŭ. It's why these read onn', nāl' rather than a full onnu, nālu. And the doubled letters (onnu, mūnnu) are real held consonants — linger on the nn."
+              "text": "Five moved furthest: an older aintu softened toward Malayalam anchu. Say an-chu slowly, then normally. The sound comes before its spelling."
             }
           ]
         },
@@ -120,37 +99,31 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"onnu, raṇṭu, mūnnu, nālu, añcu\"",
+              "instruction": "onnu, randu, moonnu, naalu, anchu while raising one more finger",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"onnu, raṇṭu, mūnnu, nālu, añcu\"]"
+              "source": "[YOU SAY: *onnu, randu, moonnu, naalu, anchu* while raising one more finger]"
             },
             {
               "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the near-identity — \"oṉṟu corresponds to onnu\", \"iraṇṭu corresponds to raṇṭu\"",
+              "action": "HEAR",
+              "instruction": "moonnu; YOU SHOW: 3",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the near-identity — \"oṉṟu ↔ onnu\", \"iraṇṭu ↔ raṇṭu\"]"
+              "source": "[YOU HEAR: *moonnu*; YOU SHOW: 3]"
             },
             {
               "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the one that shifted — \"aintu becomes añcu\"",
+              "action": "HEAR",
+              "instruction": "anchu; YOU SHOW: 5",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the one that shifted — \"aintu → añcu\"]"
+              "source": "[YOU HEAR: *anchu*; YOU SHOW: 5]"
             }
           ]
         },
@@ -167,7 +140,523 @@
             },
             {
               "kind": "speech",
-              "text": "Count to five in Malayalam. (Onnu, raṇṭu, mūnnu, nālu, añcu.) Does Malayalam's one follow Tamil or break away like Telugu? (Follows Tamil — onnu corresponds to oṉṟu.) Which number changed most from Tamil, and how? (Five — aintu's nt palatalised to añcu.) What does the chandrakkala ് (virama) do to a word's last sound? (Trims its vowel to a half-heard ŭ.) Next: six to ten."
+              "text": "Count from one to five without looking. Which word means three? (Moonnu.) Which one changed furthest from its older Tamil cousin? (Anchu, five.) Next, the first three numeral shapes arrive one small step at a time."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-W07-digits-1-3",
+      "sequence": 341,
+      "title": "൧, ൨, ൩ — three numeral shapes",
+      "headword": "൧ ൨ ൩",
+      "romanization": "one, two, three",
+      "gloss": "recognize and trace the first three Malayalam numerals",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:619eb5ec44ae5e38",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say onnu, randu, moonnu. You already own the meanings and sounds; this lesson adds only their three numeral shapes."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "൧ means 1: onnu."
+            },
+            {
+              "kind": "speech",
+              "text": "൨ means 2: randu."
+            },
+            {
+              "kind": "speech",
+              "text": "൩ means 3: moonnu."
+            },
+            {
+              "kind": "speech",
+              "text": "Point in order, then out of order: ൩ ൧ ൨."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — observe and trace",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep the models visible. Finger-trace ൧, ൨, and ൩ once each. Say the number word only after your finger stops. Do not copy from memory yet."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Point to ൨ and say it. (Randu.) Which shape means three? (൩.) How many new shapes arrived? (Three.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-W07-digits-4-5",
+      "sequence": 342,
+      "title": "൪, ൫ — finish the first five numerals",
+      "headword": "൪ ൫",
+      "romanization": "four, five",
+      "gloss": "recognize and trace two more Malayalam numerals",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:6df9385f5a934c0f",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read ൧ ൨ ൩ (one, two, three). Two shapes remain in the first group."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "൪ means 4: naalu."
+            },
+            {
+              "kind": "speech",
+              "text": "൫ means 5: anchu."
+            },
+            {
+              "kind": "speech",
+              "text": "Now point through ൧ ൨ ൩ (one, two, three) ൪ ൫ (four, five) (one to five). The first five numeral shapes are complete."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — observe and trace",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep both models visible. Trace ൪ once and ൫ once. Then circle the one you hear:"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "anchu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *anchu*]"
+            },
+            {
+              "kind": "speech",
+              "text": ". (൫.)"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which shape means four? (൪.) Read ൫. (Anchu.) How many new shapes did this lesson add? (Two.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-W07-number-words-1-5",
+      "sequence": 343,
+      "title": "ഒ (independent o) — one new letter unlocks five familiar words",
+      "headword": "ഒ",
+      "romanization": "independent o",
+      "gloss": "learn the one remaining letter, then read the first five number words",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:7862a1dc2649d648",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say one to five, then read their numerals: ൧ ൨ ൩ (one, two, three) ൪ ൫ (four, five). The words themselves need only one letter you have not met."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഒ (independent o) is independent short o. It begins ഒന്ന്, onnu, one."
+            },
+            {
+              "kind": "speech",
+              "text": "Every other shape in this row is already familiar:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "numeral",
+                "word",
+                "said"
+              ],
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "numeral: ൧. word: ഒന്ന്. said: onnu.",
+                "numeral: ൨. word: രണ്ട്. said: randu.",
+                "numeral: ൩. word: മൂന്ന്. said: moonnu.",
+                "numeral: ൪. word: നാല്. said: naalu.",
+                "numeral: ൫. word: അഞ്ച്. said: anchu."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — observe and trace",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace ഒ (independent o) once with its model visible. Then point from ൧ to ഒന്ന് and say onnu. Read the remaining four rows; do not copy the whole row yet."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which new letter begins onnu? (ഒ (independent o).) Read ൩ and മൂന്ന്. (Moonnu, three.) How many new letters appeared? (One.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-W07-numbers-1-5-guided-copy",
+      "sequence": 344,
+      "title": "൧ ൨ ൩ (one, two, three) ൪ ൫ (four, five) (one to five) — one visible copy",
+      "headword": "൧ ൨ ൩ ൪ ൫",
+      "romanization": "one to five",
+      "gloss": "copy the familiar numeral row with its model visible",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:05ebe4c4e5ec7e2d",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Point through ൧ ൨ ൩ (one, two, three) ൪ ൫ (four, five) (one to five) and say the five words. Keep the model visible."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — guided copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy the row once directly beneath its model. Look back after every shape if you need to. Say onnu through anchu as you check your copy. Repair only one shape."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read ൪. (Naalu.) Which written word begins with the new letter ഒ (independent o)? (ഒന്ന്, onnu.) No new shape was added here."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-W07-numbers-1-5-delayed-copy",
+      "sequence": 345,
+      "title": "Five numerals — hide, then write",
+      "headword": "൧ ൨ ൩ ൪ ൫",
+      "romanization": "one to five",
+      "gloss": "retrieve the familiar numeral row after hiding its model",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:de887f4323bdd35a",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Study ൧ ൨ ൩ (one, two, three) ൪ ൫ (four, five) (one to five) for five seconds. Say each number, then cover the row."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — delayed copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Write the five numerals in order while the model is hidden. If one will not come, peek once, cover it again, and continue. Uncover and repair one place."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the row without looking. What made this harder than the previous lesson? (The model was hidden before writing.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-W07-numbers-1-5-dictation",
+      "sequence": 346,
+      "title": "Three heard numbers — write their numerals",
+      "headword": "൧ ൨ ൩ ൪ ൫",
+      "romanization": "one to five",
+      "gloss": "write familiar numerals from heard number words",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:2af87fe59195bc72",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover the answer line. You will hear familiar words, never an untaught form."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — dictation",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "randu — anchu — moonnu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *randu — anchu — moonnu*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write the three numeral shapes from sound alone. Then uncover and compare: ൨ ൫ ൩. Repair one shape if needed; do not rewrite the whole line."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write the numeral for naalu from sound alone. (൪.) You are now ready to hear six through ten before meeting any of their shapes."
             }
           ]
         }
@@ -175,28 +664,19 @@
     },
     {
       "id": "ML-C07-numbers-6-10",
-      "sequence": 350,
-      "title": "ആറ്, ഏഴ്, എട്ട്, ഒമ്പത്, പത്ത് — six to ten",
-      "headword": "ആറ് ഏഴ് എട്ട് ഒമ്പത് പത്ത്",
+      "sequence": 347,
+      "title": "Six to ten — voice first",
+      "headword": "aaru ezhu ettu ompathu pathu",
       "romanization": "",
-      "gloss": "six to ten — Malayalam keeps Tamil's rare ḻ where the others lost it",
+      "gloss": "hear and say six to ten before meeting their written forms",
       "script": "malayalam",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fdd67cc65bed0e4b",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "You'll want to know"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called You'll want to know until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:1f51f39db4797e23",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -211,69 +691,61 @@
             },
             {
               "kind": "speech",
-              "text": "Malayalam holds onto a Tamil sound the other cousins let go — and you'll hear it in seven."
+              "text": "Count onnu through anchu. Keep your pencil down: the next five meanings and sounds come before their shapes."
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "You'll want to know",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 5,
+              "kind": "table",
               "headers": [
-                "",
-                "numeral",
-                "word",
+                "quantity",
                 "said"
               ],
-              "text": "There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: one with no heading, numeral, word, said. Come back and look at it when you have stopped."
+              "columns": 2,
+              "rowCount": 5,
+              "utterances": [
+                "quantity: 6. said: aaru.",
+                "quantity: 7. said: ezhu.",
+                "quantity: 8. said: ettu.",
+                "quantity: 9. said: ompathu.",
+                "quantity: 10. said: pathu."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Say the row once slowly, then once at counting speed."
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way — seven keeps a rare sound",
           "segments": [
             {
               "kind": "speech",
-              "text": "Watch seven travel across the three sister scripts:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "",
-                "word",
-                "its 7-letter"
-              ],
-              "columns": 3,
-              "rowCount": 4,
-              "utterances": [
-                "Tamil. word: ēḻu. its 7-letter: ழ (ḻ).",
-                "Malayalam. word: ēḻu. its 7-letter: ഴ (ḻ) — kept.",
-                "Kannada. word: ēḷu. its 7-letter: ḷ — hardened.",
-                "Telugu. word: ēḍu. its 7-letter: ḍ — hardened further."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Malayalam, alone with Tamil, keeps the ḻ — the rare retroflex sound that sits in the name Tamiḻ itself. (The name Malayāḷam, by contrast, carries the hardened cousin ḷ — ള — the very sound Kannada's ēḷu shows; the two letters ഴ ḻ and ള ḷ are worth keeping apart.) Six (āṟu), eight (eṭṭu) and ten (pattu) are likewise almost letter-for-letter Tamil: this is the closest of all the cousin-columns."
+              "text": "The middle sound of ezhu is the curled zh heard in the name Tamil in its native form. Malayalam and Tamil kept it; Kannada and Telugu hardened it. Practise only the sound now: e-zhu. The written letter waits for a later micro-lesson."
             }
           ]
         },
         {
           "index": 3,
           "type": "etymology",
-          "title": "The word, taken apart",
+          "title": "The word, taken apart — nine is one short of ten",
           "segments": [
             {
               "kind": "speech",
-              "text": "Nine comes, exactly as in Tamil, from the old oṉ (\"one\") + patu (\"ten\") — one short of ten. But before the p, the n shifts to an m: so the underlying oṉpatu is both written ഒമ്പത് and said ompatu (say \"onpatu\" fast and you'll do it yourself). Kannada does the same in ombattu."
+              "text": "Ompathu grew from an old word for one plus pathu, ten: one short of ten. Before p, the older n becomes m. Say on-pathu slowly, then let it settle into ompathu."
             }
           ]
         },
@@ -283,37 +755,31 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"āṟu, ēḻu, eṭṭu, onpatu, pattu\"",
+              "instruction": "aaru, ezhu, ettu, ompathu, pathu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"āṟu, ēḻu, eṭṭu, onpatu, pattu\"]"
+              "source": "[YOU SAY: *aaru, ezhu, ettu, ompathu, pathu*]"
             },
             {
               "kind": "prompt",
-              "action": "SAY",
-              "instruction": "seven's kept sound — \"ēḻu\", the ḻ of Tamiḻ (not the ḷ of Malayāḷam)",
+              "action": "HEAR",
+              "instruction": "ezhu; YOU SHOW: 7",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: seven's kept sound — \"ēḻu\", the ḻ of *Tamiḻ* (not the ḷ of *Malayāḷam*)]"
+              "source": "[YOU HEAR: *ezhu*; YOU SHOW: 7]"
             },
             {
               "kind": "prompt",
-              "action": "SAY",
-              "instruction": "nine taken apart — \"oṉ + patu becomes ompatu\", one short of ten",
+              "action": "HEAR",
+              "instruction": "ompathu; YOU SHOW: 9",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: nine taken apart — \"oṉ + patu → ompatu\", one short of ten]"
+              "source": "[YOU HEAR: *ompathu*; YOU SHOW: 9]"
             }
           ]
         },
@@ -330,7 +796,646 @@
             },
             {
               "kind": "speech",
-              "text": "Count six to ten in Malayalam. (Āṟu, ēḻu, eṭṭu, onpatu, pattu.) Which sister languages keep Tamil's rare ḻ in seven, and which hardened it? (Malayalam keeps it; Kannada becomes ḷ, Telugu becomes ḍ.) How is ompatu built, and why the m? (oṉ \"one\" + patu \"ten\"; the n becomes m before p.) Which of these numbers is furthest from Tamil? (None much — this is the closest cousin-set.)"
+              "text": "Count six to ten. Which word preserves the rare zh? (Ezhu.) How is ompathu built? (One plus ten: one short of ten.) Next, the numeral shapes arrive in groups of three or fewer."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-W07-digits-6-8",
+      "sequence": 348,
+      "title": "൬, ൭, ൮ — three more numeral shapes",
+      "headword": "൬ ൭ ൮",
+      "romanization": "six, seven, eight",
+      "gloss": "recognize and trace three Malayalam numeral shapes",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:c1c09b9a71989c82",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say aaru, ezhu, ettu. Their sounds and quantities are familiar; only the shapes are new."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "൬ means 6: aaru."
+            },
+            {
+              "kind": "speech",
+              "text": "൭ means 7: ezhu."
+            },
+            {
+              "kind": "speech",
+              "text": "൮ means 8: ettu."
+            },
+            {
+              "kind": "speech",
+              "text": "Point out of order: ൮ ൬ ൭."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — observe and trace",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep the models visible. Trace ൬, ൭, and ൮ once each. Say the word after each trace. Memory writing waits."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which shape means seven? (൭.) Read ൮. (Ettu.) How many new shapes arrived? (Three.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-W07-digits-9-10",
+      "sequence": 349,
+      "title": "൯, ൰ — nine and ten",
+      "headword": "൯ ൰",
+      "romanization": "nine, ten",
+      "gloss": "recognize and trace the final two Malayalam numeral shapes in the row",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:ee8f643eadb49c7f",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read ൬ ൭ ൮ (six, seven, eight). Two shapes finish the sequence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "൯ means 9: ompathu."
+            },
+            {
+              "kind": "speech",
+              "text": "൰ means 10: pathu."
+            },
+            {
+              "kind": "speech",
+              "text": "Point through ൬ ൭ ൮ (six, seven, eight) ൯ ൰ (nine, ten) (six to ten) and say the words once."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — observe and trace",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace ൯ once and ൰ once with their models visible. Circle the one you hear:"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "ompathu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *ompathu*]"
+            },
+            {
+              "kind": "speech",
+              "text": ". (൯.)"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which shape means ten? (൰.) Read ൯. (Ompathu.) This lesson added two shapes, not five."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-W07-number-words-6-10",
+      "sequence": 350,
+      "title": "ഏ, ഴ — two letters unlock the second row",
+      "headword": "ഏ ഴ",
+      "romanization": "long e, zha",
+      "gloss": "learn the two remaining letters, then read six to ten",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:807ecf1ae84ab1a8",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say six to ten, then read ൬ ൭ ൮ (six, seven, eight) ൯ ൰ (nine, ten). Two letters remain before every written word in the row is decodable."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഏ is independent long e."
+            },
+            {
+              "kind": "speech",
+              "text": "ഴ is the curled zh you already heard in ezhu."
+            },
+            {
+              "kind": "speech",
+              "text": "Together with the familiar chandrakkala, they begin and finish ഏഴ്, ezhu."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "numeral",
+                "word",
+                "said"
+              ],
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "numeral: ൬. word: ആറ്. said: aaru.",
+                "numeral: ൭. word: ഏഴ്. said: ezhu.",
+                "numeral: ൮. word: എട്ട്. said: ettu.",
+                "numeral: ൯. word: ഒമ്പത്. said: ompathu.",
+                "numeral: ൰. word: പത്ത്. said: pathu."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — observe and trace",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace ഏ once and ഴ once with the models visible. Then point through ഏഴ് and say ezhu. Whole-word memory writing waits."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter carries the rare zh? (ഴ.) Read ൭ — ഏഴ്. (Ezhu, seven.) How many new letters appeared? (Two.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-W07-numbers-6-10-guided-copy",
+      "sequence": 351,
+      "title": "൬ ൭ ൮ (six, seven, eight) ൯ ൰ (nine, ten) (six to ten) — one supported copy",
+      "headword": "൬ ൭ ൮ ൯ ൰",
+      "romanization": "six to ten",
+      "gloss": "copy the second numeral row and one representative word with models visible",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:c7b45b52d09df7d1",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read ൬ ൭ ൮ (six, seven, eight) ൯ ൰ (nine, ten) (six to ten). Keep both models below visible."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — guided copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy ൬ ൭ ൮ (six, seven, eight) ൯ ൰ (nine, ten) (six to ten) once. Then copy ഏഴ് — ൭ once. Look back whenever you need. Check only the two new letters ഏ and ഴ, then stop."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read your copied word. (Ezhu, seven.) Which numeral belongs beside it? (൭.) No new shape was added here."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-W07-numbers-6-10-delayed-copy",
+      "sequence": 352,
+      "title": "ഏഴ് — hide, then write",
+      "headword": "ഏഴ് ൭",
+      "romanization": "ezhu, seven",
+      "gloss": "retrieve one familiar word-numeral pair after hiding its model",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:84ae84b6990b8105",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Study ഏഴ് — ൭ for five seconds. Say ezhu, then cover both forms."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — delayed copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Write the word and numeral while the model is hidden. Peek once if needed, cover again, and finish. Uncover and repair one shape rather than rewriting."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter carries the curled sound? (ഴ.) What changed from the guided copy? (The model was hidden before writing.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-W07-numbers-6-10-dictation",
+      "sequence": 353,
+      "title": "Heard numbers — write without a model",
+      "headword": "ഏഴ് ൭",
+      "romanization": "ezhu, seven",
+      "gloss": "write familiar number forms from sound alone",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:69e69f73426dd37f",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover the answer line. Every sound and shape has already had a supported turn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — dictation and transcription",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "aaru — ezhu — ompathu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *aaru — ezhu — ompathu*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write the three numerals from sound alone. For ezhu, also write the word. Then uncover: ൬ — ൭ ഏഴ് — ൯. Compare and repair one place."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write the numeral for pathu. (൰.) Write the word you practised for seven. (ഏഴ്.) Next comes a cumulative, no-new-shape payoff."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C07-numbers-practice",
+      "sequence": 354,
+      "title": "One to ten — the cumulative payoff",
+      "headword": "൧ ൨ ൩ ൪ ൫ ൬ ൭ ൮ ൯ ൰",
+      "romanization": "onnu through pathu",
+      "gloss": "count, read shuffled numerals, and write one familiar form independently",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:0cdf2ec4b46b9b48",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Count from onnu to pathu once without looking. No new word or shape appears in this lesson."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice — read, not recite",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read these shuffled numerals before looking back at the ordered row:"
+            },
+            {
+              "kind": "speech",
+              "text": "൭ ൨ ൰ ൫ ൮ ൩ ൯ ൧ ൬ ൪."
+            },
+            {
+              "kind": "speech",
+              "text": "Now check against ൧ ൨ ൩ (one, two, three) ൪ ൫ (four, five) (one to five) ൬ ൭ ൮ (six, seven, eight) ൯ ൰ (nine, ten) (six to ten) (onnu through pathu)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way — meaning and history",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Which word preserves the rare zh? (ഏഴ്, ezhu, seven.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Which word means one short of ten? (ഒമ്പത്, ompathu, nine.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Which first-five word shifted furthest from older aintu? (അഞ്ച്, anchu.)"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "writing",
+          "title": "Writing — independent dictation",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover the answer."
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "ezhu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *ezhu*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write its numeral and word from sound alone. Uncover and compare: ൭ — ഏഴ്. Repair one shape if needed."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Count one to ten, then read ൯ ൪ ൭ out of order. You can now hear, say, read, and write a representative part of the complete number sequence."
             }
           ]
         }
