@@ -1870,6 +1870,9 @@ public static class Validator
     private const string ForbiddenTrackedArtifactComponent = "node_modules";
     private const string RedactedTrackedArtifactPath = "repository";
 
+    private static readonly IComparer<string> UnicodeScalarOrdinalComparer =
+        Comparer<string>.Create(CompareUnicodeScalars);
+
     private static readonly HashSet<string> WindowsReservedBasenames = new(StringComparer.Ordinal)
     {
         "CON", "PRN", "AUX", "NUL", "CONIN$", "CONOUT$", "CLOCK$",
@@ -1924,7 +1927,7 @@ public static class Validator
 
         return diagnostics
             .OrderBy(diagnostic => diagnostic.Code, StringComparer.Ordinal)
-            .ThenBy(diagnostic => diagnostic.Path, StringComparer.Ordinal)
+            .ThenBy(diagnostic => diagnostic.Path, UnicodeScalarOrdinalComparer)
             .ThenBy(diagnostic => CanonicalDetails(diagnostic.Details), StringComparer.Ordinal)
             .ToArray();
     }
@@ -1994,7 +1997,7 @@ public static class Validator
             return (null, "EMPTY");
         }
 
-        if (normalized.Length > 512)
+        if (normalized.EnumerateRunes().Count() > 512)
         {
             return (null, "TOO_LONG");
         }
@@ -2038,7 +2041,7 @@ public static class Validator
                 return (null, "TRAILING_DOT_OR_SPACE");
             }
 
-            var basename = segment.Split('.', 2)[0].ToUpperInvariant();
+            var basename = FullUppercaseForReservedBasename(segment.Split('.', 2)[0]);
             if (WindowsReservedBasenames.Contains(basename))
             {
                 return (null, "RESERVED_BASENAME");
@@ -2060,6 +2063,35 @@ public static class Validator
             .Replace("\u1e9e", "ss", StringComparison.Ordinal)
             .ToLowerInvariant();
         return string.Equals(identity, ForbiddenTrackedArtifactComponent, StringComparison.Ordinal);
+    }
+
+    private static string FullUppercaseForReservedBasename(string value)
+    {
+        // The closed reserved-name set is ASCII. U+0131 DOTLESS I is the only
+        // full-uppercase-to-ASCII mapping that can participate in one of those
+        // names and differs from .NET's invariant single-scalar casing.
+        return value.Replace('\u0131', 'i').ToUpperInvariant();
+    }
+
+    private static int CompareUnicodeScalars(string left, string right)
+    {
+        var leftIndex = 0;
+        var rightIndex = 0;
+        while (leftIndex < left.Length && rightIndex < right.Length)
+        {
+            var leftRune = Rune.GetRuneAt(left, leftIndex);
+            var rightRune = Rune.GetRuneAt(right, rightIndex);
+            var comparison = leftRune.Value.CompareTo(rightRune.Value);
+            if (comparison != 0)
+            {
+                return comparison;
+            }
+
+            leftIndex += leftRune.Utf16SequenceLength;
+            rightIndex += rightRune.Utf16SequenceLength;
+        }
+
+        return (left.Length - leftIndex).CompareTo(right.Length - rightIndex);
     }
 
     private static string CanonicalDetails(TrackedArtifactDiagnosticDetails details)

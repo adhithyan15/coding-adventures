@@ -251,6 +251,49 @@ public sealed class BuildToolTests : IDisposable
         }
     }
 
+    [Fact]
+    public void TrackedArtifactLengthLimitCountsUnicodeScalarsRatherThanUtf16Units()
+    {
+        var allowed = string.Concat(Enumerable.Repeat("\U0001f600", 512));
+        var tooLong = string.Concat(Enumerable.Repeat("\U0001f600", 513));
+
+        Assert.Empty(Validator.ValidateTrackedArtifactSnapshot(
+        [
+            new TrackedArtifactEntry(1, allowed, "regular"),
+        ]));
+        var diagnostic = Assert.Single(Validator.ValidateTrackedArtifactSnapshot(
+        [
+            new TrackedArtifactEntry(1, tooLong, "regular"),
+        ]));
+        Assert.Equal("TOO_LONG", diagnostic.Details.Problem);
+    }
+
+    [Fact]
+    public void TrackedArtifactDiagnosticsSortPathsByUnicodeScalarValue()
+    {
+        var diagnostics = Validator.ValidateTrackedArtifactSnapshot(
+        [
+            new TrackedArtifactEntry(1, "\U00010000/node_modules/a", "regular"),
+            new TrackedArtifactEntry(2, "\ue000/node_modules/b", "regular"),
+        ]);
+
+        Assert.Equal("\ue000/node_modules/b", diagnostics[0].Path);
+        Assert.Equal("\U00010000/node_modules/a", diagnostics[1].Path);
+    }
+
+    [Fact]
+    public void TrackedArtifactValidationUsesFullUppercaseForReservedBasenames()
+    {
+        var diagnostic = Assert.Single(Validator.ValidateTrackedArtifactSnapshot(
+        [
+            new TrackedArtifactEntry(1, "code/con\u0131n$.txt/file.cs", "regular"),
+        ]));
+
+        Assert.Equal("TRACKED_ARTIFACT_PATH_INVALID", diagnostic.Code);
+        Assert.Equal("RESERVED_BASENAME", diagnostic.Details.Problem);
+        Assert.Equal("repository", diagnostic.Path);
+    }
+
     public void Dispose()
     {
         if (Directory.Exists(_tempRoot))
