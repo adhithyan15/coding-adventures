@@ -31,12 +31,12 @@ from __future__ import annotations
 import socket
 import threading
 import time
+from contextlib import suppress
 from unittest.mock import MagicMock
 
 import pytest
 
 from tcp_server import TcpServer
-
 
 # ---------------------------------------------------------------------------
 # Helper utilities
@@ -395,7 +395,7 @@ class TestShutdown:
 
 
 class TestErrorHandling:
-    """Tests for error code-paths: handler exceptions and cleanup with live connections."""
+    """Handler-exception and live-connection cleanup tests."""
 
     def test_handler_exception_closes_client_keeps_server_alive(self) -> None:
         """
@@ -424,11 +424,9 @@ class TestErrorHandling:
                 s.connect(("127.0.0.1", 16372))
                 s.sendall(b"crash me")
                 s.settimeout(1.0)
-                try:
+                with suppress(ConnectionResetError, OSError):
                     # Server closes the connection after the handler crash.
                     s.recv(4096)
-                except (ConnectionResetError, OSError):
-                    pass  # platform-specific: some OSes send RST, others FIN
 
             # Give the event loop a moment to clean up and return to select().
             time.sleep(0.1)
@@ -466,10 +464,8 @@ class TestErrorHandling:
                 s.connect(("127.0.0.1", 16374))
                 s.sendall(b"trigger oserror")
                 s.settimeout(1.0)
-                try:
+                with suppress(ConnectionResetError, OSError):
                     s.recv(4096)
-                except (ConnectionResetError, OSError):
-                    pass
 
             time.sleep(0.1)
 

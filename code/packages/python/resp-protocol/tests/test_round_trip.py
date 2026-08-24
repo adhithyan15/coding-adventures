@@ -1,14 +1,17 @@
 """
-Round-trip tests: encode(x) → decode → re-encode, verifying encode(x) == re-encode(decode(encode(x))).
+Round-trip tests verify that encode(x) equals re-encode(decode(encode(x))).
 
 This also serves as integration tests proving the encoder and decoder
 are consistent with each other.
 """
 
-import pytest
-
 from resp_protocol import RespError, decode, encode
-from resp_protocol.encoder import encode_array, encode_bulk_string, encode_integer, encode_simple_string
+from resp_protocol.encoder import (
+    encode_array,
+    encode_bulk_string,
+    encode_integer,
+    encode_simple_string,
+)
 
 
 class TestRoundTrip:
