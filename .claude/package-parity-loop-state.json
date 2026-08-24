@@ -11,9 +11,9 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 12501,
+  "active_pr": null,
   "last_inventory": {
-    "revision": "ec2f913facaf2ecf00ebc1a0393d289220cde39d",
+    "revision": "8ca09a9928a113c358a625fe16938b02fb1e38c5",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1369,
@@ -4309,16 +4309,18 @@
     {
       "id": "python-hash-functions-build-front-strict-mypy",
       "title": "Bring the repaired Python hash-functions BUILD fronts under strict MyPy",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["python-hash-functions-build-front-idempotence"],
       "branch": "codex/python-hash-functions-build-front-strict-mypy",
       "pr_number": 12501,
       "selection_revision": "ec2f913facaf2ecf00ebc1a0393d289220cde39d",
       "implementation_revision": "f81793e933ebedb270d8bab5faf4d209b4832078",
-      "final_review_revision": "ca3ab61352b1e7ac19194aa4cc3488bd27933139",
+      "final_review_revision": "71d82e170b90100d8ec070305eaebaba603e15f9",
+      "merge_revision": "8ca09a9928a113c358a625fe16938b02fb1e38c5",
+      "merged_at": "2026-08-24T04:44:15Z",
       "selection_notes": "Selected after PR #12495 completed all 30 checks and merged through the requested auto-merge path. The collision-checked post-merge inventory remains identity-neutral at 15 established lanes, 1,369 identities, and 4,562 slots with zero collisions or unknown buckets. No new unowned portable identity appeared; merged Roku PR #12488's newly explicit native authority is split into a selection-blocked review owner before selection. The dependency audit also added this already registered strict-MyPy correction to the final data-store owner's prerequisites so the downstream DAG cannot overclaim a quality gate. This bounded two-front correction closes an active governing-contract violation and repairs the merged hash-functions validation claim; strict MyPy already passes all nine source/test files, so no production source or behavioral test change is expected. RESP/TCP remains the next dependency-leveraged owner. Live audits across six open PRs and 27 remote source heads find zero overlap on hash-functions, its recipe regression, parity state, or roadmap; the target branch and PR were absent before creation.",
       "validation_notes": "The canonical and Windows BUILD recipes now differ from the repaired fronts only by adding MyPy's --strict flag, and the exact-recipe regression pins both commands. The exact Windows front passes twice consecutively with uv 0.11.28, Python 3.13.14, Ruff, formatting, strict MyPy across all nine source/test files, 88 tests, and 100% coverage. Exact dependent Windows fronts pass Bloom Filter (47 tests, 96.15% coverage), Hash Map (116 tests, 96.04%), HyperLogLog (61 tests, 98.88%), and the already repaired protocol (five tests, 100%); an immediate manual engine downstream passes 57 tests at 96.67%. Focused recipe, uv-audit, parity-reporter, and capability-taxonomy suites pass 2, 13, 10, and 7 tests. The Go build tool passes tests, vet, and trimpath compilation. Its exact dry plan evaluates 45 Starlark files and 494 Python packages, selecting the expected one changed and eight affected packages. With the uv 0.11.28 executable directory on PATH and explicit UV_PYTHON=3.13 plus UV_VENV_CLEAR=1 only for separately owned legacy fronts, the real affected execution builds hash-functions, bloom-filter, hash-map, hyperloglog, protocol, and resp-protocol, then reproduces the unchanged engine front's separately owned quoted editable requirement parse error and dependency-skips the store. This tranche changes no package source, behavioral tests, dependencies, capability metadata, production authority, or privileged boundary.",
-      "publication_notes": "Opened ready-for-review PR #12501 from independently reviewed head ca3ab61352b1e7ac19194aa4cc3488bd27933139 after a normal first push from exact origin/main ec2f913facaf2ecf00ebc1a0393d289220cde39d. Eight open PRs and 30 non-main remote heads had zero exact implementation, state, roadmap, dependency-fixture, or recipe-test overlap; the target remote branch and PR were absent before publication. Independent implementation/claim, security/ownership, and roadmap/state reviews passed with no remaining defect. CI and mergeability now require live monitoring before auto-merge.",
+      "publication_notes": "Opened ready-for-review PR #12501 from independently reviewed head ca3ab61352b1e7ac19194aa4cc3488bd27933139 after a normal first push from exact origin/main ec2f913facaf2ecf00ebc1a0393d289220cde39d. Eight open PRs and 30 non-main remote heads had zero exact implementation, state, roadmap, dependency-fixture, or recipe-test overlap; the target remote branch and PR were absent before publication. Independent implementation/claim, security/ownership, and roadmap/state reviews passed with no remaining defect. Final head 71d82e170b90100d8ec070305eaebaba603e15f9 completed all 30 checks with 24 successes, five expected skips, one neutral CodeQL result, and no failures or pending work. GitHub reported the branch clean and mergeable; the loop requested squash auto-merge, and GitHub merged PR #12501 as 8ca09a9928a113c358a625fe16938b02fb1e38c5 at 2026-08-24T04:44:15Z.",
       "notes": "Discovered by the post-#12492 governing-contract audit. The merged hash-functions repair is classified as generated-standard and its state notes claim strict MyPy, but both active fronts still invoke plain `mypy src tests` and the package has no strict configuration. Add `--strict` to both recipes and their exact regression, resolve only resulting static-narrowing debt, rerun both fronts twice and the hash-dependent closure, and correct the historical validation claim. This bounded correction is separately owned and does not displace the concrete data-store protocol blocker."
     },
     {
@@ -4361,11 +4363,22 @@
     {
       "id": "python-resp-tcp-build-front-idempotence",
       "title": "Make the Python RESP and TCP BUILD fronts repeatable",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["python-uv-build-front-idempotence-audit"],
+      "branch": "codex/python-resp-tcp-build-front-idempotence",
+      "pr_number": null,
+      "selection_revision": "8ca09a9928a113c358a625fe16938b02fb1e38c5",
+      "selection_notes": "Selected after PR #12501 completed all 30 checks and GitHub merged it through the requested squash auto-merge command. The collision-checked post-merge inventory remains identity-neutral at 15 established lanes, 1,369 implementation identities, and 4,562 slots with zero collisions or unknown buckets. Before selection, the contract audit added a separately owned follow-up for tcp-server's protocol-agnostic source/README versus its declared RESP dependency; the current generated-standard fixture explicitly preserves RESP-before-TCP order, so that metadata/spec reconciliation depends on this backfill rather than widening it. This coherent two-package repair is dependency-ready and is the sole remaining prerequisite that unlocks the final data-store owner. Nine open PRs and 31 non-main remote heads have zero exact package, state, roadmap, fixture, or recipe-test overlap; the target branch and prior PR were absent before creation.",
+      "notes": "Dependency-shaped generated-pattern backfill for python/resp-protocol followed by python/tcp-server. Pin and recreate both environments, preserve the RESP prerequisite order, and validate the exact dependent closure on immediate repeat."
+    },
+    {
+      "id": "python-tcp-server-resp-dependency-reconciliation",
+      "title": "Reconcile the Python TCP server's protocol-agnostic contract with its RESP dependency",
+      "status": "pending",
+      "depends_on": ["python-resp-tcp-build-front-idempotence"],
       "branch": null,
       "pr_number": null,
-      "notes": "Dependency-shaped generated-pattern backfill for python/resp-protocol followed by python/tcp-server. Pin and recreate both environments, preserve the RESP prerequisite order, and validate the exact dependent closure on immediate repeat."
+      "notes": "Discovered by the post-#12501 governing-reference audit. DT24, tcp-server's README, and its source define a protocol-agnostic raw-byte server and contain no RESP import, while pyproject.toml, both BUILD fronts, the uv fixture, and dependency tests encode RESP as a runtime prerequisite. After the generated-standard backfill preserves the fixture's current RESP-before-TCP order, audit the intended package contract and either remove the unused dependency consistently or document and test the missing integration rationale. Keep this follow-up separate so the selected repeatability repair does not rewrite dependency metadata or historical audit fixtures."
     },
     {
       "id": "python-data-store-build-front-idempotence",
