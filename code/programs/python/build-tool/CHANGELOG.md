@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.8] - 2026-08-24
+
+### Added
+
+- **Tracked-artifact validation conformance**: the Python validator now consumes
+  all four language-neutral `tracked_artifact_absence` cases, including exact,
+  nested, separator-normalized, case-folded, and Unicode compatibility aliases
+  of `node_modules`.
+- **Closed redacted failures**: unsafe raw paths produce only the stable
+  `TRACKED_ARTIFACT_PATH_INVALID` diagnostic at `repository`; safe forbidden
+  paths produce `TRACKED_ARTIFACT_FORBIDDEN` in canonical order. Entry-kind
+  metadata remains inert and grants no Git, filesystem, or process authority.
+
 ## [0.3.7] - 2026-08-13
 
 ### Fixed

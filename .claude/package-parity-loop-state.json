@@ -12,13 +12,13 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 12598,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/12598",
-    "branch": "codex/build-tool-tracked-artifact-validation-corpus",
+    "number": 12602,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/12602",
+    "branch": "codex/build-tool-python-tracked-artifact-validation-conformance",
     "status": "open"
   },
   "last_inventory": {
-    "revision": "1d5eb7d570ceb011b0d6bd66a4be8e32cac5b395",
+    "revision": "cd0d11cea514288cca2e4a9c786eb98dd336b654",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1370,
@@ -4685,10 +4685,113 @@
       "id": "build-tool-orphan-crate-validation-remaining-engines",
       "title": "Enforce orphan-crate BUILD validation in every supported build tool",
       "status": "pending",
+      "depends_on": [
+        "build-tool-orphan-crate-validation-corpus",
+        "build-tool-csharp-orphan-crate-validation-conformance",
+        "build-tool-elixir-orphan-crate-validation-conformance",
+        "build-tool-haskell-orphan-crate-validation-conformance",
+        "build-tool-lua-orphan-crate-validation-conformance",
+        "build-tool-perl-orphan-crate-validation-conformance",
+        "build-tool-python-orphan-crate-validation-conformance",
+        "build-tool-ruby-orphan-crate-validation-conformance",
+        "build-tool-rust-orphan-crate-validation-conformance",
+        "build-tool-swift-orphan-crate-validation-conformance",
+        "build-tool-typescript-orphan-crate-validation-conformance"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Completion umbrella for the independently reviewable C#, Elixir, Haskell, Lua, Perl, Python, Ruby, Rust, Swift, and TypeScript children. Route later Dart/JVM engines through the same contract and do not infer coverage from Go's repository gate."
+    },
+    {
+      "id": "build-tool-csharp-orphan-crate-validation-conformance",
+      "title": "Make the C# build tool consume orphan-crate validation",
+      "status": "pending",
       "depends_on": ["build-tool-orphan-crate-validation-corpus"],
       "branch": null,
       "pr_number": null,
-      "notes": "Consume the closed orphan-crate corpus in the extant C#, Elixir, Haskell, Lua, Perl, Python, Ruby, Rust, Swift, and TypeScript build-tool engines, and route later Dart/JVM engines through the same contract. Decompose into independently reviewable per-engine children before implementation; do not infer coverage from Go's repository gate."
+      "notes": "Consume the closed process-free orphan-crate snapshot and diagnostics in the C# engine without adding filesystem enumeration or process authority."
+    },
+    {
+      "id": "build-tool-elixir-orphan-crate-validation-conformance",
+      "title": "Make the Elixir build tool consume orphan-crate validation",
+      "status": "pending",
+      "depends_on": ["build-tool-orphan-crate-validation-corpus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume the closed process-free orphan-crate snapshot and diagnostics in the Elixir engine without adding filesystem enumeration or process authority."
+    },
+    {
+      "id": "build-tool-haskell-orphan-crate-validation-conformance",
+      "title": "Make the Haskell build tool consume orphan-crate validation",
+      "status": "pending",
+      "depends_on": ["build-tool-orphan-crate-validation-corpus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume the closed process-free orphan-crate snapshot and diagnostics in the Haskell engine without adding filesystem enumeration or process authority."
+    },
+    {
+      "id": "build-tool-lua-orphan-crate-validation-conformance",
+      "title": "Make the Lua build tool consume orphan-crate validation",
+      "status": "pending",
+      "depends_on": ["build-tool-orphan-crate-validation-corpus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume the closed process-free orphan-crate snapshot and diagnostics in the Lua engine without adding filesystem enumeration or process authority."
+    },
+    {
+      "id": "build-tool-perl-orphan-crate-validation-conformance",
+      "title": "Make the Perl build tool consume orphan-crate validation",
+      "status": "pending",
+      "depends_on": ["build-tool-orphan-crate-validation-corpus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume the closed process-free orphan-crate snapshot and diagnostics in the Perl engine without adding filesystem enumeration or process authority."
+    },
+    {
+      "id": "build-tool-python-orphan-crate-validation-conformance",
+      "title": "Make the Python build tool consume orphan-crate validation",
+      "status": "pending",
+      "depends_on": ["build-tool-orphan-crate-validation-corpus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume the closed process-free orphan-crate snapshot and diagnostics in the Python engine without adding filesystem enumeration or process authority."
+    },
+    {
+      "id": "build-tool-ruby-orphan-crate-validation-conformance",
+      "title": "Make the Ruby build tool consume orphan-crate validation",
+      "status": "pending",
+      "depends_on": ["build-tool-orphan-crate-validation-corpus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume the closed process-free orphan-crate snapshot and diagnostics in the Ruby engine without adding filesystem enumeration or process authority."
+    },
+    {
+      "id": "build-tool-rust-orphan-crate-validation-conformance",
+      "title": "Make the Rust build tool consume orphan-crate validation",
+      "status": "pending",
+      "depends_on": ["build-tool-orphan-crate-validation-corpus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume the closed process-free orphan-crate snapshot and diagnostics in the Rust engine without adding filesystem enumeration or process authority."
+    },
+    {
+      "id": "build-tool-swift-orphan-crate-validation-conformance",
+      "title": "Make the Swift build tool consume orphan-crate validation",
+      "status": "pending",
+      "depends_on": ["build-tool-orphan-crate-validation-corpus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume the closed process-free orphan-crate snapshot and diagnostics in the Swift engine without adding filesystem enumeration or process authority."
+    },
+    {
+      "id": "build-tool-typescript-orphan-crate-validation-conformance",
+      "title": "Make the TypeScript build tool consume orphan-crate validation",
+      "status": "pending",
+      "depends_on": ["build-tool-orphan-crate-validation-corpus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume the closed process-free orphan-crate snapshot and diagnostics in the TypeScript engine without adding filesystem enumeration or process authority."
     },
     {
       "id": "build-tool-go-orphan-crate-host-scanner-security-review",
@@ -4703,7 +4806,7 @@
     {
       "id": "build-tool-tracked-artifact-validation-corpus",
       "title": "Define language-neutral tracked-artifact validation",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-validation-oracle-corpus"],
       "branch": "codex/build-tool-tracked-artifact-validation-corpus",
       "pr_number": 12598,
@@ -4712,9 +4815,13 @@
       "selection_notes": "Selected only after PR #12591 completed all 29 checks and merged through squash auto-merge, the exact-main collision inventory was regenerated, and the newly exposed Go tracked-artifact index authority was registered under its own selection-blocked review. The schema-3 inventory remains 15 established lanes, 1,370 identities, 4,563 slots, 175 high-consensus identities with 276 gaps, 907 singletons with 12,698 gaps, 718 Rust singletons, zero collisions, and zero unknown buckets; OCaml remains correctly emerging at zero packages. Exact tree comparison from the prior inventory revision found no identity, slot, directory-spelling, marker, or unknown-bucket delta and no newly unowned portable package. This bounded process-free corpus is ready behind the merged validation oracle, removes a direct Go-oracle prerequisite, and unlocks every remaining engine's tracked-artifact validator, with eleven unfinished descendants through the Go oracle, build-tool lanes, and OCaml promotion. Eleven live open PRs and 34 non-main remote heads have zero expected-surface overlap; the target branch and prior PR are absent. The newly ready orphan remaining-engine umbrella requires per-engine decomposition and has no descendants, while OCaml's process-free core still intersects PRs #12149 and #12162 on Go validator and main surfaces.",
       "notes": "Discovered after merged PR #12551 added Go-only rejection of tracked node_modules paths. Define closed process-free fixtures for exact and nested tracked artifacts, normalized separators, case and Unicode aliases, dotted traversal, symlink/reparse metadata supplied as data, allowed ordinary source paths, sorted diagnostics, and repository-relative redaction before other build-tool implementations claim the contract. Keep Git enumeration and host filesystem inspection outside this language-neutral validator corpus.",
       "implementation_revision": "49b510ded78c14cb59bc0d2f8e42f2fae74dffa0",
+      "final_revision": "bc18656cbf4375f418a1a75f8150391445be6498",
+      "merge_revision": "d960dabfe5e07a4d0d7073dada2fea00c05de426",
+      "merged_at": "2026-08-24T17:55:43Z",
+      "merge_notes": "All 29 reported checks reached terminal acceptable conclusions: 23 successes and six expected skips, with no failures or pending work. GitHub reported the branch clean and mergeable; the loop enabled squash auto-merge, and GitHub merged PR #12598 without a manual merge command.",
       "implementation_notes": "Implemented the eleventh closed validation check, tracked_artifact_absence, over bounded inert ordinal/path/entry-kind records. The independent oracle normalizes separators, rejects exact, nested, case-folded, and NFKC-compatible node_modules components, treats regular/symlink/reparse metadata identically, redacts invalid raw paths to repository, and sorts every derived diagnostic without Git, filesystem, process, environment, or network authority. Four cases cover clean paths, exact/nested artifacts, aliases, unsafe paths, dishonest results, conditional schema leakage, stable problem codes, and malformed snapshot ordering.",
       "validation_notes": "Validated 110 strict corpus cases with 269 staged workspace files; 201 conformance schema/runner/execution/authority/loader/broker/backend tests pass with 23 expected platform skips and 90% branch-aware coverage for build_tool_conformance.py. The Go build tool passes all packages at 78.3% aggregate coverage plus vet and trimpath build; a forced dry plan validates and selects all 5,070 packages. Ten parity-reporter, seven capability-taxonomy, five Haskell-capability, and 46 OCaml-lock tests pass with two expected skips. Ruff error-class lint/format, production Bandit, strict JSON, the 459-owner/638-edge acyclic state graph, collision reporting, and diff checks pass. Strict MyPy reports the same eight pre-existing source findings as exact main and no added finding. A late exact-main inventory at 1d5eb7d570ceb011b0d6bd66a4be8e32cac5b395 remains unchanged with zero collisions and unknown buckets.",
-      "publication_notes": "Opened ready-for-review PR #12598 from clean validated implementation head 49b510ded78c14cb59bc0d2f8e42f2fae74dffa0 after a normal first push. Immediately before publication, remote main remained at exact reviewed base 1d5eb7d570ceb011b0d6bd66a4be8e32cac5b395; nine live open PRs had zero exact overlap across the 14 changed paths. GitHub reports the PR mergeable while required CI and CodeQL checks are queued or in progress, so auto-merge remains disabled. This lifecycle follow-up records #12598 as the sole active parity PR and leaves the loop monitor-only until every required check is terminal and acceptable."
+      "publication_notes": "Opened ready-for-review PR #12598 from clean validated implementation head 49b510ded78c14cb59bc0d2f8e42f2fae74dffa0 after a normal first push. Immediately before publication, remote main remained at exact reviewed base 1d5eb7d570ceb011b0d6bd66a4be8e32cac5b395; nine live open PRs had zero exact overlap across the 14 changed paths. Final head bc18656cbf4375f418a1a75f8150391445be6498 completed all 29 checks with 23 successes, six expected skips, and no failures or pending work. GitHub reported the branch clean and mergeable; the loop enabled squash auto-merge, and GitHub merged PR #12598 as d960dabfe5e07a4d0d7073dada2fea00c05de426 at 2026-08-24T17:55:43Z without a manual merge command."
     },
     {
       "id": "build-tool-go-tracked-artifact-index-authority-review",
@@ -4730,10 +4837,120 @@
       "id": "build-tool-tracked-artifact-validation-remaining-engines",
       "title": "Enforce tracked-artifact validation in every supported build tool",
       "status": "pending",
+      "depends_on": [
+        "build-tool-tracked-artifact-validation-corpus",
+        "build-tool-csharp-tracked-artifact-validation-conformance",
+        "build-tool-elixir-tracked-artifact-validation-conformance",
+        "build-tool-haskell-tracked-artifact-validation-conformance",
+        "build-tool-lua-tracked-artifact-validation-conformance",
+        "build-tool-perl-tracked-artifact-validation-conformance",
+        "build-tool-python-tracked-artifact-validation-conformance",
+        "build-tool-ruby-tracked-artifact-validation-conformance",
+        "build-tool-rust-tracked-artifact-validation-conformance",
+        "build-tool-swift-tracked-artifact-validation-conformance",
+        "build-tool-typescript-tracked-artifact-validation-conformance"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Completion umbrella for the independently reviewable C#, Elixir, Haskell, Lua, Perl, Python, Ruby, Rust, Swift, and TypeScript children. Route later Dart/JVM engines through the same contract and do not infer coverage from the Go repository gate."
+    },
+    {
+      "id": "build-tool-csharp-tracked-artifact-validation-conformance",
+      "title": "Make the C# build tool consume tracked-artifact validation",
+      "status": "pending",
       "depends_on": ["build-tool-tracked-artifact-validation-corpus"],
       "branch": null,
       "pr_number": null,
-      "notes": "Consume the closed tracked-artifact corpus in the extant C#, Elixir, Haskell, Lua, Perl, Python, Ruby, Rust, Swift, and TypeScript build-tool engines, and route later Dart/JVM engines through the same contract. Decompose into independently reviewable per-engine children before implementation; do not infer coverage from the Go repository gate."
+      "notes": "Consume the closed process-free tracked-artifact snapshot and diagnostics in the C# engine without adding Git, filesystem, or process authority."
+    },
+    {
+      "id": "build-tool-elixir-tracked-artifact-validation-conformance",
+      "title": "Make the Elixir build tool consume tracked-artifact validation",
+      "status": "pending",
+      "depends_on": ["build-tool-tracked-artifact-validation-corpus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume the closed process-free tracked-artifact snapshot and diagnostics in the Elixir engine without adding Git, filesystem, or process authority."
+    },
+    {
+      "id": "build-tool-haskell-tracked-artifact-validation-conformance",
+      "title": "Make the Haskell build tool consume tracked-artifact validation",
+      "status": "pending",
+      "depends_on": ["build-tool-tracked-artifact-validation-corpus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume the closed process-free tracked-artifact snapshot and diagnostics in the Haskell engine without adding Git, filesystem, or process authority."
+    },
+    {
+      "id": "build-tool-lua-tracked-artifact-validation-conformance",
+      "title": "Make the Lua build tool consume tracked-artifact validation",
+      "status": "pending",
+      "depends_on": ["build-tool-tracked-artifact-validation-corpus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume the closed process-free tracked-artifact snapshot and diagnostics in the Lua engine without adding Git, filesystem, or process authority."
+    },
+    {
+      "id": "build-tool-perl-tracked-artifact-validation-conformance",
+      "title": "Make the Perl build tool consume tracked-artifact validation",
+      "status": "pending",
+      "depends_on": ["build-tool-tracked-artifact-validation-corpus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume the closed process-free tracked-artifact snapshot and diagnostics in the Perl engine without adding Git, filesystem, or process authority."
+    },
+    {
+      "id": "build-tool-python-tracked-artifact-validation-conformance",
+      "title": "Make the Python build tool consume tracked-artifact validation",
+      "status": "pr-open",
+      "depends_on": ["build-tool-tracked-artifact-validation-corpus"],
+      "branch": "codex/build-tool-python-tracked-artifact-validation-conformance",
+      "pr_number": 12602,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/12602",
+      "selection_revision": "d960dabfe5e07a4d0d7073dada2fea00c05de426",
+      "selection_notes": "Selected only after PR #12598 completed all 29 checks and merged through squash auto-merge, the exact-main collision inventory was regenerated, and both remaining-engine validation umbrellas were decomposed into twenty independently reviewable engine children. The schema-3 inventory remains 15 established lanes, 1,370 identities, 4,563 slots, 175 high-consensus identities with 276 gaps, 907 singletons with 12,698 gaps, 718 Rust singletons, zero collisions, and zero unknown buckets; OCaml remains correctly emerging at zero packages. This one-engine process-free child is the smallest newly ready consumer of the tracked-artifact contract and has zero exact overlap across eleven live open PRs and 35 non-main remote heads. The Go Git-index authority remains selection-blocked, and the higher-strategic OCaml process-free core remains collision-unsafe while PRs #12149 and #12162 touch Go validator and main surfaces.",
+      "implementation_revision": "3012333dbdd95af5bb6a8b92a1b3e9f78772ff3a",
+      "final_review_revision": "38f9c89fdb6adcc2fbd77f453e09e70f7d75bd11",
+      "validation_notes": "The Python validator consumes all four shared tracked-artifact cases and exactly matches the independent oracle for separator normalization, ten closed portable-path failures with hostile-path redaction, NFKC case-folded node_modules detection, inert regular/symlink/reparse kinds, and deterministic diagnostic sorting. Both canonical BUILD and BUILD_windows recipes pass from independently cleared uv 0.11.28 / Python 3.13.14 environments: 423 tests at 90.06% total coverage and 97% validator coverage in each run. The 110-case, 269-file neutral corpus validates; 164 conformance tests, 200 subtests, and 23 expected platform skips pass under Python 3.10. The focused validator source is Ruff-, strict-MyPy-, Bandit-, and compileall-clean; the complete package retains exactly the same 11 strict-MyPy findings in seven unchanged files as exact main. Wheel and source distributions build, and all 17 installed packages pass uv dependency checks. The Go build tool passes all packages, vet, and trimpath compilation; a fresh binary evaluates 45 Starlark BUILD files, discovers and validates 5,070 packages, preserves the five-entry orphan ledger, and completes a forced dry plan. Package-parity, capability-taxonomy, Haskell-capability, and OCaml-lock suites pass 66 tests plus 806 subtests with two expected skips. Three independent read-only reviews found no implementation, security-boundary, state-graph, inventory, roadmap, or collision issue after the identified rebase and front-door validation gaps were closed. The branch rebased twice without conflict onto exact origin/main cd0d11cea514288cca2e4a9c786eb98dd336b654; the regenerated schema-3 inventory remains 15 lanes, 1,370 identities, 4,563 slots, zero collisions, and zero unknown buckets. Diff, dependency, credential, production-authority, strict-JSON, and state-DAG gates are clean. This tranche adds no dependency, fixture, schema, capability-manifest, Git, filesystem, process, environment, or network authority.",
+      "publication_notes": "Opened ready-for-review PR #12602 from clean validated head 38f9c89fdb6adcc2fbd77f453e09e70f7d75bd11 after a normal first push. Immediately before publication, remote main remained at exact reviewed base cd0d11cea514288cca2e4a9c786eb98dd336b654; eight live open PRs had zero exact overlap across the six changed paths, and the target remote branch was absent.",
+      "notes": "Consume all four tracked-artifact fixture cases in the Python build-tool validator, preserving exact separator normalization, portable-path rejection and redaction, NFKC case-folded node_modules detection, inert entry-kind handling, and deterministic diagnostic ordering. Do not add Git enumeration, filesystem inspection, process execution, environment reads, or network authority."
+    },
+    {
+      "id": "build-tool-ruby-tracked-artifact-validation-conformance",
+      "title": "Make the Ruby build tool consume tracked-artifact validation",
+      "status": "pending",
+      "depends_on": ["build-tool-tracked-artifact-validation-corpus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume the closed process-free tracked-artifact snapshot and diagnostics in the Ruby engine without adding Git, filesystem, or process authority."
+    },
+    {
+      "id": "build-tool-rust-tracked-artifact-validation-conformance",
+      "title": "Make the Rust build tool consume tracked-artifact validation",
+      "status": "pending",
+      "depends_on": ["build-tool-tracked-artifact-validation-corpus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume the closed process-free tracked-artifact snapshot and diagnostics in the Rust engine without adding Git, filesystem, or process authority."
+    },
+    {
+      "id": "build-tool-swift-tracked-artifact-validation-conformance",
+      "title": "Make the Swift build tool consume tracked-artifact validation",
+      "status": "pending",
+      "depends_on": ["build-tool-tracked-artifact-validation-corpus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume the closed process-free tracked-artifact snapshot and diagnostics in the Swift engine without adding Git, filesystem, or process authority."
+    },
+    {
+      "id": "build-tool-typescript-tracked-artifact-validation-conformance",
+      "title": "Make the TypeScript build tool consume tracked-artifact validation",
+      "status": "pending",
+      "depends_on": ["build-tool-tracked-artifact-validation-corpus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume the closed process-free tracked-artifact snapshot and diagnostics in the TypeScript engine without adding Git, filesystem, or process authority."
     },
     {
       "id": "human-language-data-generator-filesystem-authority-review",

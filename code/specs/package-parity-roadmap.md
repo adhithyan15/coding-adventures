@@ -6028,6 +6028,60 @@ Rust singletons, zero collisions, and zero unknown buckets; OCaml remains
 correctly emerging with no packages. Nine open PRs still have no exact
 changed-file overlap, and the target branch and prior PR remain absent.
 
+### Post-#12598 refresh and Python tracked-artifact selection
+
+Final head `bc18656cbf4375f418a1a75f8150391445be6498` completed all 29
+reported checks with 23 successes, six expected skips, and no failures or
+pending work. GitHub reported PR #12598 clean and mergeable; the loop enabled
+squash auto-merge, and GitHub merged it as
+`d960dabfe5e07a4d0d7073dada2fea00c05de426` at 2026-08-24T17:55:43Z
+without a manual merge command.
+
+The collision-checked schema-3 inventory on that exact merge remains 15
+established lanes, 1,370 identities, and 4,563 present slots: 175
+high-consensus identities have 276 gaps, 122 identities in five to nine lanes
+have 926 gaps, 166 identities in two to four lanes have 2,087 gaps, and 907
+singletons have 12,698 gaps. There are 718 Rust singletons, zero canonical
+collisions, and zero unknown buckets. OCaml remains correctly emerging with no
+packages. Exact tree comparison from the prior inventory revision found no
+identity, slot, directory-spelling, marker, or unknown-bucket change and no
+newly unowned portable package.
+
+Before selection, the loop decomposed both closed validation-corpus umbrellas
+into independently reviewable C#, Elixir, Haskell, Lua, Perl, Python, Ruby,
+Rust, Swift, and TypeScript children. This prevents an umbrella from being
+mistaken for native engine coverage and gives every extant non-Go consumer an
+explicit owner. The completion umbrellas remain selection-blocked tracking
+nodes until their ten engine children merge. The Go tracked-artifact
+Git-index/process boundary stays separately selection-blocked and outside the
+process-free oracle.
+
+The dependency/leverage pass selects
+`build-tool-python-tracked-artifact-validation-conformance` on branch
+`codex/build-tool-python-tracked-artifact-validation-conformance` from exact
+base `d960dabfe5e07a4d0d7073dada2fea00c05de426`. It is one engine and one
+closed check, consumes all four neutral cases without Git or host-filesystem
+authority, and is the smallest newly ready build-tool parity child. Eleven live
+open PRs and 35 non-main remote heads have zero exact candidate-surface
+overlap; the target branch is absent. The OCaml process-free core remains
+dependency-ready but collision-unsafe while PRs #12149 and #12162 touch the Go
+validator and main surfaces.
+
+The implementation adds one pure Python validator over inert snapshot entries,
+tests it against every shared tracked-artifact fixture, and documents the
+public result shape without widening the reviewed authority boundary. After
+four unrelated human-language and HTML-parser commits reached `main`, the two
+implementation commits rebased without conflict onto exact revision
+`cd0d11cea514288cca2e4a9c786eb98dd336b654`. The collision-checked inventory is
+unchanged at 15 established lanes, 1,370 identities, 4,563 slots, zero
+collisions, and zero unknown buckets. Both complete Python build-tool fronts
+pass from cleared Python 3.13 environments with 423 tests and 90.06% coverage;
+the shared corpus, Python 3.10 conformance family, Go oracle and forced dry
+repository plan, package-parity/capability/OCaml gates, focused quality and
+security checks, build artifacts, dependency check, state DAG, and diff checks
+also pass. Full-package strict MyPy retains exactly the same 11 findings in
+seven unchanged files as exact `main`; the new validator is strict-MyPy clean.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
