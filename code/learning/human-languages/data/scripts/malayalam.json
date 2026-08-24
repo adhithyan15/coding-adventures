@@ -5721,6 +5721,28 @@
       "strokeOrderNote": ""
     }
   ],
+  "marks": [
+    {
+      "mark": "്",
+      "sound": "(suppresses the inherent vowel / may realize half-u)",
+      "role": "virama",
+      "attachesAs": "the candrakkala attached after a Malayalam carrier; it suppresses the preceding inherent vowel, may form a conjunct with a following consonant, or may represent the neutral half-u sound",
+      "example": {
+        "base": "ക",
+        "combined": "ക്",
+        "sound": "k"
+      },
+      "compositionOrder": [
+        "write the Malayalam carrier first",
+        "add the candrakkala to suppress its inherent vowel or prepare the following conjunct"
+      ],
+      "compositionSource": {
+        "citation": "The Unicode Consortium, The Unicode Standard, Version 17.0, Core Specification, §12.9.3 ‘Rendering Malayalam’, ‘Candrakkala’, U+0D4D MALAYALAM SIGN VIRAMA (2025)",
+        "url": "https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-12/",
+        "variation": "The standard identifies U+0D4D as Malayalam's candrakkala, shows consonant-plus-virama-plus-consonant sequences forming conjuncts, and explains that a visible candrakkala either suppresses the preceding vowel or replaces it with the neutral half-u sound. It specifies encoded composition and placement, not a universal handwriting direction or pen-lift count; the carrier-first instruction is therefore a transparent learner composition convention, and this entry deliberately makes no standalone ductus claim."
+      }
+    }
+  ],
   "digits": [
     {
       "glyph": "൦",
