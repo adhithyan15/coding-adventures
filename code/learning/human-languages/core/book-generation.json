@@ -2787,13 +2787,6 @@
     },
     {
       "language": "marathi",
-      "chapter": 6,
-      "output": "marathi/book/chapters/ch06-numbers-1-5.tex",
-      "unicodeScript": "Devanagari",
-      "scriptCommand": "mr"
-    },
-    {
-      "language": "marathi",
       "chapter": 7,
       "output": "marathi/book/chapters/ch07-numbers-1-5.tex",
       "unicodeScript": "Devanagari",
@@ -6451,26 +6444,6 @@
       "language": "urdu",
       "chapter": 1,
       "output": "urdu/book/chapters/ch01-greetings-and-responses.tex"
-    },
-    {
-      "language": "marathi",
-      "chapter": 2,
-      "output": "marathi/book/chapters/ch02-introductions.tex"
-    },
-    {
-      "language": "marathi",
-      "chapter": 3,
-      "output": "marathi/book/chapters/ch03-responding.tex"
-    },
-    {
-      "language": "marathi",
-      "chapter": 4,
-      "output": "marathi/book/chapters/ch04-farewells.tex"
-    },
-    {
-      "language": "marathi",
-      "chapter": 5,
-      "output": "marathi/book/chapters/ch05-first-verbs.tex"
     }
   ]
 }
