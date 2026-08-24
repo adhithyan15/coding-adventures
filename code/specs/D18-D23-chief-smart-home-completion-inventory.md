@@ -2399,9 +2399,11 @@ keeping unauthenticated BACnet control outside the runtime boundary:
   are isolated as partial failures, and conflicting endpoints claiming one
   device instance are reported without replacing the deterministic first
   observation.
-- The runtime exposes no property reads, writes, controls, BBMD management,
-  foreign-device registration, or BACnet/SC session ownership. Those require
-  separate authenticated ownership and operation-specific policy.
+- The discovery path exposes no property reads, writes, controls, BBMD
+  management, foreign-device registration, or BACnet/SC session ownership.
+  The later Device telemetry slice owns the one fixed read-only exception;
+  generic reads and every mutation still require separate authenticated
+  ownership and operation-specific policy.
 
 This expands local HVAC, lighting, access, and energy discovery without
 weakening the independent credential, camera-resource, or radio-host blocks.
@@ -2845,6 +2847,42 @@ https://www.belkin.com/support-article/?articleNum=335419.
 This keeps already-configured local Wemo switches and outlets useful after the
 vendor cloud shutdown while preserving explicit endpoint, authorization,
 lifetime, and model-recognition boundaries.
+
+## Current BACnet/IP Device Telemetry Breadth Slice
+
+The next breadth slice extends the existing BACnet/IP discovery runtime with a
+fixed read-only Device-object surface without turning unauthenticated classic
+BACnet/IP into a generic building-control session:
+
+- `bacnet-protocol` owns confirmed ReadProperty framing for exactly eight
+  standardized Device properties: object name, system status, vendor name and
+  identifier, model name, firmware revision, application software version, and
+  protocol version. Complex acknowledgements must correlate the BVLC/NPDU form,
+  invoke id, service, Device instance, property id, application value type, and
+  complete datagram; character strings are bounded to 128 printable ANSI X3.4
+  bytes.
+- `smart-home-bacnet-ip-integration` connects one UDP socket to an explicit
+  private, link-local, or loopback IPv4 endpoint and issues the fixed property
+  sequence within bounded per-response timeouts. Connected-peer correlation and
+  the protocol checks fail closed before one normalized network-diagnostic
+  entity is installed.
+- D23 read authorization runs before socket creation. Device system status maps
+  to explicit online, degraded, offline, or unknown health while unrecognized
+  future enumerations remain visible instead of being silently treated as
+  operational.
+- The runtime exposes no caller-selected object or property, point telemetry,
+  write, control, public endpoint, forwarded NPDU, BBMD management,
+  foreign-device registration, BACnet/SC session, subscription, or long-lived
+  socket.
+
+The BACnet Committee's public Device-object overview identifies these fields as
+required device information and describes most as manufacturer-fixed and read
+only by peer devices:
+https://bacnet.org/wp-content/uploads/sites/4/2022/06/The-Language-of-BACnet-1.pdf.
+
+This broadens common HVAC and building-controller diagnostics while preserving
+the existing block on generic property access, unauthenticated mutation, and
+authenticated BACnet/SC ownership.
 
 The protocol- and vendor-specific backlog below remains valid after these
 breadth steps:

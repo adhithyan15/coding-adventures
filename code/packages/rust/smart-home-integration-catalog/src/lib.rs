@@ -49063,7 +49063,7 @@ fn bacnet_ip_entry() -> IntegrationCatalogEntry {
     base_entry(
         "bacnet_ip",
         "BACnet/IP",
-        "Bounded Who-Is/I-Am discovery for local building-automation devices.",
+        "Bounded discovery and Device identity/status telemetry for local building automation.",
         IntegrationCategory::ProtocolStandard,
         ConnectivityClass::LocalPolling,
         ImplementationStatus::FirstPartyRuntime,
@@ -49072,6 +49072,7 @@ fn bacnet_ip_entry() -> IntegrationCatalogEntry {
     )
     .with_protocols(vec![ProtocolFamily::Vendor("bacnet_ip".to_string())])
     .with_capabilities(&["smart_home.read"])
+    .with_entities(&[EntityKind::NetworkDiagnostic])
     .with_discovery(&[DiscoveryMechanism::UdpBroadcast, DiscoveryMechanism::Manual])
     .with_auth(&[AuthMode::None])
     .with_primitives(&[
@@ -49083,8 +49084,8 @@ fn bacnet_ip_entry() -> IntegrationCatalogEntry {
         PrimitiveFamily::TestSimulator,
     ])
     .with_notes(&[
-        "The first-party runtime supports only bounded Who-Is/I-Am device discovery.",
-        "Property reads, writes, controls, BBMD management, foreign-device registration, and BACnet/SC remain out of scope.",
+        "The first-party runtime supports bounded Who-Is/I-Am discovery plus a fixed eight-property Device identity and status read allowlist.",
+        "Generic object reads, writes, controls, public endpoints, forwarded routing, BBMD management, foreign-device registration, and BACnet/SC remain out of scope.",
     ])
 }
 
@@ -82299,7 +82300,7 @@ mod tests {
     }
 
     #[test]
-    fn bacnet_entry_exposes_bounded_discovery_only_runtime() {
+    fn bacnet_entry_exposes_bounded_discovery_and_device_telemetry() {
         let catalog = first_party_catalog();
         let bacnet = find_entry(&catalog, &IntegrationId::trusted("bacnet_ip")).unwrap();
         assert_eq!(
@@ -82316,7 +82317,10 @@ mod tests {
             bacnet.required_capabilities,
             vec![CapabilityId::trusted("smart_home.read")]
         );
-        assert!(bacnet.target_entity_kinds.is_empty());
+        assert_eq!(
+            bacnet.target_entity_kinds,
+            vec![EntityKind::NetworkDiagnostic]
+        );
         for primitive in [
             PrimitiveFamily::DiscoveryIndex,
             PrimitiveFamily::Udp,
