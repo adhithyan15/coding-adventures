@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "id": "cli/argument-count-limit",
+  "domain": "cli",
+  "summary": "The exact one-over argv count receives the dedicated bounded-input diagnostic.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "cli"
+  ],
+  "workspace": {
+    "files": []
+  },
+  "input": {
+    "operation": "cli",
+    "options": {
+      "argv": [
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x",
+        "x"
+      ],
+      "dispatch_outcome": "success",
+      "requires_execution": false
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "cli/argument-count-limit",
+    "domain": "cli",
+    "outcome": "error",
+    "result": {
+      "exit_code": 2
+    },
+    "diagnostics": [
+      {
+        "code": "CLI_ARGUMENT_LIMIT",
+        "severity": "error"
+      }
+    ]
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}

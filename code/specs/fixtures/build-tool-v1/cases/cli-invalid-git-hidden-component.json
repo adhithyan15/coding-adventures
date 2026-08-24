@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "id": "cli/invalid-usage",
+  "id": "cli/invalid-git-hidden-component",
   "domain": "cli",
-  "summary": "An unknown CLI flag maps to a stable usage error without calling the build dispatcher.",
+  "summary": "A Git ref with a component beginning with a dot is outside the closed inert ref grammar.",
   "platforms": [
     "darwin",
     "linux",
@@ -18,7 +18,7 @@
     "operation": "cli",
     "options": {
       "argv": [
-        "--unknown"
+        "--diff-base=refs/.hidden/main"
       ],
       "dispatch_outcome": "success",
       "requires_execution": false
@@ -26,7 +26,7 @@
   },
   "expected": {
     "schema_version": 1,
-    "case_id": "cli/invalid-usage",
+    "case_id": "cli/invalid-git-hidden-component",
     "domain": "cli",
     "outcome": "error",
     "result": {

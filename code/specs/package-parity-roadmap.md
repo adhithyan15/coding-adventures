@@ -5792,6 +5792,50 @@ tests, capability taxonomy, Haskell capability, and OCaml toolchain-lock suites
 also pass. Strict MyPy remains a non-gating legacy audit with 11 errors in
 unchanged runner lines; this tranche adds none.
 
+### Post-#12577 refresh and CLI-parser selection
+
+Final head `0c97091ff2c1ab526f41fe518377d77050bd51be` completed all 29
+reported checks with 23 successes and six expected skips. GitHub reported PR
+#12577 clean and mergeable; the loop enabled squash auto-merge, and GitHub
+merged it as `aacb6a163b599737e821a2083aa500ce26b7b100` at
+2026-08-24T13:50:10Z without a manual merge command.
+
+The collision-checked exact-main schema-3 inventory remains unchanged: 15
+established lanes, 1,370 implementation identities, 4,563 package slots, 175
+high-consensus identities with 276 gaps, 122 identities in five to nine lanes
+with 926 gaps, 166 identities in two to four lanes with 2,087 gaps, and 907
+singletons with 12,698 gaps. There are 718 Rust singletons, zero canonical
+collisions, and zero unknown buckets. OCaml remains correctly emerging with no
+packages. No package marker changed in the merge.
+
+The post-merge implementation audit registers one newly exposed rollout before
+selection: `build-tool-validation-oracle-remaining-engines`, pending behind the
+canonical Go oracle. The neutral corpus now specifies all nine validation
+checks, but no native engine consumes its new cases; C#, Elixir, Haskell, Lua,
+Perl, Python, Ruby, Rust, Swift, and TypeScript therefore need decomposed engine
+children later, with future Dart and JVM implementations routed through the
+same contract. Schema and reference-runner coverage are not engine parity.
+
+The dependency/leverage pass selects `build-tool-cli-parser-corpus`. It is the
+last independent process-free parser prerequisite on the Go-oracle path, is
+ready behind the merged pure-domain corpus, and has nine unfinished descendants
+through build-tool and OCaml delivery. Ten live open PRs and 34 current
+non-main heads have zero exact candidate overlap; only the already merged
+validation-corpus branch touches the shared neutral surfaces, and the target
+branch and prior PR are absent. The orphan-crate and tracked-artifact corpora
+each unlock one remaining-engine umbrella, while the collision-free LZ78 repair
+unlocks none. Go-oracle and OCaml implementation surfaces remain collision-
+blocked by live PRs #12162 and #12149, so their neutral CLI prerequisite is the
+highest-leverage safe serial continuation.
+
+Local cross-version validation also registered
+`build-tool-windows-python313-execution-snapshot-volume-identity` as a separate
+pending owner behind the merged execution snapshot. Five unchanged Windows
+execution-schema tests pass under Python 3.10 but fail identically on a clean
+baseline and this branch under Python 3.13 because the newer interpreter's
+64-bit `st_dev` does not equal the existing 32-bit volume-serial projection.
+That native filesystem identity debt is outside this inert CLI-parser slice.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

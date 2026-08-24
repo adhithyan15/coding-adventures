@@ -35,7 +35,7 @@ emerging OCaml lane. It records front-door and shared-engine state but contains
 no executable commands. Every adapter is currently marked missing, so a valid
 inventory is not reported as conformance success.
 
-The 75-case bootstrap corpus covers every process-free v1 domain:
+The 102-case bootstrap corpus covers every process-free v1 domain:
 
 - canonical package and program membership, language-registry classification
   with paired C#, F#, Haskell, Java, and Kotlin package/program identities, a
@@ -70,7 +70,10 @@ The 75-case bootstrap corpus covers every process-free v1 domain:
   package roots, manifests, toolchains, and path safety, plus absent Lua
   `BUILD_windows` sibling-closure parity and the complete toolchain registry,
   including OCaml; and
-- process-free CLI exit-decision classification.
+- bounded process-free CLI parsing with deterministic typed defaults, modeled
+  post-parse outcomes, exact multibyte and astral-scalar limits, and adversarial
+  reserved, path, Git-ref-component, shell, environment, response-file,
+  duplicate, missing, range, and conflict rejection.
 
 The outer envelope and build-plan payload use `schema.json`,
 `result.schema.json`, and `code/specs/schemas/build-plan-v1.schema.json`.
@@ -246,7 +249,8 @@ bounded in-memory decoding of pure fixture workspaces so invalid base64, path
 aliases, collisions, prefix conflicts, and aggregate size violations fail
 without creating a filesystem root. Domain checks verify reference integrity,
 framed hashes, cache state, inline Starlark loads, shard closure/cost, all nine
-BUILD-file validation checks, complete toolchain maps, and CLI exit decisions.
+BUILD-file validation checks, complete toolchain maps, and independent CLI
+parse/exit decisions.
 
 ## Security boundary
 
@@ -285,8 +289,8 @@ The pure-domain expansion keeps that boundary intact. Diff selection consumes
 declared changed paths instead of Git, hashing consumes inline bytes instead of
 filesystem metadata, Starlark returns structured commands without running
 them, validation reads only fixture data, toolchain detection never probes the
-host, and CLI cases classify exit decisions without parsing native argv or
-invoking a build.
+host, and CLI cases parse only the closed inert `argv` record without invoking
+a native front door or build.
 
 The corpus now closes all process-free v1 domains:
 
@@ -295,7 +299,7 @@ The corpus now closes all process-free v1 domains:
 - Starlark evaluation and structured-command extraction;
 - prerequisite-closed sharding;
 - nine-check BUILD-file validation and toolchain detection; and
-- CLI exit-decision semantics.
+- bounded CLI parsing, typed normalized options, and exit-decision semantics.
 
 Execution now has a closed data model and authority policy, but no execution
 backend. This distinction is deliberate: schemas and digests are prerequisites

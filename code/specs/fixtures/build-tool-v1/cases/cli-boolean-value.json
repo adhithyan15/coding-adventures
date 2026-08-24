@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "id": "cli/invalid-usage",
+  "id": "cli/boolean-value",
   "domain": "cli",
-  "summary": "An unknown CLI flag maps to a stable usage error without calling the build dispatcher.",
+  "summary": "Boolean flags reject attached values instead of applying language-specific coercion.",
   "platforms": [
     "darwin",
     "linux",
@@ -18,7 +18,7 @@
     "operation": "cli",
     "options": {
       "argv": [
-        "--unknown"
+        "--force=true"
       ],
       "dispatch_outcome": "success",
       "requires_execution": false
@@ -26,7 +26,7 @@
   },
   "expected": {
     "schema_version": 1,
-    "case_id": "cli/invalid-usage",
+    "case_id": "cli/boolean-value",
     "domain": "cli",
     "outcome": "error",
     "result": {

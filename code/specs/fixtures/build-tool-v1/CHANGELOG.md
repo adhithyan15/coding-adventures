@@ -2,6 +2,13 @@
 
 ## 2026-08-24
 
+- Replaced CLI exit-decision-only input with a bounded inert `argv` grammar,
+  deterministic typed parse results, and an independent parser oracle.
+  Twenty-seven new positive and adversarial cases cover separated/equals
+  values, Unicode-scalar and UTF-8-byte limits, reserved adapter flags, unsafe
+  paths and Git-ref components, shell and environment syntax, response files,
+  duplicate options, numeric bounds, conflicting modes, and missing values
+  without host reads or dispatch.
 - Closed validation v1 with six language-neutral positive and adversarial
   cases for local dependency declarations, standalone prerequisites, Starlark
   sources and dependencies, package-root and manifest uniqueness, toolchain

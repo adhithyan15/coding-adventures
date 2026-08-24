@@ -11,9 +11,9 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 12577,
+  "active_pr": null,
   "last_inventory": {
-    "revision": "2bf4896ee63c359e6f04c57cdc9da6a14fcf84b2",
+    "revision": "aacb6a163b599737e821a2083aa500ce26b7b100",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1370,
@@ -115,6 +115,15 @@
       "branch": "codex/build-tool-execution-case-snapshot",
       "pr_number": 9371,
       "notes": "Merged PR #9371 at d05262d531b180ce5bbbced4d8fbcbc8a43a43d0 after all GitHub checks passed. Selected after merged PR #9368 and the collision-clean 2e067105d inventory plus parallel package, fixture, contract, and security audits. The process-free boundary defines factory-only typed immutable snapshots and selectors, exact retained bytes and digests, bounded direct corpus membership, Unicode/case alias rejection, POSIX retained no-follow traversal, and Windows fixed-volume non-reparse FileId binding without claiming execution authority, backend readiness, adapter conformance, or fixture execution. Validation: 178 build-tool tests passed with 23 expected platform skips and 81% branch-aware Windows coverage; 10 reporter tests, both process-free contract validators, Ruff, Bandit, compileall, Go test/vet, collision and state-graph checks, diff hygiene, and independent fixture, contract, and security reviews passed. The repository BUILD validator reproduced the same 73 pre-existing Windows BUILD/CI metadata errors on pristine origin/main."
+    },
+    {
+      "id": "build-tool-windows-python313-execution-snapshot-volume-identity",
+      "title": "Reconcile Windows execution-corpus volume identity on Python 3.13",
+      "status": "pending",
+      "depends_on": ["build-tool-execution-case-snapshot"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered while validating the inert CLI parser corpus. Five unchanged execution-schema tests fail identically on the CLI branch and a clean baseline under Windows Python 3.13, while the complete execution, authority, and backend family passes under Python 3.10. Python 3.13 exposes a 64-bit st_dev value, but the existing Windows snapshot code compares it with a 32-bit volume serial and misclassifies ordinary files. Reconcile the identity representation and retain all fixed-volume, reparse, alias, mutation, and retained-handle invariants in a separate execution-boundary change; do not widen the process-free CLI corpus into native filesystem authority."
     },
     {
       "id": "build-tool-bootstrap-execution-fixture",
@@ -280,10 +289,12 @@
     {
       "id": "build-tool-cli-parser-corpus",
       "title": "Define the inert cross-language CLI argv grammar and parser corpus",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-pure-domain-corpus"],
-      "branch": null,
+      "branch": "codex/build-tool-cli-parser-corpus",
       "pr_number": null,
+      "selection_revision": "aacb6a163b599737e821a2083aa500ce26b7b100",
+      "selection_notes": "Selected only after PR #12577 completed all 29 checks, merged through squash auto-merge, the collision-checked exact-main inventory was regenerated, and the newly exposed validation-oracle remaining-engine rollout was registered. The schema-3 inventory remains 15 established lanes, 1,370 implementation identities, and 4,563 slots with zero collisions or unknown buckets; OCaml remains correctly emerging at zero packages. This inert language-neutral parser corpus is ready behind the merged pure-domain corpus and has nine unfinished descendants through the Go oracle, every-language build tools, and OCaml promotion. Ten live open PRs and 34 current non-main heads have zero exact candidate overlap; only the already merged validation-corpus branch touches shared neutral surfaces, and the target branch and prior PR are absent. Orphan-crate and tracked-artifact corpora each unlock one remaining-engine umbrella, while the collision-free LZ78 repair unlocks none. The implementation-coupled Go oracle and OCaml core still overlap live PRs #12162 and #12149, so closing their final neutral parser prerequisite has the highest safe leverage.",
       "notes": "Discovered during the pure-domain security review. Replace exit-decision-only coverage with bounded argv parsing, typed parse results, reserved-flag/path rejection, and adversarial shell/env/@file tokens without dispatch or host reads."
     },
     {
@@ -320,13 +331,27 @@
     {
       "id": "build-tool-validation-oracle-corpus",
       "title": "Close the remaining build-tool validation checks with semantic oracles",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-pure-domain-corpus"],
       "branch": "codex/build-tool-validation-oracle-corpus",
       "pr_number": 12577,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/12577",
+      "merged_head_revision": "0c97091ff2c1ab526f41fe518377d77050bd51be",
+      "merged_at": "2026-08-24T13:50:10Z",
+      "merge_revision": "aacb6a163b599737e821a2083aa500ce26b7b100",
+      "merge_notes": "All 29 reported checks reached terminal acceptable conclusions: 23 successes and six expected skips, with no failures or pending work. GitHub reported the branch clean and mergeable; the loop enabled squash auto-merge, and GitHub merged PR #12577 without a manual merge command.",
       "selection_revision": "21032fe145526085b69a9ffa116c56cb67d558d2",
       "selection_notes": "Selected only after PR #12572 completed all 30 checks, merged through squash auto-merge, the collision-checked exact-main inventory was regenerated, and the implementation and authority deltas were classified without exposing another unowned gap. The schema-3 inventory remains 15 established lanes, 1,370 implementation identities, and 4,563 slots with zero collisions or unknown buckets; OCaml remains correctly emerging at zero packages. This process-free, language-neutral corpus is ready behind the merged pure-domain corpus, directly unlocks three owners, and has 12 unfinished build-tool and OCaml descendants. Nine live open PRs and 35 non-main remote heads have zero exact overlap on the governing conformance spec, schema, neutral fixture surfaces, reference runner, runner/schema tests, state, or roadmap; the target branch and prior PR are absent. PRs #12162 and #12149 still block implementation-coupled Go validator and OCaml integration surfaces, but do not touch this neutral corpus slice. The newly ready LZ78 Python pin is collision-free and remains the smallest immediate package repair, while this validation corpus has substantially greater dependency leverage. Main advances after the trie merge change only human-language and already-owned HTML diagnostic surfaces and do not alter the inventory or selected files.",
       "notes": "Implemented the closed nine-check validation contract in dependency order: governing spec, schema and six language-neutral positive/adversarial cases, independent Python semantic oracles and dishonesty rejection, then fixture README/changelog and loop metadata. The snapshot derives build presence, local and transitive standalone prerequisites, Starlark sources/dependencies, package-root identity, manifest uniqueness, toolchain support, path safety, and Lua Windows sibling parity without workspace, Git, process, or network access. Local validation passes the 75-case corpus, 18 schema tests, 48 runner tests at 88% branch-aware runner coverage, all 121 downstream execution/authority/backend tests with expected platform skips, execution-contract validation, Ruff error-class lint and formatting, compileall, Bandit, Go build-tool tests at 78.3% aggregate coverage plus vet/trimpath build and the 5,070-package BUILD-file plan, the collision-free schema-3 parity report plus 10 reporter tests, seven capability taxonomy tests, five Haskell capability tests, and 46 OCaml lock tests with two expected skips. Strict MyPy remains non-gating for this legacy runner and reports 11 baseline errors only in unchanged lines. The branch rebased cleanly onto exact main 2bf4896ee63c359e6f04c57cdc9da6a14fcf84b2; the post-rebase inventory retains the same counts with zero collisions or unknown buckets."
+    },
+    {
+      "id": "build-tool-validation-oracle-remaining-engines",
+      "title": "Make every supported build-tool engine consume the validation-oracle contract",
+      "status": "pending",
+      "depends_on": ["build-tool-go-oracle"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the exact post-#12577 implementation audit. The neutral corpus and independent Python reference runner now cover all nine validation checks, but no native build-tool engine consumes the new case IDs. After the canonical Go oracle lands, decompose the extant C#, Elixir, Haskell, Lua, Perl, Python, Ruby, Rust, Swift, and TypeScript engines into independently reviewable children and route future Dart and JVM engines through the same process-free validation contract. Do not infer engine parity from schema, fixture, or reference-runner coverage."
     },
     {
       "id": "build-file-standalone-integrity",

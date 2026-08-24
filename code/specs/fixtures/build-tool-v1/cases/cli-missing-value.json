@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "id": "cli/missing-value",
+  "domain": "cli",
+  "summary": "A value flag without its value is a deterministic usage error.",
+  "platforms": ["darwin", "linux", "windows"],
+  "capabilities": ["cli"],
+  "workspace": {"files": []},
+  "input": {
+    "operation": "cli",
+    "options": {
+      "argv": ["--language"],
+      "dispatch_outcome": "success",
+      "requires_execution": false
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "cli/missing-value",
+    "domain": "cli",
+    "outcome": "error",
+    "result": {"exit_code": 2},
+    "diagnostics": [{"code": "CLI_USAGE_INVALID", "severity": "error"}]
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}

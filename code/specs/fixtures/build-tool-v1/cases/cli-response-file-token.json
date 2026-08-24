@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "id": "cli/response-file-token",
+  "domain": "cli",
+  "summary": "Response-file syntax is rejected as inert data and is never expanded or read.",
+  "platforms": ["darwin", "linux", "windows"],
+  "capabilities": ["cli"],
+  "workspace": {"files": []},
+  "input": {
+    "operation": "cli",
+    "options": {
+      "argv": ["@args.txt"],
+      "dispatch_outcome": "success",
+      "requires_execution": false
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "cli/response-file-token",
+    "domain": "cli",
+    "outcome": "error",
+    "result": {"exit_code": 2},
+    "diagnostics": [{"code": "CLI_ARGUMENT_UNSAFE", "severity": "error"}]
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}

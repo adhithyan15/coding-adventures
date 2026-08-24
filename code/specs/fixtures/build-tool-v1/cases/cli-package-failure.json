@@ -1,33 +1,22 @@
 {
   "schema_version": 1,
-  "id": "cli/validation-failure",
+  "id": "cli/package-failure",
   "domain": "cli",
-  "summary": "A valid typed parse remains available when a modeled validation decision maps to exit code one.",
-  "platforms": [
-    "darwin",
-    "linux",
-    "windows"
-  ],
-  "capabilities": [
-    "cli"
-  ],
-  "workspace": {
-    "files": []
-  },
+  "summary": "A valid default parse remains available when a modeled package failure maps to exit code one.",
+  "platforms": ["darwin", "linux", "windows"],
+  "capabilities": ["cli"],
+  "workspace": {"files": []},
   "input": {
     "operation": "cli",
     "options": {
-      "argv": [
-        "--language",
-        "python"
-      ],
-      "dispatch_outcome": "validation_failure",
+      "argv": [],
+      "dispatch_outcome": "package_failure",
       "requires_execution": false
     }
   },
   "expected": {
     "schema_version": 1,
-    "case_id": "cli/validation-failure",
+    "case_id": "cli/package-failure",
     "domain": "cli",
     "outcome": "error",
     "result": {
@@ -42,7 +31,7 @@
         "emit_shard_matrix": false,
         "force": false,
         "jobs": null,
-        "language": "python",
+        "language": "all",
         "plan_file": null,
         "root": null,
         "shard_count": null,
@@ -50,12 +39,7 @@
         "validate_build_files": true
       }
     },
-    "diagnostics": [
-      {
-        "code": "CLI_VALIDATION_FAILED",
-        "severity": "error"
-      }
-    ]
+    "diagnostics": [{"code": "CLI_PACKAGE_FAILED", "severity": "error"}]
   },
   "limits": {
     "wall_time_ms": 1000,

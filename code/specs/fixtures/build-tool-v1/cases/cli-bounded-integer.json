@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "id": "cli/bounded-integer",
+  "domain": "cli",
+  "summary": "An out-of-range worker count is rejected without consulting host CPU state.",
+  "platforms": ["darwin", "linux", "windows"],
+  "capabilities": ["cli"],
+  "workspace": {"files": []},
+  "input": {
+    "operation": "cli",
+    "options": {
+      "argv": ["--jobs=257"],
+      "dispatch_outcome": "success",
+      "requires_execution": false
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "cli/bounded-integer",
+    "domain": "cli",
+    "outcome": "error",
+    "result": {"exit_code": 2},
+    "diagnostics": [{"code": "CLI_USAGE_INVALID", "severity": "error"}]
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}
