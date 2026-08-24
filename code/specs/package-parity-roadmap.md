@@ -6129,20 +6129,33 @@ entry and diagnostic records serialize directly to the shared result shape;
 the implementation adds no Git, filesystem, process, environment, or network
 authority and changes no fixture, schema, capability manifest, or dependency.
 
-All four shared fixtures pass through the C# API, and focused hostile-path
-tests cover every stable problem code plus both unsafe-character branches. The
-canonical .NET 9 BUILD front door passes 23 xUnit tests. The new validator is
-fully covered at 67 of 67 lines and 44 of 44 branches; complete-package
-coverage is 49.16% line, 33.36% branch, and 67.97% method. The neutral corpus
+All four shared fixtures pass through the C# API. Focused hostile-path and
+Unicode boundary tests cover every stable problem code, both unsafe-character
+branches, scalar-counted 512/513 limits, cross-plane scalar ordering, and the
+dotless-i uppercase expansion used by a reserved basename. The canonical .NET
+9 BUILD front door passes 26 xUnit tests. The new validator is fully covered at
+79 of 79 lines and 50 of 50 branches; complete-package coverage is 49.69% line,
+33.79% branch, and 68.33% method. The neutral corpus
 validates 110 cases and 269 files, while 269 focused package-parity,
 capability-taxonomy, OCaml-lock, and conformance tests pass with 25 expected
 platform skips. The Go oracle passes all packages with coverage, vet, and
-trimpath compilation, then a fresh binary evaluates 45 Starlark BUILD files,
-preserves the five-entry orphan ledger, and validates a forced dry plan across
-all 200 discovered C# packages. NuGet reports no vulnerable direct or
+trimpath compilation. A fresh binary evaluates 45 Starlark BUILD files,
+discovers 5,070 packages, preserves the five-entry orphan ledger, and validates
+a diff-based dry plan with one changed and two affected packages. NuGet reports no vulnerable direct or
 transitive dependency. The source-wide `dotnet format` whitespace gate retains
 the exact same 18 findings in unchanged pre-existing ranges as the clean
 selected-main baseline; the new ranges and complete diff are clean.
+
+Three independent read-only reviews caught and drove corrections for UTF-16
+length counting, UTF-16 ordinal path sorting, and dotless-i reserved-name
+uppercase behavior, then found no remaining implementation, authority,
+ownership, state-graph, or publication-scope defect. The branch rebased without
+conflict over four unrelated human-language and HTML-parser commits to exact
+`origin/main` `1d482dc49a5c791b326e0b073cf6469c46d67ef8`. A fresh collision-checked
+report at that revision is tree-equivalent to the post-#12602 inventory: 15
+established lanes, 1,370 identities, 4,563 slots, 175 high-consensus packages
+with 276 gaps, 907 singletons with 12,698 gaps, 718 Rust singletons, zero
+collisions, and zero unknown buckets; OCaml remains correctly emerging at zero.
 
 ## Autonomous Loop Protocol
 
