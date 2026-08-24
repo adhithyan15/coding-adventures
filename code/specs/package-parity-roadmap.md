@@ -5240,8 +5240,41 @@ exact `origin/main` `de94b5ab33e04e13d0581f3ecf6a846049cb7d6d`.
 Ten open PRs and 31 remote source heads have zero selected-package or full-diff
 overlap. Independent security/ownership, implementation, and state/roadmap
 reviews all pass with no required fix. GitHub reports the PR open, non-draft,
-and mergeable while required CI and CodeQL checks are queued, so auto-merge
-remains disabled and the loop returns to monitor-only behavior.
+and mergeable. Final head `d1c3d2d6d1109b1e1fbbd97e55444e347ae23bb3`
+completed all 30 checks with 24 successes, five expected skips, one neutral
+CodeQL result, and no failures or pending work. GitHub's REST state reported the
+branch clean and mergeable; the loop requested squash auto-merge, and GitHub
+merged PR #12495 as `ec2f913facaf2ecf00ebc1a0393d289220cde39d` at
+2026-08-24T03:44:58Z.
+
+### Post-#12495 refresh and Hash Functions strict-MyPy selection
+
+The collision-checked schema-3 inventory at exact merged main
+`ec2f913facaf2ecf00ebc1a0393d289220cde39d` remains identity-neutral: 15
+established lanes, 1,369 implementation identities, 4,562 package slots, 175
+high-consensus identities with 276 gaps, 122 identities in five to nine lanes
+with 926 gaps, 166 identities in two to four lanes with 2,087 gaps, and 906
+singletons with 12,684 gaps. Collisions and unknown buckets remain zero, and no
+new unowned portable identity appeared. Merged Roku PR #12488 did expand the
+Rust native host's concrete TCP/HTTP, timeout, CLI, and runtime-command
+authority without a capability profile, so new selection-blocked owner
+`smart-home-roku-ecp-native-authority-review` records that excluded native
+review before selection. The existing portable Roku owner now cites #12488's
+deterministic media-control behavior as its Rust reference.
+
+The dependency audit adds the already registered
+`python-hash-functions-build-front-strict-mypy` owner to the final data-store
+owner's prerequisites before selection. This closes the missing DAG edge: the
+merged Hash Functions state claims strict checking, but both active recipes
+still invoke plain MyPy. Strict MyPy already passes all nine source/test files,
+so the selected correction is limited to two BUILD commands, their exact
+recipe expectations, package documentation, and the historical validation
+claim. It makes no production-source, dependency, capability, or behavioral
+test change. RESP/TCP remains the next dependency-leveraged prerequisite.
+
+Live audits across six open PRs and 27 remote source heads find zero overlap on
+Hash Functions, its recipe regression, parity state, or roadmap. The target
+remote branch and PR were absent before creation.
 
 ## Autonomous Loop Protocol
 

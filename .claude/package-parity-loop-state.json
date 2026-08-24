@@ -11,9 +11,9 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 12495,
+  "active_pr": null,
   "last_inventory": {
-    "revision": "de94b5ab33e04e13d0581f3ecf6a846049cb7d6d",
+    "revision": "ec2f913facaf2ecf00ebc1a0393d289220cde39d",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1369,
@@ -1935,7 +1935,17 @@
       "depends_on": ["smart-home-media-entity-command-contract"],
       "branch": null,
       "pr_number": null,
-      "notes": "Share SSDP/ECP request and response plus bounded XML fixtures, device/app normalization, identities, stable errors, and media projection. Multicast, DNS/TCP, and runtime authority are excluded."
+      "notes": "Share SSDP/ECP request and response plus bounded XML fixtures, device/app normalization, identities, stable errors, and media projection. Merged PR #12488 expands the Rust reference with bounded media-control planning and execution; its deterministic command mapping, validation, response classification, and projection remain portable-core inputs. Multicast, concrete TCP/HTTP, timeouts, CLI effects, runtime authorization and mutation, and host authority are excluded."
+    },
+    {
+      "id": "smart-home-roku-ecp-native-authority-review",
+      "title": "Review the native Roku ECP integration authority",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered in the post-#12495 audit after merged PR #12488 expanded Rust smart-home-roku-ecp-integration with concrete private-endpoint TCP/HTTP transport, timeouts, CLI effects, and runtime-command authorization and mutation while the crate still lacks required_capabilities.json. Review truthful network, endpoint-policy, process, time, and runtime capabilities plus response bounds and error redaction; this native-runtime work is excluded from autonomous parity selection."
     },
     {
       "id": "spice-device-parameter-validation-shared-conformance",
@@ -4299,25 +4309,29 @@
     {
       "id": "python-hash-functions-build-front-strict-mypy",
       "title": "Bring the repaired Python hash-functions BUILD fronts under strict MyPy",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["python-hash-functions-build-front-idempotence"],
-      "branch": null,
+      "branch": "codex/python-hash-functions-build-front-strict-mypy",
       "pr_number": null,
+      "selection_revision": "ec2f913facaf2ecf00ebc1a0393d289220cde39d",
+      "selection_notes": "Selected after PR #12495 completed all 30 checks and merged through the requested auto-merge path. The collision-checked post-merge inventory remains identity-neutral at 15 established lanes, 1,369 identities, and 4,562 slots with zero collisions or unknown buckets. No new unowned portable identity appeared; merged Roku PR #12488's newly explicit native authority is split into a selection-blocked review owner before selection. The dependency audit also added this already registered strict-MyPy correction to the final data-store owner's prerequisites so the downstream DAG cannot overclaim a quality gate. This bounded two-front correction closes an active governing-contract violation and repairs the merged hash-functions validation claim; strict MyPy already passes all nine source/test files, so no production source or behavioral test change is expected. RESP/TCP remains the next dependency-leveraged owner. Live audits across six open PRs and 27 remote source heads find zero overlap on hash-functions, its recipe regression, parity state, or roadmap; the target branch and PR were absent before creation.",
       "notes": "Discovered by the post-#12492 governing-contract audit. The merged hash-functions repair is classified as generated-standard and its state notes claim strict MyPy, but both active fronts still invoke plain `mypy src tests` and the package has no strict configuration. Add `--strict` to both recipes and their exact regression, resolve only resulting static-narrowing debt, rerun both fronts twice and the hash-dependent closure, and correct the historical validation claim. This bounded correction is separately owned and does not displace the concrete data-store protocol blocker."
     },
     {
       "id": "python-in-memory-data-store-protocol-build-front-python313",
       "title": "Pin the Python data-store protocol BUILD fronts to a named 3.13 environment",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [],
       "branch": "codex/python-in-memory-data-store-protocol-build-front-python313",
       "pr_number": 12495,
       "selection_revision": "6440352ce3d282209d5c5e6aa08e2ec2ee80463b",
       "selection_notes": "Selected after PR #12492 completed all 30 checks and merged through the requested auto-merge path. The collision-checked post-merge inventory remains identity-neutral at 15 established lanes, 1,369 identities, and 4,562 slots with zero collisions or unknown buckets. The post-merge contract audit added the separately owned hash-functions strict-MyPy correction before implementation; that retroactive bounded quality-gate gap does not displace this concrete prerequisite that blocked the exact eight-node data-store build. The selected repair replaces ambient Python and the recursive pip launcher with a pinned named Python 3.13 environment, directly advancing the final data-store closure. Live audits find zero overlap across nine open PRs and 30 remote source heads on the package, state, or roadmap; the target remote branch was absent before creation.",
       "implementation_revision": "1b5a1fde701cd89722c93c44ee5f076f724c209d",
-      "final_review_revision": "f8fe85c86c50225945784a2440d6179fad9ebecd",
+      "final_review_revision": "d1c3d2d6d1109b1e1fbbd97e55444e347ae23bb3",
+      "merge_revision": "ec2f913facaf2ecf00ebc1a0393d289220cde39d",
+      "merged_at": "2026-08-24T03:44:58Z",
       "validation_notes": "Both BUILD fronts now recreate .venv with --clear, pin Python 3.13, install through that named environment, and invoke its interpreter explicitly for Ruff, formatting, strict MyPy, and pytest. The Windows front separates the dependency-free local package install from tool installation so the isolated protocol package cannot recurse through a generated pip launcher. A repository regression pins both complete recipes. The exact Windows front passes twice consecutively on uv 0.11.28 and Python 3.13.14 with all five tests at 100% coverage and Ruff, formatting, and strict MyPy clean. Strict checking exposed that EngineResponse.bulk_string already accepts and normalizes bytearray and memoryview at runtime; its annotation now states that existing behavior without changing algorithms. The immediate store-engine downstream passes 57 tests at 96.67% coverage against editable local dependencies. Focused recipe, uv-audit, parity reporter, and capability taxonomy suites pass 2, 13, 10, and 7 tests. The Go build tool passes tests, vet, and compilation. Its exact 494-package affected Windows execution, with the uv 0.11.28 executable directory explicitly on PATH and UV_PYTHON=3.13 plus UV_VENV_CLEAR=1, builds hash-functions, hyperloglog, resp-protocol, and this protocol successfully before reaching the separately owned store-engine front; that unchanged front fails on its Windows-invalid quoted editable requirement, and the final store is dependency-skipped. The collision gate is clean. This tranche changes no dependency metadata, capability manifest, production authority, credential path, or privileged boundary.",
-      "publication_notes": "Opened ready-for-review PR #12495 from independently reviewed head f8fe85c86c50225945784a2440d6179fad9ebecd after a normal first push from exact origin/main de94b5ab33e04e13d0581f3ecf6a846049cb7d6d. Ten open PRs and 31 remote source heads had zero exact package or full-diff overlap, and the target branch was absent before publication. Independent security/ownership, implementation, and state/roadmap reviews all passed with no required fix. GitHub reports the PR open, non-draft, and mergeable while required CI and CodeQL checks are queued; auto-merge remains disabled until every required check is terminal and acceptable.",
+      "publication_notes": "Opened ready-for-review PR #12495 from independently reviewed head f8fe85c86c50225945784a2440d6179fad9ebecd after a normal first push from exact origin/main de94b5ab33e04e13d0581f3ecf6a846049cb7d6d. Ten open PRs and 31 remote source heads had zero exact package or full-diff overlap, and the target branch was absent before publication. Independent security/ownership, implementation, and state/roadmap reviews all passed with no required fix. Final head d1c3d2d6d1109b1e1fbbd97e55444e347ae23bb3 completed all 30 checks with 24 successes, five expected skips, one neutral CodeQL result, and no failures or pending work. GitHub's REST state reported the branch clean and mergeable; the loop requested squash auto-merge, and GitHub merged PR #12495 as ec2f913facaf2ecf00ebc1a0393d289220cde39d at 2026-08-24T03:44:58Z.",
       "notes": "Discovered by the exact affected build-tool execution for the hash-functions repair. python/in-memory-data-store-protocol is an eight-node plan prerequisite outside the uv-audit corpus: its canonical front creates an unpinned uv environment, while BUILD_windows resolves ambient python for stdlib venv creation and invokes the pip console launcher directly. On this host the latter recursively launched through the environment and did not reach tests; the same source passes five tests at 100% coverage on Python 3.13 when pip and pytest are invoked through the named interpreter. Pin and clear both fronts, use the explicit environment interpreter for install and tests, add a complete recipe regression, and validate the protocol before the existing data-store owner."
     },
     {
@@ -4353,7 +4367,7 @@
       "id": "python-data-store-build-front-idempotence",
       "title": "Make the Python in-memory data-store BUILD fronts repeatable",
       "status": "pending",
-      "depends_on": ["python-uv-build-front-idempotence-audit", "python-hash-collections-build-front-idempotence", "python-resp-tcp-build-front-idempotence", "python-in-memory-data-store-protocol-build-front-python313"],
+      "depends_on": ["python-uv-build-front-idempotence-audit", "python-hash-functions-build-front-strict-mypy", "python-hash-collections-build-front-idempotence", "python-resp-tcp-build-front-idempotence", "python-in-memory-data-store-protocol-build-front-python313"],
       "branch": null,
       "pr_number": null,
       "notes": "Backfill for python/in-memory-data-store-engine followed by python/in-memory-data-store after their hash and RESP prerequisites land. In addition to pinning and clearing .venv, reconcile the Windows-invalid quoted editable requirement while preserving the complete local sibling closure."
