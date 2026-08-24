@@ -2,8 +2,6 @@
 Tests for RespError and related type behaviour.
 """
 
-import pytest
-
 from resp_protocol import RespError
 
 
@@ -52,5 +50,5 @@ class TestRespError:
     def test_hashable(self) -> None:
         err = RespError("ERR msg")
         # Should not raise
-        s: set = {err}
+        s: set[RespError] = {err}
         assert err in s

@@ -48,7 +48,8 @@ def encode_simple_string(s: str) -> bytes:
     """
     if "\r" in s or "\n" in s:
         raise ValueError(
-            f"Simple string must not contain \\r or \\n; use encode_bulk_string instead. "
+            "Simple string must not contain \\r or \\n; "
+            "use encode_bulk_string instead. "
             f"Got: {s!r}"
         )
     return b"+" + s.encode("utf-8") + _CRLF
@@ -171,7 +172,7 @@ def encode_array(items: list[Any] | None) -> bytes:
     return header + body
 
 
-def encode(value: Any) -> bytes:
+def encode(value: Any) -> bytes:  # noqa: ANN401
     """
     High-level encoder: dispatch to the appropriate RESP type based on
     the Python type of the value.
@@ -215,6 +216,4 @@ def encode(value: Any) -> bytes:
         return encode_array(value)
     if isinstance(value, RespError):
         return encode_error(value.message)
-    raise TypeError(
-        f"Cannot encode value of type {type(value).__name__!r}: {value!r}"
-    )
+    raise TypeError(f"Cannot encode value of type {type(value).__name__!r}: {value!r}")

@@ -79,4 +79,4 @@ class RespError:
 #   bytes  → decoded from Bulk String ($...)
 #   None   → decoded from Null Bulk String ($-1\r\n) or Null Array (*-1\r\n)
 #   list   → decoded from Array (*...) where elements are themselves RespValue
-type RespValue = str | RespError | int | bytes | None | list  # type: ignore[valid-type]
+type RespValue = str | RespError | int | bytes | None | list[RespValue]

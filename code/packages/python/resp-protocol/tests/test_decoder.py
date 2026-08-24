@@ -4,8 +4,15 @@ Tests for the RESP2 decoder: decode(), decode_all(), and RespDecoder.
 
 import pytest
 
-from resp_protocol import RespDecodeError, RespDecoder, RespError, decode, decode_all
-from resp_protocol.encoder import encode_array, encode_bulk_string
+from resp_protocol import (
+    RespDecodeError,
+    RespDecoder,
+    RespError,
+    RespValue,
+    decode,
+    decode_all,
+)
+from resp_protocol.encoder import encode_bulk_string
 
 
 class TestDecodeSimpleString:
@@ -259,6 +266,7 @@ class TestDecodeAll:
 
     def test_three_commands(self) -> None:
         from resp_protocol import encode
+
         full = (
             encode([b"SET", b"k", b"v"])
             + encode([b"GET", b"k"])
@@ -329,6 +337,7 @@ class TestRespDecoder:
     def test_streaming_byte_by_byte(self) -> None:
         """Simulate worst-case TCP fragmentation: one byte at a time."""
         from resp_protocol import encode
+
         messages_to_send = [
             encode([b"SET", b"k", b"v"]),
             encode([b"GET", b"k"]),
@@ -337,7 +346,7 @@ class TestRespDecoder:
         full_stream = b"".join(messages_to_send)
 
         dec = RespDecoder()
-        received: list = []
+        received: list[RespValue] = []
         for byte_val in full_stream:
             dec.feed(bytes([byte_val]))
             while dec.has_message():
