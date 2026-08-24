@@ -3,32 +3,147 @@
   "language": "malayalam",
   "chapter": 1,
   "title": "Greetings",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:771e0c15b213dbad",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:a7f1b28bea94fe88",
   "lessons": [
     {
       "id": "ML-C01-namaskaram",
       "sequence": 10,
-      "title": "നമസ്കാരം (namaskāram) — \"greetings,\" a making of a bow",
+      "title": "Namaskaram — first hear the greeting",
       "headword": "നമസ്കാരം",
       "romanization": "namaskāram",
-      "gloss": "hello / greetings (namaskāram — \"a making of a bow\")",
+      "gloss": "hello / greetings (namaskāram — a making of a bow)",
       "script": "malayalam",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fca098842d146074",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Imagine meeting someone with your palms together and a small bow. First, only listen: namaskāram."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Namaskāram is a respectful Malayalam greeting. It can open a conversation, and it can also close one. Hear its five beats slowly: na-ma-s-kā-ram. Answer with the same greeting once."
+            },
+            {
+              "kind": "speech",
+              "text": "The Malayalam spelling is deliberately absent from this first pass. The next tiny lessons give your eye and hand no more than three reusable shapes at a time. Only after every shape is familiar will the book show the whole written greeting."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The greeting comes from Sanskrit namas, “a bow or homage,” plus kāra, “a making,” from the root kṛ, “to do.” Its memory hook is therefore the making of a bow. Malayalam is Tamil's closest sister, but this formal greeting is part of Malayalam's large Sanskrit layer."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "namaskāram once as a greeting",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *namaskāram* once as a greeting]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "its five beats — na-ma-s-kā-ram",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: its five beats — *na-ma-s-kā-ram*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "its literal memory hook — “the making of a bow”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: its literal memory hook — “the making of a bow”]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What can you say when you meet someone respectfully? (Namaskāram.) What gesture and literal history help you remember it? (A small bow; “the making of a bow.”) Do you need to decode its Malayalam spelling yet? (No. The script starts next with only two shapes.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-W01-na-ma-trace",
+      "sequence": 11,
+      "title": "ന, മ — two sounds you already heard",
+      "headword": "ന മ",
+      "romanization": "na ma",
+      "gloss": "recognize and trace the first two shapes of the known greeting",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0af09810bf1e9da8",
+      "sourceHash": "fnv1a64:d2f5d736a6a7c30f",
       "notice": {
-        "modality": "sight",
+        "modality": "pen",
         "needs": [
+          "a pen and something to write on",
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "Script"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -44,153 +159,46 @@
             },
             {
               "kind": "speech",
-              "text": "The first Malayalam word, and your first Malayalam letters. You'll learn to read it and to understand it in the same breath."
+              "text": "Say na-ma — the first two beats of namaskāram. Your hand meets only those two familiar sounds today."
             }
           ]
         },
         {
           "index": 1,
           "type": "script",
-          "title": "The letters in this word",
+          "title": "Script",
           "segments": [
             {
               "kind": "speech",
-              "text": "(If you already read Malayalam, skim this — it's here so the book needs no prior knowledge.) Malayalam is written left to right, and every consonant carries a built-in \"a\" unless something removes it."
+              "text": "Malayalam is an abugida: a bare consonant already carries a short a."
             },
             {
               "kind": "speech",
-              "text": "ന = \"na\", മ = \"ma\", ര = \"ra\" — each with its built-in a."
+              "text": "ന is na."
             },
             {
               "kind": "speech",
-              "text": "കാ = \"kā\" — ക (ka) plus the long-\"ā\" vowel sign."
+              "text": "മ is ma."
             },
             {
               "kind": "speech",
-              "text": "സ്ക — സ (sa) loses its vowel (a mark called the chandrakkala does the removing) and joins ക (ka) as a conjunct, \"ska.\""
-            },
-            {
-              "kind": "speech",
-              "text": "ം — the anusvāram, a little circle that adds a final nasal \"-m.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Left to right: ന, മ, സ്, കാ, ര, ം = na-ma-s-kā-ram, which gives:"
-            },
-            {
-              "kind": "speech",
-              "text": "നമസ്കാരം = namaskāram."
+              "text": "Put them together: നമ, na-ma. Keep both models visible."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "writing",
+          "title": "Writing — observe and trace",
           "segments": [
             {
               "kind": "speech",
-              "text": "നമസ്കാരം (namaskāram) is Sanskrit: namas (\"a bow, homage\") + kāra (\"a making,\" from the root kṛ, \"to do\"), with a Malayalam ending. Literally \"the making of a bow\" — the same word as Hindi namaskār and Telugu namaskāram."
-            },
-            {
-              "kind": "speech",
-              "text": "This is worth marking, because Malayalam is otherwise the closest sister of Tamil — the two split apart only about a thousand years ago. Yet for a formal greeting Malayalam, unlike Tamil, uses the Sanskrit namaskāram: over centuries it absorbed an enormous Sanskrit layer (the old Maṇipravāḷam style freely mixed the two), even as it kept a deeply Tamil-like everyday core — as the next words will show."
+              "text": "Finger-trace ന once, then മ once. Trace നമ once from left to right. Say na-ma after your finger stops. This is observation with a visible model, not a memory test."
             }
           ]
         },
         {
           "index": 3,
-          "type": "unknown",
-          "title": "Across the family — the same idea, five ways",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "Language",
-                "\"Hello\"",
-                "Source"
-              ],
-              "columns": 3,
-              "rowCount": 6,
-              "utterances": [
-                "Language: Malayalam. \"Hello\": namaskāram (നമസ്കാരം). Source: Sanskrit.",
-                "Language: Telugu. \"Hello\": namaskāram (నమస్కారం). Source: Sanskrit.",
-                "Language: Kannada. \"Hello\": namaskāra (ನಮಸ್ಕಾರ). Source: Sanskrit.",
-                "Language: Hindi. \"Hello\": namaste (नमस्ते). Source: Sanskrit.",
-                "Language: Tamil. \"Hello\": vaṇakkam (வணக்கம்). Source: native Dravidian.",
-                "Language: English. \"Hello\": hello. Source: Germanic."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Even Tamil's closest sister took the Sanskrit greeting; Tamil alone kept its own."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "namaskāram is said with the palms pressed together and a small bow — the gesture is the word. It serves as both hello and goodbye, any time, to almost anyone, respectful without being stiff."
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Malayalam reads left to right, and every consonant carries a built-in “a.” ന na, മ ma, ര ra. A vowel sign changes it: ക ka + long-ā becomes കാ kā. The chandrakkala strips a vowel so consonants join as a conjunct: സ + ക becomes സ്ക “ska.” The anusvāram ം adds a final nasal “-m.” Read ന, മ, സ്, കാ, ര, ം becomes namaskāram."
-            }
-          ]
-        },
-        {
-          "index": 6,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "na, ma, s, kā, ram becomes \"namaskāram\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: na · ma · s · kā · ram → \"namaskāram\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "what the chandrakkala does to സ (removes its vowel, for the conjunct)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: what the *chandrakkala* does to സ (removes its vowel, for the conjunct)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"namaskāram,\" with a small bow",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"namaskāram,\" with a small bow]"
-            }
-          ]
-        },
-        {
-          "index": 7,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -202,7 +210,583 @@
             },
             {
               "kind": "speech",
-              "text": "Read നമസ്കാരം (namaskāram). Native Malayalam or a borrowing, and what does it literally mean? (Sanskrit namas + kāra, \"the making of a bow.\") Which language is Malayalam's closest sister? (Tamil.)"
+              "text": "Point to na. (ന.) Point to ma. (മ.) What vowel did you write after either consonant? (None — the short a is inherent.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-W01-na-ma-guided-copy",
+      "sequence": 12,
+      "title": "നമ (na-ma) — one guided copy",
+      "headword": "നമ",
+      "romanization": "na-ma",
+      "gloss": "copy the known two-beat unit once with its model visible",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:d3ae5d0f8d3005d2",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep നമ visible. Point left to right and say na-ma."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — copy with help",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy നമ (na-ma) once directly below the visible model. Look back as often as you need. Check ന first and മ second; repair only one place, then stop."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read your copy. Which longer greeting begins with these two beats? (Namaskāram.) No new shape was added here: the work was moving from a finger trace to one supported copy."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-W01-na-ma-delayed-copy",
+      "sequence": 13,
+      "title": "നമ (na-ma) — one delayed copy",
+      "headword": "നമ",
+      "romanization": "na-ma",
+      "gloss": "write the familiar two-beat unit once after hiding its model",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:856154e0f1a300db",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at നമ for five seconds. Say na-ma, then cover the model."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — retrieve after a delay",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Write the two shapes once while the model is covered. If one shape will not come, peek briefly, cover it again, and finish. This is retrieval practice, not a speed test."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Uncover നമ (na-ma) and compare. Repair one shape if needed. What changed from the last lesson? (The model was hidden before writing.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-W01-na-ma-dictation",
+      "sequence": 14,
+      "title": "Two heard beats — write them",
+      "headword": "നമ",
+      "romanization": "na-ma",
+      "gloss": "write the familiar two-beat unit from sound alone",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:43883e1f85196ce2",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover the answer lower on this page. No new Malayalam shape is hiding here."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — short dictation",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "na-ma",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *na-ma*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write the two-beat unit from sound alone. Now uncover and compare: നമ (na-ma). Check ന first and മ second. Repair one place if needed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have moved the same small unit through trace, visible copy, delayed copy, and dictation. Say the complete greeting it begins. (Namaskāram.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-W01-sa-chandrakkala-ka",
+      "sequence": 15,
+      "title": "സ, ്, ക — build ska without a leap",
+      "headword": "സ ് ക",
+      "romanization": "sa, chandrakkala, ka",
+      "gloss": "three pieces that make the greeting's ska cluster",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:8149161f62ab272f",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write നമ from the heard cue na-ma. Now set it aside. This lesson adds exactly three shapes."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സ is sa, with its inherent a."
+            },
+            {
+              "kind": "speech",
+              "text": "് is the chandrakkala. Attach it to remove that inherent vowel: സ്."
+            },
+            {
+              "kind": "speech",
+              "text": "ക is ka."
+            },
+            {
+              "kind": "speech",
+              "text": "Join the vowel-less first consonant to the next one: സ്ക, ska. The cluster is not a fourth shape; it is the three pieces you just met working together."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — observe and trace three pieces",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep the models visible. Trace സ, then ്, then ക once each. Point through സ്ക and say ska. Stop after one slow pass."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ് remove? (The inherent vowel.) Read സ and then സ്. (sa; s.) What does സ്ക say? (ska.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-W01-aa-ra-anusvaram",
+      "sequence": 16,
+      "title": "ാ, ര, ം — finish the sound inventory",
+      "headword": "ാ ര ം",
+      "romanization": "long ā, ra, final m",
+      "gloss": "the final three pieces needed for the greeting",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:7b99c3705651c108",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read സ്ക once: ska. The greeting needs only three more written pieces."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ാ is the long-ā vowel sign. Attach it to known ക: കാ, kā."
+            },
+            {
+              "kind": "speech",
+              "text": "ര is ra."
+            },
+            {
+              "kind": "speech",
+              "text": "ം is the anusvaram, the final nasal m here. With ര: രം, ram."
+            },
+            {
+              "kind": "speech",
+              "text": "These are the last new shapes in the greeting."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — observe and trace the last three",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace ാ, ര, and ം once each while the models remain visible. Then trace കാ and രം once. Say kā-ram after your finger stops."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What makes ക into കാ? (The long-ā sign, ാ.) What does the final circle ം contribute here? (A final nasal m.) How many new shapes remain before reading the whole greeting? (None.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-W01-namaskaram-read",
+      "sequence": 17,
+      "title": "നമസ്കാരം (namaskāram) — every shape is already yours",
+      "headword": "നമസ്കാരം",
+      "romanization": "namaskāram",
+      "gloss": "assemble and read the known greeting with no new shape",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:798422534f54186b",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — assemble and read"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — assemble and read until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say namaskāram. Now the written greeting may appear: it contains no unfamiliar shape."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — assemble and read",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ന + മ + സ + ് + ക + ാ + ര + ം becomes നമസ്കാരം (namaskāram)."
+            },
+            {
+              "kind": "speech",
+              "text": "Read the pieces in the groups you practised:"
+            },
+            {
+              "kind": "speech",
+              "text": "നമ — na-ma."
+            },
+            {
+              "kind": "speech",
+              "text": "സ്ക — ska."
+            },
+            {
+              "kind": "speech",
+              "text": "ാരം — ā-ram."
+            },
+            {
+              "kind": "speech",
+              "text": "Together: നമസ്കാരം, namaskāram. The conjunct സ്ക is still just സ with its vowel removed by ്, joined to ക."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — one visible whole-word copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep നമസ്കാരം (namaskāram) visible and copy it once in the three groups above. Look back whenever needed. Independent production waits for the next tiny lesson."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read നമസ്കാരം (namaskāram). How many new shapes did this lesson add? (None.) What does the greeting literally evoke? (The making of a bow.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-W01-namaskaram-dictation",
+      "sequence": 18,
+      "title": "One heard greeting — write the whole",
+      "headword": "നമസ്കാരം",
+      "romanization": "namaskāram",
+      "gloss": "write the complete known greeting from sound alone",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:336d7d27b37f5be5",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover the written answer below. You have already traced every shape, carried നമ (na-ma) through dictation, and copied the whole greeting once."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — whole-word dictation",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "namaskāram — “greetings”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *namaskāram* — “greetings”]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write the greeting from sound alone. Use the three remembered groups: na-ma, ska, ā-ram. Then uncover and compare: നമസ്കാരം (namaskāram). Repair one group if needed; do not rewrite the whole word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read your greeting and say what it does. (It respectfully opens or closes a conversation.) This is independent production of a fully taught word, not a preview of untaught shapes."
             }
           ]
         }
@@ -912,21 +1496,24 @@
       "romanization": "",
       "gloss": "Chapter 1 recap + the Malayalam farewell",
       "script": "malayalam",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "pen",
+      "derivedModality": "pen",
       "modalityReasons": [
+        "writing-block",
+        "sight-cue",
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:5a03202775f4a9a5",
+      "sourceHash": "fnv1a64:32cc5f4165be8d72",
       "notice": {
-        "modality": "sight",
+        "modality": "pen",
         "needs": [
+          "your eyes, because the lesson points at something written down",
           "your eyes for one table that cannot be read aloud"
         ],
         "waitUntilStopped": [
-          "Read them back"
+          "The exchange — read them back"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called Read them back until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The exchange — read them back until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -948,8 +1535,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "Read them back",
+          "type": "input",
+          "title": "The exchange — read them back",
           "segments": [
             {
               "kind": "speech",
@@ -980,8 +1567,8 @@
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "A promise for later",
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way — a promise for later",
           "segments": [
             {
               "kind": "speech",
@@ -1022,6 +1609,17 @@
         },
         {
           "index": 4,
+          "type": "writing",
+          "title": "Writing checkpoint",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hide the model. Hear namaskāram once, write നമസ്കാരം, then uncover the word in the table and check one group at a time: നമ (na-ma), സ്ക, ാരം. A mismatch is a signal to repeat the earlier two-minute shape lesson, not to push faster."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

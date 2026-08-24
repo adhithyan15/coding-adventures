@@ -256,7 +256,7 @@ describe("corpus snapshot", () => {
     // Chapters 7-9 then map their terminal practices and Chapter 9's remaining
     // teaching lessons. Chapter 10 closes two more gaps; Chapter 11 closes its
     // possessive and terminal-practice gaps; Chapters 12-13 close their payoff gaps.
-    expect(summary.unmapped).toBe(61); // Punjabi and Marathi's migrated Chapter 1 checkpoints now name SPINE-RESPOND-BASIC.
+    expect(summary.unmapped).toBe(60); // Malayalam joins Punjabi and Marathi: its migrated Chapter 1 checkpoint now names SPINE-RESPOND-BASIC.
     /* Historical cumulative context:
     expect(summary.unmapped).toBe(64); // HL-C259: -4 -- IMPROVEMENT, the four gujarati chapter practices gain a spine_node // HL-C258: -3 -- IMPROVEMENT, the three bengali chapter practices gain a spine_node // HL-C256: -1 -- IMPROVEMENT, BN-C01-practice gains a spine_node // HL-C255: -3 -- IMPROVEMENT, three hindi ch4/ch5 lessons gain a spine_node. unmapped has fallen 84 -> 72 across six migrations // HL-C254: -1 -- IMPROVEMENT, HI-C03-practice gains a spine_node // HL-C253: -1 -- IMPROVEMENT, HI-C02-practice gains a spine_node // HL-C252: -1 -- IMPROVEMENT, HI-C01-practice gains a spine_node and stops counting as unmapped // HL-C251: -6 -- IMPROVEMENT. Six of the twelve migrated russian ch1 lessons gained a spine_node and stop counting as unmapped // HL-C250: -2 -- IMPROVEMENT. Migrating RU-C02-practice-cases and RU-C02-practice-zero-copula to v2 gave them a spine_node, so they stop counting as unmapped. This number should keep falling as #12072 proceeds
     */
