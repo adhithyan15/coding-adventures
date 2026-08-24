@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "id": "starlark/meter-range-limit",
+  "domain": "starlark",
+  "summary": "Range cardinality is rejected before iteration or materialization.",
+  "platforms": ["darwin", "linux", "windows"],
+  "capabilities": ["starlark"],
+  "workspace": {
+    "files": [
+      {
+        "path": "code/packages/python/demo/BUILD",
+        "content_utf8": "indices = range(5)\n_targets = []\n"
+      }
+    ]
+  },
+  "input": {
+    "operation": "starlark",
+    "options": {
+      "entrypoint": "code/packages/python/demo/BUILD",
+      "context": {"version": 1, "os": "linux", "arch": "amd64", "cpu_count": 1, "ci": true},
+      "legacy_fallback": "error",
+      "evaluation_limits": {"step_count": 1000, "recursion_depth": 8, "load_depth": 8, "module_count": 8, "value_items": 1000, "range_items": 4, "value_bytes": 1024, "output_bytes": 1024}
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "starlark/meter-range-limit",
+    "domain": "starlark",
+    "outcome": "error",
+    "result": {},
+    "diagnostics": [{"code": "STARLARK_RANGE_LIMIT", "severity": "error", "path": "code/packages/python/demo/BUILD"}]
+  },
+  "limits": {"wall_time_ms": 1000, "output_bytes": 1048576, "workspace_bytes": 1048576, "process_count": 1, "memory_mib": 128, "cpu_time_ms": 1000}
+}

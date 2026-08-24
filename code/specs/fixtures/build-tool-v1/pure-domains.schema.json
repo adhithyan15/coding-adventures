@@ -613,6 +613,16 @@
           "minimum": 1,
           "maximum": 1000000
         },
+        "range_items": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000
+        },
+        "value_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1048576
+        },
         "output_bytes": {
           "type": "integer",
           "minimum": 1,

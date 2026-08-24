@@ -1202,11 +1202,17 @@ def _starlark_module_error(
     staged_files: list[WorkspaceFile],
 ) -> tuple[str, str] | None:
     sources = {entry.path: entry.content for entry in staged_files}
-    pending = [(options["entrypoint"], 0)]
+    pending = [(options["entrypoint"], 0, False)]
     visited: set[str] = set()
+    active: set[str] = set()
     limits = options["evaluation_limits"]
     while pending:
-        module, depth = pending.pop()
+        module, depth, exiting = pending.pop()
+        if exiting:
+            active.remove(module)
+            continue
+        if module in active:
+            return "STARLARK_LOAD_CYCLE", module
         if module in visited:
             continue
         visited.add(module)
@@ -1222,6 +1228,8 @@ def _starlark_module_error(
             syntax = ast.parse(source, mode="exec")
         except SyntaxError:
             return "STARLARK_SOURCE_INVALID", module
+        active.add(module)
+        pending.append((module, depth, True))
         parents = {
             child: parent
             for parent in ast.walk(syntax)
@@ -1276,7 +1284,7 @@ def _starlark_module_error(
                 return "STARLARK_LOAD_OUTSIDE_REPOSITORY", module
             if resolved not in sources:
                 return "STARLARK_MODULE_MISSING", resolved
-            pending.append((resolved, depth + 1))
+            pending.append((resolved, depth + 1, False))
     return None
 
 
