@@ -6228,6 +6228,11 @@ read-only fixture, security/authority, and state/roadmap reviews found no
 remaining implementation or publication-scope defect. F# tracked-artifact
 therefore remains the correct next owner after merge.
 
+Ready-for-review PR #12615 opened from validated head
+`5c6cdd8df36fe9a490d251e707b379221b48bf72` after a normal first push. GitHub
+reports it mergeable while required checks are pending, so auto-merge remains
+disabled until every required check reaches a terminal acceptable conclusion.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
