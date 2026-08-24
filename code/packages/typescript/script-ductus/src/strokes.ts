@@ -3055,6 +3055,31 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: devanagariAlphabetSource("ज"),
   },
+  // Opiaterein's animation joins the descending central stem to the
+  // counterclockwise open body, then finishes with a separate headline:
+  // two strokes, one lift.
+  [ductusKey("devanagari", "ट")]: {
+    script: "devanagari",
+    glyph: "ट",
+    strokes: [
+      { segments: [{ label: "descend the stem and sweep counterclockwise around the open body", path: [
+        { x: 358, y: 551 }, { x: 358, y: 500 }, { x: 358, y: 445 },
+        { x: 358, y: 395 }, { x: 330, y: 390 }, { x: 290, y: 388 },
+        { x: 245, y: 382 }, { x: 200, y: 368 }, { x: 158, y: 345 },
+        { x: 125, y: 312 }, { x: 100, y: 272 }, { x: 86, y: 225 },
+        { x: 88, y: 178 }, { x: 105, y: 135 }, { x: 138, y: 98 },
+        { x: 180, y: 72 }, { x: 228, y: 58 }, { x: 278, y: 57 },
+        { x: 328, y: 66 }, { x: 375, y: 84 }, { x: 416, y: 110 },
+        { x: 430, y: 125 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the shirorekha left-to-right", path: [
+        { x: 5, y: 585 }, { x: 75, y: 585 }, { x: 145, y: 585 },
+        { x: 215, y: 585 }, { x: 285, y: 585 }, { x: 355, y: 585 },
+        { x: 425, y: 585 }, { x: 500, y: 585 },
+      ] }] },
+    ],
+    source: devanagariAlphabetSource("ट"),
+  },
   // Opiaterein's animation joins the descending left stem, clockwise lower
   // bowl, and ascending inner right stem in one run, then separately descends
   // the outer right stem and finishes the headline: three strokes, two lifts.
