@@ -258,15 +258,29 @@ impl LocalSecretV1 {
         check_version(take_uint(&mut fields, 1)?)?;
         let vault_id = VaultId::new(take_fixed(&mut fields, 2)?);
         let device_id = DeviceId::new(take_fixed(&mut fields, 3)?);
-        let authority_seed = *take_secret_fixed::<32>(&mut fields, 4)?;
-        let device_signing_seed = *take_secret_fixed::<32>(&mut fields, 5)?;
-        let device_x25519_secret = *take_secret_fixed::<32>(&mut fields, 6)?;
+        // Each `take_secret_fixed` result stays wrapped in `Zeroizing` all the
+        // way to the final, infallible struct literal below -- not
+        // dereferenced into a plain `[u8; 32]` the moment it is bound. A
+        // plain array's `Drop` is a no-op, so if an *earlier* field here
+        // (say, `authority_seed`) had already been unwrapped into one and a
+        // *later* field then failed to decode, the `?` on that later call
+        // would return early with the earlier seed's copy sitting unwiped in
+        // this frame -- the exact partial-multi-field-decode residual this
+        // function exists to close, just one field later than the case
+        // `take_secret_fixed` itself already covers. Keeping every seed
+        // `Zeroizing`-wrapped until every `?` in this function has already
+        // succeeded means an early return here always still wipes each seed
+        // already taken, the same guarantee `encode` gives on its own exit
+        // paths above.
+        let authority_seed = take_secret_fixed::<32>(&mut fields, 4)?;
+        let device_signing_seed = take_secret_fixed::<32>(&mut fields, 5)?;
+        let device_x25519_secret = take_secret_fixed::<32>(&mut fields, 6)?;
         Ok(Self {
             vault_id,
             device_id,
-            authority_seed,
-            device_signing_seed,
-            device_x25519_secret,
+            authority_seed: *authority_seed,
+            device_signing_seed: *device_signing_seed,
+            device_x25519_secret: *device_x25519_secret,
         })
     }
 }
@@ -1987,6 +2001,41 @@ mod tests {
              on the success path"
         );
         assert_eq!(decoded.authority_seed(), &[0xB1; 32]);
+    }
+
+    /// A round-1 security review of this fix flagged the exact scenario
+    /// this pins: `decode_fields` takes its three seeds one `?` at a time,
+    /// so an earlier seed can already have been successfully taken and
+    /// unwrapped by the time a *later* field fails to decode and the `?`
+    /// returns early. Field 4 (`authority_seed`) here is well-formed; field
+    /// 5 (`device_signing_seed`) is one byte short, so `take_secret_fixed`
+    /// fails on it only after `authority_seed` has already succeeded. Every
+    /// `take_secret_fixed` result stays `Zeroizing`-wrapped until the final
+    /// struct literal (see the comment in `decode` above) specifically so
+    /// this early return still wipes `authority_seed`'s already-taken copy,
+    /// not just the field that actually failed.
+    #[test]
+    fn local_secret_decode_wipes_an_earlier_seed_when_a_later_field_fails() {
+        use core::sync::atomic::Ordering;
+
+        let malformed = encode(&CborValue::Map(vec![
+            field(1, CborValue::Unsigned(VERSION)),
+            field(2, bytes(&[1; 16])),
+            field(3, bytes(&[2; 16])),
+            field(4, bytes(&[3; 32])),
+            field(5, bytes(&[4; 31])),
+            field(6, bytes(&[5; 32])),
+        ]));
+
+        let before = ZEROIZE_CBOR_SECRETS_CALLS.load(Ordering::Relaxed);
+        assert_eq!(
+            LocalSecretV1::decode(&malformed),
+            Err(ApplicationError::IntegrityFailure)
+        );
+        assert!(
+            ZEROIZE_CBOR_SECRETS_CALLS.load(Ordering::Relaxed) > before,
+            "an already-taken seed was not wiped when a later field failed to decode"
+        );
     }
 
     /// Inside this crate's own 16 MiB plaintext gate, outside

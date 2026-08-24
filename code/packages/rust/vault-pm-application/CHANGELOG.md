@@ -53,8 +53,23 @@ All notable changes to this package are documented here.
     stay on plain `take_fixed`, matching `AttachmentManifestV1`'s existing
     secret/identifier distinction.
 
+  - **Round-1 security review finding, fixed before push:** the first draft
+    of `decode_fields` dereferenced each `take_secret_fixed` result into a
+    plain `[u8; 32]` local immediately on the line that took it. A plain
+    array's `Drop` is a no-op, so if an earlier seed (say, `authority_seed`)
+    had already been taken and dereferenced by the time a *later* field (5
+    or 6) failed to decode, that early `?` return left the earlier seed's
+    already-extracted copy sitting unwiped — one field later than
+    `take_secret_fixed`'s own per-call guarantee reaches. Fixed by keeping
+    every seed `Zeroizing`-wrapped until the function's one, final,
+    infallible `Ok(Self { ... })` literal, so an early return anywhere
+    before that point still wipes every seed already taken via its own
+    still-live wrapper.
+
   - New tests: `local_secret_encode_wipes_its_own_scaffolding`,
     `local_secret_decode_wipes_its_own_scaffolding_on_success`,
+    `local_secret_decode_wipes_an_earlier_seed_when_a_later_field_fails`
+    (pins the round-1 finding above),
     `encode_item_revision_wipes_the_records_plaintext_on_success`, and
     `encode_item_revision_wipes_the_records_plaintext_on_bound_exceeded`,
     each watching a new `#[cfg(test)]` process-wide call counter on

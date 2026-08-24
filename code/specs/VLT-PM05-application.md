@@ -1572,6 +1572,22 @@ existed as its decode-side companion, converting a decoded `Vec<u8>` into a
   `try_encode` succeeded or returned `BoundExceeded` — mirroring
   `AttachmentManifestV1::encode`'s existing shape exactly.
 
+A round-1 security review of this fix found a real MEDIUM in `decode_fields`'s
+first draft: each `take_secret_fixed::<32>(&mut fields, key)?` call was
+immediately dereferenced into a plain `[u8; 32]` local (`*take_secret_fixed
+::<32>(&mut fields, 4)?`) the moment it was bound. `take_secret_fixed` itself
+still wiped its own decoder-owned copy correctly, but once `authority_seed`
+was a bare, non-`Zeroizing` array on the stack, a *later* field's `?` (field
+5 or 6) failing after `authority_seed` had already succeeded returned early
+with `authority_seed`'s already-extracted copy left unwiped — a plain
+array's `Drop` is a no-op — one field later than `take_secret_fixed`'s own
+guarantee reaches. The fix keeps every seed `Zeroizing`-wrapped all the way
+to the function's one, final, infallible `Ok(Self { ... })` literal, where
+all three are dereferenced together only once every fallible step has
+already succeeded; an early return anywhere before that point now wipes
+every seed already taken via each still-live `Zeroizing` wrapper's own
+`Drop`, not just the field whose decode actually failed.
+
 **Tests.** `zeroize_cbor_secrets` gained a `#[cfg(test)]`-only, process-wide
 atomic call counter (`ZEROIZE_CBOR_SECRETS_CALLS`), the same shape as
 `vault-records`'s `SECRET_CBOR_VALUE_DROPS`: read it before and after a real
@@ -1584,6 +1600,10 @@ correct in isolation on a hand-built tree.
 `local_secret_decode_wipes_its_own_scaffolding_on_success` cover Instance 1
 on both directions, the latter specifically targeting the success path
 `value_fields`'s existing failure-path wipe does not reach.
+`local_secret_decode_wipes_an_earlier_seed_when_a_later_field_fails` pins the
+round-1 review finding above directly: field 4 well-formed, field 5 one byte
+short, and the assertion is that `authority_seed` — already taken by the
+time field 5 fails — still gets wiped.
 `encode_item_revision_wipes_the_records_plaintext_on_success` and
 `encode_item_revision_wipes_the_records_plaintext_on_bound_exceeded` cover
 Instance 2 on both the ordinary path and the routine, expected
