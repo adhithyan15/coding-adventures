@@ -200,6 +200,31 @@
       "json": "japanese/narration/ch10.json",
       "textHash": "fnv1a64:b339247391ba6ee2",
       "jsonHash": "fnv1a64:0f6eb219d08f329d"
+    },
+    {
+      "language": "japanese",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:eb6b44a84de9d053",
+      "lessonIds": [
+        "JA-W11-small-tsu",
+        "JA-W11-te",
+        "JA-W11-ta",
+        "JA-W11-da",
+        "JA-C11-te-hand",
+        "JA-C11-mimi",
+        "JA-C11-kuchi",
+        "JA-C11-ashi",
+        "JA-C11-hana",
+        "JA-C11-kao",
+        "JA-C11-me-eye",
+        "JA-C11-body-map"
+      ],
+      "voiceLessons": 8,
+      "drivablePrefix": 0,
+      "text": "japanese/narration/ch11.txt",
+      "json": "japanese/narration/ch11.json",
+      "textHash": "fnv1a64:cfae4a18582ffb5e",
+      "jsonHash": "fnv1a64:1c67eeb297ed4cd8"
     }
   ],
   "findings": []

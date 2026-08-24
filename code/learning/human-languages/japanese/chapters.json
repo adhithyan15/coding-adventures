@@ -131,6 +131,19 @@
         "summary": "A second repair strategy assembled from seven tiny lexical steps while independent reading and writing stay inside the learner's earned script boundary.",
         "assesses": ["JA-LEX-SUKOSHI", "JA-LEX-YUKKURI", "JA-LEX-ITTE-KUDASAI", "JA-LEX-MOU-SUKOSHI", "JA-LEX-WAKARIMASHITA", "JA-LEX-KOKO", "JA-LEX-SLOWER-PLEASE", "JA-SCRIPT-SE-01", "JA-SCRIPT-O-01", "JA-SCRIPT-NE-01", "JA-SCRIPT-SHI-01", "JA-SCRIPT-YU-01"]
       }
+    },
+    {
+      "chapter": 11,
+      "title": "Seven Body Words, No New Guessing",
+      "label": "ch:ja-body-seven",
+      "canDo": "I can read, write, hear, and say seven basic body words, and I can decode the repair signs that were previously only sound-first exposure.",
+      "spineNodes": ["SPINE-CHECK-WELLBEING"],
+      "payoff": {
+        "lesson": "JA-C11-body-map",
+        "kind": "reading",
+        "summary": "Seven concrete body labels built only from earned hiragana after four tiny lessons close every outstanding repair-script exposure.",
+        "assesses": ["JA-SCRIPT-SMALL-TSU-01", "JA-SCRIPT-TE-01", "JA-SCRIPT-TA-01", "JA-SCRIPT-DA-01", "JA-LEX-TE-HAND", "JA-LEX-MIMI", "JA-LEX-KUCHI", "JA-LEX-ASHI", "JA-LEX-HANA-NOSE", "JA-LEX-KAO", "JA-LEX-ME-EYE", "JA-PERFORMANCE-BODY-SEVEN-01"]
+      }
     }
   ]
 }

@@ -188,6 +188,29 @@
         "JA-EXT-017-REPAIR-SLOWER"
       ],
       "after": []
+    },
+    {
+      "id": "JA-PATH-011",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "JA-W11-small-tsu",
+        "JA-W11-te",
+        "JA-W11-ta",
+        "JA-W11-da",
+        "JA-C11-te-hand",
+        "JA-C11-mimi",
+        "JA-C11-kuchi",
+        "JA-C11-ashi",
+        "JA-C11-hana",
+        "JA-C11-kao",
+        "JA-C11-me-eye",
+        "JA-C11-body-map"
+      ],
+      "before": [],
+      "inline": [
+        "JA-EXT-018-BODY-SEVEN"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -243,7 +266,9 @@
       "relocates": {}
     },
     "SPINE-CHECK-WELLBEING": {
-      "segments": [],
+      "segments": [
+        "JA-PATH-011"
+      ],
       "omits": [
         "QUESTION-HOW",
         "STATE-HOW-ARE-YOU",
@@ -828,6 +853,30 @@
         "JA-C10-wakarimashita",
         "JA-C10-koko",
         "JA-C10-slower-please"
+      ]
+    },
+    {
+      "id": "JA-EXT-018-BODY-SEVEN",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can read, write, hear, and say seven body words built only from earned hiragana, after closing every outstanding repair-script exposure.",
+      "prerequisites": [
+        "JA-EXT-017-REPAIR-SLOWER"
+      ],
+      "lessons": [
+        "JA-W11-small-tsu",
+        "JA-W11-te",
+        "JA-W11-ta",
+        "JA-W11-da",
+        "JA-C11-te-hand",
+        "JA-C11-mimi",
+        "JA-C11-kuchi",
+        "JA-C11-ashi",
+        "JA-C11-hana",
+        "JA-C11-kao",
+        "JA-C11-me-eye",
+        "JA-C11-body-map"
       ]
     }
   ]
