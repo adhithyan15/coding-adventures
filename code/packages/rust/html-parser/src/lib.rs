@@ -7397,10 +7397,13 @@ impl HtmlParser {
                 )
                 .at_emission(self.current_token_emission_position),
             );
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-li-end-tag",
-                "end tag `</li>` did not match a list item in scope",
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-li-end-tag",
+                    "end tag `</li>` did not match a list item in scope",
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             return;
         }
         if self.current_namespace().is_some()
@@ -7898,10 +7901,13 @@ impl HtmlParser {
             }
             "li" => {
                 if !self.close_open_list_item_if_in_scope() {
-                    self.diagnostics.push(ParserDiagnostic::new(
-                        "unexpected-li-end-tag",
-                        "end tag `</li>` did not match a list item in scope",
-                    ));
+                    self.diagnostics.push(
+                        ParserDiagnostic::new(
+                            "unexpected-li-end-tag",
+                            "end tag `</li>` did not match a list item in scope",
+                        )
+                        .at_emission(self.current_token_emission_position),
+                    );
                 }
             }
             name @ ("dd" | "dt") => self.close_open_description_item(name),
@@ -27352,6 +27358,14 @@ mod tests {
         .at_emission(Some(end_tag_position(source, "p")))
     }
 
+    fn unexpected_li_end_tag(source: &str) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-li-end-tag",
+            "end tag `</li>` did not match a list item in scope",
+        )
+        .at_emission(Some(end_tag_position(source, "li")))
+    }
+
     fn scoped_block_end_tag_outside_scope(source: &str, name: &str) -> ParserDiagnostic {
         ParserDiagnostic::new(
             "unexpected-block-end-tag-outside-scope",
@@ -34438,10 +34452,13 @@ mod tests {
 
     #[test]
     fn list_item_end_tags_respect_full_list_item_scope() {
-        let table = parse_html_with_diagnostics(
-            "<!doctype html><ul><li id=l><table id=t></li><tr><td>X</table>Y",
-        )
-        .unwrap();
+        let table_source = "<!doctype html><ul><li id=l><table id=t></li><tr><td>X</table>Y";
+        let table = parse_html_with_diagnostics(table_source).unwrap();
+        let table_diagnostic = table
+            .parser_diagnostics
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-li-end-tag")
+            .unwrap();
         assert_eq!(
             table
                 .parser_diagnostics
@@ -34449,6 +34466,10 @@ mod tests {
                 .filter(|diagnostic| diagnostic.code == "unexpected-li-end-tag")
                 .count(),
             1
+        );
+        assert_eq!(
+            table_diagnostic.position,
+            Some(end_tag_position(table_source, "li"))
         );
         let item = find_element_by_id(&table.document.children, "l")
             .expect("the blocked end tag should leave the list item open");
@@ -34466,15 +34487,20 @@ mod tests {
             "<!doctype html><ul><li><template></li>X</template>Y</ul>",
         ] {
             let output = parse_html_with_diagnostics(source).unwrap();
+            let diagnostics = output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-li-end-tag")
+                .collect::<Vec<_>>();
             assert_eq!(
-                output
-                    .parser_diagnostics
-                    .iter()
-                    .filter(|diagnostic| diagnostic.code == "unexpected-li-end-tag")
-                    .count(),
+                diagnostics.len(),
                 1,
                 "source {source:?}: {:?}",
                 output.parser_diagnostics
+            );
+            assert_eq!(
+                diagnostics[0].position,
+                Some(end_tag_position(source, "li"))
             );
         }
 
@@ -34515,10 +34541,7 @@ mod tests {
                 output.parser_diagnostics,
                 vec![
                     generic_foreign_end_tag_mismatch(&source, "li"),
-                    ParserDiagnostic::new(
-                        "unexpected-li-end-tag",
-                        "end tag `</li>` did not match a list item in scope"
-                    ),
+                    unexpected_li_end_tag(&source),
                 ],
                 "source {source:?}"
             );
@@ -34557,11 +34580,12 @@ mod tests {
             find_element_by_id(&no_html_list_item.document.children, "boundary").unwrap();
         assert_eq!(boundary.children, vec![Node::text("X")]);
 
-        let unmatched = parse_html_with_diagnostics("<!doctype html></li>").unwrap();
+        let unmatched_source = "<!doctype html></li>";
+        let unmatched = parse_html_with_diagnostics(unmatched_source).unwrap();
         assert!(unmatched
             .parser_diagnostics
             .iter()
-            .any(|diagnostic| diagnostic.code == "unexpected-li-end-tag"));
+            .any(|diagnostic| diagnostic == &unexpected_li_end_tag(unmatched_source)));
 
         let fragment = parse_html_fragment_for_context_with_diagnostics("</li>X", "li").unwrap();
         assert!(fragment
@@ -34578,10 +34602,7 @@ mod tests {
             output.parser_diagnostics,
             vec![
                 generic_foreign_end_tag_mismatch(source, "li"),
-                ParserDiagnostic::new(
-                    "unexpected-li-end-tag",
-                    "end tag `</li>` did not match a list item in scope"
-                ),
+                unexpected_li_end_tag(source),
             ]
         );
         assert!(source.len() > source.chars().count());
