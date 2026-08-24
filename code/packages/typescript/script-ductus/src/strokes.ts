@@ -3683,6 +3683,38 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: devanagariAlphabetSource("श"),
   },
+  // Opiaterein's animation draws the U-shaped body first, then separately
+  // retraces and descends its right stem, adds the diagonal, and finishes the
+  // headline: four strokes, three lifts.
+  [ductusKey("devanagari", "ष")]: {
+    script: "devanagari",
+    glyph: "ष",
+    strokes: [
+      { segments: [{ label: "descend the left side, curve around the bowl, and rise along the right side", path: [
+        { x: 120, y: 551 }, { x: 120, y: 480 }, { x: 120, y: 410 },
+        { x: 120, y: 350 }, { x: 128, y: 300 }, { x: 145, y: 255 },
+        { x: 170, y: 220 }, { x: 205, y: 195 }, { x: 245, y: 182 },
+        { x: 285, y: 182 }, { x: 325, y: 195 }, { x: 360, y: 220 },
+        { x: 388, y: 255 }, { x: 408, y: 300 }, { x: 420, y: 350 },
+        { x: 420, y: 410 }, { x: 420, y: 475 }, { x: 420, y: 551 },
+      ] }] },
+      { segments: [{ label: "lift, then descend the right stem", path: [
+        { x: 420, y: 551 }, { x: 420, y: 475 }, { x: 420, y: 395 },
+        { x: 420, y: 315 }, { x: 420, y: 235 }, { x: 420, y: 155 },
+        { x: 420, y: 75 }, { x: 420, y: 5 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the inner diagonal down-right", path: [
+        { x: 175, y: 530 }, { x: 220, y: 475 }, { x: 270, y: 415 },
+        { x: 320, y: 355 }, { x: 370, y: 295 }, { x: 410, y: 245 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the shirorekha left-to-right", path: [
+        { x: 5, y: 585 }, { x: 75, y: 585 }, { x: 145, y: 585 },
+        { x: 215, y: 585 }, { x: 285, y: 585 }, { x: 355, y: 585 },
+        { x: 425, y: 585 }, { x: 500, y: 585 }, { x: 592, y: 585 },
+      ] }] },
+    ],
+    source: devanagariAlphabetSource("ष"),
+  },
   // JackPotte's animation joins the descending left stem, hook, and tail, then
   // restarts for the crossbar, right stem, and headline. The Directorate
   // deskbook confirms that order while staging the hook and tail separately.
