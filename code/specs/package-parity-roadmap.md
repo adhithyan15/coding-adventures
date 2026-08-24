@@ -5200,6 +5200,38 @@ correction and validation-claim repair. It does not displace the selected
 protocol item because the protocol's recursive pip launcher is the reproduced
 dependency-closure blocker.
 
+### Python data-store protocol BUILD-front implementation
+
+Both protocol BUILD fronts now recreate a named `.venv`, pin Python 3.13,
+install through that environment, and invoke its interpreter explicitly for
+Ruff, formatting, strict MyPy, and pytest. The Windows recipe separates the
+dependency-free editable package install from the quality-tool install, which
+removes the recursive generated-pip path without changing package dependencies.
+A repository regression pins both complete recipes. Strict checking also made
+the existing `EngineResponse.bulk_string` normalization contract explicit for
+`bytearray` and `memoryview`; runtime behavior is unchanged.
+
+The exact Windows recipe passes twice consecutively on Python 3.13.14 with all
+five tests at 100% coverage and every quality gate clean. The immediate
+store-engine downstream passes 57 tests at 96.67% coverage against editable
+local dependencies. Focused recipe, uv-audit, parity reporter, and capability
+taxonomy suites pass two, 13, ten, and seven tests. The Go build tool passes
+tests, vet, and compilation.
+
+With `uv` explicitly available to the child shell and the compatibility
+variables already owned by pending legacy-front repairs, the build tool's real
+494-package affected execution builds `hash-functions`, `hyperloglog`,
+`resp-protocol`, and `in-memory-data-store-protocol`. It then reaches the
+unchanged `in-memory-data-store-engine` front and reproduces its separately
+owned Windows-invalid quoted editable requirement; the composed store is
+dependency-skipped. The protocol blocker is therefore closed without widening
+this tranche into `python-data-store-build-front-idempotence`.
+
+After a clean rebase onto current `origin/main`
+`de94b5ab33e04e13d0581f3ecf6a846049cb7d6d`, the collision-checked inventory
+remains unchanged at 15 established lanes, 1,369 implementation identities,
+4,562 package slots, and zero collisions or unknown buckets.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
