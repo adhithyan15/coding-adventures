@@ -123,8 +123,13 @@ for dir in "$BOOKS"/*/book; do
   # two array entries. Not an injection (every expansion below is quoted), but a
   # spurious failure is still a failure nobody can act on.
   svgs=()
-  while IFS= read -r -d '' svg; do svgs+=("$svg"); done \
-    < <(find "$dir/figures" -name '*.svg' -type f -print0 2>/dev/null | sort -z)
+  # Use the MSYS find explicitly and avoid `sort -z`: Git Bash can resolve
+  # `sort` to Windows' `sort.exe`, which consumes `-z` as a filename and leaves
+  # this array empty. That would bypass both conversion and the required clean
+  # skip, then report a misleading XeLaTeX failure for every illustrated book.
+  # Enumeration order does not affect the gate; every SVG is converted first.
+  mapfile -d '' -t svgs \
+    < <(/usr/bin/find "$dir/figures" -name '*.svg' -type f -print0 2>/dev/null)
 
   if [ ${#svgs[@]} -gt 0 ] && [ -z "$CONVERTER" ]; then
     printf 'SKIP %-12s %d figure(s) need an SVG-to-PDF converter (rsvg-convert, inkscape or magick)\n' \
