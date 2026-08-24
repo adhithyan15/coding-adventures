@@ -1,0 +1,806 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 310,
+  "title": "El Cuarto Y La Mesa --- Key, Shower, Table, Light, Bathroom",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:f4328984c0669a9e",
+  "lessons": [
+    {
+      "id": "ES-C310-llave",
+      "sequence": 4620,
+      "title": "la llave — the little key, and the three English words hiding it",
+      "headword": "la llave",
+      "romanization": "la llave",
+      "gloss": "the key — Latin clavis, the little key; the same root gives English clavicle, clef and conclave",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:e98f3377eda8e14e",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two repairs from last time, before anything new is added. Which one admits you have no answer? (No sé.) Which one asks a stranger for a meaning? (¿Qué significa?)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "LLA-ve, stress on the first part. The ll is a y, so this begins the way yes begins. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la llave — \"the key.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin clavis was the key. Spanish softened the cl- into that ll-, the same way clamare became llamar, and the shape of the old word all but disappeared. English never softened it, so English is where you can still see it."
+            },
+            {
+              "kind": "speech",
+              "text": "Look at your collarbone. It is the clavicle — the little key — because a Roman anatomist thought it turned like one where it meets the shoulder. Look at the start of a line of music: that is the clef, the key that unlocks which note each line means. And when cardinals are shut in a room to choose a pope, they are cum clave, with a key — in conclave."
+            },
+            {
+              "kind": "speech",
+              "text": "Three English words, one Spanish word, one Latin key. You have carried clavis around in your own shoulder your whole life."
+            },
+            {
+              "kind": "speech",
+              "text": "Say la llave, por favor at a hotel desk and you will be handed one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first of the things you have to ask a stranger for."
+            },
+            {
+              "kind": "speech",
+              "text": "Everything in this run is an object that somebody else is holding, and the only way to it is a question. That is why these words sit with your repair kit rather than apart from it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la llave",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la llave*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la llave, por favor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la llave, por favor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "disculpe — la llave, por favor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *disculpe — la llave, por favor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "no sé. ¿qué significa?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *no sé. ¿qué significa?*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which bone is named \"the little key\"? (The clavicle.) What is la llave? (The key.) And which two repairs opened this lesson? (No sé and ¿qué significa?)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C310-ducha",
+      "sequence": 4630,
+      "title": "la ducha — a thing that leads water",
+      "headword": "la ducha",
+      "romanization": "la ducha",
+      "gloss": "the shower — Latin ducere, to lead; the same root leads water through an aqueduct and gives English duct, conduct and duke",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6aae5ad8036d9e80",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two from last time. Which English bone is the little key? (The clavicle, from the same clavis as llave.) And which question earns you a meaning from a stranger? (¿Qué significa?)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "DU-cha, stress on the first part. The d is soft, closer to the th of this than to an English d. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la ducha — \"the shower.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish borrowed this one from Italian doccia, a pipe or a spout, and Italian had it from Latin ducere: to lead."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the whole idea. A shower is not named for water and not named for washing. It is named for the fact that something leads the water to where you are standing."
+            },
+            {
+              "kind": "speech",
+              "text": "Ducere is one of the busiest roots English owns. A duct leads air. An aqueduct leads water — aqua plus ducere, and the Romans built them for five hundred years. To conduct is to lead together; to introduce is to lead somebody in; to produce is to lead a thing forward into the world. And a duke is a dux, the one who leads."
+            },
+            {
+              "kind": "speech",
+              "text": "A duke and a shower head, doing the same job."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two objects now, and both of them belong to somebody else."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la ducha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la ducha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la llave, then la ducha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la llave*, then *la ducha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "disculpe, ¿dónde está la ducha?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *disculpe, ¿dónde está la ducha?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "¿qué significa?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *¿qué significa?*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did ducere mean? (To lead.) So what does an aqueduct do to water? (Leads it.) Which English title is the plain dux? (Duke.) And what is la llave? (The key.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C310-mesa",
+      "sequence": 4640,
+      "title": "la mesa — the one word English took without changing a letter",
+      "headword": "la mesa",
+      "romanization": "la mesa",
+      "gloss": "the table — Latin mensa, the measured board; English borrowed mesa whole for the flat-topped hill",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:20b290cb967425df",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two from last time. What is la llave? (The key.) And what does a ducha do, going by its root? (It leads the water to you.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ME-sa, stress on the first part. The s stays clear and hissed; it never buzzes into a z. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la mesa — \"the table.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin mensa was the table, and it sits next to metiri, \"to measure.\" A mensa was a board cut to a measure — flat, level, and made so on purpose. Flatness is the whole of the word."
+            },
+            {
+              "kind": "speech",
+              "text": "Which is why English has this one twice, and one of the two came the long way round. When English speakers reached the American southwest they found hills whose tops were sheared level, and they took the local Spanish word for it. A mesa in English is a flat-topped hill. It is la mesa with nothing changed — not the spelling, not the sound, not the idea. A table is a small flat top; a mesa is an enormous one."
+            },
+            {
+              "kind": "speech",
+              "text": "The Latin sense survives too, in commensal: creatures that are commensal eat at one table."
+            },
+            {
+              "kind": "speech",
+              "text": "Una mesa, por favor gets you seated."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The key got you in, and the table is where the asking really starts."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la mesa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la mesa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la mesa, por favor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la mesa, por favor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la llave, then la ducha, then la mesa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la llave*, then *la ducha*, then *la mesa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "disculpe, ¿dónde está la mesa?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *disculpe, ¿dónde está la mesa?*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is a mesa in English? (A flat-topped hill — the same word, untouched.) What did mensa have to do with measuring? (It was a board cut to a measure.) And which of your three words leads water? (La ducha.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C310-luz",
+      "sequence": 4650,
+      "title": "la luz — the word that clears things up",
+      "headword": "la luz",
+      "romanization": "la luz",
+      "gloss": "the light — Latin lux, lucem; English keeps it in lucid, translucent and elucidate",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:cb3bf11b5bac7062",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two from last time. What does a ducha lead? (Water.) And which English word is la mesa, borrowed whole? (Mesa, the flat-topped hill.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One syllable: luz. The final z is an s across the Americas and a th in much of Spain, and both are correct where they are said. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la luz — \"the light.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin lux shows its fuller shape in the form lucem, and that luc- is what English borrowed, over and over."
+            },
+            {
+              "kind": "speech",
+              "text": "Something lucid is lit from inside — clear enough to see through. Something translucent lets light across it. To elucidate is to bring light out of a thing, which is what a good explanation does. And the morning star was Lucifer, the light-bearer, before the name was given to anybody else."
+            },
+            {
+              "kind": "speech",
+              "text": "There is a second, older link that is easy to miss. English light is not borrowed from Latin at all — it came down the Germanic side of the family. But go back far enough and lux and light meet at one ancient root meaning brightness. The two words have been apart for thousands of years and still mean the same thing."
+            },
+            {
+              "kind": "speech",
+              "text": "No hay luz is what you say when the bulb is dead."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four objects, and this is the first one you ask about when it is missing rather than when you want it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la luz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la luz*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "no hay luz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *no hay luz*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "disculpe — no hay luz. ayuda, por favor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *disculpe — no hay luz. ayuda, por favor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la ducha, then la mesa, then la luz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la ducha*, then *la mesa*, then *la luz*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does elucidate do, literally? (Brings light out of something.) Is English light borrowed from lux? (No — it is a distant cousin, not a loan.) And what is la mesa? (The table.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C310-bano",
+      "sequence": 4660,
+      "title": "el baño — the question every traveller asks first",
+      "headword": "el baño",
+      "romanization": "el baño",
+      "gloss": "the bathroom — Latin balneum from Greek balaneion; English bath only looks related, and is not",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:41095b2109cbcd60",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two from last time. What is la mesa? (The table.) And what does elucidate do to a thing? (Brings light out of it, from the same luc- as luz.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "BA-ño, stress on the first part. The ñ is one sound, the ny in canyon — which is itself Spanish cañón. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el baño — \"the bathroom.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin balneum was the bath, and Latin had taken it from Greek balaneion, the bath house. Spanish wore balneum down to baño: the l fell out and the -ne- folded into that single ñ."
+            },
+            {
+              "kind": "speech",
+              "text": "Now the trap, because it is worth naming. English bath looks like family. It is not. Bath came down the Germanic side and never met balneum at all. The honest English relative is the rare one: balneology, the study of baths and bathing waters, which is exactly balneum with a Greek ending stuck on."
+            },
+            {
+              "kind": "speech",
+              "text": "Two words for the same room, sitting side by side for centuries, unrelated. When a pair looks obvious, that is precisely when it pays to check."
+            },
+            {
+              "kind": "speech",
+              "text": "¿Dónde está el baño? is the sentence you will need before any other in this run, and you already have every piece of it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five things a room and a table make you ask for: the key, the shower, the table, the light, the bathroom. None of them are yours until somebody tells you where they are."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the chapter. Next comes the shop, where the asking costs money."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el baño",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el baño*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "¿dónde está el baño?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *¿dónde está el baño?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "disculpe, ¿dónde está el baño?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *disculpe, ¿dónde está el baño?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la mesa, then la luz, then el baño",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la mesa*, then *la luz*, then *el baño*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gracias",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gracias*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Is English bath related to baño? (No — it only looks like it.) Which English word is the real relative? (Balneology.) And say the whole question one more time. (¿Dónde está el baño?)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

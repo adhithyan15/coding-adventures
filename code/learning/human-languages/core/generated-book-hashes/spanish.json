@@ -3048,6 +3048,58 @@
     },
     {
       "language": "spanish",
+      "chapter": 310,
+      "sourceHash": "fnv1a64:d067a2a0b5523c67",
+      "lessonIds": [
+        "ES-C310-llave",
+        "ES-C310-ducha",
+        "ES-C310-mesa",
+        "ES-C310-luz",
+        "ES-C310-bano"
+      ],
+      "tex": "spanish/book/chapters/ch310-el-cuarto-y-la-mesa.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 311,
+      "sourceHash": "fnv1a64:6d07e0d8a49ad68b",
+      "lessonIds": [
+        "ES-C311-tienda",
+        "ES-C311-cuenta",
+        "ES-C311-precio",
+        "ES-C311-bolsa",
+        "ES-C311-asiento"
+      ],
+      "tex": "spanish/book/chapters/ch311-la-tienda-y-la-cuenta.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 312,
+      "sourceHash": "fnv1a64:b80bf55c804e3169",
+      "lessonIds": [
+        "ES-C312-reloj",
+        "ES-C312-telefono",
+        "ES-C312-maleta",
+        "ES-C312-mapa",
+        "ES-C312-carta"
+      ],
+      "tex": "spanish/book/chapters/ch312-lo-que-llevas.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 313,
+      "sourceHash": "fnv1a64:affb42651d8a871d",
+      "lessonIds": [
+        "ES-C313-boleto",
+        "ES-C313-moneda",
+        "ES-C313-pasaporte",
+        "ES-C313-entrada",
+        "ES-C313-cambio"
+      ],
+      "tex": "spanish/book/chapters/ch313-el-mostrador.tex"
+    },
+    {
+      "language": "spanish",
       "chapter": 314,
       "sourceHash": "fnv1a64:59c8c0cacb7d60df",
       "lessonIds": [

@@ -4006,6 +4006,70 @@
         "ES-EXT-319-RESPUESTAS"
       ],
       "after": []
+    },
+    {
+      "id": "ES-PATH-310-01",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "ES-C310-llave",
+        "ES-C310-ducha",
+        "ES-C310-mesa",
+        "ES-C310-luz",
+        "ES-C310-bano"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-310-ASK"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-311-01",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "ES-C311-tienda",
+        "ES-C311-cuenta",
+        "ES-C311-precio",
+        "ES-C311-bolsa",
+        "ES-C311-asiento"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-311-ASK"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-312-01",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "ES-C312-reloj",
+        "ES-C312-telefono",
+        "ES-C312-maleta",
+        "ES-C312-mapa",
+        "ES-C312-carta"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-312-ASK"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-313-01",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "ES-C313-boleto",
+        "ES-C313-moneda",
+        "ES-C313-pasaporte",
+        "ES-C313-entrada",
+        "ES-C313-cambio"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-313-ASK"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -4105,7 +4169,11 @@
         "ES-PATH-301-01",
         "ES-PATH-303-01",
         "ES-PATH-318-02",
-        "ES-PATH-319-01"
+        "ES-PATH-319-01",
+        "ES-PATH-310-01",
+        "ES-PATH-311-01",
+        "ES-PATH-312-01",
+        "ES-PATH-313-01"
       ],
       "omits": [],
       "relocates": {}
@@ -8144,6 +8212,66 @@
       "lessons": [
         "ES-C319-repaso-respuestas",
         "ES-C319-otro-y-poco"
+      ]
+    },
+    {
+      "id": "ES-EXT-310-ASK",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can ask a stranger in Spanish for the key, the shower, the table, the light and the bathroom.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C310-llave",
+        "ES-C310-ducha",
+        "ES-C310-mesa",
+        "ES-C310-luz",
+        "ES-C310-bano"
+      ]
+    },
+    {
+      "id": "ES-EXT-311-ASK",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can handle a shop counter in Spanish: the shop, the bill, the price, the bag and the seat.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C311-tienda",
+        "ES-C311-cuenta",
+        "ES-C311-precio",
+        "ES-C311-bolsa",
+        "ES-C311-asiento"
+      ]
+    },
+    {
+      "id": "ES-EXT-312-ASK",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name the five things I travel with in Spanish: the clock, the phone, the suitcase, the map and the letter.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C312-reloj",
+        "ES-C312-telefono",
+        "ES-C312-maleta",
+        "ES-C312-mapa",
+        "ES-C312-carta"
+      ]
+    },
+    {
+      "id": "ES-EXT-313-ASK",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can get through a ticket counter in Spanish: the ticket, the coin, the passport, the entrance and the change.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C313-boleto",
+        "ES-C313-moneda",
+        "ES-C313-pasaporte",
+        "ES-C313-entrada",
+        "ES-C313-cambio"
       ]
     }
   ],

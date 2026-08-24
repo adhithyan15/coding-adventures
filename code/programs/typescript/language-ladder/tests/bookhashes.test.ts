@@ -271,6 +271,11 @@ describe("generated book source hashes", () => {
     [205, 1],
     [206, 1],
     [207, 1],
+    // spanish pre-A1 asking tranche: +4 -- chapters 310-313, five lessons each
+    [310, 5],
+    [311, 5],
+    [312, 5],
+    [313, 5],
   ])("matches the browser-loaded Spanish Chapter %i AST across %i lessons", (chapter, count) => {
     const lessons = loadLessons();
     const expected = expectedBookHash("spanish", chapter);
