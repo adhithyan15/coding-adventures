@@ -8533,10 +8533,13 @@ impl HtmlParser {
                 false
             }
             "form" if self.form_element_pointer_set && !self.has_open_html_template_element() => {
-                self.diagnostics.push(ParserDiagnostic::new(
-                    "nested-form-start-tag",
-                    "nested form start tag was ignored while a form element was already open",
-                ));
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "nested-form-start-tag",
+                        "nested form start tag was ignored while a form element was already open",
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
                 true
             }
             _ => false,
@@ -27468,6 +27471,14 @@ mod tests {
         .at_emission(Some(start_tag_position_at(source, "nobr", occurrence)))
     }
 
+    fn nested_form_start_tag(source: &str, occurrence: usize) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "nested-form-start-tag",
+            "nested form start tag was ignored while a form element was already open",
+        )
+        .at_emission(Some(start_tag_position_at(source, "form", occurrence)))
+    }
+
     fn unexpected_description_item_end_tag(source: &str, name: &str) -> ParserDiagnostic {
         ParserDiagnostic::new(
             "unexpected-description-item-end-tag",
@@ -34355,10 +34366,7 @@ mod tests {
         assert_eq!(
             output.parser_diagnostics,
             vec![
-                ParserDiagnostic::new(
-                    "nested-form-start-tag",
-                    "nested form start tag was ignored while a form element was already open"
-                ),
+                nested_form_start_tag(source, 1),
                 ParserDiagnostic::new(
                     "unexpected-non-current-form-end-tag",
                     "end tag `</form>` removed a form while a non-form node remained current after implied-end-tag generation"
@@ -34385,22 +34393,85 @@ mod tests {
         let paragraph = element(&div.children[2]);
         assert_eq!(paragraph.name, "p");
         assert_eq!(paragraph.children, vec![Node::text("After")]);
+
+        let repeated_source = "<!doctype html><form><form><form>";
+        let repeated = parse_html_with_diagnostics(repeated_source).unwrap();
+        assert_eq!(
+            repeated
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "nested-form-start-tag")
+                .collect::<Vec<_>>(),
+            vec![
+                &nested_form_start_tag(repeated_source, 1),
+                &nested_form_start_tag(repeated_source, 2),
+            ],
+        );
+
+        let unicode_source = "<!doctype html><!--é-->\r\n<form><form>";
+        let unicode = parse_html_with_diagnostics(unicode_source).unwrap();
+        assert_eq!(
+            unicode
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "nested-form-start-tag")
+                .collect::<Vec<_>>(),
+            vec![&nested_form_start_tag(unicode_source, 1)],
+        );
+
+        let fragment_source = "<form><form>";
+        let fragment =
+            parse_html_fragment_for_context_with_diagnostics(fragment_source, "div").unwrap();
+        assert_eq!(
+            fragment
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "nested-form-start-tag")
+                .collect::<Vec<_>>(),
+            vec![&nested_form_start_tag(fragment_source, 1)],
+        );
+
+        let incomplete = parse_html_with_diagnostics("<!doctype html><form><form").unwrap();
+        assert!(incomplete
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "nested-form-start-tag"));
+
+        let mut unpositioned = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        for token in [
+            Token::StartTag {
+                name: "form".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "form".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Eof,
+        ] {
+            unpositioned.process_token(token);
+        }
+        let diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| diagnostic.code == "nested-form-start-tag")
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
     }
 
     #[test]
     fn keeps_template_owned_forms_separate_from_the_form_pointer() {
-        let output = parse_html_with_diagnostics(
-            "<!doctype html><form id=outer><template><form id=inner><input id=inside></form></template><form id=ignored><input id=outer-input></form><form id=next></form>",
-        )
-        .unwrap();
-
+        let source = "<!doctype html><form id=outer><template><form id=inner><input id=inside></form></template><form id=ignored><input id=outer-input></form><form id=next></form>";
+        let output = parse_html_with_diagnostics(source).unwrap();
         assert_eq!(
             output
                 .parser_diagnostics
                 .iter()
                 .filter(|diagnostic| diagnostic.code == "nested-form-start-tag")
-                .count(),
-            1
+                .collect::<Vec<_>>(),
+            vec![&nested_form_start_tag(source, 2)],
         );
 
         let outer = find_element_by_id(&output.document.children, "outer")
