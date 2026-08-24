@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "id": "validation/tracked-artifacts-forbidden",
+  "domain": "validation",
+  "summary": "Exact, nested, and separator-normalized node_modules components are forbidden for every entry kind.",
+  "platforms": ["linux", "windows"],
+  "capabilities": ["validation"],
+  "workspace": {"files": []},
+  "input": {
+    "operation": "validation",
+    "options": {
+      "platform": "linux",
+      "checks": ["tracked_artifact_absence"],
+      "packages": [],
+      "dependency_edges": [],
+      "tracked_artifact_snapshot": {
+        "entries": [
+          {"ordinal": 1, "path": "node_modules/root.js", "entry_kind": "regular"},
+          {"ordinal": 2, "path": "code/packages/typescript/demo/node_modules/pkg/index.js", "entry_kind": "symlink"},
+          {"ordinal": 3, "path": "code\\programs\\typescript\\demo\\node_modules\\cache.bin", "entry_kind": "reparse"}
+        ]
+      }
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "validation/tracked-artifacts-forbidden",
+    "domain": "validation",
+    "outcome": "error",
+    "result": {"valid": false, "diagnostic_codes": ["TRACKED_ARTIFACT_FORBIDDEN"]},
+    "diagnostics": [
+      {"code": "TRACKED_ARTIFACT_FORBIDDEN", "severity": "error", "path": "code/packages/typescript/demo/node_modules/pkg/index.js", "details": {"ordinal": 2, "entry_kind": "symlink"}},
+      {"code": "TRACKED_ARTIFACT_FORBIDDEN", "severity": "error", "path": "code/programs/typescript/demo/node_modules/cache.bin", "details": {"ordinal": 3, "entry_kind": "reparse"}},
+      {"code": "TRACKED_ARTIFACT_FORBIDDEN", "severity": "error", "path": "node_modules/root.js", "details": {"ordinal": 1, "entry_kind": "regular"}}
+    ]
+  },
+  "limits": {"wall_time_ms": 1000, "output_bytes": 1048576, "workspace_bytes": 1048576, "process_count": 1, "memory_mib": 128, "cpu_time_ms": 1000}
+}

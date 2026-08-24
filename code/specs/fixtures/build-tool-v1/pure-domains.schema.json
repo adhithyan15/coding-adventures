@@ -1023,7 +1023,8 @@
         "path_safety",
         "standalone_prerequisites",
         "starlark_declarations",
-        "toolchain_support"
+        "toolchain_support",
+        "tracked_artifact_absence"
       ]
     },
     "validation_diagnostic_code": {
@@ -1041,7 +1042,9 @@
         "ORPHAN_CRATE_UNLISTED",
         "ORPHAN_CRATE_EMPTY_BUILD",
         "ORPHAN_EXEMPTION_INVALID",
-        "ORPHAN_EXEMPTION_STALE"
+        "ORPHAN_EXEMPTION_STALE",
+        "TRACKED_ARTIFACT_FORBIDDEN",
+        "TRACKED_ARTIFACT_PATH_INVALID"
       ]
     },
     "validation_package": {
@@ -1249,6 +1252,50 @@
         }
       }
     },
+    "tracked_artifact_entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ordinal",
+        "path",
+        "entry_kind"
+      ],
+      "properties": {
+        "ordinal": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1048576
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "entry_kind": {
+          "enum": [
+            "regular",
+            "symlink",
+            "reparse"
+          ]
+        }
+      }
+    },
+    "tracked_artifact_snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "entries"
+      ],
+      "properties": {
+        "entries": {
+          "type": "array",
+          "maxItems": 16384,
+          "items": {
+            "$ref": "#/$defs/tracked_artifact_entry"
+          }
+        }
+      }
+    },
     "validation_input": {
       "type": "object",
       "additionalProperties": false,
@@ -1280,7 +1327,7 @@
             "checks": {
               "type": "array",
               "minItems": 1,
-              "maxItems": 10,
+              "maxItems": 11,
               "uniqueItems": true,
               "items": {
                 "$ref": "#/$defs/validation_check"
@@ -1303,9 +1350,38 @@
             },
             "orphan_snapshot": {
               "$ref": "#/$defs/orphan_snapshot"
+            },
+            "tracked_artifact_snapshot": {
+              "$ref": "#/$defs/tracked_artifact_snapshot"
             }
           },
           "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "checks": {
+                    "contains": {
+                      "const": "tracked_artifact_absence"
+                    }
+                  }
+                },
+                "required": [
+                  "checks"
+                ]
+              },
+              "then": {
+                "required": [
+                  "tracked_artifact_snapshot"
+                ]
+              },
+              "else": {
+                "not": {
+                  "required": [
+                    "tracked_artifact_snapshot"
+                  ]
+                }
+              }
+            },
             {
               "if": {
                 "properties": {

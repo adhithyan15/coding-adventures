@@ -12,13 +12,13 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 12591,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/12591",
-    "branch": "codex/build-tool-orphan-crate-validation-corpus",
+    "number": 12598,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/12598",
+    "branch": "codex/build-tool-tracked-artifact-validation-corpus",
     "status": "open"
   },
   "last_inventory": {
-    "revision": "9d40f14652dabc95b698d092c275bff9e57200c5",
+    "revision": "1d5eb7d570ceb011b0d6bd66a4be8e32cac5b395",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1370,
@@ -4666,7 +4666,7 @@
     {
       "id": "build-tool-orphan-crate-validation-corpus",
       "title": "Define language-neutral orphan-crate BUILD validation",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-validation-oracle-corpus"],
       "branch": "codex/build-tool-orphan-crate-validation-corpus",
       "pr_number": 12591,
@@ -4674,8 +4674,11 @@
       "selection_revision": "0ba76cb0b5b0463179c7f4d0ee338db1ddedc01f",
       "selection_notes": "Selected only after PR #12584 completed all 29 checks and merged through squash auto-merge at f7f929e494aa77573bac8bf19d57583bdab1b783, exact main advanced through the unrelated Devanagari ttha merge, and the collision-checked schema-3 inventory was regenerated at 0ba76cb0b5b0463179c7f4d0ee338db1ddedc01f. The inventory remains 15 established lanes, 1,370 identities, 4,563 slots, 907 singletons, 718 Rust singletons, zero collisions, and zero unknown buckets; OCaml remains correctly emerging at zero packages. Before selection, the loop registered the missing CLI native-consumer umbrella, decomposed newly reproduced TypeScript and Swift dist-newstyle fixture gaps, and made the orphan and tracked-artifact neutral corpora explicit Go-oracle prerequisites. This process-free corpus is dependency-ready behind the merged validation oracle, directly unlocks the every-engine orphan validator rollout, and has zero candidate-surface overlap across eleven live open PRs and current non-main heads apart from stale squash-source branches for already merged parity PRs. The higher-strategic OCaml core remains collision-unsafe while PRs #12149 and #12162 touch Go validator/main surfaces; the Ruby/Rust dist-newstyle repair is ready but bounded to Ruby/Rust, with TypeScript and Swift separately owned. Orphan validation wins the neutral-corpus tie because a missing crate is otherwise invisible to discovery, build, test, and lint, while the live reviewed ledger retains five active entries.",
       "implementation_revision": "7d58ba847b595ce43d1e56778f9f659ca782cdd8",
+      "final_revision": "9362bde637976b1c48c136850983fa8246a5f042",
+      "merge_revision": "053f6501b9b4b72c89253d198b9de6ad2a52e256",
+      "merged_at": "2026-08-24T16:48:14Z",
       "validation_notes": "Implemented the contract in dependency order: governing specs, a closed conditionally scoped snapshot/result schema, four neutral fixtures, independent Python oracle and adversarial tests, then README/changelog and parity metadata. Direct, ancestor, and every platform BUILD name; package and program roots; exact artifact exclusion; sibling noncoverage; empty BUILDs; virtual, compile-only, foreign-toolchain, and active PENDING exemptions; unsafe redacted entries; invalid-entry non-suppression; stale covered/missing/nonmanifest entries; exact path joins; normalized collision rejection; and pending-debt counting are all derived from inert data. Python 3.13 passes 75 focused tests at 89% branch-aware runner coverage; Python 3.10 passes the complete 196-test execution, authority, loader, broker, backend, schema, and runner family with 23 expected platform skips. The 106-case, 269-file corpus validates. Go passes all tests at 78.3% aggregate coverage plus vet and trimpath build; a real forced dry plan evaluates 45 Starlark BUILD files, discovers 5,070 packages, verifies the five-entry orphan ledger, and emits 9,778 dependency edges. Ten parity-reporter, seven capability-taxonomy, five Haskell-capability, and 46 OCaml-lock tests pass with two expected skips. Ruff error-class lint/format, compileall, production Bandit, strict JSON, the 458-node/637-edge state DAG, diff hygiene, dependency/capability-manifest scope, production-authority, and added-line credential scans pass. Strict MyPy retains the same ten findings only in unchanged legacy lines. Three independent read-only reviews found and verified closure of conditional-schema, program-root, exact-join, path-redaction, generated-artifact, state, roadmap, and host-authority ownership issues. The implementation rebased three times without conflict onto exact origin/main 9d40f14652dabc95b698d092c275bff9e57200c5; ten live PRs and 35 non-main remote heads, including a GitHub-tree check of gh-pages, have zero exact overlap across the 14 changed paths.",
-      "publication_notes": "Opened ready-for-review PR #12591 from clean validated head 26d94eb339ef2743b1935bf5c1f492ebf867f97a after a normal first push. Immediately before publication, origin/main remained at the exact reviewed base 9d40f14652dabc95b698d092c275bff9e57200c5, so no further rebase or force push was required. GitHub reports the branch mergeable and conflict-free while required CI and CodeQL checks are queued or in progress; this lifecycle follow-up records PR #12591 as the sole active parity PR, and the loop remains monitor-only with auto-merge disabled until every required check is terminal and acceptable.",
+      "publication_notes": "Opened ready-for-review PR #12591 from clean validated head 26d94eb339ef2743b1935bf5c1f492ebf867f97a after a normal first push. Immediately before publication, origin/main remained at the exact reviewed base 9d40f14652dabc95b698d092c275bff9e57200c5, so no further rebase or force push was required. Final reviewed head 9362bde637976b1c48c136850983fa8246a5f042 completed all 29 checks with 23 successes, six expected skips, and no failures or pending work. GitHub reported the branch clean and mergeable; the loop enabled squash auto-merge, and GitHub merged PR #12591 as 053f6501b9b4b72c89253d198b9de6ad2a52e256 at 2026-08-24T16:48:14Z without a manual merge command.",
       "notes": "Discovered after merged PR #12153 added Go-only ValidateNoOrphanCrates and the code/BUILD-EXEMPTIONS ledger. Define closed language-neutral fixtures for runnable ancestor coverage, virtual workspaces, foreign-toolchain and compile-only exclusions, required reasons, pending debt, empty-BUILD bypasses, traversal, duplicates, missing paths, and stale exemptions before other build-tool implementations claim the contract. Preserve the ledger as policy data and keep host execution outside this process-free validator corpus."
     },
     {
@@ -4700,11 +4703,28 @@
     {
       "id": "build-tool-tracked-artifact-validation-corpus",
       "title": "Define language-neutral tracked-artifact validation",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["build-tool-validation-oracle-corpus"],
+      "branch": "codex/build-tool-tracked-artifact-validation-corpus",
+      "pr_number": 12598,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/12598",
+      "selection_revision": "053f6501b9b4b72c89253d198b9de6ad2a52e256",
+      "selection_notes": "Selected only after PR #12591 completed all 29 checks and merged through squash auto-merge, the exact-main collision inventory was regenerated, and the newly exposed Go tracked-artifact index authority was registered under its own selection-blocked review. The schema-3 inventory remains 15 established lanes, 1,370 identities, 4,563 slots, 175 high-consensus identities with 276 gaps, 907 singletons with 12,698 gaps, 718 Rust singletons, zero collisions, and zero unknown buckets; OCaml remains correctly emerging at zero packages. Exact tree comparison from the prior inventory revision found no identity, slot, directory-spelling, marker, or unknown-bucket delta and no newly unowned portable package. This bounded process-free corpus is ready behind the merged validation oracle, removes a direct Go-oracle prerequisite, and unlocks every remaining engine's tracked-artifact validator, with eleven unfinished descendants through the Go oracle, build-tool lanes, and OCaml promotion. Eleven live open PRs and 34 non-main remote heads have zero expected-surface overlap; the target branch and prior PR are absent. The newly ready orphan remaining-engine umbrella requires per-engine decomposition and has no descendants, while OCaml's process-free core still intersects PRs #12149 and #12162 on Go validator and main surfaces.",
+      "notes": "Discovered after merged PR #12551 added Go-only rejection of tracked node_modules paths. Define closed process-free fixtures for exact and nested tracked artifacts, normalized separators, case and Unicode aliases, dotted traversal, symlink/reparse metadata supplied as data, allowed ordinary source paths, sorted diagnostics, and repository-relative redaction before other build-tool implementations claim the contract. Keep Git enumeration and host filesystem inspection outside this language-neutral validator corpus.",
+      "implementation_revision": "49b510ded78c14cb59bc0d2f8e42f2fae74dffa0",
+      "implementation_notes": "Implemented the eleventh closed validation check, tracked_artifact_absence, over bounded inert ordinal/path/entry-kind records. The independent oracle normalizes separators, rejects exact, nested, case-folded, and NFKC-compatible node_modules components, treats regular/symlink/reparse metadata identically, redacts invalid raw paths to repository, and sorts every derived diagnostic without Git, filesystem, process, environment, or network authority. Four cases cover clean paths, exact/nested artifacts, aliases, unsafe paths, dishonest results, conditional schema leakage, stable problem codes, and malformed snapshot ordering.",
+      "validation_notes": "Validated 110 strict corpus cases with 269 staged workspace files; 201 conformance schema/runner/execution/authority/loader/broker/backend tests pass with 23 expected platform skips and 90% branch-aware coverage for build_tool_conformance.py. The Go build tool passes all packages at 78.3% aggregate coverage plus vet and trimpath build; a forced dry plan validates and selects all 5,070 packages. Ten parity-reporter, seven capability-taxonomy, five Haskell-capability, and 46 OCaml-lock tests pass with two expected skips. Ruff error-class lint/format, production Bandit, strict JSON, the 459-owner/638-edge acyclic state graph, collision reporting, and diff checks pass. Strict MyPy reports the same eight pre-existing source findings as exact main and no added finding. A late exact-main inventory at 1d5eb7d570ceb011b0d6bd66a4be8e32cac5b395 remains unchanged with zero collisions and unknown buckets.",
+      "publication_notes": "Opened ready-for-review PR #12598 from clean validated implementation head 49b510ded78c14cb59bc0d2f8e42f2fae74dffa0 after a normal first push. Immediately before publication, remote main remained at exact reviewed base 1d5eb7d570ceb011b0d6bd66a4be8e32cac5b395; nine live open PRs had zero exact overlap across the 14 changed paths. GitHub reports the PR mergeable while required CI and CodeQL checks are queued or in progress, so auto-merge remains disabled. This lifecycle follow-up records #12598 as the sole active parity PR and leaves the loop monitor-only until every required check is terminal and acceptable."
+    },
+    {
+      "id": "build-tool-go-tracked-artifact-index-authority-review",
+      "title": "Review Go tracked-artifact Git-index authority",
+      "status": "pending",
+      "depends_on": ["build-tool-tracked-artifact-validation-corpus"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered after merged PR #12551 added Go-only rejection of tracked node_modules paths. Define closed process-free fixtures for exact and nested tracked artifacts, normalized separators, case and Unicode aliases, dotted traversal, symlink/reparse metadata supplied as data, allowed ordinary source paths, sorted diagnostics, and repository-relative redaction before other build-tool implementations claim the contract. Keep Git enumeration and host filesystem inspection outside this language-neutral validator corpus."
+      "selection_blocked": true,
+      "notes": "Discovered before selecting the process-free tracked-artifact corpus. Review the native Go scanner's PATH-resolved Git execution, repository-root trust, bounded index output, timeout and process-tree cleanup, malformed-index handling, symlink-mode interpretation, raw stderr and indexed-path redaction, and deterministic failure behavior. This is host process and Git-index authority rather than a portable pure-domain port, so it must not widen the neutral corpus and remains excluded from autonomous parity selection."
     },
     {
       "id": "build-tool-tracked-artifact-validation-remaining-engines",

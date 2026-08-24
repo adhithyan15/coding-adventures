@@ -131,7 +131,7 @@ class CorpusTests(unittest.TestCase):
         summary = runner.validate_corpus(FIXTURE_ROOT)
 
         self.assertEqual(summary["schema_version"], 1)
-        self.assertEqual(summary["case_count"], 106)
+        self.assertEqual(summary["case_count"], 110)
         self.assertEqual(summary["implementation_count"], 16)
         self.assertEqual(summary["established_languages"], 15)
         self.assertEqual(summary["execution_case_count"], 0)
@@ -848,6 +848,92 @@ class PureDomainValidationTests(unittest.TestCase):
                 "CASE_VALIDATION_SNAPSHOT_INCONSISTENT",
             )
 
+    def test_tracked_artifact_absence_is_derived_from_closed_snapshots(self) -> None:
+        schema_args = self._schema_args()
+        for filename in (
+            "validation-tracked-artifacts-clean.json",
+            "validation-tracked-artifacts-forbidden.json",
+            "validation-tracked-artifacts-aliases.json",
+            "validation-tracked-artifacts-invalid.json",
+        ):
+            with self.subTest(filename=filename):
+                case = load_case(filename)
+                runner.validate_case_document(case, **schema_args)
+                runner.assert_result_matches(
+                    case,
+                    copy.deepcopy(case["expected"]),
+                    pure_domain_schema=schema_args["pure_domain_schema"],
+                )
+
+        dishonest = load_case("validation-tracked-artifacts-clean.json")
+        dishonest["input"]["options"]["tracked_artifact_snapshot"]["entries"][0][
+            "path"
+        ] = "code/node_modules/index.js"
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.validate_case_document(dishonest, **schema_args)
+        self.assertEqual(raised.exception.code, "EXPECTED_VALIDATION_INCONSISTENT")
+
+    def test_tracked_artifact_snapshot_normalizes_and_redacts_paths(self) -> None:
+        forbidden = load_case("validation-tracked-artifacts-forbidden.json")
+        diagnostics = runner._expected_tracked_artifact_validation(
+            forbidden["input"]["options"]
+        )
+        self.assertEqual(diagnostics, forbidden["expected"]["diagnostics"])
+        self.assertTrue(all("\\" not in item["path"] for item in diagnostics))
+
+        invalid = load_case("validation-tracked-artifacts-invalid.json")
+        diagnostics = runner._expected_tracked_artifact_validation(
+            invalid["input"]["options"]
+        )
+        self.assertEqual(diagnostics, invalid["expected"]["diagnostics"])
+        serialized = json.dumps(diagnostics, ensure_ascii=False)
+        for entry in invalid["input"]["options"]["tracked_artifact_snapshot"][
+            "entries"
+        ]:
+            self.assertNotIn(entry["path"], serialized)
+
+    def test_tracked_artifact_snapshot_requires_increasing_ordinals(self) -> None:
+        schema_args = self._schema_args()
+        for ordinals in ((1, 1, 3), (2, 1, 3)):
+            with self.subTest(ordinals=ordinals):
+                case = load_case("validation-tracked-artifacts-forbidden.json")
+                entries = case["input"]["options"]["tracked_artifact_snapshot"][
+                    "entries"
+                ]
+                for entry, ordinal in zip(entries, ordinals, strict=True):
+                    entry["ordinal"] = ordinal
+                with self.assertRaises(runner.ConformanceError) as raised:
+                    runner.validate_case_document(case, **schema_args)
+                self.assertEqual(
+                    raised.exception.code,
+                    "CASE_VALIDATION_SNAPSHOT_INCONSISTENT",
+                )
+
+    def test_tracked_artifact_path_problem_registry_is_stable(self) -> None:
+        cases = {
+            "": "EMPTY",
+            "a" * 513: "TOO_LONG",
+            "code/e\u0301/file": "NON_NFC",
+            "/code/file": "ABSOLUTE",
+            "C:\\code\\file": "DRIVE_QUALIFIED",
+            "code//file": "EMPTY_SEGMENT",
+            "code/../file": "DOT_SEGMENT",
+            "code/file.": "TRAILING_DOT_OR_SPACE",
+            "code/file?.txt": "UNSAFE_CHARACTER",
+            "code/CON.txt": "RESERVED_BASENAME",
+        }
+        for path, problem in cases.items():
+            with self.subTest(path=path):
+                normalized, actual_problem = runner._normalize_tracked_artifact_path(
+                    path
+                )
+                self.assertIsNone(normalized)
+                self.assertEqual(actual_problem, problem)
+        self.assertEqual(
+            runner._normalize_tracked_artifact_path("code\\src\\file.ts"),
+            ("code/src/file.ts", None),
+        )
+
     def test_remaining_validation_oracles_are_derived_from_snapshots(self) -> None:
         filenames = (
             "validation-clean-full.json",
@@ -1242,7 +1328,7 @@ class CommandLineTests(unittest.TestCase):
 
         self.assertEqual(exit_code, 0)
         summary = json.loads(stdout.getvalue())
-        self.assertEqual(summary["case_count"], 106)
+        self.assertEqual(summary["case_count"], 110)
 
     def test_validate_result_reports_match_and_rejects_execution_override(self) -> None:
         case_path = CASES_ROOT / "graph-diamond.json"

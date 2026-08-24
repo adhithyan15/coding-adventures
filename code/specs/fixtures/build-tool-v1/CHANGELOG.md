@@ -2,6 +2,12 @@
 
 ## 2026-08-24
 
+- Added four process-free tracked-artifact validation cases for clean source
+  paths, exact and nested `node_modules`, separator normalization, case and
+  Unicode compatibility aliases, inert symlink/reparse metadata, sorted
+  diagnostics, and fixed-path redaction of unsafe index records. The neutral
+  oracle consumes a bounded closed snapshot and performs no Git, filesystem,
+  process, environment, or network operation.
 - Added four process-free orphan-crate validation cases for direct, ancestor,
   and platform BUILD coverage; exact artifact exclusion; unlisted and empty
   crates; reasoned EXCLUDED and countable PENDING entries; invalid redacted

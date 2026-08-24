@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "id": "validation/tracked-artifacts-invalid",
+  "domain": "validation",
+  "summary": "Unsafe tracked paths fail closed at a fixed repository-relative path without echoing hostile input.",
+  "platforms": ["linux", "windows"],
+  "capabilities": ["validation"],
+  "workspace": {"files": []},
+  "input": {
+    "operation": "validation",
+    "options": {
+      "platform": "linux",
+      "checks": ["tracked_artifact_absence"],
+      "packages": [],
+      "dependency_edges": [],
+      "tracked_artifact_snapshot": {
+        "entries": [
+          {"ordinal": 1, "path": "code/../node_modules/pkg.js", "entry_kind": "regular"},
+          {"ordinal": 2, "path": "/node_modules/root.js", "entry_kind": "symlink"},
+          {"ordinal": 3, "path": "C:\\repo\\node_modules\\cache.bin", "entry_kind": "reparse"},
+          {"ordinal": 4, "path": "\\\\server\\share\\node_modules\\lock", "entry_kind": "regular"},
+          {"ordinal": 5, "path": "code/packages/é/node_modules/x", "entry_kind": "regular"},
+          {"ordinal": 6, "path": "code//node_modules/x", "entry_kind": "regular"}
+        ]
+      }
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "validation/tracked-artifacts-invalid",
+    "domain": "validation",
+    "outcome": "error",
+    "result": {"valid": false, "diagnostic_codes": ["TRACKED_ARTIFACT_PATH_INVALID"]},
+    "diagnostics": [
+      {"code": "TRACKED_ARTIFACT_PATH_INVALID", "severity": "error", "path": "repository", "details": {"ordinal": 1, "entry_kind": "regular", "problem": "DOT_SEGMENT"}},
+      {"code": "TRACKED_ARTIFACT_PATH_INVALID", "severity": "error", "path": "repository", "details": {"ordinal": 4, "entry_kind": "regular", "problem": "ABSOLUTE"}},
+      {"code": "TRACKED_ARTIFACT_PATH_INVALID", "severity": "error", "path": "repository", "details": {"ordinal": 5, "entry_kind": "regular", "problem": "NON_NFC"}},
+      {"code": "TRACKED_ARTIFACT_PATH_INVALID", "severity": "error", "path": "repository", "details": {"ordinal": 6, "entry_kind": "regular", "problem": "EMPTY_SEGMENT"}},
+      {"code": "TRACKED_ARTIFACT_PATH_INVALID", "severity": "error", "path": "repository", "details": {"ordinal": 3, "entry_kind": "reparse", "problem": "DRIVE_QUALIFIED"}},
+      {"code": "TRACKED_ARTIFACT_PATH_INVALID", "severity": "error", "path": "repository", "details": {"ordinal": 2, "entry_kind": "symlink", "problem": "ABSOLUTE"}}
+    ]
+  },
+  "limits": {"wall_time_ms": 1000, "output_bytes": 1048576, "workspace_bytes": 1048576, "process_count": 1, "memory_mib": 128, "cpu_time_ms": 1000}
+}

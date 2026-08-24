@@ -35,7 +35,7 @@ emerging OCaml lane. It records front-door and shared-engine state but contains
 no executable commands. Every adapter is currently marked missing, so a valid
 inventory is not reported as conformance success.
 
-The 106-case bootstrap corpus covers every process-free v1 domain:
+The 110-case bootstrap corpus covers every process-free v1 domain:
 
 - canonical package and program membership, language-registry classification
   with paired C#, F#, Haskell, Java, and Kotlin package/program identities, a
@@ -71,7 +71,9 @@ The 106-case bootstrap corpus covers every process-free v1 domain:
   `BUILD_windows` sibling-closure parity and the complete toolchain registry,
   including OCaml, plus independently derived orphan Cargo-manifest coverage,
   empty BUILD rejection, reasoned exemptions, countable PENDING debt, and
-  stale-ledger cleanup; and
+  stale-ledger cleanup, plus tracked-artifact rejection for exact, nested,
+  separator-normalized, case, and Unicode-compatible `node_modules` paths,
+  inert symlink/reparse metadata, and redacted unsafe paths; and
 - bounded process-free CLI parsing with deterministic typed defaults, modeled
   post-parse outcomes, exact multibyte and astral-scalar limits, and adversarial
   reserved, path, Git-ref-component, shell, environment, response-file,
@@ -250,7 +252,7 @@ stable error codes. `validate-corpus` also performs two-phase validation and
 bounded in-memory decoding of pure fixture workspaces so invalid base64, path
 aliases, collisions, prefix conflicts, and aggregate size violations fail
 without creating a filesystem root. Domain checks verify reference integrity,
-framed hashes, cache state, inline Starlark loads, shard closure/cost, all nine
+framed hashes, cache state, inline Starlark loads, shard closure/cost, all eleven
 BUILD-file validation checks, complete toolchain maps, and independent CLI
 parse/exit decisions.
 

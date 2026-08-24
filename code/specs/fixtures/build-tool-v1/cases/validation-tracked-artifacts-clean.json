@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "id": "validation/tracked-artifacts-clean",
+  "domain": "validation",
+  "summary": "Ordinary source paths, similarly named components, and inert link metadata remain allowed.",
+  "platforms": ["linux", "windows"],
+  "capabilities": ["validation"],
+  "workspace": {"files": []},
+  "input": {
+    "operation": "validation",
+    "options": {
+      "platform": "linux",
+      "checks": ["tracked_artifact_absence"],
+      "packages": [],
+      "dependency_edges": [],
+      "tracked_artifact_snapshot": {
+        "entries": [
+          {"ordinal": 1, "path": "code/packages/typescript/demo/src/index.ts", "entry_kind": "regular"},
+          {"ordinal": 2, "path": "code/packages/typescript/demo/node_modules-cache/README.md", "entry_kind": "symlink"},
+          {"ordinal": 3, "path": "docs/vendor/guide.md", "entry_kind": "reparse"}
+        ]
+      }
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "validation/tracked-artifacts-clean",
+    "domain": "validation",
+    "outcome": "ok",
+    "result": {"valid": true, "diagnostic_codes": []},
+    "diagnostics": []
+  },
+  "limits": {"wall_time_ms": 1000, "output_bytes": 1048576, "workspace_bytes": 1048576, "process_count": 1, "memory_mib": 128, "cpu_time_ms": 1000}
+}

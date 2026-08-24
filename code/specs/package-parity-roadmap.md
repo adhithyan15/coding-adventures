@@ -5944,6 +5944,90 @@ read-only reviews found and verified closure of conditional-schema,
 program-root, exact-join, redaction, generated-artifact, state, roadmap, and
 host-authority ownership issues.
 
+### Post-#12591 refresh and tracked-artifact corpus selection
+
+Final head `9362bde637976b1c48c136850983fa8246a5f042` completed all 29
+reported checks with 23 successes, six expected skips, and no failures or
+pending work. GitHub reported PR #12591 clean and mergeable; the loop enabled
+squash auto-merge, and GitHub merged it as
+`053f6501b9b4b72c89253d198b9de6ad2a52e256` at 2026-08-24T16:48:14Z
+without a manual merge command.
+
+The collision-checked schema-3 inventory on that exact merge remains 15
+established lanes, 1,370 identities, and 4,563 present slots: 175
+high-consensus identities have 276 gaps, 122 identities in five to nine lanes
+have 926 gaps, 166 identities in two to four lanes have 2,087 gaps, and 907
+singletons have 12,698 gaps. There are 718 Rust singletons, zero canonical
+collisions, and zero unknown buckets. OCaml remains correctly emerging with no
+packages. Exact tree comparison from the prior inventory revision found no
+identity, slot, directory-spelling, marker, or unknown-bucket change and no
+newly unowned portable package.
+
+The post-merge audit registers
+`build-tool-go-tracked-artifact-index-authority-review` before selection. The
+current Go scanner PATH-resolves and executes Git, buffers its index output,
+has no timeout or process-tree cleanup, and can expose raw stderr and indexed
+paths. That native process and Git-index authority is selection-blocked and
+must remain outside the neutral corpus. The reconciled state graph now has 459
+unique owners and 638 dependency edges with one in-progress item, no duplicate
+IDs, missing dependencies, self-edges, or cycles.
+
+The dependency/leverage pass selects
+`build-tool-tracked-artifact-validation-corpus` on branch
+`codex/build-tool-tracked-artifact-validation-corpus` from exact base
+`053f6501b9b4b72c89253d198b9de6ad2a52e256`. This bounded process-free
+contract is ready behind the merged validation oracle, removes another direct
+Go-oracle prerequisite, and unlocks every remaining engine's tracked-artifact
+validator, with eleven unfinished descendants through the Go oracle,
+every-language build tools, and OCaml promotion. Eleven live open PRs and 34
+non-main remote heads have zero expected-surface overlap; the target branch and
+prior PR are absent. The newly ready orphan remaining-engine umbrella first
+requires per-engine decomposition and has no descendants, while OCaml's
+process-free core still overlaps PRs #12149 and #12162 on Go validator and main
+surfaces.
+
+### Tracked-artifact corpus implementation and validation
+
+Validation v1 now exposes `tracked_artifact_absence` as its eleventh closed
+check. Its bounded snapshot contains only strictly increasing ordinals, raw
+paths, and inert regular, symlink, or reparse kinds. The independent oracle
+normalizes separators, applies portable path checks, and rejects every exact,
+nested, case-folded, or NFKC-compatible `node_modules` component. Unsafe paths
+produce `TRACKED_ARTIFACT_PATH_INVALID` at the fixed `repository` path without
+echoing hostile input; safe forbidden paths produce
+`TRACKED_ARTIFACT_FORBIDDEN`. Entry kind never authorizes a read or follow, and
+the neutral implementation does not inspect Git, the filesystem, processes,
+the environment, or the network.
+
+Four new fixtures cover allowed ordinary and similarly named paths,
+root/nested and backslash-normalized artifacts, case and Unicode compatibility
+aliases, all three entry kinds, dotted traversal, absolute/drive/UNC and other
+unsafe inputs, fixed-path redaction, deterministic sorting, dishonest expected
+results, conditional-schema leakage, stable problem codes, and malformed
+ordinal ordering. The corpus now validates 110 unique cases and 269 staged
+workspace files. The complete conformance schema, runner, execution,
+authority, loader, broker, and backend family passes 201 tests with 23 expected
+platform skips; the reference runner has 90% branch-aware coverage.
+
+The Go build tool passes all packages at 78.3% aggregate coverage plus vet and
+trimpath compilation. A real forced dry plan validates and selects all 5,070
+packages. Ten parity-reporter, seven capability-taxonomy, five
+Haskell-capability, and 46 OCaml-lock tests pass with two expected skips. Ruff
+error-class lint and formatting, production Bandit, strict JSON, collision
+reporting, the 459-owner/638-edge acyclic state graph, and diff checks pass.
+Strict MyPy reports the same eight pre-existing source findings as exact main
+and no added finding.
+
+Before publication, `main` advanced through two Devanagari curriculum commits
+in existing roots and the existing Rust HTML parser to exact revision
+`1d5eb7d570ceb011b0d6bd66a4be8e32cac5b395`. None changes a package identity
+or overlaps the neutral corpus surfaces. The refreshed schema-3
+inventory remains 15 established lanes, 1,370 identities, 4,563 slots, 175
+high-consensus identities with 276 gaps, 907 singletons with 12,698 gaps, 718
+Rust singletons, zero collisions, and zero unknown buckets; OCaml remains
+correctly emerging with no packages. Nine open PRs still have no exact
+changed-file overlap, and the target branch and prior PR remain absent.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
