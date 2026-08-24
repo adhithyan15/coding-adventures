@@ -185,10 +185,12 @@ const ARABIC_KHAA = DUCTUS[ductusKey("arabic", "خ")];
 const ARABIC_DAAL = DUCTUS[ductusKey("arabic", "د")];
 const ARABIC_DHAAL = DUCTUS[ductusKey("arabic", "ذ")];
 const ARABIC_RAA = DUCTUS[ductusKey("arabic", "ر")];
+const ARABIC_ZAY = DUCTUS[ductusKey("arabic", "ز")];
 const ARABIC_SEEN = DUCTUS[ductusKey("arabic", "س")];
 const ARABIC_SHIIN = DUCTUS[ductusKey("arabic", "ش")];
 const ARABIC_SAAD = DUCTUS[ductusKey("arabic", "ص")];
 const ARABIC_DAAD = DUCTUS[ductusKey("arabic", "ض")];
+const ARABIC_TAH = DUCTUS[ductusKey("arabic", "ط")];
 const ARABIC_AYN = DUCTUS[ductusKey("arabic", "ع")];
 const ARABIC_KAF = DUCTUS[ductusKey("arabic", "ك")];
 const ARABIC_LAM = DUCTUS[ductusKey("arabic", "ل")];
@@ -348,10 +350,10 @@ describe("handwriting ductus", () => {
     expect(gujarati.letters.every((letter) => letter.strokeOrderSource !== undefined)).toBe(true);
   });
 
-  it("keeps all 23 unique Arabic rows sourced without overstating completion", () => {
+  it("keeps all 25 unique Arabic rows sourced without overstating completion", () => {
     const arabic = SCRIPTS.find((script) => script.script === "arabic")!;
     expect(arabic.complete).toBe(false);
-    expect(arabic.letters).toHaveLength(23);
+    expect(arabic.letters).toHaveLength(25);
     expect(arabic.letters.every((letter) => letter.strokeOrderSource !== undefined)).toBe(true);
   });
 
@@ -2986,6 +2988,17 @@ describe("handwriting ductus", () => {
     expect(curve[0].x).toBeGreaterThan(curve.at(-1)!.x);
   });
 
+  it("Arabic independent ز preserves the Raa body before placing its upper dot", () => {
+    expect(penLifts(ARABIC_ZAY)).toBe(1);
+    expect(ARABIC_ZAY.strokes).toHaveLength(2);
+    expect(ARABIC_ZAY.strokes[0]).toEqual(ARABIC_RAA.strokes[0]);
+    const body = ARABIC_ZAY.strokes[0].segments.flatMap((segment) => segment.path);
+    const dot = ARABIC_ZAY.strokes[1].segments[0].path;
+    expect(Math.min(...dot.map((point) => point.y))).toBeGreaterThan(
+      Math.max(...body.map((point) => point.y)),
+    );
+  });
+
   it("Arabic independent س joins its three close teeth directly to the final bowl", () => {
     expect(ARABIC_SEEN.script).toBe("arabic");
     expect(penLifts(ARABIC_SEEN)).toBe(0);
@@ -3044,6 +3057,20 @@ describe("handwriting ductus", () => {
     );
     expect(Math.min(...dot.map((point) => point.y))).toBeGreaterThan(bodyTop);
     expect(dot[0]).toEqual(dot.at(-1));
+  });
+
+  it("Arabic independent ط closes its oval before drawing the upright downward", () => {
+    expect(ARABIC_TAH.script).toBe("arabic");
+    expect(penLifts(ARABIC_TAH)).toBe(1);
+    expect(ARABIC_TAH.strokes).toHaveLength(2);
+    expect(ARABIC_TAH.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1]);
+    const loop = ARABIC_TAH.strokes[0].segments[0].path;
+    const exit = ARABIC_TAH.strokes[0].segments[1].path;
+    const upright = ARABIC_TAH.strokes[1].segments[0].path;
+    expect(loop[0]).toEqual(loop.at(-1));
+    expect(loop.at(-1)).toEqual(exit[0]);
+    expect(exit.at(-1)!.x).toBeLessThan(exit[0].x);
+    expect(upright[0].y).toBeGreaterThan(upright.at(-1)!.y);
   });
 
   it("Arabic independent ع joins its open head directly to the lower bowl", () => {
@@ -3553,6 +3580,12 @@ describe("handwriting ductus", () => {
       "_fonts/NotoNaskhArabic-Static.ttf",
     );
     expect(verifiedLetterFont("ر", ARABIC_RAA.source.url)).toBe(
+      "_fonts/NotoNaskhArabic-Static.ttf",
+    );
+    expect(verifiedLetterFont("ز", ARABIC_ZAY.source.url)).toBe(
+      "_fonts/NotoNaskhArabic-Static.ttf",
+    );
+    expect(verifiedLetterFont("ط", ARABIC_TAH.source.url)).toBe(
       "_fonts/NotoNaskhArabic-Static.ttf",
     );
     expect(verifiedLetterFont("و", "https://example.invalid/wrong-source")).toBeUndefined();
@@ -5442,6 +5475,19 @@ describe("handwriting ductus", () => {
     expect(src.url).not.toBe(URDU_RE.source.url);
   });
 
+  it("Arabic independent ز traces its body-first dot-last order to the University of Oregon", () => {
+    const src = ARABIC_ZAY.source;
+    expect(src.url).toBe(
+      "https://opentext.uoregon.edu/introarabic/chapter/alphabet-%D8%B1-%D8%B2-%D9%88/",
+    );
+    expect(src.citation).toMatch(
+      /Introduction to Arabic.*Alphabet ر ز و.*Zay.*Oregon.*2023.*2026-08-23/i,
+    );
+    expect(src.variation).toMatch(
+      /directly linked zaay\.mp4.*body-first.*upper tip.*descends through the short stroke.*sweeps left.*lower curve.*without lifting.*complete Raa-shaped body.*lifts once.*single dot above.*one-way connector.*English z sound.*\/z\/ transliteration.*independent and final forms.*two-stroke.*one-lift.*Noto Naskh.*shares its body with ر.*own video.*rather than inferred/i,
+    );
+  });
+
   it("Arabic independent س traces its continuous teeth and bowl to the University of Oregon", () => {
     const src = ARABIC_SEEN.source;
     expect(src.url).toBe(
@@ -5494,6 +5540,19 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /embedded Panopto Daad lesson.*three pen-down runs.*00:43.1–00:46.3.*00:43.1–00:45.0.*lower-left junction.*oval clockwise.*short shoulder.*without lifting.*one lift.*00:45.2–00:45.4.*baseline junction.*trailing bowl.*second lift.*upper dot last.*00:46.0–00:46.3.*FullSizeRender-5.mov.*HTTP 403.*accessible embedded primary lesson.*embedded Saad lesson.*direct Saad clip.*same two body runs.*two-way connector.*contextual shapes.*three-stroke.*two-lift.*Noto Naskh.*independently evidenced.*Saad/i,
+    );
+  });
+
+  it("Arabic independent ط traces its loop-before-upright order to the Oregon lesson", () => {
+    const src = ARABIC_TAH.source;
+    expect(src.url).toBe(
+      "https://opentext.uoregon.edu/introarabic/chapter/alphabet-%D8%B7-%D8%B8/",
+    );
+    expect(src.citation).toMatch(
+      /Introduction to Arabic.*Alphabet ط ظ.*emphatic Taa.*00:01.2–00:03.0.*Oregon.*2023.*2026-08-23/i,
+    );
+    expect(src.variation).toMatch(
+      /directly linked taaemphatic\.mov.*embedded Panopto mirror.*two pen-down runs.*00:01.2–00:03.0.*upper-right edge.*counterclockwise.*closed body.*leftward.*baseline.*one lift.*upright's top.*descends.*right junction.*two-way connector.*emphatic t sound.*T transliteration.*contextual shapes.*two-stroke.*one-lift.*Noto Naskh.*retraces.*upper-left arc.*without crossing the counter.*directions stay unchanged.*independent form.*connected examples/i,
     );
   });
 

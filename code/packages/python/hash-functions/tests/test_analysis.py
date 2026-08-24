@@ -2,8 +2,6 @@
 Tests for the avalanche_score and distribution_test analysis utilities.
 """
 
-import pytest
-
 from hash_functions import avalanche_score, distribution_test, fnv1a_32, murmur3_32
 
 
@@ -43,6 +41,7 @@ class TestDistributionTest:
 
     def test_fnv1a32_chi_squared_reasonable(self) -> None:
         import random
+
         random.seed(99)
         inputs = [random.randbytes(8) for _ in range(10_000)]
         chi2 = distribution_test(fnv1a_32, inputs, num_buckets=100)
@@ -52,6 +51,7 @@ class TestDistributionTest:
 
     def test_murmur3_chi_squared_reasonable(self) -> None:
         import random
+
         random.seed(42)
         inputs = [random.randbytes(8) for _ in range(10_000)]
         chi2 = distribution_test(murmur3_32, inputs, num_buckets=100)
@@ -71,6 +71,7 @@ class TestDistributionTest:
         # chi-squared should be close to num_buckets - 1.
         # We test this indirectly: random inputs + good hash → low chi2.
         import random
+
         random.seed(7)
         inputs = [random.randbytes(16) for _ in range(5_000)]
         chi2 = distribution_test(murmur3_32, inputs, num_buckets=50)

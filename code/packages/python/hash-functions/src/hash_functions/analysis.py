@@ -58,7 +58,7 @@ def avalanche_score(
 
         # Flip each of the 64 input bits and measure output difference.
         for bit_pos in range(len(input_bytes) * 8):
-            byte_idx = bit_pos >> 3      # which byte contains this bit
+            byte_idx = bit_pos >> 3  # which byte contains this bit
             bit_mask = 1 << (bit_pos & 7)  # which bit within that byte
 
             # XOR the target byte with the mask to flip exactly one bit.

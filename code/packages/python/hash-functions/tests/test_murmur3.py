@@ -5,8 +5,6 @@ Reference test vectors come from Austin Appleby's original C implementation
 at https://github.com/aappleby/smhasher
 """
 
-import pytest
-
 from hash_functions import murmur3_32
 
 

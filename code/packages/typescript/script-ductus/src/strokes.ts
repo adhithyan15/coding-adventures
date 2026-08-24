@@ -310,6 +310,9 @@ export const ductusKey = (script: string, glyph: string): string => `${script}:$
 // descends through its short stroke, and sweeps left through the lower curve
 // without lifting. Its scoped source stays distinct from Urdu ر even though
 // both paths fit the same vendored Noto Naskh glyph.
+// The following ر ز و page's Arabic ز clip repeats the complete Raa-shaped
+// body first, then lifts once to place its single upper dot. Its dedicated
+// evidence keeps that dot-last order from being inferred from the shared body.
 // The next page's Arabic س clip shapes all three close teeth right-to-left and
 // flows directly into the final bowl in one uninterrupted run. Its scoped
 // evidence stays distinct from the already-authored Persian and Urdu س paths.
@@ -322,6 +325,9 @@ export const ductusKey = (script: string, glyph: string): string => `${script}:$
 // The page's embedded Arabic ض lesson repeats those two Saad body runs, then
 // lifts again to place the upper dot last. Its independently observed order is
 // recorded even though the directly linked short MOV was unavailable at audit.
+// The following ط ظ page's emphatic Taa clip closes the oval and exits left
+// along the baseline first, then lifts once to draw the tall upright downward
+// into the body's right junction. The independent form precedes connected work.
 // The next source page's Arabic ع clip begins at the upper-right tip, shapes the
 // open head, and flows directly down and around the lower bowl without lifting.
 // Its independent form stays distinct from the adjacent dotted Ghayn lesson.
@@ -8424,6 +8430,58 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: arabicAlphabetSource("ر"),
   },
+  [ductusKey("arabic", "ز")]: {
+    script: "arabic",
+    glyph: "ز",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "begin at the upper tip and descend through the short stroke",
+            path: [
+              { x: 250, y: 320 },
+              { x: 248, y: 280 },
+              { x: 255, y: 235 },
+              { x: 270, y: 190 },
+              { x: 287, y: 145 },
+              { x: 300, y: 95 },
+              { x: 304, y: 48 },
+            ],
+          },
+          {
+            label: "sweep left through the lower curve without lifting",
+            path: [
+              { x: 304, y: 48 },
+              { x: 298, y: 8 },
+              { x: 284, y: -30 },
+              { x: 260, y: -68 },
+              { x: 226, y: -103 },
+              { x: 185, y: -130 },
+              { x: 140, y: -146 },
+              { x: 95, y: -151 },
+              { x: 52, y: -147 },
+              { x: 10, y: -136 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift once, then place the dot above",
+            path: [
+              { x: 200, y: 405 },
+              { x: 140, y: 465 },
+              { x: 200, y: 525 },
+              { x: 260, y: 465 },
+              { x: 200, y: 405 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: arabicAlphabetSource("ز"),
+  },
   [ductusKey("arabic", "س")]: {
     script: "arabic",
     glyph: "س",
@@ -8675,6 +8733,75 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: arabicAlphabetSource("ض"),
+  },
+  [ductusKey("arabic", "ط")]: {
+    script: "arabic",
+    glyph: "ط",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "loop counterclockwise around the closed oval",
+            path: [
+              { x: 675, y: 280 },
+              { x: 600, y: 315 },
+              { x: 500, y: 310 },
+              { x: 450, y: 290 },
+              { x: 400, y: 265 },
+              { x: 350, y: 230 },
+              { x: 310, y: 195 },
+              { x: 280, y: 190 },
+              { x: 275, y: 120 },
+              { x: 260, y: 95 },
+              { x: 275, y: 65 },
+              { x: 330, y: 45 },
+              { x: 430, y: 35 },
+              { x: 540, y: 50 },
+              { x: 635, y: 90 },
+              { x: 690, y: 150 },
+              { x: 690, y: 220 },
+              { x: 675, y: 280 },
+            ],
+          },
+          {
+            label: "finish left along the baseline without lifting",
+            path: [
+              { x: 675, y: 280 },
+              { x: 600, y: 315 },
+              { x: 500, y: 310 },
+              { x: 450, y: 290 },
+              { x: 400, y: 265 },
+              { x: 350, y: 230 },
+              { x: 310, y: 195 },
+              { x: 280, y: 190 },
+              { x: 270, y: 130 },
+              { x: 220, y: 90 },
+              { x: 150, y: 75 },
+              { x: 80, y: 85 },
+              { x: 45, y: 90 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift once, then draw the tall upright top-to-bottom",
+            path: [
+              { x: 245, y: 650 },
+              { x: 240, y: 590 },
+              { x: 248, y: 520 },
+              { x: 255, y: 450 },
+              { x: 263, y: 380 },
+              { x: 272, y: 315 },
+              { x: 282, y: 255 },
+              { x: 295, y: 205 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: arabicAlphabetSource("ط"),
   },
   [ductusKey("arabic", "ع")]: {
     script: "arabic",
