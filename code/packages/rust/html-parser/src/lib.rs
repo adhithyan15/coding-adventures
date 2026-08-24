@@ -8407,12 +8407,15 @@ impl HtmlParser {
                             .is_some_and(|name| name == "dt" || name == "dd")
                     })
                 {
-                    self.diagnostics.push(ParserDiagnostic::new(
-                        "unexpected-description-list-item-start-tag",
-                        format!(
-                            "start tag `<{incoming_name}>` implied the end of a non-current description-list item"
-                        ),
-                    ));
+                    self.diagnostics.push(
+                        ParserDiagnostic::new(
+                            "unexpected-description-list-item-start-tag",
+                            format!(
+                                "start tag `<{incoming_name}>` implied the end of a non-current description-list item"
+                            ),
+                        )
+                        .at_emission(self.current_token_emission_position),
+                    );
                 }
                 self.close_open_element_if(|name| name == "dt" || name == "dd");
             }
@@ -27380,6 +27383,19 @@ mod tests {
         .at_emission(Some(end_tag_position(source, name)))
     }
 
+    fn unexpected_description_list_item_start_tag(
+        source: &str,
+        name: &str,
+    ) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-description-list-item-start-tag",
+            format!(
+                "start tag `<{name}>` implied the end of a non-current description-list item"
+            ),
+        )
+        .at_emission(Some(start_tag_position(source, name)))
+    }
+
     fn scoped_block_end_tag_outside_scope(source: &str, name: &str) -> ParserDiagnostic {
         ParserDiagnostic::new(
             "unexpected-block-end-tag-outside-scope",
@@ -39921,14 +39937,21 @@ mod tests {
 
     #[test]
     fn reports_description_list_item_start_tags_that_close_non_current_items() {
-        let output = parse_html_with_diagnostics("<!DOCTYPE html><dt><div><dd>").unwrap();
-        assert_eq!(
-            output.parser_diagnostics,
-            vec![ParserDiagnostic::new(
-                "unexpected-description-list-item-start-tag",
-                "start tag `<dd>` implied the end of a non-current description-list item"
-            )]
-        );
+        for (source, incoming_name) in [
+            ("<!DOCTYPE html><dt><div><dd>", "dd"),
+            ("<!doctype html><dd><div><dt>", "dt"),
+            ("<!doctype html><!--é-->\r\n<dt><div><dd>X", "dd"),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output.parser_diagnostics,
+                vec![unexpected_description_list_item_start_tag(
+                    source,
+                    incoming_name,
+                )],
+                "source {source:?}"
+            );
+        }
 
         for source in [
             "<!doctype html><dl><dt>term<dd>description",
@@ -39940,6 +39963,41 @@ mod tests {
                 diagnostic.code != "unexpected-description-list-item-start-tag"
             }));
         }
+
+        let incomplete = parse_html_with_diagnostics("<!doctype html><dt><div><dd").unwrap();
+        assert!(incomplete.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-description-list-item-start-tag"
+        }));
+
+        let mut unpositioned = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        for token in [
+            Token::StartTag {
+                name: "dt".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "div".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "dd".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Eof,
+        ] {
+            unpositioned.process_token(token);
+        }
+        let diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| {
+                diagnostic.code == "unexpected-description-list-item-start-tag"
+            })
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
     }
 
     #[test]
