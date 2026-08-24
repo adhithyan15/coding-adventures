@@ -1237,7 +1237,9 @@ unique sourced rows: its filmstrip preserves the complete **د** body in the
 first run and places the single upper dot after one lift. Arabic **ز** follows
 with the same evidence rule: its dedicated Oregon clip completes the **ر** body
 before one lift places the upper dot, growing the inventory to 24 rows. Arabic
-remains incomplete because later lessons still use five absent base letters;
+**ط** then closes its oval and exits left along the baseline before one lift
+places the tall descending upright, growing the inventory to 25 rows. Arabic
+remains incomplete because later lessons still use four absent base letters;
 those rows must be added rather than hidden by a premature completion flag.
 The canonical script-data group is capped at 250 kB per cacheable batch, so
 these growing source notes stay within the app's enforced 500 kB eager-chunk
