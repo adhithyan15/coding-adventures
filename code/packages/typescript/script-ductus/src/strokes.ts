@@ -3203,6 +3203,41 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: devanagariAlphabetSource("त"),
   },
+  // Opiaterein's animation keeps the upper spiral and broad lower bowl in one
+  // continuous run, then separately descends the right stem and finishes the
+  // headline: three strokes, two lifts.
+  [ductusKey("devanagari", "थ")]: {
+    script: "devanagari",
+    glyph: "थ",
+    strokes: [
+      { segments: [{ label: "curl around the upper spiral and continue around the broad lower bowl", path: [
+        { x: 200, y: 445 }, { x: 170, y: 425 }, { x: 135, y: 415 },
+        { x: 104, y: 424 }, { x: 81, y: 448 }, { x: 69, y: 470 },
+        { x: 70, y: 500 }, { x: 90, y: 525 }, { x: 120, y: 540 },
+        { x: 147, y: 546 }, { x: 180, y: 566 }, { x: 220, y: 570 },
+        { x: 260, y: 565 }, { x: 300, y: 545 }, { x: 330, y: 515 },
+        { x: 345, y: 480 }, { x: 350, y: 445 }, { x: 341, y: 410 },
+        { x: 328, y: 382 }, { x: 305, y: 355 }, { x: 275, y: 338 },
+        { x: 240, y: 328 }, { x: 200, y: 320 }, { x: 160, y: 315 },
+        { x: 120, y: 318 }, { x: 90, y: 323 }, { x: 58, y: 329 },
+        { x: 74, y: 285 }, { x: 94, y: 242 }, { x: 124, y: 199 },
+        { x: 162, y: 164 }, { x: 207, y: 139 }, { x: 255, y: 126 }, { x: 305, y: 122 },
+        { x: 355, y: 135 }, { x: 400, y: 160 }, { x: 435, y: 195 },
+        { x: 460, y: 230 }, { x: 480, y: 260 },
+      ] }] },
+      { segments: [{ label: "lift, then descend the right stem", path: [
+        { x: 508, y: 551 }, { x: 508, y: 475 }, { x: 508, y: 395 },
+        { x: 508, y: 315 }, { x: 508, y: 235 }, { x: 508, y: 155 },
+        { x: 508, y: 75 }, { x: 508, y: 5 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the shirorekha left-to-right", path: [
+        { x: 394, y: 585 }, { x: 435, y: 585 }, { x: 475, y: 585 },
+        { x: 515, y: 585 }, { x: 555, y: 585 }, { x: 600, y: 585 },
+        { x: 652, y: 585 },
+      ] }] },
+    ],
+    source: devanagariAlphabetSource("थ"),
+  },
   // Opiaterein's animation descends the short stem, then joins the outer body
   // directly through the inward curl and tail before the final headline. The
   // Central Hindi Directorate deskbook corroborates component order while
