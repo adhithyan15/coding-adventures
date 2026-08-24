@@ -20,11 +20,11 @@ from __future__ import annotations
 # They are sparse in binary (few set bits) so the multiplication maps
 # efficiently to shifts-and-adds on older architectures.
 
-FNV32_OFFSET_BASIS: int = 0x811C9DC5   # 2166136261
-FNV32_PRIME: int        = 0x01000193   # 16777619
+FNV32_OFFSET_BASIS: int = 0x811C9DC5  # 2166136261
+FNV32_PRIME: int = 0x01000193  # 16777619
 
-FNV64_OFFSET_BASIS: int = 0xCBF29CE484222325   # 14695981039346656037
-FNV64_PRIME: int        = 0x00000100000001B3   # 1099511628211
+FNV64_OFFSET_BASIS: int = 0xCBF29CE484222325  # 14695981039346656037
+FNV64_PRIME: int = 0x00000100000001B3  # 1099511628211
 
 # Bit masks for truncating Python's arbitrary-precision integers to 32 and 64 bits.
 MASK32: int = 0xFFFFFFFF
@@ -41,6 +41,7 @@ def _to_bytes(data: bytes | str) -> bytes:
 # ---------------------------------------------------------------------------
 # FNV-1a 32-bit
 # ---------------------------------------------------------------------------
+
 
 def fnv1a_32(data: bytes | str) -> int:
     """
@@ -80,6 +81,7 @@ def fnv1a_32(data: bytes | str) -> int:
 # FNV-1a 64-bit
 # ---------------------------------------------------------------------------
 
+
 def fnv1a_64(data: bytes | str) -> int:
     """
     FNV-1a 64-bit hash.
@@ -111,6 +113,7 @@ def fnv1a_64(data: bytes | str) -> int:
 # ---------------------------------------------------------------------------
 # DJB2
 # ---------------------------------------------------------------------------
+
 
 def djb2(data: bytes | str) -> int:
     """
@@ -156,6 +159,7 @@ def djb2(data: bytes | str) -> int:
 # ---------------------------------------------------------------------------
 # Polynomial rolling hash
 # ---------------------------------------------------------------------------
+
 
 def polynomial_rolling(
     data: bytes | str,
@@ -309,12 +313,7 @@ def murmur3_32(data: bytes | str, seed: int = 0) -> int:
     for block_idx in range(num_blocks):
         i = block_idx * 4
         # Pack 4 bytes into a 32-bit little-endian integer.
-        k = (
-            raw[i]
-            | (raw[i + 1] << 8)
-            | (raw[i + 2] << 16)
-            | (raw[i + 3] << 24)
-        )
+        k = raw[i] | (raw[i + 1] << 8) | (raw[i + 2] << 16) | (raw[i + 3] << 24)
 
         k = (k * _MUR_C1) & MASK32
         k = _rotl32(k, 15)
@@ -342,6 +341,6 @@ def murmur3_32(data: bytes | str, seed: int = 0) -> int:
         h ^= k
 
     # --- Phase 3: finalization ---
-    h ^= length          # fold in the length so different-length inputs
-    h = _fmix32(h)       # diverge even if the data bytes match
+    h ^= length  # fold in the length so different-length inputs
+    h = _fmix32(h)  # diverge even if the data bytes match
     return h

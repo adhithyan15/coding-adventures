@@ -2,8 +2,6 @@
 Tests for the polynomial rolling hash.
 """
 
-import pytest
-
 from hash_functions import polynomial_rolling
 
 
