@@ -213,6 +213,43 @@ shrinks only by these two packages. Validation MUST also build distributable
 artifacts, exercise the store's direct dependent closure, and run the Go build
 tool's dry plan and real affected closure.
 
+## Graph dependency-chain repair profile
+
+The `python-graph-build-front-idempotence` owner MUST repair `graph` before
+`directed-graph`. The graph package is the typed DT00 leaf and
+`directed-graph` is its DT01 dependent; no other package root belongs to this
+owner. Both packages MUST adopt the generated named-environment guarantees
+above while preserving this exact leaf-to-root installation order:
+
+1. `graph` creates its environment and installs only its own `.[dev]` editable
+   requirement; and
+2. `directed-graph` installs `../graph` before its own `.[dev]` editable
+   requirement.
+
+The Windows fronts MUST retain the existing `--no-deps` editable-package plus
+explicit development-tool split. Every front MUST invoke Ruff lint, Ruff
+format checking, strict MyPy, and pytest through its explicit package-local
+interpreter. MyPy MUST analyze the complete `src` and `tests` trees without
+`--follow-untyped-imports`: the installed graph prerequisite publishes its
+`py.typed` marker and is therefore part of the typed dependency contract.
+
+Dormant lint, formatting, and type-check findings MAY receive only bounded,
+behavior-preserving cleanup within these two roots. Such cleanup MAY modernize
+generic syntax to the declared Python 3.12 floor, make iterative DFS stack
+frames explicitly iterable for strict typing, add missing test-local type
+annotations, and sort imports or exports. It MUST NOT change graph algorithms,
+public behavior, package metadata, runtime dependencies, versions, capability
+manifests, or the DT00/DT01 boundary. Existing 95% coverage thresholds and both
+packages' PEP 561 markers MUST remain unchanged.
+
+The regression MUST compare all four complete recipes exactly. Windows runtime
+validation MUST execute both fronts twice consecutively from clean
+package-local copies with uv 0.11.28 and Python 3.13, then prove the live audit
+shrinks only by `graph` and `directed-graph`. Validation MUST also build both
+distributable artifacts, exercise a representative selection from the direct
+dependent closure, and run the Go build tool's dry plan and real affected
+closure.
+
 ## Legacy named-environment repair profile
 
 The separately owned `python/in-memory-data-store-protocol` front was not in
