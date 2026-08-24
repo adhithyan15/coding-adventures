@@ -1,10 +1,10 @@
 ---
 schema_version: 2
 id: PA-W01-bindi
-spine_node: SPINE-MEET-GREET
-sequence: 820
+spine_node: SPINE-RESPOND-BASIC
+sequence: 33
 delivery: script
-chapter: 14
+chapter: 1
 type: writing
 headword: ਂ
 romanization: "-ṁ"
@@ -16,11 +16,11 @@ etymology_hook: "Gurmukhi means from the mouth of the Guru; it was standardised 
 duration:
   max_seconds: 200
 requires:
-  knowledge: [PA-SCRIPT-HA-01, PA-SCRIPT-AA-MATRA-01]
+  knowledge: [PA-LEX-HAAN-NAHIN-01, PA-SCRIPT-HA-01, PA-SCRIPT-AA-MATRA-01]
 introduces:
   knowledge: [PA-SCRIPT-BINDI-01]
 practises:
-  knowledge: [PA-SCRIPT-HA-01, PA-SCRIPT-AA-MATRA-01, PA-SCRIPT-BINDI-01]
+  knowledge: [PA-LEX-HAAN-NAHIN-01, PA-SCRIPT-HA-01, PA-SCRIPT-AA-MATRA-01, PA-SCRIPT-BINDI-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -31,7 +31,7 @@ reviews_of: [PA-W01-aa-matra]
 # ਂ — a dot above the line that nasalises the vowel
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-HA-01, PA-SCRIPT-AA-MATRA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-HAAN-NAHIN-01, PA-SCRIPT-HA-01, PA-SCRIPT-AA-MATRA-01] -->
 
 [PAUSE 2s] Write the piece from the previous lesson before adding another.
 
@@ -58,11 +58,13 @@ lesson.
 the dot and you have a different word. That is why the script spends a character on
 it.
 
-## Guided Practice
+## Writing — observe and trace
 <!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-HA-01, PA-SCRIPT-AA-MATRA-01, PA-SCRIPT-BINDI-01] -->
+<!-- hl-writing-stage: observe-trace -->
 
-- [YOU WRITE: ਂ]
-- [YOU READ: every piece this chapter has given you so far, in order]
+Keep **ਂ** visible above the head-line. Point to it once, finger-trace the dot
+once, then trace one printed model with a pencil. Say “nasal” as your hand stops.
+Do not copy the whole word yet; assembly is the next separate session.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-HA-01, PA-SCRIPT-AA-MATRA-01, PA-SCRIPT-BINDI-01] -->

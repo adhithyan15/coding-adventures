@@ -971,7 +971,7 @@ pub(crate) fn validate_attachment_name(name: &str) -> Result<(), ApplicationErro
 ///
 /// Stated plainly so nobody later reads this list as the thing keeping a
 /// terminal safe and deletes the escaping as redundant.
-const fn is_forbidden_in_attachment_name(character: char) -> bool {
+fn is_forbidden_in_attachment_name(character: char) -> bool {
     character.is_control()
         || character == '/'
         || character == '\\'

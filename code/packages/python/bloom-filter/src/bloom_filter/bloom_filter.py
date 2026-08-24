@@ -109,7 +109,6 @@ Example: m=16 stored in 2 bytes
 from __future__ import annotations
 
 import math
-from typing import Any
 
 from hash_functions import djb2, fnv1a_32
 
@@ -179,10 +178,13 @@ class BloomFilter:
         false_positive_rate: target FP rate, e.g. 0.01 = 1%.
         """
         if expected_items <= 0:
-            raise ValueError(f"expected_items must be a positive integer, got {expected_items!r}")
+            raise ValueError(
+                f"expected_items must be a positive integer, got {expected_items!r}"
+            )
         if not (0.0 < false_positive_rate < 1.0):
             raise ValueError(
-                f"false_positive_rate must be in the open interval (0, 1), got {false_positive_rate!r}"
+                "false_positive_rate must be in the open interval (0, 1), "
+                f"got {false_positive_rate!r}"
             )
 
         n = expected_items
@@ -194,9 +196,9 @@ class BloomFilter:
         # Optimal hash count: k = (m/n) * ln(2). At least 1.
         k = max(1, round((m / n) * math.log(2)))
 
-        self._m: int = m          # total number of bits
-        self._k: int = k          # number of hash functions
-        self._n_expected: int = n # elements we sized for
+        self._m: int = m  # total number of bits
+        self._k: int = k  # number of hash functions
+        self._n_expected: int = n  # elements we sized for
 
         # Compact bit array: (m + 7) // 8 bytes covers all m bits.
         # All bits start at 0 (the "definitely not seen" state).
@@ -223,13 +225,15 @@ class BloomFilter:
         if bit_count <= 0:
             raise ValueError(f"bit_count must be a positive integer, got {bit_count!r}")
         if hash_count <= 0:
-            raise ValueError(f"hash_count must be a positive integer, got {hash_count!r}")
+            raise ValueError(
+                f"hash_count must be a positive integer, got {hash_count!r}"
+            )
 
         # Use __new__ to skip __init__ and set attributes directly.
         bf: BloomFilter = cls.__new__(cls)
         bf._m = bit_count
         bf._k = hash_count
-        bf._n_expected = 0          # not sized for a specific n
+        bf._n_expected = 0  # not sized for a specific n
         bf._bits = bytearray((bit_count + 7) // 8)
         bf._bits_set = 0
         bf._n = 0
@@ -239,7 +243,7 @@ class BloomFilter:
     # Core operations
     # ------------------------------------------------------------------
 
-    def _hash_indices(self, element: Any) -> list[int]:
+    def _hash_indices(self, element: object) -> list[int]:
         """
         Generate k bit indices for element using double hashing.
 
@@ -287,7 +291,7 @@ class BloomFilter:
         h2 |= 1  # ensure non-zero and odd → all m positions reachable
         return [(h1 + i * h2) % self._m for i in range(self._k)]
 
-    def add(self, element: Any) -> None:
+    def add(self, element: object) -> None:
         """
         Add element to the filter. Sets up to k bits in the bit array.
 
@@ -305,7 +309,7 @@ class BloomFilter:
                 self._bits_set += 1
         self._n += 1
 
-    def contains(self, element: Any) -> bool:
+    def contains(self, element: object) -> bool:
         """
         Check if element might be in the filter.
 
@@ -322,8 +326,8 @@ class BloomFilter:
             byte_idx: int = idx // 8
             bit_mask: int = 1 << (idx % 8)
             if not (self._bits[byte_idx] & bit_mask):
-                return False   # at least one bit is 0 → definitely absent
-        return True            # all k bits are 1 → probably present
+                return False  # at least one bit is 0 → definitely absent
+        return True  # all k bits are 1 → probably present
 
     def __contains__(self, element: object) -> bool:
         """
@@ -386,7 +390,7 @@ class BloomFilter:
         """
         if self._bits_set == 0:
             return 0.0
-        return self.fill_ratio ** self._k
+        return self.fill_ratio**self._k
 
     def is_over_capacity(self) -> bool:
         """
@@ -453,7 +457,7 @@ class BloomFilter:
           capacity_for_memory(1_000_000, 0.01) → ~877,000 elements
           (about 1 million elements in 1 MB at 1% FPR)
         """
-        m = memory_bytes * 8   # bytes to bits
+        m = memory_bytes * 8  # bytes to bits
         return int(-m * (math.log(2) ** 2) / math.log(p))
 
     # ------------------------------------------------------------------

@@ -54,7 +54,14 @@ DT17: hash-functions   ← this package
 ## Running tests
 
 ```bash
-uv venv .venv --quiet --no-project
+uv venv .venv --quiet --no-project --clear --python 3.13
 uv pip install --python .venv -e .[dev] --quiet
-uv run --no-project python -m pytest tests/ -v
+.venv/bin/python -m ruff check src tests
+.venv/bin/python -m ruff format --check src tests
+.venv/bin/python -m mypy src tests
+.venv/bin/python -m pytest tests/ -v
 ```
+
+On Windows, use the equivalent `.venv\Scripts\python.exe` interpreter path.
+Both BUILD fronts recreate the package-local environment, so rerunning either
+front in the same checkout is supported.

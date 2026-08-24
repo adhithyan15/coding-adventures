@@ -45385,14 +45385,14 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
         base_entry(
             "roku",
             "Roku ECP",
-            "Local Roku player and TV discovery plus read-only device and application inspection.",
+            "Local Roku player and TV discovery, media telemetry, and verified play/pause control.",
             IntegrationCategory::CameraMedia,
             ConnectivityClass::LocalPolling,
             ImplementationStatus::FirstPartyRuntime,
             2,
             "roku",
         )
-        .with_capabilities(&["smart_home.read"])
+        .with_capabilities(&["smart_home.read", "smart_home.command.media"])
         .with_entities(&[EntityKind::Unknown])
         .with_discovery(&[DiscoveryMechanism::Ssdp, DiscoveryMechanism::Manual])
         .with_auth(&[AuthMode::None])
@@ -45403,11 +45403,14 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
             PrimitiveFamily::Ssdp,
             PrimitiveFamily::Udp,
             PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::CommandMapping,
             PrimitiveFamily::CapabilityPolicy,
             PrimitiveFamily::Supervision,
         ])
         .with_notes(&[
-            "This runtime slice is read-only until D23 has a protocol-neutral media command contract.",
+            "Only D23 play and pause are mapped to the fixed ECP Play key; current state and the post-command state must prove an exact toggle.",
+            "Configured endpoints are private, link-local, or loopback IP literals and accept no credentials.",
+            "App launch, arbitrary keypress, browse, input, power, volume, media transfer, recording, and long-lived connections remain out of scope.",
         ]),
         base_entry(
             "wemo",
@@ -81918,7 +81921,7 @@ mod tests {
     }
 
     #[test]
-    fn roku_entry_exposes_ssdp_and_read_only_ecp_runtime_primitives() {
+    fn roku_entry_exposes_ssdp_and_bounded_media_control_primitives() {
         let catalog = first_party_catalog();
         let roku = find_entry(&catalog, &IntegrationId::trusted("roku")).unwrap();
 
@@ -81939,9 +81942,12 @@ mod tests {
         assert!(roku
             .required_primitives
             .contains(&PrimitiveFamily::LocalHttp));
-        assert!(!roku
+        assert!(roku
             .required_capabilities
             .contains(&CapabilityId::trusted("smart_home.command.media")));
+        assert!(roku
+            .required_primitives
+            .contains(&PrimitiveFamily::CommandMapping));
     }
 
     #[test]

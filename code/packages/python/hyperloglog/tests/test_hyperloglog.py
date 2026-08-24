@@ -16,17 +16,15 @@ Coverage target: ≥95% of all src/hyperloglog lines.
 
 from __future__ import annotations
 
-import math
-
 import pytest
 
 from hyperloglog import HyperLogLog
-from hyperloglog.hyperloglog import _count_leading_zeros, _alpha
-
+from hyperloglog.hyperloglog import _alpha, _count_leading_zeros
 
 # ---------------------------------------------------------------------------
 # Helper
 # ---------------------------------------------------------------------------
+
 
 def _within(estimate: int, true_count: int, fraction: float) -> bool:
     """Return True if |estimate - true_count| / true_count <= fraction."""
@@ -36,6 +34,7 @@ def _within(estimate: int, true_count: int, fraction: float) -> bool:
 # ---------------------------------------------------------------------------
 # 1. Basic accuracy
 # ---------------------------------------------------------------------------
+
 
 class TestBasicAccuracy:
     """Accuracy tests at various cardinalities using precision=14 (Redis default)."""
@@ -100,6 +99,7 @@ class TestBasicAccuracy:
 # 2. Duplicate suppression
 # ---------------------------------------------------------------------------
 
+
 class TestDuplicateSuppression:
     """Identical elements added multiple times should not inflate the estimate."""
 
@@ -133,6 +133,7 @@ class TestDuplicateSuppression:
 # ---------------------------------------------------------------------------
 # 3. Merge (union)
 # ---------------------------------------------------------------------------
+
 
 class TestMerge:
     """Tests for merge(), which computes the set union of two HLL sketches."""
@@ -209,6 +210,7 @@ class TestMerge:
 # 4. Properties and dunder methods
 # ---------------------------------------------------------------------------
 
+
 class TestProperties:
     """Tests for properties: precision, num_registers, error_rate, len."""
 
@@ -267,6 +269,7 @@ class TestProperties:
 # 5. Input validation
 # ---------------------------------------------------------------------------
 
+
 class TestValidation:
     """Tests for constructor validation and merge precision check."""
 
@@ -296,6 +299,7 @@ class TestValidation:
 # ---------------------------------------------------------------------------
 # 6. Static utility methods
 # ---------------------------------------------------------------------------
+
 
 class TestStaticMethods:
     """Tests for error_rate_for_precision, memory_bytes, optimal_precision."""
@@ -358,6 +362,7 @@ class TestStaticMethods:
 # 7. Internal helper: _count_leading_zeros
 # ---------------------------------------------------------------------------
 
+
 class TestCountLeadingZeros:
     """Unit tests for the internal _count_leading_zeros function."""
 
@@ -395,6 +400,7 @@ class TestCountLeadingZeros:
 # 8. Internal helper: _alpha
 # ---------------------------------------------------------------------------
 
+
 class TestAlpha:
     """Unit tests for the bias-correction constant function."""
 
@@ -420,6 +426,7 @@ class TestAlpha:
 # ---------------------------------------------------------------------------
 # 9. Small and large range corrections
 # ---------------------------------------------------------------------------
+
 
 class TestRangeCorrections:
     """Verify that the small-range LinearCounting correction kicks in properly."""
@@ -455,14 +462,15 @@ class TestRangeCorrections:
 # 10. Memory invariant
 # ---------------------------------------------------------------------------
 
+
 class TestMemoryInvariant:
     """Registers list length must equal num_registers for all valid precisions."""
 
     def test_register_count_matches_precision(self) -> None:
         for b in [4, 6, 8, 10, 12, 14, 16]:
             hll = HyperLogLog(precision=b)
-            assert len(hll._registers) == 2 ** b
-            assert hll.num_registers == 2 ** b
+            assert len(hll._registers) == 2**b
+            assert hll.num_registers == 2**b
 
     def test_registers_initially_zero(self) -> None:
         hll = HyperLogLog(precision=10)
@@ -476,5 +484,5 @@ class TestMemoryInvariant:
 
     def test_memory_bytes_formula(self) -> None:
         for b in [4, 8, 10, 12, 14, 16]:
-            expected = (2 ** b * 6) // 8
+            expected = (2**b * 6) // 8
             assert HyperLogLog.memory_bytes(b) == expected

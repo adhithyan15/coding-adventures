@@ -292,6 +292,7 @@ pub fn twigc_self_check(
                 compiler_dir.display()
             ),
         })?;
+    let host_io_dir = windows_host_io_path(raw_dir_str);
 
     // `canonicalize` returns a verbatim `\\?\` path on Windows. The compiler
     // appends `/span.tw`, but verbatim Windows paths reject forward slashes.
@@ -317,7 +318,7 @@ pub fn twigc_self_check(
     // it could confuse parsers downstream of the Twig compiler itself, or
     // indicate a path-injection attempt.  Failing early with a clear message
     // is safer than attempting to escape every possible byte value.
-    if let Some(bad) = raw_dir_str.chars().find(|c| c.is_ascii_control()) {
+    if let Some(bad) = host_io_dir.chars().find(|c| c.is_ascii_control()) {
         return Err(TwigcError::Vm {
             message: format!(
                 "compiler_dir '{}' contains a control character (U+{:04X}) — \
@@ -331,7 +332,7 @@ pub fn twigc_self_check(
     // Escape `\` and `"` for the Twig string literal.  These are the only
     // two characters that have special meaning inside `"…"` per the Twig
     // lexer regex `/"([^"\\]|\\.)*"/`.
-    let dir_str = raw_dir_str
+    let dir_str = host_io_dir
         .replace('\\', "\\\\")
         .replace('"', "\\\"");
 
@@ -389,6 +390,35 @@ pub fn twigc_self_check(
 }
 
 // ── Internal helpers ─────────────────────────────────────────────────────────
+
+/// Convert a canonical Windows path into a form accepted by host I/O after
+/// Twig appends a forward-slash path component.
+///
+/// `std::fs::canonicalize` uses Windows' verbatim path prefix. Verbatim paths
+/// reject `/` separators, while the self-hosted compiler constructs paths with
+/// `(string-append dir "/span.tw")`. Removing the prefix restores ordinary
+/// Windows path parsing without changing the resolved directory.
+fn windows_host_io_path(path: &str) -> std::borrow::Cow<'_, str> {
+    #[cfg(windows)]
+    {
+        strip_windows_verbatim_prefix(path)
+    }
+    #[cfg(not(windows))]
+    {
+        std::borrow::Cow::Borrowed(path)
+    }
+}
+
+#[cfg(any(windows, test))]
+fn strip_windows_verbatim_prefix(path: &str) -> std::borrow::Cow<'_, str> {
+    if let Some(rest) = path.strip_prefix(r"\\?\UNC\") {
+        return std::borrow::Cow::Owned(format!(r"\\{rest}"));
+    }
+    if let Some(rest) = path.strip_prefix(r"\\?\") {
+        return std::borrow::Cow::Borrowed(rest);
+    }
+    std::borrow::Cow::Borrowed(path)
+}
 
 /// RAII guard for a temporary directory.
 ///
@@ -491,6 +521,25 @@ mod twigc_tests {
 
     // ── Test 1 ───────────────────────────────────────────────────────────────
     //
+    // Windows canonicalization regression: fixed-point wrappers must pass a
+    // non-verbatim directory to host/read_file before Twig appends /span.tw.
+
+    #[test]
+    fn windows_verbatim_paths_are_safe_for_twig_suffixes() {
+        assert_eq!(
+            strip_windows_verbatim_prefix(r"\\?\C:\work\compiler"),
+            r"C:\work\compiler"
+        );
+        assert_eq!(
+            strip_windows_verbatim_prefix(r"\\?\UNC\server\share\compiler"),
+            r"\\server\share\compiler"
+        );
+        assert_eq!(
+            strip_windows_verbatim_prefix(r"C:\work\compiler"),
+            r"C:\work\compiler"
+        );
+    }
+
     // `twigc_check` on a clean `(typed strict)` program should return `Ok(())`.
 
     #[test]

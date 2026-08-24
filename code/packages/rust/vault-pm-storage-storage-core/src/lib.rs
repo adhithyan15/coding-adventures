@@ -351,7 +351,7 @@ fn parse_object_key(key: &str) -> Result<ObjectId, StoreError> {
         return Err(StoreError::Corruption);
     }
     let mut bytes = [0u8; 32];
-    for (index, pair) in key.as_bytes().chunks_exact(2).enumerate() {
+    for (index, pair) in key.as_bytes().as_chunks::<2>().0.iter().enumerate() {
         let high = decode_hex(pair[0]).ok_or(StoreError::Corruption)?;
         let low = decode_hex(pair[1]).ok_or(StoreError::Corruption)?;
         bytes[index] = (high << 4) | low;

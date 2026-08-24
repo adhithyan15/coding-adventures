@@ -3,10 +3,10 @@ schema_version: 2
 id: GU-C01-practice
 spine_node: SPINE-RESPOND-BASIC
 sequence: 60
-chapter: 1
+chapter: 2
 type: practice
 headword: (recap)
-gloss: Chapter 1 recap — the greetings
+gloss: Chapter 2 recap — courtesy and responses
 concept_tag: REVIEW
 prerequisites: [GU-C01-namaste, GU-C01-aabhaar, GU-C01-haa-naa, GU-W01-haa-dictation, GU-C01-saarun, GU-C01-aavjo]
 sounds: []
@@ -27,7 +27,7 @@ variety: standard-gujarati
 reviews_of: [GU-C01-namaste, GU-C01-aabhaar, GU-C01-haa-naa, GU-W01-haa-dictation, GU-C01-saarun, GU-C01-aavjo]
 ---
 
-# Chapter 1 — The greetings
+# Chapter 2 — Courtesy and responses
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C01-AABHAAR-01, GU-CONCEPT-C01-AAVJO-01, GU-CONCEPT-C01-HAANAA-01, GU-CONCEPT-C01-NAMASTE-01, GU-CONCEPT-C01-SAARUN-01] -->

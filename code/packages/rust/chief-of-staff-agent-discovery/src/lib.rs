@@ -2,6 +2,8 @@
 
 #![forbid(unsafe_code)]
 #![deny(missing_docs)]
+// DiscoveryError is a stable public taxonomy whose variants retain typed sources.
+#![allow(clippy::result_large_err)]
 
 use chief_of_staff_agent_manifest::{parse_manifest, AgentManifest, ManifestError};
 use chief_of_staff_host_runtime::{

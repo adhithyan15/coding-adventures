@@ -5003,10 +5003,165 @@ Ready-for-review PR #12447 was opened from clean validated head
 `c4ebd2113e42cfd915d30916a034a5bffdb928d6` after a normal first push from
 exact `origin/main` `54db2ed5ba676e5921010179e4046cb025ee6b0a`.
 The target branch and prior PR were absent before publication, and a late audit
-found zero exact overlap across 17 open PRs. GitHub reports the PR open,
-non-draft, and mergeable. Required CI, CodeQL, and human-language checks are
-queued, so this sole active parity PR is monitor-only until every check is
-terminal.
+found zero exact overlap across 17 open PRs. Final reviewed head
+`b636516654b718a1de3950ba358f1e4432641ecb` completed all 29 checks with 23
+successes, five expected skips, one neutral result, and no failures or pending
+work. GitHub reported the branch mergeable; the loop requested squash
+auto-merge, and GitHub merged PR #12447 as
+`fc0ff4496e81e3a79c5011be2ec4b03465211676` at 2026-08-22T07:02:42Z.
+
+### Post-#12447 refresh and Python hash-functions BUILD-front selection
+
+The collision-checked schema-3 inventory selected at main
+`56374fe9ef977ecac3180315239f1c54da76eec7` and revalidated after the later
+Arabic lesson-only main `352edb288887b47098958106f907f0113cd3b891`
+contains 15 established lanes,
+1,369 canonical identities, and 4,562 implementation slots. The 175-package
+high-consensus band still has 276 missing slots, the 5-9 band has 122 packages
+and 926 gaps, the 2-4 band has 166 packages and 2,087 gaps, and 906 singletons
+have 12,684 gaps, including 717 Rust singletons. Canonical collisions and
+unknown language buckets remain zero. The reporter's ten focused tests pass.
+
+The one new canonical identity since the prior inventory is the Rust-only
+`smart-home-kodi-jsonrpc-integration` merged in PR #12308. It owns concrete
+private-endpoint TCP/HTTP JSON-RPC transport and D23 runtime authorization, has
+no `required_capabilities.json`, and is therefore split into two explicit
+owners. The selectable portable-core owner will define language-neutral
+fixtures for bounded envelopes and snapshots, stable D23 projection,
+allowlisted command plans and postconditions, injected transport, normalized
+failures, and redaction. The selection-blocked native authority review owns
+TCP/HTTP, endpoint trust, timeouts and response limits, CLI effects, and D23
+runtime authorization and mutation. No cross-lane coverage claim is made
+before these boundaries are classified.
+
+`python-hash-functions-build-front-idempotence` is the next eligible bounded
+owner. The uv audit's machine-checked decomposition places `hash-functions`
+before `bloom-filter`, `hash-map`, and `hyperloglog`, which in turn precede the
+in-memory data-store closure. Repairing this single leaf front therefore has
+the highest immediate dependency leverage while preserving one coherent
+package boundary. Both fronts will recreate `.venv`, pin Python 3.13, install
+through that named environment, and invoke its interpreter explicitly for
+Ruff, formatting, MyPy, and pytest. Validation will execute the exact Windows
+front twice, pin the canonical recipe structurally for Linux/macOS CI, and
+inspect the exact affected build plan. Live open-PR and remote-branch audits
+found no overlapping owner on `python/hash-functions`, parity state, or this
+roadmap, and the selected branch was absent before creation.
+
+### Python hash-functions BUILD-front implementation and validation
+
+Both `hash-functions` fronts now recreate `.venv` with `--clear`, pin Python
+3.13, install through that environment, and invoke its interpreter explicitly
+for Ruff, formatting, strict MyPy, and pytest. The package's previously dormant
+quality gates exposed only mechanical test hygiene and formatting debt, which
+is now clean without changing hash behavior. A repository regression pins both
+complete recipes. The audit contract and tests preserve the original 17-owner
+decomposition while treating the live non-idempotent corpus as a shrinking
+set, so each selected owner can advance through the normal lifecycle without
+invalidating the merged audit.
+
+The exact Windows front passes twice consecutively in clean validation
+worktrees on Python 3.13.14 with every quality gate clean and all 88 tests at
+100% coverage. The canonical recipe is structurally pinned for exact Linux and
+macOS CI execution because this Windows host has neither WSL nor a container
+runtime. The Go build tool passes all tests, vet, and trimpath compilation. Its
+exact Windows dry plan evaluates 45 Starlark files, discovers 494 Python
+packages, and selects one changed and eight affected nodes:
+`hash-functions`, `bloom-filter`, `hash-map`, `hyperloglog`,
+`in-memory-data-store-protocol`, `resp-protocol`,
+`in-memory-data-store-engine`, and `in-memory-data-store`, with 486 skipped.
+
+The exact build execution exposed an out-of-scope prerequisite front before it
+could complete that plan. `in-memory-data-store-protocol` creates its Windows
+venv through ambient `python` and invokes the `pip` console launcher directly;
+the launcher recursively re-entered the environment and did not reach tests.
+This distinct non-uv recipe is now owned by
+`python-in-memory-data-store-protocol-build-front-python313`, and the existing
+data-store owner depends on it. The protocol source passes five tests at 100%
+coverage when install and pytest use its named Python 3.13 interpreter.
+
+The remaining real downstream Windows fronts pass under the explicit
+`UV_PYTHON=3.13` and `UV_VENV_CLEAR=1` compatibility settings already owned by
+their pending backfills: RESP Protocol passes 129 tests at 100% coverage,
+Bloom Filter 47 at 96.19%, Hash Map 116 at 96.04%, HyperLogLog 61 at 98.89%,
+the store engine 57 at 96.67%, and the composed store five at 100%. Focused
+build-front, uv-audit, parity reporter, and capability taxonomy suites pass 2,
+13, 10, and 7 tests. The schema-3 inventory remains 15 lanes, 1,369 identities,
+and 4,562 slots with zero collisions or unknown buckets. State, diff,
+credential, dependency, and production-authority checks are clean; the tranche
+changes no production behavior, dependency metadata, capability manifest, or
+privileged boundary.
+
+### Python hash-functions BUILD-front publication
+
+Ready-for-review PR #12482 opened from independently reviewed head
+`6be901dbae2716252eec572208e05052106ecc5b` after a normal first push from exact
+`origin/main` `352edb288887b47098958106f907f0113cd3b891`. The target branch and exact
+implementation surfaces were absent before publication. Final head
+`2dac3e26949c0e7c297d8816691aa4e5ee706f11` completed all 30 checks with 24
+successes, five expected skips, one neutral CodeQL result, and no failures or
+pending work. GitHub reported the branch clean and mergeable; the loop
+requested squash auto-merge, and GitHub merged PR #12482 as
+`e9d55a4265f4894228f2b595b6ce4c17daf1eb70` at 2026-08-24T02:03:40Z.
+
+### Post-#12482 refresh and Python hash-collections selection
+
+The collision-checked schema-3 inventory at exact merged main
+`e9d55a4265f4894228f2b595b6ce4c17daf1eb70` remains identity-neutral: 15
+established lanes, 1,369 canonical identities, 4,562 implementation slots,
+175 high-consensus identities with 276 missing slots, 122 identities in five
+to nine lanes with 926 missing slots, 166 identities in two to four lanes with
+2,087 missing slots, and 906 singletons with 12,684 missing slots. There are
+zero canonical collisions and zero unknown language buckets. No identity or
+per-lane slot changed since the preceding inventory, so no new owner was
+needed.
+
+The dependency/leverage pass selects
+`python-hash-collections-build-front-idempotence`. Its two prerequisites are
+merged, and its homogeneous generated-standard repair closes the six fronts
+for Bloom Filter, Hash Map, and HyperLogLog. All three directly consume the
+newly repaired hash-functions package, while HyperLogLog continues into the
+in-memory data-store closure. Independent live audits across nine open PRs and
+32 remote heads find zero overlap on the three package roots, audit fixtures,
+state, or roadmap; the selected remote branch was absent before creation.
+
+### Python hash-collections BUILD-front implementation and validation
+
+All six complete recipes are now pinned by one focused regression. Each front
+clears and recreates its package-local environment with Python 3.13, installs
+the local hash-functions prerequisite before the package, and invokes Ruff,
+formatting, strict MyPy, and pytest through that exact interpreter. The
+generated-standard contract explicitly covers local dependencies without a
+PEP 561 marker by analyzing them with MyPy's `--follow-untyped-imports`; no
+dependency metadata or capability boundary changes.
+
+On Windows with uv 0.12.1 and Python 3.13.14, every literal front passes twice
+consecutively: Bloom Filter passes 47 tests at 96.15% coverage, Hash Map passes
+116 tests at 96.04%, and HyperLogLog passes 61 tests at 98.88%. Dormant Ruff
+and MyPy findings required only formatting, unused-test cleanup, stronger type
+annotations, and the behavior-equivalent register maximum expression. The
+immediate HyperLogLog downstream store engine passes 57 tests at 96.67%
+coverage against editable local dependencies.
+
+Focused recipe and uv-audit suites pass two and 13 tests; parity reporter and
+capability taxonomy suites pass ten and seven tests, and the collision gate is
+clean. The Go build tool passes all tests, vet, and compilation. Its exact dry
+plan evaluates 45 Starlark files, discovers 494 Python packages, and selects
+the three changed packages plus five prerequisites and dependents. A full
+eight-node local execution reached the unchanged in-memory-data-store-protocol
+prerequisite and reproduced its separately owned recursive pip-launcher hang;
+the runaway validation process was stopped after five minutes. The selected
+fronts and immediate runtime downstream were executed directly, while the
+canonical Unix recipes remain structurally pinned for Linux and macOS CI.
+
+### Python hash-collections BUILD-front publication
+
+Ready-for-review PR #12492 opened from independently reviewed head
+`6a3b5fb04a5016e66164787db6de8aac1e85b118` after a normal first push from
+exact `origin/main` `d491ed654f31c43f01e429a96eb5cbaaae4cc85c`.
+Live audits found zero overlap across 11 open PRs and 32 remote source heads;
+the target remote branch was absent before publication. GitHub reports the
+branch mergeable, while required checks are queued, so the loop returns to
+monitor-only behavior.
 
 ## Autonomous Loop Protocol
 

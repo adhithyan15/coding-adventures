@@ -3,7 +3,7 @@ schema_version: 2
 id: GU-C09-levun
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 460
-chapter: 9
+chapter: 10
 type: word
 headword: લેવું
 romanization: levũ

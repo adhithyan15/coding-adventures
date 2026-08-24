@@ -7,10 +7,37 @@
       "spine_node": "SPINE-MEET-GREET",
       "lessons": [
         "PA-C01-sat-sri-akal",
-        "PA-C01-namaste",
+        "PA-C01-namaste"
+      ],
+      "before": [],
+      "inline": [
+        "PA-EXT-001-INLINE-SCRIPT"
+      ],
+      "after": []
+    },
+    {
+      "id": "PA-PATH-003",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "PA-C01-han-nahin",
         "PA-W01-ha",
         "PA-W01-aa-matra",
         "PA-W01-bindi",
+        "PA-W01-haan-assemble",
+        "PA-W01-haan-guided-copy",
+        "PA-W01-haan-delayed-copy",
+        "PA-W01-haan-dictation"
+      ],
+      "before": [],
+      "inline": [],
+      "after": [
+        "PA-EXT-003-HAAN-WRITING"
+      ]
+    },
+    {
+      "id": "PA-PATH-001S",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
         "PA-W01-na",
         "PA-W01-ii-matra",
         "PA-W01-ma",
@@ -20,9 +47,7 @@
         "PA-W01-namaste-read"
       ],
       "before": [],
-      "inline": [
-        "PA-EXT-001-INLINE-SCRIPT"
-      ],
+      "inline": [],
       "after": [
         "PA-EXT-016-SCRIPT-FIRST-PIECES"
       ]
@@ -39,13 +64,15 @@
       "after": []
     },
     {
-      "id": "PA-PATH-003",
+      "id": "PA-PATH-C1P",
       "spine_node": "SPINE-RESPOND-BASIC",
       "lessons": [
-        "PA-C01-han-nahin"
+        "PA-C01-practice"
       ],
       "before": [],
-      "inline": [],
+      "inline": [
+        "PA-EXT-001-CONSOLIDATION"
+      ],
       "after": []
     },
     {
@@ -244,7 +271,8 @@
   "spine": {
     "SPINE-MEET-GREET": {
       "segments": [
-        "PA-PATH-001"
+        "PA-PATH-001",
+        "PA-PATH-001S"
       ],
       "omits": [
         "GREETING-PEACE",
@@ -262,7 +290,8 @@
     },
     "SPINE-RESPOND-BASIC": {
       "segments": [
-        "PA-PATH-003"
+        "PA-PATH-003",
+        "PA-PATH-C1P"
       ],
       "omits": [
         "RESPONSE-YES",
@@ -670,6 +699,34 @@
       ]
     },
     {
+      "id": "PA-EXT-003-HAAN-WRITING",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "After hearing ਹਾਂ and tracing its three pieces separately, I can assemble, copy, recall, and write the word from a heard cue.",
+      "prerequisites": [],
+      "lessons": [
+        "PA-W01-ha",
+        "PA-W01-aa-matra",
+        "PA-W01-bindi",
+        "PA-W01-haan-assemble",
+        "PA-W01-haan-guided-copy",
+        "PA-W01-haan-delayed-copy",
+        "PA-W01-haan-dictation"
+      ]
+    },
+    {
+      "id": "PA-EXT-001-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "assessment",
+      "canDo": "I can keep reading, listening, independent writing, and speaking separately measurable at the Chapter 1 checkpoint.",
+      "prerequisites": [],
+      "lessons": [
+        "PA-C01-practice"
+      ]
+    },
+    {
       "id": "PA-EXT-014-LANGUAGE-SPECIFIC",
       "stage": "pre-A1",
       "kind": "required",
@@ -728,12 +785,9 @@
       "stage": "pre-A1",
       "kind": "required",
       "category": "script",
-      "canDo": "I can write nine Gurmukhi pieces from memory — four consonants, three vowel signs and the nasal bindi — and read the words for yes, no and the greeting by assembling them rather than recalling the words whole.",
+      "canDo": "I can add six Gurmukhi pieces to the three learned with ਹਾਂ, then read ਨਹੀਂ and ਨਮਸਤੇ by assembling only known pieces.",
       "prerequisites": [],
       "lessons": [
-        "PA-W01-ha",
-        "PA-W01-aa-matra",
-        "PA-W01-bindi",
         "PA-W01-na",
         "PA-W01-ii-matra",
         "PA-W01-ma",

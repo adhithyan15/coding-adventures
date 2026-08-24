@@ -5,6 +5,68 @@ Findings from the pre-A1 tranche work were recorded in commit messages and PR
 bodies, which are durable and searchable, but a reader opening this file found
 nothing. The entries below are the ones that change how the work is done.
 
+## HL-C09HH — Arabic غ completes its ع body before the upper dot
+
+The University of Oregon's dedicated Ghayn video extends the canonical Arabic
+inventory with the next lesson-corpus base letter. Independent **غ** draws the
+complete **ع** body in one uninterrupted run, then lifts once to place the upper
+dot. Its own video supplies that body-first order rather than treating the
+shared skeleton as proof.
+
+Arabic is now **27 unique source-verified rows** and remains deliberately
+incomplete. The lesson-corpus audit still requires two base letters: **ف and
+ق**. Continue in source order with **ف** next; separately account for seated
+Hamza and ending variants instead of conflating them with new base letters. The
+production `script-data` batch must remain below the 250 kB authored-data target;
+this build measures the Arabic-bearing batch at **41.00 kB**.
+
+## HL-C09HG — Arabic ظ places its dot before the descending upright
+
+The University of Oregon's dedicated emphatic-DHaa video extends the canonical
+Arabic inventory with the next lesson-corpus base letter. Independent **ظ**
+draws the complete **ط** body first, lifts once to place its upper dot, then
+lifts again to draw the tall upright top-to-bottom. Its own video supplies that
+body-dot-upright order rather than treating the shared skeleton as proof.
+
+Arabic is now **26 unique source-verified rows** and remains deliberately
+incomplete. The lesson-corpus audit still requires three base letters: **غ, ف,
+and ق**. Continue in source order with **غ** next; separately account for seated
+Hamza and ending variants instead of conflating them with new base letters. The
+production `script-data` batch must remain below the 250 kB authored-data target;
+this build measures the Arabic-bearing batch at **39.48 kB**.
+
+## HL-C09HF — Arabic ط loops before its descending upright
+
+The University of Oregon's dedicated emphatic-Taa video extends the canonical
+Arabic inventory with the next lesson-corpus base letter. Independent **ط**
+closes its oval and exits left along the baseline first, then lifts once to
+draw the tall upright top-to-bottom into the body's right junction. The direct
+MOV and its accessible Panopto mirror agree on that two-run order.
+
+Arabic is now **25 unique source-verified rows** and remains deliberately
+incomplete. The lesson-corpus audit still requires four base letters: **ظ, غ,
+ف, and ق**. Continue in source order with **ظ** next; separately account for
+seated Hamza and ending variants instead of conflating them with new base
+letters. The production `script-data` batch must remain below the 250 kB
+authored-data target; this build measures the Arabic-bearing batch at **37.42
+kB**.
+
+## HL-C09HE — Arabic ز keeps Raa's curve and adds its dot last
+
+The University of Oregon's dedicated Zay video extends the canonical Arabic
+inventory with the next lesson-corpus base letter. Independent **ز** draws the
+complete **ر** body first — down through the short stroke and left through the
+lower curve in one run — then lifts once to place the single upper dot. Its own
+video supplies that order rather than treating the shared skeleton as proof.
+
+Arabic is now **24 unique source-verified rows** and remains deliberately
+incomplete. The lesson-corpus audit still requires five base letters: **ط, ظ,
+غ, ف, and ق**. Continue in source order with **ط** next; separately account for
+seated Hamza and ending variants instead of conflating them with new base
+letters. The production `script-data` batch must remain below the 250 kB
+authored-data target; this build measures the Arabic-bearing batch at **35.76
+kB**.
+
 ## HL-C09HD — Arabic ذ keeps Daal's body and adds its dot last
 
 The University of Oregon's dedicated Dhaal video now extends the canonical

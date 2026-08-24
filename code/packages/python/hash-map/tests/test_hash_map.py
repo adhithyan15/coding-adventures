@@ -17,7 +17,6 @@ import pytest
 
 from hash_map import HashMap, from_entries, merge
 
-
 # ---------------------------------------------------------------------------
 # Parametrize helpers
 # ---------------------------------------------------------------------------
@@ -231,7 +230,7 @@ class TestCollisionHandling:
         # At capacity=4 with 3 items, load=0.75 which triggers resize;
         # use 2 items to stay below threshold without triggering it.
         m.set(0, "zero")
-        m.set(4, "four")   # same hash%4 as 0 → probes forward
+        m.set(4, "four")  # same hash%4 as 0 → probes forward
         assert m.get(0) == "zero"
         assert m.get(4) == "four"
 
@@ -319,13 +318,12 @@ class TestTombstones:
 
     def test_tombstone_chain_multiple_deletes(self) -> None:
         """Three colliding insertions, middle deleted; both ends still found."""
-        m: HashMap[int, str] = HashMap(capacity=8, strategy="open_addressing")
         # Force three entries to the same starting slot by using integer keys
         # and small capacity.
         m2: HashMap[int, str] = HashMap(capacity=4, strategy="open_addressing")
         # Use 2 items (below resize threshold) at capacity=4.
         m2.set(1, "one")
-        m2.set(5, "five")   # same hash%4 as 1 in many hash functions? Not guaranteed.
+        m2.set(5, "five")  # same hash%4 as 1 in many hash functions? Not guaranteed.
         # Re-insert both to make sure they're there regardless.
         assert m2.size() == 2
         # Delete one and verify the other.
@@ -416,7 +414,7 @@ class TestFromEntries:
 
     @pytest.mark.parametrize("strategy", STRATEGIES)
     def test_empty_list(self, strategy: str) -> None:
-        m = from_entries([], strategy=strategy)
+        m: HashMap[str, int] = from_entries([], strategy=strategy)
         assert m.size() == 0
 
     @pytest.mark.parametrize("hash_fn", HASH_FNS)
@@ -549,9 +547,7 @@ class TestLoadFactor:
     """Load factor invariants."""
 
     @pytest.mark.parametrize("strategy", STRATEGIES)
-    def test_load_factor_never_exceeds_threshold_after_ops(
-        self, strategy: str
-    ) -> None:
+    def test_load_factor_never_exceeds_threshold_after_ops(self, strategy: str) -> None:
         threshold = 1.0 if strategy == "chaining" else 0.75
         m: HashMap[str, int] = HashMap(capacity=4, strategy=strategy)
         for i in range(50):
@@ -560,7 +556,7 @@ class TestLoadFactor:
             # (HashMap resizes when it would).
             assert m.load_factor() <= threshold + 1e-9, (
                 f"load factor {m.load_factor():.4f} exceeds threshold "
-                f"{threshold} after {i+1} inserts"
+                f"{threshold} after {i + 1} inserts"
             )
 
     @pytest.mark.parametrize("strategy", STRATEGIES)

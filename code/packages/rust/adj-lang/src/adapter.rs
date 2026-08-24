@@ -448,9 +448,7 @@ fn adapt_context_order(node: &GrammarASTNode) -> Result<Statement, AdapterError>
         });
     }
     let edges = idents
-        .as_chunks::<2>()
-        .0
-        .iter()
+        .as_chunks::<2>().0.iter()
         .map(|p| (p[0].clone(), p[1].clone()))
         .collect();
     Ok(Statement::ContextOrder { edges })

@@ -3,7 +3,7 @@ schema_version: 2
 id: GU-C04-pachha-malishun
 spine_node: SPINE-TAKE-LEAVE
 sequence: 250
-chapter: 4
+chapter: 5
 type: phrase
 headword: પાછા મળીશું
 gloss: we'll meet again (goodbye)
@@ -32,13 +32,13 @@ reviews_of: [GU-C01-aavjo]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C01-AAVJO-01, GU-CONCEPT-C04-MALISHUN-01, GU-CONCEPT-C04-PACHHA-01] -->
 
-[PAUSE 2s] The warm, explicit goodbye — the companion of Chapter 1's *āvjo*.
+[PAUSE 2s] The warm, explicit goodbye — the companion of the earlier *āvjo*.
 
 ## The phrase, taken apart
 <!-- hl-knowledge: introduces=[GU-CONCEPT-C04-PACHHAMALISHUN-01]; assesses=[GU-CONCEPT-C01-AAVJO-01, GU-CONCEPT-C04-MALISHUN-01, GU-CONCEPT-C04-PACHHA-01] -->
 
 **પાછા મળીશું** = **પાછા** (*pāchhā*, "again") + **મળીશું** (*maḷīshũ*, "we will
-meet") — "**we'll meet again**." Where Chapter 1's **આવજો** (*āvjo*) is the quick,
+meet") — "**we'll meet again**." Where the earlier **આવજો** (*āvjo*) is the quick,
 warm "come again," *pāchhā maḷīshũ* spells out the promise: we will meet once
 more. It is the same "promise of return" the whole subcontinent prefers (Hindi
 *phir milenge*, Bengali *āshi*, Tamil *pōy varugiṟēṉ*).

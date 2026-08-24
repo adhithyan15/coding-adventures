@@ -1,53 +1,63 @@
 ---
+schema_version: 2
 id: PA-C01-han-nahin
-sequence: 50
+spine_node: SPINE-RESPOND-BASIC
+sequence: 30
 chapter: 1
 type: word
 headword: ਹਾਂ / ਨਹੀਂ
-gloss: yes / no (hāṇ / nahīṇ)
+romanization: "hā̃ / nahī̃"
+gloss: "yes / no — heard and understood before they are decoded"
 concept_tag: RESPONSE-YESNO
-prerequisites: [PA-C01-shukriya]
-sounds: [inherent-a, bindi-nasal, vowel-sign]
+prerequisites: [PA-C01-namaste]
+sounds: [nasal-vowel]
 roots: [na-negative]
-est_minutes: 4
+duration:
+  max_seconds: 180
+requires:
+  knowledge: []
+introduces:
+  knowledge: [PA-LEX-HAAN-NAHIN-01]
+practises:
+  knowledge: [PA-LEX-HAAN-NAHIN-01]
+skills: [listening, speaking]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-punjabi
 reviews_of: [PA-C01-namaste]
 ---
 
-# ਹਾਂ / ਨਹੀਂ (hāṇ / nahīṇ) — "yes" and "no"
+# *hā̃* / *nahī̃* — “yes” and “no” by ear
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] Two tiny words you cannot hold a conversation without — and one of
-them is a cousin of English.
+[PAUSE 2s] Two tiny answers no conversation survives without. Today they belong
+to your ear and voice. The printed forms are labels, not a reading test.
 
-## The letters in this word
+## You'll want to know first — meaning before spelling
+<!-- hl-knowledge: introduces=[PA-LEX-HAAN-NAHIN-01]; assesses=[] -->
 
-New: **ਹ** ha, and the nasal sign **ਂ** (*bindi*) that hangs above the line.
-**ਹਾਂ** (*hāṇ*) and **ਨਹੀਂ** (*nahīṇ*) both end in a **nasalised** vowel — the
-breath released through the nose, marked by that dot.
+[YOU HEAR: *hā̃*] — **yes**. Hold the vowel, then let the ending pass gently
+through the nose.
 
-## The word, taken apart
+[YOU HEAR: *nahī̃*] — **no**. The second syllable is long, and its ending is
+nasal too.
 
-**ਹਾਂ** (*hāṇ*, "yes") and **ਨਹੀਂ** (*nahīṇ*, "no"). The "no" is built on the
-ancient negative **na-** — the very same Proto-Indo-European *ne* that surfaces
-in English **no**, **not**, and **none**, in Latin *nōn*, and in Hindi *nahīṇ*.
-Say "no" in Punjabi and in English and you are reaching for the same
-five-thousand-year-old syllable.
+Answer aloud once: [YOU SAY: *hā̃* — yes]. Then once: [YOU SAY: *nahī̃* — no].
+Do not take the Gurmukhi apart yet. The next three tiny sessions will teach one
+piece at a time before you are asked to read or write **ਹਾਂ**.
 
-## Why it's said this way
+## The word, taken apart — one old root
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-HAAN-NAHIN-01] -->
 
-The nasalised vowel (that *bindi*) is everywhere in Punjabi — it is part of what
-gives the language its distinctive music, and it often carries grammatical weight
-(marking plurals, oblique forms). For now, just hear the "n"-colored release at
-the end of both words.
+Punjabi *nahī̃* is built on ancient **na-**, from the same Proto-Indo-European
+**\*ne** behind English **no**, **not**, and **none**. That history is a memory
+hook for the sound and meaning; it is not a spelling cue.
 
-## Guided Practice
+## Wrap-up recall
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-HAAN-NAHIN-01] -->
+<!-- hl-activity: {"id":"PA-C01-han-nahin-heard-meaning","kind":"text","assesses":["PA-LEX-HAAN-NAHIN-01"],"prompt":"You hear hā̃. Answer with its English meaning.","answer":"yes","accepted":[],"feedback":{"correct":"Right: hā̃ means yes.","incorrect":"Listen again: hā̃ is yes; nahī̃ is no."},"response_seconds":8} -->
 
-[PAUSE 1s]
-- [YOU SAY: read them — hāṇ / na·hīṇ]
-- [YOU SAY: the shared ancestor of Punjabi *nahīṇ* and English *no* (PIE *ne)]
-
-## Wrap-up Recall
-
-[PAUSE 3s] What ancient root links Punjabi *nahīṇ* to English *no*, and what does
-the *bindi* dot do? (Proto-Indo-European *ne, "not"; it nasalises the vowel.)
+[PAUSE 3s] Say the two answers in order: **yes, no** — *hā̃, nahī̃*.

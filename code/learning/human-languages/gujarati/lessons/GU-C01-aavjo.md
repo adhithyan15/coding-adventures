@@ -3,7 +3,7 @@ schema_version: 2
 id: GU-C01-aavjo
 spine_node: SPINE-TAKE-LEAVE
 sequence: 30
-chapter: 1
+chapter: 2
 type: word
 headword: આવજો
 gloss: goodbye (lit. "[please] come [again]")

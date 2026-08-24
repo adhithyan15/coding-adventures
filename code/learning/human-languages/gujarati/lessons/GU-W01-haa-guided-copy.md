@@ -4,7 +4,7 @@ id: GU-W01-haa-guided-copy
 spine_node: SPINE-RESPOND-BASIC
 sequence: 43
 delivery: script
-chapter: 1
+chapter: 2
 type: writing
 headword: હા
 romanization: "hā"

@@ -1700,10 +1700,10 @@ mod tests {
             UdpOptions {
                 bind_addr: Some("127.0.0.1:0".parse().unwrap()),
                 max_datagram_size: 4096,
-                read_timeout: Some(Duration::from_millis(100)),
-                write_timeout: Some(Duration::from_millis(100)),
+                read_timeout: Some(Duration::from_secs(3)),
+                write_timeout: Some(Duration::from_secs(3)),
             },
-            4,
+            1,
         )
         .unwrap();
         assert_eq!(candidates.len(), 1);

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.12.0
+
+- Lay out horizontal Mermaid XY charts with categorical rows, numeric columns, horizontal bars, and transposed line paths.
+
 ## 0.11.0
 
 - Reserve XY-chart plot margins for axis titles and lower them to backend-neutral chart labels.

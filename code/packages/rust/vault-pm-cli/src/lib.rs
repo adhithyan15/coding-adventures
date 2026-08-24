@@ -6295,6 +6295,7 @@ enum CliFailure {
     /// dependency was unavailable" failure, but its own message: "storage
     /// unavailable" would misdescribe a socket problem that has nothing to do
     /// with the object store.
+    #[cfg(unix)]
     AgentUnavailable,
 }
 
@@ -6311,6 +6312,7 @@ impl CliFailure {
             Self::Provider => ExitCode::Provider,
             Self::Unsupported => ExitCode::Unsupported,
             Self::Internal => ExitCode::Internal,
+            #[cfg(unix)]
             Self::AgentUnavailable => ExitCode::Provider,
         }
     }
@@ -6327,6 +6329,7 @@ impl CliFailure {
             Self::Provider => "vault-pm: storage unavailable",
             Self::Unsupported => "vault-pm: unsupported capability",
             Self::Internal => "vault-pm: internal invariant failed",
+            #[cfg(unix)]
             Self::AgentUnavailable => "vault-pm: agent unavailable",
         }
     }
@@ -14624,10 +14627,19 @@ mod tests {
         let exact = StorageLocation::new(real.to_str().unwrap()).unwrap();
         assert!(same_local_directory(&exact, &exact));
 
-        // A relative-looking (but still absolute-rooted) alternate spelling
-        // of the exact same directory, reached through `.`.
-        let via_dot = real.join(".");
-        let alternate_spelling = StorageLocation::new(via_dot.to_str().unwrap()).unwrap();
+        // An absolute alternate spelling of the exact same directory. The
+        // intermediate directory must exist so Windows can canonicalize the
+        // path through `..`; unlike joining `.`, this also remains a distinct
+        // raw spelling on every supported platform.
+        let traversal_anchor = root.child("traversal-anchor");
+        fs::create_dir_all(&traversal_anchor).unwrap();
+        let separator = std::path::MAIN_SEPARATOR;
+        let via_parent = format!(
+            "{}{separator}..{separator}{}",
+            traversal_anchor.display(),
+            real.file_name().unwrap().to_string_lossy()
+        );
+        let alternate_spelling = StorageLocation::new(via_parent).unwrap();
         assert_ne!(exact.as_str(), alternate_spelling.as_str());
         assert!(same_local_directory(&exact, &alternate_spelling));
 

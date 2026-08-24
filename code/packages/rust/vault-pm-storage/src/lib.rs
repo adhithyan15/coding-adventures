@@ -1559,7 +1559,7 @@ mod tests {
             state ^= state >> 17;
             state ^= state << 5;
             let mut id = [0_u8; 32];
-            for chunk in id.chunks_exact_mut(4) {
+            for chunk in id.as_chunks_mut::<4>().0 {
                 chunk.copy_from_slice(&state.to_be_bytes());
                 state = state.rotate_left(7).wrapping_add(0x7f4a_7c15);
             }

@@ -2,6 +2,30 @@
 
 ## Unreleased
 
+### Added — source-verified Arabic غ ductus (HL-C09HH)
+
+- Extend Arabic's canonical inventory to 27 unique source-backed rows.
+- Preserve the complete **ع** body before lifting once for **غ**'s upper dot.
+- Keep Arabic incomplete while two lesson-corpus base letters remain absent.
+
+### Added — source-verified Arabic ظ ductus (HL-C09HG)
+
+- Extend Arabic's canonical inventory to 26 unique source-backed rows.
+- Preserve the complete **ط** body, then place **ظ**'s dot before its upright.
+- Keep Arabic incomplete while three lesson-corpus base letters remain absent.
+
+### Added — source-verified Arabic ط ductus (HL-C09HF)
+
+- Extend Arabic's canonical inventory to 25 unique source-backed rows.
+- Close the oval and baseline exit before drawing the upright downward.
+- Keep Arabic incomplete while four lesson-corpus base letters remain absent.
+
+### Added — source-verified Arabic ز ductus (HL-C09HE)
+
+- Extend Arabic's canonical inventory to 24 unique source-backed rows.
+- Preserve the complete **ر** body before lifting once for **ز**'s upper dot.
+- Keep Arabic incomplete while five lesson-corpus base letters remain absent.
+
 ### Added — source-verified Arabic ذ ductus (HL-C09HD)
 
 - Extend Arabic's canonical inventory to 23 unique source-backed rows.

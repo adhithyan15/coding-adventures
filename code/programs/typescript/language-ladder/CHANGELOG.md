@@ -1,5 +1,29 @@
 # Changelog
 
+## Unreleased — source-verified Arabic غ ductus
+
+- Extend Arabic's canonical inventory from 26 to 27 unique sourced rows.
+- Show Ghayn's complete Ayn-shaped body before its separately placed upper dot.
+- Keep the completion flag false until the two remaining corpus letters land.
+
+## Unreleased — source-verified Arabic ظ ductus
+
+- Extend Arabic's canonical inventory from 25 to 26 unique sourced rows.
+- Show emphatic DHaa's complete Taa-shaped body, upper dot, then tall upright.
+- Keep the completion flag false until the three remaining corpus letters land.
+
+## Unreleased — source-verified Arabic ط ductus
+
+- Extend Arabic's canonical inventory from 24 to 25 unique sourced rows.
+- Show emphatic Taa's closed body before its separately drawn tall upright.
+- Keep the completion flag false until the four remaining corpus letters land.
+
+## Unreleased — source-verified Arabic ز ductus
+
+- Extend Arabic's canonical inventory from 23 to 24 unique sourced rows.
+- Show Zay's complete Raa-shaped body before its separately placed upper dot.
+- Keep the completion flag false until the five remaining corpus letters land.
+
 ## Unreleased — source-verified Arabic ذ ductus
 
 - Extend Arabic's canonical inventory from 22 to 23 unique sourced rows.

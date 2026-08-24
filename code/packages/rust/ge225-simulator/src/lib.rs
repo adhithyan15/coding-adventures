@@ -304,9 +304,7 @@ pub fn unpack_words(program: &[u8]) -> Result<Vec<i32>, String> {
         return Err(format!("GE-225 byte stream must be a multiple of {WORD_BYTES} bytes, got {}", program.len()));
     }
     Ok(program
-        .as_chunks::<WORD_BYTES>()
-        .0
-        .iter()
+        .as_chunks::<WORD_BYTES>().0.iter()
         .map(|chunk| (((chunk[0] as i32) << 16) | ((chunk[1] as i32) << 8) | chunk[2] as i32) & MASK_20)
         .collect())
 }

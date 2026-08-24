@@ -2117,8 +2117,8 @@ fn switch_handler(vm: &mut VM, expr: IRApply) -> IRNode {
         return unevaluated(expr);
     }
     let subject = vm.eval(expr.args[0].clone());
-    // The remaining args are (form, value) pairs; `as_chunks::<2>()` over them
-    // has no remainder because the total arity (minus the leading subject) is even.
+    // The remaining args are (form, value) pairs; `chunks_exact(2)` over them is
+    // exact because the total arity (minus the leading subject) is even.
     for pair in expr.args[1..].as_chunks::<2>().0 {
         if form_matches(&pair[0], &subject) {
             return vm.eval(pair[1].clone());

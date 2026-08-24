@@ -1,1 +1,1 @@
-cargo test -p chief-of-staff-skill-parser -- --nocapture
+cargo test -p chief-of-staff-skill-parser -- --nocapture && cargo clippy -p chief-of-staff-skill-parser --all-targets -- -D warnings

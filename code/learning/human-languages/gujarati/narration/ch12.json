@@ -2,24 +2,24 @@
   "version": 1,
   "language": "gujarati",
   "chapter": 12,
-  "title": "Eye, Ear, Mouth, and Nose",
+  "title": "Friend and Family",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b4450287fa203285",
+  "sourceHash": "fnv1a64:237799f3372c4a39",
   "lessons": [
     {
-      "id": "GU-C12-aankh",
-      "sequence": 580,
-      "title": "આંખ (āṅkh) — an eye, and a nasal that is not what it looks like",
-      "headword": "આંખ",
-      "romanization": "āṅkh",
-      "gloss": "eye — a straight cousin of the English word, and a nasal mark that is not the neuter tell you might expect",
+      "id": "GU-C11-mitra",
+      "sequence": 540,
+      "title": "મિત્ર (mitra) — a friend, and the word inside your own \"please\"",
+      "headword": "મિત્ર",
+      "romanization": "mitra",
+      "gloss": "friend — a word this chapter will link to the very phrase you used to ask for water",
       "script": "gujarati",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:908a428d5d9ba832",
+      "sourceHash": "fnv1a64:e85448f38dafdb1e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -45,7 +45,7 @@
             },
             {
               "kind": "speech",
-              "text": "બહેન (bahen) closed a chapter about people. This chapter checks on how someone is — starting with the parts of the body a friend might actually ask about."
+              "text": "Last chapter asked politely for roṭlī with meherbānī karīne. That phrase is about to turn out to share its root with the very first word of this new chapter."
             }
           ]
         },
@@ -56,7 +56,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "આંખ — āṅkh — eye."
+              "text": "મિત્ર — mitra — friend."
             }
           ]
         },
@@ -67,18 +67,22 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "આ the independent long-ā, then the nasal dot ં sitting on top of it — exactly the medial anusvāra you first read inside વાંચવું, doing the same job here, in the middle of a noun rather than a verb — then ખ, the aspirated k. Note what this nasal is NOT: it does not mark આંખ (āṅkh) as neuter — the word is feminine. A nasal dot in the middle of a word is a sound, present or absent as pronunciation happens to need it; it is a different thing entirely from the grammatical -ũ ending you will meet again soon, and this chapter keeps the two apart on purpose."
+              "text": "મ ma, િ the short-i sign written before the consonant it belongs to — the same leftward quirk you saw open vichārvũ — then a conjunct: ત્ર — ત ta with the virama ્ stripping its vowel, joined straight into ર ra. Mi-tra, two syllables, the second one a cluster."
             }
           ]
         },
         {
           "index": 3,
           "type": "etymology",
-          "title": "The word, taken apart — the same word as \"eye,\" unbroken",
+          "title": "The word, taken apart — the friend hiding inside \"please\"",
           "segments": [
             {
               "kind": "speech",
-              "text": "āṅkh is inherited from Sauraseni Prakrit akkhi, from Sanskrit akṣi, \"eye.\" The root is Indo-European h₃ekʷ-, \"eye; to see,\" and it survives unbroken in English eye itself, in Latin oculus (behind ocular), and in Greek ósse. This is bhāī's kind of cousin, not bahen's: a straight line back to the same ancestor, no borrowing and no detour."
+              "text": "mitra is Sanskrit for \"friend,\" from Proto-Indo-Iranian mitras, \"(that which) causes binding\" — a covenant word before it was a friendship word. Its exact twin is Avestan Mithra, the god of contracts and given word, whose name lived on in Middle Persian as Mihr."
+            },
+            {
+              "kind": "speech",
+              "text": "That is not a dead end. મહેરબાની, the \"kindness\" you built meherbānī karīne from last chapter, is Persian mihrbānī — built on that very same Mihr. So મિત્ર (mitra), inherited straight down from Sanskrit, and મહેરબાની, borrowed centuries later from Persian, are cousins by the same Indo-Iranian root — one word for \"friend,\" the other for \"favor,\" both once naming the same idea of a bond that holds."
             }
           ]
         },
@@ -90,190 +94,191 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "āṅkh — eye",
+              "instruction": "mitra — friend",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: **āṅkh** — eye]"
+              "source": "[YOU SAY: **mitra** — friend]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "Proto-Indo-Iranian mitras becomes Avestan Mithra becomes Persian Mihr becomes મહેરબાની",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: Proto-Indo-Iranian *mitras* → Avestan **Mithra** → Persian **Mihr** → **મહેરબાની**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONNECT",
+              "instruction": "મિત્ર (mitra) and મહેરબાની — same ancient root, two different doors into Gujarati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONNECT: **મિત્ર** and **મહેરબાની** — same ancient root, two different doors into Gujarati]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "roṭlī, meherbānī karīne once more, now naming the \"friend\" root inside it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: **roṭlī, meherbānī karīne** once more, now naming the \"friend\" root inside it]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the word for \"friend.\" (Mitra.) Which other Gujarati word you already know shares its root, and through which language did each arrive? (મહેરબાની — mitra inherited from Sanskrit, meherbānī borrowed from Persian mihr.) What did the shared root originally mean? (\"To bind,\" a covenant.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: મિત્ર (mitra); Wiktionary: Mithra."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C11-kutumb",
+      "sequence": 550,
+      "title": "કુટુંબ (kuṭumb) — a word that skipped the sound changes",
+      "headword": "કુટુંબ",
+      "romanization": "kuṭumb",
+      "gloss": "family — the whole group, and a word that arrived in Gujarati already finished rather than growing there",
+      "script": "gujarati",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:b28c2ebdfb969320",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "મિત્ર (mitra) reached Gujarati the long way, worn down through Prakrit like nearly every word you own. The word for the group a friend gets folded into took a different road entirely."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કુટુંબ — kuṭumb — family."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ક ka, ુ the short-u sign below it, then ટ — the same retroflex ṭ you first curled back in roṭlī, here doing the same job again. ું closes it: u with the nasal dot on top, then બ ba. Ku-ṭu-m-b."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: taken whole, not worn down",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You have seen Sanskrit reach back into Gujarati once before: ત્રણ's r, restored after Prakrit had already dropped it — a repair, made to a word that had kept changing the whole time. કુટુંબ is a different kind of contact. Gujarati did not inherit this word through the centuries of sound change that gave you pāṇī or be; it took the Sanskrit word up directly, close to whole, the way a modern language reaches for a ready-made technical term instead of growing one on its own. Linguists call an inherited word like pāṇī tadbhava, \"born from that,\" and a direct borrowing like this one tatsama, \"same as that\" — kuṭumb is tatsama."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart — a family word borrowed by Sanskrit itself",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Here the trail runs further than usual, in an unexpected direction. Sanskrit kuṭumba is itself thought to be a loanword, taken from a Dravidian source and compared to Tamil kuṭimai, \"family, lineage,\" both built on kuṭi, \"hut.\" A word that looks purely Sanskrit, and that Gujarati then borrowed as purely Sanskrit, may have entered Sanskrit from a completely different family of languages first. The chain of ownership runs Dravidian becomes Sanskrit becomes Gujarati, with no step skipped and no step certain beyond reasonable comparison."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṭumb — family",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **kuṭumb** — family]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "tadbhava pāṇī (worn down over time) against tatsama kuṭumb (taken whole)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: **tadbhava** *pāṇī* (worn down over time) against **tatsama** *kuṭumb* (taken whole)]"
             },
             {
               "kind": "prompt",
               "action": "MATCH",
-              "instruction": "the medial nasal here against the one in વાંચવું",
+              "instruction": "this \"taken whole\" idea against traṇ's restored r — both are Sanskrit reaching forward, in different ways",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU MATCH: the medial nasal here against the one in **વાંચવું**]"
-            },
-            {
-              "kind": "prompt",
-              "action": "STATE",
-              "instruction": "is this nasal a gender marker? (No.) Is āṅkh neuter? (No — feminine.)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU STATE: is this nasal a gender marker? (No.) Is **āṅkh** neuter? (No — feminine.)]"
+              "source": "[YOU MATCH: this \"taken whole\" idea against *traṇ*'s restored *r* — both are Sanskrit reaching forward, in different ways]"
             },
             {
               "kind": "prompt",
               "action": "TRACE",
-              "instruction": "PIE h₃ekʷ- becomes Sanskrit akṣi becomes આંખ (āṅkh), and becomes English eye",
+              "instruction": "proposed Dravidian kuṭi \"hut\" becomes Sanskrit kuṭumba becomes કુટુંબ",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU TRACE: PIE *h₃ekʷ-* → Sanskrit *akṣi* → **આંખ**, and → English **eye**]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Give the word for \"eye.\" (Āṅkh.) Which English word is the same word by unbroken descent? (Eye.) Does the nasal dot in āṅkh mean the word is neuter? (No — āṅkh is feminine; the dot is only a sound.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Sources: Wiktionary: આંખ (āṅkh); Wiktionary: Sanskrit akshi."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GU-C12-kaan",
-      "sequence": 590,
-      "title": "કાન (kān) — an ear whose own root is unsettled",
-      "headword": "કાન",
-      "romanization": "kān",
-      "gloss": "ear — a word Sanskrit itself could not settle the origin of, and one that changed gender on the way to Gujarati",
-      "script": "gujarati",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:87ee6294531dd00c",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "આંખ (āṅkh) traced back cleanly to a confirmed Indo-European root. The next body part will not be nearly as tidy."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know first — one word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "કાન — kān — ear."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ક ka, ા long-ā, ન na. All three already yours."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: a gender that changed on the way here",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "કાન is feminine in Gujarati. Its Sanskrit ancestor, karṇa, was masculine. Nothing about inheriting a word guarantees its gender comes along unchanged — મિત્ર kept Sanskrit's masculine, but kān did not keep karṇa's. Gender, like the gender of આંખ (āṅkh) or બહેન, has to be learned with each noun as it stands today, not projected backward from what its ancestor was — the same caution રોટલી's chapter drew from its own -ī ending."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "etymology",
-          "title": "The word, taken apart — where even Sanskrit scholars disagree",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "kān is inherited from Old Gujarati kāna, through Apabhramsa and Prakrit kaṇṇa, from Sanskrit karṇa, \"ear.\" Past that point, no agreement exists. Proposed origins include a root for \"defect\" (with \"ear\" as a later, narrower sense), a root meaning \"point\" or \"spike,\" a root meaning \"handle\" or \"grip,\" and a connection to śṛṇoti, \"to hear.\" None of these has won out. Kān joins roṭlī as a second word in your Gujarati vocabulary whose Sanskrit form is certain and whose deeper root is not — the honest answer, said plainly rather than picked at random."
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "kān — ear, and āṅkh — eye",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: **kān** — ear, and **āṅkh** — eye]"
-            },
-            {
-              "kind": "prompt",
-              "action": "STATE",
-              "instruction": "karṇa's Sanskrit gender against kān's Gujarati gender (masculine becomes feminine)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU STATE: *karṇa*'s Sanskrit gender against *kān*'s Gujarati gender (masculine → feminine)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "NAME",
-              "instruction": "two of the four disputed origins scholars have proposed for karṇa",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU NAME: two of the four disputed origins scholars have proposed for *karṇa*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "CONTRAST",
-              "instruction": "āṅkh's confirmed PIE root against kān's unsettled one",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU CONTRAST: *āṅkh*'s confirmed PIE root against *kān*'s unsettled one]"
+              "source": "[YOU TRACE: proposed Dravidian *kuṭi* \"hut\" → Sanskrit *kuṭumba* → **કુટુંબ**]"
             }
           ]
         },
@@ -290,182 +295,30 @@
             },
             {
               "kind": "speech",
-              "text": "Give the word for \"ear.\" (Kān.) Did its gender change between Sanskrit and Gujarati? (Yes — masculine to feminine.) Is karṇa's own root settled? (No — several proposals, no agreement.)"
+              "text": "Give the word for \"family.\" (Kuṭumb.) Is it tadbhava or tatsama? (Tatsama — borrowed whole from Sanskrit, not worn down through Prakrit.) Where does Sanskrit's own kuṭumba likely come from? (Dravidian, compared to Tamil kuṭimai.)"
             },
             {
               "kind": "speech",
-              "text": "Sources: Wiktionary: કાન (kān); Wiktionary: Sanskrit karna."
+              "text": "Sources: Wiktionary: કુટુંબ (kuṭumb); Wiktionary: Sanskrit kutumba."
             }
           ]
         }
       ]
     },
     {
-      "id": "GU-C12-modhu",
-      "sequence": 600,
-      "title": "મોઢું (moḍhũ) — the tell you have been hearing all along",
-      "headword": "મોઢું",
-      "romanization": "moḍhũ",
-      "gloss": "mouth — the clearest example yet of Gujarati's neuter tell, the nasalized -ũ you have been hearing on every verb",
+      "id": "GU-C11-bhai",
+      "sequence": 560,
+      "title": "ભાઈ (bhāī) — the same word as \"brother,\" unbroken",
+      "headword": "ભાઈ",
+      "romanization": "bhāī",
+      "gloss": "brother — the plainest possible cousin of the English word for the very same person",
       "script": "gujarati",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d21dd2c664d5e91f",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "કાન (kān)'s own gender shifted away from Sanskrit's. The next body part wears its gender in plain sight — the same nasalized ending you have heard on nearly every verb in this book."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know first — one word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "મોઢું — moḍhũ — mouth."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "મ ma, ો the o sign, then a new letter: ઢ, the retroflex aspirated ḍh — curl the tongue back as for ટ and ણ, and add the puff of breath that made ધ aspirated. Then ું, u with the nasal dot. Mo-ḍhũ."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: the neuter tell, named plainly",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Every verb infinitive in this book ends in the neuter -વું: hovũ, javũ, jāṇvũ, lakhvũ — a whole word class marked by that one nasalized ending. મોઢું shows the same ending doing the same job on a noun: moḍhũ is neuter, and the nasalized -ũ is the single most recognizable tell for it. Not every neuter noun wears it — પાણી and નાક (nāk) do not — but when you do see or hear a word end this way, neuter is the way to bet. And do not confuse it with આંખ (āṅkh)'s nasal: that one sat in the middle of a feminine word and marked nothing about gender at all. This one sits at the end, and it does."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "etymology",
-          "title": "The word, taken apart — a mouth, and a doublet with its own formal twin",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "moḍhũ is inherited from Sauraseni Prakrit muha, from Sanskrit mukha, \"mouth, face.\" It has a formal doublet, મુખ mukh, borrowed directly from the same Sanskrit word the way kuṭumb was — the everyday and the formal register, side by side, from one ancestor reached by two different roads. Past Sanskrit, mukha's own root is not agreed upon — a second open question, alongside karṇa's, rather than a guess dressed up as an answer."
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "moḍhũ — mouth",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: **moḍhũ** — mouth]"
-            },
-            {
-              "kind": "prompt",
-              "action": "STATE",
-              "instruction": "what gender the -ũ ending marks, and one verb infinitive that wears the same ending",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU STATE: what gender the *-ũ* ending marks, and one verb infinitive that wears the same ending]"
-            },
-            {
-              "kind": "prompt",
-              "action": "CONTRAST",
-              "instruction": "moḍhũ's end-of-word nasal against āṅkh's middle-of-word one",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU CONTRAST: *moḍhũ*'s end-of-word nasal against *āṅkh*'s middle-of-word one]"
-            },
-            {
-              "kind": "prompt",
-              "action": "NAME",
-              "instruction": "moḍhũ's formal doublet, and how it reached Gujarati (borrowed whole, like kuṭumb)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU NAME: *moḍhũ*'s formal doublet, and how it reached Gujarati (borrowed whole, like *kuṭumb*)]"
-            }
-          ]
-        },
-        {
-          "index": 6,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Give the word for \"mouth.\" (Moḍhũ.) What gender does its -ũ ending mark? (Neuter.) Name the formal doublet of moḍhũ. (મુખ, mukh.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Sources: Wiktionary: મોં; Wiktionary: Sanskrit mukha."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GU-C12-naak",
-      "sequence": 610,
-      "title": "નાક (nāk) — the whole face, run back",
-      "headword": "નાક",
-      "romanization": "nāk",
-      "gloss": "nose — the fourth body word, closing the chapter by running the whole face back through gender, sound, and certainty",
-      "script": "gujarati",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:b8bc753f46dc0005",
+      "sourceHash": "fnv1a64:6aca99898e2108f9",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -491,7 +344,7 @@
             },
             {
               "kind": "speech",
-              "text": "આંખ (āṅkh), કાન (kān), મોઢું (moḍhũ) — eye, ear, mouth. One more completes the face, and this one closes the chapter by tying its ending back to a pattern from three chapters ago."
+              "text": "કુટુંબ (kuṭumb) was taken up whole, close to the finished Sanskrit shape. The two words for its members run the opposite way — worn all the way down, the ordinary path nearly every Gujarati word has followed."
             }
           ]
         },
@@ -502,7 +355,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "નાક — nāk — nose."
+              "text": "ભાઈ — bhāī — brother."
             }
           ]
         },
@@ -513,86 +366,66 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ન na, ા long-ā, ક ka. Every letter already familiar — nāk's only new information is the word itself."
+              "text": "ભ bha, the aspirated b, with the long-ā sign ા, then ઈ, the independent long-ī vowel standing on its own rather than attached to a consonant. Bhā-ī, two syllables, no consonant closing the second."
             }
           ]
         },
         {
           "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: closing the chapter's gender count",
+          "type": "etymology",
+          "title": "The word, taken apart — no disguise at all",
           "segments": [
             {
               "kind": "speech",
-              "text": "નાક is neuter, like મોઢું — but unlike moḍhũ, it carries no nasalized -ũ at all. Run the whole face: āṅkh feminine, kān feminine, moḍhũ neuter with the tell, nāk neuter without it. Two neuters, only one of them wearing the ending that names the class. This is exactly why last lesson called the nasalized -ũ a tell, not a rule: it is the loudest signal Gujarati gives you for neuter, and it is still only sometimes there — the same caution roṭlī and pāṇī already taught you about -ī, and kān's Grammar Lens taught you about gender and inheritance more generally."
+              "text": "bhāī is inherited, through Prakrit bhāi, from Sanskrit bhrātṛ. Its root is Indo-European bʰréh₂tēr, and this is one of the cleanest cognate sets Indo-European linguistics has: Sanskrit bhrātṛ, English brother, Latin frāter, Greek phrātēr, Russian brat — every one of them the same word, carried down by ordinary sound change in every branch rather than borrowed by any of them. Where kuṭumb skipped the centuries of change that shape tadbhava words, bhāī is the textbook case of what those centuries do: the consonant cluster bhr- simplified once the r dropped, exactly the kind of wearing-down that gave you pāṇī from pānīya."
             }
           ]
         },
         {
           "index": 4,
-          "type": "etymology",
-          "title": "The word, taken apart — the last unbroken cousin in the chapter",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "nāk is inherited from Prakrit ṇakka, from Sanskrit nas, \"nose,\" with a suffix added along the way — the retroflex ṇ here is the same sound-shift you first met turning jānāti into jāṇvũ, a single letter's worth of difference deciding a great deal, the way one mark once told javũ apart from jovũ. The root is Indo-European nehas-, unbroken in English nose, Latin nāsus (behind nasal), and Lithuanian nósis. Like āṅkh, nāk needed no ship and no loan to reach you — only the ordinary work of sound change, the same work that once put a nasal dot in the middle of વાંચવું and, this chapter, in the middle of આંખ."
-            }
-          ]
-        },
-        {
-          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "all four face words — āṅkh, kān, moḍhũ, nāk",
+              "instruction": "bhāī — brother",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: all four face words — **āṅkh**, **kān**, **moḍhũ**, **nāk**]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SORT",
-              "instruction": "gender of each — feminine, feminine, neuter, neuter",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SORT: gender of each — feminine, feminine, neuter, neuter]"
-            },
-            {
-              "kind": "prompt",
-              "action": "STATE",
-              "instruction": "which of the two neuters carries the -ũ tell, and which does not",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU STATE: which of the two neuters carries the *-ũ* tell, and which does not]"
+              "source": "[YOU SAY: **bhāī** — brother]"
             },
             {
               "kind": "prompt",
               "action": "TRACE",
-              "instruction": "PIE nehas- becomes Sanskrit nas becomes નાક (nāk), and becomes English nose",
+              "instruction": "PIE bʰréh₂tēr becomes Sanskrit bhrātṛ becomes ભાઈ (bhāī), and becomes English brother",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU TRACE: PIE *nehas-* → Sanskrit *nas* → **નાક**, and → English **nose**]"
+              "source": "[YOU TRACE: PIE *bʰréh₂tēr* → Sanskrit *bhrātṛ* → **ભાઈ**, and → English **brother**]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "the medial nasal in વાંચવું, and the one-mark contrast between જવું and જોવું",
+              "action": "CONTRAST",
+              "instruction": "bhāī worn down over centuries against kuṭumb taken up whole",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: the medial nasal in **વાંચવું**, and the one-mark contrast between **જવું** and **જોવું**]"
+              "source": "[YOU CONTRAST: *bhāī* worn down over centuries against *kuṭumb* taken up whole]"
+            },
+            {
+              "kind": "prompt",
+              "action": "NAME",
+              "instruction": "two other languages whose word for \"brother\" is the same cognate (Latin frāter, Greek phrātēr, or Russian brat)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU NAME: two other languages whose word for \"brother\" is the same cognate (Latin *frāter*, Greek *phrātēr*, or Russian *brat*)]"
             }
           ]
         },
         {
-          "index": 6,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -604,11 +437,166 @@
             },
             {
               "kind": "speech",
-              "text": "Give the word for \"nose.\" (Nāk.) Which English word is the same word by unbroken descent? (Nose.) Name this chapter's four body words and their genders. (Āṅkh f., kān f., moḍhũ n., nāk n.) Which neuter noun wears the nasalized -ũ tell, and which does not? (Moḍhũ does; nāk does not.)"
+              "text": "Give the word for \"brother.\" (Bhāī.) Which English word is the very same word, by unbroken descent, not borrowing? (Brother.) Is bhāī tadbhava or tatsama — worn down, or taken whole like kuṭumb? (Tadbhava — worn down.)"
             },
             {
               "kind": "speech",
-              "text": "Sources: Wiktionary: નાક (nāk); Wiktionary: Sanskrit nas."
+              "text": "Sources: Wiktionary: ભાઈ (bhāī); Wiktionary: bʰréh₂tēr."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C11-bahen",
+      "sequence": 570,
+      "title": "બહેન (bahen) — the sister who is not \"sister\"'s cousin",
+      "headword": "બહેન",
+      "romanization": "bahen",
+      "gloss": "sister — which, unlike its brother, is not the same word as the English one at all",
+      "script": "gujarati",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:a8038cebebb4cb54",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "ભાઈ (bhāī) is English brother, unbroken, down to the root. Do not assume the sibling pair matches. This chapter's last word breaks the pattern."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "બહેન — bahen — sister."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "બ ba, હ ha, ે the e sign above the consonant, then ન na. Ba-hen, every letter already yours from earlier chapters."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart — a different root entirely",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Here is the surprise: બહેન (bahen) is not bhāī's counterpart the way English sister is brother's. English sister, Latin soror, and Sanskrit svasṛ all descend from one shared PIE root, swésōr. Gujarati's word for sister does not use that root at all."
+            },
+            {
+              "kind": "speech",
+              "text": "bahen comes from Sanskrit bhaginī, through Prakrit bhaginī. Scholars connect bhaginī to bhaga, \"good fortune, a share\" — the same bhaga behind bhāgya, \"fate\" — plus a feminine suffix, so \"sister\" may originally have meant something closer to \"the one who shares.\" That connection is debated rather than settled, the way roṭlī's root was: some scholars accept the bhaga link, others have argued against it. What is certain is what it is not: unlike bhāī, bahen is no relation to English sister at all — and unlike the disputed-but-real mitra/meherbānī pair, this dial lands on \"unrelated,\" full stop."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bahen — sister, and bhāī — brother",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **bahen** — sister, and **bhāī** — brother]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "bhāī — same root as English brother; bahen — a different Sanskrit word entirely, not sister's cousin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: *bhāī* — same root as English *brother*; *bahen* — a different Sanskrit word entirely, not *sister*'s cousin]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "proposed bhaga \"share, fortune\" becomes bhaginī becomes બહેન (bahen)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: proposed *bhaga* \"share, fortune\" → *bhaginī* → **બહેન**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "all four family words — mitra, kuṭumb, bhāī, bahen — inherited/borrowed, direct/indirect",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: all four family words — **mitra**, **kuṭumb**, **bhāī**, **bahen** — inherited/borrowed, direct/indirect]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "મિત્ર (mitra) and મહેરબાની's shared root from the last chapter, and કુટુંબ (kuṭumb)'s proposed Dravidian root",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: **મિત્ર** and **મહેરબાની**'s shared root from the last chapter, and **કુટુંબ**'s proposed Dravidian root]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the word for \"sister.\" (Bahen.) Is it the same root as English sister? (No — that connection belongs to bhāī/brother instead.) What does bahen probably come from? (Sanskrit bhaginī, disputedly tied to bhaga, \"share.\") Name this chapter's four people and things: friend, family, brother, sister. (Mitra, kuṭumb, bhāī, bahen.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: બહેન (bahen); Wiktionary: Sanskrit bhagini."
             }
           ]
         }

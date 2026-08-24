@@ -687,12 +687,6 @@ pub fn spawn_detached_clearer(
     arguments: &[&str],
     request: &ClipboardClearRequest,
 ) -> Result<(), CliHostError> {
-    let mut command = Command::new(program);
-    command
-        .args(arguments)
-        .stdin(Stdio::piped())
-        .stdout(Stdio::null())
-        .stderr(Stdio::null());
     #[cfg(not(unix))]
     {
         // No non-Unix target has an audited clipboard — `PlatformClipboard`
@@ -703,11 +697,17 @@ pub fn spawn_detached_clearer(
         // `wait` at the end of this function would block the foreground process
         // for the whole configured timeout, up to an hour, with the secret
         // already on the clipboard.
-        let _ = &mut command;
-        return Err(CliHostError::ClipboardClearScheduleFailed);
+        let _ = (program, arguments, request);
+        Err(CliHostError::ClipboardClearScheduleFailed)
     }
     #[cfg(unix)]
     {
+        let mut command = Command::new(program);
+        command
+            .args(arguments)
+            .stdin(Stdio::piped())
+            .stdout(Stdio::null())
+            .stderr(Stdio::null());
         // SAFETY: the closure runs in the freshly forked child, between `fork`
         // and `execvp`. It is non-capturing, allocates nothing, and calls only
         // `fork`, `setsid`, and `_exit`, all of which POSIX lists as
@@ -733,23 +733,23 @@ pub fn spawn_detached_clearer(
                 Ok(())
             });
         }
+        let mut child = command
+            .spawn()
+            .map_err(|_| CliHostError::ClipboardClearScheduleFailed)?;
+        let block = Zeroizing::new(request.to_bytes());
+        let written = child.stdin.take().ok_or(()).and_then(|mut pipe| {
+            pipe.write_all(&*block)
+                .and_then(|()| pipe.flush())
+                .map_err(|_| ())
+        });
+        // The direct child is the short-lived intermediate; reaping it is
+        // immediate and leaves the grandchild orphaned as intended. The wait is
+        // still bounded rather than open ended: an intermediate that somehow does
+        // not exit must not be able to hold a person's terminal, and every other
+        // wait in this module is bounded for the same reason.
+        let _ = wait_bounded(&mut child);
+        written.map_err(|()| CliHostError::ClipboardClearScheduleFailed)
     }
-    let mut child = command
-        .spawn()
-        .map_err(|_| CliHostError::ClipboardClearScheduleFailed)?;
-    let block = Zeroizing::new(request.to_bytes());
-    let written = child.stdin.take().ok_or(()).and_then(|mut pipe| {
-        pipe.write_all(&*block)
-            .and_then(|()| pipe.flush())
-            .map_err(|_| ())
-    });
-    // The direct child is the short-lived intermediate; reaping it is
-    // immediate and leaves the grandchild orphaned as intended. The wait is
-    // still bounded rather than open ended: an intermediate that somehow does
-    // not exit must not be able to hold a person's terminal, and every other
-    // wait in this module is bounded for the same reason.
-    let _ = wait_bounded(&mut child);
-    written.map_err(|()| CliHostError::ClipboardClearScheduleFailed)
 }
 
 /// Run a utility, feed it `input` on standard input, and wait — bounded.

@@ -85,7 +85,7 @@ impl Cpu8086 {
         let mem = vec![0u8; MEM_SIZE]
             .into_boxed_slice()
             .try_into()
-            .expect("MEM_SIZE fixes the boxed memory length");
+            .unwrap_or_else(|_| unreachable!("8086 memory allocation has a fixed size"));
         Cpu8086 {
             rf: RegisterFile8086::new(),
             mem,
