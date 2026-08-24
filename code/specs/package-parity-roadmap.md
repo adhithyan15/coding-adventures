@@ -5836,6 +5836,23 @@ baseline and this branch under Python 3.13 because the newer interpreter's
 64-bit `st_dev` does not equal the existing 32-bit volume-serial projection.
 That native filesystem identity debt is outside this inert CLI-parser slice.
 
+Before publication, the completed parser corpus rebased conflict-free onto
+exact `origin/main` `e5bb93ca7e7a54537f109ee6de0926c05565cd5c` after two Devanagari
+curriculum commits and the merged HTML-parser diagnostic repair. None changes a
+package marker or overlaps this tranche. The collision gate remains at 15
+established lanes, 1,370 implementation identities, 4,563 package slots, 175
+high-consensus identities with 276 gaps, 907 singletons with 12,698 gaps, 718
+Rust singletons, zero collisions, and zero unknown buckets; OCaml remains
+correctly emerging with zero packages.
+
+The downstream audit also registers
+`build-tool-dist-newstyle-discovery-exclusion-remaining-engines`. Go accepts the
+shared language-registry fixture, while Ruby retains one failure among 307 runs
+and 632 assertions and Rust retains one failure among 140 tests because both
+still discover `code/packages/haskell/dist-newstyle` as a package on Windows.
+That pre-existing engine discovery debt is now explicit behind the merged Ruby
+and Rust identity registries and remains outside the neutral CLI-parser change.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

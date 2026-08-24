@@ -637,7 +637,8 @@ class PureDomainValidationTests(unittest.TestCase):
             ]
         )
         self.assertIsNone(plan_diagnostic)
-        assert plan_parse is not None
+        if plan_parse is None:
+            self.fail("valid plan-consumption arguments did not produce a parse")
         self.assertEqual(plan_parse["root"], ".")
         self.assertEqual(plan_parse["plan_file"], "artifacts/plan.json")
         self.assertEqual(plan_parse["shard_index"], 0)
