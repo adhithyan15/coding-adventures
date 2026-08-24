@@ -5948,6 +5948,90 @@
       }
     },
     {
+      "chapter": 306,
+      "title": "Blood and Household --- Son, Daughter, Grandfather, Grandmother, Husband",
+      "label": "ch:hijos-y-abuelos",
+      "canDo": "I can name the closest members of a family in Spanish --- son, daughter, grandfather, grandmother and husband --- and switch the ending to say which one I mean.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "ES-C306-esposo",
+        "kind": "production",
+        "summary": "Complete ES-C306-esposo: name all five relatives, taking the -o/-a switch in both directions.",
+        "assesses": [
+          "ES-LEX-C306-KIN-01",
+          "ES-LEX-C306-KIN-02",
+          "ES-LEX-C306-KIN-03",
+          "ES-LEX-C306-KIN-04",
+          "ES-LEX-C306-KIN-05"
+        ]
+      }
+    },
+    {
+      "chapter": 307,
+      "title": "The Wider Circle --- Wife, Uncle, Aunt, Cousin",
+      "label": "ch:esposos-y-tios",
+      "canDo": "I can name a wife, an uncle, an aunt and a cousin in Spanish, in either gender, and I know why Spanish and English chose different ancient words for the same relatives.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "ES-C307-prima",
+        "kind": "production",
+        "summary": "Complete ES-C307-prima: name the wider circle of relatives and pair each -o form with its -a form.",
+        "assesses": [
+          "ES-LEX-C307-KIN-06",
+          "ES-LEX-C307-KIN-07",
+          "ES-LEX-C307-KIN-08",
+          "ES-LEX-C307-KIN-09",
+          "ES-LEX-C307-KIN-10"
+        ]
+      }
+    },
+    {
+      "chapter": 308,
+      "title": "Children and Everybody --- Boy, Girl, Lad, Lass, People",
+      "label": "ch:ninos-y-gente",
+      "canDo": "I can talk about children and about people in general in Spanish, and I can tell a real cousin word from a false friend.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "ES-C308-gente",
+        "kind": "production",
+        "summary": "Complete ES-C308-gente: name children in both genders and move from one child to people in general.",
+        "assesses": [
+          "ES-LEX-C308-KIN-11",
+          "ES-LEX-C308-KIN-12",
+          "ES-LEX-C308-KIN-13",
+          "ES-LEX-C308-KIN-14",
+          "ES-LEX-C308-KIN-15"
+        ]
+      }
+    },
+    {
+      "chapter": 309,
+      "title": "Naming the Whole --- Family, Nickname, Relative, Partner, Baby",
+      "label": "ch:familia-y-pareja",
+      "canDo": "I can name a family, a partner, a relative and a baby in Spanish, and I can say what somebody is called by nickname as well as by name and surname.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "ES-C309-bebe",
+        "kind": "production",
+        "summary": "Complete ES-C309-bebe: gather the whole household into one word, add the third kind of name, and close on the youngest person in the room.",
+        "assesses": [
+          "ES-LEX-C309-KIN-16",
+          "ES-LEX-C309-KIN-17",
+          "ES-LEX-C309-KIN-18",
+          "ES-LEX-C309-KIN-19",
+          "ES-LEX-C309-KIN-20"
+        ]
+      }
+    },
+    {
       "chapter": 310,
       "title": "El Cuarto Y La Mesa --- Key, Shower, Table, Light, Bathroom",
       "label": "ch:el-cuarto-y-la-mesa",

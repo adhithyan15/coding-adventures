@@ -2787,6 +2787,13 @@
     },
     {
       "language": "marathi",
+      "chapter": 6,
+      "output": "marathi/book/chapters/ch06-numbers-1-5.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "mr"
+    },
+    {
+      "language": "marathi",
       "chapter": 7,
       "output": "marathi/book/chapters/ch07-numbers-1-5.tex",
       "unicodeScript": "Devanagari",
@@ -5153,6 +5160,26 @@
     },
     {
       "language": "spanish",
+      "chapter": 306,
+      "output": "spanish/book/chapters/ch306-hijos-y-abuelos.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 307,
+      "output": "spanish/book/chapters/ch307-esposos-y-tios.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 308,
+      "output": "spanish/book/chapters/ch308-ninos-y-gente.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 309,
+      "output": "spanish/book/chapters/ch309-familia-y-pareja.tex"
+    },
+    {
+      "language": "spanish",
       "chapter": 310,
       "output": "spanish/book/chapters/ch310-el-cuarto-y-la-mesa.tex"
     },
@@ -6424,6 +6451,26 @@
       "language": "urdu",
       "chapter": 1,
       "output": "urdu/book/chapters/ch01-greetings-and-responses.tex"
+    },
+    {
+      "language": "marathi",
+      "chapter": 2,
+      "output": "marathi/book/chapters/ch02-introductions.tex"
+    },
+    {
+      "language": "marathi",
+      "chapter": 3,
+      "output": "marathi/book/chapters/ch03-responding.tex"
+    },
+    {
+      "language": "marathi",
+      "chapter": 4,
+      "output": "marathi/book/chapters/ch04-farewells.tex"
+    },
+    {
+      "language": "marathi",
+      "chapter": 5,
+      "output": "marathi/book/chapters/ch05-first-verbs.tex"
     }
   ]
 }
