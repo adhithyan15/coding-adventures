@@ -7420,10 +7420,13 @@ impl HtmlParser {
                 )
                 .at_emission(self.current_token_emission_position),
             );
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-description-item-end-tag",
-                format!("end tag `</{name}>` did not match a description item in scope"),
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-description-item-end-tag",
+                    format!("end tag `</{name}>` did not match a description item in scope"),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             return;
         }
         if self.current_namespace().is_some()
@@ -8641,10 +8644,13 @@ impl HtmlParser {
             return;
         }
         let Some(index) = self.open_html_element_in_scope_index(name) else {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-description-item-end-tag",
-                format!("end tag `</{name}>` did not match a description item in scope"),
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-description-item-end-tag",
+                    format!("end tag `</{name}>` did not match a description item in scope"),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             return;
         };
 
@@ -27366,6 +27372,14 @@ mod tests {
         .at_emission(Some(end_tag_position(source, "li")))
     }
 
+    fn unexpected_description_item_end_tag(source: &str, name: &str) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-description-item-end-tag",
+            format!("end tag `</{name}>` did not match a description item in scope"),
+        )
+        .at_emission(Some(end_tag_position(source, name)))
+    }
+
     fn scoped_block_end_tag_outside_scope(source: &str, name: &str) -> ParserDiagnostic {
         ParserDiagnostic::new(
             "unexpected-block-end-tag-outside-scope",
@@ -34657,32 +34671,38 @@ mod tests {
 
     #[test]
     fn description_item_end_tags_respect_full_ordinary_scope() {
-        for (source, boundary_name) in [
+        for (source, boundary_name, item_name) in [
             (
                 "<!doctype html><dl><dd id=item><object id=boundary></dd>X</object>Y</dl>",
                 "object",
+                "dd",
             ),
             (
                 "<!doctype html><dl><dt id=item><marquee id=boundary></dt>X</marquee>Y</dl>",
                 "marquee",
+                "dt",
             ),
             (
                 "<!doctype html><dl><dd id=item><template id=boundary></dd>X</template>Y</dl>",
                 "template",
+                "dd",
             ),
         ] {
             let output = parse_html_with_diagnostics(source).unwrap();
+            let diagnostics = output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-description-item-end-tag")
+                .collect::<Vec<_>>();
             assert_eq!(
-                output
-                    .parser_diagnostics
-                    .iter()
-                    .filter(|diagnostic| {
-                        diagnostic.code == "unexpected-description-item-end-tag"
-                    })
-                    .count(),
+                diagnostics.len(),
                 1,
                 "source {source:?}: {:?}",
                 output.parser_diagnostics
+            );
+            assert_eq!(
+                diagnostics[0].position,
+                Some(end_tag_position(source, item_name))
             );
             let item = find_element_by_id(&output.document.children, "item")
                 .expect("the blocked end tag should leave the description item open");
@@ -34730,12 +34750,7 @@ mod tests {
                     output.parser_diagnostics,
                     vec![
                         generic_foreign_end_tag_mismatch(&source, item_name),
-                        ParserDiagnostic::new(
-                            "unexpected-description-item-end-tag",
-                            format!(
-                                "end tag `</{item_name}>` did not match a description item in scope"
-                            )
-                        ),
+                        unexpected_description_item_end_tag(&source, item_name),
                     ],
                     "source {source:?}"
                 );
@@ -34758,12 +34773,7 @@ mod tests {
                 output.parser_diagnostics,
                 vec![
                     generic_foreign_end_tag_mismatch(&source, end_name),
-                    ParserDiagnostic::new(
-                        "unexpected-description-item-end-tag",
-                        format!(
-                            "end tag `</{end_name}>` did not match a description item in scope"
-                        )
-                    ),
+                    unexpected_description_item_end_tag(&source, end_name),
                 ],
                 "source {source:?}"
             );
@@ -34794,12 +34804,11 @@ mod tests {
             find_element_by_id(&no_html_description_item.document.children, "boundary").unwrap();
         assert_eq!(boundary.children, vec![Node::text("X")]);
 
-        let blocked_table = parse_html_with_diagnostics(
-            "<!doctype html><dl><dd id=item><table id=boundary></dd><tr><td>X</table>Y</dl>",
-        )
-        .unwrap();
+        let blocked_table_source =
+            "<!doctype html><dl><dd id=item><table id=boundary></dd><tr><td>X</table>Y</dl>";
+        let blocked_table = parse_html_with_diagnostics(blocked_table_source).unwrap();
         assert!(blocked_table.parser_diagnostics.iter().any(|diagnostic| {
-            diagnostic.code == "unexpected-description-item-end-tag"
+            diagnostic == &unexpected_description_item_end_tag(blocked_table_source, "dd")
         }));
         let item = find_element_by_id(&blocked_table.document.children, "item").unwrap();
         assert!(find_element_by_id(&item.children, "boundary").is_some());
@@ -34811,23 +34820,24 @@ mod tests {
             diagnostic.code == "unexpected-non-current-description-item-end-tag"
         }));
 
-        let cross_name =
-            parse_html_with_diagnostics("<!doctype html><dl><dd id=item></dt>X</dd></dl>")
-                .unwrap();
+        let cross_name_source = "<!doctype html><dl><dd id=item></dt>X</dd></dl>";
+        let cross_name = parse_html_with_diagnostics(cross_name_source).unwrap();
         assert!(cross_name.parser_diagnostics.iter().any(|diagnostic| {
-            diagnostic.code == "unexpected-description-item-end-tag"
+            diagnostic == &unexpected_description_item_end_tag(cross_name_source, "dt")
         }));
         let item = find_element_by_id(&cross_name.document.children, "item").unwrap();
         assert_eq!(item.children, vec![Node::text("X")]);
 
+        let fragment_source = "</dd>X</dt>Y";
         let fragment =
-            parse_html_fragment_for_context_with_diagnostics("</dd>X</dt>Y", "dd").unwrap();
+            parse_html_fragment_for_context_with_diagnostics(fragment_source, "dd").unwrap();
         assert_eq!(
             fragment
                 .parser_diagnostics
                 .iter()
                 .filter(|diagnostic| {
-                    diagnostic.code == "unexpected-description-item-end-tag"
+                    *diagnostic
+                        == &unexpected_description_item_end_tag(fragment_source, "dt")
                 })
                 .count(),
             1
@@ -34853,12 +34863,7 @@ mod tests {
                 output.parser_diagnostics,
                 vec![
                     generic_foreign_end_tag_mismatch(&source, end_name),
-                    ParserDiagnostic::new(
-                        "unexpected-description-item-end-tag",
-                        format!(
-                            "end tag `</{end_name}>` did not match a description item in scope"
-                        )
-                    ),
+                    unexpected_description_item_end_tag(&source, end_name),
                 ],
                 "source {source:?}"
             );
