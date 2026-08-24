@@ -273,7 +273,7 @@ fn print_audit(
     println!("Fired contributions ({} of {} possible rules):",
              fired.len(), lr_table().len());
     println!();
-    println!("  {:<24} {:>8} {:>10}   {}", "id", "LR", "log(LR)", "citation");
+    println!("  {:<24} {:>8} {:>10}   citation", "id", "LR", "log(LR)");
     println!("  {}", "-".repeat(110));
     let mut atomic_log_sum = 0.0_f64;
     let mut interact_log_sum = 0.0_f64;
@@ -334,6 +334,15 @@ fn main() {
         SearchResult::FindFirstResult(_) => {
             panic!("EnumerateAll requested but engine short-circuited to FindFirst");
         }
+        // `LRAggregateResult` is only ever returned for `SearchMode::LRAggregate`,
+        // and this demo asks for `EnumerateAll`, so reaching here means the engine
+        // returned a result inconsistent with the mode it was given. Treated the
+        // same way as the `FindFirstResult` arm above: a loud failure, not a
+        // silent fallback, because the rest of this program reads `dag.proofs`
+        // and would otherwise report an empty derivation set as a real answer.
+        SearchResult::LRAggregateResult { .. } => {
+            panic!("EnumerateAll requested but engine returned an LRAggregate result");
+        }
     };
 
     // For each proof in the DAG, recover which contrib id it derived.
@@ -362,7 +371,7 @@ fn main() {
     }
 
     // Stable order for the audit doc.
-    fired.sort_by(|a, b| a.id.cmp(&b.id));
+    fired.sort_by(|a, b| a.id.cmp(b.id));
 
     let (prior_lo, post_lo, post_p) = aggregate(&fired, PRIOR_P_ACS);
 

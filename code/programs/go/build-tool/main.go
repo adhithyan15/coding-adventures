@@ -583,9 +583,31 @@ func run() int {
 	}
 
 	if *validateBuildFiles {
-		if err := validator.ValidateBuildFiles(packages, graph); err != nil {
-			fmt.Fprintln(os.Stderr, err)
+		// Both validations run before either can fail the process. They answer
+		// different questions and a repo can be wrong in both ways at once;
+		// reporting one at a time would mean two round-trips through CI to see
+		// the full punch list.
+		//
+		// ValidateBuildFiles can only ever inspect packages the tool DISCOVERED,
+		// and discovery means "has a BUILD file" — so by construction it is blind
+		// to a crate that has none. ValidateNoOrphanCrates scans the filesystem
+		// instead, and is the only check that can see that gap.
+		buildErr := validator.ValidateBuildFiles(packages, graph)
+		orphanErr := validator.ValidateNoOrphanCrates(repoRoot)
+
+		if buildErr != nil {
+			fmt.Fprintln(os.Stderr, buildErr)
+		}
+		if orphanErr != nil {
+			fmt.Fprintln(os.Stderr, orphanErr)
+		}
+		if buildErr != nil || orphanErr != nil {
 			return 1
+		}
+
+		if pending := validator.PendingExemptionCount(repoRoot); pending > 0 {
+			fmt.Printf("Orphan-crate check: OK (%d crates still on the BUILD backlog in %s)\n",
+				pending, validator.ExemptionsFile)
 		}
 	}
 

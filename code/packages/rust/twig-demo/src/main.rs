@@ -1205,6 +1205,13 @@ fn exec_method(
 ///
 /// With *signed* i64 comparison, -5 < 0 is true, so `(- 0 x)` = `(- 0 -5)`
 /// = 5 is returned.
+///
+/// Gated to the same platform as its ONE use site, `aot_type_correctness_demo`
+/// below — the AOT deep-dive shells out to `ld` for a macOS/ARM64 Mach-O, so
+/// every function in this section is `macos + aarch64` only. Gating the constant
+/// on where it is *used* rather than leaving it unconditional is what keeps
+/// `-D warnings` green on Linux and Windows, where the demo does not exist.
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
 const ABS_PROGRAM: &str =
     "(define (abs-val x) (if (< x 0) (- 0 x) x)) (abs-val -5)";
 

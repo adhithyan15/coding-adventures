@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Changed — Chinese corpus closure (HL-C09HR)
+
+- Mark all 29 source-verified Simplified Chinese character and radical rows
+  complete after the current Mandarin lesson corpus passes closure.
+- Require the inventory and subset font to grow with every future headword.
+
 ### Changed — Hebrew corpus closure (HL-C09HQ)
 
 - Mark the 22 source-verified Hebrew letters and nine current-corpus niqqud

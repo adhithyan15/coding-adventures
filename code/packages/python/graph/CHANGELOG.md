@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Changed
+- Canonical and Windows BUILD fronts now recreate a pinned Python 3.13
+  package-local environment and run Ruff, formatting, strict MyPy, and pytest
+  through its explicit interpreter.
+- Type syntax and tests were brought through the newly enforced quality gates
+  without changing graph behavior or package metadata.
+
 ### Added
 - Graph, node, and edge property bags with canonical `weight` edge metadata.
 

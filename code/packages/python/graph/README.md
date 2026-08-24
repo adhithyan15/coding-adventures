@@ -83,5 +83,14 @@ DT02 tree
 
 ```bash
 cd code/packages/python/graph
-bash BUILD
+uv venv .venv --quiet --no-project --clear --python 3.13
+uv pip install --python .venv -e .[dev] --quiet
+.venv/bin/python -m ruff check src tests
+.venv/bin/python -m ruff format --check src tests
+.venv/bin/python -m mypy --strict src tests
+.venv/bin/python -m pytest tests/ -v
 ```
+
+`BUILD_windows` provides the same gates through
+`.venv\Scripts\python.exe`. Both recipes clear and recreate the package-local
+environment, so an immediate repeat is supported.

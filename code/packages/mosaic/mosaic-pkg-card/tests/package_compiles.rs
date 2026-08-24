@@ -18,10 +18,14 @@
 //!      footer, all `text`) and zero emits.
 //!   3. src/Card.mll compiles via moslayout_compiler::compile against
 //!      the .mil interface descriptor, and the layout tree is:
-//!        Column [card-root]
-//!          Box [card-title]
-//!          Box [card-body]
-//!          Box [card-footer]
+//!
+//!      ```text
+//!      Column [card-root]
+//!        Box [card-title]
+//!        Box [card-body]
+//!        Box [card-footer]
+//!      ```
+//!
 //!   4. src/Card.dark.msl compiles via mosstyle_compiler::compile
 //!      against the .mll part map, and produces exactly four parts:
 //!      card-root / card-title / card-body / card-footer.
