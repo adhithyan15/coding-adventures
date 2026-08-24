@@ -6070,9 +6070,9 @@ validator and main surfaces.
 The implementation adds one pure Python validator over inert snapshot entries,
 tests it against every shared tracked-artifact fixture, and documents the
 public result shape without widening the reviewed authority boundary. After
-three unrelated human-language and HTML-parser commits reached `main`, the two
+four unrelated human-language and HTML-parser commits reached `main`, the two
 implementation commits rebased without conflict onto exact revision
-`b42ae77fd298bf33c3ee354c369e36d5979f4d7d`. The collision-checked inventory is
+`cd0d11cea514288cca2e4a9c786eb98dd336b654`. The collision-checked inventory is
 unchanged at 15 established lanes, 1,370 identities, 4,563 slots, zero
 collisions, and zero unknown buckets. Both complete Python build-tool fronts
 pass from cleared Python 3.13 environments with 423 tests and 90.06% coverage;
