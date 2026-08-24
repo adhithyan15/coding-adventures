@@ -14,6 +14,7 @@ import {
 } from "./constants.js";
 import type { Issue, ScriptData, Taxonomy } from "./types.js";
 import type { ParsedLesson } from "./parse.js";
+import { belongsToAny, SCRIPT_SYSTEMS } from "./ramp.js";
 
 export interface ValidateInput {
   taxonomy: Taxonomy;
@@ -161,7 +162,7 @@ export function validate(input: ValidateInput): Issue[] {
 function uncoveredGlyphs(headword: string, sd: ScriptData): string[] {
   const covered = new Set<string>();
   const add = (s?: string) => {
-    if (s) for (const ch of s) covered.add(ch);
+    if (s) for (const ch of s.normalize("NFD")) covered.add(ch);
   };
   for (const l of sd.letters) {
     add(l.glyph);
@@ -171,10 +172,16 @@ function uncoveredGlyphs(headword: string, sd: ScriptData): string[] {
     add(l.forms?.final);
   }
   for (const m of sd.marks ?? []) add(m.mark);
+  const targetSystems = hasOwn(SCRIPT_SYSTEMS, sd.script)
+    ? new Set(SCRIPT_SYSTEMS[sd.script])
+    : undefined;
   const skip = /[\s\p{P}‌‍]/u; // spaces, punctuation, ZWNJ/ZWJ
   const out: string[] = [];
-  for (const ch of headword) {
+  for (const ch of headword.normalize("NFD")) {
     if (skip.test(ch)) continue;
+    // A legacy headword may itself be romanized. Script closure concerns only
+    // characters from the script this file owns, never Latin teaching text.
+    if (targetSystems && !belongsToAny(ch, targetSystems)) continue;
     if (!covered.has(ch) && !out.includes(ch)) out.push(ch);
   }
   return out;
