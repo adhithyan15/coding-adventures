@@ -1,10 +1,10 @@
 ---
 schema_version: 2
 id: PA-W01-aa-matra
-spine_node: SPINE-MEET-GREET
-sequence: 810
+spine_node: SPINE-RESPOND-BASIC
+sequence: 32
 delivery: script
-chapter: 14
+chapter: 1
 type: writing
 headword: ਾ
 romanization: "-ā"
@@ -16,11 +16,11 @@ etymology_hook: "Gurmukhi means from the mouth of the Guru; it was standardised 
 duration:
   max_seconds: 200
 requires:
-  knowledge: [PA-SCRIPT-HA-01]
+  knowledge: [PA-LEX-HAAN-NAHIN-01, PA-SCRIPT-HA-01]
 introduces:
   knowledge: [PA-SCRIPT-AA-MATRA-01]
 practises:
-  knowledge: [PA-SCRIPT-HA-01, PA-SCRIPT-AA-MATRA-01]
+  knowledge: [PA-LEX-HAAN-NAHIN-01, PA-SCRIPT-HA-01, PA-SCRIPT-AA-MATRA-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -31,7 +31,7 @@ reviews_of: [PA-W01-ha]
 # ਾ — the vowel sign that replaces the inherent a
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-HA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-HAAN-NAHIN-01, PA-SCRIPT-HA-01] -->
 
 [PAUSE 2s] Write the piece from the previous lesson before adding another.
 
@@ -53,11 +53,13 @@ the head-line. Attached, it swaps the short *a* for **ā**, the *a* of English
 
 You are one mark away from a word.
 
-## Guided Practice
+## Writing — observe and trace
 <!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-HA-01, PA-SCRIPT-AA-MATRA-01] -->
+<!-- hl-writing-stage: observe-trace -->
 
-- [YOU WRITE: ਾ]
-- [YOU READ: every piece this chapter has given you so far, in order]
+Keep **ਾ** visible beside **ਹ**. Finger-trace the vowel sign once, then trace one
+printed model once with a pencil. Point to **ਹ**, then **ਾ**, and say *hā*. Keep
+the model visible; the nasal ending has not been taught yet.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-HA-01, PA-SCRIPT-AA-MATRA-01] -->

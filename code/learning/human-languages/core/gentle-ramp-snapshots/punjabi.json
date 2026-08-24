@@ -1,14 +1,14 @@
 {
   "language": "punjabi",
-  "lessonCount": 71,
-  "atomMeasurableLessons": 40,
-  "atomMeasurementBlindLessons": 31,
+  "lessonCount": 75,
+  "atomMeasurableLessons": 46,
+  "atomMeasurementBlindLessons": 29,
   "durationViolations": 0,
   "atomLessonSpikes": 4,
   "atomChapterSpikes": 1,
-  "glyphLessonSpikes": 2,
+  "glyphLessonSpikes": 3,
   "scriptSystemSpikes": 0,
-  "scriptClosureViolations": 51,
+  "scriptClosureViolations": 45,
   "neverTaughtGlyphs": 36,
   "orderDefects": 0,
   "lessonsWithoutSequence": 0,
@@ -16,19 +16,19 @@
   "forwardPrerequisites": 0,
   "forwardReviews": 0,
   "forwardReferences": 0,
-  "atomsTaught": 92,
+  "atomsTaught": 98,
   "atomsNeverRevisited": 5,
-  "reinforcementWindowMisses": 137,
+  "reinforcementWindowMisses": 142,
   "reinforcementMissesByWindow": {
-    "R1": 25,
-    "R2": 52,
-    "R3": 60,
+    "R1": 26,
+    "R2": 54,
+    "R3": 62,
     "R4": 0
   },
   "payoffSurprises": 0,
   "writingPracticeLessons": 53,
-  "firstWritingPracticeAt": 0,
-  "lessonsBeforeWritingPractice": 0,
+  "firstWritingPracticeAt": 3,
+  "lessonsBeforeWritingPractice": 3,
   "findings": [
     {
       "language": "punjabi",
@@ -36,6 +36,13 @@
       "count": 36,
       "unit": "glyph(s)",
       "detail": "teach every load-bearing glyph before asking the learner to decode it"
+    },
+    {
+      "language": "punjabi",
+      "kind": "writing-ramp",
+      "count": 3,
+      "unit": "opening lesson(s)",
+      "detail": "move the first gentle writing microstep to lesson one"
     },
     {
       "language": "punjabi",
@@ -47,21 +54,21 @@
     {
       "language": "punjabi",
       "kind": "glyph-step",
-      "count": 2,
+      "count": 3,
       "unit": "lesson/system spike(s)",
       "detail": "split new glyphs and writing systems across gentler steps"
     },
     {
       "language": "punjabi",
       "kind": "reinforcement",
-      "count": 137,
+      "count": 142,
       "unit": "missed window(s)",
       "detail": "add retrieval at the expanding R1-R4 intervals"
     },
     {
       "language": "punjabi",
       "kind": "measurement-blind",
-      "count": 31,
+      "count": 29,
       "unit": "lesson(s)",
       "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
     }

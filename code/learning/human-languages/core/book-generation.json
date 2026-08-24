@@ -2917,6 +2917,13 @@
     },
     {
       "language": "punjabi",
+      "chapter": 1,
+      "output": "punjabi/book/chapters/ch01-greetings.tex",
+      "unicodeScript": "Gurmukhi",
+      "scriptCommand": "pa"
+    },
+    {
+      "language": "punjabi",
       "chapter": 6,
       "output": "punjabi/book/chapters/ch06-numbers-1-5.tex",
       "unicodeScript": "Gurmukhi",
@@ -6219,11 +6226,6 @@
       "language": "portuguese",
       "chapter": 1,
       "output": "portuguese/book/chapters/ch01-greetings.tex"
-    },
-    {
-      "language": "punjabi",
-      "chapter": 1,
-      "output": "punjabi/book/chapters/ch01-greetings.tex"
     },
     {
       "language": "punjabi",

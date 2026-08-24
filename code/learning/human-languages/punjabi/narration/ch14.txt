@@ -1,92 +1,8 @@
 Punjabi, chapter 14: From the Mouth of the Guru, One Piece at a Time.
-10 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+7 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 10.
-ਹ — the consonant ha.
-
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Nothing is assumed but the words you can already say. This chapter turns them into words you can read.
-
-Script.
-Gurmukhi is an abugida: a consonant already carries a vowel, and you write a vowel mark only when you want a different one.
-ਹ (ha).
-That is ha — the consonant h with an a already inside it, the a of English about. Nobody wrote that vowel. A bare consonant is understood to carry it, and it is called the inherent vowel.
-Now the name, because it tells you what this script is for. Gurmukhi means "from the mouth of the Guru." It was standardised in the sixteenth century by Guru Angad, the second Sikh Guru, to write down what had until then been recited — and that origin is why it is a tidier script than its neighbours: it was designed in one go, for one purpose, rather than drifting into shape over centuries.
-Look at the top. There is a head-line across it, as in Devanagari, and in running text it joins up so a word appears to hang from a line. Gujarati is the sister that erases this line; Gurmukhi keeps it.
-
-Guided Practice.
-[once you have stopped driving — write: ਹ (ha)]
-[your turn — read: every piece this chapter has given you so far, in order]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What vowel does a bare consonant carry? (a — nobody writes it.) What does Gurmukhi mean? (From the mouth of the Guru.) And is the head-line there? (Yes — kept, not erased.)
-Source: Unicode Gurmukhi chart.
-
-
-Lesson 2 of 10.
-ਾ (-ā) — the vowel sign that replaces the inherent a.
-
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Write the piece from the previous lesson before adding another.
-
-Script.
-To get a different vowel you replace the inherent one, with a mark called a mātrā.
-ਾ (-ā).
-A single upright stroke standing to the right of its consonant, dropping from the head-line. Attached, it swaps the short a for ā, the a of English father.
-ਹ (ha) + ਾ (-ā) becomes ਹਾ.
-hā. One beat — a mātrā changes the vowel, it never adds a beat.
-You are one mark away from a word.
-
-Guided Practice.
-[once you have stopped driving — write: ਾ (-ā)]
-[your turn — read: every piece this chapter has given you so far, in order]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What does a mātrā do to the inherent vowel? (Replaces it.) Where does this one sit? (To the right.) And does it add a beat? (No.)
-Source: Unicode Gurmukhi chart.
-
-
-Lesson 3 of 10.
-ਂ (-ṁ) — a dot above the line that nasalises the vowel.
-
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Write the piece from the previous lesson before adding another.
-
-Script.
-Here is a mark that is not a vowel at all.
-ਂ (-ṁ).
-This is the bindi, a dot sitting above the head-line. It does not change which vowel you say. It says: send that vowel through your nose.
-English does this constantly and never writes it. Say bad, then say ban — the vowel in the second is nasalised before you ever reach the n. Punjabi writes what English leaves implicit.
-ਹਾ + ਂ (-ṁ) becomes ਹਾਂ.
-hāṁ — and that is yes, the word you have been saying since your first lesson.
-Nasalisation is meaning-bearing here. It is not an accent or a flourish; drop the dot and you have a different word. That is why the script spends a character on it.
-
-Guided Practice.
-[once you have stopped driving — write: ਂ (-ṁ)]
-[your turn — read: every piece this chapter has given you so far, in order]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What does the bindi do? (Nasalises the vowel — sends it through the nose.) Does it change which vowel you say? (No.) And what word did it complete? (ਹਾਂ — hāṁ, "yes".)
-Source: Unicode Gurmukhi chart.
-
-
-Lesson 4 of 10.
+Lesson 1 of 7.
 ਨ — the consonant na.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -111,7 +27,7 @@ What vowel is inside ਨ (na) when nothing is attached? (a.) How many new rules 
 Source: Unicode Gurmukhi chart.
 
 
-Lesson 5 of 10.
+Lesson 2 of 7.
 ੀ (-ī) — a second mātrā.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -124,7 +40,7 @@ Script.
 ੀ (-ī).
 ī, the long ee of English see. Like the first mātrā it stands to the right, but it carries a curve that rises and hooks back over the head-line.
 Now build with everything you have:
-ਨ (na) + ਹ (ha) + ੀ (-ī) + ਂ (-ṁ) becomes ਨਹੀਂ.
+ਨ (na) + ਹ + ੀ (-ī) + ਂ becomes ਨਹੀਂ.
 na-hīṁ — no. Two consonants, one mātrā, one nasal dot.
 Both answers to a yes-or-no question are now readable:
 ਹਾਂ ਨਹੀਂ.
@@ -141,7 +57,7 @@ What is ਨਹੀਂ? (No.) How many pieces is it built from? (Four.) And what i
 Source: Unicode Gurmukhi chart.
 
 
-Lesson 6 of 10.
+Lesson 3 of 7.
 ਮ — the consonant ma.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -154,7 +70,7 @@ Script.
 ਮ (ma).
 ma — the m of English met, plus the inherent vowel.
 Three consonants. Say them in the order you met them, each with the vowel nobody wrote:
-ਹ (ha) ਨ (na) ਮ (ma).
+ਹ ਨ (na) ਮ (ma).
 ha, na, ma.
 
 Guided Practice.
@@ -168,7 +84,7 @@ Say the three consonants you hold, each with its inherent vowel. (ha, na, ma.)
 Source: Unicode Gurmukhi chart.
 
 
-Lesson 7 of 10.
+Lesson 4 of 7.
 ਸ — the consonant sa.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -193,7 +109,7 @@ What is the inherent vowel in ਸ? (a — sa.)
 Source: Unicode Gurmukhi chart.
 
 
-Lesson 8 of 10.
+Lesson 5 of 7.
 ਤ — the consonant ta.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -219,7 +135,7 @@ Where does the tongue go for ਤ? (Against the back of the upper teeth — denta
 Source: Unicode Gurmukhi chart.
 
 
-Lesson 9 of 10.
+Lesson 6 of 7.
 ੇ (-e) — a mātrā that sits ABOVE the letter, not beside it.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -246,7 +162,7 @@ Where does this mātrā sit? (Above the consonant.) Does it add a beat? (No.)
 Source: Unicode Gurmukhi chart.
 
 
-Lesson 10 of 10.
+Lesson 7 of 7.
 ਨਮਸਤੇ (namaste) — five pieces, all of them already yours.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.

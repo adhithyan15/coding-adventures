@@ -1,58 +1,62 @@
 ---
+schema_version: 2
 id: PA-C01-sat-sri-akal
+spine_node: SPINE-MEET-GREET
 sequence: 10
 chapter: 1
-type: word
+type: phrase
 headword: ਸਤਿ ਸ੍ਰੀ ਅਕਾਲ
-gloss: hello / goodbye, the Sikh greeting (sat srī akāl)
+romanization: "sat srī akāl"
+gloss: "hello or goodbye — the Sikh greeting"
 concept_tag: GREETING-FORMAL
 prerequisites: []
-sounds: [inherent-a, vowel-sign, vowel-carrier]
+sounds: []
 roots: [satya, sri, akala]
-est_minutes: 4
+duration:
+  max_seconds: 180
+requires:
+  knowledge: []
+introduces:
+  knowledge: [PA-LEX-SAT-SRI-AKAL-01]
+practises:
+  knowledge: [PA-LEX-SAT-SRI-AKAL-01]
+skills: [listening, speaking]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: respectful
+variety: standard-punjabi
 reviews_of: []
 ---
 
-# ਸਤਿ ਸ੍ਰੀ ਅਕਾਲ (sat srī akāl) — the Sikh greeting
+# *sat srī akāl* — the Sikh greeting by ear
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] The first Punjabi words — and a greeting that is a small statement of
-faith.
+[PAUSE 2s] Begin with one respectful greeting you can hear and return. The
+printed Gurmukhi is a label today, not a decoding task.
 
-## The letters in this word
+## You'll want to know first — listen and answer
+<!-- hl-knowledge: introduces=[PA-LEX-SAT-SRI-AKAL-01]; assesses=[] -->
 
-*(If you already read Gurmukhi, skim this.)* Gurmukhi runs **left to right**
-under a top line; every consonant carries a built-in "a." **ਸ** sa, **ਤ** ta,
-**ਰ** ra, **ਕ** ka, **ਲ** la. A **vowel sign** changes the vowel (**ਾ** ā, **ਿ**
-i, **ੀ** ī); a word-initial vowel rides a **carrier** — **ਅ** is the "a"-carrier.
-So **ਅਕਾਲ** = a·kā·l → *akāl*.
+[YOU HEAR: *sat srī akāl*]. It serves as both **hello** and **goodbye** among
+Sikhs. Answer by repeating it: [YOU SAY: *sat srī akāl*]. One careful return is
+enough.
 
-## The word, taken apart
+The phrase is also a small statement of faith: *sat* is “truth,” *srī* is an
+honorific, and *akāl* is “timeless” — *a-* “not” plus *kāl* “time.” *Akāl* names
+the Timeless One. *Sat* descends from Sanskrit *satya*, from the same old
+being-and-truth family remembered by English **sooth** and **soothsayer**.
 
-A three-word creed:
-- **ਸਤਿ** (*sat*, "truth") — from Sanskrit *satya*, the same "being/truth" root
-  behind English **sooth** and **soothsayer** ("truth-teller").
-- **ਸ੍ਰੀ** (*srī*) — an honorific "revered/glorious," from Sanskrit *śrī*
-  ("glory, splendor").
-- **ਅਕਾਲ** (*akāl*, "timeless") = *a-* ("not") + *kāl* ("time, death," Sanskrit
-  *kāla*). In Sikhism *Akāl* is a name of God: the Timeless One.
+## Why it's said this way — use the greeting with care
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-SAT-SRI-AKAL-01] -->
 
-So the whole greeting declares: *God is the eternal Truth.*
+This is specifically a Sikh greeting, often said with folded hands. Do not treat
+it as a generic label for every Punjabi speaker. The next lesson gives a broader
+pan-Indian greeting.
 
-## Why it's said this way
+## Wrap-up recall
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-SAT-SRI-AKAL-01] -->
+<!-- hl-activity: {"id":"PA-C01-sat-sri-akal-return","kind":"text","assesses":["PA-LEX-SAT-SRI-AKAL-01"],"prompt":"You hear sat srī akāl. Type the greeting you would say back.","answer":"sat srī akāl","accepted":["sat sri akal"],"feedback":{"correct":"Right: return the Sikh greeting in kind.","incorrect":"Repeat the same respectful greeting: sat srī akāl."},"response_seconds":10} -->
 
-The greeting of Sikhs — said with folded hands, serving as both hello and
-goodbye. It is a profession of faith as much as a greeting, which is why it
-carries weight. A Sikh will often answer it by saying it right back.
-
-## Guided Practice
-
-[PAUSE 1s]
-- [YOU SAY: read it — sat · srī · a·kā·l]
-- [YOU SAY: what *akāl* is built from (*a-* "not" + *kāl* "time" → "timeless")]
-
-## Wrap-up Recall
-
-[PAUSE 3s] What does the greeting literally declare, and what English word shares
-a root with *sat*? ("God is the eternal Truth"; **sooth**, as in *soothsayer*.)
+[PAUSE 3s] Does this greeting serve only as hello? (**No — hello and goodbye.**)

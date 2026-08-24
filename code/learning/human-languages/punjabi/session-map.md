@@ -1,105 +1,87 @@
-# Session Map — Punjabi Chapters 1–6
+# Session Map — Punjabi Chapters 1–14
 
-Same spaced-repetition schedule as the other tracks (a word from session *N*
-resurfaces at *N+1, N+3, N+7, N+15*). Lessons named by slug; this map is the
-authoritative order.
+This is the authoritative book order. Every row is one session of at most five
+minutes. Sound and meaning come before load-bearing decoding; writing grows from
+visible tracing to independent production. The canonical lesson ID is written in
+full so omissions, duplicates, and ordering drift can be checked mechanically.
 
-**There is no reading course.** Gurmukhi is learned *through* the words: each
-lesson's *"The letters in this word"* section introduces exactly the letters that
-word needs.
+| Session | Chapter | Canonical lesson | Gentle focus |
+|---:|---:|---|---|
+| 1 | 1 | PA-C01-sat-sri-akal | hear and use the Sikh greeting |
+| 2 | 1 | PA-C01-namaste | hear and use the shared greeting |
+| 3 | 1 | PA-C01-han-nahin | understand yes and no by ear |
+| 4 | 1 | PA-W01-ha | observe and trace ਹ |
+| 5 | 1 | PA-W01-aa-matra | observe and trace ਾ |
+| 6 | 1 | PA-W01-bindi | observe and trace ਂ |
+| 7 | 1 | PA-W01-haan-assemble | assemble and read ਹਾਂ |
+| 8 | 1 | PA-W01-haan-guided-copy | copy ਹਾਂ with the model visible |
+| 9 | 1 | PA-W01-haan-delayed-copy | hide, write, compare, repair |
+| 10 | 1 | PA-W01-haan-dictation | write ਹਾਂ from a heard cue |
+| 11 | 1 | PA-C01-dhanvaad | Sanskritic thanks |
+| 12 | 1 | PA-C01-shukriya | Perso-Arabic thanks |
+| 13 | 1 | PA-C01-practice | separately score four skills |
+| 14 | 2 | PA-C02-naam | name |
+| 15 | 2 | PA-C02-mera | my |
+| 16 | 2 | PA-C02-hai | is |
+| 17 | 2 | PA-C02-mera-naam-hai | say my name is |
+| 18 | 2 | PA-C02-tu-tusi | familiar and respectful you |
+| 19 | 2 | PA-C02-ki | what |
+| 20 | 2 | PA-C02-tuhada-naam-ki-hai | ask a name |
+| 21 | 2 | PA-C02-khushi | pleased to meet you |
+| 22 | 2 | PA-C02-practice | introduction exchange |
+| 23 | 3 | PA-C03-kivein | how |
+| 24 | 3 | PA-C03-tusi-kivein-ho | ask how someone is |
+| 25 | 3 | PA-C03-main | I |
+| 26 | 3 | PA-C03-thik | fine and well |
+| 27 | 3 | PA-C03-koi-gall-nahin | no problem |
+| 28 | 3 | PA-C03-practice | wellbeing exchange |
+| 29 | 4 | PA-C04-phir | again |
+| 30 | 4 | PA-C04-milaange | we will meet |
+| 31 | 4 | PA-C04-phir-milaange | say goodbye with a return |
+| 32 | 4 | PA-C04-rab-raakha | use the blessing farewell |
+| 33 | 4 | PA-C04-practice | farewell exchange |
+| 34 | 5 | PA-C05-bolna | to speak |
+| 35 | 5 | PA-C05-main-punjabi-bolda-han | say I speak Punjabi |
+| 36 | 5 | PA-C05-rahna | to live and stay |
+| 37 | 5 | PA-C05-kamm-karna | to work |
+| 38 | 5 | PA-C05-practice | first-verb exchange |
+| 39 | 6 | PA-C06-numbers-1-5 | count one to five |
+| 40 | 6 | PA-C06-panj-convergence | distinguish inheritance and convergence |
+| 41 | 7 | PA-C07-hona | to be |
+| 42 | 7 | PA-C07-jana | to go |
+| 43 | 7 | PA-C07-auna | to come |
+| 44 | 7 | PA-C07-khana | to eat and hear tone |
+| 45 | 7 | PA-C07-vekhna | to see |
+| 46 | 7 | PA-C07-janna | to know |
+| 47 | 8 | PA-C08-sochna | to think |
+| 48 | 8 | PA-C08-samajhna | to understand |
+| 49 | 8 | PA-C08-parhna | to read |
+| 50 | 8 | PA-C08-likhna | to write |
+| 51 | 9 | PA-C09-laina | to take |
+| 52 | 9 | PA-C09-puchhna | to ask |
+| 53 | 9 | PA-C09-madad-karna | to help |
+| 54 | 9 | PA-C09-pasand | say what pleases you |
+| 55 | 10 | PA-C10-paani | request water |
+| 56 | 10 | PA-C10-chaa | request tea and hear high tone |
+| 57 | 10 | PA-C10-dudh | request milk |
+| 58 | 10 | PA-C10-roti | request bread |
+| 59 | 11 | PA-C11-dost | friend |
+| 60 | 11 | PA-C11-parivar | family |
+| 61 | 11 | PA-C11-bhara | brother and low tone |
+| 62 | 11 | PA-C11-bhain | sister and low tone |
+| 63 | 12 | PA-C12-akkh | eye |
+| 64 | 12 | PA-C12-kann | ear |
+| 65 | 12 | PA-C12-munh | mouth and face |
+| 66 | 12 | PA-C12-nakk | nose |
+| 67 | 13 | PA-C13-dil | heart and a Persian loan |
+| 68 | 13 | PA-C13-sir | head and inherited kin |
+| 69 | 14 | PA-W01-na | add ਨ |
+| 70 | 14 | PA-W01-ii-matra | add ੀ and assemble ਨਹੀਂ |
+| 71 | 14 | PA-W01-ma | add ਮ |
+| 72 | 14 | PA-W01-sa | add ਸ |
+| 73 | 14 | PA-W01-ta | add dental ਤ |
+| 74 | 14 | PA-W01-e-matra | add ੇ |
+| 75 | 14 | PA-W01-namaste-read | assemble and read ਨਮਸਤੇ |
 
-## Chapter 1 — Greetings
-
-| Session | Lesson | Word | Root / hook |
-|---|---|---|---|
-| 1 | sat-sri-akal | ਸਤਿ ਸ੍ਰੀ ਅਕਾਲ | Sikh greeting as a creed: *sat* "truth" + *srī* + *akāl* "timeless" |
-| 2 | namaste | ਨਮਸਤੇ | "hello" (general) ← Sanskrit *namas*+*te*; contrast with the Sikh greeting |
-| 3 | dhanvaad | ਧੰਨਵਾਦ | "thanks" (Sanskritic) ← *dhanya*+*vāda*; the *ṭippi* nasal |
-| 4 | shukriya | ਸ਼ੁਕਰੀਆ | "thanks" (Perso-Arabic) ← Arabic *shukr*; the *pair bindi* |
-| 5 | han-nahin | ਹਾਂ / ਨਹੀਂ | "yes / no"; *nahīṇ* ← PIE *ne (English *no/not/none*) |
-| 6 | practice | (recap) | greetings + the two-vocabulary thread |
-
-## Chapter 2 — Introducing Yourself
-
-| Session | Lesson | Word | Root / hook |
-|---|---|---|---|
-| 7 | naam | ਨਾਂ | "name" ← Sanskrit *nāman* → English *name* |
-| 8 | mera | ਮੇਰਾ | "my" ← *ma-* → English *my*; agrees with the noun |
-| 9 | hai | ਹੈ | "is" ← Sanskrit *asti* → English *is* |
-| 10 | mera-naam-hai | ਮੇਰਾ ਨਾਂ … ਹੈ | **"my name is…"**; subject–object–verb |
-| 11 | tu-tusi | ਤੂੰ / ਤੁਸੀਂ | **"you"** familiar/respectful; *tū̃* ← *\*tū* → *thou* |
-| 12 | ki | ਕੀ | "what" ← *ka-* → English *what/who* |
-| 13 | tuhada-naam-ki-hai | ਤੁਹਾਡਾ ਨਾਂ ਕੀ ਹੈ? | **"what's your name?"**; verb last |
-| 14 | khushi | ਖ਼ੁਸ਼ੀ | "pleased to meet you"; *khushī* ← Persian (the second vocabulary) |
-| 15 | practice | (dialogue) | the whole exchange |
-
-## Chapter 3 — How Are You
-
-| Session | Lesson | Word | Root / hook |
-|---|---|---|---|
-| 16 | kivein | ਕਿਵੇਂ | "how" ← the interrogative *k-* (the *k-* question family) |
-| 17 | tusi-kivein-ho | ਤੁਸੀਂ ਕਿਵੇਂ ਹੋ? | **"how are you?"**; the copula set (hāṁ/haiṁ/ho) |
-| 18 | main | ਮੈਂ | "I" ← *ma-* → English *me*; the *hāṁ* "am"/"yes" homophone |
-| 19 | thik | ਠੀਕ | "fine" (native); reply *maiṁ ṭhīk hāṁ* |
-| 20 | koi-gall-nahin | ਕੋਈ ਗੱਲ ਨਹੀਂ | "it's nothing / you're welcome"; *nahīṁ* ← PIE *ne |
-| 21 | practice | (dialogue) | the whole how-are-you exchange |
-
-## Chapter 4 — Farewells
-
-| Session | Lesson | Word | Root / hook |
-|---|---|---|---|
-| 22 | phir | ਫਿਰ | "again" — turns a parting into a promise |
-| 23 | milaange | ਮਿਲਾਂਗੇ | "(we) will meet" ← *mil-* "to join"; the future is an ending |
-| 24 | phir-milaange | ਫਿਰ ਮਿਲਾਂਗੇ | **"we'll meet again"**; everyday vs. formal *sat srī akāl* |
-| 25 | rab-raakha | ਰੱਬ ਰਾਖਾ | "God keep you"; Arabic *rabb* + Sanskrit *rakṣ-* |
-| 26 | practice | (dialogue) | the farewells |
-
-## Chapter 5 — The First Verbs
-
-| Session | Lesson | Word | Root / hook |
-|---|---|---|---|
-| 27 | bolna | ਬੋਲਣਾ | "to speak"; every infinitive ends in *-ṇā*; stem *bol-* |
-| 28 | main-punjabi-bolda-han | ਮੈਂ ਪੰਜਾਬੀ ਬੋਲਦਾ ਹਾਂ | **"I speak Punjabi"**; *panj* "five" + *āb* "river" |
-| 29 | rahna | ਰਹਿਣਾ | "to live" ← *rah-* "to remain" |
-| 30 | kamm-karna | ਕੰਮ ਕਰਨਾ | "to work" (noun + *karnā*) ← √kṛ, the root of *namaskār* |
-| 31 | practice | (dialogue) | three verbs, one engine |
-
-## Chapter 6 — Numbers 1–5
-
-| Session | Lesson | Word | Root / hook |
-|---|---|---|---|
-| 32 | numbers-1-5 | ਇੱਕ, ਦੋ, ਤਿੰਨ, ਚਾਰ, ਪੰਜ | retrieve the five forms; distinguish addak from tippi; reuse *panj* from *panjābī* |
-| 33 | panj-convergence | ਪੰਜ · *panj* | Punjabi *pañca → panj* and Persian *panč → panj* converge independently |
-
-## Chapter 7 — Six Verbs at the Core
-
-| Session | Lesson | Word | Root / hook |
-|---|---|---|---|
-| 34 | hona | ਹੋਣਾ | "to be" ← *bhavati* / *bhū-* → English *be*; braided with *hai* ← *asti* → *is* |
-| 35 | jana | ਜਾਣਾ | "to go" ← *yāti*; every Sanskrit *y-* became a Punjabi *j-* (*jog*, *javān*, *Jamnā*) |
-| 36 | auna | ਆਉਣਾ | "to come" = *ā-* "toward" + *gam-* "go" ← PIE *gʷem- → English *come* |
-| 37 | khana | ਖਾਣਾ | "to eat" ← *khādati*; **tone** — ਘ lost its breath and left a pitch (*kòṛā* / *koṛā*) |
-| 38 | vekhna | ਵੇਖਣਾ | "to see" ← *prekṣate* / *īkṣ-* ← *akṣi* "eye" → English *eye*, *optic*, *window* |
-| 39 | janna | ਜਾਣਨਾ | **payoff** — "to know" ← *jñā-* → English *know*; one held *n* from *jāṇā* |
-
-## Chapter 8 — The Mind, the Page, and the Falling Tone
-
-| Session | Lesson | Word | Root / hook |
-|---|---|---|---|
-| 40 | sochna | ਸੋਚਣਾ | "to think" ← *śocyate* / *śuc-* "burn, grieve"; the root behind *śoka* and **Aśoka** |
-| 41 | samajhna | ਸਮਝਣਾ | "to understand" ← *sambudhyate* / *budh-* "wake" → **Buddha**; ਝ heard as a **falling** tone |
-| 42 | parhna | ਪੜ੍ਹਨਾ | "to read" ← *paṭhati* "recite aloud"; the **subjoined ਹ** in ੜ੍ਹ |
-| 43 | likhna | ਲਿਖਣਾ | **payoff** — "to write" ← *likhati* "scratch"; *maiṁ panjābī likhdā hāṁ* |
-
-## Chapter 9 — Taking, Asking, Helping, and What Pleases You
-
-| Session | Lesson | Word | Root / hook |
-|---|---|---|---|
-| 44 | laina | ਲੈਣਾ | "to take" ← *labhate* → *lahaï* → *lai*; a breathy *bh* worn away to nothing |
-| 45 | puchhna | ਪੁੱਛਣਾ | "to ask" ← *pṛcchati* ← PIE *preḱ- → English *pray*, *precarious*; cousin to Persian *porsīdan* |
-| 46 | madad-karna | ਮਦਦ ਕਰਨਾ | "to help" — Arabic *madad* (root m-d-d "extend") through Persian, plus noun + *karnā* |
-| 47 | pasand | ਪਸੰਦ | **payoff** — Persian noun, not a verb; *mainū̃ panjābī pasand hai* |
-
-## Next
-
-Finish Chapter 6 with numbers 6–10, then postpositions (*nū̃, tō̃, vic, te*).
+After session 75, the track continues through the dependency-linked backlog;
+this map makes no claim that the current book is yet complete or exam-ready.
