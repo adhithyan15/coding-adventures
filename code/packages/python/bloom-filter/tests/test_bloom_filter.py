@@ -19,14 +19,12 @@ from __future__ import annotations
 
 import random
 
-import pytest
-
 from bloom_filter import BloomFilter
-
 
 # ---------------------------------------------------------------------------
 # 1. Basic membership — no false negatives
 # ---------------------------------------------------------------------------
+
 
 class TestBasicMembership:
     """Fundamental add/contains behaviour."""
@@ -95,6 +93,7 @@ class TestBasicMembership:
 # 2. False positive rate
 # ---------------------------------------------------------------------------
 
+
 class TestFalsePositiveRate:
     """False positive rate should be near the configured target."""
 
@@ -127,6 +126,7 @@ class TestFalsePositiveRate:
 # ---------------------------------------------------------------------------
 # 3. Properties
 # ---------------------------------------------------------------------------
+
 
 class TestProperties:
     """bit_count, hash_count, bits_set, fill_ratio, estimated FPR."""
@@ -193,6 +193,7 @@ class TestProperties:
 # 4. from_params() factory
 # ---------------------------------------------------------------------------
 
+
 class TestFromParams:
     """BloomFilter.from_params() creates a filter with explicit m and k."""
 
@@ -221,6 +222,7 @@ class TestFromParams:
 # ---------------------------------------------------------------------------
 # 5. Optimal parameter formulas
 # ---------------------------------------------------------------------------
+
 
 class TestOptimalParams:
     """Static methods optimal_m, optimal_k, capacity_for_memory."""
@@ -271,6 +273,7 @@ class TestOptimalParams:
 # 6. Over-capacity detection
 # ---------------------------------------------------------------------------
 
+
 class TestOverCapacity:
     """Adding more elements than expected_items raises FPR."""
 
@@ -300,6 +303,7 @@ class TestOverCapacity:
 # 7. Determinism
 # ---------------------------------------------------------------------------
 
+
 class TestDeterminism:
     """Same inputs in same order → identical bit arrays."""
 
@@ -323,6 +327,7 @@ class TestDeterminism:
 # ---------------------------------------------------------------------------
 # 8. Edge cases
 # ---------------------------------------------------------------------------
+
 
 class TestEdgeCases:
     """Corner cases and boundary conditions."""
@@ -371,6 +376,7 @@ class TestEdgeCases:
 # ---------------------------------------------------------------------------
 # 9. __repr__ and __contains__
 # ---------------------------------------------------------------------------
+
 
 class TestReprAndContains:
     """String representation and __contains__ sugar."""

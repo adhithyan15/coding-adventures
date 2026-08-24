@@ -67,10 +67,10 @@ from typing import Any
 
 from hash_functions import fnv1a_64
 
-
 # ---------------------------------------------------------------------------
 # Helper: count leading zeros
 # ---------------------------------------------------------------------------
+
 
 def _count_leading_zeros(value: int, bit_width: int) -> int:
     """
@@ -109,6 +109,7 @@ def _count_leading_zeros(value: int, bit_width: int) -> int:
 # Helper: bias-correction constant alpha_m
 # ---------------------------------------------------------------------------
 
+
 def _alpha(m: int) -> float:
     """
     Bias-correction constant α for the harmonic mean estimator.
@@ -146,6 +147,7 @@ def _alpha(m: int) -> float:
 # ---------------------------------------------------------------------------
 # Public class: HyperLogLog
 # ---------------------------------------------------------------------------
+
 
 class HyperLogLog:
     """
@@ -203,7 +205,7 @@ class HyperLogLog:
                 f"{self._MAX_PRECISION}, got {precision}"
             )
         self._precision: int = precision
-        self._num_registers: int = 1 << precision   # 2^precision
+        self._num_registers: int = 1 << precision  # 2^precision
         # Each register stores the maximum ρ seen for its bucket.
         # ρ is in [1, 64-b], so values fit in a single byte.
         # Initially all zeros — no elements added yet.
@@ -291,8 +293,7 @@ class HyperLogLog:
         rho: int = _count_leading_zeros(remaining, remaining_bits) + 1
 
         # Update the register only if we saw more leading zeros than before.
-        if rho > self._registers[bucket]:
-            self._registers[bucket] = rho
+        self._registers[bucket] = max(self._registers[bucket], rho)
 
     # ------------------------------------------------------------------
     # Core query: count
@@ -353,7 +354,7 @@ class HyperLogLog:
                 estimate = m * math.log(m / zeros)
 
         # Phase 3: large range correction.
-        two_32: float = 2.0 ** 32
+        two_32: float = 2.0**32
         if estimate > two_32 / 30.0:
             estimate = -two_32 * math.log(1.0 - estimate / two_32)
 
@@ -363,7 +364,7 @@ class HyperLogLog:
     # Merge: union of two sketches
     # ------------------------------------------------------------------
 
-    def merge(self, other: "HyperLogLog") -> "HyperLogLog":
+    def merge(self, other: HyperLogLog) -> HyperLogLog:
         """
         Return a new HyperLogLog representing the union of self and other.
 

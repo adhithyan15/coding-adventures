@@ -28,7 +28,7 @@ Layer position (from spec DT18):
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Any, Generic, Iterator, TypeVar
+from typing import Any, Generic, Iterator, TypeVar, cast
 
 from hash_functions import djb2, fnv1a_32, murmur3_32
 
@@ -42,6 +42,7 @@ V = TypeVar("V")
 # ---------------------------------------------------------------------------
 # Key serialisation
 # ---------------------------------------------------------------------------
+
 
 def _serialize_key(key: Any) -> bytes:
     """
@@ -68,6 +69,7 @@ def _serialize_key(key: Any) -> bytes:
 # ---------------------------------------------------------------------------
 # Hash function dispatch
 # ---------------------------------------------------------------------------
+
 
 def _apply_hash(data: bytes, hash_fn_name: str) -> int:
     """
@@ -106,6 +108,7 @@ _TOMBSTONE: object = object()
 # ---------------------------------------------------------------------------
 # Abstract base strategy
 # ---------------------------------------------------------------------------
+
 
 class _HashMapStrategy(ABC, Generic[K, V]):
     """
@@ -153,6 +156,7 @@ class _HashMapStrategy(ABC, Generic[K, V]):
 # ---------------------------------------------------------------------------
 # Strategy 1: Separate chaining
 # ---------------------------------------------------------------------------
+
 
 class _ChainingStrategy(_HashMapStrategy[K, V]):
     """
@@ -321,6 +325,7 @@ class _ChainingStrategy(_HashMapStrategy[K, V]):
 # Strategy 2: Open addressing (linear probing)
 # ---------------------------------------------------------------------------
 
+
 class _OpenAddressingStrategy(_HashMapStrategy[K, V]):
     """
     Open addressing with linear probing and tombstone deletion.
@@ -435,9 +440,7 @@ class _OpenAddressingStrategy(_HashMapStrategy[K, V]):
             self.__size += 1
             return
 
-        raise RuntimeError(
-            "Hash table is completely full — resize should have triggered earlier."
-        )
+        raise RuntimeError("Hash table is completely full — resize should have triggered earlier.")
 
     def get(self, key: K) -> V | None:
         """
@@ -457,7 +460,7 @@ class _OpenAddressingStrategy(_HashMapStrategy[K, V]):
             if slot is _EMPTY:
                 return None
             if slot is not _TOMBSTONE and slot[0] == key:
-                return slot[1]
+                return cast(tuple[K, V], slot)[1]
         return None
 
     def delete(self, key: K) -> bool:
@@ -492,11 +495,7 @@ class _OpenAddressingStrategy(_HashMapStrategy[K, V]):
 
         Only slots that hold a tuple (not EMPTY or TOMBSTONE) are included.
         """
-        return [
-            slot
-            for slot in self.__slots
-            if slot is not _EMPTY and slot is not _TOMBSTONE
-        ]
+        return [slot for slot in self.__slots if slot is not _EMPTY and slot is not _TOMBSTONE]
 
     def needs_resize(self) -> bool:
         """
@@ -532,6 +531,7 @@ class _OpenAddressingStrategy(_HashMapStrategy[K, V]):
 # ---------------------------------------------------------------------------
 # HashMap: the public interface
 # ---------------------------------------------------------------------------
+
 
 class HashMap(Generic[K, V]):
     """
@@ -608,8 +608,7 @@ class HashMap(Generic[K, V]):
             self._impl = _OpenAddressingStrategy(capacity, hash_fn)
         else:
             raise ValueError(
-                f"Unknown strategy {strategy!r}. "
-                "Choose 'chaining' or 'open_addressing'."
+                f"Unknown strategy {strategy!r}. Choose 'chaining' or 'open_addressing'."
             )
 
     # -- Mutating operations -------------------------------------------------
@@ -728,9 +727,7 @@ class HashMap(Generic[K, V]):
             HashMap(size=3, capacity=16, strategy='chaining', hash_fn='fnv1a',
                     entries={'a': 1, 'b': 2, 'c': 3})
         """
-        pairs = ", ".join(
-            f"{k!r}: {v!r}" for k, v in self._impl.entries()
-        )
+        pairs = ", ".join(f"{k!r}: {v!r}" for k, v in self._impl.entries())
         return (
             f"HashMap(size={self._impl._size}, "
             f"capacity={self._impl._capacity}, "
@@ -743,6 +740,7 @@ class HashMap(Generic[K, V]):
 # ---------------------------------------------------------------------------
 # Module-level utility functions
 # ---------------------------------------------------------------------------
+
 
 def from_entries(
     pairs: list[tuple[K, V]],

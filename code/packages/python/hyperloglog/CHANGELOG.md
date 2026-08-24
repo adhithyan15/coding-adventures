@@ -2,6 +2,17 @@
 
 All notable changes to `coding-adventures-hyperloglog` are documented here.
 
+## [Unreleased]
+
+### Changed
+
+- Made the canonical and Windows BUILD fronts repeatable by clearing the
+  package-local virtual environment, installing the local hash-functions
+  dependency before this package, and running every tool through that exact
+  interpreter.
+- Normalized future annotations and the register-maximum expression for the
+  current Ruff rules without changing estimator behavior.
+
 ## [0.1.0] — 2026-04-08
 
 ### Added
