@@ -39,7 +39,7 @@ describe("real curriculum", () => {
     expect(scripts.devanagari!.complete).toBe(true);
   });
 
-  it("keeps the cross-script closure queue measured after Tamil ra", () => {
+  it("keeps the cross-script closure queue measured after Malayalam anusvara", () => {
     const candrakkala = scripts.malayalam!.marks!.find((mark) => mark.mark === "്")!;
     expect(candrakkala.role).toBe("virama");
     expect(candrakkala.compositionOrder).toEqual([
@@ -54,6 +54,22 @@ describe("real curriculum", () => {
     );
     expect(candrakkala.compositionSource?.variation).toMatch(
       /encoded composition.*not a universal handwriting direction.*no standalone ductus claim/i,
+    );
+
+    const malayalamAnusvara = scripts.malayalam!.marks!.find((mark) => mark.mark === "ം")!;
+    expect(malayalamAnusvara.role).toBe("anusvara");
+    expect(malayalamAnusvara.compositionOrder).toEqual([
+      "write the Malayalam base first",
+      "add the anusvara after it",
+    ]);
+    expect(malayalamAnusvara.compositionSource?.url).toBe(
+      "https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-12/",
+    );
+    expect(malayalamAnusvara.compositionSource?.citation).toMatch(
+      /Unicode Standard.*Version 17\.0.*12\.9\.3.*Anusvara.*U\+0D02/i,
+    );
+    expect(malayalamAnusvara.compositionSource?.variation).toMatch(
+      /independent vowels.*dependent vowel signs.*Malayalam letters.*encoded composition.*not a universal handwriting direction.*no standalone ductus claim/i,
     );
 
     const teluguVirama = scripts.telugu!.marks!.find((mark) => mark.mark === "్")!;
@@ -201,10 +217,12 @@ describe("real curriculum", () => {
     expect(affected.get("த") ?? 0).toBe(0);
     expect(missingByScript.get("tamil.json")?.has("ர")).toBe(false);
     expect(affected.get("ர") ?? 0).toBe(0);
-    expect(affected.get("ം")).toBe(44);
+    expect(missingByScript.get("malayalam.json")?.has("ം")).toBe(false);
+    expect(affected.get("ം") ?? 0).toBe(0);
+    expect(affected.get("ய")).toBe(38);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["ം", 44]);
+    ).toEqual(["ய", 38]);
   });
 
   it("loaded every track (17+ and growing)", () => {
