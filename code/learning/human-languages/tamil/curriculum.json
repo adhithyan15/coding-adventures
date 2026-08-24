@@ -261,6 +261,11 @@
       "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
       "lessons": [
         "TA-C08-tayavuseytu",
+        "TA-C08-sollungal",
+        "TA-W08-short-o-observe",
+        "TA-W08-sollungal-guided-copy",
+        "TA-W08-sollungal-delayed-copy",
+        "TA-W08-sollungal-dictation",
         "TA-C08-please-register",
         "TA-C09-mannikkavum",
         "TA-C09-sorry-register"
@@ -1550,6 +1555,11 @@
       "canDo": "I can choose the Tamil form that fits this relationship and setting.",
       "prerequisites": [],
       "lessons": [
+        "TA-C08-sollungal",
+        "TA-W08-short-o-observe",
+        "TA-W08-sollungal-guided-copy",
+        "TA-W08-sollungal-delayed-copy",
+        "TA-W08-sollungal-dictation",
         "TA-C08-please-register",
         "TA-C09-sorry-register"
       ]
