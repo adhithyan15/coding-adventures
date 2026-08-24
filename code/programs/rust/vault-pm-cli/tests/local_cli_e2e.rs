@@ -3175,6 +3175,153 @@ fn real_cli_imports_bitwarden_json_and_leaks_no_secret_anywhere() {
     assert!(stdout_string(&kdbx_result).is_empty());
 }
 
+/// VLT-PM49 §5.5, through the real executable with a real pseudo-terminal:
+/// this is the user's explicit request that motivated the slice -- TOTP
+/// setup via an `otpauth://` URI (the shape a QR code or an issuer's manual
+/// setup page encodes) instead of only retyping a Base32 secret by hand.
+///
+/// A file holding one such URI becomes a real, redacted, separately
+/// reachable vault-pm item, and this goes one step further than the
+/// Bitwarden import test above: it proves the *decoded* secret, algorithm,
+/// digit count, and period actually produce correct TOTP codes end to end
+/// (survive encoding, encryption, storage, decryption, and a real PTY),
+/// not just that some item got created. The plaintext secret never reaches
+/// stdout, stderr, or a durable audit row.
+#[test]
+fn real_cli_imports_an_otpauth_uri_and_produces_correct_totp_codes() {
+    use coding_adventures_vault_auth::{TotpAlgorithm, TotpAuthenticator};
+    use std::time::{SystemTime, UNIX_EPOCH};
+
+    const OTPAUTH_SECRET_BASE32: &[u8] = b"JBSWY3DPEHPK3PXP";
+    // Base32 `JBSWY3DPEHPK3PXP` decodes to exactly these ten raw bytes --
+    // an independently computable fact checked once here so the assertions
+    // below do not have to trust the same decoder they are verifying.
+    const OTPAUTH_RAW_SECRET: &[u8] = b"Hello!\xde\xad\xbe\xef";
+    const OTPAUTH_URI: &[u8] = b"otpauth://totp/E2E+Bank:import-user?secret=JBSWY3DPEHPK3PXP&issuer=E2E+Bank&algorithm=SHA256&digits=8&period=60";
+
+    let home = TestHome::new();
+    assert!(run_init_in_pty(&home).0.success());
+
+    let source = home.0.join("otpauth-seed.txt");
+    fs::write(&source, OTPAUTH_URI).unwrap();
+
+    let (imported_status, imported_transcript) = run_unlock_in_pty(
+        &home,
+        &[
+            "import",
+            "otpauth-uri",
+            source.to_str().expect("UTF-8 test source path"),
+        ],
+        b"Import complete: created=1 skipped=0 failed=0",
+    );
+    assert!(imported_status.success(), "{imported_transcript}");
+    assert!(!imported_transcript
+        .as_bytes()
+        .windows(OTPAUTH_SECRET_BASE32.len())
+        .any(|value| value == OTPAUTH_SECRET_BASE32));
+    assert_transcript_excludes_secrets(&imported_transcript);
+
+    let (listed_status, listed_transcript) =
+        run_unlock_in_pty(&home, &["item", "list"], b"E2E Bank:import-user");
+    assert!(listed_status.success(), "{listed_transcript}");
+    assert!(!listed_transcript
+        .as_bytes()
+        .windows(OTPAUTH_SECRET_BASE32.len())
+        .any(|value| value == OTPAUTH_SECRET_BASE32));
+    let item_id = listed_transcript
+        .lines()
+        .map(|line| line.trim_end_matches('\r'))
+        .find(|line| line.ends_with("\"E2E Bank:import-user\""))
+        .and_then(|line| line.split('\t').next())
+        .expect("imported item listing row")
+        .to_string();
+
+    let (shown_status, shown_transcript) =
+        run_unlock_in_pty(&home, &["item", "show", &item_id], b"Secret: <redacted>");
+    assert!(shown_status.success(), "{shown_transcript}");
+    for field in [
+        "Label: \"E2E Bank:import-user\"",
+        "Issuer: \"E2E Bank\"",
+        "Algorithm: SHA256",
+        "Digits: 8",
+        "Period: 60",
+    ] {
+        assert!(shown_transcript.contains(field), "{shown_transcript}");
+    }
+
+    // The decoded fields must produce real, correct TOTP codes -- not just
+    // an item that happens to exist.
+    let before = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap()
+        .as_secs();
+    let (code_status, code_transcript, code_stdout) =
+        run_totp_code_in_pty(&home, &item_id, b"yes", true);
+    let after = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap()
+        .as_secs();
+    assert!(code_status.success(), "{code_transcript}");
+    let code = extract_revealed_secret(&code_transcript);
+    assert_eq!(code.len(), 8, "{code_transcript}");
+    assert!(code.bytes().all(|byte| byte.is_ascii_digit()), "{code}");
+
+    let authenticator =
+        TotpAuthenticator::new(OTPAUTH_RAW_SECRET.to_vec(), TotpAlgorithm::Sha256, 60, 8, 0)
+            .unwrap();
+    let acceptable: Vec<String> = (before..=after)
+        .map(|second| authenticator.formatted_code_at(second).unwrap().to_string())
+        .collect();
+    assert!(
+        acceptable.contains(&code),
+        "the executable produced {code}, which is no code for {before}..={after}"
+    );
+    assert!(!String::from_utf8_lossy(&code_stdout).contains(&code));
+    assert_transcript_excludes_secrets(&code_transcript);
+    assert!(!code_transcript
+        .as_bytes()
+        .windows(OTPAUTH_SECRET_BASE32.len())
+        .any(|value| value == OTPAUTH_SECRET_BASE32));
+
+    let (audit_status, audit_transcript) = run_unlock_in_pty(&home, &["audit", "list"], b"action=");
+    assert!(audit_status.success(), "{audit_transcript}");
+    for forbidden in [
+        core::str::from_utf8(OTPAUTH_SECRET_BASE32).unwrap(),
+        "E2E Bank:import-user",
+        code.as_str(),
+    ] {
+        assert!(
+            !audit_transcript.contains(forbidden),
+            "{forbidden} leaked into the audit"
+        );
+    }
+    assert_audit_rows_have_only_closed_fields(&audit_transcript);
+    // Unlike the manual `item add totp` test, this test's own import
+    // *source* file legitimately holds the plaintext secret in `home.0`
+    // (the real-world equivalent of a person's downloaded `otpauth://`
+    // export sitting next to their `$HOME`), so a whole-tree
+    // `assert_tree_excludes(&home.0, ...)` would trip on that file rather
+    // than on the vault's own storage -- the same reason
+    // `real_cli_imports_bitwarden_json_and_leaks_no_secret_anywhere` above
+    // does not make that call either. The transcript/stdout/audit
+    // assertions above already cover every channel the vault's own storage
+    // and rendering can leak through.
+
+    // otpauth QR-image decoding always fails closed before opening its
+    // source (VLT-PM49 §9, explicitly deferred) -- the same proof the
+    // Bitwarden test above gives for KDBX (§8).
+    let qr_result = run_plain(
+        &home,
+        &[
+            "import",
+            "otpauth-qr",
+            home.0.join("absent-qr.png").to_str().unwrap(),
+        ],
+    );
+    assert!(!qr_result.status.success());
+    assert!(stdout_string(&qr_result).is_empty());
+}
+
 fn first_subdirectory(root: &Path) -> PathBuf {
     fs::read_dir(root)
         .unwrap()
