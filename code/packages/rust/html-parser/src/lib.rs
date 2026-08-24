@@ -6056,10 +6056,13 @@ impl HtmlParser {
             && self.current_last_child_element_is("col")
         {
             if !is_html_whitespace_text(&text) {
-                self.diagnostics.push(ParserDiagnostic::new(
-                    "unexpected-character-in-template-column-group",
-                    "non-whitespace character data was ignored at a template column-group boundary",
-                ));
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-character-in-template-column-group",
+                        "non-whitespace character data was ignored at a template column-group boundary",
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
             }
             let text = text
                 .chars()
@@ -27225,6 +27228,32 @@ mod tests {
         .at_emission(Some(end_tag_position(source, name)))
     }
 
+    fn character_in_template_column_group_recovery(
+        source: &str,
+        emission_boundary: &str,
+    ) -> ParserDiagnostic {
+        let byte_offset = source
+            .find(emission_boundary)
+            .expect("source should contain the text emission boundary");
+        let line_start = source[..byte_offset]
+            .rfind('\n')
+            .map_or(0, |index| index + 1);
+        ParserDiagnostic::new(
+            "unexpected-character-in-template-column-group",
+            "non-whitespace character data was ignored at a template column-group boundary",
+        )
+        .at_emission(Some(SourcePosition {
+            byte_offset,
+            char_offset: source[..byte_offset].chars().count(),
+            line: source[..byte_offset]
+                .chars()
+                .filter(|character| *character == '\n')
+                .count()
+                + 1,
+            column: source[line_start..byte_offset].chars().count() + 1,
+        }))
+    }
+
     fn li_start_tag_in_table_recovery(source: &str, occurrence: usize) -> ParserDiagnostic {
         let prefix = "<li";
         let start = source
@@ -40810,19 +40839,32 @@ mod tests {
     }
 
     #[test]
-    fn reports_non_whitespace_text_rejected_at_a_template_column_group_boundary() {
+    fn positions_non_whitespace_text_rejected_at_a_template_column_group_boundary() {
         let source = "<!doctype html><template><col> \tHello\n</template>";
-        let output = parse_html_with_diagnostics(source).unwrap();
-        assert_eq!(
-            output.parser_diagnostics,
-            vec![ParserDiagnostic::new(
-                "unexpected-character-in-template-column-group",
-                "non-whitespace character data was ignored at a template column-group boundary",
-            )]
-        );
+        let unicode_source =
+            "<!doctype html><!--é-->\r\n<template><col> aβ </template>";
+        for source in [source, unicode_source] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            let diagnostics = output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| {
+                    diagnostic.code == "unexpected-character-in-template-column-group"
+                })
+                .collect::<Vec<_>>();
+            assert_eq!(
+                diagnostics,
+                vec![&character_in_template_column_group_recovery(
+                    source,
+                    "</template>"
+                )],
+                "source {source:?}"
+            );
+        }
+        assert!(unicode_source.len() > unicode_source.chars().count());
 
         let control = parse_html("<!doctype html><template><col> \t\n</template>").unwrap();
-        assert_eq!(output.document, control);
+        assert_eq!(parse_html(source).unwrap(), control);
 
         for source in [
             "<!doctype html><template><col> \t\n</template>",
@@ -40848,6 +40890,32 @@ mod tests {
         assert!(fragment.parser_diagnostics.iter().all(|diagnostic| {
             diagnostic.code != "unexpected-character-in-template-column-group"
         }));
+
+        let mut unpositioned = HtmlParser::new();
+        for token in [
+            Token::StartTag {
+                name: "template".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "col".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("x".to_string()),
+        ] {
+            unpositioned.process_token(token);
+        }
+        let diagnostics = unpositioned
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| {
+                diagnostic.code == "unexpected-character-in-template-column-group"
+            })
+            .collect::<Vec<_>>();
+        assert_eq!(diagnostics.len(), 1);
+        assert_eq!(diagnostics[0].position, None);
     }
 
     #[test]
