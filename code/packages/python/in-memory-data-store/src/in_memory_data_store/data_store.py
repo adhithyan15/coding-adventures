@@ -156,8 +156,12 @@ def response_to_resp_value(response: EngineResponse) -> RespValue:
 
     if response.kind == "error":
         return RespError(cast(str, response.value))
-    if response.kind in {"simple_string", "integer", "bulk_string"}:
-        return response.value
+    if response.kind == "simple_string":
+        return cast(str, response.value)
+    if response.kind == "integer":
+        return cast(int, response.value)
+    if response.kind == "bulk_string":
+        return cast(bytes | None, response.value)
     values = cast(tuple[EngineResponse, ...] | None, response.value)
     if values is None:
         return None

@@ -217,9 +217,7 @@ class RepositoryAuditTests(unittest.TestCase):
             for row in self.report["fronts"]
             if "windows-quoted-editable" in row["issues"]
         ]
-        self.assertEqual(
-            quoted, ["in-memory-data-store", "in-memory-data-store-engine"]
-        )
+        self.assertEqual(quoted, [])
 
     def test_dependency_components_are_deterministic(self) -> None:
         components_by_package = {

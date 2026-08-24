@@ -78,6 +78,21 @@ export interface Mark {
   compositionSource?: { citation: string; url: string; variation?: string };
 }
 
+/** An obligatory joined shape whose editable text remains existing letters. */
+export interface Ligature {
+  sequence: string;
+  displayGlyph: string;
+  sound: string;
+  role: string;
+  forms: Record<string, string>;
+  components: string[];
+  strokeOrder: string[];
+  strokeOrderNote: string;
+  penLifts?: number;
+  strokeOrderSource?: { citation: string; url: string; variation?: string };
+  notes?: string;
+}
+
 /** A whole script: its metadata plus its inventory of letters. */
 export interface ScriptData {
   script: string;
@@ -89,6 +104,7 @@ export interface ScriptData {
    *  "spot the script" identification mode. Verified by rendering the font. */
   signature?: string;
   letters: Letter[];
+  ligatures?: Ligature[];
   /** For an abugida: the independent (word-initial) vowels — the letters a word
    *  writes when it BEGINS with a vowel (అ a, ఆ ā), as opposed to the vowel signs
    *  that ride on a consonant. Kept separate from `letters` so the consonant

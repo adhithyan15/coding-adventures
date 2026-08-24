@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import cast
 
 import pytest
 from in_memory_data_store_engine import DataStoreEngine, Store
@@ -100,10 +101,15 @@ def test_aof_replays_successful_mutations_and_canonicalizes_expire(
 
     frames, consumed = decode_all(aof.read_bytes())
     assert consumed == len(aof.read_bytes())
-    assert frames[0] == [b"SET", b"persistent", b"yes"]
-    assert [b"SELECT", b"1"] in frames
-    assert any(frame[0] == b"EXPIREAT" and frame[1] == b"ttl" for frame in frames)
-    assert not any(frame[0] in {b"GET", b"UNKNOWN"} for frame in frames)
+    assert all(
+        isinstance(frame, list) and all(isinstance(part, bytes) for part in frame)
+        for frame in frames
+    )
+    byte_frames = cast(list[list[bytes]], frames)
+    assert byte_frames[0] == [b"SET", b"persistent", b"yes"]
+    assert [b"SELECT", b"1"] in byte_frames
+    assert any(frame[0] == b"EXPIREAT" and frame[1] == b"ttl" for frame in byte_frames)
+    assert not any(frame[0] in {b"GET", b"UNKNOWN"} for frame in byte_frames)
 
     with InMemoryDataStore(aof_path=aof) as replayed:
         assert replayed.execute_parts([b"GET", b"persistent"]).value == b"yes"
