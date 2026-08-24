@@ -4372,13 +4372,13 @@
       "notes": "Dependency-shaped generated-pattern backfill for python/resp-protocol followed by python/tcp-server. Pin and recreate both environments, preserve the RESP prerequisite order, and validate the exact dependent closure on immediate repeat."
     },
     {
-      "id": "python-tcp-server-resp-dependency-reconciliation",
-      "title": "Reconcile the Python TCP server's protocol-agnostic contract with its RESP dependency",
+      "id": "python-tcp-server-resp-dependency-contract-reconciliation",
+      "title": "Reconcile the Python TCP server RESP dependency contract",
       "status": "pending",
       "depends_on": ["python-resp-tcp-build-front-idempotence"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered by the post-#12501 governing-reference audit. DT24, tcp-server's README, and its source define a protocol-agnostic raw-byte server and contain no RESP import, while pyproject.toml, both BUILD fronts, the uv fixture, and dependency tests encode RESP as a runtime prerequisite. After the generated-standard backfill preserves the fixture's current RESP-before-TCP order, audit the intended package contract and either remove the unused dependency consistently or document and test the missing integration rationale. Keep this follow-up separate so the selected repeatability repair does not rewrite dependency metadata or historical audit fixtures."
+      "notes": "Discovered by the post-#12501 governing-reference audit. DT24, tcp-server source, and its README define a protocol-neutral raw-byte server and contain no RESP import, while DT23's layer diagram, tcp-server pyproject metadata, both BUILD fronts, and the uv audit dependency model encode resp-protocol as a runtime prerequisite. Review the intended contract after the repeatability owner lands; either remove the redundant dependency and align recipes, tests, specs, and docs, or document and test a real RESP-facing contract. Do not widen the repeatability owner."
     },
     {
       "id": "python-data-store-build-front-idempotence",

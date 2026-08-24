@@ -5334,7 +5334,7 @@ The reference audit did discover a contract discrepancy within existing
 `tcp-server`: DT24, the README, and source define a protocol-agnostic raw-byte
 server with no RESP import, while package metadata, both BUILD fronts, and the
 uv fixture encode RESP as a runtime prerequisite. New pending owner
-`python-tcp-server-resp-dependency-reconciliation` records that follow-up and
+`python-tcp-server-resp-dependency-contract-reconciliation` records that follow-up and
 depends on the current backfill. The selected generated-standard repair must
 preserve the fixture's explicit RESP-before-TCP order, so it does not widen
 into dependency-metadata or historical-fixture redesign.
