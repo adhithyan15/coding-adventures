@@ -5586,6 +5586,26 @@
         "url": "https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-12/",
         "variation": "The standard shows U+0C15 KA plus U+0C4D virama producing vowelless క్ and shows consonant-plus-virama-plus-consonant sequences producing Telugu clusters with a commonly subscripted second consonant. It also notes that adding virama replaces the carrier's v-shaped headstroke. Unicode specifies encoded composition and rendering behavior, not a universal handwriting direction or pen-lift count; the carrier-first instruction is therefore a transparent learner composition convention, and this entry deliberately makes no standalone ductus claim."
       }
+    },
+    {
+      "mark": "ం",
+      "sound": "ṃ (nasal)",
+      "role": "anusvara",
+      "attachesAs": "the Telugu consonant-nasalization sign, called sunna, applied after its carrier",
+      "example": {
+        "base": "అ",
+        "combined": "అం",
+        "sound": "aṃ"
+      },
+      "compositionOrder": [
+        "write the Telugu carrier first",
+        "add the sunna to mark consonant nasalization"
+      ],
+      "compositionSource": {
+        "citation": "Unicode, Indic Scripts in Unicode, Telugu ¶352: the consonant nasalization sign sunna is encoded as U+0C02 TELUGU SIGN ANUSVARA (2012); Unicode Standard 17.0 Telugu code chart confirms U+0C02",
+        "url": "https://www.unicode.org/L2/L2012/12289-index-cnvrt.pdf",
+        "variation": "The source identifies the encoded mark and its consonant-nasalization role, not a universal handwriting direction or pen-lift count; the carrier-first instruction is an encoded composition convention, and this entry makes no standalone ductus claim."
+      }
     }
   ],
   "digits": [

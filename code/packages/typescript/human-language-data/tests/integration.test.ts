@@ -39,7 +39,7 @@ describe("real curriculum", () => {
     expect(scripts.devanagari!.complete).toBe(true);
   });
 
-  it("keeps the cross-script closure queue measured after Tamil u", () => {
+  it("keeps the cross-script closure queue measured after Telugu anusvara", () => {
     const candrakkala = scripts.malayalam!.marks!.find((mark) => mark.mark === "്")!;
     expect(candrakkala.role).toBe("virama");
     expect(candrakkala.compositionOrder).toEqual([
@@ -104,6 +104,22 @@ describe("real curriculum", () => {
       /encoded carrier-first composition.*normally ligates.*not a universal handwriting direction.*no standalone ductus claim/i,
     );
 
+    const teluguAnusvara = scripts.telugu!.marks!.find((mark) => mark.mark === "ం")!;
+    expect(teluguAnusvara.role).toBe("anusvara");
+    expect(teluguAnusvara.compositionOrder).toEqual([
+      "write the Telugu carrier first",
+      "add the sunna to mark consonant nasalization",
+    ]);
+    expect(teluguAnusvara.compositionSource?.url).toBe(
+      "https://www.unicode.org/L2/L2012/12289-index-cnvrt.pdf",
+    );
+    expect(teluguAnusvara.compositionSource?.citation).toMatch(
+      /Indic Scripts in Unicode.*Telugu.*352.*sunna.*U\+0C02.*ANUSVARA/i,
+    );
+    expect(teluguAnusvara.compositionSource?.variation).toMatch(
+      /consonant-nasalization role.*not a universal handwriting direction.*no standalone ductus claim/i,
+    );
+
     const gaps = validate({ taxonomy, lessons, scripts }).filter(
       (issue) => issue.level === "warning" && issue.code === "uncovered-glyphs",
     );
@@ -130,10 +146,12 @@ describe("real curriculum", () => {
     expect(affected.get("್") ?? 0).toBe(0);
     expect(missingByScript.get("tamil.json")?.has("ு")).toBe(false);
     expect(affected.get("ு") ?? 0).toBe(0);
-    expect(affected.get("ం")).toBe(68);
+    expect(missingByScript.get("telugu.json")?.has("ం")).toBe(false);
+    expect(affected.get("ం") ?? 0).toBe(0);
+    expect(affected.get("ப")).toBe(61);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["ం", 68]);
+    ).toEqual(["ப", 61]);
   });
 
   it("loaded every track (17+ and growing)", () => {
