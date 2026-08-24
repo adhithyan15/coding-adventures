@@ -1,0 +1,18 @@
+{
+  "id": "SPINE-TAKE-LEAVE",
+  "stage": "pre-A1",
+  "strand": "FUNCTION",
+  "canDo": "I can end a short interaction and choose a suitable parting expression.",
+  "prerequisites": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "core": true,
+  "concepts": [
+    "FAREWELL",
+    "FAREWELL-CASUAL",
+    "FAREWELL-LATER",
+    "FAREWELL-SOON",
+    "FAREWELL-TOMORROW",
+    "GREETING-GOODNIGHT"
+  ]
+}

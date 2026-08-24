@@ -1,0 +1,16 @@
+{
+  "id": "SPINE-FOLLOW-REGIONAL-VARIATION",
+  "stage": "C1",
+  "strand": "CULTURE",
+  "canDo": "I can follow a speaker whose regional variety differs from the one I learned.",
+  "prerequisites": [
+    "SPINE-SHIFT-REGISTER"
+  ],
+  "core": true,
+  "concepts": [
+    "DIALECT-FEATURE",
+    "ACCENT-VARIATION",
+    "LEXICAL-VARIANT-REGIONAL",
+    "DIGLOSSIA"
+  ]
+}

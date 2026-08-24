@@ -578,6 +578,17 @@ describe("handwriting ductus", () => {
     ]);
   });
 
+  it("த joins its left loop, cap, broad bowl, and tail without lifting", () => {
+    expect(penLifts(DUCTUS["த"])).toBe(0);
+    expect(DUCTUS["த"].strokes).toHaveLength(1);
+    expect(DUCTUS["த"].strokes[0].segments.map((segment) => segment.label)).toEqual([
+      "down the short left upright",
+      "around the compact left loop",
+      "up the central upright and across the top",
+      "back through the center and around the broad bowl to the tail",
+    ]);
+  });
+
   it("Chinese 人 draws the left-falling stroke before the lifted right-falling stroke", () => {
     expect(CHINESE_REN.script).toBe("chinese");
     expect(penLifts(CHINESE_REN)).toBe(1);
@@ -5958,6 +5969,13 @@ describe("handwriting ductus", () => {
     const src = DUCTUS["ப"].source;
     expect(src.url).toContain("tamilscript/category/3-moduals/module-01");
     expect(src.citation).toMatch(/Tamil Script Learners Manual.*Frame 1.*ப/i);
+    expect(src.variation).toMatch(/left-to-right.*top-to-bottom.*varies by school.*continuous order.*Noto Sans Tamil/i);
+  });
+
+  it("த's continuous order traces to Frame 1 of the UT Austin primer", () => {
+    const src = DUCTUS["த"].source;
+    expect(src.url).toContain("tamilscript/category/3-moduals/module-01");
+    expect(src.citation).toMatch(/Tamil Script Learners Manual.*Frame 1.*த/i);
     expect(src.variation).toMatch(/left-to-right.*top-to-bottom.*varies by school.*continuous order.*Noto Sans Tamil/i);
   });
 

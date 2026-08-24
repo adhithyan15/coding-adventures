@@ -1,0 +1,16 @@
+{
+  "id": "SPINE-DESCRIBE-EXPERIENCE",
+  "stage": "B1",
+  "strand": "FUNCTION",
+  "canDo": "I can describe experiences, feelings and ambitions.",
+  "prerequisites": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "core": true,
+  "concepts": [
+    "ADJECTIVE-FEELING",
+    "AMBITION-EXPRESS",
+    "COMPARISON-BASIC",
+    "TIME-DURATION"
+  ]
+}

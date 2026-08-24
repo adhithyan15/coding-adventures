@@ -1,0 +1,17 @@
+{
+  "id": "SPINE-ARGUE-A-VIEW",
+  "stage": "B2",
+  "strand": "TEXT",
+  "canDo": "I can develop an argument, giving relevant reasons and examples.",
+  "prerequisites": [
+    "SPINE-GIVE-REASONS",
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "core": true,
+  "concepts": [
+    "ARGUMENT-CLAIM",
+    "ARGUMENT-EVIDENCE",
+    "CONNECTIVE-HOWEVER",
+    "CONNECTIVE-ALTHOUGH"
+  ]
+}

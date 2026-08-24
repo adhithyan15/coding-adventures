@@ -1,0 +1,14 @@
+{
+  "id": "SPINE-POLITE-REQUEST-REPAIR",
+  "stage": "pre-A1",
+  "strand": "FUNCTION",
+  "canDo": "I can make a request politely and repair a small social mistake.",
+  "prerequisites": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "core": true,
+  "concepts": [
+    "COURTESY-PLEASE",
+    "COURTESY-SORRY"
+  ]
+}

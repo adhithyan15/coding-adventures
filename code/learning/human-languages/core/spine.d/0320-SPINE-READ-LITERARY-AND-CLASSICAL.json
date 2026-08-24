@@ -1,0 +1,17 @@
+{
+  "id": "SPINE-READ-LITERARY-AND-CLASSICAL",
+  "stage": "C2",
+  "strand": "TEXT",
+  "canDo": "I can read literary and older texts and feel the period they come from.",
+  "prerequisites": [
+    "SPINE-INFER-IMPLICIT-MEANING",
+    "SPINE-FOLLOW-REGIONAL-VARIATION"
+  ],
+  "core": true,
+  "concepts": [
+    "LITERARY-REGISTER",
+    "ARCHAIC-FORM",
+    "METER-AND-VERSE",
+    "ORTHOGRAPHY-HISTORICAL"
+  ]
+}

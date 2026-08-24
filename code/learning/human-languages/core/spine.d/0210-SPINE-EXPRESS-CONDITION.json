@@ -1,0 +1,16 @@
+{
+  "id": "SPINE-EXPRESS-CONDITION",
+  "stage": "B1",
+  "strand": "GRAMMAR",
+  "canDo": "I can say what would happen if something else did.",
+  "prerequisites": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "core": true,
+  "concepts": [
+    "CONDITIONAL-REAL",
+    "CONNECTIVE-IF",
+    "MODAL-WOULD",
+    "CONDITION-DEPENDS"
+  ]
+}

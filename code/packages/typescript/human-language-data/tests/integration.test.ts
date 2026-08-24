@@ -39,7 +39,7 @@ describe("real curriculum", () => {
     expect(scripts.devanagari!.complete).toBe(true);
   });
 
-  it("keeps the cross-script closure queue measured after Tamil pa", () => {
+  it("keeps the cross-script closure queue measured after Tamil tha", () => {
     const candrakkala = scripts.malayalam!.marks!.find((mark) => mark.mark === "്")!;
     expect(candrakkala.role).toBe("virama");
     expect(candrakkala.compositionOrder).toEqual([
@@ -135,6 +135,22 @@ describe("real curriculum", () => {
       /left-to-right.*top-to-bottom.*varies by school.*continuous order.*Noto Sans Tamil/i,
     );
 
+    const tamilTha = scripts.tamil!.letters.find((letter) => letter.glyph === "த")!;
+    expect(tamilTha.strokeOrder).toEqual([
+      "start at the top left and descend the short left upright",
+      "without lifting, turn around the compact left loop and return to the central crossing",
+      "without lifting, climb the central upright and carry the top bar to the right",
+      "without lifting, retrace to the central crossing, sweep around the broad right bowl, and finish down the low left tail — and only now lift",
+    ]);
+    expect(tamilTha.penLifts).toBe(0);
+    expect(tamilTha.strokeOrderSource?.url).toBe(
+      "https://sites.la.utexas.edu/tamilscript/category/3-moduals/module-01",
+    );
+    expect(tamilTha.strokeOrderSource?.citation).toMatch(/Tamil Script Learners Manual.*Frame 1.*த/i);
+    expect(tamilTha.strokeOrderSource?.variation).toMatch(
+      /left-to-right.*top-to-bottom.*varies by school.*continuous order.*Noto Sans Tamil/i,
+    );
+
     const gaps = validate({ taxonomy, lessons, scripts }).filter(
       (issue) => issue.level === "warning" && issue.code === "uncovered-glyphs",
     );
@@ -165,10 +181,12 @@ describe("real curriculum", () => {
     expect(affected.get("ం") ?? 0).toBe(0);
     expect(missingByScript.get("tamil.json")?.has("ப")).toBe(false);
     expect(affected.get("ப") ?? 0).toBe(0);
-    expect(affected.get("த")).toBe(50);
+    expect(missingByScript.get("tamil.json")?.has("த")).toBe(false);
+    expect(affected.get("த") ?? 0).toBe(0);
+    expect(affected.get("ர")).toBe(47);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["த", 50]);
+    ).toEqual(["ர", 47]);
   });
 
   it("loaded every track (17+ and growing)", () => {

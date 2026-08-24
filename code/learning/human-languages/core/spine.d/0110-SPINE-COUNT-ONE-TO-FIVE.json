@@ -1,0 +1,13 @@
+{
+  "id": "SPINE-COUNT-ONE-TO-FIVE",
+  "stage": "A1",
+  "strand": "LEXICON",
+  "canDo": "I can understand and produce the cardinal numbers one through five.",
+  "prerequisites": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "core": false,
+  "concepts": [
+    "NUMBER-ONE-TO-FIVE"
+  ]
+}

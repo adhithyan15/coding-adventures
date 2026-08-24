@@ -1,0 +1,17 @@
+{
+  "id": "SPINE-DISCUSS-ABSTRACT",
+  "stage": "B2",
+  "strand": "FUNCTION",
+  "canDo": "I can take part in a discussion of abstract or unfamiliar topics.",
+  "prerequisites": [
+    "SPINE-ARGUE-A-VIEW",
+    "SPINE-READ-EXTENDED-PROSE"
+  ],
+  "core": true,
+  "concepts": [
+    "ABSTRACT-NOUN",
+    "HEDGE-PROBABLY",
+    "HEDGE-SUPPOSE",
+    "NOMINALIZATION"
+  ]
+}

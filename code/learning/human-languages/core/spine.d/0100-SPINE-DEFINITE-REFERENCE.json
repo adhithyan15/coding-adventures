@@ -1,0 +1,13 @@
+{
+  "id": "SPINE-DEFINITE-REFERENCE",
+  "stage": "A1",
+  "strand": "GRAMMAR",
+  "canDo": "I can recognize how this language marks a specific known person or thing when it does so.",
+  "prerequisites": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "core": false,
+  "concepts": [
+    "GRAMMAR-THE"
+  ]
+}

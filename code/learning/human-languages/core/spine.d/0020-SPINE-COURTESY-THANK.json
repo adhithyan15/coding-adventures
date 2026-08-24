@@ -1,0 +1,15 @@
+{
+  "id": "SPINE-COURTESY-THANK",
+  "stage": "pre-A1",
+  "strand": "FUNCTION",
+  "canDo": "I can thank someone and respond appropriately to thanks.",
+  "prerequisites": [
+    "SPINE-MEET-GREET"
+  ],
+  "core": true,
+  "concepts": [
+    "COURTESY-THANKS",
+    "COURTESY-THANKS-CASUAL",
+    "COURTESY-YOUREWELCOME"
+  ]
+}

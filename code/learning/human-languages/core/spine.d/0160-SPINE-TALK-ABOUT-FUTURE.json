@@ -1,0 +1,13 @@
+{
+  "id": "SPINE-TALK-ABOUT-FUTURE",
+  "stage": "A2",
+  "strand": "GRAMMAR",
+  "canDo": "I can say what will happen, or what I mean to do.",
+  "prerequisites": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "core": true,
+  "concepts": [
+    "VERB-FUTURE"
+  ]
+}

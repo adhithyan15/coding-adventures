@@ -1,0 +1,16 @@
+{
+  "id": "SPINE-READ-EXTENDED-PROSE",
+  "stage": "B2",
+  "strand": "TEXT",
+  "canDo": "I can read articles and reports on contemporary matters.",
+  "prerequisites": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "core": true,
+  "concepts": [
+    "DISCOURSE-TOPIC-SENTENCE",
+    "RELATIVE-CLAUSE",
+    "VOICE-PASSIVE",
+    "VOCAB-FIELD-SPECIFIC"
+  ]
+}
