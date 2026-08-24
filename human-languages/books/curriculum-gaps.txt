@@ -7,7 +7,7 @@ Human Languages curriculum gap report
 0 legacy, 14 mixed, 9 version-2 schema tracks
 2958 drivable lessons (84% of the corpus)
 levels: 2239 pre-A1, 573 A1, 549 A2, 40 B1, 17 B2, 10 C1, 18 C2; 61 unmapped (98% placed)
-ramp: 46 lessons above 3 new atoms (508 unmeasurable, 86% measurable); 24 chapters above 12
+ramp: 46 lessons above 3 new atoms (394 unmeasurable, 89% measurable); 24 chapters above 12
 script ramp: 46 lessons above 3 new glyphs; 0 opening more than 1 writing system at once; steepest RU-C01-privet at 14
 cousin layer: 219 lessons show another script (max 26 glyphs) — context, never charged to the budget
 script closure: 712 lessons ask the reader to decode a glyph nobody taught them, across 17 non-Latin tracks; 0 of those tracks teach NO letters at all
@@ -16,9 +16,9 @@ order: 0 lessons with no declared sequence across 0 tracks; 0 prerequisites and 
 reinforcement: 624 of 4810 atoms never revisited (13%); missed windows R1 1185, R2 3652, R3 3535, R4 2085
 forward references: 431 uses of material a later lesson teaches
 writing stages: 8/23 tracks prove the cumulative pre-A1 ladder; 93 evidence blocks, 0 invalid; 699 missing (track, level, stage) pairs
-super-gentle ramp: 21/23 tracks carry detected or unmeasured debt; 125 named track/debt items
+super-gentle ramp: 21/23 tracks carry detected or unmeasured debt; 124 named track/debt items
 writing ramp: 0 track(s) never practise writing; 5 start after lesson one
-gentleness measurement: 508 lesson(s) remain atom-measurement blind
+gentleness measurement: 394 lesson(s) remain atom-measurement blind
 VOCABULARY vs HL09 §3.1 targets: spanish 154/300 at-or-below pre-A1 (332 total), sanskrit 174/300 at-or-below pre-A1 (240 total), telugu 186/300 at-or-below pre-A1 (239 total), hindi 155/300 at-or-below pre-A1 (212 total), malayalam 154/300 at-or-below pre-A1 (212 total); 22 of 23 tracks short of the level they are working on
 levels ATTAINED (HL09 §3.1): none; 23 track(s) touch a level they have not attained
 0 of 1017 book chapters without an HL05 capability; 83 payoffs below the 0.5 representativeness floor; 9 tracks already clean

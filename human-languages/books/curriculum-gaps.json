@@ -5050,8 +5050,8 @@
       {
         "language": "arabic",
         "lessonCount": 108,
-        "measurable": 84,
-        "unmeasurable": 24,
+        "measurable": 85,
+        "unmeasurable": 23,
         "lessonViolations": 0,
         "chapterViolations": 2
       },
@@ -5146,8 +5146,8 @@
       {
         "language": "marathi",
         "lessonCount": 89,
-        "measurable": 46,
-        "unmeasurable": 43,
+        "measurable": 61,
+        "unmeasurable": 28,
         "lessonViolations": 1,
         "chapterViolations": 1
       },
@@ -5162,8 +5162,8 @@
       {
         "language": "persian",
         "lessonCount": 71,
-        "measurable": 66,
-        "unmeasurable": 5,
+        "measurable": 67,
+        "unmeasurable": 4,
         "lessonViolations": 2,
         "chapterViolations": 3
       },
@@ -5178,16 +5178,16 @@
       {
         "language": "punjabi",
         "lessonCount": 75,
-        "measurable": 46,
-        "unmeasurable": 29,
+        "measurable": 47,
+        "unmeasurable": 28,
         "lessonViolations": 4,
         "chapterViolations": 1
       },
       {
         "language": "russian",
         "lessonCount": 84,
-        "measurable": 83,
-        "unmeasurable": 1,
+        "measurable": 84,
+        "unmeasurable": 0,
         "lessonViolations": 1,
         "chapterViolations": 4
       },
@@ -5202,8 +5202,8 @@
       {
         "language": "spanish",
         "lessonCount": 585,
-        "measurable": 489,
-        "unmeasurable": 96,
+        "measurable": 584,
+        "unmeasurable": 1,
         "lessonViolations": 6,
         "chapterViolations": 0
       },
@@ -5999,8 +5999,8 @@
     "summary": {
       "lessonViolations": 46,
       "chapterViolations": 24,
-      "unmeasurableLessons": 508,
-      "measurablePercent": 86,
+      "unmeasurableLessons": 394,
+      "measurablePercent": 89,
       "steepestLesson": {
         "lessonId": "BN-C06-numbers-1-5",
         "language": "bengali",
@@ -70608,8 +70608,8 @@
       {
         "language": "arabic",
         "lessonCount": 108,
-        "atomMeasurableLessons": 84,
-        "atomMeasurementBlindLessons": 24,
+        "atomMeasurableLessons": 85,
+        "atomMeasurementBlindLessons": 23,
         "durationViolations": 0,
         "atomLessonSpikes": 0,
         "atomChapterSpikes": 2,
@@ -70675,7 +70675,7 @@
           {
             "language": "arabic",
             "kind": "measurement-blind",
-            "count": 24,
+            "count": 23,
             "unit": "lesson(s)",
             "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
           }
@@ -71506,8 +71506,8 @@
       {
         "language": "marathi",
         "lessonCount": 89,
-        "atomMeasurableLessons": 46,
-        "atomMeasurementBlindLessons": 43,
+        "atomMeasurableLessons": 61,
+        "atomMeasurementBlindLessons": 28,
         "durationViolations": 0,
         "atomLessonSpikes": 1,
         "atomChapterSpikes": 1,
@@ -71573,7 +71573,7 @@
           {
             "language": "marathi",
             "kind": "measurement-blind",
-            "count": 43,
+            "count": 28,
             "unit": "lesson(s)",
             "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
           }
@@ -71623,8 +71623,8 @@
       {
         "language": "persian",
         "lessonCount": 71,
-        "atomMeasurableLessons": 66,
-        "atomMeasurementBlindLessons": 5,
+        "atomMeasurableLessons": 67,
+        "atomMeasurementBlindLessons": 4,
         "durationViolations": 0,
         "atomLessonSpikes": 2,
         "atomChapterSpikes": 3,
@@ -71697,7 +71697,7 @@
           {
             "language": "persian",
             "kind": "measurement-blind",
-            "count": 5,
+            "count": 4,
             "unit": "lesson(s)",
             "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
           }
@@ -71789,8 +71789,8 @@
       {
         "language": "punjabi",
         "lessonCount": 75,
-        "atomMeasurableLessons": 46,
-        "atomMeasurementBlindLessons": 29,
+        "atomMeasurableLessons": 47,
+        "atomMeasurementBlindLessons": 28,
         "durationViolations": 0,
         "atomLessonSpikes": 4,
         "atomChapterSpikes": 1,
@@ -71856,7 +71856,7 @@
           {
             "language": "punjabi",
             "kind": "measurement-blind",
-            "count": 29,
+            "count": 28,
             "unit": "lesson(s)",
             "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
           }
@@ -71872,8 +71872,8 @@
       {
         "language": "russian",
         "lessonCount": 84,
-        "atomMeasurableLessons": 83,
-        "atomMeasurementBlindLessons": 1,
+        "atomMeasurableLessons": 84,
+        "atomMeasurementBlindLessons": 0,
         "durationViolations": 0,
         "atomLessonSpikes": 1,
         "atomChapterSpikes": 4,
@@ -71942,13 +71942,6 @@
             "count": 2,
             "unit": "chapter payoff finding(s)",
             "detail": "make each chapter payoff assess only taught, representative material"
-          },
-          {
-            "language": "russian",
-            "kind": "measurement-blind",
-            "count": 1,
-            "unit": "lesson(s)",
-            "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
           }
         ],
         "next": {
@@ -72052,8 +72045,8 @@
       {
         "language": "spanish",
         "lessonCount": 585,
-        "atomMeasurableLessons": 489,
-        "atomMeasurementBlindLessons": 96,
+        "atomMeasurableLessons": 584,
+        "atomMeasurementBlindLessons": 1,
         "durationViolations": 0,
         "atomLessonSpikes": 6,
         "atomChapterSpikes": 0,
@@ -72119,7 +72112,7 @@
           {
             "language": "spanish",
             "kind": "measurement-blind",
-            "count": 96,
+            "count": 1,
             "unit": "lesson(s)",
             "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
           }
@@ -73161,13 +73154,6 @@
         "detail": "make each chapter payoff assess only taught, representative material"
       },
       {
-        "language": "spanish",
-        "kind": "measurement-blind",
-        "count": 96,
-        "unit": "lesson(s)",
-        "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
-      },
-      {
         "language": "french",
         "kind": "measurement-blind",
         "count": 67,
@@ -73178,13 +73164,6 @@
         "language": "german",
         "kind": "measurement-blind",
         "count": 66,
-        "unit": "lesson(s)",
-        "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
-      },
-      {
-        "language": "marathi",
-        "kind": "measurement-blind",
-        "count": 43,
         "unit": "lesson(s)",
         "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
       },
@@ -73224,16 +73203,23 @@
         "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
       },
       {
+        "language": "marathi",
+        "kind": "measurement-blind",
+        "count": 28,
+        "unit": "lesson(s)",
+        "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
+      },
+      {
         "language": "punjabi",
         "kind": "measurement-blind",
-        "count": 29,
+        "count": 28,
         "unit": "lesson(s)",
         "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
       },
       {
         "language": "arabic",
         "kind": "measurement-blind",
-        "count": 24,
+        "count": 23,
         "unit": "lesson(s)",
         "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
       },
@@ -73254,7 +73240,7 @@
       {
         "language": "persian",
         "kind": "measurement-blind",
-        "count": 5,
+        "count": 4,
         "unit": "lesson(s)",
         "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
       },
@@ -73273,7 +73259,7 @@
         "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
       },
       {
-        "language": "russian",
+        "language": "spanish",
         "kind": "measurement-blind",
         "count": 1,
         "unit": "lesson(s)",
@@ -73292,8 +73278,8 @@
       "tracksWithDetectedCliffs": 21,
       "tracksWithNoWritingPractice": 0,
       "tracksWhereWritingStartsLate": 5,
-      "atomMeasurementBlindLessons": 508,
-      "findings": 125
+      "atomMeasurementBlindLessons": 394,
+      "findings": 124
     }
   },
   "levelGate": {
