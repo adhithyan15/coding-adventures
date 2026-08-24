@@ -5384,10 +5384,13 @@ impl HtmlParser {
             && !self.current_has_child_element("thead")
         {
             if self.first_authored_open_template_index().is_some() {
-                self.diagnostics.push(ParserDiagnostic::new(
-                    "unexpected-row-start-tag-in-template-body",
-                    "start tag `<tr>` in template body content was ignored",
-                ));
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-row-start-tag-in-template-body",
+                        "start tag `<tr>` in template body content was ignored",
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
             }
             return;
         }
@@ -5410,10 +5413,13 @@ impl HtmlParser {
             && !self.current_element_is("tbody")
         {
             if self.first_authored_open_template_index().is_some() {
-                self.diagnostics.push(ParserDiagnostic::new(
-                    "unexpected-row-start-tag-in-template-body",
-                    "start tag `<tr>` in template body content was ignored",
-                ));
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-row-start-tag-in-template-body",
+                        "start tag `<tr>` in template body content was ignored",
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
             }
             return;
         }
@@ -27333,6 +27339,17 @@ mod tests {
         .at_emission(Some(start_tag_position_at(source, name, occurrence)))
     }
 
+    fn row_start_tag_in_template_body_recovery(
+        source: &str,
+        occurrence: usize,
+    ) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-row-start-tag-in-template-body",
+            "start tag `<tr>` in template body content was ignored",
+        )
+        .at_emission(Some(start_tag_position_at(source, "tr", occurrence)))
+    }
+
     fn end_tag_in_template_column_group_recovery(
         source: &str,
         name: &str,
@@ -42063,30 +42080,25 @@ mod tests {
 
     #[test]
     fn reports_row_start_tags_ignored_in_authored_template_body_content() {
-        let output =
-            parse_html_with_diagnostics("<!doctype html><template><div><tr></div></template>")
-                .unwrap();
+        let source = "<!doctype html><template><div><tr></div></template>";
+        let output = parse_html_with_diagnostics(source).unwrap();
         assert_eq!(
             output.parser_diagnostics,
-            vec![ParserDiagnostic::new(
-                "unexpected-row-start-tag-in-template-body",
-                "start tag `<tr>` in template body content was ignored",
-            )]
+            vec![row_start_tag_in_template_body_recovery(source, 0)]
         );
         assert_eq!(
             output.document,
             parse_html("<!doctype html><template><div></div></template>").unwrap()
         );
 
-        let restored_template_current = parse_html_with_diagnostics(
-            "<!doctype html><template><div></div><tr><span>x</span></template>",
-        )
-        .unwrap();
+        let restored_source =
+            "<!doctype html><template><div></div><tr><span>x</span></template>";
+        let restored_template_current = parse_html_with_diagnostics(restored_source).unwrap();
         assert_eq!(
             restored_template_current.parser_diagnostics,
-            vec![ParserDiagnostic::new(
-                "unexpected-row-start-tag-in-template-body",
-                "start tag `<tr>` in template body content was ignored",
+            vec![row_start_tag_in_template_body_recovery(
+                restored_source,
+                0
             )]
         );
         assert_eq!(
@@ -42114,6 +42126,99 @@ mod tests {
             .parser_diagnostics
             .iter()
             .all(|diagnostic| { diagnostic.code != "unexpected-row-start-tag-in-template-body" }));
+    }
+
+    #[test]
+    fn positions_row_start_tags_ignored_in_authored_template_body_content() {
+        let repeated_source =
+            "<!doctype html><template><div><tr><tr></div></template>";
+        let repeated = parse_html_with_diagnostics(repeated_source).unwrap();
+        assert_eq!(
+            repeated
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| {
+                    diagnostic.code == "unexpected-row-start-tag-in-template-body"
+                })
+                .cloned()
+                .collect::<Vec<_>>(),
+            vec![
+                row_start_tag_in_template_body_recovery(repeated_source, 0),
+                row_start_tag_in_template_body_recovery(repeated_source, 1),
+            ]
+        );
+
+        let unicode_source =
+            "<!doctype html><!--é-->\r\n<template><div></div><tr data-name='é'>";
+        let unicode = parse_html_with_diagnostics(unicode_source).unwrap();
+        assert_eq!(
+            unicode
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| {
+                    diagnostic.code == "unexpected-row-start-tag-in-template-body"
+                })
+                .cloned()
+                .collect::<Vec<_>>(),
+            vec![row_start_tag_in_template_body_recovery(
+                unicode_source,
+                0
+            )]
+        );
+        assert!(unicode_source.len() > unicode_source.chars().count());
+
+        let incomplete =
+            parse_html_with_diagnostics("<!doctype html><template><div><tr data-name=x")
+                .unwrap();
+        assert!(incomplete.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-row-start-tag-in-template-body"
+        }));
+
+        let fragment =
+            parse_html_fragment_for_context_with_diagnostics("<div><tr></div>", "template")
+                .unwrap();
+        assert!(fragment
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| { diagnostic.code != "unexpected-row-start-tag-in-template-body" }));
+
+        let mut unpositioned = HtmlParser::new();
+        for token in [
+            Token::StartTag {
+                name: "template".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "div".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "tr".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::EndTag {
+                name: "div".to_string(),
+            },
+            Token::StartTag {
+                name: "tr".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+        ] {
+            unpositioned.process_token(token);
+        }
+        let diagnostics = unpositioned
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| {
+                diagnostic.code == "unexpected-row-start-tag-in-template-body"
+            })
+            .collect::<Vec<_>>();
+        assert_eq!(diagnostics.len(), 2);
+        assert!(diagnostics.iter().all(|diagnostic| diagnostic.position.is_none()));
     }
 
     #[test]
