@@ -7321,18 +7321,20 @@ impl HtmlParser {
             if self.current_element_is_marked_foreign_fragment_context() {
                 return;
             }
-            let (code, message) = if self.has_authored_open_html_element(name) {
-                (
-                    "unexpected-block-end-tag-outside-scope",
-                    "end tag `</button>` targeted an element outside ordinary scope",
-                )
+            if self.has_authored_open_html_element(name) {
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-block-end-tag-outside-scope",
+                        "end tag `</button>` targeted an element outside ordinary scope",
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
             } else {
-                (
+                self.diagnostics.push(ParserDiagnostic::new(
                     "unexpected-end-tag",
                     "end tag `</button>` did not match an open element",
-                )
-            };
-            self.diagnostics.push(ParserDiagnostic::new(code, message));
+                ));
+            }
             return;
         }
         if self.current_namespace().is_some()
@@ -7348,10 +7350,13 @@ impl HtmlParser {
                 )
                 .at_emission(self.current_token_emission_position),
             );
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-block-end-tag-outside-scope",
-                format!("end tag `</{name}>` targeted an element outside ordinary scope"),
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-block-end-tag-outside-scope",
+                    format!("end tag `</{name}>` targeted an element outside ordinary scope"),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             return;
         }
         if self.current_namespace().is_some()
@@ -7943,10 +7948,13 @@ impl HtmlParser {
                 && self.has_authored_open_html_element(name)
                 && self.open_html_element_in_scope_index(name).is_none() =>
             {
-                self.diagnostics.push(ParserDiagnostic::new(
-                    "unexpected-block-end-tag-outside-scope",
-                    format!("end tag `</{name}>` targeted an element outside ordinary scope"),
-                ));
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-block-end-tag-outside-scope",
+                        format!("end tag `</{name}>` targeted an element outside ordinary scope"),
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
             }
             _ => self.close_element(name),
         }
@@ -27306,6 +27314,14 @@ mod tests {
         .at_emission(Some(end_tag_position(source, name)))
     }
 
+    fn scoped_block_end_tag_outside_scope(source: &str, name: &str) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-block-end-tag-outside-scope",
+            format!("end tag `</{name}>` targeted an element outside ordinary scope"),
+        )
+        .at_emission(Some(end_tag_position(source, name)))
+    }
+
     fn table_foreign_end_tag_recovery(source: &str, name: &str) -> ParserDiagnostic {
         ParserDiagnostic::new(
             "unexpected-table-end-tag-in-foreign-content",
@@ -32786,10 +32802,7 @@ mod tests {
                 output.parser_diagnostics,
                 vec![
                     generic_foreign_end_tag_mismatch(&source, "button"),
-                    ParserDiagnostic::new(
-                        "unexpected-block-end-tag-outside-scope",
-                        "end tag `</button>` targeted an element outside ordinary scope"
-                    ),
+                    scoped_block_end_tag_outside_scope(&source, "button"),
                 ],
                 "source {source:?}"
             );
@@ -32892,7 +32905,10 @@ mod tests {
             output.parser_diagnostics[0],
             generic_foreign_end_tag_mismatch(source, "button")
         );
-        assert_eq!(output.parser_diagnostics[1].position, None);
+        assert_eq!(
+            output.parser_diagnostics[1],
+            scoped_block_end_tag_outside_scope(source, "button")
+        );
         assert!(source.len() > source.chars().count());
 
         let eof_source = "<!doctype html><button><math><mi></button";
@@ -39488,10 +39504,7 @@ mod tests {
                 output.parser_diagnostics,
                 vec![
                     generic_foreign_end_tag_mismatch(source, "div"),
-                    ParserDiagnostic::new(
-                        "unexpected-block-end-tag-outside-scope",
-                        "end tag `</div>` targeted an element outside ordinary scope"
-                    ),
+                    scoped_block_end_tag_outside_scope(source, "div"),
                 ],
                 "source {source:?}"
             );
@@ -39580,12 +39593,49 @@ mod tests {
     }
 
     #[test]
+    fn positions_scoped_block_end_tags_outside_scope_at_token_emission() {
+        for (name, boundary) in [
+            ("div", "object"),
+            ("section", "applet"),
+            ("article", "marquee"),
+            ("nav", "select"),
+        ] {
+            let source = format!(
+                "<!doctype html><!--é-->\r\n<{name}><{boundary}></{name}>"
+            );
+            let output = parse_html_with_diagnostics(&source).unwrap();
+            let diagnostics = output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| {
+                    diagnostic.code == "unexpected-block-end-tag-outside-scope"
+                })
+                .cloned()
+                .collect::<Vec<_>>();
+            assert_eq!(
+                diagnostics,
+                vec![scoped_block_end_tag_outside_scope(&source, name)],
+                "source {source:?}: {:?}",
+                output.parser_diagnostics
+            );
+            assert!(source.len() > source.chars().count());
+        }
+
+        let eof_source = "<!doctype html><div><object></div";
+        let eof_output = parse_html_with_diagnostics(eof_source).unwrap();
+        assert!(eof_output.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-block-end-tag-outside-scope"
+        }));
+    }
+
+    #[test]
     fn positions_scoped_block_foreign_end_tag_mismatches_at_token_emission() {
         for name in [
             "address",
             "article",
             "aside",
             "blockquote",
+            "button",
             "center",
             "details",
             "dialog",
@@ -39619,7 +39669,8 @@ mod tests {
                 "source {source:?}"
             );
             assert_eq!(
-                output.parser_diagnostics[1].position, None,
+                output.parser_diagnostics[1],
+                scoped_block_end_tag_outside_scope(&source, name),
                 "source {source:?}"
             );
             assert!(source.len() > source.chars().count());
@@ -39630,7 +39681,13 @@ mod tests {
         assert!(eof_output
             .parser_diagnostics
             .iter()
-            .all(|diagnostic| diagnostic.code != "unexpected-end-tag-in-foreign-content"));
+            .all(|diagnostic| {
+                !matches!(
+                    diagnostic.code.as_str(),
+                    "unexpected-end-tag-in-foreign-content"
+                        | "unexpected-block-end-tag-outside-scope"
+                )
+            }));
 
         let mut unpositioned = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
         for token in [
@@ -39656,12 +39713,17 @@ mod tests {
         ] {
             unpositioned.process_token(token);
         }
-        let diagnostic = unpositioned
-            .diagnostics()
-            .iter()
-            .find(|diagnostic| diagnostic.code == "unexpected-end-tag-in-foreign-content")
-            .unwrap();
-        assert_eq!(diagnostic.position, None);
+        for code in [
+            "unexpected-end-tag-in-foreign-content",
+            "unexpected-block-end-tag-outside-scope",
+        ] {
+            let diagnostic = unpositioned
+                .diagnostics()
+                .iter()
+                .find(|diagnostic| diagnostic.code == code)
+                .unwrap();
+            assert_eq!(diagnostic.position, None, "code {code:?}");
+        }
     }
 
     #[test]
