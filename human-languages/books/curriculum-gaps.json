@@ -149,12 +149,12 @@
       {
         "lessonId": "GU-C02-naam",
         "language": "gujarati",
-        "chapter": 2
+        "chapter": 3
       },
       {
         "lessonId": "GU-C04-pachha",
         "language": "gujarati",
-        "chapter": 4
+        "chapter": 5
       },
       {
         "lessonId": "HI-C01-namaste",
@@ -606,12 +606,12 @@
       {
         "lessonId": "GU-C02-naam",
         "language": "gujarati",
-        "chapter": 2
+        "chapter": 3
       },
       {
         "lessonId": "GU-C04-pachha",
         "language": "gujarati",
-        "chapter": 4
+        "chapter": 5
       },
       {
         "lessonId": "HI-C02-naam",
@@ -2879,7 +2879,8 @@
           9,
           10,
           11,
-          12
+          12,
+          13
         ],
         "bookChapters": [
           1,
@@ -2893,7 +2894,8 @@
           9,
           10,
           11,
-          12
+          12,
+          13
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -4028,8 +4030,8 @@
       },
       {
         "language": "gujarati",
-        "bookChapters": 12,
-        "declaredChapters": 12,
+        "bookChapters": 13,
+        "declaredChapters": 13,
         "missingCapability": 0,
         "findings": 0,
         "clean": true
@@ -4172,8 +4174,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 1016,
-      "declaredChapters": 1016,
+      "bookChapters": 1017,
+      "declaredChapters": 1017,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 83,
@@ -4750,14 +4752,14 @@
       {
         "lessonId": "GU-C06-number-histories",
         "language": "gujarati",
-        "chapter": 6,
+        "chapter": 7,
         "atoms": 4,
         "budget": 3
       },
       {
         "lessonId": "GU-C06-numbers-1-5",
         "language": "gujarati",
-        "chapter": 6,
+        "chapter": 7,
         "atoms": 4,
         "budget": 3
       },
@@ -4926,14 +4928,7 @@
       },
       {
         "language": "gujarati",
-        "chapter": 1,
-        "atoms": 16,
-        "budget": 12,
-        "lessonCount": 19
-      },
-      {
-        "language": "gujarati",
-        "chapter": 7,
+        "chapter": 8,
         "atoms": 16,
         "budget": 12,
         "lessonCount": 6
@@ -5091,7 +5086,7 @@
         "measurable": 69,
         "unmeasurable": 3,
         "lessonViolations": 2,
-        "chapterViolations": 2
+        "chapterViolations": 1
       },
       {
         "language": "hindi",
@@ -5360,7 +5355,7 @@
         {
           "lessonId": "GU-C01-aabhaar",
           "language": "gujarati",
-          "chapter": 1,
+          "chapter": 2,
           "glyphs": 7,
           "sample": "દધભયરવૃ",
           "systems": [
@@ -5580,7 +5575,7 @@
         {
           "lessonId": "GU-C01-aavjo",
           "language": "gujarati",
-          "chapter": 1,
+          "chapter": 2,
           "glyphs": 4,
           "sample": "ંજુો",
           "systems": [
@@ -5985,7 +5980,7 @@
     },
     "summary": {
       "lessonViolations": 46,
-      "chapterViolations": 24,
+      "chapterViolations": 23,
       "unmeasurableLessons": 502,
       "measurablePercent": 86,
       "steepestLesson": {
@@ -60600,7 +60595,7 @@
       {
         "lessonId": "GU-C10-dudh",
         "language": "gujarati",
-        "chapter": 10,
+        "chapter": 11,
         "glyphs": "ંકખચણપબભરવીો",
         "count": 12
       },
@@ -60915,14 +60910,14 @@
       {
         "lessonId": "GU-C04-pachha-malishun",
         "language": "gujarati",
-        "chapter": 4,
+        "chapter": 5,
         "glyphs": "ંછજપળવશીુો",
         "count": 10
       },
       {
         "lessonId": "GU-C05-hun-gujarati-bolun-chhun",
         "language": "gujarati",
-        "chapter": 5,
+        "chapter": 6,
         "glyphs": "ંગછજબરલીુો",
         "count": 10
       },
@@ -61174,14 +61169,14 @@
       {
         "lessonId": "GU-C11-bahen",
         "language": "gujarati",
-        "chapter": 11,
+        "chapter": 12,
         "glyphs": "ંઈકટભરિીુ",
         "count": 9
       },
       {
         "lessonId": "GU-C12-kaan",
         "language": "gujarati",
-        "chapter": 12,
+        "chapter": 13,
         "glyphs": "ંખટબરલિીો",
         "count": 9
       },
@@ -61419,35 +61414,35 @@
       {
         "lessonId": "GU-C02-shun",
         "language": "gujarati",
-        "chapter": 2,
+        "chapter": 3,
         "glyphs": "ંકણયરશુો",
         "count": 8
       },
       {
         "lessonId": "GU-C04-malishun",
         "language": "gujarati",
-        "chapter": 4,
+        "chapter": 5,
         "glyphs": "ંલળવશિીુ",
         "count": 8
       },
       {
         "lessonId": "GU-C09-gamvun",
         "language": "gujarati",
-        "chapter": 9,
+        "chapter": 10,
         "glyphs": "છજણબરલીો",
         "count": 8
       },
       {
         "lessonId": "GU-C12-modhu",
         "language": "gujarati",
-        "chapter": 12,
+        "chapter": 13,
         "glyphs": "કખટણધપવી",
         "count": 8
       },
       {
         "lessonId": "GU-C12-naak",
         "language": "gujarati",
-        "chapter": 12,
+        "chapter": 13,
         "glyphs": "ંખચજઢવુો",
         "count": 8
       },
@@ -61720,35 +61715,35 @@
       {
         "lessonId": "GU-C01-aabhaar",
         "language": "gujarati",
-        "chapter": 1,
+        "chapter": 2,
         "glyphs": "દધભયરવૃ",
         "count": 7
       },
       {
         "lessonId": "GU-C02-anand",
         "language": "gujarati",
-        "chapter": 2,
+        "chapter": 3,
         "glyphs": "ંથદયળીો",
         "count": 7
       },
       {
         "lessonId": "GU-C04-kaale",
         "language": "gujarati",
-        "chapter": 4,
+        "chapter": 5,
         "glyphs": "ંકલળશીુ",
         "count": 7
       },
       {
         "lessonId": "GU-C05-kaam-karvun",
         "language": "gujarati",
-        "chapter": 5,
+        "chapter": 6,
         "glyphs": "ંકરવીુૃ",
         "count": 7
       },
       {
         "lessonId": "GU-C05-rahevun",
         "language": "gujarati",
-        "chapter": 5,
+        "chapter": 6,
         "glyphs": "ંઅછદરવુ",
         "count": 7
       },
@@ -62000,7 +61995,7 @@
       {
         "lessonId": "GU-C05-bolvun",
         "language": "gujarati",
-        "chapter": 5,
+        "chapter": 6,
         "glyphs": "ંબલવુો",
         "count": 6
       },
@@ -62266,77 +62261,77 @@
       {
         "lessonId": "GU-C01-aavjo",
         "language": "gujarati",
-        "chapter": 1,
+        "chapter": 2,
         "glyphs": "ંજવુો",
         "count": 5
       },
       {
         "lessonId": "GU-C01-saarun",
         "language": "gujarati",
-        "chapter": 1,
+        "chapter": 2,
         "glyphs": "ંરીુો",
         "count": 5
       },
       {
         "lessonId": "GU-C02-maarun",
         "language": "gujarati",
-        "chapter": 2,
+        "chapter": 3,
         "glyphs": "ંરીુો",
         "count": 5
       },
       {
         "lessonId": "GU-C02-tamarun-naam-shun-chhe",
         "language": "gujarati",
-        "chapter": 2,
+        "chapter": 3,
         "glyphs": "ંછરશુ",
         "count": 5
       },
       {
         "lessonId": "GU-C03-hun",
         "language": "gujarati",
-        "chapter": 3,
+        "chapter": 4,
         "glyphs": "ંઅછરુ",
         "count": 5
       },
       {
         "lessonId": "GU-C03-tame-kem-chho",
         "language": "gujarati",
-        "chapter": 3,
+        "chapter": 4,
         "glyphs": "ંકછુો",
         "count": 5
       },
       {
         "lessonId": "GU-C03-vandho-nahi",
         "language": "gujarati",
-        "chapter": 3,
+        "chapter": 4,
         "glyphs": "ંધવીો",
         "count": 5
       },
       {
         "lessonId": "GU-C09-madad-karvi",
         "language": "gujarati",
-        "chapter": 9,
+        "chapter": 10,
         "glyphs": "ંછજબુ",
         "count": 5
       },
       {
         "lessonId": "GU-C10-paani",
         "language": "gujarati",
-        "chapter": 10,
+        "chapter": 11,
         "glyphs": "કદબરવ",
         "count": 5
       },
       {
         "lessonId": "GU-C10-rotli",
         "language": "gujarati",
-        "chapter": 10,
+        "chapter": 11,
         "glyphs": "કણપબવ",
         "count": 5
       },
       {
         "lessonId": "GU-C11-bhai",
         "language": "gujarati",
-        "chapter": 11,
+        "chapter": 12,
         "glyphs": "ંકટબુ",
         "count": 5
       },
@@ -62700,49 +62695,49 @@
       {
         "lessonId": "GU-C02-chhe",
         "language": "gujarati",
-        "chapter": 2,
+        "chapter": 3,
         "glyphs": "ંછુો",
         "count": 4
       },
       {
         "lessonId": "GU-C02-maarun-naam-chhe",
         "language": "gujarati",
-        "chapter": 2,
+        "chapter": 3,
         "glyphs": "ંછરુ",
         "count": 4
       },
       {
         "lessonId": "GU-C03-majaa",
         "language": "gujarati",
-        "chapter": 3,
+        "chapter": 4,
         "glyphs": "ંછજુ",
         "count": 4
       },
       {
         "lessonId": "GU-C04-pachha",
         "language": "gujarati",
-        "chapter": 4,
+        "chapter": 5,
         "glyphs": "ચછપશ",
         "count": 4
       },
       {
         "lessonId": "GU-C07-aavvun",
         "language": "gujarati",
-        "chapter": 7,
+        "chapter": 8,
         "glyphs": "દળિી",
         "count": 4
       },
       {
         "lessonId": "GU-C10-chaa",
         "language": "gujarati",
-        "chapter": 10,
+        "chapter": 11,
         "glyphs": "કબરી",
         "count": 4
       },
       {
         "lessonId": "GU-C12-aankh",
         "language": "gujarati",
-        "chapter": 12,
+        "chapter": 13,
         "glyphs": "ચબવુ",
         "count": 4
       },
@@ -63071,21 +63066,21 @@
       {
         "lessonId": "GU-C03-kem",
         "language": "gujarati",
-        "chapter": 3,
+        "chapter": 4,
         "glyphs": "કછો",
         "count": 3
       },
       {
         "lessonId": "GU-C08-vanchvun",
         "language": "gujarati",
-        "chapter": 8,
+        "chapter": 9,
         "glyphs": "જપો",
         "count": 3
       },
       {
         "lessonId": "GU-C11-kutumb",
         "language": "gujarati",
-        "chapter": 11,
+        "chapter": 12,
         "glyphs": "ણરિ",
         "count": 3
       },
@@ -63589,28 +63584,28 @@
       {
         "lessonId": "GU-C02-tu-tame",
         "language": "gujarati",
-        "chapter": 2,
+        "chapter": 3,
         "glyphs": "ંુ",
         "count": 2
       },
       {
         "lessonId": "GU-C08-lakhvun",
         "language": "gujarati",
-        "chapter": 8,
+        "chapter": 9,
         "glyphs": "છર",
         "count": 2
       },
       {
         "lessonId": "GU-C09-levun",
         "language": "gujarati",
-        "chapter": 9,
+        "chapter": 10,
         "glyphs": "ઉછ",
         "count": 2
       },
       {
         "lessonId": "GU-C11-mitra",
         "language": "gujarati",
-        "chapter": 11,
+        "chapter": 12,
         "glyphs": "બી",
         "count": 2
       },
@@ -64142,35 +64137,35 @@
       {
         "lessonId": "GU-C04-practice",
         "language": "gujarati",
-        "chapter": 4,
+        "chapter": 5,
         "glyphs": "ળ",
         "count": 1
       },
       {
         "lessonId": "GU-C07-hovun",
         "language": "gujarati",
-        "chapter": 7,
+        "chapter": 8,
         "glyphs": "છ",
         "count": 1
       },
       {
         "lessonId": "GU-C07-jaanvun",
         "language": "gujarati",
-        "chapter": 7,
+        "chapter": 8,
         "glyphs": "ળ",
         "count": 1
       },
       {
         "lessonId": "GU-C07-khaavun",
         "language": "gujarati",
-        "chapter": 7,
+        "chapter": 8,
         "glyphs": "ક",
         "count": 1
       },
       {
         "lessonId": "GU-C09-puchhvun",
         "language": "gujarati",
-        "chapter": 9,
+        "chapter": 10,
         "glyphs": "ચ",
         "count": 1
       },
@@ -70831,7 +70826,7 @@
         "atomMeasurementBlindLessons": 3,
         "durationViolations": 0,
         "atomLessonSpikes": 2,
-        "atomChapterSpikes": 2,
+        "atomChapterSpikes": 1,
         "glyphLessonSpikes": 2,
         "scriptSystemSpikes": 0,
         "scriptClosureViolations": 46,
@@ -70880,7 +70875,7 @@
           {
             "language": "gujarati",
             "kind": "atom-step",
-            "count": 4,
+            "count": 3,
             "unit": "lesson/chapter spike(s)",
             "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
           },
@@ -72573,16 +72568,16 @@
         "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
       },
       {
-        "language": "gujarati",
+        "language": "sanskrit",
         "kind": "atom-step",
         "count": 4,
         "unit": "lesson/chapter spike(s)",
         "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
       },
       {
-        "language": "sanskrit",
+        "language": "gujarati",
         "kind": "atom-step",
-        "count": 4,
+        "count": 3,
         "unit": "lesson/chapter spike(s)",
         "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
       },
@@ -75642,16 +75637,16 @@
         "pen": 14,
         "coreVoice": 58,
         "drivablePercent": 81,
-        "drivablePrefixTotal": 54,
+        "drivablePrefixTotal": 57,
         "chapters": [
           {
             "language": "gujarati",
             "chapter": 1,
-            "lessonCount": 19,
+            "lessonCount": 11,
             "voice": 1,
-            "sight": 4,
-            "pen": 14,
-            "coreVoice": 5,
+            "sight": 0,
+            "pen": 10,
+            "coreVoice": 1,
             "modalities": [
               "voice",
               "sight",
@@ -75663,6 +75658,21 @@
           {
             "language": "gujarati",
             "chapter": 2,
+            "lessonCount": 8,
+            "voice": 0,
+            "sight": 4,
+            "pen": 4,
+            "coreVoice": 4,
+            "modalities": [
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 3,
+            "firstNonVoiceLesson": "GU-W01-haa-guided-copy"
+          },
+          {
+            "language": "gujarati",
+            "chapter": 3,
             "lessonCount": 9,
             "voice": 3,
             "sight": 6,
@@ -75677,7 +75687,7 @@
           },
           {
             "language": "gujarati",
-            "chapter": 3,
+            "chapter": 4,
             "lessonCount": 6,
             "voice": 2,
             "sight": 4,
@@ -75692,7 +75702,7 @@
           },
           {
             "language": "gujarati",
-            "chapter": 4,
+            "chapter": 5,
             "lessonCount": 5,
             "voice": 2,
             "sight": 3,
@@ -75707,7 +75717,7 @@
           },
           {
             "language": "gujarati",
-            "chapter": 5,
+            "chapter": 6,
             "lessonCount": 5,
             "voice": 1,
             "sight": 4,
@@ -75722,7 +75732,7 @@
           },
           {
             "language": "gujarati",
-            "chapter": 6,
+            "chapter": 7,
             "lessonCount": 2,
             "voice": 2,
             "sight": 0,
@@ -75736,7 +75746,7 @@
           },
           {
             "language": "gujarati",
-            "chapter": 7,
+            "chapter": 8,
             "lessonCount": 6,
             "voice": 6,
             "sight": 0,
@@ -75746,20 +75756,6 @@
               "voice"
             ],
             "drivablePrefix": 6,
-            "firstNonVoiceLesson": null
-          },
-          {
-            "language": "gujarati",
-            "chapter": 8,
-            "lessonCount": 4,
-            "voice": 0,
-            "sight": 4,
-            "pen": 0,
-            "coreVoice": 4,
-            "modalities": [
-              "sight"
-            ],
-            "drivablePrefix": 4,
             "firstNonVoiceLesson": null
           },
           {
@@ -75807,6 +75803,20 @@
           {
             "language": "gujarati",
             "chapter": 12,
+            "lessonCount": 4,
+            "voice": 0,
+            "sight": 4,
+            "pen": 0,
+            "coreVoice": 4,
+            "modalities": [
+              "sight"
+            ],
+            "drivablePrefix": 4,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "gujarati",
+            "chapter": 13,
             "lessonCount": 4,
             "voice": 0,
             "sight": 4,
@@ -89176,7 +89186,7 @@
     "renderedFindings": 0
   },
   "glyphCoverage": {
-    "filesScanned": 1154,
+    "filesScanned": 1155,
     "mainCharacters": 126,
     "scriptCharacters": 681,
     "gaps": 0
