@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "id": "validation/starlark-declarations-invalid",
+  "domain": "validation",
+  "summary": "Unsafe Starlark source patterns and undeclared dependency identities fail closed.",
+  "platforms": [
+    "linux"
+  ],
+  "capabilities": [
+    "validation"
+  ],
+  "workspace": {
+    "files": []
+  },
+  "input": {
+    "operation": "validation",
+    "options": {
+      "platform": "linux",
+      "checks": [
+        "starlark_declarations"
+      ],
+      "packages": [
+        {
+          "name": "python/core",
+          "rel_path": "code/packages/python/core",
+          "language": "python",
+          "build_file_state": "present",
+          "build_references": [],
+          "is_starlark": false,
+          "declared_srcs": [],
+          "declared_deps": []
+        },
+        {
+          "name": "python/rules",
+          "rel_path": "code/packages/python/rules",
+          "language": "python",
+          "build_file_state": "present",
+          "build_references": [
+            "python/core"
+          ],
+          "is_starlark": true,
+          "declared_srcs": [
+            "../outside.py"
+          ],
+          "declared_deps": [
+            "python/core",
+            "python/missing"
+          ]
+        }
+      ],
+      "dependency_edges": [
+        [
+          "python/core",
+          "python/rules"
+        ]
+      ]
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "validation/starlark-declarations-invalid",
+    "domain": "validation",
+    "outcome": "error",
+    "result": {
+      "valid": false,
+      "diagnostic_codes": [
+        "STARLARK_DEPENDENCY_INVALID",
+        "STARLARK_SOURCE_INVALID"
+      ]
+    },
+    "diagnostics": [
+      {
+        "code": "STARLARK_DEPENDENCY_INVALID",
+        "severity": "error",
+        "path": "code/packages/python/rules/BUILD",
+        "package": "python/rules",
+        "details": {
+          "invalid_dependencies": [
+            "python/missing"
+          ]
+        }
+      },
+      {
+        "code": "STARLARK_SOURCE_INVALID",
+        "severity": "error",
+        "path": "code/packages/python/rules/BUILD",
+        "package": "python/rules",
+        "details": {
+          "invalid_sources": [
+            "../outside.py"
+          ]
+        }
+      }
+    ]
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}

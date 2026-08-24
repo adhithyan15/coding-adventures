@@ -11,9 +11,9 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 12572,
+  "active_pr": null,
   "last_inventory": {
-    "revision": "69d816d78994217c72e7d956d5f59872406b6282",
+    "revision": "21032fe145526085b69a9ffa116c56cb67d558d2",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1370,
@@ -320,11 +320,13 @@
     {
       "id": "build-tool-validation-oracle-corpus",
       "title": "Close the remaining build-tool validation checks with semantic oracles",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-pure-domain-corpus"],
-      "branch": null,
+      "branch": "codex/build-tool-validation-oracle-corpus",
       "pr_number": null,
-      "notes": "Discovered during the pure-domain security review. Add deterministic inline inputs, positive and adversarial fixtures, and input-to-diagnostic oracles for declared dependencies, standalone prerequisites, Starlark declarations, identity, toolchain support, and path safety before those checks enter the closed schema."
+      "selection_revision": "21032fe145526085b69a9ffa116c56cb67d558d2",
+      "selection_notes": "Selected only after PR #12572 completed all 30 checks, merged through squash auto-merge, the collision-checked exact-main inventory was regenerated, and the implementation and authority deltas were classified without exposing another unowned gap. The schema-3 inventory remains 15 established lanes, 1,370 implementation identities, and 4,563 slots with zero collisions or unknown buckets; OCaml remains correctly emerging at zero packages. This process-free, language-neutral corpus is ready behind the merged pure-domain corpus, directly unlocks three owners, and has 12 unfinished build-tool and OCaml descendants. Nine live open PRs and 35 non-main remote heads have zero exact overlap on the governing conformance spec, schema, neutral fixture surfaces, reference runner, runner/schema tests, state, or roadmap; the target branch and prior PR are absent. PRs #12162 and #12149 still block implementation-coupled Go validator and OCaml integration surfaces, but do not touch this neutral corpus slice. The newly ready LZ78 Python pin is collision-free and remains the smallest immediate package repair, while this validation corpus has substantially greater dependency leverage. Main advances after the trie merge change only human-language and already-owned HTML diagnostic surfaces and do not alter the inventory or selected files.",
+      "notes": "Implemented the closed nine-check validation contract in dependency order: governing spec, schema and six language-neutral positive/adversarial cases, independent Python semantic oracles and dishonesty rejection, then fixture README/changelog and loop metadata. The snapshot derives build presence, local and transitive standalone prerequisites, Starlark sources/dependencies, package-root identity, manifest uniqueness, toolchain support, path safety, and Lua Windows sibling parity without workspace, Git, process, or network access. Local validation passes the 75-case corpus, 18 schema tests, 48 runner tests at 88% branch-aware runner coverage, all 121 downstream execution/authority/backend tests with expected platform skips, execution-contract validation, Ruff error-class lint and formatting, compileall, Bandit, Go build-tool tests at 78.3% aggregate coverage plus vet/trimpath build and the 5,070-package BUILD-file plan, the collision-free schema-3 parity report plus 10 reporter tests, seven capability taxonomy tests, five Haskell capability tests, and 46 OCaml lock tests with two expected skips. Strict MyPy remains non-gating for this legacy runner and reports 11 baseline errors only in unchanged lines."
     },
     {
       "id": "build-file-standalone-integrity",
@@ -4524,7 +4526,7 @@
     {
       "id": "python-trie-build-front-idempotence",
       "title": "Make the Python trie BUILD fronts repeatable",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["python-uv-build-front-idempotence-audit"],
       "branch": "codex/python-trie-build-front-idempotence",
       "pr_number": 12572,
@@ -4535,6 +4537,10 @@
       "selection_notes": "Selected only after PR #12562 merged through squash auto-merge, the collision-checked exact-main inventory was regenerated, and the newly exposed remaining-engine Starlark metering owner was registered. The schema-3 inventory remains 15 established lanes, 1,370 implementation identities, and 4,563 slots with zero collisions or unknown buckets; the uv audit reports exactly seven remaining non-idempotent fronts across six components. Trie followed by radix-tree is dependency-ready behind the merged uv audit, owns the only remaining two-package uv component, removes two measured fronts, and has six recorded Python manifest consumers. Nine live open PRs and 32 non-main remote heads have zero exact or semantic overlap on both package roots, focused recipe and audit tests, state, roadmap, or the governing uv spec; the target branch and prior PR are absent. The higher-leverage build-tool validation, CLI, and OCaml process-free owners remain unsafe while PRs #12162 and #12149 overlap their validator and main surfaces, while IPP portability is a broader all-lane tranche with fewer immediate descendants. The post-#12562 Devanagari-only main advance changes no package marker or candidate surface.",
       "implementation_revision": "63cfb36bd861b3dceebd25190d04b2dbd65ed8ed",
       "final_review_revision": "9fbdd41996ec2b9ddf0bb0ebab8cf9c9ae1b6143",
+      "merged_head_revision": "8f4bd8ea3dca1f0ec0fdf1c66f3ea25a2a63f3f8",
+      "merged_at": "2026-08-24T12:55:12Z",
+      "merge_revision": "42b29dd5f03b93841660848628c49d9a1130664b",
+      "merge_notes": "All 30 reported checks reached terminal acceptable conclusions: 24 successes, five expected skips, and one neutral aggregate CodeQL result, with no failures or pending work. GitHub reported the branch clean and mergeable; the loop enabled squash auto-merge, and GitHub merged PR #12572 without a manual merge command.",
       "publication_notes": "Opened ready-for-review PR #12572 from clean validated head 49785f98766dc5bc7c16fe97de4aae55f3fefa98 after a normal first push. Immediately before publication, origin/main remained at the exact selection revision 69d816d78994217c72e7d956d5f59872406b6282, so no rebase or force push was required. The published branch contains one dependency-shaped trie/radix-tree repair plus the separately registered LZ78 descendant; no other parity PR was active.",
       "validation_notes": "Both trie and radix-tree canonical and Windows BUILD fronts now clear and pin a named Python 3.13 environment, preserve trie-before-radix installation, and invoke that interpreter for Ruff lint, Ruff formatting, strict MyPy, and pytest. Radix-tree follows the installed untyped trie source explicitly. On Windows with uv 0.11.28 and Python 3.13.14, both fronts pass twice consecutively: trie passes 95 tests at 99.41% coverage and radix-tree passes 84 tests at 97.97% coverage, with all newly enforced quality gates clean. Bounded Python 3.12 generic-syntax and formatting cleanup changes no behavior, package metadata, version, runtime dependency, capability, or coverage floor. Wheel and source distributions build for both packages. The focused complete-recipe, uv-audit, and Markov regression suites pass 18 tests, and the live uv corpus shrinks exactly from seven fronts to five. An explicit Python 3.13 downstream environment passes all 48 LZ78 tests at 97.26% coverage. The exact LZ78 Windows front separately selects ambient Python 3.10.11 and fails before tests against trie's Python >=3.12 floor; this pre-existing affected-closure defect is recorded under the new pending python-lz78-build-front-python313 owner rather than widened into this tranche. The Go build tool passes all tests, vet, and trimpath compilation; its exact diff plan evaluates 45 Starlark files, discovers 494 Python packages, and selects exactly trie, radix-tree, and LZ78. The real affected execution builds both owned packages successfully and reproduces only the separately owned LZ78 Python-selection failure.",
       "notes": "Dependency-shaped generated-pattern backfill for python/trie followed by python/radix-tree. Pin Python 3.13, recreate the named environment, and prove both fronts and their dependency order on immediate repeat."

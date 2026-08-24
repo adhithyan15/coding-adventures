@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "id": "validation/dependency-oracles",
+  "domain": "validation",
+  "summary": "Undeclared local references and missing standalone prerequisites produce independent diagnostics.",
+  "platforms": [
+    "linux"
+  ],
+  "capabilities": [
+    "validation"
+  ],
+  "workspace": {
+    "files": []
+  },
+  "input": {
+    "operation": "validation",
+    "options": {
+      "platform": "linux",
+      "checks": [
+        "local_dependency_declarations",
+        "standalone_prerequisites"
+      ],
+      "packages": [
+        {
+          "name": "python/core",
+          "rel_path": "code/packages/python/core",
+          "language": "python",
+          "build_file_state": "present",
+          "build_references": [],
+          "is_starlark": false,
+          "declared_srcs": [],
+          "declared_deps": []
+        },
+        {
+          "name": "python/rogue",
+          "rel_path": "code/packages/python/rogue",
+          "language": "python",
+          "build_file_state": "present",
+          "build_references": [],
+          "is_starlark": false,
+          "declared_srcs": [],
+          "declared_deps": []
+        },
+        {
+          "name": "python/app",
+          "rel_path": "code/packages/python/app",
+          "language": "python",
+          "build_file_state": "present",
+          "build_references": [
+            "python/rogue"
+          ],
+          "is_starlark": false,
+          "declared_srcs": [],
+          "declared_deps": []
+        }
+      ],
+      "dependency_edges": [
+        [
+          "python/core",
+          "python/app"
+        ]
+      ]
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "validation/dependency-oracles",
+    "domain": "validation",
+    "outcome": "error",
+    "result": {
+      "valid": false,
+      "diagnostic_codes": [
+        "LOCAL_DEPENDENCY_UNDECLARED",
+        "STANDALONE_PREREQUISITE_MISSING"
+      ]
+    },
+    "diagnostics": [
+      {
+        "code": "LOCAL_DEPENDENCY_UNDECLARED",
+        "severity": "error",
+        "path": "code/packages/python/app/BUILD",
+        "package": "python/app",
+        "details": {
+          "undeclared_references": [
+            "python/rogue"
+          ]
+        }
+      },
+      {
+        "code": "STANDALONE_PREREQUISITE_MISSING",
+        "severity": "error",
+        "path": "code/packages/python/app/BUILD",
+        "package": "python/app",
+        "details": {
+          "missing_prerequisites": [
+            "python/core"
+          ]
+        }
+      }
+    ]
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}

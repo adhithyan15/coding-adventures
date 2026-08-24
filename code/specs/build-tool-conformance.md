@@ -805,27 +805,61 @@ Validation v1 uses the stable diagnostic registry
 `BUILD_FILE_MISSING`, `BUILD_FILE_EMPTY`, `LOCAL_DEPENDENCY_UNDECLARED`,
 `STANDALONE_PREREQUISITE_MISSING`, `STARLARK_SOURCE_INVALID`,
 `STARLARK_DEPENDENCY_INVALID`, `IDENTITY_AMBIGUOUS`, `MANIFEST_AMBIGUOUS`,
-`TOOLCHAIN_UNSUPPORTED`, and `PATH_UNSAFE`. `outcome: "ok"` requires
-`valid: true` with no diagnostic codes. `outcome: "error"` requires
-`valid: false`, one or more codes, and matching diagnostic-envelope codes.
+`TOOLCHAIN_UNSUPPORTED`, and `PATH_UNSAFE`. The closed check registry is
+`build_file_presence`, `local_dependency_declarations`,
+`standalone_prerequisites`, `starlark_declarations`, `identity_uniqueness`,
+`manifest_uniqueness`, `toolchain_support`, `path_safety`, and
+`lua_windows_sibling_parity`.
+
+Every validation package carries one normalized snapshot: canonical package
+identity and root, implementation language, selected BUILD state and local
+references, Starlark source/dependency declarations, canonical identity-root
+candidates, manifest candidates, and raw path candidates. Dependency edges are
+ordered `[prerequisite, dependent]`; both endpoints MUST be declared, duplicate
+edges are rejected by the closed schema, and cycles are invalid case input.
+These records are data, never instructions:
+
+- `local_dependency_declarations` reports every BUILD reference other than the
+  package itself that is not in the package's transitive prerequisite closure;
+- `standalone_prerequisites` applies to the fixed isolated-environment registry
+  `python`, `typescript`, and `perl`, and reports transitive prerequisites that
+  the selected BUILD does not reference;
+- `starlark_declarations` reports source patterns that fail the portable-glob
+  grammar and declared dependency names that are unknown or outside the
+  package's transitive prerequisite closure;
+- `identity_uniqueness` requires exactly one candidate root equal to the
+  package's normalized root, while `manifest_uniqueness` permits at most one
+  canonical manifest candidate;
+- `toolchain_support` derives support only from the canonical v1 toolchain
+  registry below; fixtures cannot assert support with a boolean; and
+- `path_safety` applies the shared atomic repository-relative path validator to
+  each raw candidate and reports unsafe strings in diagnostic details while
+  retaining the package's safe normalized root as the diagnostic path.
+
+Every produced diagnostic includes a stable code and severity plus the safe
+package root or selected BUILD path. Package-scoped diagnostics include the
+qualified package name and sorted machine-readable detail lists. The complete
+diagnostic array is sorted by `(code, path, package, canonical details)`.
+`outcome: "ok"` requires `valid: true` with no diagnostic codes. `outcome:
+"error"` requires `valid: false`, one or more codes, and matching
+diagnostic-envelope codes. A fixture's expected result is never evidence for a
+check: the runner independently derives the diagnostic array from the input
+snapshot and rejects a self-consistent but dishonest result.
+
 Platform BUILD precedence is a discovery decision; validation does not invent
 a missing-platform error when canonical `BUILD` fallback is available.
 Validation input is the sole normalized repository-data snapshot for this
 domain. It does not carry a second inline BUILD-file source of truth, and the
-adapter MUST NOT consult the workspace or host checkout.
+adapter MUST NOT consult the workspace or host checkout, Git, a process API, or
+the network.
 
-The closed process-free v1 record exposes `build_file_presence`, whose result
-is derived exactly from each package's normalized `build_file_state`, and
-`lua_windows_sibling_parity`. The Lua check consumes only normalized package
-data: `canonical_lua_sibling_installs`, `windows_build_file_state`, and
+The Lua sibling-parity check additionally consumes
+`canonical_lua_sibling_installs`, `windows_build_file_state`, and
 `windows_lua_sibling_installs`. Every referenced sibling is a declared package
 identity. A canonical sibling missing from the Windows set produces
 `STANDALONE_PREREQUISITE_MISSING` at the package's `BUILD_windows` path,
 including when `windows_build_file_state` is `missing`; Windows may contain
-additional transitive siblings. The other diagnostic families above remain
-the target contract, but they are not valid pure-domain check values until
-their inputs and deterministic semantic oracles are added. A self-consistent
-result is never sufficient evidence for an unmodeled validation check.
+additional transitive siblings.
 
 Canonical result ordering is domain-aware:
 

@@ -5730,6 +5730,68 @@ requires Python 3.12 or newer; an explicit Python 3.13 environment passes all
 pinning correction, its complete-recipe regression, and any dormant LZ78
 quality debt in an independently reviewable dependency-shaped slice.
 
+### Post-#12572 refresh and validation-oracle selection
+
+Final head `8f4bd8ea3dca1f0ec0fdf1c66f3ea25a2a63f3f8` completed all 30
+reported checks with 24 successes, five expected skips, one neutral aggregate
+CodeQL result, and no failures or pending work. GitHub reported PR #12572 clean
+and mergeable; the loop enabled squash auto-merge, and GitHub merged it as
+`42b29dd5f03b93841660848628c49d9a1130664b` at
+2026-08-24T12:55:12Z without a manual merge command.
+
+The collision-checked schema-3 inventory remains identity-neutral through the
+subsequent human-language and already-owned HTML diagnostic changes at exact
+main `21032fe145526085b69a9ffa116c56cb67d558d2`: 15 established lanes,
+1,370 implementation identities, 4,563 package slots, 175 high-consensus
+identities with 276 gaps, 122 identities in five to nine lanes with 926 gaps,
+166 identities in two to four lanes with 2,087 gaps, and 907 singletons with
+12,698 gaps. There are 718 Rust singletons, zero canonical collisions, and
+zero unknown buckets. OCaml remains correctly emerging with no packages. The
+exact implementation, fixture, and authority audit exposes no unowned gap;
+LZ78's affected-closure Python pin is already a pending registered owner.
+
+The dependency/leverage pass selects
+`build-tool-validation-oracle-corpus`. It is ready behind the merged pure-domain
+corpus, directly unlocks the Go oracle plus orphan-crate and tracked-artifact
+validation corpora, and has 12 unfinished build-tool and OCaml descendants.
+Nine live open PRs and 35 non-main remote heads have zero exact overlap on the
+governing conformance spec, closed schema, neutral fixtures, Python reference
+runner, runner/schema tests, state, or roadmap; the target branch and prior PR
+are absent.
+
+PRs #12162 and #12149 still block implementation-coupled Go validator and
+OCaml integration surfaces, but they do not touch this language-neutral corpus
+slice. This narrows the earlier conservative roadmap classification: neutral
+validation and CLI fixtures may proceed while native implementation edits stay
+serialized behind those live branches. The newly ready LZ78 repair remains a
+small collision-free follow-up, but it unlocks no state descendants; closing
+the deterministic process-free validation contract therefore has materially
+greater leverage toward the every-language build-tool and OCaml promotion
+requirements.
+
+The selected corpus is now implemented without widening into any native
+build-tool engine. Validation v1 exposes exactly nine checks and derives every
+diagnostic from one bounded normalized snapshot. Six new fixtures cover a
+fully clean transitive prerequisite chain, undeclared local references,
+missing standalone prerequisites, unsafe Starlark sources and unknown
+dependencies, ambiguous package roots and manifests, an unsupported language,
+and unsafe raw paths. Unknown graph endpoints, normalized duplicate package
+identities, cycles, and self-consistent dishonest results fail closed. The
+runner retains safe package roots as diagnostic paths, keeps unsafe inputs only
+in bounded details, and the full pure-domain side-effect test proves no
+filesystem, process, Git, or network access.
+
+Local validation passes the 75-case corpus, all 18 schema and 48 runner tests
+with 88% branch-aware runner coverage, 121 downstream execution, authority,
+loader, broker, and Linux-backend tests with their expected platform skips,
+and the process-free execution-contract validator. Ruff error-class lint and
+format checks, compileall, Bandit, the Go build tool's full tests at 78.3%
+aggregate coverage plus vet and trimpath build, a real 5,070-package
+BUILD-validation plan, the collision-free schema-3 parity report and its ten
+tests, capability taxonomy, Haskell capability, and OCaml toolchain-lock suites
+also pass. Strict MyPy remains a non-gating legacy audit with 11 errors in
+unchanged runner lines; this tranche adds none.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

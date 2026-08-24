@@ -2,6 +2,12 @@
 
 ## 2026-08-24
 
+- Closed validation v1 with six language-neutral positive and adversarial
+  cases for local dependency declarations, standalone prerequisites, Starlark
+  sources and dependencies, package-root and manifest uniqueness, toolchain
+  support, and path safety. The process-free runner now derives all nine
+  validation checks from bounded normalized snapshots and rejects dishonest
+  result assertions, unknown endpoints, duplicate identities, and cycles.
 - Added one bounded positive Starlark metering case plus stable adversarial
   oracles for step fuel, recursion, aggregate allocations, range cardinality,
   scalar bytes, load depth, module count, load cycles, and combined print/trace

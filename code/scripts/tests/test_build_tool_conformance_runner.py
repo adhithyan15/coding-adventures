@@ -131,7 +131,7 @@ class CorpusTests(unittest.TestCase):
         summary = runner.validate_corpus(FIXTURE_ROOT)
 
         self.assertEqual(summary["schema_version"], 1)
-        self.assertEqual(summary["case_count"], 69)
+        self.assertEqual(summary["case_count"], 75)
         self.assertEqual(summary["implementation_count"], 16)
         self.assertEqual(summary["established_languages"], 15)
         self.assertEqual(summary["execution_case_count"], 0)
@@ -643,6 +643,67 @@ class PureDomainValidationTests(unittest.TestCase):
             "CASE_VALIDATION_SNAPSHOT_INCONSISTENT",
         )
 
+    def test_remaining_validation_oracles_are_derived_from_snapshots(self) -> None:
+        filenames = (
+            "validation-clean-full.json",
+            "validation-dependency-oracles.json",
+            "validation-starlark-declarations-invalid.json",
+            "validation-identity-manifest-ambiguous.json",
+            "validation-toolchain-unsupported.json",
+            "validation-path-unsafe.json",
+        )
+        schema_args = self._schema_args()
+        for filename in filenames:
+            with self.subTest(filename=filename):
+                case = load_case(filename)
+                runner.validate_case_document(case, **schema_args)
+                runner.assert_result_matches(
+                    case,
+                    copy.deepcopy(case["expected"]),
+                    pure_domain_schema=schema_args["pure_domain_schema"],
+                )
+
+    def test_validation_rejects_unknown_duplicate_and_cyclic_graph_inputs(
+        self,
+    ) -> None:
+        schema_args = self._schema_args()
+
+        unknown = load_case("validation-dependency-oracles.json")
+        unknown["input"]["options"]["dependency_edges"][0][0] = "python/missing"
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.validate_case_document(unknown, **schema_args)
+        self.assertEqual(raised.exception.code, "CASE_EDGE_UNKNOWN")
+
+        duplicate = load_case("validation-dependency-oracles.json")
+        duplicate["input"]["options"]["packages"].append(
+            copy.deepcopy(duplicate["input"]["options"]["packages"][0])
+        )
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.validate_case_document(duplicate, **schema_args)
+        self.assertEqual(raised.exception.code, "CASE_PACKAGE_DUPLICATE")
+
+        cyclic = load_case("validation-dependency-oracles.json")
+        cyclic["input"]["options"]["dependency_edges"].append(
+            ["python/app", "python/core"]
+        )
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.validate_case_document(cyclic, **schema_args)
+        self.assertEqual(raised.exception.code, "CASE_EDGE_CYCLE")
+
+    def test_validation_result_cannot_self_assert_a_dishonest_outcome(self) -> None:
+        case = load_case("validation-path-unsafe.json")
+        actual = copy.deepcopy(case["expected"])
+        actual["outcome"] = "ok"
+        actual["result"] = {"valid": True, "diagnostic_codes": []}
+        actual["diagnostics"] = []
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.assert_result_matches(
+                case,
+                actual,
+                pure_domain_schema=self._schema_args()["pure_domain_schema"],
+            )
+        self.assertEqual(raised.exception.code, "RESULT_VALIDATION_INCONSISTENT")
+
     def test_starlark_load_scanner_handles_lexical_literal_forms(self) -> None:
         commented = load_case("starlark-structured-context.json")
         commented["workspace"]["files"][0]["content_utf8"] = (
@@ -931,6 +992,9 @@ class PureDomainValidationTests(unittest.TestCase):
             mock.patch.object(subprocess, "Popen") as popen,
             mock.patch.object(os, "system") as system,
             mock.patch.object(os, "chmod") as chmod,
+            mock.patch("urllib.request.urlopen") as retrieve,
+            mock.patch("socket.socket") as network_socket,
+            mock.patch("builtins.open") as file_open,
         ):
             for case in cases:
                 runner.validate_case_document(case, **schema_args)
@@ -940,6 +1004,9 @@ class PureDomainValidationTests(unittest.TestCase):
         popen.assert_not_called()
         system.assert_not_called()
         chmod.assert_not_called()
+        retrieve.assert_not_called()
+        network_socket.assert_not_called()
+        file_open.assert_not_called()
 
 
 class CommandLineTests(unittest.TestCase):
@@ -952,7 +1019,7 @@ class CommandLineTests(unittest.TestCase):
 
         self.assertEqual(exit_code, 0)
         summary = json.loads(stdout.getvalue())
-        self.assertEqual(summary["case_count"], 69)
+        self.assertEqual(summary["case_count"], 75)
 
     def test_validate_result_reports_match_and_rejects_execution_override(self) -> None:
         case_path = CASES_ROOT / "graph-diamond.json"

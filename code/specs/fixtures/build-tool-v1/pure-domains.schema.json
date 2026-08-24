@@ -1015,7 +1015,14 @@
     "validation_check": {
       "enum": [
         "build_file_presence",
-        "lua_windows_sibling_parity"
+        "identity_uniqueness",
+        "local_dependency_declarations",
+        "lua_windows_sibling_parity",
+        "manifest_uniqueness",
+        "path_safety",
+        "standalone_prerequisites",
+        "starlark_declarations",
+        "toolchain_support"
       ]
     },
     "validation_diagnostic_code": {
@@ -1078,11 +1085,39 @@
           "maxItems": 4096,
           "uniqueItems": true,
           "items": {
-            "$ref": "#/$defs/portable_glob"
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
           }
         },
         "declared_deps": {
           "$ref": "#/$defs/package_names"
+        },
+        "identity_candidates": {
+          "type": "array",
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/safe_path"
+          }
+        },
+        "manifest_candidates": {
+          "type": "array",
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/safe_path"
+          }
+        },
+        "validation_paths": {
+          "type": "array",
+          "maxItems": 4096,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          }
         },
         "canonical_lua_sibling_installs": {
           "$ref": "#/$defs/package_names"
@@ -1130,7 +1165,7 @@
             "checks": {
               "type": "array",
               "minItems": 1,
-              "maxItems": 8,
+              "maxItems": 9,
               "uniqueItems": true,
               "items": {
                 "$ref": "#/$defs/validation_check"
@@ -1181,6 +1216,81 @@
                           "const": "lua"
                         }
                       }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "checks": {
+                    "contains": {
+                      "const": "identity_uniqueness"
+                    }
+                  }
+                },
+                "required": [
+                  "checks"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "packages": {
+                    "items": {
+                      "required": [
+                        "identity_candidates"
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "checks": {
+                    "contains": {
+                      "const": "manifest_uniqueness"
+                    }
+                  }
+                },
+                "required": [
+                  "checks"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "packages": {
+                    "items": {
+                      "required": [
+                        "manifest_candidates"
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "checks": {
+                    "contains": {
+                      "const": "path_safety"
+                    }
+                  }
+                },
+                "required": [
+                  "checks"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "packages": {
+                    "items": {
+                      "required": [
+                        "validation_paths"
+                      ]
                     }
                   }
                 }
