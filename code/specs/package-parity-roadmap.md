@@ -5279,6 +5279,32 @@ Live audits across six open PRs and 27 remote source heads find zero overlap on
 Hash Functions, its recipe regression, parity state, or roadmap. The target
 remote branch and PR were absent before creation.
 
+### Hash Functions strict-MyPy implementation and validation
+
+The canonical and Windows Hash Functions BUILD recipes now add only MyPy's
+`--strict` flag to the repaired commands, and the exact-recipe regression pins
+both spellings. No package source, behavioral test, dependency, capability,
+production-authority, or privileged-boundary surface changes.
+
+The exact Windows front passes twice consecutively with uv 0.11.28, Python
+3.13.14, Ruff, formatting, strict MyPy across all nine source/test files, 88
+tests, and 100% coverage. Exact dependent Windows fronts pass Bloom Filter (47
+tests, 96.15% coverage), Hash Map (116 tests, 96.04%), HyperLogLog (61 tests,
+98.88%), and the already repaired data-store protocol (five tests, 100%); the
+immediate engine downstream passes 57 tests at 96.67% under its local sibling
+closure. Focused recipe, uv-audit, parity-reporter, and capability-taxonomy
+suites pass 2, 13, 10, and 7 tests. The Go build tool passes tests, vet, and
+trimpath compilation.
+
+The exact build-tool dry plan evaluates 45 Starlark files and 494 Python
+packages, selecting the expected one changed and eight affected packages. Its
+real affected execution builds `hash-functions`, `bloom-filter`, `hash-map`,
+`hyperloglog`, `in-memory-data-store-protocol`, and `resp-protocol`; it then
+reproduces the unchanged engine front's separately owned Windows-invalid
+quoted editable requirement and dependency-skips the composed store. That
+failure remains within `python-data-store-build-front-idempotence` and does not
+widen this strict-MyPy correction.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
