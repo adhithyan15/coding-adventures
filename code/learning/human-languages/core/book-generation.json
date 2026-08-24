@@ -5883,6 +5883,21 @@
       "output": "spanish/book/chapters/ch302-calle-y-faro.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 303,
+      "output": "spanish/book/chapters/ch303-reparaciones.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 304,
+      "output": "spanish/book/chapters/ch304-como-estoy.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 305,
+      "output": "spanish/book/chapters/ch305-nombre-y-apellido.tex"
+    },
+    {
       "language": "hindi",
       "chapter": 52,
       "output": "hindi/book/chapters/ch52-in-the-kitchen.tex",
