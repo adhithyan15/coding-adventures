@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
@@ -211,6 +211,83 @@ describe("refusals", () => {
     expect(() => safeLedgerPath(root, "core/../../escape.json")).toThrow(/unsafe ledger path/);
     expect(() => safeLedgerPath(root, "core/notes.md")).toThrow(/unsafe ledger path/);
     expect(safeLedgerPath(root, "core/toy.json")).toBe(join(root, "core", "toy.json"));
+  });
+});
+
+describe("the writer cannot be walked outside the checkout", () => {
+  let root: string;
+
+  beforeEach(() => {
+    root = mkdtempSync(join(tmpdir(), "hl-shard-cli-"));
+    mkdirSync(join(root, "core"));
+    writeFileSync(
+      join(root, "core", "toy.json"),
+      `${JSON.stringify({ version: 1, nodes: [{ id: "ALPHA" }] }, null, 2)}\n`,
+      "utf8",
+    );
+  });
+
+  afterEach(() => {
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  const plan: ShardPlan = {
+    path: "core/toy.json",
+    listKey: "nodes",
+    idOf: (element) => (element as { id?: unknown }).id as string,
+  };
+
+  function trySymlink(target: string, path: string): boolean {
+    for (const type of ["dir", "junction"] as const) {
+      try {
+        symlinkSync(target, path, type);
+        return true;
+      } catch {
+        // Windows needs Developer Mode for "dir" but allows "junction".
+      }
+    }
+    return false;
+  }
+
+  it("refuses a symlinked shard directory instead of deleting through it", (ctx) => {
+    // The HIGH finding this test exists for. `--shard` used to gate on
+    // `existsSync`, which FOLLOWS symlinks, so a committed
+    // `core/toy.d -> ../victim` had rmSync delete every *.json in the victim
+    // directory and writeFileSync put shards there. Pointed at `.git` or
+    // `~/.ssh`, `npm run shard` on such a branch is arbitrary file deletion.
+    const victim = join(root, "victim");
+    mkdirSync(victim);
+    const treasure = join(victim, "secrets.json");
+    writeFileSync(treasure, '{ "keep": "me" }\n', "utf8");
+    if (!trySymlink(victim, join(root, "core", "toy.d"))) ctx.skip();
+
+    expect(() => shardLedger(root, plan)).toThrow(/symbolic link/);
+    // The point of the test: the victim file is still there.
+    expect(existsSync(treasure)).toBe(true);
+    expect(readFileSync(treasure, "utf8")).toBe('{ "keep": "me" }\n');
+  });
+
+  it("refuses a non-directory squatting on the shard directory name", () => {
+    // `mkdirSync(dir, { recursive: true })` silently no-ops on an existing
+    // entry, so without this the run would carry on against something that is
+    // not a shard directory at all.
+    writeFileSync(join(root, "core", "toy.d"), "not a directory\n", "utf8");
+    expect(() => shardLedger(root, plan)).toThrow(/exists and is not a directory/);
+  });
+});
+
+describe("metaOf cannot be walked through the prototype setter", () => {
+  it("keeps __proto__ as data and does not drop it", () => {
+    // Plain `meta[key] = value` goes through [[Set]] and invokes the
+    // `__proto__` setter: the key vanished from the emitted _meta.json and the
+    // local object's prototype was swapped. Contained, but a silent data loss
+    // on top of being the exact sink the key check exists to close.
+    const hostile = JSON.parse('{ "version": 1, "__proto__": { "polluted": "yes" }, "nodes": [] }');
+    const meta = metaOf(hostile, "nodes");
+    expect(Object.getPrototypeOf(meta)).toBe(null);
+    expect(Object.hasOwn(meta, "__proto__")).toBe(true);
+    expect(({} as Record<string, unknown>).polluted).toBeUndefined();
+    expect(Object.prototype).not.toHaveProperty("polluted");
   });
 });
 

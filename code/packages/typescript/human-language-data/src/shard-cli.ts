@@ -59,16 +59,18 @@
 // but `--check` compares the REBUILT MONOLITH rather than the filenames, so a
 // hand-inserted `0015-SPINE-NEW.json` passes without anyone having to renumber.
 
-import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, lstatSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join, normalize, relative as pathRelative, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { defaultCurriculumRoot } from "./loader.js";
 import {
   META_SHARD,
+  assertRealFile,
+  isSharded,
   listShardNames,
+  readLedgerFile,
   readShards,
   shardDirectoryFor,
-  isSharded,
 } from "./shard.js";
 
 /**
@@ -179,11 +181,30 @@ export function safeLedgerPath(root: string, relative: string): string {
   return output;
 }
 
-/** The `_meta.json` body: every top-level key except the sharded array. */
+/**
+ * The `_meta.json` body: every top-level key except the sharded array.
+ *
+ * Built with `defineProperty` onto a null-prototype object, not `meta[key] =`.
+ * Plain assignment goes through `[[Set]]`, which INVOKES the `__proto__` setter
+ * — so a monolith carrying `"__proto__": {...}` swapped this object's prototype
+ * and silently dropped the key from the emitted `_meta.json`. Contained (it
+ * never reached `Object.prototype`), but it was both the exact sink
+ * `rejectDangerousKeys` exists to close and a silent data-loss bug on top.
+ *
+ * `rejectDangerousKeys` now runs on the parsed monolith as well, so this is
+ * belt and braces. Both, deliberately: the key check protects this function
+ * from its callers, and `defineProperty` protects it from a caller that forgets.
+ */
 export function metaOf(document: Record<string, unknown>, listKey: string): Record<string, unknown> {
-  const meta: Record<string, unknown> = {};
+  const meta = Object.create(null) as Record<string, unknown>;
   for (const [key, value] of Object.entries(document)) {
-    if (key !== listKey) meta[key] = value;
+    if (key === listKey) continue;
+    Object.defineProperty(meta, key, {
+      value,
+      enumerable: true,
+      writable: true,
+      configurable: true,
+    });
   }
   return meta;
 }
@@ -273,32 +294,84 @@ function assertListIsLast(document: Record<string, unknown>, plan: ShardPlan): v
   }
 }
 
-/** Split a monolith into its `.d/` directory. */
+/**
+ * Split a monolith into its `.d/` directory.
+ *
+ * THE GATE HERE IS `isSharded`, NOT `existsSync`, and the difference is the
+ * whole security of this function. `existsSync` FOLLOWS symlinks. This used to
+ * read:
+ *
+ *     if (existsSync(dir)) { for (const name of listShardNames(monolith)) rmSync(...) }
+ *
+ * With `core/spine.d` committed as a symlink — which git tracks as a
+ * first-class object, so a pull request can contain one — that deleted every
+ * `*.json` in the link's target and then wrote shards into it. Pointed at
+ * `../../.git` or `~/.ssh`, `npm run shard` on that branch is arbitrary file
+ * deletion. `listShardNames`'s per-entry symlink check does not help: entries
+ * reached THROUGH a symlinked parent report `isSymbolicLink() === false`.
+ *
+ * `isSharded` uses `lstatSync` and throws on a link, so the whole branch is
+ * refused before anything is unlinked. The reader had this guard from the
+ * start; the writer skipped it, which is the lesson — a guard that lives only
+ * in the reader is a guard the writer forgets, and the writer is the dangerous
+ * one.
+ */
 export function shardLedger(root: string, plan: ShardPlan): string[] {
   const monolith = safeLedgerPath(root, plan.path);
-  const document = JSON.parse(readFileSync(monolith, "utf8")) as Record<string, unknown>;
+  // `readLedgerFile`, not a bare `JSON.parse(readFileSync(...))`. The bare form
+  // skipped the symlink refusal, the dangerous-key check and the parse-error
+  // scrubbing all at once — three controls lost to one convenience.
+  const document = readLedgerFile<Record<string, unknown>>(monolith);
   assertListIsLast(document, plan);
   const contents = shardContents(document, plan);
   const dir = shardDirectoryFor(monolith);
+
   // Remove shards that the monolith no longer produces. Leaving them behind
   // would make the next `--check` fail with a node nobody can find in the
   // source — the "unexpected stale shard" case `modality-cli` already guards.
-  if (existsSync(dir)) {
+  if (isSharded(monolith)) {
     for (const name of listShardNames(monolith)) rmSync(join(dir, name));
+  } else {
+    // `isSharded` returned false for a reason other than "absent" only if
+    // something that is not a directory is squatting on the name. Refuse it
+    // rather than letting `mkdirSync(..., { recursive: true })` no-op over it.
+    try {
+      lstatSync(dir);
+      throw new Error(`shard-cli: '${dir}' exists and is not a directory`);
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+    }
   }
+
   mkdirSync(dir, { recursive: true });
   const written: string[] = [];
   for (const [name, body] of contents) {
-    writeFileSync(join(dir, name), body, "utf8");
+    // `wx` is O_EXCL, which does not follow symlinks and fails if the path
+    // exists. Between the `rmSync` above and this write, anyone able to write
+    // into the shard directory could otherwise plant a symlink at a shard name
+    // and have the write follow it. Every name was just removed, so a collision
+    // here means someone else is writing concurrently — which should fail the
+    // run, not be papered over.
+    writeFileSync(join(dir, name), body, { encoding: "utf8", flag: "wx" });
     written.push(name);
   }
   return written;
 }
 
-/** Rebuild the monolith from the shards. Returns the bytes written. */
+/**
+ * Rebuild the monolith from the shards. Returns the bytes written.
+ *
+ * `assertRealFile` before the write, because `open(2)` with `O_WRONLY|O_TRUNC`
+ * follows symlinks: with `core/spine.json` committed as a link, this would
+ * truncate and overwrite the link's target. The file is expected to exist
+ * already — it is a generated artifact under version control — so a missing one
+ * is a broken checkout worth reporting rather than silently creating.
+ */
 export function unshardLedger(root: string, plan: ShardPlan): string {
   const body = unshardContents(root, plan);
-  writeFileSync(safeLedgerPath(root, plan.path), body, "utf8");
+  const monolith = safeLedgerPath(root, plan.path);
+  if (existsSync(monolith)) assertRealFile(monolith);
+  writeFileSync(monolith, body, "utf8");
   return body;
 }
 
@@ -353,7 +426,15 @@ export function runShardCli(
       continue;
     }
     const expected = unshardContents(root, plan);
-    const actual = existsSync(monolith) ? readFileSync(monolith, "utf8") : undefined;
+    // Guarded even though this only READS: `--check` is the one mode CI runs, so
+    // it is the one mode a hostile branch can reach on a maintainer's runner.
+    // A symlinked monolith would otherwise have its target's bytes read and
+    // compared, and the comparison result reported.
+    let actual: string | undefined;
+    if (existsSync(monolith)) {
+      assertRealFile(monolith);
+      actual = readFileSync(monolith, "utf8");
+    }
     if (actual !== expected) {
       // Same failure, same fix, one message — as `modality-cli` puts it.
       process.stderr.write(

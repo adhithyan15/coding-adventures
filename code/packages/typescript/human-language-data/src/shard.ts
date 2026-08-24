@@ -248,38 +248,60 @@ export function readMaybeSharded<T>(
 ): T {
   const shards = readShards(monolithPath);
   if (shards !== null) return merge(shards);
+  return readLedgerFile<T>(monolithPath);
+}
 
-  // The monolith gets the same symlink refusal as the shard directory. It would
-  // be an odd threat model that blocked `core/spine.d -> ~/.aws` and waved
-  // through `core/spine.json -> ~/.aws/credentials`, and the round trip in
-  // `shard-cli` reads this file too.
+/**
+ * Refuse a path that is not a real file in the tree.
+ *
+ * Exported because EVERY writer needs it too, and the first version of
+ * `shard-cli` proved that a guard living only inside the reader is a guard the
+ * writer forgets. Its `--shard` gated on `existsSync`, which FOLLOWS symlinks —
+ * so a committed `core/spine.d -> ../../.git` would have had `rmSync` delete the
+ * target's contents and `writeFileSync` put shards there. Reading past a
+ * symlink is a disclosure; writing past one is destruction.
+ */
+export function assertRealFile(path: string, what = "ledger"): void {
   let stat;
   try {
-    stat = lstatSync(monolithPath);
+    stat = lstatSync(path);
   } catch (cause) {
-    throw new Error(`'${monolithPath}': cannot be read — ${describe(cause)}`, { cause });
+    throw new Error(`'${path}': cannot be read — ${describe(cause)}`, { cause });
   }
   if (stat.isSymbolicLink()) {
-    throw new Error(
-      `'${monolithPath}' is a symbolic link — a ledger must be a real file in the tree`,
-    );
+    throw new Error(`'${path}' is a symbolic link — a ${what} must be a real file in the tree`);
   }
+  if (!stat.isFile()) {
+    throw new Error(`'${path}' is not a regular file`);
+  }
+}
 
+/**
+ * Read one JSON ledger file with every guard applied.
+ *
+ * The single door for reading a monolith. `shard-cli` used to have its own bare
+ * `JSON.parse(readFileSync(...))`, which meant it skipped the symlink refusal,
+ * the dangerous-key check and the parse-error scrubbing all at once — three
+ * controls lost to one convenience. Nothing outside this module should be
+ * calling `readFileSync` on a ledger.
+ */
+export function readLedgerFile<T = unknown>(path: string): T {
+  assertRealFile(path);
   let text: string;
   try {
-    text = readFileSync(monolithPath, "utf8");
+    text = readFileSync(path, "utf8");
   } catch (cause) {
-    throw new Error(`'${monolithPath}': cannot be read — ${describe(cause)}`, { cause });
+    throw new Error(`'${path}': cannot be read — ${describe(cause)}`, { cause });
   }
   let value: T;
   try {
     value = JSON.parse(text) as T;
   } catch (cause) {
-    throw new Error(`'${monolithPath}': malformed JSON — ${describeParseFailure(cause)}`, {
+    throw new Error(`'${path}': malformed JSON — ${describeParseFailure(cause)}`, {
       cause: scrubbedCause(cause),
     });
   }
-  rejectDangerousKeys(value, `'${monolithPath}'`);
+  rejectDangerousKeys(value, `'${path}'`);
   return value;
 }
 
@@ -440,7 +462,7 @@ function scrubbedCause(cause: unknown): unknown {
  * depth for the consumer that has not been written yet. See `mergeMetaAndList`
  * for why `JSON.parse` plus spread is not itself pollution.
  */
-function rejectDangerousKeys(value: unknown, where: string): void {
+export function rejectDangerousKeys(value: unknown, where: string): void {
   if (typeof value !== "object" || value === null) return;
   for (const dangerous of ["__proto__", "constructor", "prototype"]) {
     if (Object.hasOwn(value, dangerous)) {
