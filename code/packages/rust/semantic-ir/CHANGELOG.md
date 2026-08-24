@@ -2,6 +2,125 @@
 
 All notable changes to the `semantic-ir` crate are documented here.
 
+## 0.26.0 — SIR29: nominal/static-dispatch OOP profile (Java-family frontends)
+
+Implements [SIR29](../../../specs/SIR29-nominal-static-oop-profile.md) — a
+second, structurally different OOP profile alongside SIR25 §2's dynamic-
+OOP `Feature::Classes`, closing the fork SIR25 §6 explicitly reserved for
+"a nominally-typed, interface/generic-based, static-dispatch" family (the
+substrate a `java-to-semantic-ir` frontend and `semantic-ir-to-java`
+backend will need). Additive only, following the exact discipline SIR22/
+SIR23 used for their own extensions: every existing SIR10/SIR16/SIR17/
+SIR18/SIR21/SIR22/SIR23/SIR26 module remains valid; no existing `Expr`/
+`Stmt`/`SirType`/`Feature` variant, validator rule, or backend behaviour
+changed.
+
+**New `SirType` variants** (`types.rs`):
+- `Nominal { name: String }` — an advisory, unresolved reference to a
+  declared class/interface, mirroring `Stmt::ClassDef.superclass`'s own
+  unresolved-name discipline. Prints `(nominal Name)`.
+- `TypeParam { name: String, bound: Option<Box<SirType>> }` — an *erased*
+  generic type parameter (no runtime representation by design — see the
+  spec's "Explicitly out of scope: reified generics"). Prints
+  `(type-param T)` or `(type-param T Bound)`.
+
+**New `Stmt` variants** (`nodes.rs`):
+- `NominalClassDef { name, type_params, superclass, interfaces,
+  is_abstract, fields: Vec<FieldDef>, body: Vec<Stmt>, span }` — unlike
+  `ClassDef`, methods nest **directly** in `body` rather than being
+  hoisted to detached top-level functions, since this profile's dispatch
+  primitive never looks a method up by name at runtime.
+- `InterfaceDef { name, type_params, extends: Vec<String>, methods:
+  Vec<MethodSig>, span }` — signatures only (no default methods) for v1.
+- `MethodDef { name, params: Vec<Param>, return_type, is_static,
+  is_override, vtable_slot: Option<u32>, body: Block, span }` — nested
+  inside a `NominalClassDef.body`. A static method needs no new node: it
+  compiles to an ordinary `Expr::DirectCall` against a mangled top-level
+  identity.
+- New support structs: `FieldDef { name, sir_type, span }`, `MethodSig {
+  name, params: Vec<SirType>, ret: SirType }` (bodyless — used only by
+  `InterfaceDef`).
+
+**New `Expr` variant, the dispatch primitive** (`nodes.rs`):
+- `VirtualCall { receiver: Box<Expr>, method: String, slot: u32, args:
+  Vec<Expr>, effects: EffectSet, span }` — an *index*-based sibling of
+  SIR25 §2.2's *string*-based method-table lookup. `slot` is a frontend-
+  assigned, per-class-hierarchy-stable vtable index (an override reuses
+  its parent's slot); `method` rides along for debug/display only and is
+  never a codegen dispatch key — the anti-injection invariant SIR25 §2.5
+  requires is achieved *by construction* here (no string a backend could
+  route through reflection), not by validation. Carries `effects`, unlike
+  every SIR22/23 node: a virtual call may do anything its target method's
+  body does.
+
+**New `Feature` flags** (`manifest.rs`): `NominalClasses` (a
+`NominalClassDef`), `Interfaces` (an `InterfaceDef`, or a
+`NominalClassDef` with a non-empty `interfaces` list — split from
+`NominalClasses` the same way SIR22 splits `MatrixOps` from `NDArrays`),
+`VirtualDispatch` (a `VirtualCall`), `ErasedGenerics` (a `TypeParam`
+anywhere).
+
+**Validator** (`validator.rs`): `NominalClassDef` observes its features,
+depth-guards, and recurses into `body` in a fresh local-env scope (like
+`ClassDef`, since methods nest here rather than being hoisted);
+`InterfaceDef` rejects a duplicate method-signature name; `MethodDef` gets
+its own `check_method_def` — validated like a top-level `Function`
+(duplicate-parameter detection, `OptionalTypeAnnotations`/
+`DynamicTyping`/`DefaultParams`/`KeywordParams` observation, default-value
+checking), but without `check_function`'s Ruby-specific `*rest`/`**opts`
+ordering rules, since SIR29 v1 methods are a Java/C#-shaped positional-
+plus-optional-default surface, not Ruby's full variadic/keyword calling
+convention. `VirtualCall` observes `Feature::VirtualDispatch` and recurses
+into `receiver` + every arg.
+
+**Walker, backend intrinsics-scanner, printer** (`walker.rs`,
+`backend.rs`, `text/printer.rs`): all three recurse into every new node's
+children the same way the validator does; the printer gained new
+S-expression forms (`nominal-class-def`, `interface-def`, `method-def`,
+`method-sig`, `virtual-call`, `type-param`, `nominal`), none colliding
+with an existing head keyword.
+
+**Feasibility sketch** (spec-only, no code): confirmed the primitive is
+realizable at both ends of this repo's host-language spectrum before any
+backend implementation started — TypeScript (`VirtualCall` discards
+`slot`, emits ordinary `receiver.method(args)`, since TS's own prototype
+chain already is a vtable) and C (`NominalClassDef` → `struct C {
+...fields; struct C_vtable* vtable; }`, `VirtualCall` →
+`receiver->vtable->slot_N(receiver, args...)`).
+
+**Backend capability rejection**: no backend changes are required for
+this spec to land safely — a backend that doesn't declare
+`NominalClasses`/`Interfaces`/`VirtualDispatch`/`ErasedGenerics` in
+`accepts_features()` cleanly rejects any module using these nodes via the
+existing SIR10 capability-check mechanism, proven with new `backend.rs`
+tests (one per new feature, mirroring the SIR22/SIR23 capability-
+rejection test blocks). All Rust-workspace crates with an exhaustive
+`match` over `Stmt`/`Expr` — five backends
+(`semantic-ir-to-{go,javascript,python,rust,typescript}`), one whose
+`Stmt` match (not `Expr`, which already wildcards) is exhaustive
+(`semantic-ir-to-ruby`), and three frontends whose internal generic
+tree-walking utilities must stay exhaustive even though none of them
+produce these nodes today (`{ruby,javascript,python}-to-semantic-ir`) —
+gained the minimal compile-compat arm needed to keep `cargo build
+--workspace` green, following the exact precedent SIR22/SIR23 set for
+their own equivalent rollouts: panic guards in the backends (unreachable
+because `ACCEPTED_FEATURES` never lists the new features) and faithful
+structural recursion in the frontends. `semantic-ir-to-c` and
+`c-to-semantic-ir` required no changes (no exhaustive `Stmt`/`Expr`
+match in either crate).
+
+**Versioning** (`metadata.rs`): `CURRENT_SIR_VERSION` bumped `"4"` →
+`"5"`, following the same "adding a feature is a v.bump" policy that
+moved `"3"` → `"4"` in the SIR22 addendum. The two `v4`-asserting golden
+tests (`lib.rs`, `text/printer.rs`) were updated to `v5`.
+
+Extensive unit tests added for every new node kind (construction, span
+handling, printer round-trip, walker traversal, validator
+feature-observation, duplicate-name rejection) plus new `backend.rs`
+capability-rejection tests proving each of the four new features is
+independently rejected by a backend that doesn't declare it — mirroring
+the SIR22/SIR23 test blocks' style exactly.
+
 ## 0.25.2 — SIR21 T3b-2 Slice 1: division-split spec amendment (doc-only)
 
 No code change. `op_select.rs`'s doc comment on the `/`-exclusion note

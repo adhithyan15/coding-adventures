@@ -349,6 +349,29 @@ pub struct RescueClause {
     pub span: Span,
 }
 
+/// A declared field of a [`Stmt::NominalClassDef`] (SIR29) — Java/C#
+/// `private int x;`.  Unlike the dynamic-OOP profile's `Scope::Instance`
+/// (any name legal at first write, no declaration), a nominal class
+/// declares its field surface up front: `sir_type` is not optional here,
+/// matching how a statically-typed source language always supplies one.
+#[derive(Debug, Clone, PartialEq)]
+pub struct FieldDef {
+    pub name: String,
+    pub sir_type: SirType,
+    pub span: Span,
+}
+
+/// A method **signature** with no body — the shape a
+/// [`Stmt::InterfaceDef`] declares (SIR29). Distinct from
+/// [`Stmt::MethodDef`], which carries a real, executable body: an
+/// interface method is a contract, not a definition.
+#[derive(Debug, Clone, PartialEq)]
+pub struct MethodSig {
+    pub name: String,
+    pub params: Vec<SirType>,
+    pub ret: SirType,
+}
+
 /// Statement kinds.
 ///
 /// SIR v0 had only `LetBinding`, `LetStarBinding`, and `ExprStmt`.
@@ -537,6 +560,97 @@ pub enum Stmt {
         value: Box<Expr>,
         span: Span,
     },
+
+    // ── SIR29: nominal/static-dispatch OOP profile ──────────────────
+    /// `class Name<T> extends Super implements I1, I2 { fields; methods }`
+    /// — a nominally-typed class declaration in SIR29's static-dispatch
+    /// profile. This is a **sibling** of [`Stmt::ClassDef`] (the §2
+    /// dynamic-OOP profile of
+    /// [SIR25](../../../../specs/SIR25-language-agnostic-object-model.md)),
+    /// not a replacement: a module may contain either, both, or neither.
+    ///
+    /// Unlike `ClassDef`, whose method `def`s are hoisted to detached
+    /// top-level `Function`s by the lowerer (a convention that exists
+    /// only to support §2's string-keyed table dispatch), `body` here
+    /// contains [`Stmt::MethodDef`]s **nested** directly — this profile's
+    /// dispatch primitive ([`Expr::VirtualCall`]) has no need for
+    /// detachment, since it never looks a method up by name at runtime.
+    ///
+    /// `type_params` holds zero or more `SirType::TypeParam` entries (SIR29
+    /// v1: erased generics only — see `SirType::TypeParam`'s doc comment).
+    /// `superclass`/`interfaces` are advisory names, like `ClassDef.
+    /// superclass`: SIR v0 has no class/interface symbol table, so the
+    /// validator does not resolve them. `is_abstract` marks a class that
+    /// may declare `MethodDef`s with no body-producing implementation (a
+    /// backend targeting a language without an abstract-class concept
+    /// must reject such a module, same as any other capability gap).
+    ///
+    /// Gated by `Feature::NominalClasses`; `interfaces` non-empty or an
+    /// `InterfaceDef`/`VirtualCall` present also gates `Feature::
+    /// Interfaces`/`Feature::VirtualDispatch` respectively.  See
+    /// [SIR29](../../../../specs/SIR29-nominal-static-oop-profile.md).
+    NominalClassDef {
+        name: String,
+        type_params: Vec<SirType>,
+        superclass: Option<String>,
+        interfaces: Vec<String>,
+        is_abstract: bool,
+        fields: Vec<FieldDef>,
+        body: Vec<Stmt>,
+        span: Span,
+    },
+
+    /// `interface Name<T> extends I1, I2 { method signatures }` — an
+    /// interface declaration (SIR29). Carries method **signatures**
+    /// only ([`MethodSig`], no body) — default interface methods are
+    /// explicitly out of scope for v1 (see the SIR29 spec's "Explicitly
+    /// deferred" section). `extends` lists parent interfaces (an
+    /// interface may extend several, unlike `NominalClassDef.superclass`,
+    /// which is single); like every other class/interface name in this
+    /// profile, entries are advisory and unresolved by the validator.
+    ///
+    /// Gated by `Feature::Interfaces`.
+    InterfaceDef {
+        name: String,
+        type_params: Vec<SirType>,
+        extends: Vec<String>,
+        methods: Vec<MethodSig>,
+        span: Span,
+    },
+
+    /// A method **definition** nested inside a [`Stmt::NominalClassDef`]
+    /// body (SIR29) — Java/C# `public int m(int x) { … }`. Distinct from
+    /// [`MethodSig`] (a bodyless contract, used only by `InterfaceDef`):
+    /// this node is a real, executable definition, so it carries `params`/
+    /// `return_type`/`body` in the same shape as the top-level [`Function`]
+    /// struct rather than a bare signature.
+    ///
+    /// `is_static` marks a class-level method with no receiver — a static
+    /// call compiles to an ordinary `Expr::DirectCall` against a mangled
+    /// top-level identity (e.g. `ClassName$$methodName`), so SIR29 adds no
+    /// new node for the static case. `is_override` records that this
+    /// method overrides an ancestor's or interface's method of the same
+    /// name — advisory metadata a backend may use for e.g. emitting
+    /// `@Override`, not something the validator itself checks against an
+    /// ancestor's declared surface (SIR v0 has no such symbol table).
+    ///
+    /// `vtable_slot` is the frontend-assigned, per-class-hierarchy-stable
+    /// vtable index this method occupies — `Some(n)` for an instance
+    /// method reachable via [`Expr::VirtualCall`] (an override reuses its
+    /// parent's slot number), `None` for a static method (no vtable
+    /// entry) or a method never called virtually in this module. This is
+    /// advisory bookkeeping on the *declaration* side; the actual
+    /// dispatch-by-index contract lives on `VirtualCall.slot`.
+    MethodDef {
+        name: String,
+        params: Vec<Param>,
+        return_type: Option<SirType>,
+        is_static: bool,
+        is_override: bool,
+        vtable_slot: Option<u32>,
+        body: Block,
+        span: Span,
+    },
 }
 
 impl Stmt {
@@ -556,6 +670,9 @@ impl Stmt {
             Stmt::SingletonClassDef { span, .. } => span,
             Stmt::TryCatch { span, .. } => span,
             Stmt::IndexSet { span, .. } => span,
+            Stmt::NominalClassDef { span, .. } => span,
+            Stmt::InterfaceDef { span, .. } => span,
+            Stmt::MethodDef { span, .. } => span,
         }
     }
 }
@@ -1137,6 +1254,41 @@ pub enum Expr {
         repeated: bool,
         span: Span,
     },
+
+    // ── SIR29: nominal/static-dispatch OOP profile ──────────────────
+    /// `receiver.method(args…)` under **virtual dispatch** — the SIR29
+    /// static-OOP profile's one new dispatch primitive (a sibling of §2.2
+    /// of [SIR25](../../../../specs/SIR25-language-agnostic-object-model.md)'s
+    /// string-keyed method-table lookup, not a replacement for it).
+    ///
+    /// `slot` is a frontend-assigned, per-class-hierarchy-stable vtable
+    /// index (an overriding method reuses its parent's slot number) — an
+    /// *index*-based sibling of §2.2's *string*-based table lookup, which
+    /// gets the same "never reflection on a source-derived string"
+    /// invariant §2.5 requires **by construction**, not by validation:
+    /// there is no string anywhere in this node for a backend to route
+    /// through a generic reflection facility.  `method` rides along for
+    /// debug/display purposes only (e.g. a backend's generated comment,
+    /// or a text-format pretty-printer) — it is never a codegen dispatch
+    /// key, and a backend must not use it as one.
+    ///
+    /// A **static** call needs no new node: it compiles to an ordinary
+    /// [`Expr::DirectCall`] against a mangled top-level identity (SIR29
+    /// spec's "Dispatch primitive" section) — this node exists only for
+    /// the instance/virtual case.  Overload resolution is entirely a
+    /// frontend concern, already resolved before lowering: the IR never
+    /// represents an overload *set*, only the one already-chosen call
+    /// target, so `args` here is exactly the resolved argument list.
+    ///
+    /// Gated by `Feature::VirtualDispatch`.
+    VirtualCall {
+        receiver: Box<Expr>,
+        method: String,
+        slot: u32,
+        args: Vec<Expr>,
+        effects: EffectSet,
+        span: Span,
+    },
 }
 
 /// The five elementwise (broadcast) binary arithmetic operators
@@ -1301,6 +1453,7 @@ impl Expr {
             Expr::SymPatternNamed { span, .. } => span,
             Expr::SymRule { span, .. } => span,
             Expr::SymReplaceAll { span, .. } => span,
+            Expr::VirtualCall { span, .. } => span,
         }
     }
 
@@ -1354,6 +1507,7 @@ impl Expr {
             Expr::SymPatternNamed { .. } => "sym-pattern-named",
             Expr::SymRule { .. } => "sym-rule",
             Expr::SymReplaceAll { .. } => "sym-replace-all",
+            Expr::VirtualCall { .. } => "virtual-call",
         }
     }
 }

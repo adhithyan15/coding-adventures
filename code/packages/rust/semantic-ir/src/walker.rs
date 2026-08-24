@@ -229,6 +229,23 @@ pub fn walk_stmt_default<V: Visitor>(v: &mut V, s: &Stmt, depth: usize) {
             walk_index_args(v, indices, depth + 1);
             v.visit_expr(value, depth + 1);
         }
+
+        // ── SIR29: nominal/static-dispatch OOP profile ──────────────
+        Stmt::NominalClassDef { body, .. } => {
+            // Methods nest directly in `body` (unlike `ClassDef`, which
+            // hoists them to top-level `Function`s) — recurse the same
+            // way ClassDef/ModuleDef do above.
+            for stmt in body {
+                v.visit_stmt(stmt, depth + 1);
+            }
+        }
+        Stmt::InterfaceDef { .. } => {
+            // `methods` holds bodyless `MethodSig`s only — no `Stmt`/
+            // `Expr` to recurse into.
+        }
+        Stmt::MethodDef { body, .. } => {
+            v.visit_block(body, depth + 1);
+        }
     }
 }
 
@@ -464,6 +481,14 @@ pub fn walk_expr_default<V: Visitor>(v: &mut V, e: &Expr, depth: usize) {
             v.visit_expr(expr, depth + 1);
             for r in rules {
                 v.visit_expr(r, depth + 1);
+            }
+        }
+
+        // ── SIR29: nominal/static-dispatch OOP profile ──────────────
+        Expr::VirtualCall { receiver, args, .. } => {
+            v.visit_expr(receiver, depth + 1);
+            for a in args {
+                v.visit_expr(a, depth + 1);
             }
         }
     }

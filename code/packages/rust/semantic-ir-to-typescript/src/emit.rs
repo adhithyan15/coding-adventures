@@ -193,6 +193,18 @@ fn collect_ancestry_in_stmt(
             }
             collect_ancestry_in_expr(value, pairs, seen);
         }
+        // SIR29: nominal-OOP declarations are rejected by `check_module`
+        // before this backend ever emits (no `Feature::NominalClasses`/
+        // `Interfaces`/`VirtualDispatch` in `accepts_features`) — this is a
+        // compile-exhaustiveness fix only, not real support.
+        Stmt::NominalClassDef { span, .. }
+        | Stmt::InterfaceDef { span, .. }
+        | Stmt::MethodDef { span, .. } => {
+            panic!(
+                "typescript backend reached a SIR29 nominal-OOP node at {} — capability check should have rejected it",
+                span
+            );
+        }
     }
 }
 
@@ -363,6 +375,17 @@ fn stmt_uses_builtin(s: &Stmt, name: &str) -> bool {
                 || indices.iter().any(|idx| index_arg_uses_builtin(idx, name))
                 || expr_uses_builtin(value, name)
         }
+        // SIR29: nominal-OOP declarations are rejected by `check_module`
+        // before this backend ever emits — same rationale as the SIR22
+        // `IndexSet` arm above; this is a compile-exhaustiveness fix only.
+        Stmt::NominalClassDef { span, .. }
+        | Stmt::InterfaceDef { span, .. }
+        | Stmt::MethodDef { span, .. } => {
+            panic!(
+                "typescript backend reached a SIR29 nominal-OOP node at {} — capability check should have rejected it",
+                span
+            );
+        }
     }
 }
 
@@ -492,6 +515,15 @@ fn expr_uses_builtin(e: &Expr, name: &str) -> bool {
         | Expr::SymLit { .. }
         | Expr::StrLit { .. }
         | Expr::VarRef { .. } => false,
+        // SIR29: `VirtualCall` is rejected by `check_module` before this
+        // backend ever emits (no `Feature::VirtualDispatch` in
+        // `accepts_features`) — compile-exhaustiveness fix only.
+        Expr::VirtualCall { span, .. } => {
+            panic!(
+                "typescript backend reached a SIR29 nominal-OOP node at {} — capability check should have rejected it",
+                span
+            );
+        }
     }
 }
 
@@ -893,6 +925,16 @@ fn collect_stmt_assigned(s: &Stmt, out: &mut HashSet<String>) {
             }
             collect_expr_assigned(value, out);
         }
+        // SIR29: nominal-OOP declarations are rejected by `check_module`
+        // before this backend ever emits — compile-exhaustiveness fix only.
+        Stmt::NominalClassDef { span, .. }
+        | Stmt::InterfaceDef { span, .. }
+        | Stmt::MethodDef { span, .. } => {
+            panic!(
+                "typescript backend reached a SIR29 nominal-OOP node at {} — capability check should have rejected it",
+                span
+            );
+        }
     }
 }
 
@@ -1056,6 +1098,14 @@ fn collect_expr_assigned(e: &Expr, out: &mut HashSet<String>) {
         | Expr::StrLit { .. }
         | Expr::VarRef { .. }
         | Expr::Intrinsic { .. } => {}
+        // SIR29: `VirtualCall` is rejected by `check_module` before this
+        // backend ever emits — compile-exhaustiveness fix only.
+        Expr::VirtualCall { span, .. } => {
+            panic!(
+                "typescript backend reached a SIR29 nominal-OOP node at {} — capability check should have rejected it",
+                span
+            );
+        }
     }
 }
 
@@ -1403,6 +1453,21 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             out.push_str("], ");
             emit_expr(out, value, indent);
             out.push_str(");\n");
+        }
+        // SIR29 nominal-OOP declarations: this backend has no
+        // Java-facing codegen yet (that's tracked separately) — the
+        // capability check (no `Feature::NominalClasses`/`Interfaces`/
+        // `VirtualDispatch` in `accepts_features`) rejects any module using
+        // these nodes before emission, so this arm exists only to satisfy
+        // exhaustiveness. Mirrors the `Intrinsic`/`Convert`/`KeywordArg`
+        // guards above.
+        Stmt::NominalClassDef { span, .. }
+        | Stmt::InterfaceDef { span, .. }
+        | Stmt::MethodDef { span, .. } => {
+            panic!(
+                "typescript backend reached a SIR29 nominal-OOP node at {} — capability check should have rejected it",
+                span
+            );
         }
     }
 }
@@ -1899,6 +1964,18 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
                 emit_sym_operand(out, r, indent);
             }
             out.push_str("]))");
+        }
+        // SIR29 `VirtualCall`: this backend has no Java-facing codegen yet
+        // (that's tracked separately) — the capability check (no
+        // `Feature::VirtualDispatch` in `accepts_features`) rejects any
+        // module using this node before emission, so this arm exists only
+        // to satisfy exhaustiveness. Mirrors the `Intrinsic`/`Convert`/
+        // `KeywordArg` guards above.
+        Expr::VirtualCall { span, .. } => {
+            panic!(
+                "typescript backend reached a SIR29 nominal-OOP node at {} — capability check should have rejected it",
+                span
+            );
         }
     }
 }

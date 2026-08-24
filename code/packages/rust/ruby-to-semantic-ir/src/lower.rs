@@ -368,6 +368,18 @@ fn expr_references_any_name(expr: &Expr, names: &HashSet<String>) -> bool {
             expr_references_any_name(expr, names)
                 || rules.iter().any(|r| expr_references_any_name(r, names))
         }
+
+        // SIR29 compile-compat stub: the Ruby frontend never produces
+        // `VirtualCall` today (same rationale as the SIR22/SIR23 stubs
+        // above), so this arm is unreachable in practice.  It still
+        // recurses into `receiver` and every `args` entry, mirroring the
+        // `IndirectCall` arm above, so the swap-safety check keeps
+        // scanning every child `Expr` for `VarRef`s if a future lowering
+        // path ever produces this node.
+        Expr::VirtualCall { receiver, args, .. } => {
+            expr_references_any_name(receiver, names)
+                || args.iter().any(|a| expr_references_any_name(a, names))
+        }
     }
 }
 
@@ -469,11 +481,15 @@ fn block_references_any_name(block: &Block, names: &HashSet<String>) -> bool {
             }
             Stmt::ClassDef { body, .. }
             | Stmt::ModuleDef { body, .. }
-            | Stmt::SingletonClassDef { body, .. } => {
+            | Stmt::SingletonClassDef { body, .. }
+            | Stmt::NominalClassDef { body, .. } => {
                 // A class/module/singleton declaration body is itself a
                 // `Vec<Stmt>`.  Recurse over each contained statement
                 // using a synthetic wrapper Block, mirroring the loop /
-                // pattern-stmt arms above.
+                // pattern-stmt arms above.  `NominalClassDef` (SIR29
+                // compile-compat stub, never emitted by this frontend
+                // today) shares this arm because its `body` field has
+                // the exact same `Vec<Stmt>` shape.
                 for inner in body {
                     let synthetic = Block {
                         stmts: vec![inner.clone()],
@@ -485,6 +501,26 @@ fn block_references_any_name(block: &Block, names: &HashSet<String>) -> bool {
                     if block_references_any_name(&synthetic, names) {
                         return true;
                     }
+                }
+            }
+            // SIR29 compile-compat stub (never emitted by this frontend
+            // today): an interface declares only method *signatures*
+            // (`MethodSig`), which carry no `Expr`, so there is nothing
+            // to scan for `VarRef`s.
+            Stmt::InterfaceDef { .. } => {}
+            // SIR29 compile-compat stub (never emitted by this frontend
+            // today): recurse into each parameter's default-value
+            // `Expr` (if any) and the method `body` `Block`, mirroring
+            // how every other arm above scans every child `Expr`/
+            // `Block` it contains.
+            Stmt::MethodDef { params, body, .. } => {
+                if params.iter().any(|p| {
+                    p.default
+                        .as_deref()
+                        .is_some_and(|d| expr_references_any_name(d, names))
+                }) || block_references_any_name(body, names)
+                {
+                    return true;
                 }
             }
             Stmt::TryCatch {
@@ -4012,9 +4048,16 @@ impl Lowerer {
             // Class/module/singleton declaration bodies are NOT descended:
             // their method `def`s are hoisted to their own top-level
             // Functions, where any `yield` is rewritten in its own right.
-            Stmt::ClassDef { .. } | Stmt::ModuleDef { .. } | Stmt::SingletonClassDef { .. } => {
-                false
-            }
+            // SIR29 compile-compat stub: `NominalClassDef`/`InterfaceDef`/
+            // `MethodDef` are never emitted by this frontend today, so
+            // these arms are unreachable in practice; grouped here because
+            // they share the same "not descended by this pass" contract.
+            Stmt::ClassDef { .. }
+            | Stmt::ModuleDef { .. }
+            | Stmt::SingletonClassDef { .. }
+            | Stmt::NominalClassDef { .. }
+            | Stmt::InterfaceDef { .. }
+            | Stmt::MethodDef { .. } => false,
         }
     }
 
@@ -4291,6 +4334,19 @@ impl Lowerer {
                 }
                 found
             }
+
+            // SIR29 compile-compat stub: never emitted by this frontend
+            // today, but recurse into `receiver` and every `args` entry,
+            // mirroring the `IndirectCall` arm above, so a `yield` nested
+            // inside one would still be found and rewritten if a future
+            // lowering path ever produced this node.
+            Expr::VirtualCall { receiver, args, .. } => {
+                let mut found = Self::rewrite_yields_in_expr(receiver, block_scope);
+                for a in args.iter_mut() {
+                    found |= Self::rewrite_yields_in_expr(a, block_scope);
+                }
+                found
+            }
         }
     }
 
@@ -4423,7 +4479,17 @@ impl Lowerer {
                 }
             }
             // Declaration bodies hoist their own methods; not descended.
-            Stmt::ClassDef { .. } | Stmt::ModuleDef { .. } | Stmt::SingletonClassDef { .. } => {}
+            // SIR29 compile-compat stub: `NominalClassDef`/`InterfaceDef`/
+            // `MethodDef` are never emitted by this frontend today;
+            // grouped here because a nested `MethodDef`'s locals belong
+            // to that method's own scope, not this (outer) block's
+            // bound-names set.
+            Stmt::ClassDef { .. }
+            | Stmt::ModuleDef { .. }
+            | Stmt::SingletonClassDef { .. }
+            | Stmt::NominalClassDef { .. }
+            | Stmt::InterfaceDef { .. }
+            | Stmt::MethodDef { .. } => {}
         }
     }
 
@@ -4594,7 +4660,17 @@ impl Lowerer {
                     }
                 }
             }
-            Stmt::ClassDef { .. } | Stmt::ModuleDef { .. } | Stmt::SingletonClassDef { .. } => {}
+            // SIR29 compile-compat stub: `NominalClassDef`/`InterfaceDef`/
+            // `MethodDef` are never emitted by this frontend today;
+            // grouped with the dynamic-OOP declarations above because a
+            // nested `MethodDef`'s reads belong to that method's own
+            // capture analysis, not this (outer) block's.
+            Stmt::ClassDef { .. }
+            | Stmt::ModuleDef { .. }
+            | Stmt::SingletonClassDef { .. }
+            | Stmt::NominalClassDef { .. }
+            | Stmt::InterfaceDef { .. }
+            | Stmt::MethodDef { .. } => {}
         }
     }
 
@@ -4782,9 +4858,30 @@ impl Lowerer {
             // (their `def`s are hoisted to top-level functions, which the
             // outer loop over `functions` already visits) — descend so a
             // call inside e.g. a constant initializer is threaded too.
+            // `NominalClassDef` (SIR29 compile-compat stub, never emitted
+            // by this frontend today) shares this arm because its `body`
+            // field has the exact same `Vec<Stmt>` shape.
             Stmt::ClassDef { body, .. }
             | Stmt::ModuleDef { body, .. }
-            | Stmt::SingletonClassDef { body, .. } => Self::normalize_calls_in_stmts(body, ctx),
+            | Stmt::SingletonClassDef { body, .. }
+            | Stmt::NominalClassDef { body, .. } => Self::normalize_calls_in_stmts(body, ctx),
+            // SIR29 compile-compat stub (never emitted by this frontend
+            // today): an interface declares only method signatures
+            // (`MethodSig`), which carry no `Expr`/call sites to
+            // normalize.
+            Stmt::InterfaceDef { .. } => {}
+            // SIR29 compile-compat stub (never emitted by this frontend
+            // today): normalize calls nested in each parameter's
+            // default-value expression, then descend into the method
+            // body exactly like the `While`/`ForRange`/etc. bodies above.
+            Stmt::MethodDef { params, body, .. } => {
+                for p in params.iter_mut() {
+                    if let Some(d) = p.default.as_deref_mut() {
+                        Self::normalize_calls_in_expr(d, ctx);
+                    }
+                }
+                Self::normalize_block_call_args(body, ctx);
+            }
             Stmt::TryCatch {
                 body,
                 rescues,
@@ -5027,6 +5124,18 @@ impl Lowerer {
             | Expr::StrLit { .. }
             | Expr::FloatLit { .. }
             | Expr::VarRef { .. } => {}
+
+            // SIR29 compile-compat stub: never emitted by this frontend
+            // today, but recurse into `receiver` and every `args` entry,
+            // mirroring the `IndirectCall` arm above, so a parenless
+            // block-method call nested inside one would still be
+            // threaded/normalized.
+            Expr::VirtualCall { receiver, args, .. } => {
+                Self::normalize_calls_in_expr(receiver, ctx);
+                for a in args.iter_mut() {
+                    Self::normalize_calls_in_expr(a, ctx);
+                }
+            }
         }
     }
 
@@ -5126,9 +5235,29 @@ impl Lowerer {
                 }
                 Self::collect_bound_names_expr(value, out);
             }
+            // `NominalClassDef` (SIR29 compile-compat stub, never emitted
+            // by this frontend today) shares this arm because its `body`
+            // field has the exact same `Vec<Stmt>` shape.
             Stmt::ClassDef { body, .. }
             | Stmt::ModuleDef { body, .. }
-            | Stmt::SingletonClassDef { body, .. } => Self::collect_bound_names_stmts(body, out),
+            | Stmt::SingletonClassDef { body, .. }
+            | Stmt::NominalClassDef { body, .. } => Self::collect_bound_names_stmts(body, out),
+            // SIR29 compile-compat stub (never emitted by this frontend
+            // today): an interface declares only method signatures,
+            // which bind no names.
+            Stmt::InterfaceDef { .. } => {}
+            // SIR29 compile-compat stub (never emitted by this frontend
+            // today): seed the method's own params — mirroring how a
+            // top-level `Function`'s params are seeded by this pass's
+            // caller (see `lower_program`'s `bound` construction just
+            // above `collect_bound_names_block`) — then descend into the
+            // body, so a parenless call inside a method nested in a
+            // `NominalClassDef` would still resolve local shadowing
+            // correctly if this node were ever produced.
+            Stmt::MethodDef { params, body, .. } => {
+                out.extend(params.iter().map(|p| p.name.clone()));
+                Self::collect_bound_names_block(body, out);
+            }
             Stmt::TryCatch {
                 body,
                 rescues,
@@ -5314,6 +5443,17 @@ impl Lowerer {
             | Expr::StrLit { .. }
             | Expr::FloatLit { .. }
             | Expr::VarRef { .. } => {}
+
+            // SIR29 compile-compat stub: never emitted by this frontend
+            // today, but recurse into `receiver` and every `args` entry,
+            // mirroring the `IndirectCall` arm above, so a name bound
+            // inside a nested closure would still be collected.
+            Expr::VirtualCall { receiver, args, .. } => {
+                Self::collect_bound_names_expr(receiver, out);
+                for a in args {
+                    Self::collect_bound_names_expr(a, out);
+                }
+            }
         }
     }
 

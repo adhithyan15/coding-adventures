@@ -525,6 +525,33 @@ fn check_soundness_stmt(s: &semantic_ir::Stmt, errs: &mut Vec<BackendError>) {
             }
             check_soundness_expr(value, errs);
         }
+        // ── SIR29 static/nominal OOP profile ─────────────────────────
+        // `NominalClassDef`/`InterfaceDef`/`MethodDef` are not in
+        // `ACCEPTED_FEATURES` (see the SIR29 note on `Expr::VirtualCall`'s
+        // arm below and in `emit.rs`), so a module using them is already
+        // rejected by the manifest-level `check_module` gate that runs
+        // before this walk. Unlike `emit.rs` (reached only AFTER that gate
+        // passes, where a stray SIR29 node is provably unreachable and
+        // panics), `check_exception_soundness` runs unconditionally on the
+        // raw module BEFORE `cap_errors` is inspected in `compile()` — so
+        // this function must stay non-panicking, same as every other arm
+        // here. Recurse into the nested `Stmt`/`Expr` positions for the
+        // same residual-const-usage checks every other statement gets,
+        // mirroring the `ClassDef`/`ModuleDef` arms above; `InterfaceDef`
+        // carries no nested `Stmt`/`Expr` (only `MethodSig`s), so there is
+        // nothing to walk.
+        Stmt::NominalClassDef { body, .. } => {
+            for st in body {
+                check_soundness_stmt(st, errs);
+            }
+        }
+        Stmt::InterfaceDef { .. } => {}
+        Stmt::MethodDef { body, .. } => {
+            for st in &body.stmts {
+                check_soundness_stmt(st, errs);
+            }
+            check_soundness_expr(&body.value, errs);
+        }
     }
 }
 

@@ -391,7 +391,114 @@ fn print_stmt(out: &mut String, s: &Stmt, indent: usize, depth: usize) {
             print_expr_inline_depth(out, value, depth + 1);
             out.push(')');
         }
+        // ── SIR29: nominal/static-dispatch OOP profile ──────────────
+        Stmt::NominalClassDef {
+            name,
+            type_params,
+            superclass,
+            interfaces,
+            is_abstract,
+            fields,
+            body,
+            ..
+        } => {
+            let _ = write!(out, "(nominal-class-def {}", name);
+            print_type_params(out, type_params);
+            if let Some(sup) = superclass {
+                let _ = write!(out, " (< {})", sup);
+            }
+            if !interfaces.is_empty() {
+                let _ = write!(out, " (implements {})", interfaces.join(" "));
+            }
+            if *is_abstract {
+                out.push_str(" (abstract)");
+            }
+            for field in fields {
+                let _ = write!(
+                    out,
+                    "\n{}  (field {} {})",
+                    " ".repeat(indent),
+                    field.name,
+                    field.sir_type
+                );
+            }
+            for inner in body {
+                let _ = write!(out, "\n{}  ", " ".repeat(indent));
+                print_stmt(out, inner, indent + 2, depth + 1);
+            }
+            out.push(')');
+        }
+        Stmt::InterfaceDef {
+            name,
+            type_params,
+            extends,
+            methods,
+            ..
+        } => {
+            let _ = write!(out, "(interface-def {}", name);
+            print_type_params(out, type_params);
+            if !extends.is_empty() {
+                let _ = write!(out, " (extends {})", extends.join(" "));
+            }
+            for m in methods {
+                let _ = write!(out, "\n{}  (method-sig {} (", " ".repeat(indent), m.name);
+                for (i, p) in m.params.iter().enumerate() {
+                    if i > 0 {
+                        out.push(' ');
+                    }
+                    let _ = write!(out, "{}", p);
+                }
+                let _ = write!(out, ") {})", m.ret);
+            }
+            out.push(')');
+        }
+        Stmt::MethodDef {
+            name,
+            params,
+            return_type,
+            is_static,
+            is_override,
+            vtable_slot,
+            body,
+            ..
+        } => {
+            let _ = write!(out, "(method-def {} (", name);
+            for (i, p) in params.iter().enumerate() {
+                if i > 0 {
+                    out.push(' ');
+                }
+                let _ = write!(out, "({} {})", p.name, type_or_any(p.sir_type.as_ref()));
+            }
+            let _ = write!(out, ") {}", type_or_any(return_type.as_ref()));
+            if *is_static {
+                out.push_str(" (static)");
+            }
+            if *is_override {
+                out.push_str(" (override)");
+            }
+            if let Some(slot) = vtable_slot {
+                let _ = write!(out, " (vtable-slot {})", slot);
+            }
+            let _ = write!(out, "\n{}  ", " ".repeat(indent));
+            print_block_depth(out, body, indent + 2, depth + 1);
+            out.push(')');
+        }
     }
+}
+
+/// Shared helper: render a `(type-params …)` clause for
+/// [`Stmt::NominalClassDef`]/[`Stmt::InterfaceDef`] (SIR29). Omitted
+/// entirely when `type_params` is empty, matching how `superclass`/
+/// `interfaces` above only print when present.
+fn print_type_params(out: &mut String, type_params: &[SirType]) {
+    if type_params.is_empty() {
+        return;
+    }
+    let _ = write!(out, " (type-params");
+    for tp in type_params {
+        let _ = write!(out, " {}", tp);
+    }
+    out.push(')');
 }
 
 /// Render an expression as a single-line s-expression.  Public for
@@ -776,6 +883,23 @@ fn print_expr_inline_depth(out: &mut String, e: &Expr, depth: usize) {
             out.push(')');
             let _ = write!(out, " {})", if *repeated { "repeated" } else { "once" });
         }
+        // `(virtual-call <receiver> method slot <args…> (effects …))`
+        // (SIR29) — `method` rides along for display only, per the
+        // node's own doc comment; `slot` is the real dispatch key.
+        Expr::VirtualCall {
+            receiver,
+            method,
+            slot,
+            args,
+            effects,
+            ..
+        } => {
+            let _ = write!(out, "(virtual-call ");
+            print_expr_inline_depth(out, receiver, depth + 1);
+            let _ = write!(out, " {} {}", method, slot);
+            print_args(out, args, depth);
+            let _ = write!(out, " (effects {}))", effects);
+        }
     }
 }
 
@@ -888,7 +1012,7 @@ mod tests {
     fn print_empty_module() {
         let m = module_with(vec![], FeatureManifest::new());
         let t = print_module(&m);
-        assert!(t.starts_with("(sir-module demo v4"));
+        assert!(t.starts_with("(sir-module demo v5"));
         assert!(t.contains("(metadata"));
         assert!(t.ends_with(")\n"));
     }

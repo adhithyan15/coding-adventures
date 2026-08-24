@@ -4152,6 +4152,24 @@ fn collect_callees_stmt(stmt: &Stmt, out: &mut HashSet<String>) {
                 }
             }
         }
+        // SIR29 compile-compat stubs: this frontend never emits any of
+        // the nominal/static-OOP profile's `Stmt` kinds (Python only
+        // lowers to the dynamic-OOP `ClassDef` profile), but each is
+        // still walked into every nested `Stmt`/`Expr` slot it carries,
+        // mirroring the treatment `ClassDef`/`ModuleDef`/
+        // `SingletonClassDef` get just above, so a `DirectCall` nested
+        // inside one would still be found if a future lowering path
+        // ever produced this node.
+        Stmt::NominalClassDef { body, .. } => {
+            for s in body {
+                collect_callees_stmt(s, out);
+            }
+        }
+        // `InterfaceDef` carries only bodyless `MethodSig`s (name +
+        // `SirType` signature, no `Expr`/`Stmt`), so there is nothing
+        // nested to recurse into.
+        Stmt::InterfaceDef { .. } => {}
+        Stmt::MethodDef { body, .. } => collect_direct_callees(body, out),
     }
 }
 
@@ -4321,6 +4339,18 @@ fn collect_callees_expr(expr: &Expr, out: &mut HashSet<String>) {
             collect_callees_expr(expr, out);
             for r in rules {
                 collect_callees_expr(r, out);
+            }
+        }
+        // SIR29 compile-compat stub: the Python frontend never emits
+        // `VirtualCall` (it only lowers to the dynamic-OOP `ClassDef`
+        // profile's string-keyed dispatch), but recurse into `receiver`
+        // and every `args` slot, mirroring the `IndirectCall` treatment
+        // above, so a nested `DirectCall` would still be found if a
+        // future lowering path ever produced this node.
+        Expr::VirtualCall { receiver, args, .. } => {
+            collect_callees_expr(receiver, out);
+            for a in args {
+                collect_callees_expr(a, out);
             }
         }
         // Atoms and references bind nothing.

@@ -43,6 +43,10 @@ use std::fmt;
 /// | `SymbolicExpr`             | a `SymSymbol` or `SymApply` node       |
 /// | `PatternMatching`          | a `SymPatternBlank`, `SymPatternNamed`, `SymRule`, or `SymReplaceAll` node |
 /// | `ConsoleIO`                | a `BuiltinCall("__sys_write__", ...)` node |
+/// | `NominalClasses`           | a `Stmt::NominalClassDef`             |
+/// | `Interfaces`               | a `Stmt::InterfaceDef`, or a `NominalClassDef` with interfaces |
+/// | `VirtualDispatch`          | an `Expr::VirtualCall` node           |
+/// | `ErasedGenerics`           | a `SirType::TypeParam`                |
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Feature {
     Closures,
@@ -236,6 +240,37 @@ pub enum Feature {
     /// defines, not just the subset one frontend happens to emit.  See
     /// [SIR28](../../../../specs/SIR28-syscall-primitives.md).
     ConsoleIO,
+    // ── SIR29 (nominal/static-dispatch OOP profile) ──────────────────
+    /// The module contains at least one `Stmt::NominalClassDef` — a
+    /// nominally-typed class in the SIR29 static-dispatch OOP profile,
+    /// distinct from `Feature::Classes`' dynamic, string-table-dispatch
+    /// profile (§2 of [SIR25](../../../../specs/SIR25-language-agnostic-object-model.md)).
+    /// The two profiles are siblings, not variants of one another: a
+    /// module may declare either, both, or neither, and a backend
+    /// accepting one is not thereby promising anything about the other.
+    /// See [SIR29](../../../../specs/SIR29-nominal-static-oop-profile.md).
+    NominalClasses,
+    /// The module contains at least one `Stmt::InterfaceDef`, or a
+    /// `Stmt::NominalClassDef` whose `interfaces` list is non-empty.
+    /// Split out from `NominalClasses` the same way `Feature::MatrixOps`
+    /// is split from `Feature::NDArrays` in SIR22 — a backend could in
+    /// principle support nominal classes without interface conformance
+    /// checks.
+    Interfaces,
+    /// The module contains an `Expr::VirtualCall` node — the SIR29
+    /// index-based virtual-dispatch primitive (a sibling of §2.2's
+    /// string-keyed method-table lookup, not a replacement for it). A
+    /// backend accepting this promises to honour `slot`'s per-class-
+    /// hierarchy stability contract; see the SIR29 spec's "Dispatch
+    /// primitive" section.
+    VirtualDispatch,
+    /// The module uses an erased generic type parameter
+    /// (`SirType::TypeParam`) — on a `Stmt::NominalClassDef.type_params`,
+    /// a `Stmt::InterfaceDef.type_params`, or anywhere else a `SirType`
+    /// may appear (a field, parameter, or return type). Named
+    /// "erased" because SIR29 v1 carries no reification/runtime-type-
+    /// token machinery — see `SirType::TypeParam`'s own doc comment.
+    ErasedGenerics,
 }
 
 impl Feature {
@@ -282,6 +317,10 @@ impl Feature {
         Feature::SymbolicExpr,
         Feature::PatternMatching,
         Feature::ConsoleIO,
+        Feature::NominalClasses,
+        Feature::Interfaces,
+        Feature::VirtualDispatch,
+        Feature::ErasedGenerics,
     ];
 
     /// Kebab-case name for the SIR text format.
@@ -328,6 +367,10 @@ impl Feature {
             Feature::SymbolicExpr => "symbolic-expr",
             Feature::PatternMatching => "pattern-matching",
             Feature::ConsoleIO => "console-io",
+            Feature::NominalClasses => "nominal-classes",
+            Feature::Interfaces => "interfaces",
+            Feature::VirtualDispatch => "virtual-dispatch",
+            Feature::ErasedGenerics => "erased-generics",
         }
     }
 
@@ -452,6 +495,24 @@ mod tests {
         let new = [
             (Feature::SymbolicExpr, "symbolic-expr"),
             (Feature::PatternMatching, "pattern-matching"),
+        ];
+        for (feat, name) in new {
+            assert_eq!(feat.name(), name);
+            assert_eq!(Feature::from_name(name), Some(feat));
+            assert!(Feature::ALL.contains(&feat), "{} missing from ALL", name);
+        }
+    }
+
+    #[test]
+    fn sir29_features_present_and_named() {
+        // NominalClasses/Interfaces/VirtualDispatch/ErasedGenerics round-trip
+        // through name()/from_name() and are members of ALL, mirroring the
+        // SIR23 test above.
+        let new = [
+            (Feature::NominalClasses, "nominal-classes"),
+            (Feature::Interfaces, "interfaces"),
+            (Feature::VirtualDispatch, "virtual-dispatch"),
+            (Feature::ErasedGenerics, "erased-generics"),
         ];
         for (feat, name) in new {
             assert_eq!(feat.name(), name);

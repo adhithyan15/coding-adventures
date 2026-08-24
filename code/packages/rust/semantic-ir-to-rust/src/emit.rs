@@ -431,6 +431,13 @@ fn collect_stmt_assigned(s: &Stmt, out: &mut HashSet<String>) {
         | Stmt::ModuleDef { .. }
         | Stmt::SingletonClassDef { .. }
         | Stmt::TryCatch { .. } => {}
+        // SIR29 nominal-OOP nodes: `Feature::NominalClasses`/`Interfaces`/
+        // `VirtualDispatch` are not in this backend's accepted-features
+        // list (see `ACCEPTED_FEATURES` in lib.rs), so `check_module`
+        // rejects any module using these before this traversal ever runs
+        // — same "rejected at the capability check" treatment as the
+        // SIR17 arm above.
+        Stmt::NominalClassDef { .. } | Stmt::InterfaceDef { .. } | Stmt::MethodDef { .. } => {}
         // SIR22 array/matrix indexed assignment: `target`, each index
         // argument, and `value` can each nest an `Assign` (e.g.
         // `A(i) = (foo := 1)`), so recurse into all three — same
@@ -523,7 +530,10 @@ fn collect_expr_assigned(e: &Expr, out: &mut HashSet<String>) {
         // validator until then, so this arm is effectively unreachable today.
         Expr::KeywordArg { value, .. } => collect_expr_assigned(value, out),
         // Leaves, and the SIR18 `StrConcat` node (rejected before emit) —
-        // nothing nested that could hold a reachable `Assign`.
+        // nothing nested that could hold a reachable `Assign`.  The SIR29
+        // `VirtualCall` joins this group for the same reason: `Feature::
+        // VirtualDispatch` is not in `ACCEPTED_FEATURES`, so a module
+        // using it is rejected before this traversal ever runs.
         Expr::IntLit { .. }
         | Expr::FloatLit { .. }
         | Expr::BoolLit { .. }
@@ -532,7 +542,8 @@ fn collect_expr_assigned(e: &Expr, out: &mut HashSet<String>) {
         | Expr::StrLit { .. }
         | Expr::VarRef { .. }
         | Expr::Intrinsic { .. }
-        | Expr::StrConcat { .. } => {}
+        | Expr::StrConcat { .. }
+        | Expr::VirtualCall { .. } => {}
         // SIR22 array/matrix nodes (base cut) — real recursion, since this
         // backend now accepts them: each sub-expression can nest an
         // `Assign` the same as any other operand position.
@@ -861,6 +872,16 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
         }
         Stmt::SingletonClassDef { span, .. } => {
             panic!("rust backend reached SIR17 singleton-class-def statement at {} — capability check should have rejected it", span);
+        }
+        // SIR29 nominal-OOP statements (`NominalClassDef`/`InterfaceDef`/
+        // `MethodDef`) — `Feature::NominalClasses`/`Interfaces`/
+        // `VirtualDispatch` are not in `ACCEPTED_FEATURES`, so a
+        // validated module never reaches here.  Compile-exhaustiveness
+        // stub only; no real codegen for this profile yet.
+        Stmt::NominalClassDef { span, .. }
+        | Stmt::InterfaceDef { span, .. }
+        | Stmt::MethodDef { span, .. } => {
+            panic!("rust backend reached a SIR29 nominal-OOP node at {} — capability check should have rejected it", span);
         }
         // `begin … rescue … ensure … end` → a `catch_unwind` region.  See
         // `emit_try_catch` for the full mapping and its ensure-ordering
@@ -1199,6 +1220,13 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
         // this arm is an internal bug.
         Expr::StrConcat { span, .. } => {
             panic!("rust backend reached SIR18 str-concat expression at {} — capability check should have rejected it", span);
+        }
+        // SIR29 `VirtualCall` — `Feature::VirtualDispatch` is not in
+        // `ACCEPTED_FEATURES`, so a validated module never reaches here.
+        // Compile-exhaustiveness stub only; no real codegen for this
+        // profile yet.
+        Expr::VirtualCall { span, .. } => {
+            panic!("rust backend reached a SIR29 virtual-call expression at {} — capability check should have rejected it", span);
         }
         // KW5: a `KeywordArg` is never emitted as a stand-alone
         // expression.  The validator guarantees it appears ONLY inside a
@@ -2709,6 +2737,14 @@ fn emit_stmt_inline(out: &mut String, s: &Stmt, indent: usize) {
         }
         Stmt::SingletonClassDef { span, .. } => {
             panic!("rust backend (inline) reached SIR17 singleton-class-def statement at {} — capability check should have rejected it", span);
+        }
+        // SIR29 nominal-OOP statements — same treatment as the non-inline
+        // `emit_stmt` arm above: not in `ACCEPTED_FEATURES`, so a
+        // validated module never reaches here.
+        Stmt::NominalClassDef { span, .. }
+        | Stmt::InterfaceDef { span, .. }
+        | Stmt::MethodDef { span, .. } => {
+            panic!("rust backend (inline) reached a SIR29 nominal-OOP node at {} — capability check should have rejected it", span);
         }
         // `begin … rescue … ensure … end` in a block-as-expression
         // context.  The multi-line `catch_unwind` region the shared

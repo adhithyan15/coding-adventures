@@ -15,6 +15,7 @@ use crate::limits::MAX_IR_DEPTH;
 use crate::manifest::{Feature, FeatureManifest};
 use crate::nodes::*;
 use crate::span::Span;
+use crate::types::SirType;
 use std::collections::{HashMap, HashSet};
 use std::fmt;
 
@@ -750,8 +751,158 @@ impl<'m> ValidatorState<'m> {
                     }
                     i += 1;
                 }
+                Stmt::NominalClassDef {
+                    type_params,
+                    interfaces,
+                    fields,
+                    body,
+                    span,
+                    ..
+                } => {
+                    // SIR29: a nominal class is the static-dispatch
+                    // sibling of `ClassDef` — same depth-guard/fresh-
+                    // local-env recursion shape, but methods nest
+                    // directly in `body` (no hoisting), so a nested
+                    // `MethodDef` is validated by the same
+                    // `check_stmt_seq` recursion rather than a separate
+                    // top-level pass.
+                    self.observed.add(Feature::NominalClasses);
+                    if !interfaces.is_empty() {
+                        self.observed.add(Feature::Interfaces);
+                    }
+                    if !type_params.is_empty() {
+                        self.observed.add(Feature::ErasedGenerics);
+                    }
+                    let mut field_names: HashSet<String> = HashSet::new();
+                    for field in fields {
+                        if !field_names.insert(field.name.clone()) {
+                            self.error(format!("duplicate field `{}`", field.name), &field.span);
+                        }
+                        if matches!(field.sir_type, SirType::TypeParam { .. }) {
+                            self.observed.add(Feature::ErasedGenerics);
+                        }
+                    }
+                    if self.check_depth(depth, span) {
+                        i += 1;
+                        continue;
+                    }
+                    let class_mark = env.mark();
+                    self.check_stmt_seq(body, env, depth + 1);
+                    env.rewind(class_mark);
+                    i += 1;
+                }
+                Stmt::InterfaceDef {
+                    type_params,
+                    methods,
+                    span,
+                    ..
+                } => {
+                    // SIR29: an interface declares bodyless method
+                    // signatures only — no nested `Stmt`/`Expr` to walk,
+                    // so (unlike `NominalClassDef`) there is no
+                    // recursive `check_stmt_seq` call here; the depth
+                    // guard still applies for consistency with every
+                    // other declaration-shaped statement.
+                    self.observed.add(Feature::Interfaces);
+                    if !type_params.is_empty() {
+                        self.observed.add(Feature::ErasedGenerics);
+                    }
+                    let mut method_names: HashSet<String> = HashSet::new();
+                    for m in methods {
+                        if !method_names.insert(m.name.clone()) {
+                            self.error(
+                                format!("duplicate interface method `{}`", m.name),
+                                span,
+                            );
+                        }
+                        for p in &m.params {
+                            if matches!(p, SirType::TypeParam { .. }) {
+                                self.observed.add(Feature::ErasedGenerics);
+                            }
+                        }
+                        if matches!(m.ret, SirType::TypeParam { .. }) {
+                            self.observed.add(Feature::ErasedGenerics);
+                        }
+                    }
+                    self.check_depth(depth, span);
+                    i += 1;
+                }
+                Stmt::MethodDef {
+                    name,
+                    params,
+                    return_type,
+                    vtable_slot,
+                    body,
+                    ..
+                } => {
+                    // SIR29: a method nested in a `NominalClassDef` body.
+                    // Validated like a top-level `Function` — its own
+                    // fresh parameter scope, not the enclosing class
+                    // body's `env` — since a method's parameters and
+                    // locals are not visible to sibling statements/
+                    // methods.  `vtable_slot` carries no expression to
+                    // check; a return type using a type parameter
+                    // observes `ErasedGenerics` the same way a field's
+                    // type does above.
+                    if matches!(return_type, Some(SirType::TypeParam { .. })) {
+                        self.observed.add(Feature::ErasedGenerics);
+                    }
+                    if vtable_slot.is_some() {
+                        self.observed.add(Feature::VirtualDispatch);
+                    }
+                    self.check_method_def(name, params, body);
+                    i += 1;
+                }
             }
         }
+    }
+
+    /// Validate a [`Stmt::MethodDef`]'s parameter list and body (SIR29).
+    ///
+    /// Mirrors [`Self::check_function`]'s parameter-scope handling
+    /// (duplicate-name detection, `OptionalTypeAnnotations`/
+    /// `DynamicTyping` observation, default-value checking against the
+    /// params declared so far) so a method gets the same rigor as a
+    /// top-level function, without the Ruby-specific `*rest`/`**opts`
+    /// ordering rules `check_function` also enforces — SIR29 v1 methods
+    /// are a Java/C#-shaped positional-plus-optional-default surface,
+    /// not Ruby's full variadic/keyword calling convention, so that
+    /// ordering machinery has no SIR29 caller to exercise it correctly
+    /// yet; a future SIR29 addendum that needs it can factor the shared
+    /// logic out at that point instead of guessing at the rules now.
+    fn check_method_def(&mut self, name: &str, params: &[Param], body: &Block) {
+        let mut param_names: HashSet<String> = HashSet::new();
+        let mut scope_so_far: HashSet<String> = HashSet::new();
+        let no_captures: HashSet<String> = HashSet::new();
+        for p in params {
+            if !param_names.insert(p.name.clone()) {
+                self.error(
+                    format!("duplicate parameter `{}` in method `{}`", p.name, name),
+                    &p.span,
+                );
+            }
+            if let Some(t) = &p.sir_type {
+                self.observed.add(Feature::OptionalTypeAnnotations);
+                if matches!(t, SirType::TypeParam { .. }) {
+                    self.observed.add(Feature::ErasedGenerics);
+                }
+            } else {
+                self.observed.add(Feature::DynamicTyping);
+            }
+            if p.kind == ParamKind::Keyword {
+                self.observed.add(Feature::KeywordParams);
+            }
+            if let Some(default) = &p.default {
+                if p.kind != ParamKind::Keyword {
+                    self.observed.add(Feature::DefaultParams);
+                }
+                let mut env = LocalEnv::new(&scope_so_far, &no_captures);
+                self.check_expr(default, &mut env, 0);
+            }
+            scope_so_far.insert(p.name.clone());
+        }
+        let mut env = LocalEnv::new(&param_names, &no_captures);
+        self.check_block(body, &mut env, 0);
     }
 
     fn check_expr(&mut self, e: &Expr, env: &mut LocalEnv, depth: usize) {
@@ -1142,6 +1293,17 @@ impl<'m> ValidatorState<'m> {
                 self.check_expr(expr, env, depth + 1);
                 for r in rules {
                     self.check_expr(r, env, depth + 1);
+                }
+            }
+
+            // ── SIR29: nominal/static-dispatch OOP profile ──────────
+            Expr::VirtualCall {
+                receiver, args, ..
+            } => {
+                self.observed.add(Feature::VirtualDispatch);
+                self.check_expr(receiver, env, depth + 1);
+                for a in args {
+                    self.check_expr(a, env, depth + 1);
                 }
             }
         }
@@ -5435,5 +5597,324 @@ mod tests {
         );
         let r = validate(&m);
         assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    // ── SIR29: nominal/static-dispatch OOP profile ───────────────────
+
+    fn module_with_fn_body_stmts(manifest: FeatureManifest, stmts: Vec<Stmt>) -> Module {
+        let mut m = empty_module(manifest);
+        m.functions.push(Function {
+            name: "f".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts,
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        m
+    }
+
+    #[test]
+    fn nominal_class_def_observes_nominal_classes_feature() {
+        let m = module_with_fn_body_stmts(
+            FeatureManifest::from_features(&[Feature::NominalClasses]),
+            vec![Stmt::NominalClassDef {
+                name: "Animal".into(),
+                type_params: vec![],
+                superclass: None,
+                interfaces: vec![],
+                is_abstract: false,
+                fields: vec![],
+                body: vec![],
+                span: s(),
+            }],
+        );
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn nominal_class_def_without_feature_declared_is_error() {
+        let m = module_with_fn_body_stmts(
+            FeatureManifest::new(),
+            vec![Stmt::NominalClassDef {
+                name: "Animal".into(),
+                type_params: vec![],
+                superclass: None,
+                interfaces: vec![],
+                is_abstract: false,
+                fields: vec![],
+                body: vec![],
+                span: s(),
+            }],
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok(), "expected error for undeclared NominalClasses");
+    }
+
+    #[test]
+    fn nominal_class_def_with_interfaces_observes_interfaces_feature() {
+        let m = module_with_fn_body_stmts(
+            FeatureManifest::from_features(&[Feature::NominalClasses, Feature::Interfaces]),
+            vec![Stmt::NominalClassDef {
+                name: "Dog".into(),
+                type_params: vec![],
+                superclass: Some("Animal".into()),
+                interfaces: vec!["Comparable".into()],
+                is_abstract: false,
+                fields: vec![FieldDef {
+                    name: "name".into(),
+                    sir_type: SirType::Str,
+                    span: s(),
+                }],
+                body: vec![],
+                span: s(),
+            }],
+        );
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn nominal_class_def_duplicate_field_name_is_error() {
+        let field = |ty: SirType| FieldDef {
+            name: "x".into(),
+            sir_type: ty,
+            span: s(),
+        };
+        let m = module_with_fn_body_stmts(
+            FeatureManifest::from_features(&[Feature::NominalClasses]),
+            vec![Stmt::NominalClassDef {
+                name: "Point".into(),
+                type_params: vec![],
+                superclass: None,
+                interfaces: vec![],
+                is_abstract: false,
+                fields: vec![field(SirType::int_default()), field(SirType::int_default())],
+                body: vec![],
+                span: s(),
+            }],
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok(), "expected error for duplicate field name");
+    }
+
+    #[test]
+    fn nominal_class_def_nests_method_def_and_validates_its_body() {
+        // The method's body references an undeclared local — the
+        // validator must recurse into MethodDef.body to catch it, proving
+        // methods nest directly (no hoisting) unlike Stmt::ClassDef.
+        let m = module_with_fn_body_stmts(
+            FeatureManifest::from_features(&[Feature::NominalClasses]),
+            vec![Stmt::NominalClassDef {
+                name: "Greeter".into(),
+                type_params: vec![],
+                superclass: None,
+                interfaces: vec![],
+                is_abstract: false,
+                fields: vec![],
+                body: vec![Stmt::MethodDef {
+                    name: "greet".into(),
+                    params: vec![],
+                    return_type: None,
+                    is_static: false,
+                    is_override: false,
+                    vtable_slot: Some(0),
+                    body: Block {
+                        stmts: vec![],
+                        value: Expr::VarRef {
+                            name: "undeclared".into(),
+                            scope: Scope::Local,
+                            span: s(),
+                        },
+                        span: s(),
+                    },
+                    span: s(),
+                }],
+                span: s(),
+            }],
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok(), "expected error for undeclared local in method body");
+    }
+
+    #[test]
+    fn method_def_with_vtable_slot_observes_virtual_dispatch_feature() {
+        let m = module_with_fn_body_stmts(
+            FeatureManifest::from_features(&[Feature::NominalClasses, Feature::VirtualDispatch]),
+            vec![Stmt::NominalClassDef {
+                name: "Greeter".into(),
+                type_params: vec![],
+                superclass: None,
+                interfaces: vec![],
+                is_abstract: false,
+                fields: vec![],
+                body: vec![Stmt::MethodDef {
+                    name: "greet".into(),
+                    params: vec![],
+                    return_type: None,
+                    is_static: false,
+                    is_override: false,
+                    vtable_slot: Some(0),
+                    body: Block {
+                        stmts: vec![],
+                        value: Expr::NilLit { span: s() },
+                        span: s(),
+                    },
+                    span: s(),
+                }],
+                span: s(),
+            }],
+        );
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn interface_def_observes_interfaces_feature() {
+        let m = module_with_fn_body_stmts(
+            FeatureManifest::from_features(&[Feature::Interfaces]),
+            vec![Stmt::InterfaceDef {
+                name: "Comparable".into(),
+                type_params: vec![],
+                extends: vec![],
+                methods: vec![MethodSig {
+                    name: "compareTo".into(),
+                    params: vec![SirType::int_default()],
+                    ret: SirType::int_default(),
+                }],
+                span: s(),
+            }],
+        );
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn interface_def_duplicate_method_name_is_error() {
+        let sig = || MethodSig {
+            name: "m".into(),
+            params: vec![],
+            ret: SirType::Dynamic,
+        };
+        let m = module_with_fn_body_stmts(
+            FeatureManifest::from_features(&[Feature::Interfaces]),
+            vec![Stmt::InterfaceDef {
+                name: "I".into(),
+                type_params: vec![],
+                extends: vec![],
+                methods: vec![sig(), sig()],
+                span: s(),
+            }],
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok(), "expected error for duplicate interface method name");
+    }
+
+    #[test]
+    fn type_param_on_nominal_class_observes_erased_generics_feature() {
+        let m = module_with_fn_body_stmts(
+            FeatureManifest::from_features(&[Feature::NominalClasses, Feature::ErasedGenerics]),
+            vec![Stmt::NominalClassDef {
+                name: "Box".into(),
+                type_params: vec![SirType::TypeParam {
+                    name: "T".into(),
+                    bound: None,
+                }],
+                superclass: None,
+                interfaces: vec![],
+                is_abstract: false,
+                fields: vec![],
+                body: vec![],
+                span: s(),
+            }],
+        );
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn virtual_call_with_declared_receiver_is_valid() {
+        let mut m = empty_module(FeatureManifest::from_features(&[
+            Feature::VirtualDispatch,
+            Feature::DynamicTyping,
+        ]));
+        m.functions.push(Function {
+            name: "f".into(),
+            params: vec![Param {
+                name: "recv".into(),
+                sir_type: None,
+                kind: ParamKind::Required,
+                default: None,
+                span: s(),
+            }],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::VirtualCall {
+                    receiver: Box::new(Expr::VarRef {
+                        name: "recv".into(),
+                        scope: Scope::Param,
+                        span: s(),
+                    }),
+                    method: "speak".into(),
+                    slot: 0,
+                    args: vec![],
+                    effects: EffectSet::PURE,
+                    span: s(),
+                },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn virtual_call_without_feature_declared_is_error() {
+        let mut m = empty_module(FeatureManifest::new());
+        m.functions.push(Function {
+            name: "f".into(),
+            params: vec![Param {
+                name: "recv".into(),
+                sir_type: None,
+                kind: ParamKind::Required,
+                default: None,
+                span: s(),
+            }],
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::VirtualCall {
+                    receiver: Box::new(Expr::VarRef {
+                        name: "recv".into(),
+                        scope: Scope::Param,
+                        span: s(),
+                    }),
+                    method: "speak".into(),
+                    slot: 0,
+                    args: vec![],
+                    effects: EffectSet::PURE,
+                    span: s(),
+                },
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        });
+        let r = validate(&m);
+        assert!(!r.is_ok(), "expected error for undeclared VirtualDispatch");
     }
 }

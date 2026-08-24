@@ -285,6 +285,22 @@ where
             walk_intrinsics_in_index_args(indices, f, depth + 1);
             walk_intrinsics_in_expr(value, f, depth + 1);
         }
+        crate::nodes::Stmt::NominalClassDef { body, .. } => {
+            // SIR29: methods nest directly in `body` — recurse the same
+            // way ClassDef/ModuleDef do above.
+            for s in body {
+                walk_intrinsics_in_stmt(s, f, depth + 1);
+            }
+        }
+        crate::nodes::Stmt::InterfaceDef { .. } => {
+            // Bodyless `MethodSig`s only — nothing to recurse into.
+        }
+        crate::nodes::Stmt::MethodDef { body, .. } => {
+            for s in &body.stmts {
+                walk_intrinsics_in_stmt(s, f, depth + 1);
+            }
+            walk_intrinsics_in_expr(&body.value, f, depth + 1);
+        }
     }
 }
 
@@ -509,6 +525,12 @@ where
             walk_intrinsics_in_expr(expr, f, depth + 1);
             for r in rules {
                 walk_intrinsics_in_expr(r, f, depth + 1);
+            }
+        }
+        Expr::VirtualCall { receiver, args, .. } => {
+            walk_intrinsics_in_expr(receiver, f, depth + 1);
+            for a in args {
+                walk_intrinsics_in_expr(a, f, depth + 1);
             }
         }
     }
@@ -804,6 +826,63 @@ mod tests {
         assert_eq!(errs.len(), 1);
         assert_eq!(errs[0].kind, BackendErrorKind::UnsupportedFeature);
         assert!(errs[0].message.contains("symbolic-expr"));
+    }
+
+    // ── SIR29: capability-rejection tests ────────────────────────────
+    //
+    // Per the SIR29 spec's "Backend impact" section (mirrors SIR22/23's
+    // own precedent above): a backend that doesn't declare
+    // NominalClasses/Interfaces/VirtualDispatch/ErasedGenerics in
+    // accepts_features() cleanly rejects any module using them, via the
+    // existing SIR10 capability-check mechanism — no new mechanism
+    // needed. These tests prove that against the actual mechanism
+    // (`Backend::check_module`), same style as the SIR22/23 blocks above.
+
+    #[test]
+    fn backend_without_nominal_classes_rejects_module_declaring_it() {
+        let b = NoFeaturesBackend;
+        let m = module_with_feature(Feature::NominalClasses);
+        let errs = b.check_module(&m);
+        assert_eq!(errs.len(), 1);
+        assert_eq!(errs[0].kind, BackendErrorKind::UnsupportedFeature);
+        assert!(errs[0].message.contains("nominal-classes"));
+    }
+
+    #[test]
+    fn backend_without_interfaces_rejects_module_declaring_it() {
+        let b = NoFeaturesBackend;
+        let m = module_with_feature(Feature::Interfaces);
+        let errs = b.check_module(&m);
+        assert_eq!(errs.len(), 1);
+        assert_eq!(errs[0].kind, BackendErrorKind::UnsupportedFeature);
+        assert!(errs[0].message.contains("interfaces"));
+    }
+
+    #[test]
+    fn backend_without_virtual_dispatch_rejects_module_declaring_it() {
+        let b = NoFeaturesBackend;
+        let m = module_with_feature(Feature::VirtualDispatch);
+        let errs = b.check_module(&m);
+        assert_eq!(errs.len(), 1);
+        assert_eq!(errs[0].kind, BackendErrorKind::UnsupportedFeature);
+        assert!(errs[0].message.contains("virtual-dispatch"));
+    }
+
+    #[test]
+    fn backend_without_erased_generics_rejects_module_declaring_it() {
+        let b = NoFeaturesBackend;
+        let m = module_with_feature(Feature::ErasedGenerics);
+        let errs = b.check_module(&m);
+        assert_eq!(errs.len(), 1);
+        assert_eq!(errs[0].kind, BackendErrorKind::UnsupportedFeature);
+        assert!(errs[0].message.contains("erased-generics"));
+    }
+
+    #[test]
+    fn all_features_backend_accepts_nominal_classes() {
+        let b = AllFeaturesBackend;
+        let m = module_with_feature(Feature::NominalClasses);
+        assert!(b.check_module(&m).is_empty());
     }
 
     #[test]
