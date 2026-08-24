@@ -7,31 +7,31 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:ff6ea3cd33ed21d5",
+  "sourceHash": "fnv1a64:e27e388d8fcc3206",
   "summary": {
-    "totalLessons": 75,
-    "voice": 21,
+    "totalLessons": 89,
+    "voice": 35,
     "sight": 41,
     "pen": 13,
-    "drivableLessons": 21,
-    "drivablePercent": 28,
+    "drivableLessons": 35,
+    "drivablePercent": 39,
     "trackCount": 1,
     "chapterCount": 14,
-    "drivablePrefixTotal": 8,
-    "fullyDrivableChapters": 2,
-    "unstartableChapters": 12,
+    "drivablePrefixTotal": 20,
+    "fullyDrivableChapters": 3,
+    "unstartableChapters": 11,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
   "tracks": [
     {
       "language": "marathi",
-      "lessonCount": 75,
-      "voice": 21,
+      "lessonCount": 89,
+      "voice": 35,
       "sight": 41,
       "pen": 13,
-      "drivablePercent": 28,
-      "drivablePrefixTotal": 8,
+      "drivablePercent": 39,
+      "drivablePrefixTotal": 20,
       "modalities": [
         "voice",
         "sight",
@@ -40,13 +40,14 @@
       "chapters": [
         {
           "chapter": 1,
-          "lessonCount": 7,
+          "lessonCount": 20,
           "voice": 1,
           "sight": 6,
-          "pen": 0,
+          "pen": 13,
           "modalities": [
             "voice",
-            "sight"
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 0,
           "firstNonVoiceLesson": "MR-C01-namaskar",
@@ -195,11 +196,12 @@
         },
         {
           "chapter": 11,
-          "lessonCount": 4,
-          "voice": 0,
+          "lessonCount": 6,
+          "voice": 2,
           "sight": 4,
           "pen": 0,
           "modalities": [
+            "voice",
             "sight"
           ],
           "drivablePrefix": 0,
@@ -237,18 +239,30 @@
         },
         {
           "chapter": 14,
-          "lessonCount": 13,
-          "voice": 0,
+          "lessonCount": 12,
+          "voice": 12,
           "sight": 0,
-          "pen": 13,
+          "pen": 0,
           "modalities": [
-            "sight",
-            "pen"
+            "voice"
           ],
-          "drivablePrefix": 0,
-          "firstNonVoiceLesson": "MR-W01-ha",
-          "drivable": false,
-          "drivableLessonIds": []
+          "drivablePrefix": 12,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "MR-R14-mitra-r2",
+            "MR-R14-kutumb-r2",
+            "MR-R14-siblings",
+            "MR-R14-eye-ear",
+            "MR-R14-mouth-nose",
+            "MR-R14-food",
+            "MR-R14-doing",
+            "MR-R14-mind",
+            "MR-R14-core",
+            "MR-R14-mitra-r3",
+            "MR-R14-numbers",
+            "MR-R14-kutumb-r3"
+          ]
         }
       ]
     }
@@ -270,55 +284,319 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a41e61a17664bb0e",
+      "sourceHash": "fnv1a64:f6315db577f9ba3b",
       "detachableSegments": [
         "The letters in this word"
       ]
     },
     {
-      "id": "MR-C01-dhanyavad",
+      "id": "MR-W01-ha",
+      "language": "marathi",
+      "chapter": 1,
+      "sequence": 6,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "sight-cue"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:91ae975d19bda384",
+      "detachableSegments": [
+        "Script",
+        "Writing — notice and trace one consonant"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "MR-W01-o-matra",
+      "language": "marathi",
+      "chapter": 1,
+      "sequence": 7,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:2085493c97c7086a",
+      "detachableSegments": [
+        "Script",
+        "Writing — one supported copy"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "MR-W01-ho-delayed-copy",
+      "language": "marathi",
+      "chapter": 1,
+      "sequence": 8,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "sight-cue"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type",
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:1eac7e133791eeaf",
+      "detachableSegments": [
+        "Writing — delayed copy"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "MR-W01-ho-dictation",
+      "language": "marathi",
+      "chapter": 1,
+      "sequence": 9,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:11afb08c22049583",
+      "detachableSegments": [
+        "Writing — short dictation"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "MR-W01-na",
       "language": "marathi",
       "chapter": 1,
       "sequence": 10,
-      "modality": "sight",
-      "derived": "sight",
+      "modality": "pen",
+      "derived": "pen",
       "drivable": false,
       "reasons": [
+        "writing-type",
         "script-block"
       ],
-      "coreModality": "voice",
+      "coreModality": "pen",
       "coreReasons": [
-        "no-visual-dependency"
+        "writing-type"
       ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:14237165386b41d7",
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:8ecfee496b55f415",
       "detachableSegments": [
-        "The letters in this word"
-      ]
+        "Script"
+      ],
+      "delivery": "script"
     },
     {
-      "id": "MR-C01-ho",
+      "id": "MR-W01-aa-matra",
+      "language": "marathi",
+      "chapter": 1,
+      "sequence": 11,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:7bd0dccda4ad7f18",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "MR-W01-ii-matra",
+      "language": "marathi",
+      "chapter": 1,
+      "sequence": 12,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:06e3176a57d3a5eb",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "MR-W01-ma",
+      "language": "marathi",
+      "chapter": 1,
+      "sequence": 13,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:b53a28791fee5183",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "MR-W01-sa",
+      "language": "marathi",
+      "chapter": 1,
+      "sequence": 14,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:ed51fe011b8d859c",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "MR-W01-ka",
       "language": "marathi",
       "chapter": 1,
       "sequence": 15,
-      "modality": "sight",
-      "derived": "sight",
+      "modality": "pen",
+      "derived": "pen",
       "drivable": false,
       "reasons": [
+        "writing-type",
         "script-block"
       ],
-      "coreModality": "voice",
+      "coreModality": "pen",
       "coreReasons": [
-        "no-visual-dependency"
+        "writing-type"
       ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:99109ff77646ca53",
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:fee289dcde6ded2a",
       "detachableSegments": [
-        "The letters in this word"
-      ]
+        "Script"
+      ],
+      "delivery": "script"
     },
     {
-      "id": "MR-C01-nahi",
+      "id": "MR-W01-virama",
+      "language": "marathi",
+      "chapter": 1,
+      "sequence": 16,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:067c12e85d82ee36",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "MR-W01-ra",
+      "language": "marathi",
+      "chapter": 1,
+      "sequence": 17,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:d9d5a78a4e8ff344",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "MR-W01-namaskar-read",
+      "language": "marathi",
+      "chapter": 1,
+      "sequence": 18,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:ae4e80f7e5026426",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "MR-C01-dhanyavad",
       "language": "marathi",
       "chapter": 1,
       "sequence": 20,
@@ -333,7 +611,28 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:3a04909f61929ae0",
+      "sourceHash": "fnv1a64:ae927fc4e79db3bc",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "MR-C01-ho",
+      "language": "marathi",
+      "chapter": 1,
+      "sequence": 22,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:7305b59f66aa9f7b",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -342,7 +641,7 @@
       "id": "MR-C01-baram",
       "language": "marathi",
       "chapter": 1,
-      "sequence": 25,
+      "sequence": 24,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -354,7 +653,28 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:80667628df6ff3f6",
+      "sourceHash": "fnv1a64:03e597d63fbf58ee",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "MR-C01-nahi",
+      "language": "marathi",
+      "chapter": 1,
+      "sequence": 26,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:b645e836c91ab297",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -363,7 +683,7 @@
       "id": "MR-C01-yeto",
       "language": "marathi",
       "chapter": 1,
-      "sequence": 30,
+      "sequence": 28,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -375,7 +695,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:3b8bdfd13c85af62",
+      "sourceHash": "fnv1a64:3faec7990fd93059",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -384,7 +704,7 @@
       "id": "MR-C01-practice",
       "language": "marathi",
       "chapter": 1,
-      "sequence": 35,
+      "sequence": 30,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -396,7 +716,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:0246d5377b6f552f"
+      "sourceHash": "fnv1a64:1e31e6a887edf7ce"
     },
     {
       "id": "MR-C02-naav",
@@ -1327,6 +1647,24 @@
       ]
     },
     {
+      "id": "MR-R11-mitra-r1",
+      "language": "marathi",
+      "chapter": 11,
+      "sequence": 545,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:3cab58e95a8d7731"
+    },
+    {
       "id": "MR-C11-kutumb",
       "language": "marathi",
       "chapter": 11,
@@ -1342,10 +1680,28 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e9c3e5e20a44ff01",
+      "sourceHash": "fnv1a64:9b2b49926c42303e",
       "detachableSegments": [
         "The letters in this word"
       ]
+    },
+    {
+      "id": "MR-R11-kutumb-r1",
+      "language": "marathi",
+      "chapter": 11,
+      "sequence": 555,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:cb57daf32d7c4f6a"
     },
     {
       "id": "MR-C11-bhau",
@@ -1363,7 +1719,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:39c377f3aa14c7ed",
+      "sourceHash": "fnv1a64:6368a63c8c191575",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1495,310 +1851,220 @@
       ]
     },
     {
-      "id": "MR-W01-ha",
+      "id": "MR-R14-mitra-r2",
       "language": "marathi",
       "chapter": 14,
-      "sequence": 800,
-      "modality": "pen",
-      "derived": "pen",
-      "drivable": false,
+      "sequence": 630,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "writing-type",
-        "writing-block",
-        "script-block",
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "coreModality": "pen",
+      "coreModality": "voice",
       "coreReasons": [
-        "writing-type"
+        "no-visual-dependency"
       ],
-      "coreDrivable": false,
-      "sourceHash": "fnv1a64:1ba26806e71f743e",
-      "detachableSegments": [
-        "Script",
-        "Writing — notice and trace one consonant"
-      ],
-      "delivery": "script"
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:c51b4cd31ad63bb7"
     },
     {
-      "id": "MR-W01-o-matra",
+      "id": "MR-R14-kutumb-r2",
       "language": "marathi",
       "chapter": 14,
-      "sequence": 810,
-      "modality": "pen",
-      "derived": "pen",
-      "drivable": false,
+      "sequence": 640,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "writing-type",
-        "writing-block",
-        "script-block"
+        "no-visual-dependency"
       ],
-      "coreModality": "pen",
+      "coreModality": "voice",
       "coreReasons": [
-        "writing-type"
+        "no-visual-dependency"
       ],
-      "coreDrivable": false,
-      "sourceHash": "fnv1a64:c6ba4ce949efabee",
-      "detachableSegments": [
-        "Script",
-        "Writing — one supported copy"
-      ],
-      "delivery": "script"
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:85304f3dd1c57e6a"
     },
     {
-      "id": "MR-W01-ho-delayed-copy",
+      "id": "MR-R14-siblings",
       "language": "marathi",
       "chapter": 14,
-      "sequence": 815,
-      "modality": "pen",
-      "derived": "pen",
-      "drivable": false,
+      "sequence": 650,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "writing-type",
-        "writing-block",
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "coreModality": "pen",
+      "coreModality": "voice",
       "coreReasons": [
-        "writing-type",
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "coreDrivable": false,
-      "sourceHash": "fnv1a64:3b16799d2e8b32e9",
-      "detachableSegments": [
-        "Writing — delayed copy"
-      ],
-      "delivery": "script"
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:6023fced9c8f54c3"
     },
     {
-      "id": "MR-W01-ho-dictation",
+      "id": "MR-R14-eye-ear",
       "language": "marathi",
       "chapter": 14,
-      "sequence": 817,
-      "modality": "pen",
-      "derived": "pen",
-      "drivable": false,
+      "sequence": 660,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "writing-type",
-        "writing-block"
+        "no-visual-dependency"
       ],
-      "coreModality": "pen",
+      "coreModality": "voice",
       "coreReasons": [
-        "writing-type"
+        "no-visual-dependency"
       ],
-      "coreDrivable": false,
-      "sourceHash": "fnv1a64:10fa9ba2c3351bac",
-      "detachableSegments": [
-        "Writing — short dictation"
-      ],
-      "delivery": "script"
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:9af9096312c471e0"
     },
     {
-      "id": "MR-W01-na",
+      "id": "MR-R14-mouth-nose",
       "language": "marathi",
       "chapter": 14,
-      "sequence": 820,
-      "modality": "pen",
-      "derived": "pen",
-      "drivable": false,
+      "sequence": 670,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "writing-type",
-        "script-block"
+        "no-visual-dependency"
       ],
-      "coreModality": "pen",
+      "coreModality": "voice",
       "coreReasons": [
-        "writing-type"
+        "no-visual-dependency"
       ],
-      "coreDrivable": false,
-      "sourceHash": "fnv1a64:ec4d9f8ba18dec9c",
-      "detachableSegments": [
-        "Script"
-      ],
-      "delivery": "script"
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:9da35a78af61f6bb"
     },
     {
-      "id": "MR-W01-aa-matra",
+      "id": "MR-R14-food",
       "language": "marathi",
       "chapter": 14,
-      "sequence": 830,
-      "modality": "pen",
-      "derived": "pen",
-      "drivable": false,
+      "sequence": 680,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "writing-type",
-        "script-block"
+        "no-visual-dependency"
       ],
-      "coreModality": "pen",
+      "coreModality": "voice",
       "coreReasons": [
-        "writing-type"
+        "no-visual-dependency"
       ],
-      "coreDrivable": false,
-      "sourceHash": "fnv1a64:147c1eb959594db3",
-      "detachableSegments": [
-        "Script"
-      ],
-      "delivery": "script"
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:9553528155268292"
     },
     {
-      "id": "MR-W01-ii-matra",
+      "id": "MR-R14-doing",
       "language": "marathi",
       "chapter": 14,
-      "sequence": 840,
-      "modality": "pen",
-      "derived": "pen",
-      "drivable": false,
+      "sequence": 690,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "writing-type",
-        "script-block"
+        "no-visual-dependency"
       ],
-      "coreModality": "pen",
+      "coreModality": "voice",
       "coreReasons": [
-        "writing-type"
+        "no-visual-dependency"
       ],
-      "coreDrivable": false,
-      "sourceHash": "fnv1a64:c0b1ad8f3cb8912a",
-      "detachableSegments": [
-        "Script"
-      ],
-      "delivery": "script"
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:14c6064720123a66"
     },
     {
-      "id": "MR-W01-ma",
+      "id": "MR-R14-mind",
       "language": "marathi",
       "chapter": 14,
-      "sequence": 850,
-      "modality": "pen",
-      "derived": "pen",
-      "drivable": false,
+      "sequence": 700,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "writing-type",
-        "script-block"
+        "no-visual-dependency"
       ],
-      "coreModality": "pen",
+      "coreModality": "voice",
       "coreReasons": [
-        "writing-type"
+        "no-visual-dependency"
       ],
-      "coreDrivable": false,
-      "sourceHash": "fnv1a64:c9604e26e24f70aa",
-      "detachableSegments": [
-        "Script"
-      ],
-      "delivery": "script"
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:c262af8ad528a061"
     },
     {
-      "id": "MR-W01-sa",
+      "id": "MR-R14-core",
       "language": "marathi",
       "chapter": 14,
-      "sequence": 860,
-      "modality": "pen",
-      "derived": "pen",
-      "drivable": false,
+      "sequence": 710,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "writing-type",
-        "script-block"
+        "no-visual-dependency"
       ],
-      "coreModality": "pen",
+      "coreModality": "voice",
       "coreReasons": [
-        "writing-type"
+        "no-visual-dependency"
       ],
-      "coreDrivable": false,
-      "sourceHash": "fnv1a64:d9095d1ef01f17a7",
-      "detachableSegments": [
-        "Script"
-      ],
-      "delivery": "script"
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:178c072707b09b27"
     },
     {
-      "id": "MR-W01-ka",
+      "id": "MR-R14-mitra-r3",
       "language": "marathi",
       "chapter": 14,
-      "sequence": 870,
-      "modality": "pen",
-      "derived": "pen",
-      "drivable": false,
+      "sequence": 720,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "writing-type",
-        "script-block"
+        "no-visual-dependency"
       ],
-      "coreModality": "pen",
+      "coreModality": "voice",
       "coreReasons": [
-        "writing-type"
+        "no-visual-dependency"
       ],
-      "coreDrivable": false,
-      "sourceHash": "fnv1a64:de19bc6f3d55eb59",
-      "detachableSegments": [
-        "Script"
-      ],
-      "delivery": "script"
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:9de725e25945d182"
     },
     {
-      "id": "MR-W01-virama",
+      "id": "MR-R14-numbers",
       "language": "marathi",
       "chapter": 14,
-      "sequence": 880,
-      "modality": "pen",
-      "derived": "pen",
-      "drivable": false,
+      "sequence": 730,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "writing-type",
-        "script-block"
+        "no-visual-dependency"
       ],
-      "coreModality": "pen",
+      "coreModality": "voice",
       "coreReasons": [
-        "writing-type"
+        "no-visual-dependency"
       ],
-      "coreDrivable": false,
-      "sourceHash": "fnv1a64:b284a465eed6f1f5",
-      "detachableSegments": [
-        "Script"
-      ],
-      "delivery": "script"
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:4fb35f0bc66a42ab"
     },
     {
-      "id": "MR-W01-ra",
+      "id": "MR-R14-kutumb-r3",
       "language": "marathi",
       "chapter": 14,
-      "sequence": 890,
-      "modality": "pen",
-      "derived": "pen",
-      "drivable": false,
+      "sequence": 740,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "writing-type",
-        "script-block"
+        "no-visual-dependency"
       ],
-      "coreModality": "pen",
+      "coreModality": "voice",
       "coreReasons": [
-        "writing-type"
+        "no-visual-dependency"
       ],
-      "coreDrivable": false,
-      "sourceHash": "fnv1a64:87fcc3505d79dd63",
-      "detachableSegments": [
-        "Script"
-      ],
-      "delivery": "script"
-    },
-    {
-      "id": "MR-W01-namaskar-read",
-      "language": "marathi",
-      "chapter": 14,
-      "sequence": 900,
-      "modality": "pen",
-      "derived": "pen",
-      "drivable": false,
-      "reasons": [
-        "writing-type",
-        "script-block"
-      ],
-      "coreModality": "pen",
-      "coreReasons": [
-        "writing-type"
-      ],
-      "coreDrivable": false,
-      "sourceHash": "fnv1a64:22253ee4e0b4923a",
-      "detachableSegments": [
-        "Script"
-      ],
-      "delivery": "script"
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:183a5dce9d805a6b"
     }
   ],
   "findings": []

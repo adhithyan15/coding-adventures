@@ -2,9 +2,9 @@
 schema_version: 2
 id: MR-W01-virama
 spine_node: SPINE-MEET-GREET
-sequence: 880
+sequence: 16
 delivery: script
-chapter: 14
+chapter: 1
 type: writing
 headword: ्
 romanization: "(virama)"

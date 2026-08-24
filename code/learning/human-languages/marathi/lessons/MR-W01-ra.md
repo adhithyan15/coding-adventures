@@ -2,9 +2,9 @@
 schema_version: 2
 id: MR-W01-ra
 spine_node: SPINE-MEET-GREET
-sequence: 890
+sequence: 17
 delivery: script
-chapter: 14
+chapter: 1
 type: writing
 headword: र
 romanization: "ra"

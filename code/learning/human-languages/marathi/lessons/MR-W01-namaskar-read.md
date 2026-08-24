@@ -2,9 +2,9 @@
 schema_version: 2
 id: MR-W01-namaskar-read
 spine_node: SPINE-MEET-GREET
-sequence: 900
+sequence: 18
 delivery: script
-chapter: 14
+chapter: 1
 type: writing
 headword: नमस्कार
 romanization: "namaskār"

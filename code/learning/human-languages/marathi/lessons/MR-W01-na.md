@@ -2,9 +2,9 @@
 schema_version: 2
 id: MR-W01-na
 spine_node: SPINE-MEET-GREET
-sequence: 820
+sequence: 10
 delivery: script
-chapter: 14
+chapter: 1
 type: writing
 headword: न
 romanization: "na"

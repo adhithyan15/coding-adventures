@@ -2,9 +2,9 @@
 schema_version: 2
 id: MR-W01-sa
 spine_node: SPINE-MEET-GREET
-sequence: 860
+sequence: 14
 delivery: script
-chapter: 14
+chapter: 1
 type: writing
 headword: स
 romanization: "sa"

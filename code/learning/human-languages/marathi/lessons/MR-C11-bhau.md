@@ -9,7 +9,7 @@ headword: भाऊ
 romanization: bhāū
 gloss: brother — worn down by sound change rather than borrowed whole, and a secure cousin of the English word
 concept_tag: MR-PEOPLE-BROTHER
-prerequisites: [MR-C11-kutumb]
+prerequisites: [MR-R11-kutumb-r1]
 sounds: [independent-oo]
 roots: [sanskrit-bhratr, pie-bhreh2ter]
 etymology_hook: "भाऊ continues Sanskrit भ्रातृ bhrātṛ through the regular Prakrit sound changes, from Indo-European *bʰréh₂tēr — the same word as English brother, Latin frater, and Sanskrit's own bhrātṛ, one of the most secure cognate sets in the whole family"
@@ -26,7 +26,7 @@ modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [MR-C11-kutumb, MR-C11-mitra]
+reviews_of: [MR-R11-kutumb-r1, MR-C11-kutumb, MR-C11-mitra]
 ---
 
 # भाऊ (bhāū) — brother, and this time the resemblance is real

@@ -9,7 +9,7 @@ headword: कुटुंब
 romanization: kuṭumb
 gloss: family — another word borrowed whole from Sanskrit, and neuter where Hindi made the same word masculine
 concept_tag: MR-PEOPLE-FAMILY
-prerequisites: [MR-C11-mitra]
+prerequisites: [MR-R11-mitra-r1]
 sounds: [matra-u, retroflex-ta]
 roots: [sanskrit-kutumba]
 etymology_hook: "कुटुंब is a learned borrowing from Sanskrit कुटुम्ब kuṭumba, \"household, family\" — a word whose own origin before Sanskrit is debated, with a Dravidian source proposed but not settled, so this lesson states the dispute rather than picking a side"
@@ -26,7 +26,7 @@ modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [MR-C11-mitra]
+reviews_of: [MR-R11-mitra-r1, MR-C11-mitra]
 ---
 
 # कुटुंब (kuṭumb) — family, and a gender Hindi disagrees with

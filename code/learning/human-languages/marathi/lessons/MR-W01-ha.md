@@ -2,9 +2,9 @@
 schema_version: 2
 id: MR-W01-ha
 spine_node: SPINE-MEET-GREET
-sequence: 800
+sequence: 6
 delivery: script
-chapter: 14
+chapter: 1
 type: writing
 headword: ह
 romanization: "ha"

@@ -2629,6 +2629,13 @@
     },
     {
       "language": "marathi",
+      "chapter": 1,
+      "output": "marathi/book/chapters/ch01-greetings.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "mr"
+    },
+    {
+      "language": "marathi",
       "chapter": 6,
       "output": "marathi/book/chapters/ch06-numbers-1-5.tex",
       "unicodeScript": "Devanagari",
@@ -2686,7 +2693,7 @@
     {
       "language": "marathi",
       "chapter": 14,
-      "output": "marathi/book/chapters/ch14-script-first.tex",
+      "output": "marathi/book/chapters/ch14-family-memory.tex",
       "unicodeScript": "Devanagari",
       "scriptCommand": "mr"
     },
@@ -6191,11 +6198,6 @@
       "language": "malayalam",
       "chapter": 5,
       "output": "malayalam/book/chapters/ch05-first-verbs.tex"
-    },
-    {
-      "language": "marathi",
-      "chapter": 1,
-      "output": "marathi/book/chapters/ch01-greetings.tex"
     },
     {
       "language": "marathi",

@@ -2,9 +2,9 @@
 schema_version: 2
 id: MR-W01-aa-matra
 spine_node: SPINE-MEET-GREET
-sequence: 830
+sequence: 11
 delivery: script
-chapter: 14
+chapter: 1
 type: writing
 headword: ा
 romanization: "-ā"

@@ -1,25 +1,33 @@
-# Session Map — Marathi Chapters 1–9
+# Session Guide — Marathi Chapters 1–9
 
 Same spaced-repetition schedule as the other tracks (a word from session *N*
-resurfaces at *N+1, N+3, N+7, N+15*). Lessons named by slug; this map is the
-authoritative order.
+resurfaces at successively wider distances). Lessons are named by slug. The
+machine-authoritative order is the `(chapter, sequence)` order in lesson
+frontmatter, with `curriculum.json` defining the learner paths; this guide
+records the original chapter hooks without trying to duplicate all 89 lessons.
 
-**There is no reading course.** Devanagari is learned *through* the words: each
-lesson's *"The letters in this word"* section introduces exactly the letters that
-word needs. (Chapter 7 names that section *"Sounds you'll need"*; the two are the
-same job under two headings, and the canonical one is the former.)
+**Reading and writing begin inside the first exchange.** After hearing
+**नमस्कार**, the learner meets one shape at a time, traces and copies **हो**,
+recalls it without a visible model, writes it from a heard cue, and then reads
+**नमस्कार**. Later word lessons continue to teach their needed letters inline.
 
 ## Chapter 1 — Greetings
 
 | Session | Lesson | Word | Root / hook |
 |---|---|---|---|
-| 1 | namaskar | नमस्कार | "hello" ← Sanskrit *namaḥ*+*kāra*; Marathi's default greeting |
-| 2 | dhanyavad | धन्यवाद | "thanks" ← Sanskrit *dhanya*+*vāda*; the न्य conjunct |
-| 3 | ho | हो | "yes" (distinct from Hindi *hāṁ*) |
-| 4 | nahi | नाही | "no" ← PIE *\*ne* (English *no/not/none*) |
-| 5 | baram | बरं | "okay/fine" (native word); the anusvāra nasal |
-| 6 | yeto | येतो / येते | "I'll be going" — gendered verb (m./f.); "promise of return" |
-| 7 | practice | (recap) | greetings + what makes Marathi its own (3 genders, ळ) |
+| 1 | namaskar | नमस्कार | hear the greeting before being asked to decode it |
+| 2 | W01-ha | ह | trace one familiar shape |
+| 3 | W01-o-matra | ो | add one vowel mark and copy **हो** |
+| 4 | W01-ho-delayed-copy | हो | hide the model, then retrieve the whole word |
+| 5 | W01-ho-dictation | हो | write from a heard cue with no answer model |
+| 6–13 | W01-na … W01-ra | न, ा, ी, म, स, क, ्, र | one new piece per short lesson |
+| 14 | W01-namaskar-read | नमस्कार | blend and read the first greeting independently |
+| 15 | dhanyavad | धन्यवाद | "thanks" ← Sanskrit *dhanya*+*vāda* |
+| 16 | ho | हो | use the already written word as "yes" |
+| 17 | baram | बरं | "okay/fine" (native word); the anusvāra nasal |
+| 18 | nahi | नाही | "no" ← PIE *\*ne* (English *no/not/none*) |
+| 19 | yeto | येतो / येते | gendered leave-taking (m./f.) |
+| 20 | practice | (recap) | retrieve speech, reading, and independent writing together |
 
 ## Chapter 2 — Introducing Yourself
 

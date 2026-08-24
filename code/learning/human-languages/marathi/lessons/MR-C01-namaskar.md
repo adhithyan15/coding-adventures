@@ -1,25 +1,42 @@
 ---
+schema_version: 2
 id: MR-C01-namaskar
+spine_node: SPINE-MEET-GREET
 sequence: 5
 chapter: 1
 type: word
 headword: नमस्कार
+romanization: namaskar
 gloss: hello / goodbye (namaskār)
 concept_tag: GREETING-HELLO
 prerequisites: []
 sounds: [inherent-a, halant-conjunct]
 roots: [namas, kara]
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [MR-LEX-NAMASKAR-01]
+practises:
+  knowledge: [MR-LEX-NAMASKAR-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: []
 ---
 
 # नमस्कार (namaskār) — "greetings"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[MR-LEX-NAMASKAR-01]; assesses=[] -->
 
 [PAUSE 2s] The first Marathi word — and the everyday greeting of Maharashtra.
 
 ## The letters in this word
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-NAMASKAR-01] -->
 
 *(If you already read Devanagari, skim this.)* Devanagari runs **left to
 right**; every consonant carries a built-in "a." **न** na, **म** ma, **का** kā,
@@ -28,6 +45,7 @@ right**; every consonant carries a built-in "a." **न** na, **म** ma, **क�
 → **namaskār**.
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-NAMASKAR-01] -->
 
 **नमस्कार** (*namaskār*) = **नमः** (*namaḥ*, "a bow") + **कार** (*kāra*, "the
 making of"), from Sanskrit — literally "the making of a bow." The same word
@@ -36,18 +54,21 @@ where Hindi leans on *namaste*, Marathi's default, all-purpose greeting is
 **namaskār** — one of many small ways the two Devanagari languages differ.
 
 ## Why it's said this way
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-NAMASKAR-01] -->
 
 Said with palms pressed together, respectful and neutral — hello and goodbye,
 any time, to almost anyone. Warmer and more casual: *kāy mhaṇtā?* ("what do you
 say?" ≈ "how's it going?") among friends.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-NAMASKAR-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: read it — na · ma · s · kā · r → "namaskār"]
 - [YOU SAY: what a *halant* does (removes स's vowel, for the स्का conjunct)]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-NAMASKAR-01] -->
 
 [PAUSE 3s] What does **नमस्कार** literally mean, and how does Marathi's greeting
 habit differ from Hindi's? ("The making of a bow"; Marathi favors *namaskār*,

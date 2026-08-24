@@ -2,9 +2,9 @@
 schema_version: 2
 id: MR-W01-ho-delayed-copy
 spine_node: SPINE-MEET-GREET
-sequence: 815
+sequence: 8
 delivery: script
-chapter: 14
+chapter: 1
 type: writing
 headword: हो
 romanization: "ho"
