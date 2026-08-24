@@ -1,0 +1,463 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+id: ES-C305-senor
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 4390
+chapter: 305
+type: word
+headword: señor
+gloss: sir, Mr — Latin senior, older; respect built out of age
+concept_tag: ES-NAME-SIR
+prerequisites: [ES-C305-apellido]
+sounds: [enye, stress-final]
+roots: [senior]
+etymology_hook: "senor is Latin senior, older — the same word as English senior, and the ancestor of French monsieur and English sir"
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ES-LEX-C305-NAME-02]
+introduces:
+  knowledge: [ES-LEX-C305-NAME-03]
+practises:
+  knowledge: [ES-LEX-C305-NAME-01, ES-LEX-C305-NAME-02, ES-LEX-C305-NAME-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: american-neutral
+reviews_of: [ES-C305-apellido]
+---
+
+# señor — respect made out of age
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C305-NAME-01, ES-LEX-C305-NAME-02] -->
+
+[PAUSE 2s] Two from last time, before anything new is added.
+
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+- Say it once slowly, then at speed. →
+  [pronunciation reference](../pronunciation-reference.md)
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[ES-LEX-C305-NAME-03]; assesses=[] -->
+
+**señor** — "sir," "Mr."
+
+Latin **senior** meant "older," the comparative of *senex*, "old." English took
+it raw as *senior*, and took the French descendant *sieur* — which is inside
+*monsieur*, "my lord," and worn all the way down to English *sir*.
+
+So *señor*, *sir*, *senior* and *monsieur* are one word, spread out.
+
+The **ñ** is the letter you met in the writing chapter. And this is what you say
+to get a stranger's attention politely, ahead of any of last chapter's
+repairs.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+A way to address the person before you ask them anything.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C305-NAME-01, ES-LEX-C305-NAME-02, ES-LEX-C305-NAME-03] -->
+
+[PAUSE 1s]
+- [YOU SAY: *señor*]
+- [YOU SAY: *señor, por favor*]
+- [YOU SAY: *señor — ¿qué significa?*]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C305-NAME-01, ES-LEX-C305-NAME-02, ES-LEX-C305-NAME-03] -->
+
+[PAUSE 3s] What did *senior* mean? (Older.) Which English one-syllable word is the same root, worn down? (*Sir*.)
+`,r=e({default:()=>i}),i=`---
+schema_version: 2
+id: ES-C305-senora
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 4400
+chapter: 305
+type: word
+headword: señora
+gloss: madam, Mrs — the feminine of senor, on the same Latin senior
+concept_tag: ES-NAME-MADAM
+prerequisites: [ES-C305-senor]
+sounds: [enye, stress-penultimate]
+roots: [senior]
+etymology_hook: "senora is the feminine of senor, both on Latin senior — and the -o/-a switch you met in bueno and buena does the work"
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ES-LEX-C305-NAME-03]
+introduces:
+  knowledge: [ES-LEX-C305-NAME-04]
+practises:
+  knowledge: [ES-LEX-C305-NAME-02, ES-LEX-C305-NAME-03, ES-LEX-C305-NAME-04]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: american-neutral
+reviews_of: [ES-C305-senor]
+---
+
+# señora — the same word, turned
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C305-NAME-02, ES-LEX-C305-NAME-03] -->
+
+[PAUSE 2s] Two from last time, before anything new is added.
+
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+- Say it once slowly, then at speed. →
+  [pronunciation reference](../pronunciation-reference.md)
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[ES-LEX-C305-NAME-04]; assesses=[] -->
+
+**señora** — "madam," "Mrs."
+
+The same *senior*, turned by the *-o*/*-a* switch you have now met three times:
+*bueno*/*buena*, *tranquilo*/*tranquila*, and here.
+
+That switch is the single most useful pattern in the language, and you have been
+collecting it since chapter one without being asked to memorise a rule.
+
+One caution worth having early: *señorita* exists and marks an unmarried woman.
+It is going out of use, and *señora* is the safe address for an adult woman you
+do not know.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Both forms of address, and the *-o*/*-a* switch confirmed a third time.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C305-NAME-02, ES-LEX-C305-NAME-03, ES-LEX-C305-NAME-04] -->
+
+[PAUSE 1s]
+- [YOU SAY: *señora*]
+- [YOU SAY: *señora, por favor*]
+- [YOU SAY: *señor — señora*]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C305-NAME-02, ES-LEX-C305-NAME-03, ES-LEX-C305-NAME-04] -->
+
+[PAUSE 3s] What turns *señor* into *señora*? (The *-o*/*-a* switch.) Which is the safe address for an adult woman you do not know? (*Señora*.)
+`,a=e({default:()=>o}),o=`---
+schema_version: 2
+id: ES-C31-dieciseis-diecinueve
+spine_node: SPINE-COUNT-ONE-TO-FIVE
+sequence: 1820
+chapter: 149
+type: word
+headword: dieciséis — diecinueve
+gloss: 16-19 — not words to memorise but a formula, diez y X, with the seam still visible
+concept_tag: ES-NUM-16-19
+prerequisites: [ES-C31-once-quince]
+sounds: [diphthong-ie, silent-none]
+roots: [latin-decem-et]
+etymology_hook: "dieciséis-diecinueve are transparent 'diez y seis' compounds — you can still hear diez in every one, so these four are generated by a rule rather than learned as words"
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [ES-LEX-NUMBERS-11-15-01, ES-ETYMON-NUMBERS-11-15-02]
+introduces:
+  knowledge: [ES-LEX-NUMBERS-16-19-03, ES-GRAMMAR-NUMBER-FORMATION-04]
+practises:
+  knowledge: [ES-LEX-NUMBERS-11-15-01, ES-ETYMON-NUMBERS-11-15-02, ES-LEX-NUMBERS-16-19-03, ES-GRAMMAR-NUMBER-FORMATION-04]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
+reviews_of: [ES-C31-once-quince]
+---
+
+# dieciséis — diecinueve: where the seam reopens
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-NUMBERS-11-15-01, ES-ETYMON-NUMBERS-11-15-02] -->
+
+[PAUSE 2s] You just learned five numbers whose insides had been ground
+smooth. Now say **fifteen** and then **sixteen** — *quince*, *dieciséis* —
+and hear the language change gear. From here you are not memorising words;
+you are following a rule.
+
+## The words, taken apart: dieciséis through diecinueve
+<!-- hl-knowledge: introduces=[ES-LEX-NUMBERS-16-19-03]; assesses=[] -->
+
+| Spanish | literally |
+|---|---|
+| **dieciséis** | *diez y seis*, "ten and six" |
+| **diecisiete** | *diez y siete*, "ten and seven" |
+| **dieciocho** | *diez y ocho*, "ten and eight" |
+| **diecinueve** | *diez y nueve*, "ten and nine" |
+
+No fusion. You can hear **diez** plainly at the front of every one, and the
+number you already know sitting right behind it.
+
+## Grammar Lens: a formula, not a list
+<!-- hl-knowledge: introduces=[ES-GRAMMAR-NUMBER-FORMATION-04]; assesses=[] -->
+
+This is the structural difference that makes 15/16 a real boundary in
+Spanish rather than a convenient place to pause:
+
+| | 11-15 | 16-19 |
+|---|---|---|
+| how you get the word | **remember** it | **build** it |
+| the "ten" inside | worn to *-ce* | still spelled *dieci-* |
+| can you hear the parts? | no | yes |
+
+So *once* through *quince* are **vocabulary**, and *dieciséis* through
+*diecinueve* are **grammar**: one template, *dieci- + digit*, filled four
+times. Learn the template once and all four are already yours.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-NUMBERS-11-15-01, ES-ETYMON-NUMBERS-11-15-02, ES-LEX-NUMBERS-16-19-03, ES-GRAMMAR-NUMBER-FORMATION-04] -->
+
+[PAUSE 1s]
+- [YOU SAY: "dieciséis, diecisiete, dieciocho, diecinueve"]
+- [YOU SAY: the seam out loud — "diez y seis" then "dieciséis"]
+- [YOU SAY: the boundary — "quince" (remembered), "dieciséis" (built)]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-NUMBERS-11-15-01, ES-ETYMON-NUMBERS-11-15-02, ES-LEX-NUMBERS-16-19-03, ES-GRAMMAR-NUMBER-FORMATION-04] -->
+
+[PAUSE 3s] Count sixteen to nineteen. (*Dieciséis, diecisiete, dieciocho,
+diecinueve*.) Are these fused or transparent? (**Transparent** — plain "ten
+and X.") Which of the two groups do you have to memorise, and which can you
+generate? (**Memorise 11-15**; **generate 16-19** from *dieci-* plus the
+digit.)
+`,s=e({default:()=>c}),c=`---
+schema_version: 2
+id: ES-C31-once-quince
+spine_node: SPINE-COUNT-ONE-TO-FIVE
+sequence: 1810
+chapter: 149
+type: word
+headword: once — quince
+gloss: 11-15 — five single opaque words, each one a Latin compound worn down until the seam disappeared
+concept_tag: ES-NUM-11-15
+prerequisites: [ES-C08-numeros-6-10]
+sounds: [diphthong-ie, silent-none]
+roots: [latin-undecim-quindecim]
+etymology_hook: "once-quince were Latin's ūndecim, duodecim, tredecim, quattuordecim, quīndecim — number + -decim ('ten') — fused by centuries of use until only a worn -ce survives of the 'ten'"
+duration:
+  max_seconds: 210
+requires:
+  knowledge: []
+introduces:
+  knowledge: [ES-LEX-NUMBERS-11-15-01, ES-ETYMON-NUMBERS-11-15-02]
+practises:
+  knowledge: [ES-LEX-NUMBERS-11-15-01, ES-ETYMON-NUMBERS-11-15-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
+reviews_of: [ES-C08-numeros-6-10]
+---
+
+# once — quince: five words with a seam you can no longer see
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+[PAUSE 2s] Spanish counts past ten in **two completely different ways**, and
+the join between them is a real boundary in the language, not a place someone
+drew a line. Today: the first five, which you simply have to learn as words.
+
+## The words, taken apart: once through quince
+<!-- hl-knowledge: introduces=[ES-LEX-NUMBERS-11-15-01, ES-ETYMON-NUMBERS-11-15-02]; assesses=[] -->
+
+| Spanish | ← Latin |
+|---|---|
+| **once** | *undecim* ("one-ten") |
+| **doce** | *duodecim* ("two-ten") |
+| **trece** | *tredecim* ("three-ten") |
+| **catorce** | *quattuordecim* ("four-ten") |
+| **quince** | *quindecim* ("five-ten") |
+
+Every one of these *was* a compound — a number plus **-decim** ("ten," the
+same root as *diez*). But these five are the numbers people say most often,
+and heavy use wears words smooth. Centuries of everyday speech fused each
+pair into a single, **opaque** word: no Spanish speaker hears "one-ten" in
+*once* any more than an English speaker hears "two-ten" in *twelve*.
+
+Listen for the ghost, though. The **-ce** ending on *doce, trece, catorce,
+quince* is all that survives of Latin's *-decim*. It is the same "ten" you
+already say in **diez**, ground down to two letters.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-NUMBERS-11-15-01, ES-ETYMON-NUMBERS-11-15-02] -->
+
+[PAUSE 1s]
+- [YOU SAY: "once, doce, trece, catorce, quince"]
+- [YOU SAY: just the endings — "-ce, -ce, -ce, -ce" — the worn-down *ten*]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-NUMBERS-11-15-01, ES-ETYMON-NUMBERS-11-15-02] -->
+
+[PAUSE 3s] Count eleven to fifteen. (*Once, doce, trece, catorce, quince*.)
+What are these five, structurally? (**Fused Latin compounds** — number plus
+*-decim*, "ten.") Which piece of each word is the old "ten"? (The **-ce**
+ending — *diez* worn down.) Next: the numbers where the seam is still wide
+open.
+`,l=e({default:()=>u}),u=`---
+schema_version: 2
+id: ES-C31-teens-latinos
+spine_node: SPINE-COUNT-ONE-TO-FIVE
+sequence: 1830
+chapter: 149
+type: etymology
+headword: duodēvīgintī, ūndēvīgintī
+gloss: why 18 and 19 are the interesting ones — Latin counted them backwards from twenty, and Spanish refused to
+concept_tag: ES-NUM-LATIN-TEENS
+prerequisites: [ES-C31-dieciseis-diecinueve]
+sounds: []
+roots: [latin-duodeviginti, latin-undeviginti]
+etymology_hook: "Latin's own 18 and 19 were subtractive — duodēvīgintī ('two from twenty') and ūndēvīgintī ('one from twenty') — and Spanish did not inherit them; dieciocho and diecinueve are built fresh on the regular ten-and-X template"
+duration:
+  max_seconds: 180
+requires:
+  knowledge: [ES-LEX-NUMBERS-16-19-03, ES-GRAMMAR-NUMBER-FORMATION-04]
+introduces:
+  knowledge: [ES-ETYMON-LATIN-TEENS-05]
+practises:
+  knowledge: [ES-LEX-NUMBERS-16-19-03, ES-GRAMMAR-NUMBER-FORMATION-04, ES-ETYMON-LATIN-TEENS-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
+reviews_of: [ES-C31-dieciseis-diecinueve]
+---
+
+# duodēvīgintī — the quirk Spanish threw away
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-NUMBERS-16-19-03] -->
+
+[PAUSE 2s] *Dieciocho* and *diecinueve* look like the least interesting words
+in the chapter — just two more ten-and-X compounds. They are actually the
+most interesting, because of what Latin said instead.
+
+## You'll want to know first
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+- [dieciséis — diecinueve](./ES-C31-dieciseis-diecinueve.md) — the *dieci-*
+  plus digit template.
+
+## Why it's said this way: Latin counted 18 and 19 backwards
+<!-- hl-knowledge: introduces=[ES-ETYMON-LATIN-TEENS-05]; assesses=[] -->
+
+You would expect *dieciocho* and *diecinueve* to carry on whatever Latin did
+for 18 and 19. Latin did something else entirely. Its everyday words for
+those two numbers were **subtractive** — counted *down* from twenty:
+
+| number | Latin | literally |
+|---|---|---|
+| 18 | **duodēvīgintī** | "**two from** twenty" |
+| 19 | **ūndēvīgintī** | "**one from** twenty" |
+
+(You still meet this habit in English clock-talk: "ten **to** four.")
+
+Spanish did not inherit either word. It built *dieciocho* and *diecinueve*
+fresh, on exactly the same simple template as 16 and 17 — quietly
+**regularising away** an irregularity that existed in its own parent
+language. Languages are usually described as wearing down and getting
+messier; here is a clean case of one tidying up.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-NUMBERS-16-19-03, ES-GRAMMAR-NUMBER-FORMATION-04, ES-ETYMON-LATIN-TEENS-05] -->
+
+[PAUSE 1s]
+- [YOU SAY: Latin's way — "two from twenty" — then Spanish's — "dieciocho"]
+- [YOU SAY: "dieciocho, diecinueve" — addition, not subtraction]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-NUMBERS-16-19-03, ES-GRAMMAR-NUMBER-FORMATION-04, ES-ETYMON-LATIN-TEENS-05] -->
+
+[PAUSE 3s] How did Latin say 18 and 19? (**Subtractively** —
+*duodēvīgintī*, "two from twenty," and *ūndēvīgintī*, "one from twenty.")
+Did Spanish keep that? (**No** — it built *dieciocho* and *diecinueve* on
+the regular ten-and-X template.) So which language is the irregular one
+here? (**Latin** — Spanish simplified.)
+`,d=e({default:()=>f}),f=`---
+schema_version: 2
+id: ES-C31-veinte
+spine_node: SPINE-COUNT-ONE-TO-FIVE
+sequence: 1840
+chapter: 149
+type: word
+headword: veinte
+gloss: twenty — the ceiling of the teens, and a word that was worn but never fused
+concept_tag: ES-NUM-VEINTE
+prerequisites: [ES-C31-teens-latinos]
+sounds: [diphthong-ei, silent-none]
+roots: [latin-viginti]
+etymology_hook: "veinte ← Latin vīgintī, worn down by ordinary sound change but never fused from two words the way once-quince were — it was always a single word for a single round number"
+duration:
+  max_seconds: 210
+requires:
+  knowledge: [ES-LEX-NUMBERS-11-15-01, ES-ETYMON-NUMBERS-11-15-02, ES-LEX-NUMBERS-16-19-03, ES-GRAMMAR-NUMBER-FORMATION-04, ES-ETYMON-LATIN-TEENS-05]
+introduces:
+  knowledge: [ES-LEX-VEINTE-06, ES-ETYMON-VEINTE-07]
+practises:
+  knowledge: [ES-LEX-NUMBERS-11-15-01, ES-ETYMON-NUMBERS-11-15-02, ES-LEX-NUMBERS-16-19-03, ES-GRAMMAR-NUMBER-FORMATION-04, ES-ETYMON-LATIN-TEENS-05, ES-LEX-VEINTE-06, ES-ETYMON-VEINTE-07]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
+reviews_of: [ES-C31-once-quince, ES-C31-dieciseis-diecinueve, ES-C31-teens-latinos]
+---
+
+# veinte — the number the teens were counting toward
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ES-ETYMON-LATIN-TEENS-05] -->
+
+[PAUSE 2s] Latin's own 18 and 19 were counted *down from twenty*. So it is
+worth meeting twenty itself — the number the whole run has been aiming at.
+
+## The word, taken apart: veinte
+<!-- hl-knowledge: introduces=[ES-LEX-VEINTE-06, ES-ETYMON-VEINTE-07]; assesses=[] -->
+
+**veinte** ("twenty") ← Latin **vīgintī**. It was worn down by ordinary
+sound change — the *g* softened away, the vowels shifted — but notice what
+did **not** happen to it: it was never **fused** out of two separate words
+the way *once* through *quince* were. *Vīgintī* was already a single word
+for a single round number, so there is no seam inside *veinte* to look for.
+
+Three different histories, then, in one short chapter:
+
+| words | what happened |
+|---|---|
+| *once - quince* | two words **fused** into one |
+| *dieciséis - diecinueve* | two words **built** into one, seam visible |
+| *veinte* | one word, simply **worn** |
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-NUMBERS-11-15-01, ES-ETYMON-NUMBERS-11-15-02, ES-LEX-NUMBERS-16-19-03, ES-GRAMMAR-NUMBER-FORMATION-04, ES-ETYMON-LATIN-TEENS-05, ES-LEX-VEINTE-06, ES-ETYMON-VEINTE-07] -->
+
+[PAUSE 1s]
+- [YOU SAY: "once, doce, trece, catorce, quince" — the five fused Latins]
+- [YOU SAY: "dieciséis, diecisiete, dieciocho, diecinueve" — built, not fused]
+- [YOU SAY: "veinte" — twenty, worn but never fused]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-NUMBERS-11-15-01, ES-ETYMON-NUMBERS-11-15-02, ES-LEX-NUMBERS-16-19-03, ES-GRAMMAR-NUMBER-FORMATION-04, ES-ETYMON-LATIN-TEENS-05, ES-LEX-VEINTE-06, ES-ETYMON-VEINTE-07] -->
+
+[PAUSE 3s] Count eleven to twenty. Where is the boundary between remembering
+and building, and why is it there? (**After *quince*** — 11-15 are fused
+Latin compounds, 16-19 are *dieci-* plus a digit.) Did Spanish inherit
+Latin's subtractive 18 and 19? (**No** — it regularised them.) Was *veinte*
+fused from two words? (**No** — Latin *vīgintī* was already one word; it was
+only worn down.)
+`;export{r as a,a as i,l as n,t as o,s as r,d as t};
