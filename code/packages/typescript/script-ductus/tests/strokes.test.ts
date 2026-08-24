@@ -204,6 +204,7 @@ const ARABIC_HEH = DUCTUS[ductusKey("arabic", "ه")];
 const ARABIC_WAW = DUCTUS[ductusKey("arabic", "و")];
 const ARABIC_YAA = DUCTUS[ductusKey("arabic", "ي")];
 const ARABIC_HAMZA = DUCTUS[ductusKey("arabic", "ء")];
+const ARABIC_LAM_ALIF = DUCTUS[ductusKey("arabic", "لا")];
 const URDU_ALEF = DUCTUS[ductusKey("urdu-nastaliq", "ا")];
 const URDU_JIM = DUCTUS[ductusKey("urdu-nastaliq", "ج")];
 const URDU_RE = DUCTUS[ductusKey("urdu-nastaliq", "ر")];
@@ -221,10 +222,13 @@ const URDU_BARI_YE = DUCTUS[ductusKey("urdu-nastaliq", "ے")];
 const fontForDuctus = (letter: LetterDuctus) => {
   const script = SCRIPTS.find((candidate) => candidate.script === letter.script);
   if (!script) throw new Error(`no verified script/font owns ${letter.glyph}`);
-  const claim = script.letters.find(
+  const letterClaim = script.letters.find(
     (entry) => entry.glyph === letter.glyph && entry.strokeOrderSource?.url === letter.source.url,
   );
-  if (!claim) throw new Error(`${letter.script} does not verify ${letter.glyph}`);
+  const ligatureClaim = script.ligatures?.find(
+    (entry) => entry.displayGlyph === letter.glyph && entry.strokeOrderSource?.url === letter.source.url,
+  );
+  if (!letterClaim && !ligatureClaim) throw new Error(`${letter.script} does not verify ${letter.glyph}`);
   return parseFont(load(script.font.split("/").pop()!));
 };
 
@@ -354,11 +358,12 @@ describe("handwriting ductus", () => {
     expect(gujarati.letters.every((letter) => letter.strokeOrderSource !== undefined)).toBe(true);
   });
 
-  it("keeps all 31 unique Arabic learner rows sourced without overstating completion", () => {
+  it("closes Arabic's sourced shape inventory without overstating corpus closure", () => {
     const arabic = SCRIPTS.find((script) => script.script === "arabic")!;
     expect(arabic.complete).toBe(false);
     expect(arabic.letters).toHaveLength(31);
     expect(arabic.letters.every((letter) => letter.strokeOrderSource !== undefined)).toBe(true);
+    expect(arabic.ligatures?.map((ligature) => ligature.sequence)).toEqual(["لا"]);
   });
 
   it("keeps taa marbuta word-final and body-first", () => {
@@ -388,6 +393,24 @@ describe("handwriting ductus", () => {
     expect(maqsura.strokes).toHaveLength(1);
     expect(penPath(maqsura.strokes[0])).toEqual(penPath(yaa.strokes[0]));
     expect(yaa.strokes).toHaveLength(3);
+  });
+
+  it("keeps lam-alif as an obligatory two-letter ligature", () => {
+    const arabic = SCRIPTS.find((script) => script.script === "arabic")!;
+    expect(arabic.letters).toHaveLength(31);
+    expect(arabic.letters.some((letter) => letter.glyph === "لا")).toBe(false);
+    expect(arabic.ligatures).toHaveLength(1);
+    const ligature = arabic.ligatures![0];
+    expect(ligature.sequence).toBe("لا");
+    expect([...ligature.sequence]).toEqual(["ل", "ا"]);
+    expect(ligature.displayGlyph).toBe("ﻻ");
+    expect(ligature.forms).toEqual({ isolated: "لا", final: "ـلا" });
+    expect(ligature.penLifts).toBe(1);
+    expect(ligature.strokeOrderSource!.url).toBe(
+      "https://alarabiyah.sakura.ne.jp/arabic/alphabets/naskh/laamalif/",
+    );
+    expect(ARABIC_LAM_ALIF.glyph).toBe("ﻻ");
+    expect(ARABIC_LAM_ALIF.strokes).toHaveLength(2);
   });
 
   it("models seated Hamza as sourced carrier composition, not duplicate letters", () => {
@@ -3438,22 +3461,34 @@ describe("handwriting ductus", () => {
   });
 
   it("every verified prose claim has the same font-checked ductus and source", () => {
-    const verified = SCRIPTS.flatMap((script) =>
-      script.letters
+    const verified = SCRIPTS.flatMap((script) => [
+      ...script.letters
         .filter((letter) => letter.penLifts !== undefined || letter.strokeOrderSource !== undefined)
-        .map((letter) => ({ script: script.script, letter })),
-    );
+        .map((letter) => ({
+          script: script.script, identity: letter.glyph, glyph: letter.glyph,
+          penLifts: letter.penLifts, source: letter.strokeOrderSource,
+        })),
+      ...(script.ligatures ?? [])
+        .filter((ligature) => ligature.penLifts !== undefined || ligature.strokeOrderSource !== undefined)
+        .map((ligature) => ({
+          script: script.script, identity: ligature.sequence, glyph: ligature.displayGlyph,
+          penLifts: ligature.penLifts, source: ligature.strokeOrderSource,
+        })),
+    ]);
     expect(verified).toHaveLength(letters.length);
-    for (const { script, letter } of verified) {
-      const ductus = ductusFor(letter.glyph, script);
-      expect(ductus, `${script} ${letter.glyph} claims verification without a ductus`).toBeDefined();
-      if (!ductus) throw new Error(`${script} ${letter.glyph} has no ductus`);
-      expect(letter.penLifts).toBe(penLifts(ductus));
-      expect(letter.strokeOrderSource).toEqual(ductus.source);
+    for (const claim of verified) {
+      const ductus = ductusFor(claim.identity, claim.script);
+      expect(ductus, `${claim.script} ${claim.identity} claims verification without a ductus`).toBeDefined();
+      if (!ductus) throw new Error(`${claim.script} ${claim.identity} has no ductus`);
+      expect(ductus.glyph).toBe(claim.glyph);
+      expect(claim.penLifts).toBe(penLifts(ductus));
+      expect(claim.source).toEqual(ductus.source);
     }
     for (const ductus of letters) {
       expect(
-        verified.some(({ script, letter }) => script === ductus.script && letter.glyph === ductus.glyph),
+        verified.some((claim) =>
+          claim.script === ductus.script && claim.identity === (ductus.sequence ?? ductus.glyph)
+        ),
         `${ductus.glyph} has a ductus but no verified prose claim`,
       ).toBe(true);
     }

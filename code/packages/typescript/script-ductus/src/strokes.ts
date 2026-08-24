@@ -98,6 +98,8 @@ export interface StrokeSource {
 export interface LetterDuctus {
   /** Canonical script id. Glyphs shared by multiple scripts need distinct identities. */
   script: string;
+  /** Editable lookup identity when `glyph` is only a presentation-form outline. */
+  sequence?: string;
   glyph: string;
   /** In writing order. `strokes.length - 1` is the number of pen lifts. */
   strokes: Stroke[];
@@ -201,6 +203,14 @@ const arabicAlphabetSource = (glyph: string): StrokeSource => {
     throw new Error(`Arabic ${glyph} has no verified source`);
   }
   return letter.strokeOrderSource;
+};
+
+const arabicLigatureSource = (sequence: string): StrokeSource => {
+  const ligature = arabic.ligatures.find((candidate) => candidate.sequence === sequence);
+  if (!ligature?.strokeOrderSource) {
+    throw new Error(`Arabic ${sequence} has no verified ligature source`);
+  }
+  return ligature.strokeOrderSource;
 };
 
 const chineseCharacterSource = (glyph: string): StrokeSource => {
@@ -9572,6 +9582,40 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: arabicAlphabetSource("ى"),
+  },
+  // Lam plus Alif is obligatorily shaped as a crossed ligature. The table key
+  // remains the editable two-character sequence; U+FEFB supplies only the
+  // joined Noto Naskh outline against which these sourced movements are fit.
+  [ductusKey("arabic", "لا")]: {
+    script: "arabic",
+    sequence: "لا",
+    glyph: "ﻻ",
+    strokes: [
+      {
+        segments: [{
+          label: "descend from the upper right and curve left near the baseline",
+          path: [
+            { x: 398, y: 660 }, { x: 390, y: 610 }, { x: 386, y: 555 },
+            { x: 401, y: 485 }, { x: 404, y: 410 }, { x: 398, y: 335 },
+            { x: 374, y: 255 }, { x: 340, y: 185 }, { x: 292, y: 128 },
+            { x: 230, y: 84 },
+          ],
+        }],
+      },
+      {
+        segments: [{
+          label: "lift, cross down from the upper left, and meet the first endpoint",
+          path: [
+            { x: 58, y: 500 }, { x: 82, y: 470 }, { x: 120, y: 435 },
+            { x: 175, y: 395 }, { x: 235, y: 345 }, { x: 300, y: 285 },
+            { x: 350, y: 230 }, { x: 392, y: 165 }, { x: 430, y: 95 },
+            { x: 437, y: 58 }, { x: 390, y: 42 }, { x: 325, y: 34 },
+            { x: 260, y: 27 }, { x: 200, y: 23 }, { x: 150, y: 24 },
+          ],
+        }],
+      },
+    ],
+    source: arabicLigatureSource("لا"),
   },
   // The source explicitly demonstrates the one-stroke Hamza variant: its
   // c-shaped upper head flows directly into the lower diagonal.

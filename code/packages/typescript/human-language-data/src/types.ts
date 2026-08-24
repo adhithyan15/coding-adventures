@@ -703,6 +703,27 @@ export interface Letter {
 }
 
 /**
+ * A mandatory joined shape for an underlying sequence of existing letters.
+ *
+ * `sequence` preserves the text learners type and edit. `displayGlyph` is only
+ * the precomposed presentation-form outline used to verify the authored pen
+ * path; it must never replace the underlying letters in curriculum text.
+ */
+export interface Ligature {
+  sequence: string;
+  displayGlyph: string;
+  sound: string;
+  role: LetterRole;
+  forms: LetterForms;
+  components: string[];
+  strokeOrder: string[];
+  strokeOrderNote: string;
+  penLifts?: number;
+  strokeOrderSource?: StrokeOrderSource;
+  notes?: string;
+}
+
+/**
  * A vowel sign / diacritic that attaches to a letter — an abugida mātrā, or the
  * harakat/niqqud of an abjad. `null`-free: alphabets simply have no marks.
  */
@@ -783,6 +804,8 @@ export interface ScriptData {
   direction: Direction;
   system: WritingSystem;
   letters: Letter[];
+  /** Obligatory contextual shapes composed from existing letters, not new rows. */
+  ligatures?: Ligature[];
   marks?: Mark[];
   /** Tonal languages only: the tone inventory the `Letter.tone` numbers index into. */
   tones?: Tone[];
