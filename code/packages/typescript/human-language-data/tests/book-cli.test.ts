@@ -481,6 +481,18 @@ describe("hand-written chapters", () => {
     const generated = generatedBookOutputs(root);
     for (const [relative] of generated) {
       if (!relative.endsWith(".tex")) continue;
+      // `book.tex` is the one generated .tex that is a COMPOSITE rather than a
+      // rendering (HL21 section 6): its bytes are the authored `frontmatter.tex`,
+      // then the derived `\input` list, then the authored `backmatter.tex`. So it
+      // legitimately opens with `\documentclass`, which is a human's prose, and a
+      // "% GENERATED FILE." banner would either have to be prepended to all 23
+      // committed books or be written into the authored half where it would be a
+      // lie. The invariant this test protects — the generator must not silently
+      // own hand-written prose — is enforced for it instead by
+      // `tests/book-tex.test.ts`, which asserts the two authored halves exist,
+      // are NOT in the generated set, and reassemble the committed file byte for
+      // byte.
+      if (relative.endsWith("/book/book.tex")) continue;
       const path = join(root, relative);
       if (!existsSync(path)) continue;
       expect(

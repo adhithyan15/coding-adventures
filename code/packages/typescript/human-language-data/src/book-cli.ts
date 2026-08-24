@@ -1,5 +1,5 @@
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { dirname, join, normalize, relative as pathRelative, resolve } from "node:path";
+import { existsSync, lstatSync, mkdirSync, readFileSync, realpathSync, writeFileSync } from "node:fs";
+import { dirname, join, normalize, relative as pathRelative, resolve, sep } from "node:path";
 import { assertRelativeManifestPath } from "./manifest-path.js";
 import { pathToFileURL } from "node:url";
 import {
@@ -23,6 +23,12 @@ import {
   loadTrackChapters,
 } from "./loader.js";
 import { summarizeModality } from "./modality.js";
+import {
+  BACKMATTER_TEX,
+  FRONTMATTER_TEX,
+  chapterInputsFor,
+  renderBookTex,
+} from "./book-tex.js";
 import type { ChapterCapability } from "./types.js";
 
 interface ConfiguredBookGenerationTarget extends Omit<BookGenerationTarget, "title" | "label"> {
@@ -219,6 +225,63 @@ export function handwrittenBookChapters(
     );
     return { ...entry, title: capability.title, label: capability.label };
   });
+}
+
+/**
+ * Read one authored `book.tex` fragment, refusing a symlink.
+ *
+ * `existsSync` + `readFileSync` both follow symlinks, and `safeOutput` is purely
+ * lexical so it cannot see one. A committed
+ * `<track>/book/frontmatter.tex -> ~/.npmrc` would have that file's contents
+ * copied verbatim into the generated `book.tex` and written into the working
+ * tree — where the next `--write` commits it.
+ */
+/**
+ * `lstat`, or undefined when the path does not exist.
+ *
+ * Deliberately NOT `existsSync`: that uses `stat`, so it follows symlinks and
+ * reports a dangling one as absent — which silently skips any guard placed
+ * behind it. `shard-cli.ts` carries the same helper for the same reason.
+ */
+function statIfPresent(path: string): ReturnType<typeof lstatSync> | undefined {
+  try {
+    return lstatSync(path);
+  } catch {
+    return undefined;
+  }
+}
+
+function readAuthoredFragment(root: string, path: string): string {
+  if (!lstatSync(path).isFile()) {
+    throw new Error(`authored book fragment '${path}' is not a regular file`);
+  }
+  // `lstat` vets only the LAST component. `<track>` and `<track>/book` are still
+  // followed, so a committed `spanish/book -> /somewhere/else` is read straight
+  // through — and `safeOutput` cannot see it either, being purely lexical.
+  // Resolving the whole chain and re-asserting containment is the only check
+  // that covers every component at once.
+  const real = realpathSync(path);
+  const realRoot = realpathSync(root);
+  // Compare by PREFIX, not by escape-shape.
+  //
+  // Inferring "escaped" from a leading `../` is the win32 hole this repo has
+  // already fixed three times elsewhere: `path.relative()` cannot express a
+  // journey between two roots as `..` steps, so it returns the target unchanged.
+  // With root `C:\repo\curriculum`, measured on Node 24:
+  //
+  //     "D:\\evil.tex"                -> "D:/evil.tex"             NOT rejected
+  //     "\\\\server\\share\\evil.tex"  -> "//server/share/evil.tex" NOT rejected
+  //     "C:\\Windows\\evil.tex"       -> "../../Windows/evil.tex"   rejected
+  //
+  // `realpathSync` resolves NTFS junctions, so a committed `frontmatter.tex`
+  // pointing at another volume — or at a UNC share, which additionally makes
+  // this an outbound SMB fetch to an attacker-named host — would pass and have
+  // its contents copied verbatim into the generated `book.tex`. Windows is this
+  // repo's primary development platform, so that is the live case.
+  if (real !== realRoot && !real.startsWith(realRoot + sep)) {
+    throw new Error(`authored book fragment '${path}' resolves outside the curriculum root`);
+  }
+  return readFileSync(real, "utf8");
 }
 
 export function generatedBookOutputs(root = defaultCurriculumRoot()): Map<string, string> {
@@ -448,6 +511,43 @@ export function generatedBookOutputs(root = defaultCurriculumRoot()): Map<string
     manifest.chapters.sort((left, right) => left.chapter - right.chapter);
     outputs.set(manifestPath(language), `${JSON.stringify(manifest, null, 2)}\n`);
   }
+
+  // HL21 section 6: `book.tex` is the last hand-maintained link in the
+  // lesson -> chapter -> book chain, and the only one that could be forgotten
+  // without anything failing. A chapter whose `\input` line is missing simply
+  // does not appear in the book, while its `.tex` stays generated, committed and
+  // hash-checked. That has already happened once.
+  //
+  // The authored halves live beside it as `frontmatter.tex` and
+  // `backmatter.tex`; only the `\input` list in between is derived, and it is
+  // derived from the ledger already in hand.
+  for (const language of [...new Set(config.targets.map((target) => target.language))].sort()) {
+    // Validated BEFORE the `join`, so the check covers the reads below and not
+    // only the write. Checking it afterwards via `safeOutput` would still
+    // contain the write, but a traversing `language` would reach `existsSync`
+    // first, come back false, and `continue` — turning a manifest-integrity
+    // violation into a silent no-op, which is the exact failure mode this
+    // generator exists to remove.
+    if (!/^[a-z][a-z0-9-]*$/.test(language)) {
+      throw new Error(`unsafe track language '${language}' in book-generation.json`);
+    }
+    const frontPath = join(root, language, "book", FRONTMATTER_TEX);
+    const backPath = join(root, language, "book", BACKMATTER_TEX);
+    // A track that has not been migrated yet keeps its hand-written book.tex.
+    // Same reasoning as HL21's loader fallback: this lands one track at a time
+    // rather than needing a flag day.
+    if (!existsSync(frontPath) || !existsSync(backPath)) continue;
+    const relative = `${language}/book/book.tex`;
+    safeOutput(root, relative);
+    outputs.set(
+      relative,
+      renderBookTex(
+        readAuthoredFragment(root, frontPath),
+        chapterInputsFor(config, language),
+        readAuthoredFragment(root, backPath),
+      ),
+    );
+  }
   return outputs;
 }
 
@@ -467,6 +567,22 @@ export function runBookGeneration(
       : safeOutput(root, relative);
     if (mode === "--write") {
       mkdirSync(dirname(output), { recursive: true });
+      // `writeFileSync` FOLLOWS a symlink, and `safeOutput` is purely lexical so
+      // it cannot see one. This matters more than it used to: making
+      // `<track>/book/book.tex` a generated output turns a committed symlink at
+      // that path into an arbitrary-write primitive whose CONTENT is also
+      // attacker-chosen (it is the authored `frontmatter.tex`, verbatim). Target
+      // `~/.bashrc`, `.git/hooks/post-checkout`, a workflow file — and it fires
+      // on an ordinary `npm run generate:books`.
+      //
+      // The read side of this feature already got `lstat` + `realpath`; leaving
+      // the write side lexical would be a strange place to stop.
+      const existing = statIfPresent(output);
+      if (existing && !existing.isFile()) {
+        throw new Error(
+          `generated output '${relative}' is not a regular file — refusing to write through it`,
+        );
+      }
       writeFileSync(output, expected, "utf8");
       process.stdout.write(`generated ${relative}\n`);
       continue;

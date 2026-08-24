@@ -22,6 +22,9 @@
 
 set -u
 ROOT=$(cd "$(dirname "$0")/../.." && pwd)
+# Repo root, kept separate from ROOT (which is the human-languages dir): the
+# curated latexmk rc must be loaded from OUTSIDE the tree latexmk cd-s into.
+REPO_ROOT=$(cd "$(dirname "$0")/../../../.." && pwd -P)
 JOBS=${JOBS:-8}
 OUT=$(mktemp -d)
 trap 'rm -rf "$OUT"' EXIT
@@ -91,8 +94,8 @@ build_one() {
   d="$ROOT/$t/book"
   [ -f "$d/book.tex" ] || { printf '%s SKIP no-book.tex\n' "$t" > "$OUT/$t"; return; }
   s=$(date +%s)
-  ( cd "$d" && latexmk -C >/dev/null 2>&1 &&
-    latexmk -xelatex -interaction=nonstopmode -halt-on-error book.tex >/dev/null 2>&1 )
+  ( cd "$d" && latexmk -norc -r "$REPO_ROOT/code/scripts/latexmk-safe.rc" -C >/dev/null 2>&1 &&
+    latexmk -norc -r "$REPO_ROOT/code/scripts/latexmk-safe.rc" -xelatex -interaction=nonstopmode -halt-on-error book.tex >/dev/null 2>&1 )
   rc=$?
   e=$(date +%s)
   set -- $(classify_log "$d/book.log" "$rc")

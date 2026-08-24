@@ -11,6 +11,10 @@
 #   ./code/scripts/verify-human-languages.sh          # everything
 #   ./code/scripts/verify-human-languages.sh --fast   # skip the 22-book XeLaTeX compile
 #   ./code/scripts/verify-human-languages.sh --books  # ONLY the book compile + warning scan
+#
+# For the compile alone, without the warning scan or the rest of the gates, see
+# ./code/scripts/check-book-compile.sh — which also takes a track name, so a
+# single book can be checked in a couple of seconds instead of a hundred.
 
 set -uo pipefail
 
@@ -99,7 +103,7 @@ if [ "$MODE" != "fast" ]; then
   for dir in "$BOOKS"/*/book; do
     [ -f "$dir/book.tex" ] || continue
     name="$(basename "$(dirname "$dir")")"
-    if ( cd "$dir" && latexmk -xelatex -interaction=nonstopmode -halt-on-error book.tex ) \
+    if ( cd "$dir" && latexmk -norc -r "$ROOT/code/scripts/latexmk-safe.rc" -xelatex -interaction=nonstopmode -halt-on-error book.tex ) \
         >"$RUNLOG" 2>&1; then
       ok "$name"
     else
