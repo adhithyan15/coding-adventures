@@ -5653,6 +5653,19 @@ and would remove the only remaining two-node dependency component. Selecting
 the neutral Starlark corpus now therefore preserves implementation-PR
 serialization without changing the durable OCaml or Python priorities.
 
+Before publication, main advanced again through the already-owned HTML parser,
+Mermaid XY layout, IPP printer-status runtime, and Devanagari curriculum work.
+The branch rebased conflict-free onto exact main
+`9eb5934aefd3c5fb216ec8171e803c6f91a6f938`. The refreshed inventory adds one
+identity and one slot: the pure Rust-only `ipp-protocol` singleton introduced
+by the status runtime. The roadmap now owns that zero-authority codec through a
+neutral fixture and established-lane port, and makes the existing injected IPP
+printer core consume it. Exact-main totals are therefore 1,370 implementation
+identities, 4,563 slots, 907 singletons with 12,698 missing slots, and 718 Rust
+singletons; all high-consensus and middle-band totals remain unchanged, with
+zero collisions and zero unknown buckets. This late identity does not overlap
+or displace the already selected Starlark contract slice.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

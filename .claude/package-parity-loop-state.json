@@ -13,16 +13,16 @@
   },
   "active_pr": null,
   "last_inventory": {
-    "revision": "35ead36e61adab3bcf8f86a9cf527c633d96012a",
+    "revision": "9eb5934aefd3c5fb216ec8171e803c6f91a6f938",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1369,
-    "implementation_package_slots": 4562,
+    "implementation_identities": 1370,
+    "implementation_package_slots": 4563,
     "high_consensus_packages": 175,
     "high_consensus_missing_slots": 276,
-    "singleton_packages": 906,
-    "singleton_missing_slots": 12684,
-    "rust_singletons": 717,
+    "singleton_packages": 907,
+    "singleton_missing_slots": 12698,
+    "rust_singletons": 718,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -295,6 +295,9 @@
       "pr_number": null,
       "selection_revision": "35ead36e61adab3bcf8f86a9cf527c633d96012a",
       "selection_notes": "Selected after PR #12549 merged through squash auto-merge, the collision-checked exact-main inventory was regenerated through the subsequent tracked-node_modules validator and Spanish-curriculum merges, and three newly exposed owners were registered before selection. The schema-3 inventory remains 15 established lanes, 1,369 implementation identities, and 4,562 slots with zero collisions or unknown buckets. This process-free, language-neutral metering corpus is dependency-ready behind the merged pure-domain corpus, has zero exact overlap across 11 live open PRs and 33 non-main remote heads, and its target branch and prior PR are absent. It directly unlocks the Go build-tool oracle and seven unfinished build-tool descendants, while the higher raw-leverage validation corpus, CLI parser corpus, and OCaml process-free substrate overlap live PRs #12162 and #12149 on main/validator surfaces. Trie followed by radix-tree remains a collision-free ready uv repair, but closes only two of seven remaining fronts; the metering corpus advances the durable every-language build-tool contract without claiming evaluator execution or host authority.",
+      "implementation_revision": "aa2c8998877ead4725aa0df6c0e497e7df809c15",
+      "final_review_revision": "aa2c8998877ead4725aa0df6c0e497e7df809c15",
+      "validation_notes": "The authoritative build-tool contract now defines deterministic fuel events, bounded user-call depth, active-chain load-cycle rejection, entrypoint-inclusive module and edge-depth accounting, cumulative container allocation, per-range and per-scalar ceilings, and combined UTF-8 print/trace bytes. Ten inert cases add one bounded success and stable error oracles for steps, recursion, aggregates, ranges, scalar bytes, load depth, module count, load cycles, and output; the bootstrap corpus grows from 59 to 69 cases without adding execution, process, network, filesystem, environment, clock, or random authority. Schema and focused runner tests pass 63 tests. The full process-free conformance family passes 184 tests with 23 expected authority/platform skips and 87% branch coverage on build_tool_conformance.py. Native Go, Ruby, and Rust fixture consumers pass with zero errors. The Go operational build tool passes all tests, vet, and trimpath build; exact repository validation evaluates 45 Starlark BUILD files and emits a 5,069-package, 9,775-edge plan with orphan-crate validation clean. Package-parity, capability-taxonomy, uv-audit, OCaml-toolchain, JSON, state, diff, dependency, credential, and production-authority checks are clean. The branch rebased conflict-free before publication onto exact main 9eb5934aefd3c5fb216ec8171e803c6f91a6f938; the new Rust-only pure ipp-protocol identity is recorded under its own portable owner.",
       "notes": "Discovered during the pure-domain security review. Cover fuel, recursion, aggregate allocations, range/value sizes, load depth/count/cycles, and print/trace limits before any native evaluator claims final Starlark conformance."
     },
     {
@@ -3456,13 +3459,22 @@
       "notes": "Excluded from autonomous portable selection. Review mDNS bind/send/receive, timeouts, peer and origin policy, response bounds, authorization before transport, truthful runtime/test capabilities, redacted diagnostics, CLI I/O, and sequential mutation risk."
     },
     {
-      "id": "smart-home-ipp-printer-discovery-portable-core-conformance",
-      "title": "Extract and port the injected IPP printer discovery core",
+      "id": "ipp-protocol-portable-conformance",
+      "title": "Fixture and port the bounded IPP printer-status codec",
       "status": "pending",
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered after afa7975 added smart-home-ipp-printer-discovery-integration. Fixture injected discovery-result validation, service and TXT normalization, bounded printer identity and endpoint planning, deterministic deduplication, authorization ordering, stable failures, and D23 projection. Native DNS-SD, HTTP/IPP transport, printing, credentials, and CLI effects stay out of scope."
+      "notes": "Discovered after merged PR #12546 added the Rust-only pure ipp-protocol singleton. Define closed neutral fixtures and established-lane ports for IPP/1.1 Get-Printer-Attributes request framing with the fixed nine-attribute allowlist and strict correlated response decoding: version, status, request id, group and value tags, duplicate and missing attributes, text and aggregate bounds, state/reason normalization, exact consumption, trailing-data rejection, stable payload-blind errors, and explicit empty capability metadata. Keep HTTP/TLS, discovery, authentication, credentials, sessions, clocks, print submission, job queries, and queue mutation outside this zero-authority byte codec."
+    },
+    {
+      "id": "smart-home-ipp-printer-discovery-portable-core-conformance",
+      "title": "Extract and port the injected IPP printer discovery core",
+      "status": "pending",
+      "depends_on": ["ipp-protocol-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after afa7975 added smart-home-ipp-printer-discovery-integration and expanded after PR #12546 added bounded printer-status projection. Fixture injected discovery-result validation, service and TXT normalization, bounded printer identity and endpoint planning, deterministic deduplication, authorization ordering, fixed status snapshot projection, stable failures, and D23 projection. Consume the separately owned pure IPP codec; native DNS-SD, HTTP/IPP transport, printing, credentials, and CLI effects stay out of scope."
     },
     {
       "id": "smart-home-ipp-printer-discovery-native-authority-review",
