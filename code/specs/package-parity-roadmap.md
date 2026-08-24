@@ -6357,7 +6357,7 @@ diagnostic ordering. One exact `oxixml-unicode` 0.1.2 dependency supplies NFC,
 NFKC, full folding, and full uppercase from the same Unicode 17.0.0 snapshot;
 the dependency is Apache-2.0, has no transitives, and forbids unsafe code.
 
-Focused tests pass 2/2 at 98.97% validator line and 100% function coverage;
+Focused tests pass 2/2 at 98.98% validator line and 100% function coverage;
 Clippy passes all targets with warnings denied. Both canonical BUILD fronts
 compile successfully and then reproduce only the unchanged
 `test_language_registry_conformance_fixture` failure caused by the intentional
@@ -6373,14 +6373,24 @@ vet, trimpath compilation, BUILD validation, and a real no-change dry run over
 57 dependencies, and dependency, credential, diff, capability-manifest, and
 production-authority reviews are clean.
 
-The branch rebased without conflict over seven unrelated main commits to exact
-`origin/main` `6244f8c75392c389c0a0cd6a8ade6e6ef5b3533d`. A fresh schema-3
+The branch rebased without conflict over eight unrelated main commits to exact
+`origin/main` `c587a9071ff294acb33f9b5234f9815b69e78d2a`. A fresh schema-3
 collision report at that revision remains 15 established lanes, 1,370
 identities, 4,563 slots, 718 Rust singletons, zero collisions, and zero unknown
 buckets. The state graph contains 486 unique owners with complete dependencies
-and no cycle. The 467,707,645-byte `target_isolated/` validation artifact was
+and no cycle. The final 467,724,155-byte `target_isolated/` validation artifact was
 removed after the exact Windows front ran; its durable cleanliness repair stays
 with the separately registered owner.
+
+Final fixture/inventory review caught one subtle NFC issue before publication:
+the Unicode library's fast predicate is conservative for `NFC_QC=Maybe`
+scalars. The validator now uses that predicate only as a fast path and performs
+an exact normalization comparison whenever it is inconclusive. A focused
+q-plus-combining-grave regression proves an already-normalized path remains
+accepted while the existing decomposed e-plus-acute case remains `NON_NFC`.
+Three independent read-only reviews verified the correction and found no
+remaining implementation, ownership, security, authority, or publication
+defect.
 
 ## Autonomous Loop Protocol
 
