@@ -5,6 +5,18 @@ Findings from the pre-A1 tranche work were recorded in commit messages and PR
 bodies, which are durable and searchable, but a reader opening this file found
 nothing. The entries below are the ones that change how the work is done.
 
+## HL-C09O — Tamil ப opens the letter-ledger closure queue
+
+After Telugu anusvara landed, the measured queue put Tamil **ப** first at **61
+affected realizations**. The UT Austin *Tamil Script Learners Manual* introduces
+ப in Frame 1, states the usual left-to-right and top-to-bottom hand movement,
+and presents the letter directly for copying beside its close relatives ம and
+ய. The fitted path descends the left upright, crosses the bottom, and rises up
+the right upright as one continuous run.
+
+The new inventory and ductus entry remove all **61 affected realizations** for
+**ப**. The reranked queue keeps Tamil first with **த** at 50.
+
 ## HL-C09N — Telugu ం removes the largest remaining nasal-sign gap
 
 After Tamil u landed, the measured cross-script queue put Telugu anusvara

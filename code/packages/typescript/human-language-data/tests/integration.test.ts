@@ -39,7 +39,7 @@ describe("real curriculum", () => {
     expect(scripts.devanagari!.complete).toBe(true);
   });
 
-  it("keeps the cross-script closure queue measured after Telugu anusvara", () => {
+  it("keeps the cross-script closure queue measured after Tamil pa", () => {
     const candrakkala = scripts.malayalam!.marks!.find((mark) => mark.mark === "്")!;
     expect(candrakkala.role).toBe("virama");
     expect(candrakkala.compositionOrder).toEqual([
@@ -120,6 +120,21 @@ describe("real curriculum", () => {
       /consonant-nasalization role.*not a universal handwriting direction.*no standalone ductus claim/i,
     );
 
+    const tamilPa = scripts.tamil!.letters.find((letter) => letter.glyph === "ப")!;
+    expect(tamilPa.strokeOrder).toEqual([
+      "start at the top left and draw the left upright straight down to the baseline",
+      "without lifting, turn right and run along the bottom to the far right",
+      "without lifting, turn upward and finish at the top of the right upright — and only now lift",
+    ]);
+    expect(tamilPa.penLifts).toBe(0);
+    expect(tamilPa.strokeOrderSource?.url).toBe(
+      "https://sites.la.utexas.edu/tamilscript/category/3-moduals/module-01",
+    );
+    expect(tamilPa.strokeOrderSource?.citation).toMatch(/Tamil Script Learners Manual.*Frame 1.*ப/i);
+    expect(tamilPa.strokeOrderSource?.variation).toMatch(
+      /left-to-right.*top-to-bottom.*varies by school.*continuous order.*Noto Sans Tamil/i,
+    );
+
     const gaps = validate({ taxonomy, lessons, scripts }).filter(
       (issue) => issue.level === "warning" && issue.code === "uncovered-glyphs",
     );
@@ -148,10 +163,12 @@ describe("real curriculum", () => {
     expect(affected.get("ு") ?? 0).toBe(0);
     expect(missingByScript.get("telugu.json")?.has("ం")).toBe(false);
     expect(affected.get("ం") ?? 0).toBe(0);
-    expect(affected.get("ப")).toBe(61);
+    expect(missingByScript.get("tamil.json")?.has("ப")).toBe(false);
+    expect(affected.get("ப") ?? 0).toBe(0);
+    expect(affected.get("த")).toBe(50);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["ப", 61]);
+    ).toEqual(["த", 50]);
   });
 
   it("loaded every track (17+ and growing)", () => {
