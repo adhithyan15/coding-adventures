@@ -4882,7 +4882,7 @@
     {
       "language": "spanish",
       "chapter": 323,
-      "sourceHash": "fnv1a64:4ccb2bd943fcd105",
+      "sourceHash": "fnv1a64:b95080fe5e585dd1",
       "lessonIds": [
         "ES-C323-ya",
         "ES-C323-entonces",
@@ -4894,8 +4894,8 @@
       "drivablePrefix": 5,
       "text": "spanish/narration/ch323.txt",
       "json": "spanish/narration/ch323.json",
-      "textHash": "fnv1a64:85d7cb62aeb340be",
-      "jsonHash": "fnv1a64:40ce50e69d90d11a"
+      "textHash": "fnv1a64:a7ef93b48647e06f",
+      "jsonHash": "fnv1a64:8de8138c31f6287c"
     }
   ],
   "findings": []

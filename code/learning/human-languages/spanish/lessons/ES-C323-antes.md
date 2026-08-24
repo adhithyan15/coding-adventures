@@ -60,7 +60,7 @@ go*: **one who went before**. Not an old relative — a walker who was on the ro
 first.
 
 To say *before something*, Spanish puts *de* after it: *antes de*. The word by
-itself just means *earlier*: *antes, no* — *not before now*.
+itself means only *earlier*: *antes, no* — *not before now*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 323,
   "title": "Before, After, and While",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4ccb2bd943fcd105",
+  "sourceHash": "fnv1a64:b95080fe5e585dd1",
   "lessons": [
     {
       "id": "ES-C323-ya",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eeb314c8b60c69eb",
+      "sourceHash": "fnv1a64:2e3302e307e47291",
       "notice": null,
       "blocks": [
         {
@@ -69,7 +69,7 @@
             },
             {
               "kind": "speech",
-              "text": "Now set it against the word you just learned. Todavía says the thing has not stopped. Ya says the thing has arrived. Todavía no is not yet; ya is it's done. They are the two ends of one line, and Spanish speakers swap between them constantly."
+              "text": "Now set it against the word from last time. Todavía says the thing has not stopped. Ya says the thing has arrived. Todavía no is not yet; ya is it's done. They are the two ends of one line, and Spanish speakers swap between them constantly."
             },
             {
               "kind": "speech",
@@ -301,7 +301,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:44367c75d6235813",
+      "sourceHash": "fnv1a64:ae998d8aec71a3df",
       "notice": null,
       "blocks": [
         {
@@ -355,7 +355,7 @@
             },
             {
               "kind": "speech",
-              "text": "To say before something, Spanish puts de after it: antes de. The word by itself just means earlier: antes, no — not before now."
+              "text": "To say before something, Spanish puts de after it: antes de. The word by itself means only earlier: antes, no — not before now."
             }
           ]
         },

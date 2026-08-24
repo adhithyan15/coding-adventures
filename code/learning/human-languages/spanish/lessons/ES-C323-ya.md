@@ -54,7 +54,7 @@ An English speaker has been carrying this word without knowing it. French wore
 borrowed the phrase whole and never translated it. Every time somebody says
 **déjà vu**, *already seen*, the *jà* in the middle is *ya*.
 
-Now set it against the word you just learned. *Todavía* says the thing has not
+Now set it against the word from last time. *Todavía* says the thing has not
 stopped. *Ya* says the thing has arrived. *Todavía no* is *not yet*; *ya* is
 *it's done*. They are the two ends of one line, and Spanish speakers swap between
 them constantly.
