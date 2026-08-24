@@ -11,9 +11,9 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 12482,
+  "active_pr": null,
   "last_inventory": {
-    "revision": "352edb288887b47098958106f907f0113cd3b891",
+    "revision": "e9d55a4265f4894228f2b595b6ce4c17daf1eb70",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1369,
@@ -4280,7 +4280,7 @@
     {
       "id": "python-hash-functions-build-front-idempotence",
       "title": "Make the Python hash-functions BUILD fronts repeatable",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["python-uv-build-front-idempotence-audit"],
       "branch": "codex/python-hash-functions-build-front-idempotence",
       "pr_number": 12482,
@@ -4288,10 +4288,12 @@
       "opened_at": "2026-08-24T01:36:24Z",
       "selection_revision": "56374fe9ef977ecac3180315239f1c54da76eec7",
       "implementation_revision": "baf119e329be3543523d01195071cc031e9e4f77",
-      "final_review_revision": "6be901dbae2716252eec572208e05052106ecc5b",
+      "final_review_revision": "2dac3e26949c0e7c297d8816691aa4e5ee706f11",
+      "merge_revision": "e9d55a4265f4894228f2b595b6ce4c17daf1eb70",
+      "merged_at": "2026-08-24T02:03:40Z",
       "selection_notes": "Selected after Python uv audit PR #12447 completed all 29 checks and merged through the requested auto-merge path. The refreshed schema-3 inventory at exact live main 56374fe9ef has 15 established lanes, 1,369 canonical identities, and 4,562 implementation slots with zero collisions or unknown buckets; the one new Rust Kodi singleton is split into explicit portable-core and selection-blocked native-authority owners. The audit's machine-checked decomposition makes hash-functions the smallest dependency-leveraged eligible owner: it is the leaf prerequisite for bloom-filter, hash-map, hyperloglog, and the in-memory data-store closure. Live open-PR and branch audits find no exact ownership overlap on hash-functions, parity state, or roadmap; the target branch was absent before selection.",
       "validation_notes": "Both BUILD fronts now recreate .venv with --clear, pin Python 3.13, install through that environment, and invoke its interpreter explicitly for Ruff, formatting, strict MyPy, and pytest. A repository regression pins both complete recipes, while the uv audit regression now preserves the original 17-owner decomposition as repaired fronts leave the current live corpus. The exact Windows front passes twice consecutively in clean validation worktrees with all quality gates clean and 88 tests at 100% coverage on Python 3.13.14; the canonical recipe is structurally pinned for exact Linux and macOS CI execution because no local Unix runtime is available. The Go build tool passes all tests, vet, and trimpath compilation. Its exact Windows dry plan evaluates 45 Starlark files, discovers 494 Python packages, and selects one changed and eight affected nodes: hash-functions, bloom-filter, hash-map, hyperloglog, in-memory-data-store-protocol, resp-protocol, in-memory-data-store-engine, and in-memory-data-store, with 486 skipped. Under explicit UV_PYTHON=3.13 and UV_VENV_CLEAR=1 for the separately pending legacy fronts, the real downstream Windows recipes pass 129 RESP tests at 100% coverage, 47 Bloom Filter tests at 96.19%, 116 Hash Map tests at 96.04%, 61 HyperLogLog tests at 98.89%, 57 store-engine tests at 96.67%, and five store tests at 100%; the protocol source passes five tests at 100% when pip is invoked through its named interpreter. The exact build-tool execution exposed the protocol front's pre-existing unpinned stdlib venv and recursive pip launcher, now recorded as a separate prerequisite owner rather than widened into this repair. Focused build-front, uv-audit, parity reporter, and capability taxonomy suites pass 2, 13, 10, and 7 tests. The schema-3 inventory remains 15 lanes, 1,369 identities, and 4,562 slots with zero collisions or unknowns. State, diff, credential, dependency, and production-authority checks are clean; this tranche changes no production behavior, dependency metadata, capability manifest, or privileged boundary.",
-      "publication_notes": "Opened ready-for-review PR #12482 from independently reviewed head 6be901dbae2716252eec572208e05052106ecc5b after a normal first push from exact origin/main 352edb288887b47098958106f907f0113cd3b891. The target branch and exact implementation surfaces were absent before publication, and the final security/scope review found no credential, host-path, dependency, capability, shell-safety, production-authority, or state-integrity issue. GitHub reports the PR open, non-draft, and mergeable; required checks are pending, so the loop is monitoring only and has not requested auto-merge.",
+      "publication_notes": "Opened ready-for-review PR #12482 from independently reviewed head 6be901dbae2716252eec572208e05052106ecc5b after a normal first push from exact origin/main 352edb288887b47098958106f907f0113cd3b891. The target branch and exact implementation surfaces were absent before publication, and the final security/scope review found no credential, host-path, dependency, capability, shell-safety, production-authority, or state-integrity issue. Final head 2dac3e26949c0e7c297d8816691aa4e5ee706f11 completed all 30 checks with 24 successes, five expected skips, one neutral CodeQL result, and no failures or pending work. GitHub reported the branch clean and mergeable; the loop requested squash auto-merge, and GitHub merged PR #12482 as e9d55a4265f4894228f2b595b6ce4c17daf1eb70 at 2026-08-24T02:03:40Z.",
       "notes": "Backfill owner from the version-1 uv idempotence audit. Repair python/hash-functions first because it is the leaf prerequisite for bloom-filter, hash-map, hyperloglog, and the in-memory data-store closure. Pin Python 3.13, recreate .venv, invoke the named interpreter, and prove both fronts twice plus the exact downstream plan."
     },
     {
@@ -4306,10 +4308,12 @@
     {
       "id": "python-hash-collections-build-front-idempotence",
       "title": "Make the Python hash-dependent collection BUILD fronts repeatable",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["python-uv-build-front-idempotence-audit", "python-hash-functions-build-front-idempotence"],
-      "branch": null,
+      "branch": "codex/python-hash-collections-build-front-idempotence",
       "pr_number": null,
+      "selection_revision": "e9d55a4265f4894228f2b595b6ce4c17daf1eb70",
+      "selection_notes": "Selected immediately after hash-functions PR #12482 completed all 30 checks and merged through the requested auto-merge path. The collision-checked post-merge inventory is identity-neutral at 15 established lanes, 1,369 canonical identities, and 4,562 implementation slots with zero collisions or unknown buckets. With both prerequisites merged, this homogeneous three-package generated-standard repair is the highest-leverage ready Python owner: bloom-filter, hash-map, and hyperloglog all consume hash-functions, and HyperLogLog continues into the in-memory data-store closure. Independent live audits across nine open PRs and 32 remote heads find zero overlap on the three package roots, uv audit fixtures, state, or roadmap; the selected remote branch was absent before creation.",
       "notes": "Homogeneous generated-pattern backfill for python/bloom-filter, python/hash-map, and python/hyperloglog after the shared hash-functions prerequisite is repaired. Preserve exact sibling dependency order and validate the three fronts twice before the data-store closure."
     },
     {
