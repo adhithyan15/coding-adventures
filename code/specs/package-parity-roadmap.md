@@ -5012,8 +5012,10 @@ auto-merge, and GitHub merged PR #12447 as
 
 ### Post-#12447 refresh and Python hash-functions BUILD-front selection
 
-The collision-checked schema-3 inventory at exact live main
-`56374fe9ef977ecac3180315239f1c54da76eec7` contains 15 established lanes,
+The collision-checked schema-3 inventory selected at main
+`56374fe9ef977ecac3180315239f1c54da76eec7` and revalidated after the later
+Arabic lesson-only main `352edb288887b47098958106f907f0113cd3b891`
+contains 15 established lanes,
 1,369 canonical identities, and 4,562 implementation slots. The 175-package
 high-consensus band still has 276 missing slots, the 5-9 band has 122 packages
 and 926 gaps, the 2-4 band has 166 packages and 2,087 gaps, and 906 singletons
