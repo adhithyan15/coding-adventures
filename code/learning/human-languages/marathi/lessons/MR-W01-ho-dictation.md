@@ -2,9 +2,9 @@
 schema_version: 2
 id: MR-W01-ho-dictation
 spine_node: SPINE-MEET-GREET
-sequence: 817
+sequence: 9
 delivery: script
-chapter: 14
+chapter: 1
 type: writing
 headword: हो
 romanization: "ho"

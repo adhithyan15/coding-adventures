@@ -2,9 +2,9 @@
 schema_version: 2
 id: MR-W01-ma
 spine_node: SPINE-MEET-GREET
-sequence: 850
+sequence: 13
 delivery: script
-chapter: 14
+chapter: 1
 type: writing
 headword: म
 romanization: "ma"

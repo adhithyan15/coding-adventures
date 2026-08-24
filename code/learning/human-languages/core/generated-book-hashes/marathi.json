@@ -4,6 +4,34 @@
   "chapters": [
     {
       "language": "marathi",
+      "chapter": 1,
+      "sourceHash": "fnv1a64:5986083ed13c4d40",
+      "lessonIds": [
+        "MR-C01-namaskar",
+        "MR-W01-ha",
+        "MR-W01-o-matra",
+        "MR-W01-ho-delayed-copy",
+        "MR-W01-ho-dictation",
+        "MR-W01-na",
+        "MR-W01-aa-matra",
+        "MR-W01-ii-matra",
+        "MR-W01-ma",
+        "MR-W01-sa",
+        "MR-W01-ka",
+        "MR-W01-virama",
+        "MR-W01-ra",
+        "MR-W01-namaskar-read",
+        "MR-C01-dhanyavad",
+        "MR-C01-ho",
+        "MR-C01-baram",
+        "MR-C01-nahi",
+        "MR-C01-yeto",
+        "MR-C01-practice"
+      ],
+      "tex": "marathi/book/chapters/ch01-greetings.tex"
+    },
+    {
+      "language": "marathi",
       "chapter": 6,
       "sourceHash": "fnv1a64:c4cd9fddda234365",
       "lessonIds": [
@@ -65,10 +93,12 @@
     {
       "language": "marathi",
       "chapter": 11,
-      "sourceHash": "fnv1a64:81d9b964581c9a85",
+      "sourceHash": "fnv1a64:0a0f3ab07dcd40e7",
       "lessonIds": [
         "MR-C11-mitra",
+        "MR-R11-mitra-r1",
         "MR-C11-kutumb",
+        "MR-R11-kutumb-r1",
         "MR-C11-bhau",
         "MR-C11-bahin"
       ],
@@ -98,23 +128,22 @@
     {
       "language": "marathi",
       "chapter": 14,
-      "sourceHash": "fnv1a64:5b52f1a9896b6c93",
+      "sourceHash": "fnv1a64:d17b96e47c8ed15f",
       "lessonIds": [
-        "MR-W01-ha",
-        "MR-W01-o-matra",
-        "MR-W01-ho-delayed-copy",
-        "MR-W01-ho-dictation",
-        "MR-W01-na",
-        "MR-W01-aa-matra",
-        "MR-W01-ii-matra",
-        "MR-W01-ma",
-        "MR-W01-sa",
-        "MR-W01-ka",
-        "MR-W01-virama",
-        "MR-W01-ra",
-        "MR-W01-namaskar-read"
+        "MR-R14-mitra-r2",
+        "MR-R14-kutumb-r2",
+        "MR-R14-siblings",
+        "MR-R14-eye-ear",
+        "MR-R14-mouth-nose",
+        "MR-R14-food",
+        "MR-R14-doing",
+        "MR-R14-mind",
+        "MR-R14-core",
+        "MR-R14-mitra-r3",
+        "MR-R14-numbers",
+        "MR-R14-kutumb-r3"
       ],
-      "tex": "marathi/book/chapters/ch14-script-first.tex"
+      "tex": "marathi/book/chapters/ch14-family-memory.tex"
     }
   ]
 }

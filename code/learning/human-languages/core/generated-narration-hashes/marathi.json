@@ -6,13 +6,26 @@
     {
       "language": "marathi",
       "chapter": 1,
-      "sourceHash": "fnv1a64:9a9585e9c49bbb0c",
+      "sourceHash": "fnv1a64:d8bce8779df79cc5",
       "lessonIds": [
         "MR-C01-namaskar",
+        "MR-W01-ha",
+        "MR-W01-o-matra",
+        "MR-W01-ho-delayed-copy",
+        "MR-W01-ho-dictation",
+        "MR-W01-na",
+        "MR-W01-aa-matra",
+        "MR-W01-ii-matra",
+        "MR-W01-ma",
+        "MR-W01-sa",
+        "MR-W01-ka",
+        "MR-W01-virama",
+        "MR-W01-ra",
+        "MR-W01-namaskar-read",
         "MR-C01-dhanyavad",
         "MR-C01-ho",
-        "MR-C01-nahi",
         "MR-C01-baram",
+        "MR-C01-nahi",
         "MR-C01-yeto",
         "MR-C01-practice"
       ],
@@ -20,8 +33,8 @@
       "drivablePrefix": 0,
       "text": "marathi/narration/ch01.txt",
       "json": "marathi/narration/ch01.json",
-      "textHash": "fnv1a64:14a2a7d868662721",
-      "jsonHash": "fnv1a64:3d275476a49ecf38"
+      "textHash": "fnv1a64:0adc325944e54ffa",
+      "jsonHash": "fnv1a64:7239f3e84fe457a8"
     },
     {
       "language": "marathi",
@@ -189,19 +202,21 @@
     {
       "language": "marathi",
       "chapter": 11,
-      "sourceHash": "fnv1a64:610b366c32d81a38",
+      "sourceHash": "fnv1a64:12c9fd30768c05ae",
       "lessonIds": [
         "MR-C11-mitra",
+        "MR-R11-mitra-r1",
         "MR-C11-kutumb",
+        "MR-R11-kutumb-r1",
         "MR-C11-bhau",
         "MR-C11-bahin"
       ],
-      "voiceLessons": 0,
+      "voiceLessons": 2,
       "drivablePrefix": 0,
       "text": "marathi/narration/ch11.txt",
       "json": "marathi/narration/ch11.json",
-      "textHash": "fnv1a64:bf9df7a07b834741",
-      "jsonHash": "fnv1a64:47a7ceda76586f18"
+      "textHash": "fnv1a64:4c612a7d371a0034",
+      "jsonHash": "fnv1a64:6bb61ddd45dc57dd"
     },
     {
       "language": "marathi",
@@ -237,28 +252,27 @@
     {
       "language": "marathi",
       "chapter": 14,
-      "sourceHash": "fnv1a64:3ae68a8a3a71295b",
+      "sourceHash": "fnv1a64:cb164d9bd21a0770",
       "lessonIds": [
-        "MR-W01-ha",
-        "MR-W01-o-matra",
-        "MR-W01-ho-delayed-copy",
-        "MR-W01-ho-dictation",
-        "MR-W01-na",
-        "MR-W01-aa-matra",
-        "MR-W01-ii-matra",
-        "MR-W01-ma",
-        "MR-W01-sa",
-        "MR-W01-ka",
-        "MR-W01-virama",
-        "MR-W01-ra",
-        "MR-W01-namaskar-read"
+        "MR-R14-mitra-r2",
+        "MR-R14-kutumb-r2",
+        "MR-R14-siblings",
+        "MR-R14-eye-ear",
+        "MR-R14-mouth-nose",
+        "MR-R14-food",
+        "MR-R14-doing",
+        "MR-R14-mind",
+        "MR-R14-core",
+        "MR-R14-mitra-r3",
+        "MR-R14-numbers",
+        "MR-R14-kutumb-r3"
       ],
-      "voiceLessons": 0,
-      "drivablePrefix": 0,
+      "voiceLessons": 12,
+      "drivablePrefix": 12,
       "text": "marathi/narration/ch14.txt",
       "json": "marathi/narration/ch14.json",
-      "textHash": "fnv1a64:805b1adec8665211",
-      "jsonHash": "fnv1a64:b774834cc05b3d09"
+      "textHash": "fnv1a64:0faeadcd63eef004",
+      "jsonHash": "fnv1a64:187d7b73046cfabb"
     }
   ],
   "findings": []

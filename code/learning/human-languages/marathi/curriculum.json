@@ -62,6 +62,18 @@
       "after": []
     },
     {
+      "id": "MR-PATH-C1P",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "MR-C01-practice"
+      ],
+      "before": [],
+      "inline": [
+        "MR-EXT-001-CONSOLIDATION"
+      ],
+      "after": []
+    },
+    {
       "id": "MR-PATH-005",
       "spine_node": "SPINE-EXCHANGE-NAMES",
       "lessons": [
@@ -231,7 +243,9 @@
       "spine_node": "SPINE-EXCHANGE-NAMES",
       "lessons": [
         "MR-C11-mitra",
+        "MR-R11-mitra-r1",
         "MR-C11-kutumb",
+        "MR-R11-kutumb-r1",
         "MR-C11-bhau",
         "MR-C11-bahin"
       ],
@@ -267,6 +281,29 @@
         "MR-EXT-018-LANGUAGE-SPECIFIC"
       ],
       "after": []
+    },
+    {
+      "id": "MR-PATH-020",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "MR-R14-mitra-r2",
+        "MR-R14-kutumb-r2",
+        "MR-R14-siblings",
+        "MR-R14-eye-ear",
+        "MR-R14-mouth-nose",
+        "MR-R14-food",
+        "MR-R14-doing",
+        "MR-R14-mind",
+        "MR-R14-core",
+        "MR-R14-mitra-r3",
+        "MR-R14-numbers",
+        "MR-R14-kutumb-r3"
+      ],
+      "before": [],
+      "inline": [],
+      "after": [
+        "MR-EXT-020-FAMILY-RETRIEVAL"
+      ]
     }
   ],
   "spine": {
@@ -293,7 +330,8 @@
     },
     "SPINE-RESPOND-BASIC": {
       "segments": [
-        "MR-PATH-003"
+        "MR-PATH-003",
+        "MR-PATH-C1P"
       ],
       "omits": [
         "RESPONSE-YESNO"
@@ -304,7 +342,8 @@
       "segments": [
         "MR-PATH-005",
         "MR-PATH-007",
-        "MR-PATH-016"
+        "MR-PATH-016",
+        "MR-PATH-020"
       ],
       "omits": [
         "PRONOUN-ME"
@@ -625,6 +664,17 @@
   },
   "extensions": [
     {
+      "id": "MR-EXT-001-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can retrieve the complete first greeting, response, thanks, and leave-taking exchange without receiving new material.",
+      "prerequisites": [],
+      "lessons": [
+        "MR-C01-practice"
+      ]
+    },
+    {
       "id": "MR-EXT-010-LANGUAGE-SPECIFIC",
       "stage": "pre-A1",
       "kind": "required",
@@ -736,7 +786,9 @@
       "prerequisites": [],
       "lessons": [
         "MR-C11-mitra",
+        "MR-R11-mitra-r1",
         "MR-C11-kutumb",
+        "MR-R11-kutumb-r1",
         "MR-C11-bhau",
         "MR-C11-bahin"
       ]
@@ -802,6 +854,28 @@
         "MR-W01-virama",
         "MR-W01-ra",
         "MR-W01-namaskar-read"
+      ]
+    },
+    {
+      "id": "MR-EXT-020-FAMILY-RETRIEVAL",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can retrieve Marathi family, body, food, verb, and number memories at widening distances without receiving new material.",
+      "prerequisites": [],
+      "lessons": [
+        "MR-R14-mitra-r2",
+        "MR-R14-kutumb-r2",
+        "MR-R14-siblings",
+        "MR-R14-eye-ear",
+        "MR-R14-mouth-nose",
+        "MR-R14-food",
+        "MR-R14-doing",
+        "MR-R14-mind",
+        "MR-R14-core",
+        "MR-R14-mitra-r3",
+        "MR-R14-numbers",
+        "MR-R14-kutumb-r3"
       ]
     }
   ]

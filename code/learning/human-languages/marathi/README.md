@@ -34,8 +34,12 @@ validation remain explicit backlog.
 
 ## Progress
 
-- **Chapter 1 — Greetings** ([`lessons/MR-C01-*`](./lessons/)): namaskār,
-  dhanyavād, ho, nāhī, baraṁ, yeto/yete (gendered farewell), practice.
+- **Chapter 1 — Greetings and the first Devanagari runway**
+  ([`lessons/MR-C01-*`](./lessons/), [`lessons/MR-W01-*`](./lessons/)):
+  hear **namaskār**, then trace, copy, recall, and write the pieces needed for
+  **हो** before reading **नमस्कार** independently. Only then does the learner
+  add dhanyavād, ho, baraṁ, nāhī, yeto/yete (gendered farewell), and a mixed
+  listening, speaking, reading, and writing recap.
 - **Chapter 2 — Introducing Yourself** ([`lessons/MR-C02-*`](./lessons/)): nāv,
   mājhaṁ, āhe, "my name is…", tū/tumhī, kāy, "what's your name?", ānand.
 - **Chapter 3 — How Are You** ([`lessons/MR-C03-*`](./lessons/)): kasā, "tumhī
@@ -102,8 +106,14 @@ validation remain explicit backlog.
   **cor**/**cordis** (**cordial**), Greek **kardia** (**cardiac**), all one PIE
   root, *ḱērd-*, with no metaphorical drift at all, set against **वाचणे**'s and
   **समजणे**'s (Chapter 8) and **डोळा**'s (Chapter 12) drifted meanings.
+- **Chapter 14 — Family Memory at Real Distance**
+  ([`lessons/MR-R14-*`](./lessons/)): twelve two-to-three-minute retrieval
+  sessions revisit family, body, food, verbs, numbers, and the opening core.
+  In particular, **मित्र** and **कुटुंब** now receive genuine R2 and R3 recalls
+  after their immediate Chapter 11 reviews rather than being credited through
+  metadata or a learner-invisible order.
 
-Chapters 1–13 are in the book. Chapters 6–13 are schema v2. Chapter 7 is `voice`
+Chapters 1–14 are in the book. Chapters 1 and 6–14 are schema v2. Chapter 7 is `voice`
 at full modality; Chapters 8–13 derive as `sight` because each lesson carries
 a *"The letters in this word"* section — but that section is **detachable**, so
 every lesson is `coreVoice` and every chapter is fully drivable by ear.

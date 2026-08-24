@@ -2,9 +2,9 @@
 schema_version: 2
 id: MR-W01-o-matra
 spine_node: SPINE-MEET-GREET
-sequence: 810
+sequence: 7
 delivery: script
-chapter: 14
+chapter: 1
 type: writing
 headword: ो
 romanization: "-o"

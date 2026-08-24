@@ -5,9 +5,9 @@
   "chapters": [
     {
       "chapter": 1,
-      "title": "Greetings",
+      "title": "Greetings and the First Devanagari Runway",
       "label": "ch:greetings",
-      "canDo": "I can greet someone in Marathi, recognize the reply, and choose an appropriate response.",
+      "canDo": "I can greet someone in Marathi, move हो from tracing through dictation, and read नमस्कार by assembling only signs I have already practised.",
       "spineNodes": [
         "SPINE-MEET-GREET",
         "SPINE-COURTESY-THANK",
@@ -17,9 +17,19 @@
       "payoff": {
         "lesson": "MR-C01-practice",
         "kind": "task",
-        "summary": "Complete MR-C01-practice, the canonical closing checkpoint, and demonstrate the chapter promise: greet someone in Marathi, recognize the reply, and choose an appropriate response.",
-        "assesses": [],
-        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+        "summary": "Read नमस्कार, write हो without a visible model, and retrieve the six-word greeting, response, thanks, and leave-taking exchange in one short final checkpoint.",
+        "assesses": [
+          "MR-LEX-NAMASKAR-01",
+          "MR-LEX-DHANYAVAD-01",
+          "MR-LEX-HO-01",
+          "MR-LEX-BARAM-01",
+          "MR-LEX-NAHI-01",
+          "MR-PHRASE-YETO-YETE-01",
+          "MR-SCRIPT-HA-01",
+          "MR-SCRIPT-O-MATRA-01",
+          "MR-SCRIPT-NAMASKAR-READ-01"
+        ],
+        "note": "The final checkpoint keeps reading, independent writing, and spoken retrieval separately observable rather than allowing one strong skill to hide another."
       }
     },
     {
@@ -281,25 +291,22 @@
     },
     {
       "chapter": 14,
-      "title": "Hanging From the Head-Line, One Piece at a Time",
-      "label": "ch:mr-script-first",
-      "canDo": "I can move one familiar word from tracing through guided copy, delayed copy and dictation; write ten Devanagari pieces from memory; and read yes, no and the greeting by assembling them from those pieces, including the greeting's conjunct.",
+      "title": "Family Memory at Real Distance",
+      "label": "ch:mr-family-memory",
+      "canDo": "I can retrieve मित्र and कुटुंब after short, medium, and durable gaps; explain the binding root and tatsama path of मित्र; and recall that कुटुंब is neuter in Marathi.",
       "spineNodes": [
-        "SPINE-MEET-GREET"
+        "SPINE-EXCHANGE-NAMES"
       ],
       "payoff": {
-        "lesson": "MR-W01-namaskar-read",
-        "kind": "reading",
-        "summary": "The greeting assembled from seven pieces the reader can each write from memory, including the conjunct, and introducing nothing new at all.",
+        "lesson": "MR-R14-kutumb-r3",
+        "kind": "task",
+        "summary": "After genuine intervening retrievals, produce the five-part comparison: मित्र, its binding root and tatsama path, then कुटुंब and its Marathi neuter gender.",
         "assesses": [
-          "MR-SCRIPT-NAMASKAR-READ-01",
-          "MR-SCRIPT-NA-01",
-          "MR-SCRIPT-MA-01",
-          "MR-SCRIPT-SA-01",
-          "MR-SCRIPT-KA-01",
-          "MR-SCRIPT-VIRAMA-01",
-          "MR-SCRIPT-AA-MATRA-01",
-          "MR-SCRIPT-RA-01"
+          "MR-LEX-MITRA",
+          "MR-ETYMON-MITRA-BIND",
+          "MR-GRAMMAR-TATSAMA-BORROWING",
+          "MR-LEX-KUTUMB",
+          "MR-GRAMMAR-KUTUMB-NEUTER"
         ]
       }
     }
