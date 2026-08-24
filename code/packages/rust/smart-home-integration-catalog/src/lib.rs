@@ -45130,14 +45130,14 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
         base_entry(
             "sonos",
             "Sonos",
-            "Local Sonos ZonePlayer discovery and read-only player-state inspection.",
+            "Local Sonos ZonePlayer discovery, player telemetry, and verified media control.",
             IntegrationCategory::CameraMedia,
             ConnectivityClass::LocalPolling,
             ImplementationStatus::FirstPartyRuntime,
             2,
             "sonos",
         )
-        .with_capabilities(&["smart_home.read"])
+        .with_capabilities(&["smart_home.read", "smart_home.command.media"])
         .with_entities(&[EntityKind::Unknown])
         .with_discovery(&[DiscoveryMechanism::Ssdp, DiscoveryMechanism::Manual])
         .with_auth(&[AuthMode::None])
@@ -45147,11 +45147,14 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
             PrimitiveFamily::DiscoveryIndex,
             PrimitiveFamily::Ssdp,
             PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::CommandMapping,
             PrimitiveFamily::CapabilityPolicy,
             PrimitiveFamily::Supervision,
         ])
         .with_notes(&[
-            "Current runtime support is polling-only; GENA subscriptions and media commands remain future work.",
+            "Configured endpoints are credential-free private, link-local, or loopback IP literals and advertised control URLs must share the configured authority.",
+            "Only play, pause, stop, master volume, and master mute are D23-authorized and mapped to fixed UPnP actions with native readback verification.",
+            "GENA subscriptions, topology, group control, browse, queue mutation, seek, next/previous, media transfer, cloud control, and credentials remain out of scope.",
         ]),
         base_entry(
             "heos",
@@ -81951,7 +81954,7 @@ mod tests {
     }
 
     #[test]
-    fn sonos_entry_exposes_ssdp_and_read_only_upnp_runtime_primitives() {
+    fn sonos_entry_exposes_ssdp_and_bounded_media_control_primitives() {
         let catalog = first_party_catalog();
         let sonos = find_entry(&catalog, &IntegrationId::trusted("sonos")).unwrap();
 
@@ -81971,9 +81974,12 @@ mod tests {
         assert!(sonos
             .required_primitives
             .contains(&PrimitiveFamily::LocalHttp));
-        assert!(!sonos
+        assert!(sonos
             .required_capabilities
             .contains(&CapabilityId::trusted("smart_home.command.media")));
+        assert!(sonos
+            .required_primitives
+            .contains(&PrimitiveFamily::CommandMapping));
     }
 
     #[test]

@@ -49,7 +49,7 @@ fn run() -> Result<(), String> {
                     "serial_number": snapshot.device.serial_number,
                     "firmware_version": snapshot.device.firmware_version,
                     "room_name": snapshot.device.room_name,
-                    "transport_state": snapshot.transport_state,
+                    "playback_state": snapshot.playback_state.as_str(),
                     "volume": snapshot.volume,
                     "muted": snapshot.muted,
                     "track_uri": snapshot.track_uri,
