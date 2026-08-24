@@ -4431,10 +4431,12 @@
     {
       "id": "python-graph-build-front-idempotence",
       "title": "Make the Python graph BUILD fronts repeatable",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["python-uv-build-front-idempotence-audit"],
-      "branch": null,
+      "branch": "codex/python-graph-build-front-idempotence",
       "pr_number": null,
+      "selection_revision": "e5eb4be0c234456a3a5c0ae627ed88a723b066b6",
+      "selection_notes": "Selected only after PR #12520 merged through squash auto-merge, the collision-checked exact-main inventory was regenerated, and the newly discovered Wemo native-authority review was registered as selection-blocked. The schema-3 inventory remains 15 established lanes, 1,369 implementation identities, and 4,562 slots with zero collisions or unknown buckets; the uv audit reports exactly nine remaining fronts across seven components. Graph followed by directed-graph is the highest-leverage zero-overlap ready build-front owner: 97 Python pyproject files and 118 unique direct BUILD consumers reference graph or directed-graph, while trie/radix reaches six pyproject consumers. Eight open PRs and 29 non-main remote source heads have zero exact overlap on the two package roots, focused recipe/audit tests, state, roadmap, or repair profile; the target remote branch and prior PR are absent. The strategically important OCaml process-free build substrate is dependency-ready but currently overlaps three live build-tool PRs on validator/main/change surfaces, so this conflict-free dependency chain is selected first without changing OCaml priority. Pre-selection diagnostics pass 132 graph tests at 95.04% coverage and 129 directed-graph tests at 97.62%; strict MyPy is already clean for graph, while the selected generated-standard quality gates expose bounded Ruff/format cleanup plus seven directed-graph strict-MyPy findings that must be resolved without behavioral or dependency changes.",
       "notes": "Dependency-shaped generated-pattern backfill for python/graph followed by python/directed-graph. Validate both canonical and Windows fronts twice and preserve the graph prerequisite order."
     },
     {

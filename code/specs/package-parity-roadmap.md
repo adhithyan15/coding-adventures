@@ -5486,6 +5486,26 @@ substrate capability review. The existing portable owner now includes
 recognized-model, endpoint-policy, and pre-read/readback fixtures without
 making native network or CLI authority portable.
 
+The dependency/leverage pass selects
+`python-graph-build-front-idempotence`. Graph followed by directed-graph is the
+largest zero-overlap ready uv-debt component: 97 Python package manifests and
+118 unique direct BUILD consumers reference the pair, versus six manifest
+consumers for trie/radix. Eight live open PRs and 29 non-main source heads have
+zero exact overlap on the package roots, focused recipe/audit tests, state,
+roadmap, or repair profile; the target branch and prior PR are absent. The
+dependency-ready OCaml process-free build substrate remains strategically
+important, but three live build-tool PRs currently overlap its validator,
+main, and changelog surfaces, so the conflict-free graph chain is the safer
+serial delivery choice without changing OCaml's durable priority.
+
+Pre-selection diagnostics pass 132 graph tests at 95.04% coverage and 129
+directed-graph tests at 97.62%. Strict MyPy is already clean for graph. The
+generated-standard quality profile also exposes bounded Ruff and formatting
+debt in both packages plus seven directed-graph strict-MyPy findings; the
+selected repair must resolve those findings without changing behavior,
+runtime dependencies, capabilities, or the graph-before-directed dependency
+order.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
