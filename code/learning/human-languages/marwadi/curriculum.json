@@ -81,6 +81,14 @@
       "before": [],
       "inline": ["MW-EXT-024-TRAVEL-FIVE"],
       "after": []
+    },
+    {
+      "id": "MW-PATH-011",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": ["MW-C11-hear-hawa", "MW-C11-hawa", "MW-C11-hear-baadal", "MW-C11-baadal", "MW-C11-hear-barsaat", "MW-C11-barsaat", "MW-R11-weather-three", "MW-C11-weather-three", "MW-R11-weather-close"],
+      "before": [],
+      "inline": ["MW-EXT-025-WEATHER-THREE"],
+      "after": []
     }
   ],
   "spine": {
@@ -89,7 +97,7 @@
     "SPINE-RESPOND-BASIC": { "segments": ["MW-PATH-003"], "omits": ["RESPONSE-NO", "RESPONSE-YESNO", "RESPONSE-OKAY"], "relocates": {} },
     "SPINE-EXCHANGE-NAMES": { "segments": ["MW-PATH-005", "MW-PATH-008", "MW-PATH-009"], "omits": ["PRONOUN-I", "PRONOUN-ME", "PRONOUN-YOU", "WORD-IS", "INTRO-WHATS-YOUR-NAME", "INTRO-NICE-TO-MEET-YOU"], "relocates": {} },
     "SPINE-CHECK-WELLBEING": { "segments": ["MW-PATH-006"], "omits": ["QUESTION-HOW", "WORD-GOOD", "WORD-SOSO"], "relocates": {} },
-    "SPINE-POLITE-REQUEST-REPAIR": { "segments": ["MW-PATH-004", "MW-PATH-010"], "omits": ["COURTESY-PLEASE", "COURTESY-SORRY"], "relocates": {} },
+    "SPINE-POLITE-REQUEST-REPAIR": { "segments": ["MW-PATH-004", "MW-PATH-010", "MW-PATH-011"], "omits": ["COURTESY-PLEASE", "COURTESY-SORRY"], "relocates": {} },
     "SPINE-TAKE-LEAVE": { "segments": ["MW-PATH-007"], "omits": ["FAREWELL", "FAREWELL-CASUAL", "FAREWELL-LATER", "FAREWELL-SOON", "FAREWELL-TOMORROW", "GREETING-GOODNIGHT"], "relocates": {} },
     "SPINE-TIME-OF-DAY": { "segments": [], "omits": ["TIME-DAY", "TIME-MORNING", "TIME-AFTERNOON", "TIME-EVENING", "TIME-NIGHT", "GREETING-DAY", "GREETING-MORNING", "GREETING-AFTERNOON", "GREETING-EVENING"], "relocates": {} },
     "SPINE-ASK-LOCATION": { "segments": [], "omits": ["QUESTION-WHERE"], "relocates": {} },
@@ -334,6 +342,15 @@
       "canDo": "I can retrieve market, home, temple, hand, and money in listening, speaking, reading, and writing after adding only ज and घ.",
       "prerequisites": ["MW-EXT-023-FAMILY-TWELVE"],
       "lessons": ["MW-C10-hear-bajar", "MW-W10-ja", "MW-C10-bajar", "MW-C10-hear-ghar", "MW-W10-gha", "MW-C10-ghar", "MW-C10-hear-mandir", "MW-C10-mandir", "MW-R10-places-three", "MW-C10-hear-haath", "MW-C10-haath", "MW-C10-hear-paisa", "MW-C10-paisa", "MW-R10-travel-five", "MW-C10-travel-five", "MW-R10-script-close"]
+    },
+    {
+      "id": "MW-EXT-025-WEATHER-THREE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can retrieve wind, cloud, and rain in listening, speaking, reading, and writing while reusing only previously taught Devanagari signs.",
+      "prerequisites": ["MW-EXT-024-TRAVEL-FIVE"],
+      "lessons": ["MW-C11-hear-hawa", "MW-C11-hawa", "MW-C11-hear-baadal", "MW-C11-baadal", "MW-C11-hear-barsaat", "MW-C11-barsaat", "MW-R11-weather-three", "MW-C11-weather-three", "MW-R11-weather-close"]
     }
   ]
 }

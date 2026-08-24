@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
-  "lessonCount": 108,
-  "atomMeasurableLessons": 108,
+  "lessonCount": 117,
+  "atomMeasurableLessons": 117,
   "atomMeasurementBlindLessons": 0,
   "durationViolations": 0,
   "atomLessonSpikes": 0,
@@ -16,7 +16,7 @@
   "forwardPrerequisites": 0,
   "forwardReviews": 0,
   "forwardReferences": 0,
-  "atomsTaught": 116,
+  "atomsTaught": 123,
   "atomsNeverRevisited": 0,
   "reinforcementWindowMisses": 0,
   "reinforcementMissesByWindow": {

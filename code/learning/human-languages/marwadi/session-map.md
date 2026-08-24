@@ -114,6 +114,15 @@ memory demand at a time.
 | S106 | `MW-R10-travel-five` | retrieve all five words after a gap | mixed four-skill recall |
 | S107 | `MW-C10-travel-five` | pass the five-word travel map | non-compensatory listening, speaking, reading, and writing |
 | S108 | `MW-R10-script-close` | close the writing loop for **ज** and **घ** | write both signs and their load-bearing words |
+| S109 | `MW-C11-hear-hawa` | hear *havā* as wind | none; meaning precedes spelling |
+| S110 | `MW-C11-hawa` | assemble **हवा** from known signs | delayed copy and dictation |
+| S111 | `MW-C11-hear-baadal` | hear *bādal* as cloud | none; meaning precedes spelling |
+| S112 | `MW-C11-baadal` | assemble **बादल** from known signs | delayed copy and dictation |
+| S113 | `MW-C11-hear-barsaat` | hear *barsāt* as rain | none; meaning precedes spelling |
+| S114 | `MW-C11-barsaat` | assemble **बरसात** from known signs | delayed copy and dictation |
+| S115 | `MW-R11-weather-three` | retrieve wind, cloud, and rain after a gap | mixed four-skill recall |
+| S116 | `MW-C11-weather-three` | pass the three-word weather map | non-compensatory listening, speaking, reading, and writing |
+| S117 | `MW-R11-weather-close` | close the weather meaning-and-writing loop | hidden-model three-word recall |
 
 Reviews use expanding spacing: repeat S7 the next day, after three days, after
 one week, and after two weeks. A failed written recall sends the learner back to

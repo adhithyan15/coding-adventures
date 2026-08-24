@@ -229,6 +229,23 @@
         "MW-R10-script-close"
       ],
       "tex": "marwadi/book/chapters/ch15-hand-and-money.tex"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 16,
+      "sourceHash": "fnv1a64:c2d63e547acf335e",
+      "lessonIds": [
+        "MW-C11-hear-hawa",
+        "MW-C11-hawa",
+        "MW-C11-hear-baadal",
+        "MW-C11-baadal",
+        "MW-C11-hear-barsaat",
+        "MW-C11-barsaat",
+        "MW-R11-weather-three",
+        "MW-C11-weather-three",
+        "MW-R11-weather-close"
+      ],
+      "tex": "marwadi/book/chapters/ch16-weather-three.tex"
     }
   ]
 }

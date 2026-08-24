@@ -32,8 +32,10 @@ ask and answer how someone is, take leave, and retrieve **मां, बाप, 
 दादा, दादी, परिवार, नाना, नानी, पति, पत्नी, बच्चा** without assuming that every
 household or region uses the same labels. They can also retrieve **बाजार, घर,
 मंदिर, हाथ, पैसा** as a first direction-and-travel vocabulary map without
-pretending that the still-untaught location question is complete. The track now
-contains 108 canonical lessons and 28 distinct taught headwords. That is still a small pre-A1
+pretending that the still-untaught location question is complete. Chapter 16
+adds **हवा, बादल, बरसात** as wind, cloud, and rain, using no new Devanagari
+signs and without pretending that a complete weather exchange is taught. The
+track now contains 117 canonical lessons and 31 distinct taught headwords. That is still a small pre-A1
 capability, not completion of pre-A1 and not exam readiness. The curriculum map
 records every untouched spine concept explicitly so the remaining work stays
 measurable.
@@ -67,6 +69,9 @@ corroborates the close-family domain.
 Marwari Pathshala Lesson 5 supplies the five direction-and-travel words in
 Chapters 14–15, including **हाथ** inside right/left direction cues and **पैसा**
 inside a travel-cost question.
+Marwari Pathshala Lesson 7 supplies **हवा, बादल, बरसात** for Chapter 16. The
+book treats them as source-attested weather vocabulary, not proof that the
+still-untaught weather question or a full conversation is complete.
 
 - [Rajasthan Foundation: Rajasthani Language](https://foundation.rajasthan.gov.in/RajasthaniLanguage.aspx)
 - [Rajasthan State Archives: learning Rajasthani (Marwari)](https://rsad.artandculture.rajasthan.gov.in/content/raj/art-and-culture/rajasthan-state-archives-bikaner/en/download.html)
@@ -76,6 +81,7 @@ inside a travel-cost question.
 - [Rajasthan Sahitya Akademi, *Jāgtī Jot*, April–May 2019](https://rbssa.artandculture.rajasthan.gov.in/content/dam/doitassets/art-and-culture/Rajasthani-Bhasha-Sahitya-Avm-Sanskriti-Academy-Bikaner/pdf/JJ_All_Pdf/JJ_47_01_02_April_to_May_2019.pdf)
 - [SIL International, *Marwari–English Dictionary* (2015)](https://nepal.sil.org/resources/archives/63768)
 - [Marwari Pathshala, Lesson 4: relations](https://www.marwaripathshala.com/marwari-lesson-4-english)
+- [Marwari Pathshala, Lesson 7: weather and seasons](https://www.marwaripathshala.com/marwari-lesson-7-english)
 - [Marwari Pathshala, D glossary](https://www.marwaripathshala.com/d-glossary-of-rajasthani-language)
 - [Society for Endangered Languages, Marwari Swadesh list](https://selindia.org/wp-content/uploads/2025/05/SWL-Marwari_IPA.pdf)
 - [Turner, *A Comparative Dictionary of the Indo-Aryan Languages*](https://dsal.uchicago.edu/dictionaries/soas/)
