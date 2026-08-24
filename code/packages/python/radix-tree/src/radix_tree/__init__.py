@@ -8,4 +8,4 @@ Public surface:
 
 from radix_tree.radix_tree import RadixNode, RadixTree
 
-__all__ = ["RadixTree", "RadixNode"]
+__all__ = ["RadixNode", "RadixTree"]

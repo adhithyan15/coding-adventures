@@ -5666,6 +5666,48 @@ singletons; all high-consensus and middle-band totals remain unchanged, with
 zero collisions and zero unknown buckets. This late identity does not overlap
 or displace the already selected Starlark contract slice.
 
+### Post-#12562 refresh and Python trie selection
+
+Final head `876c19a0c247e4ace99f5017462da0aa11e9e80e` completed all 29
+reported checks with 23 successes, six expected skips, and no failures or
+pending work. GitHub reported PR #12562 clean and mergeable; the loop enabled
+squash auto-merge, and GitHub merged it as
+`707a5d39f8d5c68f769200a9cfc466bd1c231693` at
+2026-08-24T12:02:53Z without a manual merge command.
+
+The collision-checked schema-3 inventory remains identity-neutral through the
+subsequent Devanagari curriculum-only commit at exact main
+`69d816d78994217c72e7d956d5f59872406b6282`: 15 established lanes,
+1,370 implementation identities, 4,563 package slots, 175 high-consensus
+identities with 276 gaps, 122 identities in five to nine lanes with 926 gaps,
+166 identities in two to four lanes with 2,087 gaps, and 907 singletons with
+12,698 gaps. There are 718 Rust singletons, zero canonical collisions, and
+zero unknown buckets. OCaml remains correctly emerging with no packages.
+
+The implementation audit records one new owner before selection. The Starlark
+metering corpus now supplies ten neutral cases and a Python reference oracle,
+but no native build-tool engine consumes the exact fuel, recursion, allocation,
+range, scalar, load-graph, or combined-output limits. The pending
+`build-tool-starlark-metering-remaining-engines` umbrella therefore follows the
+canonical Go oracle and must be decomposed into independent engine children;
+future Dart and JVM engines must consume the same process-free contract.
+
+The dependency/leverage pass selects
+`python-trie-build-front-idempotence`. Trie followed by radix-tree is ready
+behind the merged uv audit, owns the only remaining two-package dependency
+component, and removes two of the seven measured live fronts across six
+components. Six Python manifests consume the pair. Nine live open PRs and 32
+non-main remote heads have zero exact or semantic overlap on the package roots,
+focused regression and audit tests, state, roadmap, or governing uv spec; the
+target branch and prior PR are absent.
+
+The build-tool validation and CLI corpora and the OCaml process-free substrate
+remain strategically stronger but overlap live PRs #12162 and #12149 in Go
+validator and main surfaces. IPP portability is collision-free but is a broader
+all-lane tranche with fewer immediate descendants. The dependency-shaped trie
+repair is therefore the safest serial continuation while those higher-leverage
+owners remain collision-blocked.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

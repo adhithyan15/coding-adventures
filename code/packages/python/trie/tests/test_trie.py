@@ -28,9 +28,8 @@ import string
 
 import pytest
 
-from trie import Trie, TrieCursor, TrieError
+from trie import Trie, TrieCursor
 from trie.trie import KeyNotFoundError
-
 
 # ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -428,10 +427,12 @@ class TestCaseSensitivity:
 class TestLargeScale:
     def test_insert_and_search_1000_words(self) -> None:
         rng = random.Random(42)
-        words = list({
-            "".join(rng.choices(string.ascii_lowercase, k=rng.randint(3, 10)))
-            for _ in range(1000)
-        })
+        words = list(
+            {
+                "".join(rng.choices(string.ascii_lowercase, k=rng.randint(3, 10)))
+                for _ in range(1000)
+            }
+        )
         t = make_trie(*words)
         assert len(t) == len(words)
         for w in words:
@@ -439,10 +440,12 @@ class TestLargeScale:
 
     def test_all_words_1000_sorted(self) -> None:
         rng = random.Random(99)
-        words = list({
-            "".join(rng.choices(string.ascii_lowercase, k=rng.randint(3, 8)))
-            for _ in range(500)
-        })
+        words = list(
+            {
+                "".join(rng.choices(string.ascii_lowercase, k=rng.randint(3, 8)))
+                for _ in range(500)
+            }
+        )
         t = make_trie(*words)
         result = [w for w, _ in t.all_words()]
         assert result == sorted(set(words))
@@ -454,10 +457,12 @@ class TestLargeScale:
 class TestAutocomplete:
     def test_autocomplete_matches_linear_scan(self) -> None:
         rng = random.Random(7)
-        words = list({
-            "".join(rng.choices(string.ascii_lowercase, k=rng.randint(3, 10)))
-            for _ in range(500)
-        })
+        words = list(
+            {
+                "".join(rng.choices(string.ascii_lowercase, k=rng.randint(3, 10)))
+                for _ in range(500)
+            }
+        )
         t = make_trie(*words)
 
         prefix = "pre"
@@ -501,7 +506,7 @@ class TestDictLikeInterface:
     def test_contains_non_string(self) -> None:
         t: Trie[int] = Trie()
         t.insert("hello", 1)
-        assert 42 not in t  # type: ignore[operator]
+        assert 42 not in t
 
     def test_setitem_update(self) -> None:
         t: Trie[int] = Trie()
@@ -707,12 +712,12 @@ class TestTrieCursor:
 
     def test_iteration_multiple(self) -> None:
         cursor: TrieCursor[int, str] = TrieCursor()
-        cursor.insert(65, "A")      # root → 65 → "A"
+        cursor.insert(65, "A")  # root → 65 → "A"
         cursor.reset()
         cursor.step(65)
-        cursor.insert(66, "AB")     # root → 65 → 66 → "AB"
+        cursor.insert(66, "AB")  # root → 65 → 66 → "AB"
         cursor.reset()
-        cursor.insert(66, "B")      # root → 66 → "B"
+        cursor.insert(66, "B")  # root → 66 → "B"
         entries = sorted(list(cursor), key=lambda p: p[1])
         assert entries == [([65], "A"), ([65, 66], "AB"), ([66], "B")]
 
@@ -775,6 +780,4 @@ class TestTrieCursor:
         if not cursor.at_root:
             tokens.append((cursor.value or 0, 0))
 
-        assert tokens == [
-            (0, 65), (1, 66), (0, 67), (0, 66), (4, 65), (4, 67)
-        ]
+        assert tokens == [(0, 65), (1, 66), (0, 67), (0, 66), (4, 65), (4, 67)]

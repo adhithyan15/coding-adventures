@@ -250,6 +250,39 @@ distributable artifacts, exercise a representative selection from the direct
 dependent closure, and run the Go build tool's dry plan and real affected
 closure.
 
+## Trie dependency-chain repair profile
+
+The `python-trie-build-front-idempotence` owner MUST repair `trie` before
+`radix-tree`. Trie is the DT13 leaf and radix-tree is its DT14 dependent; no
+other package root belongs to this owner. Both packages MUST adopt the
+generated named-environment guarantees above while preserving this exact
+leaf-to-root installation order:
+
+1. `trie` creates its environment and installs only its own `.[dev]` editable
+   requirement; and
+2. `radix-tree` installs `../trie` before its own `.[dev]` editable
+   requirement.
+
+The Windows fronts MUST retain the existing `--no-deps` editable-package plus
+explicit development-tool split. Every front MUST invoke Ruff lint, Ruff
+format checking, strict MyPy, and pytest through its explicit package-local
+interpreter. Radix-tree's MyPy command MUST use `--follow-untyped-imports`
+because the installed trie prerequisite does not publish a PEP 561 marker;
+trie itself requires no such exception.
+
+Dormant lint, formatting, and type-check findings MAY receive only bounded,
+behavior-preserving cleanup within these two roots. Such cleanup MUST NOT
+change trie or radix-tree algorithms, public behavior, package metadata,
+runtime dependencies, versions, capability manifests, or the DT13/DT14
+boundary. Existing 95% coverage thresholds must remain unchanged.
+
+The regression MUST compare all four complete recipes exactly. Windows runtime
+validation MUST execute both fronts twice consecutively from clean
+package-local state with uv 0.11.28 and Python 3.13, then prove the live audit
+shrinks only by `trie` and `radix-tree`. Validation MUST also build both wheel
+and source distributions, exercise the direct `lz78` consumer, and run the Go
+build tool's dry plan and real affected closure.
+
 ## Markov affected-closure Python pin profile
 
 The separately discovered `python-markov-chain-build-front-python313` owner

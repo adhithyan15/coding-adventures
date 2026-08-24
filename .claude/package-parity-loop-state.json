@@ -11,9 +11,9 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 12562,
+  "active_pr": null,
   "last_inventory": {
-    "revision": "9eb5934aefd3c5fb216ec8171e803c6f91a6f938",
+    "revision": "69d816d78994217c72e7d956d5f59872406b6282",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1370,
@@ -289,7 +289,7 @@
     {
       "id": "build-tool-starlark-metering-corpus",
       "title": "Add adversarial Starlark evaluator metering fixtures",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-pure-domain-corpus"],
       "branch": "codex/build-tool-starlark-metering-corpus",
       "pr_number": 12562,
@@ -300,9 +300,22 @@
       "selection_notes": "Selected after PR #12549 merged through squash auto-merge, the collision-checked exact-main inventory was regenerated through the subsequent tracked-node_modules validator and Spanish-curriculum merges, and three newly exposed owners were registered before selection. The schema-3 inventory remains 15 established lanes, 1,369 implementation identities, and 4,562 slots with zero collisions or unknown buckets. This process-free, language-neutral metering corpus is dependency-ready behind the merged pure-domain corpus, has zero exact overlap across 11 live open PRs and 33 non-main remote heads, and its target branch and prior PR are absent. It directly unlocks the Go build-tool oracle and seven unfinished build-tool descendants, while the higher raw-leverage validation corpus, CLI parser corpus, and OCaml process-free substrate overlap live PRs #12162 and #12149 on main/validator surfaces. Trie followed by radix-tree remains a collision-free ready uv repair, but closes only two of seven remaining fronts; the metering corpus advances the durable every-language build-tool contract without claiming evaluator execution or host authority.",
       "implementation_revision": "aa2c8998877ead4725aa0df6c0e497e7df809c15",
       "final_review_revision": "aa2c8998877ead4725aa0df6c0e497e7df809c15",
+      "merged_head_revision": "876c19a0c247e4ace99f5017462da0aa11e9e80e",
+      "merged_at": "2026-08-24T12:02:53Z",
+      "merge_revision": "707a5d39f8d5c68f769200a9cfc466bd1c231693",
+      "merge_notes": "All 29 reported checks reached terminal acceptable conclusions: 23 successes and six expected skips, with no failures or pending work. GitHub reported the branch clean and mergeable; the loop enabled squash auto-merge, and GitHub merged PR #12562 without a manual merge command.",
       "publication_notes": "Opened ready-for-review PR #12562 from clean validated head 5957c22145633a716e796dd4686c9e1a5e00f347 after a normal first push. Before publication, origin/main advanced through already-owned HTML-parser diagnostics, Mermaid XY layout, IPP printer status, and Devanagari curriculum work to 9eb5934aefd3c5fb216ec8171e803c6f91a6f938. The branch rebased conflict-free; the refreshed inventory registered the new pure ipp-protocol singleton under its own portability owner and the focused exact-base corpus, native-consumer, parity, state, diff, and security checks passed. GitHub reports the ready PR mergeable and conflict-free with 16 checks queued, so the loop remains monitor-only and auto-merge stays disabled until every required check is terminal and acceptable.",
       "validation_notes": "The authoritative build-tool contract now defines deterministic fuel events, bounded user-call depth, active-chain load-cycle rejection, entrypoint-inclusive module and edge-depth accounting, cumulative container allocation, per-range and per-scalar ceilings, and combined UTF-8 print/trace bytes. Ten inert cases add one bounded success and stable error oracles for steps, recursion, aggregates, ranges, scalar bytes, load depth, module count, load cycles, and output; the bootstrap corpus grows from 59 to 69 cases without adding execution, process, network, filesystem, environment, clock, or random authority. Schema and focused runner tests pass 63 tests. The full process-free conformance family passes 184 tests with 23 expected authority/platform skips and 87% branch coverage on build_tool_conformance.py. Native Go, Ruby, and Rust fixture consumers pass with zero errors. The Go operational build tool passes all tests, vet, and trimpath build; exact repository validation evaluates 45 Starlark BUILD files and emits a 5,069-package, 9,775-edge plan with orphan-crate validation clean. Package-parity, capability-taxonomy, uv-audit, OCaml-toolchain, JSON, state, diff, dependency, credential, and production-authority checks are clean. The branch rebased conflict-free before publication onto exact main 9eb5934aefd3c5fb216ec8171e803c6f91a6f938; the new Rust-only pure ipp-protocol identity is recorded under its own portable owner.",
       "notes": "Discovered during the pure-domain security review. Cover fuel, recursion, aggregate allocations, range/value sizes, load depth/count/cycles, and print/trace limits before any native evaluator claims final Starlark conformance."
+    },
+    {
+      "id": "build-tool-starlark-metering-remaining-engines",
+      "title": "Make every supported build-tool engine consume the Starlark metering contract",
+      "status": "pending",
+      "depends_on": ["build-tool-go-oracle"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the exact post-#12562 implementation audit. The neutral corpus and Python reference runner now cover fuel, recursion, aggregate allocation, range and scalar bounds, module count, load depth and cycles, and combined print/trace output, but no native build-tool engine consumes those cases yet. After the canonical Go oracle lands, decompose the extant C#, Elixir, Haskell, Lua, Perl, Python, Ruby, Rust, Swift, and TypeScript engines into independent children and route later Dart and JVM engines through the same process-free evaluator contract. Do not infer final Starlark conformance from schema or reference-runner coverage."
     },
     {
       "id": "build-tool-validation-oracle-corpus",
@@ -4511,11 +4524,22 @@
     {
       "id": "python-trie-build-front-idempotence",
       "title": "Make the Python trie BUILD fronts repeatable",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["python-uv-build-front-idempotence-audit"],
+      "branch": "codex/python-trie-build-front-idempotence",
+      "pr_number": null,
+      "selection_revision": "69d816d78994217c72e7d956d5f59872406b6282",
+      "selection_notes": "Selected only after PR #12562 merged through squash auto-merge, the collision-checked exact-main inventory was regenerated, and the newly exposed remaining-engine Starlark metering owner was registered. The schema-3 inventory remains 15 established lanes, 1,370 implementation identities, and 4,563 slots with zero collisions or unknown buckets; the uv audit reports exactly seven remaining non-idempotent fronts across six components. Trie followed by radix-tree is dependency-ready behind the merged uv audit, owns the only remaining two-package uv component, removes two measured fronts, and has six recorded Python manifest consumers. Nine live open PRs and 32 non-main remote heads have zero exact or semantic overlap on both package roots, focused recipe and audit tests, state, roadmap, or the governing uv spec; the target branch and prior PR are absent. The higher-leverage build-tool validation, CLI, and OCaml process-free owners remain unsafe while PRs #12162 and #12149 overlap their validator and main surfaces, while IPP portability is a broader all-lane tranche with fewer immediate descendants. The post-#12562 Devanagari-only main advance changes no package marker or candidate surface.",
+      "notes": "Dependency-shaped generated-pattern backfill for python/trie followed by python/radix-tree. Pin Python 3.13, recreate the named environment, and prove both fronts and their dependency order on immediate repeat."
+    },
+    {
+      "id": "python-lz78-build-front-python313",
+      "title": "Pin the Python LZ78 BUILD fronts to Python 3.13",
+      "status": "pending",
+      "depends_on": ["python-trie-build-front-idempotence"],
       "branch": null,
       "pr_number": null,
-      "notes": "Dependency-shaped generated-pattern backfill for python/trie followed by python/radix-tree. Pin Python 3.13, recreate the named environment, and prove both fronts and their dependency order on immediate repeat."
+      "notes": "Discovered by the trie repair's required downstream validation. The exact lz78 Windows front clears .venv but omits a Python pin, selects ambient Python 3.10.11 on the audited host, and deterministically fails before tests because its installed trie prerequisite requires Python >=3.12. An explicit Python 3.13 environment passes all 48 LZ78 tests at 97.26% coverage. Reconcile both fronts in a separate dependency-shaped slice, retain trie-before-lz78 installation, add complete-recipe regression coverage, and prove immediate repeatability without folding dormant LZ78 Ruff findings into the trie/radix owner."
     },
     {
       "id": "python-caesar-cipher-build-front-idempotence",

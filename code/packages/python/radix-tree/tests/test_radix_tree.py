@@ -15,15 +15,12 @@ from __future__ import annotations
 import random
 import string
 
-import pytest
-
 from radix_tree import RadixNode, RadixTree
-
 
 # ─── Helpers ──────────────────────────────────────────────────────────────────
 
 
-def _count_nodes(node: RadixNode) -> int:
+def _count_nodes[V](node: RadixNode[V]) -> int:
     """Recursively count all nodes in the subtree (including node itself)."""
     return 1 + sum(_count_nodes(child) for _, child in node.children.values())
 
@@ -529,8 +526,8 @@ class TestIterAndLen:
 
     def test_contains_non_string(self) -> None:
         t = _tree_with("foo")
-        assert 42 not in t  # type: ignore[operator]
-        assert None not in t  # type: ignore[operator]
+        assert 42 not in t
+        assert None not in t
 
     def test_iter_with_common_prefixes(self) -> None:
         t = _tree_with("app", "apple", "application", "apt")
@@ -616,9 +613,7 @@ class TestRandomProperty:
     def _random_keys(self, n: int, seed: int = 42) -> list[str]:
         rng = random.Random(seed)
         alphabet = string.ascii_lowercase
-        return [
-            "".join(rng.choices(alphabet, k=rng.randint(1, 12))) for _ in range(n)
-        ]
+        return ["".join(rng.choices(alphabet, k=rng.randint(1, 12))) for _ in range(n)]
 
     def test_insert_100_random_keys_all_found(self) -> None:
         keys = self._random_keys(100)
@@ -691,7 +686,7 @@ class TestRandomProperty:
         for i, k in enumerate(unique_keys):
             t.insert(k, i)
 
-        all_via_iter = sorted(list(t))
+        all_via_iter = sorted(t)
         all_via_prefix = t.words_with_prefix("")
         assert all_via_prefix == all_via_iter
 
@@ -707,7 +702,9 @@ class TestRandomProperty:
         prefixes = [k[:i] for k in unique_keys for i in range(len(k) + 1)]
         # Also test some random strings not necessarily in tree.
         rng = random.Random(31)
-        prefixes += ["".join(rng.choices(string.ascii_lowercase, k=3)) for _ in range(20)]
+        prefixes += [
+            "".join(rng.choices(string.ascii_lowercase, k=3)) for _ in range(20)
+        ]
 
         for p in prefixes:
             sw = t.starts_with(p)

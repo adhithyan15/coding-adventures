@@ -42,10 +42,8 @@ EXPECTED_LIVE_PACKAGES = [
     "caesar-cipher",
     "fenwick-tree",
     "ls00",
-    "radix-tree",
     "skip-list",
     "tree-set",
-    "trie",
 ]
 
 

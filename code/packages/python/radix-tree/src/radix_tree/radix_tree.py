@@ -107,11 +107,8 @@ constant factors (fewer nodes = fewer allocations = better cache behaviour).
 
 from __future__ import annotations
 
+from collections.abc import Iterator
 from dataclasses import dataclass, field
-from typing import Generic, Iterator, TypeVar
-
-V = TypeVar("V")
-
 
 # ─── Helper ───────────────────────────────────────────────────────────────────
 
@@ -138,7 +135,7 @@ def _common_prefix_len(a: str, b: str) -> int:
 
 
 @dataclass
-class RadixNode(Generic[V]):
+class RadixNode[V]:
     """
     A single node in a radix tree.
 
@@ -163,17 +160,17 @@ class RadixNode(Generic[V]):
         )
     """
 
-    children: dict[str, tuple[str, "RadixNode[V]"]] = field(default_factory=dict)
+    children: dict[str, tuple[str, RadixNode[V]]] = field(default_factory=dict)
     is_end: bool = False
     value: V | None = None
 
 
-def _make_leaf(value: V) -> RadixNode[V]:
+def _make_leaf[V](value: V) -> RadixNode[V]:
     """Create a terminal leaf node storing the given value."""
     return RadixNode(is_end=True, value=value)
 
 
-def _make_inner() -> RadixNode[V]:
+def _make_inner[V]() -> RadixNode[V]:
     """Create an inner node (not an endpoint)."""
     return RadixNode(is_end=False, value=None)
 
@@ -181,7 +178,7 @@ def _make_inner() -> RadixNode[V]:
 # ─── Main class ───────────────────────────────────────────────────────────────
 
 
-class RadixTree(Generic[V]):
+class RadixTree[V]:
     """
     Radix tree (compressed trie / Patricia trie) mapping string keys to values.
 
@@ -410,9 +407,7 @@ class RadixTree(Generic[V]):
             self._size -= 1
         return deleted
 
-    def _delete(
-        self, node: RadixNode[V], key: str
-    ) -> tuple[bool, bool]:
+    def _delete(self, node: RadixNode[V], key: str) -> tuple[bool, bool]:
         """
         Recursively delete key from the subtree rooted at node.
 

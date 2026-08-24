@@ -4,6 +4,17 @@ All notable changes to `coding-adventures-radix-tree` are documented here.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## Unreleased
+
+### Changed
+
+- Made both BUILD fronts repeatable by clearing the named environment and
+  pinning Python 3.13 while preserving trie-before-radix installation order.
+- Added explicit named-interpreter Ruff, format, strict MyPy, and pytest gates;
+  MyPy follows the installed untyped trie source rather than ignoring it.
+- Modernized generic typing and bounded test cleanup without changing radix-tree
+  algorithms, package metadata, or runtime behavior.
+
 ## [0.1.0] — 2026-04-08
 
 ### Added

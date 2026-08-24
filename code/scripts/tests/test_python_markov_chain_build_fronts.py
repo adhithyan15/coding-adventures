@@ -61,7 +61,7 @@ class PythonMarkovChainBuildFrontTests(unittest.TestCase):
         packages = [row["package"] for row in report["fronts"]]
 
         self.assertNotIn("markov-chain", packages)
-        self.assertEqual(report["summary"]["non_idempotent_fronts"], 7)
+        self.assertEqual(report["summary"]["non_idempotent_fronts"], 5)
 
     @staticmethod
     def _recipe(name: str) -> list[str]:
