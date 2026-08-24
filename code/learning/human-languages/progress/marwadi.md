@@ -2,8 +2,8 @@
 
 - Track: [Marwadi (Marwari)](../marwadi/README.md)
 - Family / script: Indo-Aryan / Devanagari
-- Canonical lessons: 117
-- Mapped lessons: 117
-- Book progress: 16 chapters; through Ch. 16; 16 generated
+- Canonical lessons: 130
+- Mapped lessons: 130
+- Book progress: 17 chapters; through Ch. 17; 17 generated
 
 This file is generated from canonical curriculum data. Do not edit it by hand.

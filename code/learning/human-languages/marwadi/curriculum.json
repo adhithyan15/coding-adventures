@@ -89,6 +89,14 @@
       "before": [],
       "inline": ["MW-EXT-025-WEATHER-THREE"],
       "after": []
+    },
+    {
+      "id": "MW-PATH-012",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": ["MW-C12-hear-mausam", "MW-W12-au-matra", "MW-C12-mausam", "MW-C12-hear-garmi", "MW-W12-ga", "MW-C12-garmi", "MW-R12-weather-first-two", "MW-C12-hear-thandi", "MW-W12-dda", "MW-C12-thandi", "MW-R12-weather-new-three", "MW-C12-weather-six", "MW-R12-script-close"],
+      "before": [],
+      "inline": ["MW-EXT-026-WEATHER-SIX"],
+      "after": []
     }
   ],
   "spine": {
@@ -97,7 +105,7 @@
     "SPINE-RESPOND-BASIC": { "segments": ["MW-PATH-003"], "omits": ["RESPONSE-NO", "RESPONSE-YESNO", "RESPONSE-OKAY"], "relocates": {} },
     "SPINE-EXCHANGE-NAMES": { "segments": ["MW-PATH-005", "MW-PATH-008", "MW-PATH-009"], "omits": ["PRONOUN-I", "PRONOUN-ME", "PRONOUN-YOU", "WORD-IS", "INTRO-WHATS-YOUR-NAME", "INTRO-NICE-TO-MEET-YOU"], "relocates": {} },
     "SPINE-CHECK-WELLBEING": { "segments": ["MW-PATH-006"], "omits": ["QUESTION-HOW", "WORD-GOOD", "WORD-SOSO"], "relocates": {} },
-    "SPINE-POLITE-REQUEST-REPAIR": { "segments": ["MW-PATH-004", "MW-PATH-010", "MW-PATH-011"], "omits": ["COURTESY-PLEASE", "COURTESY-SORRY"], "relocates": {} },
+    "SPINE-POLITE-REQUEST-REPAIR": { "segments": ["MW-PATH-004", "MW-PATH-010", "MW-PATH-011", "MW-PATH-012"], "omits": ["COURTESY-PLEASE", "COURTESY-SORRY"], "relocates": {} },
     "SPINE-TAKE-LEAVE": { "segments": ["MW-PATH-007"], "omits": ["FAREWELL", "FAREWELL-CASUAL", "FAREWELL-LATER", "FAREWELL-SOON", "FAREWELL-TOMORROW", "GREETING-GOODNIGHT"], "relocates": {} },
     "SPINE-TIME-OF-DAY": { "segments": [], "omits": ["TIME-DAY", "TIME-MORNING", "TIME-AFTERNOON", "TIME-EVENING", "TIME-NIGHT", "GREETING-DAY", "GREETING-MORNING", "GREETING-AFTERNOON", "GREETING-EVENING"], "relocates": {} },
     "SPINE-ASK-LOCATION": { "segments": [], "omits": ["QUESTION-WHERE"], "relocates": {} },
@@ -351,6 +359,15 @@
       "canDo": "I can retrieve wind, cloud, and rain in listening, speaking, reading, and writing while reusing only previously taught Devanagari signs.",
       "prerequisites": ["MW-EXT-024-TRAVEL-FIVE"],
       "lessons": ["MW-C11-hear-hawa", "MW-C11-hawa", "MW-C11-hear-baadal", "MW-C11-baadal", "MW-C11-hear-barsaat", "MW-C11-barsaat", "MW-R11-weather-three", "MW-C11-weather-three", "MW-R11-weather-close"]
+    },
+    {
+      "id": "MW-EXT-026-WEATHER-SIX",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can add weather, heat, and cold to the earlier wind-cloud-rain map in four separately scored skills after learning only the au mark, ग, and ड.",
+      "prerequisites": ["MW-EXT-025-WEATHER-THREE"],
+      "lessons": ["MW-C12-hear-mausam", "MW-W12-au-matra", "MW-C12-mausam", "MW-C12-hear-garmi", "MW-W12-ga", "MW-C12-garmi", "MW-R12-weather-first-two", "MW-C12-hear-thandi", "MW-W12-dda", "MW-C12-thandi", "MW-R12-weather-new-three", "MW-C12-weather-six", "MW-R12-script-close"]
     }
   ]
 }

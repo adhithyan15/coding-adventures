@@ -123,6 +123,19 @@ memory demand at a time.
 | S115 | `MW-R11-weather-three` | retrieve wind, cloud, and rain after a gap | mixed four-skill recall |
 | S116 | `MW-C11-weather-three` | pass the three-word weather map | non-compensatory listening, speaking, reading, and writing |
 | S117 | `MW-R11-weather-close` | close the weather meaning-and-writing loop | hidden-model three-word recall |
+| S118 | `MW-C12-hear-mausam` | hear *mausam* as weather | none; meaning precedes the new vowel mark |
+| S119 | `MW-W12-au-matra` | isolate **ौ** on familiar **म** | observe, trace, copy one vowel mark |
+| S120 | `MW-C12-mausam` | assemble **मौसम** | delayed copy and dictation |
+| S121 | `MW-C12-hear-garmi` | hear *garmī* as heat or hot weather | none; meaning precedes the new consonant |
+| S122 | `MW-W12-ga` | distinguish **ग** from aspirated **घ** | observe, trace, copy one sign |
+| S123 | `MW-C12-garmi` | assemble **गर्मी** | delayed copy and dictation |
+| S124 | `MW-R12-weather-first-two` | retrieve weather and heat after a gap | mixed four-skill recall |
+| S125 | `MW-C12-hear-thandi` | hear *ṭhaṇḍī* as cold or cold weather | none; meaning precedes the new consonant |
+| S126 | `MW-W12-dda` | distinguish retroflex **ड** from dental **द** | observe, trace, copy one sign |
+| S127 | `MW-C12-thandi` | assemble **ठंडी** | delayed copy and dictation |
+| S128 | `MW-R12-weather-new-three` | retrieve weather, heat, and cold | mixed four-skill recall |
+| S129 | `MW-C12-weather-six` | pass the six-word weather map | non-compensatory listening, speaking, reading, and writing |
+| S130 | `MW-R12-script-close` | close the writing loop for **ौ**, **ग**, and **ड** | hidden-model signs and words |
 
 Reviews use expanding spacing: repeat S7 the next day, after three days, after
 one week, and after two weeks. A failed written recall sends the learner back to

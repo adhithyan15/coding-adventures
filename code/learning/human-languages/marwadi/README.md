@@ -34,8 +34,10 @@ household or region uses the same labels. They can also retrieve **बाजा�
 मंदिर, हाथ, पैसा** as a first direction-and-travel vocabulary map without
 pretending that the still-untaught location question is complete. Chapter 16
 adds **हवा, बादल, बरसात** as wind, cloud, and rain, using no new Devanagari
-signs and without pretending that a complete weather exchange is taught. The
-track now contains 117 canonical lessons and 31 distinct taught headwords. That is still a small pre-A1
+signs and without pretending that a complete weather exchange is taught.
+Chapter 17 adds **मौसम, गर्मी, ठंडी** as weather, heat, and cold after isolating
+only **ौ**, **ग**, and **ड**. The track now contains 130 canonical lessons and
+34 distinct taught headwords. That is still a small pre-A1
 capability, not completion of pre-A1 and not exam readiness. The curriculum map
 records every untouched spine concept explicitly so the remaining work stays
 measurable.
@@ -71,7 +73,10 @@ Chapters 14–15, including **हाथ** inside right/left direction cues and *
 inside a travel-cost question.
 Marwari Pathshala Lesson 7 supplies **हवा, बादल, बरसात** for Chapter 16. The
 book treats them as source-attested weather vocabulary, not proof that the
-still-untaught weather question or a full conversation is complete.
+still-untaught weather question or a full conversation is complete. Chapter 17
+uses the same source's **मौसम, गर्मी, ठंडी** while recording that it groups the
+last two with summer and winter; the first teaching move keeps the narrower
+heat and cold meanings rather than collapsing weather and seasons.
 
 - [Rajasthan Foundation: Rajasthani Language](https://foundation.rajasthan.gov.in/RajasthaniLanguage.aspx)
 - [Rajasthan State Archives: learning Rajasthani (Marwari)](https://rsad.artandculture.rajasthan.gov.in/content/raj/art-and-culture/rajasthan-state-archives-bikaner/en/download.html)

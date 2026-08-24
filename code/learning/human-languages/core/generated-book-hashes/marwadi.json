@@ -246,6 +246,27 @@
         "MW-R11-weather-close"
       ],
       "tex": "marwadi/book/chapters/ch16-weather-three.tex"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 17,
+      "sourceHash": "fnv1a64:13d3cc40f1541814",
+      "lessonIds": [
+        "MW-C12-hear-mausam",
+        "MW-W12-au-matra",
+        "MW-C12-mausam",
+        "MW-C12-hear-garmi",
+        "MW-W12-ga",
+        "MW-C12-garmi",
+        "MW-R12-weather-first-two",
+        "MW-C12-hear-thandi",
+        "MW-W12-dda",
+        "MW-C12-thandi",
+        "MW-R12-weather-new-three",
+        "MW-C12-weather-six",
+        "MW-R12-script-close"
+      ],
+      "tex": "marwadi/book/chapters/ch17-weather-six.tex"
     }
   ]
 }

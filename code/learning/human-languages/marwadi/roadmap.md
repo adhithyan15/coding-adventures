@@ -39,9 +39,13 @@ scored four-skill close. The strict report remains all-zero at 108 lessons.
 Chapter 16 adds nine meaning-first lessons for **हवा, बादल, बरसात** without
 adding a new sign, then closes with separately scored listening, speaking,
 reading, and writing. The strict report remains all-zero at 117 lessons.
+Chapter 17 adds thirteen more meaning-first lessons for **मौसम, गर्मी, ठंडी**,
+isolating only **ौ**, **ग**, and **ड** before those forms are decoded. The new
+three-word map then joins wind, cloud, and rain in a six-word four-skill payoff.
+The strict report remains all-zero at 130 lessons.
 
-This brings the first vocabulary expansion from 11 to 31 distinct taught
-headwords: 20 of the issue's intended 35 new headwords are complete, leaving 15
+This brings the first vocabulary expansion from 11 to 34 distinct taught
+headwords: 23 of the issue's intended 35 new headwords are complete, leaving 12
 new headwords in this tranche. The earlier 17-word remaining figure counted toward a
 35-word total rather than the issue's explicit allowance of 35 additions and is
 superseded here. The next independent slice should favor high-frequency

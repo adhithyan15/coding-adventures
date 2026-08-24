@@ -317,6 +317,19 @@
         "summary": "Three source-attested weather nouns begin by ear, reuse the established script inventory, and finish in four separately scored skills without claiming a weather conversation is complete.",
         "assesses": ["MW-LEX-HAWA-01", "MW-SCRIPT-HAWA-01", "MW-LEX-BAADAL-01", "MW-SCRIPT-BAADAL-01", "MW-LEX-BARSAAT-01", "MW-SCRIPT-BARSAAT-01", "MW-PERFORMANCE-WEATHER-THREE-FOUR-SKILL-01"]
       }
+    },
+    {
+      "chapter": 17,
+      "title": "Weather, Heat, and Cold: Three New Signs",
+      "label": "ch:mw-weather-six",
+      "canDo": "I can add weather, heat, and cold to the earlier wind-cloud-rain map after learning only the au mark, ग, and ड.",
+      "spineNodes": ["SPINE-POLITE-REQUEST-REPAIR"],
+      "payoff": {
+        "lesson": "MW-C12-weather-six",
+        "kind": "four-skill-vocabulary-map",
+        "summary": "Three more source-attested weather words begin by ear, add three signs one at a time, and join the earlier map in four separately scored skills without claiming a complete weather exchange.",
+        "assesses": ["MW-LEX-MAUSAM-01", "MW-SCRIPT-AU-MATRA-01", "MW-SCRIPT-MAUSAM-01", "MW-LEX-GARMI-01", "MW-SCRIPT-GA-01", "MW-SCRIPT-GARMI-01", "MW-LEX-THANDI-01", "MW-SCRIPT-DDA-01", "MW-SCRIPT-THANDI-01", "MW-PERFORMANCE-WEATHER-SIX-FOUR-SKILL-01"]
+      }
     }
   ]
 }

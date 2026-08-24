@@ -75,17 +75,23 @@ it("pins Marwadi's complete pre-A1 writing ramp", () => {
     "delayed-copy",
     "delayed-copy",
     "delayed-copy",
+    "observe-trace",
+    "delayed-copy",
+    "observe-trace",
+    "delayed-copy",
+    "observe-trace",
+    "delayed-copy",
   ]);
 });
 
 it("pins Marwadi-owned chapters and objective activities", () => {
   const lessons = loadTrackLessons("marwadi");
-  expect(lessons).toHaveLength(117);
+  expect(lessons).toHaveLength(130);
   expect(new Set(lessons.map((lesson) => Number(lesson.frontmatter.chapter)))).toEqual(
-    new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]),
+    new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]),
   );
   const activities = lessons.flatMap((lesson) => compileLessonActivities(lesson.blocks));
-  expect(activities).toHaveLength(117);
+  expect(activities).toHaveLength(130);
   expect(lessons.every((lesson) => compileLessonActivities(lesson.blocks).length === 1)).toBe(true);
   expect(activities.map((activity) => activity.id).sort()).toEqual([
     "MW-C01-practice-answer",
@@ -162,6 +168,13 @@ it("pins Marwadi-owned chapters and objective activities", () => {
     "MW-C11-hear-barsaat-meaning",
     "MW-C11-hear-hawa-meaning",
     "MW-C11-weather-three-payoff",
+    "MW-C12-garmi-dictation",
+    "MW-C12-hear-garmi-meaning",
+    "MW-C12-hear-mausam-meaning",
+    "MW-C12-hear-thandi-meaning",
+    "MW-C12-mausam-dictation",
+    "MW-C12-thandi-dictation",
+    "MW-C12-weather-six-payoff",
     "MW-R08-family-foundation-three",
     "MW-R08-family-map-four",
     "MW-R08-script-close-three",
@@ -173,6 +186,9 @@ it("pins Marwadi-owned chapters and objective activities", () => {
     "MW-R10-travel-five-recall",
     "MW-R11-weather-close-recall",
     "MW-R11-weather-three-recall",
+    "MW-R12-script-close-recall",
+    "MW-R12-weather-first-two-recall",
+    "MW-R12-weather-new-three-recall",
     "MW-W01-aa-matra-change",
     "MW-W01-ra-read",
     "MW-W01-raam-build",
@@ -205,12 +221,15 @@ it("pins Marwadi-owned chapters and objective activities", () => {
     "MW-W09-ta-write",
     "MW-W10-gha-write",
     "MW-W10-ja-write",
+    "MW-W12-au-matra-write",
+    "MW-W12-dda-write",
+    "MW-W12-ga-write",
   ]);
 
   const closure = measureScriptClosure(lessons);
   expect(closure.violations.filter((violation) => violation.language === "marwadi")).toEqual([]);
   expect(closure.tracks.find((track) => track.language === "marwadi")).toMatchObject({
-    lessonCount: 117,
+    lessonCount: 130,
     neverTaughtGlyphs: 0,
     violations: 0,
   });

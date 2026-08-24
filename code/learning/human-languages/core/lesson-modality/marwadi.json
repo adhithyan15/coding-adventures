@@ -7,17 +7,17 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:bcfc4ae39780fdba",
+  "sourceHash": "fnv1a64:104b9429c8ce4133",
   "summary": {
-    "totalLessons": 117,
-    "voice": 75,
+    "totalLessons": 130,
+    "voice": 85,
     "sight": 6,
-    "pen": 36,
-    "drivableLessons": 75,
-    "drivablePercent": 64,
+    "pen": 39,
+    "drivableLessons": 85,
+    "drivablePercent": 65,
     "trackCount": 1,
-    "chapterCount": 16,
-    "drivablePrefixTotal": 33,
+    "chapterCount": 17,
+    "drivablePrefixTotal": 34,
     "fullyDrivableChapters": 2,
     "unstartableChapters": 3,
     "overriddenLessons": 0,
@@ -26,12 +26,12 @@
   "tracks": [
     {
       "language": "marwadi",
-      "lessonCount": 117,
-      "voice": 75,
+      "lessonCount": 130,
+      "voice": 85,
       "sight": 6,
-      "pen": 36,
-      "drivablePercent": 64,
-      "drivablePrefixTotal": 33,
+      "pen": 39,
+      "drivablePercent": 65,
+      "drivablePrefixTotal": 34,
       "modalities": [
         "voice",
         "sight",
@@ -333,6 +333,24 @@
             "MW-R11-weather-three",
             "MW-C11-weather-three",
             "MW-R11-weather-close"
+          ]
+        },
+        {
+          "chapter": 17,
+          "lessonCount": 13,
+          "voice": 10,
+          "sight": 0,
+          "pen": 3,
+          "modalities": [
+            "voice",
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": "MW-W12-au-matra",
+          "drivable": false,
+          "drivableLessonIds": [
+            "MW-C12-hear-mausam"
           ]
         }
       ]
@@ -2653,6 +2671,255 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:2fb4f6be6635694c"
+    },
+    {
+      "id": "MW-C12-hear-mausam",
+      "language": "marwadi",
+      "chapter": 17,
+      "sequence": 1180,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:41377f9803eaed37"
+    },
+    {
+      "id": "MW-W12-au-matra",
+      "language": "marwadi",
+      "chapter": 17,
+      "sequence": 1190,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:d7a63195e168c502",
+      "detachableSegments": [
+        "Script — one sign"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "MW-C12-mausam",
+      "language": "marwadi",
+      "chapter": 17,
+      "sequence": 1200,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:b077c0d587e04283"
+    },
+    {
+      "id": "MW-C12-hear-garmi",
+      "language": "marwadi",
+      "chapter": 17,
+      "sequence": 1210,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:546aa4939aa138aa"
+    },
+    {
+      "id": "MW-W12-ga",
+      "language": "marwadi",
+      "chapter": 17,
+      "sequence": 1220,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:5225cb79f8d76962",
+      "detachableSegments": [
+        "Script — one sign"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "MW-C12-garmi",
+      "language": "marwadi",
+      "chapter": 17,
+      "sequence": 1230,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:3af20aa6e0504034"
+    },
+    {
+      "id": "MW-R12-weather-first-two",
+      "language": "marwadi",
+      "chapter": 17,
+      "sequence": 1240,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:f9de8b3b623f5284"
+    },
+    {
+      "id": "MW-C12-hear-thandi",
+      "language": "marwadi",
+      "chapter": 17,
+      "sequence": 1250,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:4426d0e9956acfcd"
+    },
+    {
+      "id": "MW-W12-dda",
+      "language": "marwadi",
+      "chapter": 17,
+      "sequence": 1260,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:ae1b8fb1f10c2ba7",
+      "detachableSegments": [
+        "Script — one sign"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "MW-C12-thandi",
+      "language": "marwadi",
+      "chapter": 17,
+      "sequence": 1270,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:7e1d4da3196c463d"
+    },
+    {
+      "id": "MW-R12-weather-new-three",
+      "language": "marwadi",
+      "chapter": 17,
+      "sequence": 1280,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:d94206ebdbb40e1f"
+    },
+    {
+      "id": "MW-C12-weather-six",
+      "language": "marwadi",
+      "chapter": 17,
+      "sequence": 1290,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:4a438415824d43db"
+    },
+    {
+      "id": "MW-R12-script-close",
+      "language": "marwadi",
+      "chapter": 17,
+      "sequence": 1300,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:49ff6b162224de28"
     }
   ],
   "findings": []

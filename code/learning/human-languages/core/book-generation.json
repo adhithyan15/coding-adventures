@@ -2945,6 +2945,12 @@
         "scriptSet": "marwadi-main"
       },
       {
+        "language": "marwadi",
+        "chapter": 17,
+        "output": "marwadi/book/chapters/ch17-weather-six.tex",
+        "scriptSet": "marwadi-main"
+      },
+      {
         "language": "persian",
       "chapter": 2,
       "output": "persian/book/chapters/ch02-give-your-name.tex",

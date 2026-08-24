@@ -327,6 +327,32 @@
       "json": "marwadi/narration/ch16.json",
       "textHash": "fnv1a64:40d61c1497cd2654",
       "jsonHash": "fnv1a64:debda46c944867c0"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 17,
+      "sourceHash": "fnv1a64:daedcb1295c8f545",
+      "lessonIds": [
+        "MW-C12-hear-mausam",
+        "MW-W12-au-matra",
+        "MW-C12-mausam",
+        "MW-C12-hear-garmi",
+        "MW-W12-ga",
+        "MW-C12-garmi",
+        "MW-R12-weather-first-two",
+        "MW-C12-hear-thandi",
+        "MW-W12-dda",
+        "MW-C12-thandi",
+        "MW-R12-weather-new-three",
+        "MW-C12-weather-six",
+        "MW-R12-script-close"
+      ],
+      "voiceLessons": 10,
+      "drivablePrefix": 1,
+      "text": "marwadi/narration/ch17.txt",
+      "json": "marwadi/narration/ch17.json",
+      "textHash": "fnv1a64:917a039dcac48053",
+      "jsonHash": "fnv1a64:683e46a164b25996"
     }
   ],
   "findings": []
