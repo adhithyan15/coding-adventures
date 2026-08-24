@@ -6117,6 +6117,33 @@ but neither unlocks a second explicitly supported lane. Ten live open PRs and
 state, or roadmap surfaces; the target branch was absent before the clean
 worktree was created.
 
+### C# tracked-artifact implementation
+
+The C# child implements one pure validator over caller-supplied inert snapshot
+entries. It slash-normalizes separators, fails closed on the ten reviewed
+portable-path defects without echoing hostile text, detects exact
+`node_modules` components after NFKC and the full-fold expansions relevant to
+an ASCII identity, treats regular, symlink, and reparse kinds identically, and
+sorts complete diagnostics by the neutral oracle's canonical keys. The public
+entry and diagnostic records serialize directly to the shared result shape;
+the implementation adds no Git, filesystem, process, environment, or network
+authority and changes no fixture, schema, capability manifest, or dependency.
+
+All four shared fixtures pass through the C# API, and focused hostile-path
+tests cover every stable problem code plus both unsafe-character branches. The
+canonical .NET 9 BUILD front door passes 23 xUnit tests. The new validator is
+fully covered at 67 of 67 lines and 44 of 44 branches; complete-package
+coverage is 49.16% line, 33.36% branch, and 67.97% method. The neutral corpus
+validates 110 cases and 269 files, while 269 focused package-parity,
+capability-taxonomy, OCaml-lock, and conformance tests pass with 25 expected
+platform skips. The Go oracle passes all packages with coverage, vet, and
+trimpath compilation, then a fresh binary evaluates 45 Starlark BUILD files,
+preserves the five-entry orphan ledger, and validates a forced dry plan across
+all 200 discovered C# packages. NuGet reports no vulnerable direct or
+transitive dependency. The source-wide `dotnet format` whitespace gate retains
+the exact same 18 findings in unchanged pre-existing ranges as the clean
+selected-main baseline; the new ranges and complete diff are clean.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
