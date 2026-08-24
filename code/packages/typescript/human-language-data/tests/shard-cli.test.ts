@@ -11,6 +11,7 @@ import {
   shardFilename,
   shardLedger,
   unshardContents,
+  unshardLedger,
   type ShardPlan,
 } from "../src/shard-cli.js";
 import { defaultCurriculumRoot, loadCurriculumSpine } from "../src/loader.js";
@@ -265,6 +266,25 @@ describe("the writer cannot be walked outside the checkout", () => {
     // The point of the test: the victim file is still there.
     expect(existsSync(treasure)).toBe(true);
     expect(readFileSync(treasure, "utf8")).toBe('{ "keep": "me" }\n');
+  });
+
+  it("refuses a DANGLING symlinked monolith instead of creating its target", (ctx) => {
+    // The round-2 finding. `if (existsSync(monolith)) assertRealFile(monolith)`
+    // skipped the guard entirely for a dangling link, because `existsSync` uses
+    // `stat` and a dangling link has nothing to stat. `writeFileSync` then
+    // opened O_CREAT through the link and created the target — attacker-chosen
+    // JSON, at a path outside the checkout.
+    const target = join(root, "not-created-yet.json");
+    shardLedger(root, plan);
+    rmSync(join(root, "core", "toy.json"));
+    try {
+      symlinkSync(target, join(root, "core", "toy.json"), "file");
+    } catch {
+      ctx.skip();
+    }
+
+    expect(() => unshardLedger(root, plan)).toThrow(/symbolic link/);
+    expect(existsSync(target)).toBe(false);
   });
 
   it("refuses a non-directory squatting on the shard directory name", () => {

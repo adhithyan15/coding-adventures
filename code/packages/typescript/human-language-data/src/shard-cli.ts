@@ -59,7 +59,12 @@
 // but `--check` compares the REBUILT MONOLITH rather than the filenames, so a
 // hand-inserted `0015-SPINE-NEW.json` passes without anyone having to renumber.
 
-import { existsSync, lstatSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+// `existsSync` is deliberately NOT imported. It uses `stat`, so it follows
+// symlinks and reports a dangling link as absent — which silently skipped a
+// guard placed behind it, twice, in two consecutive review rounds. Use
+// `statIfPresent` below. Leaving the import out makes the next reach for it a
+// compile error rather than a judgement call.
+import { lstatSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join, normalize, relative as pathRelative, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { defaultCurriculumRoot } from "./loader.js";
@@ -155,6 +160,23 @@ export function shardFilename(index: number, id: string): string {
 /** The one serialization, used by every writer here so the round trip closes. */
 function serialize(value: unknown): string {
   return `${JSON.stringify(value, null, 2)}\n`;
+}
+
+/**
+ * `lstatSync`, or `undefined` if the path is not there at all.
+ *
+ * The replacement for `existsSync` throughout this file. `existsSync` uses
+ * `stat`, which follows symlinks, so a DANGLING link reads as "not there" and
+ * every guard placed behind one is skipped. `lstatSync` describes the link
+ * itself, which is the thing being asked about.
+ */
+function statIfPresent(path: string): ReturnType<typeof lstatSync> | undefined {
+  try {
+    return lstatSync(path);
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") return undefined;
+    throw error;
+  }
 }
 
 /**
@@ -335,11 +357,8 @@ export function shardLedger(root: string, plan: ShardPlan): string[] {
     // `isSharded` returned false for a reason other than "absent" only if
     // something that is not a directory is squatting on the name. Refuse it
     // rather than letting `mkdirSync(..., { recursive: true })` no-op over it.
-    try {
-      lstatSync(dir);
+    if (statIfPresent(dir) !== undefined) {
       throw new Error(`shard-cli: '${dir}' exists and is not a directory`);
-    } catch (error) {
-      if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
     }
   }
 
@@ -370,7 +389,21 @@ export function shardLedger(root: string, plan: ShardPlan): string[] {
 export function unshardLedger(root: string, plan: ShardPlan): string {
   const body = unshardContents(root, plan);
   const monolith = safeLedgerPath(root, plan.path);
-  if (existsSync(monolith)) assertRealFile(monolith);
+  // UNCONDITIONAL. This read `if (existsSync(monolith)) assertRealFile(monolith)`
+  // for one round — reintroducing, in the writer, the exact call the previous
+  // round had removed from `shardLedger` for following symlinks.
+  //
+  // `existsSync` uses `stat`, so for a DANGLING link it returns false and the
+  // guard never runs; `writeFileSync` then opens `O_CREAT` through the link and
+  // creates the target. A branch committing `core/spine.json` as a link to a
+  // not-yet-existing path under `$HOME` gets attacker-chosen JSON written there
+  // — and `--check`'s own failure message ("Run 'npm run unshard'") is what
+  // walks the maintainer into it.
+  //
+  // The docstring above already said a missing monolith is a broken checkout
+  // worth reporting rather than silently creating. The code disagreed with the
+  // comment; the comment was right.
+  assertRealFile(monolith);
   writeFileSync(monolith, body, "utf8");
   return body;
 }
@@ -430,8 +463,14 @@ export function runShardCli(
     // it is the one mode a hostile branch can reach on a maintainer's runner.
     // A symlinked monolith would otherwise have its target's bytes read and
     // compared, and the comparison result reported.
+    //
+    // `lstatSync`, not `existsSync`, for the third time in this file: a dangling
+    // link is invisible to `existsSync`, so the guard behind one never runs. Not
+    // exploitable here — a dangling link just reports "stale" — but it is the
+    // same anti-pattern, and this is the message that funnels maintainers into
+    // `--unshard`, which is where it WAS exploitable.
     let actual: string | undefined;
-    if (existsSync(monolith)) {
+    if (statIfPresent(monolith) !== undefined) {
       assertRealFile(monolith);
       actual = readFileSync(monolith, "utf8");
     }
