@@ -5341,12 +5341,15 @@ impl HtmlParser {
             && name != "col"
             && name != "template"
         {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-start-tag-in-template-column-group",
-                format!(
-                    "start tag `<{name}>` was ignored at a template column-group boundary"
-                ),
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-start-tag-in-template-column-group",
+                    format!(
+                        "start tag `<{name}>` was ignored at a template column-group boundary"
+                    ),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             return;
         }
 
@@ -27197,6 +27200,17 @@ mod tests {
         .at_emission(Some(end_tag_position(source, name)))
     }
 
+    fn start_tag_in_template_column_group_recovery(
+        source: &str,
+        name: &str,
+    ) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-start-tag-in-template-column-group",
+            format!("start tag `<{name}>` was ignored at a template column-group boundary"),
+        )
+        .at_emission(Some(start_tag_position(source, name)))
+    }
+
     fn li_start_tag_in_table_recovery(source: &str, occurrence: usize) -> ParserDiagnostic {
         let prefix = "<li";
         let start = source
@@ -40697,11 +40711,8 @@ mod tests {
             let output = parse_html_with_diagnostics(&source).unwrap();
             assert_eq!(
                 output.parser_diagnostics,
-                vec![ParserDiagnostic::new(
-                    "unexpected-start-tag-in-template-column-group",
-                    format!(
-                        "start tag `<{name}>` was ignored at a template column-group boundary"
-                    ),
+                vec![start_tag_in_template_column_group_recovery(
+                    &source, name,
                 )],
                 "source {source:?}"
             );
@@ -40725,6 +40736,63 @@ mod tests {
                 output.parser_diagnostics
             );
         }
+    }
+
+    #[test]
+    fn positions_start_tags_rejected_at_template_column_group_at_token_emission() {
+        let unicode_source =
+            "<!doctype html><!--é-->\r\n<template><col><colgroup data-name='é'>";
+        for (source, name) in [
+            ("<!doctype html><template><col><div data-name=x>", "div"),
+            (unicode_source, "colgroup"),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .filter(|diagnostic| {
+                        diagnostic.code == "unexpected-start-tag-in-template-column-group"
+                    })
+                    .collect::<Vec<_>>(),
+                vec![&start_tag_in_template_column_group_recovery(source, name)],
+                "source {source:?}"
+            );
+        }
+        assert!(unicode_source.len() > unicode_source.chars().count());
+
+        for source in [
+            "<!doctype html><template><col><div",
+            "<!doctype html><template><col><colgroup",
+            "<!doctype html><div><col><div>",
+            "<!doctype html><table><colgroup><col><div></table>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output.parser_diagnostics.iter().all(|diagnostic| {
+                    diagnostic.code != "unexpected-start-tag-in-template-column-group"
+                }),
+                "source {source:?}"
+            );
+        }
+
+        let mut unpositioned = HtmlParser::new();
+        for name in ["template", "col", "div"] {
+            unpositioned.process_token(Token::StartTag {
+                name: name.to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            });
+        }
+        let diagnostics = unpositioned
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| {
+                diagnostic.code == "unexpected-start-tag-in-template-column-group"
+            })
+            .collect::<Vec<_>>();
+        assert_eq!(diagnostics.len(), 1);
+        assert_eq!(diagnostics[0].position, None);
     }
 
     #[test]
