@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
@@ -211,7 +211,12 @@ describe("refusals", () => {
     expect(() => safeLedgerPath(root, "../escape.json")).toThrow(/unsafe ledger path/);
     expect(() => safeLedgerPath(root, "core/../../escape.json")).toThrow(/unsafe ledger path/);
     expect(() => safeLedgerPath(root, "core/notes.md")).toThrow(/unsafe ledger path/);
-    expect(safeLedgerPath(root, "core/toy.json")).toBe(join(root, "core", "toy.json"));
+    // Compared against the REALPATH of root: `safeLedgerPath` now resolves the
+    // parent directory, and `mkdtempSync(tmpdir())` is itself behind a symlink
+    // on macOS (`/var` -> `/private/var`).
+    expect(safeLedgerPath(root, "core/toy.json")).toBe(
+      join(realpathSync(root), "core", "toy.json"),
+    );
   });
 });
 
@@ -285,6 +290,37 @@ describe("the writer cannot be walked outside the checkout", () => {
 
     expect(() => unshardLedger(root, plan)).toThrow(/symbolic link/);
     expect(existsSync(target)).toBe(false);
+  });
+
+  it("refuses a symlinked PARENT directory, not just a symlinked X.d", (ctx) => {
+    // Round 3. Every guard added over the previous two rounds calls `lstat`,
+    // which does not follow the FINAL component — but does follow every
+    // component before it. So `core/toy.d` as a link was refused and `core`
+    // itself as a link walked straight through, with all four guards satisfied:
+    // `rmSync` deleted out-of-tree files and `writeFileSync` overwrote them.
+    // Lexical containment cannot see this; only `realpath` can.
+    const outside = mkdtempSync(join(tmpdir(), "hl-victim-"));
+    const treasure = join(outside, "treasure.json");
+    writeFileSync(treasure, '{ "keep": "me" }\n', "utf8");
+    writeFileSync(
+      join(outside, "toy.json"),
+      `${JSON.stringify({ version: 1, nodes: [{ id: "ALPHA" }] }, null, 2)}\n`,
+      "utf8",
+    );
+
+    const linkedRoot = mkdtempSync(join(tmpdir(), "hl-shard-cli-"));
+    try {
+      if (!trySymlink(outside, join(linkedRoot, "core"))) ctx.skip();
+
+      expect(() => shardLedger(linkedRoot, plan)).toThrow(/resolves outside the curriculum root/);
+      expect(() => unshardLedger(linkedRoot, plan)).toThrow(
+        /resolves outside the curriculum root/,
+      );
+      expect(existsSync(treasure)).toBe(true);
+    } finally {
+      rmSync(linkedRoot, { recursive: true, force: true });
+      rmSync(outside, { recursive: true, force: true });
+    }
   });
 
   it("refuses a non-directory squatting on the shard directory name", () => {

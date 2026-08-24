@@ -64,8 +64,8 @@
 // guard placed behind it, twice, in two consecutive review rounds. Use
 // `statIfPresent` below. Leaving the import out makes the next reach for it a
 // compile error rather than a judgement call.
-import { lstatSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
-import { join, normalize, relative as pathRelative, resolve } from "node:path";
+import { lstatSync, mkdirSync, readFileSync, realpathSync, rmSync, writeFileSync } from "node:fs";
+import { basename, dirname, join, normalize, relative as pathRelative, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { defaultCurriculumRoot } from "./loader.js";
 import {
@@ -200,7 +200,32 @@ export function safeLedgerPath(root: string, relative: string): string {
   ) {
     throw new Error(`shard-cli: unsafe ledger path '${relative}'`);
   }
-  return output;
+
+  // And now the part that three rounds of `lstat` guards did not cover.
+  //
+  // `lstat` does not follow the FINAL component — which is what every guard in
+  // this feature was checking — but it follows every component BEFORE it. So
+  // `core/spine.d` committed as a link is refused, and `core` committed as a
+  // link sails through: `rmSync` deletes out-of-tree files and `writeFileSync`
+  // overwrites them, with all four earlier guards satisfied.
+  //
+  // Lexical containment cannot see this; only `realpath` can. Resolving the
+  // PARENT closes every intermediate component at once, and returning the
+  // resolved path means the downstream operations act on the real location
+  // rather than re-walking the links.
+  //
+  // Comparing realpath to realpath, not realpath to `root`, matters: on macOS
+  // `/var` is a link to `/private/var`, so a checkout under a symlinked path
+  // would otherwise fail this check for no reason.
+  const realParent = realpathSync(dirname(output));
+  const inside = normalize(pathRelative(realpathSync(root), realParent)).replaceAll("\\", "/");
+  if (inside === ".." || inside.startsWith("../")) {
+    throw new Error(
+      `shard-cli: '${relative}' resolves outside the curriculum root — ` +
+        `a parent directory is a symbolic link`,
+    );
+  }
+  return join(realParent, basename(output));
 }
 
 /**
