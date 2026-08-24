@@ -39,7 +39,7 @@ describe("real curriculum", () => {
     expect(scripts.devanagari!.complete).toBe(true);
   });
 
-  it("keeps the cross-script closure queue measured after Kannada halant", () => {
+  it("keeps the cross-script closure queue measured after Tamil u", () => {
     const candrakkala = scripts.malayalam!.marks!.find((mark) => mark.mark === "്")!;
     expect(candrakkala.role).toBe("virama");
     expect(candrakkala.compositionOrder).toEqual([
@@ -88,6 +88,22 @@ describe("real curriculum", () => {
       /horn.*dead consonants.*conjuncts.*not a universal handwriting direction.*no standalone ductus claim/i,
     );
 
+    const tamilU = scripts.tamil!.marks!.find((mark) => mark.mark === "ு")!;
+    expect(tamilU.role).toBe("vowel-sign");
+    expect(tamilU.compositionOrder).toEqual([
+      "write the Tamil consonant carrier first",
+      "add the u vowel sign to replace its inherent vowel",
+    ]);
+    expect(tamilU.compositionSource?.url).toBe(
+      "https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-12/",
+    );
+    expect(tamilU.compositionSource?.citation).toMatch(
+      /Unicode Standard.*Version 17\.0.*12\.6\.3.*U\+0BC1.*க \+ ு → கு/i,
+    );
+    expect(tamilU.compositionSource?.variation).toMatch(
+      /encoded carrier-first composition.*normally ligates.*not a universal handwriting direction.*no standalone ductus claim/i,
+    );
+
     const gaps = validate({ taxonomy, lessons, scripts }).filter(
       (issue) => issue.level === "warning" && issue.code === "uncovered-glyphs",
     );
@@ -112,10 +128,12 @@ describe("real curriculum", () => {
     expect(affected.get("్") ?? 0).toBe(0);
     expect(missingByScript.get("kannada.json")?.has("್")).toBe(false);
     expect(affected.get("್") ?? 0).toBe(0);
-    expect(affected.get("ு")).toBe(80);
+    expect(missingByScript.get("tamil.json")?.has("ு")).toBe(false);
+    expect(affected.get("ு") ?? 0).toBe(0);
+    expect(affected.get("ం")).toBe(68);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["ு", 80]);
+    ).toEqual(["ం", 68]);
   });
 
   it("loaded every track (17+ and growing)", () => {

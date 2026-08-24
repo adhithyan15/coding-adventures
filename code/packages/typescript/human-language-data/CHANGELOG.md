@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+### Added - source-backed Tamil u vowel-sign inventory
+
+- Add U+0BC1 **ு** to the Tamil mark inventory with Unicode-backed
+  carrier-first composition, vowel replacement, and normal ligature semantics.
+- Remove 80 affected Tamil realizations from the cross-script coverage queue,
+  without inventing handwriting direction or pen-lift claims.
+- Pin the reranked queue with Telugu anusvara **ం** first at 68.
+
 ### Added - source-backed Kannada halant inventory
 
 - Add U+0CCD **್** to the Kannada mark inventory with Unicode-backed vowel
