@@ -1,4 +1,4 @@
-//! Sonos UPnP discovery and read-only player inspection for D23.
+//! Bounded Sonos UPnP discovery, telemetry, and media control for D23.
 
 #![forbid(unsafe_code)]
 
@@ -6,19 +6,19 @@ use coding_adventures_xml_parser::{parse_xml, XmlElement, XmlNode};
 use http1::{parse_response_head, Http1ParseError};
 use http_core::BodyKind;
 use smart_home_core::{
-    AgentId, Bridge, BridgeId, BridgeTransport, Capability, CapabilityId, CapabilityMode, Device,
-    DeviceId, Entity, EntityId, EntityKind, Health, IntegrationId, Metadata, ProtocolFamily,
-    ProtocolIdentifier, SmartHomeTool, StateConfidence, StateSnapshot, StateSource, Value,
-    ValueKind,
+    AgentId, Bridge, BridgeId, BridgeTransport, Capability, CapabilityId, CapabilityMode,
+    CommandResult, CommandType, Device, DeviceId, Entity, EntityId, EntityKind, Health,
+    IntegrationId, MediaCommandType, Metadata, ProtocolFamily, ProtocolIdentifier, SmartHomeTool,
+    StateConfidence, StateSnapshot, StateSource, Value, ValueKind,
 };
 use smart_home_discovery::{
     DiscoveryConfidence, DiscoveryRecord, DiscoverySource, PairingRequirement,
 };
-use smart_home_runtime::{RuntimeError, SmartHomeRuntime};
+use smart_home_runtime::{RuntimeCommandToolRequest, RuntimeError, SmartHomeRuntime};
 use std::collections::BTreeMap;
 use std::fmt;
-use std::io::{self, Read, Write};
-use std::net::{SocketAddr, TcpStream, ToSocketAddrs};
+use std::io::{Read, Write};
+use std::net::{IpAddr, Ipv6Addr, SocketAddr, TcpStream};
 use std::time::Duration;
 use udp_client::{send_to_and_collect, UdpDiscoveryEndpoint, UdpError, UdpOptions};
 use url_parser::{Url, UrlError};
@@ -40,9 +40,32 @@ pub enum SonosError {
     Http(String),
     HttpStatus(u16),
     Xml(String),
-    ResponseTooLarge { limit: usize },
-    TruncatedBody { expected: usize, actual: usize },
+    ResponseTooLarge {
+        limit: usize,
+    },
+    TruncatedBody {
+        expected: usize,
+        actual: usize,
+    },
     MissingService(&'static str),
+    MissingInspection,
+    UnsupportedCommand(CommandType),
+    InvalidCommandArguments {
+        command_type: CommandType,
+        expected: &'static str,
+    },
+    PlaybackPostcondition {
+        expected: SonosPlaybackState,
+        actual: SonosPlaybackState,
+    },
+    VolumePostcondition {
+        expected: u8,
+        actual: u8,
+    },
+    MutePostcondition {
+        expected: bool,
+        actual: bool,
+    },
     Runtime(RuntimeError),
 }
 
@@ -66,6 +89,33 @@ impl fmt::Display for SonosError {
             Self::MissingService(service) => {
                 write!(formatter, "Sonos description has no {service} service")
             }
+            Self::MissingInspection => {
+                formatter.write_str("Sonos must be inspected before command routing")
+            }
+            Self::UnsupportedCommand(command) => {
+                write!(formatter, "Sonos does not support command {command:?}")
+            }
+            Self::InvalidCommandArguments {
+                command_type,
+                expected,
+            } => write!(
+                formatter,
+                "Sonos command {command_type:?} expects {expected}"
+            ),
+            Self::PlaybackPostcondition { expected, actual } => write!(
+                formatter,
+                "Sonos playback postcondition failed: expected {}, got {}",
+                expected.as_str(),
+                actual.as_str()
+            ),
+            Self::VolumePostcondition { expected, actual } => write!(
+                formatter,
+                "Sonos volume postcondition failed: expected {expected}, got {actual}"
+            ),
+            Self::MutePostcondition { expected, actual } => write!(
+                formatter,
+                "Sonos mute postcondition failed: expected {expected}, got {actual}"
+            ),
             Self::Runtime(error) => error.fmt(formatter),
         }
     }
@@ -112,6 +162,7 @@ impl SonosConfig {
                 "setup URL must be credential-free local HTTP with a path".to_string(),
             ));
         }
+        validate_local_ip_url(&parsed, "setup URL")?;
         Ok(Self {
             bridge_id,
             setup_url,
@@ -149,12 +200,35 @@ pub struct SonosDeviceDescription {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SonosSnapshot {
     pub device: SonosDeviceDescription,
-    pub transport_state: String,
+    pub playback_state: SonosPlaybackState,
     pub volume: u8,
     pub muted: bool,
     pub track_uri: Option<String>,
     pub track_title: Option<String>,
     pub track_artist: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum SonosPlaybackState {
+    Play,
+    Pause,
+    Stop,
+    Transitioning,
+    NoMedia,
+    Other(String),
+}
+
+impl SonosPlaybackState {
+    pub fn as_str(&self) -> &str {
+        match self {
+            Self::Play => "play",
+            Self::Pause => "pause",
+            Self::Stop => "stop",
+            Self::Transitioning => "transitioning",
+            Self::NoMedia => "no_media",
+            Self::Other(state) => state,
+        }
+    }
 }
 
 pub fn ssdp_search_request() -> Vec<u8> {
@@ -401,7 +475,10 @@ impl<T: SonosTransport> SonosClient<T> {
             "GetMute",
             "<InstanceID>0</InstanceID><Channel>Master</Channel>",
         )?;
-        let transport_state = required_response_text(&transport, "CurrentTransportState")?;
+        let playback_state = parse_playback_state(&required_response_text(
+            &transport,
+            "CurrentTransportState",
+        )?);
         let volume = parse_percentage(&required_response_text(&volume, "CurrentVolume")?)?;
         let muted = parse_boolean(&required_response_text(&mute, "CurrentMute")?)?;
         let track_uri = response_text(&position, "TrackURI")?;
@@ -414,13 +491,116 @@ impl<T: SonosTransport> SonosClient<T> {
         self.description = Some(description.clone());
         Ok(SonosSnapshot {
             device: description,
-            transport_state,
+            playback_state,
             volume,
             muted,
             track_uri,
             track_title,
             track_artist,
         })
+    }
+
+    pub fn playback_state(&mut self) -> Result<SonosPlaybackState, SonosError> {
+        let control_url = self.av_transport_control_url()?;
+        let response = self.soap_action(
+            &control_url,
+            AV_TRANSPORT_SERVICE_TYPE,
+            "GetTransportInfo",
+            "<InstanceID>0</InstanceID>",
+        )?;
+        Ok(parse_playback_state(&required_response_text(
+            &response,
+            "CurrentTransportState",
+        )?))
+    }
+
+    pub fn volume(&mut self) -> Result<u8, SonosError> {
+        let control_url = self.rendering_control_url()?;
+        let response = self.soap_action(
+            &control_url,
+            RENDERING_CONTROL_SERVICE_TYPE,
+            "GetVolume",
+            "<InstanceID>0</InstanceID><Channel>Master</Channel>",
+        )?;
+        parse_percentage(&required_response_text(&response, "CurrentVolume")?)
+    }
+
+    pub fn muted(&mut self) -> Result<bool, SonosError> {
+        let control_url = self.rendering_control_url()?;
+        let response = self.soap_action(
+            &control_url,
+            RENDERING_CONTROL_SERVICE_TYPE,
+            "GetMute",
+            "<InstanceID>0</InstanceID><Channel>Master</Channel>",
+        )?;
+        parse_boolean(&required_response_text(&response, "CurrentMute")?)
+    }
+
+    fn set_playback_state(&mut self, desired: &SonosPlaybackState) -> Result<(), SonosError> {
+        let (action, arguments) = match desired {
+            SonosPlaybackState::Play => ("Play", "<InstanceID>0</InstanceID><Speed>1</Speed>"),
+            SonosPlaybackState::Pause => ("Pause", "<InstanceID>0</InstanceID>"),
+            SonosPlaybackState::Stop => ("Stop", "<InstanceID>0</InstanceID>"),
+            SonosPlaybackState::Transitioning
+            | SonosPlaybackState::NoMedia
+            | SonosPlaybackState::Other(_) => {
+                return Err(SonosError::Validation(
+                    "unsupported Sonos playback target".to_string(),
+                ))
+            }
+        };
+        let control_url = self.av_transport_control_url()?;
+        self.soap_action(&control_url, AV_TRANSPORT_SERVICE_TYPE, action, arguments)?;
+        Ok(())
+    }
+
+    fn set_volume(&mut self, volume: u8) -> Result<(), SonosError> {
+        let control_url = self.rendering_control_url()?;
+        self.soap_action(
+            &control_url,
+            RENDERING_CONTROL_SERVICE_TYPE,
+            "SetVolume",
+            &format!(
+                "<InstanceID>0</InstanceID><Channel>Master</Channel><DesiredVolume>{volume}</DesiredVolume>"
+            ),
+        )?;
+        Ok(())
+    }
+
+    fn set_muted(&mut self, muted: bool) -> Result<(), SonosError> {
+        let control_url = self.rendering_control_url()?;
+        let desired = u8::from(muted);
+        self.soap_action(
+            &control_url,
+            RENDERING_CONTROL_SERVICE_TYPE,
+            "SetMute",
+            &format!(
+                "<InstanceID>0</InstanceID><Channel>Master</Channel><DesiredMute>{desired}</DesiredMute>"
+            ),
+        )?;
+        Ok(())
+    }
+
+    fn av_transport_control_url(&self) -> Result<String, SonosError> {
+        let description = self
+            .description
+            .as_ref()
+            .ok_or(SonosError::MissingInspection)?;
+        resolve_control_url(
+            &self.config.setup_url,
+            &description.av_transport.control_url,
+        )
+    }
+
+    fn rendering_control_url(&self) -> Result<String, SonosError> {
+        let description = self
+            .description
+            .as_ref()
+            .ok_or(SonosError::MissingInspection)?;
+        resolve_control_url(
+            &self.config.setup_url,
+            &description.rendering_control.control_url,
+        )
     }
 
     fn soap_action(
@@ -441,11 +621,15 @@ impl<T: SonosTransport> SonosClient<T> {
 
 pub struct SonosRuntimeIntegration<T> {
     client: SonosClient<T>,
+    entity_id: Option<EntityId>,
 }
 
 impl<T: SonosTransport> SonosRuntimeIntegration<T> {
     pub fn new(client: SonosClient<T>) -> Self {
-        Self { client }
+        Self {
+            client,
+            entity_id: None,
+        }
     }
 
     pub fn inspect_and_install_authorized(
@@ -467,8 +651,117 @@ impl<T: SonosTransport> SonosRuntimeIntegration<T> {
             }));
         }
         let snapshot = self.client.inspect()?;
-        install_snapshot(runtime, &self.client.config, &snapshot, observed_at_ms)
+        let entity_id = install_snapshot(runtime, &self.client.config, &snapshot, observed_at_ms)?;
+        self.entity_id = Some(entity_id.clone());
+        Ok(entity_id)
     }
+
+    pub fn dispatch_command_authorized(
+        &mut self,
+        runtime: &mut SmartHomeRuntime,
+        principal_id: AgentId,
+        request: RuntimeCommandToolRequest,
+        now_ms: u64,
+    ) -> Result<CommandResult, SonosError> {
+        if self.entity_id.as_ref() != Some(&request.entity_id) {
+            return Err(SonosError::InvalidCommandArguments {
+                command_type: request.command_type,
+                expected: "the installed Sonos media entity",
+            });
+        }
+        let command = sonos_command(&request)?;
+        let result = runtime.execute_command_tool(principal_id, request, now_ms)?;
+        execute_command(&mut self.client, command)?;
+        Ok(result)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+enum SonosCommand {
+    Playback(SonosPlaybackState),
+    Volume(u8),
+    Mute(bool),
+}
+
+fn sonos_command(request: &RuntimeCommandToolRequest) -> Result<SonosCommand, SonosError> {
+    match request.command_type {
+        CommandType::Media(MediaCommandType::SetPlaybackState) => {
+            let Value::Text(state) = &request.arguments else {
+                return invalid_command_arguments(
+                    request.command_type,
+                    "play, pause, or stop text",
+                );
+            };
+            match state.as_str() {
+                "play" => Ok(SonosCommand::Playback(SonosPlaybackState::Play)),
+                "pause" => Ok(SonosCommand::Playback(SonosPlaybackState::Pause)),
+                "stop" => Ok(SonosCommand::Playback(SonosPlaybackState::Stop)),
+                _ => invalid_command_arguments(request.command_type, "play, pause, or stop text"),
+            }
+        }
+        CommandType::Media(MediaCommandType::SetVolume) => {
+            let Value::Percentage(volume) = request.arguments else {
+                return invalid_command_arguments(request.command_type, "a percentage volume");
+            };
+            Ok(SonosCommand::Volume(volume))
+        }
+        CommandType::Media(MediaCommandType::SetMute) => {
+            let Value::Bool(muted) = request.arguments else {
+                return invalid_command_arguments(request.command_type, "a boolean mute state");
+            };
+            Ok(SonosCommand::Mute(muted))
+        }
+        command_type => Err(SonosError::UnsupportedCommand(command_type)),
+    }
+}
+
+fn invalid_command_arguments<T>(
+    command_type: CommandType,
+    expected: &'static str,
+) -> Result<T, SonosError> {
+    Err(SonosError::InvalidCommandArguments {
+        command_type,
+        expected,
+    })
+}
+
+fn execute_command<T: SonosTransport>(
+    client: &mut SonosClient<T>,
+    command: SonosCommand,
+) -> Result<(), SonosError> {
+    match command {
+        SonosCommand::Playback(expected) => {
+            if client.playback_state()? == expected {
+                return Ok(());
+            }
+            client.set_playback_state(&expected)?;
+            let actual = client.playback_state()?;
+            if actual != expected {
+                return Err(SonosError::PlaybackPostcondition { expected, actual });
+            }
+        }
+        SonosCommand::Volume(expected) => {
+            if client.volume()? == expected {
+                return Ok(());
+            }
+            client.set_volume(expected)?;
+            let actual = client.volume()?;
+            if actual != expected {
+                return Err(SonosError::VolumePostcondition { expected, actual });
+            }
+        }
+        SonosCommand::Mute(expected) => {
+            if client.muted()? == expected {
+                return Ok(());
+            }
+            client.set_muted(expected)?;
+            let actual = client.muted()?;
+            if actual != expected {
+                return Err(SonosError::MutePostcondition { expected, actual });
+            }
+        }
+    }
+    Ok(())
 }
 
 pub fn parse_device_description(bytes: &[u8]) -> Result<SonosDeviceDescription, SonosError> {
@@ -546,6 +839,17 @@ fn parse_boolean(value: &str) -> Result<bool, SonosError> {
     }
 }
 
+pub fn parse_playback_state(value: &str) -> SonosPlaybackState {
+    match value {
+        "PLAYING" => SonosPlaybackState::Play,
+        "PAUSED_PLAYBACK" => SonosPlaybackState::Pause,
+        "STOPPED" => SonosPlaybackState::Stop,
+        "TRANSITIONING" => SonosPlaybackState::Transitioning,
+        "NO_MEDIA_PRESENT" => SonosPlaybackState::NoMedia,
+        state => SonosPlaybackState::Other(state.to_ascii_lowercase()),
+    }
+}
+
 pub fn parse_didl_metadata(source: &str) -> Result<(Option<String>, Option<String>), SonosError> {
     if source.trim().is_empty() {
         return Ok((None, None));
@@ -609,8 +913,8 @@ pub fn install_snapshot(
     })?;
     let state = Value::Object(vec![
         (
-            "transport_state".to_string(),
-            Value::Text(snapshot.transport_state.clone()),
+            "playback_state".to_string(),
+            Value::Text(snapshot.playback_state.as_str().to_string()),
         ),
         ("volume".to_string(), Value::Percentage(snapshot.volume)),
         ("muted".to_string(), Value::Bool(snapshot.muted)),
@@ -648,11 +952,15 @@ pub fn install_snapshot(
             .room_name
             .clone()
             .unwrap_or_else(|| snapshot.device.friendly_name.clone()),
-        capabilities: vec![Capability::new(
-            CapabilityId::trusted("media.player_state"),
-            CapabilityMode::Observe,
-            ValueKind::Object,
-        )],
+        capabilities: vec![
+            Capability::new(
+                CapabilityId::trusted("media.player_state"),
+                CapabilityMode::Observe,
+                ValueKind::Object,
+            ),
+            Capability::media_playback(),
+            Capability::media_volume(),
+        ],
         state: Some(StateSnapshot {
             entity_id: entity_id.clone(),
             value: state,
@@ -662,7 +970,7 @@ pub fn install_snapshot(
             expires_at_ms: None,
             confidence: StateConfidence::Confirmed,
         }),
-        metadata: vec![Metadata::new("sonos.control_surface", "read_only_player")],
+        metadata: vec![Metadata::new("sonos.control_surface", "bounded_media")],
     })?;
     Ok(entity_id)
 }
@@ -708,9 +1016,6 @@ fn collect_descendants<'a>(root: &'a XmlElement, name: &str, output: &mut Vec<&'
 }
 
 fn resolve_control_url(setup_url: &str, control_url: &str) -> Result<String, SonosError> {
-    if control_url.starts_with("http://") {
-        return Ok(control_url.to_string());
-    }
     let setup = Url::parse(setup_url)?;
     let host = setup
         .host
@@ -719,13 +1024,75 @@ fn resolve_control_url(setup_url: &str, control_url: &str) -> Result<String, Son
     let authority = setup
         .port
         .map_or_else(|| host.to_string(), |port| format!("{host}:{port}"));
-    let path = if control_url.starts_with('/') {
+    let resolved = if control_url.starts_with("http://") {
         control_url.to_string()
     } else {
-        let directory = setup.path.rsplit_once('/').map_or("/", |(dir, _)| dir);
-        format!("{directory}/{control_url}")
+        let path = if control_url.starts_with('/') {
+            control_url.to_string()
+        } else {
+            let directory = setup.path.rsplit_once('/').map_or("/", |(dir, _)| dir);
+            format!("{directory}/{control_url}")
+        };
+        format!("http://{authority}{path}")
     };
-    Ok(format!("http://{authority}{path}"))
+    let endpoint = Url::parse(&resolved)?;
+    validate_local_ip_url(&endpoint, "control URL")?;
+    if endpoint.host != setup.host || endpoint.effective_port() != setup.effective_port() {
+        return Err(SonosError::Validation(
+            "control URL must share the configured setup authority".to_string(),
+        ));
+    }
+    Ok(resolved)
+}
+
+fn validate_local_ip_url(url: &Url, label: &str) -> Result<(), SonosError> {
+    if url.scheme != "http"
+        || url.userinfo.is_some()
+        || url.query.is_some()
+        || url.fragment.is_some()
+        || url.path.is_empty()
+        || url.effective_port() == Some(0)
+    {
+        return Err(SonosError::Validation(format!(
+            "{label} must be credential-free local HTTP with a path"
+        )));
+    }
+    let host = url
+        .host
+        .as_deref()
+        .ok_or_else(|| SonosError::Validation(format!("{label} is missing a host")))?;
+    let address = strip_ipv6_brackets(host)
+        .parse::<IpAddr>()
+        .map_err(|_| SonosError::Validation(format!("{label} host must be an IP literal")))?;
+    if !is_local_ip(address) {
+        return Err(SonosError::Validation(format!(
+            "{label} host must be private, link-local, or loopback"
+        )));
+    }
+    Ok(())
+}
+
+fn is_local_ip(address: IpAddr) -> bool {
+    match address {
+        IpAddr::V4(address) => {
+            address.is_private() || address.is_link_local() || address.is_loopback()
+        }
+        IpAddr::V6(address) => {
+            address.is_loopback()
+                || address.is_unicast_link_local()
+                || is_unique_local_ipv6(address)
+        }
+    }
+}
+
+fn is_unique_local_ipv6(address: Ipv6Addr) -> bool {
+    address.segments()[0] & 0xfe00 == 0xfc00
+}
+
+fn strip_ipv6_brackets(host: &str) -> &str {
+    host.strip_prefix('[')
+        .and_then(|host| host.strip_suffix(']'))
+        .unwrap_or(host)
 }
 
 fn protocol_identifier(kind: &str, value: &str) -> Result<ProtocolIdentifier, SonosError> {
@@ -780,35 +1147,23 @@ fn encode_request(
 }
 
 fn connect_tcp(host: &str, port: u16, timeout: Duration) -> Result<TcpStream, SonosError> {
-    let addresses = (host, port)
-        .to_socket_addrs()
-        .map_err(|error| SonosError::Io(error.to_string()))?
-        .collect::<Vec<_>>();
-    let mut last_error = None;
-    for address in addresses {
-        match TcpStream::connect_timeout(&address, timeout) {
-            Ok(stream) => {
-                stream
-                    .set_read_timeout(Some(timeout))
-                    .map_err(|error| SonosError::Io(error.to_string()))?;
-                stream
-                    .set_write_timeout(Some(timeout))
-                    .map_err(|error| SonosError::Io(error.to_string()))?;
-                return Ok(stream);
-            }
-            Err(error) => last_error = Some(error),
-        }
+    let address = strip_ipv6_brackets(host)
+        .parse::<IpAddr>()
+        .map_err(|_| SonosError::Validation("endpoint host must be an IP literal".to_string()))?;
+    if !is_local_ip(address) {
+        return Err(SonosError::Validation(
+            "endpoint host must be private, link-local, or loopback".to_string(),
+        ));
     }
-    Err(SonosError::Io(
-        last_error
-            .unwrap_or_else(|| {
-                io::Error::new(
-                    io::ErrorKind::AddrNotAvailable,
-                    "host resolved to no addresses",
-                )
-            })
-            .to_string(),
-    ))
+    let stream = TcpStream::connect_timeout(&SocketAddr::new(address, port), timeout)
+        .map_err(|error| SonosError::Io(error.to_string()))?;
+    stream
+        .set_read_timeout(Some(timeout))
+        .map_err(|error| SonosError::Io(error.to_string()))?;
+    stream
+        .set_write_timeout(Some(timeout))
+        .map_err(|error| SonosError::Io(error.to_string()))?;
+    Ok(stream)
 }
 
 fn read_bounded(reader: &mut dyn Read, maximum: usize) -> Result<Vec<u8>, SonosError> {
@@ -864,6 +1219,7 @@ fn decode_http_response(bytes: &[u8], maximum: usize) -> Result<Vec<u8>, SonosEr
 mod tests {
     use super::*;
     use smart_home_core::{CapabilityGrant, CapabilityGrantId, PrivilegeTier};
+    use std::collections::VecDeque;
     use std::net::{TcpListener, UdpSocket};
     use std::sync::atomic::{AtomicUsize, Ordering};
     use std::sync::{Arc, Mutex};
@@ -874,6 +1230,73 @@ mod tests {
     const POSITION: &str = r#"<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><u:GetPositionInfoResponse xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><TrackURI>x-sonos-http:track.mp3</TrackURI><TrackMetaData>&lt;DIDL-Lite xmlns:dc=&quot;http://purl.org/dc/elements/1.1/&quot;&gt;&lt;item&gt;&lt;dc:title&gt;Night Drive&lt;/dc:title&gt;&lt;dc:creator&gt;The Tests&lt;/dc:creator&gt;&lt;/item&gt;&lt;/DIDL-Lite&gt;</TrackMetaData></u:GetPositionInfoResponse></s:Body></s:Envelope>"#;
     const VOLUME: &str = r#"<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><u:GetVolumeResponse xmlns:u="urn:schemas-upnp-org:service:RenderingControl:1"><CurrentVolume>27</CurrentVolume></u:GetVolumeResponse></s:Body></s:Envelope>"#;
     const MUTE: &str = r#"<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><u:GetMuteResponse xmlns:u="urn:schemas-upnp-org:service:RenderingControl:1"><CurrentMute>0</CurrentMute></u:GetMuteResponse></s:Body></s:Envelope>"#;
+    const TRANSPORT_PAUSED: &str = r#"<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><u:GetTransportInfoResponse xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><CurrentTransportState>PAUSED_PLAYBACK</CurrentTransportState></u:GetTransportInfoResponse></s:Body></s:Envelope>"#;
+    const TRANSPORT_STOPPED: &str = r#"<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><u:GetTransportInfoResponse xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><CurrentTransportState>STOPPED</CurrentTransportState></u:GetTransportInfoResponse></s:Body></s:Envelope>"#;
+    const VOLUME_42: &str = r#"<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><u:GetVolumeResponse xmlns:u="urn:schemas-upnp-org:service:RenderingControl:1"><CurrentVolume>42</CurrentVolume></u:GetVolumeResponse></s:Body></s:Envelope>"#;
+    const MUTED: &str = r#"<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><u:GetMuteResponse xmlns:u="urn:schemas-upnp-org:service:RenderingControl:1"><CurrentMute>1</CurrentMute></u:GetMuteResponse></s:Body></s:Envelope>"#;
+
+    struct ScriptedTransport {
+        responses: VecDeque<Vec<u8>>,
+        calls: Arc<Mutex<Vec<String>>>,
+    }
+
+    impl SonosTransport for ScriptedTransport {
+        fn get(&mut self, endpoint: &str) -> Result<Vec<u8>, SonosError> {
+            self.calls.lock().unwrap().push(format!("GET {endpoint}"));
+            self.responses
+                .pop_front()
+                .ok_or_else(|| SonosError::Io("scripted response exhausted".to_string()))
+        }
+
+        fn soap(
+            &mut self,
+            endpoint: &str,
+            soap_action: &str,
+            body: &[u8],
+        ) -> Result<Vec<u8>, SonosError> {
+            self.calls.lock().unwrap().push(format!(
+                "SOAP {endpoint} {soap_action} {}",
+                String::from_utf8_lossy(body)
+            ));
+            self.responses
+                .pop_front()
+                .ok_or_else(|| SonosError::Io("scripted response exhausted".to_string()))
+        }
+    }
+
+    fn scripted_integration(
+        responses: &[&str],
+        calls: Arc<Mutex<Vec<String>>>,
+    ) -> SonosRuntimeIntegration<ScriptedTransport> {
+        let config = SonosConfig::new(
+            BridgeId::trusted("sonos:scripted"),
+            "http://127.0.0.1:1400/xml/device_description.xml",
+        )
+        .unwrap();
+        SonosRuntimeIntegration::new(SonosClient::new(
+            config,
+            ScriptedTransport {
+                responses: responses
+                    .iter()
+                    .map(|response| response.as_bytes().to_vec())
+                    .collect(),
+                calls,
+            },
+        ))
+    }
+
+    fn grant_all(runtime: &mut SmartHomeRuntime, principal: &AgentId) {
+        let _ = runtime.registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_all_smart_home(
+                CapabilityGrantId::trusted(format!("grant:{}", principal.as_str())),
+                principal.clone(),
+                PrivilegeTier::LowRisk,
+                "test",
+                1,
+            )
+            .with_expiry(1_000),
+        );
+    }
 
     #[test]
     fn parses_ssdp_description_and_player_state() {
@@ -889,8 +1312,10 @@ mod tests {
         assert_eq!(description.friendly_name, "Living Room");
         assert_eq!(description.room_name.as_deref(), Some("Living Room"));
         assert_eq!(
-            required_response_text(TRANSPORT.as_bytes(), "CurrentTransportState").unwrap(),
-            "PLAYING"
+            parse_playback_state(
+                &required_response_text(TRANSPORT.as_bytes(), "CurrentTransportState").unwrap()
+            ),
+            SonosPlaybackState::Play
         );
         assert_eq!(parse_percentage("27").unwrap(), 27);
         assert!(!parse_boolean("0").unwrap());
@@ -904,6 +1329,174 @@ mod tests {
                 Some("The Tests".to_string())
             )
         );
+    }
+
+    #[test]
+    fn configuration_rejects_dns_public_and_cross_origin_control_urls() {
+        for setup_url in [
+            "http://speaker.local:1400/xml/device_description.xml",
+            "http://203.0.113.9:1400/xml/device_description.xml",
+            "http://127.0.0.1:0/xml/device_description.xml",
+        ] {
+            assert!(matches!(
+                SonosConfig::new(BridgeId::trusted("sonos:invalid"), setup_url),
+                Err(SonosError::Validation(_))
+            ));
+        }
+        assert!(matches!(
+            resolve_control_url(
+                "http://127.0.0.1:1400/xml/device_description.xml",
+                "http://127.0.0.2:1400/MediaRenderer/AVTransport/Control"
+            ),
+            Err(SonosError::Validation(_))
+        ));
+    }
+
+    #[test]
+    fn authorized_commands_are_fixed_idempotent_verified_and_denied_before_io() {
+        let calls = Arc::new(Mutex::new(Vec::new()));
+        let mut integration = scripted_integration(
+            &[
+                SETUP,
+                TRANSPORT,
+                POSITION,
+                VOLUME,
+                MUTE,
+                TRANSPORT,
+                TRANSPORT,
+                "",
+                TRANSPORT_PAUSED,
+                VOLUME,
+                "",
+                VOLUME_42,
+                MUTE,
+                "",
+                MUTED,
+                TRANSPORT_PAUSED,
+                "",
+                TRANSPORT_STOPPED,
+            ],
+            Arc::clone(&calls),
+        );
+        let mut runtime = SmartHomeRuntime::new();
+        let principal = AgentId::trusted("agent:sonos-command");
+        grant_all(&mut runtime, &principal);
+        let entity_id = integration
+            .inspect_and_install_authorized(&mut runtime, principal.clone(), 10)
+            .unwrap();
+
+        for request in [
+            RuntimeCommandToolRequest::new(
+                entity_id.clone(),
+                CommandType::Media(MediaCommandType::SetPlaybackState),
+                Value::Text("play".to_string()),
+            ),
+            RuntimeCommandToolRequest::new(
+                entity_id.clone(),
+                CommandType::Media(MediaCommandType::SetPlaybackState),
+                Value::Text("pause".to_string()),
+            ),
+            RuntimeCommandToolRequest::new(
+                entity_id.clone(),
+                CommandType::Media(MediaCommandType::SetVolume),
+                Value::Percentage(42),
+            ),
+            RuntimeCommandToolRequest::new(
+                entity_id.clone(),
+                CommandType::Media(MediaCommandType::SetMute),
+                Value::Bool(true),
+            ),
+            RuntimeCommandToolRequest::new(
+                entity_id.clone(),
+                CommandType::Media(MediaCommandType::SetPlaybackState),
+                Value::Text("stop".to_string()),
+            ),
+        ] {
+            assert!(integration
+                .dispatch_command_authorized(&mut runtime, principal.clone(), request, 20)
+                .unwrap()
+                .is_accepted());
+        }
+
+        let captured = calls.lock().unwrap().clone();
+        assert_eq!(captured.len(), 18);
+        assert!(captured[7].contains("#Pause\"") && captured[7].contains("<InstanceID>0"));
+        assert!(
+            captured[10].contains("#SetVolume\"")
+                && captured[10].contains("<DesiredVolume>42</DesiredVolume>")
+        );
+        assert!(
+            captured[13].contains("#SetMute\"")
+                && captured[13].contains("<DesiredMute>1</DesiredMute>")
+        );
+        assert!(captured[16].contains("#Stop\"") && captured[16].contains("<InstanceID>0"));
+
+        let before_denial = calls.lock().unwrap().len();
+        assert!(matches!(
+            integration.dispatch_command_authorized(
+                &mut runtime,
+                AgentId::trusted("agent:sonos-denied"),
+                RuntimeCommandToolRequest::new(
+                    entity_id,
+                    CommandType::Media(MediaCommandType::SetPlaybackState),
+                    Value::Text("play".to_string()),
+                ),
+                30,
+            ),
+            Err(SonosError::Runtime(_))
+        ));
+        assert_eq!(calls.lock().unwrap().len(), before_denial);
+    }
+
+    #[test]
+    fn command_postconditions_and_allowlist_fail_closed() {
+        let calls = Arc::new(Mutex::new(Vec::new()));
+        let mut integration = scripted_integration(
+            &[
+                SETUP, TRANSPORT, POSITION, VOLUME, MUTE, TRANSPORT, "", TRANSPORT,
+            ],
+            Arc::clone(&calls),
+        );
+        let mut runtime = SmartHomeRuntime::new();
+        let principal = AgentId::trusted("agent:sonos-postcondition");
+        grant_all(&mut runtime, &principal);
+        let entity_id = integration
+            .inspect_and_install_authorized(&mut runtime, principal.clone(), 10)
+            .unwrap();
+
+        assert!(matches!(
+            integration.dispatch_command_authorized(
+                &mut runtime,
+                principal.clone(),
+                RuntimeCommandToolRequest::new(
+                    entity_id.clone(),
+                    CommandType::Media(MediaCommandType::SetPlaybackState),
+                    Value::Text("pause".to_string()),
+                ),
+                20,
+            ),
+            Err(SonosError::PlaybackPostcondition {
+                expected: SonosPlaybackState::Pause,
+                actual: SonosPlaybackState::Play,
+            })
+        ));
+        let before_unsupported = calls.lock().unwrap().len();
+        assert!(matches!(
+            integration.dispatch_command_authorized(
+                &mut runtime,
+                principal,
+                RuntimeCommandToolRequest::new(
+                    entity_id,
+                    CommandType::Media(MediaCommandType::PlayNext),
+                    Value::Null,
+                ),
+                30,
+            ),
+            Err(SonosError::UnsupportedCommand(CommandType::Media(
+                MediaCommandType::PlayNext
+            )))
+        ));
+        assert_eq!(calls.lock().unwrap().len(), before_unsupported);
     }
 
     #[test]
@@ -1015,6 +1608,14 @@ mod tests {
             entity.capabilities[0].capability_id.as_str(),
             "media.player_state"
         );
+        assert!(entity.capabilities.iter().any(|capability| {
+            capability.capability_id.as_str() == "media.playback"
+                && capability.mode == CapabilityMode::ObserveAndCommand
+        }));
+        assert!(entity.capabilities.iter().any(|capability| {
+            capability.capability_id.as_str() == "media.volume"
+                && capability.mode == CapabilityMode::ObserveAndCommand
+        }));
         udp_handle.join().unwrap();
         http_handle.join().unwrap();
         let requests = requests.lock().unwrap();
@@ -1023,5 +1624,75 @@ mod tests {
         assert!(requests[2].contains("GetPositionInfo"));
         assert!(requests[3].contains("GetVolume"));
         assert!(requests[4].contains("GetMute"));
+    }
+
+    #[test]
+    fn loopback_http_pause_uses_fixed_soap_action_and_verifies_readback() {
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let address = listener.local_addr().unwrap();
+        let requests = Arc::new(Mutex::new(Vec::new()));
+        let server_requests = Arc::clone(&requests);
+        let action_ok = r#"<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><u:PauseResponse xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"/></s:Body></s:Envelope>"#;
+        let server = thread::spawn(move || {
+            for body in [
+                SETUP,
+                TRANSPORT,
+                POSITION,
+                VOLUME,
+                MUTE,
+                TRANSPORT,
+                action_ok,
+                TRANSPORT_PAUSED,
+            ] {
+                let (mut stream, _) = listener.accept().unwrap();
+                let mut request = [0u8; 4096];
+                let read = stream.read(&mut request).unwrap();
+                server_requests
+                    .lock()
+                    .unwrap()
+                    .push(String::from_utf8_lossy(&request[..read]).to_string());
+                write!(
+                    stream,
+                    "HTTP/1.1 200 OK\r\nContent-Type: text/xml\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{}",
+                    body.len(),
+                    body
+                )
+                .unwrap();
+            }
+        });
+
+        let config = SonosConfig::new(
+            BridgeId::trusted("sonos:loopback-command"),
+            format!("http://{address}/xml/device_description.xml"),
+        )
+        .unwrap();
+        let mut integration =
+            SonosRuntimeIntegration::new(SonosClient::new(config, SonosLanTransport::default()));
+        let mut runtime = SmartHomeRuntime::new();
+        let principal = AgentId::trusted("agent:sonos-loopback-command");
+        grant_all(&mut runtime, &principal);
+        let entity_id = integration
+            .inspect_and_install_authorized(&mut runtime, principal.clone(), 10)
+            .unwrap();
+        integration
+            .dispatch_command_authorized(
+                &mut runtime,
+                principal,
+                RuntimeCommandToolRequest::new(
+                    entity_id,
+                    CommandType::Media(MediaCommandType::SetPlaybackState),
+                    Value::Text("pause".to_string()),
+                ),
+                20,
+            )
+            .unwrap();
+
+        server.join().unwrap();
+        let requests = requests.lock().unwrap();
+        assert_eq!(requests.len(), 8);
+        assert!(requests[5].contains("#GetTransportInfo\""));
+        assert!(requests[6].contains("#Pause\""));
+        assert!(requests[6].contains("<InstanceID>0</InstanceID>"));
+        assert!(requests[7].contains("#GetTransportInfo\""));
     }
 }

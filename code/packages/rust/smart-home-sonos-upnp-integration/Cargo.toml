@@ -2,7 +2,7 @@
 name = "smart-home-sonos-upnp-integration"
 version = "0.1.0"
 edition = "2021"
-description = "Sonos UPnP discovery and read-only player inspection for the smart-home runtime"
+description = "Bounded Sonos UPnP discovery, telemetry, and media control for the smart-home runtime"
 license = "MIT"
 
 [dependencies]

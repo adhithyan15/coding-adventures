@@ -2782,6 +2782,39 @@ This closes the Roku control prerequisite made executable by the Kodi slice
 while preserving explicit endpoint, authorization, lifetime, and secret
 boundaries.
 
+## Current Sonos UPnP Media Control Breadth Slice
+
+The next breadth slice applies the completed D23 media command contract to the
+existing Sonos ZonePlayer UPnP runtime without opening topology, grouping, or
+content-management surfaces:
+
+- Explicit configuration accepts one credential-free HTTP setup URL whose host
+  is a private, link-local, or loopback IP literal. Device-advertised
+  AVTransport and RenderingControl endpoints must remain on that exact
+  authority, and all requests, responses, and timeouts stay bounded and
+  connection-scoped.
+- Existing AVTransport, position, master-volume, and master-mute inspection is
+  normalized into D23 playback, volume, mute, and track facts. D23 read
+  authorization still runs before network I/O.
+- Low-risk D23 media authorization runs before native command I/O and maps only
+  play, pause, stop, master volume, and master mute to the standardized fixed
+  UPnP actions. Exact current values make commands idempotent, and every issued
+  mutation is followed by the corresponding native getter to prove the
+  requested postcondition.
+- The runtime accepts no credentials and exposes no arbitrary SOAP action,
+  GENA subscription, topology or group mutation, browse, queue mutation, seek,
+  next/previous, media transfer, cloud control, public endpoint, DNS
+  resolution, or long-lived connection.
+
+The action and argument contracts come from the OCF-hosted standardized UPnP
+AVTransport and RenderingControl specifications:
+https://openconnectivity.org/wp-content/uploads/2015/11/UPnP-av-AVTransport-Service.pdf
+and
+https://openconnectivity.org/wp-content/uploads/2015/11/UPnP-av-RenderingControl-v3-Service-20101231.pdf.
+
+This broadens common local multi-room audio telemetry and low-risk control while
+preserving explicit endpoint, authorization, lifetime, and secret boundaries.
+
 The protocol- and vendor-specific backlog below remains valid after these
 breadth steps:
 
