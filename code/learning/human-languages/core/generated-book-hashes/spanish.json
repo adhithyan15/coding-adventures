@@ -3228,6 +3228,58 @@
         "ES-C319-otro-y-poco"
       ],
       "tex": "spanish/book/chapters/ch319-repaso-la-superficie.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 320,
+      "sourceHash": "fnv1a64:3967fc8681cadadf",
+      "lessonIds": [
+        "ES-C320-favor",
+        "ES-C320-molestia",
+        "ES-C320-pena",
+        "ES-C320-suerte",
+        "ES-C320-culpa"
+      ],
+      "tex": "spanish/book/chapters/ch320-favor-y-culpa.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 321,
+      "sourceHash": "fnv1a64:d588396578ab2b77",
+      "lessonIds": [
+        "ES-C321-placer",
+        "ES-C321-razon",
+        "ES-C321-respeto",
+        "ES-C321-paciencia",
+        "ES-C321-consejo"
+      ],
+      "tex": "spanish/book/chapters/ch321-placer-y-consejo.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 322,
+      "sourceHash": "fnv1a64:61ed3012fb95b1ac",
+      "lessonIds": [
+        "ES-C322-anoche",
+        "ES-C322-semana",
+        "ES-C322-temprano",
+        "ES-C322-enseguida",
+        "ES-C322-todavia"
+      ],
+      "tex": "spanish/book/chapters/ch322-anoche-y-todavia.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 323,
+      "sourceHash": "fnv1a64:6c5a1974f01347ed",
+      "lessonIds": [
+        "ES-C323-ya",
+        "ES-C323-entonces",
+        "ES-C323-antes",
+        "ES-C323-despues",
+        "ES-C323-mientras"
+      ],
+      "tex": "spanish/book/chapters/ch323-antes-y-despues.tex"
     }
   ]
 }

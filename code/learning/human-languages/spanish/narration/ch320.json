@@ -1,0 +1,723 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 320,
+  "title": "The Words Behind Please and Sorry",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:070acfb9284810a0",
+  "lessons": [
+    {
+      "id": "ES-C320-favor",
+      "sequence": 5120,
+      "title": "el favor — the word you have been saying for a long time",
+      "headword": "el favor",
+      "romanization": "el favor",
+      "gloss": "a favour, a good turn — Latin favere, to be well disposed toward somebody; English favour, favourite and favourable are all the same word",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:55a4778fe2d33b8b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say another book, then a little water. (Otro libro; poca agua.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "por favor — this word is already inside it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fa-VOR, the stress on the second beat. The v is soft, closer to a b made without closing the lips. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el favor — \"a favour,\" a good turn done for somebody."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin favēre meant to be well disposed toward — to be on someone's side. The noun favor was what that goodwill looked like when it did something."
+            },
+            {
+              "kind": "speech",
+              "text": "You have been carrying it without opening it. Por favor is por plus favor: for a favour. Every time you have said please in Spanish you have been saying as a good turn to me. Now the second half stands on its own: un favor is a thing you ask for, and el favor is the one being asked."
+            },
+            {
+              "kind": "speech",
+              "text": "English has it three ways over: a favour is the good turn, your favourite is what your goodwill lands on, and favourable weather is weather on your side."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first of five courtesy words that name what politeness is actually made of."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el favor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el favor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un favor, por favor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un favor, por favor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "otro favor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *otro favor*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did favēre mean? (To be well disposed toward somebody.) And what is hiding inside por favor? (Favor — a good turn.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C320-molestia",
+      "sequence": 5130,
+      "title": "la molestia — the weight you are asked to carry",
+      "headword": "la molestia",
+      "romanization": "la molestia",
+      "gloss": "trouble, bother — Latin molestia from moles, a heavy mass; English molecule is the same mass made small",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:82b2545554a07d0b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is the second half of por favor? (Favor.) And what does poco measure? (A little of something.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mo-LES-tia, the stress in the middle. The s and t run together with no vowel between them. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la molestia — \"the trouble,\" \"the bother.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Underneath it is Latin mōlēs: a mass, a heavy bulk, the word Romans used for a breakwater or a great pile of stone. Something molestus was something with that weight on it. Molestia is the weight itself."
+            },
+            {
+              "kind": "speech",
+              "text": "So a bother in Spanish is not an irritation. It is a load — a thing somebody has to carry for you. That is why no es molestia, \"it is no trouble,\" is the warm answer to thanks: you are saying nothing was carried."
+            },
+            {
+              "kind": "speech",
+              "text": "English kept the mass and shrank it. A molecule is mōlēs with a little-ending on the end: a tiny mass. The pile of stone and the smallest piece of matter are the same Latin word at two sizes."
+            },
+            {
+              "kind": "speech",
+              "text": "Molestia ends in -a and takes la, like la casa and la mesa."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The word that lets you tell somebody they cost you nothing."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la molestia",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la molestia*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "no es molestia",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *no es molestia*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un favor — no es molestia",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un favor — no es molestia*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was a mōlēs? (A heavy mass, a pile of stone.) Which English word is that same mass made tiny? (Molecule.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C320-pena",
+      "sequence": 5140,
+      "title": "la pena — the price a feeling costs",
+      "headword": "la pena",
+      "romanization": "la pena",
+      "gloss": "sorrow, a shame — Latin poena, a penalty; English pain, penalty and subpoena all come off it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1b86e1e1dcc6a19f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say a favour, then it is no trouble. (Un favor; no es molestia.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "PE-na, two beats, stress on the first. A plain n, not the ñ. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la pena — \"sorrow,\" and also \"a shame,\" and also \"a penalty.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin poena was a price: the payment a wrongdoer owed. Greek lent it to Latin, where it had meant the blood-price paid to a dead man's family. It has been about paying from the beginning."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish kept both ends. La pena is still the legal penalty, and it is also the ache — because sorrow is what a loss costs you."
+            },
+            {
+              "kind": "speech",
+              "text": "English took it three separate times. Pain came the long way through French and softened into feeling. Penal and penalty came straight off the Latin and stayed legal. And a subpoena is sub poena, under penalty: a summons that names the price of not coming."
+            },
+            {
+              "kind": "speech",
+              "text": "¡Qué pena! — \"what a shame\" — is the everyday one. You will hear it for a cancelled plan and for a real grief, and the word does not change size."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One word that reaches from a courtroom to a friend's bad news."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la pena",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la pena*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "¡Qué pena!",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *¡Qué pena!*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "no es molestia — es una pena",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *no es molestia — es una pena*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did poena mean first? (A price paid, a penalty.) What does sub poena mean, word for word? (Under penalty.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C320-suerte",
+      "sequence": 5150,
+      "title": "la suerte — the token you drew",
+      "headword": "la suerte",
+      "romanization": "la suerte",
+      "gloss": "luck — Latin sors, sortem, a token drawn from a jar; English sort, sorcery and consort are all lots being drawn",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ec367e8d8ad029eb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is a molestia? (A trouble, a weight carried.) And what did poena mean before it meant sorrow? (A penalty, a price.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "SUER-te. The ue is one gliding sound, as in bueno, and the r is a single tap. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la suerte — \"luck.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin sors, and in its other form sortem, was a physical object: a marked token dropped into a jar and shaken out. Rome settled questions that way. Your sors was the token that came out for you, and from there it became your lot, your share, your fate."
+            },
+            {
+              "kind": "speech",
+              "text": "English built a surprising amount on that jar. To sort things is to put each into the pile its token names. A sorcerer is a sortiarius, one who works by casting lots. Your consort is con plus sors: the person whose lot is drawn with yours. A soldier's sortie is a going-out on whatever lot fell."
+            },
+            {
+              "kind": "speech",
+              "text": "The o in sortem broke into ue on the way to Spanish, the same break that turns bueno and puerta out of bonus and porta."
+            },
+            {
+              "kind": "speech",
+              "text": "¡Buena suerte! is the wish. It agrees: buena, because suerte takes la."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A wish you can hand somebody at the door."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la suerte",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la suerte*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "¡buena suerte!",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *¡buena suerte!*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qué pena — buena suerte",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qué pena — buena suerte*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was a sors, as an object? (A token drawn from a jar.) Why is it buena suerte and not bueno? (Suerte takes la.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C320-culpa",
+      "sequence": 5160,
+      "title": "la culpa — five words for what politeness is made of",
+      "headword": "la culpa",
+      "romanization": "la culpa",
+      "gloss": "fault, blame — Latin culpa; English culprit and culpable are the same word, and mea culpa was never translated at all",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6c06ada703a0ed82",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say what a shame, then good luck. (¡Qué pena!; ¡buena suerte!)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "CUL-pa. The c is hard, as in cat, and the u is a full round vowel. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la culpa — \"the fault,\" \"the blame.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin culpa meant exactly this, and it came into Spanish unchanged — five letters carried two thousand years without losing one."
+            },
+            {
+              "kind": "speech",
+              "text": "English never quite translated it. Mea culpa, my fault, is still said in Latin. A culprit is the one the fault attaches to. Something culpable is something the fault can be laid on, and to exculpate is to carry the fault back out of somebody."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish does not say I am at fault. It says la culpa es mía — the fault is mine — or shorter, es mi culpa. The fault is a thing that belongs to somebody, and you name whose. That is why the answer that clears a person is no es tu culpa: not a denial of the trouble, a return of the object."
+            },
+            {
+              "kind": "speech",
+              "text": "Set beside lo siento and perdón, which you already have: those two say what you feel and what you ask for. Culpa says where the thing sits."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five words that name the parts of courtesy: the good turn, the weight, the cost, the token drawn, and the fault. None of them is a phrase you repeat. Each one is a thing you can put in a sentence."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la culpa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la culpa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "es mi culpa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *es mi culpa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "no es tu culpa — buena suerte",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *no es tu culpa — buena suerte*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How does Spanish say it is my fault? (Es mi culpa — the fault is mine.) Which English word is culpa with a person attached? (Culprit.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
