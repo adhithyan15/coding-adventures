@@ -144,6 +144,26 @@ describe("validate", () => {
     expect(issues.some((i) => i.code === "uncovered-glyphs")).toBe(false);
   });
 
+  it("checks only target-script glyphs and resolves canonical compositions", () => {
+    const arabic: ScriptData = {
+      script: "arabic", name: "Arabic", font: "f", direction: "rtl", system: "abjad",
+      letters: [{ glyph: "ا", sound: "ā", role: "consonant", components: [], strokeOrder: [], strokeOrderNote: "" }],
+      marks: [
+        { mark: "ٔ", sound: "ʾ", role: "other", attachesAs: "above" },
+        { mark: "ٕ", sound: "ʾi", role: "other", attachesAs: "below" },
+        { mark: "ٓ", sound: "ʾā", role: "diacritic", attachesAs: "maddah above" },
+      ],
+      complete: true,
+    };
+    const lessons = [
+      good("arabic", "AR-ROM", "GREETING-HELLO", { headword: "as-salāmu", romanization: "" }),
+      good("arabic", "AR-COMPOSED", "COURTESY-THANKS", { headword: "أ إ آ", romanization: "a i ā" }),
+    ];
+    const issues = validate({ taxonomy, lessons, scripts: { arabic } });
+    expect(issues.some((issue) => issue.code === "uncovered-glyphs")).toBe(false);
+    expect(hasErrors(issues)).toBe(false);
+  });
+
   it("handles a logographic script (Chinese characters + tones, no marks/forms)", () => {
     const chinese: ScriptData = {
       script: "chinese", name: "Chinese (Simplified)", font: "f", direction: "ltr", system: "logographic",
