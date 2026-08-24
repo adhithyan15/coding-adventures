@@ -1,8 +1,8 @@
 {
   "language": "persian",
   "lessonCount": 71,
-  "atomMeasurableLessons": 66,
-  "atomMeasurementBlindLessons": 5,
+  "atomMeasurableLessons": 67,
+  "atomMeasurementBlindLessons": 4,
   "durationViolations": 0,
   "atomLessonSpikes": 2,
   "atomChapterSpikes": 3,
@@ -75,7 +75,7 @@
     {
       "language": "persian",
       "kind": "measurement-blind",
-      "count": 5,
+      "count": 4,
       "unit": "lesson(s)",
       "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
     }

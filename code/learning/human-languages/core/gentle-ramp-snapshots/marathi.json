@@ -1,8 +1,8 @@
 {
   "language": "marathi",
   "lessonCount": 89,
-  "atomMeasurableLessons": 46,
-  "atomMeasurementBlindLessons": 43,
+  "atomMeasurableLessons": 61,
+  "atomMeasurementBlindLessons": 28,
   "durationViolations": 0,
   "atomLessonSpikes": 1,
   "atomChapterSpikes": 1,
@@ -68,7 +68,7 @@
     {
       "language": "marathi",
       "kind": "measurement-blind",
-      "count": 43,
+      "count": 28,
       "unit": "lesson(s)",
       "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
     }
