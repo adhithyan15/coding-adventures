@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "id": "validation/toolchain-unsupported",
+  "domain": "validation",
+  "summary": "An unregistered implementation language reports the stable toolchain diagnostic.",
+  "platforms": [
+    "linux"
+  ],
+  "capabilities": [
+    "validation"
+  ],
+  "workspace": {
+    "files": []
+  },
+  "input": {
+    "operation": "validation",
+    "options": {
+      "platform": "linux",
+      "checks": [
+        "toolchain_support"
+      ],
+      "packages": [
+        {
+          "name": "brainfuck/demo",
+          "rel_path": "code/packages/brainfuck/demo",
+          "language": "brainfuck",
+          "build_file_state": "present",
+          "build_references": [],
+          "is_starlark": false,
+          "declared_srcs": [],
+          "declared_deps": []
+        }
+      ],
+      "dependency_edges": []
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "validation/toolchain-unsupported",
+    "domain": "validation",
+    "outcome": "error",
+    "result": {
+      "valid": false,
+      "diagnostic_codes": [
+        "TOOLCHAIN_UNSUPPORTED"
+      ]
+    },
+    "diagnostics": [
+      {
+        "code": "TOOLCHAIN_UNSUPPORTED",
+        "severity": "error",
+        "path": "code/packages/brainfuck/demo",
+        "package": "brainfuck/demo",
+        "details": {
+          "language": "brainfuck"
+        }
+      }
+    ]
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}

@@ -35,7 +35,7 @@ emerging OCaml lane. It records front-door and shared-engine state but contains
 no executable commands. Every adapter is currently marked missing, so a valid
 inventory is not reported as conformance success.
 
-The 69-case bootstrap corpus covers every process-free v1 domain:
+The 75-case bootstrap corpus covers every process-free v1 domain:
 
 - canonical package and program membership, language-registry classification
   with paired C#, F#, Haskell, Java, and Kotlin package/program identities, a
@@ -65,9 +65,11 @@ The 69-case bootstrap corpus covers every process-free v1 domain:
   fuel, recursion, aggregate, range, scalar-value, load-graph, and output
   metering oracles;
 - deterministic prerequisite-closed sharding and invalid input handling;
-- normalized BUILD-file validation snapshots, absent Lua `BUILD_windows`
-  sibling-closure parity, and the complete toolchain registry, including
-  OCaml; and
+- normalized BUILD-file validation snapshots with independent oracles for
+  presence, local references, isolated prerequisites, Starlark declarations,
+  package roots, manifests, toolchains, and path safety, plus absent Lua
+  `BUILD_windows` sibling-closure parity and the complete toolchain registry,
+  including OCaml; and
 - process-free CLI exit-decision classification.
 
 The outer envelope and build-plan payload use `schema.json`,
@@ -243,9 +245,8 @@ stable error codes. `validate-corpus` also performs two-phase validation and
 bounded in-memory decoding of pure fixture workspaces so invalid base64, path
 aliases, collisions, prefix conflicts, and aggregate size violations fail
 without creating a filesystem root. Domain checks verify reference integrity,
-framed hashes, cache state, inline Starlark loads, shard closure/cost,
-BUILD-file validation diagnostics, complete toolchain maps, and CLI exit
-decisions.
+framed hashes, cache state, inline Starlark loads, shard closure/cost, all nine
+BUILD-file validation checks, complete toolchain maps, and CLI exit decisions.
 
 ## Security boundary
 
@@ -293,7 +294,7 @@ The corpus now closes all process-free v1 domains:
 - diff selection and hashing/cache;
 - Starlark evaluation and structured-command extraction;
 - prerequisite-closed sharding;
-- BUILD-file validation and toolchain detection; and
+- nine-check BUILD-file validation and toolchain detection; and
 - CLI exit-decision semantics.
 
 Execution now has a closed data model and authority policy, but no execution

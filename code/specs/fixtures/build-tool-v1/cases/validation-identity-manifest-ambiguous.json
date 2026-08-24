@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "id": "validation/identity-manifest-ambiguous",
+  "domain": "validation",
+  "summary": "Multiple canonical roots and manifests produce stable ambiguity diagnostics.",
+  "platforms": [
+    "linux"
+  ],
+  "capabilities": [
+    "validation"
+  ],
+  "workspace": {
+    "files": []
+  },
+  "input": {
+    "operation": "validation",
+    "options": {
+      "platform": "linux",
+      "checks": [
+        "identity_uniqueness",
+        "manifest_uniqueness"
+      ],
+      "packages": [
+        {
+          "name": "python/demo",
+          "rel_path": "code/packages/python/demo",
+          "language": "python",
+          "build_file_state": "present",
+          "build_references": [],
+          "is_starlark": false,
+          "declared_srcs": [],
+          "declared_deps": [],
+          "identity_candidates": [
+            "code/packages/python/demo",
+            "code/programs/python/demo"
+          ],
+          "manifest_candidates": [
+            "code/packages/python/demo/package.json",
+            "code/packages/python/demo/pyproject.toml"
+          ]
+        }
+      ],
+      "dependency_edges": []
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "validation/identity-manifest-ambiguous",
+    "domain": "validation",
+    "outcome": "error",
+    "result": {
+      "valid": false,
+      "diagnostic_codes": [
+        "IDENTITY_AMBIGUOUS",
+        "MANIFEST_AMBIGUOUS"
+      ]
+    },
+    "diagnostics": [
+      {
+        "code": "IDENTITY_AMBIGUOUS",
+        "severity": "error",
+        "path": "code/packages/python/demo",
+        "package": "python/demo",
+        "details": {
+          "candidate_roots": [
+            "code/packages/python/demo",
+            "code/programs/python/demo"
+          ]
+        }
+      },
+      {
+        "code": "MANIFEST_AMBIGUOUS",
+        "severity": "error",
+        "path": "code/packages/python/demo",
+        "package": "python/demo",
+        "details": {
+          "candidate_manifests": [
+            "code/packages/python/demo/package.json",
+            "code/packages/python/demo/pyproject.toml"
+          ]
+        }
+      }
+    ]
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}

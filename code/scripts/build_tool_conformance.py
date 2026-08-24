@@ -998,9 +998,9 @@ def _validate_pure_case_semantics(
             _toolchain_for_language(by_name[name]["language"])
     elif domain == "validation":
         by_name = _package_index(options["packages"])
-        lua_windows_sibling_parity = (
-            "lua_windows_sibling_parity" in options["checks"]
-        )
+        checks = set(options["checks"])
+        lua_windows_sibling_parity = "lua_windows_sibling_parity" in checks
+        starlark_declarations = "starlark_declarations" in checks
         _validate_unique_paths(
             [package["rel_path"] for package in by_name.values()],
             "CASE_NESTED_PATH_UNSAFE",
@@ -1008,12 +1008,26 @@ def _validate_pure_case_semantics(
         _validate_known_edges(options["dependency_edges"], set(by_name))
         for package in by_name.values():
             for pattern in package["declared_srcs"]:
-                if error := portable_glob_error(pattern):
+                if not starlark_declarations and (
+                    error := portable_glob_error(pattern)
+                ):
                     raise ConformanceError(
                         "CASE_NESTED_GLOB_UNSAFE",
                         f"unsafe declared source {pattern!r}: {error}",
                     )
-            reference_fields = ["build_references", "declared_deps"]
+            for field in (
+                "identity_candidates",
+                "manifest_candidates",
+                "validation_paths",
+            ):
+                if field in package and package[field] != sorted(package[field]):
+                    raise ConformanceError(
+                        "CASE_VALIDATION_SNAPSHOT_INCONSISTENT",
+                        f"{field} must be sorted",
+                    )
+            reference_fields = ["build_references"]
+            if not starlark_declarations:
+                reference_fields.append("declared_deps")
             if lua_windows_sibling_parity:
                 reference_fields.extend(
                     (
@@ -1363,9 +1377,35 @@ def _expected_validation_diagnostics(
     options: dict[str, Any],
 ) -> list[dict[str, Any]]:
     checks = set(options["checks"])
+    packages = _package_index(options["packages"])
+    prerequisites: dict[str, set[str]] = {name: set() for name in packages}
+    for prerequisite, dependent in options["dependency_edges"]:
+        prerequisites[dependent].add(prerequisite)
+
+    closure_cache: dict[str, frozenset[str]] = {}
+
+    def prerequisite_closure(name: str) -> frozenset[str]:
+        if name in closure_cache:
+            return closure_cache[name]
+        result: set[str] = set()
+        pending = list(prerequisites[name])
+        while pending:
+            prerequisite = pending.pop()
+            if prerequisite in result:
+                continue
+            result.add(prerequisite)
+            pending.extend(prerequisites[prerequisite])
+        closure = frozenset(result)
+        closure_cache[name] = closure
+        return closure
+
+    def build_path(package: dict[str, Any]) -> str:
+        filename = "BUILD_windows" if options["platform"] == "windows" else "BUILD"
+        return f"{package['rel_path']}/{filename}"
+
     diagnostics: list[dict[str, Any]] = []
     if "build_file_presence" in checks:
-        for package in options["packages"]:
+        for package in packages.values():
             state = package["build_file_state"]
             if state == "present":
                 continue
@@ -1379,8 +1419,135 @@ def _expected_validation_diagnostics(
                     "path": package["rel_path"],
                 }
             )
+    if "local_dependency_declarations" in checks:
+        for name, package in packages.items():
+            undeclared = sorted(
+                set(package["build_references"])
+                - {name}
+                - set(prerequisite_closure(name))
+            )
+            if undeclared:
+                diagnostics.append(
+                    {
+                        "code": "LOCAL_DEPENDENCY_UNDECLARED",
+                        "severity": "error",
+                        "path": build_path(package),
+                        "package": name,
+                        "details": {"undeclared_references": undeclared},
+                    }
+                )
+    if "standalone_prerequisites" in checks:
+        standalone_languages = {"perl", "python", "typescript"}
+        for name, package in packages.items():
+            if package["language"] not in standalone_languages:
+                continue
+            missing = sorted(
+                set(prerequisite_closure(name)) - set(package["build_references"])
+            )
+            if missing:
+                diagnostics.append(
+                    {
+                        "code": "STANDALONE_PREREQUISITE_MISSING",
+                        "severity": "error",
+                        "path": build_path(package),
+                        "package": name,
+                        "details": {"missing_prerequisites": missing},
+                    }
+                )
+    if "starlark_declarations" in checks:
+        for name, package in packages.items():
+            if not package["is_starlark"]:
+                continue
+            invalid_dependencies = sorted(
+                dependency
+                for dependency in package["declared_deps"]
+                if dependency not in packages
+                or dependency not in prerequisite_closure(name)
+            )
+            invalid_sources = sorted(
+                pattern
+                for pattern in package["declared_srcs"]
+                if portable_glob_error(pattern) is not None
+            )
+            if invalid_dependencies:
+                diagnostics.append(
+                    {
+                        "code": "STARLARK_DEPENDENCY_INVALID",
+                        "severity": "error",
+                        "path": build_path(package),
+                        "package": name,
+                        "details": {
+                            "invalid_dependencies": invalid_dependencies,
+                        },
+                    }
+                )
+            if invalid_sources:
+                diagnostics.append(
+                    {
+                        "code": "STARLARK_SOURCE_INVALID",
+                        "severity": "error",
+                        "path": build_path(package),
+                        "package": name,
+                        "details": {"invalid_sources": invalid_sources},
+                    }
+                )
+    if "identity_uniqueness" in checks:
+        for name, package in packages.items():
+            candidates = package["identity_candidates"]
+            if len(candidates) != 1 or candidates[0] != package["rel_path"]:
+                diagnostics.append(
+                    {
+                        "code": "IDENTITY_AMBIGUOUS",
+                        "severity": "error",
+                        "path": package["rel_path"],
+                        "package": name,
+                        "details": {"candidate_roots": candidates},
+                    }
+                )
+    if "manifest_uniqueness" in checks:
+        for name, package in packages.items():
+            candidates = package["manifest_candidates"]
+            if len(candidates) > 1:
+                diagnostics.append(
+                    {
+                        "code": "MANIFEST_AMBIGUOUS",
+                        "severity": "error",
+                        "path": package["rel_path"],
+                        "package": name,
+                        "details": {"candidate_manifests": candidates},
+                    }
+                )
+    if "toolchain_support" in checks:
+        for name, package in packages.items():
+            if package["language"] not in LANGUAGE_TOOLCHAINS:
+                diagnostics.append(
+                    {
+                        "code": "TOOLCHAIN_UNSUPPORTED",
+                        "severity": "error",
+                        "path": package["rel_path"],
+                        "package": name,
+                        "details": {"language": package["language"]},
+                    }
+                )
+    if "path_safety" in checks:
+        for name, package in packages.items():
+            unsafe_paths = sorted(
+                path
+                for path in package["validation_paths"]
+                if portable_path_error(path) is not None
+            )
+            if unsafe_paths:
+                diagnostics.append(
+                    {
+                        "code": "PATH_UNSAFE",
+                        "severity": "error",
+                        "path": package["rel_path"],
+                        "package": name,
+                        "details": {"unsafe_paths": unsafe_paths},
+                    }
+                )
     if "lua_windows_sibling_parity" in checks:
-        for package in options["packages"]:
+        for package in packages.values():
             missing = sorted(
                 set(package["canonical_lua_sibling_installs"])
                 - set(package["windows_lua_sibling_installs"])
@@ -1395,9 +1562,7 @@ def _expected_validation_diagnostics(
                     "package": package["name"],
                     "details": {
                         "missing_sibling_installs": missing,
-                        "windows_build_file_state": package[
-                            "windows_build_file_state"
-                        ],
+                        "windows_build_file_state": package["windows_build_file_state"],
                     },
                 }
             )

@@ -1,0 +1,132 @@
+{
+  "schema_version": 1,
+  "id": "validation/clean-full",
+  "domain": "validation",
+  "summary": "All closed validation checks accept a consistent normalized dependency snapshot.",
+  "platforms": [
+    "linux"
+  ],
+  "capabilities": [
+    "validation"
+  ],
+  "workspace": {
+    "files": []
+  },
+  "input": {
+    "operation": "validation",
+    "options": {
+      "platform": "linux",
+      "checks": [
+        "build_file_presence",
+        "identity_uniqueness",
+        "local_dependency_declarations",
+        "manifest_uniqueness",
+        "path_safety",
+        "standalone_prerequisites",
+        "starlark_declarations",
+        "toolchain_support"
+      ],
+      "packages": [
+        {
+          "name": "python/base",
+          "rel_path": "code/packages/python/base",
+          "language": "python",
+          "build_file_state": "present",
+          "build_references": [],
+          "is_starlark": false,
+          "declared_srcs": [],
+          "declared_deps": [],
+          "identity_candidates": [
+            "code/packages/python/base"
+          ],
+          "manifest_candidates": [
+            "code/packages/python/base/pyproject.toml"
+          ],
+          "validation_paths": [
+            "code/packages/python/base/BUILD",
+            "code/packages/python/base/pyproject.toml"
+          ]
+        },
+        {
+          "name": "python/core",
+          "rel_path": "code/packages/python/core",
+          "language": "python",
+          "build_file_state": "present",
+          "build_references": [
+            "python/base"
+          ],
+          "is_starlark": false,
+          "declared_srcs": [],
+          "declared_deps": [],
+          "identity_candidates": [
+            "code/packages/python/core"
+          ],
+          "manifest_candidates": [
+            "code/packages/python/core/pyproject.toml"
+          ],
+          "validation_paths": [
+            "code/packages/python/core/BUILD",
+            "code/packages/python/core/pyproject.toml"
+          ]
+        },
+        {
+          "name": "python/app",
+          "rel_path": "code/packages/python/app",
+          "language": "python",
+          "build_file_state": "present",
+          "build_references": [
+            "python/base",
+            "python/core"
+          ],
+          "is_starlark": true,
+          "declared_srcs": [
+            "src/**/*.py"
+          ],
+          "declared_deps": [
+            "python/base",
+            "python/core"
+          ],
+          "identity_candidates": [
+            "code/packages/python/app"
+          ],
+          "manifest_candidates": [
+            "code/packages/python/app/pyproject.toml"
+          ],
+          "validation_paths": [
+            "code/packages/python/app/BUILD",
+            "code/packages/python/app/pyproject.toml"
+          ]
+        }
+      ],
+      "dependency_edges": [
+        [
+          "python/base",
+          "python/core"
+        ],
+        [
+          "python/core",
+          "python/app"
+        ]
+      ]
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "validation/clean-full",
+    "domain": "validation",
+    "outcome": "ok",
+    "result": {
+      "valid": true,
+      "diagnostic_codes": []
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}
