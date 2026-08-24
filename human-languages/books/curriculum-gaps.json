@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 3489,
+    "totalLessons": 3493,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -22,14 +22,14 @@
     "legacySchemaTracks": 0,
     "mixedSchemaTracks": 14,
     "version2SchemaTracks": 9,
-    "lessonsWithoutLevel": 63,
+    "lessonsWithoutLevel": 62,
     "rampOverBudgetLessons": 46,
-    "scriptRampOverBudgetLessons": 45,
+    "scriptRampOverBudgetLessons": 46,
     "lessonsOpeningMultipleScripts": 0,
-    "scriptClosureViolations": 720,
-    "scriptExposureExemptedGlyphs": 2000,
+    "scriptClosureViolations": 714,
+    "scriptExposureExemptedGlyphs": 2010,
     "tracksTeachingNoScript": 0,
-    "headwordsWithoutRomanization": 302,
+    "headwordsWithoutRomanization": 297,
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
     "atomsNeverRevisited": 625,
@@ -37,10 +37,10 @@
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 83,
     "chapterGateCleanTracks": 9,
-    "tracksWithoutWritingStageEvidence": 8,
-    "missingWritingStagePairs": 727,
+    "tracksWithoutWritingStageEvidence": 7,
+    "missingWritingStagePairs": 699,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 2943,
+    "drivableLessons": 2944,
     "drivablePercent": 84,
     "chaptersWithoutDrivablePrefix": 107,
     "unexplainedModalityOverrides": 0
@@ -3328,10 +3328,10 @@
       {
         "language": "punjabi",
         "status": "mixed",
-        "lessonCount": 71,
+        "lessonCount": 75,
         "versions": {
-          "1": 31,
-          "2": 40
+          "1": 25,
+          "2": 50
         }
       },
       {
@@ -4187,9 +4187,9 @@
     }
   },
   "levels": {
-    "totalLessons": 3489,
+    "totalLessons": 3493,
     "byLevel": {
-      "pre-A1": 2219,
+      "pre-A1": 2224,
       "A1": 573,
       "A2": 549,
       "B1": 40,
@@ -4197,7 +4197,7 @@
       "C1": 10,
       "C2": 18
     },
-    "unmapped": 63,
+    "unmapped": 62,
     "mappedPercent": 98,
     "tracks": [
       {
@@ -4442,9 +4442,9 @@
       },
       {
         "language": "punjabi",
-        "lessonCount": 71,
+        "lessonCount": 75,
         "byLevel": {
-          "pre-A1": 46,
+          "pre-A1": 51,
           "A1": 4,
           "A2": 14,
           "B1": 0,
@@ -4452,7 +4452,7 @@
           "C1": 0,
           "C2": 0
         },
-        "unmapped": 7,
+        "unmapped": 6,
         "reach": "A2"
       },
       {
@@ -5170,9 +5170,9 @@
       },
       {
         "language": "punjabi",
-        "lessonCount": 71,
-        "measurable": 40,
-        "unmeasurable": 31,
+        "lessonCount": 75,
+        "measurable": 46,
+        "unmeasurable": 29,
         "lessonViolations": 4,
         "chapterViolations": 1
       },
@@ -5239,17 +5239,6 @@
           "sample": "абвдезийопрсту",
           "systems": [
             "Cyrillic"
-          ],
-          "budget": 3
-        },
-        {
-          "lessonId": "PA-C01-sat-sri-akal",
-          "language": "punjabi",
-          "chapter": 1,
-          "glyphs": 10,
-          "sample": "ਅਕਤਰਲਸਾਿੀ੍",
-          "systems": [
-            "Gurmukhi"
           ],
           "budget": 3
         },
@@ -5518,6 +5507,28 @@
           "budget": 3
         },
         {
+          "lessonId": "PA-C02-hai",
+          "language": "punjabi",
+          "chapter": 2,
+          "glyphs": 5,
+          "sample": "ਅਤਸਿੈ",
+          "systems": [
+            "Gurmukhi"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "PA-C02-khushi",
+          "language": "punjabi",
+          "chapter": 2,
+          "glyphs": 5,
+          "sample": "ਈਖਲ਼ੋ",
+          "systems": [
+            "Gurmukhi"
+          ],
+          "budget": 3
+        },
+        {
           "lessonId": "RU-C02-ya",
           "language": "russian",
           "chapter": 2,
@@ -5606,11 +5617,11 @@
           "budget": 3
         },
         {
-          "lessonId": "PA-C01-dhanvaad",
+          "lessonId": "PA-C05-main-punjabi-bolda-han",
           "language": "punjabi",
-          "chapter": 1,
+          "chapter": 5,
           "glyphs": 4,
-          "sample": "ਦਧਵੰ",
+          "sample": "ਆਜਦਪ",
           "systems": [
             "Gurmukhi"
           ],
@@ -5893,9 +5904,9 @@
           "language": "punjabi",
           "script": "gurmukhi",
           "latinScript": false,
-          "lessonCount": 71,
+          "lessonCount": 75,
           "totalGlyphs": 45,
-          "lessonViolations": 2,
+          "lessonViolations": 3,
           "systemViolations": 0,
           "lessonsWithForeignScript": 2
         },
@@ -5961,7 +5972,7 @@
         }
       ],
       "summary": {
-        "lessonViolations": 45,
+        "lessonViolations": 46,
         "systemViolations": 0,
         "lessonsWithForeignScript": 219,
         "maxForeignGlyphsInALesson": 26,
@@ -5981,7 +5992,7 @@
     "summary": {
       "lessonViolations": 46,
       "chapterViolations": 23,
-      "unmeasurableLessons": 502,
+      "unmeasurableLessons": 500,
       "measurablePercent": 86,
       "steepestLesson": {
         "lessonId": "BN-C06-numbers-1-5",
@@ -24750,7 +24761,7 @@
         "atom": "PA-COMPARISON-VEKHNA-DEKHNA",
         "language": "punjabi",
         "introducedBy": "PA-C07-vekhna",
-        "introducedAt": 37,
+        "introducedAt": 44,
         "missed": [
           "R1",
           "R2",
@@ -24762,7 +24773,7 @@
         "atom": "PA-ETYMON-AUNA-GAM",
         "language": "punjabi",
         "introducedBy": "PA-C07-auna",
-        "introducedAt": 35,
+        "introducedAt": 42,
         "missed": [
           "R1",
           "R2",
@@ -24774,7 +24785,7 @@
         "atom": "PA-ETYMON-KHANA-KHAD",
         "language": "punjabi",
         "introducedBy": "PA-C07-khana",
-        "introducedAt": 36,
+        "introducedAt": 43,
         "missed": [
           "R1",
           "R2",
@@ -24786,7 +24797,7 @@
         "atom": "PA-ETYMON-PASAND-SHINE",
         "language": "punjabi",
         "introducedBy": "PA-C09-pasand",
-        "introducedAt": 46,
+        "introducedAt": 53,
         "missed": [
           "R1",
           "R2",
@@ -24798,7 +24809,7 @@
         "atom": "PA-ETYMON-VEKHNA-IKS",
         "language": "punjabi",
         "introducedBy": "PA-C07-vekhna",
-        "introducedAt": 37,
+        "introducedAt": 44,
         "missed": [
           "R1",
           "R2",
@@ -24810,7 +24821,7 @@
         "atom": "PA-EVIDENCE-GHORA-KORA",
         "language": "punjabi",
         "introducedBy": "PA-C07-khana",
-        "introducedAt": 36,
+        "introducedAt": 43,
         "missed": [
           "R1",
           "R2",
@@ -41092,7 +41103,7 @@
         "atom": "PA-COMPARISON-PANJ-MATCH",
         "language": "punjabi",
         "introducedBy": "PA-C06-panj-convergence",
-        "introducedAt": 32,
+        "introducedAt": 39,
         "missed": [
           "R1",
           "R3"
@@ -41103,7 +41114,7 @@
         "atom": "PA-CONTRAST-JANA-JANNA",
         "language": "punjabi",
         "introducedBy": "PA-C07-janna",
-        "introducedAt": 38,
+        "introducedAt": 45,
         "missed": [
           "R2",
           "R3"
@@ -41114,7 +41125,7 @@
         "atom": "PA-ETYMON-AKKH-EYE",
         "language": "punjabi",
         "introducedBy": "PA-C12-akkh",
-        "introducedAt": 55,
+        "introducedAt": 62,
         "missed": [
           "R1",
           "R2"
@@ -41122,32 +41133,10 @@
         "revisits": 0
       },
       {
-        "atom": "PA-ETYMON-CHA-CHINESE",
-        "language": "punjabi",
-        "introducedBy": "PA-C10-chaa",
-        "introducedAt": 48,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "PA-ETYMON-DUDH-DUGDHA",
-        "language": "punjabi",
-        "introducedBy": "PA-C10-dudh",
-        "introducedAt": 49,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
         "atom": "PA-ETYMON-HONA-BHU",
         "language": "punjabi",
         "introducedBy": "PA-C07-hona",
-        "introducedAt": 33,
+        "introducedAt": 40,
         "missed": [
           "R1",
           "R3"
@@ -41158,7 +41147,7 @@
         "atom": "PA-ETYMON-JANA-YATI",
         "language": "punjabi",
         "introducedBy": "PA-C07-jana",
-        "introducedAt": 34,
+        "introducedAt": 41,
         "missed": [
           "R1",
           "R3"
@@ -41169,7 +41158,7 @@
         "atom": "PA-ETYMON-JANNA-KNOW",
         "language": "punjabi",
         "introducedBy": "PA-C07-janna",
-        "introducedAt": 38,
+        "introducedAt": 45,
         "missed": [
           "R2",
           "R3"
@@ -41180,7 +41169,7 @@
         "atom": "PA-ETYMON-LAINA-LABH",
         "language": "punjabi",
         "introducedBy": "PA-C09-laina",
-        "introducedAt": 43,
+        "introducedAt": 50,
         "missed": [
           "R2",
           "R3"
@@ -41191,7 +41180,7 @@
         "atom": "PA-ETYMON-LIKH-SCRATCH",
         "language": "punjabi",
         "introducedBy": "PA-C08-likhna",
-        "introducedAt": 42,
+        "introducedAt": 49,
         "missed": [
           "R2",
           "R3"
@@ -41202,7 +41191,7 @@
         "atom": "PA-ETYMON-MADAD-ARABIC",
         "language": "punjabi",
         "introducedBy": "PA-C09-madad-karna",
-        "introducedAt": 45,
+        "introducedAt": 52,
         "missed": [
           "R2",
           "R3"
@@ -41213,7 +41202,7 @@
         "atom": "PA-ETYMON-PAANI-DRINK",
         "language": "punjabi",
         "introducedBy": "PA-C10-paani",
-        "introducedAt": 47,
+        "introducedAt": 54,
         "missed": [
           "R2",
           "R3"
@@ -41224,7 +41213,7 @@
         "atom": "PA-ETYMON-PANJ-PANCA-INHERITANCE",
         "language": "punjabi",
         "introducedBy": "PA-C06-panj-convergence",
-        "introducedAt": 32,
+        "introducedAt": 39,
         "missed": [
           "R1",
           "R3"
@@ -41235,7 +41224,7 @@
         "atom": "PA-ETYMON-PARHNA-PATH",
         "language": "punjabi",
         "introducedBy": "PA-C08-parhna",
-        "introducedAt": 41,
+        "introducedAt": 48,
         "missed": [
           "R2",
           "R3"
@@ -41246,7 +41235,7 @@
         "atom": "PA-ETYMON-PERSIAN-PANJ-INDEPENDENT",
         "language": "punjabi",
         "introducedBy": "PA-C06-panj-convergence",
-        "introducedAt": 32,
+        "introducedAt": 39,
         "missed": [
           "R1",
           "R3"
@@ -41257,7 +41246,7 @@
         "atom": "PA-ETYMON-PUCHHNA-PRACH",
         "language": "punjabi",
         "introducedBy": "PA-C09-puchhna",
-        "introducedAt": 44,
+        "introducedAt": 51,
         "missed": [
           "R2",
           "R3"
@@ -41265,21 +41254,10 @@
         "revisits": 2
       },
       {
-        "atom": "PA-ETYMON-ROTI-UNKNOWN",
-        "language": "punjabi",
-        "introducedBy": "PA-C10-roti",
-        "introducedAt": 50,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
         "atom": "PA-ETYMON-SAMAJH-BUDH",
         "language": "punjabi",
         "introducedBy": "PA-C08-samajhna",
-        "introducedAt": 40,
+        "introducedAt": 47,
         "missed": [
           "R2",
           "R3"
@@ -41290,7 +41268,7 @@
         "atom": "PA-ETYMON-SIR-HORN",
         "language": "punjabi",
         "introducedBy": "PA-C13-sir",
-        "introducedAt": 60,
+        "introducedAt": 67,
         "missed": [
           "R1",
           "R2"
@@ -41301,7 +41279,7 @@
         "atom": "PA-ETYMON-SOCHNA-SHUC",
         "language": "punjabi",
         "introducedBy": "PA-C08-sochna",
-        "introducedAt": 39,
+        "introducedAt": 46,
         "missed": [
           "R2",
           "R3"
@@ -41312,7 +41290,7 @@
         "atom": "PA-EVIDENCE-PANJAH-PACAS",
         "language": "punjabi",
         "introducedBy": "PA-C06-panj-convergence",
-        "introducedAt": 32,
+        "introducedAt": 39,
         "missed": [
           "R1",
           "R3"
@@ -41323,7 +41301,7 @@
         "atom": "PA-GRAMMAR-A-PREFIX-TOWARD",
         "language": "punjabi",
         "introducedBy": "PA-C07-auna",
-        "introducedAt": 35,
+        "introducedAt": 42,
         "missed": [
           "R1",
           "R3"
@@ -41334,7 +41312,7 @@
         "atom": "PA-GRAMMAR-BE-TWO-ROOTS",
         "language": "punjabi",
         "introducedBy": "PA-C07-hona",
-        "introducedAt": 33,
+        "introducedAt": 40,
         "missed": [
           "R1",
           "R3"
@@ -41345,7 +41323,7 @@
         "atom": "PA-GRAMMAR-DATIVE-LIKING",
         "language": "punjabi",
         "introducedBy": "PA-C09-pasand",
-        "introducedAt": 46,
+        "introducedAt": 53,
         "missed": [
           "R2",
           "R3"
@@ -41356,7 +41334,7 @@
         "atom": "PA-GRAMMAR-NOUN-PLUS-KARNA",
         "language": "punjabi",
         "introducedBy": "PA-C09-madad-karna",
-        "introducedAt": 45,
+        "introducedAt": 52,
         "missed": [
           "R2",
           "R3"
@@ -41367,7 +41345,7 @@
         "atom": "PA-HISTORY-PANJ-CONVERGENCE",
         "language": "punjabi",
         "introducedBy": "PA-C06-panj-convergence",
-        "introducedAt": 32,
+        "introducedAt": 39,
         "missed": [
           "R1",
           "R3"
@@ -41378,7 +41356,7 @@
         "atom": "PA-HISTORY-PANJABI-FIVE-RIVERS",
         "language": "punjabi",
         "introducedBy": "PA-C06-numbers-1-5",
-        "introducedAt": 31,
+        "introducedAt": 38,
         "missed": [
           "R2",
           "R3"
@@ -41386,10 +41364,10 @@
         "revisits": 1
       },
       {
-        "atom": "PA-LEX-DUDH",
+        "atom": "PA-LEX-DHANVAAD-01",
         "language": "punjabi",
-        "introducedBy": "PA-C10-dudh",
-        "introducedAt": 49,
+        "introducedBy": "PA-C01-dhanvaad",
+        "introducedAt": 10,
         "missed": [
           "R2",
           "R3"
@@ -41400,7 +41378,7 @@
         "atom": "PA-LEX-HONA",
         "language": "punjabi",
         "introducedBy": "PA-C07-hona",
-        "introducedAt": 33,
+        "introducedAt": 40,
         "missed": [
           "R1",
           "R3"
@@ -41411,7 +41389,7 @@
         "atom": "PA-LEX-JANNA",
         "language": "punjabi",
         "introducedBy": "PA-C07-janna",
-        "introducedAt": 38,
+        "introducedAt": 45,
         "missed": [
           "R2",
           "R3"
@@ -41422,7 +41400,7 @@
         "atom": "PA-LEX-KHANA",
         "language": "punjabi",
         "introducedBy": "PA-C07-khana",
-        "introducedAt": 36,
+        "introducedAt": 43,
         "missed": [
           "R2",
           "R3"
@@ -41433,7 +41411,7 @@
         "atom": "PA-LEX-LAINA",
         "language": "punjabi",
         "introducedBy": "PA-C09-laina",
-        "introducedAt": 43,
+        "introducedAt": 50,
         "missed": [
           "R2",
           "R3"
@@ -41444,7 +41422,7 @@
         "atom": "PA-LEX-LIKHNA",
         "language": "punjabi",
         "introducedBy": "PA-C08-likhna",
-        "introducedAt": 42,
+        "introducedAt": 49,
         "missed": [
           "R2",
           "R3"
@@ -41452,10 +41430,21 @@
         "revisits": 3
       },
       {
+        "atom": "PA-LEX-NAMASTE-01",
+        "language": "punjabi",
+        "introducedBy": "PA-C01-namaste",
+        "introducedAt": 1,
+        "missed": [
+          "R1",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "PA-LEX-NUMBERS-ONE-TO-FIVE",
         "language": "punjabi",
         "introducedBy": "PA-C06-numbers-1-5",
-        "introducedAt": 31,
+        "introducedAt": 38,
         "missed": [
           "R2",
           "R3"
@@ -41466,7 +41455,7 @@
         "atom": "PA-LEX-PAANI",
         "language": "punjabi",
         "introducedBy": "PA-C10-paani",
-        "introducedAt": 47,
+        "introducedAt": 54,
         "missed": [
           "R2",
           "R3"
@@ -41477,7 +41466,7 @@
         "atom": "PA-LEX-PASAND",
         "language": "punjabi",
         "introducedBy": "PA-C09-pasand",
-        "introducedAt": 46,
+        "introducedAt": 53,
         "missed": [
           "R2",
           "R3"
@@ -41488,18 +41477,7 @@
         "atom": "PA-LEX-PUCHHNA",
         "language": "punjabi",
         "introducedBy": "PA-C09-puchhna",
-        "introducedAt": 44,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "PA-LEX-ROTI",
-        "language": "punjabi",
-        "introducedBy": "PA-C10-roti",
-        "introducedAt": 50,
+        "introducedAt": 51,
         "missed": [
           "R2",
           "R3"
@@ -41510,7 +41488,7 @@
         "atom": "PA-LEX-SAMAJHNA",
         "language": "punjabi",
         "introducedBy": "PA-C08-samajhna",
-        "introducedAt": 40,
+        "introducedAt": 47,
         "missed": [
           "R2",
           "R3"
@@ -41518,10 +41496,21 @@
         "revisits": 2
       },
       {
+        "atom": "PA-LEX-SHUKRIYA-01",
+        "language": "punjabi",
+        "introducedBy": "PA-C01-shukriya",
+        "introducedAt": 11,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "PA-LEX-SIR",
         "language": "punjabi",
         "introducedBy": "PA-C13-sir",
-        "introducedAt": 60,
+        "introducedAt": 67,
         "missed": [
           "R1",
           "R2"
@@ -41532,7 +41521,7 @@
         "atom": "PA-LEX-SOCHNA",
         "language": "punjabi",
         "introducedBy": "PA-C08-sochna",
-        "introducedAt": 39,
+        "introducedAt": 46,
         "missed": [
           "R2",
           "R3"
@@ -41543,7 +41532,7 @@
         "atom": "PA-LEX-VEKHNA",
         "language": "punjabi",
         "introducedBy": "PA-C07-vekhna",
-        "introducedAt": 37,
+        "introducedAt": 44,
         "missed": [
           "R2",
           "R3"
@@ -41554,7 +41543,7 @@
         "atom": "PA-PHRASE-KIRPA-KARKE",
         "language": "punjabi",
         "introducedBy": "PA-C10-paani",
-        "introducedAt": 47,
+        "introducedAt": 54,
         "missed": [
           "R2",
           "R3"
@@ -41565,7 +41554,7 @@
         "atom": "PA-SCRIPT-GURMUKHI-TOP-LINE",
         "language": "punjabi",
         "introducedBy": "PA-C06-numbers-1-5",
-        "introducedAt": 31,
+        "introducedAt": 38,
         "missed": [
           "R1",
           "R3"
@@ -41576,7 +41565,7 @@
         "atom": "PA-SCRIPT-SUBJOINED-HA",
         "language": "punjabi",
         "introducedBy": "PA-C08-parhna",
-        "introducedAt": 41,
+        "introducedAt": 48,
         "missed": [
           "R2",
           "R3"
@@ -41587,7 +41576,7 @@
         "atom": "PA-SCRIPT-TIPPI-NASAL",
         "language": "punjabi",
         "introducedBy": "PA-C06-numbers-1-5",
-        "introducedAt": 31,
+        "introducedAt": 38,
         "missed": [
           "R1",
           "R3"
@@ -41598,7 +41587,7 @@
         "atom": "PA-SOUND-NASAL-STOP-VOICING",
         "language": "punjabi",
         "introducedBy": "PA-C06-panj-convergence",
-        "introducedAt": 32,
+        "introducedAt": 39,
         "missed": [
           "R1",
           "R3"
@@ -41606,21 +41595,10 @@
         "revisits": 1
       },
       {
-        "atom": "PA-SOUND-TONE-HIGH-LEVEL",
-        "language": "punjabi",
-        "introducedBy": "PA-C10-chaa",
-        "introducedAt": 48,
-        "missed": [
-          "R1",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
         "atom": "PA-SOUND-Y-TO-J",
         "language": "punjabi",
         "introducedBy": "PA-C07-jana",
-        "introducedAt": 34,
+        "introducedAt": 41,
         "missed": [
           "R1",
           "R3"
@@ -53283,7 +53261,7 @@
         "atom": "PA-CONTRAST-KANN-KARNA",
         "language": "punjabi",
         "introducedBy": "PA-C12-kann",
-        "introducedAt": 56,
+        "introducedAt": 63,
         "missed": [
           "R2"
         ],
@@ -53293,7 +53271,7 @@
         "atom": "PA-ETYMON-BHAIN-BHAGA",
         "language": "punjabi",
         "introducedBy": "PA-C11-bhain",
-        "introducedAt": 54,
+        "introducedAt": 61,
         "missed": [
           "R2"
         ],
@@ -53303,7 +53281,17 @@
         "atom": "PA-ETYMON-BHARA-BROTHER",
         "language": "punjabi",
         "introducedBy": "PA-C11-bhara",
-        "introducedAt": 53,
+        "introducedAt": 60,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "PA-ETYMON-CHA-CHINESE",
+        "language": "punjabi",
+        "introducedBy": "PA-C10-chaa",
+        "introducedAt": 55,
         "missed": [
           "R2"
         ],
@@ -53313,7 +53301,17 @@
         "atom": "PA-ETYMON-DIL-HEART",
         "language": "punjabi",
         "introducedBy": "PA-C13-dil",
-        "introducedAt": 59,
+        "introducedAt": 66,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "PA-ETYMON-DUDH-DUGDHA",
+        "language": "punjabi",
+        "introducedBy": "PA-C10-dudh",
+        "introducedAt": 56,
         "missed": [
           "R2"
         ],
@@ -53323,7 +53321,7 @@
         "atom": "PA-ETYMON-MUNH-MUKHA",
         "language": "punjabi",
         "introducedBy": "PA-C12-munh",
-        "introducedAt": 57,
+        "introducedAt": 64,
         "missed": [
           "R2"
         ],
@@ -53333,7 +53331,7 @@
         "atom": "PA-ETYMON-NAKK-NOSE",
         "language": "punjabi",
         "introducedBy": "PA-C12-nakk",
-        "introducedAt": 58,
+        "introducedAt": 65,
         "missed": [
           "R2"
         ],
@@ -53343,7 +53341,17 @@
         "atom": "PA-ETYMON-PARIVAR-SURROUND",
         "language": "punjabi",
         "introducedBy": "PA-C11-parivar",
-        "introducedAt": 52,
+        "introducedAt": 59,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "PA-ETYMON-ROTI-UNKNOWN",
+        "language": "punjabi",
+        "introducedBy": "PA-C10-roti",
+        "introducedAt": 57,
         "missed": [
           "R2"
         ],
@@ -53353,7 +53361,7 @@
         "atom": "PA-GRAMMAR-NA-INFINITIVE",
         "language": "punjabi",
         "introducedBy": "PA-C07-hona",
-        "introducedAt": 33,
+        "introducedAt": 40,
         "missed": [
           "R3"
         ],
@@ -53363,37 +53371,47 @@
         "atom": "PA-LEX-AUNA",
         "language": "punjabi",
         "introducedBy": "PA-C07-auna",
-        "introducedAt": 35,
+        "introducedAt": 42,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "PA-LEX-CHA",
-        "language": "punjabi",
-        "introducedBy": "PA-C10-chaa",
-        "introducedAt": 48,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 4
-      },
-      {
         "atom": "PA-LEX-DIL",
         "language": "punjabi",
         "introducedBy": "PA-C13-dil",
-        "introducedAt": 59,
+        "introducedAt": 66,
         "missed": [
           "R2"
         ],
         "revisits": 1
       },
       {
+        "atom": "PA-LEX-DUDH",
+        "language": "punjabi",
+        "introducedBy": "PA-C10-dudh",
+        "introducedAt": 56,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "PA-LEX-HAAN-NAHIN-01",
+        "language": "punjabi",
+        "introducedBy": "PA-C01-han-nahin",
+        "introducedAt": 2,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 9
+      },
+      {
         "atom": "PA-LEX-JANA",
         "language": "punjabi",
         "introducedBy": "PA-C07-jana",
-        "introducedAt": 34,
+        "introducedAt": 41,
         "missed": [
           "R3"
         ],
@@ -53403,7 +53421,7 @@
         "atom": "PA-LEX-KANN",
         "language": "punjabi",
         "introducedBy": "PA-C12-kann",
-        "introducedAt": 56,
+        "introducedAt": 63,
         "missed": [
           "R2"
         ],
@@ -53413,7 +53431,7 @@
         "atom": "PA-LEX-MADAD-KARNA",
         "language": "punjabi",
         "introducedBy": "PA-C09-madad-karna",
-        "introducedAt": 45,
+        "introducedAt": 52,
         "missed": [
           "R3"
         ],
@@ -53423,7 +53441,7 @@
         "atom": "PA-LEX-MUNH",
         "language": "punjabi",
         "introducedBy": "PA-C12-munh",
-        "introducedAt": 57,
+        "introducedAt": 64,
         "missed": [
           "R2"
         ],
@@ -53433,7 +53451,7 @@
         "atom": "PA-LEX-NAKK",
         "language": "punjabi",
         "introducedBy": "PA-C12-nakk",
-        "introducedAt": 58,
+        "introducedAt": 65,
         "missed": [
           "R2"
         ],
@@ -53443,7 +53461,7 @@
         "atom": "PA-LEX-PARHNA",
         "language": "punjabi",
         "introducedBy": "PA-C08-parhna",
-        "introducedAt": 41,
+        "introducedAt": 48,
         "missed": [
           "R3"
         ],
@@ -53453,19 +53471,79 @@
         "atom": "PA-LEX-PARIVAR",
         "language": "punjabi",
         "introducedBy": "PA-C11-parivar",
-        "introducedAt": 52,
+        "introducedAt": 59,
         "missed": [
           "R2"
         ],
         "revisits": 2
       },
       {
+        "atom": "PA-LEX-ROTI",
+        "language": "punjabi",
+        "introducedBy": "PA-C10-roti",
+        "introducedAt": 57,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "PA-LEX-SAT-SRI-AKAL-01",
+        "language": "punjabi",
+        "introducedBy": "PA-C01-sat-sri-akal",
+        "introducedAt": 0,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "PA-SCRIPT-AA-MATRA-01",
+        "language": "punjabi",
+        "introducedBy": "PA-W01-aa-matra",
+        "introducedAt": 4,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 13
+      },
+      {
         "atom": "PA-SCRIPT-ADDAK-DOUBLING",
         "language": "punjabi",
         "introducedBy": "PA-C06-numbers-1-5",
-        "introducedAt": 31,
+        "introducedAt": 38,
         "missed": [
           "R1"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "PA-SCRIPT-BINDI-01",
+        "language": "punjabi",
+        "introducedBy": "PA-W01-bindi",
+        "introducedAt": 5,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 12
+      },
+      {
+        "atom": "PA-SCRIPT-HA-01",
+        "language": "punjabi",
+        "introducedBy": "PA-W01-ha",
+        "introducedAt": 3,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 14
+      },
+      {
+        "atom": "PA-SCRIPT-HAAN-01",
+        "language": "punjabi",
+        "introducedBy": "PA-W01-haan-assemble",
+        "introducedAt": 6,
+        "missed": [
+          "R3"
         ],
         "revisits": 4
       },
@@ -53473,7 +53551,7 @@
         "atom": "PA-SOUND-PUNJABI-TONE",
         "language": "punjabi",
         "introducedBy": "PA-C07-khana",
-        "introducedAt": 36,
+        "introducedAt": 43,
         "missed": [
           "R3"
         ],
@@ -53483,11 +53561,21 @@
         "atom": "PA-SOUND-TONE-FALLING",
         "language": "punjabi",
         "introducedBy": "PA-C08-samajhna",
-        "introducedAt": 40,
+        "introducedAt": 47,
         "missed": [
           "R3"
         ],
         "revisits": 4
+      },
+      {
+        "atom": "PA-SOUND-TONE-HIGH-LEVEL",
+        "language": "punjabi",
+        "introducedBy": "PA-C10-chaa",
+        "introducedAt": 55,
+        "missed": [
+          "R1"
+        ],
+        "revisits": 3
       },
       {
         "atom": "PT-ETYMON-AGUA-VINHO-02",
@@ -59609,11 +59697,11 @@
       },
       {
         "language": "punjabi",
-        "lessonCount": 71,
+        "lessonCount": 75,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 92,
+        "atomsTaught": 98,
         "atomsNeverRevisited": 5,
         "forwardReferences": 0
       },
@@ -59683,13 +59771,13 @@
       "tracksWithUnorderedLessons": 0,
       "forwardPrerequisites": 0,
       "forwardReviews": 0,
-      "atomsTaught": 4798,
+      "atomsTaught": 4804,
       "atomsNeverRevisited": 625,
       "neverRevisitedPercent": 13,
       "missedByWindow": {
-        "R1": 1182,
-        "R2": 3655,
-        "R3": 3537,
+        "R1": 1183,
+        "R2": 3657,
+        "R3": 3539,
         "R4": 2078
       },
       "forwardReferences": 428
@@ -59843,15 +59931,15 @@
       {
         "language": "punjabi",
         "script": "gurmukhi",
-        "lessonCount": 71,
-        "scriptLessons": 10,
+        "lessonCount": 75,
+        "scriptLessons": 13,
         "taughtGlyphs": 9,
         "shownGlyphs": 45,
         "neverTaughtGlyphs": 36,
-        "violations": 51,
-        "exposureOnly": 6,
-        "exposureExemptedGlyphs": 130,
-        "headwordsWithoutRomanization": 26
+        "violations": 45,
+        "exposureOnly": 11,
+        "exposureExemptedGlyphs": 140,
+        "headwordsWithoutRomanization": 21
       },
       {
         "language": "russian",
@@ -60033,13 +60121,6 @@
         "count": 18
       },
       {
-        "lessonId": "PA-C02-khushi",
-        "language": "punjabi",
-        "chapter": 2,
-        "glyphs": "ਈਕਖਤਨਮਲਸਹ਼ਾਿੀੁੂੇੋੰ",
-        "count": 18
-      },
-      {
         "lessonId": "UR-C14-topi",
         "language": "urdu",
         "chapter": 14,
@@ -60096,13 +60177,6 @@
         "count": 17
       },
       {
-        "lessonId": "PA-C13-dil",
-        "language": "punjabi",
-        "chapter": 13,
-        "glyphs": "ਅਕਖਣਤਧਨਮਸਹਾੁੂੈੋੰੱ",
-        "count": 17
-      },
-      {
         "lessonId": "BN-C07-khaowa",
         "language": "bengali",
         "chapter": 7,
@@ -60135,6 +60209,13 @@
         "language": "marathi",
         "chapter": 11,
         "glyphs": "ंऊकगजटतनभमरािुे्",
+        "count": 16
+      },
+      {
+        "lessonId": "PA-C02-khushi",
+        "language": "punjabi",
+        "chapter": 2,
+        "glyphs": "ਈਕਖਤਨਮਲਸ਼ਿੀੁੂੇੋੰ",
         "count": 16
       },
       {
@@ -60243,24 +60324,10 @@
         "count": 15
       },
       {
-        "lessonId": "PA-C04-phir-milaange",
+        "lessonId": "PA-C13-dil",
         "language": "punjabi",
-        "chapter": 4,
-        "glyphs": "ਂਅਕਗਤਫਮਰਲਸਾਿੀੇ੍",
-        "count": 15
-      },
-      {
-        "lessonId": "PA-C09-pasand",
-        "language": "punjabi",
-        "chapter": 9,
-        "glyphs": "ਂਆਉਜਣਨਬਮਹਾੀੂੈ੍ੜ",
-        "count": 15
-      },
-      {
-        "lessonId": "PA-C10-dudh",
-        "language": "punjabi",
-        "chapter": 10,
-        "glyphs": "ਕਖਚਣਨਪਬਰਵਹਾਿੀੇੰ",
+        "chapter": 13,
+        "glyphs": "ਅਕਖਣਤਧਨਮਸੁੂੈੋੰੱ",
         "count": 15
       },
       {
@@ -60352,34 +60419,6 @@
         "language": "marathi",
         "chapter": 12,
         "glyphs": "ंटडणतदबरळहीुो्",
-        "count": 14
-      },
-      {
-        "lessonId": "PA-C03-tusi-kivein-ho",
-        "language": "punjabi",
-        "chapter": 3,
-        "glyphs": "ਂਕਤਵਸਹਿੀੁੂੇੈੋੰ",
-        "count": 14
-      },
-      {
-        "lessonId": "PA-C05-kamm-karna",
-        "language": "punjabi",
-        "chapter": 5,
-        "glyphs": "ਕਗਤਨਮਰਲਸਾੁੇ੍ੰੱ",
-        "count": 14
-      },
-      {
-        "lessonId": "PA-C05-main-punjabi-bolda-han",
-        "language": "punjabi",
-        "chapter": 5,
-        "glyphs": "ਂਆਜਦਪਬਮਲਹਾੀੈੋੰ",
-        "count": 14
-      },
-      {
-        "lessonId": "PA-C05-rahna",
-        "language": "punjabi",
-        "chapter": 5,
-        "glyphs": "ਂਅਣਤਦਮਰਸਹਾਿੈ੍ੰ",
         "count": 14
       },
       {
@@ -60509,10 +60548,24 @@
         "count": 13
       },
       {
-        "lessonId": "PA-C10-paani",
+        "lessonId": "PA-C04-phir-milaange",
+        "language": "punjabi",
+        "chapter": 4,
+        "glyphs": "ਅਕਗਤਫਮਰਲਸਿੀੇ੍",
+        "count": 13
+      },
+      {
+        "lessonId": "PA-C05-kamm-karna",
+        "language": "punjabi",
+        "chapter": 5,
+        "glyphs": "ਕਗਤਨਮਰਲਸੁੇ੍ੰੱ",
+        "count": 13
+      },
+      {
+        "lessonId": "PA-C10-dudh",
         "language": "punjabi",
         "chapter": 10,
-        "glyphs": "ਕਜਦਨਮਰਸਹਿੂੇੈੰ",
+        "glyphs": "ਕਖਚਣਨਪਬਰਵਿੀੇੰ",
         "count": 13
       },
       {
@@ -60670,17 +60723,24 @@
         "count": 12
       },
       {
-        "lessonId": "PA-C02-tuhada-naam-ki-hai",
+        "lessonId": "PA-C03-tusi-kivein-ho",
         "language": "punjabi",
-        "chapter": 2,
-        "glyphs": "ਂਕਡਤਨਰਹਾੀੁੇੈ",
+        "chapter": 3,
+        "glyphs": "ਕਤਵਸਿੀੁੂੇੈੋੰ",
         "count": 12
       },
       {
-        "lessonId": "PA-C09-madad-karna",
+        "lessonId": "PA-C09-pasand",
         "language": "punjabi",
         "chapter": 9,
-        "glyphs": "ਆਗਣਲਸਹ਼ੀੁੋੰੱ",
+        "glyphs": "ਆਉਜਣਨਬਮੀੂੈ੍ੜ",
+        "count": 12
+      },
+      {
+        "lessonId": "PA-C10-paani",
+        "language": "punjabi",
+        "chapter": 10,
+        "glyphs": "ਕਜਦਨਮਰਸਿੂੇੈੰ",
         "count": 12
       },
       {
@@ -60814,6 +60874,27 @@
         "language": "marathi",
         "chapter": 13,
         "glyphs": "चजडणमळवसाेो",
+        "count": 11
+      },
+      {
+        "lessonId": "PA-C05-main-punjabi-bolda-han",
+        "language": "punjabi",
+        "chapter": 5,
+        "glyphs": "ਆਜਦਪਬਮਲੀੈੋੰ",
+        "count": 11
+      },
+      {
+        "lessonId": "PA-C05-rahna",
+        "language": "punjabi",
+        "chapter": 5,
+        "glyphs": "ਅਣਤਦਮਰਸਿੈ੍ੰ",
+        "count": 11
+      },
+      {
+        "lessonId": "PA-C09-madad-karna",
+        "language": "punjabi",
+        "chapter": 9,
+        "glyphs": "ਆਗਣਲਸ਼ੀੁੋੰੱ",
         "count": 11
       },
       {
@@ -60982,34 +61063,6 @@
         "language": "marathi",
         "chapter": 9,
         "glyphs": "कछतनपमीूो्",
-        "count": 10
-      },
-      {
-        "lessonId": "PA-C01-sat-sri-akal",
-        "language": "punjabi",
-        "chapter": 1,
-        "glyphs": "ਅਕਤਰਲਸਾਿੀ੍",
-        "count": 10
-      },
-      {
-        "lessonId": "PA-C03-koi-gall-nahin",
-        "language": "punjabi",
-        "chapter": 3,
-        "glyphs": "ਂਈਕਗਨਲਹੀੋੱ",
-        "count": 10
-      },
-      {
-        "lessonId": "PA-C03-thik",
-        "language": "punjabi",
-        "chapter": 3,
-        "glyphs": "ਂਕਟਠਡਮਹਾੀੈ",
-        "count": 10
-      },
-      {
-        "lessonId": "PA-C12-munh",
-        "language": "punjabi",
-        "chapter": 12,
-        "glyphs": "ਕਖਚਦਨਪਰਸਾੁ",
         "count": 10
       },
       {
@@ -61216,17 +61269,17 @@
         "count": 9
       },
       {
-        "lessonId": "PA-C04-milaange",
+        "lessonId": "PA-C02-tuhada-naam-ki-hai",
         "language": "punjabi",
-        "chapter": 4,
-        "glyphs": "ਂਗਣਮਲਾਿੇ੍",
+        "chapter": 2,
+        "glyphs": "ਕਡਤਨਰੀੁੇੈ",
         "count": 9
       },
       {
-        "lessonId": "PA-C13-sir",
+        "lessonId": "PA-C12-munh",
         "language": "punjabi",
-        "chapter": 13,
-        "glyphs": "ਣਤਦਭਮਲਾੇੈ",
+        "chapter": 12,
+        "glyphs": "ਕਖਚਦਨਪਰਸੁ",
         "count": 9
       },
       {
@@ -61475,10 +61528,10 @@
         "count": 8
       },
       {
-        "lessonId": "PA-C02-mera-naam-hai",
+        "lessonId": "PA-C03-koi-gall-nahin",
         "language": "punjabi",
-        "chapter": 2,
-        "glyphs": "ਂਨਮਰਹਾੇੈ",
+        "chapter": 3,
+        "glyphs": "ਈਕਗਨਲੀੋੱ",
         "count": 8
       },
       {
@@ -61486,6 +61539,13 @@
         "language": "punjabi",
         "chapter": 12,
         "glyphs": "ਣਦਧਬਭਰੁੈ",
+        "count": 8
+      },
+      {
+        "lessonId": "PA-C13-sir",
+        "language": "punjabi",
+        "chapter": 13,
+        "glyphs": "ਣਤਦਭਮਲੇੈ",
         "count": 8
       },
       {
@@ -61825,31 +61885,17 @@
         "count": 7
       },
       {
-        "lessonId": "PA-C01-shukriya",
+        "lessonId": "PA-C03-thik",
         "language": "punjabi",
-        "chapter": 1,
-        "glyphs": "ਆਕਰਸ਼ੀੁ",
+        "chapter": 3,
+        "glyphs": "ਕਟਠਡਮੀੈ",
         "count": 7
       },
       {
-        "lessonId": "PA-C02-hai",
+        "lessonId": "PA-C04-milaange",
         "language": "punjabi",
-        "chapter": 2,
-        "glyphs": "ਅਤਸਹਿੈ੍",
-        "count": 7
-      },
-      {
-        "lessonId": "PA-C02-tu-tusi",
-        "language": "punjabi",
-        "chapter": 2,
-        "glyphs": "ਂਤਸੀੁੂੰ",
-        "count": 7
-      },
-      {
-        "lessonId": "PA-C10-roti",
-        "language": "punjabi",
-        "chapter": 10,
-        "glyphs": "ਕਠਡਪਾਿੇ",
+        "chapter": 4,
+        "glyphs": "ਗਣਮਲਿੇ੍",
         "count": 7
       },
       {
@@ -61857,13 +61903,6 @@
         "language": "punjabi",
         "chapter": 11,
         "glyphs": "ਖਣਤਦਸੇੋ",
-        "count": 7
-      },
-      {
-        "lessonId": "PA-C12-kann",
-        "language": "punjabi",
-        "chapter": 12,
-        "glyphs": "ਅਖਦਮਰਾੱ",
         "count": 7
       },
       {
@@ -62042,31 +62081,31 @@
         "count": 6
       },
       {
-        "lessonId": "PA-C01-dhanvaad",
+        "lessonId": "PA-C02-hai",
         "language": "punjabi",
-        "chapter": 1,
-        "glyphs": "ਦਧਨਵਾੰ",
+        "chapter": 2,
+        "glyphs": "ਅਤਸਿੈ੍",
         "count": 6
       },
       {
-        "lessonId": "PA-C03-kivein",
+        "lessonId": "PA-C02-tu-tusi",
         "language": "punjabi",
-        "chapter": 3,
-        "glyphs": "ਂਕਵਿੀੇ",
+        "chapter": 2,
+        "glyphs": "ਤਸੀੁੂੰ",
         "count": 6
       },
       {
-        "lessonId": "PA-C08-likhna",
+        "lessonId": "PA-C10-roti",
         "language": "punjabi",
-        "chapter": 8,
-        "glyphs": "ਂਦਮਹੀੈ",
+        "chapter": 10,
+        "glyphs": "ਕਠਡਪਿੇ",
         "count": 6
       },
       {
-        "lessonId": "PA-C12-nakk",
+        "lessonId": "PA-C12-kann",
         "language": "punjabi",
         "chapter": 12,
-        "glyphs": "ਅਖਮਹੂੰ",
+        "glyphs": "ਅਖਦਮਰੱ",
         "count": 6
       },
       {
@@ -62399,52 +62438,17 @@
         "count": 5
       },
       {
-        "lessonId": "PA-C01-han-nahin",
-        "language": "punjabi",
-        "chapter": 1,
-        "glyphs": "ਂਨਹਾੀ",
-        "count": 5
-      },
-      {
-        "lessonId": "PA-C01-namaste",
-        "language": "punjabi",
-        "chapter": 1,
-        "glyphs": "ਤਨਮਸੇ",
-        "count": 5
-      },
-      {
-        "lessonId": "PA-C02-mera",
+        "lessonId": "PA-C02-mera-naam-hai",
         "language": "punjabi",
         "chapter": 2,
-        "glyphs": "ਮਰਾੀੇ",
+        "glyphs": "ਨਮਰੇੈ",
         "count": 5
       },
       {
-        "lessonId": "PA-C02-naam",
-        "language": "punjabi",
-        "chapter": 2,
-        "glyphs": "ਂਨਮਾ੍",
-        "count": 5
-      },
-      {
-        "lessonId": "PA-C03-main",
+        "lessonId": "PA-C03-kivein",
         "language": "punjabi",
         "chapter": 3,
-        "glyphs": "ਂਮਹਾੈ",
-        "count": 5
-      },
-      {
-        "lessonId": "PA-C04-rab-raakha",
-        "language": "punjabi",
-        "chapter": 4,
-        "glyphs": "ਖਬਰਾੱ",
-        "count": 5
-      },
-      {
-        "lessonId": "PA-C05-bolna",
-        "language": "punjabi",
-        "chapter": 5,
-        "glyphs": "ਣਬਲਾੋ",
+        "glyphs": "ਕਵਿੀੇ",
         "count": 5
       },
       {
@@ -62462,17 +62466,10 @@
         "count": 5
       },
       {
-        "lessonId": "PA-C08-samajhna",
+        "lessonId": "PA-C12-nakk",
         "language": "punjabi",
-        "chapter": 8,
-        "glyphs": "ਖਘਹੋੜ",
-        "count": 5
-      },
-      {
-        "lessonId": "PA-C11-bhain",
-        "language": "punjabi",
-        "chapter": 11,
-        "glyphs": "ਜਨਰਹਾ",
+        "chapter": 12,
+        "glyphs": "ਅਖਮੂੰ",
         "count": 5
       },
       {
@@ -62868,6 +62865,41 @@
         "count": 4
       },
       {
+        "lessonId": "PA-C02-mera",
+        "language": "punjabi",
+        "chapter": 2,
+        "glyphs": "ਮਰੀੇ",
+        "count": 4
+      },
+      {
+        "lessonId": "PA-C04-rab-raakha",
+        "language": "punjabi",
+        "chapter": 4,
+        "glyphs": "ਖਬਰੱ",
+        "count": 4
+      },
+      {
+        "lessonId": "PA-C05-bolna",
+        "language": "punjabi",
+        "chapter": 5,
+        "glyphs": "ਣਬਲੋ",
+        "count": 4
+      },
+      {
+        "lessonId": "PA-C08-likhna",
+        "language": "punjabi",
+        "chapter": 8,
+        "glyphs": "ਦਮੀੈ",
+        "count": 4
+      },
+      {
+        "lessonId": "PA-C08-samajhna",
+        "language": "punjabi",
+        "chapter": 8,
+        "glyphs": "ਖਘੋੜ",
+        "count": 4
+      },
+      {
         "lessonId": "RU-C02-kak-vas-zovut",
         "language": "russian",
         "chapter": 2,
@@ -63204,6 +63236,13 @@
         "count": 3
       },
       {
+        "lessonId": "PA-C02-naam",
+        "language": "punjabi",
+        "chapter": 2,
+        "glyphs": "ਨਮ੍",
+        "count": 3
+      },
+      {
         "lessonId": "PA-C04-phir",
         "language": "punjabi",
         "chapter": 4,
@@ -63218,10 +63257,10 @@
         "count": 3
       },
       {
-        "lessonId": "PA-C09-laina",
+        "lessonId": "PA-C11-bhain",
         "language": "punjabi",
-        "chapter": 9,
-        "glyphs": "ਂਜਮ",
+        "chapter": 11,
+        "glyphs": "ਜਨਰ",
         "count": 3
       },
       {
@@ -63778,17 +63817,24 @@
         "count": 2
       },
       {
-        "lessonId": "PA-C01-practice",
-        "language": "punjabi",
-        "chapter": 1,
-        "glyphs": "ਸ਼",
-        "count": 2
-      },
-      {
         "lessonId": "PA-C02-ki",
         "language": "punjabi",
         "chapter": 2,
         "glyphs": "ਕੀ",
+        "count": 2
+      },
+      {
+        "lessonId": "PA-C03-main",
+        "language": "punjabi",
+        "chapter": 3,
+        "glyphs": "ਮੈ",
+        "count": 2
+      },
+      {
+        "lessonId": "PA-C09-laina",
+        "language": "punjabi",
+        "chapter": 9,
+        "glyphs": "ਜਮ",
         "count": 2
       },
       {
@@ -64964,10 +65010,10 @@
     "summary": {
       "tracksWithScript": 17,
       "tracksTeachingNothing": 0,
-      "violations": 720,
-      "exposureOnly": 192,
-      "exposureExemptedGlyphs": 2000,
-      "headwordsWithoutRomanization": 302,
+      "violations": 714,
+      "exposureOnly": 197,
+      "exposureExemptedGlyphs": 2010,
+      "headwordsWithoutRomanization": 297,
       "tracksWithUnknownScript": 0
     },
     "unknownScriptTracks": []
@@ -69237,8 +69283,118 @@
       },
       {
         "language": "punjabi",
-        "evidence": [],
-        "validEvidence": [],
+        "evidence": [
+          {
+            "language": "punjabi",
+            "lessonId": "PA-W01-ha",
+            "blockIndex": 2,
+            "blockTitle": "Writing — observe and trace",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 31
+          },
+          {
+            "language": "punjabi",
+            "lessonId": "PA-W01-aa-matra",
+            "blockIndex": 2,
+            "blockTitle": "Writing — observe and trace",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 32
+          },
+          {
+            "language": "punjabi",
+            "lessonId": "PA-W01-bindi",
+            "blockIndex": 2,
+            "blockTitle": "Writing — observe and trace",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 33
+          },
+          {
+            "language": "punjabi",
+            "lessonId": "PA-W01-haan-guided-copy",
+            "blockIndex": 1,
+            "blockTitle": "Writing — guided copy",
+            "stage": "guided-copy",
+            "level": "pre-A1",
+            "sequence": 35
+          },
+          {
+            "language": "punjabi",
+            "lessonId": "PA-W01-haan-delayed-copy",
+            "blockIndex": 1,
+            "blockTitle": "Writing — delayed copy",
+            "stage": "delayed-copy",
+            "level": "pre-A1",
+            "sequence": 36
+          },
+          {
+            "language": "punjabi",
+            "lessonId": "PA-W01-haan-dictation",
+            "blockIndex": 1,
+            "blockTitle": "Writing — short dictation",
+            "stage": "dictation-transcription",
+            "level": "pre-A1",
+            "sequence": 37
+          }
+        ],
+        "validEvidence": [
+          {
+            "language": "punjabi",
+            "lessonId": "PA-W01-ha",
+            "blockIndex": 2,
+            "blockTitle": "Writing — observe and trace",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 31
+          },
+          {
+            "language": "punjabi",
+            "lessonId": "PA-W01-aa-matra",
+            "blockIndex": 2,
+            "blockTitle": "Writing — observe and trace",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 32
+          },
+          {
+            "language": "punjabi",
+            "lessonId": "PA-W01-bindi",
+            "blockIndex": 2,
+            "blockTitle": "Writing — observe and trace",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 33
+          },
+          {
+            "language": "punjabi",
+            "lessonId": "PA-W01-haan-guided-copy",
+            "blockIndex": 1,
+            "blockTitle": "Writing — guided copy",
+            "stage": "guided-copy",
+            "level": "pre-A1",
+            "sequence": 35
+          },
+          {
+            "language": "punjabi",
+            "lessonId": "PA-W01-haan-delayed-copy",
+            "blockIndex": 1,
+            "blockTitle": "Writing — delayed copy",
+            "stage": "delayed-copy",
+            "level": "pre-A1",
+            "sequence": 36
+          },
+          {
+            "language": "punjabi",
+            "lessonId": "PA-W01-haan-dictation",
+            "blockIndex": 1,
+            "blockTitle": "Writing — short dictation",
+            "stage": "dictation-transcription",
+            "level": "pre-A1",
+            "sequence": 37
+          }
+        ],
         "defects": [],
         "levels": [
           {
@@ -69249,14 +69405,14 @@
               "delayed-copy",
               "dictation-transcription"
             ],
-            "evidencedStages": [],
-            "missingStages": [
+            "evidencedStages": [
               "observe-trace",
               "guided-copy",
               "delayed-copy",
               "dictation-transcription"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           },
           {
             "level": "A1",
@@ -69268,12 +69424,13 @@
               "controlled-composition",
               "timed-assessment-production"
             ],
-            "evidencedStages": [],
-            "missingStages": [
+            "evidencedStages": [
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription",
+              "dictation-transcription"
+            ],
+            "missingStages": [
               "controlled-composition",
               "timed-assessment-production"
             ],
@@ -69290,12 +69447,13 @@
               "connected-composition",
               "timed-assessment-production"
             ],
-            "evidencedStages": [],
-            "missingStages": [
+            "evidencedStages": [
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription",
+              "dictation-transcription"
+            ],
+            "missingStages": [
               "controlled-composition",
               "connected-composition",
               "timed-assessment-production"
@@ -69313,12 +69471,13 @@
               "connected-composition",
               "timed-assessment-production"
             ],
-            "evidencedStages": [],
-            "missingStages": [
+            "evidencedStages": [
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription",
+              "dictation-transcription"
+            ],
+            "missingStages": [
               "controlled-composition",
               "connected-composition",
               "timed-assessment-production"
@@ -69336,12 +69495,13 @@
               "connected-composition",
               "timed-assessment-production"
             ],
-            "evidencedStages": [],
-            "missingStages": [
+            "evidencedStages": [
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription",
+              "dictation-transcription"
+            ],
+            "missingStages": [
               "controlled-composition",
               "connected-composition",
               "timed-assessment-production"
@@ -69359,12 +69519,13 @@
               "connected-composition",
               "timed-assessment-production"
             ],
-            "evidencedStages": [],
-            "missingStages": [
+            "evidencedStages": [
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription",
+              "dictation-transcription"
+            ],
+            "missingStages": [
               "controlled-composition",
               "connected-composition",
               "timed-assessment-production"
@@ -69382,12 +69543,13 @@
               "connected-composition",
               "timed-assessment-production"
             ],
-            "evidencedStages": [],
-            "missingStages": [
+            "evidencedStages": [
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription",
+              "dictation-transcription"
+            ],
+            "missingStages": [
               "controlled-composition",
               "connected-composition",
               "timed-assessment-production"
@@ -70437,11 +70599,11 @@
     ],
     "summary": {
       "tracks": 23,
-      "tracksWithAnyEvidence": 15,
-      "tracksCompleteAtPreA1": 7,
-      "evidenceBlocks": 87,
+      "tracksWithAnyEvidence": 16,
+      "tracksCompleteAtPreA1": 8,
+      "evidenceBlocks": 93,
       "invalidEvidenceBlocks": 0,
-      "missingTrackLevelStages": 727
+      "missingTrackLevelStages": 699
     }
   },
   "gentleRamp": {
@@ -71636,15 +71798,15 @@
       },
       {
         "language": "punjabi",
-        "lessonCount": 71,
-        "atomMeasurableLessons": 40,
-        "atomMeasurementBlindLessons": 31,
+        "lessonCount": 75,
+        "atomMeasurableLessons": 46,
+        "atomMeasurementBlindLessons": 29,
         "durationViolations": 0,
         "atomLessonSpikes": 4,
         "atomChapterSpikes": 1,
-        "glyphLessonSpikes": 2,
+        "glyphLessonSpikes": 3,
         "scriptSystemSpikes": 0,
-        "scriptClosureViolations": 51,
+        "scriptClosureViolations": 45,
         "neverTaughtGlyphs": 36,
         "orderDefects": 0,
         "lessonsWithoutSequence": 0,
@@ -71652,19 +71814,19 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "forwardReferences": 0,
-        "atomsTaught": 92,
+        "atomsTaught": 98,
         "atomsNeverRevisited": 5,
-        "reinforcementWindowMisses": 137,
+        "reinforcementWindowMisses": 142,
         "reinforcementMissesByWindow": {
-          "R1": 25,
-          "R2": 52,
-          "R3": 60,
+          "R1": 26,
+          "R2": 54,
+          "R3": 62,
           "R4": 0
         },
         "payoffSurprises": 0,
         "writingPracticeLessons": 53,
-        "firstWritingPracticeAt": 0,
-        "lessonsBeforeWritingPractice": 0,
+        "firstWritingPracticeAt": 3,
+        "lessonsBeforeWritingPractice": 3,
         "findings": [
           {
             "language": "punjabi",
@@ -71672,6 +71834,13 @@
             "count": 36,
             "unit": "glyph(s)",
             "detail": "teach every load-bearing glyph before asking the learner to decode it"
+          },
+          {
+            "language": "punjabi",
+            "kind": "writing-ramp",
+            "count": 3,
+            "unit": "opening lesson(s)",
+            "detail": "move the first gentle writing microstep to lesson one"
           },
           {
             "language": "punjabi",
@@ -71683,21 +71852,21 @@
           {
             "language": "punjabi",
             "kind": "glyph-step",
-            "count": 2,
+            "count": 3,
             "unit": "lesson/system spike(s)",
             "detail": "split new glyphs and writing systems across gentler steps"
           },
           {
             "language": "punjabi",
             "kind": "reinforcement",
-            "count": 137,
+            "count": 142,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
           {
             "language": "punjabi",
             "kind": "measurement-blind",
-            "count": 31,
+            "count": 29,
             "unit": "lesson(s)",
             "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
           }
@@ -72491,6 +72660,13 @@
         "detail": "move the first gentle writing microstep to lesson one"
       },
       {
+        "language": "punjabi",
+        "kind": "writing-ramp",
+        "count": 3,
+        "unit": "opening lesson(s)",
+        "detail": "move the first gentle writing microstep to lesson one"
+      },
+      {
         "language": "french",
         "kind": "writing-ramp",
         "count": 1,
@@ -72708,6 +72884,13 @@
         "detail": "split new glyphs and writing systems across gentler steps"
       },
       {
+        "language": "punjabi",
+        "kind": "glyph-step",
+        "count": 3,
+        "unit": "lesson/system spike(s)",
+        "detail": "split new glyphs and writing systems across gentler steps"
+      },
+      {
         "language": "gujarati",
         "kind": "glyph-step",
         "count": 2,
@@ -72716,13 +72899,6 @@
       },
       {
         "language": "marathi",
-        "kind": "glyph-step",
-        "count": 2,
-        "unit": "lesson/system spike(s)",
-        "detail": "split new glyphs and writing systems across gentler steps"
-      },
-      {
-        "language": "punjabi",
         "kind": "glyph-step",
         "count": 2,
         "unit": "lesson/system spike(s)",
@@ -72878,7 +73054,7 @@
       {
         "language": "punjabi",
         "kind": "reinforcement",
-        "count": 137,
+        "count": 142,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -73037,13 +73213,6 @@
         "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
       },
       {
-        "language": "punjabi",
-        "kind": "measurement-blind",
-        "count": 31,
-        "unit": "lesson(s)",
-        "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
-      },
-      {
         "language": "kannada",
         "kind": "measurement-blind",
         "count": 30,
@@ -73061,6 +73230,13 @@
         "language": "telugu",
         "kind": "measurement-blind",
         "count": 30,
+        "unit": "lesson(s)",
+        "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
+      },
+      {
+        "language": "punjabi",
+        "kind": "measurement-blind",
+        "count": 29,
         "unit": "lesson(s)",
         "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
       },
@@ -73125,9 +73301,9 @@
       "tracks": 23,
       "tracksWithDetectedCliffs": 21,
       "tracksWithNoWritingPractice": 0,
-      "tracksWhereWritingStartsLate": 4,
-      "atomMeasurementBlindLessons": 502,
-      "findings": 124
+      "tracksWhereWritingStartsLate": 5,
+      "atomMeasurementBlindLessons": 500,
+      "findings": 125
     }
   },
   "levelGate": {
@@ -73537,19 +73713,14 @@
         "inProgressAt": "pre-A1",
         "blockers": [
           {
-            "criterion": "writing-stage",
-            "detail": "4 cumulative writing stage(s) unproved at pre-A1: observe-trace, guided-copy, delayed-copy, dictation-transcription",
-            "shortfall": 4
-          },
-          {
             "criterion": "vocabulary",
             "detail": "teaches 36 distinct headwords at or below pre-A1, against 300",
             "shortfall": 264
           },
           {
             "criterion": "reinforcement",
-            "detail": "3 atom(s) at or below pre-A1 are revisited fewer than twice (12 etymology hook(s) waived)",
-            "shortfall": 3
+            "detail": "4 atom(s) at or below pre-A1 are revisited fewer than twice (12 etymology hook(s) waived)",
+            "shortfall": 4
           }
         ],
         "vocabulary": 55
@@ -73730,12 +73901,12 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 3489,
-    "voice": 2485,
-    "sight": 587,
-    "pen": 417,
-    "coreVoice": 2943,
-    "lessonsWithWritingSegments": 188,
+    "totalLessons": 3493,
+    "voice": 2489,
+    "sight": 583,
+    "pen": 421,
+    "coreVoice": 2944,
+    "lessonsWithWritingSegments": 195,
     "drivablePercent": 84,
     "tracks": [
       {
@@ -80912,28 +81083,29 @@
       },
       {
         "language": "punjabi",
-        "lessonCount": 71,
-        "voice": 18,
-        "sight": 43,
-        "pen": 10,
-        "coreVoice": 60,
-        "drivablePercent": 85,
-        "drivablePrefixTotal": 58,
+        "lessonCount": 75,
+        "voice": 22,
+        "sight": 39,
+        "pen": 14,
+        "coreVoice": 61,
+        "drivablePercent": 81,
+        "drivablePrefixTotal": 55,
         "chapters": [
           {
             "language": "punjabi",
             "chapter": 1,
-            "lessonCount": 6,
-            "voice": 1,
-            "sight": 5,
-            "pen": 0,
-            "coreVoice": 6,
+            "lessonCount": 13,
+            "voice": 5,
+            "sight": 1,
+            "pen": 7,
+            "coreVoice": 7,
             "modalities": [
               "voice",
-              "sight"
+              "sight",
+              "pen"
             ],
-            "drivablePrefix": 6,
-            "firstNonVoiceLesson": null
+            "drivablePrefix": 3,
+            "firstNonVoiceLesson": "PA-W01-ha"
           },
           {
             "language": "punjabi",
@@ -81111,17 +81283,17 @@
           {
             "language": "punjabi",
             "chapter": 14,
-            "lessonCount": 10,
+            "lessonCount": 7,
             "voice": 0,
             "sight": 0,
-            "pen": 10,
+            "pen": 7,
             "coreVoice": 0,
             "modalities": [
               "sight",
               "pen"
             ],
             "drivablePrefix": 0,
-            "firstNonVoiceLesson": "PA-W01-ha"
+            "firstNonVoiceLesson": "PA-W01-na"
           }
         ]
       },
@@ -89139,7 +89311,7 @@
     "underspentPercent": 96
   },
   "infoDump": {
-    "lessons": 3489,
+    "lessons": 3493,
     "lessonsWithFindings": 121,
     "ruleStatements": 30,
     "paradigmTables": 95,
@@ -89149,10 +89321,10 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 53,
-    "lessonsUsingTerms": 3362,
-    "usesBeforeIntroduction": 12148,
-    "technicalUsesBeforeIntroduction": 3181,
-    "technicalLessons": 1657,
+    "lessonsUsingTerms": 3365,
+    "usesBeforeIntroduction": 12151,
+    "technicalUsesBeforeIntroduction": 3182,
+    "technicalLessons": 1658,
     "worstTerms": [
       {
         "term": "verb",
@@ -89181,7 +89353,7 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 3489,
+    "lessonsScanned": 3493,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
