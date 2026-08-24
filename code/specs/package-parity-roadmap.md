@@ -6294,9 +6294,9 @@ the loop registers the separate pending owner
 `build-tool-csharp-isolated-artifact-fixture-root-resolution` rather than
 widening this F# tranche.
 
-The branch rebased without conflict over three non-overlapping HTML-parser and
-human-language commits to exact `origin/main`
-`109c30d66c1a6374ae6b6288ca29efaf638008c1`. A fresh collision-checked report
+The branch rebased without conflict over four non-overlapping HTML-parser,
+human-language, and ADJ facts commits to exact `origin/main`
+`5f5e7f6242732f2e0d33b08c78a86dbfd464efdd`. A fresh collision-checked report
 at that revision is unchanged at 15 established lanes, 1,370 identities, 4,563
 slots, zero collisions, and zero unknown buckets.
 
