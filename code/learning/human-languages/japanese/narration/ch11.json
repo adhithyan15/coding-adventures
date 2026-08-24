@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Seven Body Words, No New Guessing",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:eb6b44a84de9d053",
+  "sourceHash": "fnv1a64:30691b733e4fffd2",
   "lessons": [
     {
       "id": "JA-W11-small-tsu",
@@ -20,7 +20,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:81681b9eac0e3432",
+      "sourceHash": "fnv1a64:033672f13beb98d1",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -40,13 +40,13 @@
           "segments": [
             {
               "kind": "pause",
-              "seconds": 12,
+              "seconds": 35,
               "perItem": false,
-              "source": "[PAUSE 12s]"
+              "source": "[PAUSE 35s]"
             },
             {
               "kind": "speech",
-              "text": "Say yukkuri and itte kudasai. Hold the silence before each second consonant; do not add a vowel."
+              "text": "Point here and say koko. Count one time with ichido. Ask for the line a little more slowly, then isolate yukkuri and itte kudasai. Hold the silence before each second consonant; do not add a vowel."
             }
           ]
         },
@@ -133,7 +133,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3123dd09b9e307be",
+      "sourceHash": "fnv1a64:28ed9c40ca5bea68",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -153,13 +153,13 @@
           "segments": [
             {
               "kind": "pause",
-              "seconds": 12,
+              "seconds": 20,
               "perItem": false,
-              "source": "[PAUSE 12s]"
+              "source": "[PAUSE 20s]"
             },
             {
               "kind": "speech",
-              "text": "Say itte kudasai. Write the small っ (small tsu) that holds before t."
+              "text": "Write もうすこし, say itte kudasai, then write the small っ (small tsu) that holds before t."
             }
           ]
         },
@@ -471,7 +471,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dc3f128e8bbbcef7",
+      "sourceHash": "fnv1a64:9587ff0cdfcf4b43",
       "notice": null,
       "blocks": [
         {
@@ -481,13 +481,13 @@
           "segments": [
             {
               "kind": "pause",
-              "seconds": 10,
+              "seconds": 25,
               "perItem": false,
-              "source": "[PAUSE 10s]"
+              "source": "[PAUSE 25s]"
             },
             {
               "kind": "speech",
-              "text": "Write て once and say its mora."
+              "text": "Write て and だ (da). Point here and say koko, then ask for the line a little more slowly."
             }
           ]
         },

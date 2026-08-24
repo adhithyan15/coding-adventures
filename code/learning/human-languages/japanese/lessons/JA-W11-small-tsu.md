@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [JA-SCRIPT-SMALL-TSU-01]
 practises:
-  knowledge: [JA-SCRIPT-SMALL-TSU-01, JA-LEX-YUKKURI, JA-LEX-ITTE-KUDASAI]
+  knowledge: [JA-SCRIPT-SMALL-TSU-01, JA-LEX-YUKKURI, JA-LEX-ITTE-KUDASAI, JA-LEX-KOKO, JA-LEX-SLOWER-PLEASE, JA-LEX-ICHIDO]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus, meaning-input]
@@ -32,10 +32,11 @@ reviews_of: [JA-C10-yukkuri, JA-C10-itte-kudasai]
 # っ — one small held beat
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-YUKKURI, JA-LEX-ITTE-KUDASAI] -->
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-YUKKURI, JA-LEX-ITTE-KUDASAI, JA-LEX-KOKO, JA-LEX-SLOWER-PLEASE, JA-LEX-ICHIDO] -->
 
-[PAUSE 12s] Say *yukkuri* and *itte kudasai*. Hold the silence before each
-second consonant; do not add a vowel.
+[PAUSE 35s] Point here and say *koko*. Count one time with *ichido*. Ask for the
+line a little more slowly, then isolate *yukkuri* and *itte kudasai*. Hold the
+silence before each second consonant; do not add a vowel.
 
 ## Script — the shape
 <!-- hl-knowledge: introduces=[JA-SCRIPT-SMALL-TSU-01]; assesses=[] -->

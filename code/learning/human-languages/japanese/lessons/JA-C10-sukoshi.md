@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [JA-LEX-SUKOSHI]
 practises:
-  knowledge: [JA-LEX-SUKOSHI, JA-LEX-MOU-ICHIDO-ONEGAI-SHIMASU, JA-SCRIPT-SU-01, JA-SCRIPT-KO-01]
+  knowledge: [JA-LEX-SUKOSHI, JA-LEX-MOU-ICHIDO-ONEGAI-SHIMASU, JA-SCRIPT-SU-01, JA-SCRIPT-KO-01, JA-SCRIPT-NE-01]
 skills: [listening, speaking]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, language-focus]
@@ -32,9 +32,9 @@ reviews_of: [JA-C09-mou-ichido-onegaishimasu, JA-W03-su, JA-W01-ko]
 # すこし — ask for a small change
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-MOU-ICHIDO-ONEGAI-SHIMASU, JA-SCRIPT-SU-01, JA-SCRIPT-KO-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-MOU-ICHIDO-ONEGAI-SHIMASU, JA-SCRIPT-SU-01, JA-SCRIPT-KO-01, JA-SCRIPT-NE-01] -->
 
-[PAUSE 12s] Ask for one repetition, then write known **す** and **こ**.
+[PAUSE 18s] Ask for one repetition, then write known **す**, **こ**, and **ね**.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[JA-LEX-SUKOSHI]; assesses=[] -->

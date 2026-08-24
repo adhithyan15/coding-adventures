@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [JA-LEX-TE-HAND]
 practises:
-  knowledge: [JA-LEX-TE-HAND, JA-SCRIPT-TE-01]
+  knowledge: [JA-LEX-TE-HAND, JA-SCRIPT-TE-01, JA-SCRIPT-DA-01, JA-LEX-KOKO, JA-LEX-SLOWER-PLEASE]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output]
@@ -32,9 +32,10 @@ reviews_of: [JA-W11-te]
 # て — hand
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-TE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-TE-01, JA-SCRIPT-DA-01, JA-LEX-KOKO, JA-LEX-SLOWER-PLEASE] -->
 
-[PAUSE 10s] Write **て** once and say its mora.
+[PAUSE 25s] Write **て** and **だ**. Point here and say *koko*, then ask for the
+line a little more slowly.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[JA-LEX-TE-HAND]; assesses=[] -->

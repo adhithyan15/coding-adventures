@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [JA-LEX-MOU]
 practises:
-  knowledge: [JA-LEX-MOU, JA-LEX-WAKARIMASEN, JA-LEX-SUMIMASEN, JA-SCRIPT-ME-01]
+  knowledge: [JA-LEX-MOU, JA-LEX-WAKARIMASEN, JA-LEX-SUMIMASEN, JA-SCRIPT-ME-01, JA-SCRIPT-DO-01]
 skills: [listening, speaking]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, language-focus]
@@ -32,9 +32,9 @@ reviews_of: [JA-C09-wakarimasen, JA-C09-sumimasen, JA-W09-me]
 # もう — one more time begins here
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-WAKARIMASEN, JA-LEX-SUMIMASEN, JA-SCRIPT-ME-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-WAKARIMASEN, JA-LEX-SUMIMASEN, JA-SCRIPT-ME-01, JA-SCRIPT-DO-01] -->
 
-[PAUSE 12s] Say *sumimasen, yoku wakarimasen*. Write **め** once.
+[PAUSE 18s] Say *sumimasen, yoku wakarimasen*. Write **め** and **ど** once.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[JA-LEX-MOU]; assesses=[] -->

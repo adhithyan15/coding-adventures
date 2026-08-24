@@ -113,7 +113,7 @@
     {
       "language": "japanese",
       "chapter": 9,
-      "sourceHash": "fnv1a64:0cfc580bb7429557",
+      "sourceHash": "fnv1a64:f4132f364fce1234",
       "lessonIds": [
         "JA-C09-sumimasen",
         "JA-W09-mi",
@@ -133,7 +133,7 @@
     {
       "language": "japanese",
       "chapter": 10,
-      "sourceHash": "fnv1a64:1fba115d359d9d9b",
+      "sourceHash": "fnv1a64:10db589b7d812418",
       "lessonIds": [
         "JA-W10-se",
         "JA-W10-o",
@@ -153,7 +153,7 @@
     {
       "language": "japanese",
       "chapter": 11,
-      "sourceHash": "fnv1a64:01c3857b2c70d0f1",
+      "sourceHash": "fnv1a64:b81a44ce550a04da",
       "lessonIds": [
         "JA-W11-small-tsu",
         "JA-W11-te",

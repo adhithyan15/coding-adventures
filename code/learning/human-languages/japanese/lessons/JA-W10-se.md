@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [JA-SCRIPT-SE-01]
 practises:
-  knowledge: [JA-SCRIPT-SE-01, JA-LEX-SUMIMASEN, JA-SCRIPT-SU-01, JA-SCRIPT-MI-01, JA-SCRIPT-MA-01, JA-SCRIPT-N-01]
+  knowledge: [JA-SCRIPT-SE-01, JA-LEX-SUMIMASEN, JA-SCRIPT-SU-01, JA-SCRIPT-MI-01, JA-SCRIPT-MA-01, JA-SCRIPT-N-01, JA-LEX-MOU-ICHIDO-ONEGAI-SHIMASU, JA-SCRIPT-RA-01, JA-SCRIPT-SAYOUNARA-READ-01, JA-PERFORMANCE-SAYOUNARA-FOUR-SKILL-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus, meaning-input]
@@ -32,10 +32,11 @@ reviews_of: [JA-C09-sumimasen, JA-W09-mi, JA-W03-su, JA-W03-ma, JA-W01-n]
 # せ — close the opener
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-SUMIMASEN, JA-SCRIPT-SU-01, JA-SCRIPT-MI-01, JA-SCRIPT-MA-01, JA-SCRIPT-N-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-SUMIMASEN, JA-SCRIPT-SU-01, JA-SCRIPT-MI-01, JA-SCRIPT-MA-01, JA-SCRIPT-N-01, JA-LEX-MOU-ICHIDO-ONEGAI-SHIMASU, JA-SCRIPT-RA-01, JA-SCRIPT-SAYOUNARA-READ-01, JA-PERFORMANCE-SAYOUNARA-FOUR-SKILL-01] -->
 
-[PAUSE 15s] Say *sumimasen*, then write known **す, み, ま, ん** separately.
-Only the fourth sign is still missing.
+[PAUSE 40s] Ask for one repetition. Then hear the farewell in your mind, say
+it, read **さようなら**, and write its final **ら**. Write known **す, み, ま,
+ん** separately. Only the fourth sign of *sumimasen* is still missing.
 
 ## Script — the shape
 <!-- hl-knowledge: introduces=[JA-SCRIPT-SE-01]; assesses=[] -->

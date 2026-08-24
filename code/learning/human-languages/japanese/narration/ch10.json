@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "A Little More Slowly",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ed7b5e7103e84acc",
+  "sourceHash": "fnv1a64:7bcb77ff93c3d224",
   "lessons": [
     {
       "id": "JA-W10-se",
@@ -20,7 +20,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9d7dd625b7019832",
+      "sourceHash": "fnv1a64:543ba16b7afc4d71",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -40,13 +40,13 @@
           "segments": [
             {
               "kind": "pause",
-              "seconds": 15,
+              "seconds": 40,
               "perItem": false,
-              "source": "[PAUSE 15s]"
+              "source": "[PAUSE 40s]"
             },
             {
               "kind": "speech",
-              "text": "Say sumimasen, then write known す, み, ま, ん separately. Only the fourth sign is still missing."
+              "text": "Ask for one repetition. Then hear the farewell in your mind, say it, read さようなら, and write its final ら. Write known す, み, ま, ん separately. Only the fourth sign of sumimasen is still missing."
             }
           ]
         },
@@ -374,7 +374,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:39864d4ba1d21dc0",
+      "sourceHash": "fnv1a64:cb790edfcb9ac1d1",
       "notice": null,
       "blocks": [
         {
@@ -384,13 +384,13 @@
           "segments": [
             {
               "kind": "pause",
-              "seconds": 12,
+              "seconds": 18,
               "perItem": false,
-              "source": "[PAUSE 12s]"
+              "source": "[PAUSE 18s]"
             },
             {
               "kind": "speech",
-              "text": "Ask for one repetition, then write known す and こ."
+              "text": "Ask for one repetition, then write known す, こ, and ね."
             }
           ]
         },
@@ -974,7 +974,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cf39634419ad9059",
+      "sourceHash": "fnv1a64:c2410108830f66ea",
       "notice": null,
       "blocks": [
         {
@@ -984,13 +984,13 @@
           "segments": [
             {
               "kind": "pause",
-              "seconds": 18,
+              "seconds": 28,
               "perItem": false,
-              "source": "[PAUSE 18s]"
+              "source": "[PAUSE 28s]"
             },
             {
               "kind": "speech",
-              "text": "Write もう and すこし (sukoshi) separately. Read both."
+              "text": "Say itte kudasai, write ゆ (yu), then write もう and すこし (sukoshi) separately. Read both."
             }
           ]
         },

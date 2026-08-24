@@ -154,7 +154,7 @@
     {
       "language": "japanese",
       "chapter": 9,
-      "sourceHash": "fnv1a64:7eaa8fa580e66c40",
+      "sourceHash": "fnv1a64:e1ebd0bdb2253958",
       "lessonIds": [
         "JA-C09-sumimasen",
         "JA-W09-mi",
@@ -173,13 +173,13 @@
       "drivablePrefix": 1,
       "text": "japanese/narration/ch09.txt",
       "json": "japanese/narration/ch09.json",
-      "textHash": "fnv1a64:52d7701221b6884c",
-      "jsonHash": "fnv1a64:c7afd61c9403e629"
+      "textHash": "fnv1a64:cb5c6f6c6815fd41",
+      "jsonHash": "fnv1a64:865ecd47589a5f5d"
     },
     {
       "language": "japanese",
       "chapter": 10,
-      "sourceHash": "fnv1a64:ed7b5e7103e84acc",
+      "sourceHash": "fnv1a64:7bcb77ff93c3d224",
       "lessonIds": [
         "JA-W10-se",
         "JA-W10-o",
@@ -198,13 +198,13 @@
       "drivablePrefix": 0,
       "text": "japanese/narration/ch10.txt",
       "json": "japanese/narration/ch10.json",
-      "textHash": "fnv1a64:b339247391ba6ee2",
-      "jsonHash": "fnv1a64:0f6eb219d08f329d"
+      "textHash": "fnv1a64:5cb2dcfefe4658a9",
+      "jsonHash": "fnv1a64:7b8c341c0dd7993e"
     },
     {
       "language": "japanese",
       "chapter": 11,
-      "sourceHash": "fnv1a64:eb6b44a84de9d053",
+      "sourceHash": "fnv1a64:30691b733e4fffd2",
       "lessonIds": [
         "JA-W11-small-tsu",
         "JA-W11-te",
@@ -223,8 +223,8 @@
       "drivablePrefix": 0,
       "text": "japanese/narration/ch11.txt",
       "json": "japanese/narration/ch11.json",
-      "textHash": "fnv1a64:cfae4a18582ffb5e",
-      "jsonHash": "fnv1a64:1c67eeb297ed4cd8"
+      "textHash": "fnv1a64:86c1f47ae837c3d9",
+      "jsonHash": "fnv1a64:799e50a8650ba943"
     }
   ],
   "findings": []

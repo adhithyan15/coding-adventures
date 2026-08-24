@@ -17,11 +17,11 @@
   "forwardReviews": 0,
   "forwardReferences": 0,
   "atomsTaught": 91,
-  "atomsNeverRevisited": 4,
-  "reinforcementWindowMisses": 52,
+  "atomsNeverRevisited": 1,
+  "reinforcementWindowMisses": 35,
   "reinforcementMissesByWindow": {
-    "R1": 9,
-    "R2": 8,
+    "R1": 0,
+    "R2": 0,
     "R3": 35,
     "R4": 0
   },
@@ -33,7 +33,7 @@
     {
       "language": "japanese",
       "kind": "reinforcement",
-      "count": 52,
+      "count": 35,
       "unit": "missed window(s)",
       "detail": "add retrieval at the expanding R1-R4 intervals"
     }
@@ -41,7 +41,7 @@
   "next": {
     "language": "japanese",
     "kind": "reinforcement",
-    "count": 52,
+    "count": 35,
     "unit": "missed window(s)",
     "detail": "add retrieval at the expanding R1-R4 intervals"
   }

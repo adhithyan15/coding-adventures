@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:ed46ed4ba4bf49d0",
+  "sourceHash": "fnv1a64:10f178ecfafe4035",
   "summary": {
     "totalLessons": 80,
     "voice": 25,
@@ -1218,7 +1218,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:729268f3906c3c30"
+      "sourceHash": "fnv1a64:2f2bf3f61c416e01"
     },
     {
       "id": "JA-W09-mi",
@@ -1237,7 +1237,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:3ab9b51bad9e5dab",
+      "sourceHash": "fnv1a64:2c27f6ae585b5442",
       "detachableSegments": [
         "Script — the shape"
       ],
@@ -1366,7 +1366,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:f281273b2cea7d3b"
+      "sourceHash": "fnv1a64:34d85874d9796e60"
     },
     {
       "id": "JA-W09-mo",
@@ -1462,7 +1462,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:9d7dd625b7019832",
+      "sourceHash": "fnv1a64:543ba16b7afc4d71",
       "detachableSegments": [
         "Script — the shape"
       ],
@@ -1530,7 +1530,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:39864d4ba1d21dc0"
+      "sourceHash": "fnv1a64:cb790edfcb9ac1d1"
     },
     {
       "id": "JA-W10-shi",
@@ -1630,7 +1630,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:cf39634419ad9059"
+      "sourceHash": "fnv1a64:c2410108830f66ea"
     },
     {
       "id": "JA-C10-wakarimashita",
@@ -1703,7 +1703,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:81681b9eac0e3432",
+      "sourceHash": "fnv1a64:033672f13beb98d1",
       "detachableSegments": [
         "Script — the shape"
       ],
@@ -1726,7 +1726,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:3123dd09b9e307be",
+      "sourceHash": "fnv1a64:28ed9c40ca5bea68",
       "detachableSegments": [
         "Script — the shape"
       ],
@@ -1794,7 +1794,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:dc3f128e8bbbcef7"
+      "sourceHash": "fnv1a64:9587ff0cdfcf4b43"
     },
     {
       "id": "JA-C11-mimi",

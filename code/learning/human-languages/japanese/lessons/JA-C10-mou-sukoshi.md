@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [JA-LEX-MOU-SUKOSHI]
 practises:
-  knowledge: [JA-LEX-MOU-SUKOSHI, JA-LEX-MOU, JA-LEX-SUKOSHI, JA-SCRIPT-MO-01, JA-SCRIPT-U-01, JA-SCRIPT-SU-01, JA-SCRIPT-KO-01, JA-SCRIPT-SHI-01]
+  knowledge: [JA-LEX-MOU-SUKOSHI, JA-LEX-MOU, JA-LEX-SUKOSHI, JA-SCRIPT-MO-01, JA-SCRIPT-U-01, JA-SCRIPT-SU-01, JA-SCRIPT-KO-01, JA-SCRIPT-SHI-01, JA-LEX-ITTE-KUDASAI, JA-SCRIPT-YU-01]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -32,9 +32,10 @@ reviews_of: [JA-C09-mou, JA-C10-sukoshi, JA-W09-mo, JA-W03-u, JA-W03-su, JA-W01-
 # もうすこし — a little more
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-MOU, JA-LEX-SUKOSHI, JA-SCRIPT-MO-01, JA-SCRIPT-U-01, JA-SCRIPT-SU-01, JA-SCRIPT-KO-01, JA-SCRIPT-SHI-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-MOU, JA-LEX-SUKOSHI, JA-SCRIPT-MO-01, JA-SCRIPT-U-01, JA-SCRIPT-SU-01, JA-SCRIPT-KO-01, JA-SCRIPT-SHI-01, JA-LEX-ITTE-KUDASAI, JA-SCRIPT-YU-01] -->
 
-[PAUSE 18s] Write **もう** and **すこし** separately. Read both.
+[PAUSE 28s] Say *itte kudasai*, write **ゆ**, then write **もう** and **すこし**
+separately. Read both.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[JA-LEX-MOU-SUKOSHI]; assesses=[] -->

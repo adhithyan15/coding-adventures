@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "One More Time, Please",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:7eaa8fa580e66c40",
+  "sourceHash": "fnv1a64:e1ebd0bdb2253958",
   "lessons": [
     {
       "id": "JA-C09-sumimasen",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:729268f3906c3c30",
+      "sourceHash": "fnv1a64:2f2bf3f61c416e01",
       "notice": null,
       "blocks": [
         {
@@ -29,13 +29,13 @@
           "segments": [
             {
               "kind": "pause",
-              "seconds": 8,
+              "seconds": 25,
               "perItem": false,
-              "source": "[PAUSE 8s]"
+              "source": "[PAUSE 25s]"
             },
             {
               "kind": "speech",
-              "text": "Say the farewell from the last chapter once. Now imagine that the other person has spoken and you missed it. Do not guess; open a repair."
+              "text": "Hear the farewell in your mind, say it, read さようなら, and write it once. Now imagine that the other person has spoken and you missed it. Do not guess; open a repair."
             }
           ]
         },
@@ -151,7 +151,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3ab9b51bad9e5dab",
+      "sourceHash": "fnv1a64:2c27f6ae585b5442",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -171,13 +171,13 @@
           "segments": [
             {
               "kind": "pause",
-              "seconds": 10,
+              "seconds": 15,
               "perItem": false,
-              "source": "[PAUSE 10s]"
+              "source": "[PAUSE 15s]"
             },
             {
               "kind": "speech",
-              "text": "Say sumimasen once, then write known ま. The new sign shares the m opening but carries a different vowel."
+              "text": "Say sumimasen once, then write known ま and な. The new sign shares the m opening but carries a different vowel."
             }
           ]
         },
@@ -874,7 +874,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f281273b2cea7d3b",
+      "sourceHash": "fnv1a64:34d85874d9796e60",
       "notice": null,
       "blocks": [
         {
@@ -884,13 +884,13 @@
           "segments": [
             {
               "kind": "pause",
-              "seconds": 12,
+              "seconds": 18,
               "perItem": false,
-              "source": "[PAUSE 12s]"
+              "source": "[PAUSE 18s]"
             },
             {
               "kind": "speech",
-              "text": "Say sumimasen, yoku wakarimasen. Write め (me) once."
+              "text": "Say sumimasen, yoku wakarimasen. Write め (me) and ど (do) once."
             }
           ]
         },

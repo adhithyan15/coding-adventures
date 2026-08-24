@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [JA-SCRIPT-TE-01]
 practises:
-  knowledge: [JA-SCRIPT-TE-01, JA-LEX-ITTE-KUDASAI, JA-SCRIPT-SMALL-TSU-01]
+  knowledge: [JA-SCRIPT-TE-01, JA-LEX-ITTE-KUDASAI, JA-SCRIPT-SMALL-TSU-01, JA-LEX-MOU-SUKOSHI]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus, meaning-input]
@@ -32,9 +32,10 @@ reviews_of: [JA-C10-itte-kudasai, JA-W11-small-tsu]
 # て — close *itte*
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ITTE-KUDASAI, JA-SCRIPT-SMALL-TSU-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ITTE-KUDASAI, JA-SCRIPT-SMALL-TSU-01, JA-LEX-MOU-SUKOSHI] -->
 
-[PAUSE 12s] Say *itte kudasai*. Write the small **っ** that holds before *t*.
+[PAUSE 20s] Write **もうすこし**, say *itte kudasai*, then write the small
+**っ** that holds before *t*.
 
 ## Script — the shape
 <!-- hl-knowledge: introduces=[JA-SCRIPT-TE-01]; assesses=[] -->

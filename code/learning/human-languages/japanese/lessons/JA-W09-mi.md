@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [JA-SCRIPT-MI-01]
 practises:
-  knowledge: [JA-SCRIPT-MI-01, JA-LEX-SUMIMASEN, JA-SCRIPT-MA-01]
+  knowledge: [JA-SCRIPT-MI-01, JA-LEX-SUMIMASEN, JA-SCRIPT-MA-01, JA-SCRIPT-NA-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus, meaning-input]
@@ -32,10 +32,10 @@ reviews_of: [JA-C09-sumimasen, JA-W03-ma]
 # み — one looped bridge
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-SUMIMASEN, JA-SCRIPT-MA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-SUMIMASEN, JA-SCRIPT-MA-01, JA-SCRIPT-NA-01] -->
 
-[PAUSE 10s] Say *sumimasen* once, then write known **ま**. The new sign shares
-the *m* opening but carries a different vowel.
+[PAUSE 15s] Say *sumimasen* once, then write known **ま** and **な**. The new
+sign shares the *m* opening but carries a different vowel.
 
 ## Script — the shape
 <!-- hl-knowledge: introduces=[JA-SCRIPT-MI-01]; assesses=[] -->

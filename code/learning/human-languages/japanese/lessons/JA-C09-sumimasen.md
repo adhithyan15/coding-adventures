@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [JA-LEX-SUMIMASEN]
 practises:
-  knowledge: [JA-LEX-SUMIMASEN, JA-LEX-SAYOUNARA]
+  knowledge: [JA-LEX-SUMIMASEN, JA-LEX-SAYOUNARA, JA-PERFORMANCE-SAYOUNARA-FOUR-SKILL-01]
 skills: [listening, speaking]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output]
@@ -32,10 +32,11 @@ reviews_of: [JA-C08-sayounara]
 # すみません — open the repair gently
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-SAYOUNARA] -->
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-SAYOUNARA, JA-PERFORMANCE-SAYOUNARA-FOUR-SKILL-01] -->
 
-[PAUSE 8s] Say the farewell from the last chapter once. Now imagine that the
-other person has spoken and you missed it. Do not guess; open a repair.
+[PAUSE 25s] Hear the farewell in your mind, say it, read **さようなら**, and
+write it once. Now imagine that the other person has spoken and you missed it.
+Do not guess; open a repair.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[JA-LEX-SUMIMASEN]; assesses=[] -->
