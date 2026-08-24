@@ -7669,10 +7669,13 @@ impl HtmlParser {
             && (self.current_last_child_element_is("td")
                 || self.current_last_child_element_is("th"))
         {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-caption-end-tag-in-template-row",
-                "end tag `</caption>` was ignored at a template row boundary",
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-caption-end-tag-in-template-row",
+                    "end tag `</caption>` was ignored at a template row boundary",
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             return;
         }
         if matches!(name, "head" | "frameset")
@@ -27401,6 +27404,17 @@ mod tests {
         .at_emission(Some(end_tag_position_at(source, name, occurrence)))
     }
 
+    fn caption_end_tag_in_template_row_recovery(
+        source: &str,
+        occurrence: usize,
+    ) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-caption-end-tag-in-template-row",
+            "end tag `</caption>` was ignored at a template row boundary",
+        )
+        .at_emission(Some(end_tag_position_at(source, "caption", occurrence)))
+    }
+
     fn end_tag_in_template_column_group_recovery(
         source: &str,
         name: &str,
@@ -42016,10 +42030,7 @@ mod tests {
             let output = parse_html_with_diagnostics(source).unwrap();
             assert_eq!(
                 output.parser_diagnostics,
-                vec![ParserDiagnostic::new(
-                    "unexpected-caption-end-tag-in-template-row",
-                    "end tag `</caption>` was ignored at a template row boundary",
-                )],
+                vec![caption_end_tag_in_template_row_recovery(source, 0)],
                 "source {source:?}"
             );
             assert_eq!(
@@ -42068,6 +42079,82 @@ mod tests {
             .parser_diagnostics
             .iter()
             .all(|diagnostic| { diagnostic.code != "unexpected-caption-end-tag-in-template-row" }));
+    }
+
+    #[test]
+    fn positions_caption_end_tags_rejected_after_template_owned_cells() {
+        let repeated_source =
+            "<!doctype html><template><td></td></caption></caption></template>";
+        let repeated = parse_html_with_diagnostics(repeated_source).unwrap();
+        assert_eq!(
+            repeated
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| {
+                    diagnostic.code == "unexpected-caption-end-tag-in-template-row"
+                })
+                .cloned()
+                .collect::<Vec<_>>(),
+            vec![
+                caption_end_tag_in_template_row_recovery(repeated_source, 0),
+                caption_end_tag_in_template_row_recovery(repeated_source, 1),
+            ]
+        );
+
+        let unicode_source =
+            "<!doctype html>\r\n<p>雪</p>\r\n<template><th></th></caption></template>";
+        let unicode = parse_html_with_diagnostics(unicode_source).unwrap();
+        assert_eq!(
+            unicode
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| {
+                    diagnostic.code == "unexpected-caption-end-tag-in-template-row"
+                })
+                .cloned()
+                .collect::<Vec<_>>(),
+            vec![caption_end_tag_in_template_row_recovery(
+                unicode_source,
+                0,
+            )]
+        );
+
+        let incomplete =
+            parse_html_with_diagnostics("<!doctype html><template><td></td></caption").unwrap();
+        assert!(incomplete.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-caption-end-tag-in-template-row"
+        }));
+
+        let mut unpositioned = HtmlParser::new();
+        for token in [
+            Token::StartTag {
+                name: "template".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "td".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::EndTag {
+                name: "td".to_string(),
+            },
+            Token::EndTag {
+                name: "caption".to_string(),
+            },
+        ] {
+            unpositioned.process_token(token);
+        }
+        let diagnostics = unpositioned
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| {
+                diagnostic.code == "unexpected-caption-end-tag-in-template-row"
+            })
+            .collect::<Vec<_>>();
+        assert_eq!(diagnostics.len(), 1);
+        assert_eq!(diagnostics[0].position, None);
     }
 
     #[test]
