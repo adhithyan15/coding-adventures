@@ -843,6 +843,46 @@ baseline failures (17 `assert_return`, 1 `module`, 1 `assert_unlinkable`, 2
 `f32x4` or this campaign) are byte-for-byte unchanged by this PR, confirming
 zero regressions. No other already-vendored file's stats changed.
 
+SIMD widen PR31 (task #208-210) implements `f64x2.neg` (`0xED`),
+`f64x2.sqrt` (`0xEF`), `f64x2.add` (`0xF0`), `f64x2.sub` (`0xF1`),
+`f64x2.mul` (`0xF2`), `f64x2.div` (`0xF3`) and vendors
+`simd_f64x2_arith.wast` -- a direct structural mirror of PR29's
+`f32x4.neg`/`sqrt`/`add`/`sub`/`div`, at `f64x2`'s 2-lane width, plus
+`mul` (`f32x4.mul` already existed pre-PR29; `f64x2.mul` did not exist
+until this PR, so it rides along on the same binary-op shape as
+`add`/`sub`/`div`). Each sub-opcode byte fetched live from
+`BinarySIMD.md` and cross-checked against every existing `SIMD_OPS`
+entry: `f64x2.abs` (`0xEC`, still unimplemented) precedes this run,
+`0xED` is `neg`, `0xEE` is genuinely unassigned in the SIMD proposal's
+own binary encoding (the same "real gap, not a skipped op" shape as
+`f32x4`'s own `0xE2` gap between `abs`/`neg` and `sqrt`), `0xEF`-`0xF3`
+are `sqrt`/`add`/`sub`/`mul`/`div` in that order, and `f64x2.min`/`max`
+(`0xF4`/`0xF5`, still unimplemented) sit immediately past this run with
+no overlap. `neg` and `sqrt` are UNARY; `add`/`sub`/`mul`/`div` are
+BINARY -- same shapes as the `f32x4` family. All six needed no bespoke
+NaN/signed-zero handling: Rust's native `f64` `-`/`sqrt()`/`+`/`-`/`*`/
+`/` operators are already IEEE-754 compliant, including
+`sqrt(negative) == NaN`, `sqrt(-0.0) == -0.0`, and `/`'s TOTAL behavior
+on a zero divisor (finite/`0.0` -> `+/-infinity` per the
+sign-of-quotient rule, `0.0/0.0` -> `NaN`, never a trap or a panic) --
+all independently verified by dedicated `wasm-execution` unit tests, not
+just inferred from the corpus file's own coverage.
+
+`simd_f64x2_arith.wast` has 1806 `assert_return` + 16 `assert_invalid` =
+1822 total gradeable directives across 3 modules, ALL 100% passing on the
+first baseline regen after implementation (0 `NotYetSupported`, 0
+failures). Aggregate `assert_return` rose from 29154/29171 to
+30960/30977 (+1806 pass, +1806 gradeable, exactly this file's own
+`assert_return` count); `assert_invalid` rose from 1780/1780 to
+1796/1796 (+16, exactly this file's own count, still 100.0% of gradeable
+directives); `module` pass count rose from 1177/1178 to 1180/1181 (+3,
+one per module in this file, all passing). The pre-existing, unrelated
+baseline failures (17 `assert_return`, 1 `module`, 1 `assert_unlinkable`,
+2 `register` -- present before this PR and tracked separately, none
+touching `f64x2` or this campaign) are byte-for-byte unchanged by this
+PR, confirming zero regressions. No other already-vendored file's stats
+changed.
+
 The vendored files are licensed under the Apache License, Version 2.0 --
 see the accompanying LICENSE file, itself vendored verbatim from the same
 pinned commit.

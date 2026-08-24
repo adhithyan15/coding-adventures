@@ -2,6 +2,35 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.41] - 2026-08-24 (task #208-210 — SIMD widen PR31: f64x2 neg/sqrt/add/sub/mul/div)
+
+### Added
+
+- `register_simd` gains three new dispatch arms, a direct structural
+  mirror of PR29's `f32x4` arithmetic family at `f64x2`'s 2-lane width:
+  - `NegF64x2`: UNARY, pops one `v128`, flips the sign bit of each of
+    the 2 `f64` lanes.
+  - `SqrtF64x2`: UNARY, pops one `v128`, IEEE-754 square root of each
+    of the 2 `f64` lanes.
+  - `AddF64x2`/`SubF64x2`/`MulF64x2`/`DivF64x2` (one combined arm,
+    `match op.kind` inside): BINARY, pops two `v128`s, applies standard
+    IEEE-754 arithmetic to each of the 2 `f64` lane pairs. `mul` is new
+    (`f32x4.mul` predates PR29; `f64x2.mul` did not exist before this
+    PR).
+- Rust's native `f64` `-`/`sqrt()`/`+`/`-`/`*`/`/` operators are already
+  IEEE-754 compliant, so no bespoke NaN/signed-zero handling is needed:
+  `sqrt(negative) == NaN`, `sqrt(-0.0) == -0.0`, and `/`'s TOTAL
+  behavior on a zero divisor (finite/`0.0` -> `+/-infinity`, `0.0/0.0`
+  -> `NaN`, no trap, no panic).
+- New tests: `f64x2_neg_flips_sign_bit_and_leaves_nan_lane_nan`,
+  `f64x2_sqrt_computes_ieee754_square_root_per_lane`,
+  `f64x2_add_adds_each_lane_pair`, `f64x2_sub_subtracts_each_lane_pair`,
+  `f64x2_mul_multiplies_each_lane_pair_and_overflows_to_infinity`,
+  `f64x2_div_divides_each_lane_pair`,
+  `f64x2_div_by_zero_produces_signed_infinity_not_a_trap`,
+  `f64x2_div_zero_by_zero_produces_nan`,
+  `f64x2_add_sub_mul_div_propagate_nan_in_either_operand`.
+
 ## [0.9.40] - 2026-08-24 (task #205-207 — SIMD widen PR30: f32x4 eq/ne/lt/gt/le/ge)
 
 ### Added

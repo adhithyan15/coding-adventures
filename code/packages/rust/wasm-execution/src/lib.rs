@@ -6280,6 +6280,86 @@ fn register_simd(vm: &mut GenericVM) {
                 let handle = push_v128(ctx, result)?;
                 push_wasm(vm, WasmValue::V128(handle));
             }
+            SimdOpKind::NegF64x2 => {
+                // f64x2.neg (SIMD widen PR31): UNARY, pop one v128, flip
+                // the sign bit of each of the 2 `f64` lanes, push one
+                // v128. Same shape as `NegF32x4`, one lane width wider
+                // (2 lanes of 8 bytes instead of 4 lanes of 4 bytes) --
+                // `-NaN` is still NaN, just sign-flipped, the spec-correct
+                // result, no bespoke NaN handling needed.
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let mut result = [0u8; 16];
+                for i in 0..2 {
+                    let v = f64::from_le_bytes(bytes[i * 8..i * 8 + 8].try_into().unwrap());
+                    let out = -v;
+                    result[i * 8..i * 8 + 8].copy_from_slice(&out.to_le_bytes());
+                }
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::SqrtF64x2 => {
+                // f64x2.sqrt (SIMD widen PR31): UNARY, pop one v128, take
+                // the IEEE-754 square root of each of the 2 `f64` lanes.
+                // Rust's `f64::sqrt()` is already IEEE-754 compliant
+                // (sqrt of a negative lane is NaN, sqrt(-0.0) is -0.0),
+                // so no bespoke NaN/signed-zero handling is needed here,
+                // same discipline as `SqrtF32x4`/`MulF32x4`.
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let mut result = [0u8; 16];
+                for i in 0..2 {
+                    let v = f64::from_le_bytes(bytes[i * 8..i * 8 + 8].try_into().unwrap());
+                    let out = v.sqrt();
+                    result[i * 8..i * 8 + 8].copy_from_slice(&out.to_le_bytes());
+                }
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::AddF64x2 | SimdOpKind::SubF64x2 | SimdOpKind::MulF64x2 | SimdOpKind::DivF64x2 => {
+                // f64x2.add/sub/mul/div (SIMD widen PR31): BINARY, pop
+                // two v128s, apply standard IEEE-754 float arithmetic to
+                // each of the 2 `f64` lane pairs, push one v128. Same
+                // "pop two v128s, push one" shape as `AddF32x4`/
+                // `SubF32x4`/`DivF32x4` (plus `MulF32x4`'s own binary
+                // shape for `mul`), one lane width wider -- ordinary add/
+                // sub/mul/div have no WASM-specific deviation from
+                // IEEE-754 (unlike `min`/`max`), so Rust's native `+`/
+                // `-`/`*`/`/` on `f64` are directly correct, including
+                // `/`'s TOTAL behavior on a zero divisor (finite/0.0 ->
+                // +/-infinity, 0.0/0.0 -> NaN, no trap, no panic).
+                let rhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let lhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let rhs = *ctx
+                    .v128_heap
+                    .get(rhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let lhs = *ctx
+                    .v128_heap
+                    .get(lhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let mut result = [0u8; 16];
+                for i in 0..2 {
+                    let l = f64::from_le_bytes(lhs[i * 8..i * 8 + 8].try_into().unwrap());
+                    let r = f64::from_le_bytes(rhs[i * 8..i * 8 + 8].try_into().unwrap());
+                    let out = match op.kind {
+                        SimdOpKind::AddF64x2 => l + r,
+                        SimdOpKind::SubF64x2 => l - r,
+                        SimdOpKind::MulF64x2 => l * r,
+                        SimdOpKind::DivF64x2 => l / r,
+                        _ => unreachable!("only AddF64x2/SubF64x2/MulF64x2/DivF64x2 reach this arm"),
+                    };
+                    result[i * 8..i * 8 + 8].copy_from_slice(&out.to_le_bytes());
+                }
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
             SimdOpKind::EqF32x4
             | SimdOpKind::NeF32x4
             | SimdOpKind::LtF32x4
@@ -14818,6 +14898,200 @@ mod tests {
             let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
             let out = f32x4_lanes(results[0].unwrap());
             assert!(out.iter().all(|v| v.is_nan()), "f32x4.{name}(NaN, 5.0) must be NaN in every lane, got {out:?}");
+        }
+    }
+
+    // ── f64x2.neg/sqrt/add/sub/mul/div (SIMD widen PR31, task #208-210) ─────
+
+    /// `f64x2.neg`: flips the sign bit of each lane -- a normal positive
+    /// lane becomes negative and vice versa, `+0.0` becomes `-0.0`, and a
+    /// NaN lane stays NaN (only its sign bit flips). Direct 2-lane mirror
+    /// of `f32x4_neg_flips_sign_bit_and_leaves_nan_lane_nan` above.
+    #[test]
+    fn f64x2_neg_flips_sign_bit_and_leaves_nan_lane_nan() {
+        let lanes = [3.5f64, f64::NAN];
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_f64x2(lanes));
+        code.extend([0xFD, 0xED, 0x01]); // f64x2.neg (LEB128: [0xED, 0x01] for sub-opcode 0xED)
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f64x2_lanes(results[0].unwrap());
+        assert_eq!(out[0], -3.5, "neg(3.5) must be -3.5");
+        assert!(out[1].is_nan(), "neg(NaN) must stay NaN, got {}", out[1]);
+
+        let lanes2 = [0.0f64, -2.0f64];
+        let mut code2 = vec![0xFD, 0x0C];
+        code2.extend(v128_const_bytes_f64x2(lanes2));
+        code2.extend([0xFD, 0xED, 0x01]);
+        code2.push(0x0B);
+        let mut engine2 = simd_engine_returning_v128(code2);
+        let (_, results2) = engine2.call_function_with_v128(0, &[]).unwrap();
+        let out2 = f64x2_lanes(results2[0].unwrap());
+        assert!(out2[0] == 0.0 && out2[0].is_sign_negative(), "neg(+0.0) must flip the sign bit to -0.0, got {}", out2[0]);
+        assert_eq!(out2[1], 2.0, "neg(-2.0) must be 2.0");
+    }
+
+    /// `f64x2.sqrt`: IEEE-754 square root per lane -- an ordinary perfect
+    /// square, a non-perfect-square value, `sqrt(-0.0) == -0.0` (checked
+    /// by sign bit not just `== 0.0`), and `sqrt(negative) == NaN` (not a
+    /// trap/error). Direct 2-lane mirror of
+    /// `f32x4_sqrt_computes_ieee754_square_root_per_lane` above.
+    #[test]
+    fn f64x2_sqrt_computes_ieee754_square_root_per_lane() {
+        let lanes = [4.0f64, 2.0f64];
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_f64x2(lanes));
+        code.extend([0xFD, 0xEF, 0x01]); // f64x2.sqrt (LEB128: [0xEF, 0x01] for sub-opcode 0xEF)
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f64x2_lanes(results[0].unwrap());
+        assert_eq!(out[0], 2.0, "sqrt(4.0) must be 2.0");
+        assert_eq!(out[1], 2.0f64.sqrt(), "sqrt(2.0) must match f64::sqrt(2.0)");
+
+        let lanes2 = [-0.0f64, -1.0f64];
+        let mut code2 = vec![0xFD, 0x0C];
+        code2.extend(v128_const_bytes_f64x2(lanes2));
+        code2.extend([0xFD, 0xEF, 0x01]);
+        code2.push(0x0B);
+        let mut engine2 = simd_engine_returning_v128(code2);
+        let (_, results2) = engine2.call_function_with_v128(0, &[]).unwrap();
+        let out2 = f64x2_lanes(results2[0].unwrap());
+        assert!(out2[0] == 0.0 && out2[0].is_sign_negative(), "sqrt(-0.0) must be -0.0, got {}", out2[0]);
+        assert!(out2[1].is_nan(), "sqrt(-1.0) must be NaN, got {}", out2[1]);
+    }
+
+    /// `f64x2.add`: ordinary lane-wise IEEE-754 float addition across
+    /// mixed-sign, non-trivial values.
+    #[test]
+    fn f64x2_add_adds_each_lane_pair() {
+        let lhs = [2.0f64, -3.0f64];
+        let rhs = [4.0f64, 5.0f64];
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_f64x2(lhs));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes_f64x2(rhs));
+        code.extend([0xFD, 0xF0, 0x01]); // f64x2.add (LEB128: [0xF0, 0x01] for sub-opcode 0xF0)
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f64x2_lanes(results[0].unwrap());
+        assert_eq!(out, [6.0, 2.0], "f64x2.add must compute the exact lane-wise sum");
+    }
+
+    /// `f64x2.sub`: ordinary lane-wise IEEE-754 float subtraction across
+    /// mixed-sign, non-trivial values.
+    #[test]
+    fn f64x2_sub_subtracts_each_lane_pair() {
+        let lhs = [2.0f64, -3.0f64];
+        let rhs = [4.0f64, 5.0f64];
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_f64x2(lhs));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes_f64x2(rhs));
+        code.extend([0xFD, 0xF1, 0x01]); // f64x2.sub (LEB128: [0xF1, 0x01] for sub-opcode 0xF1)
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f64x2_lanes(results[0].unwrap());
+        assert_eq!(out, [-2.0, -8.0], "f64x2.sub must compute the exact lane-wise difference");
+    }
+
+    /// `f64x2.mul`: ordinary lane-wise IEEE-754 float multiplication,
+    /// including a case that overflows to infinity -- proving native
+    /// `f64` `*` is directly correct with no bespoke overflow handling,
+    /// same discipline as `f32x4.mul`.
+    #[test]
+    fn f64x2_mul_multiplies_each_lane_pair_and_overflows_to_infinity() {
+        let lhs = [2.0f64, f64::MAX];
+        let rhs = [4.0f64, f64::MAX];
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_f64x2(lhs));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes_f64x2(rhs));
+        code.extend([0xFD, 0xF2, 0x01]); // f64x2.mul (LEB128: [0xF2, 0x01] for sub-opcode 0xF2)
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f64x2_lanes(results[0].unwrap());
+        assert_eq!(out[0], 8.0, "f64x2.mul must compute the exact lane-wise product");
+        assert_eq!(out[1], f64::INFINITY, "f64::MAX * f64::MAX must overflow to +infinity, got {}", out[1]);
+    }
+
+    /// `f64x2.div`: ordinary lane-wise IEEE-754 float division for a
+    /// normal in-range case.
+    #[test]
+    fn f64x2_div_divides_each_lane_pair() {
+        let lhs = [8.0f64, -9.0f64];
+        let rhs = [2.0f64, 3.0f64];
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_f64x2(lhs));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes_f64x2(rhs));
+        code.extend([0xFD, 0xF3, 0x01]); // f64x2.div (LEB128: [0xF3, 0x01] for sub-opcode 0xF3)
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f64x2_lanes(results[0].unwrap());
+        assert_eq!(out, [4.0, -3.0], "f64x2.div must compute the exact lane-wise quotient");
+    }
+
+    /// `f64x2.div`: IEEE-754 division is TOTAL, not partial -- a finite
+    /// lane divided by `0.0` must produce `+/-infinity` (sign per the
+    /// usual sign-of-quotient rule), NOT a trap or a panic. Direct 2-lane
+    /// mirror of `f32x4_div_by_zero_produces_signed_infinity_not_a_trap`.
+    #[test]
+    fn f64x2_div_by_zero_produces_signed_infinity_not_a_trap() {
+        let lhs = [1.0f64, -1.0f64];
+        let rhs = [0.0f64, 0.0f64];
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_f64x2(lhs));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes_f64x2(rhs));
+        code.extend([0xFD, 0xF3, 0x01]); // f64x2.div
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f64x2_lanes(results[0].unwrap());
+        assert_eq!(out[0], f64::INFINITY, "1.0 / 0.0 must be +infinity, got {}", out[0]);
+        assert_eq!(out[1], f64::NEG_INFINITY, "-1.0 / 0.0 must be -infinity, got {}", out[1]);
+    }
+
+    /// `f64x2.div`: `0.0 / 0.0` must produce `NaN`, per IEEE-754 --
+    /// checked in both zero signs, still no trap/panic.
+    #[test]
+    fn f64x2_div_zero_by_zero_produces_nan() {
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_f64x2([0.0f64, -0.0f64]));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes_f64x2([0.0f64, 0.0f64]));
+        code.extend([0xFD, 0xF3, 0x01]); // f64x2.div
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f64x2_lanes(results[0].unwrap());
+        assert!(out.iter().all(|v| v.is_nan()), "0.0 / 0.0 (any zero-sign combination) must be NaN in every lane, got {out:?}");
+    }
+
+    /// `f64x2.add`/`sub`/`mul`/`div`: NaN propagates through ordinary
+    /// arithmetic the same way IEEE-754 (and Rust's native `f64` ops)
+    /// already handle it -- if EITHER operand lane is NaN, the result
+    /// lane is NaN. Direct 2-lane mirror of
+    /// `f32x4_add_sub_div_propagate_nan_in_either_operand`, plus `mul`.
+    #[test]
+    fn f64x2_add_sub_mul_div_propagate_nan_in_either_operand() {
+        for (sub_opcode, name) in [(0xF0u8, "add"), (0xF1u8, "sub"), (0xF2u8, "mul"), (0xF3u8, "div")] {
+            let mut code = vec![0xFD, 0x0C];
+            code.extend(v128_const_bytes_f64x2([f64::NAN; 2]));
+            code.extend([0xFD, 0x0C]);
+            code.extend(v128_const_bytes_f64x2([5.0; 2]));
+            code.extend([0xFD, sub_opcode, 0x01]);
+            code.push(0x0B);
+            let mut engine = simd_engine_returning_v128(code);
+            let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+            let out = f64x2_lanes(results[0].unwrap());
+            assert!(out.iter().all(|v| v.is_nan()), "f64x2.{name}(NaN, 5.0) must be NaN in every lane, got {out:?}");
         }
     }
 
