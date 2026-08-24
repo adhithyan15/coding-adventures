@@ -62,7 +62,10 @@ fn run_native(src: &str, stem: &str) -> Option<i32> {
     #[cfg(target_os = "macos")]
     lang_aot::compile_file_to_macos_executable(&src_path, &exe, Language::Twig).ok()?;
     #[cfg(not(any(target_os = "linux", target_os = "macos")))]
-    { let _ = (src_path, exe); return None; }
+    {
+        let _ = (src_path, exe);
+        None
+    }
     #[cfg(any(target_os = "linux", target_os = "macos"))]
     Command::new(&exe).output().ok()?.status.code()
 }

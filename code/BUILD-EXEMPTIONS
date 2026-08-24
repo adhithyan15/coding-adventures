@@ -1,0 +1,76 @@
+# BUILD-EXEMPTIONS — crates not covered by any BUILD file
+#
+# The build tool discovers work by scanning for BUILD files. A crate that no
+# BUILD covers is therefore invisible to it: never built, its test targets never
+# compiled, its assertions never run, and `cargo clippy --all-targets -- -D
+# warnings` never applied. In a Cargo workspace that failure is silent, because
+# every sibling listing the crate as a path dependency keeps it COMPILING while
+# nothing tests or lints it. That is how 84 crates accumulated unnoticed, two of
+# them carrying live clippy errors.
+#
+# `build-tool -validate-build-files` now fails on any directory that has a
+# Cargo.toml, no covering BUILD, and no entry here. A brand-new crate is in
+# neither state, so it fails the first time it is pushed. That is the point:
+# writing the missing BUILD files fixes today's omissions, but only this gate
+# makes the next one impossible.
+#
+# A crate counts as covered when it OR ANY ANCESTOR holds a BUILD with at least
+# one runnable line. The ancestor rule matters: ~170 native-extension crates sit
+# inside another language's package (code/packages/python/conduit/ext/
+# conduit_native is compiled by code/packages/python/conduit/BUILD), and flagging
+# those would make the gate noise. An empty BUILD does NOT count — it satisfies
+# discovery while running nothing, which would be a one-`touch` bypass.
+#
+# FORMAT
+#
+#   <KIND> <repo-relative path>  # <reason>
+#
+# KIND is one of:
+#
+#   EXCLUDED  This crate genuinely should never have a BUILD — a compile-only
+#             bridge with nothing to run, or a crate built by a foreign
+#             toolchain. The reason must say which, and where it IS covered.
+#
+#   PENDING   A real crate that ought to be built, tested and linted, but is not
+#             yet. This is a backlog. It is meant to shrink.
+#
+# The reason is mandatory. An exemption with no reason is indistinguishable from
+# an oversight, which is the thing this file exists to make impossible.
+#
+# STALE ENTRIES ARE ALSO AN ERROR. If a listed crate becomes covered, or its
+# directory disappears, validation fails until the line is deleted. So landing a
+# BUILD for a PENDING crate forces the same change to remove its entry here, and
+# this list cannot quietly outlive the problem it describes.
+
+
+# ---------------------------------------------------------------------------
+# EXCLUDED — never gets a BUILD
+# ---------------------------------------------------------------------------
+
+EXCLUDED code/packages/rust  # virtual workspace manifest (`[workspace]`, no `[package]`) — there is no crate here to build; its 1100+ members each carry their own BUILD
+EXCLUDED code/packages/rust/conduit-jni  # compile-only JNI bridge; the cdylib is built and its behaviour tested by code/packages/java/conduit
+EXCLUDED code/packages/rust/jni-bridge  # compile-only JNI helper; exercised through md5-native-jni / sha256-native-jni / silicon-rust-jni, each of which has its own BUILD
+EXCLUDED code/packages/rust/irc-server-native-jni  # compile-only JNI bridge for code/packages/java/irc-server-native, which builds and tests it
+EXCLUDED code/packages/rust/spreadsheet-android-jni  # compile-only JNI bridge; built by code/programs/kotlin/visicalc-android/scripts/build.sh against the Android NDK, never the host toolchain
+EXCLUDED code/packages/rust/engram-core-wasm  # wasm32-only cdylib; built and tested via engram-wasm, which has its own BUILD
+EXCLUDED code/packages/typescript/directed-graph-native  # napi-rs cdylib with no Rust test target; built and tested through the TypeScript package that loads it
+
+# ---------------------------------------------------------------------------
+# PENDING — known gaps, each needs a BUILD file
+#
+# Every crate below is real code with a spec behind it; none is dead. Each is
+# here because it could not be verified from this host, not because it was
+# waved through — the reason says what is in the way.
+# ---------------------------------------------------------------------------
+
+# Needs a non-Windows host to verify
+PENDING code/packages/rust/jit-loader-macos  # macOS-only mmap/mprotect JIT loader; needs a BUILD gated on `[ "$(uname)" = Darwin ]` and a macOS host to verify — cannot be checked from here
+PENDING code/packages/rust/twig-module-driver  # 2 dependents (twig-vm, twigc); 7 deep-recursion self-compile tests reserve 768 MiB / 3 GiB thread stacks and fail on a Windows host — needs Linux verification before it can be watched
+PENDING code/packages/rust/sir-conformance  # cross-backend conformance harness; test suite is red on a Windows host — needs Linux triage before it can be watched
+
+# Paint VM backends that need a native library present at build time. Their
+# pure-Rust siblings (runtime, gpu-core, mesa, opencl, opengl, vulkan, wgpu) all
+# gained BUILDs once they were verified clean for BOTH the host and the
+# x86_64-unknown-linux-gnu target CI actually builds on.
+PENDING code/packages/rust/paint-vm-cairo  # 5 dependents; cairo-rs needs libcairo via pkg-config on Linux/macOS. Passes on Windows ONLY because the dep is target-gated off there, so that is not evidence — and the Linux cross-check cannot settle it either (pkg-config refuses to cross-compile). Needs a real Linux/macOS host with libcairo installed
+PENDING code/packages/rust/paint-vm-skia  # 2 dependents (barcode-1d, barcode-2d); skia-safe downloads or builds Skia binaries at build time, which needs a host with that toolchain to verify honestly

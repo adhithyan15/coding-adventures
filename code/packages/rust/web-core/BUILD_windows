@@ -1,0 +1,1 @@
+cargo test -p web-core -- --nocapture --test-threads=1

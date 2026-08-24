@@ -14,10 +14,10 @@
 //!   2. For each exported component:
 //!      a. `<Component>.mil` compiles via `mosmodel_compiler::compile`.
 //!      b. `<Component>.mll` compiles via `moslayout_compiler::compile`,
-//!         validated against the matching `.mil` interface.
+//!      validated against the matching `.mil` interface.
 //!      c. `<Component>.light.msl` and `<Component>.dark.msl` each
-//!         compile via `mosstyle_compiler::compile`, validated
-//!         against the matching `.mll` part map.
+//!      compile via `mosstyle_compiler::compile`, validated
+//!      against the matching `.mll` part map.
 //!
 //! Backend-specific lowering (does each component produce valid
 //! React/SwiftUI/Qt/XAML/etc.?) is NOT in scope here — that lives in

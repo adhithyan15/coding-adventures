@@ -8,21 +8,25 @@
 //! 2. `Dialog.mil` compiles via `mosmodel_compiler::compile` and declares
 //!    four slots in the documented order:
 //!
-//!        open : bool                          (NEW in v0.2.0)
-//!        title : text
-//!        message : text
-//!        close-label : text
+//!    ```text
+//!    open : bool                          (NEW in v0.2.0)
+//!    title : text
+//!    message : text
+//!    close-label : text
+//!    ```
 //!
 //!    plus one zero-payload emit (`onClose`).
 //! 3. `Dialog.mll` compiles via `moslayout_compiler::compile` validated
 //!    against the `.mil`'s interface descriptor, and the resulting tree
 //!    has the new shape the spec promised:
 //!
-//!        HostDialog [dialog-shell]            <-- NEW: root is the kernel
-//!                                                 primitive, not a Box
-//!          Column [dialog-stack]
-//!            Box [dialog-message]    -> Text
-//!            Box [dialog-actions]    -> HostButton
+//!    ```text
+//!    HostDialog [dialog-shell]            <-- NEW: root is the kernel
+//!                                             primitive, not a Box
+//!      Column [dialog-stack]
+//!        Box [dialog-message]    -> Text
+//!        Box [dialog-actions]    -> HostButton
+//!    ```
 //!
 //! 4. `Dialog.dark.msl` compiles via `mosstyle_compiler::compile` against
 //!    the layout's part map, and declares exactly three parts
@@ -334,14 +338,6 @@ const ARTIFACT_BACKENDS: &[Backend] = &[
     Backend::Xaml,
 ];
 
-/// All six UI29 §4.3 backends are now wired by
-/// `mosaic-package-artifact-builder` (UI29-2 follow-up). The
-/// `UNWIRED_BACKENDS` slice that used to track WebComponent/Html
-/// is empty, so the `skipped_backends_return_unsupported` test
-/// has been removed (it pinned the rejection path that no longer
-/// exists).
-const UNWIRED_BACKENDS: &[Backend] = &[];
-
 /// Distinguish an "unknown primitive: HostDialog" pipeline error (the
 /// expected "K-* PR hasn't landed yet" state) from any other failure
 /// mode.  Each backend's emitter renders its `UnknownPrimitive` error
@@ -480,13 +476,19 @@ fn artifact_backends_either_build_or_defer_on_hostdialog() {
     }
 }
 
-/// (Removed.) The v0.1.0-era `skipped_backends_return_unsupported`
-/// test pinned the rejection path for WebComponent/Html. Those
-/// backends are now fully wired by the artifact builder, so the
-/// rejection path no longer exists for them. The `UNWIRED_BACKENDS`
-/// slice is intentionally empty above — if a NEW backend ever gets
-/// added to `Backend` but not wired in the artifact builder, populate
-/// `UNWIRED_BACKENDS` and reinstate this test against it.
+// (Removed.) The v0.1.0-era `skipped_backends_return_unsupported` test pinned
+// the rejection path for WebComponent/Html. All six UI29 §4.3 backends are now
+// wired by `mosaic-package-artifact-builder` (UI29-2 follow-up), so that
+// rejection path no longer exists and the test went with it. The
+// `UNWIRED_BACKENDS` slice it iterated is gone too — it had become an empty
+// `&[]` that nothing read, which is dead code rather than a useful hook.
+//
+// If a NEW backend is ever added to `Backend` but left unwired in the artifact
+// builder, reinstate both: a slice naming the unwired backends, and a test
+// asserting they return `Unsupported`.
+//
+// This is a plain `//` comment, not `///`: it documents an absence, and a doc
+// comment attached to nothing is a `-D warnings` error.
 
 // ---------------------------------------------------------------------------
 // 6. Source-shape sanity

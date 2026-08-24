@@ -4,7 +4,7 @@
 //! `HttpRequest` values. End-to-end tests spin up a real server on port 0.
 
 use std::collections::HashMap;
-use std::io::{BufRead, BufReader, Write};
+use std::io::{self, BufRead, BufReader, Write};
 use std::net::{SocketAddr, TcpStream};
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::{Arc, Mutex};
@@ -42,32 +42,32 @@ fn make_http_request(method: &str, target: &str) -> HttpRequest {
     }
 }
 
-fn http_request(port: u16, method: &str, path: &str, body: &str) -> (u16, String) {
-    let mut stream = TcpStream::connect(("127.0.0.1", port)).expect("connect");
-    stream.set_read_timeout(Some(Duration::from_secs(5))).unwrap();
+fn try_http_request(port: u16, method: &str, path: &str, body: &str) -> io::Result<(u16, Vec<String>, String)> {
+    let mut stream = TcpStream::connect(("127.0.0.1", port))?;
+    stream.set_read_timeout(Some(Duration::from_secs(5)))?;
 
     let req_str = format!(
         "{method} {path} HTTP/1.1\r\nHost: localhost\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{body}",
         body.len()
     );
-    stream.write_all(req_str.as_bytes()).expect("write request");
+    stream.write_all(req_str.as_bytes())?;
 
     let mut reader = BufReader::new(&stream);
     let mut status_line = String::new();
-    reader.read_line(&mut status_line).expect("read status line");
+    reader.read_line(&mut status_line)?;
 
     let status: u16 = status_line
         .split_whitespace()
         .nth(1)
-        .expect("status code field")
+        .ok_or_else(|| io::Error::new(io::ErrorKind::InvalidData, "missing status code"))?
         .parse()
-        .expect("parse status code");
+        .map_err(|error| io::Error::new(io::ErrorKind::InvalidData, error))?;
 
     let mut content_length = 0usize;
     let mut response_headers: Vec<String> = Vec::new();
     loop {
         let mut line = String::new();
-        reader.read_line(&mut line).unwrap();
+        reader.read_line(&mut line)?;
         let trimmed = line.trim().to_string();
         if trimmed.is_empty() {
             break;
@@ -83,8 +83,27 @@ fn http_request(port: u16, method: &str, path: &str, body: &str) -> (u16, String
     }
 
     let mut body_buf = vec![0u8; content_length];
-    std::io::Read::read_exact(&mut reader, &mut body_buf).unwrap_or(());
-    (status, String::from_utf8_lossy(&body_buf).into_owned())
+    std::io::Read::read_exact(&mut reader, &mut body_buf)?;
+    Ok((status, response_headers, String::from_utf8_lossy(&body_buf).into_owned()))
+}
+
+fn http_request_with_headers(port: u16, method: &str, path: &str, body: &str) -> (u16, Vec<String>, String) {
+    let attempts = if cfg!(target_os = "windows") { 3 } else { 1 };
+    for attempt in 0..attempts {
+        match try_http_request(port, method, path, body) {
+            Ok(response) => return response,
+            Err(error) if cfg!(target_os = "windows")
+                && error.kind() == io::ErrorKind::ConnectionReset
+                && attempt + 1 < attempts => thread::sleep(Duration::from_millis(10)),
+            Err(error) => panic!("HTTP request failed: {error}"),
+        }
+    }
+    unreachable!("the request loop returns or panics on every attempt")
+}
+
+fn http_request(port: u16, method: &str, path: &str, body: &str) -> (u16, String) {
+    let (status, _, body) = http_request_with_headers(port, method, path, body);
+    (status, body)
 }
 
 fn http_get(port: u16, path: &str) -> (u16, String) {
@@ -442,34 +461,15 @@ fn e2e_after_handler_adds_header() {
     });
     let (port, stop) = start_server(app);
 
-    let mut stream = TcpStream::connect(("127.0.0.1", port)).expect("connect");
-    stream.set_read_timeout(Some(Duration::from_secs(5))).unwrap();
-    write!(stream, "GET /ping HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n").unwrap();
-
-    let mut reader = BufReader::new(&stream);
-    let mut all_headers: Vec<String> = Vec::new();
-    let mut content_length = 0usize;
-    let mut first = true;
-    loop {
-        let mut line = String::new();
-        reader.read_line(&mut line).unwrap();
-        let trimmed = line.trim().to_string();
-        if first { first = false; continue; } // skip status line
-        if trimmed.is_empty() { break; }
-        if trimmed.to_ascii_lowercase().starts_with("content-length:") {
-            content_length = trimmed.split_once(':').map(|x| x.1).unwrap_or("").trim().parse().unwrap_or(0);
-        }
-        all_headers.push(trimmed);
-    }
-    let mut body_buf = vec![0u8; content_length];
-    std::io::Read::read_exact(&mut reader, &mut body_buf).unwrap_or(());
+    let (status, all_headers, body) = http_request_with_headers(port, "GET", "/ping", "");
     stop.stop();
 
+    assert_eq!(status, 200);
+    assert_eq!(body, "pong");
     assert!(
         all_headers.iter().any(|h| h.to_ascii_lowercase().starts_with("x-powered-by:")),
         "x-powered-by header missing; got: {all_headers:?}"
     );
-    assert_eq!(String::from_utf8_lossy(&body_buf), "pong");
 }
 
 #[test]
@@ -513,6 +513,16 @@ fn e2e_on_server_stop_fires_after_serve_exits() {
 
 /// Bind and start a `ShardedWebServer` on port 0 with `worker_count` shards,
 /// returning the port and a stop handle. Mirrors `start_server` but parallel.
+///
+/// **Not built on Windows.** Sharded serving needs `SO_REUSEPORT`, which the
+/// Windows TCP provider does not have, so `bind_windows_sharded` can never
+/// succeed there (see the constructor's docs, and
+/// `sharded_bind_is_unsupported_on_windows` below, which pins that). Every
+/// caller of this helper is therefore `cfg(not(windows))`; the helper carries
+/// the SAME gate so it is not compiled into a build that has no use for it —
+/// an ungated helper whose only callers are gated is exactly the shape that
+/// `-D warnings` rejects as dead code.
+#[cfg(not(target_os = "windows"))]
 fn start_sharded_server(
     app: WebApp,
     worker_count: usize,
@@ -543,15 +553,6 @@ fn start_sharded_server(
         Arc::clone(&app),
     )
     .expect("bind epoll sharded");
-
-    #[cfg(target_os = "windows")]
-    let mut server = ShardedWebServer::bind_windows_sharded(
-        "127.0.0.1:0",
-        HttpServerOptions::default(),
-        worker_count,
-        Arc::clone(&app),
-    )
-    .expect("bind windows sharded");
 
     let port = server.local_addr().port();
     let shards = server.worker_count();
@@ -713,6 +714,12 @@ fn sharded_web_server_cpu_bound_throughput_scales() {
 /// pool, returning the port and the (cloneable) server so the caller can `stop`
 /// it. Mirrors `start_server` / `start_sharded_server`, but the mailbox stack is
 /// cross-platform (one `bind`) and `serve` takes `&self`, so we serve a clone.
+///
+/// Unlike `start_sharded_server` this helper is built on EVERY platform,
+/// because the mailbox stack really is cross-platform: on Unix the comparative
+/// benchmark below uses it, and on Windows `mailbox_web_server_serves_on_windows`
+/// does. That is the point of the mailbox mode — it is the parallel server you
+/// can actually run on Windows.
 fn start_mailbox_server(app: WebApp, worker_count: usize) -> (u16, MailboxWebServer) {
     let app = Arc::new(app);
     let server = MailboxWebServer::bind(
@@ -840,4 +847,88 @@ fn web_serving_modes_cpu_bound_comparison() {
              (single: {single:?}, mailbox: {mailbox:?})",
         );
     }
+}
+
+// ---------------------------------------------------------------------------
+// Windows platform contract — which parallel serving mode actually works there
+// ---------------------------------------------------------------------------
+//
+// The two benchmarks above and the sharded concurrency proof are all
+// `cfg(not(windows))`, which used to leave `start_sharded_server` compiled but
+// uncalled on Windows (`-D warnings` dead_code). The gates are right; what was
+// missing is a test that states WHY, so the two below pin the platform contract
+// from the Windows side instead of leaving it as folklore in a `cfg`.
+
+/// `ShardedWebServer` cannot be bound on Windows — and that is a hard property
+/// of the platform, not a missing feature.
+///
+/// Sharded serving fans out by having every shard bind the *same* address under
+/// `SO_REUSEPORT` and letting the kernel spread accepted connections across
+/// them. The Windows TCP provider has no `SO_REUSEPORT` (its `SO_REUSEADDR` only
+/// permits rebinding — it does not load-balance), so `transport-platform`'s
+/// Windows `configure_listener_socket` rejects `reuse_port` before any listener
+/// exists. `bind_windows_sharded` therefore fails at *bind* time.
+///
+/// The bind is attempted with `worker_count = 4` deliberately. `tcp-runtime`
+/// sets `reuse_port` only when `worker_count > 1` (one worker needs no fan-out),
+/// so `worker_count = 1` would bind successfully — a one-shard "sharded" server,
+/// which is just a `WebServer` with extra indirection. Asserting on the
+/// degenerate case would prove nothing about sharding.
+///
+/// This test exists so that (a) the `bind_windows_sharded` call site stays
+/// compiled and executed on Windows rather than silently rotting, and (b) if the
+/// Windows transport ever gains real fan-out, this test fails and tells the next
+/// person to un-gate the sharded suite instead of leaving it off forever.
+#[cfg(target_os = "windows")]
+#[test]
+fn sharded_bind_is_unsupported_on_windows() {
+    use web_core::ShardedWebServer;
+
+    let mut app = WebApp::new();
+    app.get("/ping", |_| WebResponse::text("pong"));
+
+    let result = ShardedWebServer::bind_windows_sharded(
+        "127.0.0.1:0",
+        HttpServerOptions::default(),
+        4,
+        Arc::new(app),
+    );
+
+    let err = match result {
+        Ok(_) => panic!(
+            "bind_windows_sharded unexpectedly SUCCEEDED. Windows gained \
+             SO_REUSEPORT-style listener fan-out: drop the \
+             `cfg(not(target_os = \"windows\"))` gates on start_sharded_server \
+             and the sharded tests, and delete this test."
+        ),
+        Err(e) => e,
+    };
+
+    let rendered = format!("{err:?}");
+    assert!(
+        rendered.contains("SO_REUSEPORT"),
+        "expected the bind to fail on the missing SO_REUSEPORT option, got: {rendered}"
+    );
+}
+
+/// The mailbox server — the parallel mode that *is* cross-platform — really does
+/// serve requests on Windows.
+///
+/// `MailboxWebServer` parallelises by *request* over a single listener, so it
+/// never asks for `SO_REUSEPORT` and needs no per-shard bind. That is what makes
+/// it the answer to the test above: on Windows it is the way to serve a `WebApp`
+/// on more than one thread. Asserting a real 200 over a real socket keeps that
+/// claim honest rather than merely documented.
+#[cfg(target_os = "windows")]
+#[test]
+fn mailbox_web_server_serves_on_windows() {
+    let mut app = WebApp::new();
+    app.get("/ping", |_| WebResponse::text("pong"));
+
+    let (port, server) = start_mailbox_server(app, 4);
+    let (status, body) = http_get(port, "/ping");
+    server.stop();
+
+    assert_eq!(status, 200, "mailbox server should serve a 200 on Windows");
+    assert_eq!(body, "pong");
 }
