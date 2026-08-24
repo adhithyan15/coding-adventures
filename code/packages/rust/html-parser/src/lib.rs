@@ -8456,10 +8456,15 @@ impl HtmlParser {
                 self.close_open_element_if(|name| name == "p");
             }
             if self.current_element_name().is_some_and(is_heading_element) {
-                self.diagnostics.push(ParserDiagnostic::new(
-                    "nested-heading-start-tag",
-                    format!("start tag `<{incoming_name}>` implied the end of the current heading"),
-                ));
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "nested-heading-start-tag",
+                        format!(
+                            "start tag `<{incoming_name}>` implied the end of the current heading"
+                        ),
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
                 self.open_elements.pop();
             }
         } else if is_paragraph_boundary_element(incoming_name) {
@@ -27425,6 +27430,18 @@ mod tests {
         )))
     }
 
+    fn nested_heading_start_tag(
+        source: &str,
+        name: &str,
+        occurrence: usize,
+    ) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "nested-heading-start-tag",
+            format!("start tag `<{name}>` implied the end of the current heading"),
+        )
+        .at_emission(Some(start_tag_position_at(source, name, occurrence)))
+    }
+
     fn unexpected_description_item_end_tag(source: &str, name: &str) -> ParserDiagnostic {
         ParserDiagnostic::new(
             "unexpected-description-item-end-tag",
@@ -35361,32 +35378,69 @@ mod tests {
 
     #[test]
     fn reports_heading_starts_that_replace_the_current_heading() {
-        for source in [
-            "<!doctype html><h1><h2>",
-            "<!doctype html><h1>one<h1>two",
-            "<!doctype html><table><tr><td><h1><h2>",
+        for (source, name, occurrence) in [
+            ("<!doctype html><h1><h2>", "h2", 0),
+            ("<!doctype html><h1>one<h1>two", "h1", 1),
+            ("<!doctype html><table><tr><td><h1><h2>", "h2", 0),
+            (
+                "<!doctype html><!--é-->\r\n<h1>one<h2>two",
+                "h2",
+                0,
+            ),
         ] {
             let output = parse_html_with_diagnostics(source).unwrap();
+            let diagnostics = output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "nested-heading-start-tag")
+                .collect::<Vec<_>>();
             assert_eq!(
-                output
-                    .parser_diagnostics
-                    .iter()
-                    .filter(|diagnostic| diagnostic.code == "nested-heading-start-tag")
-                    .count(),
-                1,
+                diagnostics,
+                vec![&nested_heading_start_tag(source, name, occurrence)],
                 "source {source:?}"
             );
         }
 
-        let fragment = parse_html_fragment_for_context_with_diagnostics("<h1><h2>", "div").unwrap();
+        let fragment_source = "<h1><h2>";
+        let fragment =
+            parse_html_fragment_for_context_with_diagnostics(fragment_source, "div").unwrap();
         assert_eq!(
             fragment
                 .parser_diagnostics
                 .iter()
                 .filter(|diagnostic| diagnostic.code == "nested-heading-start-tag")
-                .count(),
-            1,
+                .collect::<Vec<_>>(),
+            vec![&nested_heading_start_tag(fragment_source, "h2", 0)],
         );
+
+        let incomplete = parse_html_with_diagnostics("<!doctype html><h1><h2").unwrap();
+        assert!(incomplete
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "nested-heading-start-tag"));
+
+        let mut unpositioned = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        for token in [
+            Token::StartTag {
+                name: "h1".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "h2".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Eof,
+        ] {
+            unpositioned.process_token(token);
+        }
+        let diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| diagnostic.code == "nested-heading-start-tag")
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
     }
 
     #[test]
