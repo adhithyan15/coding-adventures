@@ -6216,6 +6216,18 @@ coverage and 97% validator coverage; and C# passes all 27 release tests. The
 corpus remains process-free and adds no Git, filesystem, environment, process,
 or network authority.
 
+Before publication, the branch rebased without conflict over the unrelated
+Rust HTML-parser fix in PR #12613 to exact `origin/main`
+`6378b33b42714a66eb09964acb2682adfe830738`. A fresh collision-checked report
+at that base is unchanged at 15 established lanes, 1,370 identities, 4,563
+slots, zero collisions, and zero unknown buckets. All 178 build-tool
+conformance tests pass with 23 expected platform skips and 225 subtests; both
+canonical Python BUILD fronts pass 424 tests at 90.06% total coverage and the
+C# BUILD front passes 27 tests with no compiler warning. Three independent
+read-only fixture, security/authority, and state/roadmap reviews found no
+remaining implementation or publication-scope defect. F# tracked-artifact
+therefore remains the correct next owner after merge.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
