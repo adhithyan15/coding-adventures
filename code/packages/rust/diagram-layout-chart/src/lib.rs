@@ -16,7 +16,7 @@ use diagram_ir::{
 };
 use std::collections::{HashMap, VecDeque};
 
-pub const VERSION: &str = "0.12.0";
+pub const VERSION: &str = "0.13.0";
 
 const MARGIN: f64 = 24.0;
 const TITLE_H: f64 = 32.0;
@@ -25,6 +25,11 @@ const X_LBL_H: f64 = 24.0;
 const LEGEND_H: f64 = 28.0;
 const TICK_LEN: f64 = 6.0;
 const GRID_COUNT: usize = 5;
+const POINT_LABEL_FONT_SIZE: f64 = 12.0;
+
+fn point_label_size(label: &str) -> (f64, f64) {
+    ((label.chars().count() as f64 * 7.0 + 4.0).max(12.0), 14.4)
+}
 
 const SERIES_COLORS: &[&str] = &[
     "#3b82f6", "#ef4444", "#22c55e", "#f59e0b", "#a855f7", "#14b8a6",
@@ -51,7 +56,7 @@ fn resolve_y_range(diagram: &ChartDiagram) -> (f64, f64) {
     let all: Vec<f64> = diagram
         .series
         .iter()
-        .flat_map(|s| s.data.iter().copied())
+        .flat_map(|series| series.data.iter().map(|point| point.value))
         .collect();
     if all.is_empty() {
         return (0.0, 100.0);
@@ -204,7 +209,8 @@ fn layout_xy_vertical(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChart
         }
         match series.kind {
             SeriesKind::Bar => {
-                for (ci, &val) in series.data.iter().enumerate() {
+                for (ci, point) in series.data.iter().enumerate() {
+                    let val = point.value;
                     let bh = ((val - ym) / yr * ph).max(0.0);
                     let bx = pl + ci as f64 * cat_w + cat_w * 0.15 + bar_series_idx as f64 * bar_w;
                     let by = pb - bh;
@@ -223,17 +229,31 @@ fn layout_xy_vertical(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChart
                     .data
                     .iter()
                     .enumerate()
-                    .map(|(ci, &val)| {
+                    .map(|(ci, point)| {
                         let lx = pl + (ci as f64 + 0.5) * cat_w;
-                        let ly = pb - (val - ym) / yr * ph;
+                        let ly = pb - (point.value - ym) / yr * ph;
                         Point { x: lx, y: ly }
                     })
                     .collect();
                 if !pts.is_empty() {
                     items.push(LayoutedChartItem::LinePath {
-                        points: pts,
+                        points: pts.clone(),
                         color: color.clone(),
                     });
+                }
+                for (point, position) in series.data.iter().zip(&pts) {
+                    if let Some(label) = &point.label {
+                        let (width, height) = point_label_size(label);
+                        items.push(LayoutedChartItem::PointLabel {
+                            x: position.x - width / 2.0,
+                            y: position.y - 10.0 - height / 2.0,
+                            width,
+                            height,
+                            text: label.clone(),
+                            font_size: POINT_LABEL_FONT_SIZE,
+                            color: color.clone(),
+                        });
+                    }
                 }
             }
         }
@@ -381,8 +401,8 @@ fn layout_xy_horizontal(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedCha
         }
         match series.kind {
             SeriesKind::Bar => {
-                for (category_index, value) in series.data.iter().copied().enumerate() {
-                    let width = ((value - minimum) / range * plot_width).max(0.0);
+                for (category_index, point) in series.data.iter().enumerate() {
+                    let width = ((point.value - minimum) / range * plot_width).max(0.0);
                     let y = top
                         + category_index as f64 * category_height
                         + category_height * 0.15
@@ -401,15 +421,31 @@ fn layout_xy_horizontal(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedCha
                 let points = series
                     .data
                     .iter()
-                    .copied()
                     .enumerate()
-                    .map(|(category_index, value)| Point {
-                        x: left + (value - minimum) / range * plot_width,
+                    .map(|(category_index, point)| Point {
+                        x: left + (point.value - minimum) / range * plot_width,
                         y: top + (category_index as f64 + 0.5) * category_height,
                     })
                     .collect::<Vec<_>>();
                 if !points.is_empty() {
-                    items.push(LayoutedChartItem::LinePath { points, color });
+                    items.push(LayoutedChartItem::LinePath {
+                        points: points.clone(),
+                        color: color.clone(),
+                    });
+                }
+                for (point, position) in series.data.iter().zip(&points) {
+                    if let Some(label) = &point.label {
+                        let (width, height) = point_label_size(label);
+                        items.push(LayoutedChartItem::PointLabel {
+                            x: position.x + 10.0,
+                            y: position.y - height / 2.0,
+                            width,
+                            height,
+                            text: label.clone(),
+                            font_size: POINT_LABEL_FONT_SIZE,
+                            color: color.clone(),
+                        });
+                    }
                 }
             }
         }
@@ -827,12 +863,28 @@ mod tests {
                 ChartSeries {
                     kind: SeriesKind::Bar,
                     label: Some("A".into()),
-                    data: vec![40.0, 60.0, 50.0],
+                    data: vec![40.0, 60.0, 50.0]
+                        .into_iter()
+                        .map(|value| ChartDataPoint { value, label: None })
+                        .collect(),
                 },
                 ChartSeries {
                     kind: SeriesKind::Line,
                     label: Some("B".into()),
-                    data: vec![35.0, 55.0, 48.0],
+                    data: vec![
+                        ChartDataPoint {
+                            value: 35.0,
+                            label: Some("Start".into()),
+                        },
+                        ChartDataPoint {
+                            value: 55.0,
+                            label: None,
+                        },
+                        ChartDataPoint {
+                            value: 48.0,
+                            label: Some("End".into()),
+                        },
+                    ],
                 },
             ],
             slices: vec![],
@@ -847,7 +899,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.12.0");
+        assert_eq!(crate::VERSION, "0.13.0");
     }
 
     #[test]
@@ -904,6 +956,12 @@ mod tests {
             .expect("horizontal line path");
         assert!(points[0].y < points[1].y && points[1].y < points[2].y);
         assert!(points[0].x < points[1].x);
+        let labels = layout
+            .items
+            .iter()
+            .filter(|item| matches!(item, LayoutedChartItem::PointLabel { .. }))
+            .count();
+        assert_eq!(labels, 2);
     }
 
     #[test]

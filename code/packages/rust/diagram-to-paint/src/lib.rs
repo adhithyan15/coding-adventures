@@ -683,6 +683,25 @@ where
                     instructions.push(PaintInstruction::Path(line_path(points, color, 2.0)));
                 }
             }
+            LayoutedChartItem::PointLabel {
+                x,
+                y,
+                width,
+                height,
+                text,
+                font_size,
+                color,
+            } => {
+                text_children.push(text_node(
+                    text,
+                    *x,
+                    *y,
+                    *width,
+                    *height,
+                    font_with_size(&lf, Some(*font_size)),
+                    css_to_color(color),
+                ));
+            }
             LayoutedChartItem::PieArc {
                 cx,
                 cy,
@@ -4256,6 +4275,36 @@ mod tests {
             metadata["accessibility.description"],
             "Native renderer priorities"
         );
+    }
+
+    #[test]
+    fn chart_point_labels_lower_to_backend_neutral_glyphs() {
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let layout = LayoutedChartDiagram {
+            width: 400.0,
+            height: 300.0,
+            accessibility_title: None,
+            accessibility_description: None,
+            title_box: None,
+            items: vec![LayoutedChartItem::PointLabel {
+                x: 100.0,
+                y: 80.0,
+                width: 60.0,
+                height: 14.4,
+                text: "Peak".into(),
+                font_size: 12.0,
+                color: "#ef4444".into(),
+            }],
+        };
+
+        let scene = diagram_to_paint_chart(&layout, &opts);
+        assert!(scene
+            .instructions
+            .iter()
+            .any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
     }
 
     #[test]
