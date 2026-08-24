@@ -3123,6 +3123,46 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: devanagariAlphabetSource("ज"),
   },
+  // Opiaterein's animation joins the short upper stem, upper bowl, lower loop,
+  // and diagonal tail, then separately adds the middle crossbar, right stem,
+  // and headline: four strokes, three lifts.
+  [ductusKey("devanagari", "झ")]: {
+    script: "devanagari",
+    glyph: "झ",
+    strokes: [
+      { segments: [{ label: "descend through both bowls and finish through the diagonal tail", path: [
+        { x: 362, y: 551 }, { x: 362, y: 510 }, { x: 362, y: 470 },
+        { x: 340, y: 445 }, { x: 300, y: 428 }, { x: 245, y: 420 },
+        { x: 185, y: 420 }, { x: 130, y: 415 }, { x: 95, y: 395 },
+        { x: 88, y: 365 }, { x: 92, y: 335 }, { x: 110, y: 305 },
+        { x: 145, y: 282 }, { x: 195, y: 270 }, { x: 250, y: 262 },
+        { x: 315, y: 250 }, { x: 365, y: 225 }, { x: 395, y: 195 },
+        { x: 408, y: 160 }, { x: 405, y: 125 }, { x: 390, y: 95 },
+        { x: 360, y: 72 }, { x: 315, y: 58 }, { x: 265, y: 52 },
+        { x: 210, y: 55 }, { x: 155, y: 62 }, { x: 110, y: 78 },
+        { x: 82, y: 100 }, { x: 75, y: 122 }, { x: 85, y: 100 },
+        { x: 110, y: 82 }, { x: 135, y: 70 }, { x: 160, y: 62 },
+        { x: 185, y: 45 }, { x: 210, y: 10 }, { x: 235, y: -25 },
+        { x: 260, y: -55 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the middle crossbar left-to-right", path: [
+        { x: 315, y: 240 }, { x: 365, y: 240 }, { x: 415, y: 240 },
+        { x: 465, y: 240 }, { x: 520, y: 240 }, { x: 610, y: 240 },
+      ] }] },
+      { segments: [{ label: "lift, then descend the right stem", path: [
+        { x: 610, y: 551 }, { x: 610, y: 475 }, { x: 610, y: 395 },
+        { x: 610, y: 315 }, { x: 610, y: 235 }, { x: 610, y: 155 },
+        { x: 610, y: 75 }, { x: 610, y: 5 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the shirorekha left-to-right", path: [
+        { x: 5, y: 585 }, { x: 85, y: 585 }, { x: 165, y: 585 },
+        { x: 245, y: 585 }, { x: 325, y: 585 }, { x: 405, y: 585 },
+        { x: 485, y: 585 }, { x: 585, y: 585 }, { x: 675, y: 585 },
+        { x: 750, y: 585 },
+      ] }] },
+    ],
+    source: devanagariAlphabetSource("झ"),
+  },
   // Opiaterein's animation joins the descending central stem to the
   // counterclockwise open body, then finishes with a separate headline:
   // two strokes, one lift.
