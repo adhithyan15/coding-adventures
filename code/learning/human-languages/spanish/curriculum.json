@@ -3795,6 +3795,54 @@
         "ES-EXT-302-CALLE"
       ],
       "after": []
+    },
+    {
+      "id": "ES-PATH-303-01",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "ES-C303-ayuda",
+        "ES-C303-momento",
+        "ES-C303-otra-vez",
+        "ES-C303-no-se",
+        "ES-C303-que-significa"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-303-REPARAR"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-304-01",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "ES-C304-tranquilo",
+        "ES-C304-enfermo",
+        "ES-C304-contento",
+        "ES-C304-ocupado",
+        "ES-C304-triste"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-304-ESTADO"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-305-01",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "ES-C305-nombre",
+        "ES-C305-apellido",
+        "ES-C305-senor",
+        "ES-C305-senora",
+        "ES-C305-encantado"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-305-PRESENTARSE"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -3847,7 +3895,8 @@
         "ES-PATH-021",
         "ES-PATH-285-01",
         "ES-PATH-292-01",
-        "ES-PATH-299-01"
+        "ES-PATH-299-01",
+        "ES-PATH-305-01"
       ],
       "omits": [
         "PRONOUN-I",
@@ -3866,7 +3915,8 @@
         "ES-PATH-022",
         "ES-PATH-286-01",
         "ES-PATH-293-01",
-        "ES-PATH-300-01"
+        "ES-PATH-300-01",
+        "ES-PATH-304-01"
       ],
       "omits": [
         "WORD-GOOD"
@@ -3881,7 +3931,8 @@
         "ES-PATH-024-PRONOUN-EVIDENCE",
         "ES-PATH-287-01",
         "ES-PATH-294-01",
-        "ES-PATH-301-01"
+        "ES-PATH-301-01",
+        "ES-PATH-303-01"
       ],
       "omits": [],
       "relocates": {}
@@ -7722,6 +7773,51 @@
         "ES-C302-huella",
         "ES-C302-puerto",
         "ES-C302-faro"
+      ]
+    },
+    {
+      "id": "ES-EXT-303-REPARAR",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can repair a conversation five ways in Spanish: ask for help, for time, for a repeat, admit I do not know, and ask what a word means.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C303-ayuda",
+        "ES-C303-momento",
+        "ES-C303-otra-vez",
+        "ES-C303-no-se",
+        "ES-C303-que-significa"
+      ]
+    },
+    {
+      "id": "ES-EXT-304-ESTADO",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can give five true answers to the wellbeing question in Spanish, switching the four that take -o/-a and leaving the -e one unchanged.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C304-tranquilo",
+        "ES-C304-enfermo",
+        "ES-C304-contento",
+        "ES-C304-ocupado",
+        "ES-C304-triste"
+      ]
+    },
+    {
+      "id": "ES-EXT-305-PRESENTARSE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can complete a first introduction in Spanish: both names, the right form of address, and the reply.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C305-nombre",
+        "ES-C305-apellido",
+        "ES-C305-senor",
+        "ES-C305-senora",
+        "ES-C305-encantado"
       ]
     }
   ],

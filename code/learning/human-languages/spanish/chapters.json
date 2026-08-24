@@ -5883,6 +5883,69 @@
           "ES-LEX-C302-AWAY-05"
         ]
       }
+    },
+    {
+      "chapter": 303,
+      "title": "When the Words Run Out --- Help, a Moment, Again, I Don't Know, What Does It Mean",
+      "label": "ch:reparaciones",
+      "canDo": "I can ask for help, ask for a moment, ask for another go, admit I do not know, and ask what a word means in Spanish.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "ES-C303-que-significa",
+        "kind": "production",
+        "summary": "Complete ES-C303-que-significa: repair a stalled exchange five ways, ending with the question that earns a meaning.",
+        "assesses": [
+          "ES-LEX-C303-REPAIR-01",
+          "ES-LEX-C303-REPAIR-02",
+          "ES-LEX-C303-REPAIR-03",
+          "ES-LEX-C303-REPAIR-04",
+          "ES-LEX-C303-REPAIR-05"
+        ]
+      }
+    },
+    {
+      "chapter": 304,
+      "title": "When Bien Is Not True --- Calm, Ill, Content, Busy, Sad",
+      "label": "ch:como-estoy",
+      "canDo": "I can answer how I am honestly in Spanish: calm, ill, content, busy or sad, in the right form for who is speaking.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "ES-C304-triste",
+        "kind": "production",
+        "summary": "Complete ES-C304-triste: give all five answers, switching the four that take -o/-a and leaving the one that ends in -e alone.",
+        "assesses": [
+          "ES-LEX-C304-WELL-01",
+          "ES-LEX-C304-WELL-02",
+          "ES-LEX-C304-WELL-03",
+          "ES-LEX-C304-WELL-04",
+          "ES-LEX-C304-WELL-05"
+        ]
+      }
+    },
+    {
+      "chapter": 305,
+      "title": "Naming, Properly --- Name, Surname, Sir, Madam, Delighted",
+      "label": "ch:nombre-y-apellido",
+      "canDo": "I can ask for and give a first name and a surname in Spanish, address a stranger as senor or senora, and answer an introduction.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "ES-C305-encantado",
+        "kind": "production",
+        "summary": "Complete ES-C305-encantado: give both names, address the other person correctly, and answer the introduction.",
+        "assesses": [
+          "ES-LEX-C305-NAME-01",
+          "ES-LEX-C305-NAME-02",
+          "ES-LEX-C305-NAME-03",
+          "ES-LEX-C305-NAME-04",
+          "ES-LEX-C305-NAME-05"
+        ]
+      }
     }
   ]
 }

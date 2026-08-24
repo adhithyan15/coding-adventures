@@ -1,0 +1,700 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 304,
+  "title": "When Bien Is Not True --- Calm, Ill, Content, Busy, Sad",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:225d29d8a7fc8c15",
+  "lessons": [
+    {
+      "id": "ES-C304-tranquilo",
+      "sequence": 4320,
+      "title": "tranquilo — a sea with no wind on it",
+      "headword": "tranquilo",
+      "romanization": "tranquilo",
+      "gloss": "calm — Latin tranquillus, the word for a sea with no wind on it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:58ffd00243519bcd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two from last time, before anything new is added."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say it once slowly, then at speed. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tranquilo — \"calm.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin tranquillus was, before anything else, a word for water: a sea or a lake with no wind moving across it. Flat, and therefore safe to cross."
+            },
+            {
+              "kind": "speech",
+              "text": "English borrowed it whole and kept the picture, whether or not anybody notices it: tranquil, tranquillity."
+            },
+            {
+              "kind": "speech",
+              "text": "It is the most-used answer in this chapter after bien, and it does something the others do not — said to somebody else, tranquilo means \"take it easy,\" a whole sentence in one word."
+            },
+            {
+              "kind": "speech",
+              "text": "A man says tranquilo; a woman says tranquila. You met that -o/-a switch in bueno and buena."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can answer the wellbeing question with something other than bien."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tranquilo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tranquilo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tranquila",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tranquila*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tranquilo, gracias",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tranquilo, gracias*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did tranquillus describe first? (Water with no wind on it.) And what does a woman say? (Tranquila.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C304-enfermo",
+      "sequence": 4330,
+      "title": "enfermo — not firm",
+      "headword": "enfermo",
+      "romanization": "enfermo",
+      "gloss": "ill — Latin infirmus, not firm; the same word as English infirm",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d7715f76257a1e32",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two from last time, before anything new is added."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say it once slowly, then at speed. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "enfermo — \"ill.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin infirmus is in- (\"not\") plus firmus (\"firm, steady\"). Illness named as the loss of steadiness — not pain, not fever, just the going of the thing that held you up."
+            },
+            {
+              "kind": "speech",
+              "text": "English borrowed it twice and kept the shape both times: infirm, and the infirmary where the not-firm are put."
+            },
+            {
+              "kind": "speech",
+              "text": "Enfermo is the strong one in this chapter. You already have la fiebre and el dolor; this is the word for the state they belong to. And la enfermera — the nurse — is built straight off it: the one who attends the not-firm."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two honest answers now, and one of them explains a word you already had."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "enfermo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *enfermo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "enferma",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *enferma*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "enfermo — la enfermera, por favor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *enfermo — la enfermera, por favor*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Take infirmus apart. (In- not, firmus firm.) Which word you already knew is built on it? (La enfermera.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C304-contento",
+      "sequence": 4340,
+      "title": "contento — held together",
+      "headword": "contento",
+      "romanization": "contento",
+      "gloss": "happy, content — Latin contentus, held together, from continere",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7bdd7a499de182a8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two from last time, before anything new is added."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say it once slowly, then at speed. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "contento — \"happy,\" \"content.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin contentus is the past participle of continere, \"to hold together\" — con- plus tenere, \"to hold.\" So contento is literally held together."
+            },
+            {
+              "kind": "speech",
+              "text": "English took the verb as contain and the participle as content, and kept the double life: a container holds things; a contented person is held."
+            },
+            {
+              "kind": "speech",
+              "text": "That is a quieter word than \"happy.\" It does not claim delight. It claims that nothing is falling apart — which, next to tranquilo and enfermo, is exactly the right register for answering a stranger."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three answers: worn out, not firm, and held together."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "contento",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *contento*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "contenta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *contenta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "contento, gracias",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *contento, gracias*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does continere mean? (To hold together.) So what is a contento person, literally? (Held together.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C304-ocupado",
+      "sequence": 4350,
+      "title": "ocupado — seized",
+      "headword": "ocupado",
+      "romanization": "ocupado",
+      "gloss": "busy — Latin occupare, to seize; to be busy is to be seized",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fcef64da42444b4d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two from last time, before anything new is added."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say it once slowly, then at speed. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ocupado — \"busy.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin occupare meant to seize, to take possession of — an army occupies ground. English kept it exactly: to occupy, and an occupation."
+            },
+            {
+              "kind": "speech",
+              "text": "So ocupado does not say \"I have a lot on.\" It says something has taken hold of me. The work is the one doing the grabbing."
+            },
+            {
+              "kind": "speech",
+              "text": "It is also the word on a lavatory door, and what a Spanish phone line is when it is busy — the seat and the line are both seized."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four honest answers, and one of them is written on doors."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ocupado",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ocupado*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ocupada",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ocupada*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lo siento — ocupado",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lo siento — ocupado*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did occupare mean? (To seize.) So who is doing the seizing when you are ocupado? (The work.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C304-triste",
+      "sequence": 4360,
+      "title": "triste — the one word that does not change",
+      "headword": "triste",
+      "romanization": "triste",
+      "gloss": "sad — Latin tristis, which also meant harsh and grim before it softened",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a93a84459d7928b9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two from last time, before anything new is added."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say it once slowly, then at speed. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "triste — \"sad.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin tristis was wider than the English word. It covered grim, harsh, severe — a tristis judge was a stern one — and only later settled onto sorrow. French carried the softer end into tristesse, which English borrowed without translating."
+            },
+            {
+              "kind": "speech",
+              "text": "Here is the thing worth noticing, and it is a rule you have been shown four times now without it being named: tranquilo becomes tranquila, contento becomes contenta, ocupado becomes ocupada. Triste does not move."
+            },
+            {
+              "kind": "speech",
+              "text": "Words ending in -e have one form for everybody. That is not an exception to the -o/-a switch; it is the other half of it, and it costs you nothing to learn because there is nothing to change."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five answers — and the fifth quietly teaches the limit of the -o/-a rule."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "triste",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *triste*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "triste, gracias",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *triste, gracias*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "contento — contenta — triste",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *contento — contenta — triste*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Did tristis only mean sad? (No — grim and harsh too.) And why does triste not change for a woman? (It ends in -e.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
