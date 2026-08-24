@@ -7294,10 +7294,13 @@ impl HtmlParser {
             if self.current_element_is_marked_foreign_fragment_context() {
                 return;
             }
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-shell-end-tag-outside-scope",
-                format!("end tag `</{name}>` targeted a body element outside ordinary scope"),
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-shell-end-tag-outside-scope",
+                    format!("end tag `</{name}>` targeted a body element outside ordinary scope"),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             return;
         }
         if self.current_namespace().is_some()
@@ -7661,10 +7664,13 @@ impl HtmlParser {
             && self.has_authored_open_html_element("body")
             && self.open_html_element_in_scope_index("body").is_none()
         {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-shell-end-tag-outside-scope",
-                format!("end tag `</{name}>` targeted a body element outside ordinary scope"),
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-shell-end-tag-outside-scope",
+                    format!("end tag `</{name}>` targeted a body element outside ordinary scope"),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             return;
         }
         if (!self.is_fragment || self.open_fragment_context_name() == Some("html"))
@@ -27001,6 +27007,14 @@ mod tests {
         }
     }
 
+    fn shell_end_tag_outside_scope(source: &str, name: &str) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-shell-end-tag-outside-scope",
+            format!("end tag `</{name}>` targeted a body element outside ordinary scope"),
+        )
+        .at_emission(Some(end_tag_position(source, name)))
+    }
+
     fn start_tag_position(source: &str, name: &str) -> SourcePosition {
         let prefix = format!("<{name}");
         let start = source
@@ -38813,10 +38827,7 @@ mod tests {
         assert_eq!(
             table.parser_diagnostics,
             vec![
-                ParserDiagnostic::new(
-                    "unexpected-shell-end-tag-outside-scope",
-                    "end tag `</body>` targeted a body element outside ordinary scope"
-                ),
+                shell_end_tag_outside_scope(table_source, "body"),
                 eof_with_unclosed_elements(table_source)
             ]
         );
@@ -38874,12 +38885,7 @@ mod tests {
                         })
                         .cloned()
                         .collect::<Vec<_>>(),
-                    vec![ParserDiagnostic::new(
-                        "unexpected-shell-end-tag-outside-scope",
-                        format!(
-                            "end tag `</{end_tag}>` targeted a body element outside ordinary scope"
-                        )
-                    )],
+                    vec![shell_end_tag_outside_scope(&source, end_tag)],
                     "source {source:?}: {:?}",
                     output.parser_diagnostics
                 );
@@ -38959,12 +38965,7 @@ mod tests {
                         .collect::<Vec<_>>(),
                     vec![
                         generic_foreign_end_tag_mismatch(&source, end_tag),
-                        ParserDiagnostic::new(
-                            "unexpected-shell-end-tag-outside-scope",
-                            format!(
-                                "end tag `</{end_tag}>` targeted a body element outside ordinary scope"
-                            )
-                        ),
+                        shell_end_tag_outside_scope(&source, end_tag),
                     ],
                     "source {source:?}: {:?}",
                     output.parser_diagnostics
@@ -39004,16 +39005,29 @@ mod tests {
     }
 
     #[test]
-    fn positions_shell_foreign_end_tag_mismatches_at_token_emission() {
+    fn positions_shell_end_tags_outside_scope_at_token_emission() {
         for end_tag in ["body", "html"] {
             let source =
                 format!("<!doctype html><!--é-->\r\n<svg><foreignObject></{end_tag}>");
             let output = parse_html_with_diagnostics(&source).unwrap();
             assert_eq!(
-                output.parser_diagnostics[0],
-                generic_foreign_end_tag_mismatch(&source, end_tag)
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .filter(|diagnostic| {
+                        matches!(
+                            diagnostic.code.as_str(),
+                            "unexpected-end-tag-in-foreign-content"
+                                | "unexpected-shell-end-tag-outside-scope"
+                        )
+                    })
+                    .cloned()
+                    .collect::<Vec<_>>(),
+                vec![
+                    generic_foreign_end_tag_mismatch(&source, end_tag),
+                    shell_end_tag_outside_scope(&source, end_tag),
+                ]
             );
-            assert_eq!(output.parser_diagnostics[1].position, None);
             assert!(source.len() > source.chars().count());
 
             let eof_source = format!("<!doctype html><svg><foreignObject></{end_tag}");
@@ -39021,7 +39035,13 @@ mod tests {
             assert!(eof_output
                 .parser_diagnostics
                 .iter()
-                .all(|diagnostic| diagnostic.code != "unexpected-end-tag-in-foreign-content"));
+                .all(|diagnostic| {
+                    !matches!(
+                        diagnostic.code.as_str(),
+                        "unexpected-end-tag-in-foreign-content"
+                            | "unexpected-shell-end-tag-outside-scope"
+                    )
+                }));
 
             let mut unpositioned =
                 HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
@@ -39043,11 +39063,57 @@ mod tests {
             ] {
                 unpositioned.process_token(token);
             }
-            let diagnostic = unpositioned
+            let diagnostics = unpositioned
                 .diagnostics()
                 .iter()
-                .find(|diagnostic| diagnostic.code == "unexpected-end-tag-in-foreign-content")
-                .unwrap();
+                .filter(|diagnostic| {
+                    matches!(
+                        diagnostic.code.as_str(),
+                        "unexpected-end-tag-in-foreign-content"
+                            | "unexpected-shell-end-tag-outside-scope"
+                    )
+                })
+                .collect::<Vec<_>>();
+            assert_eq!(diagnostics.len(), 2);
+            assert!(diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.position.is_none()));
+
+            let mut ordinary_unpositioned =
+                HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+            for token in [
+                Token::StartTag {
+                    name: "table".to_string(),
+                    attributes: Vec::new(),
+                    self_closing: false,
+                },
+                Token::StartTag {
+                    name: "tbody".to_string(),
+                    attributes: Vec::new(),
+                    self_closing: false,
+                },
+                Token::StartTag {
+                    name: "tr".to_string(),
+                    attributes: Vec::new(),
+                    self_closing: false,
+                },
+                Token::StartTag {
+                    name: "td".to_string(),
+                    attributes: Vec::new(),
+                    self_closing: false,
+                },
+                Token::EndTag {
+                    name: end_tag.to_string(),
+                },
+                Token::Eof,
+            ] {
+                ordinary_unpositioned.process_token(token);
+            }
+            let diagnostic = ordinary_unpositioned
+                .diagnostics()
+                .iter()
+                .find(|diagnostic| diagnostic.code == "unexpected-shell-end-tag-outside-scope")
+                .expect("the table cell should place the body outside ordinary scope");
             assert_eq!(diagnostic.position, None);
         }
     }
