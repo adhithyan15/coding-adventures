@@ -1247,8 +1247,11 @@ loops its closed head directly into the broad leftward bowl before one lift
 places the upper dot, growing the inventory to 28 rows. Arabic **ق** then loops
 its closed head directly into a deeper below-baseline bowl before separate
 right and left upper-dot runs grow the inventory to 29 rows. That completes the
-lesson-corpus base-letter audit; Arabic remains incomplete while seated Hamza
-and ending variants still need explicit accounting.
+lesson-corpus base-letter audit. The seated forms **أ إ ؤ ئ** are now explicitly
+modeled as carrier-plus-Hamza compositions: write the existing
+Alif, Waw, or dotless-Yaa carrier first, then add the existing Hamza path above
+or below. They therefore do not inflate the canonical letter-row count. Ending
+forms **ة** and **ى**, followed by obligatory **لا**, remain to be audited.
 The canonical script-data group is capped at 250 kB per cacheable batch, so
 these growing source notes stay within the app's enforced 500 kB eager-chunk
 budget without removing learner-facing evidence.

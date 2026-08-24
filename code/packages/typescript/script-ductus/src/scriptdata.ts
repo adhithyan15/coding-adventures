@@ -60,6 +60,24 @@ export interface Letter {
   notes?: string;
 }
 
+/** A combining sign, including source-backed carrier-composition metadata. */
+export interface Mark {
+  mark: string;
+  sound: string;
+  role: string;
+  attachesAs: string;
+  example?: { base: string; combined: string; sound: string };
+  examples?: Array<{
+    base: string;
+    combined: string;
+    sound: string;
+    carrier: string;
+    note?: string;
+  }>;
+  compositionOrder?: string[];
+  compositionSource?: { citation: string; url: string; variation?: string };
+}
+
 /** A whole script: its metadata plus its inventory of letters. */
 export interface ScriptData {
   script: string;
@@ -79,7 +97,7 @@ export interface ScriptData {
   /** For a script with its own numerals: the digits 0–9 in the script's glyphs
    *  (౦౧౨…). Kept separate from `letters`, like `independentVowels`. */
   digits?: Letter[];
-  marks?: unknown[];
+  marks?: Mark[];
   combination?: string;
   complete?: boolean;
   notes?: string;
