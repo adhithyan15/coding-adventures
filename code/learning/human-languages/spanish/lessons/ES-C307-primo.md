@@ -28,7 +28,7 @@ variety: american-neutral
 reviews_of: [ES-C307-tia]
 ---
 
-# el primo --- the one that just means first
+# el primo --- the relative whose name means first
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C307-KIN-07, ES-LEX-C307-KIN-08] -->

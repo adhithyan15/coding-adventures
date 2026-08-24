@@ -4,7 +4,7 @@
   "chapter": 307,
   "title": "The Wider Circle --- Wife, Uncle, Aunt, Cousin",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f9cacb28a3c6cec2",
+  "sourceHash": "fnv1a64:f244a3f0cd810270",
   "lessons": [
     {
       "id": "ES-C307-esposa",
@@ -420,7 +420,7 @@
     {
       "id": "ES-C307-primo",
       "sequence": 4500,
-      "title": "el primo --- the one that just means first",
+      "title": "el primo --- the relative whose name means first",
       "headword": "el primo",
       "romanization": "el primo",
       "gloss": "the cousin --- Latin primus, first; the same root as primero, and as English prime and primary",
@@ -430,7 +430,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f392d8c46732185f",
+      "sourceHash": "fnv1a64:0bebe0a3f39780c7",
       "notice": null,
       "blocks": [
         {
