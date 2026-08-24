@@ -2,7 +2,7 @@
 name = "bacnet-protocol"
 version = "0.1.0"
 edition = "2021"
-description = "Bounded BACnet/IP Who-Is and I-Am protocol framing"
+description = "Bounded BACnet/IP discovery and Device ReadProperty framing"
 license = "MIT"
 
 [dependencies]

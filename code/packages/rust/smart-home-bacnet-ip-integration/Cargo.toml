@@ -2,7 +2,7 @@
 name = "smart-home-bacnet-ip-integration"
 version = "0.1.0"
 edition = "2021"
-description = "Authorized bounded BACnet/IP device discovery for Smart Home"
+description = "Authorized bounded BACnet/IP discovery and Device telemetry for Smart Home"
 license = "MIT"
 
 [dependencies]
