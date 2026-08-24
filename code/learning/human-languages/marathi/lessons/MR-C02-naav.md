@@ -1,7 +1,7 @@
 ---
 id: MR-C02-naav
 sequence: 40
-chapter: 2
+chapter: 3
 type: word
 headword: नाव
 gloss: name (nāv)

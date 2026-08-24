@@ -3,7 +3,7 @@ schema_version: 2
 id: MR-C09-ghene
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 460
-chapter: 9
+chapter: 10
 type: word
 headword: घेणे
 romanization: gheṇe
@@ -29,7 +29,7 @@ variety: standard-colloquial
 reviews_of: [MR-C08-lihine, MR-C08-vachne, MR-C04-kalji-ghya]
 ---
 
-# घेणे (gheṇe) — "to take," which you have been saying since Chapter 4
+# घेणे (gheṇe) — "to take," which you have been saying since Chapter 5
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-LIHINE, MR-ETYMON-LIKH-SCRATCH, MR-LEX-VACHNE] -->

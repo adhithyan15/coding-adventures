@@ -1,4 +1,4 @@
-# Session Guide — Marathi Chapters 1–9
+# Session Guide — Marathi Chapters 1–10
 
 Same spaced-repetition schedule as the other tracks (a word from session *N*
 resurfaces at successively wider distances). Lessons are named by slug. The
@@ -11,7 +11,7 @@ records the original chapter hooks without trying to duplicate all 89 lessons.
 recalls it without a visible model, writes it from a heard cue, and then reads
 **नमस्कार**. Later word lessons continue to teach their needed letters inline.
 
-## Chapter 1 — Greetings
+## Chapter 1 — Namaskar, Piece by Piece
 
 | Session | Lesson | Word | Root / hook |
 |---|---|---|---|
@@ -22,14 +22,19 @@ recalls it without a visible model, writes it from a heard cue, and then reads
 | 5 | W01-ho-dictation | हो | write from a heard cue with no answer model |
 | 6–13 | W01-na … W01-ra | न, ा, ी, म, स, क, ्, र | one new piece per short lesson |
 | 14 | W01-namaskar-read | नमस्कार | blend and read the first greeting independently |
+
+## Chapter 2 — Courtesy, Responses, and Leave-Taking
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
 | 15 | dhanyavad | धन्यवाद | "thanks" ← Sanskrit *dhanya*+*vāda* |
 | 16 | ho | हो | use the already written word as "yes" |
 | 17 | baram | बरं | "okay/fine" (native word); the anusvāra nasal |
 | 18 | nahi | नाही | "no" ← PIE *\*ne* (English *no/not/none*) |
 | 19 | yeto | येतो / येते | gendered leave-taking (m./f.) |
-| 20 | practice | (recap) | retrieve speech, reading, and independent writing together |
+| 20 | practice | (recap) | retrieve courtesy, responses, leave-taking, and independent **हो** writing |
 
-## Chapter 2 — Introducing Yourself
+## Chapter 3 — Introducing Yourself
 
 | Session | Lesson | Word | Root / hook |
 |---|---|---|---|
@@ -43,7 +48,7 @@ recalls it without a visible model, writes it from a heard cue, and then reads
 | 15 | anand | भेटून आनंद झाला | "pleased to meet you" ← *ānand* "joy" |
 | 16 | practice | (recap) | the whole introduction exchange |
 
-## Chapter 3 — How Are You
+## Chapter 4 — How Are You
 
 | Session | Lesson | Word | Root / hook |
 |---|---|---|---|
@@ -54,7 +59,7 @@ recalls it without a visible model, writes it from a heard cue, and then reads
 | 21 | kaahi-harkat-nahi | काही हरकत नाही | "no problem"; *nāhī* ← PIE *ne, *harkat* ← Arabic |
 | 22 | practice | (recap) | the whole how-are-you exchange |
 
-## Chapter 4 — Farewells
+## Chapter 5 — Farewells
 
 | Session | Lesson | Word | Root / hook |
 |---|---|---|---|
@@ -65,7 +70,7 @@ recalls it without a visible model, writes it from a heard cue, and then reads
 | 27 | kalji-ghya | काळजी घ्या | "take care"; the retroflex ळ; *ghyā* (resp.) / *ghe* (fam.) |
 | 28 | practice | (recap) | the farewells |
 
-## Chapter 5 — The First Verbs
+## Chapter 6 — The First Verbs
 
 | Session | Lesson | Word | Root / hook |
 |---|---|---|---|
@@ -75,14 +80,14 @@ recalls it without a visible model, writes it from a heard cue, and then reads
 | 32 | kaam-karne | काम करणे | "to work"; *karṇe* ← √*kṛ* (root of *namaskār*, *karma*) |
 | 33 | practice | (recap) | three verbs, one engine — sentences about yourself |
 
-## Chapter 6 — Numbers 1–5
+## Chapter 7 — Numbers 1–5
 
 | Session | Lesson | Word | Root / hook |
 |---|---|---|---|
 | 34 | numbers-1-5 | एक, दोन, तीन, चार, पाच | retrieve the five forms; notice two written differences and one sound difference |
 | 35 | number-differences | दोन · तीन · पाच · चार | *don* copied *tīn* by analogy; Hindi retained *pāṁch*'s nasal; Marathi *chār* shifts toward *tsār* |
 
-## Chapter 7 — The Core Verbs
+## Chapter 8 — The Core Verbs
 
 | Session | Lesson | Word | Root / hook |
 |---|---|---|---|
@@ -93,7 +98,7 @@ recalls it without a visible model, writes it from a heard cue, and then reads
 | 40 | pahne | पाहणे | "to see" ← *prapaśyati*; *paś-* ← *\*spek-* → *spectacle, inspect, spy* |
 | 41 | mahit-asne | माहीत असणे | "to know"; *malā māhīt āhe* — the knower is dative; **माहीत** a Persian loan beside inherited जाणणे |
 
-## Chapter 8 — The Mind and the Page
+## Chapter 9 — The Mind and the Page
 
 | Session | Lesson | Word | Root / hook |
 |---|---|---|---|
@@ -102,7 +107,7 @@ recalls it without a visible model, writes it from a heard cue, and then reads
 | 44 | vachne | वाचणे | "to read"; ← *vācayati*, causative of *vac-* "to speak" ← *\*wekʷ-* → *voice, vocal, invoke* |
 | 45 | lihine | लिहिणे | "to write"; ← *likhati*, root sense "to scratch," beside *scrībere* and *write*; **payoff** |
 
-## Chapter 9 — Taking, Asking, Helping, Liking
+## Chapter 10 — Taking, Asking, Helping, Liking
 
 | Session | Lesson | Word | Root / hook |
 |---|---|---|---|
@@ -113,6 +118,6 @@ recalls it without a visible model, writes it from a heard cue, and then reads
 
 ## Next
 
-Finish Chapter 6 with numbers 6–10 and Devanagari digits १२३, then family and
+Finish the number runway with numbers 6–10 and Devanagari digits १२३, then family and
 food, then the rest of the core verbs, negation and questions, and the tenses
 where gender returns on the verb.

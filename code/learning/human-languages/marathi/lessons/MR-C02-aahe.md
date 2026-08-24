@@ -1,7 +1,7 @@
 ---
 id: MR-C02-aahe
 sequence: 50
-chapter: 2
+chapter: 3
 type: word
 headword: आहे
 gloss: is (āhe)

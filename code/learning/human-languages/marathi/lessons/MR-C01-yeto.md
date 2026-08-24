@@ -3,7 +3,7 @@ schema_version: 2
 id: MR-C01-yeto
 spine_node: SPINE-TAKE-LEAVE
 sequence: 28
-chapter: 1
+chapter: 2
 type: word
 headword: येतो / येते
 romanization: yeto / yete

@@ -1,7 +1,7 @@
 ---
 id: MR-C02-anand
 sequence: 75
-chapter: 2
+chapter: 3
 type: phrase
 headword: भेटून आनंद झाला
 gloss: pleased to meet you (bheṭūn ānand jhālā)
@@ -37,7 +37,7 @@ the feeling **joy**.
 
 The verb **झाला** (*jhālā*, "happened/became") also carries gender — *jhālā* by
 default here for the event *ānand*. And **भेटून** (*bheṭūn*) is built on **भेटणे**
-(*bheṭṇe*, "to meet") — a verb you will meet again in Chapter 4's goodbye, *punhā
+(*bheṭṇe*, "to meet") — a verb you will meet again in Chapter 5's goodbye, *punhā
 bheṭū* ("we'll meet again").
 
 ## Guided Practice

@@ -3,11 +3,11 @@ schema_version: 2
 id: MR-C01-practice
 spine_node: SPINE-RESPOND-BASIC
 sequence: 30
-chapter: 1
+chapter: 2
 type: practice
 headword: (recap)
 romanization: recap
-gloss: Chapter 1 recap — greetings, and what makes Marathi its own
+gloss: Chapter 2 recap — courtesy, responses, and leave-taking
 concept_tag: REVIEW
 prerequisites: [MR-C01-namaskar, MR-C01-dhanyavad, MR-C01-ho, MR-C01-nahi, MR-C01-baram, MR-C01-yeto]
 sounds: []
@@ -28,7 +28,7 @@ variety: standard-colloquial
 reviews_of: [MR-C01-namaskar, MR-C01-dhanyavad, MR-C01-ho, MR-C01-nahi, MR-C01-baram, MR-C01-yeto]
 ---
 
-# Chapter 1 — recap
+# Chapter 2 — courtesy, responses, and leave-taking
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-NAMASKAR-01, MR-LEX-DHANYAVAD-01, MR-LEX-HO-01, MR-LEX-BARAM-01, MR-LEX-NAHI-01, MR-PHRASE-YETO-YETE-01] -->

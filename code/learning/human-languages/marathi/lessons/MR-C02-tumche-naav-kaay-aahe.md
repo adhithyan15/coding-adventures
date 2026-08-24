@@ -1,7 +1,7 @@
 ---
 id: MR-C02-tumche-naav-kaay-aahe
 sequence: 70
-chapter: 2
+chapter: 3
 type: phrase
 headword: तुमचं नाव काय आहे?
 gloss: what's your name? (tumchaṁ nāv kāy āhe?)

@@ -5,7 +5,7 @@
     {
       "language": "marathi",
       "chapter": 1,
-      "sourceHash": "fnv1a64:5986083ed13c4d40",
+      "sourceHash": "fnv1a64:82050b4ed7c298b0",
       "lessonIds": [
         "MR-C01-namaskar",
         "MR-W01-ha",
@@ -20,7 +20,15 @@
         "MR-W01-ka",
         "MR-W01-virama",
         "MR-W01-ra",
-        "MR-W01-namaskar-read",
+        "MR-W01-namaskar-read"
+      ],
+      "tex": "marathi/book/chapters/ch01-namaskar-script.tex"
+    },
+    {
+      "language": "marathi",
+      "chapter": 2,
+      "sourceHash": "fnv1a64:06deca7c814f9f99",
+      "lessonIds": [
         "MR-C01-dhanyavad",
         "MR-C01-ho",
         "MR-C01-baram",
@@ -28,22 +36,22 @@
         "MR-C01-yeto",
         "MR-C01-practice"
       ],
-      "tex": "marathi/book/chapters/ch01-greetings.tex"
-    },
-    {
-      "language": "marathi",
-      "chapter": 6,
-      "sourceHash": "fnv1a64:c4cd9fddda234365",
-      "lessonIds": [
-        "MR-C06-numbers-1-5",
-        "MR-C06-number-differences"
-      ],
-      "tex": "marathi/book/chapters/ch06-numbers-1-5.tex"
+      "tex": "marathi/book/chapters/ch02-courtesy-responses.tex"
     },
     {
       "language": "marathi",
       "chapter": 7,
-      "sourceHash": "fnv1a64:27210f006bec4062",
+      "sourceHash": "fnv1a64:9959a7f04e416104",
+      "lessonIds": [
+        "MR-C06-numbers-1-5",
+        "MR-C06-number-differences"
+      ],
+      "tex": "marathi/book/chapters/ch07-numbers-1-5.tex"
+    },
+    {
+      "language": "marathi",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:94fe065721f18bc9",
       "lessonIds": [
         "MR-C07-asne",
         "MR-C07-jane",
@@ -52,48 +60,48 @@
         "MR-C07-pahne",
         "MR-C07-mahit-asne"
       ],
-      "tex": "marathi/book/chapters/ch07-core-verbs.tex"
+      "tex": "marathi/book/chapters/ch08-core-verbs.tex"
     },
     {
       "language": "marathi",
-      "chapter": 8,
-      "sourceHash": "fnv1a64:9dda14847345c18d",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:c6df4484f6daa84b",
       "lessonIds": [
         "MR-C08-vichar-karne",
         "MR-C08-samajne",
         "MR-C08-vachne",
         "MR-C08-lihine"
       ],
-      "tex": "marathi/book/chapters/ch08-mind-and-page.tex"
+      "tex": "marathi/book/chapters/ch09-mind-and-page.tex"
     },
     {
       "language": "marathi",
-      "chapter": 9,
-      "sourceHash": "fnv1a64:08c7a78718f571ff",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:7926d3d5718394ad",
       "lessonIds": [
         "MR-C09-ghene",
         "MR-C09-vicharne",
         "MR-C09-madat-karne",
         "MR-C09-avadne"
       ],
-      "tex": "marathi/book/chapters/ch09-doing-verbs.tex"
+      "tex": "marathi/book/chapters/ch10-doing-verbs.tex"
     },
     {
       "language": "marathi",
-      "chapter": 10,
-      "sourceHash": "fnv1a64:cf2a8dd578f13505",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:860cfda9d993bc81",
       "lessonIds": [
         "MR-C10-paani",
         "MR-C10-chaha",
         "MR-C10-dudh",
         "MR-C10-bhakari"
       ],
-      "tex": "marathi/book/chapters/ch10-request-food-drink.tex"
+      "tex": "marathi/book/chapters/ch11-request-food-drink.tex"
     },
     {
       "language": "marathi",
-      "chapter": 11,
-      "sourceHash": "fnv1a64:0a0f3ab07dcd40e7",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:53a534b11b5527d4",
       "lessonIds": [
         "MR-C11-mitra",
         "MR-R11-mitra-r1",
@@ -102,33 +110,33 @@
         "MR-C11-bhau",
         "MR-C11-bahin"
       ],
-      "tex": "marathi/book/chapters/ch11-friend-and-family.tex"
+      "tex": "marathi/book/chapters/ch12-friend-and-family.tex"
     },
     {
       "language": "marathi",
-      "chapter": 12,
-      "sourceHash": "fnv1a64:556c8f23ff12cd7f",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:ae2f17137354cf24",
       "lessonIds": [
         "MR-C12-dola",
         "MR-C12-kaan",
         "MR-C12-tond",
         "MR-C12-naak"
       ],
-      "tex": "marathi/book/chapters/ch12-face-parts.tex"
-    },
-    {
-      "language": "marathi",
-      "chapter": 13,
-      "sourceHash": "fnv1a64:6853215b42dd2b6a",
-      "lessonIds": [
-        "MR-C13-hrudaya"
-      ],
-      "tex": "marathi/book/chapters/ch13-heart.tex"
+      "tex": "marathi/book/chapters/ch13-face-parts.tex"
     },
     {
       "language": "marathi",
       "chapter": 14,
-      "sourceHash": "fnv1a64:d17b96e47c8ed15f",
+      "sourceHash": "fnv1a64:d31ac91c97ab5f71",
+      "lessonIds": [
+        "MR-C13-hrudaya"
+      ],
+      "tex": "marathi/book/chapters/ch14-heart.tex"
+    },
+    {
+      "language": "marathi",
+      "chapter": 15,
+      "sourceHash": "fnv1a64:04626d3054df85e6",
       "lessonIds": [
         "MR-R14-mitra-r2",
         "MR-R14-kutumb-r2",
@@ -143,7 +151,7 @@
         "MR-R14-numbers",
         "MR-R14-kutumb-r3"
       ],
-      "tex": "marathi/book/chapters/ch14-family-memory.tex"
+      "tex": "marathi/book/chapters/ch15-family-memory.tex"
     }
   ]
 }

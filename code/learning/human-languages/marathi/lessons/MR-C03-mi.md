@@ -1,7 +1,7 @@
 ---
 id: MR-C03-mi
 sequence: 95
-chapter: 3
+chapter: 4
 type: word
 headword: मी
 gloss: I (mī)
@@ -37,7 +37,7 @@ family tie to last chapter's **माझं** (*mājhaṁ*, "my"): the same firs
 ## Grammar Lens: "I am" is *mī āhe*
 
 Pair **मी** with the copula **आहे**: **मी आहे** (*mī āhe*, "I am"). To answer
-that you are well, reach back to Chapter 1's **बरं** (*baraṁ*, "fine") in its
+that you are well, reach back to Chapter 2's **बरं** (*baraṁ*, "fine") in its
 gendered form: **मी बरा आहे** (*mī barā āhe*, a man) / **मी बरी आहे** (*mī barī
 āhe*, a woman) — "I am fine."
 

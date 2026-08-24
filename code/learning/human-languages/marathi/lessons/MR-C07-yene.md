@@ -3,7 +3,7 @@ schema_version: 2
 id: MR-C07-yene
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 380
-chapter: 7
+chapter: 8
 type: word
 headword: येणे
 romanization: yeṇe
@@ -45,7 +45,7 @@ shape. The next verb is closer to it than it sounds.
 Same infinitive ending, same machinery: stem **ये-** *ye-*, present **येतो**
 (*yeto*) and **येते** (*yete*), split by gender exactly as *jāto / jāte* was.
 
-You met *yeto* in Chapter 1 as a farewell — Marathi takes its leave by saying "I
+You met *yeto* in Chapter 2 as a farewell — Marathi takes its leave by saying "I
 come," promising the return rather than announcing the departure.
 
 ## Sounds you'll need: ये · णे

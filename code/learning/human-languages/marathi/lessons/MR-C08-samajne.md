@@ -3,7 +3,7 @@ schema_version: 2
 id: MR-C08-samajne
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 430
-chapter: 8
+chapter: 9
 type: word
 headword: समजणे
 romanization: samajṇe

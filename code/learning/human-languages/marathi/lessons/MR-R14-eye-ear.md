@@ -3,7 +3,7 @@ schema_version: 2
 id: MR-R14-eye-ear
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 660
-chapter: 14
+chapter: 15
 type: review
 headword: डोळा / कान
 romanization: dola / kaan

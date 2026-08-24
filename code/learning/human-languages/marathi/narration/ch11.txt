@@ -1,194 +1,146 @@
-Marathi, chapter 11: Friend and Family.
-6 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Marathi, chapter 11: Water, Tea, Milk, and Bhakri.
+4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 6.
-मित्र (mitra) — a friend, and a very old bond.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-You can ask for bhākarī now. This chapter turns from what you'd request to who you'd share it with.
-
-You'll want to know: मित्र.
-मित्र — mitra — friend (masculine).
-
-The letters in this word.
-Two things worth pausing on. ि, the short i vowel sign, is new — written before the consonant it belongs to but said after it, so मि is read mi, not im. And त्र is त joined to र by a halant, the same conjunct mechanism as punhā's न्हा, just a different pair of letters. Mi-tra.
-
-The word, taken apart — a friend, and a covenant before that.
-मित्र is a learned borrowing straight from Sanskrit मित्र mitra — taken up whole, not worn down by centuries of sound change the way most everyday words are. Its root is Indo-European mey-, "to bind," and the same word named a god: Avestan Mithra and Old Persian Mithra were divine witnesses to oaths — the bond itself, personified, before the word settled into ordinary Sanskrit as "friend."
-
-Grammar Lens: taken up whole, not worn down.
-Sanskrit-descended Marathi words come in two kinds: a tatsama, borrowed directly with its Sanskrit shape mostly intact — मित्र (mitra) is one — and a tadbhava, one that passed through centuries of Prakrit sound change and came out reshaped. भाकरी was neither: it never touched Sanskrit at all. This chapter will show both a tatsama and a tadbhava for family words, so you can hear the difference.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: mitra — friend]
-[pause 8 seconds for the answer]
-[your turn — say: what its root meant before "friend" — "to bind"]
-[pause 8 seconds for the answer]
-[your turn — name: the god-name that shares this root — Mithra]
-[pause 8 seconds for the answer]
-[your turn — say: mitra, then bhākarī — a learned word beside a native one whose own root went no further back than "a heap, a lump"]
-[pause 8 seconds for the answer]
-[your turn — recall: Chapter 10's four requests and their three genders — pāṇī neuter, chahā masculine, dūdh neuter, bhākarī feminine]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What did मित्र (mitra)'s root mean before "friend"? (To bind.) What god-name shares that root? (Mithra.) Is मित्र (mitra) a tatsama or a tadbhava? (Tatsama — taken up whole from Sanskrit.)
-Sources: Wiktionary: मित्र (mitra).
-
-
-Lesson 2 of 6.
-One step later — retrieve मित्र (mitra).
-
-Warm-up.
-[pause 3 seconds]
-Say the Marathi word for friend before you uncover it: मित्र (mitra).
-
-What you've built.
-Its old root meant to bind. Marathi took the Sanskrit form up whole, so it is a tatsama, not a word worn down through ordinary sound change.
-
-Guided Practice.
-[pause 1 second]
-Answer once, then repair only the missing piece.
-[question — say your answer, then pause 18 seconds]
-Give the word for friend, the old root meaning, and its borrowing type.
-
-Wrap-up Recall.
-[pause 2 seconds]
-मित्र (mitra) — bind — tatsama. Stop here; the next lesson adds family.
-
-
-Lesson 3 of 6.
-कुटुंब (kutumb) (kuṭumb) — family, and a gender Hindi disagrees with.
+Lesson 1 of 4.
+पाणी (pāṇī) — the first thing you'll actually ask for.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-मित्र (mitra) was taken up whole from Sanskrit, not worn down. This next word was too — and it names the group your friend belongs to as well.
+आवडणे told you what you like; प्रेम करणे what you love. This chapter asks for something smaller and more frequent than either: a drink.
 
-You'll want to know: कुटुंब.
-कुटुंब (kutumb) — kuṭumb — family (neuter).
+You'll want to know: पाणी.
+पाणी — pāṇī — water.
 
 The letters in this word.
-One new mark: ु, the short u vowel sign, a small hook under the consonant — the short partner of dūdh's long ू. ट you have informally from marāṭhī; ं the familiar anusvāra. Ku-ṭu-mb.
+Nothing new here. प pa you have from punhā; ण you have from every -णे verb so far; ी is the familiar long ī. पा-णी.
 
-The word, taken apart — borrowed whole, origin disputed.
-कुटुंब (kutumb) is a tatsama, a learned borrowing from Sanskrit कुटुम्ब kuṭumba, "household, family" — like मित्र (mitra), taken up whole rather than worn down by sound change. Unlike मित्र (mitra), its story does not reach a secure Indo-European root: a Dravidian origin for Sanskrit's own kuṭumba has been proposed, but it is not settled, so this lesson names the dispute rather than inventing a resolution.
+Grammar Lens: asking politely.
+पाणी, कृपया. — pāṇī, kṛpayā. — Water, please.
+कृपया kṛpayā is Sanskrit's own instrumental of कृपा kṛpā, "mercy, kindness" — literally "by kindness, out of kindness." Name the thing you want, add कृपया, and the request is complete: no verb for "give" required. This is the pattern the whole chapter reuses, and the first time this track has built a "please" of any kind — a spine node this book had left empty until now.
 
-Grammar Lens: a gender Hindi disagrees with.
-The very same Sanskrit word carries two different genders in its two daughters: Marathi's कुटुंब (kutumb) (kuṭumb) is neuter, Hindi's कुटुंब (kutumb) (kuṭumb) is masculine. Both borrowed the identical tatsama; each language then had to assign it a gender inside its own system, and they assigned it differently. A word's gender is not carried in with its meaning — it is decided fresh by whichever language receives it.
+The word, taken apart — the oldest drinking word you own.
+पाणी continues Maharastri Prakrit pāṇīa, from Sanskrit पानीय pānīya, "that which is to be drunk," built on पा pā-, "to drink." That root is Indo-European peh₃(i)-, and English keeps two disguised pieces of it: potion and poison both come through Latin potare, "to drink" — a poison, by origin, is just a drink gone wrong. Greek turned the same idea into sympotēs, "one who drinks together," which English keeps as symposium.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: kuṭumb — family]
+[your turn — say: pāṇī — water]
 [pause 8 seconds for the answer]
-[your turn — state: its gender in Marathi against Hindi — neuter here, masculine there]
+[your turn — say: pāṇī, kṛpayā. — water, please]
 [pause 8 seconds for the answer]
-[your turn — say: mitra, then kuṭumb — two tatsamas in a row]
-[pause 8 seconds for the answer]
-[your turn — recall: Chapter 10's own gender lineup — कुटुंब (kutumb) (kuṭumb)'s neuter joins पाणी and दूध, after bhākarī's feminine closed out all three genders in one chapter]
+[your turn — run: malā marāṭhī āvaḍte, then pāṇī, kṛpayā — liking and requesting, side by side]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What gender is कुटुंब (kutumb) (kuṭumb) in Marathi, and how does that differ from Hindi? (Neuter here, masculine there — same borrowed word, different choice.) Is कुटुंब (kutumb) (kuṭumb)'s pre-Sanskrit origin settled? (No — a Dravidian source is proposed but disputed.)
-Sources: Wiktionary: कुटुंब (kutumb) (kuṭumb).
+Ask for water politely. (Pāṇī, kṛpayā.) What does कृपया literally mean? ("By kindness.") Which two English words for a drink, and one for a whole gathering of them, share pāṇī's root? (Potion, poison, symposium.)
+Sources: Wiktionary: पाणी (pāṇī); Wiktionary: कृपया.
 
 
-Lesson 4 of 6.
-One step later — retrieve कुटुंब (kutumb) (kuṭumb).
-
-Warm-up.
-[pause 3 seconds]
-Say the Marathi word for family: कुटुंब (kuṭumb) (kutumb).
-
-What you've built.
-Marathi treats कुटुंब (kutumb) (kuṭumb) as neuter. Hindi assigns the same borrowed word masculine gender. Retrieve the Marathi choice, not a universal rule.
-
-Guided Practice.
-[pause 1 second]
-Answer once, then repair only the missing piece.
-[question — say your answer, then pause 15 seconds]
-Give the Marathi word for family and its Marathi gender.
-
-Wrap-up Recall.
-[pause 2 seconds]
-कुटुंब (kutumb) (kuṭumb) — family — neuter.
-
-
-Lesson 5 of 6.
-भाऊ (bhāū) — brother, and this time the resemblance is real.
+Lesson 2 of 4.
+चहा (chahā) — a word that took the overland road.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-मित्र (mitra) and कुटुंब (kutumb) (kuṭumb) were both taken up whole from Sanskrit. This next word was not — it was worn down, letter by letter, over centuries.
+पाणी, कृपया (pāṇī, kṛpayā) — water, please. Say it once more, then ask for something that is not water at all.
 
-You'll want to know: भाऊ.
-भाऊ — bhāū — brother (masculine).
+You'll want to know: चहा.
+चहा — chahā — tea.
+चहा, कृपया. — chahā, kṛpayā. — Tea, please.
 
 The letters in this word.
-One new letter: ऊ, the independent long ū, used here because a Marathi word cannot stack one vowel mark on top of another — after आ's ा, the second vowel needs its own full letter. भ you have from bheṭū. Bhā-ū.
+Nothing new. च you already say near ts from Chapter 7's चार; ह is नमस्कार's; ा the familiar long ā. Cha-hā.
 
-The word, taken apart — worn down, but the family resemblance survives.
-भाऊ (bhāū) is a tadbhava — not borrowed whole like मित्र (mitra) or कुटुंब (kutumb) (kuṭumb), but the ordinary Prakrit-worn descendant of Sanskrit भ्रातृ bhrātṛ, three syllables ground down to two over a thousand years of speech. That root is Indo-European bʰréh₂tēr, and here the family resemblance to English is not a false friend — it is the real thing: brother, Latin frāter, and Sanskrit's own bhrātṛ are all the same word, worn down four different ways by four different languages.
+The word, taken apart — the one word in this chapter with no Sanskrit in it.
+Every other word in this chapter reaches back to Sanskrit. चहा (chahā) does not — it is a loanword from Mandarin cha, and it reached Marathi by the overland route, through Persian and Turkic trade, the same road that gave Hindi चाय chāy, Bengali cha, and Persian chāy their words for the same drink. A second branch of the same plant travelled by sea: Dutch traders carried the Hokkien word te to Western Europe, which is why English says tea, not cha. One plant, two words, two trade routes.
+चहा (chahā) is also this chapter's first masculine noun, against पाणी (pāṇī)'s neuter — a reminder that Marathi's three genders do not sort words by where they came from.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: bhāū — brother]
+[your turn — say: chahā, kṛpayā — tea, please]
 [pause 8 seconds for the answer]
-[your turn — name: three languages that share this root — English, Latin, Sanskrit]
+[your turn — name: the two trade routes — overland to chāy/chahā, by sea to tea]
 [pause 8 seconds for the answer]
-[your turn — say: the three so far — mitra, kuṭumb, bhāū]
+[your turn — say: both requests — pāṇī, kṛpayā … chahā, kṛpayā]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Is भाऊ (bhāū) a tatsama or a tadbhava? (Tadbhava — worn down by sound change, not borrowed whole.) Which English word is the very same word as भाऊ (bhāū)? (Brother.)
-Sources: Wiktionary: भाऊ (bhāū).
+Ask for tea politely. (Chahā, kṛpayā.) Which language does चहा (chahā) ultimately come from? (Mandarin Chinese, cha.) Which English word for the same plant took the sea route instead? (Tea.)
+Sources: Wiktionary: चहा (chahā).
 
 
-Lesson 6 of 6.
-बहीण (bahīṇ) — sister, deliberately not English's cousin.
+Lesson 3 of 4.
+दूध (dūdh) — back to Sanskrit, and a surprising English cousin.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-Three words so far: mitra, kuṭumb, bhāū. Say them, and say which one is a genuine cousin of an English word. (Bhāū — brother.) Its pair is not so simple.
+चहा (chahā) broke the pattern — a loanword with no Sanskrit behind it. This next word rejoins पाणी (pāṇī)'s family: inherited, traceable, Indo-European.
 
-You'll want to know: बहीण.
-बहीण — bahīṇ — sister (feminine).
+You'll want to know: दूध.
+दूध — dūdh — milk.
+दूध, कृपया. — dūdh, kṛpayā. — Milk, please.
 
 The letters in this word.
-Nothing new. ब from baraṃ, ह from namaskār, ी the familiar long ī, ण from every -णे verb. Ba-hī-ṇ.
+One new mark: ू, the long ū vowel sign — a longer hook under the consonant than any you've written so far. द you have from dhanyavād and madat; ध from dhanyavād too. Dū-dh.
 
-The word, taken apart — not sister's cousin.
-बहीण (bahīṇ) is a tadbhava, worn down like भाऊ (bhāū): Old Marathi bahiṇī, from Maharastri Prakrit bhaiṇī, from Sanskrit भगिनी bhaginī. There the resemblance to brother's pair ends. Bhaginī is traditionally connected to भज् bhaj-, "to share, to apportion" — a sister as one who shares in the household. That root has nothing to do with Indo-European swésōr, the ancestor of English sister. Two words that translate each other perfectly are, underneath, unrelated.
-
-Grammar Lens: the chapter's whole shape, in two pairs.
-[a table of 2 rows, read aloud]
-word: मित्र, कुटुंब (kutumb) (mitra, kuṭumb). kind: tatsama. route: taken up whole from Sanskrit.
-word: भाऊ, बहीण (bhāū, bahīṇ). kind: tadbhava. route: worn down by Prakrit sound change.
-Notice, too, how each pair looks: मित्र (mitra) and कुटुंब (kutumb) (kuṭumb) carry conjuncts and marks a learner has to stop for; भाऊ (bhāū) and बहीण (bahīṇ) do not — plain consonants and vowels, the shape sound change tends to leave behind. And of the tadbhava pair, only भाऊ (bhāū) is a secure English cousin; बहीण (bahīṇ) is not.
+The word, taken apart — milk, and the root behind "doughty".
+दूध (dūdh) continues Maharastri Prakrit duddha, from Sanskrit दुग्ध dugdha, "milked, milk" — literally the past participle of दुह् duh-, "to milk." That root traces to Indo-European dʰewgʰ-, "to be fit, to be of use, to produce" — milking as producing something useful. Germanic kept the same root for a different sense of "useful, capable": English doughty, "brave and able," is dūhtig in Old English, built on this exact root. Milk and doughtiness, four thousand years apart, share one ancestor.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: all four — mitra, kuṭumb, bhāū, bahīṇ]
+[your turn — say: dūdh, kṛpayā — milk, please]
 [pause 8 seconds for the answer]
-[your turn — sort: which two are tatsama, which two are tadbhava]
+[your turn — say: what dugdha literally was — "milked"]
 [pause 8 seconds for the answer]
-[your turn — name: which sibling word is English's real cousin, and which is not — bhāū yes, bahīṇ no]
+[your turn — run: all three requests — pāṇī, chahā, dūdh — kṛpayā]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Is बहीण related to English sister? (No — a different Sanskrit root entirely.) Which sibling word is related to its English counterpart? (भाऊ, to brother.) Sort the chapter's four words into tatsama and tadbhava. (Mitra, kuṭumb — tatsama; bhāū, bahīṇ — tadbhava.) What did कुटुंब (kutumb)'s gender turn out to be, against Hindi's? (Neuter here, masculine there.) And what did मित्र (mitra)'s root mean before "friend"? (To bind.)
-Sources: Wiktionary: बहीण (bahīṇ); Wiktionary: भगिनी.
+Ask for milk politely. (Dūdh, kṛpayā.) What English word for "brave and capable" shares दूध (dūdh)'s root? (Doughty.)
+Sources: Wiktionary: दूध (dūdh).
+
+
+Lesson 4 of 4.
+भाकरी (bhākarī) — the request that breaks the pattern.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Three requests so far: pāṇī, chahā, dūdh. Two inherited from Sanskrit, one borrowed from Chinese. The fourth belongs to neither story.
+
+You'll want to know: भाकरी.
+भाकरी — bhākarī — a round flatbread, the everyday Maharashtrian bread — of jowar, bajra, or rice flour, not wheat.
+भाकरी, कृपया. — bhākarī, kṛpayā. — Bhakri, please.
+
+The letters in this word.
+Nothing new. भ from bheṭū, क from everywhere, र from marāṭhī, ी the familiar long ī. Bhā-ka-rī.
+
+The word, taken apart — the one word that stayed home.
+भाकरी is inherited from Old Marathi bhākarī, from Proto-Indo-Aryan bʰakkaras, "heap, pile, lump" — the flatbread named for the lump of dough it started as. That reconstruction is as far back as the sources trace it; its own root before Proto-Indo-Aryan is not established, so this lesson claims none rather than inventing one.
+Unlike पाणी (pāṇī) and दूध (dūdh), भाकरी (bhākarī) is not a Sanskrit tatsama or tadbhava — it never touched classical Sanskrit. And unlike चहा (chahā), it is no loanword either — a regional word, close kin to Gujarati bhākhrī and Kannada bakkari, and simply not Hindi's word for bread: Hindi asks for रोटी roṭī, an unrelated root. A Delhi shopkeeper would not recognize the request; a Pune one would hand you lunch.
+
+Why it's said this way.
+Say the four requests once more and notice their genders: पाणी (pāṇī) neuter, चहा (chahā) masculine, दूध (dūdh) neuter, भाकरी (bhākarī) feminine. Four everyday nouns, all three of Marathi's genders, in one short chapter — proof, alongside the verbs' present-tense endings, that the third gender Hindi lost is not a museum piece here.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: all four requests, kṛpayā each time — pāṇī, chahā, dūdh, bhākarī]
+[pause 8 seconds for the answer]
+[your turn — say: "I eat bhakri" — mī bhākarī khāto or khāte, putting Chapter 7's खाणे to work on a word it never had before]
+[pause 8 seconds for the answer]
+[your turn — name: which of the four is neither Sanskrit nor a loanword — bhākarī]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What did भाकरी's Proto-Indo-Aryan ancestor mean? (A heap, a lump.) What does Hindi ask for instead? (रोटी, an unrelated root.) Give all four requests with their genders. (पाणी (pāṇī) n, चहा m, दूध n, भाकरी f — all with कृपया.) Sort the four sources: two from Sanskrit, one a Chinese loan, one purely regional. (Pāṇī, dūdh — Sanskrit; chahā — Chinese; bhākarī — regional.)
+Sources: Wiktionary: भाकरी (bhākarī).

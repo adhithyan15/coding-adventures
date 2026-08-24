@@ -40,10 +40,10 @@ Do not copy it while the model is visible.
 <!-- hl-knowledge: introduces=[]; assesses=[MR-SCRIPT-HA-01, MR-SCRIPT-O-MATRA-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-1. cover **हो**
-2. wait five seconds
-3. write it once from memory
-4. uncover the model and compare the two pieces
+- cover **हो**
+- wait five seconds
+- write it once from memory
+- uncover the model and compare the two pieces
 
 If one piece differs, circle it and repair only that place. Repair is part of
 the exercise, not a failure. There is no tracing and no romanized answer model.

@@ -1,7 +1,7 @@
 ---
 id: MR-C03-mi-bara-aahe
 sequence: 100
-chapter: 3
+chapter: 4
 type: phrase
 headword: मी बरा आहे
 gloss: I'm well, thank you (mī barā āhe)
@@ -18,7 +18,7 @@ reviews_of: [MR-C01-baram, MR-C01-dhanyavad, MR-C03-mi]
 ## Warm-up
 
 [PAUSE 2s] The answer to "how are you?" — and it reuses a word you already banked
-in Chapter 1.
+in Chapter 2.
 
 ## The phrase, assembled
 
@@ -26,7 +26,7 @@ in Chapter 1.
 आहे** — "I am well." Add thanks: **मी बरा आहे, धन्यवाद** (*mī barā āhe,
 dhanyavād*).
 
-Back in Chapter 1 you met **बरं** (*baraṁ*) standing alone as "okay/fine" — its
+Back in Chapter 2 you met **बरं** (*baraṁ*) standing alone as "okay/fine" — its
 **neuter** form. When it describes *you*, it takes your gender:
 - **बरा** (*barā*) — a man is well
 - **बरी** (*barī*) — a woman is well

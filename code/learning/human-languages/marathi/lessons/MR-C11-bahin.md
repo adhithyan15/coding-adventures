@@ -3,7 +3,7 @@ schema_version: 2
 id: MR-C11-bahin
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 570
-chapter: 11
+chapter: 12
 type: word
 headword: बहीण
 romanization: bahīṇ

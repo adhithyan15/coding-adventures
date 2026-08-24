@@ -3,7 +3,7 @@ schema_version: 2
 id: MR-C08-vichar-karne
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 420
-chapter: 8
+chapter: 9
 type: word
 headword: विचार करणे
 romanization: vichār karṇe

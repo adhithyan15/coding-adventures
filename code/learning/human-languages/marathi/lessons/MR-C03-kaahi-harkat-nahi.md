@@ -1,7 +1,7 @@
 ---
 id: MR-C03-kaahi-harkat-nahi
 sequence: 105
-chapter: 3
+chapter: 4
 type: phrase
 headword: काही हरकत नाही
 gloss: no problem / you're welcome (kāhī harkat nāhī)
@@ -28,7 +28,7 @@ but "there's **no objection** at all."
 ## The word, taken apart
 
 Two threads meet here:
-- **नाही** (*nāhī*, "not") is Chapter 1's "no," on the ancient negative **na-** —
+- **नाही** (*nāhī*, "not") is Chapter 2's "no," on the ancient negative **na-** —
   PIE **\*ne**, the root of English **no, not, none** and Latin *nōn*.
 - **हरकत** (*harkat*, "objection, hindrance") is a **Perso-Arabic** loan (from
   Arabic *ḥarakah*), one of the many words Marathi absorbed over centuries of

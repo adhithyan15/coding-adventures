@@ -280,19 +280,19 @@ describe("generated book source hashes", () => {
   });
 
   it.each([
-    ["bengali", 1],
-    ["gujarati", 5],
-    ["marathi", 2],
-    ["punjabi", 2],
-    ["sanskrit", 3],
+    ["bengali", 6, 1],
+    ["gujarati", 6, 5],
+    ["marathi", 7, 2],
+    ["punjabi", 6, 2],
+    ["sanskrit", 6, 3],
   ])(
-    "matches the browser-loaded %s Chapter 6 AST across %i lessons",
-    (language, count) => {
+    "matches the browser-loaded %s Chapter %i AST across %i lessons",
+    (language, chapter, count) => {
       const lessons = loadLessons();
-      const expected = expectedBookHash(language, 6);
+      const expected = expectedBookHash(language, chapter);
       expect(expected?.lessonIds).toHaveLength(count);
-      expect(actualChapterHash(lessons, language, 6)).toBe(expected?.sourceHash);
-      expect(bookHashStatus(lessons, language, 6)).toBe("synced");
+      expect(actualChapterHash(lessons, language, chapter)).toBe(expected?.sourceHash);
+      expect(bookHashStatus(lessons, language, chapter)).toBe("synced");
     },
   );
 
