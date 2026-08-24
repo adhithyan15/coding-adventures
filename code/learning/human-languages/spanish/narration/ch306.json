@@ -1,0 +1,703 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 306,
+  "title": "Blood and Household --- Son, Daughter, Grandfather, Grandmother, Husband",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:6825c8e7c290f2be",
+  "lessons": [
+    {
+      "id": "ES-C306-hijo",
+      "sequence": 4420,
+      "title": "el hijo --- the f that turned into a silent h",
+      "headword": "el hijo",
+      "romanization": "el hijo",
+      "gloss": "the son --- Latin filius, cousin to English filial and affiliate; the f- that became a silent h-",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:205f27c6655b112b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two from last time, before anything new is added."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say it once slowly, then at speed. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el hijo --- \"the son.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin filius. English kept it in the borrowed words rather than the everyday one: filial duty is the duty owed by a son or a daughter, and to affiliate is to take something in as a son."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish did something to it that English never did. A Latin f- at the front of a word became Spanish h-, and then that h- fell silent. Filius became hijo: the letter is written and never said."
+            },
+            {
+              "kind": "speech",
+              "text": "Once you have seen the rule it keeps paying out --- facere became hacer, ferrum became hierro, fumus became humo. The h you do not pronounce is the fossil of an f."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first person most people name after they have given their own name."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el hijo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el hijo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el nombre del hijo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el nombre del hijo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mi hijo, señor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mi hijo, señor*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was hijo in Latin? (Filius.) Which English words still show that f? (Filial, affiliate.) Do you say the h? (No --- never.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C306-hija",
+      "sequence": 4430,
+      "title": "la hija --- the same root, the other ending",
+      "headword": "la hija",
+      "romanization": "la hija",
+      "gloss": "the daughter --- the same filius root, swung to -a; English filial covers both",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3142a00aad37fa6f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two from last time, before anything new is added."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say it once slowly, then at speed. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la hija --- \"the daughter.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Same Latin root, feminine end: filia beside filius. Spanish did not need a second word, only a second vowel. You have met this machinery already with contento and contenta --- here it does the work of a whole separate noun."
+            },
+            {
+              "kind": "speech",
+              "text": "English has no everyday cousin either, so it leans on the same borrowed filial, which quietly covers sons and daughters at once."
+            },
+            {
+              "kind": "speech",
+              "text": "There is one more place the root is hiding. A Spanish hidalgo --- the minor nobleman --- is a worn-down hijo de algo, \"son of something,\" meaning son of somebody with property. The rank is a description of a parent."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A pair: change the last vowel, change who you are talking about."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la hija",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la hija*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el hijo y la hija",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el hijo y la hija*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el nombre de la hija, por favor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el nombre de la hija, por favor*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is the only difference between hijo and hija? (The last vowel.) What is an hidalgo literally? (Hijo de algo --- son of something.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C306-abuelo",
+      "sequence": 4440,
+      "title": "el abuelo --- the little grandfather",
+      "headword": "el abuelo",
+      "romanization": "el abuelo",
+      "gloss": "the grandfather --- Latin avus, the root inside English avuncular and atavistic",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:50af3e7bf411d792",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two from last time, before anything new is added."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say it once slowly, then at speed. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el abuelo --- \"the grandfather.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin avus was the grandfather. Spanish did not inherit avus plainly; it inherited the fond diminutive aviolus, \"the little grandfather,\" and wore it down to abuelo. The affection is baked into the word."
+            },
+            {
+              "kind": "speech",
+              "text": "English holds the same root in two long words. Avuncular --- warm in the way an uncle is warm --- comes from avunculus, which is itself \"little grandfather\" and drifted to mean the mother's brother. And atavistic, a trait surfacing from far back, is atavus, an ancestor several grandfathers deep."
+            },
+            {
+              "kind": "speech",
+              "text": "Notice what that means: English uncle is a worn-down avunculus. Your word for grandfather and their word for uncle are the same Latin word, pulled two ways."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A root that runs through two English words most people never connect."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el abuelo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el abuelo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el abuelo y el hijo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el abuelo y el hijo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el apellido del abuelo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el apellido del abuelo*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was avus? (Grandfather.) Why is avuncular about uncles? (Avunculus, little grandfather, drifted to mother's brother.) What does atavistic reach back to? (A distant ancestor.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C306-abuela",
+      "sequence": 4450,
+      "title": "la abuela --- twice over, and again",
+      "headword": "la abuela",
+      "romanization": "la abuela",
+      "gloss": "the grandmother --- the avus root swung feminine, the same -o/-a switch as hijo and hija",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:30e4d1dcff2be8fa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two from last time, before anything new is added."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say it once slowly, then at speed. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la abuela --- \"the grandmother.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The switch you have now done twice: abuelo to abuela. Third time you have met this ending doing the work of a separate word, and it will not be the last."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish then does something tidy that English handles with a hyphen. Stack the Latin bis, \"twice,\" on the front and you get bisabuela --- the great-grandmother, the grandmother twice over. English took that same bis in biscuit, which is bis coctus, \"twice cooked,\" and in bicycle and binary."
+            },
+            {
+              "kind": "speech",
+              "text": "So the word for the oldest person in the room is built out of the number two."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four kinship words, and the -o/-a switch is starting to feel automatic."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la abuela",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la abuela*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el abuelo y la abuela",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el abuelo y la abuela*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la abuela y la hija",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la abuela y la hija*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does bis mean? (Twice.) So what is a bisabuela? (A great-grandmother.) What is a biscuit literally? (Twice cooked.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C306-esposo",
+      "sequence": 4460,
+      "title": "el esposo --- the one who promised",
+      "headword": "el esposo",
+      "romanization": "el esposo",
+      "gloss": "the husband --- Latin spondere, to pledge solemnly; English spouse, sponsor, respond, despondent",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:90dd91d933cb209c",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two from last time, before anything new is added."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say it once slowly, then at speed. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el esposo --- \"the husband.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin spondere meant to pledge, to promise in a way that binds. The pledged person was the sponsus. English took the same word twice: once quietly as spouse, and once openly as sponsor --- somebody who makes a promise on your behalf."
+            },
+            {
+              "kind": "speech",
+              "text": "The verb went further than that. To respond is to pledge back. To be despondent is to have pledged away, given up. All of it is one Latin verb about promises."
+            },
+            {
+              "kind": "speech",
+              "text": "And look at the front of the Spanish word. Latin sponsus began with s- plus a consonant, and Spanish cannot start a word that way, so it glued an e- on the front: esposo. That is the same e- you already have in España and escuela. The husband is, in the plainest possible terms, the one who promised."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A word for a person that is really a word for a promise --- and the chapter's last."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el esposo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el esposo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el esposo y el hijo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el esposo y el hijo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el nombre del esposo, por favor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el nombre del esposo, por favor*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did spondere mean? (To pledge.) Name two English words from it. (Spouse, sponsor, respond, despondent.) Why the e- on the front? (Spanish will not start a word with s- plus a consonant.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

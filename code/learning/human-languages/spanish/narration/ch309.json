@@ -1,0 +1,716 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 309,
+  "title": "Naming the Whole --- Family, Nickname, Relative, Partner, Baby",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:07ae0c488d0871ae",
+  "lessons": [
+    {
+      "id": "ES-C309-familia",
+      "sequence": 4570,
+      "title": "la familia --- the household, servants included",
+      "headword": "la familia",
+      "romanization": "la familia",
+      "gloss": "the family --- Latin familia, the whole household including its servants; English family and familiar",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4035e959e5e2fa80",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two from last time, before anything new is added."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say it once slowly, then at speed. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la familia --- \"the family.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin familia did not mean what you think. It meant the whole household --- the people, the servants, the property, everything under one roof and one authority. The root is famulus, \"a servant.\" Blood was not the point; belonging to the house was."
+            },
+            {
+              "kind": "speech",
+              "text": "English took the word and narrowed it to relatives. But the older sense survives in familiar: to be familiar with something is to be at home with it, and a familiar --- in the old sense --- was a spirit attached to a household."
+            },
+            {
+              "kind": "speech",
+              "text": "The stress lands on the i: fa-MI-lia. The -lia at the end is one syllable, not two."
+            },
+            {
+              "kind": "speech",
+              "text": "You now have a word that gathers up everything in the chapter before it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One word that holds all fifteen of the people you have named."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la familia",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la familia*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la familia y la gente",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la familia y la gente*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el apellido de la familia",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el apellido de la familia*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Who was in a Latin familia? (Everyone in the household, servants included.) What is a famulus? (A servant.) What does familiar really mean? (At home with something.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C309-apodo",
+      "sequence": 4580,
+      "title": "el apodo --- the name somebody reckoned for you",
+      "headword": "el apodo",
+      "romanization": "el apodo",
+      "gloss": "the nickname --- from apodar, Latin putare, to prune and so to reckon; English compute, dispute, amputate",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a9d71e6be1c3aac7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two from last time, before anything new is added."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say it once slowly, then at speed. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el apodo --- \"the nickname.\""
+            },
+            {
+              "kind": "speech",
+              "text": "It comes from apodar, \"to nickname,\" and behind that sits Latin putare. Putare first meant to prune a tree --- to cut it back into shape. From trimming a tree it moved to trimming a problem, and so to reckon, judge, consider."
+            },
+            {
+              "kind": "speech",
+              "text": "English is full of the pruned version. To compute is to reckon together. To dispute is to reckon apart. Your reputation is what people reckon about you over and over. And to amputate is the oldest sense back again, cutting off."
+            },
+            {
+              "kind": "speech",
+              "text": "So an apodo is a name somebody reckoned up for you --- a judgement, trimmed to one word. Which is exactly what a nickname is."
+            },
+            {
+              "kind": "speech",
+              "text": "Set it beside what you already have. Your nombre was given to you, your apellido was inherited, and your apodo was decided by other people."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The third kind of name --- and the only one you do not choose."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el apodo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el apodo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el nombre y el apodo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el nombre y el apodo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el apodo del niño",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el apodo del niño*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did putare mean first? (To prune a tree.) How did it get to compute? (Pruning to reckoning.) Which of your three names do other people decide? (The apodo.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C309-pariente",
+      "sequence": 4590,
+      "title": "el pariente --- not the parent",
+      "headword": "el pariente",
+      "romanization": "el pariente",
+      "gloss": "the relative --- Latin parere, to give birth; English parent and postpartum, and a false friend worth knowing",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0278762286cf9deb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two from last time, before anything new is added."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say it once slowly, then at speed. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el pariente --- \"the relative.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin parere meant to bring forth, to give birth. The one giving birth was a parens, and that is English parent. It is also postpartum, \"after the bringing forth,\" and it is hiding inside viper --- vivipara, the creature that bears its young alive."
+            },
+            {
+              "kind": "speech",
+              "text": "Now the warning, and it matters more than the etymology. Pariente does not mean parent. It means any relative at all --- the cousin, the aunt, the grandmother. This is your second false friend, and a sharper one than chico, because here the words really are related and the meanings still drifted apart."
+            },
+            {
+              "kind": "speech",
+              "text": "One more caution, because the resemblance is very convincing. English apparent looks like it belongs here and does not: that is Latin apparēre, \"to appear,\" a different verb that happens to look almost identical. Two Latin verbs, nearly the same shape, unrelated in sense."
+            },
+            {
+              "kind": "speech",
+              "text": "Related words can mislead you exactly because they are related."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A word that means more than it looks like --- and a caution about trusting resemblance."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el pariente",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el pariente*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el pariente y la familia",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el pariente y la familia*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un pariente, señor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un pariente, señor*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did parere mean? (To bring forth.) Does pariente mean parent? (No --- any relative.) Is apparent from the same verb? (No --- a different Latin verb that looks alike.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C309-pareja",
+      "sequence": 4600,
+      "title": "la pareja --- two of equal weight",
+      "headword": "la pareja",
+      "romanization": "la pareja",
+      "gloss": "the couple, the partner --- Latin par, equal; English pair, par, peer, parity and umpire",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e41457131121deb3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two from last time, before anything new is added."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say it once slowly, then at speed. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la pareja --- \"the couple,\" or \"the partner.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin par meant equal. Pareja is paricula, \"a little equal\" --- two things matched in weight."
+            },
+            {
+              "kind": "speech",
+              "text": "English is thick with it. A pair is two equals. Par in golf is the equal score. Your peers are your equals. Parity is the state of being equal. To compare is to set things side by side as equals."
+            },
+            {
+              "kind": "speech",
+              "text": "The best one is umpire. It was noumpere in Middle English --- non par, \"not equal,\" the third person who is not on either side and can therefore decide. English then misheard a noumpere as an oumpere, and the n moved house. The word for the one who is not equal is built out of the word for equal."
+            },
+            {
+              "kind": "speech",
+              "text": "So pareja says something specific about a couple: not one and one, but two of matching weight."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Nineteen words, and a root that runs from golf to refereeing."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la pareja",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la pareja*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la pareja y la familia",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la pareja y la familia*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mi pareja, encantado",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mi pareja, encantado*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does par mean? (Equal.) What is an umpire literally? (Non par --- not equal, so able to decide.) What does pareja say about a couple? (Two of matching weight.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C309-bebe",
+      "sequence": 4610,
+      "title": "el bebé --- the sound, not the word",
+      "headword": "el bebé",
+      "romanization": "el bebé",
+      "gloss": "the baby --- French bebe, echoic babble, the same kind of word as English baby and babble",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d82a37f2d8f000f8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two from last time, before anything new is added."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say it once slowly, then at speed. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el bebé --- \"the baby.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish took this from French bébé, and French did not take it from anywhere. It is echoic: the b-noise infants actually make, repeated. English baby, babe and babble are the same act of listening, done separately."
+            },
+            {
+              "kind": "speech",
+              "text": "This closes the loop the chapter opened. Niño was babble too. The oldest and most careful words here --- esposo from a Roman legal pledge, gente from a Roman clan register --- are the formal ones. The words for the smallest people are noises."
+            },
+            {
+              "kind": "speech",
+              "text": "Two points of form. The written accent on the final é pulls the stress to the last syllable: be-BÉ. Without it Spanish would stress the first. And el bebé stays masculine whoever the baby is; the word has a gender, the child need not match it."
+            },
+            {
+              "kind": "speech",
+              "text": "You began this stretch able to give your own name. You can now name everyone else in the room."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Twenty people named --- and the last of them arrived as a sound."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el bebé",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el bebé*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el bebé y la niña",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el bebé y la niña*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el nombre del bebé, por favor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el nombre del bebé, por favor*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where did bebé come from? (French, and before that nowhere --- it is babble.) What does the accent do? (Pulls the stress to the last syllable.) Is bebé masculine for a girl too? (Yes --- the word has a gender, the child need not match.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
