@@ -6263,6 +6263,43 @@ roadmap surfaces; the target remote branch was absent, and `origin/main`
 remained at exact selected base `2f50248a87521d15b069b6daa8b6e1c25d693d85`
 before the fresh clean branch was created.
 
+The implementation makes the shared-engine exception reviewable rather than
+implicit. The governing contract now requires a language-native adapter and
+independent fixture consumption for every shared-engine front door. F# exposes
+one pure facade over the reviewed C# tracked-artifact validator, consumes all
+five neutral cases through that F# symbol, and routes both existing smoke tests
+through the actual F# `main` function. Its test-only root resolver also retains
+fixture reachability when .NET artifacts are isolated outside the checkout.
+No C# engine, neutral fixture, schema, project, dependency, BUILD, capability,
+or production authority changed.
+
+An isolated Release run passes all seven F# tests with 100% line, branch, and
+method coverage. Both canonical BUILD commands, a warning-as-error Release
+build, Fantomas 7.0.6, and the NuGet vulnerability audit pass. The unchanged C#
+engine passes its canonical 27-test Release suite. The neutral corpus validates
+111 cases and 269 files; schema and runner suites pass 80 tests plus 119
+subtests. Package-parity, capability-taxonomy, Haskell-capability, and OCaml-lock
+suites pass 68 tests with two expected Windows symlink skips. The Go build tool
+passes all packages with coverage, vet, and trimpath compilation. The real F#
+front door validates build files, discovers 199 F# packages, and completes a
+clean no-change dry run. Two independent final reviews found no implementation,
+fixture, metadata, redaction, security, or authority defect.
+
+The broad conformance family reproduces the five unchanged Windows Python 3.13
+execution-snapshot failures already owned by
+`build-tool-windows-python313-execution-snapshot-volume-identity`. An isolated
+C# downstream run also exposed that its fixture-root finder searches only the
+compiled binary ancestry. The canonical in-tree C# suite remains green, and
+the loop registers the separate pending owner
+`build-tool-csharp-isolated-artifact-fixture-root-resolution` rather than
+widening this F# tranche.
+
+The branch rebased without conflict over three non-overlapping HTML-parser and
+human-language commits to exact `origin/main`
+`109c30d66c1a6374ae6b6288ca29efaf638008c1`. A fresh collision-checked report
+at that revision is unchanged at 15 established lanes, 1,370 identities, 4,563
+slots, zero collisions, and zero unknown buckets.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
