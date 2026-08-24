@@ -28,7 +28,7 @@ describe("real curriculum", () => {
         issue.code === "uncovered-glyphs" &&
         issue.message.includes("devanagari.json"),
     );
-    expect(gaps).toHaveLength(150);
+    expect(gaps).toHaveLength(140);
 
     const missing = new Set(
       gaps.flatMap((issue) =>
@@ -36,7 +36,7 @@ describe("real curriculum", () => {
       ),
     );
     expect(missing).toEqual(new Set([
-      "ख", "़", "ठ", "फ", "ज", "थ", "ष", "ट",
+      "़", "ठ", "फ", "ज", "थ", "ष", "ट",
       "ढ", "झ", "घ", "छ", "ड", "ण", "ळ", "ञ",
     ]));
     expect(scripts.devanagari!.complete).toBe(false);

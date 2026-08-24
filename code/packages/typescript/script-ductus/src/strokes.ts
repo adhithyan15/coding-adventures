@@ -2923,6 +2923,48 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: devanagariAlphabetSource("क"),
   },
+  // Opiaterein's 28-frame animation joins the descending left stem, small
+  // loop, and broad lower bowl, then separately writes the upper-right loop,
+  // right stem, and headline: four strokes and three lifts in all.
+  [ductusKey("devanagari", "ख")]: {
+    script: "devanagari",
+    glyph: "ख",
+    strokes: [
+      { segments: [{ label: "descend, curl around the small loop, and sweep through the lower bowl", path: [
+        { x: 225, y: 551 }, { x: 225, y: 500 }, { x: 220, y: 450 },
+          { x: 220, y: 405 }, { x: 210, y: 390 }, { x: 200, y: 370 },
+          { x: 150, y: 370 }, { x: 140, y: 370 },
+        { x: 105, y: 355 }, { x: 80, y: 330 }, { x: 85, y: 305 },
+        { x: 110, y: 285 }, { x: 140, y: 290 }, { x: 160, y: 310 },
+        { x: 160, y: 335 }, { x: 145, y: 355 }, { x: 138, y: 335 },
+        { x: 145, y: 270 },
+        { x: 180, y: 200 }, { x: 240, y: 130 }, { x: 320, y: 80 },
+          { x: 400, y: 55 }, { x: 480, y: 65 }, { x: 550, y: 70 },
+          { x: 650, y: 70 }, { x: 650, y: 105 }, { x: 650, y: 155 },
+          { x: 650, y: 220 },
+      ] }] },
+      { segments: [{ label: "lift, then sweep clockwise around the upper-right loop", path: [
+        { x: 380, y: 405 }, { x: 430, y: 430 }, { x: 500, y: 430 },
+        { x: 600, y: 420 }, { x: 650, y: 405 }, { x: 650, y: 350 },
+        { x: 650, y: 290 }, { x: 625, y: 240 }, { x: 600, y: 220 },
+        { x: 550, y: 200 }, { x: 500, y: 185 }, { x: 455, y: 200 },
+        { x: 420, y: 220 }, { x: 395, y: 240 }, { x: 375, y: 260 },
+        { x: 360, y: 290 }, { x: 360, y: 320 }, { x: 360, y: 350 },
+        { x: 375, y: 390 },
+      ] }] },
+      { segments: [{ label: "lift, then descend the right stem", path: [
+        { x: 650, y: 551 }, { x: 650, y: 475 }, { x: 650, y: 395 },
+        { x: 650, y: 315 }, { x: 650, y: 235 }, { x: 650, y: 155 },
+        { x: 650, y: 75 }, { x: 650, y: 5 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the shirorekha left-to-right", path: [
+        { x: 5, y: 585 }, { x: 105, y: 585 }, { x: 205, y: 585 },
+        { x: 305, y: 585 }, { x: 405, y: 585 }, { x: 505, y: 585 },
+        { x: 605, y: 585 }, { x: 720, y: 585 },
+      ] }] },
+    ],
+    source: devanagariAlphabetSource("ख"),
+  },
   // Opiaterein's animation writes the counterclockwise loop and carries the
   // same run up its joined stem, then separately descends the right stem and
   // finishes the headline. The Central Hindi Directorate's 2019 deskbook

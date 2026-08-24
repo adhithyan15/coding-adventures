@@ -59,6 +59,7 @@ const DEVANAGARI_AI = DUCTUS[ductusKey("devanagari", "ऐ")];
 const DEVANAGARI_O = DUCTUS[ductusKey("devanagari", "ओ")];
 const DEVANAGARI_AU = DUCTUS[ductusKey("devanagari", "औ")];
 const DEVANAGARI_KA = DUCTUS[ductusKey("devanagari", "क")];
+const DEVANAGARI_KHA = DUCTUS[ductusKey("devanagari", "ख")];
 const DEVANAGARI_GA = DUCTUS[ductusKey("devanagari", "ग")];
 const DEVANAGARI_CA = DUCTUS[ductusKey("devanagari", "च")];
 const DEVANAGARI_TA = DUCTUS[ductusKey("devanagari", "त")];
@@ -483,11 +484,15 @@ describe("handwriting ductus", () => {
         const inInk = makeInInk(glyph().contours);
         for (let s = 0; s < letter.strokes.length; s++) {
           const frac = fractionOnInk(penPath(letter.strokes[s]), inInk);
-          // Noto Sans Gujarati prints હ as two disconnected contours, while
-          // the cited handwriting animation keeps them in one pen-down run.
-          // Permit only that documented bridge; every other authored path
-          // retains the stricter general-purpose ink-fit floor.
-          const minimumInkFit = letter.script === "gujarati" && letter.glyph === "હ" ? 0.92 : 0.97;
+          // Two cited handwriting animations keep a run continuous across a
+          // gap in Noto's printed contours: Gujarati હ and Devanagari ख's
+          // upper-right loop. Permit only those documented bridges; every
+          // other authored path retains the stricter general-purpose floor.
+          const minimumInkFit = letter.script === "gujarati" && letter.glyph === "હ"
+            ? 0.92
+            : letter.script === "devanagari" && letter.glyph === "ख"
+              ? 0.95
+              : 0.97;
           expect(frac, `stroke ${s} strays off the glyph`).toBeGreaterThan(minimumInkFit);
         }
       });
@@ -1085,6 +1090,25 @@ describe("handwriting ductus", () => {
     expect(Math.max(...arch.map((point) => point.x))).toBeGreaterThan(arch[0].x);
     expect(arch[0].y).toBeGreaterThan(arch.at(-1)!.y);
     const headline = penPath(DEVANAGARI_KA.strokes[3]);
+    expect(headline[0].x).toBeLessThan(headline.at(-1)!.x);
+  });
+
+  it("Devanagari ख keeps its descending left body joined before the upper loop, right stem, and headline", () => {
+    expect(DEVANAGARI_KHA.script).toBe("devanagari");
+    expect(penLifts(DEVANAGARI_KHA)).toBe(3);
+    expect(DEVANAGARI_KHA.strokes).toHaveLength(4);
+    expect(DEVANAGARI_KHA.strokes.map((stroke) => stroke.segments.length)).toEqual([
+      1, 1, 1, 1,
+    ]);
+    const body = penPath(DEVANAGARI_KHA.strokes[0]);
+    expect(body[0].y).toBeGreaterThan(Math.min(...body.map((point) => point.y)));
+    expect(Math.max(...body.map((point) => point.x))).toBeGreaterThan(body[0].x);
+    const loop = penPath(DEVANAGARI_KHA.strokes[1]);
+    expect(Math.max(...loop.map((point) => point.x))).toBeGreaterThan(loop[0].x);
+    expect(Math.min(...loop.map((point) => point.y))).toBeLessThan(loop[0].y);
+    const stem = penPath(DEVANAGARI_KHA.strokes[2]);
+    expect(stem[0].y).toBeGreaterThan(stem.at(-1)!.y);
+    const headline = penPath(DEVANAGARI_KHA.strokes[3]);
     expect(headline[0].x).toBeLessThan(headline.at(-1)!.x);
   });
 
@@ -4228,6 +4252,19 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /27-frame animation.*four ordered pen-down runs.*frames 2–11.*upper-right junction.*left over the top.*down the left side.*around the bottom.*lower-right junction.*frames 12–15.*central stem top-to-bottom.*frames 16–19.*upper junction.*right-hand arch clockwise.*open tip.*frames 20–27.*shirorekhā left-to-right.*three intervening lifts.*Central Hindi Directorate.*2019 Deskbook on Orthography of Devanagari Script.*Lesson 2.*Unit III.*p\. 12.*same four-part buildup.*Noto Sans Devanagari.*everyday handwriting.*join or simplify/i,
+    );
+  });
+
+  it("Devanagari ख traces the animated four-run joined body, upper loop, right stem, and headline order", () => {
+    const src = DEVANAGARI_KHA.source;
+    expect(src.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Deva-%E0%A4%96-order.gif",
+    );
+    expect(src.citation).toMatch(
+      /Opiaterein.*Deva-ख-order\.gif.*strokes 1–4.*Wikimedia Commons.*9 May 2009/i,
+    );
+    expect(src.variation).toMatch(
+      /28-frame animation.*four ordered pen-down runs.*frames 2–12.*descend the left stem.*clockwise around the small left opening.*broad lower bowl.*without lifting.*frames 13–20.*upper-left of the right opening.*clockwise around its oval.*open lower-left tip.*frames 21–23.*right stem's headline junction.*top-to-bottom.*frames 24–27.*headline's left edge.*shirorekhā left-to-right.*three intervening lifts.*Noto Sans Devanagari.*everyday handwriting.*narrow or join the bowls/i,
     );
   });
 
