@@ -850,7 +850,7 @@ impl<'m> ValidatorState<'m> {
                     if vtable_slot.is_some() {
                         self.observed.add(Feature::VirtualDispatch);
                     }
-                    self.check_method_def(name, params, body);
+                    self.check_method_def(name, params, body, depth + 1);
                     i += 1;
                 }
             }
@@ -870,7 +870,21 @@ impl<'m> ValidatorState<'m> {
     /// ordering machinery has no SIR29 caller to exercise it correctly
     /// yet; a future SIR29 addendum that needs it can factor the shared
     /// logic out at that point instead of guessing at the rules now.
-    fn check_method_def(&mut self, name: &str, params: &[Param], body: &Block) {
+    ///
+    /// Unlike `check_function` (called once per flat top-level function,
+    /// never nested), `Stmt::MethodDef` can nest arbitrarily — a
+    /// `MethodDef` sits inside a `NominalClassDef.body`, and nothing
+    /// prevents that body from containing another `NominalClassDef`
+    /// containing another `MethodDef`. `depth` must therefore be the
+    /// caller's *ambient* recursion depth, not a fresh `0`: resetting to
+    /// `0` here would let a pathologically nested chain of
+    /// method-inside-class-inside-method bypass `MAX_IR_DEPTH` entirely
+    /// (CWE-674) even though every sibling SIR29 arm
+    /// (`NominalClassDef`/`VirtualCall`) correctly threads `depth + 1`.
+    fn check_method_def(&mut self, name: &str, params: &[Param], body: &Block, depth: usize) {
+        if self.check_depth(depth, &body.span) {
+            return;
+        }
         let mut param_names: HashSet<String> = HashSet::new();
         let mut scope_so_far: HashSet<String> = HashSet::new();
         let no_captures: HashSet<String> = HashSet::new();
@@ -897,12 +911,12 @@ impl<'m> ValidatorState<'m> {
                     self.observed.add(Feature::DefaultParams);
                 }
                 let mut env = LocalEnv::new(&scope_so_far, &no_captures);
-                self.check_expr(default, &mut env, 0);
+                self.check_expr(default, &mut env, depth);
             }
             scope_so_far.insert(p.name.clone());
         }
         let mut env = LocalEnv::new(&param_names, &no_captures);
-        self.check_block(body, &mut env, 0);
+        self.check_block(body, &mut env, depth);
     }
 
     fn check_expr(&mut self, e: &Expr, env: &mut LocalEnv, depth: usize) {
@@ -2643,6 +2657,89 @@ mod tests {
         let (ok, saw_overflow) = handle.join().expect("thread join");
         assert!(!ok, "expected validation to fail with depth overflow");
         assert!(saw_overflow, "expected depth-overflow error to be reported");
+    }
+
+    #[test]
+    fn sir29_deeply_nested_method_defs_report_depth_overflow_not_panic() {
+        // Regression test (CWE-674): `check_method_def` must thread the
+        // caller's ambient `depth` through to `check_block`, not reset
+        // it to 0 — a `Stmt::MethodDef` can nest directly inside another
+        // `Stmt::MethodDef`'s own `body`, so resetting depth at each
+        // level would let a pathologically nested chain of methods
+        // bypass `MAX_IR_DEPTH` entirely and blow the host stack. Same
+        // dedicated-thread/big-stack/leak-on-teardown shape as
+        // `depth_overflow_is_reported_not_panicked` above.
+        let handle = std::thread::Builder::new()
+            .stack_size(32 * 1024 * 1024)
+            .name("sir29-depth-overflow-test".into())
+            .spawn(|| {
+                let mut m =
+                    empty_module(FeatureManifest::from_features(&[Feature::NominalClasses]));
+                let deep = build_deep_nested_method_defs(crate::MAX_IR_DEPTH + 100);
+                m.functions.push(Function {
+                    name: "f".into(),
+                    params: vec![],
+                    return_type: None,
+                    captures: vec![],
+                    body: Block {
+                        stmts: vec![Stmt::NominalClassDef {
+                            name: "C".into(),
+                            type_params: vec![],
+                            superclass: None,
+                            interfaces: vec![],
+                            is_abstract: false,
+                            fields: vec![],
+                            body: vec![deep],
+                            span: s(),
+                        }],
+                        value: Expr::NilLit { span: s() },
+                        span: s(),
+                    },
+                    effects: EffectSet::PURE,
+                    metadata: Metadata::new(),
+                    span: s(),
+                });
+                let r = validate(&m);
+                let ok = r.is_ok();
+                let saw_overflow = r
+                    .errors()
+                    .any(|i| i.message.contains("exceeds MAX_IR_DEPTH"));
+                // Leak, same reason as the sibling test above: the
+                // recursive Drop would itself overflow on teardown.
+                Box::leak(Box::new(m));
+                (ok, saw_overflow)
+            })
+            .expect("spawn test thread");
+        let (ok, saw_overflow) = handle.join().expect("thread join");
+        assert!(!ok, "expected validation to fail with depth overflow");
+        assert!(saw_overflow, "expected depth-overflow error to be reported");
+    }
+
+    /// Build a chain of `depth` `Stmt::MethodDef`s, each one's `body`
+    /// containing exactly the next as its sole statement, bottoming out
+    /// in a bare `ExprStmt`. Constructed iteratively (host-stack safe).
+    fn build_deep_nested_method_defs(depth: usize) -> Stmt {
+        let mut inner = Stmt::ExprStmt {
+            expr: Expr::NilLit { span: s() },
+            span: s(),
+        };
+        for _ in 0..depth {
+            inner = Stmt::MethodDef {
+                name: "m".into(),
+                params: vec![],
+                return_type: None,
+                is_static: false,
+                is_override: false,
+                vtable_slot: None,
+                body: Block {
+                    stmts: vec![inner],
+                    value: Expr::NilLit { span: s() },
+                    span: s(),
+                },
+                span: s(),
+            };
+        }
+        inner
     }
 
     /// Build a chain of `(if true then <inner> else <nil>)` of the
