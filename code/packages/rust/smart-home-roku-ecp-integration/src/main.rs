@@ -49,6 +49,7 @@ fn run() -> Result<(), String> {
                     "serial_number": snapshot.device.serial_number,
                     "software_version": snapshot.device.software_version,
                     "power_mode": snapshot.device.power_mode,
+                    "playback_state": snapshot.playback_state.as_str(),
                     "active_app": snapshot.active_app.as_ref().map(|app| json!({
                         "id": app.id,
                         "name": app.name,
