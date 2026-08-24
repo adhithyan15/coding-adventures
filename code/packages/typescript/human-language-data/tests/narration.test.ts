@@ -658,6 +658,6 @@ describe("the whole corpus", () => {
     // speakable person rows. Chapter 18 removes its remaining refused wide table.
     // #12352 removes Italian Chapter 1's five-language sound-change table: the
     // pre-A1 lesson now asks the learner to hear one noctem -> notte change.
-    expect(refusals).toBe(62); // #12509: -2 -- both Malayalam five-number wide reveal tables became voice-first two-column quantity/sound tables, so narration can speak them instead of refusing them // HL-C113: unchanged -- ch204 has no table for the narrator to refuse // HL-C157: ayer + hablare close A2
+    expect(refusals).toBe(60); // #12529: -2 -- both Tamil five-number wide reveal tables became voice-first two-column quantity/sound tables // #12509: -2 -- both Malayalam five-number wide reveal tables became voice-first two-column quantity/sound tables, so narration can speak them instead of refusing them // HL-C113: unchanged -- ch204 has no table for the narrator to refuse // HL-C157: ayer + hablare close A2
   });
 });
