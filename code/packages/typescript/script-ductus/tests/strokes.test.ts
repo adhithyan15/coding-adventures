@@ -74,6 +74,7 @@ const DEVANAGARI_DA = DUCTUS[ductusKey("devanagari", "द")];
 const DEVANAGARI_DHA = DUCTUS[ductusKey("devanagari", "ध")];
 const DEVANAGARI_NA = DUCTUS[ductusKey("devanagari", "न")];
 const DEVANAGARI_PA = DUCTUS[ductusKey("devanagari", "प")];
+const DEVANAGARI_PHA = DUCTUS[ductusKey("devanagari", "फ")];
 const DEVANAGARI_BA = DUCTUS[ductusKey("devanagari", "ब")];
 const DEVANAGARI_BHA = DUCTUS[ductusKey("devanagari", "भ")];
 const DEVANAGARI_MA = DUCTUS[ductusKey("devanagari", "म")];
@@ -1376,6 +1377,22 @@ describe("handwriting ductus", () => {
     const stem = penPath(DEVANAGARI_PA.strokes[1]);
     expect(stem[0].y).toBeGreaterThan(stem.at(-1)!.y);
     const headline = penPath(DEVANAGARI_PA.strokes[2]);
+    expect(headline[0].x).toBeLessThan(headline.at(-1)!.x);
+  });
+
+  it("Devanagari फ joins its lower bowl to the retraced central stem before the arch and headline", () => {
+    expect(DEVANAGARI_PHA.script).toBe("devanagari");
+    expect(penLifts(DEVANAGARI_PHA)).toBe(2);
+    expect(DEVANAGARI_PHA.strokes).toHaveLength(3);
+    expect(DEVANAGARI_PHA.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 1, 1]);
+    const body = penPath(DEVANAGARI_PHA.strokes[0]);
+    expect(Math.min(...body.map((point) => point.x))).toBeLessThan(body[0].x + 20);
+    expect(Math.max(...body.map((point) => point.x))).toBeGreaterThan(body[0].x);
+    expect(body.at(-1)!.y).toBeLessThan(Math.min(body[0].y, body[17].y));
+    const arch = penPath(DEVANAGARI_PHA.strokes[1]);
+    expect(Math.max(...arch.map((point) => point.x))).toBeGreaterThan(arch[0].x);
+    expect(arch.at(-1)!.y).toBeLessThan(arch[0].y);
+    const headline = penPath(DEVANAGARI_PHA.strokes[2]);
     expect(headline[0].x).toBeLessThan(headline.at(-1)!.x);
   });
 
@@ -4590,6 +4607,19 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /19-frame animation.*three ordered pen-down runs.*frames 2–10.*descend the left stem.*curve right around the lower bowl.*rise to its upper-right junction.*without lifting.*frames 11–13.*right stem's headline junction.*top-to-bottom.*frames 14–17.*headline's left edge.*shirorekhā left-to-right.*two intervening lifts.*250 ms holds.*frames 10 and 13.*one-second completed frame.*Central Hindi Directorate.*2019 Deskbook on Orthography of Devanagari Script.*Lesson 2.*Unit VII.*p\. 35.*same left stem-and-bowl.*right stem.*headline buildup and directions.*Noto Sans Devanagari.*everyday handwriting.*join or simplify/i,
+    );
+  });
+
+  it("Devanagari फ traces the animated joined bowl-stem, right arch, and headline order", () => {
+    const src = DEVANAGARI_PHA.source;
+    expect(src.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Devanagari_p%CA%B0_%E0%A4%AB.gif",
+    );
+    expect(src.citation).toMatch(
+      /JackPotte.*Devanagari pʰ फ\.gif.*strokes 1–3.*Wikimedia Commons.*29 March 2009/i,
+    );
+    expect(src.variation).toMatch(
+      /15-frame animation.*three ordered pen-down runs.*frames 0–6.*left stem.*lower bowl.*central side.*retrace.*central stem.*without lifting.*frames 7–10.*clockwise.*right arch.*frames 11–14.*headline's left edge.*shirorekhā left-to-right.*two intervening lifts.*spatial restarts at frames 7 and 11.*all frames last 100 ms.*no long inter-stroke holds.*Deskbook.*Unit VII.*p\. 36.*Noto Sans Devanagari.*everyday handwriting.*divide or simplify/i,
     );
   });
 
