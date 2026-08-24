@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+### Added - explicit obligatory ligature metadata
+
+- Represent a ligature's editable letter sequence separately from its
+  presentation-form glyph, initially for Arabic lam-alif.
+- Keep ligatures outside the base-letter inventory while retaining sourced
+  forms, components, writing order, and lift count.
+- Mark Arabic complete after its base letters, ending forms, carrier
+  compositions, and obligatory ligature all pass their provenance gates.
+
 ### Added - source-backed mark composition metadata
 
 - Let combining marks carry multiple normalized carrier examples plus a sourced

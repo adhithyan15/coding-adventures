@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+### Added — source-verified Arabic lam-alif ligature (HL-C09HN)
+
+- Add obligatory **لا** as a two-stroke, one-lift joined shape.
+- Keep its underlying Lam-plus-Alif text separate from the U+FEFB outline used
+  for font-fit verification.
+- Mark Arabic complete while preserving 31 learner rows and 29 canonical
+  base/standalone rows.
+
 ### Added — source-verified Arabic alif-maqsura ending (HL-C09HM)
 
 - Add isolated **ى** and connected-final **ـى** as word-final long-aa forms.
