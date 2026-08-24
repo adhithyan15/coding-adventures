@@ -39,7 +39,7 @@ describe("real curriculum", () => {
     expect(scripts.devanagari!.complete).toBe(true);
   });
 
-  it("keeps the cross-script closure queue measured after Telugu virama", () => {
+  it("keeps the cross-script closure queue measured after Kannada halant", () => {
     const candrakkala = scripts.malayalam!.marks!.find((mark) => mark.mark === "്")!;
     expect(candrakkala.role).toBe("virama");
     expect(candrakkala.compositionOrder).toEqual([
@@ -72,6 +72,22 @@ describe("real curriculum", () => {
       /headstroke.*encoded composition.*not a universal handwriting direction.*no standalone ductus claim/i,
     );
 
+    const kannadaHalant = scripts.kannada!.marks!.find((mark) => mark.mark === "್")!;
+    expect(kannadaHalant.role).toBe("virama");
+    expect(kannadaHalant.compositionOrder).toEqual([
+      "write the Kannada consonant carrier first",
+      "add the halant to suppress its inherent vowel or prepare the following conjunct",
+    ]);
+    expect(kannadaHalant.compositionSource?.url).toBe(
+      "https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-12/",
+    );
+    expect(kannadaHalant.compositionSource?.citation).toMatch(
+      /Unicode Standard.*Version 17\.0.*12\.8\.2.*U\+0CCD/i,
+    );
+    expect(kannadaHalant.compositionSource?.variation).toMatch(
+      /horn.*dead consonants.*conjuncts.*not a universal handwriting direction.*no standalone ductus claim/i,
+    );
+
     const gaps = validate({ taxonomy, lessons, scripts }).filter(
       (issue) => issue.level === "warning" && issue.code === "uncovered-glyphs",
     );
@@ -94,10 +110,12 @@ describe("real curriculum", () => {
     expect(affected.get("്") ?? 0).toBe(0);
     expect(missingByScript.get("telugu.json")?.has("్")).toBe(false);
     expect(affected.get("్") ?? 0).toBe(0);
-    expect(affected.get("್")).toBe(87);
+    expect(missingByScript.get("kannada.json")?.has("್")).toBe(false);
+    expect(affected.get("್") ?? 0).toBe(0);
+    expect(affected.get("ு")).toBe(80);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["್", 87]);
+    ).toEqual(["ு", 80]);
   });
 
   it("loaded every track (17+ and growing)", () => {
