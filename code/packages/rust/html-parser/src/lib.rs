@@ -7641,10 +7641,13 @@ impl HtmlParser {
                 || self.current_last_child_element_is("th")
                 || self.current_last_child_element_is("tr"))
         {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-table-end-tag-in-template-table-mode",
-                "end tag `</table>` was ignored because its required table row or body was not in scope",
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-table-end-tag-in-template-table-mode",
+                    "end tag `</table>` was ignored because its required table row or body was not in scope",
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             return;
         }
         if name == "tr"
@@ -27415,6 +27418,17 @@ mod tests {
         .at_emission(Some(end_tag_position_at(source, "caption", occurrence)))
     }
 
+    fn table_end_tag_in_template_table_mode_recovery(
+        source: &str,
+        occurrence: usize,
+    ) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-table-end-tag-in-template-table-mode",
+            "end tag `</table>` was ignored because its required table row or body was not in scope",
+        )
+        .at_emission(Some(end_tag_position_at(source, "table", occurrence)))
+    }
+
     fn end_tag_in_template_column_group_recovery(
         source: &str,
         name: &str,
@@ -41944,10 +41958,7 @@ mod tests {
             let output = parse_html_with_diagnostics(source).unwrap();
             assert_eq!(
                 output.parser_diagnostics,
-                vec![ParserDiagnostic::new(
-                    "unexpected-table-end-tag-in-template-table-mode",
-                    "end tag `</table>` was ignored because its required table row or body was not in scope",
-                )],
+                vec![table_end_tag_in_template_table_mode_recovery(source, 0)],
                 "source {source:?}"
             );
 
@@ -41978,6 +41989,82 @@ mod tests {
         assert!(fragment.parser_diagnostics.iter().all(|diagnostic| {
             diagnostic.code != "unexpected-table-end-tag-in-template-table-mode"
         }));
+    }
+
+    #[test]
+    fn positions_table_end_tags_rejected_after_template_owned_rows_or_cells() {
+        let repeated_source =
+            "<!doctype html><template><tr></tr></table></table></template>";
+        let repeated = parse_html_with_diagnostics(repeated_source).unwrap();
+        assert_eq!(
+            repeated
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| {
+                    diagnostic.code == "unexpected-table-end-tag-in-template-table-mode"
+                })
+                .cloned()
+                .collect::<Vec<_>>(),
+            vec![
+                table_end_tag_in_template_table_mode_recovery(repeated_source, 0),
+                table_end_tag_in_template_table_mode_recovery(repeated_source, 1),
+            ]
+        );
+
+        let unicode_source =
+            "<!doctype html>\r\n<p>雪</p>\r\n<template><td></td></table></template>";
+        let unicode = parse_html_with_diagnostics(unicode_source).unwrap();
+        assert_eq!(
+            unicode
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| {
+                    diagnostic.code == "unexpected-table-end-tag-in-template-table-mode"
+                })
+                .cloned()
+                .collect::<Vec<_>>(),
+            vec![table_end_tag_in_template_table_mode_recovery(
+                unicode_source,
+                0,
+            )]
+        );
+
+        let incomplete =
+            parse_html_with_diagnostics("<!doctype html><template><tr></tr></table").unwrap();
+        assert!(incomplete.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-table-end-tag-in-template-table-mode"
+        }));
+
+        let mut unpositioned = HtmlParser::new();
+        for token in [
+            Token::StartTag {
+                name: "template".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "tr".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::EndTag {
+                name: "tr".to_string(),
+            },
+            Token::EndTag {
+                name: "table".to_string(),
+            },
+        ] {
+            unpositioned.process_token(token);
+        }
+        let diagnostics = unpositioned
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| {
+                diagnostic.code == "unexpected-table-end-tag-in-template-table-mode"
+            })
+            .collect::<Vec<_>>();
+        assert_eq!(diagnostics.len(), 1);
+        assert_eq!(diagnostics[0].position, None);
     }
 
     #[test]
