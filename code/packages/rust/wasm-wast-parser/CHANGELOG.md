@@ -1,5 +1,22 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.52 — 2026-08-24 — SIMD widen PR30: f32x4 eq/ne/lt/gt/le/ge text-form (task #205-207)
+
+### Added
+
+- `SimdOpKind::EqF32x4`/`NeF32x4`/`LtF32x4`/`GtF32x4`/`LeF32x4`/`GeF32x4`
+  join the shared "no immediate beyond the opcode byte itself" SIMD
+  dispatch arm (already used for `AddF32x4`/`MulF32x4`/`EqI64x2`/etc.)
+  in both the folded (`encode_stream_instr`) and flat
+  (`encode_flat_instr`) instruction encoders -- verified byte-identical
+  at both call sites before editing. All six sub-opcodes are looked up
+  by name from `wasm_opcodes::SIMD_OPS` (data-driven, via
+  `get_simd_op_by_name`), so no separate name-to-encoding table was
+  needed. Unlike PR29's five entries (all 2-byte LEB128), these six
+  sub-opcode values are all `< 0x80`, so each encodes as a single byte.
+- New test: `f32x4_cmp_family_encodes_the_real_single_byte_leb128_sub_opcodes`
+  (folded and flat forms, all six sub-opcodes).
+
 ## 0.1.51 — 2026-08-24 — SIMD widen PR29: f32x4 add/sub/div/neg/sqrt text-form (task #202-204)
 
 ### Added

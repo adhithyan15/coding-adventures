@@ -1879,6 +1879,12 @@ fn encode_stream_instr(
             | wasm_opcodes::SimdOpKind::AddF32x4
             | wasm_opcodes::SimdOpKind::SubF32x4
             | wasm_opcodes::SimdOpKind::DivF32x4
+            | wasm_opcodes::SimdOpKind::EqF32x4
+            | wasm_opcodes::SimdOpKind::NeF32x4
+            | wasm_opcodes::SimdOpKind::LtF32x4
+            | wasm_opcodes::SimdOpKind::GtF32x4
+            | wasm_opcodes::SimdOpKind::LeF32x4
+            | wasm_opcodes::SimdOpKind::GeF32x4
             | wasm_opcodes::SimdOpKind::TruncSatF32x4S
             | wasm_opcodes::SimdOpKind::TruncSatF32x4U
             | wasm_opcodes::SimdOpKind::ConvertI32x4S
@@ -1923,6 +1929,13 @@ fn encode_stream_instr(
                 // (SIMD widen PR29) join too, same reasoning -- 2 UNARY
                 // (`neg`/`sqrt`) and 3 BINARY (`add`/`sub`/`div`), all
                 // still no-immediate at the encoding level.
+                // `EqF32x4`/`NeF32x4`/`LtF32x4`/`GtF32x4`/`LeF32x4`/
+                // `GeF32x4` (SIMD widen PR30) join too, same reasoning --
+                // all 6 BINARY, same no-immediate encoding shape as the
+                // integer comparison families (`Eq`/`EqI16x8`/`EqI8x16`/
+                // `EqI64x2` etc. above); the IEEE-754 float comparison and
+                // NaN semantics are entirely a runtime/type-checker
+                // concern, invisible here.
                 // `TruncSatF32x4S`/`_U`/`ConvertI32x4S`/`_U` (SIMD widen
                 // PR20) join too -- same no-immediate shape, the fact
                 // that these change lane TYPE (not just value) is
@@ -2671,6 +2684,12 @@ fn encode_flat_instr(
             | wasm_opcodes::SimdOpKind::AddF32x4
             | wasm_opcodes::SimdOpKind::SubF32x4
             | wasm_opcodes::SimdOpKind::DivF32x4
+            | wasm_opcodes::SimdOpKind::EqF32x4
+            | wasm_opcodes::SimdOpKind::NeF32x4
+            | wasm_opcodes::SimdOpKind::LtF32x4
+            | wasm_opcodes::SimdOpKind::GtF32x4
+            | wasm_opcodes::SimdOpKind::LeF32x4
+            | wasm_opcodes::SimdOpKind::GeF32x4
             | wasm_opcodes::SimdOpKind::TruncSatF32x4S
             | wasm_opcodes::SimdOpKind::TruncSatF32x4U
             | wasm_opcodes::SimdOpKind::ConvertI32x4S
@@ -2707,6 +2726,9 @@ fn encode_flat_instr(
                 // `NegF32x4`/`SqrtF32x4`/`AddF32x4`/`SubF32x4`/`DivF32x4`
                 // (SIMD widen PR29) join too, same reasoning -- see the
                 // matching comment in `encode_stream_instr` above.
+                // `EqF32x4`/`NeF32x4`/`LtF32x4`/`GtF32x4`/`LeF32x4`/
+                // `GeF32x4` (SIMD widen PR30) join too, same reasoning --
+                // see the matching comment in `encode_stream_instr` above.
                 // `TruncSatF32x4S`/`_U`/`ConvertI32x4S`/`_U` (SIMD widen
                 // PR20) join too, same reasoning. `TruncSatF64x2SZero`/
                 // `_UZero` (SIMD widen PR25) join too, same reasoning.
@@ -5727,6 +5749,51 @@ mod tests {
             assert!(code.windows(3).any(|w| w == [0xFD, 0xE4, 0x01]), "missing f32x4.add: {code:?}");
             assert!(code.windows(3).any(|w| w == [0xFD, 0xE5, 0x01]), "missing f32x4.sub: {code:?}");
             assert!(code.windows(3).any(|w| w == [0xFD, 0xE7, 0x01]), "missing f32x4.div: {code:?}");
+        }
+    }
+
+    #[test]
+    fn f32x4_cmp_family_encodes_the_real_single_byte_leb128_sub_opcodes() {
+        // SIMD widen PR30 (task #205-207): f32x4.eq (0x41), f32x4.ne
+        // (0x42), f32x4.lt (0x43), f32x4.gt (0x44), f32x4.le (0x45),
+        // f32x4.ge (0x46) -- the f32x4 comparison family. Unlike every
+        // f32x4 op added since PR19 (all >= 0x80, needing a real 2-byte
+        // LEB128 sequence), these six sub-opcode values are all < 0x80,
+        // so each encodes as a SINGLE byte (`[0xFD, byte]`, no
+        // continuation byte) -- the same single-byte shape as
+        // `i32x4.eq`'s own 0x37. All six are BINARY (two v128 operands)
+        // -- same "no immediate beyond the opcode byte itself" shape as
+        // every other comparison family in this table.
+        let folded = parse_module(
+            r#"(module (func (param v128 v128) (result v128)
+                 (f32x4.ge
+                   (f32x4.le
+                     (f32x4.gt
+                       (f32x4.lt
+                         (f32x4.ne (f32x4.eq (local.get 0) (local.get 1)) (local.get 1))
+                         (local.get 1))
+                       (local.get 1))
+                     (local.get 1))
+                   (local.get 1))))"#,
+        )
+        .unwrap();
+        let flat = parse_module(
+            r#"(module (func (param v128 v128) (result v128)
+                 local.get 0 local.get 1 f32x4.eq
+                 local.get 1 f32x4.ne
+                 local.get 1 f32x4.lt
+                 local.get 1 f32x4.gt
+                 local.get 1 f32x4.le
+                 local.get 1 f32x4.ge))"#,
+        )
+        .unwrap();
+        for code in [code_of(&folded, 0), code_of(&flat, 0)] {
+            assert!(code.windows(2).any(|w| w == [0xFD, 0x41]), "missing f32x4.eq: {code:?}");
+            assert!(code.windows(2).any(|w| w == [0xFD, 0x42]), "missing f32x4.ne: {code:?}");
+            assert!(code.windows(2).any(|w| w == [0xFD, 0x43]), "missing f32x4.lt: {code:?}");
+            assert!(code.windows(2).any(|w| w == [0xFD, 0x44]), "missing f32x4.gt: {code:?}");
+            assert!(code.windows(2).any(|w| w == [0xFD, 0x45]), "missing f32x4.le: {code:?}");
+            assert!(code.windows(2).any(|w| w == [0xFD, 0x46]), "missing f32x4.ge: {code:?}");
         }
     }
 

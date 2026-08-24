@@ -479,6 +479,14 @@ TESTSUITE_FILES = [
     # family. The single biggest directive-count win in this campaign so
     # far -- see the NOTICE file for the real vendored/pass counts.
     "simd_f32x4_arith.wast",
+    # SIMD widen PR30 (task #205-207): simd_f32x4_cmp.wast -- vendors the
+    # dedicated upstream file for f32x4.eq/ne/lt/gt/le/ge (0x41-0x46),
+    # this PR's 6 new opcodes, closing the f32x4 comparison family gap
+    # (the arithmetic family completed in PR29 above). The single BIGGEST
+    # directive-count win in this campaign so far -- larger than PR29's
+    # simd_f32x4_arith.wast -- see the NOTICE file for the real vendored/
+    # pass counts.
+    "simd_f32x4_cmp.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under

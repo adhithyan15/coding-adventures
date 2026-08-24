@@ -2,6 +2,31 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.33] - 2026-08-24 - SIMD widen PR30: f32x4 eq/ne/lt/gt/le/ge (task #205-207)
+
+### Added
+
+- 6 new `SIMD_OPS` entries: `f32x4.eq` (`0x41`), `f32x4.ne` (`0x42`),
+  `f32x4.lt` (`0x43`), `f32x4.gt` (`0x44`), `f32x4.le` (`0x45`),
+  `f32x4.ge` (`0x46`) -- the `f32x4` comparison family, joining the
+  arithmetic family PR29 just closed. 165 SIMD opcodes total, up from
+  159. Each sub-opcode byte fetched live from the SIMD proposal's own
+  `BinarySIMD.md` and cross-checked against every existing `SIMD_OPS`
+  entry: the closest neighbors are `i32x4.eq`..`i32x4.ge_u`
+  (`0x37`-`0x40`, just below) and `v128.not` (`0x4D`, just above),
+  confirming `0x41`-`0x46` are genuinely free (a naive grep for that
+  byte range also hits unrelated `ATOMIC_OPS`/scalar
+  `numeric_i32`/`numeric_i64`/`numeric_f32`/`numeric_f64` entries behind
+  DIFFERENT opcode prefixes -- verified against `SIMD_OPS` specifically).
+  Unlike every `f32x4` opcode added since PR19 (all `>= 0x80`, needing a
+  real 2-byte LEB128 encoding), these six values are all `< 0x80`
+  (single-byte LEB128). 6 new `SimdOpKind` variants: `EqF32x4`,
+  `NeF32x4`, `LtF32x4`, `GtF32x4`, `LeF32x4`, `GeF32x4`.
+- New tests:
+  `simd_ops_table_has_the_expected_165_entries_and_no_duplicates`
+  (renamed from `_159_`, was 159) and
+  `simd_f32x4_cmp_family_has_the_real_verified_sub_opcode_values`.
+
 ## [0.2.32] - 2026-08-24 - SIMD widen PR29: f32x4 add/sub/div/neg/sqrt (task #202-204)
 
 ### Added

@@ -2,6 +2,33 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.40] - 2026-08-24 (task #205-207 — SIMD widen PR30: f32x4 eq/ne/lt/gt/le/ge)
+
+### Added
+
+- `register_simd` gains one new dispatch arm (`EqF32x4`/`NeF32x4`/
+  `LtF32x4`/`GtF32x4`/`LeF32x4`/`GeF32x4` together, `match op.kind`
+  inside), closing the `f32x4` comparison family gap -- the arithmetic
+  family completed in PR29:
+  - BINARY, pops two `v128`s, compares each of the 4 `f32` lane pairs
+    with a native Rust `f32` comparison operator, pushes one `v128`
+    boolean mask (all-1s/all-0s per lane) -- same lane-wise shape and
+    mask convention as the integer comparison families (`Eq`/`EqI16x8`/
+    `EqI8x16`/`EqI64x2` etc.), just at `f32x4`'s width with float
+    operands and no signed/unsigned split.
+  - Rust's native `f32` `==`/`!=`/`<`/`>`/`<=`/`>=` are already
+    IEEE-754 compliant, so no bespoke NaN handling is needed: `NaN ==
+    x`/`NaN <op> x` for any ordered `<op>` are already false, and
+    `NaN != x` (including `x == NaN`) is already true -- same "native
+    operator is already correct" discipline as PR29's `add`/`sub`/`div`,
+    unlike `MinF32x4`'s bespoke tie-break logic.
+- New unit tests:
+  `f32x4_cmp_family_uses_the_mask_convention_on_ordinary_values`,
+  `f32x4_ordered_cmp_family_is_false_when_either_operand_is_nan`,
+  `f32x4_ne_is_true_when_either_operand_is_nan_including_nan_vs_itself`,
+  `f32x4_eq_ne_treat_positive_and_negative_zero_as_equal`,
+  `f32x4_ordered_cmp_family_orders_negative_and_positive_values_correctly`.
+
 ## [0.9.39] - 2026-08-24 (task #202-204 — SIMD widen PR29: f32x4 add/sub/div/neg/sqrt)
 
 ### Added

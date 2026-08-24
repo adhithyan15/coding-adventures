@@ -1079,6 +1079,51 @@ fn invalid_f32x4_neg_given_no_operand_at_all() {
 }
 
 #[test]
+fn valid_f32x4_cmp_family() {
+    // SIMD widen PR30 (task #205-207): f32x4.eq/ne/lt/gt/le/ge -- the
+    // f32x4 comparison family, mirroring the SIMD boolean-mask convention
+    // of `i32x4.eq`/etc. above (RESULT is still a v128, not a plain i32).
+    // All 6 are BINARY (pop two v128s, push one v128) -- same shape as
+    // `f32x4.add`/`mul` above. Their IEEE-754 comparison and NaN-handling
+    // semantics (see wasm-opcodes' `SimdOpKind::EqF32x4` doc comment) are
+    // entirely invisible to the type checker, same discipline as every
+    // other f32x4 op's runtime subtlety.
+    assert_valid(
+        r#"(module
+             (func (param v128 v128) (result v128) (f32x4.eq (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (f32x4.ne (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (f32x4.lt (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (f32x4.gt (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (f32x4.le (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (f32x4.ge (local.get 0) (local.get 1))))"#,
+    );
+}
+
+#[test]
+fn invalid_f32x4_eq_given_an_i32_operand_instead_of_v128() {
+    // Confirms the type checker actually enforces V128 in both operand
+    // slots, not just accepting whatever's on the stack -- one operand
+    // here is a plain i32, so the pop (expecting V128) must reject it.
+    assert_invalid("(module (func (param v128 i32) (result v128) (f32x4.eq (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn invalid_f32x4_lt_given_no_operands_at_all() {
+    // An empty operand stack must be rejected cleanly, not panic --
+    // mirrors `invalid_f32x4_neg_given_no_operand_at_all` above for a
+    // different f32x4 op.
+    assert_invalid("(module (func (result v128) (f32x4.lt)))");
+}
+
+#[test]
+fn invalid_f32x4_ge_given_an_i32_result_type_instead_of_v128() {
+    // The SIMD boolean-mask convention means the result is a v128, NOT a
+    // plain i32 -- a function that declares an `i32` result type but
+    // returns the v128 comparison result directly must be rejected.
+    assert_invalid("(module (func (param v128 v128) (result i32) (f32x4.ge (local.get 0) (local.get 1))))");
+}
+
+#[test]
 fn valid_i32x4_f32x4_conversion_family() {
     // SIMD widen PR20 (task #177-179): i32x4.trunc_sat_f32x4_s/_u,
     // f32x4.convert_i32x4_s/_u -- the FIRST i32x4<->f32x4 CONVERSION

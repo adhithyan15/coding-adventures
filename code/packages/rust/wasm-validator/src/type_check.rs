@@ -1571,12 +1571,23 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     | wasm_opcodes::SimdOpKind::LtSI64x2
                     | wasm_opcodes::SimdOpKind::GtSI64x2
                     | wasm_opcodes::SimdOpKind::LeSI64x2
-                    | wasm_opcodes::SimdOpKind::GeSI64x2 => {
+                    | wasm_opcodes::SimdOpKind::GeSI64x2
+                    | wasm_opcodes::SimdOpKind::EqF32x4
+                    | wasm_opcodes::SimdOpKind::NeF32x4
+                    | wasm_opcodes::SimdOpKind::LtF32x4
+                    | wasm_opcodes::SimdOpKind::GtF32x4
+                    | wasm_opcodes::SimdOpKind::LeF32x4
+                    | wasm_opcodes::SimdOpKind::GeF32x4 => {
                         // WASM's SIMD comparison convention: the RESULT is
                         // still a v128 (a per-lane boolean mask), not a
                         // plain i32 -- see `SimdOpKind::Eq`'s own doc
                         // comment in wasm-opcodes. Same convention for
                         // i16x8's and i8x16's own comparison families.
+                        // `f32x4.eq`/`ne`/`lt`/`gt`/`le`/`ge` (SIMD widen
+                        // PR30) join too: same pop-two-push-one V128 shape
+                        // -- the IEEE-754 float-comparison and NaN-handling
+                        // semantics are entirely a runtime concern (see
+                        // `wasm-execution`), invisible to the type checker.
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         push_val(&mut stack, ValueType::V128);

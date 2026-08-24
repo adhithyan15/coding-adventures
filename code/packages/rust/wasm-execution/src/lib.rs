@@ -6280,6 +6280,60 @@ fn register_simd(vm: &mut GenericVM) {
                 let handle = push_v128(ctx, result)?;
                 push_wasm(vm, WasmValue::V128(handle));
             }
+            SimdOpKind::EqF32x4
+            | SimdOpKind::NeF32x4
+            | SimdOpKind::LtF32x4
+            | SimdOpKind::GtF32x4
+            | SimdOpKind::LeF32x4
+            | SimdOpKind::GeF32x4 => {
+                // f32x4.eq/ne/lt/gt/le/ge (SIMD widen PR30): BINARY, pop
+                // two v128s, compare each of the 4 `f32` lane pairs with
+                // ordinary IEEE-754 comparison, push one v128 boolean
+                // mask (all-1s/all-0s per lane) -- same lane-wise BINARY
+                // shape and mask convention as the integer comparison
+                // families (`Eq`/`EqI16x8`/`EqI8x16`/`EqI64x2` etc.
+                // above), just over `f32x4`'s width with float operands.
+                // Unlike the integer families, there is no signed/
+                // unsigned split. Rust's native `f32` `==`/`!=`/`<`/`>`/
+                // `<=`/`>=` operators are already IEEE-754 compliant, so
+                // no bespoke NaN handling is needed: `NaN == x` and
+                // `NaN <op> x` for any ordered `<op>` are already false,
+                // and `NaN != x` (including `x == NaN`) is already true,
+                // matching this family's spec-mandated semantics exactly
+                // (same "native operator is already correct" discipline
+                // as `AddF32x4`/`SubF32x4`/`DivF32x4` above, unlike
+                // `MinF32x4`'s bespoke tie-break logic).
+                let rhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let lhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let rhs = *ctx
+                    .v128_heap
+                    .get(rhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let lhs = *ctx
+                    .v128_heap
+                    .get(lhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+
+                let mask = |b: bool| if b { -1i32 } else { 0i32 };
+
+                let mut result = [0u8; 16];
+                for i in 0..4 {
+                    let l = f32::from_le_bytes(lhs[i * 4..i * 4 + 4].try_into().unwrap());
+                    let r = f32::from_le_bytes(rhs[i * 4..i * 4 + 4].try_into().unwrap());
+                    let out = match op.kind {
+                        SimdOpKind::EqF32x4 => mask(l == r),
+                        SimdOpKind::NeF32x4 => mask(l != r),
+                        SimdOpKind::LtF32x4 => mask(l < r),
+                        SimdOpKind::GtF32x4 => mask(l > r),
+                        SimdOpKind::LeF32x4 => mask(l <= r),
+                        SimdOpKind::GeF32x4 => mask(l >= r),
+                        _ => unreachable!("only EqF32x4/NeF32x4/LtF32x4/GtF32x4/LeF32x4/GeF32x4 reach this arm"),
+                    };
+                    result[i * 4..i * 4 + 4].copy_from_slice(&out.to_le_bytes());
+                }
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
             SimdOpKind::TruncSatF32x4S | SimdOpKind::TruncSatF32x4U => {
                 // i32x4.trunc_sat_f32x4_s/_u (SIMD widen PR20): UNARY,
                 // pop one v128, convert each of the 4 `f32` lanes to a
@@ -14765,6 +14819,186 @@ mod tests {
             let out = f32x4_lanes(results[0].unwrap());
             assert!(out.iter().all(|v| v.is_nan()), "f32x4.{name}(NaN, 5.0) must be NaN in every lane, got {out:?}");
         }
+    }
+
+    // ── f32x4.eq/ne/lt/gt/le/ge (SIMD widen PR30, task #205-207) ────────────
+
+    /// Build the code for one `f32x4` comparison sub-opcode applied to two
+    /// `v128.const f32x4` operands, extracting a single lane (as an `i32`
+    /// mask value, via `i32x4.extract_lane`) so the test can assert on a
+    /// plain `WasmValue::I32` the same way the `i32x4` comparison family's
+    /// own tests do.
+    fn f32x4_cmp_lane_code(lhs: [f32; 4], rhs: [f32; 4], sub_opcode: u8, lane: u8) -> Vec<u8> {
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_f32x4(lhs));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes_f32x4(rhs));
+        // 0x41-0x46 are all < 0x80, so each is a single-byte LEB128 value
+        // (no continuation byte) -- same shape as `i32x4.eq`'s own 0x37
+        // test above, unlike `f32x4.add`'s 0xE4 (which needs a second
+        // [.., 0x01] byte since it's >= 0x80).
+        code.extend([0xFD, sub_opcode]);
+        code.extend([0xFD, 0x1B, lane]); // i32x4.extract_lane
+        code.push(0x0B);
+        code
+    }
+
+    /// `f32x4.eq`/`ne`/`lt`/`gt`/`le`/`ge`: the boolean-mask convention
+    /// (all-1s/all-0s, same as every other lane width's comparison
+    /// family) on ordinary, non-NaN, non-edge-case operands -- one
+    /// equal-lane and one unequal-lane case per predicate.
+    #[test]
+    fn f32x4_cmp_family_uses_the_mask_convention_on_ordinary_values() {
+        for (sub_opcode, name, equal_expect, less_expect, greater_expect) in [
+            (0x41u8, "eq", true, false, false),
+            (0x42u8, "ne", false, true, true),
+            (0x43u8, "lt", false, true, false),
+            (0x44u8, "gt", false, false, true),
+            (0x45u8, "le", true, true, false),
+            (0x46u8, "ge", true, false, true),
+        ] {
+            // lane 0: 3.0 vs 3.0 (equal); lane 1: 2.0 vs 5.0 (less);
+            // lane 2: 5.0 vs 2.0 (greater); lane 3 unused padding.
+            let lhs = [3.0f32, 2.0f32, 5.0f32, 1.0f32];
+            let rhs = [3.0f32, 5.0f32, 2.0f32, 1.0f32];
+
+            let code = f32x4_cmp_lane_code(lhs, rhs, sub_opcode, 0);
+            let mut engine = simd_engine(code);
+            let expect = if equal_expect { -1 } else { 0 };
+            assert_eq!(
+                engine.call_function(0, &[]).unwrap(),
+                vec![WasmValue::I32(expect)],
+                "f32x4.{name} lane 0 (3.0 vs 3.0) must produce mask {expect}"
+            );
+
+            let code = f32x4_cmp_lane_code(lhs, rhs, sub_opcode, 1);
+            let mut engine = simd_engine(code);
+            let expect = if less_expect { -1 } else { 0 };
+            assert_eq!(
+                engine.call_function(0, &[]).unwrap(),
+                vec![WasmValue::I32(expect)],
+                "f32x4.{name} lane 1 (2.0 vs 5.0) must produce mask {expect}"
+            );
+
+            let code = f32x4_cmp_lane_code(lhs, rhs, sub_opcode, 2);
+            let mut engine = simd_engine(code);
+            let expect = if greater_expect { -1 } else { 0 };
+            assert_eq!(
+                engine.call_function(0, &[]).unwrap(),
+                vec![WasmValue::I32(expect)],
+                "f32x4.{name} lane 2 (5.0 vs 2.0) must produce mask {expect}"
+            );
+        }
+    }
+
+    /// `f32x4.eq`/`lt`/`gt`/`le`/`ge`: a NaN operand on either side makes
+    /// the comparison false, per IEEE-754 unordered-comparison semantics
+    /// -- checked for every predicate except `ne` (which has the OPPOSITE
+    /// rule, covered separately below), and for NaN appearing in either
+    /// operand position.
+    #[test]
+    fn f32x4_ordered_cmp_family_is_false_when_either_operand_is_nan() {
+        for (sub_opcode, name) in [(0x41u8, "eq"), (0x43u8, "lt"), (0x44u8, "gt"), (0x45u8, "le"), (0x46u8, "ge")] {
+            // NaN on the left.
+            let code = f32x4_cmp_lane_code([f32::NAN; 4], [5.0; 4], sub_opcode, 0);
+            let mut engine = simd_engine(code);
+            assert_eq!(
+                engine.call_function(0, &[]).unwrap(),
+                vec![WasmValue::I32(0)],
+                "f32x4.{name}(NaN, 5.0) must be false (mask 0)"
+            );
+
+            // NaN on the right.
+            let code = f32x4_cmp_lane_code([5.0; 4], [f32::NAN; 4], sub_opcode, 0);
+            let mut engine = simd_engine(code);
+            assert_eq!(
+                engine.call_function(0, &[]).unwrap(),
+                vec![WasmValue::I32(0)],
+                "f32x4.{name}(5.0, NaN) must be false (mask 0)"
+            );
+
+            // NaN compared with itself.
+            let code = f32x4_cmp_lane_code([f32::NAN; 4], [f32::NAN; 4], sub_opcode, 0);
+            let mut engine = simd_engine(code);
+            assert_eq!(
+                engine.call_function(0, &[]).unwrap(),
+                vec![WasmValue::I32(0)],
+                "f32x4.{name}(NaN, NaN) must be false (mask 0)"
+            );
+        }
+    }
+
+    /// `f32x4.ne`: the one predicate where a NaN operand makes the result
+    /// TRUE, not false -- including comparing NaN with itself (`NaN !=
+    /// NaN` is `true` per IEEE-754, unlike ordinary scalar equality
+    /// intuition).
+    #[test]
+    fn f32x4_ne_is_true_when_either_operand_is_nan_including_nan_vs_itself() {
+        let code = f32x4_cmp_lane_code([f32::NAN; 4], [5.0; 4], 0x42, 0);
+        let mut engine = simd_engine(code);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(-1)], "f32x4.ne(NaN, 5.0) must be true (mask -1)");
+
+        let code = f32x4_cmp_lane_code([5.0; 4], [f32::NAN; 4], 0x42, 0);
+        let mut engine = simd_engine(code);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(-1)], "f32x4.ne(5.0, NaN) must be true (mask -1)");
+
+        let code = f32x4_cmp_lane_code([f32::NAN; 4], [f32::NAN; 4], 0x42, 0);
+        let mut engine = simd_engine(code);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(-1)], "f32x4.ne(NaN, NaN) must be true (mask -1)");
+    }
+
+    /// `f32x4.eq`/`ne`: IEEE-754 treats `+0.0` and `-0.0` as numerically
+    /// equal, unlike a bitwise comparison of their (different) bit
+    /// patterns -- `eq` must be true and `ne` must be false across every
+    /// sign combination.
+    #[test]
+    fn f32x4_eq_ne_treat_positive_and_negative_zero_as_equal() {
+        for (lhs, rhs) in [(0.0f32, 0.0f32), (0.0f32, -0.0f32), (-0.0f32, 0.0f32), (-0.0f32, -0.0f32)] {
+            let code = f32x4_cmp_lane_code([lhs; 4], [rhs; 4], 0x41, 0);
+            let mut engine = simd_engine(code);
+            assert_eq!(
+                engine.call_function(0, &[]).unwrap(),
+                vec![WasmValue::I32(-1)],
+                "f32x4.eq({lhs}, {rhs}) must be true (+0.0 == -0.0 per IEEE-754)"
+            );
+
+            let code = f32x4_cmp_lane_code([lhs; 4], [rhs; 4], 0x42, 0);
+            let mut engine = simd_engine(code);
+            assert_eq!(
+                engine.call_function(0, &[]).unwrap(),
+                vec![WasmValue::I32(0)],
+                "f32x4.ne({lhs}, {rhs}) must be false (+0.0 == -0.0 per IEEE-754)"
+            );
+        }
+    }
+
+    /// `f32x4.lt`/`gt`/`le`/`ge`: ordinary negative-vs-positive lane
+    /// ordering, proving the normal (non-NaN, non-zero-tie) path is
+    /// correct.
+    #[test]
+    fn f32x4_ordered_cmp_family_orders_negative_and_positive_values_correctly() {
+        let lhs = [-5.0f32; 4];
+        let rhs = [3.0f32; 4];
+
+        let code = f32x4_cmp_lane_code(lhs, rhs, 0x43, 0); // lt
+        let mut engine = simd_engine(code);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(-1)], "-5.0 < 3.0 must be true");
+
+        let code = f32x4_cmp_lane_code(lhs, rhs, 0x44, 0); // gt
+        let mut engine = simd_engine(code);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(0)], "-5.0 > 3.0 must be false");
+
+        let code = f32x4_cmp_lane_code(rhs, lhs, 0x44, 0); // gt, operands swapped
+        let mut engine = simd_engine(code);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(-1)], "3.0 > -5.0 must be true");
+
+        let code = f32x4_cmp_lane_code(lhs, lhs, 0x45, 0); // le, equal operands
+        let mut engine = simd_engine(code);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(-1)], "-5.0 <= -5.0 must be true");
+
+        let code = f32x4_cmp_lane_code(lhs, lhs, 0x46, 0); // ge, equal operands
+        let mut engine = simd_engine(code);
+        assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(-1)], "-5.0 >= -5.0 must be true");
     }
 
     // ── i32x4<->f32x4 conversions (SIMD widen PR20, task #177-179) ──────────
