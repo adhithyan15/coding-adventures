@@ -5506,6 +5506,27 @@ selected repair must resolve those findings without changing behavior,
 runtime dependencies, capabilities, or the graph-before-directed dependency
 order.
 
+The implemented repair pins all four canonical and Windows recipes to Python
+3.13, recreates each named environment with `--clear`, preserves graph before
+directed-graph installation, and invokes that interpreter for Ruff lint and
+format checks, strict MyPy, and pytest. Exact recipe regressions and the uv
+audit now report seven live fronts rather than nine. Both Windows fronts pass
+twice consecutively on uv 0.11.28 and Python 3.13.14: graph passes 134 tests at
+96.14% coverage and directed-graph passes 129 at 97.63%, with every quality
+gate clean. State-machine passes 161 downstream tests at 99.02% coverage and
+tree passes 137 at 100%; both selected packages build wheel and source
+distributions and retain `py.typed` in their wheels.
+
+A real Windows build-tool execution validates the 4,982-package, 9,489-edge
+plan and attempts all 205 affected packages. It builds both selected roots and
+196 packages total, skips 289 unchanged packages, and exposes four unrelated
+pre-existing failures plus five dependent skips. Exact replay classifies them
+under three newly registered pending owners: an unpinned Python 3.13 front for
+Markov chain, truthful Windows symlink-capability testing for ir-to-jvm-class-
+file and unix-tools, and scaffold-generator temporary-root cleanup after a
+current-directory change. Those owners preserve the evidence without widening
+this dependency-shaped repair.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

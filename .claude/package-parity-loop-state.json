@@ -4437,7 +4437,35 @@
       "pr_number": null,
       "selection_revision": "e5eb4be0c234456a3a5c0ae627ed88a723b066b6",
       "selection_notes": "Selected only after PR #12520 merged through squash auto-merge, the collision-checked exact-main inventory was regenerated, and the newly discovered Wemo native-authority review was registered as selection-blocked. The schema-3 inventory remains 15 established lanes, 1,369 implementation identities, and 4,562 slots with zero collisions or unknown buckets; the uv audit reports exactly nine remaining fronts across seven components. Graph followed by directed-graph is the highest-leverage zero-overlap ready build-front owner: 97 Python pyproject files and 118 unique direct BUILD consumers reference graph or directed-graph, while trie/radix reaches six pyproject consumers. Eight open PRs and 29 non-main remote source heads have zero exact overlap on the two package roots, focused recipe/audit tests, state, roadmap, or repair profile; the target remote branch and prior PR are absent. The strategically important OCaml process-free build substrate is dependency-ready but currently overlaps three live build-tool PRs on validator/main/change surfaces, so this conflict-free dependency chain is selected first without changing OCaml priority. Pre-selection diagnostics pass 132 graph tests at 95.04% coverage and 129 directed-graph tests at 97.62%; strict MyPy is already clean for graph, while the selected generated-standard quality gates expose bounded Ruff/format cleanup plus seven directed-graph strict-MyPy findings that must be resolved without behavioral or dependency changes.",
+      "validation_notes": "All four canonical and Windows BUILD recipes now recreate .venv with --clear, pin Python 3.13, preserve graph-before-directed installation order, and invoke the named interpreter for Ruff lint, Ruff formatting, strict MyPy, and pytest. Three focused regressions pin the complete recipe profile and the uv audit falls exactly from nine to seven live fronts. On Windows with uv 0.11.28 and Python 3.13.14, both BUILD_windows fronts pass twice consecutively: graph passes 134 tests at 96.14% coverage and directed-graph passes 129 tests at 97.63%, with all quality gates clean. Behavior-preserving typing cleanup retains the public runtime PropertyValue and PropertyBag aliases, narrows DFS iterators, adopts Python 3.12 generic syntax, and adds a graph-property weight reset proof without changing dependency metadata or versions. Both packages build wheel and source distributions whose wheels retain py.typed. Direct downstreams pass state-machine's 161 tests at 99.02% coverage and tree's 137 tests at 100%. The Go build tool passes all tests, vet, trimpath compilation, BUILD validation, and a real exact-plan Windows execution over 4,982 packages and 9,489 edges: 205 affected packages were attempted, graph and directed-graph built successfully, 196 packages built, 289 skipped, four failed, and five dependency-skipped. Actual replay classifies the four failures as pre-existing and separately owned: Markov's unpinned Python front, Windows symlink privilege tests in ir-to-jvm-class-file and unix-tools, and scaffold-generator temporary-directory cleanup while the process current directory remains inside the tree. The collision inventory, parity reporter, capability taxonomy, state graph, diff, dependency, credential, and production-authority reviews are clean; this tranche adds no privileged authority or production dependency.",
       "notes": "Dependency-shaped generated-pattern backfill for python/graph followed by python/directed-graph. Validate both canonical and Windows fronts twice and preserve the graph prerequisite order."
+    },
+    {
+      "id": "python-markov-chain-build-front-python313",
+      "title": "Pin the Python Markov chain BUILD fronts to Python 3.13",
+      "status": "pending",
+      "depends_on": ["python-graph-build-front-idempotence"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the real affected Windows build for the graph closure. Markov chain already clears its named environment, but neither front pins Python; uv can select ambient Python 3.10 and reject the graph dependency's Python >=3.12 floor before tests. Pin Python 3.13 in both recipes, retain graph followed by directed-graph installation order, add an exact-recipe regression, and prove immediate repeatability. An explicit UV_PYTHON=3.13 replay passes all 91 tests at 97.62% coverage, confirming this is build-front selection debt rather than graph behavior."
+    },
+    {
+      "id": "python-windows-symlink-test-portability",
+      "title": "Make Python symlink security tests truthful on Windows",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the real affected Windows graph build. ir-to-jvm-class-file and programs/unix-tools execute symlink security tests on a host without Windows symlink creation privilege and fail with WinError 1314 before the asserted production behavior is reached. Add an explicit platform/capability probe or equivalent truthful skip while retaining full traversal and symlink coverage on capable Windows hosts and POSIX lanes; do not weaken the production path-containment checks."
+    },
+    {
+      "id": "python-scaffold-generator-temp-root-cleanup-portability",
+      "title": "Restore the process directory before scaffold temporary-root cleanup",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the real affected Windows graph build. Two scaffold-generator repository-root tests change the process current directory into a TemporaryDirectory and let cleanup begin while Windows still holds the directory, producing WinError 32/5; 40 other tests pass. Restore the original directory before the context exits, preserve both .git-directory and worktree .git-file coverage, and validate on Windows plus the established Unix lane."
     },
     {
       "id": "python-trie-build-front-idempotence",
