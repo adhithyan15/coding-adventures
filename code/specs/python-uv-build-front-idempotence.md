@@ -163,6 +163,18 @@ package dependency, capability declaration, and runtime behavior. Validation
 MUST prove strict checking on the package's complete `src` and `tests` trees,
 then repeat the Windows front twice and exercise the hash-dependent closure.
 
+The RESP/TCP owner MUST repair `resp-protocol` before `tcp-server` and preserve
+the fixture's current RESP prerequisite while the separately owned dependency-
+contract reconciliation remains pending. TCP's strict MyPy command MUST use
+`--follow-untyped-imports` because the installed RESP package has no PEP 561
+marker. Dormant lint, formatting, and type-check findings MAY receive bounded,
+behavior-preserving corrections within the two owned roots. Because TCP's
+baseline coverage clears its 95% gate by fewer than two executable lines, the
+repair MUST add focused tests for both cleanup-exception paths instead of
+relying on that fragile margin or lowering the threshold. It MUST NOT change
+runtime dependency metadata, capability declarations, protocol semantics, or
+the DT23/DT24 behavior boundary.
+
 ## Legacy named-environment repair profile
 
 The separately owned `python/in-memory-data-store-protocol` front was not in
