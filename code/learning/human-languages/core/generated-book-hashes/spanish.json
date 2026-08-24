@@ -3045,6 +3045,58 @@
         "ES-C305-encantado"
       ],
       "tex": "spanish/book/chapters/ch305-nombre-y-apellido.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 314,
+      "sourceHash": "fnv1a64:59c8c0cacb7d60df",
+      "lessonIds": [
+        "ES-C314-brazo",
+        "ES-C314-pierna",
+        "ES-C314-pie",
+        "ES-C314-diente",
+        "ES-C314-oido"
+      ],
+      "tex": "spanish/book/chapters/ch314-brazo-y-pie.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 315,
+      "sourceHash": "fnv1a64:1c2a86a84214c21e",
+      "lessonIds": [
+        "ES-C315-pecho",
+        "ES-C315-fuerza",
+        "ES-C315-descanso",
+        "ES-C315-miedo",
+        "ES-C315-risa"
+      ],
+      "tex": "spanish/book/chapters/ch315-fuerza-y-risa.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 316,
+      "sourceHash": "fnv1a64:510dcb6723ad5eb5",
+      "lessonIds": [
+        "ES-C316-llanto",
+        "ES-C316-nunca",
+        "ES-C316-siempre",
+        "ES-C316-todo",
+        "ES-C316-nada"
+      ],
+      "tex": "spanish/book/chapters/ch316-nunca-y-siempre.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 317,
+      "sourceHash": "fnv1a64:21e143a8ec7e3810",
+      "lessonIds": [
+        "ES-C317-algo",
+        "ES-C317-alguien",
+        "ES-C317-nadie",
+        "ES-C317-otro",
+        "ES-C317-poco"
+      ],
+      "tex": "spanish/book/chapters/ch317-algo-y-nadie.tex"
     }
   ]
 }
