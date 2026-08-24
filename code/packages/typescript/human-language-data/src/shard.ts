@@ -363,25 +363,43 @@ function describe(cause: unknown): string {
  * repo, and the quoted snippet adds nothing a reader needs: the filename says
  * where to look and the position says where in it.
  *
- * The elision does NOT try to match the quotes around the snippet, which is the
- * obvious approach and a broken one: V8 splices the bytes in RAW and unescaped,
- * so a file whose first few bytes contain a `"` mis-pairs the delimiters and
- * walks content straight through the filter. (`ab"cd AKIA…` yields
- * `Unexpected token 'a', "ab"cd AKIA"...`, and a quote-matching regex helpfully
- * elides `"ab"` and leaves ` cd AKIA` behind.) A sanitiser whose correctness
- * depends on the bytes it is sanitising is not one.
+ * This is an ALLOWLIST, and it took two wrong turns to get here — both of the
+ * same kind, and worth recording so nobody takes a third.
  *
- * V8 always introduces the snippet with `, "` and always runs it to the end of
- * the message, so cutting there is independent of the content. The leading
- * `Unexpected token 'A'` quotes one byte too, and is elided for the same reason.
- * Everything that carries no snippet — "Unterminated string in JSON at position
- * 22", "Expected ',' or ']' after array element" — survives untouched, which is
- * the part a reader actually needs.
+ * The first attempt matched the quotes around the snippet. But V8 splices the
+ * bytes in RAW and unescaped, so a file containing a `"` mis-pairs the
+ * delimiters: `ab"cd AKIA…` yields `Unexpected token 'a', "ab"cd AKIA"...`, of
+ * which a quote-matching regex elides `"ab"` and leaves ` cd AKIA` behind.
+ *
+ * The second attempt cut from V8's `, "` separator to end of message. But V8
+ * has FOUR context templates, not one, and only two of them start that way:
+ *
+ *     Unexpected token 'x', "CTX"...        <- elided
+ *     Unexpected token 'x', ..."CTX"...     <- survived
+ *
+ * V8 picks the `...`-prefixed forms once the error is more than about eighteen
+ * bytes into the file — which is to say, for essentially every real shard. A
+ * fuzz over 5,408 malformed inputs leaked bytes in 917 of them.
+ *
+ * Both failures share a root cause: a sanitiser whose correctness depends on
+ * the shape of the thing it is sanitising. So stop pattern-matching the message
+ * and allowlist instead. `Unexpected token` is the ONLY V8 JSON family that
+ * splices file bytes, and none of its four templates carries a position — so
+ * there is nothing in it worth keeping, and the filename printed beside it
+ * already says where to look. Every other message is byte-free and passes
+ * through intact: "Unterminated string in JSON at position 22", "Expected ','
+ * or ']' after array element", "Expected double-quoted property name". Those
+ * carry the position, which is the part a reader actually uses.
+ *
+ * Matching on the family name also catches Node 18's older phrasing
+ * (`Unexpected token A in JSON at position 0`), which both earlier attempts
+ * missed entirely.
  */
 function describeParseFailure(cause: unknown): string {
-  return describe(cause)
-    .replace(/, ".*$/s, " (contents elided)")
-    .replace(/^Unexpected token '.'/u, "Unexpected token '…'");
+  const message = describe(cause);
+  return /^Unexpected token\b/.test(message)
+    ? "unexpected token (contents elided)"
+    : message;
 }
 
 /**

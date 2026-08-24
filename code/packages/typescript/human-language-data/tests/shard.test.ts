@@ -370,6 +370,54 @@ describe("hostile shard contents", () => {
     expect(message).not.toMatch(/AKIA/);
   });
 
+  it("elides bytes when the error is deep in the file, not just at position 0", () => {
+    // The regression that killed the SECOND version of this filter. V8 has four
+    // context templates and only two are introduced by `, "`; it picks the
+    // `..."CTX"...` forms once the error is more than ~18 bytes in — which is to
+    // say, for every real shard. The two tests above both error at position 0
+    // and so could only ever exercise the other template.
+    const monolith = join(root, "spine.json");
+    const dir = join(root, "spine.d");
+    mkdirSync(dir);
+    writeFileSync(
+      join(dir, "0010-ALPHA.json"),
+      `{ "id": "ALPHA", "token": "ghp_s3cr3tv4lue", "canDo": 'I can greet' }\n`,
+      "utf8",
+    );
+
+    let message = "";
+    try {
+      readMaybeSharded(monolith, mergeItems);
+    } catch (error) {
+      message = (error as Error).message;
+    }
+    expect(message).toMatch(/0010-ALPHA\.json/);
+    expect(message).not.toMatch(/ghp_|s3cr3t|canDo/);
+  });
+
+  it("elides bytes for every byte value in value position", () => {
+    // A sanitiser is only as good as the range of inputs it was tried on, and
+    // the two hand-written cases above are two points in a large space. Sweep
+    // the whole first byte plane rather than trusting the two that were thought
+    // of, and assert on the marker rather than on the message shape.
+    const monolith = join(root, "spine.json");
+    const dir = join(root, "spine.d");
+    mkdirSync(dir);
+    const marker = "ghp_s3cr3tv4lue";
+    let leaked: string[] = [];
+    for (let byte = 0x20; byte < 0x7f; byte += 1) {
+      const body = `{ "id": "ALPHA", "pad": "${marker}", "x": ${String.fromCharCode(byte)}zz }\n`;
+      writeFileSync(join(dir, "0010-ALPHA.json"), body, "utf8");
+      try {
+        readMaybeSharded(monolith, mergeItems);
+      } catch (error) {
+        const message = (error as Error).message;
+        if (message.includes(marker)) leaked.push(`0x${byte.toString(16)}`);
+      }
+    }
+    expect(leaked).toEqual([]);
+  });
+
   it("keeps the part of a parse error that helps", () => {
     // Elision must not reduce every failure to "malformed JSON". The forms that
     // carry no snippet name the position, and that is what a reader opens the
