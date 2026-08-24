@@ -91,7 +91,12 @@ Fetched:       2026-08-13 (initial slice, W05/PR3), extended 2026-08-14 (WASM08)
                extended 2026-08-24 (task #202-204 -- simd_f32x4_arith.wast,
                5 new opcodes (f32x4.neg/sqrt/add/sub/div), same pinned
                commit, no re-pin -- see below; the single biggest
-               directive-count win in this campaign so far)
+               directive-count win in this campaign so far),
+               extended 2026-08-24 (task #205-207 -- simd_f32x4_cmp.wast,
+               6 new opcodes (f32x4.eq/ne/lt/gt/le/ge), same pinned
+               commit, no re-pin -- see below; now the single biggest
+               directive-count win in this campaign, surpassing PR29's
+               simd_f32x4_arith.wast)
 Fetch method:  code/packages/rust/wasm-conformance/tests/fixtures/fetch_testsuite.py
 
 The pinned commit was resolved via:
@@ -794,6 +799,49 @@ passing). The pre-existing, unrelated baseline failures (17
 present before this PR and tracked separately, none touching `f32x4` or
 this campaign) are byte-for-byte unchanged by this PR, confirming zero
 regressions. No other already-vendored file's stats changed.
+
+SIMD widen PR30 (task #205-207) implements `f32x4.eq` (`0x41`), `f32x4.ne`
+(`0x42`), `f32x4.lt` (`0x43`), `f32x4.gt` (`0x44`), `f32x4.le` (`0x45`),
+`f32x4.ge` (`0x46`) and vendors `simd_f32x4_cmp.wast` -- the `f32x4`
+comparison family, joining the arithmetic family PR29 closed just above.
+Each sub-opcode byte fetched live from `BinarySIMD.md` and cross-checked
+against every existing `SIMD_OPS` entry: unlike every `f32x4` opcode added
+since PR19 (all `>= 0x80`, needing a real 2-byte LEB128 encoding), these
+six values are all `< 0x80` (single-byte LEB128, no continuation byte) --
+the closest neighbors are `i32x4.eq`..`i32x4.ge_u` (`0x37`-`0x40`, just
+below) and `v128.not` (`0x4D`, just above), confirming `0x41`-`0x46` are
+genuinely free (a naive grep for that byte range also hits unrelated
+`ATOMIC_OPS`/scalar `numeric_i32`/`numeric_i64`/`numeric_f32`/`numeric_f64`
+entries behind DIFFERENT opcode prefixes -- verified against `SIMD_OPS`
+specifically, not confused with those). Unlike every integer comparison
+family in this crate, there is no signed/unsigned split (IEEE-754
+comparison has only one notion of each relation), and a NaN operand on
+EITHER side makes every comparison in this family false EXCEPT `ne`
+(always true on a NaN operand, including a lane compared with itself, per
+IEEE-754's unordered-comparison rule). Rust's native `f32` `==`/`!=`/`<`/
+`>`/`<=`/`>=` operators are already IEEE-754 compliant (including
+`+0.0 == -0.0` and `NaN == NaN` being false, `NaN != NaN` being true), so
+none of the six handlers need any bespoke NaN-detection logic -- same
+"native operator is already correct" discipline as PR29's `add`/`sub`/
+`div`, unlike `f32x4.min`'s bespoke NaN/signed-zero tie-break logic.
+
+`simd_f32x4_cmp.wast` is now this campaign's single biggest directive-count
+win, surpassing PR29's `simd_f32x4_arith.wast`: 2581 `assert_return` + 18
+`assert_invalid` + 6 `assert_malformed` = 2605 total gradeable directives
+across 2 modules, ALL 100% passing on the first baseline regen after
+implementation (0 `NotYetSupported`, 0 failures) -- including the corpus's
+own exhaustive NaN-payload/signed-NaN/`+0.0`-vs-`-0.0` edge-case vectors for
+every one of the six comparisons. Aggregate `assert_return` rose from
+26573/26590 to 29154/29171 (+2581 pass, +2581 gradeable, exactly this
+file's own `assert_return` count); `assert_invalid` rose from 1762/1762 to
+1780/1780 (+18, exactly this file's own count); `assert_malformed` rose
+from 307/307 to 313/313 (+6, exactly this file's own count, still 100.0% of
+gradeable directives); `module` pass count rose from 1175 to 1177 (+2, one
+per module in this file, both passing). The pre-existing, unrelated
+baseline failures (17 `assert_return`, 1 `module`, 1 `assert_unlinkable`, 2
+`register` -- present before this PR and tracked separately, none touching
+`f32x4` or this campaign) are byte-for-byte unchanged by this PR, confirming
+zero regressions. No other already-vendored file's stats changed.
 
 The vendored files are licensed under the Apache License, Version 2.0 --
 see the accompanying LICENSE file, itself vendored verbatim from the same

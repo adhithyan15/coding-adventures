@@ -1609,6 +1609,46 @@ pub enum SimdOpKind {
     /// signed `i32`) must convert to `4294967295.0f64` (`u32::MAX`), NOT
     /// `-1.0f64`.
     ConvertLowI32x4U,
+    /// `f32x4.eq` -- lane-wise IEEE-754 equality of 4 `f32` lane pairs,
+    /// boolean mask (all-1s/all-0s per lane). BINARY, same
+    /// pop-two-push-one shape and mask convention as [`Self::Eq`]
+    /// (`i32x4.eq`), but the FIRST floating-point comparison family in
+    /// this table -- unlike the integer families, there is no signed/
+    /// unsigned split (IEEE-754 comparison has only one notion of
+    /// "equal"), and a NaN operand on EITHER side makes every comparison
+    /// in this family false EXCEPT `ne` (see [`Self::NeF32x4`]). Native
+    /// Rust `f32` `==` already implements this correctly (including
+    /// `+0.0 == -0.0` being true and `NaN == NaN` being false), so the
+    /// handler needs no bespoke NaN-detection logic, just the operator
+    /// itself.
+    EqF32x4,
+    /// `f32x4.ne` -- lane-wise IEEE-754 inequality, boolean mask. BINARY,
+    /// same shape as [`Self::EqF32x4`]. The one family member where a NaN
+    /// operand makes the result TRUE (not false): IEEE-754 "unordered"
+    /// comparisons report `!=` as true whenever either operand is NaN,
+    /// including a lane compared with itself. Native Rust `f32` `!=`
+    /// already implements this correctly.
+    NeF32x4,
+    /// `f32x4.lt` -- lane-wise IEEE-754 ordered less-than, boolean mask.
+    /// BINARY, same shape as [`Self::EqF32x4`]. Any NaN operand makes the
+    /// result false (an "unordered" comparison is never less-than).
+    /// Native Rust `f32` `<` already implements this correctly.
+    LtF32x4,
+    /// `f32x4.gt` -- lane-wise IEEE-754 ordered greater-than, boolean
+    /// mask. BINARY, same shape as [`Self::EqF32x4`], same NaN-is-false
+    /// discipline as [`Self::LtF32x4`]. Native Rust `f32` `>` already
+    /// implements this correctly.
+    GtF32x4,
+    /// `f32x4.le` -- lane-wise IEEE-754 ordered less-than-or-equal,
+    /// boolean mask. BINARY, same shape as [`Self::EqF32x4`], same
+    /// NaN-is-false discipline as [`Self::LtF32x4`]. Native Rust `f32`
+    /// `<=` already implements this correctly.
+    LeF32x4,
+    /// `f32x4.ge` -- lane-wise IEEE-754 ordered greater-than-or-equal,
+    /// boolean mask. BINARY, same shape as [`Self::EqF32x4`], same
+    /// NaN-is-false discipline as [`Self::LtF32x4`]. Native Rust `f32`
+    /// `>=` already implements this correctly.
+    GeF32x4,
 }
 
 /// One entry in the SIMD opcode table: everything a consumer needs to
@@ -1921,6 +1961,35 @@ pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "f32x4.add", sub_opcode: 0xE4, kind: SimdOpKind::AddF32x4 },
     SimdOpInfo { name: "f32x4.sub", sub_opcode: 0xE5, kind: SimdOpKind::SubF32x4 },
     SimdOpInfo { name: "f32x4.div", sub_opcode: 0xE7, kind: SimdOpKind::DivF32x4 },
+    // SIMD widen PR30 (task #205-207): f32x4.eq/ne/lt/gt/le/ge (0x41-0x46)
+    // -- the f32x4 comparison family, identical lane-wise boolean-mask
+    // shape as the already-implemented i32x4/i16x8/i8x16/i64x2
+    // comparison families (see e.g. `SimdOpKind::Eq`'s own doc comment),
+    // just over 4 `f32` lanes with native IEEE-754 float comparison
+    // operators instead of integer comparison -- no signed/unsigned
+    // split (floats have none), and NaN operands make every comparison
+    // false except `ne` (true), per IEEE-754 unordered-comparison
+    // semantics that Rust's native `f32` operators already implement
+    // correctly. Each sub-opcode byte fetched live from BinarySIMD.md
+    // and cross-checked against every existing `SIMD_OPS` entry: 0x41-
+    // 0x46 sit in the SIMD sub-opcode space behind the `0xFD` prefix (an
+    // entirely separate byte space from the single-byte `OPCODES` table,
+    // so no collision with e.g. `i32.const`'s unrelated `0x41` there,
+    // and no collision with `ATOMIC_OPS`'s own unrelated `0x41`-`0x46`
+    // behind the `0xFE` prefix either) and confirmed free of collision
+    // with every existing `SIMD_OPS` entry -- the closest neighbors are
+    // `i32x4.eq`..`i32x4.ge_u` at `0x37`-`0x40` (just below) and
+    // `v128.not` at `0x4D` (just above), leaving 0x41-0x46 genuinely
+    // open. This PR also vendors `simd_f32x4_cmp.wast`, the single
+    // biggest directive-count win in this campaign so far -- see
+    // `code/packages/rust/wasm-conformance/tests/fixtures/
+    // fetch_testsuite.py`.
+    SimdOpInfo { name: "f32x4.eq", sub_opcode: 0x41, kind: SimdOpKind::EqF32x4 },
+    SimdOpInfo { name: "f32x4.ne", sub_opcode: 0x42, kind: SimdOpKind::NeF32x4 },
+    SimdOpInfo { name: "f32x4.lt", sub_opcode: 0x43, kind: SimdOpKind::LtF32x4 },
+    SimdOpInfo { name: "f32x4.gt", sub_opcode: 0x44, kind: SimdOpKind::GtF32x4 },
+    SimdOpInfo { name: "f32x4.le", sub_opcode: 0x45, kind: SimdOpKind::LeF32x4 },
+    SimdOpInfo { name: "f32x4.ge", sub_opcode: 0x46, kind: SimdOpKind::GeF32x4 },
     SimdOpInfo { name: "i32x4.trunc_sat_f32x4_s", sub_opcode: 0xF8, kind: SimdOpKind::TruncSatF32x4S },
     SimdOpInfo { name: "i32x4.trunc_sat_f32x4_u", sub_opcode: 0xF9, kind: SimdOpKind::TruncSatF32x4U },
     SimdOpInfo { name: "f32x4.convert_i32x4_s", sub_opcode: 0xFA, kind: SimdOpKind::ConvertI32x4S },
@@ -2431,8 +2500,8 @@ mod tests {
     // ── SIMD (0xFD prefix, v128 first slice) ─────────────────────────────────
 
     #[test]
-    fn simd_ops_table_has_the_expected_159_entries_and_no_duplicates() {
-        assert_eq!(SIMD_OPS.len(), 159);
+    fn simd_ops_table_has_the_expected_165_entries_and_no_duplicates() {
+        assert_eq!(SIMD_OPS.len(), 165);
 
         let mut seen_sub_opcodes = std::collections::HashSet::new();
         let mut seen_names = std::collections::HashSet::new();
@@ -2982,6 +3051,28 @@ mod tests {
             ("f32x4.add", 0xE4, SimdOpKind::AddF32x4),
             ("f32x4.sub", 0xE5, SimdOpKind::SubF32x4),
             ("f32x4.div", 0xE7, SimdOpKind::DivF32x4),
+        ] {
+            let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
+            assert_eq!(op.name, name);
+            assert_eq!(op.kind, kind);
+            assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
+        }
+    }
+
+    #[test]
+    fn simd_f32x4_cmp_family_has_the_real_verified_sub_opcode_values() {
+        // SIMD widen PR30 (task #205-207): f32x4.eq (0x41), f32x4.ne
+        // (0x42), f32x4.lt (0x43), f32x4.gt (0x44), f32x4.le (0x45),
+        // f32x4.ge (0x46) -- fetched live from BinarySIMD.md, the f32x4
+        // comparison family, mirroring the already-implemented i32x4/
+        // i16x8/i8x16/i64x2 comparison families' boolean-mask shape.
+        for (name, sub_opcode, kind) in [
+            ("f32x4.eq", 0x41, SimdOpKind::EqF32x4),
+            ("f32x4.ne", 0x42, SimdOpKind::NeF32x4),
+            ("f32x4.lt", 0x43, SimdOpKind::LtF32x4),
+            ("f32x4.gt", 0x44, SimdOpKind::GtF32x4),
+            ("f32x4.le", 0x45, SimdOpKind::LeF32x4),
+            ("f32x4.ge", 0x46, SimdOpKind::GeF32x4),
         ] {
             let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
             assert_eq!(op.name, name);
