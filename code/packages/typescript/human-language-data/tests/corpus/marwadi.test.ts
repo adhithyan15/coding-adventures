@@ -58,17 +58,24 @@ it("pins Marwadi's complete pre-A1 writing ramp", () => {
     "delayed-copy",
     "dictation-transcription",
     "delayed-copy",
+    "delayed-copy",
+    "delayed-copy",
+    "observe-trace",
+    "delayed-copy",
+    "delayed-copy",
+    "observe-trace",
+    "delayed-copy",
   ]);
 });
 
 it("pins Marwadi-owned chapters and objective activities", () => {
   const lessons = loadTrackLessons("marwadi");
-  expect(lessons).toHaveLength(76);
+  expect(lessons).toHaveLength(92);
   expect(new Set(lessons.map((lesson) => Number(lesson.frontmatter.chapter)))).toEqual(
-    new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]),
+    new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
   );
   const activities = lessons.flatMap((lesson) => compileLessonActivities(lesson.blocks));
-  expect(activities).toHaveLength(76);
+  expect(activities).toHaveLength(92);
   expect(lessons.every((lesson) => compileLessonActivities(lesson.blocks).length === 1)).toBe(true);
   expect(activities.map((activity) => activity.id).sort()).toEqual([
     "MW-C01-practice-answer",
@@ -116,9 +123,23 @@ it("pins Marwadi-owned chapters and objective activities", () => {
     "MW-C08-hear-parivaar-meaning",
     "MW-C08-maa-dictation",
     "MW-C08-parivaar-dictation",
+    "MW-C09-bachcha-dictation",
+    "MW-C09-family-twelve-payoff",
+    "MW-C09-hear-bachcha-meaning",
+    "MW-C09-hear-nana-meaning",
+    "MW-C09-hear-nani-meaning",
+    "MW-C09-hear-pati-meaning",
+    "MW-C09-hear-patni-meaning",
+    "MW-C09-nana-dictation",
+    "MW-C09-nani-dictation",
+    "MW-C09-pati-dictation",
+    "MW-C09-patni-dictation",
     "MW-R08-family-foundation-three",
     "MW-R08-family-map-four",
     "MW-R08-script-close-three",
+    "MW-R09-family-new-five-recall",
+    "MW-R09-maternal-three-payoff",
+    "MW-R09-script-close-recall",
     "MW-W01-aa-matra-change",
     "MW-W01-ra-read",
     "MW-W01-raam-build",
@@ -147,12 +168,14 @@ it("pins Marwadi-owned chapters and objective activities", () => {
     "MW-W08-ba-write",
     "MW-W08-da-write",
     "MW-W08-va-write",
+    "MW-W09-cha-write",
+    "MW-W09-ta-write",
   ]);
 
   const closure = measureScriptClosure(lessons);
   expect(closure.violations.filter((violation) => violation.language === "marwadi")).toEqual([]);
   expect(closure.tracks.find((track) => track.language === "marwadi")).toMatchObject({
-    lessonCount: 76,
+    lessonCount: 92,
     neverTaughtGlyphs: 0,
     violations: 0,
   });

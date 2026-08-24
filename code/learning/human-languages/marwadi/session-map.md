@@ -82,6 +82,22 @@ memory demand at a time.
 | S74 | `MW-R08-family-map` | rebuild the seven-word meaning map | write selected labels without a model |
 | S75 | `MW-C08-family-seven` | pass a seven-label four-skill payoff | independent listening, speaking, reading, and writing |
 | S76 | `MW-R08-script-close` | close the script loop for **ब**, **द**, and **व** | write all three from sound cues |
+| S77 | `MW-C09-hear-nana` | hear *nānā* as maternal grandfather | none; meaning precedes spelling |
+| S78 | `MW-C09-nana` | assemble **नाना** from known signs | delayed copy and dictation |
+| S79 | `MW-C09-hear-nani` | hear *nānī* as maternal grandmother | none; contrast the final vowel by ear |
+| S80 | `MW-C09-nani` | change **नाना** to **नानी** | delayed copy and dictation |
+| S81 | `MW-C09-hear-pati` | hear *pati* as husband | none; meaning precedes the new sign |
+| S82 | `MW-W09-ta` | distinguish dental **त** from known **थ** and **ठ** | observe, trace, copy one sign |
+| S83 | `MW-C09-pati` | assemble **पति** | delayed copy and word dictation |
+| S84 | `MW-R09-maternal-three` | pass three relationship labels in four skills | independent three-word recall |
+| S85 | `MW-C09-hear-patni` | hear *patnī* as wife and notice the source's alternative | none; meaning precedes spelling |
+| S86 | `MW-C09-patni` | assemble **पत्नी** from known signs | delayed copy and dictation |
+| S87 | `MW-C09-hear-bachcha` | hear *bachchā* as child | none; meaning precedes the new sign |
+| S88 | `MW-W09-cha` | distinguish **च** from familiar **छ** | observe, trace, copy one sign |
+| S89 | `MW-C09-bachcha` | assemble **बच्चा** and its doubled middle | delayed copy and dictation |
+| S90 | `MW-R09-family-new-five` | retrieve all five new labels after a gap | mixed four-skill recall |
+| S91 | `MW-C09-family-twelve` | pass a twelve-label family map | non-compensatory listening, speaking, reading, and writing |
+| S92 | `MW-R09-script-close` | close the writing loop for **त** and **च** | write both signs and their load-bearing words |
 
 Reviews use expanding spacing: repeat S7 the next day, after three days, after
 one week, and after two weeks. A failed written recall sends the learner back to

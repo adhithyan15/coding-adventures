@@ -26,17 +26,20 @@ practice, writing progression, full mocks, answer keys, rubrics, and a pass rule
 ## Current tranche
 
 Chapters 1–9 contain 54 lessons for a greeting, formal thanks, polite yes,
-water, a name exchange, a wellbeing exchange, and taking leave. Chapters 10–11
-add 22 lessons and seven family labels: **मां, बाप, भाई, बहन, दादा, दादी,
-परिवार**. Each word begins with sound and meaning, writing adds only **ब**, **द**,
-and **व** one at a time, and the tranche closes with separately scored
-listening, speaking, reading, and writing. The strict gentle-ramp report is
-all-zero at 76 lessons: no duration, load, script closure, ordering,
+water, a name exchange, a wellbeing exchange, and taking leave. Chapters 10–13
+add 38 lessons and twelve relationship labels: **मां, बाप, भाई, बहन, दादा,
+दादी, परिवार, नाना, नानी, पति, पत्नी, बच्चा**. Each word begins with sound and
+meaning, writing adds only **ब**, **द**, **व**, **त**, and **च** one at a time, and
+the slice closes with separately scored listening, speaking, reading, and
+writing. The strict gentle-ramp report is all-zero at 92 lessons: no duration,
+load, script closure, ordering,
 forward-reference, or reinforcement-window findings.
 
-This brings the first vocabulary expansion from 11 to 18 distinct taught
-headwords. The active 35-headword pre-A1 tranche still needs 17 more; the next
-independent slice should favor high-frequency survival nouns that reuse the
-current script inventory. The contrasting no response before a complete yes/no
+This brings the first vocabulary expansion from 11 to 23 distinct taught
+headwords: 12 of the issue's intended 35 new headwords are complete, leaving 23
+new headwords in this tranche. The earlier 17-word figure counted toward a
+35-word total rather than the issue's explicit allowance of 35 additions and is
+superseded here. The next independent slice should favor high-frequency
+survival nouns that reuse the current script inventory. The contrasting no response before a complete yes/no
 exchange, okay, casual gratitude, a you're-welcome response, and a full request
 for water also remain explicit debt.

@@ -236,6 +236,48 @@
           "MW-PERFORMANCE-FAMILY-SEVEN-FOUR-SKILL-01"
         ]
       }
+    },
+    {
+      "chapter": 12,
+      "title": "Maternal Grandparents and Husband: One New Sign",
+      "label": "ch:mw-family-ten",
+      "canDo": "I can add maternal grandfather, maternal grandmother, and husband to the family map after learning only one new Devanagari sign.",
+      "spineNodes": ["SPINE-EXCHANGE-NAMES"],
+      "payoff": {
+        "lesson": "MW-R09-maternal-three",
+        "kind": "four-skill-vocabulary-map",
+        "summary": "Three source-attested relationship labels begin by ear, reuse the established script except for त, and finish in four separately scored skills.",
+        "assesses": [
+          "MW-LEX-NANA-01",
+          "MW-SCRIPT-NANA-01",
+          "MW-LEX-NANI-01",
+          "MW-SCRIPT-NANI-01",
+          "MW-LEX-PATI-01",
+          "MW-SCRIPT-TA-01",
+          "MW-SCRIPT-PATI-01",
+          "MW-PERFORMANCE-FAMILY-TEN-FOUR-SKILL-01"
+        ]
+      }
+    },
+    {
+      "chapter": 13,
+      "title": "Wife and Child: One New Sign",
+      "label": "ch:mw-family-twelve",
+      "canDo": "I can add wife and child to a twelve-label family map while recognizing that the source records an alternative wife label.",
+      "spineNodes": ["SPINE-EXCHANGE-NAMES"],
+      "payoff": {
+        "lesson": "MW-C09-family-twelve",
+        "kind": "four-skill-vocabulary-map",
+        "summary": "Wife and child begin by ear, add only च, and join the earlier labels in a non-compensatory four-skill payoff.",
+        "assesses": [
+          "MW-LEX-PATNI-01",
+          "MW-SCRIPT-PATNI-01",
+          "MW-LEX-BACHCHA-01",
+          "MW-SCRIPT-CHA-01",
+          "MW-SCRIPT-BACHCHA-01",
+          "MW-PERFORMANCE-FAMILY-TWELVE-FOUR-SKILL-01"
+        ]
+      }
     }
   ]
 }

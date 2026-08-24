@@ -18,22 +18,23 @@ and hand. Six further sessions teach *pāṇī* ("water") by ear before showing 
 spelling, then isolate **प**, **ण**, and **ी** before assembling and independently
 writing **पाणी**. Chapters 5–9 add a name exchange, a wellbeing exchange, and
 **पाछे मिलसू** (*pāchhe milsū*, "see you later"). Chapters 10–11 then secure
-seven family labels by ear before their spelling, add only **ब**, **द**, and
-**व**, and end in independent listening, speaking, reading, and writing. Every
-lesson is at most five minutes.
+twelve family and relationship labels by ear before their spelling, add only
+**ब**, **द**, **व**, **त**, and **च**, and end in independent listening, speaking,
+reading, and writing. Every lesson is at most five minutes.
 
 ## What this starter edition can honestly claim
 
-After Chapter 11, a learner can recognise, read, say, copy, and write the polite
+After Chapter 13, a learner can recognise, read, say, copy, and write the polite
 greeting **राम-राम सा**, answer it, and offer formal **आभार** after a kindness.
 They can also answer yes respectfully with **हां सा**, and retrieve **पाणी**
 as the Marwadi word for water in all four skills. They can exchange one name,
 ask and answer how someone is, take leave, and retrieve **मां, बाप, भाई, बहन,
-दादा, दादी, परिवार** without assuming that every household or region uses the
-same labels. The track now contains 76 canonical lessons and 18 distinct taught
-headwords. That is still a small pre-A1 capability, not completion of pre-A1
-and not exam readiness. The curriculum map records every untouched spine
-concept explicitly so the remaining work stays measurable.
+दादा, दादी, परिवार, नाना, नानी, पति, पत्नी, बच्चा** without assuming that every
+household or region uses the same labels. The track now contains 92 canonical
+lessons and 23 distinct taught headwords. That is still a small pre-A1
+capability, not completion of pre-A1 and not exam readiness. The curriculum map
+records every untouched spine concept explicitly so the remaining work stays
+measurable.
 
 Marwadi has no single external pre-A1-to-C2 examination ladder suitable for the
 book's completion contract. The project therefore maps it to CEFR through its
@@ -55,10 +56,11 @@ affirmative, and an April–May 2019 *Jāgtī Jot* dialogue uses **हां स
 context, anchoring Chapter 3 without flattening regional alternatives. SIL
 International's community-compiled 2015 dictionary records **पाणी** as water,
 anchoring Chapter 4's Marwadi spelling and its contrast with Hindi **पानी**.
-Marwari Pathshala Lesson 4 supplies the seven Chapter 10–11 family forms; its
+Marwari Pathshala Lesson 4 supplies the twelve Chapter 10–13 relationship forms; its
 D glossary also records **दादो**, so the lessons teach the cited **दादा** while
 naming the documented variation instead of silently declaring one universal
-form. The Society for Endangered Languages Swadesh list independently
+form. The source also records **बाई सा** alongside **पत्नी**; the lesson begins
+with one form while preserving the alternative. The Society for Endangered Languages Swadesh list independently
 corroborates the close-family domain.
 
 - [Rajasthan Foundation: Rajasthani Language](https://foundation.rajasthan.gov.in/RajasthaniLanguage.aspx)
