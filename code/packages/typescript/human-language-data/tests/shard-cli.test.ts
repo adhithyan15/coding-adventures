@@ -211,6 +211,11 @@ describe("refusals", () => {
     expect(() => safeLedgerPath(root, "../escape.json")).toThrow(/unsafe ledger path/);
     expect(() => safeLedgerPath(root, "core/../../escape.json")).toThrow(/unsafe ledger path/);
     expect(() => safeLedgerPath(root, "core/notes.md")).toThrow(/unsafe ledger path/);
+    // On Windows `path.relative` returns the TARGET unchanged when the two paths
+    // sit on different roots, so `D:\evil\x.json` is neither ".." nor
+    // "../"-prefixed and would pass the lexical containment test.
+    expect(() => safeLedgerPath(root, "D:\\evil\\x.json")).toThrow(/must be relative/);
+    expect(() => safeLedgerPath(root, "/etc/passwd.json")).toThrow(/must be relative/);
     // Compared against the REALPATH of root: `safeLedgerPath` now resolves the
     // parent directory, and `mkdtempSync(tmpdir())` is itself behind a symlink
     // on macOS (`/var` -> `/private/var`).
@@ -372,6 +377,17 @@ describe("shardFilename", () => {
     // The property, not just the examples: unpadded, "0100" would sort before "0090".
     const names = [shardFilename(8, "B"), shardFilename(9, "C")];
     expect([...names].sort()).toEqual(names);
+  });
+
+  it("refuses to overflow the pad width rather than silently reordering", () => {
+    // At 1000 elements the ordinal becomes `10000`, which sorts BEFORE `1010` —
+    // so sorted-filename order stops reproducing authored order. `--check`
+    // cannot catch it, because both directions use the same broken order and
+    // the round trip still closes. The result is a re-sorted ladder nobody sees.
+    expect(shardFilename(998, "LAST-OK")).toBe("9990-LAST-OK.json");
+    expect(() => shardFilename(999, "OVERFLOW")).toThrow(/does not fit 4 digits/);
+    // And the ordering claim the guard protects, stated outright.
+    expect(["9990-A.json", "10000-B.json"].sort()).toEqual(["10000-B.json", "9990-A.json"]);
   });
 });
 

@@ -65,7 +65,7 @@
 // `statIfPresent` below. Leaving the import out makes the next reach for it a
 // compile error rather than a judgement call.
 import { lstatSync, mkdirSync, readFileSync, realpathSync, rmSync, writeFileSync } from "node:fs";
-import { basename, dirname, join, normalize, relative as pathRelative, resolve } from "node:path";
+import { basename, dirname, isAbsolute, join, normalize, relative as pathRelative, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { defaultCurriculumRoot } from "./loader.js";
 import {
@@ -152,9 +152,37 @@ function assertSafeId(id: unknown, plan: ShardPlan, index: number): string {
   return id;
 }
 
-/** `0010-SPINE-MEET-GREET.json` */
+/**
+ * `0010-SPINE-MEET-GREET.json`
+ *
+ * Throws rather than overflowing the pad width, and this is the whole reason the
+ * check exists: at 1000 elements the ordinal becomes `10000`, which sorts BEFORE
+ * `1010`, so sorted-filename order silently stops reproducing authored order.
+ * `--check` cannot catch that — both directions use the same broken order, so
+ * the round trip still closes — and the result is a re-sorted ladder nobody sees.
+ *
+ * A loud failure is right rather than auto-widening. Widening renumbers every
+ * shard in the directory, which is a mass rename and therefore a mass merge
+ * conflict — precisely what this work exists to avoid. Whoever first needs 1000
+ * elements should do that deliberately, at a quiet moment, not have it happen
+ * to them on an ordinary append.
+ *
+ * `core/spine.json` has 33 nodes so this is latent today. It is checked now
+ * because HL21 migrates much larger ledgers next — `spanish/chapters.json` is
+ * already at 305 and grows daily — and the convention gets copied before the
+ * bug would ever be noticed.
+ */
 export function shardFilename(index: number, id: string): string {
-  return `${String((index + 1) * ORDINAL_STRIDE).padStart(ORDINAL_WIDTH, "0")}-${id}.json`;
+  const ordinal = (index + 1) * ORDINAL_STRIDE;
+  const padded = String(ordinal).padStart(ORDINAL_WIDTH, "0");
+  if (padded.length > ORDINAL_WIDTH) {
+    throw new Error(
+      `shard-cli: ordinal ${ordinal} does not fit ${ORDINAL_WIDTH} digits — ` +
+        `this ledger has outgrown the shard numbering. Widen ORDINAL_WIDTH and ` +
+        `re-run --shard for every plan, in one commit, when no branch is in flight.`,
+    );
+  }
+  return `${padded}-${id}.json`;
 }
 
 /** The one serialization, used by every writer here so the round trip closes. */
@@ -190,6 +218,17 @@ function statIfPresent(path: string): ReturnType<typeof lstatSync> | undefined {
  * contains no leading `..` and still escapes.
  */
 export function safeLedgerPath(root: string, relative: string): string {
+  // Absolute rejected up front, because on Windows `path.relative` returns the
+  // TARGET unchanged when the two paths sit on different roots —
+  // `relative('C:\\a', 'D:\\b')` is `'D:\\b'`, which is neither `".."` nor
+  // `"../"`-prefixed and so passes the containment test below. Not reachable
+  // today (`relative` always comes from the hardcoded `SHARD_PLANS`), but the
+  // docstring promises a defence against a command-line path, and a comment
+  // claiming a guard the code does not have is exactly what produced the last
+  // two findings in this file.
+  if (isAbsolute(relative)) {
+    throw new Error(`shard-cli: ledger path must be relative to the curriculum root, got '${relative}'`);
+  }
   const output = resolve(root, relative);
   const fromRoot = normalize(pathRelative(resolve(root), output)).replaceAll("\\", "/");
   if (
