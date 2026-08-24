@@ -137,11 +137,19 @@ class HyperLogLog:
 ## Running tests
 
 ```bash
-uv venv .venv --no-project
-uv pip install --python .venv -e ../hash-functions
-uv pip install --python .venv -e .[dev]
-uv run --no-project python -m pytest tests/ -v
+uv venv .venv --quiet --no-project --clear --python 3.13
+uv pip install --python .venv -e ../hash-functions --quiet
+uv pip install --python .venv -e .[dev] --quiet
+.venv/bin/python -m ruff check src tests
+.venv/bin/python -m ruff format --check src tests
+.venv/bin/python -m mypy --follow-untyped-imports src tests
+.venv/bin/python -m pytest tests/ -v
 ```
+
+On Windows, run each line in `BUILD_windows`. Both fronts clear and recreate
+the package-local `.venv`, install `hash-functions` before this package, and
+invoke Ruff, MyPy, and pytest through that exact interpreter. They are safe to
+run repeatedly, including after an interrupted build.
 
 ## Related packages
 

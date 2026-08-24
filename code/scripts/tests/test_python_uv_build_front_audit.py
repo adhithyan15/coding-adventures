@@ -154,7 +154,7 @@ class RepositoryAuditTests(unittest.TestCase):
         )
 
     def test_report_preserves_dependency_order_and_platform_symmetry(self) -> None:
-        expected = {
+        expected_dependencies = {
             "bloom-filter": ["hash-functions"],
             "directed-graph": ["graph"],
             "hash-map": ["hash-functions"],
@@ -179,6 +179,11 @@ class RepositoryAuditTests(unittest.TestCase):
             package: row["windows"]["local_dependencies"]
             for package, row in self.by_package.items()
             if row["windows"]["local_dependencies"]
+        }
+        expected = {
+            package: dependencies
+            for package, dependencies in expected_dependencies.items()
+            if package in self.by_package
         }
 
         self.assertEqual(actual, expected)

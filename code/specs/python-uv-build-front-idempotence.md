@@ -143,7 +143,10 @@ canonical and Windows front MUST:
    checked-in recipe already needs it; and
 4. invoke Ruff lint, Ruff format checking, strict MyPy, and pytest through the
    explicit platform interpreter (`.venv/bin/python` or
-   `.venv\Scripts\python.exe`), never ambient `python` or `uv run`.
+   `.venv\Scripts\python.exe`), never ambient `python` or `uv run`. When an
+   installed repository-local prerequisite lacks a PEP 561 marker, MyPy MUST
+   use `--follow-untyped-imports` so its source is analyzed rather than
+   silently ignored.
 
 The repair regression MUST compare the complete active recipe for every owned
 front, not search for isolated substrings. Runtime validation MUST run both

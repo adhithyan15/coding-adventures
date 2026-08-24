@@ -14,7 +14,7 @@ CANONICAL_RECIPE = [
     "uv pip install --python .venv -e .[dev] --quiet",
     ".venv/bin/python -m ruff check src tests",
     ".venv/bin/python -m ruff format --check src tests",
-    ".venv/bin/python -m mypy src tests",
+    ".venv/bin/python -m mypy --follow-untyped-imports src tests",
     ".venv/bin/python -m pytest tests/ -v",
 ]
 
@@ -25,7 +25,7 @@ WINDOWS_RECIPE = [
     "uv pip install --python .venv pytest pytest-cov ruff mypy --quiet",
     r".venv\Scripts\python.exe -m ruff check src tests",
     r".venv\Scripts\python.exe -m ruff format --check src tests",
-    r".venv\Scripts\python.exe -m mypy src tests",
+    r".venv\Scripts\python.exe -m mypy --follow-untyped-imports src tests",
     r".venv\Scripts\python.exe -m pytest tests/ -v",
 ]
 
