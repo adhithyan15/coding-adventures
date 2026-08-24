@@ -5003,10 +5003,47 @@ Ready-for-review PR #12447 was opened from clean validated head
 `c4ebd2113e42cfd915d30916a034a5bffdb928d6` after a normal first push from
 exact `origin/main` `54db2ed5ba676e5921010179e4046cb025ee6b0a`.
 The target branch and prior PR were absent before publication, and a late audit
-found zero exact overlap across 17 open PRs. GitHub reports the PR open,
-non-draft, and mergeable. Required CI, CodeQL, and human-language checks are
-queued, so this sole active parity PR is monitor-only until every check is
-terminal.
+found zero exact overlap across 17 open PRs. Final reviewed head
+`b636516654b718a1de3950ba358f1e4432641ecb` completed all 29 checks with 23
+successes, five expected skips, one neutral result, and no failures or pending
+work. GitHub reported the branch mergeable; the loop requested squash
+auto-merge, and GitHub merged PR #12447 as
+`fc0ff4496e81e3a79c5011be2ec4b03465211676` at 2026-08-22T07:02:42Z.
+
+### Post-#12447 refresh and Python hash-functions BUILD-front selection
+
+The collision-checked schema-3 inventory at exact live main
+`56374fe9ef977ecac3180315239f1c54da76eec7` contains 15 established lanes,
+1,369 canonical identities, and 4,562 implementation slots. The 175-package
+high-consensus band still has 276 missing slots, the 5-9 band has 122 packages
+and 926 gaps, the 2-4 band has 166 packages and 2,087 gaps, and 906 singletons
+have 12,684 gaps, including 717 Rust singletons. Canonical collisions and
+unknown language buckets remain zero. The reporter's ten focused tests pass.
+
+The one new canonical identity since the prior inventory is the Rust-only
+`smart-home-kodi-jsonrpc-integration` merged in PR #12308. It owns concrete
+private-endpoint TCP/HTTP JSON-RPC transport and D23 runtime authorization, has
+no `required_capabilities.json`, and is therefore split into two explicit
+owners. The selectable portable-core owner will define language-neutral
+fixtures for bounded envelopes and snapshots, stable D23 projection,
+allowlisted command plans and postconditions, injected transport, normalized
+failures, and redaction. The selection-blocked native authority review owns
+TCP/HTTP, endpoint trust, timeouts and response limits, CLI effects, and D23
+runtime authorization and mutation. No cross-lane coverage claim is made
+before these boundaries are classified.
+
+`python-hash-functions-build-front-idempotence` is the next eligible bounded
+owner. The uv audit's machine-checked decomposition places `hash-functions`
+before `bloom-filter`, `hash-map`, and `hyperloglog`, which in turn precede the
+in-memory data-store closure. Repairing this single leaf front therefore has
+the highest immediate dependency leverage while preserving one coherent
+package boundary. Both fronts will recreate `.venv`, pin Python 3.13, install
+through that named environment, and invoke its interpreter explicitly for
+Ruff, formatting, MyPy, and pytest. Validation will execute the exact Windows
+front twice, pin the canonical recipe structurally for Linux/macOS CI, and
+inspect the exact affected build plan. Live open-PR and remote-branch audits
+found no overlapping owner on `python/hash-functions`, parity state, or this
+roadmap, and the selected branch was absent before creation.
 
 ## Autonomous Loop Protocol
 
