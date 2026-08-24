@@ -7779,10 +7779,13 @@ impl HtmlParser {
                 if self.has_authored_open_html_element("button")
                     && self.open_html_element_in_scope_index("button").is_none() =>
             {
-                self.diagnostics.push(ParserDiagnostic::new(
-                    "unexpected-button-end-tag-outside-scope",
-                    "end tag `</button>` targeted a button outside button scope",
-                ));
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-button-end-tag-outside-scope",
+                        "end tag `</button>` targeted a button outside button scope",
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
             }
             name @ ("applet" | "marquee" | "object")
                 if self.has_authored_open_html_element(name)
@@ -27139,6 +27142,14 @@ mod tests {
         .at_emission(Some(end_tag_position_at(source, name, occurrence)))
     }
 
+    fn button_end_tag_outside_scope(source: &str, occurrence: usize) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-button-end-tag-outside-scope",
+            "end tag `</button>` targeted a button outside button scope",
+        )
+        .at_emission(Some(end_tag_position_at(source, "button", occurrence)))
+    }
+
     fn start_tag_position_at(
         source: &str,
         name: &str,
@@ -32886,6 +32897,61 @@ mod tests {
         assert!(fragment.parser_diagnostics.iter().all(|diagnostic| {
             diagnostic.code != "unexpected-button-end-tag-outside-scope"
         }));
+    }
+
+    #[test]
+    fn positions_button_end_tags_blocked_by_button_scope_at_token_emission() {
+        let repeated = "<!doctype html><button></button><button><object></button>";
+        let output = parse_html_with_diagnostics(repeated).unwrap();
+        assert!(output
+            .parser_diagnostics
+            .contains(&button_end_tag_outside_scope(repeated, 1)));
+
+        let unicode_crlf = "<!doctype html><!--e\u{301}-->\r\n<button><object></button>";
+        let output = parse_html_with_diagnostics(unicode_crlf).unwrap();
+        assert!(output
+            .parser_diagnostics
+            .contains(&button_end_tag_outside_scope(unicode_crlf, 0)));
+
+        let incomplete = parse_html_with_diagnostics(
+            "<!doctype html><button><object></button",
+        )
+        .unwrap();
+        assert!(incomplete.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-button-end-tag-outside-scope"
+        }));
+
+        let fragment =
+            parse_html_fragment_for_context_with_diagnostics("</button>", "button").unwrap();
+        assert!(fragment.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-button-end-tag-outside-scope"
+        }));
+
+        let mut unpositioned = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        for token in [
+            Token::StartTag {
+                name: "button".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "object".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::EndTag {
+                name: "button".to_string(),
+            },
+            Token::Eof,
+        ] {
+            unpositioned.process_token(token);
+        }
+        let diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-button-end-tag-outside-scope")
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
     }
 
     #[test]
