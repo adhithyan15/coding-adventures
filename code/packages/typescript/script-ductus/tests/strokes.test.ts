@@ -361,6 +361,36 @@ describe("handwriting ductus", () => {
     expect(arabic.letters.every((letter) => letter.strokeOrderSource !== undefined)).toBe(true);
   });
 
+  it("models seated Hamza as sourced carrier composition, not duplicate letters", () => {
+    const arabic = SCRIPTS.find((script) => script.script === "arabic")!;
+    const hamzaMarks = arabic.marks!.filter((mark) => mark.compositionSource !== undefined);
+    expect(hamzaMarks.map((mark) => mark.mark)).toEqual(["ٔ", "ٕ"]);
+    expect(hamzaMarks.flatMap((mark) => mark.examples!.map((example) => example.combined))).toEqual([
+      "أ",
+      "ؤ",
+      "ئ",
+      "إ",
+    ]);
+    for (const mark of hamzaMarks) {
+      expect(mark.compositionOrder).toHaveLength(2);
+      expect(mark.compositionSource!.url).toBe(
+        "https://alarabiyah.sakura.ne.jp/arabic/alphabets/naskh/hamzah/",
+      );
+      expect(mark.compositionSource!.citation).toMatch(
+        /Arabic Language Learning Notes.*Basic Naskh.*Hamza.*2022-04-09.*2026-08-23/i,
+      );
+      expect(mark.compositionSource!.variation).toMatch(
+        /carrier.*first.*Hamza.*after|Hamza below.*alif.*carrier.*first.*Hamza.*after/i,
+      );
+      for (const example of mark.examples!) {
+        expect(example.combined.normalize("NFD")).toBe(`${example.base}${mark.mark}`);
+        expect(arabic.letters.some((letter) => letter.glyph === example.combined)).toBe(false);
+        expect(DUCTUS[ductusKey("arabic", example.base)]).toBeDefined();
+      }
+    }
+    expect(DUCTUS[ductusKey("arabic", "ء")]).toBeDefined();
+  });
+
   for (const letter of letters) {
     describe(`${letter.glyph}`, () => {
       const glyph = () => fontForDuctus(letter).glyphFor(letter.glyph)!;

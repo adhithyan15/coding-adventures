@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Added - source-backed mark composition metadata
+
+- Let combining marks carry multiple normalized carrier examples plus a sourced
+  carrier-first composition order, initially for Arabic seated Hamza.
+
 ### Changed - honest zero-new-atom review measurement (#12496)
 
 - Count schema-v2 `review`, `practice`, and `practice-mix` lessons as measurable
@@ -11,7 +16,6 @@
   and unclassified synthesis steps fail-closed as measurement-blind.
 - Regenerate per-language gentle-ramp snapshots so retrieval work no longer
   inflates migration debt; no ramp limit or violation gate changes.
-
 ### Changed - language-owned corpus ledgers and generated docs
 
 - Split modality output into `core/lesson-modality/<language>.json` shards and
