@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Added — source-verified Devanagari gha (HL-C09I5)
+
+- Add the three-run **घ** learner path: continuous upper curl, middle hook,
+  lower bowl and rising side; separate short lower stem; left-to-right headline.
+- Pin its two lifts, within-body pause evidence, frame-by-frame provenance, and
+  Noto outline fit.
+
 ### Added — source-verified Devanagari ssa (HL-C09I4)
 
 - Add the four-run **ष** learner path: U-shaped body, retraced descending right
