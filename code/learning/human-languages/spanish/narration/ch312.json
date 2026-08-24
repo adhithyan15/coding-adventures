@@ -1,0 +1,774 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 312,
+  "title": "Lo Que Llevas --- Clock, Phone, Suitcase, Map, Letter",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:6e4318b1b25c4f4f",
+  "lessons": [
+    {
+      "id": "ES-C312-reloj",
+      "sequence": 4720,
+      "title": "el reloj — the hour-teller, squeezed down to two syllables",
+      "headword": "el reloj",
+      "romanization": "el reloj",
+      "gloss": "the clock — Greek horologium, the hour-teller; the same hora sits in English hour and horoscope",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b300cbcf8759eb5c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two from last time. What is la bolsa? (The bag.) And what does an assessor do, going by the root? (Sits beside.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "re-LOJ, stress on the end. The initial r is rolled, and the final j is that scraped sound at the back of the throat. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el reloj — \"the clock,\" and also the watch on your wrist."
+            },
+            {
+              "kind": "speech",
+              "text": "Behind it is horologium, which Latin had from Greek: hōra, the hour, plus a stem meaning to tell. A clock is an hour-teller. That is the entire description, and it is still accurate."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish reached reloj by way of Catalan relotge, and you can watch the word lose weight at every step. Horologium has five syllables. Relotge has three. Reloj has two. The h- went, the -ium went, the middle collapsed. What is left is barely recognisable — until you know what to look for."
+            },
+            {
+              "kind": "speech",
+              "text": "The hōra half is easy to find in English. An hour is one. Horology is the study of timekeeping, and a horologist repairs watches. A horoscope is an hour-watcher: the reading of which sky stood over the hour you were born."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first of the things already in your pocket rather than behind a counter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el reloj",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el reloj*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el reloj, por favor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el reloj, por favor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "disculpe, ¿dónde está el reloj?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *disculpe, ¿dónde está el reloj?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la bolsa, then el asiento, then el reloj",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la bolsa*, then *el asiento*, then *el reloj*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does horologium mean, taken apart? (Hour-teller.) What is a horoscope watching? (The hour.) And what is el asiento? (The seat.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C312-telefono",
+      "sequence": 4730,
+      "title": "el teléfono — a far-voice, and where both halves went",
+      "headword": "el teléfono",
+      "romanization": "el teléfono",
+      "gloss": "the telephone — Greek tele far plus phone voice; a far-voice, and both halves are everywhere in English",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fb5af56b71eac8c5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two from last time. What is el asiento? (The seat.) And what does a reloj tell, going by its root? (The hour.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "te-LÉ-fo-no. The written accent is doing real work: it tells you the stress lands three syllables from the end, which Spanish always marks. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el teléfono — \"the telephone.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Two Greek pieces, and neither is old in this combination. Tele means far. Phone means voice or sound. A telephone is a far-voice, and the word was built in the nineteenth century by people who needed a name for a thing that had never existed."
+            },
+            {
+              "kind": "speech",
+              "text": "That is what makes it useful: both halves are still productive, so knowing them unlocks a shelf of words rather than one."
+            },
+            {
+              "kind": "speech",
+              "text": "Tele- puts distance in front of anything. A telescope looks far. A telegram writes far. Television sees far. Telepathy feels far."
+            },
+            {
+              "kind": "speech",
+              "text": "-Phone puts sound at the end. Phonetics is the study of speech sounds. A megaphone is a big sound. A microphone is a small one made large. A symphony is sounds together. Cacophony is sounds gone wrong."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish and English built this word out of the same two bricks at almost the same moment, which is why it needs no translation at all."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two pocket objects, and a pair of Greek pieces that will keep paying."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el teléfono",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el teléfono*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el teléfono, por favor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el teléfono, por favor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "disculpe — el teléfono, por favor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *disculpe — el teléfono, por favor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el asiento, then el reloj, then el teléfono",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el asiento*, then *el reloj*, then *el teléfono*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What do tele and phone each mean? (Far, and voice.) What is a symphony, taken apart? (Sounds together.) And what is el reloj? (The clock.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C312-maleta",
+      "sequence": 4740,
+      "title": "la maleta — the bag that gave its name to the post",
+      "headword": "la maleta",
+      "romanization": "la maleta",
+      "gloss": "the suitcase — a little mala, the Gaulish word for a bag; English mail, the post, is named after the same bag",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dc14ada53418b9ea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two from last time. What is el reloj? (The clock.) And what does tele- mean in front of a word? (Far.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ma-LE-ta, stress on the middle. The single l is clear and light, made at the front of the mouth. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la maleta — \"the suitcase.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The -eta on the end is a diminutive: a maleta is a little mala. So what was a mala?"
+            },
+            {
+              "kind": "speech",
+              "text": "Not a Latin word at all. Mala was Gaulish — the language spoken across France before Latin arrived — and it meant a bag or a sack. Latin borrowed it from the people it had conquered, French kept it as male, and Spanish took the small version."
+            },
+            {
+              "kind": "speech",
+              "text": "Now follow the same bag into English. A rider carrying letters between towns carried them in a male — a leather sack strapped behind the saddle. The sack was the visible thing, so people named the service after it. The letters became the mail."
+            },
+            {
+              "kind": "speech",
+              "text": "English mail, then, is not about letters and never was. It is a bag. Your suitcase and your inbox are the same Gaulish sack, and one of them still admits it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three things you carry, and one of them just explained a word you use every day in English."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la maleta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la maleta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la maleta, por favor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la maleta, por favor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "disculpe — la maleta, por favor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *disculpe — la maleta, por favor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el reloj, then el teléfono, then la maleta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el reloj*, then *el teléfono*, then *la maleta*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was a mala? (A Gaulish bag.) Why is the post called mail? (Because the letters rode in that bag.) And what is el teléfono, taken apart? (A far-voice.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C312-mapa",
+      "sequence": 4750,
+      "title": "el mapa — the world, drawn on a napkin",
+      "headword": "el mapa",
+      "romanization": "el mapa",
+      "gloss": "the map — Latin mappa, a cloth; the world was drawn on a napkin, and napkin is the same word",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:11144f37d215bf0c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two from last time. What is a teléfono, in its two Greek pieces? (A far-voice.) And why is the post called mail? (It is named after the bag.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "MA-pa, stress on the first part. It ends in -a and takes el, which is worth noticing rather than fighting. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el mapa — \"the map.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin mappa meant a cloth — a napkin, a signalling flag, a sheet of fabric. The Romans had probably taken the word from Punic, the language of Carthage."
+            },
+            {
+              "kind": "speech",
+              "text": "A medieval world map was called a mappa mundi: the cloth of the world. Not because the drawing was clever but because the surface was linen. Paper was scarce and small; cloth came in sheets big enough to hold an ocean. English then kept only the first half of the phrase, and mappa alone came to mean the drawing rather than the fabric."
+            },
+            {
+              "kind": "speech",
+              "text": "The other half of mappa went into the kitchen. French turned it into nappe, a tablecloth, with the m worn down to n — and English borrowed the little version as napkin. It even got a second one by accident: a napron was misheard as an apron, and English has said apron ever since."
+            },
+            {
+              "kind": "speech",
+              "text": "A map, a napkin and an apron. One Latin cloth, three jobs."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four carried things, and two of them turned out to be bags and cloths rather than the objects you thought."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el mapa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el mapa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el mapa, por favor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el mapa, por favor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "disculpe — el mapa, por favor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *disculpe — el mapa, por favor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el teléfono, then la maleta, then el mapa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el teléfono*, then *la maleta*, then *el mapa*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did mappa mean? (A cloth.) Which two kitchen words come off it? (Napkin and apron.) And what is la maleta? (The suitcase.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C312-carta",
+      "sequence": 4760,
+      "title": "la carta — one sheet of papyrus, six English words",
+      "headword": "la carta",
+      "romanization": "la carta",
+      "gloss": "the letter, and the menu — Latin charta from Greek khartes, a papyrus sheet; English chart, charter, card and cartoon are all it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c9787eb0c06ceb64",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two from last time. What is la maleta? (The suitcase.) And what was a mappa? (A cloth.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "CAR-ta, stress on the first part. The r is a single tap of the tongue, not a roll. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la carta — \"the letter,\" and on a table, \"the menu.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin charta came from Greek khartēs: a sheet of papyrus. The word named the material, and everything since has been named after the material."
+            },
+            {
+              "kind": "speech",
+              "text": "English has the sheet six ways over. A chart is a sheet with information on it. A charter is a sheet with rights on it, which is why a town could be granted one. Cartography is sheet-drawing. A carton is a stiffened sheet folded into a box. A cartoon was originally the full-size drawing on a sheet that a painter worked out before touching the wall. And a card is a small stiff one."
+            },
+            {
+              "kind": "speech",
+              "text": "You have met this sheet's cousin already. El papel is named after the papyrus plant; la carta is named after the sheet cut from it. The plant and the sheet became two different words, and Spanish uses both."
+            },
+            {
+              "kind": "speech",
+              "text": "On a menu the logic is unchanged. La carta is the sheet the dishes are written on, and a la carta means chosen off that sheet."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five things you carry: the clock, the phone, the suitcase, the map, the letter. Four of the five turned out to be named after the stuff they were made of rather than the job they do."
+            },
+            {
+              "kind": "speech",
+              "text": "Next comes the counter, where you hand these over."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la carta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la carta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la carta, por favor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la carta, por favor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "disculpe — la carta, por favor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *disculpe — la carta, por favor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la maleta, then el mapa, then la carta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la maleta*, then *el mapa*, then *la carta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gracias",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gracias*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was a khartēs? (A sheet of papyrus.) What was a cartoon before it was funny? (A full-size drawing on a sheet.) And what is el mapa? (The map.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
