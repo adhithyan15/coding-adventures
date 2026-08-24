@@ -5585,6 +5585,27 @@ important OCaml process-free substrate still overlaps live build-tool PRs
 therefore the highest-leverage collision-free serial continuation without
 changing OCaml's durable priority.
 
+The implemented Markov repair now pins both BUILD fronts to Python 3.13,
+recreates the named environment, preserves graph before directed-graph
+installation, and runs Ruff lint, Ruff formatting, strict MyPy, and pytest
+through the explicit interpreter. The Windows recipe passes twice
+consecutively on uv 0.11.28 and Python 3.13.14; each run passes 91 tests at
+97.62% coverage. Bounded generic annotations and formatting satisfy the new
+gates without changing behavior, dependencies, capabilities, or version
+metadata. Wheel and source distributions build successfully, `py.typed`
+survives in the wheel, and a fresh isolated install of that exact wheel passes
+a deterministic generation smoke.
+
+The Go build tool passes its full test suite, vet, and trimpath compilation.
+Repository-wide BUILD validation succeeds across 494 discovered packages. A
+real Windows diff execution identifies exactly one changed package, expands it
+to the three-package graph, directed-graph, and Markov closure, and builds all
+three without failures. Focused recipe, uv-audit, parity-reporter, capability-
+taxonomy, state-graph, diff, credential, dependency, and production-authority
+checks are clean. The live uv audit intentionally remains at seven fronts
+across six components because Markov was discovered through the previous real
+affected closure rather than the already-clear audit corpus.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
