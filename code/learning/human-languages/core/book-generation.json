@@ -1787,6 +1787,12 @@
       "scriptSet": "japanese-main"
     },
     {
+      "language": "japanese",
+      "chapter": 10,
+      "output": "japanese/book/chapters/ch10-slower-please.tex",
+      "scriptSet": "japanese-main"
+    },
+    {
       "language": "kannada",
       "chapter": 6,
       "output": "kannada/book/chapters/ch06-dative-case.tex",

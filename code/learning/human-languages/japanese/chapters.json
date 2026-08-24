@@ -118,6 +118,19 @@
         "summary": "A spoken repair assembled from independently learned pieces, with decoding and dictation limited to the signs the learner has actually earned.",
         "assesses": ["JA-LEX-SUMIMASEN", "JA-LEX-YOKU", "JA-LEX-WAKARIMASEN", "JA-LEX-MOU", "JA-LEX-ICHIDO", "JA-LEX-ONEGAI-SHIMASU", "JA-LEX-MOU-ICHIDO-ONEGAI-SHIMASU", "JA-SCRIPT-MI-01", "JA-SCRIPT-ME-01", "JA-SCRIPT-KU-01", "JA-SCRIPT-DO-01", "JA-SCRIPT-MO-01"]
       }
+    },
+    {
+      "chapter": 10,
+      "title": "A Little More Slowly",
+      "label": "ch:ja-slower-please",
+      "canDo": "I can ask for slower speech, close the repair with wakarimashita, read and write the repair lines earned in the previous chapter, and write five new hiragana signs.",
+      "spineNodes": ["SPINE-POLITE-REQUEST-REPAIR"],
+      "payoff": {
+        "lesson": "JA-C10-slower-please",
+        "kind": "dialogue",
+        "summary": "A second repair strategy assembled from seven tiny lexical steps while independent reading and writing stay inside the learner's earned script boundary.",
+        "assesses": ["JA-LEX-SUKOSHI", "JA-LEX-YUKKURI", "JA-LEX-ITTE-KUDASAI", "JA-LEX-MOU-SUKOSHI", "JA-LEX-WAKARIMASHITA", "JA-LEX-KOKO", "JA-LEX-SLOWER-PLEASE", "JA-SCRIPT-SE-01", "JA-SCRIPT-O-01", "JA-SCRIPT-NE-01", "JA-SCRIPT-SHI-01", "JA-SCRIPT-YU-01"]
+      }
     }
   ]
 }

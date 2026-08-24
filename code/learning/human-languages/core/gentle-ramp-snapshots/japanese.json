@@ -1,7 +1,7 @@
 {
   "language": "japanese",
-  "lessonCount": 56,
-  "atomMeasurableLessons": 56,
+  "lessonCount": 68,
+  "atomMeasurableLessons": 68,
   "atomMeasurementBlindLessons": 0,
   "durationViolations": 0,
   "atomLessonSpikes": 0,
@@ -16,17 +16,17 @@
   "forwardPrerequisites": 0,
   "forwardReviews": 0,
   "forwardReferences": 0,
-  "atomsTaught": 67,
-  "atomsNeverRevisited": 2,
-  "reinforcementWindowMisses": 22,
+  "atomsTaught": 79,
+  "atomsNeverRevisited": 3,
+  "reinforcementWindowMisses": 39,
   "reinforcementMissesByWindow": {
-    "R1": 2,
-    "R2": 4,
-    "R3": 16,
+    "R1": 7,
+    "R2": 5,
+    "R3": 27,
     "R4": 0
   },
   "payoffSurprises": 0,
-  "writingPracticeLessons": 46,
+  "writingPracticeLessons": 51,
   "firstWritingPracticeAt": 0,
   "lessonsBeforeWritingPractice": 0,
   "findings": [
@@ -40,7 +40,7 @@
     {
       "language": "japanese",
       "kind": "reinforcement",
-      "count": 22,
+      "count": 39,
       "unit": "missed window(s)",
       "detail": "add retrieval at the expanding R1-R4 intervals"
     }

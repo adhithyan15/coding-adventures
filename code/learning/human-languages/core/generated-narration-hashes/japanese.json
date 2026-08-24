@@ -175,6 +175,31 @@
       "json": "japanese/narration/ch09.json",
       "textHash": "fnv1a64:52d7701221b6884c",
       "jsonHash": "fnv1a64:c7afd61c9403e629"
+    },
+    {
+      "language": "japanese",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:ed7b5e7103e84acc",
+      "lessonIds": [
+        "JA-W10-se",
+        "JA-W10-o",
+        "JA-W10-ne",
+        "JA-C10-sukoshi",
+        "JA-W10-shi",
+        "JA-C10-yukkuri",
+        "JA-W10-yu",
+        "JA-C10-itte-kudasai",
+        "JA-C10-mou-sukoshi",
+        "JA-C10-wakarimashita",
+        "JA-C10-koko",
+        "JA-C10-slower-please"
+      ],
+      "voiceLessons": 7,
+      "drivablePrefix": 0,
+      "text": "japanese/narration/ch10.txt",
+      "json": "japanese/narration/ch10.json",
+      "textHash": "fnv1a64:b339247391ba6ee2",
+      "jsonHash": "fnv1a64:0f6eb219d08f329d"
     }
   ],
   "findings": []
