@@ -5390,6 +5390,12 @@ Independent implementation/claim and security/ownership reviews pass with no
 actionable defect. The state/readiness review's stale-main and stale-inventory
 findings were corrected by the final rebase and exact-main inventory refresh.
 
+Ready-for-review PR #12512 was opened from head
+`edaf6f5cf952c633b2b0c327bedbb04d3d99544d` after a normal first push from
+exact `origin/main` `19c2cfb6399a2d3513f5db7d1f656dce906a8a3b`. GitHub reports the
+PR mergeable while required checks are queued or in progress; auto-merge
+remains disabled until every required check is terminal and acceptable.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
