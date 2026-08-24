@@ -354,11 +354,25 @@ describe("handwriting ductus", () => {
     expect(gujarati.letters.every((letter) => letter.strokeOrderSource !== undefined)).toBe(true);
   });
 
-  it("keeps all 29 unique Arabic rows sourced without overstating completion", () => {
+  it("keeps all 30 unique Arabic learner rows sourced without overstating completion", () => {
     const arabic = SCRIPTS.find((script) => script.script === "arabic")!;
     expect(arabic.complete).toBe(false);
-    expect(arabic.letters).toHaveLength(29);
+    expect(arabic.letters).toHaveLength(30);
     expect(arabic.letters.every((letter) => letter.strokeOrderSource !== undefined)).toBe(true);
+  });
+
+  it("keeps taa marbuta word-final and body-first", () => {
+    const arabic = SCRIPTS.find((script) => script.script === "arabic")!;
+    const ending = arabic.letters.find((letter) => letter.glyph === "ة")!;
+    expect(ending.forms).toEqual({ isolated: "ة", final: "ـة" });
+    expect(ending.penLifts).toBe(2);
+    expect(ending.strokeOrderSource!.url).toBe(
+      "https://alarabiyah.sakura.ne.jp/arabic/alphabets/naskh/taabarbuutah/",
+    );
+    const ductus = DUCTUS[ductusKey("arabic", "ة")];
+    expect(ductus.strokes).toHaveLength(3);
+    expect(penPath(ductus.strokes[0]).at(-1)).toEqual(penPath(ductus.strokes[0])[0]);
+    expect(penPath(ductus.strokes[1])[0].x).toBeLessThan(penPath(ductus.strokes[2])[0].x);
   });
 
   it("models seated Hamza as sourced carrier composition, not duplicate letters", () => {
