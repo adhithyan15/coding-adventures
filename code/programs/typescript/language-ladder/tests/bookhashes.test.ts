@@ -446,7 +446,7 @@ describe("generated book source hashes", () => {
 
   it.each([
     [6, 4],
-    [7, 4],
+    [7, 17], // #12509 adds thirteen gentle numeral and writing-ramp lessons.
     [8, 3],
     [9, 3],
     [10, 3],

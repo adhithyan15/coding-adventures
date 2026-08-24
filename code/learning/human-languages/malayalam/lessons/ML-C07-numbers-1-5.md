@@ -5,90 +5,76 @@ spine_node: SPINE-COUNT-ONE-TO-FIVE
 sequence: 340
 chapter: 7
 type: word
-headword: ഒന്ന് രണ്ട് മൂന്ന് നാല് അഞ്ച്
-gloss: one to five — Tamil's closest sister, its numbers almost unchanged
+headword: "onnu randu moonnu naalu anchu"
+gloss: hear and say one to five before meeting their written forms
 concept_tag: ML-NUMBERS-1-5
 prerequisites: [ML-C01-namaskaram]
 sounds: [malayalam-inherent-a, chandrakkala, gemination]
 roots: [proto-dravidian-numbers]
-etymology_hook: "Malayalam split from Tamil ~1000 years ago — its numbers are the family's closest, and even ONE agrees (onnu ↔ oṉṟu)"
+etymology_hook: "Malayalam split from Tamil about a thousand years ago; its first five number words remain close cousins"
 duration:
-  max_seconds: 240
+  max_seconds: 210
 requires:
   knowledge: []
 introduces:
   knowledge: [ML-CONCEPT-C07-NUMBERS-1-5-01, ML-CONCEPT-C07-NUMBERS-1-5-02, ML-CONCEPT-C07-NUMBERS-1-5-03]
 practises:
   knowledge: [ML-CONCEPT-C07-NUMBERS-1-5-01, ML-CONCEPT-C07-NUMBERS-1-5-02, ML-CONCEPT-C07-NUMBERS-1-5-03]
-skills: [listening, speaking, reading]
-modes: [interpretive, interpersonal, presentational, mediation]
+skills: [listening, speaking]
+modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: standard-colloquial
 reviews_of: [ML-C01-namaskaram]
 ---
 
-# ഒന്ന്, രണ്ട്, മൂന്ന്, നാല്, അഞ്ച് — one to five
+# One to five — voice first
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] Of all the Dravidian cousins, Malayalam is Tamil's closest — they
-were one language a thousand years ago — and its numbers show it.
+[PAUSE 2s] This lesson has no Malayalam writing to decode. Hear the five words,
+attach each one to a quantity, and say them before your eyes meet the script.
 
-## You'll want to know
+## Sounds you'll need
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C07-NUMBERS-1-5-01]; assesses=[] -->
 
-| | numeral | word | said |
-|---|---|---|---|
-| 1 | **൧** | **ഒന്ന്** | *onnu* |
-| 2 | **൨** | **രണ്ട്** | *raṇṭu* |
-| 3 | **൩** | **മൂന്ന്** | *mūnnu* |
-| 4 | **൪** | **നാല്** | *nālu* |
-| 5 | **൫** | **അഞ്ച്** | *añcu* |
+| quantity | said |
+|---|---|
+| 1 | ***onnu*** |
+| 2 | ***randu*** |
+| 3 | ***moonnu*** |
+| 4 | ***naalu*** |
+| 5 | ***anchu*** |
 
-The symbols **൧ ൨ ൩ ൪ ൫** are Malayalam's own digits.
+Point to one finger and say *onnu*. Add one finger at a time: *randu, moonnu,
+naalu, anchu*. [REPEAT x2]
 
-## The word, taken apart
+## Why it's said this way
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C07-NUMBERS-1-5-02]; assesses=[] -->
 
-Where Telugu breaks the family with *okaṭi*, Malayalam stays loyal: its **one**
-is *onnu*, the direct cousin of Tamil *oṉṟu* (both from the old *oṉ-*). Laid
-beside Tamil, the whole row is barely changed:
+Malayalam and Tamil were once one language, and the family resemblance is still
+audible. Malayalam *onnu* sits beside Tamil *onru*; *randu* beside *irandu*;
+*moonnu* beside *moonru*; and *naalu* beside *naanku*. You do not need to learn
+the Tamil forms. Listen only for the shared bones.
 
-| | Tamil | Malayalam |
-|---|---|---|
-| 1 | *oṉṟu* | **onnu** |
-| 2 | *iraṇṭu* | **raṇṭu** |
-| 3 | *mūṉṟu* | **mūnnu** |
-| 4 | *nāṉku* | **nālu** |
-
-The one that moved most is **five**: Tamil *aintu* softened its *nt* to a
-palatal, giving Malayalam **añcu** — the same shift English feels between
-*nature* said stiffly and said naturally.
-
-## The word, taken apart
+## Why it's said this way — one sound change
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C07-NUMBERS-1-5-03]; assesses=[] -->
 
-Every word here ends in ** chandrakkala** — the little hook **് ** on the last
-letter (*ഒന്ന്*, *നാല്*) — which trims the final vowel down to a half-heard
-*ŭ*. It's why these read *onn'*, *nāl'* rather than a full *onnu*, *nālu*. And
-the doubled letters (*onnu*, *mūnnu*) are real **held** consonants — linger on
-the *nn*.
+Five moved furthest: an older *aintu* softened toward Malayalam *anchu*. Say
+*an-chu* slowly, then normally. The sound comes before its spelling.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C07-NUMBERS-1-5-01, ML-CONCEPT-C07-NUMBERS-1-5-02, ML-CONCEPT-C07-NUMBERS-1-5-03] -->
 
-[PAUSE 1s]
-- [YOU SAY: "onnu, raṇṭu, mūnnu, nālu, añcu"]
-- [YOU SAY: the near-identity — "oṉṟu ↔ onnu", "iraṇṭu ↔ raṇṭu"]
-- [YOU SAY: the one that shifted — "aintu → añcu"]
+- [YOU SAY: *onnu, randu, moonnu, naalu, anchu* while raising one more finger]
+- [YOU HEAR: *moonnu*; YOU SHOW: 3]
+- [YOU HEAR: *anchu*; YOU SHOW: 5]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C07-NUMBERS-1-5-01, ML-CONCEPT-C07-NUMBERS-1-5-02, ML-CONCEPT-C07-NUMBERS-1-5-03] -->
 
-[PAUSE 3s] Count to five in Malayalam. (*Onnu, raṇṭu, mūnnu, nālu, añcu*.) Does
-Malayalam's **one** follow Tamil or break away like Telugu? (**Follows Tamil** —
-*onnu* ↔ *oṉṟu*.) Which number changed most from Tamil, and how? (**Five** —
-*aintu*'s *nt* palatalised to *añcu*.) What does the **chandrakkala** ് do to a
-word's last sound? (Trims its vowel to a half-heard *ŭ*.) Next: six to ten.
+[PAUSE 3s] Count from one to five without looking. Which word means three?
+(***Moonnu.***) Which one changed furthest from its older Tamil cousin?
+(***Anchu**, five.*) Next, the first three numeral shapes arrive one small step
+at a time.
