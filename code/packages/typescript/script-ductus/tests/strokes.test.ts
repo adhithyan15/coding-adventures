@@ -366,6 +366,14 @@ describe("handwriting ductus", () => {
     expect(arabic.ligatures?.map((ligature) => ligature.sequence)).toEqual(["لا"]);
   });
 
+  it("marks Cyrillic complete with the 33 sourced lowercase Russian letters", () => {
+    const cyrillic = SCRIPTS.find((script) => script.script === "cyrillic")!;
+    expect(cyrillic.complete).toBe(true);
+    expect(cyrillic.letters).toHaveLength(33);
+    expect(new Set(cyrillic.letters.map((letter) => letter.glyph)).size).toBe(33);
+    expect(cyrillic.letters.every((letter) => letter.strokeOrderSource !== undefined)).toBe(true);
+  });
+
   it("keeps taa marbuta word-final and body-first", () => {
     const arabic = SCRIPTS.find((script) => script.script === "arabic")!;
     const ending = arabic.letters.find((letter) => letter.glyph === "ة")!;
