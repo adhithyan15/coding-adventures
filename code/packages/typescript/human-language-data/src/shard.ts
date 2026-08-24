@@ -88,7 +88,7 @@
 //    there. loader.ts makes the same call for the modality manifest, in the same
 //    words: a missing manifest throws rather than returning an empty one.
 
-import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
+import { lstatSync, readFileSync, readdirSync } from "node:fs";
 import { basename, join } from "node:path";
 
 /** The suffix that turns a monolith path into its shard directory. */
@@ -118,10 +118,44 @@ export function shardDirectoryFor(monolithPath: string): string {
   return `${monolithPath.slice(0, -".json".length)}${SHARD_DIR_SUFFIX}`;
 }
 
-/** True when the sharded form of this ledger is the one on disk. */
+/**
+ * True when the sharded form of this ledger is the one on disk.
+ *
+ * `lstatSync`, deliberately, and not `existsSync` + `statSync`.
+ *
+ * `statSync` FOLLOWS symlinks, and git tracks symlinks as first-class objects —
+ * so a pull request could commit `core/spine.d` as a link to `~/.docker` or to a
+ * sibling checkout, and this loader would cheerfully `readdirSync` the target
+ * and merge whatever `*.json` it found into the curriculum. That is not a
+ * hypothetical on a corpus this many people can open a PR against, and the
+ * later steps of HL21 make it worse rather than better: once `shard-cli` writes
+ * the monolith back out from the shards, "reads a file outside the tree"
+ * becomes "commits a file from outside the tree".
+ *
+ * So a symlink here is refused loudly rather than followed, and rather than
+ * silently falling back to the monolith — a link named `spine.d` is never an
+ * accident worth papering over, and a quiet fallback would hide it.
+ *
+ * The single `lstatSync` in a `try` also closes the check-then-use window that
+ * `existsSync(dir) && statSync(dir)` leaves open: between those two calls the
+ * directory can vanish, and the `statSync` then throws ENOENT out of a function
+ * whose whole job is to answer yes or no.
+ */
 export function isSharded(monolithPath: string): boolean {
   const dir = shardDirectoryFor(monolithPath);
-  return existsSync(dir) && statSync(dir).isDirectory();
+  let stat;
+  try {
+    stat = lstatSync(dir);
+  } catch {
+    return false;
+  }
+  if (stat.isSymbolicLink()) {
+    throw new Error(
+      `shard: '${dir}' is a symbolic link — a shard directory must be a real ` +
+        `directory beside its ledger, so that reads cannot leave the checkout`,
+    );
+  }
+  return stat.isDirectory();
 }
 
 /**
@@ -131,10 +165,25 @@ export function isSharded(monolithPath: string): boolean {
  * stray `README.md` or an editor's `.swp` file cannot break a build. A `.json`
  * file, on the other hand, is always taken to be a shard — there is no opt-out
  * marker, because a marker is a thing to forget.
+ *
+ * A `*.json` entry that is a SYMLINK is refused, for the reason in `isSharded`
+ * and for one more: `Dirent.isFile()` is false for a symlink, so such an entry
+ * would otherwise be dropped from the merge in silence. A shard that vanishes
+ * without a word is worse than one that fails, because the result still looks
+ * like a complete ledger.
  */
 export function listShardNames(monolithPath: string): string[] {
   const dir = shardDirectoryFor(monolithPath);
-  return readdirSync(dir, { withFileTypes: true })
+  const entries = readdirSync(dir, { withFileTypes: true });
+  for (const entry of entries) {
+    if (entry.name.endsWith(".json") && entry.isSymbolicLink()) {
+      throw new Error(
+        `shard '${entry.name}' in '${dir}': is a symbolic link — ` +
+          `a shard must be a real file inside its shard directory`,
+      );
+    }
+  }
+  return entries
     .filter((entry) => entry.isFile() && entry.name.endsWith(".json"))
     .map((entry) => entry.name)
     .sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
@@ -174,7 +223,10 @@ export function readShards<T = unknown>(monolithPath: string): Shard<T>[] | null
       // The filename is the whole point of this message. A bare
       // "Unexpected token } in JSON at position 412" against a merged read of 33
       // files tells the reader nothing they can open an editor on.
-      throw new Error(`shard '${name}' in '${dir}': malformed JSON — ${describe(cause)}`, { cause });
+      throw new Error(
+        `shard '${name}' in '${dir}': malformed JSON — ${describeParseFailure(cause)}`,
+        { cause },
+      );
     }
     return { name, path, value };
   });
@@ -204,7 +256,9 @@ export function readMaybeSharded<T>(
   try {
     return JSON.parse(text) as T;
   } catch (cause) {
-    throw new Error(`'${monolithPath}': malformed JSON — ${describe(cause)}`, { cause });
+    throw new Error(`'${monolithPath}': malformed JSON — ${describeParseFailure(cause)}`, {
+      cause,
+    });
   }
 }
 
@@ -247,6 +301,27 @@ export function mergeMetaAndList<T = unknown>(
   if (typeof meta.value !== "object" || meta.value === null || Array.isArray(meta.value)) {
     throw new Error(`shard '${META_SHARD}' in '${meta.path}': must be a JSON object`);
   }
+  // Not a live vulnerability today, and blocked here anyway.
+  //
+  // `JSON.parse` defines `__proto__` as an OWN data property rather than
+  // invoking the setter, and object spread copies it with CreateDataProperty
+  // rather than Set — so the spread below cannot pollute `Object.prototype`, and
+  // this was checked rather than assumed. What it CAN do is leave a literal
+  // `__proto__` key on the merged document, which survives `JSON.stringify`.
+  // The day some future consumer folds this with `Object.assign` or a recursive
+  // deep merge — both of which go through `[[Set]]` and so do hit the setter —
+  // that dormant key becomes real pollution, in a module far from this one.
+  //
+  // This function is the choke point every untrusted parsed shard passes
+  // through, so the guard belongs here, where it protects callers that have not
+  // been written yet.
+  for (const dangerous of ["__proto__", "constructor", "prototype"]) {
+    if (Object.hasOwn(meta.value as object, dangerous)) {
+      throw new Error(
+        `shard '${META_SHARD}' in '${meta.path}': must not carry '${dangerous}'`,
+      );
+    }
+  }
   if (Object.hasOwn(meta.value as object, listKey)) {
     // Otherwise the merge order silently decides whether the meta copy or the
     // shards win, and one of those is always a stale duplicate of the other.
@@ -266,4 +341,22 @@ export function mergeMetaAndList<T = unknown>(
 /** `unknown` from a `catch` reduced to something printable. */
 function describe(cause: unknown): string {
   return cause instanceof Error ? cause.message : String(cause);
+}
+
+/**
+ * A parse failure, with the offending file's CONTENTS held back.
+ *
+ * V8 quotes the bytes it choked on directly into the message — parse a file
+ * beginning `AWS_SECRET_ACCESS_KEY=…` and you get `Unexpected token 'A',
+ * "AWS_SECRET"... is not valid JSON`. Shards are repo files, and symlinks out of
+ * the tree are refused above, so this is defence in depth rather than a live
+ * leak. But `--check` runs in CI, CI logs are far more widely readable than the
+ * repo, and the quoted snippet adds nothing a reader needs: the filename says
+ * where to look and the position says where in it.
+ *
+ * So the quoted runs are elided and the rest — "Unexpected token", "in JSON at
+ * position 412" — is kept, which is the part that helps.
+ */
+function describeParseFailure(cause: unknown): string {
+  return describe(cause).replace(/"(?:[^"\\]|\\.)*"/g, '"…"');
 }

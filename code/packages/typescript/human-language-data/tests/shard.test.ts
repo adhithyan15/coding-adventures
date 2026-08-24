@@ -1,4 +1,4 @@
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
@@ -223,6 +223,106 @@ describe("mergeMetaAndList", () => {
     expect(() => mergeMetaAndList(shardsOf({ "_meta.json": [1, 2, 3] }), "nodes")).toThrow(
       /must be a JSON object/,
     );
+  });
+});
+
+describe("shards cannot leave the checkout", () => {
+  // Creating a symlink needs Developer Mode or elevation on Windows, and gets
+  // EPERM without them. A Windows JUNCTION needs neither and `lstat` reports it
+  // as a symbolic link all the same, so the directory case — the one that can
+  // actually read outside the checkout — still gets exercised there. The file
+  // case has no junction equivalent and skips; the guard it covers still
+  // compiles and still runs on every CI Linux job.
+  function trySymlink(target: string, path: string, type: "dir" | "file"): boolean {
+    for (const attempt of type === "dir" ? ([type, "junction"] as const) : ([type] as const)) {
+      try {
+        symlinkSync(target, path, attempt);
+        return true;
+      } catch {
+        // Try the next flavour, then give up and let the caller skip.
+      }
+    }
+    return false;
+  }
+
+  it("refuses a symlinked X.d rather than following it", (ctx) => {
+    // git tracks symlinks as first-class objects, so `core/spine.d -> ~/.docker`
+    // is a thing a pull request can contain. `statSync` would follow it and merge
+    // whatever JSON it found into the curriculum; `lstatSync` does not.
+    const outside = join(root, "outside");
+    mkdirSync(outside);
+    writeJson(join(outside, "_meta.json"), { version: 666 });
+    writeJson(join(outside, "0010-STOLEN.json"), { id: "STOLEN" });
+
+    const monolith = join(root, "inside", "spine.json");
+    mkdirSync(join(root, "inside"));
+    writeJson(monolith, { version: 1, items: [] });
+    if (!trySymlink(outside, join(root, "inside", "spine.d"), "dir")) ctx.skip();
+
+    expect(() => isSharded(monolith)).toThrow(/is a symbolic link/);
+    expect(() => readMaybeSharded(monolith, mergeItems)).toThrow(/is a symbolic link/);
+  });
+
+  it("refuses a symlinked shard file rather than silently dropping it", (ctx) => {
+    // `Dirent.isFile()` is false for a symlink, so without this guard the shard
+    // would vanish from the merge without a word — and a ledger that is quietly
+    // missing an element still looks complete.
+    const secret = join(root, "secret.json");
+    writeJson(secret, { id: "SECRET" });
+    const dir = join(root, "spine.d");
+    mkdirSync(dir);
+    writeJson(join(dir, "_meta.json"), { version: 1 });
+    if (!trySymlink(secret, join(dir, "0010-LINK.json"), "file")) ctx.skip();
+
+    expect(() => listShardNames(join(root, "spine.json"))).toThrow(/is a symbolic link/);
+  });
+
+  it("answers 'not sharded' instead of throwing when X.d simply is not there", () => {
+    expect(isSharded(join(root, "nothing-here", "spine.json"))).toBe(false);
+  });
+});
+
+describe("hostile shard contents", () => {
+  it("does not pollute Object.prototype, and refuses the key outright", () => {
+    const monolith = join(root, "spine.json");
+    const dir = join(root, "spine.d");
+    mkdirSync(dir);
+    // Written as raw text: `JSON.stringify({__proto__: ...})` would not emit the
+    // key at all, so building this fixture through an object literal would test
+    // nothing.
+    writeFileSync(
+      join(dir, "_meta.json"),
+      '{ "version": 1, "__proto__": { "polluted": "yes" } }\n',
+      "utf8",
+    );
+    writeJson(join(dir, "0010-ALPHA.json"), { id: "ALPHA" });
+
+    expect(() => readMaybeSharded(monolith, (s) => mergeMetaAndList(s, "nodes"))).toThrow(
+      /must not carry '__proto__'/,
+    );
+    expect(({} as Record<string, unknown>).polluted).toBeUndefined();
+    expect(Object.prototype).not.toHaveProperty("polluted");
+  });
+
+  it("keeps the offending file's bytes out of the error message", () => {
+    // V8 quotes the bytes it choked on straight into the message. Shards are repo
+    // files and symlinks out of the tree are refused, so this is defence in
+    // depth — but `--check` runs in CI, and CI logs are read far more widely
+    // than the repo is.
+    const monolith = join(root, "spine.json");
+    const dir = join(root, "spine.d");
+    mkdirSync(dir);
+    writeFileSync(join(dir, "0010-ALPHA.json"), 'AWS_SECRET_ACCESS_KEY=hunter2\n', "utf8");
+
+    let message = "";
+    try {
+      readMaybeSharded(monolith, mergeItems);
+    } catch (error) {
+      message = (error as Error).message;
+    }
+    expect(message).toMatch(/0010-ALPHA\.json/);
+    expect(message).toMatch(/malformed JSON/);
+    expect(message).not.toMatch(/hunter2|AWS_SECRET/);
   });
 });
 
