@@ -113,6 +113,7 @@ Example::
 from __future__ import annotations
 
 from collections import deque
+from collections.abc import Iterator
 from typing import TypeVar
 
 from directed_graph.directed_graph import DirectedGraph
@@ -124,7 +125,7 @@ T = TypeVar("T")
 # ---------------------------------------------------------------------------
 
 WHITE = 0  # Not yet visited
-GRAY = 1   # Currently on the DFS stack (being explored)
+GRAY = 1  # Currently on the DFS stack (being explored)
 BLACK = 2  # Fully explored (all descendants visited)
 
 
@@ -133,7 +134,7 @@ BLACK = 2  # Fully explored (all descendants visited)
 # ---------------------------------------------------------------------------
 
 
-def topological_sort(graph: DirectedGraph[T]) -> list[T]:
+def topological_sort[T](graph: DirectedGraph[T]) -> list[T]:
     """Return a topological ordering of all nodes in the graph.
 
     Uses Kahn's BFS-based algorithm.  The ordering is deterministic:
@@ -201,7 +202,7 @@ def topological_sort(graph: DirectedGraph[T]) -> list[T]:
 # ---------------------------------------------------------------------------
 
 
-def has_cycle(graph: DirectedGraph[T]) -> bool:
+def has_cycle[T](graph: DirectedGraph[T]) -> bool:
     """Return True if the graph contains at least one directed cycle.
 
     Uses an iterative 3-color DFS:
@@ -238,14 +239,14 @@ def has_cycle(graph: DirectedGraph[T]) -> bool:
         # Each entry is (node, iterator_over_successors).
         # When we push a node, we color it GRAY.
         # When we exhaust its successors, we color it BLACK and pop.
-        stack: list[tuple[T, object]] = []
+        stack: list[tuple[T, Iterator[T]]] = []
         color[start] = GRAY
         stack.append((start, iter(graph._adj[start])))
 
         while stack:
             node, it = stack[-1]
             try:
-                successor = next(it)  # type: ignore[arg-type]
+                successor = next(it)
                 if color[successor] == GRAY:
                     # Back edge: successor is still on the stack → cycle!
                     return True
@@ -267,7 +268,7 @@ def has_cycle(graph: DirectedGraph[T]) -> bool:
 # ---------------------------------------------------------------------------
 
 
-def transitive_closure(graph: DirectedGraph[T], node: T) -> frozenset[T]:
+def transitive_closure[T](graph: DirectedGraph[T], node: T) -> frozenset[T]:
     """Return all nodes reachable from ``node`` by following forward edges.
 
     The starting ``node`` itself is NOT included in the result (only the
@@ -326,7 +327,7 @@ def transitive_closure(graph: DirectedGraph[T], node: T) -> frozenset[T]:
 # ---------------------------------------------------------------------------
 
 
-def transitive_dependents(graph: DirectedGraph[T], node: T) -> frozenset[T]:
+def transitive_dependents[T](graph: DirectedGraph[T], node: T) -> frozenset[T]:
     """Return all nodes that transitively depend on ``node``.
 
     "Depends on" means: there is a directed path TO ``node`` from those nodes
@@ -384,7 +385,7 @@ def transitive_dependents(graph: DirectedGraph[T], node: T) -> frozenset[T]:
 # ---------------------------------------------------------------------------
 
 
-def independent_groups(graph: DirectedGraph[T]) -> list[list[T]]:
+def independent_groups[T](graph: DirectedGraph[T]) -> list[list[T]]:
     """Partition nodes into levels of parallel execution.
 
     Uses a modified Kahn's algorithm: instead of processing one zero-in-degree
@@ -456,9 +457,7 @@ def independent_groups(graph: DirectedGraph[T]) -> list[list[T]]:
 # ---------------------------------------------------------------------------
 
 
-def affected_nodes(
-    graph: DirectedGraph[T], changed: frozenset[T]
-) -> frozenset[T]:
+def affected_nodes[T](graph: DirectedGraph[T], changed: frozenset[T]) -> frozenset[T]:
     """Return all nodes affected by changes to the ``changed`` set.
 
     A node is "affected" if it is in ``changed``, or if it transitively
@@ -499,7 +498,7 @@ def affected_nodes(
 # ---------------------------------------------------------------------------
 
 
-def strongly_connected_components(
+def strongly_connected_components[T](
     graph: DirectedGraph[T],
 ) -> list[frozenset[T]]:
     """Return all Strongly Connected Components (SCCs) of the graph.
@@ -565,14 +564,14 @@ def strongly_connected_components(
         #   entered=True  means we're returning from children (post-order)
         #
         # We use (node, iterator) pairs and track when iterator is exhausted.
-        dfs1_stack: list[tuple[T, object]] = []
+        dfs1_stack: list[tuple[T, Iterator[T]]] = []
         visited_pass1.add(start)
         dfs1_stack.append((start, iter(graph._adj[start])))
 
         while dfs1_stack:
             node, it = dfs1_stack[-1]
             try:
-                successor = next(it)  # type: ignore[arg-type]
+                successor = next(it)
                 if successor not in visited_pass1:
                     visited_pass1.add(successor)
                     dfs1_stack.append((successor, iter(graph._adj[successor])))
@@ -600,7 +599,7 @@ def strongly_connected_components(
         # The reversed graph has edge v→u whenever the original has u→v.
         # So from `start` in the reversed graph we follow graph._reverse[start].
         scc_nodes: set[T] = set()
-        dfs2_stack: list[tuple[T, object]] = []
+        dfs2_stack: list[tuple[T, Iterator[T]]] = []
 
         visited_pass2.add(start)
         scc_nodes.add(start)
@@ -609,13 +608,11 @@ def strongly_connected_components(
         while dfs2_stack:
             node, it = dfs2_stack[-1]
             try:
-                predecessor = next(it)  # type: ignore[arg-type]
+                predecessor = next(it)
                 if predecessor not in visited_pass2:
                     visited_pass2.add(predecessor)
                     scc_nodes.add(predecessor)
-                    dfs2_stack.append(
-                        (predecessor, iter(graph._reverse[predecessor]))
-                    )
+                    dfs2_stack.append((predecessor, iter(graph._reverse[predecessor])))
             except StopIteration:
                 dfs2_stack.pop()
 

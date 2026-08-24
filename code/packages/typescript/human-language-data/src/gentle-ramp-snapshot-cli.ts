@@ -1,5 +1,6 @@
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { dirname, normalize, relative as pathRelative, resolve } from "node:path";
+import { assertRelativeManifestPath } from "./manifest-path.js";
 import { pathToFileURL } from "node:url";
 import { buildCurriculumGapReport } from "./report.js";
 import {
@@ -13,6 +14,7 @@ import type { GentleRampReport, TrackGentleRamp } from "./gentle-ramp.js";
 export const GENTLE_RAMP_SNAPSHOT_DIR = "core/gentle-ramp-snapshots";
 
 function safeSnapshotOutput(root: string, relative: string): string {
+  assertRelativeManifestPath(relative, `unsafe gentle-ramp snapshot output '${relative}'`);
   const output = resolve(root, relative);
   const fromRoot = normalize(pathRelative(resolve(root), output)).replaceAll("\\", "/");
   if (

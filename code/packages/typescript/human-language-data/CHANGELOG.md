@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+### Added - Devanagari candrabindu and visarga
+
+- Add U+0901 Devanagari Sign Candrabindu and U+0903 Devanagari Sign Visarga
+  with current-corpus attachment examples.
+- Reduce measured shared-script closure debt from 244 to 150 affected
+  realizations and from 18 to 16 missing glyphs.
+
+### Added - measured Devanagari closure debt
+
+- Keep the shared Hindi, Marathi, and Sanskrit inventory fail-closed after a
+  real-corpus audit finds 244 affected realizations and 18 missing glyphs.
+- Pin that measured set in integration coverage so future vocabulary or
+  inventory work changes the debt visibly.
+
 ### Changed - Chinese corpus closure
 
 - Enable the Chinese completion gate for all 29 source-verified character and
@@ -13,6 +27,13 @@
 - Enable the Hebrew completion gate for the 22 source-verified letters, their
   final forms, and the nine niqqud used by the current lesson corpus.
 - Leave less-common niqqud as explicit follow-on inventory work.
+
+### Changed - Tamil Chapter 7 numeral ramp (#12529)
+
+- Split two five-glyph numeral reveals into spoken-first, at-most-three-shape
+  script encounters with an observe-to-dictation writing ladder.
+- Preserve Tamil's existing Dravidian-family etymology lessons and finish with
+  a zero-new-shape cumulative listening, speaking, reading, and writing payoff.
 
 ### Changed - Cyrillic corpus closure
 

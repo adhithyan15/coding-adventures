@@ -402,7 +402,7 @@ class TestNeighborsOverride:
     def test_neighbors_returns_successors_only(self) -> None:
         g: DirectedGraph[str] = DirectedGraph()
         g.add_edge("A", "B")
-        g.add_edge("C", "A")   # A has an incoming edge from C
+        g.add_edge("C", "A")  # A has an incoming edge from C
         # neighbors(A) should return B (outgoing), NOT C (incoming).
         assert g.neighbors("A") == frozenset({"B"})
 
@@ -572,8 +572,8 @@ class TestHasCycle:
     def test_cycle_in_second_component(self) -> None:
         """Cycle in a disconnected component must still be detected."""
         g: DirectedGraph[str] = DirectedGraph()
-        g.add_edge("X", "Y")   # DAG component
-        g.add_edge("A", "B")   # cycle component
+        g.add_edge("X", "Y")  # DAG component
+        g.add_edge("A", "B")  # cycle component
         g.add_edge("B", "C")
         g.add_edge("C", "A")
         assert has_cycle(g)
@@ -898,10 +898,10 @@ class TestStronglyConnectedComponents:
         g: DirectedGraph[str] = DirectedGraph()
         g.add_edge("A", "B")
         g.add_edge("B", "C")
-        g.add_edge("C", "A")   # cycle: {A,B,C}
+        g.add_edge("C", "A")  # cycle: {A,B,C}
         g.add_edge("C", "D")
         g.add_edge("D", "E")
-        g.add_edge("E", "D")   # cycle: {D,E}
+        g.add_edge("E", "D")  # cycle: {D,E}
         sccs = strongly_connected_components(g)
         scc_sets = {frozenset(s) for s in sccs}
         assert frozenset({"A", "B", "C"}) in scc_sets
@@ -911,9 +911,9 @@ class TestStronglyConnectedComponents:
         """Two disconnected cycles each form their own SCC."""
         g: DirectedGraph[str] = DirectedGraph()
         g.add_edge("A", "B")
-        g.add_edge("B", "A")   # SCC 1: {A, B}
+        g.add_edge("B", "A")  # SCC 1: {A, B}
         g.add_edge("C", "D")
-        g.add_edge("D", "C")   # SCC 2: {C, D}
+        g.add_edge("D", "C")  # SCC 2: {C, D}
         sccs = strongly_connected_components(g)
         scc_sets = {frozenset(s) for s in sccs}
         assert frozenset({"A", "B"}) in scc_sets
@@ -928,7 +928,7 @@ class TestStronglyConnectedComponents:
         g.add_edge("C", "D")
         g.add_edge("D", "E")
         sccs = strongly_connected_components(g)
-        all_nodes_in_sccs = set()
+        all_nodes_in_sccs: set[str] = set()
         for scc in sccs:
             # No node should appear in more than one SCC.
             assert scc.isdisjoint(all_nodes_in_sccs)

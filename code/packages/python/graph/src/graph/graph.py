@@ -51,14 +51,14 @@ This is the key invariant that makes Graph undirected.
 from __future__ import annotations
 
 from enum import Enum
-from typing import Generic, TypeAlias, TypeVar
+from typing import TypeAlias, TypeVar
 
 T = TypeVar("T")  # Node type — must be hashable
-PropertyValue: TypeAlias = str | int | float | bool | None
-PropertyBag: TypeAlias = dict[str, PropertyValue]
+PropertyValue: TypeAlias = str | int | float | bool | None  # noqa: UP040
+PropertyBag: TypeAlias = dict[str, PropertyValue]  # noqa: UP040
 
 
-def _edge_key(u: T, v: T) -> tuple[T, T]:
+def _edge_key[T](u: T, v: T) -> tuple[T, T]:
     return (u, v) if repr(u) <= repr(v) else (v, u)
 
 
@@ -83,7 +83,7 @@ class GraphRepr(Enum):
 # ---------------------------------------------------------------------------
 
 
-class Graph(Generic[T]):
+class Graph[T]:
     """Undirected weighted graph.
 
     Nodes can be any hashable type: strings, integers, tuples, etc.
@@ -370,9 +370,7 @@ class Graph(Generic[T]):
             raise KeyError(node)
         idx = self._node_idx[node]
         return frozenset(
-            self._node_list[j]
-            for j, w in enumerate(self._matrix[idx])
-            if w != 0.0
+            self._node_list[j] for j, w in enumerate(self._matrix[idx]) if w != 0.0
         )
 
     def neighbors_weighted(self, node: T) -> dict[T, float]:
@@ -388,9 +386,7 @@ class Graph(Generic[T]):
             raise KeyError(node)
         idx = self._node_idx[node]
         return {
-            self._node_list[j]: w
-            for j, w in enumerate(self._matrix[idx])
-            if w != 0.0
+            self._node_list[j]: w for j, w in enumerate(self._matrix[idx]) if w != 0.0
         }
 
     def degree(self, node: T) -> int:

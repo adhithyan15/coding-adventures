@@ -5046,10 +5046,13 @@ impl HtmlParser {
         self_closing: bool,
     ) {
         if name == "image" {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-start-tag-treated-as",
-                "start tag `<image>` was treated as `<img>`",
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-start-tag-treated-as",
+                    "start tag `<image>` was treated as `<img>`",
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             name = "img".to_string();
         }
         let body_element_existed_before_start_tag = self.document_has_body_element();
@@ -7372,10 +7375,13 @@ impl HtmlParser {
                 )
                 .at_emission(self.current_token_emission_position),
             );
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-heading-end-tag",
-                format!("end tag `</{name}>` did not match the current heading element"),
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-heading-end-tag",
+                    format!("end tag `</{name}>` did not match the current heading element"),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             return;
         }
         if self.current_namespace().is_some()
@@ -7938,10 +7944,13 @@ impl HtmlParser {
             }
             name if is_heading_element(name) => {
                 if !self.close_open_heading_if_in_scope(Some(name)) {
-                    self.diagnostics.push(ParserDiagnostic::new(
-                        "unexpected-heading-end-tag",
-                        format!("end tag `</{name}>` did not match the current heading element"),
-                    ));
+                    self.diagnostics.push(
+                        ParserDiagnostic::new(
+                            "unexpected-heading-end-tag",
+                            format!("end tag `</{name}>` did not match the current heading element"),
+                        )
+                        .at_emission(self.current_token_emission_position),
+                    );
                 }
             }
             name if is_scoped_block_end_tag(name)
@@ -27322,6 +27331,14 @@ mod tests {
         .at_emission(Some(end_tag_position(source, name)))
     }
 
+    fn heading_end_tag_mismatch(source: &str, name: &str) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-heading-end-tag",
+            format!("end tag `</{name}>` did not match the current heading element"),
+        )
+        .at_emission(Some(end_tag_position(source, name)))
+    }
+
     fn table_foreign_end_tag_recovery(source: &str, name: &str) -> ParserDiagnostic {
         ParserDiagnostic::new(
             "unexpected-table-end-tag-in-foreign-content",
@@ -37379,8 +37396,8 @@ mod tests {
 
     #[test]
     fn treats_legacy_image_start_tag_as_img() {
-        let output =
-            parse_html_with_diagnostics("<!doctype html><p><image src=hero.png></p>").unwrap();
+        let source = "<!doctype html><p><image src=hero.png></p>";
+        let output = parse_html_with_diagnostics(source).unwrap();
 
         let paragraph = element(&body(&output.document).children[0]);
         assert_eq!(paragraph.name, "p");
@@ -37392,8 +37409,61 @@ mod tests {
             vec![ParserDiagnostic::new(
                 "unexpected-start-tag-treated-as",
                 "start tag `<image>` was treated as `<img>`"
-            )]
+            )
+            .at_emission(Some(start_tag_position(source, "image")))]
         );
+    }
+
+    #[test]
+    fn positions_legacy_image_start_tag_diagnostic_at_token_emission() {
+        for source in ["<image>", "<p><image src=x>", "<table><image>"] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            let diagnostics = output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-start-tag-treated-as")
+                .collect::<Vec<_>>();
+            assert_eq!(diagnostics.len(), 1, "source {source:?}");
+            assert_eq!(
+                diagnostics[0].position,
+                Some(start_tag_position(source, "image")),
+                "source {source:?}"
+            );
+        }
+
+        let unicode_source = "e\u{301}\r\n<image src=x>";
+        let unicode = parse_html_fragment_with_diagnostics(unicode_source).unwrap();
+        let diagnostic = unicode
+            .parser_diagnostics
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-start-tag-treated-as")
+            .unwrap();
+        assert_eq!(
+            diagnostic.position,
+            Some(start_tag_position(unicode_source, "image"))
+        );
+        assert!(unicode_source.len() > unicode_source.chars().count());
+
+        for source in ["<image", "<image src=x"] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "unexpected-start-tag-treated-as"));
+        }
+
+        let mut unpositioned = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        unpositioned.process_token(Token::StartTag {
+            name: "image".to_string(),
+            attributes: Vec::new(),
+            self_closing: false,
+        });
+        let diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-start-tag-treated-as")
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
     }
 
     #[test]
@@ -39190,10 +39260,7 @@ mod tests {
             let output = parse_html_with_diagnostics(source).unwrap();
             assert_eq!(
                 output.parser_diagnostics,
-                vec![ParserDiagnostic::new(
-                    "unexpected-heading-end-tag",
-                    format!("end tag `</{end_tag}>` did not match the current heading element")
-                )],
+                vec![heading_end_tag_mismatch(source, end_tag)],
                 "source {source:?}"
             );
         }
@@ -39218,10 +39285,7 @@ mod tests {
             let output = parse_html_with_diagnostics(&source).unwrap();
             assert_eq!(
                 output.parser_diagnostics,
-                vec![ParserDiagnostic::new(
-                    "unexpected-heading-end-tag",
-                    format!("end tag `</{end_tag}>` did not match the current heading element")
-                )],
+                vec![heading_end_tag_mismatch(&source, end_tag)],
                 "source {source:?}"
             );
             let outer = find_element_by_id(&output.document.children, "outer").unwrap();
@@ -39234,9 +39298,9 @@ mod tests {
                 .unwrap();
         assert_eq!(
             ordinary.parser_diagnostics,
-            vec![ParserDiagnostic::new(
-                "unexpected-heading-end-tag",
-                "end tag `</h1>` did not match the current heading element"
+            vec![heading_end_tag_mismatch(
+                "<!doctype html><h1 id=outer><div id=boundary></h1>X",
+                "h1"
             )]
         );
         let boundary = find_element_by_id(&ordinary.document.children, "boundary").unwrap();
@@ -39257,9 +39321,9 @@ mod tests {
             parse_html_with_diagnostics("<!doctype html><h1 id=outer><span>X</h1>Y").unwrap();
         assert_eq!(
             descendant.parser_diagnostics,
-            vec![ParserDiagnostic::new(
-                "unexpected-heading-end-tag",
-                "end tag `</h1>` did not match the current heading element"
+            vec![heading_end_tag_mismatch(
+                "<!doctype html><h1 id=outer><span>X</h1>Y",
+                "h1"
             )]
         );
         assert_eq!(
@@ -39319,12 +39383,7 @@ mod tests {
                 output.parser_diagnostics,
                 vec![
                     generic_foreign_end_tag_mismatch(&source, end_tag),
-                    ParserDiagnostic::new(
-                        "unexpected-heading-end-tag",
-                        format!(
-                            "end tag `</{end_tag}>` did not match the current heading element"
-                        )
-                    ),
+                    heading_end_tag_mismatch(&source, end_tag),
                 ],
                 "source {source:?}"
             );
@@ -39365,9 +39424,9 @@ mod tests {
             parse_html_with_diagnostics("<!doctype html><h1><span>X</h1>Y").unwrap();
         assert_eq!(
             ordinary.parser_diagnostics,
-            vec![ParserDiagnostic::new(
-                "unexpected-heading-end-tag",
-                "end tag `</h1>` did not match the current heading element"
+            vec![heading_end_tag_mismatch(
+                "<!doctype html><h1><span>X</h1>Y",
+                "h1"
             )]
         );
         assert_eq!(
@@ -39385,6 +39444,41 @@ mod tests {
     }
 
     #[test]
+    fn positions_heading_end_tag_mismatches_at_token_emission() {
+        for (boundary, end_tag) in [
+            ("select", "h1"),
+            ("object", "h2"),
+            ("marquee", "h3"),
+            ("applet", "h4"),
+        ] {
+            let source = format!(
+                "<!doctype html><!--é-->\r\n<h1><{boundary}></{end_tag}>"
+            );
+            let output = parse_html_with_diagnostics(&source).unwrap();
+            let diagnostics = output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-heading-end-tag")
+                .cloned()
+                .collect::<Vec<_>>();
+            assert_eq!(
+                diagnostics,
+                vec![heading_end_tag_mismatch(&source, end_tag)],
+                "source {source:?}: {:?}",
+                output.parser_diagnostics
+            );
+            assert!(source.len() > source.chars().count());
+        }
+
+        let eof_source = "<!doctype html><h1><select></h1";
+        let eof_output = parse_html_with_diagnostics(eof_source).unwrap();
+        assert!(eof_output
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-heading-end-tag"));
+    }
+
+    #[test]
     fn positions_heading_foreign_end_tag_mismatches_at_token_emission() {
         let source = "<!doctype html><!--é-->\r\n<h1><math><mi></h2>";
         let output = parse_html_with_diagnostics(source).unwrap();
@@ -39392,7 +39486,10 @@ mod tests {
             output.parser_diagnostics[0],
             generic_foreign_end_tag_mismatch(source, "h2")
         );
-        assert_eq!(output.parser_diagnostics[1].position, None);
+        assert_eq!(
+            output.parser_diagnostics[1],
+            heading_end_tag_mismatch(source, "h2")
+        );
         assert!(source.len() > source.chars().count());
 
         let eof_source = "<!doctype html><h1><math><mi></h1";
@@ -39400,7 +39497,12 @@ mod tests {
         assert!(eof_output
             .parser_diagnostics
             .iter()
-            .all(|diagnostic| diagnostic.code != "unexpected-end-tag-in-foreign-content"));
+            .all(|diagnostic| {
+                !matches!(
+                    diagnostic.code.as_str(),
+                    "unexpected-end-tag-in-foreign-content" | "unexpected-heading-end-tag"
+                )
+            }));
         assert_eq!(
             eof_output.parser_diagnostics.last(),
             Some(&eof_with_unclosed_elements(eof_source))
@@ -39430,12 +39532,17 @@ mod tests {
         ] {
             unpositioned.process_token(token);
         }
-        let diagnostic = unpositioned
-            .diagnostics()
-            .iter()
-            .find(|diagnostic| diagnostic.code == "unexpected-end-tag-in-foreign-content")
-            .unwrap();
-        assert_eq!(diagnostic.position, None);
+        for code in [
+            "unexpected-end-tag-in-foreign-content",
+            "unexpected-heading-end-tag",
+        ] {
+            let diagnostic = unpositioned
+                .diagnostics()
+                .iter()
+                .find(|diagnostic| diagnostic.code == code)
+                .unwrap();
+            assert_eq!(diagnostic.position, None, "code {code:?}");
+        }
     }
 
     #[test]

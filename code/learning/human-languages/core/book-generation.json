@@ -5884,6 +5884,21 @@
     },
     {
       "language": "spanish",
+      "chapter": 303,
+      "output": "spanish/book/chapters/ch303-reparaciones.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 304,
+      "output": "spanish/book/chapters/ch304-como-estoy.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 305,
+      "output": "spanish/book/chapters/ch305-nombre-y-apellido.tex"
+    },
+    {
+      "language": "spanish",
       "chapter": 318,
       "output": "spanish/book/chapters/ch318-repaso-pre-a1.tex"
     },

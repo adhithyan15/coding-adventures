@@ -11,7 +11,6 @@ Public API::
     from graph import has_cycle, shortest_path, minimum_spanning_tree
 """
 
-from graph.graph import Graph, GraphRepr, PropertyBag, PropertyValue
 from graph.algorithms import (
     bfs,
     connected_components,
@@ -21,6 +20,7 @@ from graph.algorithms import (
     minimum_spanning_tree,
     shortest_path,
 )
+from graph.graph import Graph, GraphRepr, PropertyBag, PropertyValue
 
 __version__ = "0.1.0"
 

@@ -5,6 +5,34 @@ Findings from the pre-A1 tranche work were recorded in commit messages and PR
 bodies, which are durable and searchable, but a reader opening this file found
 nothing. The entries below are the ones that change how the work is done.
 
+## HL-C09HT — Candrabindu and Visarga remove the widest Devanagari gaps
+
+The first closure-debt tranche inventories Unicode's U+0901 Devanagari Sign
+Candrabindu **ँ** and U+0903 Devanagari Sign Visarga **ः**, with attachment
+descriptions and current-corpus examples. These two signs alone reduce the
+fail-closed measurement from **244 to 150 affected realizations** and from **18
+to 16 missing glyphs** across Hindi, Marathi, and Sanskrit.
+
+Next, source and font-fit the consonants **ख, ज,** and **ण**. They remain the
+highest-reach missing letter rows; unlike combining signs, each needs verified
+stroke order, lift count, and a learner path fitted to Noto Sans Devanagari. The
+largest production `script-data` batch containing Devanagari remains below the
+250 kB authored-data target at **170.59 kB**.
+
+## HL-C09HS — Devanagari closure debt is measured, not waved through
+
+Exercising the completion gate against all three Devanagari tracks finds **244
+affected lesson realizations** and **18 distinct missing glyphs**: ख, ़, ँ, ठ,
+फ, ज, थ, ष, ट, ढ, झ, घ, छ, ड, ण, ळ, ः, and ञ. The inventory therefore remains
+fail-closed at 28 sourced rows. Integration coverage now pins both the affected
+realization count and missing set so future vocabulary or inventory expansion
+cannot change this debt silently.
+
+The next implementable tranche is the five most widespread gaps: Chandrabindu
+**ँ**, Visarga **ः**, and consonants **ख, ज,** and **ण**. Each needs
+source-backed stroke data and font-fit paths before the completion audit can be
+repeated; no flag-only shortcut is acceptable.
+
 ## HL-C09HR — Chinese closure grows with the Mandarin corpus
 
 The completion audit proves that all Han characters in the current Mandarin

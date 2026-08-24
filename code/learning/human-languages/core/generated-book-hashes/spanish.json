@@ -164,7 +164,7 @@
     {
       "language": "spanish",
       "chapter": 13,
-      "sourceHash": "fnv1a64:5fb1114794f472e5",
+      "sourceHash": "fnv1a64:583ca9e9815c0328",
       "lessonIds": [
         "ES-C05-hasta-luego",
         "ES-C05-hasta-manana",
@@ -176,7 +176,7 @@
     {
       "language": "spanish",
       "chapter": 14,
-      "sourceHash": "fnv1a64:a7b1f04777d97375",
+      "sourceHash": "fnv1a64:b808b89b7206aeeb",
       "lessonIds": [
         "ES-C06-cafe",
         "ES-C06-por-favor",
@@ -254,7 +254,7 @@
     {
       "language": "spanish",
       "chapter": 22,
-      "sourceHash": "fnv1a64:50dac6bb67decd78",
+      "sourceHash": "fnv1a64:cd9370dc8820962d",
       "lessonIds": [
         "ES-C06-espanol",
         "ES-C06-hablo-espanol"
@@ -1023,7 +1023,7 @@
     {
       "language": "spanish",
       "chapter": 103,
-      "sourceHash": "fnv1a64:41d278a4451b5788",
+      "sourceHash": "fnv1a64:d457d8051349d637",
       "lessonIds": [
         "ES-C14-ayer",
         "ES-C14-ser-ir-preterite",
@@ -1602,7 +1602,7 @@
     {
       "language": "spanish",
       "chapter": 163,
-      "sourceHash": "fnv1a64:20dd2cfa8b827ffd",
+      "sourceHash": "fnv1a64:1b2c6a84d3c9ac15",
       "lessonIds": [
         "ES-C35-gustar"
       ],
@@ -1632,7 +1632,7 @@
     {
       "language": "spanish",
       "chapter": 166,
-      "sourceHash": "fnv1a64:d4ed08bb81edad81",
+      "sourceHash": "fnv1a64:aecde8a7c2024365",
       "lessonIds": [
         "ES-C37-abrir",
         "ES-C37-cerrar",
@@ -1644,7 +1644,7 @@
     {
       "language": "spanish",
       "chapter": 167,
-      "sourceHash": "fnv1a64:77f00a329f2bf9cc",
+      "sourceHash": "fnv1a64:63966d010b25f236",
       "lessonIds": [
         "ES-C38-luego",
         "ES-C38-porque",
@@ -1710,7 +1710,7 @@
     {
       "language": "spanish",
       "chapter": 174,
-      "sourceHash": "fnv1a64:fc94c308d9cc5210",
+      "sourceHash": "fnv1a64:13ed31f835a837a2",
       "lessonIds": [
         "ES-C40-esperar",
         "ES-C40-contestar",
@@ -2265,7 +2265,7 @@
     {
       "language": "spanish",
       "chapter": 235,
-      "sourceHash": "fnv1a64:b6a04f9c0652b1b4",
+      "sourceHash": "fnv1a64:a41df72dcff87e68",
       "lessonIds": [
         "ES-C61-repaso-juntores"
       ],
@@ -2828,7 +2828,7 @@
     {
       "language": "spanish",
       "chapter": 289,
-      "sourceHash": "fnv1a64:6a2602b5e7712dfe",
+      "sourceHash": "fnv1a64:c7809983e22f39ab",
       "lessonIds": [
         "ES-C289-amanecer",
         "ES-C289-cielo",
@@ -2841,7 +2841,7 @@
     {
       "language": "spanish",
       "chapter": 290,
-      "sourceHash": "fnv1a64:836e3c0f0a8142f1",
+      "sourceHash": "fnv1a64:36ec81afab10927c",
       "lessonIds": [
         "ES-C290-trigo",
         "ES-C290-arroz",
@@ -3009,26 +3009,42 @@
     },
     {
       "language": "spanish",
-      "chapter": 318,
-      "sourceHash": "fnv1a64:afc526578d85d612",
+      "chapter": 303,
+      "sourceHash": "fnv1a64:2436808dfe19056a",
       "lessonIds": [
-        "ES-C318-repaso-despedirse",
-        "ES-C318-repaso-disculparse",
-        "ES-C318-repaso-genero",
-        "ES-C318-repaso-marcas"
+        "ES-C303-ayuda",
+        "ES-C303-momento",
+        "ES-C303-otra-vez",
+        "ES-C303-no-se",
+        "ES-C303-que-significa"
       ],
-      "tex": "spanish/book/chapters/ch318-repaso-pre-a1.tex"
+      "tex": "spanish/book/chapters/ch303-reparaciones.tex"
     },
     {
       "language": "spanish",
-      "chapter": 319,
-      "sourceHash": "fnv1a64:75e4b0cec92f540c",
+      "chapter": 304,
+      "sourceHash": "fnv1a64:5c469f4a8723fa9f",
       "lessonIds": [
-        "ES-C319-repaso-la-superficie",
-        "ES-C319-repaso-salir",
-        "ES-C319-despedida"
+        "ES-C304-tranquilo",
+        "ES-C304-enfermo",
+        "ES-C304-contento",
+        "ES-C304-ocupado",
+        "ES-C304-triste"
       ],
-      "tex": "spanish/book/chapters/ch319-repaso-la-superficie.tex"
+      "tex": "spanish/book/chapters/ch304-como-estoy.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 305,
+      "sourceHash": "fnv1a64:77977d90461b6ffe",
+      "lessonIds": [
+        "ES-C305-nombre",
+        "ES-C305-apellido",
+        "ES-C305-senor",
+        "ES-C305-senora",
+        "ES-C305-encantado"
+      ],
+      "tex": "spanish/book/chapters/ch305-nombre-y-apellido.tex"
     }
   ]
 }
