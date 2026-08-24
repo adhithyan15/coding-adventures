@@ -5376,9 +5376,9 @@ fronts, real affected execution builds the first five packages, then
 reproduces the unchanged engine front's Windows-invalid `".[dev]"` parse
 error and dependency-skips the store. Direct local downstream runs with that
 separately owned requirement spelled unquoted pass the engine's 57 tests at
-96.67% coverage and the store's five tests at 100%. After two non-overlapping
+96.67% coverage and the store's five tests at 100%. After non-overlapping
 publication-time rebases, the collision-checked schema-3 inventory at exact
-current main `61e48ebfcd5e69f544a4bc89134cf0543b2b8f3f` remains at 15 lanes,
+current main `19c2cfb6399a2d3513f5db7d1f656dce906a8a3b` remains at 15 lanes,
 1,369 identities, and 4,562 slots with zero collisions or unknown buckets; the
 430-node, 612-edge state remains unique and dependency-complete. Dependency,
 capability, credential,
