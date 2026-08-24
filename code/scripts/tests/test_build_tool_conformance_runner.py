@@ -131,7 +131,7 @@ class CorpusTests(unittest.TestCase):
         summary = runner.validate_corpus(FIXTURE_ROOT)
 
         self.assertEqual(summary["schema_version"], 1)
-        self.assertEqual(summary["case_count"], 59)
+        self.assertEqual(summary["case_count"], 69)
         self.assertEqual(summary["implementation_count"], 16)
         self.assertEqual(summary["established_languages"], 15)
         self.assertEqual(summary["execution_case_count"], 0)
@@ -695,6 +695,44 @@ class PureDomainValidationTests(unittest.TestCase):
         self.assertEqual(
             raised.exception.code,
             "EXPECTED_STARLARK_MODULE_ERROR_INVALID",
+        )
+
+    def test_starlark_metering_corpus_closes_every_budget(self) -> None:
+        expected_errors = {
+            "starlark-meter-step-limit.json": "STARLARK_STEP_LIMIT",
+            "starlark-meter-recursion-limit.json": "STARLARK_RECURSION_LIMIT",
+            "starlark-meter-aggregate-limit.json": "STARLARK_AGGREGATE_LIMIT",
+            "starlark-meter-range-limit.json": "STARLARK_RANGE_LIMIT",
+            "starlark-meter-value-limit.json": "STARLARK_VALUE_LIMIT",
+            "starlark-meter-load-depth-limit.json": "STARLARK_LOAD_DEPTH_LIMIT",
+            "starlark-meter-module-limit.json": "STARLARK_MODULE_LIMIT",
+            "starlark-meter-load-cycle.json": "STARLARK_LOAD_CYCLE",
+            "starlark-meter-output-limit.json": "STARLARK_OUTPUT_LIMIT",
+        }
+
+        boundary = load_case("starlark-meter-boundary.json")
+        limits = boundary["input"]["options"]["evaluation_limits"]
+        self.assertIn("range_items", limits)
+        self.assertIn("value_bytes", limits)
+        self.assertEqual(boundary["expected"]["outcome"], "ok")
+        runner.validate_case_document(boundary, **self._schema_args())
+
+        for filename, code in expected_errors.items():
+            with self.subTest(filename=filename):
+                case = load_case(filename)
+                diagnostics = case["expected"]["diagnostics"]
+                self.assertEqual(case["expected"]["outcome"], "error")
+                self.assertEqual(case["expected"]["result"], {})
+                self.assertEqual([item["code"] for item in diagnostics], [code])
+                self.assertEqual(diagnostics[0]["severity"], "error")
+                self.assertIn("path", diagnostics[0])
+                runner.validate_case_document(case, **self._schema_args())
+
+        cycle = load_case("starlark-meter-load-cycle.json")
+        staged = runner.preflight_workspace(cycle)
+        self.assertEqual(
+            runner._starlark_module_error(cycle["input"]["options"], staged),
+            ("STARLARK_LOAD_CYCLE", "code/build/a.star"),
         )
 
     def test_toolchain_detection_ignores_unscheduled_unsupported_packages(
