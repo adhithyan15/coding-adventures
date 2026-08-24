@@ -118,16 +118,42 @@ number at A1 is a proxy.
 
 Future A1 mocks must conform to that inventory rather than to this summary.
 
-### A2 through C2
+### A2
 
-Not yet inventoried. Each rung needs its own `task-shapes/<level>.json`
-transcribed from the official Cervantes guide and specification for that level,
-with sources and access dates, before this document says anything more specific
-than the DELE-wide grouped pass rule.
+Target: **DELE A2**. Not yet inventoried.
 
-Deliberately left blank rather than filled with plausible-looking estimates.
-HL18 §3 makes unknown first-class: a measurement the source does not publish is
-`null` plus a `notPublished` explanation, never a guess.
+### B1
+
+Target: **DELE B1**. Not yet inventoried.
+
+### B2
+
+Target: **DELE B2**. Not yet inventoried.
+
+### C1
+
+Target: **DELE C1**. Not yet inventoried.
+
+### C2
+
+Target: **DELE C2**. Not yet inventoried. This is the ceiling the whole course
+runs at, and the rung where the book must carry a learner to reading literary
+and classical Spanish, holding fine shades of meaning, and summarising from
+sources.
+
+### What "not yet inventoried" means
+
+Each of A2 through C2 needs its own `task-shapes/<level>.json` transcribed from
+the official Cervantes guide and specification for that level, with sources and
+access dates, before this document says anything more specific than the
+DELE-wide grouped pass rule.
+
+Those five sections are deliberately short rather than filled with
+plausible-looking estimates. HL18 §3 makes unknown first-class: a measurement
+the source does not publish is `null` plus a `notPublished` explanation, never a
+guess. Writing "DELE B2 has a 90-minute reading paper" here without having read
+the specification would be exactly the kind of confident, unsourced number this
+apparatus exists to keep out of the corpus.
 
 ## Required artifacts and readiness language
 

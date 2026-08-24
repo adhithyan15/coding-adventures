@@ -38,6 +38,20 @@ builds toward.
 Unknowns stay unknown: audio delivery speed is `null` with a `notPublished` note
 rather than a plausible-looking estimate.
 
+`assessment.json` completes the tranche: the machine-readable contract for all
+seven rungs, pre-A1 project-defined and A1–C2 on DELE, each naming its four-skill
+task inventory, an independent 0.6 threshold per skill, the cumulative HL19 writing
+stages for that level, and two timed mocks with rubric and answer key.
+
+Its `task-shapes/`, `mocks/` and `assessment-spec.md#…` paths are **forward
+declarations, not evidence** — a path names a required future artifact. That is the
+documented contract shape, and `assessment-spec.md` states it explicitly so nobody
+reads a filename as proof the mock exists. The `#a2`…`#c2` anchors resolve to real
+per-level sections that say "not yet inventoried" rather than to one merged heading.
+
+Spanish's outstanding pre-A1 plan items go **5 → 4**. Corpus-wide, tracks with a
+validated four-skill contract go **12 → 13 of 23**, and written task shapes **17 → 18**.
+
 ## Unreleased — the pre-A1 writing runway: hola, four steps
 
 Spanish was the pilot track and one of only six with **zero** `hl-writing-stage`
