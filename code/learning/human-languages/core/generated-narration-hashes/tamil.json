@@ -129,22 +129,35 @@
     {
       "language": "tamil",
       "chapter": 7,
-      "sourceHash": "fnv1a64:4a367111d3a938f8",
+      "sourceHash": "fnv1a64:6d41dcb1b22650ae",
       "lessonIds": [
         "TA-C07-numbers-1-5",
+        "TA-W07-digits-1-3",
+        "TA-W07-digits-4-5",
+        "TA-W07-number-words-1-5",
+        "TA-W07-numbers-1-5-guided-copy",
+        "TA-W07-numbers-1-5-delayed-copy",
+        "TA-W07-numbers-1-5-dictation",
         "TA-C07-numbers-1-5-family",
         "TA-C07-numbers-6-10",
+        "TA-W07-digits-6-8",
+        "TA-W07-digits-9-10",
+        "TA-W07-number-words-6-10",
+        "TA-W07-numbers-6-10-guided-copy",
         "TA-S03-nnna",
+        "TA-W07-numbers-6-10-delayed-copy",
+        "TA-W07-numbers-6-10-dictation",
         "TA-W03-pulli-vanakkam",
         "TA-C07-numbers-6-10-family",
-        "TA-S102-vowel-sign-oo"
+        "TA-S102-vowel-sign-oo",
+        "TA-C07-numbers-practice"
       ],
-      "voiceLessons": 1,
-      "drivablePrefix": 0,
+      "voiceLessons": 3,
+      "drivablePrefix": 1,
       "text": "tamil/narration/ch07.txt",
       "json": "tamil/narration/ch07.json",
-      "textHash": "fnv1a64:63bc006558f021fe",
-      "jsonHash": "fnv1a64:db71df023cd87ef6"
+      "textHash": "fnv1a64:a6f7049806ba458c",
+      "jsonHash": "fnv1a64:bac3070962e6ce90"
     },
     {
       "language": "tamil",
