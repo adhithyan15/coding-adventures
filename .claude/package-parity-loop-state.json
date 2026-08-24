@@ -11,7 +11,7 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": 12495,
   "last_inventory": {
     "revision": "de94b5ab33e04e13d0581f3ecf6a846049cb7d6d",
     "schema_version": 3,
@@ -4308,14 +4308,16 @@
     {
       "id": "python-in-memory-data-store-protocol-build-front-python313",
       "title": "Pin the Python data-store protocol BUILD fronts to a named 3.13 environment",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": [],
       "branch": "codex/python-in-memory-data-store-protocol-build-front-python313",
-      "pr_number": null,
+      "pr_number": 12495,
       "selection_revision": "6440352ce3d282209d5c5e6aa08e2ec2ee80463b",
       "selection_notes": "Selected after PR #12492 completed all 30 checks and merged through the requested auto-merge path. The collision-checked post-merge inventory remains identity-neutral at 15 established lanes, 1,369 identities, and 4,562 slots with zero collisions or unknown buckets. The post-merge contract audit added the separately owned hash-functions strict-MyPy correction before implementation; that retroactive bounded quality-gate gap does not displace this concrete prerequisite that blocked the exact eight-node data-store build. The selected repair replaces ambient Python and the recursive pip launcher with a pinned named Python 3.13 environment, directly advancing the final data-store closure. Live audits find zero overlap across nine open PRs and 30 remote source heads on the package, state, or roadmap; the target remote branch was absent before creation.",
       "implementation_revision": "1b5a1fde701cd89722c93c44ee5f076f724c209d",
+      "final_review_revision": "f8fe85c86c50225945784a2440d6179fad9ebecd",
       "validation_notes": "Both BUILD fronts now recreate .venv with --clear, pin Python 3.13, install through that named environment, and invoke its interpreter explicitly for Ruff, formatting, strict MyPy, and pytest. The Windows front separates the dependency-free local package install from tool installation so the isolated protocol package cannot recurse through a generated pip launcher. A repository regression pins both complete recipes. The exact Windows front passes twice consecutively on uv 0.11.28 and Python 3.13.14 with all five tests at 100% coverage and Ruff, formatting, and strict MyPy clean. Strict checking exposed that EngineResponse.bulk_string already accepts and normalizes bytearray and memoryview at runtime; its annotation now states that existing behavior without changing algorithms. The immediate store-engine downstream passes 57 tests at 96.67% coverage against editable local dependencies. Focused recipe, uv-audit, parity reporter, and capability taxonomy suites pass 2, 13, 10, and 7 tests. The Go build tool passes tests, vet, and compilation. Its exact 494-package affected Windows execution, with the uv 0.11.28 executable directory explicitly on PATH and UV_PYTHON=3.13 plus UV_VENV_CLEAR=1, builds hash-functions, hyperloglog, resp-protocol, and this protocol successfully before reaching the separately owned store-engine front; that unchanged front fails on its Windows-invalid quoted editable requirement, and the final store is dependency-skipped. The collision gate is clean. This tranche changes no dependency metadata, capability manifest, production authority, credential path, or privileged boundary.",
+      "publication_notes": "Opened ready-for-review PR #12495 from independently reviewed head f8fe85c86c50225945784a2440d6179fad9ebecd after a normal first push from exact origin/main de94b5ab33e04e13d0581f3ecf6a846049cb7d6d. Ten open PRs and 31 remote source heads had zero exact package or full-diff overlap, and the target branch was absent before publication. Independent security/ownership, implementation, and state/roadmap reviews all passed with no required fix. GitHub reports the PR open, non-draft, and mergeable while required CI and CodeQL checks are queued; auto-merge remains disabled until every required check is terminal and acceptable.",
       "notes": "Discovered by the exact affected build-tool execution for the hash-functions repair. python/in-memory-data-store-protocol is an eight-node plan prerequisite outside the uv-audit corpus: its canonical front creates an unpinned uv environment, while BUILD_windows resolves ambient python for stdlib venv creation and invokes the pip console launcher directly. On this host the latter recursively launched through the environment and did not reach tests; the same source passes five tests at 100% coverage on Python 3.13 when pip and pytest are invoked through the named interpreter. Pin and clear both fronts, use the explicit environment interpreter for install and tests, add a complete recipe regression, and validate the protocol before the existing data-store owner."
     },
     {
