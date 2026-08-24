@@ -1244,9 +1244,11 @@ then lifts again for the tall descending upright, growing the inventory to 26
 rows. Arabic **غ** then repeats the complete **ع** body in one run before one
 lift places its upper dot, growing the inventory to 27 rows. Arabic **ف** then
 loops its closed head directly into the broad leftward bowl before one lift
-places the upper dot, growing the inventory to 28 rows. Arabic remains
-incomplete because the final absent base letter, **ق**, still needs its own
-source-backed row rather than a premature completion flag.
+places the upper dot, growing the inventory to 28 rows. Arabic **ق** then loops
+its closed head directly into a deeper below-baseline bowl before separate
+right and left upper-dot runs grow the inventory to 29 rows. That completes the
+lesson-corpus base-letter audit; Arabic remains incomplete while seated Hamza
+and ending variants still need explicit accounting.
 The canonical script-data group is capped at 250 kB per cacheable batch, so
 these growing source notes stay within the app's enforced 500 kB eager-chunk
 budget without removing learner-facing evidence.

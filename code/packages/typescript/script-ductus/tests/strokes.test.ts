@@ -195,6 +195,7 @@ const ARABIC_ZAH = DUCTUS[ductusKey("arabic", "ظ")];
 const ARABIC_AYN = DUCTUS[ductusKey("arabic", "ع")];
 const ARABIC_GHAYN = DUCTUS[ductusKey("arabic", "غ")];
 const ARABIC_FAA = DUCTUS[ductusKey("arabic", "ف")];
+const ARABIC_QAF = DUCTUS[ductusKey("arabic", "ق")];
 const ARABIC_KAF = DUCTUS[ductusKey("arabic", "ك")];
 const ARABIC_LAM = DUCTUS[ductusKey("arabic", "ل")];
 const ARABIC_MEEM = DUCTUS[ductusKey("arabic", "م")];
@@ -353,10 +354,10 @@ describe("handwriting ductus", () => {
     expect(gujarati.letters.every((letter) => letter.strokeOrderSource !== undefined)).toBe(true);
   });
 
-  it("keeps all 28 unique Arabic rows sourced without overstating completion", () => {
+  it("keeps all 29 unique Arabic rows sourced without overstating completion", () => {
     const arabic = SCRIPTS.find((script) => script.script === "arabic")!;
     expect(arabic.complete).toBe(false);
-    expect(arabic.letters).toHaveLength(28);
+    expect(arabic.letters).toHaveLength(29);
     expect(arabic.letters.every((letter) => letter.strokeOrderSource !== undefined)).toBe(true);
   });
 
@@ -3132,6 +3133,31 @@ describe("handwriting ductus", () => {
     );
   });
 
+  it("Arabic independent ق joins its closed head to the deep bowl before its two dots", () => {
+    expect(ARABIC_QAF.script).toBe("arabic");
+    expect(penLifts(ARABIC_QAF)).toBe(2);
+    expect(ARABIC_QAF.strokes).toHaveLength(3);
+    expect(ARABIC_QAF.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1, 1]);
+    const head = ARABIC_QAF.strokes[0].segments[0].path;
+    const bowl = ARABIC_QAF.strokes[0].segments[1].path;
+    const rightDot = ARABIC_QAF.strokes[1].segments[0].path;
+    const leftDot = ARABIC_QAF.strokes[2].segments[0].path;
+    expect(head[0]).toEqual(head.at(-1));
+    expect(head.at(-1)).toEqual(bowl[0]);
+    expect(Math.min(...bowl.map((point) => point.y))).toBeLessThan(head[0].y);
+    expect(rightDot[0]).toEqual(rightDot.at(-1));
+    expect(leftDot[0]).toEqual(leftDot.at(-1));
+    expect(Math.min(...rightDot.map((point) => point.y))).toBeGreaterThan(
+      Math.max(...head.map((point) => point.y)),
+    );
+    expect(Math.min(...leftDot.map((point) => point.y))).toBeGreaterThan(
+      Math.max(...head.map((point) => point.y)),
+    );
+    expect(Math.min(...rightDot.map((point) => point.x))).toBeGreaterThan(
+      Math.max(...leftDot.map((point) => point.x)),
+    );
+  });
+
   it("Arabic independent ك turns along its base before lifting for the inner arm", () => {
     expect(ARABIC_KAF.script).toBe("arabic");
     expect(penLifts(ARABIC_KAF)).toBe(1);
@@ -3641,6 +3667,9 @@ describe("handwriting ductus", () => {
       "_fonts/NotoNaskhArabic-Static.ttf",
     );
     expect(verifiedLetterFont("ف", ARABIC_FAA.source.url)).toBe(
+      "_fonts/NotoNaskhArabic-Static.ttf",
+    );
+    expect(verifiedLetterFont("ق", ARABIC_QAF.source.url)).toBe(
       "_fonts/NotoNaskhArabic-Static.ttf",
     );
     expect(verifiedLetterFont("و", "https://example.invalid/wrong-source")).toBeUndefined();
@@ -5660,6 +5689,19 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /directly linked faa\.mov.*two pen-down runs.*00:01.7–00:03.3.*00:01.7–00:02.5.*upper-right edge.*counterclockwise.*closed counter.*without lifting.*down from the head.*left through the broad independent bowl.*rising left tip.*one lift.*upper dot.*00:03.2–00:03.3.*two-way connector.*f sound.*transliteration.*contextual shapes.*two-stroke.*one-lift.*Noto Naskh.*loop-to-bowl continuity.*dot-last order/i,
+    );
+  });
+
+  it("Arabic independent ق traces its joined head and deep bowl before two ordered dots", () => {
+    const src = ARABIC_QAF.source;
+    expect(src.url).toBe(
+      "https://opentext.uoregon.edu/introarabic/chapter/alphabet-%d9%81-%d9%82/",
+    );
+    expect(src.citation).toMatch(
+      /Introduction to Arabic.*Alphabet ف ق.*Qaf.*00:01.5–00:03.5.*Oregon.*2023.*2026-08-23/i,
+    );
+    expect(src.variation).toMatch(
+      /directly linked qaf\.mov.*three pen-down runs.*00:01.5–00:03.5.*00:01.5–00:03.1.*upper-right edge.*counterclockwise.*closed counter.*without lifting.*deep independent bowl.*rising left tip.*one lift.*upper-right dot.*00:03.4.*second lift.*upper-left dot.*00:03.5.*two-way connector.*no English equivalent.*deep echo.*q transliteration.*three-stroke.*two-lift.*Noto Naskh.*independently demonstrated deep bowl.*right-to-left dot order/i,
     );
   });
 
