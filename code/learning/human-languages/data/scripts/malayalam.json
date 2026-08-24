@@ -5723,6 +5723,26 @@
   ],
   "marks": [
     {
+      "mark": "ം",
+      "sound": "ṁ (anusvara)",
+      "role": "anusvara",
+      "attachesAs": "the Malayalam anusvara written after a base; it can follow independent vowels, dependent vowel signs, consonant-bearing syllables, and other supported bases",
+      "example": {
+        "base": "അ",
+        "combined": "അം",
+        "sound": "aṁ"
+      },
+      "compositionOrder": [
+        "write the Malayalam base first",
+        "add the anusvara after it"
+      ],
+      "compositionSource": {
+        "citation": "The Unicode Consortium, The Unicode Standard, Version 17.0, Core Specification, §12.9.3 ‘Rendering Malayalam’, ‘Anusvara’, U+0D02 MALAYALAM SIGN ANUSVARA (2025)",
+        "url": "https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-12/",
+        "variation": "The standard identifies U+0D02 as Malayalam anusvara, shows it following independent vowels and dependent vowel signs, and requires rendering support for it on Malayalam letters and other bases. It specifies encoded composition and placement, not a universal handwriting direction or pen-lift count; the base-first instruction is a transparent learner composition convention, and this entry deliberately makes no standalone ductus claim."
+      }
+    },
+    {
       "mark": "്",
       "sound": "(suppresses the inherent vowel / may realize half-u)",
       "role": "virama",
