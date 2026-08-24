@@ -151,6 +151,29 @@ TOOLCHAIN_WEIGHTS = {
     "python": 2,
     "ruby": 2,
 }
+ORPHAN_SCAN_ROOT = "code"
+ORPHAN_LEDGER_PATH = "code/BUILD-EXEMPTIONS"
+ORPHAN_BUILD_NAMES = (
+    "BUILD",
+    "BUILD_windows",
+    "BUILD_mac",
+    "BUILD_linux",
+    "BUILD_mac_and_linux",
+)
+ORPHAN_SKIP_COMPONENTS = frozenset(
+    {
+        ".git",
+        "target",
+        "node_modules",
+        "vendor",
+        ".venv",
+        "_build",
+        "deps",
+        ".build",
+        "dist-newstyle",
+        ".cargo",
+    }
+)
 DISPLAY_SAFE_TOKEN = re.compile(r"^[A-Za-z0-9_@%+=:,./-]+$")
 WINDOWS_RESERVED_BASENAMES = {
     "CON",
@@ -1107,6 +1130,97 @@ def _validate_unique_paths(
         normalized[identity] = path
 
 
+def _path_identity(path: str) -> str:
+    return unicodedata.normalize("NFC", path).casefold()
+
+
+def _is_orphan_artifact_path(path: str) -> bool:
+    return any(component in ORPHAN_SKIP_COMPONENTS for component in path.split("/"))
+
+
+def _is_under_orphan_scan_root(path: str) -> bool:
+    return path == ORPHAN_SCAN_ROOT or path.startswith(f"{ORPHAN_SCAN_ROOT}/")
+
+
+def _validate_orphan_snapshot(snapshot: dict[str, Any]) -> None:
+    directories = snapshot["directories"]
+    manifests = snapshot["manifests"]
+    build_files = snapshot["build_files"]
+    exemptions = snapshot["exemptions"]
+
+    if directories != sorted(directories):
+        raise ConformanceError(
+            "CASE_VALIDATION_SNAPSHOT_INCONSISTENT",
+            "orphan directories must be sorted",
+        )
+    normalized_directories: set[str] = set()
+    for path in directories:
+        if error := portable_path_error(path):
+            raise ConformanceError(
+                "CASE_VALIDATION_SNAPSHOT_INCONSISTENT",
+                f"unsafe orphan directory {path!r}: {error}",
+            )
+        if not _is_under_orphan_scan_root(path):
+            raise ConformanceError(
+                "CASE_VALIDATION_SNAPSHOT_INCONSISTENT",
+                f"orphan directory is outside {ORPHAN_SCAN_ROOT}/: {path}",
+            )
+        identity = _path_identity(path)
+        if identity in normalized_directories:
+            raise ConformanceError(
+                "CASE_VALIDATION_SNAPSHOT_INCONSISTENT",
+                f"duplicate normalized orphan directory: {path}",
+            )
+        normalized_directories.add(identity)
+
+    for records, label in ((manifests, "manifest"), (build_files, "BUILD")):
+        paths = [record["path"] for record in records]
+        if paths != sorted(paths):
+            raise ConformanceError(
+                "CASE_VALIDATION_SNAPSHOT_INCONSISTENT",
+                f"orphan {label} paths must be sorted",
+            )
+        normalized: set[str] = set()
+        for path in paths:
+            if error := portable_path_error(path):
+                raise ConformanceError(
+                    "CASE_VALIDATION_SNAPSHOT_INCONSISTENT",
+                    f"unsafe orphan {label} path {path!r}: {error}",
+                )
+            if not _is_under_orphan_scan_root(path):
+                raise ConformanceError(
+                    "CASE_VALIDATION_SNAPSHOT_INCONSISTENT",
+                    f"orphan {label} path is outside {ORPHAN_SCAN_ROOT}/: {path}",
+                )
+            identity = _path_identity(path)
+            if identity in normalized:
+                raise ConformanceError(
+                    "CASE_VALIDATION_SNAPSHOT_INCONSISTENT",
+                    f"duplicate normalized orphan {label} path: {path}",
+                )
+            normalized.add(identity)
+
+    for manifest in manifests:
+        if manifest["path"] not in set(directories):
+            raise ConformanceError(
+                "CASE_VALIDATION_SNAPSHOT_INCONSISTENT",
+                f"orphan manifest directory is not declared: {manifest['path']}",
+            )
+    for build_file in build_files:
+        if posixpath.basename(build_file["path"]) not in ORPHAN_BUILD_NAMES:
+            raise ConformanceError(
+                "CASE_VALIDATION_SNAPSHOT_INCONSISTENT",
+                f"unrecognized orphan BUILD filename: {build_file['path']}",
+            )
+
+    lines = [entry["line"] for entry in exemptions]
+    if lines != sorted(lines) or len(lines) != len(set(lines)):
+        raise ConformanceError(
+            "CASE_VALIDATION_SNAPSHOT_INCONSISTENT",
+            "orphan exemption lines must be strictly increasing and unique",
+        )
+
+
 def _toolchain_for_language(language: str) -> str:
     toolchain = LANGUAGE_TOOLCHAINS.get(language)
     if toolchain is None:
@@ -1209,6 +1323,8 @@ def _validate_pure_case_semantics(
         checks = set(options["checks"])
         lua_windows_sibling_parity = "lua_windows_sibling_parity" in checks
         starlark_declarations = "starlark_declarations" in checks
+        if "orphan_crate_coverage" in checks:
+            _validate_orphan_snapshot(options["orphan_snapshot"])
         _validate_unique_paths(
             [package["rel_path"] for package in by_name.values()],
             "CASE_NESTED_PATH_UNSAFE",
@@ -1581,6 +1697,170 @@ def _expected_shards(options: dict[str, Any]) -> list[dict[str, Any]]:
     return shards
 
 
+def _expected_orphan_validation(
+    options: dict[str, Any],
+) -> tuple[list[dict[str, Any]], int]:
+    snapshot = options["orphan_snapshot"]
+    manifests = [
+        manifest
+        for manifest in snapshot["manifests"]
+        if not _is_orphan_artifact_path(manifest["path"])
+    ]
+    build_files = snapshot["build_files"]
+    directories = set(snapshot["directories"])
+    manifest_by_path = {manifest["path"]: manifest for manifest in manifests}
+    build_name_rank = {name: index for index, name in enumerate(ORPHAN_BUILD_NAMES)}
+
+    def covering_builds(manifest_path: str, state: str) -> list[dict[str, Any]]:
+        candidates = []
+        for build_file in build_files:
+            if build_file["state"] != state:
+                continue
+            parent = posixpath.dirname(build_file["path"])
+            if manifest_path != parent and not manifest_path.startswith(f"{parent}/"):
+                continue
+            if not _is_under_orphan_scan_root(parent):
+                continue
+            candidates.append(build_file)
+        return sorted(
+            candidates,
+            key=lambda item: (
+                -len(posixpath.dirname(item["path"]).split("/")),
+                build_name_rank[posixpath.basename(item["path"])],
+                item["path"],
+            ),
+        )
+
+    coverage: dict[str, dict[str, Any] | None] = {}
+    empty_builds: dict[str, dict[str, Any] | None] = {}
+    for manifest in manifests:
+        runnable = covering_builds(manifest["path"], "runnable")
+        empty = covering_builds(manifest["path"], "empty")
+        coverage[manifest["path"]] = runnable[0] if runnable else None
+        empty_builds[manifest["path"]] = empty[0] if empty else None
+
+    diagnostics: list[dict[str, Any]] = []
+    seen_exemption_paths: dict[str, int] = {}
+    valid_exemptions: list[dict[str, Any]] = []
+    for exemption in snapshot["exemptions"]:
+        path = exemption["path"]
+        exemption_identity: str | None = None
+        path_problem: str | None = None
+        if portable_path_error(path) is not None:
+            path_problem = "PATH_UNSAFE"
+        else:
+            exemption_identity = _path_identity(path)
+            if not _is_under_orphan_scan_root(path):
+                path_problem = "PATH_OUTSIDE_SCAN"
+            elif _is_orphan_artifact_path(path):
+                path_problem = "PATH_ARTIFACT"
+
+        duplicate = False
+        if exemption_identity is not None:
+            duplicate = exemption_identity in seen_exemption_paths
+            if not duplicate:
+                seen_exemption_paths[exemption_identity] = exemption["line"]
+
+        problem: str | None
+        if exemption["kind"] not in {"EXCLUDED", "PENDING"}:
+            problem = "UNKNOWN_KIND"
+        elif not exemption["reason"].strip():
+            problem = "REASON_MISSING"
+        elif duplicate:
+            problem = "DUPLICATE_PATH"
+        elif path_problem is not None:
+            problem = path_problem
+        else:
+            problem = None
+
+        if problem is not None:
+            diagnostics.append(
+                {
+                    "code": "ORPHAN_EXEMPTION_INVALID",
+                    "severity": "error",
+                    "path": ORPHAN_LEDGER_PATH,
+                    "details": {
+                        "line": exemption["line"],
+                        "problem": problem,
+                    },
+                }
+            )
+            continue
+        if exemption_identity is None:
+            raise ConformanceError(
+                "CASE_VALIDATION_SNAPSHOT_INCONSISTENT",
+                "valid orphan exemption path has no normalized identity",
+            )
+        valid_exemptions.append(exemption)
+
+    active_exemptions: dict[str, dict[str, Any]] = {}
+    pending_exemption_count = 0
+    for exemption in valid_exemptions:
+        exemption_path = exemption["path"]
+        stale_problem: str | None = None
+        if exemption_path not in directories:
+            stale_problem = "MISSING_DIRECTORY"
+        elif exemption_path not in manifest_by_path:
+            stale_problem = "NO_MANIFEST"
+        elif coverage[exemption_path] is not None:
+            stale_problem = "COVERED"
+        if stale_problem is not None:
+            diagnostics.append(
+                {
+                    "code": "ORPHAN_EXEMPTION_STALE",
+                    "severity": "error",
+                    "path": ORPHAN_LEDGER_PATH,
+                    "details": {
+                        "entry_path": exemption["path"],
+                        "kind": exemption["kind"],
+                        "line": exemption["line"],
+                        "problem": stale_problem,
+                    },
+                }
+            )
+            continue
+        active_exemptions[exemption_path] = exemption
+        if exemption["kind"] == "PENDING":
+            pending_exemption_count += 1
+
+    for manifest in manifests:
+        manifest_path = manifest["path"]
+        if coverage[manifest_path] is not None or manifest_path in active_exemptions:
+            continue
+        empty_build = empty_builds[manifest_path]
+        if empty_build is None:
+            diagnostics.append(
+                {
+                    "code": "ORPHAN_CRATE_UNLISTED",
+                    "severity": "error",
+                    "path": manifest["path"],
+                    "details": {"manifest_kind": manifest["kind"]},
+                }
+            )
+        else:
+            diagnostics.append(
+                {
+                    "code": "ORPHAN_CRATE_EMPTY_BUILD",
+                    "severity": "error",
+                    "path": manifest["path"],
+                    "details": {
+                        "build_path": empty_build["path"],
+                        "manifest_kind": manifest["kind"],
+                    },
+                }
+            )
+
+    diagnostics.sort(
+        key=lambda item: (
+            item["code"],
+            item.get("path", ""),
+            item.get("package", ""),
+            json.dumps(item.get("details", {}), sort_keys=True),
+        )
+    )
+    return diagnostics, pending_exemption_count
+
+
 def _expected_validation_diagnostics(
     options: dict[str, Any],
 ) -> list[dict[str, Any]]:
@@ -1774,6 +2054,9 @@ def _expected_validation_diagnostics(
                     },
                 }
             )
+    if "orphan_crate_coverage" in checks:
+        orphan_diagnostics, _ = _expected_orphan_validation(options)
+        diagnostics.extend(orphan_diagnostics)
     return sorted(
         diagnostics,
         key=lambda item: (
@@ -1953,6 +2236,13 @@ def _validate_pure_result_semantics(
         expected_codes = sorted(
             {diagnostic["code"] for diagnostic in expected_diagnostics}
         )
+        if "orphan_crate_coverage" in set(options["checks"]):
+            _, expected_pending_count = _expected_orphan_validation(options)
+            if payload.get("pending_exemption_count") != expected_pending_count:
+                raise ConformanceError(
+                    f"{prefix}_VALIDATION_INCONSISTENT",
+                    "pending exemption count does not match the normalized snapshot",
+                )
         diagnostic_projection = [
             {
                 key: diagnostic[key]

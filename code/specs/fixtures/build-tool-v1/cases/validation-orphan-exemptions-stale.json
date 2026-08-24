@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "id": "validation/orphan-exemptions-stale",
+  "domain": "validation",
+  "summary": "Covered, missing-directory, and no-longer-manifest exemption entries are stale while an active PENDING entry still suppresses its uncovered crate.",
+  "platforms": ["linux"],
+  "capabilities": ["validation"],
+  "workspace": {"files": []},
+  "input": {
+    "operation": "validation",
+    "options": {
+      "platform": "linux",
+      "checks": ["orphan_crate_coverage"],
+      "packages": [],
+      "dependency_edges": [],
+      "orphan_snapshot": {
+        "directories": [
+          "code/packages/rust/covered",
+          "code/packages/rust/no-manifest",
+          "code/packages/rust/pending"
+        ],
+        "manifests": [
+          {"path": "code/packages/rust/covered", "kind": "package"},
+          {"path": "code/packages/rust/pending", "kind": "package"}
+        ],
+        "build_files": [
+          {"path": "code/packages/rust/covered/BUILD", "state": "runnable"}
+        ],
+        "exemptions": [
+          {"line": 10, "kind": "PENDING", "path": "code/packages/rust/covered", "reason": "the BUILD has now landed"},
+          {"line": 11, "kind": "EXCLUDED", "path": "code/packages/rust/missing-directory", "reason": "the directory was removed"},
+          {"line": 12, "kind": "EXCLUDED", "path": "code/packages/rust/no-manifest", "reason": "the Cargo manifest was removed"},
+          {"line": 13, "kind": "PENDING", "path": "code/packages/rust/pending", "reason": "awaiting a reviewed BUILD front"}
+        ]
+      }
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "validation/orphan-exemptions-stale",
+    "domain": "validation",
+    "outcome": "error",
+    "result": {"valid": false, "diagnostic_codes": ["ORPHAN_EXEMPTION_STALE"], "pending_exemption_count": 1},
+    "diagnostics": [
+      {"code": "ORPHAN_EXEMPTION_STALE", "severity": "error", "path": "code/BUILD-EXEMPTIONS", "details": {"entry_path": "code/packages/rust/covered", "kind": "PENDING", "line": 10, "problem": "COVERED"}},
+      {"code": "ORPHAN_EXEMPTION_STALE", "severity": "error", "path": "code/BUILD-EXEMPTIONS", "details": {"entry_path": "code/packages/rust/missing-directory", "kind": "EXCLUDED", "line": 11, "problem": "MISSING_DIRECTORY"}},
+      {"code": "ORPHAN_EXEMPTION_STALE", "severity": "error", "path": "code/BUILD-EXEMPTIONS", "details": {"entry_path": "code/packages/rust/no-manifest", "kind": "EXCLUDED", "line": 12, "problem": "NO_MANIFEST"}}
+    ]
+  },
+  "limits": {"wall_time_ms": 1000, "output_bytes": 1048576, "workspace_bytes": 1048576, "process_count": 1, "memory_mib": 128, "cpu_time_ms": 1000}
+}

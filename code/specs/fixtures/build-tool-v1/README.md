@@ -35,7 +35,7 @@ emerging OCaml lane. It records front-door and shared-engine state but contains
 no executable commands. Every adapter is currently marked missing, so a valid
 inventory is not reported as conformance success.
 
-The 102-case bootstrap corpus covers every process-free v1 domain:
+The 106-case bootstrap corpus covers every process-free v1 domain:
 
 - canonical package and program membership, language-registry classification
   with paired C#, F#, Haskell, Java, and Kotlin package/program identities, a
@@ -69,7 +69,9 @@ The 102-case bootstrap corpus covers every process-free v1 domain:
   presence, local references, isolated prerequisites, Starlark declarations,
   package roots, manifests, toolchains, and path safety, plus absent Lua
   `BUILD_windows` sibling-closure parity and the complete toolchain registry,
-  including OCaml; and
+  including OCaml, plus independently derived orphan Cargo-manifest coverage,
+  empty BUILD rejection, reasoned exemptions, countable PENDING debt, and
+  stale-ledger cleanup; and
 - bounded process-free CLI parsing with deterministic typed defaults, modeled
   post-parse outcomes, exact multibyte and astral-scalar limits, and adversarial
   reserved, path, Git-ref-component, shell, environment, response-file,
@@ -298,7 +300,7 @@ The corpus now closes all process-free v1 domains:
 - diff selection and hashing/cache;
 - Starlark evaluation and structured-command extraction;
 - prerequisite-closed sharding;
-- nine-check BUILD-file validation and toolchain detection; and
+- ten-check BUILD-file validation and toolchain detection; and
 - bounded CLI parsing, typed normalized options, and exit-decision semantics.
 
 Execution now has a closed data model and authority policy, but no execution

@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "id": "validation/orphan-crates-unlisted",
+  "domain": "validation",
+  "summary": "Missing package and program roots, empty BUILDs, sibling-only coverage, and similarly named non-artifact paths remain visible validation failures.",
+  "platforms": ["linux"],
+  "capabilities": ["validation"],
+  "workspace": {"files": []},
+  "input": {
+    "operation": "validation",
+    "options": {
+      "platform": "linux",
+      "checks": ["orphan_crate_coverage"],
+      "packages": [],
+      "dependency_edges": [],
+      "orphan_snapshot": {
+        "directories": [
+          "code/packages/rust/comment-only",
+          "code/packages/rust/missing",
+          "code/packages/rust/sibling-victim",
+          "code/packages/rust/targets/generated",
+          "code/programs/rust/missing"
+        ],
+        "manifests": [
+          {"path": "code/packages/rust/comment-only", "kind": "package"},
+          {"path": "code/packages/rust/missing", "kind": "package"},
+          {"path": "code/packages/rust/sibling-victim", "kind": "package"},
+          {"path": "code/packages/rust/targets/generated", "kind": "package"},
+          {"path": "code/programs/rust/missing", "kind": "package"}
+        ],
+        "build_files": [
+          {"path": "code/packages/rust/comment-only/BUILD", "state": "empty"},
+          {"path": "code/packages/rust/sibling-provider/BUILD", "state": "runnable"}
+        ],
+        "exemptions": []
+      }
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "validation/orphan-crates-unlisted",
+    "domain": "validation",
+    "outcome": "error",
+    "result": {"valid": false, "diagnostic_codes": ["ORPHAN_CRATE_EMPTY_BUILD", "ORPHAN_CRATE_UNLISTED"], "pending_exemption_count": 0},
+    "diagnostics": [
+      {"code": "ORPHAN_CRATE_EMPTY_BUILD", "severity": "error", "path": "code/packages/rust/comment-only", "details": {"build_path": "code/packages/rust/comment-only/BUILD", "manifest_kind": "package"}},
+      {"code": "ORPHAN_CRATE_UNLISTED", "severity": "error", "path": "code/packages/rust/missing", "details": {"manifest_kind": "package"}},
+      {"code": "ORPHAN_CRATE_UNLISTED", "severity": "error", "path": "code/packages/rust/sibling-victim", "details": {"manifest_kind": "package"}},
+      {"code": "ORPHAN_CRATE_UNLISTED", "severity": "error", "path": "code/packages/rust/targets/generated", "details": {"manifest_kind": "package"}},
+      {"code": "ORPHAN_CRATE_UNLISTED", "severity": "error", "path": "code/programs/rust/missing", "details": {"manifest_kind": "package"}}
+    ]
+  },
+  "limits": {"wall_time_ms": 1000, "output_bytes": 1048576, "workspace_bytes": 1048576, "process_count": 1, "memory_mib": 128, "cpu_time_ms": 1000}
+}
