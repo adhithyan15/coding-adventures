@@ -2,12 +2,14 @@
 
 from __future__ import annotations
 
+import json
+import re
+import unicodedata
 from collections.abc import Iterable
 from pathlib import Path
-import re
+from typing import Literal, TypedDict
 
 from build_tool.discovery import Package
-
 
 CI_MANAGED_TOOLCHAIN_LANGUAGES = frozenset(
     {
@@ -23,6 +25,40 @@ CI_MANAGED_TOOLCHAIN_LANGUAGES = frozenset(
         "haskell",
     }
 )
+TRACKED_ARTIFACT_COMPONENT_IDENTITY = "node_modules"
+TRACKED_ARTIFACT_REDACTED_PATH = "repository"
+WINDOWS_RESERVED_BASENAMES = frozenset(
+    {
+        "CON",
+        "PRN",
+        "AUX",
+        "NUL",
+        "CONIN$",
+        "CONOUT$",
+        "CLOCK$",
+        *(f"COM{index}" for index in range(1, 10)),
+        *(f"LPT{index}" for index in range(1, 10)),
+        *(f"COM{index}" for index in "¹²³"),
+        *(f"LPT{index}" for index in "¹²³"),
+    }
+)
+
+
+class TrackedArtifactEntry(TypedDict):
+    """One inert tracked-path record supplied by a reviewed native adapter."""
+
+    ordinal: int
+    path: str
+    entry_kind: Literal["regular", "symlink", "reparse"]
+
+
+class ValidationDiagnostic(TypedDict):
+    """Stable language-neutral build validation diagnostic."""
+
+    code: str
+    severity: Literal["error"]
+    path: str
+    details: dict[str, int | str]
 
 
 def validate_ci_full_build_toolchains(
@@ -184,6 +220,56 @@ def validate_perl_build_files(packages: Iterable[Package]) -> list[str]:
     return errors
 
 
+def validate_tracked_artifact_snapshot(
+    entries: Iterable[TrackedArtifactEntry],
+) -> list[ValidationDiagnostic]:
+    """Derive tracked-artifact diagnostics from inert path records only."""
+    diagnostics: list[ValidationDiagnostic] = []
+
+    for entry in entries:
+        normalized_path, problem = _normalize_tracked_artifact_path(entry["path"])
+        details: dict[str, int | str] = {
+            "ordinal": entry["ordinal"],
+            "entry_kind": entry["entry_kind"],
+        }
+        if problem is not None:
+            details["problem"] = problem
+            diagnostics.append(
+                {
+                    "code": "TRACKED_ARTIFACT_PATH_INVALID",
+                    "severity": "error",
+                    "path": TRACKED_ARTIFACT_REDACTED_PATH,
+                    "details": details,
+                }
+            )
+            continue
+
+        if normalized_path is None:
+            raise AssertionError("valid tracked artifact path did not normalize")
+        if any(
+            unicodedata.normalize("NFKC", component).casefold()
+            == TRACKED_ARTIFACT_COMPONENT_IDENTITY
+            for component in normalized_path.split("/")
+        ):
+            diagnostics.append(
+                {
+                    "code": "TRACKED_ARTIFACT_FORBIDDEN",
+                    "severity": "error",
+                    "path": normalized_path,
+                    "details": details,
+                }
+            )
+
+    return sorted(
+        diagnostics,
+        key=lambda item: (
+            item["code"],
+            item["path"],
+            json.dumps(item["details"], sort_keys=True),
+        ),
+    )
+
+
 def _languages_needing_ci_toolchains(packages: Iterable[Package]) -> list[str]:
     return sorted(
         {
@@ -192,6 +278,33 @@ def _languages_needing_ci_toolchains(packages: Iterable[Package]) -> list[str]:
             if pkg.language in CI_MANAGED_TOOLCHAIN_LANGUAGES
         }
     )
+
+
+def _normalize_tracked_artifact_path(path: str) -> tuple[str | None, str | None]:
+    normalized = path.replace("\\", "/")
+    if not normalized:
+        return None, "EMPTY"
+    if len(normalized) > 512:
+        return None, "TOO_LONG"
+    if normalized != unicodedata.normalize("NFC", normalized):
+        return None, "NON_NFC"
+    if normalized.startswith("/"):
+        return None, "ABSOLUTE"
+    if re.match(r"^[A-Za-z]:", normalized):
+        return None, "DRIVE_QUALIFIED"
+    if "//" in normalized:
+        return None, "EMPTY_SEGMENT"
+    if any(ord(character) < 32 or character in '<>:"|?*' for character in normalized):
+        return None, "UNSAFE_CHARACTER"
+    for segment in normalized.split("/"):
+        if segment in {".", ".."}:
+            return None, "DOT_SEGMENT"
+        if segment.endswith((" ", ".")):
+            return None, "TRAILING_DOT_OR_SPACE"
+        basename = segment.split(".", 1)[0].upper()
+        if basename in WINDOWS_RESERVED_BASENAMES:
+            return None, "RESERVED_BASENAME"
+    return normalized, None
 
 
 def _read_build_lines(path: Path) -> list[str]:

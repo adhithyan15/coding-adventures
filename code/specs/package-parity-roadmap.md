@@ -6056,6 +6056,17 @@ nodes until their ten engine children merge. The Go tracked-artifact
 Git-index/process boundary stays separately selection-blocked and outside the
 process-free oracle.
 
+The dependency/leverage pass selects
+`build-tool-python-tracked-artifact-validation-conformance` on branch
+`codex/build-tool-python-tracked-artifact-validation-conformance` from exact
+base `d960dabfe5e07a4d0d7073dada2fea00c05de426`. It is one engine and one
+closed check, consumes all four neutral cases without Git or host-filesystem
+authority, and is the smallest newly ready build-tool parity child. Eleven live
+open PRs and 35 non-main remote heads have zero exact candidate-surface
+overlap; the target branch is absent. The OCaml process-free core remains
+dependency-ready but collision-unsafe while PRs #12149 and #12162 touch the Go
+validator and main surfaces.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

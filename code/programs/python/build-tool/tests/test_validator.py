@@ -2,12 +2,30 @@
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
+from typing import cast
+
+import pytest
 
 from build_tool.discovery import Package
 from build_tool.validator import (
+    TrackedArtifactEntry,
+    ValidationDiagnostic,
     validate_build_contracts,
     validate_ci_full_build_toolchains,
+    validate_tracked_artifact_snapshot,
+)
+
+REPO_ROOT = Path(__file__).resolve().parents[5]
+CONFORMANCE_CASES = (
+    REPO_ROOT / "code" / "specs" / "fixtures" / "build-tool-v1" / "cases"
+)
+TRACKED_ARTIFACT_CASES = (
+    "validation-tracked-artifacts-clean.json",
+    "validation-tracked-artifacts-forbidden.json",
+    "validation-tracked-artifacts-aliases.json",
+    "validation-tracked-artifacts-invalid.json",
 )
 
 
@@ -209,3 +227,53 @@ luarocks make --local --deps-mode=none coding-adventures-safe-pkg-0.1.0-1.rocksp
     )
 
     assert validate_build_contracts(tmp_path, packages) is None
+
+
+@pytest.mark.parametrize("case_name", TRACKED_ARTIFACT_CASES)
+def test_validate_tracked_artifacts_consumes_shared_cases(case_name):
+    case = json.loads((CONFORMANCE_CASES / case_name).read_text(encoding="utf-8"))
+    entries = cast(
+        list[TrackedArtifactEntry],
+        case["input"]["options"]["tracked_artifact_snapshot"]["entries"],
+    )
+    expected = cast(list[ValidationDiagnostic], case["expected"]["diagnostics"])
+
+    diagnostics = validate_tracked_artifact_snapshot(entries)
+
+    assert diagnostics == expected
+
+
+@pytest.mark.parametrize(
+    ("path", "problem"),
+    (
+        ("", "EMPTY"),
+        ("a" * 513, "TOO_LONG"),
+        ("code/packages/e\u0301/file", "NON_NFC"),
+        ("/absolute/file", "ABSOLUTE"),
+        ("C:/drive/file", "DRIVE_QUALIFIED"),
+        ("code//empty/file", "EMPTY_SEGMENT"),
+        ("code/bad?/file", "UNSAFE_CHARACTER"),
+        ("code/../traversal", "DOT_SEGMENT"),
+        ("code/trailing./file", "TRAILING_DOT_OR_SPACE"),
+        ("code/COM1.txt/file", "RESERVED_BASENAME"),
+    ),
+)
+def test_validate_tracked_artifacts_has_closed_redacted_path_errors(path, problem):
+    diagnostics = validate_tracked_artifact_snapshot(
+        [{"ordinal": 7, "path": path, "entry_kind": "regular"}]
+    )
+
+    assert diagnostics == [
+        {
+            "code": "TRACKED_ARTIFACT_PATH_INVALID",
+            "severity": "error",
+            "path": "repository",
+            "details": {
+                "ordinal": 7,
+                "entry_kind": "regular",
+                "problem": problem,
+            },
+        }
+    ]
+    if path:
+        assert path not in repr(diagnostics)

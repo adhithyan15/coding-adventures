@@ -117,6 +117,14 @@ predictable staging path. If staging or replacement fails, the previously
 published plan remains intact and the writer makes a best-effort cleanup of its
 temporary file.
 
+The process-free tracked-artifact validator consumes the shared closed snapshot
+as inert ordinal, path, and entry-kind records. It normalizes separators,
+rejects unsafe paths at the fixed redacted `repository` location, and rejects
+exact, nested, case, and Unicode compatibility aliases of a `node_modules`
+component. Regular, symlink, and reparse metadata is classified identically;
+the validator never enumerates Git, opens or follows a path, launches a
+process, reads the environment, or accesses the network.
+
 ## Installation
 
 ```bash
