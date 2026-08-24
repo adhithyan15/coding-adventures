@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased — source-verified Arabic alif-maqsura ending
+
+- Teach **ى** as a word-final long-aa ending with isolated and final forms.
+- Distinguish it from dotted Yaa, regional dotless Yaa, and the Hamza carrier.
+
 ## Unreleased — source-verified Arabic taa-marbuta ending
 
 - Teach **ة** as a word-final-only ending with isolated and connected-final forms.

@@ -354,10 +354,10 @@ describe("handwriting ductus", () => {
     expect(gujarati.letters.every((letter) => letter.strokeOrderSource !== undefined)).toBe(true);
   });
 
-  it("keeps all 30 unique Arabic learner rows sourced without overstating completion", () => {
+  it("keeps all 31 unique Arabic learner rows sourced without overstating completion", () => {
     const arabic = SCRIPTS.find((script) => script.script === "arabic")!;
     expect(arabic.complete).toBe(false);
-    expect(arabic.letters).toHaveLength(30);
+    expect(arabic.letters).toHaveLength(31);
     expect(arabic.letters.every((letter) => letter.strokeOrderSource !== undefined)).toBe(true);
   });
 
@@ -373,6 +373,21 @@ describe("handwriting ductus", () => {
     expect(ductus.strokes).toHaveLength(3);
     expect(penPath(ductus.strokes[0]).at(-1)).toEqual(penPath(ductus.strokes[0])[0]);
     expect(penPath(ductus.strokes[1])[0].x).toBeLessThan(penPath(ductus.strokes[2])[0].x);
+  });
+
+  it("keeps alif maqsura word-final, dotless, and distinct from Yaa", () => {
+    const arabic = SCRIPTS.find((script) => script.script === "arabic")!;
+    const ending = arabic.letters.find((letter) => letter.glyph === "ى")!;
+    expect(ending.forms).toEqual({ isolated: "ى", final: "ـى" });
+    expect(ending.penLifts).toBe(0);
+    expect(ending.strokeOrderSource!.url).toBe(
+      "https://alarabiyah.sakura.ne.jp/arabic/alphabets/naskh/alifmaqsuurah/",
+    );
+    const maqsura = DUCTUS[ductusKey("arabic", "ى")];
+    const yaa = DUCTUS[ductusKey("arabic", "ي")];
+    expect(maqsura.strokes).toHaveLength(1);
+    expect(penPath(maqsura.strokes[0])).toEqual(penPath(yaa.strokes[0]));
+    expect(yaa.strokes).toHaveLength(3);
   });
 
   it("models seated Hamza as sourced carrier composition, not duplicate letters", () => {
