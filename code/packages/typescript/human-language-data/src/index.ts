@@ -144,6 +144,17 @@ export {
   loadEverything,
   loadTrackLessons,
 } from "./loader.js";
+// HL21: a ledger at `X.json` may instead live as the directory `X.d/`, so that
+// many authors can append to it at once without colliding on one file.
+export {
+  SHARD_DIR_SUFFIX,
+  isSharded,
+  listShardNames,
+  readMaybeSharded,
+  readShards,
+  shardDirectoryFor,
+  type Shard,
+} from "./shard.js";
 export {
   buildTrackProgress,
   renderTrackProgressCard,
