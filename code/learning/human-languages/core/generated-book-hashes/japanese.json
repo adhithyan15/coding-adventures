@@ -169,6 +169,34 @@
         "JA-C11-body-map"
       ],
       "tex": "japanese/book/chapters/ch11-body-seven.tex"
+    },
+    {
+      "language": "japanese",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:bc4abcb1c70ca4fa",
+      "lessonIds": [
+        "JA-R12-foundation-01",
+        "JA-C12-atama",
+        "JA-C12-kami",
+        "JA-R12-foundation-02",
+        "JA-C12-ha-tooth",
+        "JA-C12-kata",
+        "JA-R12-mixed-scripts",
+        "JA-C12-onaka",
+        "JA-C12-senaka",
+        "JA-R12-doorway",
+        "JA-C12-koshi",
+        "JA-R12-farewell",
+        "JA-R12-repair-01",
+        "JA-R12-repair-02",
+        "JA-R12-repair-03",
+        "JA-R12-repair-04",
+        "JA-R12-writing-01",
+        "JA-R12-writing-02",
+        "JA-R12-body-01",
+        "JA-C12-body-map-two"
+      ],
+      "tex": "japanese/book/chapters/ch12-body-seven-more.tex"
     }
   ]
 }

@@ -1799,6 +1799,12 @@
       "scriptSet": "japanese-main"
     },
     {
+      "language": "japanese",
+      "chapter": 12,
+      "output": "japanese/book/chapters/ch12-body-seven-more.tex",
+      "scriptSet": "japanese-main"
+    },
+    {
       "language": "kannada",
       "chapter": 6,
       "output": "kannada/book/chapters/ch06-dative-case.tex",
