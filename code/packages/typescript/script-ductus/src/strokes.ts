@@ -9388,6 +9388,39 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: arabicAlphabetSource("ه"),
   },
+  // Taa marbuta is word-final only. Its isolated Naskh body closes clockwise
+  // before the two upper dots; the cited lesson records both dot-order customs.
+  [ductusKey("arabic", "ة")]: {
+    script: "arabic",
+    glyph: "ة",
+    strokes: [
+      {
+        segments: [{
+          label: "circle clockwise through the compact body and close it on the baseline",
+          path: [
+              { x: 181, y: 351 }, { x: 225, y: 325 }, { x: 270, y: 285 },
+              { x: 300, y: 240 }, { x: 325, y: 185 }, { x: 310, y: 130 },
+              { x: 275, y: 85 }, { x: 225, y: 40 }, { x: 190, y: 40 },
+              { x: 145, y: 65 }, { x: 91, y: 140 }, { x: 92, y: 185 },
+              { x: 136, y: 264 }, { x: 175, y: 315 }, { x: 181, y: 351 },
+          ],
+        }],
+      },
+      {
+        segments: [{
+          label: "lift, then place the upper-left dot",
+          path: [{ x: 75, y: 500 }, { x: 109, y: 545 }, { x: 145, y: 500 }],
+        }],
+      },
+      {
+        segments: [{
+          label: "lift again, then place the upper-right dot",
+          path: [{ x: 220, y: 515 }, { x: 260, y: 560 }, { x: 300, y: 515 }],
+        }],
+      },
+    ],
+    source: arabicAlphabetSource("ة"),
+  },
   [ductusKey("arabic", "و")]: {
     script: "arabic",
     glyph: "و",

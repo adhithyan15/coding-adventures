@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased — source-verified Arabic taa-marbuta ending
+
+- Teach **ة** as a word-final-only ending with isolated and connected-final forms.
+- Preserve 29 canonical base/standalone rows while exposing a 30th learner row.
+
 ## Unreleased — Arabic seated-Hamza composition metadata
 
 - Represent **أ إ ؤ ئ** as compositions of existing carrier and Hamza paths.
