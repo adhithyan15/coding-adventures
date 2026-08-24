@@ -103,10 +103,10 @@
         "kind": "dialogue",
         "summary": "The Three Words for You — the chapter run end to end.",
         "assesses": [
-                                        "ES-LEX-TU",
-                                        "ES-LEX-USTED",
-                                        "ES-LEX-QUIEN",
-                                        "ES-ETYMON-TU-THOU",
+          "ES-LEX-TU",
+          "ES-LEX-USTED",
+          "ES-LEX-QUIEN",
+          "ES-ETYMON-TU-THOU",
           "ES-REGISTER-TU-USTED",
           "ES-GRAMMAR-USTED-THIRD-PERSON",
           "ES-LEX-VOS-01",
@@ -130,8 +130,8 @@
         "kind": "dialogue",
         "summary": "Asking Someone's Name — the chapter run end to end.",
         "assesses": [
-                                    "ES-LEX-COMO",
-                                    "ES-ETYMON-QUOMODO",
+          "ES-LEX-COMO",
+          "ES-ETYMON-QUOMODO",
           "ES-SCRIPT-INVERTED-QUESTION",
           "ES-GRAMMAR-QUESTION-ACCENT",
           "ES-ETYMON-QUESTION-QU",
@@ -5944,6 +5944,90 @@
           "ES-LEX-C305-NAME-03",
           "ES-LEX-C305-NAME-04",
           "ES-LEX-C305-NAME-05"
+        ]
+      }
+    },
+    {
+      "chapter": 310,
+      "title": "El Cuarto Y La Mesa --- Key, Shower, Table, Light, Bathroom",
+      "label": "ch:el-cuarto-y-la-mesa",
+      "canDo": "I can ask a stranger in Spanish for the five things a room and a table make me ask for: the key, the shower, the table, the light and the bathroom.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "ES-C310-bano",
+        "kind": "production",
+        "summary": "Complete ES-C310-bano: ask for all five, ending with the question every traveller needs first --- donde esta el bano.",
+        "assesses": [
+          "ES-LEX-C310-ASK-01",
+          "ES-LEX-C310-ASK-02",
+          "ES-LEX-C310-ASK-03",
+          "ES-LEX-C310-ASK-04",
+          "ES-LEX-C310-ASK-05"
+        ]
+      }
+    },
+    {
+      "chapter": 311,
+      "title": "La Tienda Y La Cuenta --- Shop, Bill, Price, Bag, Seat",
+      "label": "ch:la-tienda-y-la-cuenta",
+      "canDo": "I can carry out a transaction in Spanish: find the shop, ask the price, ask for the bill, ask for a bag and ask for a seat.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "ES-C311-asiento",
+        "kind": "production",
+        "summary": "Complete ES-C311-asiento: walk in, ask the price, ask for the bill, take the bag and ask for a seat.",
+        "assesses": [
+          "ES-LEX-C311-ASK-06",
+          "ES-LEX-C311-ASK-07",
+          "ES-LEX-C311-ASK-08",
+          "ES-LEX-C311-ASK-09",
+          "ES-LEX-C311-ASK-10"
+        ]
+      }
+    },
+    {
+      "chapter": 312,
+      "title": "Lo Que Llevas --- Clock, Phone, Suitcase, Map, Letter",
+      "label": "ch:lo-que-llevas",
+      "canDo": "I can name and ask for the five things I travel with in Spanish: the clock, the phone, the suitcase, the map and the letter.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "ES-C312-carta",
+        "kind": "production",
+        "summary": "Complete ES-C312-carta: ask for each of the five carried things, and ask for the menu by the same word.",
+        "assesses": [
+          "ES-LEX-C312-ASK-11",
+          "ES-LEX-C312-ASK-12",
+          "ES-LEX-C312-ASK-13",
+          "ES-LEX-C312-ASK-14",
+          "ES-LEX-C312-ASK-15"
+        ]
+      }
+    },
+    {
+      "chapter": 313,
+      "title": "El Mostrador --- Ticket, Coin, Passport, Entrance, Change",
+      "label": "ch:el-mostrador",
+      "canDo": "I can get through a counter in Spanish: ask for the ticket, hand over the passport, find the entrance and ask for my change.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "ES-C313-cambio",
+        "kind": "production",
+        "summary": "Complete ES-C313-cambio: ask for a ticket, produce the passport, find the entrance and ask for the change owed.",
+        "assesses": [
+          "ES-LEX-C313-ASK-16",
+          "ES-LEX-C313-ASK-17",
+          "ES-LEX-C313-ASK-18",
+          "ES-LEX-C313-ASK-19",
+          "ES-LEX-C313-ASK-20"
         ]
       }
     },
