@@ -3758,6 +3758,39 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: devanagariAlphabetSource("ल"),
   },
+  // Hela Nomad's published stroke data keeps both loops in one figure-eight
+  // body, then separately descends the short upper stem and draws the headline:
+  // three strokes, two lifts.
+  [ductusKey("devanagari", "ळ")]: {
+    script: "devanagari",
+    glyph: "ळ",
+    strokes: [
+      { segments: [{ label: "sweep through the joined left and right loops", path: [
+        { x: 389, y: 295 }, { x: 355, y: 332 }, { x: 310, y: 370 },
+        { x: 258, y: 397 }, { x: 198, y: 403 }, { x: 143, y: 385 },
+        { x: 102, y: 345 }, { x: 84, y: 291 }, { x: 80, y: 233 },
+        { x: 94, y: 177 }, { x: 128, y: 131 }, { x: 178, y: 103 },
+        { x: 236, y: 100 }, { x: 289, y: 123 }, { x: 330, y: 165 },
+        { x: 358, y: 216 }, { x: 384, y: 269 }, { x: 414, y: 320 },
+        { x: 448, y: 367 }, { x: 498, y: 397 }, { x: 557, y: 405 },
+        { x: 613, y: 389 }, { x: 655, y: 350 }, { x: 674, y: 295 },
+        { x: 680, y: 237 }, { x: 672, y: 180 }, { x: 642, y: 131 },
+        { x: 592, y: 103 }, { x: 533, y: 95 }, { x: 475, y: 106 },
+        { x: 426, y: 137 }, { x: 392, y: 184 }, { x: 375, y: 214 },
+      ] }] },
+      { segments: [{ label: "lift, then descend the short upper stem", path: [
+        { x: 550, y: 551 }, { x: 550, y: 515 }, { x: 550, y: 480 },
+        { x: 550, y: 445 }, { x: 550, y: 410 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the shirorekha left-to-right", path: [
+        { x: 5, y: 585 }, { x: 85, y: 585 }, { x: 165, y: 585 },
+        { x: 245, y: 585 }, { x: 325, y: 585 }, { x: 405, y: 585 },
+        { x: 485, y: 585 }, { x: 565, y: 585 }, { x: 650, y: 585 },
+        { x: 720, y: 585 },
+      ] }] },
+    ],
+    source: devanagariAlphabetSource("ळ"),
+  },
   // JackPotte's animation and the Central Hindi Directorate deskbook agree on
   // three parts: the counterclockwise loop, descending right stem, and final
   // headline. The animation supplies the within-run directions and two lifts.

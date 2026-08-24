@@ -21,24 +21,22 @@ describe("real curriculum", () => {
     expect(hasErrors(issues)).toBe(false);
   });
 
-  it("keeps the shared Devanagari inventory fail-closed with measured debt", () => {
+  it("keeps the shared Devanagari inventory closed", () => {
     const gaps = validate({ taxonomy, lessons, scripts }).filter(
       (issue) =>
         issue.level === "warning" &&
         issue.code === "uncovered-glyphs" &&
         issue.message.includes("devanagari.json"),
     );
-    expect(gaps).toHaveLength(2);
+    expect(gaps).toEqual([]);
 
     const missing = new Set(
       gaps.flatMap((issue) =>
         issue.message.split("characters not yet in devanagari.json: ")[1]!.split(" "),
       ),
     );
-    expect(missing).toEqual(new Set([
-      "ळ",
-    ]));
-    expect(scripts.devanagari!.complete).toBe(false);
+    expect(missing).toEqual(new Set());
+    expect(scripts.devanagari!.complete).toBe(true);
   });
 
   it("loaded every track (17+ and growing)", () => {
