@@ -1,5 +1,9 @@
 # Changelog — diagram-to-paint
 
+## 0.60.0
+
+- Shape resolved Mermaid XY point labels into backend-neutral Paint glyph runs.
+
 ## 0.58.0
 
 - Lower generalized GitGraph history arcs for merge and cherry-pick parent topology.

@@ -52,6 +52,7 @@
 
 export {
   type Letter,
+  type Mark,
   type ScriptData,
   SCRIPTS,
   verifiedLetterFont,

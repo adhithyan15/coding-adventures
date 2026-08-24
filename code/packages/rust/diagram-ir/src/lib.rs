@@ -510,10 +510,16 @@ pub enum SeriesKind {
 }
 
 #[derive(Clone, Debug, PartialEq)]
+pub struct ChartDataPoint {
+    pub value: f64,
+    pub label: Option<String>,
+}
+
+#[derive(Clone, Debug, PartialEq)]
 pub struct ChartSeries {
     pub kind: SeriesKind,
     pub label: Option<String>,
-    pub data: Vec<f64>,
+    pub data: Vec<ChartDataPoint>,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -645,6 +651,15 @@ pub enum LayoutedChartItem {
     },
     LinePath {
         points: Vec<Point>,
+        color: String,
+    },
+    PointLabel {
+        x: f64,
+        y: f64,
+        width: f64,
+        height: f64,
+        text: String,
+        font_size: f64,
         color: String,
     },
     PieArc {
@@ -1387,7 +1402,16 @@ mod tests {
             series: vec![ChartSeries {
                 kind: SeriesKind::Bar,
                 label: None,
-                data: vec![40.0, 60.0],
+                data: vec![
+                    ChartDataPoint {
+                        value: 40.0,
+                        label: None,
+                    },
+                    ChartDataPoint {
+                        value: 60.0,
+                        label: Some("Peak".into()),
+                    },
+                ],
             }],
             slices: vec![],
             sankey_nodes: vec![],
@@ -1398,6 +1422,7 @@ mod tests {
             orientation: ChartOrientation::Vertical,
         };
         assert_eq!(d.series[0].data.len(), 2);
+        assert_eq!(d.series[0].data[1].label.as_deref(), Some("Peak"));
     }
     #[test]
     fn structural_diagram_builds() {

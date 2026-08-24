@@ -1,60 +1,196 @@
 Malayalam, chapter 1: Greetings.
-6 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+14 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 6.
-നമസ്കാരം (namaskāram) — "greetings," a making of a bow.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+Lesson 1 of 14.
+Namaskaram — first hear the greeting.
 
 Warm-up.
 [pause 2 seconds]
-The first Malayalam word, and your first Malayalam letters. You'll learn to read it and to understand it in the same breath.
+Imagine meeting someone with your palms together and a small bow. First, only listen: namaskāram.
 
-The letters in this word.
-(If you already read Malayalam, skim this — it's here so the book needs no prior knowledge.) Malayalam is written left to right, and every consonant carries a built-in "a" unless something removes it.
-ന = "na", മ = "ma", ര = "ra" — each with its built-in a.
-കാ = "kā" — ക (ka) plus the long-"ā" vowel sign.
-സ്ക — സ (sa) loses its vowel (a mark called the chandrakkala does the removing) and joins ക (ka) as a conjunct, "ska."
-ം — the anusvāram, a little circle that adds a final nasal "-m."
-Left to right: ന, മ, സ്, കാ, ര, ം = na-ma-s-kā-ram, which gives:
-നമസ്കാരം = namaskāram.
+The exchange.
+Namaskāram is a respectful Malayalam greeting. It can open a conversation, and it can also close one. Hear its five beats slowly: na-ma-s-kā-ram. Answer with the same greeting once.
+The Malayalam spelling is deliberately absent from this first pass. The next tiny lessons give your eye and hand no more than three reusable shapes at a time. Only after every shape is familiar will the book show the whole written greeting.
 
 The word, taken apart.
-നമസ്കാരം (namaskāram) is Sanskrit: namas ("a bow, homage") + kāra ("a making," from the root kṛ, "to do"), with a Malayalam ending. Literally "the making of a bow" — the same word as Hindi namaskār and Telugu namaskāram.
-This is worth marking, because Malayalam is otherwise the closest sister of Tamil — the two split apart only about a thousand years ago. Yet for a formal greeting Malayalam, unlike Tamil, uses the Sanskrit namaskāram: over centuries it absorbed an enormous Sanskrit layer (the old Maṇipravāḷam style freely mixed the two), even as it kept a deeply Tamil-like everyday core — as the next words will show.
-
-Across the family — the same idea, five ways.
-[a table of 6 rows, read aloud]
-Language: Malayalam. "Hello": namaskāram (നമസ്കാരം). Source: Sanskrit.
-Language: Telugu. "Hello": namaskāram (నమస్కారం). Source: Sanskrit.
-Language: Kannada. "Hello": namaskāra (ನಮಸ್ಕಾರ). Source: Sanskrit.
-Language: Hindi. "Hello": namaste (नमस्ते). Source: Sanskrit.
-Language: Tamil. "Hello": vaṇakkam (வணக்கம்). Source: native Dravidian.
-Language: English. "Hello": hello. Source: Germanic.
-Even Tamil's closest sister took the Sanskrit greeting; Tamil alone kept its own.
-
-Why it's said this way.
-namaskāram is said with the palms pressed together and a small bow — the gesture is the word. It serves as both hello and goodbye, any time, to almost anyone, respectful without being stiff.
-
-Sounds you'll need.
-Malayalam reads left to right, and every consonant carries a built-in “a.” ന na, മ ma, ര ra. A vowel sign changes it: ക ka + long-ā becomes കാ kā. The chandrakkala strips a vowel so consonants join as a conjunct: സ + ക becomes സ്ക “ska.” The anusvāram ം adds a final nasal “-m.” Read ന, മ, സ്, കാ, ര, ം becomes namaskāram.
+The greeting comes from Sanskrit namas, “a bow or homage,” plus kāra, “a making,” from the root kṛ, “to do.” Its memory hook is therefore the making of a bow. Malayalam is Tamil's closest sister, but this formal greeting is part of Malayalam's large Sanskrit layer.
 
 Guided Practice.
-[pause 1 second]
-[your turn — say: na, ma, s, kā, ram becomes "namaskāram"]
+[your turn — say: namaskāram once as a greeting]
 [pause 8 seconds for the answer]
-[your turn — say: what the chandrakkala does to സ (removes its vowel, for the conjunct)]
+[your turn — say: its five beats — na-ma-s-kā-ram]
 [pause 8 seconds for the answer]
-[your turn — say: "namaskāram," with a small bow]
+[your turn — say: its literal memory hook — “the making of a bow”]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Read നമസ്കാരം (namaskāram). Native Malayalam or a borrowing, and what does it literally mean? (Sanskrit namas + kāra, "the making of a bow.") Which language is Malayalam's closest sister? (Tamil.)
+What can you say when you meet someone respectfully? (Namaskāram.) What gesture and literal history help you remember it? (A small bow; “the making of a bow.”) Do you need to decode its Malayalam spelling yet? (No. The script starts next with only two shapes.)
 
 
-Lesson 2 of 6.
+Lesson 2 of 14.
+ന, മ — two sounds you already heard.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Say na-ma — the first two beats of namaskāram. Your hand meets only those two familiar sounds today.
+
+Script.
+Malayalam is an abugida: a bare consonant already carries a short a.
+ന is na.
+മ is ma.
+Put them together: നമ, na-ma. Keep both models visible.
+
+Writing — observe and trace.
+Finger-trace ന once, then മ once. Trace നമ once from left to right. Say na-ma after your finger stops. This is observation with a visible model, not a memory test.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Point to na. (ന.) Point to ma. (മ.) What vowel did you write after either consonant? (None — the short a is inherent.)
+
+
+Lesson 3 of 14.
+നമ (na-ma) — one guided copy.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+Keep നമ visible. Point left to right and say na-ma.
+
+Writing — copy with help.
+Copy നമ (na-ma) once directly below the visible model. Look back as often as you need. Check ന first and മ second; repair only one place, then stop.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Read your copy. Which longer greeting begins with these two beats? (Namaskāram.) No new shape was added here: the work was moving from a finger trace to one supported copy.
+
+
+Lesson 4 of 14.
+നമ (na-ma) — one delayed copy.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+Look at നമ for five seconds. Say na-ma, then cover the model.
+
+Writing — retrieve after a delay.
+Write the two shapes once while the model is covered. If one shape will not come, peek briefly, cover it again, and finish. This is retrieval practice, not a speed test.
+
+Wrap-up Recall.
+Uncover നമ (na-ma) and compare. Repair one shape if needed. What changed from the last lesson? (The model was hidden before writing.)
+
+
+Lesson 5 of 14.
+Two heard beats — write them.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+Cover the answer lower on this page. No new Malayalam shape is hiding here.
+
+Writing — short dictation.
+[your turn — hear: na-ma]
+[pause 8 seconds for the answer]
+Write the two-beat unit from sound alone. Now uncover and compare: നമ (na-ma). Check ന first and മ second. Repair one place if needed.
+
+Wrap-up Recall.
+[pause 3 seconds]
+You have moved the same small unit through trace, visible copy, delayed copy, and dictation. Say the complete greeting it begins. (Namaskāram.)
+
+
+Lesson 6 of 14.
+സ, ്, ക — build ska without a leap.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write നമ from the heard cue na-ma. Now set it aside. This lesson adds exactly three shapes.
+
+Script.
+സ is sa, with its inherent a.
+് is the chandrakkala. Attach it to remove that inherent vowel: സ്.
+ക is ka.
+Join the vowel-less first consonant to the next one: സ്ക, ska. The cluster is not a fourth shape; it is the three pieces you just met working together.
+
+Writing — observe and trace three pieces.
+Keep the models visible. Trace സ, then ്, then ക once each. Point through സ്ക and say ska. Stop after one slow pass.
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does ് remove? (The inherent vowel.) Read സ and then സ്. (sa; s.) What does സ്ക say? (ska.)
+
+
+Lesson 7 of 14.
+ാ, ര, ം — finish the sound inventory.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Read സ്ക once: ska. The greeting needs only three more written pieces.
+
+Script.
+ാ is the long-ā vowel sign. Attach it to known ക: കാ, kā.
+ര is ra.
+ം is the anusvaram, the final nasal m here. With ര: രം, ram.
+These are the last new shapes in the greeting.
+
+Writing — observe and trace the last three.
+Trace ാ, ര, and ം once each while the models remain visible. Then trace കാ and രം once. Say kā-ram after your finger stops.
+
+Wrap-up Recall.
+[pause 3 seconds]
+What makes ക into കാ? (The long-ā sign, ാ.) What does the final circle ം contribute here? (A final nasal m.) How many new shapes remain before reading the whole greeting? (None.)
+
+
+Lesson 8 of 14.
+നമസ്കാരം (namaskāram) — every shape is already yours.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — assemble and read until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Say namaskāram. Now the written greeting may appear: it contains no unfamiliar shape.
+
+Script — assemble and read.
+ന + മ + സ + ് + ക + ാ + ര + ം becomes നമസ്കാരം (namaskāram).
+Read the pieces in the groups you practised:
+നമ — na-ma.
+സ്ക — ska.
+ാരം — ā-ram.
+Together: നമസ്കാരം, namaskāram. The conjunct സ്ക is still just സ with its vowel removed by ്, joined to ക.
+
+Writing — one visible whole-word copy.
+Keep നമസ്കാരം (namaskāram) visible and copy it once in the three groups above. Look back whenever needed. Independent production waits for the next tiny lesson.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Read നമസ്കാരം (namaskāram). How many new shapes did this lesson add? (None.) What does the greeting literally evoke? (The making of a bow.)
+
+
+Lesson 9 of 14.
+One heard greeting — write the whole.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+Cover the written answer below. You have already traced every shape, carried നമ (na-ma) through dictation, and copied the whole greeting once.
+
+Writing — whole-word dictation.
+[your turn — hear: namaskāram — “greetings”]
+[pause 8 seconds for the answer]
+Write the greeting from sound alone. Use the three remembered groups: na-ma, ska, ā-ram. Then uncover and compare: നമസ്കാരം (namaskāram). Repair one group if needed; do not rewrite the whole word.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Read your greeting and say what it does. (It respectfully opens or closes a conversation.) This is independent production of a fully taught word, not a preview of untaught shapes.
+
+
+Lesson 10 of 14.
 നന്ദി (nandi) — "thank you," and the Tamil kinship made visible.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -102,7 +238,7 @@ Wrap-up Recall.
 Read നന്ദി (nandi). Is it native or a Sanskrit loan, and which language has the twin word? (Native — root nal, "good"; Tamil's naṉṟi.) Which two Dravidian languages use the Sanskrit word for thanks instead? (Kannada, Telugu.)
 
 
-Lesson 3 of 6.
+Lesson 11 of 14.
 അതെ (athe) — "yes," literally "that [is so]".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -141,7 +277,7 @@ Wrap-up Recall.
 Read അതെ. What everyday word is it built from, and so what does "yes" literally assert? (athu, "that" — so "yes" = "that [is so]".) Where does the "e" vowel sign sit, and where is it read? (Written before the consonant, read after.)
 
 
-Lesson 4 of 6.
+Lesson 12 of 14.
 ഇല്ല (illa) — "no," the word Malayalam and Tamil share almost exactly.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -188,7 +324,7 @@ Wrap-up Recall.
 Read ഇല്ല (illa). Literally, is it closer to "no" or "is not"? ("Is not / there is not.") Which languages share this exact il- root, and which Dravidian sister does not? (Tamil and Kannada share it; Telugu is the outlier, with lēdu.)
 
 
-Lesson 5 of 6.
+Lesson 13 of 14.
 ശരി (sari) (śari) — "okay," the whole-family word once more.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -227,22 +363,22 @@ Wrap-up Recall.
 Read ശരി. What does it mean, and how do its Tamil, Kannada, and Telugu twins sound? ("Okay, correct"; sari, sari, sarē.) Why does Malayalam keep a separate ശ (ś) letter where Tamil uses one all-purpose sibilant? (It borrowed heavily from Sanskrit and kept Sanskrit's sibilant letters.)
 
 
-Lesson 6 of 6.
+Lesson 14 of 14.
 Chapter 1 — a five-word recap.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called Read them back until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The exchange — read them back until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
 Five words, and a first handful of Malayalam letters read straight off the page. Let's gather only what you have already learned and make it feel easy.
 
-Read them back.
+The exchange — read them back.
 Sound each out, left to right, before checking:
 There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: Read, one with no heading, Meaning, Origin. Come back and look at it when you have stopped.
 The letters that did it: consonants carry a built-in "a"; the chandrakkala strips that vowel so consonants can join into conjuncts (സ്ക, ന്ദ, ല്ല); a vowel sign swaps the vowel (ാ ā, ി i, െ e — the e-sign written before its consonant); the anusvāram (ം) adds a final nasal; and a word-initial vowel gets a full letter (അ, ഇ).
 Notice how Tamil-like the native core is: four of the five everyday words (nandi, athe, illa, śari) are shared with Tamil — because Malayalam is Tamil's closest sister — while only the formal greeting reached for Sanskrit.
 
-A promise for later.
+Why it's said this way — a promise for later.
 Malayalam has a warm departure phrase built around going and coming back. It belongs in the later chapter where you learn those actions one at a time. For now, repeating the greeting is enough when you part.
 
 Guided Practice.
@@ -251,6 +387,9 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: greet and thank — "namaskāram!" … "nandi."]
 [pause 8 seconds for the answer]
+
+Writing checkpoint.
+Hide the model. Hear namaskāram once, write നമസ്കാരം, then uncover the word in the table and check one group at a time: നമ (na-ma), സ്ക, ാരം. A mismatch is a signal to repeat the earlier two-minute shape lesson, not to push faster.
 
 Wrap-up Recall.
 [pause 3 seconds]

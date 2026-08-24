@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Recreate both BUILD environments with Python 3.13 and run Ruff, formatting,
+  strict MyPy, and pytest through the named package-local interpreter.
+- Resolve the newly active lint and strict-type findings without changing RESP
+  encoding or decoding behavior.
+
 ## 0.1.0 — 2026-04-08
 
 Initial release.

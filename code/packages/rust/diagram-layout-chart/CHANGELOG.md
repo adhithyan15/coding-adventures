@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.13.0
+
+- Resolve Mermaid XY line point labels into backend-neutral text bounds for vertical and horizontal charts.
+
 ## 0.12.0
 
 - Lay out horizontal Mermaid XY charts with categorical rows, numeric columns, horizontal bars, and transposed line paths.

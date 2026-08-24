@@ -183,9 +183,7 @@ def decode(buffer: bytes) -> tuple[RespValue, int]:
         try:
             count = int(line)
         except ValueError as exc:
-            raise RespDecodeError(
-                f"Invalid count in RESP Array: {line!r}"
-            ) from exc
+            raise RespDecodeError(f"Invalid count in RESP Array: {line!r}") from exc
 
         if count == -1:
             # Null array — some commands use this to indicate absence.

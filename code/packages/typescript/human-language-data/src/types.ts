@@ -712,6 +712,17 @@ export interface Mark {
   role: "vowel-sign" | "diacritic" | "nasal" | "virama" | "other";
   attachesAs: string;
   example?: { base: string; combined: string; sound: string };
+  /** Multiple carrier examples when one combining sign composes several glyphs. */
+  examples?: Array<{
+    base: string;
+    combined: string;
+    sound: string;
+    carrier: string;
+    note?: string;
+  }>;
+  /** Source-backed order for writing a carrier and then this attached sign. */
+  compositionOrder?: string[];
+  compositionSource?: StrokeOrderSource;
 }
 
 /**

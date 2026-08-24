@@ -66,7 +66,14 @@ DT25: mini-redis       (commands decoded via RESP, responses encoded via RESP)
 ## Running tests
 
 ```bash
-uv venv .venv --quiet --no-project
+uv venv .venv --quiet --no-project --clear --python 3.13
 uv pip install --python .venv -e .[dev] --quiet
-uv run --no-project python -m pytest tests/ -v
+.venv/bin/python -m ruff check src tests
+.venv/bin/python -m ruff format --check src tests
+.venv/bin/python -m mypy --strict src tests
+.venv/bin/python -m pytest tests/ -v
 ```
+
+On Windows, invoke the equivalent `.venv\Scripts\python.exe` commands. Both
+BUILD fronts recreate the package-local Python 3.13 environment, so immediate
+repeats are supported.

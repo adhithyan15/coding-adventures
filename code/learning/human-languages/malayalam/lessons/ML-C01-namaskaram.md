@@ -1,96 +1,72 @@
 ---
+schema_version: 2
 id: ML-C01-namaskaram
+spine_node: SPINE-MEET-GREET
 sequence: 10
 chapter: 1
 type: word
 headword: നമസ്കാരം
-gloss: hello / greetings (namaskāram — "a making of a bow")
+gloss: hello / greetings (namaskāram — a making of a bow)
 romanization: "namaskāram"
 concept_tag: GREETING-HELLO
 prerequisites: []
 sounds: [malayalam-inherent-a, chandrakkala, conjunct, anusvara]
 roots: [namas, kṛ]
-est_minutes: 4
+duration:
+  max_seconds: 210
+requires:
+  knowledge: []
+introduces:
+  knowledge: [ML-LEX-NAMASKARAM-01, ML-ETYMON-NAMASKARAM-BOW-01]
+practises:
+  knowledge: [ML-LEX-NAMASKARAM-01, ML-ETYMON-NAMASKARAM-BOW-01]
+skills: [listening, speaking]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: respectful-neutral
+variety: standard-colloquial
 reviews_of: []
 ---
 
-# നമസ്കാരം (namaskāram) — "greetings," a making of a bow
+# Namaskaram — first hear the greeting
 
 ## Warm-up
-
-[PAUSE 2s] The first Malayalam word, and your first Malayalam letters. You'll
-learn to *read* it and to understand it in the same breath.
-
-## The letters in this word
-
-*(If you already read Malayalam, skim this — it's here so the book needs no
-prior knowledge.)* Malayalam is written **left to right**, and every consonant
-carries a built-in **"a"** unless something removes it.
-
-- **ന** = "na" · **മ** = "ma" · **ര** = "ra" — each with its built-in *a*.
-- **കാ** = "kā" — **ക** (ka) plus the long-"ā" **vowel sign**.
-- **സ്ക** — **സ** (sa) loses its vowel (a mark called the *chandrakkala* does
-  the removing) and joins **ക** (ka) as a **conjunct**, "ska."
-- **ം** — the **anusvāram**, a little circle that adds a final nasal "-m."
-
-Left to right: **ന · മ · സ് · കാ · ര · ം** = *na-ma-s-kā-ram* →
-
-> **നമസ്കാരം** = **namaskāram**
-
-## The word, taken apart
-
-**നമസ്കാരം** (*namaskāram*) is **Sanskrit**: **namas** ("a bow, homage") +
-**kāra** ("a making," from the root *kṛ*, "to do"), with a Malayalam ending.
-Literally **"the making of a bow"** — the same word as Hindi *namaskār* and
-Telugu *namaskāram*.
-
-This is worth marking, because Malayalam is otherwise the **closest sister of
-Tamil** — the two split apart only about a thousand years ago. Yet for a formal
-greeting Malayalam, unlike Tamil, uses the Sanskrit *namaskāram*: over
-centuries it absorbed an enormous Sanskrit layer (the old *Maṇipravāḷam* style
-freely mixed the two), even as it kept a deeply Tamil-like everyday core — as
-the next words will show.
-
-## Across the family — the same idea, five ways
-
-| Language | "Hello" | Source |
-|---|---|---|
-| **Malayalam** | *namaskāram* (നമസ്കാരം) | **Sanskrit** |
-| Telugu | *namaskāram* (నమస్కారం) | Sanskrit |
-| Kannada | *namaskāra* (ನಮಸ್ಕಾರ) | Sanskrit |
-| Hindi | *namaste* (नमस्ते) | Sanskrit |
-| Tamil | *vaṇakkam* (வணக்கம்) | **native Dravidian** |
-| English | *hello* | Germanic |
-
-Even Tamil's closest sister took the Sanskrit greeting; Tamil alone kept its
-own.
-
-## Why it's said this way
-
-*namaskāram* is said with the palms pressed together and a small bow — the
-gesture *is* the word. It serves as both **hello and goodbye**, any time, to
-almost anyone, respectful without being stiff.
-
-## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-Malayalam reads **left to right**, and every consonant carries a built-in
-“a.” ന na, മ ma, ര ra. A **vowel sign** changes it:
-ക ka + long-ā → കാ kā. The *chandrakkala* strips a vowel so
-consonants **join as a conjunct**: സ + ക → സ്ക “ska.”
-The **anusvāram** ം adds a final nasal “-m.” Read
-ന·മ·സ്·കാ·ര·ം → *namaskāram*.
+[PAUSE 2s] Imagine meeting someone with your palms together and a small bow.
+First, only listen: *namaskāram*.
+
+## The exchange
+<!-- hl-knowledge: introduces=[ML-LEX-NAMASKARAM-01]; assesses=[] -->
+
+*Namaskāram* is a respectful Malayalam greeting. It can open a conversation,
+and it can also close one. Hear its five beats slowly: *na-ma-s-kā-ram*. Answer
+with the same greeting once.
+
+The Malayalam spelling is deliberately absent from this first pass. The next
+tiny lessons give your eye and hand no more than three reusable shapes at a
+time. Only after every shape is familiar will the book show the whole written
+greeting.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[ML-ETYMON-NAMASKARAM-BOW-01]; assesses=[ML-LEX-NAMASKARAM-01] -->
+
+The greeting comes from Sanskrit *namas*, “a bow or homage,” plus *kāra*, “a
+making,” from the root *kṛ*, “to do.” Its memory hook is therefore **the making
+of a bow**. Malayalam is Tamil's closest sister, but this formal greeting is
+part of Malayalam's large Sanskrit layer.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-NAMASKARAM-01, ML-ETYMON-NAMASKARAM-BOW-01] -->
 
-[PAUSE 1s]
-- [YOU SAY: na · ma · s · kā · ram → "namaskāram"]
-- [YOU SAY: what the *chandrakkala* does to സ (removes its vowel, for the
-  conjunct)]
-- [YOU SAY: "namaskāram," with a small bow]
+- [YOU SAY: *namaskāram* once as a greeting]
+- [YOU SAY: its five beats — *na-ma-s-kā-ram*]
+- [YOU SAY: its literal memory hook — “the making of a bow”]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-NAMASKARAM-01, ML-ETYMON-NAMASKARAM-BOW-01] -->
 
-[PAUSE 3s] Read **നമസ്കാരം**. Native Malayalam or a borrowing, and what does it
-literally mean? (Sanskrit *namas* + *kāra*, "the making of a bow.") Which
-language is Malayalam's closest sister? (Tamil.)
+[PAUSE 3s] What can you say when you meet someone respectfully?
+(***Namaskāram.***) What gesture and literal history help you remember it?
+(**A small bow; “the making of a bow.”**) Do you need to decode its Malayalam
+spelling yet? (**No.** The script starts next with only two shapes.)

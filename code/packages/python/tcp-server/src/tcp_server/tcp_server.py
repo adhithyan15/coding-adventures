@@ -57,7 +57,9 @@ from __future__ import annotations
 import selectors
 import socket
 import threading
-from typing import Any, Callable
+from collections.abc import Callable
+from contextlib import suppress
+from typing import Any, cast
 
 # ---------------------------------------------------------------------------
 # Public type alias
@@ -410,23 +412,19 @@ class TcpServer:
         self._running = False
 
         if self._server_socket is not None:
-            try:
+            with suppress(Exception):
                 self._sel.unregister(self._server_socket)
-            except Exception:
-                pass
             self._server_socket.close()
             self._server_socket = None
 
         # Close all remaining registered file descriptors (connected clients
         # that were open when stop() was called). Iterating over a copy
         # because unregister modifies the internal map.
-        for key in list(self._sel.get_map().values()):  # type: ignore[union-attr]
+        for key in list(self._sel.get_map().values()):
             if key.data != "server":
-                try:
+                with suppress(Exception):
                     self._sel.unregister(key.fileobj)
                     key.fileobj.close()  # type: ignore[union-attr]
-                except Exception:
-                    pass
 
         self._sel.close()
 
@@ -453,7 +451,8 @@ class TcpServer:
         """
         if self._server_socket is None:
             raise RuntimeError("Server has not been started. Call start() first.")
-        return self._server_socket.getsockname()
+        # start() always creates AF_INET, so getsockname() is the IPv4 pair.
+        return cast(tuple[str, int], self._server_socket.getsockname())
 
     @property
     def is_running(self) -> bool:
@@ -467,7 +466,7 @@ class TcpServer:
     # Context manager
     # -----------------------------------------------------------------------
 
-    def __enter__(self) -> "TcpServer":
+    def __enter__(self) -> TcpServer:
         """
         Support ``with TcpServer(...) as server:`` usage.
 

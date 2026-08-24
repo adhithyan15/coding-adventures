@@ -41,7 +41,11 @@
 
 import { describe, expect, it } from "vitest";
 import { loadEverything } from "../src/loader.js";
-import { measureContinuity, REINFORCEMENT_WINDOWS } from "../src/continuity.js";
+import {
+  diagnoseWholeWordSearch,
+  measureContinuity,
+  REINFORCEMENT_WINDOWS,
+} from "../src/continuity.js";
 import { parseLesson } from "../src/parse.js";
 
 /** A lesson with a declared order, an optional headword, and atom directives. */
@@ -419,18 +423,18 @@ describe("forward references", () => {
     // stop being quadratic. The matcher now skips the rest of the run, since every
     // position in it is preceded by a word-adjacent character and fails identically.
     //
-    // The budget is deliberately loose: this asserts the SHAPE (a linear scan of a
-    // few megabytes, tens of milliseconds) against a regression that costs seconds,
-    // so it cannot flake on a slow runner and still catches the bug it exists for.
-    const word = "a".repeat(4_000);
-    const body = `**${"a".repeat(4_000_000)} ${word}**`;
-    const started = performance.now();
-    const report = measureContinuity([
-      lesson({ id: "ES-1", chapter: 1, sequence: 10, headword: "hola", body }),
-      lesson({ id: "ES-2", chapter: 2, sequence: 20, headword: word }),
-    ]);
-    expect(performance.now() - started).toBeLessThan(1_000);
-    expect(report.tracks[0]?.lessonCount).toBe(2);
+    // Count the work instead of timing it. On this input, the first candidate is
+    // glued to the rest of the long run and the second is the free-standing word.
+    // The run skip therefore has exactly two candidate checks. Regressing to
+    // `from = at + 1` makes this assertion see 39,602 checks, deterministically,
+    // without depending on runner speed or parallel-suite contention.
+    const word = "a".repeat(400);
+    const body = `${"a".repeat(40_000)} ${word}`;
+    expect(diagnoseWholeWordSearch(body, word)).toEqual({
+      candidateChecks: 2,
+      skippedRuns: 1,
+      matched: true,
+    });
   });
 
   it("matches a non-Latin word at its own boundaries", () => {

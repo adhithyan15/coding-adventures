@@ -5,6 +5,14 @@ All notable changes to `coding-adventures-tcp-server` are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+- Recreate both BUILD environments with Python 3.13, preserve the audited RESP
+  prerequisite order, and run Ruff, formatting, strict MyPy, and pytest through
+  the named package-local interpreter.
+- Cover both suppressed cleanup-failure paths and resolve the newly active lint
+  and strict-type findings without changing TCP behavior.
+
 ## [0.1.0] — 2026-04-08
 
 ### Added

@@ -50,7 +50,10 @@ class TestEncodeError:
         assert encode_error(msg) == b"-WRONGTYPE Operation against wrong type\r\n"
 
     def test_noscript(self) -> None:
-        assert encode_error("NOSCRIPT No matching script") == b"-NOSCRIPT No matching script\r\n"
+        assert (
+            encode_error("NOSCRIPT No matching script")
+            == b"-NOSCRIPT No matching script\r\n"
+        )
 
     def test_empty_message(self) -> None:
         assert encode_error("") == b"-\r\n"

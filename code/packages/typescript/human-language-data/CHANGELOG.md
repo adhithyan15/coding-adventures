@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+### Added - source-backed mark composition metadata
+
+- Let combining marks carry multiple normalized carrier examples plus a sourced
+  carrier-first composition order, initially for Arabic seated Hamza.
+
+### Changed - deterministic continuity complexity regression (#12322)
+
+- Replace the adversarial whole-word matcher's wall-clock budget with exact
+  candidate-check and skipped-run counts, preserving the nonlinear-regression
+  gate without making it sensitive to parallel Windows runner load.
+
 ### Changed - honest zero-new-atom review measurement (#12496)
 
 - Count schema-v2 `review`, `practice`, and `practice-mix` lessons as measurable
@@ -11,7 +22,6 @@
   and unclassified synthesis steps fail-closed as measurement-blind.
 - Regenerate per-language gentle-ramp snapshots so retrieval work no longer
   inflates migration debt; no ramp limit or violation gate changes.
-
 ### Changed - language-owned corpus ledgers and generated docs
 
 - Split modality output into `core/lesson-modality/<language>.json` shards and

@@ -1,12 +1,12 @@
 {
   "language": "malayalam",
-  "lessonCount": 249,
-  "atomMeasurableLessons": 217,
-  "atomMeasurementBlindLessons": 32,
+  "lessonCount": 257,
+  "atomMeasurableLessons": 223,
+  "atomMeasurementBlindLessons": 34,
   "durationViolations": 0,
   "atomLessonSpikes": 1,
   "atomChapterSpikes": 0,
-  "glyphLessonSpikes": 3,
+  "glyphLessonSpikes": 2,
   "scriptSystemSpikes": 0,
   "scriptClosureViolations": 40,
   "neverTaughtGlyphs": 18,
@@ -16,19 +16,19 @@
   "forwardPrerequisites": 0,
   "forwardReviews": 0,
   "forwardReferences": 17,
-  "atomsTaught": 283,
+  "atomsTaught": 294,
   "atomsNeverRevisited": 51,
-  "reinforcementWindowMisses": 794,
+  "reinforcementWindowMisses": 817,
   "reinforcementMissesByWindow": {
-    "R1": 84,
+    "R1": 85,
     "R2": 261,
-    "R3": 249,
-    "R4": 200
+    "R3": 260,
+    "R4": 211
   },
   "payoffSurprises": 7,
-  "writingPracticeLessons": 60,
-  "firstWritingPracticeAt": 0,
-  "lessonsBeforeWritingPractice": 0,
+  "writingPracticeLessons": 68,
+  "firstWritingPracticeAt": 1,
+  "lessonsBeforeWritingPractice": 1,
   "findings": [
     {
       "language": "malayalam",
@@ -46,6 +46,13 @@
     },
     {
       "language": "malayalam",
+      "kind": "writing-ramp",
+      "count": 1,
+      "unit": "opening lesson(s)",
+      "detail": "move the first gentle writing microstep to lesson one"
+    },
+    {
+      "language": "malayalam",
       "kind": "atom-step",
       "count": 1,
       "unit": "lesson/chapter spike(s)",
@@ -54,14 +61,14 @@
     {
       "language": "malayalam",
       "kind": "glyph-step",
-      "count": 3,
+      "count": 2,
       "unit": "lesson/system spike(s)",
       "detail": "split new glyphs and writing systems across gentler steps"
     },
     {
       "language": "malayalam",
       "kind": "reinforcement",
-      "count": 794,
+      "count": 817,
       "unit": "missed window(s)",
       "detail": "add retrieval at the expanding R1-R4 intervals"
     },
@@ -75,7 +82,7 @@
     {
       "language": "malayalam",
       "kind": "measurement-blind",
-      "count": 32,
+      "count": 34,
       "unit": "lesson(s)",
       "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
     }

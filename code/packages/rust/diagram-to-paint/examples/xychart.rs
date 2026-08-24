@@ -20,7 +20,7 @@ fn main() {
   x-axis [Jan, Feb, Mar, Apr, May, Jun]
   y-axis "USD (k)" 0 --> 120
   bar [45, 62, 38, 71, 85, 94]
-  line [40, 58, 42, 68, 79, 90]"#;
+  line [40 "Plan", 58, 42 "Review", 68, 79, 90 "Finish"]"#;
 
     let diagram = parse_xychart(src).expect("xychart parse failed");
     let layout = layout_chart_diagram(&diagram, 700.0, 420.0);
