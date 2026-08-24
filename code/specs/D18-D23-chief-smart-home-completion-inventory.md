@@ -2630,11 +2630,47 @@ claiming ownership of credentials, print data, queues, or printer sessions:
   without accepting or materializing a secret.
 - The runtime opens no IPP TCP connection and performs no printer-status read,
   credential input, print submission, queue mutation, public-endpoint access,
-  or long-lived browse. Those require separately supervised transport,
-  secret-custody, data-governance, and operation-policy owners.
+  or long-lived browse. The later printer-status slice owns one fixed,
+  credential-free read-only exception; print, job, credential, IPPS trust, and
+  mutation surfaces still require separate owners.
 
 This broadens common local equipment discovery using the same reusable DNS-SD
 and D23 boundaries as the existing ESPHome, Cast, and HomeKit slices.
+
+## Current IPP Printer Status Breadth Slice
+
+The next breadth slice extends the existing IPP Everywhere discovery runtime
+with one fixed read-only printer-status surface without accepting print data or
+claiming queue ownership:
+
+- `ipp-protocol` owns IPP/1.1 `Get-Printer-Attributes` framing for exactly nine
+  identity and status attributes. Responses must match the version, successful
+  status, request id, operation and printer group order, attribute names,
+  value types, duplicate rules, required fields, bounded UTF-8 text, reason
+  count, and complete message before any state is accepted.
+- `smart-home-ipp-printer-discovery-integration` connects only to one explicitly
+  configured private, link-local, or loopback IPv4 endpoint and resource path.
+  One connection carries one bounded HTTP POST and response; redirects,
+  authentication challenges, chunking, wrong media types, malformed lengths,
+  oversized bodies, and trailing data fail closed.
+- D23 read authorization runs before TCP connection. Printer identity, model,
+  state, future state code, reasons, job acceptance, queued-job count, and
+  uptime normalize into one confirmed network-diagnostic entity. Stopped,
+  non-accepting, or reason-bearing printers report degraded health.
+- The runtime accepts no credential and exposes no print submission, job query,
+  document data, queue mutation, arbitrary attribute selection, public
+  endpoint, DNS resolution, TLS exception, subscription, or long-lived
+  connection. Credentialed and IPPS-only deployments require separately
+  supervised authentication, trust, and session owners.
+
+RFC 8011 defines `Get-Printer-Attributes` and the standardized printer-status
+attributes, while RFC 8010 defines the binary message and HTTP transport:
+https://www.rfc-editor.org/rfc/rfc8011.html and
+https://www.rfc-editor.org/rfc/rfc8010.html.
+
+This broadens common local printer diagnostics while preserving explicit
+endpoint, authorization, lifetime, credential, print-data, and mutation
+boundaries.
 
 ## Current IPP Scan Service mDNS Discovery Breadth Slice
 

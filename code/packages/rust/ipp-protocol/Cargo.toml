@@ -1,0 +1,8 @@
+[package]
+name = "ipp-protocol"
+version = "0.1.0"
+edition = "2021"
+description = "Strict bounded IPP/1.1 printer status framing"
+license = "MIT"
+
+[dependencies]
