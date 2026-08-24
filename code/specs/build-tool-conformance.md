@@ -52,6 +52,10 @@ need implementations. The F# front door currently delegates to the C# engine;
 that is a shared-engine exception candidate, not proof of an independent F#
 implementation.
 
+Every shared-engine front door MUST expose a language-native adapter and
+independently consume each required conformance fixture. Transitive coverage
+from the shared engine does not count as front-door coverage for that lane.
+
 C and C++ remain emerging implementation lanes. OCaml also begins as emerging
 and must implement this contract before promotion. WASM is an execution target,
 Mosaic and Twig are domain languages, and Starlark is a build language; none is

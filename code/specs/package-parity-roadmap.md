@@ -6233,6 +6233,82 @@ Ready-for-review PR #12615 opened from validated head
 reports it mergeable while required checks are pending, so auto-merge remains
 disabled until every required check reaches a terminal acceptable conclusion.
 
+### Post-#12615 refresh and F# tracked-artifact selection
+
+Cross-runtime tracked-artifact hardening PR #12615 completed all 30 reported
+checks with 24 successes, five expected skips, one neutral aggregate, and no
+failures or pending work. GitHub reported the branch clean and mergeable; the
+loop enabled squash auto-merge, and GitHub merged final head
+`bea09c2a425ab559ff60e5b06374dc7b49a84d4e` as
+`2f50248a87521d15b069b6daa8b6e1c25d693d85` at 2026-08-24T21:26:43Z
+without a manual merge command.
+
+The collision-checked exact-main inventory was regenerated at that merge. It
+remains 15 established lanes, 1,370 implementation identities, 4,563 slots,
+175 identities in ten to fifteen lanes with 276 gaps, 122 identities in five
+to nine lanes with 926 gaps, 166 identities in two to four lanes with 2,087
+gaps, and 907 singletons with 12,698 gaps. There are 718 Rust singletons, zero
+collisions, zero unknown buckets, no newly unowned portable package or fixture
+contract, and OCaml remains correctly emerging at zero packages.
+
+The dependency/leverage pass selects
+`build-tool-fsharp-tracked-artifact-validation-conformance` on branch
+`codex/build-tool-fsharp-tracked-artifact-validation-conformance`. Its corpus,
+C# engine, and Unicode-hardening prerequisites are all merged. This bounded
+process-free facade tranche closes the second supported .NET build-tool lane,
+tests the F# entry surface independently against all five neutral fixtures,
+and adds no Git, filesystem, process, environment, or network authority. Ten
+live open PRs have zero exact overlap on the selected F# package, state, or
+roadmap surfaces; the target remote branch was absent, and `origin/main`
+remained at exact selected base `2f50248a87521d15b069b6daa8b6e1c25d693d85`
+before the fresh clean branch was created.
+
+The implementation makes the shared-engine exception reviewable rather than
+implicit. The governing contract now requires a language-native adapter and
+independent fixture consumption for every shared-engine front door. F# exposes
+one pure facade over the reviewed C# tracked-artifact validator, consumes all
+five neutral cases through that F# symbol, and routes both existing smoke tests
+through the actual F# `main` function. Its test-only root resolver also retains
+fixture reachability when .NET artifacts are isolated outside the checkout.
+No C# engine, neutral fixture, schema, project, dependency, BUILD, capability,
+or production authority changed.
+
+An isolated Release run passes all seven F# tests with 100% line, branch, and
+method coverage. Both canonical BUILD commands, a warning-as-error Release
+build, Fantomas 7.0.6, and the NuGet vulnerability audit pass. The unchanged C#
+engine passes its canonical 27-test Release suite. The neutral corpus validates
+111 cases and 269 files; schema and runner suites pass 80 tests plus 119
+subtests. Package-parity, capability-taxonomy, Haskell-capability, and OCaml-lock
+suites pass 68 tests with two expected Windows symlink skips. The Go build tool
+passes all packages with coverage, vet, and trimpath compilation. The real F#
+front door validates build files, discovers 199 F# packages, and completes a
+clean no-change dry run. Two independent final reviews found no implementation,
+fixture, metadata, redaction, security, or authority defect.
+
+The broad conformance family reproduces the five unchanged Windows Python 3.13
+execution-snapshot failures already owned by
+`build-tool-windows-python313-execution-snapshot-volume-identity`. An isolated
+C# downstream run also exposed that its fixture-root finder searches only the
+compiled binary ancestry. The canonical in-tree C# suite remains green, and
+the loop registers the separate pending owner
+`build-tool-csharp-isolated-artifact-fixture-root-resolution` rather than
+widening this F# tranche.
+
+The branch rebased without conflict over five non-overlapping HTML-parser,
+human-language, and ADJ facts commits to exact `origin/main`
+`b4e68a5e90ef124f4bc3ec426f44bc655cc001cc`. A fresh collision-checked report
+at that revision is unchanged at 15 established lanes, 1,370 identities, 4,563
+slots, zero collisions, and zero unknown buckets.
+
+Ready-for-review PR #12625 opened from clean validated head
+`2c9fca023bba1567a57091427adef986c521971c` after a normal first push. The
+branch was based on exact `origin/main`
+`b4e68a5e90ef124f4bc3ec426f44bc655cc001cc`; the target branch was absent,
+and all seven changed paths had zero exact overlap across twelve other live
+open PRs. GitHub reports the PR non-draft and mergeable, with required checks
+queued or in progress. Auto-merge remains disabled until every required check
+is terminal and acceptable.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
