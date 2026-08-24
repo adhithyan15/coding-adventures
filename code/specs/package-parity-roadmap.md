@@ -6192,6 +6192,18 @@ also depend explicitly on this repair, while OCaml receives it transitively
 through the Go substrate. The reconciled state has 482 owners and 699 edges;
 all IDs and dependencies remain unique, present, and acyclic.
 
+The dependency/leverage pass selects
+`build-tool-tracked-artifact-unicode-cross-runtime-corpus-hardening` on branch
+`codex/build-tool-tracked-artifact-unicode-corpus-hardening`. It is the only
+newly exposed portable prerequisite, stays entirely within inert schema,
+fixture, and pure-validator data, and directly gates nine extant engine
+children, the Go oracle, the future JVM and Dart build tools, and OCaml through
+the Go substrate. Nine live open PRs and 34 current non-main remote heads have
+zero exact overlap on the selected schema, fixture, reference-runner, Python,
+C#, state, or roadmap surfaces; the target branch and prior PR were absent
+before the fresh exact-main worktree was created. F# tracked-artifact remains
+the preferred next engine child after this shared contract is closed.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

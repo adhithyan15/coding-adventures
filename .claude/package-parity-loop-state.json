@@ -4847,14 +4847,16 @@
     {
       "id": "build-tool-tracked-artifact-unicode-cross-runtime-corpus-hardening",
       "title": "Pin tracked-artifact Unicode and path-boundary behavior across runtimes",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": [
         "build-tool-tracked-artifact-validation-corpus",
         "build-tool-python-tracked-artifact-validation-conformance",
         "build-tool-csharp-tracked-artifact-validation-conformance"
       ],
-      "branch": null,
+      "branch": "codex/build-tool-tracked-artifact-unicode-corpus-hardening",
       "pr_number": null,
+      "selection_revision": "3a758a6973ea74ff14b6617098e1ad042fa5621c",
+      "selection_notes": "Selected only after PR #12608 completed 29 terminal acceptable checks and merged through squash auto-merge, the exact-main collision inventory was regenerated, and the cross-runtime fixture reachability gap plus missing F# facade dependencies were registered while still pending. The schema-3 inventory remains 15 established lanes, 1,370 identities, 4,563 slots, 175 high-consensus identities with 276 gaps, 907 singletons with 12,698 gaps, 718 Rust singletons, zero collisions, and zero unknown buckets; OCaml remains correctly emerging at zero packages. This bounded process-free tranche directly gates nine extant engine children, the Go oracle, the future JVM and Dart build tools, and OCaml transitively. Nine live open PRs and 34 current non-main remote heads have zero exact overlap on the selected neutral fixture, schema, reference-runner, Python, C#, state, or roadmap surfaces; the target branch and prior PR were absent before the fresh exact-main worktree was created.",
       "notes": "Discovered by the post-#12608 cross-runtime audit. Make EMPTY and TOO_LONG reachable through the closed schema, then pin Unicode-scalar 512/513 length semantics, cross-plane Unicode-scalar diagnostic ordering, and full-uppercase Windows reserved-basename membership for dotless-i aliases in shared fixtures and both reviewed Python and C# consumers. Preserve hostile-path redaction, bounded inert input, and the no-Git/no-filesystem/no-process authority boundary before any remaining engine child proceeds."
     },
     {
