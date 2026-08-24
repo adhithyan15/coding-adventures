@@ -7,8 +7,8 @@
 - Add obligatory **لا** as a two-stroke, one-lift joined shape.
 - Keep its underlying Lam-plus-Alif text separate from the U+FEFB outline used
   for font-fit verification.
-- Mark Arabic complete while preserving 31 learner rows and 29 canonical
-  base/standalone rows.
+- Close Arabic's sourced shape audit at 31 learner rows and 29 canonical
+  base/standalone rows without overstating the separate corpus-closure flag.
 
 ### Added — source-verified Arabic alif-maqsura ending (HL-C09HM)
 

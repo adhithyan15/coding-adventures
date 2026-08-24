@@ -358,9 +358,9 @@ describe("handwriting ductus", () => {
     expect(gujarati.letters.every((letter) => letter.strokeOrderSource !== undefined)).toBe(true);
   });
 
-  it("marks Arabic complete with 31 sourced learner rows and its obligatory ligature", () => {
+  it("closes Arabic's sourced shape inventory without overstating corpus closure", () => {
     const arabic = SCRIPTS.find((script) => script.script === "arabic")!;
-    expect(arabic.complete).toBe(true);
+    expect(arabic.complete).toBe(false);
     expect(arabic.letters).toHaveLength(31);
     expect(arabic.letters.every((letter) => letter.strokeOrderSource !== undefined)).toBe(true);
     expect(arabic.ligatures?.map((ligature) => ligature.sequence)).toEqual(["لا"]);
