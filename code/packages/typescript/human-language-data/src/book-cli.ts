@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, lstatSync, mkdirSync, readFileSync, realpathSync, writeFileSync } from "node:fs";
 import { dirname, join, normalize, relative as pathRelative, resolve } from "node:path";
 import { assertRelativeManifestPath } from "./manifest-path.js";
 import { pathToFileURL } from "node:url";
@@ -23,6 +23,12 @@ import {
   loadTrackChapters,
 } from "./loader.js";
 import { summarizeModality } from "./modality.js";
+import {
+  BACKMATTER_TEX,
+  FRONTMATTER_TEX,
+  chapterInputsFor,
+  renderBookTex,
+} from "./book-tex.js";
 import type { ChapterCapability } from "./types.js";
 
 interface ConfiguredBookGenerationTarget extends Omit<BookGenerationTarget, "title" | "label"> {
@@ -219,6 +225,32 @@ export function handwrittenBookChapters(
     );
     return { ...entry, title: capability.title, label: capability.label };
   });
+}
+
+/**
+ * Read one authored `book.tex` fragment, refusing a symlink.
+ *
+ * `existsSync` + `readFileSync` both follow symlinks, and `safeOutput` is purely
+ * lexical so it cannot see one. A committed
+ * `<track>/book/frontmatter.tex -> ~/.npmrc` would have that file's contents
+ * copied verbatim into the generated `book.tex` and written into the working
+ * tree — where the next `--write` commits it.
+ */
+function readAuthoredFragment(root: string, path: string): string {
+  if (!lstatSync(path).isFile()) {
+    throw new Error(`authored book fragment '${path}' is not a regular file`);
+  }
+  // `lstat` vets only the LAST component. `<track>` and `<track>/book` are still
+  // followed, so a committed `spanish/book -> /somewhere/else` is read straight
+  // through — and `safeOutput` cannot see it either, being purely lexical.
+  // Resolving the whole chain and re-asserting containment is the only check
+  // that covers every component at once.
+  const real = realpathSync(path);
+  const fromRoot = normalize(pathRelative(realpathSync(root), real)).replaceAll("\\", "/");
+  if (fromRoot === "" || fromRoot === ".." || fromRoot.startsWith("../")) {
+    throw new Error(`authored book fragment '${path}' resolves outside the curriculum root`);
+  }
+  return readFileSync(real, "utf8");
 }
 
 export function generatedBookOutputs(root = defaultCurriculumRoot()): Map<string, string> {
@@ -447,6 +479,43 @@ export function generatedBookOutputs(root = defaultCurriculumRoot()): Map<string
   for (const [language, manifest] of [...manifests].sort(([left], [right]) => left.localeCompare(right))) {
     manifest.chapters.sort((left, right) => left.chapter - right.chapter);
     outputs.set(manifestPath(language), `${JSON.stringify(manifest, null, 2)}\n`);
+  }
+
+  // HL21 section 6: `book.tex` is the last hand-maintained link in the
+  // lesson -> chapter -> book chain, and the only one that could be forgotten
+  // without anything failing. A chapter whose `\input` line is missing simply
+  // does not appear in the book, while its `.tex` stays generated, committed and
+  // hash-checked. That has already happened once.
+  //
+  // The authored halves live beside it as `frontmatter.tex` and
+  // `backmatter.tex`; only the `\input` list in between is derived, and it is
+  // derived from the ledger already in hand.
+  for (const language of [...new Set(config.targets.map((target) => target.language))].sort()) {
+    // Validated BEFORE the `join`, so the check covers the reads below and not
+    // only the write. Checking it afterwards via `safeOutput` would still
+    // contain the write, but a traversing `language` would reach `existsSync`
+    // first, come back false, and `continue` — turning a manifest-integrity
+    // violation into a silent no-op, which is the exact failure mode this
+    // generator exists to remove.
+    if (!/^[a-z][a-z0-9-]*$/.test(language)) {
+      throw new Error(`unsafe track language '${language}' in book-generation.json`);
+    }
+    const frontPath = join(root, language, "book", FRONTMATTER_TEX);
+    const backPath = join(root, language, "book", BACKMATTER_TEX);
+    // A track that has not been migrated yet keeps its hand-written book.tex.
+    // Same reasoning as HL21's loader fallback: this lands one track at a time
+    // rather than needing a flag day.
+    if (!existsSync(frontPath) || !existsSync(backPath)) continue;
+    const relative = `${language}/book/book.tex`;
+    safeOutput(root, relative);
+    outputs.set(
+      relative,
+      renderBookTex(
+        readAuthoredFragment(root, frontPath),
+        chapterInputsFor(config, language),
+        readAuthoredFragment(root, backPath),
+      ),
+    );
   }
   return outputs;
 }

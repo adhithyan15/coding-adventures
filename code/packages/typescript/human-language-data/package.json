@@ -21,6 +21,7 @@
     "shard": "node dist/shard-cli.js --shard",
     "unshard": "node dist/shard-cli.js --unshard",
     "check:shards": "node dist/shard-cli.js --check",
+    "check:compile": "bash ../../../scripts/check-book-compile.sh",
     "report": "node dist/report-cli.js",
     "report:gentle-ramp": "node dist/gentle-ramp-cli.js",
     "plan": "node dist/plan-cli.js",

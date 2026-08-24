@@ -11,6 +11,10 @@
 #   ./code/scripts/verify-human-languages.sh          # everything
 #   ./code/scripts/verify-human-languages.sh --fast   # skip the 22-book XeLaTeX compile
 #   ./code/scripts/verify-human-languages.sh --books  # ONLY the book compile + warning scan
+#
+# For the compile alone, without the warning scan or the rest of the gates, see
+# ./code/scripts/check-book-compile.sh — which also takes a track name, so a
+# single book can be checked in a couple of seconds instead of a hundred.
 
 set -uo pipefail
 

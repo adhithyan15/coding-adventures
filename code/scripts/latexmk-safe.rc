@@ -1,0 +1,25 @@
+# latexmk settings for the Human Languages compile gate.
+#
+# Loaded EXPLICITLY with `latexmk -norc -r <this file>`, never picked up
+# implicitly. That is the point of the pair:
+#
+#   -norc   stops latexmk reading `latexmkrc` / `.latexmkrc` from its current
+#           directory and `eval`ing it as Perl. That directory is
+#           `<track>/book`, whose contents come from the repository — so
+#           without `-norc`, a pull request that adds `<track>/book/latexmkrc`
+#           gets arbitrary Perl execution on every machine that runs the gate,
+#           before a single line of TeX is parsed.
+#
+#   -r      loads this file, which lives in `code/scripts/` where it is reviewed
+#           like any other script rather than sitting beside the content.
+#
+# The setting itself turns OFF shell escape. Restricted shell escape — the usual
+# default — is not a boundary worth relying on: it has a long history of escapes
+# through whitelisted delegates such as `mpost -tex` and `repstopdf`. Nothing in
+# these books needs `\write18`, so nothing loses anything by refusing it.
+#
+# This is a file rather than an inline `latexmk -e '...'` because Git Bash's
+# argv translation on Windows splits the quoted Perl and latexmk then reads
+# `%O` and `%S` as filenames. A committed rc file has no quoting to get wrong.
+
+$xelatex = "xelatex -no-shell-escape %O %S";

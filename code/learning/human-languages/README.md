@@ -142,6 +142,43 @@ per lesson for it to go stale; the authored `modality:` override with a
 `modality_reason:` remains available
 for the genuinely exceptional lesson.
 
+### `book.tex` is generated (HL21 section 6)
+
+`book.tex` was the last hand-maintained link in the lesson → chapter → book
+chain, and the only one that could be forgotten without anything failing: a
+chapter whose `\input` line is missing simply does not appear in the book, while
+its `.tex` stays generated, committed and hash-checked. That has happened.
+
+It is now split by **origin**, not by size:
+
+```text
+<track>/book/frontmatter.tex   AUTHORED — \documentclass, titlepage, licence,
+                               preface, \tableofcontents, \mainmatter
+<track>/book/backmatter.tex    AUTHORED — \backmatter, appendix inputs, \end{document}
+<track>/book/book.tex          GENERATED — the two, with the derived \input list between
+```
+
+Edit the authored halves; never `book.tex` itself. `npm run generate:books`
+rebuilds it and `npm run check:books` gates it, exactly like the chapters.
+
+The chapter list comes from `core/book-generation.json` — **both** `targets[]`
+and `handwritten[]`, merged by chapter number. Using `targets` alone silently
+drops every hand-authored chapter.
+
+Nothing checks that the LaTeX actually *compiles*; `check:books` only proves the
+bytes match the generator. That gap is real — `src/book.ts`'s escape map was
+once found missing a `ǵ`, which only a compiler catches. So:
+
+```sh
+npm run check:compile             # every track, ~100s
+npm run check:compile spanish     # one track
+```
+
+It is opt-in and deliberately not part of `npm test`. Tracks with SVG figures
+need `rsvg-convert` (or Inkscape, or ImageMagick's `magick`) on PATH, because
+chapters reference figures as `.pdf` and only the `.svg` is committed; without a
+converter those tracks are **skipped with a message**, not failed.
+
 The data package also loads every existing `book/book.tex` and `book/chapters/ch*.tex`
 losslessly and checks that each authored book chapter maps to its short Markdown
 lessons. This preserves the well-received book narrative while the pipeline moves
