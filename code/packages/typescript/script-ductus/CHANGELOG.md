@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Added — source-verified Devanagari jha (HL-C09I6)
+
+- Add the four-run **झ** learner path: joined upper stem, bowls, and diagonal
+  tail; separate middle crossbar; right stem; left-to-right headline.
+- Pin its three lifts, within-body pauses, frame-by-frame provenance, and Noto
+  outline fit.
+
 ### Added — source-verified Devanagari gha (HL-C09I5)
 
 - Add the three-run **घ** learner path: continuous upper curl, middle hook,
