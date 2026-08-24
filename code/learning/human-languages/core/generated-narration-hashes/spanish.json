@@ -4574,6 +4574,78 @@
     },
     {
       "language": "spanish",
+      "chapter": 306,
+      "sourceHash": "fnv1a64:6825c8e7c290f2be",
+      "lessonIds": [
+        "ES-C306-hijo",
+        "ES-C306-hija",
+        "ES-C306-abuelo",
+        "ES-C306-abuela",
+        "ES-C306-esposo"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "spanish/narration/ch306.txt",
+      "json": "spanish/narration/ch306.json",
+      "textHash": "fnv1a64:22e32cc1767e066e",
+      "jsonHash": "fnv1a64:6d3905d950285346"
+    },
+    {
+      "language": "spanish",
+      "chapter": 307,
+      "sourceHash": "fnv1a64:f244a3f0cd810270",
+      "lessonIds": [
+        "ES-C307-esposa",
+        "ES-C307-tio",
+        "ES-C307-tia",
+        "ES-C307-primo",
+        "ES-C307-prima"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch307.txt",
+      "json": "spanish/narration/ch307.json",
+      "textHash": "fnv1a64:e80e9f962ec3b217",
+      "jsonHash": "fnv1a64:7fe9a3d5a2eaf2df"
+    },
+    {
+      "language": "spanish",
+      "chapter": 308,
+      "sourceHash": "fnv1a64:c509377658fb42e6",
+      "lessonIds": [
+        "ES-C308-nino",
+        "ES-C308-nina",
+        "ES-C308-chico",
+        "ES-C308-chica",
+        "ES-C308-gente"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch308.txt",
+      "json": "spanish/narration/ch308.json",
+      "textHash": "fnv1a64:47d453c8575b80ca",
+      "jsonHash": "fnv1a64:637eff6d45426efe"
+    },
+    {
+      "language": "spanish",
+      "chapter": 309,
+      "sourceHash": "fnv1a64:07ae0c488d0871ae",
+      "lessonIds": [
+        "ES-C309-familia",
+        "ES-C309-apodo",
+        "ES-C309-pariente",
+        "ES-C309-pareja",
+        "ES-C309-bebe"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch309.txt",
+      "json": "spanish/narration/ch309.json",
+      "textHash": "fnv1a64:77dbf16f5e4a6743",
+      "jsonHash": "fnv1a64:001853554536187a"
+    },
+    {
+      "language": "spanish",
       "chapter": 310,
       "sourceHash": "fnv1a64:f4328984c0669a9e",
       "lessonIds": [

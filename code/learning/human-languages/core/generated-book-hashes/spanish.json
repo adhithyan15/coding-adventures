@@ -3048,6 +3048,58 @@
     },
     {
       "language": "spanish",
+      "chapter": 306,
+      "sourceHash": "fnv1a64:d53375870d79e726",
+      "lessonIds": [
+        "ES-C306-hijo",
+        "ES-C306-hija",
+        "ES-C306-abuelo",
+        "ES-C306-abuela",
+        "ES-C306-esposo"
+      ],
+      "tex": "spanish/book/chapters/ch306-hijos-y-abuelos.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 307,
+      "sourceHash": "fnv1a64:de0bd9b43effca7d",
+      "lessonIds": [
+        "ES-C307-esposa",
+        "ES-C307-tio",
+        "ES-C307-tia",
+        "ES-C307-primo",
+        "ES-C307-prima"
+      ],
+      "tex": "spanish/book/chapters/ch307-esposos-y-tios.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 308,
+      "sourceHash": "fnv1a64:1752c3b3d96d0885",
+      "lessonIds": [
+        "ES-C308-nino",
+        "ES-C308-nina",
+        "ES-C308-chico",
+        "ES-C308-chica",
+        "ES-C308-gente"
+      ],
+      "tex": "spanish/book/chapters/ch308-ninos-y-gente.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 309,
+      "sourceHash": "fnv1a64:93a07ee046c5ff12",
+      "lessonIds": [
+        "ES-C309-familia",
+        "ES-C309-apodo",
+        "ES-C309-pariente",
+        "ES-C309-pareja",
+        "ES-C309-bebe"
+      ],
+      "tex": "spanish/book/chapters/ch309-familia-y-pareja.tex"
+    },
+    {
+      "language": "spanish",
       "chapter": 310,
       "sourceHash": "fnv1a64:d067a2a0b5523c67",
       "lessonIds": [

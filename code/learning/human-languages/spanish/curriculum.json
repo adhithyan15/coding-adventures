@@ -4070,6 +4070,70 @@
         "ES-EXT-313-ASK"
       ],
       "after": []
+    },
+    {
+      "id": "ES-PATH-306-01",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "ES-C306-hijo",
+        "ES-C306-hija",
+        "ES-C306-abuelo",
+        "ES-C306-abuela",
+        "ES-C306-esposo"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-306-KIN"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-307-01",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "ES-C307-esposa",
+        "ES-C307-tio",
+        "ES-C307-tia",
+        "ES-C307-primo",
+        "ES-C307-prima"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-307-KIN"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-308-01",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "ES-C308-nino",
+        "ES-C308-nina",
+        "ES-C308-chico",
+        "ES-C308-chica",
+        "ES-C308-gente"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-308-KIN"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-309-01",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "ES-C309-familia",
+        "ES-C309-apodo",
+        "ES-C309-pariente",
+        "ES-C309-pareja",
+        "ES-C309-bebe"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-309-KIN"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -4127,7 +4191,11 @@
         "ES-PATH-292-01",
         "ES-PATH-299-01",
         "ES-PATH-305-01",
-        "ES-PATH-319-03"
+        "ES-PATH-319-03",
+        "ES-PATH-306-01",
+        "ES-PATH-307-01",
+        "ES-PATH-308-01",
+        "ES-PATH-309-01"
       ],
       "omits": [
         "PRONOUN-I",
@@ -8272,6 +8340,66 @@
         "ES-C313-pasaporte",
         "ES-C313-entrada",
         "ES-C313-cambio"
+      ]
+    },
+    {
+      "id": "ES-EXT-306-KIN",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name the immediate family in Spanish and change the ending to change who I mean.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C306-hijo",
+        "ES-C306-hija",
+        "ES-C306-abuelo",
+        "ES-C306-abuela",
+        "ES-C306-esposo"
+      ]
+    },
+    {
+      "id": "ES-EXT-307-KIN",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name the wider family circle in Spanish --- wife, uncle, aunt and cousin --- in either gender.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C307-esposa",
+        "ES-C307-tio",
+        "ES-C307-tia",
+        "ES-C307-primo",
+        "ES-C307-prima"
+      ]
+    },
+    {
+      "id": "ES-EXT-308-KIN",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name children and people in general in Spanish, and I can spot a false friend.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C308-nino",
+        "ES-C308-nina",
+        "ES-C308-chico",
+        "ES-C308-chica",
+        "ES-C308-gente"
+      ]
+    },
+    {
+      "id": "ES-EXT-309-KIN",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name a family as a whole in Spanish, along with a partner, a relative, a nickname and a baby.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C309-familia",
+        "ES-C309-apodo",
+        "ES-C309-pariente",
+        "ES-C309-pareja",
+        "ES-C309-bebe"
       ]
     }
   ],
