@@ -3,7 +3,7 @@ schema_version: 2
 id: GU-C04-kaale
 spine_node: SPINE-TAKE-LEAVE
 sequence: 230
-chapter: 4
+chapter: 5
 type: phrase
 headword: કાલે મળીશું
 gloss: see you tomorrow (and the કાલ puzzle)

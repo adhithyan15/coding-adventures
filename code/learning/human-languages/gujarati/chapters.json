@@ -5,9 +5,36 @@
   "chapters": [
     {
       "chapter": 1,
-      "title": "Greetings",
+      "title": "Namaste, Piece by Piece",
+      "label": "ch:first-greeting-script",
+      "canDo": "I can hear and say namaste, trace each Gujarati sign separately, and copy the whole greeting only after every sign is familiar.",
+      "spineNodes": [
+        "SPINE-MEET-GREET"
+      ],
+      "payoff": {
+        "lesson": "GU-W01-namaste-read",
+        "kind": "task",
+        "summary": "Complete GU-W01-namaste-read: assemble, read, and copy નમસ્તે only after hearing its meaning and tracing every load-bearing sign in its own short lesson.",
+        "assesses": [
+          "GU-CONCEPT-C01-NAMASTE-01",
+          "GU-SCRIPT-HA-01",
+          "GU-SCRIPT-AA-MATRA-01",
+          "GU-SCRIPT-AA-01",
+          "GU-SCRIPT-NA-01",
+          "GU-SCRIPT-MA-01",
+          "GU-SCRIPT-SA-01",
+          "GU-SCRIPT-TA-01",
+          "GU-SCRIPT-E-MATRA-01",
+          "GU-SCRIPT-VIRAMA-01",
+          "GU-SCRIPT-NAMASTE-READ-01"
+        ]
+      }
+    },
+    {
+      "chapter": 2,
+      "title": "Courtesy and Responses",
       "label": "ch:greetings",
-      "canDo": "I can greet someone in Gujarati, recognize the reply, choose an appropriate response, and write હા from a heard cue after learning its two pieces.",
+      "canDo": "I can thank someone, take my leave, answer yes or no, say that something is good, and write હા from a heard cue after a gentle copy-to-dictation ramp.",
       "spineNodes": [
         "SPINE-MEET-GREET",
         "SPINE-COURTESY-THANK",
@@ -17,7 +44,7 @@
       "payoff": {
         "lesson": "GU-C01-practice",
         "kind": "task",
-        "summary": "Complete GU-C01-practice, greet someone in Gujarati, choose an appropriate response, and retrieve હા in writing from sound with no visible model.",
+        "summary": "Complete GU-C01-practice, choose an appropriate courtesy or response, and retrieve હા in writing from sound with no visible model.",
         "assesses": [
           "GU-CONCEPT-C01-AABHAAR-01",
           "GU-CONCEPT-C01-AAVJO-01",
@@ -31,7 +58,7 @@
       }
     },
     {
-      "chapter": 2,
+      "chapter": 3,
       "title": "Introducing Yourself",
       "label": "ch:introductions",
       "canDo": "I can introduce myself in Gujarati, give my name, and understand the other person's name.",
@@ -56,7 +83,7 @@
       }
     },
     {
-      "chapter": 3,
+      "chapter": 4,
       "title": "How Are You?",
       "label": "ch:responding",
       "canDo": "I can ask how someone is in Gujarati, answer naturally, and return the question.",
@@ -80,7 +107,7 @@
       }
     },
     {
-      "chapter": 4,
+      "chapter": 5,
       "title": "Farewells",
       "label": "ch:farewells",
       "canDo": "I can end a Gujarati conversation politely and choose a farewell that fits the situation.",
@@ -102,7 +129,7 @@
       }
     },
     {
-      "chapter": 5,
+      "chapter": 6,
       "title": "The First Verbs",
       "label": "ch:first-verbs",
       "canDo": "I can build short present-tense Gujarati sentences with the chapter's first verbs.",
@@ -124,7 +151,7 @@
       }
     },
     {
-      "chapter": 6,
+      "chapter": 7,
       "title": "Numbers One to Five",
       "label": "ch:numbers-one-to-five",
       "canDo": "I can count from one to five in headless Gujarati script and explain why બે starts with b where its neighbours start with d, and why ત્રણ has an r that Hindi tīn does not.",
@@ -147,7 +174,7 @@
       }
     },
     {
-      "chapter": 7,
+      "chapter": 8,
       "title": "Six Verbs at the Core",
       "label": "ch:gu-core-verbs",
       "canDo": "I can name six everyday Gujarati verbs by the neuter -વું ending they all share, strip that ending to reach the stem, and say what I do with stem, person-ending, and the copula છે.",
@@ -172,7 +199,7 @@
       }
     },
     {
-      "chapter": 8,
+      "chapter": 9,
       "title": "The Mind and the Page",
       "label": "ch:gu-mind-and-page",
       "canDo": "I can say that I think, understand, read and write in Gujarati, hear and write the nasal that sits in the middle of વાંચવું, and name what each of the four roots was doing before it meant a mental act — ranging about, waking up, speaking, and scratching.",
@@ -205,7 +232,7 @@
       }
     },
     {
-      "chapter": 9,
+      "chapter": 10,
       "title": "Taking, Asking, Helping, Liking",
       "label": "ch:gu-doing-verbs",
       "canDo": "I can take, ask, help and say what I like in Gujarati, explain why મદદ કરવી ends in the feminine -ી while કામ કરવું ends in the neuter, and say why મને ગુજરાતી ગમે છે leaves no room for me as its subject.",
@@ -241,7 +268,7 @@
       }
     },
     {
-      "chapter": 10,
+      "chapter": 11,
       "title": "Water, Tea, Milk, and Bread",
       "label": "ch:gu-request-food-drink",
       "canDo": "I can politely ask for water, tea, milk, or bread in Gujarati, name which of the four is a loanword and which have no settled root beyond Sanskrit, and explain why a word ending in -ī is not automatically feminine.",
@@ -269,7 +296,7 @@
       }
     },
     {
-      "chapter": 11,
+      "chapter": 12,
       "title": "Friend and Family",
       "label": "ch:gu-friend-and-family",
       "canDo": "I can name a friend, a family, a brother, and a sister in Gujarati, explain which of these words was inherited whole from Sanskrit rather than worn down by sound change, and say which sibling word is genuinely a cousin of its English counterpart and which is not.",
@@ -296,7 +323,7 @@
       }
     },
     {
-      "chapter": 12,
+      "chapter": 13,
       "title": "Eye, Ear, Mouth, and Nose",
       "label": "ch:gu-face-parts",
       "canDo": "I can name the eye, ear, mouth, and nose in Gujarati, tell a nasal that only marks a sound from one that marks the neuter gender, and say which two of the four are unbroken cousins of their English counterparts.",

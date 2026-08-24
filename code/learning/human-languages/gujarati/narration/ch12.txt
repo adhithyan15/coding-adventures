@@ -1,147 +1,141 @@
-Gujarati, chapter 12: Eye, Ear, Mouth, and Nose.
+Gujarati, chapter 12: Friend and Family.
 4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
 Lesson 1 of 4.
-આંખ (āṅkh) — an eye, and a nasal that is not what it looks like.
+મિત્ર (mitra) — a friend, and the word inside your own "please".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-બહેન (bahen) closed a chapter about people. This chapter checks on how someone is — starting with the parts of the body a friend might actually ask about.
+Last chapter asked politely for roṭlī with meherbānī karīne. That phrase is about to turn out to share its root with the very first word of this new chapter.
 
 You'll want to know first — one word.
-આંખ — āṅkh — eye.
+મિત્ર — mitra — friend.
 
 The letters in this word.
-આ the independent long-ā, then the nasal dot ં sitting on top of it — exactly the medial anusvāra you first read inside વાંચવું, doing the same job here, in the middle of a noun rather than a verb — then ખ, the aspirated k. Note what this nasal is NOT: it does not mark આંખ (āṅkh) as neuter — the word is feminine. A nasal dot in the middle of a word is a sound, present or absent as pronunciation happens to need it; it is a different thing entirely from the grammatical -ũ ending you will meet again soon, and this chapter keeps the two apart on purpose.
+મ ma, િ the short-i sign written before the consonant it belongs to — the same leftward quirk you saw open vichārvũ — then a conjunct: ત્ર — ત ta with the virama ્ stripping its vowel, joined straight into ર ra. Mi-tra, two syllables, the second one a cluster.
 
-The word, taken apart — the same word as "eye," unbroken.
-āṅkh is inherited from Sauraseni Prakrit akkhi, from Sanskrit akṣi, "eye." The root is Indo-European h₃ekʷ-, "eye; to see," and it survives unbroken in English eye itself, in Latin oculus (behind ocular), and in Greek ósse. This is bhāī's kind of cousin, not bahen's: a straight line back to the same ancestor, no borrowing and no detour.
+The word, taken apart — the friend hiding inside "please".
+mitra is Sanskrit for "friend," from Proto-Indo-Iranian mitras, "(that which) causes binding" — a covenant word before it was a friendship word. Its exact twin is Avestan Mithra, the god of contracts and given word, whose name lived on in Middle Persian as Mihr.
+That is not a dead end. મહેરબાની, the "kindness" you built meherbānī karīne from last chapter, is Persian mihrbānī — built on that very same Mihr. So મિત્ર (mitra), inherited straight down from Sanskrit, and મહેરબાની, borrowed centuries later from Persian, are cousins by the same Indo-Iranian root — one word for "friend," the other for "favor," both once naming the same idea of a bond that holds.
 
 Guided Practice.
-[your turn — say: āṅkh — eye]
+[your turn — say: mitra — friend]
 [pause 8 seconds for the answer]
-[your turn — match: the medial nasal here against the one in વાંચવું]
+[once you have stopped driving — trace: Proto-Indo-Iranian mitras becomes Avestan Mithra becomes Persian Mihr becomes મહેરબાની]
+[your turn — connect: મિત્ર (mitra) and મહેરબાની — same ancient root, two different doors into Gujarati]
 [pause 8 seconds for the answer]
-[your turn — state: is this nasal a gender marker? (No.) Is āṅkh neuter? (No — feminine.)]
+[your turn — run: roṭlī, meherbānī karīne once more, now naming the "friend" root inside it]
 [pause 8 seconds for the answer]
-[once you have stopped driving — trace: PIE h₃ekʷ- becomes Sanskrit akṣi becomes આંખ (āṅkh), and becomes English eye]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the word for "eye." (Āṅkh.) Which English word is the same word by unbroken descent? (Eye.) Does the nasal dot in āṅkh mean the word is neuter? (No — āṅkh is feminine; the dot is only a sound.)
-Sources: Wiktionary: આંખ (āṅkh); Wiktionary: Sanskrit akshi.
+Give the word for "friend." (Mitra.) Which other Gujarati word you already know shares its root, and through which language did each arrive? (મહેરબાની — mitra inherited from Sanskrit, meherbānī borrowed from Persian mihr.) What did the shared root originally mean? ("To bind," a covenant.)
+Sources: Wiktionary: મિત્ર (mitra); Wiktionary: Mithra.
 
 
 Lesson 2 of 4.
-કાન (kān) — an ear whose own root is unsettled.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-આંખ (āṅkh) traced back cleanly to a confirmed Indo-European root. The next body part will not be nearly as tidy.
-
-You'll want to know first — one word.
-કાન — kān — ear.
-
-The letters in this word.
-ક ka, ા long-ā, ન na. All three already yours.
-
-Grammar Lens: a gender that changed on the way here.
-કાન is feminine in Gujarati. Its Sanskrit ancestor, karṇa, was masculine. Nothing about inheriting a word guarantees its gender comes along unchanged — મિત્ર kept Sanskrit's masculine, but kān did not keep karṇa's. Gender, like the gender of આંખ (āṅkh) or બહેન, has to be learned with each noun as it stands today, not projected backward from what its ancestor was — the same caution રોટલી's chapter drew from its own -ī ending.
-
-The word, taken apart — where even Sanskrit scholars disagree.
-kān is inherited from Old Gujarati kāna, through Apabhramsa and Prakrit kaṇṇa, from Sanskrit karṇa, "ear." Past that point, no agreement exists. Proposed origins include a root for "defect" (with "ear" as a later, narrower sense), a root meaning "point" or "spike," a root meaning "handle" or "grip," and a connection to śṛṇoti, "to hear." None of these has won out. Kān joins roṭlī as a second word in your Gujarati vocabulary whose Sanskrit form is certain and whose deeper root is not — the honest answer, said plainly rather than picked at random.
-
-Guided Practice.
-[your turn — say: kān — ear, and āṅkh — eye]
-[pause 8 seconds for the answer]
-[your turn — state: karṇa's Sanskrit gender against kān's Gujarati gender (masculine becomes feminine)]
-[pause 8 seconds for the answer]
-[your turn — name: two of the four disputed origins scholars have proposed for karṇa]
-[pause 8 seconds for the answer]
-[your turn — contrast: āṅkh's confirmed PIE root against kān's unsettled one]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Give the word for "ear." (Kān.) Did its gender change between Sanskrit and Gujarati? (Yes — masculine to feminine.) Is karṇa's own root settled? (No — several proposals, no agreement.)
-Sources: Wiktionary: કાન (kān); Wiktionary: Sanskrit karna.
-
-
-Lesson 3 of 4.
-મોઢું (moḍhũ) — the tell you have been hearing all along.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-કાન (kān)'s own gender shifted away from Sanskrit's. The next body part wears its gender in plain sight — the same nasalized ending you have heard on nearly every verb in this book.
-
-You'll want to know first — one word.
-મોઢું — moḍhũ — mouth.
-
-The letters in this word.
-મ ma, ો the o sign, then a new letter: ઢ, the retroflex aspirated ḍh — curl the tongue back as for ટ and ણ, and add the puff of breath that made ધ aspirated. Then ું, u with the nasal dot. Mo-ḍhũ.
-
-Grammar Lens: the neuter tell, named plainly.
-Every verb infinitive in this book ends in the neuter -વું: hovũ, javũ, jāṇvũ, lakhvũ — a whole word class marked by that one nasalized ending. મોઢું shows the same ending doing the same job on a noun: moḍhũ is neuter, and the nasalized -ũ is the single most recognizable tell for it. Not every neuter noun wears it — પાણી and નાક (nāk) do not — but when you do see or hear a word end this way, neuter is the way to bet. And do not confuse it with આંખ (āṅkh)'s nasal: that one sat in the middle of a feminine word and marked nothing about gender at all. This one sits at the end, and it does.
-
-The word, taken apart — a mouth, and a doublet with its own formal twin.
-moḍhũ is inherited from Sauraseni Prakrit muha, from Sanskrit mukha, "mouth, face." It has a formal doublet, મુખ mukh, borrowed directly from the same Sanskrit word the way kuṭumb was — the everyday and the formal register, side by side, from one ancestor reached by two different roads. Past Sanskrit, mukha's own root is not agreed upon — a second open question, alongside karṇa's, rather than a guess dressed up as an answer.
-
-Guided Practice.
-[your turn — say: moḍhũ — mouth]
-[pause 8 seconds for the answer]
-[your turn — state: what gender the -ũ ending marks, and one verb infinitive that wears the same ending]
-[pause 8 seconds for the answer]
-[your turn — contrast: moḍhũ's end-of-word nasal against āṅkh's middle-of-word one]
-[pause 8 seconds for the answer]
-[your turn — name: moḍhũ's formal doublet, and how it reached Gujarati (borrowed whole, like kuṭumb)]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Give the word for "mouth." (Moḍhũ.) What gender does its -ũ ending mark? (Neuter.) Name the formal doublet of moḍhũ. (મુખ, mukh.)
-Sources: Wiktionary: મોં; Wiktionary: Sanskrit mukha.
-
-
-Lesson 4 of 4.
-નાક (nāk) — the whole face, run back.
+કુટુંબ (kuṭumb) — a word that skipped the sound changes.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-આંખ (āṅkh), કાન (kān), મોઢું (moḍhũ) — eye, ear, mouth. One more completes the face, and this one closes the chapter by tying its ending back to a pattern from three chapters ago.
+મિત્ર (mitra) reached Gujarati the long way, worn down through Prakrit like nearly every word you own. The word for the group a friend gets folded into took a different road entirely.
 
 You'll want to know first — one word.
-નાક — nāk — nose.
+કુટુંબ — kuṭumb — family.
 
 The letters in this word.
-ન na, ા long-ā, ક ka. Every letter already familiar — nāk's only new information is the word itself.
+ક ka, ુ the short-u sign below it, then ટ — the same retroflex ṭ you first curled back in roṭlī, here doing the same job again. ું closes it: u with the nasal dot on top, then બ ba. Ku-ṭu-m-b.
 
-Grammar Lens: closing the chapter's gender count.
-નાક is neuter, like મોઢું — but unlike moḍhũ, it carries no nasalized -ũ at all. Run the whole face: āṅkh feminine, kān feminine, moḍhũ neuter with the tell, nāk neuter without it. Two neuters, only one of them wearing the ending that names the class. This is exactly why last lesson called the nasalized -ũ a tell, not a rule: it is the loudest signal Gujarati gives you for neuter, and it is still only sometimes there — the same caution roṭlī and pāṇī already taught you about -ī, and kān's Grammar Lens taught you about gender and inheritance more generally.
+Grammar Lens: taken whole, not worn down.
+You have seen Sanskrit reach back into Gujarati once before: ત્રણ's r, restored after Prakrit had already dropped it — a repair, made to a word that had kept changing the whole time. કુટુંબ is a different kind of contact. Gujarati did not inherit this word through the centuries of sound change that gave you pāṇī or be; it took the Sanskrit word up directly, close to whole, the way a modern language reaches for a ready-made technical term instead of growing one on its own. Linguists call an inherited word like pāṇī tadbhava, "born from that," and a direct borrowing like this one tatsama, "same as that" — kuṭumb is tatsama.
 
-The word, taken apart — the last unbroken cousin in the chapter.
-nāk is inherited from Prakrit ṇakka, from Sanskrit nas, "nose," with a suffix added along the way — the retroflex ṇ here is the same sound-shift you first met turning jānāti into jāṇvũ, a single letter's worth of difference deciding a great deal, the way one mark once told javũ apart from jovũ. The root is Indo-European nehas-, unbroken in English nose, Latin nāsus (behind nasal), and Lithuanian nósis. Like āṅkh, nāk needed no ship and no loan to reach you — only the ordinary work of sound change, the same work that once put a nasal dot in the middle of વાંચવું and, this chapter, in the middle of આંખ.
+The word, taken apart — a family word borrowed by Sanskrit itself.
+Here the trail runs further than usual, in an unexpected direction. Sanskrit kuṭumba is itself thought to be a loanword, taken from a Dravidian source and compared to Tamil kuṭimai, "family, lineage," both built on kuṭi, "hut." A word that looks purely Sanskrit, and that Gujarati then borrowed as purely Sanskrit, may have entered Sanskrit from a completely different family of languages first. The chain of ownership runs Dravidian becomes Sanskrit becomes Gujarati, with no step skipped and no step certain beyond reasonable comparison.
 
 Guided Practice.
-[your turn — say: all four face words — āṅkh, kān, moḍhũ, nāk]
+[your turn — say: kuṭumb — family]
 [pause 8 seconds for the answer]
-[your turn — sort: gender of each — feminine, feminine, neuter, neuter]
+[your turn — contrast: tadbhava pāṇī (worn down over time) against tatsama kuṭumb (taken whole)]
 [pause 8 seconds for the answer]
-[your turn — state: which of the two neuters carries the -ũ tell, and which does not]
+[your turn — match: this "taken whole" idea against traṇ's restored r — both are Sanskrit reaching forward, in different ways]
 [pause 8 seconds for the answer]
-[once you have stopped driving — trace: PIE nehas- becomes Sanskrit nas becomes નાક (nāk), and becomes English nose]
-[your turn — recall: the medial nasal in વાંચવું, and the one-mark contrast between જવું and જોવું]
+[once you have stopped driving — trace: proposed Dravidian kuṭi "hut" becomes Sanskrit kuṭumba becomes કુટુંબ]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the word for "family." (Kuṭumb.) Is it tadbhava or tatsama? (Tatsama — borrowed whole from Sanskrit, not worn down through Prakrit.) Where does Sanskrit's own kuṭumba likely come from? (Dravidian, compared to Tamil kuṭimai.)
+Sources: Wiktionary: કુટુંબ (kuṭumb); Wiktionary: Sanskrit kutumba.
+
+
+Lesson 3 of 4.
+ભાઈ (bhāī) — the same word as "brother," unbroken.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+કુટુંબ (kuṭumb) was taken up whole, close to the finished Sanskrit shape. The two words for its members run the opposite way — worn all the way down, the ordinary path nearly every Gujarati word has followed.
+
+You'll want to know first — one word.
+ભાઈ — bhāī — brother.
+
+The letters in this word.
+ભ bha, the aspirated b, with the long-ā sign ા, then ઈ, the independent long-ī vowel standing on its own rather than attached to a consonant. Bhā-ī, two syllables, no consonant closing the second.
+
+The word, taken apart — no disguise at all.
+bhāī is inherited, through Prakrit bhāi, from Sanskrit bhrātṛ. Its root is Indo-European bʰréh₂tēr, and this is one of the cleanest cognate sets Indo-European linguistics has: Sanskrit bhrātṛ, English brother, Latin frāter, Greek phrātēr, Russian brat — every one of them the same word, carried down by ordinary sound change in every branch rather than borrowed by any of them. Where kuṭumb skipped the centuries of change that shape tadbhava words, bhāī is the textbook case of what those centuries do: the consonant cluster bhr- simplified once the r dropped, exactly the kind of wearing-down that gave you pāṇī from pānīya.
+
+Guided Practice.
+[your turn — say: bhāī — brother]
+[pause 8 seconds for the answer]
+[once you have stopped driving — trace: PIE bʰréh₂tēr becomes Sanskrit bhrātṛ becomes ભાઈ (bhāī), and becomes English brother]
+[your turn — contrast: bhāī worn down over centuries against kuṭumb taken up whole]
+[pause 8 seconds for the answer]
+[your turn — name: two other languages whose word for "brother" is the same cognate (Latin frāter, Greek phrātēr, or Russian brat)]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the word for "nose." (Nāk.) Which English word is the same word by unbroken descent? (Nose.) Name this chapter's four body words and their genders. (Āṅkh f., kān f., moḍhũ n., nāk n.) Which neuter noun wears the nasalized -ũ tell, and which does not? (Moḍhũ does; nāk does not.)
-Sources: Wiktionary: નાક (nāk); Wiktionary: Sanskrit nas.
+Give the word for "brother." (Bhāī.) Which English word is the very same word, by unbroken descent, not borrowing? (Brother.) Is bhāī tadbhava or tatsama — worn down, or taken whole like kuṭumb? (Tadbhava — worn down.)
+Sources: Wiktionary: ભાઈ (bhāī); Wiktionary: bʰréh₂tēr.
+
+
+Lesson 4 of 4.
+બહેન (bahen) — the sister who is not "sister"'s cousin.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+ભાઈ (bhāī) is English brother, unbroken, down to the root. Do not assume the sibling pair matches. This chapter's last word breaks the pattern.
+
+You'll want to know first — one word.
+બહેન — bahen — sister.
+
+The letters in this word.
+બ ba, હ ha, ે the e sign above the consonant, then ન na. Ba-hen, every letter already yours from earlier chapters.
+
+The word, taken apart — a different root entirely.
+Here is the surprise: બહેન (bahen) is not bhāī's counterpart the way English sister is brother's. English sister, Latin soror, and Sanskrit svasṛ all descend from one shared PIE root, swésōr. Gujarati's word for sister does not use that root at all.
+bahen comes from Sanskrit bhaginī, through Prakrit bhaginī. Scholars connect bhaginī to bhaga, "good fortune, a share" — the same bhaga behind bhāgya, "fate" — plus a feminine suffix, so "sister" may originally have meant something closer to "the one who shares." That connection is debated rather than settled, the way roṭlī's root was: some scholars accept the bhaga link, others have argued against it. What is certain is what it is not: unlike bhāī, bahen is no relation to English sister at all — and unlike the disputed-but-real mitra/meherbānī pair, this dial lands on "unrelated," full stop.
+
+Guided Practice.
+[your turn — say: bahen — sister, and bhāī — brother]
+[pause 8 seconds for the answer]
+[your turn — contrast: bhāī — same root as English brother; bahen — a different Sanskrit word entirely, not sister's cousin]
+[pause 8 seconds for the answer]
+[once you have stopped driving — trace: proposed bhaga "share, fortune" becomes bhaginī becomes બહેન (bahen)]
+[your turn — run: all four family words — mitra, kuṭumb, bhāī, bahen — inherited/borrowed, direct/indirect]
+[pause 8 seconds for the answer]
+[your turn — recall: મિત્ર (mitra) and મહેરબાની's shared root from the last chapter, and કુટુંબ (kuṭumb)'s proposed Dravidian root]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the word for "sister." (Bahen.) Is it the same root as English sister? (No — that connection belongs to bhāī/brother instead.) What does bahen probably come from? (Sanskrit bhaginī, disputedly tied to bhaga, "share.") Name this chapter's four people and things: friend, family, brother, sister. (Mitra, kuṭumb, bhāī, bahen.)
+Sources: Wiktionary: બહેન (bahen); Wiktionary: Sanskrit bhagini.

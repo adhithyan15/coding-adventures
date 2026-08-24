@@ -1,150 +1,190 @@
-Gujarati, chapter 4: Farewells.
-5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Gujarati, chapter 4: How Are You?.
+6 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 5.
-મળીશું (maḷīshũ) — "(we) will meet".
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-A future-tense verb — the other half of "see you again."
-
-The letters in this word.
-મ (ma) + ળી (ḷī, with the retroflex ળ ḷ) + શું (shũ) becomes મળીશું (maḷīshũ).
-
-The word, taken apart.
-મળીશું (maḷīshũ, "we will meet") is the future of મળવું (maḷvũ, "to meet"), from Sanskrit મિલ્ (mil-, "to join, unite") — the same root as Hindi milnā and Punjabi milṇā. Note the retroflex ળ (ḷ): Gujarati keeps this extra letter — like Marathi and the Dravidian south, and unlike Hindi. The ending -શું (-shũ) is the "we will" future.
-
-Grammar Lens: the future is an ending.
-Gujarati marks the future with an ending on the stem: maḷ- ("meet") + -īshũ ("we will") becomes maḷīshũ. No helper-word like English "will."
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "maḷīshũ"]
-[pause 8 seconds for the answer]
-[your turn — say: the verb it's from (maḷvũ, "to meet," from Sanskrit mil-)]
-[pause 8 seconds for the answer]
-[your turn — say: the extra letter it shows (retroflex ળ, ḷ)]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What verb is maḷīshũ from, and what special letter does it use? (Maḷvũ "to meet"; the retroflex ળ ḷ, which Hindi lacks.)
-
-
-Lesson 2 of 5.
-કાલે મળીશું (kāle maḷīshũ) — "see you tomorrow".
+Lesson 1 of 6.
+હું (hũ) — "I".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-A goodbye for tomorrow — built on a word that means both tomorrow and yesterday.
+To answer "how are you?" you first need "I." In the name exchange you learned mārũ ("my"); here is its owner.
 
 The letters in this word.
-કા (kā) + લે (le) becomes કાલે (kāle, "on [the] kāl"). The base is કાલ (kāl).
+હ (ha) + the u-sign + nasal becomes હું (hũ). One nasal syllable.
 
 The word, taken apart.
-કાલ (kāl) means both "tomorrow" and "yesterday" — the day on either side of today — from Sanskrit કાલ (kāla, "time"). (It is the very same kāla behind Hindi's kal, Bengali's kāl, and Punjabi's akāl "timeless.") The verb's tense tells which: kāle maḷīshũ (future becomes "tomorrow we'll meet"), kāle maḷyā (past becomes "we met yesterday"). So કાલે મળીશું = "tomorrow we'll meet" = "see you tomorrow."
+હું (hũ, "I") descends from Sanskrit અહમ્ (aham, "I"), worn down through Old Gujarati (haũ) to hũ. That aham is from Proto-Indo-European h₁eǵ(H)om — the ancestor of Latin ego and English I. So Gujarati's hũ, Latin ego, and English I are one ancient word. Its possessive is the મારું (mārũ, "my") from that name exchange.
+
+Grammar Lens: "I" plus the copula.
+Hũ takes the copula છું (chhũ, "am"): hũ … chhũ. So the answer to tame kem chho? begins હું (hũ …).
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "kāle maḷīshũ"]
+[your turn — say: "hũ"]
 [pause 8 seconds for the answer]
-[your turn — say: the puzzle — kāl means both tomorrow and yesterday]
+[your turn — say: the family — hũ / Latin ego / English I]
 [pause 8 seconds for the answer]
-[your turn — say: the root and its cousins (kāla "time"; Hindi kal, Punjabi akāl)]
+[your turn — say: "hũ … chhũ" — I am …]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What two opposite days does kāl mean, and what tells them apart? (Both tomorrow and yesterday; the verb's tense.)
+What Sanskrit word is hũ from, and its cousins? (Aham; Latin ego, English I.)
 
 
-Lesson 3 of 5.
-પાછા (pāchhā) — "again, back".
+Lesson 2 of 6.
+કેમ (kem) — "how," a proper k- question.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-One small word turns a goodbye into "till next time." You already have the other half — āvjo ("come again") — from Chapter 1.
+Where shũ ("what") hid its k-, this one wears it plainly — and it opens the most Gujarati of greetings.
 
 The letters in this word.
-પા (pā) + છા (chhā) becomes પાછા (pāchhā).
+ક (ka) + ે (the e-sign) + મ (ma) becomes કેમ (kem).
 
 The word, taken apart.
-પાછા (pāchhā, "back, again, returning") is from Sanskrit પશ્ચાત્ (paścāt, "behind, afterward") — the same "behind/after" root behind English post- words, distantly. It carries the sense of return: pāchhā āvvũ ("to come back"), pāchhā jāvũ ("to go back"). Add it to "we'll meet" and you get the warm goodbye of the next lesson.
+કેમ (kem, "how"; also "why") is from the interrogative stem ક- (ka-), PIE kʷo- — the same root behind English wh- and Latin qu-. It heads the plain k- family Gujarati mostly kept: kem (how), kōṇ (who), kyā̃ (where), kyāre (when). And કેમ છો? (kem chho?, "how are you?") is, for most Gujaratis, the real everyday hello — warmer than namaste.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "pāchhā"]
+[your turn — say: "kem"]
 [pause 8 seconds for the answer]
-[your turn — say: what it adds to a goodbye ("again / back")]
+[your turn — say: the k- question family — kem, kōṇ, kyā̃, kyāre]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does pāchhā mean, and what sense does it carry? ("Back / again"; the sense of return — pāchhā āvvũ, "to come back.")
+What root does kem share with English how/what? (The interrogative ka-, PIE kʷo-.)
 
 
-Lesson 4 of 5.
-પાછા મળીશું (pāchhā maḷīshũ) — "we'll meet again".
+Lesson 3 of 6.
+તમે કેમ છો? (tame kem chho?) — "how are you?"
 
 Warm-up.
 [pause 2 seconds]
-The warm, explicit goodbye — the companion of Chapter 1's āvjo.
+The greeting most Gujaratis actually use — three words you already own.
 
 The phrase, taken apart.
-પાછા મળીશું = પાછા (pāchhā, "again") + મળીશું (maḷīshũ, "we will meet") — "we'll meet again." Where Chapter 1's આવજો (āvjo) is the quick, warm "come again," pāchhā maḷīshũ spells out the promise: we will meet once more. It is the same "promise of return" the whole subcontinent prefers (Hindi phir milenge, Bengali āshi, Tamil pōy varugiṟēṉ).
+તમે કેમ છો? = તમે (tame, respectful "you") + કેમ (kem, "how") + છો (chho, "are") — literally "you how are?", the verb last. Chho is the respectful/plural form of the copula chhe you met in the name exchange (hũ chhũ I am / tame chho you are). To a friend (tũ): તું કેમ છે? (tũ kem chhe?).
+
+Grammar Lens: match the "you" to the copula.
+Respectful: તમે કેમ છો? (tame … chho).
+Familiar: તું કેમ છે? (tũ … chhe).
+Same pattern as every Indo-Aryan track: the "you" and its verb-form travel together.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the warm goodbye — pāchhā maḷīshũ]
+[your turn — say: the respectful greeting — tame kem chho?]
 [pause 8 seconds for the answer]
-[your turn — say: the two words it's built from (pāchhā + maḷīshũ)]
+[your turn — say: the familiar version — tũ kem chhe?]
 [pause 8 seconds for the answer]
-[your turn — say: the Chapter-1 goodbye it partners (āvjo)]
+[your turn — say: where the verb sits (at the end)]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does pāchhā maḷīshũ literally say, and how does it relate to āvjo? ("We'll meet again"; it's the explicit form of Ch.1's "come again" goodbye.)
+Give the everyday Gujarati "how are you?", and its copula form. (Tame kem chho?; chho — the respectful form of chhe.)
 
 
-Lesson 5 of 5.
-Chapter 4 — The farewells.
+Lesson 4 of 6.
+મજા (majā) — "enjoyment," and how to answer.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-No new words. Three ways to part — none of them a blunt "goodbye."
+The word that answers "how are you?" — and it comes not from Sanskrit but from Persia.
 
-Why it's said this way — the farewells.
+The letters in this word.
+મ (ma) + જા (jā) becomes મજા (majā).
+
+The word, taken apart.
+મજા (majā, "enjoyment, fun, relish, pleasure") is not Sanskrit — it is Perso-Arabic, from Persian maza ("taste, relish"). Gujaratis, a great trading people, wove thousands of Persian and Arabic words into their speech over centuries of commerce across the Arabian Sea — and even "how are you" is answered with one. To say "I'm well," Gujarati says હું મજામાં છું (hũ majāmā chhũ) — literally "I am in enjoyment" (majā + -mā "in" + chhũ "am").
+
+The exchange — the reply.
+— tame kem chho? ("How are you?") — majāmā, ābhār. ("Well [lit. 'in enjoyment'], thank you.")
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "majā"]
+[pause 8 seconds for the answer]
+[your turn — say: the full reply — hũ majāmā chhũ]
+[pause 8 seconds for the answer]
+[your turn — say: which heritage majā belongs to (Persian, not Sanskrit)]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How does Gujarati say "I'm well," and where does majā come from? (Hũ majāmā chhũ, "I'm in enjoyment"; Persian maza, "taste/relish.")
+
+
+Lesson 5 of 6.
+વાંધો નહીં (vāndho nahĩ) — "no problem".
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+When someone thanks you — or apologises — this is the easy, gracious reply.
+
+The letters in this word.
+વાંધો (vāndho, "objection, problem" — with the nasal on વાં) + નહીં (nahĩ, "not") becomes vāndho nahĩ.
+
+The word, taken apart.
+વાંધો નહીં literally means "[there is] no objection" — vāndho ("objection, difficulty, harm") + નહીં (nahĩ, "not / no"). It serves as "it's okay / no worries / no problem / you're welcome." The negative નહીં (nahĩ) is the fuller form of the ના (nā) from the earlier yes/no lesson — both from the ancient na-, Proto-Indo-European ne, behind English no, not, and Hindi nahīṁ.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "vāndho nahĩ"]
+[pause 8 seconds for the answer]
+[your turn — say: what it literally means ("no objection")]
+[pause 8 seconds for the answer]
+[your turn — say: the exchange — ābhār / vāndho nahĩ]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does vāndho nahĩ literally say, and what ancient root is its nahĩ from? ("No objection"; PIE ne — English no/not.)
+
+
+Lesson 6 of 6.
+Chapter 4 — The how-are-you exchange.
+
+Warm-up.
+[pause 2 seconds]
+No new words. The whole responding cycle, from atoms you now own.
+
+The exchange.
 [pause 1 second after each]
-[your turn — say: the quick "come again" (Chapter 1) — āvjo]
+[your turn — say: "How are you?" (the everyday hello) — tame kem chho?]
 [pause 8 seconds for the answer]
-[your turn — say: the explicit "we'll meet again" — pāchhā maḷīshũ]
+[your turn — say: "I'm well, thank you." — hũ majāmā chhũ, ābhār.]
 [pause 8 seconds for the answer]
-[your turn — say: "see you tomorrow" — kāle maḷīshũ]
+[your turn — say: "No problem / you're welcome." — vāndho nahĩ.]
+[pause 8 seconds for the answer]
+[your turn — say: the familiar question — tũ kem chhe?]
 [pause 8 seconds for the answer]
 
 The word, taken apart — the atoms.
 [pause 2 seconds]
-[your turn — say: "again" and "(we) will meet" (pāchhā, maḷīshũ)]
+[your turn — say: the k- question-word for "how" (kem)]
 [pause 8 seconds for the answer]
-[your turn — say: the word that means BOTH tomorrow and yesterday (kāl)]
+[your turn — say: "I" and its copula (hũ, chhũ)]
 [pause 8 seconds for the answer]
-[your turn — say: the retroflex letter in maḷīshũ (ળ, ḷ)]
+[your turn — say: which of your words is Persian, not Sanskrit (majā)]
 [pause 8 seconds for the answer]
 
 What you've built — roots you now carry.
 [pause 2 seconds]
-āvjo ("goodbye") = "come [again]," from āvvũ "to come".
-maḷīshũ from maḷvũ "to meet" (Sanskrit mil-); the retroflex ળ.
-kāl from kāla "time" (Hindi kal, Punjabi akāl).
+kem from the interrogative k- (PIE kʷo-), cousin of English how/what.
+hũ from Sanskrit aham becomes Latin ego, English I.
+majā from Persian maza, "taste/relish" — the trade-language layer.
+nahĩ from PIE ne, English no (in vāndho nahĩ).
 
 Wrap-up Recall.
 [pause 3 seconds]
-You're leaving a friend and will see them tomorrow. Give the goodbye and the "tomorrow" version. (Āvjo — and kāle maḷīshũ.)
+Someone greets you with tame kem chho? — reply that you're well and thank them. (Hũ majāmā chhũ, ābhār — and to their thanks, vāndho nahĩ.)

@@ -3,7 +3,7 @@ schema_version: 2
 id: GU-C07-khaavun
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 390
-chapter: 7
+chapter: 8
 type: word
 headword: ખાવું
 romanization: khāvũ

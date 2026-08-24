@@ -3,7 +3,7 @@ schema_version: 2
 id: GU-C04-pachha
 spine_node: SPINE-TAKE-LEAVE
 sequence: 240
-chapter: 4
+chapter: 5
 type: word
 headword: પાછા
 gloss: again, back
@@ -33,7 +33,7 @@ reviews_of: []
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] One small word turns a goodbye into "**till next time**." You already
-have the other half — *āvjo* ("come again") — from Chapter 1.
+have the other half — *āvjo* ("come again") — from the earlier courtesy chapter.
 
 ## The letters in this word
 <!-- hl-knowledge: introduces=[GU-CONCEPT-C04-PACHHA-01]; assesses=[] -->

@@ -3,7 +3,7 @@ schema_version: 2
 id: GU-C03-tame-kem-chho
 spine_node: SPINE-CHECK-WELLBEING
 sequence: 180
-chapter: 3
+chapter: 4
 type: phrase
 headword: તમે કેમ છો?
 gloss: how are you? (respectful)
@@ -40,7 +40,7 @@ own.
 
 **તમે કેમ છો?** = **તમે** (*tame*, respectful "you") + **કેમ** (*kem*, "how") +
 **છો** (*chho*, "are") — literally "**you how are?**", the verb last. *Chho* is
-the respectful/plural form of the copula *chhe* you met in Chapter 2 (*hũ chhũ* I
+the respectful/plural form of the copula *chhe* you met in the name exchange (*hũ chhũ* I
 am / *tame chho* you are). To a friend (*tũ*): **તું કેમ છે?** (*tũ kem chhe?*).
 
 ## Grammar Lens: match the "you" to the copula

@@ -3,7 +3,7 @@ schema_version: 2
 id: GU-C05-rahevun
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 300
-chapter: 5
+chapter: 6
 type: word
 headword: રહેવું
 gloss: to live, to stay

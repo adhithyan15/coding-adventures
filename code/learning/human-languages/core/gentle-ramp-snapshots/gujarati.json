@@ -5,7 +5,7 @@
   "atomMeasurementBlindLessons": 3,
   "durationViolations": 0,
   "atomLessonSpikes": 2,
-  "atomChapterSpikes": 2,
+  "atomChapterSpikes": 1,
   "glyphLessonSpikes": 2,
   "scriptSystemSpikes": 0,
   "scriptClosureViolations": 46,
@@ -54,7 +54,7 @@
     {
       "language": "gujarati",
       "kind": "atom-step",
-      "count": 4,
+      "count": 3,
       "unit": "lesson/chapter spike(s)",
       "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
     },

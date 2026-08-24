@@ -1,234 +1,147 @@
-Gujarati, chapter 13: The Headless Script, Piece by Piece.
-8 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Gujarati, chapter 13: Eye, Ear, Mouth, and Nose.
+4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 8.
-આ (ā) — the SAME vowel standing alone.
+Lesson 1 of 4.
+આંખ (āṅkh) — an eye, and a nasal that is not what it looks like.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-Write the piece from the previous lesson before adding another.
+બહેન (bahen) closed a chapter about people. This chapter checks on how someone is — starting with the parts of the body a friend might actually ask about.
 
-Script.
-Now a distinction that trips up every beginner in every Indic script, and it is worth meeting deliberately rather than by accident.
-The mark you just learned only works attached to a consonant. So what do you write when a word starts with that vowel, with no consonant to hang it on?
-You write a different character:
-આ (ā).
-That is ā as well — the same sound — but it is an independent vowel, a full letter that stands on its own at the start of a word.
-These are two different characters, not two styles of one. They look related because they are, and a computer, a font and this book all treat them as completely separate. Confusing them is the commonest spelling error in the script.
-So what decides which one you write is position, not sound:
-આ (ā) begins a word.
-ા rides on a consonant.
-You already know a word that opens with the independent one — the word for thanks — and you will be able to read the whole of it shortly.
+You'll want to know first — one word.
+આંખ — āṅkh — eye.
+
+The letters in this word.
+આ the independent long-ā, then the nasal dot ં sitting on top of it — exactly the medial anusvāra you first read inside વાંચવું, doing the same job here, in the middle of a noun rather than a verb — then ખ, the aspirated k. Note what this nasal is NOT: it does not mark આંખ (āṅkh) as neuter — the word is feminine. A nasal dot in the middle of a word is a sound, present or absent as pronunciation happens to need it; it is a different thing entirely from the grammatical -ũ ending you will meet again soon, and this chapter keeps the two apart on purpose.
+
+The word, taken apart — the same word as "eye," unbroken.
+āṅkh is inherited from Sauraseni Prakrit akkhi, from Sanskrit akṣi, "eye." The root is Indo-European h₃ekʷ-, "eye; to see," and it survives unbroken in English eye itself, in Latin oculus (behind ocular), and in Greek ósse. This is bhāī's kind of cousin, not bahen's: a straight line back to the same ancestor, no borrowing and no detour.
 
 Guided Practice.
-[once you have stopped driving — write: આ (ā)]
-[your turn — read: every piece this chapter has given you so far, in order]
+[your turn — say: āṅkh — eye]
+[pause 8 seconds for the answer]
+[your turn — match: the medial nasal here against the one in વાંચવું]
+[pause 8 seconds for the answer]
+[your turn — state: is this nasal a gender marker? (No.) Is āṅkh neuter? (No — feminine.)]
+[pause 8 seconds for the answer]
+[once you have stopped driving — trace: PIE h₃ekʷ- becomes Sanskrit akṣi becomes આંખ (āṅkh), and becomes English eye]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the word for "eye." (Āṅkh.) Which English word is the same word by unbroken descent? (Eye.) Does the nasal dot in āṅkh mean the word is neuter? (No — āṅkh is feminine; the dot is only a sound.)
+Sources: Wiktionary: આંખ (āṅkh); Wiktionary: Sanskrit akshi.
+
+
+Lesson 2 of 4.
+કાન (kān) — an ear whose own root is unsettled.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+આંખ (āṅkh) traced back cleanly to a confirmed Indo-European root. The next body part will not be nearly as tidy.
+
+You'll want to know first — one word.
+કાન — kān — ear.
+
+The letters in this word.
+ક ka, ા long-ā, ન na. All three already yours.
+
+Grammar Lens: a gender that changed on the way here.
+કાન is feminine in Gujarati. Its Sanskrit ancestor, karṇa, was masculine. Nothing about inheriting a word guarantees its gender comes along unchanged — મિત્ર kept Sanskrit's masculine, but kān did not keep karṇa's. Gender, like the gender of આંખ (āṅkh) or બહેન, has to be learned with each noun as it stands today, not projected backward from what its ancestor was — the same caution રોટલી's chapter drew from its own -ī ending.
+
+The word, taken apart — where even Sanskrit scholars disagree.
+kān is inherited from Old Gujarati kāna, through Apabhramsa and Prakrit kaṇṇa, from Sanskrit karṇa, "ear." Past that point, no agreement exists. Proposed origins include a root for "defect" (with "ear" as a later, narrower sense), a root meaning "point" or "spike," a root meaning "handle" or "grip," and a connection to śṛṇoti, "to hear." None of these has won out. Kān joins roṭlī as a second word in your Gujarati vocabulary whose Sanskrit form is certain and whose deeper root is not — the honest answer, said plainly rather than picked at random.
+
+Guided Practice.
+[your turn — say: kān — ear, and āṅkh — eye]
+[pause 8 seconds for the answer]
+[your turn — state: karṇa's Sanskrit gender against kān's Gujarati gender (masculine becomes feminine)]
+[pause 8 seconds for the answer]
+[your turn — name: two of the four disputed origins scholars have proposed for karṇa]
+[pause 8 seconds for the answer]
+[your turn — contrast: āṅkh's confirmed PIE root against kān's unsettled one]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which of the two starts a word? (આ, the independent vowel.) Which one attaches to a consonant? (ા, the mātrā.) And are they the same character? (No — two separate characters for one sound.)
-Source: Unicode Gujarati chart.
+Give the word for "ear." (Kān.) Did its gender change between Sanskrit and Gujarati? (Yes — masculine to feminine.) Is karṇa's own root settled? (No — several proposals, no agreement.)
+Sources: Wiktionary: કાન (kān); Wiktionary: Sanskrit karna.
 
 
-Lesson 2 of 8.
-ન — the consonant na.
+Lesson 3 of 4.
+મોઢું (moḍhũ) — the tell you have been hearing all along.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-Write the piece from the previous lesson before adding another.
+કાન (kān)'s own gender shifted away from Sanskrit's. The next body part wears its gender in plain sight — the same nasalized ending you have heard on nearly every verb in this book.
 
-Script.
-ન (na).
-na, with the same inherent a inside it. The n of English net, then the vowel nobody wrote.
-Now put the mātrā on it, exactly as you did with the first consonant:
-ન (na) + ા becomes ના.
-nā — and that is no.
-You now hold both answers to a yes-or-no question, and you can read them both off the page:
-હા ના.
-Two consonants and one mark. That is the arithmetic of an abugida: consonants and vowel signs multiply, so a small number of pieces reaches a large number of syllables very quickly.
+You'll want to know first — one word.
+મોઢું — moḍhũ — mouth.
+
+The letters in this word.
+મ ma, ો the o sign, then a new letter: ઢ, the retroflex aspirated ḍh — curl the tongue back as for ટ and ણ, and add the puff of breath that made ધ aspirated. Then ું, u with the nasal dot. Mo-ḍhũ.
+
+Grammar Lens: the neuter tell, named plainly.
+Every verb infinitive in this book ends in the neuter -વું: hovũ, javũ, jāṇvũ, lakhvũ — a whole word class marked by that one nasalized ending. મોઢું shows the same ending doing the same job on a noun: moḍhũ is neuter, and the nasalized -ũ is the single most recognizable tell for it. Not every neuter noun wears it — પાણી and નાક (nāk) do not — but when you do see or hear a word end this way, neuter is the way to bet. And do not confuse it with આંખ (āṅkh)'s nasal: that one sat in the middle of a feminine word and marked nothing about gender at all. This one sits at the end, and it does.
+
+The word, taken apart — a mouth, and a doublet with its own formal twin.
+moḍhũ is inherited from Sauraseni Prakrit muha, from Sanskrit mukha, "mouth, face." It has a formal doublet, મુખ mukh, borrowed directly from the same Sanskrit word the way kuṭumb was — the everyday and the formal register, side by side, from one ancestor reached by two different roads. Past Sanskrit, mukha's own root is not agreed upon — a second open question, alongside karṇa's, rather than a guess dressed up as an answer.
 
 Guided Practice.
-[once you have stopped driving — write: ન (na)]
-[your turn — read: every piece this chapter has given you so far, in order]
+[your turn — say: moḍhũ — mouth]
+[pause 8 seconds for the answer]
+[your turn — state: what gender the -ũ ending marks, and one verb infinitive that wears the same ending]
+[pause 8 seconds for the answer]
+[your turn — contrast: moḍhũ's end-of-word nasal against āṅkh's middle-of-word one]
+[pause 8 seconds for the answer]
+[your turn — name: moḍhũ's formal doublet, and how it reached Gujarati (borrowed whole, like kuṭumb)]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What is ના? (No.) How many separate pieces did it take? (Two — a consonant and a mātrā.) And what does the bare consonant sound like on its own? (na, with the inherent vowel.)
-Source: Unicode Gujarati chart.
+Give the word for "mouth." (Moḍhũ.) What gender does its -ũ ending mark? (Neuter.) Name the formal doublet of moḍhũ. (મુખ, mukh.)
+Sources: Wiktionary: મોં; Wiktionary: Sanskrit mukha.
 
 
-Lesson 3 of 8.
-મ — the consonant ma.
+Lesson 4 of 4.
+નાક (nāk) — the whole face, run back.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-Write the piece from the previous lesson before adding another.
+આંખ (āṅkh), કાન (kān), મોઢું (moḍhũ) — eye, ear, mouth. One more completes the face, and this one closes the chapter by tying its ending back to a pattern from three chapters ago.
 
-Script.
-મ (ma).
-ma. The m of English met, with the inherent a riding along.
-Nothing new in the machinery this time — this is simply another consonant, and the rules you already have apply to it unchanged. Add the mātrā and you would get mā; leave it bare and it is ma.
-That is worth saying plainly, because it is the payoff of learning the system rather than the words. Every consonant from here behaves exactly like the two you already know. There are no new rules coming for them, only new shapes.
-Write it beside the two you have. Three letters, floating, no bar across the top.
+You'll want to know first — one word.
+નાક — nāk — nose.
+
+The letters in this word.
+ન na, ા long-ā, ક ka. Every letter already familiar — nāk's only new information is the word itself.
+
+Grammar Lens: closing the chapter's gender count.
+નાક is neuter, like મોઢું — but unlike moḍhũ, it carries no nasalized -ũ at all. Run the whole face: āṅkh feminine, kān feminine, moḍhũ neuter with the tell, nāk neuter without it. Two neuters, only one of them wearing the ending that names the class. This is exactly why last lesson called the nasalized -ũ a tell, not a rule: it is the loudest signal Gujarati gives you for neuter, and it is still only sometimes there — the same caution roṭlī and pāṇī already taught you about -ī, and kān's Grammar Lens taught you about gender and inheritance more generally.
+
+The word, taken apart — the last unbroken cousin in the chapter.
+nāk is inherited from Prakrit ṇakka, from Sanskrit nas, "nose," with a suffix added along the way — the retroflex ṇ here is the same sound-shift you first met turning jānāti into jāṇvũ, a single letter's worth of difference deciding a great deal, the way one mark once told javũ apart from jovũ. The root is Indo-European nehas-, unbroken in English nose, Latin nāsus (behind nasal), and Lithuanian nósis. Like āṅkh, nāk needed no ship and no loan to reach you — only the ordinary work of sound change, the same work that once put a nasal dot in the middle of વાંચવું and, this chapter, in the middle of આંખ.
 
 Guided Practice.
-[once you have stopped driving — write: મ (ma)]
-[your turn — read: every piece this chapter has given you so far, in order]
+[your turn — say: all four face words — āṅkh, kān, moḍhũ, nāk]
+[pause 8 seconds for the answer]
+[your turn — sort: gender of each — feminine, feminine, neuter, neuter]
+[pause 8 seconds for the answer]
+[your turn — state: which of the two neuters carries the -ũ tell, and which does not]
+[pause 8 seconds for the answer]
+[once you have stopped driving — trace: PIE nehas- becomes Sanskrit nas becomes નાક (nāk), and becomes English nose]
+[your turn — recall: the medial nasal in વાંચવું, and the one-mark contrast between જવું and જોવું]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What vowel is inside મ (ma) when nothing is attached? (a.) And what would મ (ma) plus the mātrā you know sound like? (mā.)
-Source: Unicode Gujarati chart.
-
-
-Lesson 4 of 8.
-સ — the consonant sa.
-
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Write the piece from the previous lesson before adding another.
-
-Script.
-સ (sa).
-sa. The s of English sit, plus the inherent vowel.
-You are four consonants and one mātrā into this script, and every one of them has behaved the same way. Say the four aloud in the order you met them, each with its inherent vowel:
-હ ન (na) મ (ma) સ (sa).
-ha, na, ma, sa. Four beats, four shapes, no bar across any of them.
-
-Guided Practice.
-[once you have stopped driving — write: સ (sa)]
-[your turn — read: every piece this chapter has given you so far, in order]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Say the four consonants you now hold, each with its inherent vowel. (ha, na, ma, sa.)
-Source: Unicode Gujarati chart.
-
-
-Lesson 5 of 8.
-ત — the consonant ta.
-
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Write the piece from the previous lesson before adding another.
-
-Script.
-ત (ta).
-ta — and the consonant is not quite the English one.
-English t is made with the tongue on the ridge behind the teeth. This one is dental: the tongue touches the back of the upper teeth themselves, further forward. It sounds softer to an English ear, and getting it right is one of the quickest ways to stop sounding foreign.
-The script will make you care about this shortly, because it has a second t made even further back, and the two are different letters and different words. This is the forward one.
-
-Guided Practice.
-[once you have stopped driving — write: ત (ta)]
-[your turn — read: every piece this chapter has given you so far, in order]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Where does the tongue go for ત? (Against the back of the upper teeth — dental, not on the ridge.) And is there another t in this script? (Yes, one made further back.)
-Source: Unicode Gujarati chart.
-
-
-Lesson 6 of 8.
-ે (-e) — a mātrā that sits ABOVE the letter, not beside it.
-
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Write the piece from the previous lesson before adding another.
-
-Script.
-A second vowel sign, and it introduces something the first one did not.
-ે (-e).
-This is e, the vowel of English bed. And unlike the mātrā you already know, which stands to the right of its consonant, this one sits above it:
-ત (ta) + ે (-e) becomes તે.
-te. One beat, still — the mark changes the vowel, never the count.
-Where a mātrā sits is not decoration. In this family of scripts a vowel sign can go to the right, to the left, above, below, or even on both sides at once, and the position is part of the character's identity. A reader learns to look around a consonant, not just after it.
-
-Guided Practice.
-[once you have stopped driving — write: ે (-e)]
-[your turn — read: every piece this chapter has given you so far, in order]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Where does this mātrā sit? (Above the consonant.) Does it add a beat? (No — it replaces the vowel, it does not add one.)
-Source: Unicode Gujarati chart.
-
-
-Lesson 7 of 8.
-્ ((virama)) — the mark that DELETES the inherent vowel, and glues two consonants together.
-
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Write the piece from the previous lesson before adding another.
-
-Script.
-One piece of machinery left, and it is the one that makes the script's hardest shapes make sense.
-The inherent vowel is a nuisance when you do not want it. If a word has two consonants pressed together with no vowel between them, writing them plainly would insert an a that is not there.
-So there is a mark that removes it:
-્ ((virama)).
-This is the virama. Attached under a consonant, it says: no vowel here.
-And then something happens that no European alphabet does. A consonant stripped of its vowel does not usually sit there bare — it fuses with the consonant after it into a single joined shape called a conjunct:
-સ (sa) + ્ ((virama)) + ત (ta) becomes સ્ત.
-sta, one cluster. You can still see both letters in it if you look, and that is the trick to reading conjuncts: they are not new characters to memorise, they are two you already know, joined.
-
-Guided Practice.
-[once you have stopped driving — write: ્ ((virama))]
-[your turn — read: every piece this chapter has given you so far, in order]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What does the virama do? (Removes the inherent vowel.) And what usually happens to a consonant that loses its vowel? (It joins the next one into a conjunct.)
-Source: Unicode Gujarati chart.
-
-
-Lesson 8 of 8.
-નમસ્તે (namaste) — five pieces, all of them already yours.
-
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Write the piece from the previous lesson before adding another.
-
-Script.
-Everything in this word is something you can already write. Nothing new is introduced here at all.
-ન + મ + સ (sa) + ્ ((virama)) + ત (ta) + ે (-e) becomes નમસ્તે (namaste).
-Read it the way you built it:
-ન — na, inherent vowel.
-મ — ma, inherent vowel.
-સ્ત — the conjunct: sa with its vowel removed, fused to ta.
-ે (-e) — the mātrā above, making that last piece te.
-na-ma-ste. The greeting you learned in your first lesson, now decoded rather than recalled.
-Look back at what it took: four consonants, two vowel signs, one virama, and one independent vowel. With them you can read yes, no, and the greeting — and every consonant you meet from here obeys rules you already hold, so the next word costs you shapes and no new machinery.
-The script has around forty more letters. It does not have any more systems.
-
-Guided Practice.
-[once you have stopped driving — write: નમસ્તે (namaste)]
-[your turn — read: every piece this chapter has given you so far, in order]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-How many new pieces were in this lesson? (None.) What is સ્ત made of? (સ (sa) with its vowel removed, joined to ત.) And what does the mark above the last letter do? (Makes it te instead of ta.)
-Source: Unicode Gujarati chart.
+Give the word for "nose." (Nāk.) Which English word is the same word by unbroken descent? (Nose.) Name this chapter's four body words and their genders. (Āṅkh f., kān f., moḍhũ n., nāk n.) Which neuter noun wears the nasalized -ũ tell, and which does not? (Moḍhũ does; nāk does not.)
+Sources: Wiktionary: નાક (nāk); Wiktionary: Sanskrit nas.

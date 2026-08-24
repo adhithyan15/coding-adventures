@@ -3,7 +3,7 @@ schema_version: 2
 id: GU-C01-aabhaar
 spine_node: SPINE-COURTESY-THANK
 sequence: 20
-chapter: 1
+chapter: 2
 type: word
 headword: આભાર
 gloss: thank you (ābhār)

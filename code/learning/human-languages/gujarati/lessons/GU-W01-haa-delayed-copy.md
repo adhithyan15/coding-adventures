@@ -4,7 +4,7 @@ id: GU-W01-haa-delayed-copy
 spine_node: SPINE-RESPOND-BASIC
 sequence: 44
 delivery: script
-chapter: 1
+chapter: 2
 type: writing
 headword: હા
 romanization: "hā"

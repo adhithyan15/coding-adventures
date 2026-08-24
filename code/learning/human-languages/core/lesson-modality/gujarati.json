@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:7aa5808279c0a8e0",
+  "sourceHash": "fnv1a64:7c9f80a481c77950",
   "summary": {
     "totalLessons": 72,
     "voice": 17,
@@ -16,10 +16,10 @@
     "drivableLessons": 17,
     "drivablePercent": 24,
     "trackCount": 1,
-    "chapterCount": 12,
+    "chapterCount": 13,
     "drivablePrefixTotal": 9,
     "fullyDrivableChapters": 2,
-    "unstartableChapters": 9,
+    "unstartableChapters": 10,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
@@ -40,10 +40,10 @@
       "chapters": [
         {
           "chapter": 1,
-          "lessonCount": 19,
+          "lessonCount": 11,
           "voice": 1,
-          "sight": 4,
-          "pen": 14,
+          "sight": 0,
+          "pen": 10,
           "modalities": [
             "voice",
             "sight",
@@ -58,6 +58,21 @@
         },
         {
           "chapter": 2,
+          "lessonCount": 8,
+          "voice": 0,
+          "sight": 4,
+          "pen": 4,
+          "modalities": [
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "GU-C01-aabhaar",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 3,
           "lessonCount": 9,
           "voice": 3,
           "sight": 6,
@@ -72,7 +87,7 @@
           "drivableLessonIds": []
         },
         {
-          "chapter": 3,
+          "chapter": 4,
           "lessonCount": 6,
           "voice": 2,
           "sight": 4,
@@ -87,7 +102,7 @@
           "drivableLessonIds": []
         },
         {
-          "chapter": 4,
+          "chapter": 5,
           "lessonCount": 5,
           "voice": 2,
           "sight": 3,
@@ -102,7 +117,7 @@
           "drivableLessonIds": []
         },
         {
-          "chapter": 5,
+          "chapter": 6,
           "lessonCount": 5,
           "voice": 1,
           "sight": 4,
@@ -117,7 +132,7 @@
           "drivableLessonIds": []
         },
         {
-          "chapter": 6,
+          "chapter": 7,
           "lessonCount": 2,
           "voice": 2,
           "sight": 0,
@@ -134,7 +149,7 @@
           ]
         },
         {
-          "chapter": 7,
+          "chapter": 8,
           "lessonCount": 6,
           "voice": 6,
           "sight": 0,
@@ -155,7 +170,7 @@
           ]
         },
         {
-          "chapter": 8,
+          "chapter": 9,
           "lessonCount": 4,
           "voice": 0,
           "sight": 4,
@@ -169,7 +184,7 @@
           "drivableLessonIds": []
         },
         {
-          "chapter": 9,
+          "chapter": 10,
           "lessonCount": 4,
           "voice": 0,
           "sight": 4,
@@ -183,7 +198,7 @@
           "drivableLessonIds": []
         },
         {
-          "chapter": 10,
+          "chapter": 11,
           "lessonCount": 4,
           "voice": 0,
           "sight": 4,
@@ -197,7 +212,7 @@
           "drivableLessonIds": []
         },
         {
-          "chapter": 11,
+          "chapter": 12,
           "lessonCount": 4,
           "voice": 0,
           "sight": 4,
@@ -211,7 +226,7 @@
           "drivableLessonIds": []
         },
         {
-          "chapter": 12,
+          "chapter": 13,
           "lessonCount": 4,
           "voice": 0,
           "sight": 4,
@@ -484,7 +499,7 @@
     {
       "id": "GU-C01-aabhaar",
       "language": "gujarati",
-      "chapter": 1,
+      "chapter": 2,
       "sequence": 20,
       "modality": "sight",
       "derived": "sight",
@@ -497,7 +512,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9663619daed64a01",
+      "sourceHash": "fnv1a64:76a7c83bd3c315be",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -505,7 +520,7 @@
     {
       "id": "GU-C01-aavjo",
       "language": "gujarati",
-      "chapter": 1,
+      "chapter": 2,
       "sequence": 30,
       "modality": "sight",
       "derived": "sight",
@@ -518,7 +533,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:462c30f8319f7699",
+      "sourceHash": "fnv1a64:7ce92355c98bc038",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -526,7 +541,7 @@
     {
       "id": "GU-C01-haa-naa",
       "language": "gujarati",
-      "chapter": 1,
+      "chapter": 2,
       "sequence": 40,
       "modality": "sight",
       "derived": "sight",
@@ -539,7 +554,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:57b1e461664548f0",
+      "sourceHash": "fnv1a64:0b4d73f6d54b7363",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -547,7 +562,7 @@
     {
       "id": "GU-W01-haa-guided-copy",
       "language": "gujarati",
-      "chapter": 1,
+      "chapter": 2,
       "sequence": 43,
       "modality": "pen",
       "derived": "pen",
@@ -561,7 +576,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:5fb3f061ef181ce7",
+      "sourceHash": "fnv1a64:5494bdfab7dbc9d8",
       "detachableSegments": [
         "Writing — guided copy"
       ],
@@ -570,7 +585,7 @@
     {
       "id": "GU-W01-haa-delayed-copy",
       "language": "gujarati",
-      "chapter": 1,
+      "chapter": 2,
       "sequence": 44,
       "modality": "pen",
       "derived": "pen",
@@ -586,7 +601,7 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:d162a51c1d5aafc1",
+      "sourceHash": "fnv1a64:297506659a7c2240",
       "detachableSegments": [
         "Writing — delayed copy"
       ],
@@ -595,7 +610,7 @@
     {
       "id": "GU-W01-haa-dictation",
       "language": "gujarati",
-      "chapter": 1,
+      "chapter": 2,
       "sequence": 45,
       "modality": "pen",
       "derived": "pen",
@@ -609,7 +624,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:5668f9df02601043",
+      "sourceHash": "fnv1a64:4facf0e9a9cf73ea",
       "detachableSegments": [
         "Writing — short dictation"
       ],
@@ -618,7 +633,7 @@
     {
       "id": "GU-C01-saarun",
       "language": "gujarati",
-      "chapter": 1,
+      "chapter": 2,
       "sequence": 50,
       "modality": "sight",
       "derived": "sight",
@@ -632,7 +647,7 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:0602a0482cdda44b",
+      "sourceHash": "fnv1a64:a92da01f5a30e1ba",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -640,7 +655,7 @@
     {
       "id": "GU-C01-practice",
       "language": "gujarati",
-      "chapter": 1,
+      "chapter": 2,
       "sequence": 60,
       "modality": "pen",
       "derived": "pen",
@@ -654,7 +669,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:05b69aef6adbfbba",
+      "sourceHash": "fnv1a64:9af4a2dd90b8b6a6",
       "detachableSegments": [
         "Script — the script and the language",
         "Writing — retrieve the tiny word once"
@@ -663,7 +678,7 @@
     {
       "id": "GU-C02-naam",
       "language": "gujarati",
-      "chapter": 2,
+      "chapter": 3,
       "sequence": 70,
       "modality": "sight",
       "derived": "sight",
@@ -676,7 +691,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:004b2558823f74ab",
+      "sourceHash": "fnv1a64:15e0f75a40262bd8",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -684,7 +699,7 @@
     {
       "id": "GU-C02-maarun",
       "language": "gujarati",
-      "chapter": 2,
+      "chapter": 3,
       "sequence": 80,
       "modality": "sight",
       "derived": "sight",
@@ -697,7 +712,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4f51718d2f91f54d",
+      "sourceHash": "fnv1a64:2e77586c2c521882",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -705,7 +720,7 @@
     {
       "id": "GU-C02-chhe",
       "language": "gujarati",
-      "chapter": 2,
+      "chapter": 3,
       "sequence": 90,
       "modality": "sight",
       "derived": "sight",
@@ -718,7 +733,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e529d4f231eec687",
+      "sourceHash": "fnv1a64:4f941baeef9ff5f4",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -726,7 +741,7 @@
     {
       "id": "GU-C02-maarun-naam-chhe",
       "language": "gujarati",
-      "chapter": 2,
+      "chapter": 3,
       "sequence": 100,
       "modality": "voice",
       "derived": "voice",
@@ -739,12 +754,12 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:22b5f4432c3c38b7"
+      "sourceHash": "fnv1a64:cc4bb16a4b9ddb66"
     },
     {
       "id": "GU-C02-anand",
       "language": "gujarati",
-      "chapter": 2,
+      "chapter": 3,
       "sequence": 110,
       "modality": "sight",
       "derived": "sight",
@@ -757,7 +772,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d746ad709dd088aa",
+      "sourceHash": "fnv1a64:c6b727d1a11e6531",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -765,7 +780,7 @@
     {
       "id": "GU-C02-tu-tame",
       "language": "gujarati",
-      "chapter": 2,
+      "chapter": 3,
       "sequence": 120,
       "modality": "sight",
       "derived": "sight",
@@ -778,7 +793,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:3640c748412afb4d",
+      "sourceHash": "fnv1a64:1dbe9a9860ca7d78",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -786,7 +801,7 @@
     {
       "id": "GU-C02-shun",
       "language": "gujarati",
-      "chapter": 2,
+      "chapter": 3,
       "sequence": 130,
       "modality": "sight",
       "derived": "sight",
@@ -799,7 +814,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:3813931c6e6248c7",
+      "sourceHash": "fnv1a64:ba0eb5e58c15daea",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -807,7 +822,7 @@
     {
       "id": "GU-C02-tamarun-naam-shun-chhe",
       "language": "gujarati",
-      "chapter": 2,
+      "chapter": 3,
       "sequence": 140,
       "modality": "voice",
       "derived": "voice",
@@ -820,12 +835,12 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8f177705908560df"
+      "sourceHash": "fnv1a64:bd3a4f94655850ec"
     },
     {
       "id": "GU-C02-practice",
       "language": "gujarati",
-      "chapter": 2,
+      "chapter": 3,
       "sequence": 150,
       "modality": "voice",
       "derived": "voice",
@@ -838,12 +853,12 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:1c7f6bff27a1eef7"
+      "sourceHash": "fnv1a64:784b4f8e18b9f565"
     },
     {
       "id": "GU-C03-hun",
       "language": "gujarati",
-      "chapter": 3,
+      "chapter": 4,
       "sequence": 160,
       "modality": "sight",
       "derived": "sight",
@@ -856,7 +871,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:67be20d0fd32bf19",
+      "sourceHash": "fnv1a64:350e3861b3c778fe",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -864,7 +879,7 @@
     {
       "id": "GU-C03-kem",
       "language": "gujarati",
-      "chapter": 3,
+      "chapter": 4,
       "sequence": 170,
       "modality": "sight",
       "derived": "sight",
@@ -877,7 +892,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:6043558b512b105c",
+      "sourceHash": "fnv1a64:7bd99bbaa0be68e5",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -885,7 +900,7 @@
     {
       "id": "GU-C03-tame-kem-chho",
       "language": "gujarati",
-      "chapter": 3,
+      "chapter": 4,
       "sequence": 180,
       "modality": "voice",
       "derived": "voice",
@@ -898,12 +913,12 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ba6d1156668fc552"
+      "sourceHash": "fnv1a64:9e80d3589c3f0503"
     },
     {
       "id": "GU-C03-majaa",
       "language": "gujarati",
-      "chapter": 3,
+      "chapter": 4,
       "sequence": 190,
       "modality": "sight",
       "derived": "sight",
@@ -916,7 +931,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:864f25d192a091ed",
+      "sourceHash": "fnv1a64:0241677852710ccc",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -924,7 +939,7 @@
     {
       "id": "GU-C03-vandho-nahi",
       "language": "gujarati",
-      "chapter": 3,
+      "chapter": 4,
       "sequence": 200,
       "modality": "sight",
       "derived": "sight",
@@ -937,7 +952,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7be03f1fc69c0369",
+      "sourceHash": "fnv1a64:d0c6b30d3663299e",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -945,7 +960,7 @@
     {
       "id": "GU-C03-practice",
       "language": "gujarati",
-      "chapter": 3,
+      "chapter": 4,
       "sequence": 210,
       "modality": "voice",
       "derived": "voice",
@@ -958,12 +973,12 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8864bcf8b507d9d1"
+      "sourceHash": "fnv1a64:ac2adaa551a3b111"
     },
     {
       "id": "GU-C04-malishun",
       "language": "gujarati",
-      "chapter": 4,
+      "chapter": 5,
       "sequence": 220,
       "modality": "sight",
       "derived": "sight",
@@ -976,7 +991,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b7ae18860fe57ac0",
+      "sourceHash": "fnv1a64:73dd9035762b57b3",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -984,7 +999,7 @@
     {
       "id": "GU-C04-kaale",
       "language": "gujarati",
-      "chapter": 4,
+      "chapter": 5,
       "sequence": 230,
       "modality": "sight",
       "derived": "sight",
@@ -997,7 +1012,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d762ef2a619956f7",
+      "sourceHash": "fnv1a64:a534f7f973de6d88",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1005,7 +1020,7 @@
     {
       "id": "GU-C04-pachha",
       "language": "gujarati",
-      "chapter": 4,
+      "chapter": 5,
       "sequence": 240,
       "modality": "sight",
       "derived": "sight",
@@ -1018,7 +1033,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:26baec6556e78839",
+      "sourceHash": "fnv1a64:985ec44f0b00541e",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1026,7 +1041,7 @@
     {
       "id": "GU-C04-pachha-malishun",
       "language": "gujarati",
-      "chapter": 4,
+      "chapter": 5,
       "sequence": 250,
       "modality": "voice",
       "derived": "voice",
@@ -1039,12 +1054,12 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:2c91bb7837b60432"
+      "sourceHash": "fnv1a64:8ae9dab2ff48b357"
     },
     {
       "id": "GU-C04-practice",
       "language": "gujarati",
-      "chapter": 4,
+      "chapter": 5,
       "sequence": 260,
       "modality": "voice",
       "derived": "voice",
@@ -1057,12 +1072,12 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:5d84795dc2a058b6"
+      "sourceHash": "fnv1a64:a875bc396360ec6c"
     },
     {
       "id": "GU-C05-bolvun",
       "language": "gujarati",
-      "chapter": 5,
+      "chapter": 6,
       "sequence": 270,
       "modality": "sight",
       "derived": "sight",
@@ -1075,7 +1090,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ed5c4a4863bdf2e0",
+      "sourceHash": "fnv1a64:6b68626727336eeb",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1083,7 +1098,7 @@
     {
       "id": "GU-C05-hun-gujarati-bolun-chhun",
       "language": "gujarati",
-      "chapter": 5,
+      "chapter": 6,
       "sequence": 280,
       "modality": "sight",
       "derived": "sight",
@@ -1096,7 +1111,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:6f9054bd49fafb01",
+      "sourceHash": "fnv1a64:102ad5bb3945bcba",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1104,7 +1119,7 @@
     {
       "id": "GU-C05-kaam-karvun",
       "language": "gujarati",
-      "chapter": 5,
+      "chapter": 6,
       "sequence": 290,
       "modality": "sight",
       "derived": "sight",
@@ -1117,7 +1132,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:912370b82cc95378",
+      "sourceHash": "fnv1a64:f83c7d88b042a265",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1125,7 +1140,7 @@
     {
       "id": "GU-C05-rahevun",
       "language": "gujarati",
-      "chapter": 5,
+      "chapter": 6,
       "sequence": 300,
       "modality": "sight",
       "derived": "sight",
@@ -1138,7 +1153,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:71647a29d0ea6761",
+      "sourceHash": "fnv1a64:7524c7949fd38e74",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1146,7 +1161,7 @@
     {
       "id": "GU-C05-practice",
       "language": "gujarati",
-      "chapter": 5,
+      "chapter": 6,
       "sequence": 310,
       "modality": "voice",
       "derived": "voice",
@@ -1159,12 +1174,12 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d630b5cacff5ba8f"
+      "sourceHash": "fnv1a64:34c4d01be54c081b"
     },
     {
       "id": "GU-C06-numbers-1-5",
       "language": "gujarati",
-      "chapter": 6,
+      "chapter": 7,
       "sequence": 340,
       "modality": "voice",
       "derived": "voice",
@@ -1177,12 +1192,12 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:efa63868bdf27365"
+      "sourceHash": "fnv1a64:1ea5238381f1747a"
     },
     {
       "id": "GU-C06-number-histories",
       "language": "gujarati",
-      "chapter": 6,
+      "chapter": 7,
       "sequence": 350,
       "modality": "voice",
       "derived": "voice",
@@ -1195,12 +1210,12 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:01b835a278e4ed28"
+      "sourceHash": "fnv1a64:7b566eff294fd5ff"
     },
     {
       "id": "GU-C07-hovun",
       "language": "gujarati",
-      "chapter": 7,
+      "chapter": 8,
       "sequence": 360,
       "modality": "voice",
       "derived": "voice",
@@ -1213,12 +1228,12 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:074c898a263805b4"
+      "sourceHash": "fnv1a64:7c27e52d9b272f3f"
     },
     {
       "id": "GU-C07-javun",
       "language": "gujarati",
-      "chapter": 7,
+      "chapter": 8,
       "sequence": 370,
       "modality": "voice",
       "derived": "voice",
@@ -1231,12 +1246,12 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ac22a70b3f014c43"
+      "sourceHash": "fnv1a64:68b13771cca3438e"
     },
     {
       "id": "GU-C07-aavvun",
       "language": "gujarati",
-      "chapter": 7,
+      "chapter": 8,
       "sequence": 380,
       "modality": "voice",
       "derived": "voice",
@@ -1249,12 +1264,12 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:0a598e9332487ff5"
+      "sourceHash": "fnv1a64:571031ef07d8d002"
     },
     {
       "id": "GU-C07-khaavun",
       "language": "gujarati",
-      "chapter": 7,
+      "chapter": 8,
       "sequence": 390,
       "modality": "voice",
       "derived": "voice",
@@ -1267,12 +1282,12 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b4e5c4ae025d4ddb"
+      "sourceHash": "fnv1a64:ef078730834019b8"
     },
     {
       "id": "GU-C07-jovun",
       "language": "gujarati",
-      "chapter": 7,
+      "chapter": 8,
       "sequence": 400,
       "modality": "voice",
       "derived": "voice",
@@ -1285,12 +1300,12 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:123451e5d601e80a"
+      "sourceHash": "fnv1a64:1e4429f9c682a03f"
     },
     {
       "id": "GU-C07-jaanvun",
       "language": "gujarati",
-      "chapter": 7,
+      "chapter": 8,
       "sequence": 410,
       "modality": "voice",
       "derived": "voice",
@@ -1303,12 +1318,12 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:0a53c84fae291b0a"
+      "sourceHash": "fnv1a64:f29e4fb98aabca2f"
     },
     {
       "id": "GU-C08-vicharvun",
       "language": "gujarati",
-      "chapter": 8,
+      "chapter": 9,
       "sequence": 420,
       "modality": "sight",
       "derived": "sight",
@@ -1321,7 +1336,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ab9bbe40fe19ee9e",
+      "sourceHash": "fnv1a64:d16a88fd8d4ec533",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1329,7 +1344,7 @@
     {
       "id": "GU-C08-samajvun",
       "language": "gujarati",
-      "chapter": 8,
+      "chapter": 9,
       "sequence": 430,
       "modality": "sight",
       "derived": "sight",
@@ -1342,7 +1357,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e619706cc4866b8e",
+      "sourceHash": "fnv1a64:a7feaaf78292fa1d",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1350,7 +1365,7 @@
     {
       "id": "GU-C08-vanchvun",
       "language": "gujarati",
-      "chapter": 8,
+      "chapter": 9,
       "sequence": 440,
       "modality": "sight",
       "derived": "sight",
@@ -1363,7 +1378,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:6a213e7937e89b80",
+      "sourceHash": "fnv1a64:7870983c35f3bd1d",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1371,7 +1386,7 @@
     {
       "id": "GU-C08-lakhvun",
       "language": "gujarati",
-      "chapter": 8,
+      "chapter": 9,
       "sequence": 450,
       "modality": "sight",
       "derived": "sight",
@@ -1384,7 +1399,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:cb81bfc0db3e69fa",
+      "sourceHash": "fnv1a64:d3ba08fdd032c57d",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1392,7 +1407,7 @@
     {
       "id": "GU-C09-levun",
       "language": "gujarati",
-      "chapter": 9,
+      "chapter": 10,
       "sequence": 460,
       "modality": "sight",
       "derived": "sight",
@@ -1405,7 +1420,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:0b5eb0b51653ba96",
+      "sourceHash": "fnv1a64:aecd47bbf5e35046",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1413,7 +1428,7 @@
     {
       "id": "GU-C09-puchhvun",
       "language": "gujarati",
-      "chapter": 9,
+      "chapter": 10,
       "sequence": 470,
       "modality": "sight",
       "derived": "sight",
@@ -1426,7 +1441,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b616a00d37b78087",
+      "sourceHash": "fnv1a64:be50dfc4e14a13b7",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1434,7 +1449,7 @@
     {
       "id": "GU-C09-madad-karvi",
       "language": "gujarati",
-      "chapter": 9,
+      "chapter": 10,
       "sequence": 480,
       "modality": "sight",
       "derived": "sight",
@@ -1447,7 +1462,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9b33f51af27e06a4",
+      "sourceHash": "fnv1a64:0bab05aaf1e585b4",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1455,7 +1470,7 @@
     {
       "id": "GU-C09-gamvun",
       "language": "gujarati",
-      "chapter": 9,
+      "chapter": 10,
       "sequence": 490,
       "modality": "sight",
       "derived": "sight",
@@ -1468,7 +1483,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e9696c743f91f3a9",
+      "sourceHash": "fnv1a64:7feaa209e8a3b979",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1476,7 +1491,7 @@
     {
       "id": "GU-C10-paani",
       "language": "gujarati",
-      "chapter": 10,
+      "chapter": 11,
       "sequence": 500,
       "modality": "sight",
       "derived": "sight",
@@ -1489,7 +1504,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:81fc00e8c42cce7c",
+      "sourceHash": "fnv1a64:00a8de9cbe1b8a3f",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1497,7 +1512,7 @@
     {
       "id": "GU-C10-chaa",
       "language": "gujarati",
-      "chapter": 10,
+      "chapter": 11,
       "sequence": 510,
       "modality": "sight",
       "derived": "sight",
@@ -1510,7 +1525,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8412e5898c1abfdd",
+      "sourceHash": "fnv1a64:3654467a616af4b0",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1518,7 +1533,7 @@
     {
       "id": "GU-C10-dudh",
       "language": "gujarati",
-      "chapter": 10,
+      "chapter": 11,
       "sequence": 520,
       "modality": "sight",
       "derived": "sight",
@@ -1531,7 +1546,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d0197d792d790205",
+      "sourceHash": "fnv1a64:55b1fd302fdde432",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1539,7 +1554,7 @@
     {
       "id": "GU-C10-rotli",
       "language": "gujarati",
-      "chapter": 10,
+      "chapter": 11,
       "sequence": 530,
       "modality": "sight",
       "derived": "sight",
@@ -1552,7 +1567,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:fe8f18d2824ac928",
+      "sourceHash": "fnv1a64:a5742f7d8db85833",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1560,7 +1575,7 @@
     {
       "id": "GU-C11-mitra",
       "language": "gujarati",
-      "chapter": 11,
+      "chapter": 12,
       "sequence": 540,
       "modality": "sight",
       "derived": "sight",
@@ -1573,7 +1588,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:510109a8b8bddacd",
+      "sourceHash": "fnv1a64:e85448f38dafdb1e",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1581,7 +1596,7 @@
     {
       "id": "GU-C11-kutumb",
       "language": "gujarati",
-      "chapter": 11,
+      "chapter": 12,
       "sequence": 550,
       "modality": "sight",
       "derived": "sight",
@@ -1594,7 +1609,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:f359800e0ad34bc1",
+      "sourceHash": "fnv1a64:b28c2ebdfb969320",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1602,7 +1617,7 @@
     {
       "id": "GU-C11-bhai",
       "language": "gujarati",
-      "chapter": 11,
+      "chapter": 12,
       "sequence": 560,
       "modality": "sight",
       "derived": "sight",
@@ -1615,7 +1630,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4704038cd28045da",
+      "sourceHash": "fnv1a64:6aca99898e2108f9",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1623,7 +1638,7 @@
     {
       "id": "GU-C11-bahen",
       "language": "gujarati",
-      "chapter": 11,
+      "chapter": 12,
       "sequence": 570,
       "modality": "sight",
       "derived": "sight",
@@ -1636,7 +1651,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:2c3f1494bcb283fb",
+      "sourceHash": "fnv1a64:a8038cebebb4cb54",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1644,7 +1659,7 @@
     {
       "id": "GU-C12-aankh",
       "language": "gujarati",
-      "chapter": 12,
+      "chapter": 13,
       "sequence": 580,
       "modality": "sight",
       "derived": "sight",
@@ -1657,7 +1672,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:908a428d5d9ba832",
+      "sourceHash": "fnv1a64:767d78e31b9bac8b",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1665,7 +1680,7 @@
     {
       "id": "GU-C12-kaan",
       "language": "gujarati",
-      "chapter": 12,
+      "chapter": 13,
       "sequence": 590,
       "modality": "sight",
       "derived": "sight",
@@ -1678,7 +1693,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:87ee6294531dd00c",
+      "sourceHash": "fnv1a64:559d7aa7856a5423",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1686,7 +1701,7 @@
     {
       "id": "GU-C12-modhu",
       "language": "gujarati",
-      "chapter": 12,
+      "chapter": 13,
       "sequence": 600,
       "modality": "sight",
       "derived": "sight",
@@ -1699,7 +1714,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d21dd2c664d5e91f",
+      "sourceHash": "fnv1a64:685ab11aa0e037e8",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1707,7 +1722,7 @@
     {
       "id": "GU-C12-naak",
       "language": "gujarati",
-      "chapter": 12,
+      "chapter": 13,
       "sequence": 610,
       "modality": "sight",
       "derived": "sight",
@@ -1720,7 +1735,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b8bc753f46dc0005",
+      "sourceHash": "fnv1a64:a0955b33309664ea",
       "detachableSegments": [
         "The letters in this word"
       ]

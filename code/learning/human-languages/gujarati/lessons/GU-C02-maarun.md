@@ -3,7 +3,7 @@ schema_version: 2
 id: GU-C02-maarun
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 80
-chapter: 2
+chapter: 3
 type: word
 headword: મારું
 gloss: my (neuter; also મારો m. / મારી f.)
@@ -58,7 +58,7 @@ the neuter *mārũ*. The full set:
 - **મારું** (*mārũ*) — **neuter** (e.g. *mārũ nām*, "my name")
 
 Every possessive works this way — three forms, chosen by the noun's gender. It is
-the thread you first pulled in Chapter 1's *sārũ*.
+the thread you first pulled in the earlier *sārũ* lesson.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C02-MAARUN-01, GU-CONCEPT-C02-NAAM-01] -->

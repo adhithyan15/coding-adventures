@@ -1128,84 +1128,91 @@
     {
       "language": "gujarati",
       "chapter": 1,
-      "output": "gujarati/book/chapters/ch01-greetings.tex",
+      "output": "gujarati/book/chapters/ch01-namaste-script.tex",
       "unicodeScript": "Gujarati",
       "scriptCommand": "gu"
     },
     {
       "language": "gujarati",
       "chapter": 2,
-      "output": "gujarati/book/chapters/ch02-introductions.tex",
+      "output": "gujarati/book/chapters/ch02-courtesy-responses.tex",
       "unicodeScript": "Gujarati",
       "scriptCommand": "gu"
     },
     {
       "language": "gujarati",
       "chapter": 3,
-      "output": "gujarati/book/chapters/ch03-responding.tex",
+      "output": "gujarati/book/chapters/ch03-introductions.tex",
       "unicodeScript": "Gujarati",
       "scriptCommand": "gu"
     },
     {
       "language": "gujarati",
       "chapter": 4,
-      "output": "gujarati/book/chapters/ch04-farewells.tex",
+      "output": "gujarati/book/chapters/ch04-responding.tex",
       "unicodeScript": "Gujarati",
       "scriptCommand": "gu"
     },
     {
       "language": "gujarati",
       "chapter": 5,
-      "output": "gujarati/book/chapters/ch05-first-verbs.tex",
+      "output": "gujarati/book/chapters/ch05-farewells.tex",
       "unicodeScript": "Gujarati",
       "scriptCommand": "gu"
     },
     {
       "language": "gujarati",
       "chapter": 6,
-      "output": "gujarati/book/chapters/ch06-numbers-1-5.tex",
+      "output": "gujarati/book/chapters/ch06-first-verbs.tex",
       "unicodeScript": "Gujarati",
       "scriptCommand": "gu"
     },
     {
       "language": "gujarati",
       "chapter": 7,
-      "output": "gujarati/book/chapters/ch07-core-verbs.tex",
+      "output": "gujarati/book/chapters/ch07-numbers-1-5.tex",
       "unicodeScript": "Gujarati",
       "scriptCommand": "gu"
     },
     {
       "language": "gujarati",
       "chapter": 8,
-      "output": "gujarati/book/chapters/ch08-mind-and-page.tex",
+      "output": "gujarati/book/chapters/ch08-core-verbs.tex",
       "unicodeScript": "Gujarati",
       "scriptCommand": "gu"
     },
     {
       "language": "gujarati",
       "chapter": 9,
-      "output": "gujarati/book/chapters/ch09-doing-verbs.tex",
+      "output": "gujarati/book/chapters/ch09-mind-and-page.tex",
       "unicodeScript": "Gujarati",
       "scriptCommand": "gu"
     },
     {
       "language": "gujarati",
       "chapter": 10,
-      "output": "gujarati/book/chapters/ch10-request-food-drink.tex",
+      "output": "gujarati/book/chapters/ch10-doing-verbs.tex",
       "unicodeScript": "Gujarati",
       "scriptCommand": "gu"
     },
     {
       "language": "gujarati",
       "chapter": 11,
-      "output": "gujarati/book/chapters/ch11-friend-and-family.tex",
+      "output": "gujarati/book/chapters/ch11-request-food-drink.tex",
       "unicodeScript": "Gujarati",
       "scriptCommand": "gu"
     },
     {
       "language": "gujarati",
       "chapter": 12,
-      "output": "gujarati/book/chapters/ch12-face-parts.tex",
+      "output": "gujarati/book/chapters/ch12-friend-and-family.tex",
+      "unicodeScript": "Gujarati",
+      "scriptCommand": "gu"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 13,
+      "output": "gujarati/book/chapters/ch13-face-parts.tex",
       "unicodeScript": "Gujarati",
       "scriptCommand": "gu"
     },

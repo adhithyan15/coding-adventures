@@ -3,7 +3,7 @@ schema_version: 2
 id: GU-C10-rotli
 spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 530
-chapter: 10
+chapter: 11
 type: word
 headword: રોટલી
 romanization: roṭlī

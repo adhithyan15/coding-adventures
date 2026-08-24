@@ -3,7 +3,7 @@ schema_version: 2
 id: GU-C03-vandho-nahi
 spine_node: SPINE-COURTESY-THANK
 sequence: 200
-chapter: 3
+chapter: 4
 type: phrase
 headword: વાંધો નહીં
 gloss: no problem / it's okay / you're welcome
@@ -47,7 +47,7 @@ reply.
 **વાંધો નહીં** literally means "**[there is] no objection**" — *vāndho*
 ("objection, difficulty, harm") + **નહીં** (*nahĩ*, "not / no"). It serves as
 "it's okay / no worries / no problem / you're welcome." The negative **નહીં**
-(*nahĩ*) is the fuller form of the **ના** (*nā*) you met in Chapter 1 — both from
+(*nahĩ*) is the fuller form of the **ના** (*nā*) from the earlier yes/no lesson — both from
 the ancient **na-**, Proto-Indo-European **\*ne**, behind English **no**,
 **not**, and Hindi *nahīṁ*.
 

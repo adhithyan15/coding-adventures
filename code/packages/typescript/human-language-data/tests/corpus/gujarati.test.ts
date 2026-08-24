@@ -11,9 +11,10 @@ it("pins Gujarati continuity", () => expectLanguageContinuity("gujarati"));
 it("pins Gujarati modality", () => expectLanguageModality("gujarati"));
 
 it("pins Gujarati's meaning-first opening script spine", () => {
-  const opening = loadTrackLessons("gujarati")
-    .sort((left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence))
-    .slice(0, 11);
+  const ordered = loadTrackLessons("gujarati").sort(
+    (left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence),
+  );
+  const opening = ordered.slice(0, 11);
   expect(opening.map((lesson) => lesson.realization.lessonId)).toEqual([
     "GU-C01-namaste",
     "GU-W01-ha",
@@ -33,6 +34,40 @@ it("pins Gujarati's meaning-first opening script spine", () => {
   expect(meaningFirst.realization.romanization).toBe("namaste");
   expect(meaningFirst.frontmatter.skills).toEqual(["listening", "speaking"]);
   expect(meaningFirst.body).not.toMatch(/\p{Script=Gujarati}/u);
+
+  const courtesy = ordered.slice(11, 19);
+  expect(courtesy.map((lesson) => lesson.realization.lessonId)).toEqual([
+    "GU-C01-aabhaar",
+    "GU-C01-aavjo",
+    "GU-C01-haa-naa",
+    "GU-W01-haa-guided-copy",
+    "GU-W01-haa-delayed-copy",
+    "GU-W01-haa-dictation",
+    "GU-C01-saarun",
+    "GU-C01-practice",
+  ]);
+  expect(courtesy.every((lesson) => lesson.frontmatter.chapter === "2")).toBe(true);
+
+  const chapterSizes = new Map<string, number>();
+  for (const lesson of ordered) {
+    const chapter = lesson.frontmatter.chapter;
+    chapterSizes.set(chapter, (chapterSizes.get(chapter) ?? 0) + 1);
+  }
+  expect([...chapterSizes.entries()]).toEqual([
+    ["1", 11],
+    ["2", 8],
+    ["3", 9],
+    ["4", 6],
+    ["5", 5],
+    ["6", 5],
+    ["7", 2],
+    ["8", 6],
+    ["9", 4],
+    ["10", 4],
+    ["11", 4],
+    ["12", 4],
+    ["13", 4],
+  ]);
 });
 
 it("pins Gujarati's complete pre-A1 writing runway", () => {

@@ -3,7 +3,7 @@ schema_version: 2
 id: GU-C09-puchhvun
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 470
-chapter: 9
+chapter: 10
 type: word
 headword: પૂછવું
 romanization: pūchhvũ

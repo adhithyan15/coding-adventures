@@ -2,6 +2,29 @@
 
 ## [Unreleased]
 
+### Fixed — the opening ramp now has two honest book chapters
+
+- Split the 19-lesson opening container into an 11-step meaning-and-script
+  chapter and an eight-step courtesy-and-response chapter. The learner still
+  hears *namaste* before seeing its spelling, traces one sign at a time, and
+  copies the whole word only after every load-bearing sign is familiar.
+- Kept every canonical lesson at five minutes or less while giving each new
+  chapter its own authored capability and payoff. The second chapter retains
+  the full guided-copy, delayed-copy, and heard-word dictation runway for
+  **હા**.
+- Renumbered every downstream lesson chapter, capability entry, generated book
+  target, and book include coherently through Chapter 13. Lesson IDs remain
+  stable so prerequisites and durable review links do not break.
+- Replaced every cross-chapter numeric pointer in lesson prose with a stable
+  semantic pointer such as "the name exchange" or the named earlier lesson, so
+  this split does not leave references that will rot at the next renumbering.
+- Extended the authored session map through the already-shipped food, family,
+  and body lessons (sessions 61–72), replacing a stale note that described
+  those chapters as future work.
+- The measured chapter-atom spike count falls **2 → 1** without changing lesson
+  duration, learner order, script closure, or reinforcement counts. The one
+  remaining chapter spike is preserved as explicit backlog rather than waived.
+
 ### Fixed — opening script prerequisites now precede the first read
 
 - Turned the first *namaste* encounter into a meaning-first listening and
