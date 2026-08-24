@@ -3393,6 +3393,40 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: devanagariAlphabetSource("प"),
   },
+  // JackPotte's animation joins the descending left stem, lower bowl, rising
+  // central side, and descending central stem in one retraced run, then adds
+  // the right arch and headline separately: three strokes, two lifts.
+  [ductusKey("devanagari", "फ")]: {
+    script: "devanagari",
+    glyph: "फ",
+    strokes: [
+      { segments: [{ label: "descend around the lower bowl, rise, and retrace down the central stem", path: [
+        { x: 120, y: 551 }, { x: 120, y: 480 }, { x: 120, y: 410 },
+        { x: 120, y: 350 }, { x: 128, y: 300 }, { x: 145, y: 255 },
+        { x: 170, y: 220 }, { x: 205, y: 195 }, { x: 245, y: 182 },
+        { x: 285, y: 182 }, { x: 325, y: 195 }, { x: 360, y: 220 },
+        { x: 388, y: 255 }, { x: 408, y: 300 }, { x: 420, y: 350 },
+        { x: 420, y: 410 }, { x: 420, y: 475 }, { x: 420, y: 551 },
+        { x: 420, y: 475 }, { x: 420, y: 395 }, { x: 420, y: 315 },
+        { x: 420, y: 235 }, { x: 420, y: 155 }, { x: 420, y: 75 },
+        { x: 420, y: 5 },
+      ] }] },
+      { segments: [{ label: "lift, then sweep clockwise through the right arch", path: [
+        { x: 420, y: 315 }, { x: 470, y: 335 }, { x: 520, y: 350 },
+        { x: 575, y: 355 }, { x: 620, y: 340 }, { x: 655, y: 315 },
+        { x: 670, y: 290 }, { x: 676, y: 260 }, { x: 687, y: 215 },
+        { x: 685, y: 170 }, { x: 671, y: 125 }, { x: 650, y: 85 },
+        { x: 626, y: 52 }, { x: 637, y: 45 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the shirorekha left-to-right", path: [
+        { x: 5, y: 585 }, { x: 85, y: 585 }, { x: 165, y: 585 },
+        { x: 245, y: 585 }, { x: 325, y: 585 }, { x: 405, y: 585 },
+        { x: 485, y: 585 }, { x: 565, y: 585 }, { x: 650, y: 585 },
+        { x: 730, y: 585 }, { x: 785, y: 585 },
+      ] }] },
+    ],
+    source: devanagariAlphabetSource("फ"),
+  },
   // JackPotte's animation circles counterclockwise around the oval, then
   // separately descends the right stem, crosses down-right through the body,
   // and finishes the headline. The Central Hindi Directorate deskbook shows

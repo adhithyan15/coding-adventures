@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Added — source-verified Devanagari pha (HL-C09I3)
+
+- Add the three-run **फ** learner path: joined left stem, lower bowl, and
+  retraced central stem; open right arch; and left-to-right headline.
+- Pin its two lifts, frame-by-frame source provenance, deskbook corroboration,
+  and Noto outline fit.
+
 ### Added — source-verified Devanagari ttha (HL-C09I2)
 
 - Add the three-run **ठ** learner path: descending short central stem,
