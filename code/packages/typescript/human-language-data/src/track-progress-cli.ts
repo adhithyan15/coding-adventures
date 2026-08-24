@@ -1,5 +1,6 @@
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { dirname, join, normalize, relative as pathRelative, resolve } from "node:path";
+import { assertRelativeManifestPath } from "./manifest-path.js";
 import { pathToFileURL } from "node:url";
 import {
   defaultCurriculumRoot,
@@ -41,6 +42,7 @@ function loadGeneratedBookChapters(root: string): GeneratedBookChapterRef[] {
 }
 
 function safeProgressOutput(root: string, relative: string): string {
+  assertRelativeManifestPath(relative, `unsafe track progress output '${relative}'`);
   const output = resolve(root, relative);
   const fromRoot = normalize(pathRelative(resolve(root), output)).replaceAll("\\", "/");
   if (
