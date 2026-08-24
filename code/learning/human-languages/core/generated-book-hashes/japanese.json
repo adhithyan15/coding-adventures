@@ -109,6 +109,26 @@
         "JA-C08-sayounara"
       ],
       "tex": "japanese/book/chapters/ch08-sayounara.tex"
+    },
+    {
+      "language": "japanese",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:0cfc580bb7429557",
+      "lessonIds": [
+        "JA-C09-sumimasen",
+        "JA-W09-mi",
+        "JA-W09-me",
+        "JA-C09-yoku",
+        "JA-W09-ku",
+        "JA-C09-wakarimasen",
+        "JA-W09-do",
+        "JA-C09-mou",
+        "JA-W09-mo",
+        "JA-C09-ichido",
+        "JA-C09-onegaishimasu",
+        "JA-C09-mou-ichido-onegaishimasu"
+      ],
+      "tex": "japanese/book/chapters/ch09-repeat-please.tex"
     }
   ]
 }

@@ -150,6 +150,31 @@
       "json": "japanese/narration/ch08.json",
       "textHash": "fnv1a64:c65e512a5bb52fa1",
       "jsonHash": "fnv1a64:77e64533b06e8b59"
+    },
+    {
+      "language": "japanese",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:7eaa8fa580e66c40",
+      "lessonIds": [
+        "JA-C09-sumimasen",
+        "JA-W09-mi",
+        "JA-W09-me",
+        "JA-C09-yoku",
+        "JA-W09-ku",
+        "JA-C09-wakarimasen",
+        "JA-W09-do",
+        "JA-C09-mou",
+        "JA-W09-mo",
+        "JA-C09-ichido",
+        "JA-C09-onegaishimasu",
+        "JA-C09-mou-ichido-onegaishimasu"
+      ],
+      "voiceLessons": 7,
+      "drivablePrefix": 1,
+      "text": "japanese/narration/ch09.txt",
+      "json": "japanese/narration/ch09.json",
+      "textHash": "fnv1a64:52d7701221b6884c",
+      "jsonHash": "fnv1a64:c7afd61c9403e629"
     }
   ],
   "findings": []

@@ -1,7 +1,7 @@
 {
   "language": "japanese",
-  "lessonCount": 44,
-  "atomMeasurableLessons": 44,
+  "lessonCount": 56,
+  "atomMeasurableLessons": 56,
   "atomMeasurementBlindLessons": 0,
   "durationViolations": 0,
   "atomLessonSpikes": 0,
@@ -9,26 +9,47 @@
   "glyphLessonSpikes": 0,
   "scriptSystemSpikes": 0,
   "scriptClosureViolations": 0,
-  "neverTaughtGlyphs": 0,
+  "neverTaughtGlyphs": 3,
   "orderDefects": 0,
   "lessonsWithoutSequence": 0,
   "unknownPrerequisites": 0,
   "forwardPrerequisites": 0,
   "forwardReviews": 0,
   "forwardReferences": 0,
-  "atomsTaught": 55,
-  "atomsNeverRevisited": 1,
-  "reinforcementWindowMisses": 0,
+  "atomsTaught": 67,
+  "atomsNeverRevisited": 2,
+  "reinforcementWindowMisses": 22,
   "reinforcementMissesByWindow": {
-    "R1": 0,
-    "R2": 0,
-    "R3": 0,
+    "R1": 2,
+    "R2": 4,
+    "R3": 16,
     "R4": 0
   },
   "payoffSurprises": 0,
-  "writingPracticeLessons": 41,
+  "writingPracticeLessons": 46,
   "firstWritingPracticeAt": 0,
   "lessonsBeforeWritingPractice": 0,
-  "findings": [],
-  "next": null
+  "findings": [
+    {
+      "language": "japanese",
+      "kind": "script-closure",
+      "count": 3,
+      "unit": "glyph(s)",
+      "detail": "teach every load-bearing glyph before asking the learner to decode it"
+    },
+    {
+      "language": "japanese",
+      "kind": "reinforcement",
+      "count": 22,
+      "unit": "missed window(s)",
+      "detail": "add retrieval at the expanding R1-R4 intervals"
+    }
+  ],
+  "next": {
+    "language": "japanese",
+    "kind": "script-closure",
+    "count": 3,
+    "unit": "glyph(s)",
+    "detail": "teach every load-bearing glyph before asking the learner to decode it"
+  }
 }

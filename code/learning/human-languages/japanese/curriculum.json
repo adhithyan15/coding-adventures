@@ -142,6 +142,29 @@
         "JA-EXT-015-SAYOUNARA-FAREWELL"
       ],
       "after": []
+    },
+    {
+      "id": "JA-PATH-009",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "JA-C09-sumimasen",
+        "JA-W09-mi",
+        "JA-W09-me",
+        "JA-C09-yoku",
+        "JA-W09-ku",
+        "JA-C09-wakarimasen",
+        "JA-W09-do",
+        "JA-C09-mou",
+        "JA-W09-mo",
+        "JA-C09-ichido",
+        "JA-C09-onegaishimasu",
+        "JA-C09-mou-ichido-onegaishimasu"
+      ],
+      "before": [],
+      "inline": [
+        "JA-EXT-016-REPAIR-REPEAT"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -208,11 +231,10 @@
       "relocates": {}
     },
     "SPINE-POLITE-REQUEST-REPAIR": {
-      "segments": [],
-      "omits": [
-        "COURTESY-PLEASE",
-        "COURTESY-SORRY"
+      "segments": [
+        "JA-PATH-009"
       ],
+      "omits": [],
       "relocates": {}
     },
     "SPINE-TAKE-LEAVE": {
@@ -736,6 +758,28 @@
         "JA-W08-ra",
         "JA-W08-sayounara-read",
         "JA-C08-sayounara"
+      ]
+    },
+    {
+      "id": "JA-EXT-016-REPAIR-REPEAT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "communication",
+      "canDo": "I can say that I do not understand, ask for one repetition politely, read and write もういちど, and write five new hiragana signs after one-sign practice.",
+      "prerequisites": [
+        "JA-EXT-015-SAYOUNARA-FAREWELL"
+      ],
+      "lessons": [
+        "JA-W09-mi",
+        "JA-W09-me",
+        "JA-C09-yoku",
+        "JA-W09-ku",
+        "JA-C09-wakarimasen",
+        "JA-W09-do",
+        "JA-C09-mou",
+        "JA-W09-mo",
+        "JA-C09-ichido",
+        "JA-C09-mou-ichido-onegaishimasu"
       ]
     }
   ]

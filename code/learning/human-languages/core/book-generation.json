@@ -1781,6 +1781,12 @@
       "scriptSet": "japanese-main"
     },
     {
+      "language": "japanese",
+      "chapter": 9,
+      "output": "japanese/book/chapters/ch09-repeat-please.tex",
+      "scriptSet": "japanese-main"
+    },
+    {
       "language": "kannada",
       "chapter": 6,
       "output": "kannada/book/chapters/ch06-dative-case.tex",
