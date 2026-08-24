@@ -353,22 +353,17 @@ pub fn shift_register(
     let current_values: Vec<u8> = state.iter().map(|s| s.slave_q).collect();
 
     // Determine data inputs based on shift direction
-    let serial_out;
-    let data_inputs: Vec<u8>;
-
-    if direction == "right" {
+    let (serial_out, data_inputs) = if direction == "right" {
         // serial_in -> FF[0] -> FF[1] -> ... -> FF[N-1] -> serial_out
-        serial_out = current_values[width - 1];
         let mut inputs = vec![serial_in];
         inputs.extend_from_slice(&current_values[..width - 1]);
-        data_inputs = inputs;
+        (current_values[width - 1], inputs)
     } else {
         // serial_out <- FF[0] <- FF[1] <- ... <- FF[N-1] <- serial_in
-        serial_out = current_values[0];
         let mut inputs = current_values[1..].to_vec();
         inputs.push(serial_in);
-        data_inputs = inputs;
-    }
+        (current_values[0], inputs)
+    };
 
     // Clock all flip-flops with their new data inputs
     let mut parallel_out = Vec::with_capacity(width);
