@@ -5051,11 +5051,14 @@ roadmap, and the selected branch was absent before creation.
 
 Both `hash-functions` fronts now recreate `.venv` with `--clear`, pin Python
 3.13, install through that environment, and invoke its interpreter explicitly
-for Ruff, formatting, strict MyPy, and pytest. The package's previously dormant
-quality gates exposed only mechanical test hygiene and formatting debt, which
-is now clean without changing hash behavior. A repository regression pins both
-complete recipes. The audit contract and tests preserve the original 17-owner
-decomposition while treating the live non-idempotent corpus as a shrinking
+for Ruff, formatting, MyPy, and pytest. The original repair validated MyPy's
+default mode but did not retain the governing profile's `--strict` flag; the
+separately owned strict-MyPy correction fixes that historical claim. The
+package's previously dormant quality gates exposed only mechanical test hygiene
+and formatting debt, which is clean without changing hash behavior. A
+repository regression pins both complete recipes. The audit contract and tests
+preserve the original 17-owner decomposition while treating the live
+non-idempotent corpus as a shrinking
 set, so each selected owner can advance through the normal lifecycle without
 invalidating the merged audit.
 

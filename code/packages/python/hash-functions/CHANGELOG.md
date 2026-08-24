@@ -6,6 +6,8 @@
 - Recreate the package virtual environment on every BUILD invocation, pin
   Python 3.13, and run lint, formatting, type checking, and tests through that
   named environment on Unix and Windows.
+- Require strict MyPy on both BUILD fronts and keep the complete recipes pinned
+  by the repository regression.
 
 ## 0.1.0 — 2026-04-08
 
