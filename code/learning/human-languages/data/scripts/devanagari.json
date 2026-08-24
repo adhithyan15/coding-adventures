@@ -51,6 +51,8 @@
     { "mark": "ौ", "sound": "au", "role": "vowel-sign", "attachesAs": "the ā bar plus a double stroke above", "example": { "base": "क", "combined": "कौ", "sound": "kau" } },
     { "mark": "ं", "sound": "ṃ (nasal)", "role": "nasal", "attachesAs": "an anusvāra dot above the top bar, nasalizing the syllable", "example": { "base": "स", "combined": "सं", "sound": "saṃ" } },
     { "mark": "्", "sound": "(vowel killer)", "role": "virama", "attachesAs": "a stroke below that removes the inherent 'a' and forms a conjunct with the next consonant", "example": { "base": "क", "combined": "क्", "sound": "k" } },
-    { "mark": "ृ", "sound": "ṛ", "role": "vowel-sign", "attachesAs": "a small hook below (the vocalic r, common in Sanskrit)", "example": { "base": "क", "combined": "कृ", "sound": "kṛ" } }
+    { "mark": "ृ", "sound": "ṛ", "role": "vowel-sign", "attachesAs": "a small hook below (the vocalic r, common in Sanskrit)", "example": { "base": "क", "combined": "कृ", "sound": "kṛ" } },
+    { "mark": "ँ", "sound": "m̐ (nasalized)", "role": "nasal", "attachesAs": "a candrabindu crescent and dot above the top bar, nasalizing the vowel", "example": { "base": "हू", "combined": "हूँ", "sound": "hūm̐" } },
+    { "mark": "ः", "sound": "ḥ", "role": "visarga", "attachesAs": "a pair of dots to the right of the syllable, marking a voiceless post-vocalic breath", "example": { "base": "म", "combined": "मः", "sound": "maḥ" } }
   ]
 }
