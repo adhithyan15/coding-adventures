@@ -589,6 +589,16 @@ describe("handwriting ductus", () => {
     ]);
   });
 
+  it("ர writes its uprights and cap before joining the angular tail", () => {
+    expect(penLifts(DUCTUS["ர"])).toBe(2);
+    expect(DUCTUS["ர"].strokes).toHaveLength(3);
+    expect(DUCTUS["ர"].strokes.map((stroke) => stroke.segments.length)).toEqual([1, 1, 2]);
+    expect(DUCTUS["ர"].strokes[2].segments.map((segment) => segment.label)).toEqual([
+      "down the central upright",
+      "around the short angular tail",
+    ]);
+  });
+
   it("Chinese 人 draws the left-falling stroke before the lifted right-falling stroke", () => {
     expect(CHINESE_REN.script).toBe("chinese");
     expect(penLifts(CHINESE_REN)).toBe(1);
@@ -5977,6 +5987,13 @@ describe("handwriting ductus", () => {
     expect(src.url).toContain("tamilscript/category/3-moduals/module-01");
     expect(src.citation).toMatch(/Tamil Script Learners Manual.*Frame 1.*த/i);
     expect(src.variation).toMatch(/left-to-right.*top-to-bottom.*varies by school.*continuous order.*Noto Sans Tamil/i);
+  });
+
+  it("ர's three-run order traces to Frame 3 of the UT Austin primer", () => {
+    const src = DUCTUS["ர"].source;
+    expect(src.url).toContain("tamilscript/files/2009/08/hw_lettersinstructions.pdf");
+    expect(src.citation).toMatch(/Appendix I.*Frame 3.*ர/i);
+    expect(src.variation).toMatch(/three-movement ஈ frame.*angular short fourth movement.*varies by school.*three-run order.*Noto Sans Tamil/i);
   });
 
   it("அ's stroke order traces to Frame 4 of the same primer", () => {

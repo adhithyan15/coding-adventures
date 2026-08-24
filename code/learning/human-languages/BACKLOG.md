@@ -5,6 +5,17 @@ Findings from the pre-A1 tranche work were recorded in commit messages and PR
 bodies, which are durable and searchable, but a reader opening this file found
 nothing. The entries below are the ones that change how the work is done.
 
+## HL-C09Q — Tamil ர hands the queue to Malayalam
+
+After Tamil dental ta landed, the measured queue put Tamil light **ர** first at
+**47 affected realizations**. The UT Austin *Tamil Script Learners Manual*
+introduces ர in Frame 3 as the three-movement ஈ frame plus a slightly angular
+short fourth movement. Appendix I fixes those movements as three pen-down runs:
+left upright, top bar, then the joined central upright and angular tail.
+
+The new inventory and ductus entry remove all **47 affected realizations** for
+**ர**. The reranked queue moves to Malayalam anusvara **ം** at 44.
+
 ## HL-C09P — Tamil த keeps the letter-ledger queue moving
 
 After Tamil pa landed, the measured queue put Tamil dental **த** first at **50
