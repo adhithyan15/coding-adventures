@@ -131,7 +131,7 @@ class CorpusTests(unittest.TestCase):
         summary = runner.validate_corpus(FIXTURE_ROOT)
 
         self.assertEqual(summary["schema_version"], 1)
-        self.assertEqual(summary["case_count"], 102)
+        self.assertEqual(summary["case_count"], 106)
         self.assertEqual(summary["implementation_count"], 16)
         self.assertEqual(summary["established_languages"], 15)
         self.assertEqual(summary["execution_case_count"], 0)
@@ -754,6 +754,100 @@ class PureDomainValidationTests(unittest.TestCase):
             "CASE_VALIDATION_SNAPSHOT_INCONSISTENT",
         )
 
+    def test_orphan_crate_coverage_is_derived_from_closed_snapshots(self) -> None:
+        schema_args = self._schema_args()
+        for filename in (
+            "validation-orphan-crates-clean.json",
+            "validation-orphan-crates-unlisted.json",
+            "validation-orphan-exemptions-invalid.json",
+            "validation-orphan-exemptions-stale.json",
+        ):
+            with self.subTest(filename=filename):
+                case = load_case(filename)
+                runner.validate_case_document(case, **schema_args)
+                runner.assert_result_matches(
+                    case,
+                    copy.deepcopy(case["expected"]),
+                    pure_domain_schema=schema_args["pure_domain_schema"],
+                )
+
+        dishonest = load_case("validation-orphan-crates-clean.json")
+        dishonest["input"]["options"]["orphan_snapshot"]["build_files"][0]["state"] = (
+            "empty"
+        )
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.validate_case_document(dishonest, **schema_args)
+        self.assertEqual(raised.exception.code, "EXPECTED_VALIDATION_INCONSISTENT")
+
+        wrong_count = load_case("validation-orphan-crates-clean.json")
+        wrong_result = copy.deepcopy(wrong_count["expected"])
+        wrong_result["result"]["pending_exemption_count"] = 2
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.assert_result_matches(
+                wrong_count,
+                wrong_result,
+                pure_domain_schema=schema_args["pure_domain_schema"],
+            )
+        self.assertEqual(raised.exception.code, "RESULT_VALIDATION_INCONSISTENT")
+
+    def test_orphan_snapshot_joins_use_exact_portable_paths(self) -> None:
+        schema_args = self._schema_args()
+        case_variant = load_case("validation-orphan-crates-clean.json")
+        case_variant["input"]["options"]["orphan_snapshot"]["exemptions"][0]["path"] = (
+            "code/packages/rust/Compile-only"
+        )
+        diagnostics, pending_count = runner._expected_orphan_validation(
+            case_variant["input"]["options"]
+        )
+        self.assertEqual(pending_count, 1)
+        self.assertIn(
+            (
+                "ORPHAN_CRATE_UNLISTED",
+                "code/packages/rust/compile-only",
+            ),
+            {(item["code"], item["path"]) for item in diagnostics},
+        )
+        self.assertTrue(
+            any(
+                item["code"] == "ORPHAN_EXEMPTION_STALE"
+                and item["details"]["problem"] == "MISSING_DIRECTORY"
+                for item in diagnostics
+            )
+        )
+
+        inconsistent = load_case("validation-orphan-crates-clean.json")
+        manifests = inconsistent["input"]["options"]["orphan_snapshot"]["manifests"]
+        manifests[2]["path"] = "code/packages/rust/Direct"
+        manifests.sort(key=lambda item: item["path"])
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.validate_case_document(inconsistent, **schema_args)
+        self.assertEqual(
+            raised.exception.code,
+            "CASE_VALIDATION_SNAPSHOT_INCONSISTENT",
+        )
+
+    def test_orphan_snapshot_rejects_noncanonical_or_impossible_state(self) -> None:
+        schema_args = self._schema_args()
+        mutations = (
+            lambda snapshot: snapshot["directories"].reverse(),
+            lambda snapshot: snapshot["manifests"].append(
+                copy.deepcopy(snapshot["manifests"][0])
+            ),
+            lambda snapshot: snapshot["build_files"][0].__setitem__(
+                "path", "code/packages/rust/ancestor/NOT_BUILD"
+            ),
+            lambda snapshot: snapshot["exemptions"][1].__setitem__("line", 10),
+        )
+        for mutate in mutations:
+            case = load_case("validation-orphan-crates-clean.json")
+            mutate(case["input"]["options"]["orphan_snapshot"])
+            with self.assertRaises(runner.ConformanceError) as raised:
+                runner.validate_case_document(case, **schema_args)
+            self.assertEqual(
+                raised.exception.code,
+                "CASE_VALIDATION_SNAPSHOT_INCONSISTENT",
+            )
+
     def test_remaining_validation_oracles_are_derived_from_snapshots(self) -> None:
         filenames = (
             "validation-clean-full.json",
@@ -1148,7 +1242,7 @@ class CommandLineTests(unittest.TestCase):
 
         self.assertEqual(exit_code, 0)
         summary = json.loads(stdout.getvalue())
-        self.assertEqual(summary["case_count"], 102)
+        self.assertEqual(summary["case_count"], 106)
 
     def test_validate_result_reports_match_and_rejects_execution_override(self) -> None:
         case_path = CASES_ROOT / "graph-diamond.json"

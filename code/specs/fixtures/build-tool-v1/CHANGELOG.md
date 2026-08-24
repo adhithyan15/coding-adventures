@@ -2,6 +2,13 @@
 
 ## 2026-08-24
 
+- Added four process-free orphan-crate validation cases for direct, ancestor,
+  and platform BUILD coverage; exact artifact exclusion; unlisted and empty
+  crates; reasoned EXCLUDED and countable PENDING entries; invalid redacted
+  ledger records; and stale covered, missing-directory, or removed-manifest
+  entries. The runner derives coverage from a bounded normalized snapshot and
+  rejects invalid exemptions without filesystem, Git, process, environment,
+  or network authority.
 - Replaced CLI exit-decision-only input with a bounded inert `argv` grammar,
   deterministic typed parse results, and an independent parser oracle.
   Twenty-seven new positive and adversarial cases cover separated/equals

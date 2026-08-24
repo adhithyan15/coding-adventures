@@ -5861,6 +5861,53 @@ squash source branch for PR #12577. GitHub reports #12584 mergeable with checks
 queued, so auto-merge remains disabled until every required check is terminal
 and acceptable.
 
+### Post-#12584 refresh and orphan-crate corpus selection
+
+Final head `9ba1dbe29c90817b31dfd33448bd8e1fccc77a8a` completed all 29
+reported checks with 23 successes, six expected skips, and no failures or
+pending work. GitHub reported PR #12584 clean and mergeable; the loop enabled
+squash auto-merge, and GitHub merged it as
+`f7f929e494aa77573bac8bf19d57583bdab1b783` at 2026-08-24T15:13:38Z
+without a manual merge command.
+
+After the merge, `main` advanced only through unrelated Devanagari curriculum
+work to exact revision `0ba76cb0b5b0463179c7f4d0ee338db1ddedc01f`. The
+collision-checked schema-3 inventory remains 15 established lanes, 1,370
+identities, and 4,563 present slots: 175 high-consensus identities have 276
+gaps, 122 identities in five to nine lanes have 926 gaps, 166 identities in
+two to four lanes have 2,087 gaps, and 907 singletons have 12,698 gaps. There
+are 718 Rust singletons, zero canonical collisions, and zero unknown buckets.
+OCaml remains correctly emerging with no packages and therefore remains
+outside the established-language denominator.
+
+The required post-merge audit registered the missing native CLI-parser rollout
+behind the Go oracle. It also narrowed the existing `dist-newstyle` repair to
+Ruby and Rust after reproducing separate TypeScript and Swift failures, then
+registered those engines under independent owners. The orphan-crate and
+tracked-artifact neutral corpora are now explicit Go-oracle prerequisites. The
+resulting state graph has 458 unique owners and 637 dependency edges with one
+in-progress item, no duplicate IDs, missing dependencies, self-edges, or
+cycles. The orphan audit additionally records pure Go-oracle debt for removed
+manifests, nonportable ledger cleanup, normalized duplicates, and REM-only
+BUILD bypasses, while no-follow/reparse/file-kind handling is isolated in a
+selection-blocked host-scanner security review.
+
+The dependency/leverage pass selects
+`build-tool-orphan-crate-validation-corpus` on branch
+`codex/build-tool-orphan-crate-validation-corpus` from exact base
+`0ba76cb0b5b0463179c7f4d0ee338db1ddedc01f`. It is ready behind the
+merged validation oracle, directly unlocks every remaining engine's orphan
+validator, and protects against gaps that discovery, build, test, and lint
+would otherwise never see. Eleven live open PRs and 35 current non-main heads
+have zero candidate-surface overlap; the target branch and prior PR are absent,
+and only stale squash-source branches for merged parity PRs intersect shared
+history. The higher-leverage OCaml core remains collision-unsafe while PRs
+#12149 and #12162 touch Go validator/main surfaces. The Ruby/Rust
+`dist-newstyle` repair remains a ready sibling with TypeScript and Swift owned
+separately. The live reviewed exemption ledger contains five active entries,
+so the neutral contract must preserve reasoned exceptions and countable
+PENDING debt rather than treating every missing BUILD as equivalent.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

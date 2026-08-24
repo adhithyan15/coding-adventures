@@ -688,7 +688,7 @@ structured command fields use the shared definitions in the corpus schema.
 | `hashing_cache` | SHA-256 mode, package, included paths, dependency digests, dependents, and a closed missing, corrupt, or typed prior-cache record | lowercase `package_digest`, `dependencies_digest`, `combined_digest`, cache status, and sorted invalidated packages |
 | `starlark` | repository-contained entrypoint, v1 `_ctx`, and declared legacy fallback policy | sorted targets containing rule metadata, structured commands, deterministic display rendering, and the per-target command source |
 | `sharding` | package languages and build-command counts, dependency edges, scheduled packages, shard count, and optional shard index | stable prerequisite-closed shard records with assignments, package closure, toolchains, and estimated cost |
-| `validation` | platform, selected checks, normalized package declarations, and dependency edges | `valid` plus sorted stable diagnostic codes |
+| `validation` | platform, selected checks, normalized package declarations, dependency edges, and optional orphan-crate/ledger snapshots | `valid` plus sorted stable diagnostic codes |
 | `toolchain_detection` | package-language records, `null`/empty/explicit package selection, and forced toolchains | the complete canonical toolchain registry as a sorted boolean map |
 | `cli` | a portable action, decision condition, and whether the action would require later execution | exit code only |
 
@@ -806,11 +806,13 @@ Validation v1 uses the stable diagnostic registry
 `BUILD_FILE_MISSING`, `BUILD_FILE_EMPTY`, `LOCAL_DEPENDENCY_UNDECLARED`,
 `STANDALONE_PREREQUISITE_MISSING`, `STARLARK_SOURCE_INVALID`,
 `STARLARK_DEPENDENCY_INVALID`, `IDENTITY_AMBIGUOUS`, `MANIFEST_AMBIGUOUS`,
-`TOOLCHAIN_UNSUPPORTED`, and `PATH_UNSAFE`. The closed check registry is
+`TOOLCHAIN_UNSUPPORTED`, `PATH_UNSAFE`, `ORPHAN_CRATE_UNLISTED`,
+`ORPHAN_CRATE_EMPTY_BUILD`, `ORPHAN_EXEMPTION_INVALID`, and
+`ORPHAN_EXEMPTION_STALE`. The closed check registry is
 `build_file_presence`, `local_dependency_declarations`,
 `standalone_prerequisites`, `starlark_declarations`, `identity_uniqueness`,
 `manifest_uniqueness`, `toolchain_support`, `path_safety`, and
-`lua_windows_sibling_parity`.
+`lua_windows_sibling_parity`, plus `orphan_crate_coverage`.
 
 Every validation package carries one normalized snapshot: canonical package
 identity and root, implementation language, selected BUILD state and local
@@ -861,6 +863,54 @@ identity. A canonical sibling missing from the Windows set produces
 `STANDALONE_PREREQUISITE_MISSING` at the package's `BUILD_windows` path,
 including when `windows_build_file_state` is `missing`; Windows may contain
 additional transitive siblings.
+
+The process-free `orphan_crate_coverage` check consumes one closed
+`orphan_snapshot`. Its sorted `directories` set is the bounded union of every
+supplied Cargo-manifest directory and every existing exemption-target
+directory; it is not an inventory of the full tree. Sorted `manifests` records
+carry a normalized directory path and `package` or `virtual_workspace` kind.
+Sorted `build_files` records carry the path and independently normalized
+`runnable` or `empty` state of every relevant recognized BUILD. A BUILD path
+must name one of `BUILD`, `BUILD_windows`, `BUILD_mac`, `BUILD_linux`, or
+`BUILD_mac_and_linux`, and its directory must be beneath `code/`. Sorted
+`exemptions` retain the bounded raw kind, path, and reason plus a unique,
+strictly increasing source line so invalid policy data remains testable.
+
+A package or virtual-workspace manifest is covered only by a runnable BUILD in
+its own directory or a component-wise ancestor through `code/`. The closest
+runnable ancestor wins using the fixed filename order above; a nearer empty
+BUILD does not mask a runnable ancestor. When no runnable ancestor exists, the
+closest empty BUILD identifies the empty-build diagnostic. Empty, blank, and
+comment-only BUILD files are `empty`, never coverage. Manifest records below `.git`, `target`,
+`node_modules`, `vendor`, `.venv`, `_build`, `deps`, `.build`,
+`dist-newstyle`, or `.cargo` are build artifacts and are ignored. This skip
+registry is exact, case-sensitive path-component matching; a similarly named
+source directory is not ignored.
+
+Each exemption is bounded data with a source line, raw kind, raw path, and
+reason. `EXCLUDED` and `PENDING` are the only valid kinds and both suppress an
+otherwise uncovered manifest. The reason must be non-empty. The path must be a
+portable NFC repository-relative directory beneath `code/`, outside the
+artifact skip registry, and occur at most once. Absolute, drive, UNC,
+backslash, traversal, non-NFC, outside-scan, artifact, missing-reason,
+unknown-kind, and normalized duplicate aliases produce
+`ORPHAN_EXEMPTION_INVALID` at the fixed redacted ledger path
+`code/BUILD-EXEMPTIONS`. Its details contain the source line and stable problem
+only; a raw invalid path is never emitted. Invalid entries never suppress an
+orphan.
+
+A valid exemption is stale when its directory is absent from `directories`,
+the directory no longer contains a supplied Cargo manifest, or the manifest is
+now covered by a runnable BUILD. These
+states produce `ORPHAN_EXEMPTION_STALE` and force ledger cleanup. An uncovered
+manifest without a valid exemption produces `ORPHAN_CRATE_UNLISTED`; an empty
+BUILD produces `ORPHAN_CRATE_EMPTY_BUILD`, including when the file contains
+only blanks or comments. The result's required `pending_exemption_count` is the
+number of structurally valid, non-stale `PENDING` entries and remains visible
+even when there are no diagnostics. Diagnostics are independently derived,
+retain only safe paths, and sort by the normal validation ordering. The snapshot and
+expected result provide no filesystem, Git, process, environment, or network
+authority.
 
 Canonical result ordering is domain-aware:
 

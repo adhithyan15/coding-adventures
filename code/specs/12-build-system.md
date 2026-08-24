@@ -146,6 +146,31 @@ The build system parses language-specific metadata files to discover inter-packa
 
 Dependencies on external packages (not in the monorepo) are silently ignored. The resolver builds a directed graph where an edge from A to B means "B depends on A" (A must build before B).
 
+## BUILD Validation
+
+`--validate-build-files` must reject source that the discovery graph would
+silently omit. In particular, every supplied Cargo-manifest directory must be
+covered by a runnable `BUILD`, `BUILD_windows`, `BUILD_mac`, `BUILD_linux`, or
+`BUILD_mac_and_linux` in that directory or an ancestor beneath `code/`. A file
+containing only blanks or comments is not runnable and cannot be used as a
+one-touch bypass. Generated and vendored directories use the exact artifact
+skip registry defined by the language-neutral conformance contract.
+
+Intentionally uncovered manifests are policy data in
+`code/BUILD-EXEMPTIONS`. Each `EXCLUDED` or `PENDING` entry requires a portable
+repository-relative path and a non-empty reason. Duplicate, unsafe,
+out-of-scan, artifact, unknown-kind, and reasonless entries are errors. An
+entry is also an error after its directory disappears, its Cargo manifest is
+removed, or a runnable BUILD begins covering it. This makes PENDING debt
+countable and prevents the ledger from silently outliving the gap.
+
+Portable engines consume the closed `orphan_crate_coverage` snapshot in
+[`build-tool-conformance.md`](build-tool-conformance.md#13-closed-pure-domain-fixture-model).
+The neutral check receives normalized manifest, directory, BUILD-state, and
+ledger records as inert data. It performs no filesystem walk, Git query,
+process launch, environment lookup, or network access; native enumeration and
+file reading stay outside the process-free oracle.
+
 ## Build Execution
 
 ### Change Detection

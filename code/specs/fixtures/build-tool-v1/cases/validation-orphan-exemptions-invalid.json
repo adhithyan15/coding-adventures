@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "id": "validation/orphan-exemptions-invalid",
+  "domain": "validation",
+  "summary": "Malformed, unsafe, duplicate, outside-scan, and artifact exemption records fail closed without echoing unsafe paths or suppressing a real orphan.",
+  "platforms": ["linux"],
+  "capabilities": ["validation"],
+  "workspace": {"files": []},
+  "input": {
+    "operation": "validation",
+    "options": {
+      "platform": "linux",
+      "checks": ["orphan_crate_coverage"],
+      "packages": [],
+      "dependency_edges": [],
+      "orphan_snapshot": {
+        "directories": [
+          "code/packages/rust/demo",
+          "code/packages/rust/reasonless"
+        ],
+        "manifests": [
+          {"path": "code/packages/rust/demo", "kind": "package"},
+          {"path": "code/packages/rust/reasonless", "kind": "package"}
+        ],
+        "build_files": [],
+        "exemptions": [
+          {"line": 10, "kind": "EXCLUDED", "path": "code/packages/rust/demo", "reason": "compile-only bridge covered by code/packages/java/demo"},
+          {"line": 11, "kind": "PENDING", "path": "CODE/PACKAGES/RUST/DEMO", "reason": "case-folded duplicate backlog entry"},
+          {"line": 12, "kind": "UNKNOWN", "path": "code/packages/rust/other", "reason": "unknown policy kind"},
+          {"line": 13, "kind": "PENDING", "path": "code/packages/rust/reasonless", "reason": ""},
+          {"line": 14, "kind": "PENDING", "path": "C:/outside", "reason": "drive-qualified host path"},
+          {"line": 15, "kind": "PENDING", "path": "../outside", "reason": "repository traversal"},
+          {"line": 16, "kind": "PENDING", "path": "docs/demo", "reason": "outside the crate scan root"},
+          {"line": 17, "kind": "PENDING", "path": "code/packages/rust/target/generated", "reason": "generated artifact path"},
+          {"line": 18, "kind": "PENDING", "path": "code\\packages\\rust\\demo", "reason": "backslash path"},
+          {"line": 19, "kind": "PENDING", "path": "//server/share", "reason": "UNC host path"},
+          {"line": 20, "kind": "PENDING", "path": "code/packages/rust/inner/../demo", "reason": "internal traversal"},
+          {"line": 21, "kind": "PENDING", "path": "code/packages//rust/demo", "reason": "empty path component"},
+          {"line": 22, "kind": "PENDING", "path": "code/packages/rust/cafe\u0301", "reason": "non-NFC path"}
+        ]
+      }
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "validation/orphan-exemptions-invalid",
+    "domain": "validation",
+    "outcome": "error",
+    "result": {"valid": false, "diagnostic_codes": ["ORPHAN_CRATE_UNLISTED", "ORPHAN_EXEMPTION_INVALID"], "pending_exemption_count": 0},
+    "diagnostics": [
+      {"code": "ORPHAN_CRATE_UNLISTED", "severity": "error", "path": "code/packages/rust/reasonless", "details": {"manifest_kind": "package"}},
+      {"code": "ORPHAN_EXEMPTION_INVALID", "severity": "error", "path": "code/BUILD-EXEMPTIONS", "details": {"line": 11, "problem": "DUPLICATE_PATH"}},
+      {"code": "ORPHAN_EXEMPTION_INVALID", "severity": "error", "path": "code/BUILD-EXEMPTIONS", "details": {"line": 12, "problem": "UNKNOWN_KIND"}},
+      {"code": "ORPHAN_EXEMPTION_INVALID", "severity": "error", "path": "code/BUILD-EXEMPTIONS", "details": {"line": 13, "problem": "REASON_MISSING"}},
+      {"code": "ORPHAN_EXEMPTION_INVALID", "severity": "error", "path": "code/BUILD-EXEMPTIONS", "details": {"line": 14, "problem": "PATH_UNSAFE"}},
+      {"code": "ORPHAN_EXEMPTION_INVALID", "severity": "error", "path": "code/BUILD-EXEMPTIONS", "details": {"line": 15, "problem": "PATH_UNSAFE"}},
+      {"code": "ORPHAN_EXEMPTION_INVALID", "severity": "error", "path": "code/BUILD-EXEMPTIONS", "details": {"line": 16, "problem": "PATH_OUTSIDE_SCAN"}},
+      {"code": "ORPHAN_EXEMPTION_INVALID", "severity": "error", "path": "code/BUILD-EXEMPTIONS", "details": {"line": 17, "problem": "PATH_ARTIFACT"}},
+      {"code": "ORPHAN_EXEMPTION_INVALID", "severity": "error", "path": "code/BUILD-EXEMPTIONS", "details": {"line": 18, "problem": "PATH_UNSAFE"}},
+      {"code": "ORPHAN_EXEMPTION_INVALID", "severity": "error", "path": "code/BUILD-EXEMPTIONS", "details": {"line": 19, "problem": "PATH_UNSAFE"}},
+      {"code": "ORPHAN_EXEMPTION_INVALID", "severity": "error", "path": "code/BUILD-EXEMPTIONS", "details": {"line": 20, "problem": "PATH_UNSAFE"}},
+      {"code": "ORPHAN_EXEMPTION_INVALID", "severity": "error", "path": "code/BUILD-EXEMPTIONS", "details": {"line": 21, "problem": "PATH_UNSAFE"}},
+      {"code": "ORPHAN_EXEMPTION_INVALID", "severity": "error", "path": "code/BUILD-EXEMPTIONS", "details": {"line": 22, "problem": "PATH_UNSAFE"}}
+    ]
+  },
+  "limits": {"wall_time_ms": 1000, "output_bytes": 1048576, "workspace_bytes": 1048576, "process_count": 1, "memory_mib": 128, "cpu_time_ms": 1000}
+}

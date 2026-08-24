@@ -361,12 +361,59 @@ class BuildToolConformanceSchemaTests(unittest.TestCase):
                 "local_dependency_declarations",
                 "lua_windows_sibling_parity",
                 "manifest_uniqueness",
+                "orphan_crate_coverage",
                 "path_safety",
                 "standalone_prerequisites",
                 "starlark_declarations",
                 "toolchain_support",
             ],
         )
+
+    def test_orphan_snapshot_schema_is_closed_and_pending_debt_is_typed(self) -> None:
+        import jsonschema
+
+        snapshot = self.pure_schema["$defs"]["orphan_snapshot"]
+        self.assertFalse(snapshot["additionalProperties"])
+        self.assertEqual(
+            set(snapshot["required"]),
+            {"directories", "manifests", "build_files", "exemptions"},
+        )
+        self.assertEqual(snapshot["properties"]["directories"]["maxItems"], 16384)
+        self.assertEqual(snapshot["properties"]["manifests"]["maxItems"], 4096)
+        self.assertEqual(snapshot["properties"]["build_files"]["maxItems"], 4096)
+        self.assertEqual(snapshot["properties"]["exemptions"]["maxItems"], 4096)
+        result = self.pure_schema["$defs"]["validation_result"]
+        self.assertEqual(
+            result["properties"]["pending_exemption_count"],
+            {"type": "integer", "minimum": 0, "maximum": 4096},
+        )
+        self.assertEqual(
+            self.pure_schema["$defs"]["validation_input"]["properties"]["options"][
+                "properties"
+            ]["checks"]["maxItems"],
+            10,
+        )
+
+        example = next(
+            item for item in self.examples if item["id"] == "validation/clean-full"
+        )
+        record = {
+            "domain": example["domain"],
+            "outcome": example["expected"]["outcome"],
+            "input": copy.deepcopy(example["input"]),
+            "result": copy.deepcopy(example["expected"]["result"]),
+        }
+        validator = jsonschema.Draft202012Validator(self.pure_schema)
+        record["input"]["options"]["orphan_snapshot"] = {
+            "directories": [],
+            "manifests": [],
+            "build_files": [],
+            "exemptions": [],
+        }
+        self.assertTrue(list(validator.iter_errors(record)))
+        del record["input"]["options"]["orphan_snapshot"]
+        record["result"]["pending_exemption_count"] = 0
+        self.assertTrue(list(validator.iter_errors(record)))
 
     def test_cli_schema_bounds_argv_and_closes_the_typed_parse_result(self) -> None:
         options = self.pure_schema["$defs"]["cli_input"]["properties"]["options"]

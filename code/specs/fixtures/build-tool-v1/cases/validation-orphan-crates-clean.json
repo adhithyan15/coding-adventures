@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "id": "validation/orphan-crates-clean",
+  "domain": "validation",
+  "summary": "Direct, ancestor, and platform BUILD files plus reasoned EXCLUDED and PENDING entries cover every source Cargo manifest while artifact manifests stay outside the scan.",
+  "platforms": ["linux"],
+  "capabilities": ["validation"],
+  "workspace": {"files": []},
+  "input": {
+    "operation": "validation",
+    "options": {
+      "platform": "linux",
+      "checks": ["orphan_crate_coverage"],
+      "packages": [],
+      "dependency_edges": [],
+      "orphan_snapshot": {
+        "directories": [
+          "code/packages/rust/ancestor/child",
+          "code/packages/rust/compile-only",
+          "code/packages/rust/direct",
+          "code/packages/rust/foreign-toolchain",
+          "code/packages/rust/pending",
+          "code/packages/rust/platform-linux",
+          "code/packages/rust/platform-mac",
+          "code/packages/rust/platform-mac-linux",
+          "code/packages/rust/platform-windows",
+          "code/packages/rust/target/generated",
+          "code/packages/rust/workspace"
+        ],
+        "manifests": [
+          {"path": "code/packages/rust/ancestor/child", "kind": "package"},
+          {"path": "code/packages/rust/compile-only", "kind": "package"},
+          {"path": "code/packages/rust/direct", "kind": "package"},
+          {"path": "code/packages/rust/foreign-toolchain", "kind": "package"},
+          {"path": "code/packages/rust/pending", "kind": "package"},
+          {"path": "code/packages/rust/platform-linux", "kind": "package"},
+          {"path": "code/packages/rust/platform-mac", "kind": "package"},
+          {"path": "code/packages/rust/platform-mac-linux", "kind": "package"},
+          {"path": "code/packages/rust/platform-windows", "kind": "package"},
+          {"path": "code/packages/rust/target/generated", "kind": "package"},
+          {"path": "code/packages/rust/workspace", "kind": "virtual_workspace"}
+        ],
+        "build_files": [
+          {"path": "code/packages/rust/ancestor/BUILD", "state": "runnable"},
+          {"path": "code/packages/rust/ancestor/child/BUILD", "state": "empty"},
+          {"path": "code/packages/rust/direct/BUILD", "state": "runnable"},
+          {"path": "code/packages/rust/platform-linux/BUILD_linux", "state": "runnable"},
+          {"path": "code/packages/rust/platform-mac-linux/BUILD_mac_and_linux", "state": "runnable"},
+          {"path": "code/packages/rust/platform-mac/BUILD_mac", "state": "runnable"},
+          {"path": "code/packages/rust/platform-windows/BUILD_windows", "state": "runnable"}
+        ],
+        "exemptions": [
+          {"line": 10, "kind": "EXCLUDED", "path": "code/packages/rust/compile-only", "reason": "compile-only bridge exercised by code/packages/java/demo"},
+          {"line": 11, "kind": "EXCLUDED", "path": "code/packages/rust/foreign-toolchain", "reason": "foreign Android toolchain coverage lives in code/programs/kotlin/demo"},
+          {"line": 12, "kind": "PENDING", "path": "code/packages/rust/pending", "reason": "awaiting a reviewed Linux BUILD front"},
+          {"line": 13, "kind": "EXCLUDED", "path": "code/packages/rust/workspace", "reason": "virtual workspace manifest whose members carry their own BUILD files"}
+        ]
+      }
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "validation/orphan-crates-clean",
+    "domain": "validation",
+    "outcome": "ok",
+    "result": {"valid": true, "diagnostic_codes": [], "pending_exemption_count": 1},
+    "diagnostics": []
+  },
+  "limits": {"wall_time_ms": 1000, "output_bytes": 1048576, "workspace_bytes": 1048576, "process_count": 1, "memory_mib": 128, "cpu_time_ms": 1000}
+}
