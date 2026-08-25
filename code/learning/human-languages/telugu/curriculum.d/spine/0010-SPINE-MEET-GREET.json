@@ -1,0 +1,16 @@
+{
+  "segments": [
+    "TE-PATH-001",
+    "TE-PATH-100",
+    "TE-PATH-52-WELCOME",
+    "TE-PATH-53-SKY",
+    "TE-PATH-60-ANIMAL",
+    "TE-PATH-67-WALL"
+  ],
+  "omits": [
+    "GREETING-FORMAL",
+    "GREETING-PEACE",
+    "GREETING-WELCOME"
+  ],
+  "relocates": {}
+}

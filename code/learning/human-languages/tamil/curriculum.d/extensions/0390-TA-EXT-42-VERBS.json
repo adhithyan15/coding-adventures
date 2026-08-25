@@ -1,0 +1,14 @@
+{
+  "id": "TA-EXT-42-VERBS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name four more everyday actions and say them in order.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C42-come",
+    "TA-C42-sit",
+    "TA-C42-read",
+    "TA-C42-give"
+  ]
+}

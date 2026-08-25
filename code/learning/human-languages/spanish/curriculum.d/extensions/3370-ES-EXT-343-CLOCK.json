@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-343-CLOCK",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a date, find it on a calendar, point forward to the next one, and name the era it belongs to.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C343-fecha",
+    "ES-C343-calendario",
+    "ES-C343-proximo",
+    "ES-C343-epoca",
+    "ES-C343-siglo"
+  ]
+}

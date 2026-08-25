@@ -1,0 +1,12 @@
+{
+  "id": "HI-EXT-010-ETYMOLOGY",
+  "stage": "A1",
+  "kind": "supporting",
+  "category": "etymology",
+  "canDo": "I can use this Hindi word history as a memory hook without confusing origin and current use.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C06-tin-char-history",
+    "HI-C06-paanch-nasal"
+  ]
+}

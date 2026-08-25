@@ -1,0 +1,16 @@
+{
+  "id": "HI-PATH-51-WELCOME",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "HI-C51-flower",
+    "HI-C51-garland",
+    "HI-C51-courtyard",
+    "HI-C51-table",
+    "HI-C51-sweet"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-51-WELCOME"
+  ],
+  "after": []
+}

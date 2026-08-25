@@ -1,0 +1,19 @@
+{
+  "segments": [
+    "KA-PATH-004",
+    "KA-PATH-006",
+    "KA-PATH-010",
+    "KA-PATH-015",
+    "KA-PATH-020",
+    "KA-PATH-027",
+    "KA-PATH-028",
+    "KA-PATH-48-ROLE",
+    "KA-PATH-54-TREE",
+    "KA-PATH-61-KITCHEN"
+  ],
+  "omits": [
+    "PRONOUN-ME",
+    "WORD-IS"
+  ],
+  "relocates": {}
+}

@@ -1,0 +1,15 @@
+{
+  "id": "TA-EXT-47-REPLY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can give five short replies in Tamil.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C47-true",
+    "TA-C47-enough",
+    "TA-C47-certainly",
+    "TA-C47-perhaps",
+    "TA-C47-just-so"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "id": "LA-PATH-015",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "LA-C14-annos-natus"
+  ],
+  "before": [],
+  "inline": [
+    "LA-EXT-015-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

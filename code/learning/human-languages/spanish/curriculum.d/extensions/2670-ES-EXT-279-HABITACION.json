@@ -1,0 +1,14 @@
+{
+  "id": "ES-EXT-279-HABITACION",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the door, the window, the chair and the bed in Spanish, and say which of the four has no settled origin.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C279-puerta",
+    "ES-C279-ventana",
+    "ES-C279-silla",
+    "ES-C279-cama"
+  ]
+}

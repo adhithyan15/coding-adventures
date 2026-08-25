@@ -1,0 +1,27 @@
+{
+  "id": "ES-PATH-007",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "ES-C03-me",
+    "ES-C03-llamar",
+    "ES-C03-me-llamo",
+    "ES-C03-tu-usted",
+    "ES-C03-tu-usted-register",
+    "ES-C03-vos",
+    "ES-C03-usted-origin",
+    "ES-C03-repaso-nombre",
+    "ES-C03-quien",
+    "ES-C03-repaso-tu-usted"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-007-LANGUAGE-SPECIFIC",
+    "ES-EXT-007-REGISTER"
+  ],
+  "after": [
+    "ES-EXT-007-ETYMOLOGY",
+    "ES-EXT-007-VARIETY",
+    "ES-EXT-007-CONSOLIDATION-NOMBRE",
+    "ES-EXT-007-CONSOLIDATION-USTED"
+  ]
+}

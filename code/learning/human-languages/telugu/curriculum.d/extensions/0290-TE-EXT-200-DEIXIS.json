@@ -1,0 +1,17 @@
+{
+  "id": "TE-EXT-200-DEIXIS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can point at something in Telugu and ask who or where it is, and I can see the one pattern the six words are built from.",
+  "prerequisites": [],
+  "lessons": [
+    "TE-C41-this",
+    "TE-C41-that",
+    "TE-C41-here",
+    "TE-C41-there",
+    "TE-C41-who",
+    "TE-C41-where",
+    "TE-C41-deixis-system"
+  ]
+}

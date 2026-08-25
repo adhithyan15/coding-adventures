@@ -1,0 +1,17 @@
+{
+  "id": "RU-PATH-007",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "RU-C03-byt",
+    "RU-C03-zhit",
+    "RU-C03-znat",
+    "RU-C03-govorit",
+    "RU-C03-videt",
+    "RU-C03-idti"
+  ],
+  "before": [],
+  "inline": [
+    "RU-EXT-007-CORE-VERBS"
+  ],
+  "after": []
+}

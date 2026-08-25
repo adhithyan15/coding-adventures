@@ -1,0 +1,12 @@
+{
+  "id": "ES-EXT-319-PRESENTARSE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "review",
+  "canDo": "I can run a whole introduction in Spanish and answer one two different ways.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C319-repaso-presentarse",
+    "ES-C319-dos-respuestas"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "segments": [
+    "ML-PATH-003",
+    "ML-PATH-008",
+    "ML-PATH-51-COURTESY",
+    "ML-PATH-56-HOUSE",
+    "ML-PATH-62-HAND"
+  ],
+  "omits": [
+    "COURTESY-THANKS-CASUAL"
+  ],
+  "relocates": {}
+}

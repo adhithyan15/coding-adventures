@@ -1,0 +1,16 @@
+{
+  "id": "TE-EXT-011-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can use the additional Telugu material required at this point in the path.",
+  "prerequisites": [],
+  "lessons": [
+    "TE-C05-maatlaadu",
+    "TE-C05-nenu-telugu-maatlaadataanu",
+    "TE-C05-pani-ceyu",
+    "TE-C05-undu",
+    "TE-C06-dative-ku",
+    "TE-C06-dative-subject"
+  ]
+}

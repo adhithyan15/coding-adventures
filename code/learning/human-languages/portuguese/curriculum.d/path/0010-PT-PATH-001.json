@@ -1,0 +1,13 @@
+{
+  "id": "PT-PATH-001",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "PT-C01-ola",
+    "PT-W01-ola-guided-copy"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "PT-EXT-001-WRITING-START"
+  ]
+}

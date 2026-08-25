@@ -1,0 +1,12 @@
+{
+  "id": "TE-EXT-030-SON-DAUGHTER",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can say son and daughter in Telugu, and show that they trace to two different Proto-Dravidian roots rather than one shared root.",
+  "prerequisites": [],
+  "lessons": [
+    "TE-C36-koduku",
+    "TE-C36-kuuturu"
+  ]
+}

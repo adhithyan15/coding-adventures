@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-040-PART-IRREG",
+  "spine_node": "SPINE-TALK-ABOUT-PAST",
+  "lessons": [
+    "ES-C49-participios-irregulares"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-040-PART-IRREG"
+  ],
+  "after": []
+}

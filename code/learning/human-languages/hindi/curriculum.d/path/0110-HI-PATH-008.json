@@ -1,0 +1,12 @@
+{
+  "id": "HI-PATH-008",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "HI-C03-hun"
+  ],
+  "before": [
+    "HI-EXT-008-LANGUAGE-SPECIFIC"
+  ],
+  "inline": [],
+  "after": []
+}

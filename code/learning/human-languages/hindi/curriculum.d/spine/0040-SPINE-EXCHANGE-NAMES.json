@@ -1,0 +1,17 @@
+{
+  "segments": [
+    "HI-PATH-004",
+    "HI-PATH-004A",
+    "HI-PATH-007",
+    "HI-PATH-015",
+    "HI-PATH-020",
+    "HI-PATH-033",
+    "HI-PATH-47-ROLE",
+    "HI-PATH-54-ANIMAL",
+    "HI-PATH-62-HANDS"
+  ],
+  "omits": [
+    "PRONOUN-ME"
+  ],
+  "relocates": {}
+}

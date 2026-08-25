@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-042-WANT-CH11",
+  "spine_node": "SPINE-SAY-WHAT-I-WANT",
+  "lessons": [
+    "ES-C11-querer"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-042-WANT-CH11"
+  ],
+  "after": []
+}

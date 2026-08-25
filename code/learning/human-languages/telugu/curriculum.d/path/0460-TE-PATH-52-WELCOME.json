@@ -1,0 +1,16 @@
+{
+  "id": "TE-PATH-52-WELCOME",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "TE-C52-door",
+    "TE-C52-chair",
+    "TE-C52-muggu",
+    "TE-C52-flower",
+    "TE-C52-garland"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-52-WELCOME"
+  ],
+  "after": []
+}

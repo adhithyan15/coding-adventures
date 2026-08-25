@@ -1,0 +1,15 @@
+{
+  "id": "HI-PATH-031",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "HI-C37-chai",
+    "HI-C37-dudh",
+    "HI-C37-khaana",
+    "HI-C37-kitaab"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-031-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

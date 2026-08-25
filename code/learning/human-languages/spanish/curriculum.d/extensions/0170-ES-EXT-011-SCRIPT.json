@@ -1,0 +1,16 @@
+{
+  "id": "ES-EXT-011-SCRIPT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can recognize and use the Spanish script features introduced inside these words.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-W01-acento",
+    "ES-W01-tilde-diacritica",
+    "ES-W02-enye",
+    "ES-W02-enye-formas",
+    "ES-W03-inverted",
+    "ES-W03-question-span"
+  ]
+}

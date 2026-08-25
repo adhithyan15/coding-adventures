@@ -1,0 +1,13 @@
+{
+  "id": "UR-EXT-011-WELLBEING-WORD-ORDER",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can place ṭhīk inside the maiṅ ... hūṅ frame and add known shukriyā after the completed clause.",
+  "prerequisites": [
+    "UR-EXT-010-SCRIPT-BRIDGE"
+  ],
+  "lessons": [
+    "UR-C04-main-thik-hun"
+  ]
+}

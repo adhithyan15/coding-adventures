@@ -1,0 +1,16 @@
+{
+  "id": "TE-PATH-60-ANIMAL",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "TE-C60-buffalo",
+    "TE-C60-goat",
+    "TE-C60-hen",
+    "TE-C60-ant",
+    "TE-C60-bird"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-60-ANIMAL"
+  ],
+  "after": []
+}

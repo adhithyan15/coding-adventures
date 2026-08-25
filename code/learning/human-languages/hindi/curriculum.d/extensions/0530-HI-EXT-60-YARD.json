@@ -1,0 +1,15 @@
+{
+  "id": "HI-EXT-60-YARD",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five more animals a Hindi household lives beside.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C60-monkey",
+    "HI-C60-snake",
+    "HI-C60-hen",
+    "HI-C60-buffalo",
+    "HI-C60-peacock"
+  ]
+}

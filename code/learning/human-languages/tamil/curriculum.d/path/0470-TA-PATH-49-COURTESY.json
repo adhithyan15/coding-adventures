@@ -1,0 +1,16 @@
+{
+  "id": "TA-PATH-49-COURTESY",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "lessons": [
+    "TA-C49-affection",
+    "TA-C49-respect",
+    "TA-C49-gladness",
+    "TA-C49-good-wish",
+    "TA-C49-many-thanks"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-49-COURTESY"
+  ],
+  "after": []
+}

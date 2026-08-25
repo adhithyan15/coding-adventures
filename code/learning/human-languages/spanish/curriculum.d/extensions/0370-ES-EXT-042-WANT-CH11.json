@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-042-WANT-CH11",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can express singular wanting with querer before a known infinitive.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C11-querer"
+  ]
+}

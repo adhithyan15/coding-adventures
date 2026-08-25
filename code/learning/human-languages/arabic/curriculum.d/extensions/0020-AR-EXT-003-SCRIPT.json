@@ -1,0 +1,15 @@
+{
+  "id": "AR-EXT-003-SCRIPT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can trace and guided-copy the greeting forms I first learned by ear, adding no more than three new shapes at a time.",
+  "prerequisites": [],
+  "lessons": [
+    "AR-W00-ra-ha",
+    "AR-W00-ba-family-marhaba",
+    "AR-W00-ayn-ya",
+    "AR-W00-kaf-waw-alaykum",
+    "AR-W00-full-greeting-recall"
+  ]
+}

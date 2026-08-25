@@ -1,0 +1,10 @@
+{
+  "id": "HI-PATH-027",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "HI-C03-thik"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

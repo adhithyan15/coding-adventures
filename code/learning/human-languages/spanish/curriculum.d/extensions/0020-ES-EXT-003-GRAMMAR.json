@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-003-GRAMMAR",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can use the Spanish-specific grammar needed for this part of the shared ability.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C01-genero-gramatical"
+  ]
+}

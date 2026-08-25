@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-290-COSECHA",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name wheat, rice, an onion, a tomato and honey in Spanish, and thank somebody for them.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C290-trigo",
+    "ES-C290-arroz",
+    "ES-C290-cebolla",
+    "ES-C290-tomate",
+    "ES-C290-miel"
+  ]
+}

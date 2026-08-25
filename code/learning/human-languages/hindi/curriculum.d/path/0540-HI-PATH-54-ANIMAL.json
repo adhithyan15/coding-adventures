@@ -1,0 +1,16 @@
+{
+  "id": "HI-PATH-54-ANIMAL",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "HI-C54-cow",
+    "HI-C54-horse",
+    "HI-C54-fish",
+    "HI-C54-bird",
+    "HI-C54-goat"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-54-ANIMAL"
+  ],
+  "after": []
+}

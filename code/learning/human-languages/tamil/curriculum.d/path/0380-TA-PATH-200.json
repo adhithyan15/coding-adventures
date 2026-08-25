@@ -1,0 +1,18 @@
+{
+  "id": "TA-PATH-200",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "TA-C40-this",
+    "TA-C40-that",
+    "TA-C40-here",
+    "TA-C40-there",
+    "TA-C40-who",
+    "TA-C40-where",
+    "TA-C40-deixis-system"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-200-DEIXIS"
+  ],
+  "after": []
+}

@@ -1,0 +1,13 @@
+{
+  "id": "FA-EXT-001-GREETING-PAYOFF",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "consolidation",
+  "canDo": "I can close a tiny greeting exchange and copy one alef beside a visible model.",
+  "prerequisites": [
+    "FA-EXT-001-INLINE-SCRIPT"
+  ],
+  "lessons": [
+    "FA-C01-practice"
+  ]
+}

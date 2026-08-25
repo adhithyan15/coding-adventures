@@ -1,0 +1,15 @@
+{
+  "id": "SA-EXT-206-PEOPLE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five kinds of person in Sanskrit and tell an elder from an ancient thing.",
+  "prerequisites": [],
+  "lessons": [
+    "SA-C20-man",
+    "SA-C20-woman",
+    "SA-C20-child",
+    "SA-C20-old-person",
+    "SA-C20-people"
+  ]
+}

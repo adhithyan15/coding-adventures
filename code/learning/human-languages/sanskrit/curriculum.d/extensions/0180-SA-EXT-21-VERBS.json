@@ -1,0 +1,14 @@
+{
+  "id": "SA-EXT-21-VERBS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name four more everyday actions and say them in order.",
+  "prerequisites": [],
+  "lessons": [
+    "SA-C21-dance",
+    "SA-C21-laugh",
+    "SA-C21-stand",
+    "SA-C21-remember"
+  ]
+}

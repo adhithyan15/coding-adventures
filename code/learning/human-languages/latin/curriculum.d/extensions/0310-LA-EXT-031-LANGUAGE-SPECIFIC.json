@@ -1,0 +1,13 @@
+{
+  "id": "LA-EXT-031-LANGUAGE-SPECIFIC",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can produce the present-tense forms of the Latin verbs of answering, meeting and buying, and say what an English word means by reading the older sense of the Latin verb inside it.",
+  "prerequisites": [],
+  "lessons": [
+    "LA-C43-respondeo",
+    "LA-C43-convenio",
+    "LA-C43-emo"
+  ]
+}

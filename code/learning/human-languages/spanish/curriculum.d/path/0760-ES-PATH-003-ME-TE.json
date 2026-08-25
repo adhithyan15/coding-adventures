@@ -1,0 +1,14 @@
+{
+  "id": "ES-PATH-003-ME-TE",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ES-C42-me-objeto",
+    "ES-C42-te",
+    "ES-C42-te-thee"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-003-ME-TE"
+  ],
+  "after": []
+}

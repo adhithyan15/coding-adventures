@@ -1,0 +1,11 @@
+{
+  "id": "SA-EXT-001-INLINE-SCRIPT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can recognize the first Sanskrit script pattern inside a greeting I already understand.",
+  "prerequisites": [],
+  "lessons": [
+    "SA-C01-namaste"
+  ]
+}

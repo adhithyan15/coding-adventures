@@ -1,0 +1,13 @@
+{
+  "id": "FA-EXT-013-KHODA-HISTORY",
+  "stage": "pre-A1",
+  "kind": "supporting",
+  "category": "etymology",
+  "canDo": "I can read khodâ and connect its modern meaning to Middle Persian xwadây without treating etymology as a production burden.",
+  "prerequisites": [
+    "FA-EXT-012-WELLBEING-CONSOLIDATION"
+  ],
+  "lessons": [
+    "FA-C05-khoda"
+  ]
+}

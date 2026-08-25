@@ -1,0 +1,16 @@
+{
+  "id": "ML-PATH-47-BODY",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "ML-C47-leg",
+    "ML-C47-tooth",
+    "ML-C47-hair",
+    "ML-C47-finger",
+    "ML-C47-stomach"
+  ],
+  "before": [],
+  "inline": [
+    "ML-EXT-47-BODY"
+  ],
+  "after": []
+}

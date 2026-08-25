@@ -1,0 +1,18 @@
+{
+  "id": "PA-PATH-001S",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "PA-W01-na",
+    "PA-W01-ii-matra",
+    "PA-W01-ma",
+    "PA-W01-sa",
+    "PA-W01-ta",
+    "PA-W01-e-matra",
+    "PA-W01-namaste-read"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "PA-EXT-016-SCRIPT-FIRST-PIECES"
+  ]
+}

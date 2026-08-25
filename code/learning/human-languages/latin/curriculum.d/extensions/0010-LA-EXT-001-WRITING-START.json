@@ -1,0 +1,11 @@
+{
+  "id": "LA-EXT-001-WRITING-START",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can copy my first Latin greeting with the model still visible and preserve its macron.",
+  "prerequisites": [],
+  "lessons": [
+    "LA-W01-salve-guided-copy"
+  ]
+}

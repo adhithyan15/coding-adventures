@@ -1,0 +1,15 @@
+{
+  "id": "KA-EXT-60-ANIMAL",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five common animals in Kannada, and greet the house that keeps them.",
+  "prerequisites": [],
+  "lessons": [
+    "KA-C60-cow",
+    "KA-C60-goat",
+    "KA-C60-hen",
+    "KA-C60-crow",
+    "KA-C60-bird"
+  ]
+}

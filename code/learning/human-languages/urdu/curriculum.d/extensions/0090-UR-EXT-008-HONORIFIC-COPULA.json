@@ -1,0 +1,13 @@
+{
+  "id": "UR-EXT-008-HONORIFIC-COPULA",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "register",
+  "canDo": "I can pair respectful āp with final haiṅ and keep the addressee agreement choice separate from politeness.",
+  "prerequisites": [
+    "UR-EXT-007-GENDERED-HOW"
+  ],
+  "lessons": [
+    "UR-C04-aap-kaise-hain"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "AR-PATH-015",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "AR-C11-ras",
+    "AR-C11-yad"
+  ],
+  "before": [],
+  "inline": [
+    "AR-EXT-015-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

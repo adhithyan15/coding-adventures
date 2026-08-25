@@ -1,0 +1,17 @@
+{
+  "id": "AR-PATH-027",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "AR-C28-dhahaba",
+    "AR-C28-jaa",
+    "AR-C29-qala",
+    "AR-C29-raa",
+    "AR-C30-arafa",
+    "AR-C30-akala"
+  ],
+  "before": [],
+  "inline": [
+    "AR-EXT-027-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

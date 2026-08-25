@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-A1-PRESENTE-DOS",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ES-C66-hablo-dos-lecturas"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-A1-PRESENTE-DOS"
+  ],
+  "after": []
+}

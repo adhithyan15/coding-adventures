@@ -1,0 +1,13 @@
+{
+  "segments": [
+    "ML-PATH-014",
+    "ML-PATH-018",
+    "ML-PATH-020",
+    "ML-PATH-023",
+    "ML-PATH-025"
+  ],
+  "omits": [
+    "GREETING-DAY"
+  ],
+  "relocates": {}
+}

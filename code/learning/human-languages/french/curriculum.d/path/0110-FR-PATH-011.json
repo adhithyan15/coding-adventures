@@ -1,0 +1,11 @@
+{
+  "id": "FR-PATH-011",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "FR-C03-comment-ca-va",
+    "FR-C03-comme-ci-comme-ca"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

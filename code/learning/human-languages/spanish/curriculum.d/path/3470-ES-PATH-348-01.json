@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-348-01",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "ES-C348-principio",
+    "ES-C348-fin",
+    "ES-C348-instante",
+    "ES-C348-demora",
+    "ES-C348-turno"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-348-SPAN"
+  ],
+  "after": []
+}

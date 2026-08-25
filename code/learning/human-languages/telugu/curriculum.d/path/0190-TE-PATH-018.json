@@ -1,0 +1,12 @@
+{
+  "id": "TE-PATH-018",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "TE-C14-rutuvulu"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-018-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

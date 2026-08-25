@@ -1,0 +1,16 @@
+{
+  "id": "SA-PATH-37-COURTESY",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "lessons": [
+    "SA-C37-peace",
+    "SA-C37-respectfully",
+    "SA-C37-gracious",
+    "SA-C37-congratulations",
+    "SA-C37-blessing"
+  ],
+  "before": [],
+  "inline": [
+    "SA-EXT-37-COURTESY"
+  ],
+  "after": []
+}

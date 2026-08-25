@@ -1,0 +1,11 @@
+{
+  "id": "PA-EXT-001-CONSOLIDATION",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "assessment",
+  "canDo": "I can keep reading, listening, independent writing, and speaking separately measurable at the Chapter 1 checkpoint.",
+  "prerequisites": [],
+  "lessons": [
+    "PA-C01-practice"
+  ]
+}

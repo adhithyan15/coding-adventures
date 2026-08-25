@@ -1,0 +1,10 @@
+{
+  "id": "RU-PATH-004",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "RU-C01-zdravstvuyte"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

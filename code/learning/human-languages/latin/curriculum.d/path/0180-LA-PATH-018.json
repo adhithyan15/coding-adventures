@@ -1,0 +1,13 @@
+{
+  "id": "LA-PATH-018",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "LA-C17-canis-feles-cattus",
+    "LA-C18-viridis-flavus"
+  ],
+  "before": [],
+  "inline": [
+    "LA-EXT-018-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

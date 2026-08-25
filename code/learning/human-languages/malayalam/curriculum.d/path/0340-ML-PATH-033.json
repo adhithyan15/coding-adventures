@@ -1,0 +1,14 @@
+{
+  "id": "ML-PATH-033",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "ML-C39-chaaya",
+    "ML-C39-kaapi",
+    "ML-C39-paal"
+  ],
+  "before": [],
+  "inline": [
+    "ML-EXT-033-TEA-COFFEE-MILK"
+  ],
+  "after": []
+}

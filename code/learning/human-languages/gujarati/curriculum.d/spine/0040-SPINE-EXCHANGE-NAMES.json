@@ -1,0 +1,11 @@
+{
+  "segments": [
+    "GU-PATH-005",
+    "GU-PATH-014",
+    "GU-PATH-C2P"
+  ],
+  "omits": [
+    "PRONOUN-ME"
+  ],
+  "relocates": {}
+}

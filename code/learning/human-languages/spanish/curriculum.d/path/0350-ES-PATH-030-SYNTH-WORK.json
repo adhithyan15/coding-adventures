@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-030-SYNTH-WORK",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "ES-C09-sintesis-trabajo"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-030-SYNTH-WORK"
+  ],
+  "after": []
+}

@@ -1,0 +1,16 @@
+{
+  "id": "TE-PATH-48-ROLE",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "TE-C48-teacher",
+    "TE-C48-student",
+    "TE-C48-doctor",
+    "TE-C48-farmer",
+    "TE-C48-guest"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-48-ROLE"
+  ],
+  "after": []
+}

@@ -1,0 +1,17 @@
+{
+  "id": "PT-PATH-014",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "PT-C07-dias-1",
+    "PT-C07-dias-2",
+    "PT-C08-hora",
+    "PT-C08-meio-dia-meia-noite",
+    "PT-C09-meses",
+    "PT-C09-estacoes"
+  ],
+  "before": [],
+  "inline": [
+    "PT-EXT-014-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

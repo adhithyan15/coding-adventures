@@ -1,0 +1,21 @@
+{
+  "id": "ML-PATH-005",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "ML-C02-peru",
+    "ML-C02-aanu",
+    "ML-C02-enre",
+    "ML-C02-enre-peru-aanu",
+    "ML-C02-nii-ningal",
+    "ML-C02-entu",
+    "ML-C02-ninre-peru-entaanu",
+    "ML-C02-santosham",
+    "ML-W02-santosham-guided-copy",
+    "ML-W03-santosham-delayed-copy"
+  ],
+  "before": [],
+  "inline": [
+    "ML-EXT-005-SANTOSHAM-WRITING"
+  ],
+  "after": []
+}

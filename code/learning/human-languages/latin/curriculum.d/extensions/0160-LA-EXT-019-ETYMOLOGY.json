@@ -1,0 +1,11 @@
+{
+  "id": "LA-EXT-019-ETYMOLOGY",
+  "stage": "pre-A1",
+  "kind": "supporting",
+  "category": "etymology",
+  "canDo": "I can use this Latin word history as a memory hook without confusing origin and current use.",
+  "prerequisites": [],
+  "lessons": [
+    "LA-C19-valeo-family"
+  ]
+}

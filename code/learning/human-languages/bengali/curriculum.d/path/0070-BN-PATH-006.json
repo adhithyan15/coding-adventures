@@ -1,0 +1,10 @@
+{
+  "id": "BN-PATH-006",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "BN-C03-kemon"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

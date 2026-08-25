@@ -1,0 +1,15 @@
+{
+  "id": "RU-PATH-009",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "RU-C05-brat",
+    "RU-C05-sprashivat",
+    "RU-C05-pomogat",
+    "RU-C05-lyubit"
+  ],
+  "before": [],
+  "inline": [
+    "RU-EXT-009-HAND-VERBS"
+  ],
+  "after": []
+}

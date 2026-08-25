@@ -1,0 +1,15 @@
+{
+  "id": "UR-PATH-010",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "UR-C09-bhai",
+    "UR-C09-bahan",
+    "UR-C09-dost",
+    "UR-C09-khandan"
+  ],
+  "before": [],
+  "inline": [
+    "UR-EXT-020-FAMILY-FRIENDS"
+  ],
+  "after": []
+}

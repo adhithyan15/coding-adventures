@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-042-REVIEW-CMD",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "ES-C50-repaso-mandatos"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-042-REVIEW-CMD"
+  ],
+  "after": []
+}

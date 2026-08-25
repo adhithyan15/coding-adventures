@@ -1,0 +1,10 @@
+{
+  "segments": [
+    "AR-PATH-010"
+  ],
+  "omits": [
+    "RESPONSE-YESNO",
+    "RESPONSE-OKAY"
+  ],
+  "relocates": {}
+}

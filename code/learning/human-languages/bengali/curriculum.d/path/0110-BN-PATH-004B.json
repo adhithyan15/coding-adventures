@@ -1,0 +1,12 @@
+{
+  "id": "BN-PATH-004B",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "BN-C04-practice"
+  ],
+  "before": [],
+  "inline": [
+    "BN-EXT-004-CONSOLIDATION"
+  ],
+  "after": []
+}

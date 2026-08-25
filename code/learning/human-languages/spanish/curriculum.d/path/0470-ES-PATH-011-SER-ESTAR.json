@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-011-SER-ESTAR",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "ES-C09-ser-vs-estar"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-011-SER-ESTAR"
+  ],
+  "after": []
+}

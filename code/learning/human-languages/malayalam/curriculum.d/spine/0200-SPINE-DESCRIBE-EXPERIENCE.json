@@ -1,0 +1,10 @@
+{
+  "segments": [],
+  "omits": [
+    "ADJECTIVE-FEELING",
+    "AMBITION-EXPRESS",
+    "COMPARISON-BASIC",
+    "TIME-DURATION"
+  ],
+  "relocates": {}
+}

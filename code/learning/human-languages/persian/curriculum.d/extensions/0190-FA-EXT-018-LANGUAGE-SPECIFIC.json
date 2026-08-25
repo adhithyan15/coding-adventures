@@ -1,0 +1,14 @@
+{
+  "id": "FA-EXT-018-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name my mother, father, brother, and daughter in Persian, the four family cousins Chapter 6 named in passing.",
+  "prerequisites": [],
+  "lessons": [
+    "FA-C10-madar",
+    "FA-C10-pedar",
+    "FA-C10-baradar",
+    "FA-C10-dokhtar"
+  ]
+}

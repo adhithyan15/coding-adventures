@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-302-01",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "ES-C302-calle",
+    "ES-C302-esquina",
+    "ES-C302-huella",
+    "ES-C302-puerto",
+    "ES-C302-faro"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-302-CALLE"
+  ],
+  "after": []
+}

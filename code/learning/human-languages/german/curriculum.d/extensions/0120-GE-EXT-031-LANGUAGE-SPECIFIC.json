@@ -1,0 +1,13 @@
+{
+  "id": "GE-EXT-031-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can politely ask for coffee, tea, or milk in German using the request pattern I already know.",
+  "prerequisites": [],
+  "lessons": [
+    "GE-C28-kaffee",
+    "GE-C28-tee",
+    "GE-C28-milch"
+  ]
+}

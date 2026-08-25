@@ -1,0 +1,15 @@
+{
+  "id": "TA-EXT-52-TREE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the five parts of a tree in Tamil.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C52-tree",
+    "TA-C52-branch",
+    "TA-C52-shoot",
+    "TA-C52-root",
+    "TA-C52-seed"
+  ]
+}

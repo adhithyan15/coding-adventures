@@ -1,0 +1,16 @@
+{
+  "id": "SA-PATH-49-REPLY",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "SA-C49-then",
+    "SA-C49-as",
+    "SA-C49-only",
+    "SA-C49-again-and-again",
+    "SA-C49-oh"
+  ],
+  "before": [],
+  "inline": [
+    "SA-EXT-49-REPLY"
+  ],
+  "after": []
+}

@@ -1,0 +1,18 @@
+{
+  "segments": [
+    "ES-PATH-012",
+    "ES-PATH-288-01",
+    "ES-PATH-295-01",
+    "ES-PATH-302-01",
+    "ES-PATH-318-01",
+    "ES-PATH-319-02",
+    "ES-PATH-322-01",
+    "ES-PATH-323-01"
+  ],
+  "omits": [
+    "FAREWELL-CASUAL"
+  ],
+  "relocates": {
+    "GREETING-GOODNIGHT": "SPINE-TIME-OF-DAY"
+  }
+}

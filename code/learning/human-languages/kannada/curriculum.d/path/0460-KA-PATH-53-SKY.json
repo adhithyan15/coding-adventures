@@ -1,0 +1,16 @@
+{
+  "id": "KA-PATH-53-SKY",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "KA-C53-sky",
+    "KA-C53-sunshine",
+    "KA-C53-moon",
+    "KA-C53-star",
+    "KA-C53-cloud"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-53-SKY"
+  ],
+  "after": []
+}

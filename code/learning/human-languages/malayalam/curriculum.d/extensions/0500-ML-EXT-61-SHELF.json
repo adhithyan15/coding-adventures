@@ -1,0 +1,15 @@
+{
+  "id": "ML-EXT-61-SHELF",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a coconut, oil, curd, jaggery and a chilli in Malayalam.",
+  "prerequisites": [],
+  "lessons": [
+    "ML-C61-coconut",
+    "ML-C61-oil",
+    "ML-C61-curd",
+    "ML-C61-jaggery",
+    "ML-C61-chilli"
+  ]
+}

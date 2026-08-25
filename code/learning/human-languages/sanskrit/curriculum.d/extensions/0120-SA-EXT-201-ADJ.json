@@ -1,0 +1,16 @@
+{
+  "id": "SA-EXT-201-ADJ",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can describe things in Sanskrit — big, small, good, new, old — and I can see the one pattern the six words are built from.",
+  "prerequisites": [],
+  "lessons": [
+    "SA-C15-big",
+    "SA-C15-small",
+    "SA-C15-good",
+    "SA-C15-new",
+    "SA-C15-old",
+    "SA-C15-adjective-system"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-EXT-005-CONSOLIDATION",
+  "stage": "pre-A1",
+  "kind": "supporting",
+  "category": "consolidation",
+  "canDo": "I can retrieve, read, say, and transcribe the greetings from the whole opening chapter.",
+  "prerequisites": [],
+  "lessons": [
+    "AR-C01-practice"
+  ]
+}

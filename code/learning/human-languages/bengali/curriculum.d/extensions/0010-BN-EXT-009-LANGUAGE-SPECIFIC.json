@@ -1,0 +1,12 @@
+{
+  "id": "BN-EXT-009-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can use the additional Bengali material required at this point in the path.",
+  "prerequisites": [],
+  "lessons": [
+    "BN-C04-abar",
+    "BN-C04-dekha-hobe"
+  ]
+}

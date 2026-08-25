@@ -1,0 +1,12 @@
+{
+  "segments": [
+    "MR-PATH-005",
+    "MR-PATH-007",
+    "MR-PATH-016",
+    "MR-PATH-020"
+  ],
+  "omits": [
+    "PRONOUN-ME"
+  ],
+  "relocates": {}
+}

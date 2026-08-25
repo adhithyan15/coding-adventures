@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-030-PONER-CH13",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "ES-C13-poner"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-030-PONER-CH13"
+  ],
+  "after": []
+}

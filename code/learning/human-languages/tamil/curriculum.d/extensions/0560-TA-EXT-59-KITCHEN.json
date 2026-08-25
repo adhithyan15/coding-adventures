@@ -1,0 +1,15 @@
+{
+  "id": "TA-EXT-59-KITCHEN",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five things a Tamil kitchen keeps in Tamil.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C59-curd",
+    "TA-C59-ghee",
+    "TA-C59-oil",
+    "TA-C59-jaggery",
+    "TA-C59-sugar"
+  ]
+}

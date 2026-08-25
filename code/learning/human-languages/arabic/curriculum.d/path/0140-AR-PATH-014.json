@@ -1,0 +1,13 @@
+{
+  "id": "AR-PATH-014",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "AR-C10-ab-umm",
+    "AR-C10-akh-ukht"
+  ],
+  "before": [],
+  "inline": [
+    "AR-EXT-014-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

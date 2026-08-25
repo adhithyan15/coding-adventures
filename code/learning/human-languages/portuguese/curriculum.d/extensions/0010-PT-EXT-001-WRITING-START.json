@@ -1,0 +1,11 @@
+{
+  "id": "PT-EXT-001-WRITING-START",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can copy my first Portuguese greeting with the model still visible and preserve its stress accent.",
+  "prerequisites": [],
+  "lessons": [
+    "PT-W01-ola-guided-copy"
+  ]
+}

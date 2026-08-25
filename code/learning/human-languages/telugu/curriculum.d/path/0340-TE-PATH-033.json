@@ -1,0 +1,12 @@
+{
+  "id": "TE-PATH-033",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "TE-C40-bhojanam"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-034-MEAL"
+  ],
+  "after": []
+}

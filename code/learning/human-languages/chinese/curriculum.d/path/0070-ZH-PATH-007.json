@@ -1,0 +1,19 @@
+{
+  "id": "ZH-PATH-007",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "ZH-W08-wo",
+    "ZH-C08-wo",
+    "ZH-W08-ming",
+    "ZH-W08-zi",
+    "ZH-C08-mingzi",
+    "ZH-C08-practice"
+  ],
+  "before": [],
+  "inline": [
+    "ZH-EXT-020-WO-SCRIPT",
+    "ZH-EXT-021-NO-INFLECTION",
+    "ZH-EXT-022-MINGZI"
+  ],
+  "after": []
+}

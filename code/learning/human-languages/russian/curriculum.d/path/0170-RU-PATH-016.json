@@ -1,0 +1,20 @@
+{
+  "id": "RU-PATH-016",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "RU-W07-a",
+    "RU-W07-o",
+    "RU-W07-g",
+    "RU-W07-kh",
+    "RU-W07-f",
+    "RU-W07-ts",
+    "RU-W07-y-short",
+    "RU-W07-yu",
+    "RU-C15-practice"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "RU-EXT-021-SCRIPT-EIGHT"
+  ]
+}

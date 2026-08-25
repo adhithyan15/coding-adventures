@@ -1,0 +1,8 @@
+{
+  "segments": [],
+  "omits": [
+    "VERB-NEGATE",
+    "QUESTION-POLAR"
+  ],
+  "relocates": {}
+}

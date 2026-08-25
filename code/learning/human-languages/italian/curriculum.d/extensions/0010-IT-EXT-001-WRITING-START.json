@@ -1,0 +1,11 @@
+{
+  "id": "IT-EXT-001-WRITING-START",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can copy my first Italian greeting with the model still visible and preserve its four-letter shape.",
+  "prerequisites": [],
+  "lessons": [
+    "IT-W01-ciao-guided-copy"
+  ]
+}

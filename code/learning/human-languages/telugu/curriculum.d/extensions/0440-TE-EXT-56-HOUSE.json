@@ -1,0 +1,15 @@
+{
+  "id": "TE-EXT-56-HOUSE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five ordinary things inside a Telugu house and thank somebody for handing me one.",
+  "prerequisites": [],
+  "lessons": [
+    "TE-C56-mat",
+    "TE-C56-basket",
+    "TE-C56-knife",
+    "TE-C56-vessel",
+    "TE-C56-box"
+  ]
+}

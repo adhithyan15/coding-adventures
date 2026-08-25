@@ -1,0 +1,25 @@
+{
+  "segments": [
+    "ES-PATH-002",
+    "ES-PATH-008",
+    "ES-PATH-011",
+    "ES-PATH-011-SER-ESTAR",
+    "ES-PATH-022",
+    "ES-PATH-286-01",
+    "ES-PATH-293-01",
+    "ES-PATH-300-01",
+    "ES-PATH-304-01",
+    "ES-PATH-314-01",
+    "ES-PATH-315-01",
+    "ES-PATH-318-03",
+    "ES-PATH-318-04",
+    "ES-PATH-326-01",
+    "ES-PATH-327-01",
+    "ES-PATH-334-01",
+    "ES-PATH-336-01"
+  ],
+  "omits": [
+    "WORD-GOOD"
+  ],
+  "relocates": {}
+}

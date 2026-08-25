@@ -1,0 +1,12 @@
+{
+  "id": "HI-PATH-009A",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "HI-C04-practice"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-004-CONSOLIDATION"
+  ],
+  "after": []
+}

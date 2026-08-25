@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-273-COHESION",
+  "stage": "C1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can build a cohesive paragraph and say what is lost when its joins are removed.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C273-practice"
+  ]
+}

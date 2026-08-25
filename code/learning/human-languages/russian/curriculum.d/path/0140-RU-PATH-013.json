@@ -1,0 +1,17 @@
+{
+  "id": "RU-PATH-013",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "RU-C11-do-svidaniya",
+    "RU-C11-poka",
+    "RU-C11-do-skorogo",
+    "RU-C11-do-zavtra",
+    "RU-C11-do-vstrechi",
+    "RU-C11-spokoynoy-nochi"
+  ],
+  "before": [],
+  "inline": [
+    "RU-EXT-013-PARTING-WORDS"
+  ],
+  "after": []
+}

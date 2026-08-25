@@ -1,0 +1,15 @@
+{
+  "id": "BN-PATH-021",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "BN-C15-kapor",
+    "BN-C15-jama",
+    "BN-C15-shari",
+    "BN-C15-choshma"
+  ],
+  "before": [],
+  "inline": [
+    "BN-EXT-021-CLOTHING-AND-ACCESSORIES"
+  ],
+  "after": []
+}

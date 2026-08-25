@@ -1,0 +1,15 @@
+{
+  "id": "SA-PATH-008",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "SA-C04-gacchami",
+    "SA-C04-punah",
+    "SA-C04-punar-darshanaya",
+    "SA-C04-shvah"
+  ],
+  "before": [],
+  "inline": [
+    "SA-EXT-008-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

@@ -1,0 +1,12 @@
+{
+  "id": "HI-EXT-028-LANGUAGE-SPECIFIC",
+  "stage": "A2",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can build the Hindi present habitual — stem + -tā/-tī/-te plus honā — on any verb stem I know.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C05-bolta-hun",
+    "HI-C05-main-hindi-bolta-hun"
+  ]
+}

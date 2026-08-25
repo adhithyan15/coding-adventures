@@ -1,0 +1,14 @@
+{
+  "id": "MR-EXT-017-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name the eye, ear, mouth, and nose in Marathi.",
+  "prerequisites": [],
+  "lessons": [
+    "MR-C12-dola",
+    "MR-C12-kaan",
+    "MR-C12-tond",
+    "MR-C12-naak"
+  ]
+}

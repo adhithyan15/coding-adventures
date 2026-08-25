@@ -1,0 +1,14 @@
+{
+  "id": "KA-PATH-019",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "KA-C16-tingalugalu",
+    "KA-C17-madhyaahna-madhyaraatri",
+    "KA-C18-gante"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-019-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

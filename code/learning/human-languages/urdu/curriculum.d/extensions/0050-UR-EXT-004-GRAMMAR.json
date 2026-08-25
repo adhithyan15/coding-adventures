@@ -1,0 +1,14 @@
+{
+  "id": "UR-EXT-004-GRAMMAR",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can keep hai final and use the fixed āp kā nām frame to ask a name respectfully.",
+  "prerequisites": [
+    "UR-EXT-002-REGISTER",
+    "UR-EXT-003-SCRIPT"
+  ],
+  "lessons": [
+    "UR-C03-aap-ka-naam-kya-hai"
+  ]
+}

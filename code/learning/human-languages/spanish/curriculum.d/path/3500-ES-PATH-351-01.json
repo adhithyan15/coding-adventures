@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-351-01",
+  "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+  "lessons": [
+    "ES-C351-cien",
+    "ES-C351-cantidad",
+    "ES-C351-ambos",
+    "ES-C351-varios",
+    "ES-C351-triple"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-351-COUNT"
+  ],
+  "after": []
+}

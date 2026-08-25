@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-028",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "ES-C07-comer",
+    "ES-C07-como",
+    "ES-C07-comes",
+    "ES-C07-come",
+    "ES-C07-repaso-comer"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-028-CONSOLIDATION-ER"
+  ],
+  "after": []
+}

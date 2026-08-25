@@ -1,0 +1,15 @@
+{
+  "id": "SA-PATH-009",
+  "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+  "lessons": [
+    "SA-C06-numbers-1-5",
+    "SA-C06-number-cognates",
+    "SA-C06-pancha-travels"
+  ],
+  "before": [],
+  "inline": [
+    "SA-EXT-009-LANGUAGE-SPECIFIC",
+    "SA-EXT-009-ETYMOLOGY"
+  ],
+  "after": []
+}

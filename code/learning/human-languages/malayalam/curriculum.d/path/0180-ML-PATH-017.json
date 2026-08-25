@@ -1,0 +1,12 @@
+{
+  "id": "ML-PATH-017",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "ML-C13-shareera-bhaagangal"
+  ],
+  "before": [],
+  "inline": [
+    "ML-EXT-017-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

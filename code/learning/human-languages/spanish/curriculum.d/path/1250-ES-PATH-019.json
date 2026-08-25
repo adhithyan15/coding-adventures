@@ -1,0 +1,13 @@
+{
+  "id": "ES-PATH-019",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "ES-C21-lunes-viernes",
+    "ES-C21-sabado-domingo"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-019-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

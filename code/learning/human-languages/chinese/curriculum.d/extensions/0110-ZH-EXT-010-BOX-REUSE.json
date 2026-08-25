@@ -1,0 +1,16 @@
+{
+  "id": "ZH-EXT-010-BOX-REUSE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can write the box character on its own, and get a second character from it by adding one bar inside before closing the bottom.",
+  "prerequisites": [
+    "ZH-EXT-009-COUNT-CONSOLIDATION"
+  ],
+  "lessons": [
+    "ZH-W04-kou",
+    "ZH-C04-kou",
+    "ZH-W04-ri",
+    "ZH-C04-ri"
+  ]
+}

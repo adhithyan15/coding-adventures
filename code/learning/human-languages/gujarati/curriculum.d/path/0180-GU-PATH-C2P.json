@@ -1,0 +1,12 @@
+{
+  "id": "GU-PATH-C2P",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "GU-C02-practice"
+  ],
+  "before": [],
+  "inline": [
+    "GU-EXT-002-CONSOLIDATION"
+  ],
+  "after": []
+}

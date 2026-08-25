@@ -1,0 +1,14 @@
+{
+  "segments": [
+    "JA-PATH-011",
+    "JA-PATH-012"
+  ],
+  "omits": [
+    "QUESTION-HOW",
+    "STATE-HOW-ARE-YOU",
+    "WORD-GOOD",
+    "WORD-WELL",
+    "WORD-SOSO"
+  ],
+  "relocates": {}
+}

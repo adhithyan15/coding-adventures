@@ -1,0 +1,13 @@
+{
+  "id": "IT-PATH-024",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "IT-C20-portare",
+    "IT-C20-comprare",
+    "IT-C20-aspettare",
+    "IT-C20-incontrare"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

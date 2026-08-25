@@ -1,0 +1,14 @@
+{
+  "id": "IT-EXT-027-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can introduce a friend, name a family as a whole, ask for someone's name with the word itself, and say 'person' the way Italian always does.",
+  "prerequisites": [],
+  "lessons": [
+    "IT-C23-amico-amica",
+    "IT-C23-famiglia",
+    "IT-C23-nome",
+    "IT-C23-persona"
+  ]
+}

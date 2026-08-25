@@ -1,0 +1,11 @@
+{
+  "id": "KA-PATH-007",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "KA-C03-niivu-hegiddiira",
+    "KA-C03-cennaagi"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

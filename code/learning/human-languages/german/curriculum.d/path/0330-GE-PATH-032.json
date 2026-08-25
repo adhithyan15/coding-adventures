@@ -1,0 +1,14 @@
+{
+  "id": "GE-PATH-032",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "GE-C29-freund",
+    "GE-C29-freundin",
+    "GE-C29-familie"
+  ],
+  "before": [],
+  "inline": [
+    "GE-EXT-032-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

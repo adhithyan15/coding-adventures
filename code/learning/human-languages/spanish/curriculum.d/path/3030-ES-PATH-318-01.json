@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-318-01",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "ES-C318-repaso-despedirse"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-318-REPASO"
+  ],
+  "after": []
+}

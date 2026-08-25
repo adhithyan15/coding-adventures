@@ -1,0 +1,15 @@
+{
+  "id": "HI-PATH-42-VERBS",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "HI-C42-come",
+    "HI-C42-sit",
+    "HI-C42-stand",
+    "HI-C42-give"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-42-VERBS"
+  ],
+  "after": []
+}

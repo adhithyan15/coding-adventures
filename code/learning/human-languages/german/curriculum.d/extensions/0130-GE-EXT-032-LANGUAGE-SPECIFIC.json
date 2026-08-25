@@ -1,0 +1,13 @@
+{
+  "id": "GE-EXT-032-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name a friend, male or female, and my family in German.",
+  "prerequisites": [],
+  "lessons": [
+    "GE-C29-freund",
+    "GE-C29-freundin",
+    "GE-C29-familie"
+  ]
+}

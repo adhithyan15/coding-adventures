@@ -1,0 +1,11 @@
+{
+  "id": "BN-PATH-003",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "BN-C01-hyan-na",
+    "BN-C01-achchha"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

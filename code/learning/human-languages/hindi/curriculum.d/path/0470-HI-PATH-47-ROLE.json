@@ -1,0 +1,16 @@
+{
+  "id": "HI-PATH-47-ROLE",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "HI-C47-teacher",
+    "HI-C47-student",
+    "HI-C47-farmer",
+    "HI-C47-guest",
+    "HI-C47-neighbour"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-47-ROLE"
+  ],
+  "after": []
+}

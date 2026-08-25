@@ -1,0 +1,14 @@
+{
+  "id": "PA-EXT-012-MIND-VERBS",
+  "stage": "A2",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can say that I think, understand, read and write in Punjabi, hear the falling tone in the two of those verbs that carry one, and name what each of the four roots meant before it named a mental act.",
+  "prerequisites": [],
+  "lessons": [
+    "PA-C08-sochna",
+    "PA-C08-samajhna",
+    "PA-C08-parhna",
+    "PA-C08-likhna"
+  ]
+}

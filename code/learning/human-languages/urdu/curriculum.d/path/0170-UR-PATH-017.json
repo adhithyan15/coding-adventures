@@ -1,0 +1,20 @@
+{
+  "id": "UR-PATH-017",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "UR-W16-alef",
+    "UR-W16-lam",
+    "UR-W16-sin",
+    "UR-W16-mim",
+    "UR-W16-joining",
+    "UR-W16-kaf",
+    "UR-W16-nun",
+    "UR-W16-ye",
+    "UR-C16-practice"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "UR-EXT-027-SCRIPT-SEVEN"
+  ]
+}

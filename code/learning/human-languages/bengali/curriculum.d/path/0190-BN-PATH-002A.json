@@ -1,0 +1,12 @@
+{
+  "id": "BN-PATH-002A",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "BN-C02-practice"
+  ],
+  "before": [],
+  "inline": [
+    "BN-EXT-002-CONSOLIDATION"
+  ],
+  "after": []
+}

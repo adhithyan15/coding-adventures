@@ -1,0 +1,10 @@
+{
+  "id": "SA-PATH-004",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "SA-C01-am-na"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

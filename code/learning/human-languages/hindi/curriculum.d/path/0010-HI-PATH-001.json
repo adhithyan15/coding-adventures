@@ -1,0 +1,17 @@
+{
+  "id": "HI-PATH-001",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "HI-C01-namaste",
+    "HI-W01-shirorekha-na-ma",
+    "HI-W01-na-ma",
+    "HI-W02-abugida-ka-ta",
+    "HI-W02-ka-ta-mouth-order",
+    "HI-C01-namaskar"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-001-SCRIPT"
+  ],
+  "after": []
+}

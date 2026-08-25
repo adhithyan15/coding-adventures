@@ -1,0 +1,12 @@
+{
+  "id": "ML-EXT-032-TWO-HEARTS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name my heart in Malayalam two ways, one Sanskrit and one native, and say which one everyday idiom actually uses.",
+  "prerequisites": [],
+  "lessons": [
+    "ML-C38-hrudayam",
+    "ML-C38-nenchu"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "id": "TA-PATH-46-ROLE",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "TA-C46-teacher",
+    "TA-C46-student",
+    "TA-C46-doctor",
+    "TA-C46-farmer",
+    "TA-C46-guest"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-46-ROLE"
+  ],
+  "after": []
+}

@@ -1,0 +1,15 @@
+{
+  "id": "PT-PATH-028",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "PT-C24-queijo",
+    "PT-C24-ovo",
+    "PT-C24-arroz",
+    "PT-C24-acucar"
+  ],
+  "before": [],
+  "inline": [
+    "PT-EXT-028-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

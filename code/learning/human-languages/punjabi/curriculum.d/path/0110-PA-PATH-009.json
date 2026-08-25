@@ -1,0 +1,15 @@
+{
+  "id": "PA-PATH-009",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "PA-C04-milaange",
+    "PA-C04-phir",
+    "PA-C04-phir-milaange",
+    "PA-C04-rab-raakha"
+  ],
+  "before": [
+    "PA-EXT-009-LANGUAGE-SPECIFIC"
+  ],
+  "inline": [],
+  "after": []
+}

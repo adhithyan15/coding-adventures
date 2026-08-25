@@ -1,0 +1,13 @@
+{
+  "id": "AR-EXT-032-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name and introduce a neighbour, a son, a daughter and a friend in Arabic, and say which single letter genders each pair.",
+  "prerequisites": [],
+  "lessons": [
+    "AR-C35-jar",
+    "AR-C35-ibn-bint",
+    "AR-C35-sadiq"
+  ]
+}

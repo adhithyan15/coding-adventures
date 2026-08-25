@@ -1,0 +1,16 @@
+{
+  "id": "TE-PATH-46-ASK",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "TE-C46-fruit",
+    "TE-C46-cloth",
+    "TE-C46-lamp",
+    "TE-C46-salt",
+    "TE-C46-book"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-46-ASK"
+  ],
+  "after": []
+}

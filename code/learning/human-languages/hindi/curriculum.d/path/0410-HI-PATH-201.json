@@ -1,0 +1,17 @@
+{
+  "id": "HI-PATH-201",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "HI-C41-big",
+    "HI-C41-small",
+    "HI-C41-good",
+    "HI-C41-new",
+    "HI-C41-old",
+    "HI-C41-adjective-system"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-201-ADJ"
+  ],
+  "after": []
+}

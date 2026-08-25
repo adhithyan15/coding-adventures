@@ -1,0 +1,14 @@
+{
+  "id": "GU-EXT-015-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name the eye, ear, mouth, and nose in Gujarati.",
+  "prerequisites": [],
+  "lessons": [
+    "GU-C12-aankh",
+    "GU-C12-kaan",
+    "GU-C12-modhu",
+    "GU-C12-naak"
+  ]
+}

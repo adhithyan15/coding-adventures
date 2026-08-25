@@ -1,0 +1,14 @@
+{
+  "id": "HI-EXT-031-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can ask for tea, milk, food or a book in the words a Hindi speaker actually uses, and I know which noun takes मेरी.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C37-chai",
+    "HI-C37-dudh",
+    "HI-C37-khaana",
+    "HI-C37-kitaab"
+  ]
+}

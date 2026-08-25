@@ -1,0 +1,17 @@
+{
+  "id": "SA-PATH-205",
+  "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+  "lessons": [
+    "SA-C19-six",
+    "SA-C19-seven",
+    "SA-C19-eight",
+    "SA-C19-nine",
+    "SA-C19-ten",
+    "SA-C19-number-family"
+  ],
+  "before": [],
+  "inline": [
+    "SA-EXT-205-NUM"
+  ],
+  "after": []
+}

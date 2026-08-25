@@ -1,0 +1,15 @@
+{
+  "id": "TE-EXT-70-CREATURE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five small Telugu creatures and answer yes or no about them.",
+  "prerequisites": [],
+  "lessons": [
+    "TE-C70-mouse",
+    "TE-C70-frog",
+    "TE-C70-mosquito",
+    "TE-C70-squirrel",
+    "TE-C70-spider"
+  ]
+}

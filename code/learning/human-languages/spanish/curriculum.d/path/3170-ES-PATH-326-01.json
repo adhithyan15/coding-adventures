@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-326-01",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "ES-C326-nervioso",
+    "ES-C326-valiente",
+    "ES-C326-solo",
+    "ES-C326-libre",
+    "ES-C326-listo"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-326-STATE"
+  ],
+  "after": []
+}

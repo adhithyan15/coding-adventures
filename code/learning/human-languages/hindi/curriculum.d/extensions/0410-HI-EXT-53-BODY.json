@@ -1,0 +1,15 @@
+{
+  "id": "HI-EXT-53-BODY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five more parts of the body.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C53-shoulder",
+    "HI-C53-knee",
+    "HI-C53-forehead",
+    "HI-C53-back",
+    "HI-C53-lip"
+  ]
+}

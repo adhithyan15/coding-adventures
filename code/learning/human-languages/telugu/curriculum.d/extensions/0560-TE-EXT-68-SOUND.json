@@ -1,0 +1,15 @@
+{
+  "id": "TE-EXT-68-SOUND",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the sounds a Telugu house makes, and give my name aloud in a message.",
+  "prerequisites": [],
+  "lessons": [
+    "TE-C68-sound",
+    "TE-C68-voice",
+    "TE-C68-song",
+    "TE-C68-shout",
+    "TE-C68-message"
+  ]
+}

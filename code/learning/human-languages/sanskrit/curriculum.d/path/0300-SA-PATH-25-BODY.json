@@ -1,0 +1,16 @@
+{
+  "id": "SA-PATH-25-BODY",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "SA-C25-hand",
+    "SA-C25-foot",
+    "SA-C25-head",
+    "SA-C25-tooth",
+    "SA-C25-hair"
+  ],
+  "before": [],
+  "inline": [
+    "SA-EXT-25-BODY"
+  ],
+  "after": []
+}

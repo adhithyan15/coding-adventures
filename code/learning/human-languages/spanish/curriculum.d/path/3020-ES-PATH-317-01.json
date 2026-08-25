@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-317-01",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "ES-C317-algo",
+    "ES-C317-alguien",
+    "ES-C317-nadie",
+    "ES-C317-otro",
+    "ES-C317-poco"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-317-ANSW"
+  ],
+  "after": []
+}

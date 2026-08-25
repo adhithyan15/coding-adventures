@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-277-SOURCES",
+  "stage": "C2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can run the four source moves on two disagreeing texts and say what my summary left out.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C277-practice"
+  ]
+}

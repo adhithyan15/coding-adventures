@@ -1,0 +1,10 @@
+{
+  "id": "ES-PATH-268-DIRECTION",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "lessons": [
+    "ES-C268-donde-esta"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

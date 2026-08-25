@@ -1,0 +1,16 @@
+{
+  "id": "SA-PATH-45-DAYTIME",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "SA-C45-morning",
+    "SA-C45-noon",
+    "SA-C45-evening",
+    "SA-C45-month",
+    "SA-C45-year"
+  ],
+  "before": [],
+  "inline": [
+    "SA-EXT-45-DAYTIME"
+  ],
+  "after": []
+}

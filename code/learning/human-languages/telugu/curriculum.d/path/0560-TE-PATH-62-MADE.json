@@ -1,0 +1,16 @@
+{
+  "id": "TE-PATH-62-MADE",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "TE-C62-thread",
+    "TE-C62-needle",
+    "TE-C62-broom",
+    "TE-C62-umbrella",
+    "TE-C62-mirror"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-62-MADE"
+  ],
+  "after": []
+}

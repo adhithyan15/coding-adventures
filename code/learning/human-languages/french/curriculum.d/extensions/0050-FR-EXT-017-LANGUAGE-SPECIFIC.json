@@ -1,0 +1,12 @@
+{
+  "id": "FR-EXT-017-LANGUAGE-SPECIFIC",
+  "stage": "A2",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can use the additional French material required at this point in the path.",
+  "prerequisites": [],
+  "lessons": [
+    "FR-C15-passe-compose",
+    "FR-C15-passe-simple"
+  ]
+}

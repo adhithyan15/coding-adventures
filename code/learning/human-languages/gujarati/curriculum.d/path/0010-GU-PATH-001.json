@@ -1,0 +1,24 @@
+{
+  "id": "GU-PATH-001",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "GU-C01-namaste",
+    "GU-W01-ha",
+    "GU-W01-aa-matra",
+    "GU-W01-aa",
+    "GU-W01-na",
+    "GU-W01-ma",
+    "GU-W01-sa",
+    "GU-W01-ta",
+    "GU-W01-e-matra",
+    "GU-W01-virama",
+    "GU-W01-namaste-read"
+  ],
+  "before": [],
+  "inline": [
+    "GU-EXT-001-INLINE-SCRIPT"
+  ],
+  "after": [
+    "GU-EXT-016-SCRIPT-FIRST-PIECES"
+  ]
+}

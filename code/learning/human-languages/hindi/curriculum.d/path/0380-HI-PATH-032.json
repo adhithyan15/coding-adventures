@@ -1,0 +1,15 @@
+{
+  "id": "HI-PATH-032",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "HI-C38-aankh",
+    "HI-C38-daant",
+    "HI-C38-pair",
+    "HI-C38-pet"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-032-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

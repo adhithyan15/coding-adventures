@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-B2-PERO",
+  "spine_node": "SPINE-ARGUE-A-VIEW",
+  "lessons": [
+    "ES-C58-pero"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-B2-PERO"
+  ],
+  "after": []
+}

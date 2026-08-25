@@ -1,0 +1,16 @@
+{
+  "id": "TA-PATH-58-ANIMAL",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "TA-C58-cow",
+    "TA-C58-goat",
+    "TA-C58-hen",
+    "TA-C58-crow",
+    "TA-C58-bird"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-58-ANIMAL"
+  ],
+  "after": []
+}

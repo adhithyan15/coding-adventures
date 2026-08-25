@@ -1,0 +1,19 @@
+{
+  "id": "TA-EXT-100-SCRIPT-DRIZZLE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can recognise and write each Tamil letter this chapter's words are built from, one letter at a time.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-S01-va",
+    "TA-S02-nna",
+    "TA-S03-nnna",
+    "TA-S04-na",
+    "TA-S05-rra",
+    "TA-S06-ka",
+    "TA-S07-ma",
+    "TA-S08-pulli",
+    "TA-S09-i-sign"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "id": "TA-PATH-024",
+  "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+  "lessons": [
+    "TA-C20-pathinondru-irupathu"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-024-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-307-KIN",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the wider family circle in Spanish --- wife, uncle, aunt and cousin --- in either gender.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C307-esposa",
+    "ES-C307-tio",
+    "ES-C307-tia",
+    "ES-C307-primo",
+    "ES-C307-prima"
+  ]
+}

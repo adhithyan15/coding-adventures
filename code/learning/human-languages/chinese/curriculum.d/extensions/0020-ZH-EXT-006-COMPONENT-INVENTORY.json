@@ -1,0 +1,19 @@
+{
+  "id": "ZH-EXT-006-COMPONENT-INVENTORY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can write the individual components a character is built from, one at a time, and then assemble them into the character without having memorised the character as a whole.",
+  "prerequisites": [
+    "ZH-EXT-000-TONE-INVENTORY"
+  ],
+  "lessons": [
+    "ZH-W01-ren",
+    "ZH-W01-ren-radical",
+    "ZH-W01-er",
+    "ZH-W01-ni-build",
+    "ZH-W01-nu",
+    "ZH-W01-zi",
+    "ZH-W01-hao-build"
+  ]
+}

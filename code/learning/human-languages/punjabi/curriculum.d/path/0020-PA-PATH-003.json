@@ -1,0 +1,19 @@
+{
+  "id": "PA-PATH-003",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "PA-C01-han-nahin",
+    "PA-W01-ha",
+    "PA-W01-aa-matra",
+    "PA-W01-bindi",
+    "PA-W01-haan-assemble",
+    "PA-W01-haan-guided-copy",
+    "PA-W01-haan-delayed-copy",
+    "PA-W01-haan-dictation"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "PA-EXT-003-HAAN-WRITING"
+  ]
+}

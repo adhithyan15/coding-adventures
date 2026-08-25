@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-319-REPASO",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "review",
+  "canDo": "I can check a Spanish surface against better evidence.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C319-repaso-la-superficie"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "id": "HI-PATH-019",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "HI-C16-mahine",
+    "HI-C17-dopahar-aadhi-raat",
+    "HI-C18-ghanta"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-019-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

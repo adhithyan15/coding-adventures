@@ -1,0 +1,14 @@
+{
+  "id": "TE-PATH-020",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "TE-C16-nelalu",
+    "TE-C17-madhyaahnam-ardharaatri",
+    "TE-C18-ganta"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-020-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

@@ -1,0 +1,15 @@
+{
+  "id": "KA-PATH-029",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "KA-C37-kannu",
+    "KA-C37-kivi",
+    "KA-C37-moogu",
+    "KA-C37-baayi"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-030-FACE-WORDS"
+  ],
+  "after": []
+}

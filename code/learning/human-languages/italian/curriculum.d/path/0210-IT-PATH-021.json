@@ -1,0 +1,13 @@
+{
+  "id": "IT-PATH-021",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "IT-C17-testa",
+    "IT-C17-mano"
+  ],
+  "before": [],
+  "inline": [
+    "IT-EXT-021-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

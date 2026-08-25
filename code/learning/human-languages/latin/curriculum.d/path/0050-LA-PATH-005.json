@@ -1,0 +1,12 @@
+{
+  "id": "LA-PATH-005",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "LA-C01-practice"
+  ],
+  "before": [],
+  "inline": [
+    "LA-EXT-005-CONSOLIDATION"
+  ],
+  "after": []
+}

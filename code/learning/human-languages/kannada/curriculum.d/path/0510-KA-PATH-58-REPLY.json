@@ -1,0 +1,16 @@
+{
+  "id": "KA-PATH-58-REPLY",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "KA-C58-a-little",
+    "KA-C58-more",
+    "KA-C58-less",
+    "KA-C58-no-thanks",
+    "KA-C58-thats-all"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-58-REPLY"
+  ],
+  "after": []
+}

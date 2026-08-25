@@ -1,0 +1,15 @@
+{
+  "id": "FR-PATH-027",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "FR-C30-fromage",
+    "FR-C30-beurre",
+    "FR-C30-sel",
+    "FR-C30-oeuf"
+  ],
+  "before": [],
+  "inline": [
+    "FR-EXT-027-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

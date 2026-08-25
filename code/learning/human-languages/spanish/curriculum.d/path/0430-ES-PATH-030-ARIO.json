@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-030-ARIO",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "ES-C09-ario"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-030-ARIO"
+  ],
+  "after": []
+}

@@ -1,0 +1,16 @@
+{
+  "id": "ML-PATH-61-SHELF",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "ML-C61-coconut",
+    "ML-C61-oil",
+    "ML-C61-curd",
+    "ML-C61-jaggery",
+    "ML-C61-chilli"
+  ],
+  "before": [],
+  "inline": [
+    "ML-EXT-61-SHELF"
+  ],
+  "after": []
+}

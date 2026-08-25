@@ -1,0 +1,12 @@
+{
+  "id": "FR-PATH-021",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "FR-C21-le-temps"
+  ],
+  "before": [],
+  "inline": [
+    "FR-EXT-021-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

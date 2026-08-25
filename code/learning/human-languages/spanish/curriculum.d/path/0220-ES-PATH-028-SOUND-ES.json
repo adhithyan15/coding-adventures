@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-028-SOUND-ES",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "ES-C57-es-inicial"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-028-SOUND-ES"
+  ],
+  "after": []
+}

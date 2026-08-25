@@ -1,0 +1,10 @@
+{
+  "id": "HI-PATH-003",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "HI-C01-alvida"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

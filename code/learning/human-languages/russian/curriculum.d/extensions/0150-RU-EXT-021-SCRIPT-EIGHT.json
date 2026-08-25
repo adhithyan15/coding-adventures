@@ -1,0 +1,21 @@
+{
+  "id": "RU-EXT-021-SCRIPT-EIGHT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can write eight more Cyrillic letters from memory, sort each into true friend, false friend or new shape, and read an unstressed о as the a sound it actually carries.",
+  "prerequisites": [
+    "RU-EXT-020-SCRIPT-ELEVEN"
+  ],
+  "lessons": [
+    "RU-W07-a",
+    "RU-W07-o",
+    "RU-W07-g",
+    "RU-W07-kh",
+    "RU-W07-f",
+    "RU-W07-ts",
+    "RU-W07-y-short",
+    "RU-W07-yu",
+    "RU-C15-practice"
+  ]
+}

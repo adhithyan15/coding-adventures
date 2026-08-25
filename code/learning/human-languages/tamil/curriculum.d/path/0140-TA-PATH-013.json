@@ -1,0 +1,22 @@
+{
+  "id": "TA-PATH-013",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "TA-C05-pesu",
+    "TA-C05-naan-tamizh-pesugiren",
+    "TA-C05-vaazh",
+    "TA-C05-velai-sey",
+    "TA-C05-practice",
+    "TA-C06-dative-ukku",
+    "TA-C06-dative-stacking",
+    "TA-C06-dative-subject",
+    "TA-C06-dative-subject-family"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-013-LANGUAGE-SPECIFIC",
+    "TA-EXT-013-CONSOLIDATION",
+    "TA-EXT-013-GRAMMAR"
+  ],
+  "after": []
+}

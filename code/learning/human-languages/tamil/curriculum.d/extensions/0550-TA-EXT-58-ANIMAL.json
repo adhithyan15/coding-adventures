@@ -1,0 +1,15 @@
+{
+  "id": "TA-EXT-58-ANIMAL",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five animals of the yard in Tamil.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C58-cow",
+    "TA-C58-goat",
+    "TA-C58-hen",
+    "TA-C58-crow",
+    "TA-C58-bird"
+  ]
+}

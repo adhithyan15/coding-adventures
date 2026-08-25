@@ -1,0 +1,13 @@
+{
+  "id": "LA-PATH-009",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "LA-C06-niger-albus",
+    "LA-C06-ruber-caeruleus"
+  ],
+  "before": [],
+  "inline": [
+    "LA-EXT-009-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

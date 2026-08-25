@@ -1,0 +1,15 @@
+{
+  "id": "GE-PATH-022",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "GE-C17-kopf",
+    "GE-C17-kopf-haupt",
+    "GE-C17-hand"
+  ],
+  "before": [],
+  "inline": [
+    "GE-EXT-022-LANGUAGE-SPECIFIC",
+    "GE-EXT-022-ETYMOLOGY"
+  ],
+  "after": []
+}

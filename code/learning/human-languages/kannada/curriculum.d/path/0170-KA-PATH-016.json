@@ -1,0 +1,12 @@
+{
+  "id": "KA-PATH-016",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "KA-C13-dehada-bhagagalu"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-016-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

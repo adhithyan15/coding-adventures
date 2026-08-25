@@ -1,0 +1,13 @@
+{
+  "id": "UR-EXT-015-FAREWELL-SPACING-REGISTER",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can read spaced خدا حافظ, distinguish its Urdu spelling from Persian's joined form, and use it as a broadly polite close.",
+  "prerequisites": [
+    "UR-EXT-014-HAFIZ-ARABIC-ROOT"
+  ],
+  "lessons": [
+    "UR-C05-khuda-hafiz"
+  ]
+}

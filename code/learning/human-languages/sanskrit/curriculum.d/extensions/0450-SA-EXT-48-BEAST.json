@@ -1,0 +1,15 @@
+{
+  "id": "SA-EXT-48-BEAST",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five more animals in Sanskrit.",
+  "prerequisites": [],
+  "lessons": [
+    "SA-C48-lion",
+    "SA-C48-wolf",
+    "SA-C48-goat",
+    "SA-C48-monkey",
+    "SA-C48-goose"
+  ]
+}

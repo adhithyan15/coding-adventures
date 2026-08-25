@@ -1,0 +1,24 @@
+{
+  "id": "BN-PATH-001",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "BN-C01-nomoshkar",
+    "BN-W01-na",
+    "BN-W01-aa-matra",
+    "BN-W01-aa",
+    "BN-W01-ha",
+    "BN-W01-ma",
+    "BN-W01-sa",
+    "BN-W01-ka",
+    "BN-W01-hasanta",
+    "BN-W01-ra",
+    "BN-W01-nomoshkar-read"
+  ],
+  "before": [],
+  "inline": [
+    "BN-EXT-001-INLINE-SCRIPT"
+  ],
+  "after": [
+    "BN-EXT-018-SCRIPT-FIRST-PIECES"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "id": "SA-EXT-33-LAND",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five pieces of country in Sanskrit.",
+  "prerequisites": [],
+  "lessons": [
+    "SA-C33-river",
+    "SA-C33-bridge",
+    "SA-C33-mountain",
+    "SA-C33-town",
+    "SA-C33-sea"
+  ]
+}

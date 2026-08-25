@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-A1-ESTE",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ES-C59-este"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-A1-ESTE"
+  ],
+  "after": []
+}

@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-309-KIN",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a family as a whole in Spanish, along with a partner, a relative, a nickname and a baby.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C309-familia",
+    "ES-C309-apodo",
+    "ES-C309-pariente",
+    "ES-C309-pareja",
+    "ES-C309-bebe"
+  ]
+}

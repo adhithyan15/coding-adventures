@@ -1,0 +1,16 @@
+{
+  "id": "SA-PATH-48-BEAST",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "SA-C48-lion",
+    "SA-C48-wolf",
+    "SA-C48-goat",
+    "SA-C48-monkey",
+    "SA-C48-goose"
+  ],
+  "before": [],
+  "inline": [
+    "SA-EXT-48-BEAST"
+  ],
+  "after": []
+}

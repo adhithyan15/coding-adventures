@@ -1,0 +1,14 @@
+{
+  "id": "ES-EXT-280-COMPRA",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name cheese, an egg, an apple and money in Spanish, and say which of them is named after a Roman gardener and which after a Roman coin.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C280-queso",
+    "ES-C280-huevo",
+    "ES-C280-manzana",
+    "ES-C280-dinero"
+  ]
+}

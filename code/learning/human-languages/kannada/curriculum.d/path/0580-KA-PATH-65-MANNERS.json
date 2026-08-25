@@ -1,0 +1,16 @@
+{
+  "id": "KA-PATH-65-MANNERS",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "lessons": [
+    "KA-C65-request",
+    "KA-C65-permission",
+    "KA-C65-hesitancy",
+    "KA-C65-trust",
+    "KA-C65-manners"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-65-MANNERS"
+  ],
+  "after": []
+}

@@ -1,0 +1,14 @@
+{
+  "id": "ML-EXT-031-FACE-WORDS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name my eye, ear, nose and mouth in Malayalam, and say which of the four the family agrees on and which it splits.",
+  "prerequisites": [],
+  "lessons": [
+    "ML-C37-kannu",
+    "ML-C37-chevi",
+    "ML-C37-mookku",
+    "ML-C37-vaay"
+  ]
+}

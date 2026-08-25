@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-A1-PERSONAL-A",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ES-C62-veo-a-maria"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-A1-PERSONAL-A"
+  ],
+  "after": []
+}

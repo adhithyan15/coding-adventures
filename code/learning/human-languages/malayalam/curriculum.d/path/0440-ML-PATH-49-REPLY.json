@@ -1,0 +1,16 @@
+{
+  "id": "ML-PATH-49-REPLY",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "ML-C49-true",
+    "ML-C49-enough",
+    "ML-C49-certainly",
+    "ML-C49-perhaps",
+    "ML-C49-just-so"
+  ],
+  "before": [],
+  "inline": [
+    "ML-EXT-49-REPLY"
+  ],
+  "after": []
+}

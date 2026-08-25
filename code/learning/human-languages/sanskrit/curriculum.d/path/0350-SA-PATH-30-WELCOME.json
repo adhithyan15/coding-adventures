@@ -1,0 +1,16 @@
+{
+  "id": "SA-PATH-30-WELCOME",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "SA-C30-door",
+    "SA-C30-seat",
+    "SA-C30-flower",
+    "SA-C30-garland",
+    "SA-C30-anjali"
+  ],
+  "before": [],
+  "inline": [
+    "SA-EXT-30-WELCOME"
+  ],
+  "after": []
+}

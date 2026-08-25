@@ -1,0 +1,16 @@
+{
+  "id": "ML-PATH-63-FEEL",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "ML-C63-hunger",
+    "ML-C63-tiredness",
+    "ML-C63-pain",
+    "ML-C63-cough",
+    "ML-C63-fever"
+  ],
+  "before": [],
+  "inline": [
+    "ML-EXT-63-FEEL"
+  ],
+  "after": []
+}

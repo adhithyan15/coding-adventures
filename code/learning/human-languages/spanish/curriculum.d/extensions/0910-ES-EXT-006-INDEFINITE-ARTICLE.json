@@ -1,0 +1,13 @@
+{
+  "id": "ES-EXT-006-INDEFINITE-ARTICLE",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can use the additional Spanish material required at this point in the path.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C02-un",
+    "ES-C02-una",
+    "ES-C02-repaso-articulos"
+  ]
+}

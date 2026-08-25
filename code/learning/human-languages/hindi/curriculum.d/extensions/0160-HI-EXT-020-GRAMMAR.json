@@ -1,0 +1,11 @@
+{
+  "id": "HI-EXT-020-GRAMMAR",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can use the Hindi-specific grammar needed for this part of the shared ability.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C19-age-grammar"
+  ]
+}

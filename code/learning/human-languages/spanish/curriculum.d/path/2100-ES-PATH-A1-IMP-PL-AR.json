@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-A1-IMP-PL-AR",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ES-C63-hablabamos"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-A1-IMP-PL-AR"
+  ],
+  "after": []
+}

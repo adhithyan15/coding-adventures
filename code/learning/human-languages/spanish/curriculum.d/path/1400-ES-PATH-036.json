@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-036",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "ES-C40-esperar",
+    "ES-C40-contestar",
+    "ES-C40-comprar"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-339-01",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "ES-W01-con-reloj"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-339-WRITING"
+  ],
+  "after": []
+}

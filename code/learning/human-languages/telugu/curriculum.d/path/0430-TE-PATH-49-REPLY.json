@@ -1,0 +1,16 @@
+{
+  "id": "TE-PATH-49-REPLY",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "TE-C49-true",
+    "TE-C49-enough",
+    "TE-C49-certainly",
+    "TE-C49-perhaps",
+    "TE-C49-alright"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-49-REPLY"
+  ],
+  "after": []
+}

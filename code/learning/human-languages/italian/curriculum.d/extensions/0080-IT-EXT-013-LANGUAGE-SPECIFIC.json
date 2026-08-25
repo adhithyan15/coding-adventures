@@ -1,0 +1,12 @@
+{
+  "id": "IT-EXT-013-LANGUAGE-SPECIFIC",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can use the additional Italian material required at this point in the path.",
+  "prerequisites": [],
+  "lessons": [
+    "IT-C06-numeri-1-5",
+    "IT-C06-numeri-6-10"
+  ]
+}

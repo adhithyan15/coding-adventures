@@ -1,0 +1,13 @@
+{
+  "id": "KA-EXT-029-CHILD-SON-DAUGHTER",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can say child, son and daughter in Kannada, and show how one root with three different endings does the work that Chapter 12 needed four separate words to do.",
+  "prerequisites": [],
+  "lessons": [
+    "KA-C36-magu",
+    "KA-C36-maga",
+    "KA-C36-magalu"
+  ]
+}

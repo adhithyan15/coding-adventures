@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-321-COURT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can answer a first meeting with un placer, agree with tienes razon, and ask for patience, respect or advice in Spanish.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C321-placer",
+    "ES-C321-razon",
+    "ES-C321-respeto",
+    "ES-C321-paciencia",
+    "ES-C321-consejo"
+  ]
+}

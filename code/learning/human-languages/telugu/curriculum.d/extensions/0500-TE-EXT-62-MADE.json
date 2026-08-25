@@ -1,0 +1,15 @@
+{
+  "id": "TE-EXT-62-MADE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five things a Telugu household makes or keeps, and ask politely for one of them.",
+  "prerequisites": [],
+  "lessons": [
+    "TE-C62-thread",
+    "TE-C62-needle",
+    "TE-C62-broom",
+    "TE-C62-umbrella",
+    "TE-C62-mirror"
+  ]
+}

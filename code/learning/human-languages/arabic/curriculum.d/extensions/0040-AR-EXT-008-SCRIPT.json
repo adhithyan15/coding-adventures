@@ -1,0 +1,18 @@
+{
+  "id": "AR-EXT-008-SCRIPT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can recognize and use the Arabic script features introduced inside these words.",
+  "prerequisites": [],
+  "lessons": [
+    "AR-W04-dots-family-nun-ta",
+    "AR-W05-ya-and-my-name",
+    "AR-W06-harakat-and-hamza",
+    "AR-W06-sukun-shadda-tanwin",
+    "AR-W06-hamza",
+    "AR-W07-hook-family-ha-kha",
+    "AR-W08-kaf-and-ra",
+    "AR-W09-khayr-bikhayr"
+  ]
+}

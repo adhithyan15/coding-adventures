@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-042-SYNTH-CMD",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "ES-C50-sintesis-pedir-bien"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-042-SYNTH-CMD"
+  ],
+  "after": []
+}

@@ -1,0 +1,14 @@
+{
+  "id": "FA-PATH-003",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "FA-C01-bale",
+    "FA-C01-na",
+    "FA-C01-practice"
+  ],
+  "before": [],
+  "inline": [
+    "FA-EXT-001-GREETING-PAYOFF"
+  ],
+  "after": []
+}

@@ -1,0 +1,15 @@
+{
+  "id": "TE-PATH-030",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "TE-C37-kannu",
+    "TE-C37-cevi",
+    "TE-C37-mukku",
+    "TE-C37-noru"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-031-FACE-WORDS"
+  ],
+  "after": []
+}

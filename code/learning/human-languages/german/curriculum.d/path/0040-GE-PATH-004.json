@@ -1,0 +1,10 @@
+{
+  "id": "GE-PATH-004",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "GE-C01-nacht"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

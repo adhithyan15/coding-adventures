@@ -1,0 +1,16 @@
+{
+  "id": "ML-PATH-57-FRAME",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "ML-C57-neck",
+    "ML-C57-back",
+    "ML-C57-lip",
+    "ML-C57-nail",
+    "ML-C57-bone"
+  ],
+  "before": [],
+  "inline": [
+    "ML-EXT-57-FRAME"
+  ],
+  "after": []
+}

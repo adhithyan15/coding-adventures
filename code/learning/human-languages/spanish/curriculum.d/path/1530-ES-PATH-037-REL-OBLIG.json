@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-037-REL-OBLIG",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "lessons": [
+    "ES-C53-que-no-se-cae"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-037-REL-OBLIG"
+  ],
+  "after": []
+}

@@ -1,0 +1,17 @@
+{
+  "id": "HI-EXT-200-DEIXIS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can point at something in Hindi and ask who or where it is, and I can see the one pattern the six words are built from.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C40-this",
+    "HI-C40-that",
+    "HI-C40-here",
+    "HI-C40-there",
+    "HI-C40-who",
+    "HI-C40-where",
+    "HI-C40-deixis-system"
+  ]
+}

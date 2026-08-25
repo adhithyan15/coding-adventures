@@ -1,0 +1,14 @@
+{
+  "id": "ZH-EXT-028-PHONETIC-COMPONENT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can write 请, and I know a character half can point at the SOUND rather than the meaning -- 青 is qing and 请 is qing -- so meeting an unknown character I can find a half I recognise and ask which job it is doing.",
+  "prerequisites": [
+    "ZH-EXT-027-PREDICT-SANDHI"
+  ],
+  "lessons": [
+    "ZH-W11-qing",
+    "ZH-C11-practice"
+  ]
+}

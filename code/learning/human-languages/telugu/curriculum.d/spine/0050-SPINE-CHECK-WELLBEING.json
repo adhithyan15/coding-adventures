@@ -1,0 +1,18 @@
+{
+  "segments": [
+    "TE-PATH-006",
+    "TE-PATH-008",
+    "TE-PATH-017",
+    "TE-PATH-030",
+    "TE-PATH-031",
+    "TE-PATH-47-BODY",
+    "TE-PATH-57-BODY",
+    "TE-PATH-63-HEALTH",
+    "TE-PATH-71-KIN"
+  ],
+  "omits": [
+    "WORD-GOOD",
+    "WORD-SOSO"
+  ],
+  "relocates": {}
+}

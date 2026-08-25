@@ -1,0 +1,11 @@
+{
+  "id": "TA-PATH-008",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "TA-C03-eppadi",
+    "TA-C03-eppadi-irukkirirgal"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

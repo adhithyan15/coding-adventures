@@ -1,0 +1,35 @@
+{
+  "id": "ES-PATH-011",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "ES-C04-estar",
+    "ES-C04-estar-estado",
+    "ES-C04-como-esta",
+    "ES-C04-repaso-como-esta",
+    "ES-C04-como-estas-register",
+    "ES-C04-regular",
+    "ES-C04-y",
+    "ES-W01-acento",
+    "ES-W01-tilde-diacritica",
+    "ES-W02-enye",
+    "ES-W02-enye-formas",
+    "ES-W03-inverted",
+    "ES-W03-question-span",
+    "ES-C04-practice",
+    "ES-C04-repaso-estar",
+    "ES-W01-repaso-acento"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-011-LANGUAGE-SPECIFIC",
+    "ES-EXT-011-REGISTER",
+    "ES-EXT-011-GRAMMAR"
+  ],
+  "after": [
+    "ES-EXT-011-SCRIPT",
+    "ES-EXT-011-CONSOLIDATION",
+    "ES-EXT-011-CONSOLIDATION-ESTAR",
+    "ES-EXT-011-CONSOLIDATION-ACENTO",
+    "ES-EXT-011-CONSOLIDATION-COMOESTA"
+  ]
+}

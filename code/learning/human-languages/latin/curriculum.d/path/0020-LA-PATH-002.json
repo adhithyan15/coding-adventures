@@ -1,0 +1,10 @@
+{
+  "id": "LA-PATH-002",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "LA-C01-vale"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

@@ -1,0 +1,13 @@
+{
+  "segments": [
+    "HI-PATH-014",
+    "HI-PATH-023",
+    "HI-PATH-200",
+    "HI-PATH-201",
+    "HI-PATH-44-FAMILY"
+  ],
+  "omits": [
+    "GRAMMAR-THE"
+  ],
+  "relocates": {}
+}

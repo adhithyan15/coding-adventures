@@ -1,0 +1,13 @@
+{
+  "id": "ES-PATH-271-02",
+  "spine_node": "SPINE-DISCUSS-ABSTRACT",
+  "lessons": [
+    "ES-C271-supongo-que",
+    "ES-C271-practice"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-271-HEDGING"
+  ],
+  "after": []
+}

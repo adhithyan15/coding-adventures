@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-318-02",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "ES-C318-repaso-disculparse"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-318-DISCULPA"
+  ],
+  "after": []
+}

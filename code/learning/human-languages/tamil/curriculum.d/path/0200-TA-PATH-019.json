@@ -1,0 +1,12 @@
+{
+  "id": "TA-PATH-019",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "TA-C13-udal-uruppugal"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-019-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

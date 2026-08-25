@@ -1,0 +1,15 @@
+{
+  "id": "LA-EXT-045-WORLD",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "lexicon",
+  "canDo": "I can name earth, fire, wind, sky and sea in Latin, and say for each whether English inherited it or borrowed it.",
+  "prerequisites": [],
+  "lessons": [
+    "LA-C45-terra",
+    "LA-C45-ignis",
+    "LA-C45-ventus",
+    "LA-C45-caelum",
+    "LA-C45-mare"
+  ]
+}

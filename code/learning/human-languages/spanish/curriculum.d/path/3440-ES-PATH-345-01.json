@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-345-01",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ES-C345-mismo",
+    "ES-C345-cada",
+    "ES-C345-parte",
+    "ES-C345-persona",
+    "ES-C345-objeto"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-345-REF"
+  ],
+  "after": []
+}

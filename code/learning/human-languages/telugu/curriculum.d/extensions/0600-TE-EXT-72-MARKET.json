@@ -1,0 +1,15 @@
+{
+  "id": "TE-EXT-72-MARKET",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can buy something in a Telugu shop, ask the price, and thank the seller.",
+  "prerequisites": [],
+  "lessons": [
+    "TE-C72-shop",
+    "TE-C72-money",
+    "TE-C72-price",
+    "TE-C72-weight",
+    "TE-C72-bargain"
+  ]
+}

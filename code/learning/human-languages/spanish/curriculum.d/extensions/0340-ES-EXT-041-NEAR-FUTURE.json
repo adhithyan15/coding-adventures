@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-041-NEAR-FUTURE",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can build the Spanish near future with a singular form of ir, a, and a known infinitive.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C10-ir-a-futuro"
+  ]
+}

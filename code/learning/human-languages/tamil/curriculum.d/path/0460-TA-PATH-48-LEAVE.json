@@ -1,0 +1,16 @@
+{
+  "id": "TA-PATH-48-LEAVE",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "TA-C48-now",
+    "TA-C48-time",
+    "TA-C48-journey",
+    "TA-C48-later",
+    "TA-C48-set-out"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-48-LEAVE"
+  ],
+  "after": []
+}

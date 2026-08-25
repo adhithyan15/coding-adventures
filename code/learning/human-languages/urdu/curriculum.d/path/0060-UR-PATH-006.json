@@ -1,0 +1,18 @@
+{
+  "id": "UR-PATH-006",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "UR-C05-khuda",
+    "UR-C05-hafiz",
+    "UR-C05-khuda-hafiz",
+    "UR-C05-practice"
+  ],
+  "before": [],
+  "inline": [
+    "UR-EXT-013-KHUDA-PERSIAN-HISTORY",
+    "UR-EXT-014-HAFIZ-ARABIC-ROOT",
+    "UR-EXT-015-FAREWELL-SPACING-REGISTER",
+    "UR-EXT-016-TAKE-LEAVE-CONSOLIDATION"
+  ],
+  "after": []
+}

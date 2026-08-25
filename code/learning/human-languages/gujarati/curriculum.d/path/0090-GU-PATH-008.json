@@ -1,0 +1,15 @@
+{
+  "id": "GU-PATH-008",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "GU-C04-malishun",
+    "GU-C04-kaale",
+    "GU-C04-pachha",
+    "GU-C04-pachha-malishun"
+  ],
+  "before": [],
+  "inline": [
+    "GU-EXT-008-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

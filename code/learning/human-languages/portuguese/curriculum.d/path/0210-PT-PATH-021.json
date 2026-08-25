@@ -1,0 +1,15 @@
+{
+  "id": "PT-PATH-021",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "PT-C17-cabeca",
+    "PT-C17-cabeca-caput",
+    "PT-C17-mao"
+  ],
+  "before": [],
+  "inline": [
+    "PT-EXT-021-LANGUAGE-SPECIFIC",
+    "PT-EXT-021-ETYMOLOGY"
+  ],
+  "after": []
+}

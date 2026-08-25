@@ -1,0 +1,12 @@
+{
+  "id": "GU-PATH-C1P",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "GU-C01-practice"
+  ],
+  "before": [],
+  "inline": [
+    "GU-EXT-001-CONSOLIDATION"
+  ],
+  "after": []
+}

@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-325-PLACE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the country, the city, the neighbourhood, the square and the spot I am standing in.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C325-pais",
+    "ES-C325-ciudad",
+    "ES-C325-barrio",
+    "ES-C325-plaza",
+    "ES-C325-lugar"
+  ]
+}

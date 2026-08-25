@@ -1,0 +1,13 @@
+{
+  "id": "PT-EXT-023-LANGUAGE-SPECIFIC",
+  "stage": "A2",
+  "kind": "required",
+  "canDo": "I can say that I think, understand, read and write in Portuguese, produce the broken row ler shares with ver, and trace each verb back to the Latin picture it came from.",
+  "prerequisites": [],
+  "lessons": [
+    "PT-C19-pensar",
+    "PT-C19-entender-compreender",
+    "PT-C19-ler",
+    "PT-C19-escrever"
+  ]
+}

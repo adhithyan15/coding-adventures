@@ -1,0 +1,14 @@
+{
+  "id": "KA-EXT-026-MIND-VERBS",
+  "stage": "A2",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can say I think, I understand, I read and I write in Kannada, name the suffix that turns a Sanskrit noun into a Kannada verb, use the ending that hands an action back to its doer, and give both of the front-of-the-word sound laws that separate Kannada from Tamil.",
+  "prerequisites": [],
+  "lessons": [
+    "KA-C33-yocisu",
+    "KA-C33-artha-maadiko",
+    "KA-C33-oodu",
+    "KA-C33-bare"
+  ]
+}

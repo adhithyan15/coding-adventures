@@ -1,0 +1,16 @@
+{
+  "id": "JA-EXT-008-HIRAGANA-YES-NO",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can write three hiragana signs from memory and read both yes-or-no answers by sounding out their signs in order, rather than recalling the words whole.",
+  "prerequisites": [
+    "JA-EXT-001-HIRAGANA-MORA"
+  ],
+  "lessons": [
+    "JA-W01-i",
+    "JA-W01-ha",
+    "JA-W01-hai-read",
+    "JA-W01-e"
+  ]
+}

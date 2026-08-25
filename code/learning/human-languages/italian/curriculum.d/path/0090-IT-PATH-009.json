@@ -1,0 +1,16 @@
+{
+  "id": "IT-PATH-009",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "IT-C03-io",
+    "IT-C03-mi-chiamo",
+    "IT-C03-come-ti-chiami",
+    "IT-C03-piacere",
+    "IT-C03-practice"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "IT-EXT-009-CONSOLIDATION"
+  ]
+}

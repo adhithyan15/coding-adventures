@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-303-01",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "ES-C303-ayuda",
+    "ES-C303-momento",
+    "ES-C303-otra-vez",
+    "ES-C303-no-se",
+    "ES-C303-que-significa"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-303-REPARAR"
+  ],
+  "after": []
+}

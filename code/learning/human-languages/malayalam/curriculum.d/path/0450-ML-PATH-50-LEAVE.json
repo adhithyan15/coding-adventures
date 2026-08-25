@@ -1,0 +1,16 @@
+{
+  "id": "ML-PATH-50-LEAVE",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "ML-C50-now",
+    "ML-C50-day-after",
+    "ML-C50-journey",
+    "ML-C50-set-out",
+    "ML-C50-farewell"
+  ],
+  "before": [],
+  "inline": [
+    "ML-EXT-50-LEAVE"
+  ],
+  "after": []
+}

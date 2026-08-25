@@ -1,0 +1,12 @@
+{
+  "id": "TA-PATH-021",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "TA-C15-thanneer-arisi"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-021-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

@@ -1,0 +1,16 @@
+{
+  "id": "KA-EXT-025-CORE-VERBS",
+  "stage": "A2",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can say what I do with six everyday Kannada verbs, build each one as stem plus tense plus person, and name the one that carries no person at all.",
+  "prerequisites": [],
+  "lessons": [
+    "KA-C32-iru",
+    "KA-C32-hoogu",
+    "KA-C32-baa",
+    "KA-C32-tinnu",
+    "KA-C32-noodu",
+    "KA-C32-gottu"
+  ]
+}

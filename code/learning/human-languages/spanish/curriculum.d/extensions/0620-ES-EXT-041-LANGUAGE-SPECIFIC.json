@@ -1,0 +1,18 @@
+{
+  "id": "ES-EXT-041-LANGUAGE-SPECIFIC",
+  "stage": "A2",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can use the Spanish-specific vocabulary and grammar that support this shared ability.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C17-futuro",
+    "ES-C17-comer-futuro",
+    "ES-C17-vivir-futuro",
+    "ES-C17-condicional",
+    "ES-C17-comer-condicional",
+    "ES-C17-vivir-condicional",
+    "ES-C17-irregulares",
+    "ES-C17-practice"
+  ]
+}

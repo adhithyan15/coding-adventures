@@ -70,11 +70,15 @@ import { pathToFileURL } from "node:url";
 import { defaultCurriculumRoot } from "./loader.js";
 import { assertRelativeManifestPath } from "./manifest-path.js";
 import {
+  BOOK_GENERATION_GROUPED_KEYS,
+  KEY_ORDER_FIELD,
   META_SHARD,
   assertRealFile,
   isSharded,
   listShardNames,
   readLedgerFile,
+  mergeGroupedShards,
+  mergeSectionedShards,
   readShards,
   shardDirectoryFor,
 } from "./shard.js";
@@ -116,11 +120,32 @@ export type MonolithDisposition = "generated" | "removed";
  * file, which array, what to call each element's shard, and what becomes of the
  * monolith afterwards.
  */
-export interface ShardPlan {
-  /** Ledger path relative to the curriculum root, POSIX-separated. */
-  readonly path: string;
-  /** The top-level array key that becomes one file per element. */
-  readonly listKey: string;
+export interface ShardSection {
+  /** The top-level key of the ledger that this section splits up. */
+  readonly key: string;
+  /**
+   * Subdirectory under `X.d/` to put this section's shards in.
+   *
+   * Omitted for a ledger with only one section, which keeps its shards directly
+   * in `X.d/` — that is what `core/spine.d/` and `<track>/chapters.d/` already
+   * look like on disk, and moving them would be a rename of every shard for no
+   * gain.
+   *
+   * Present for `<track>/curriculum.d/`, which is three lists sharing one
+   * `_meta.json`. Spanish alone would otherwise put 716 files in a single
+   * folder, and the people who open these directories are the authors this whole
+   * exercise exists for.
+   */
+  readonly dir?: string;
+  /**
+   * Whether the key holds an array of elements or an object of them.
+   *
+   * `"object"` exists for `curriculum.json`'s `spine`, which is a map from node
+   * id to that track's realization of the node. Its KEY is the shard id and is
+   * not repeated inside the value, so unsharding recovers the id from the
+   * filename — which is exactly why the filename validation is not optional.
+   */
+  readonly kind?: "array" | "object";
   /**
    * The stable part of an element's filename, without ordinal or extension.
    *
@@ -131,27 +156,114 @@ export interface ShardPlan {
    *
    * When present, the returned string must be a safe filename. It is validated,
    * not trusted: `idOf` reads a field out of authored JSON, and an id of
-   * `../../..` or `con` would otherwise decide where this tool writes.
+   * `../../..` or `con` would otherwise decide where this tool writes. For an
+   * `"object"` section it is required, because the id is the only way back to
+   * the key.
    */
   readonly idOf?: (element: unknown, index: number) => string;
   /**
    * The number that puts this element in its place in the filename ordering.
    *
-   * OPTIONAL. The default is `(index + 1) * ORDINAL_STRIDE` — 0010, 0020, … —
-   * which spaces elements so a new one can be inserted between two others
-   * without renaming its neighbours, because a mass rename is a mass merge
-   * conflict and that is the thing being removed.
-   *
-   * A ledger that already carries its own ordering number should return it
-   * instead. `chapters.json` returns the chapter number, so chapter 7 lives in
-   * `0007.json` for as long as it is chapter 7 — a name a human can predict
-   * without consulting the directory, which matters when the point of the
-   * exercise is that two authors write two different files without coordinating.
+   * See `ShardPlan.ordinalOf` — same contract, per section.
    */
   readonly ordinalOf?: (element: unknown, index: number) => number;
+}
+
+/**
+ * How several parallel arrays split into one file per GROUP.
+ *
+ * The other projection. A `ShardSection` turns one array into one file per
+ * element; this turns six arrays into one file per language, holding each
+ * array's slice of that language.
+ *
+ * `core/book-generation.json` is the ledger that needs it. Element-wise it
+ * would be 1,153 files nobody wants to open individually; what an author
+ * actually touches is "Spanish's slice of everything", so that is the file.
+ */
+export interface ShardGrouping {
+  /** The top-level arrays that get partitioned. All must be arrays. */
+  readonly keys: readonly string[];
+  /** The group an element belongs to — its filename, minus `.json`. */
+  readonly groupOf: (element: unknown, key: string, index: number) => string;
+}
+
+export interface ShardPlan {
+  /** Ledger path relative to the curriculum root, POSIX-separated. */
+  readonly path: string;
+  /**
+   * The top-level keys this ledger splits up, in the order they are written.
+   *
+   * Usually one. `<track>/curriculum.json` has three, which is why this is a
+   * list rather than the single `listKey` it started as: `path`, `spine` and
+   * `extensions` all need splitting and all three sit in the MIDDLE of the
+   * document, between `language` and `conceptAliases`.
+   */
+  readonly sections: readonly ShardSection[];
+  /**
+   * Parallel arrays partitioned into one file per group, instead of per element.
+   *
+   * Mutually exclusive with a non-empty `sections`: a ledger is split one way or
+   * the other, and a plan claiming both would have two rules for the same bytes.
+   */
+  readonly grouping?: ShardGrouping;
   /** What becomes of `X.json` once `X.d/` exists. See `MonolithDisposition`. */
   readonly monolith: MonolithDisposition;
 }
+
+/**
+ * Group names that are safe filenames on every filesystem this repo is cloned
+ * onto — the lowercase counterpart of `SAFE_ID`.
+ *
+ * Language slugs are lowercase (`spanish`, `marwadi`), so `SAFE_ID`'s
+ * uppercase-only rule would reject every one of them. The properties that
+ * matter are the same and are re-checked here rather than assumed from the
+ * shape of today's data: no separators, no `..`, no leading dot, and not a
+ * Windows reserved device name. `groupOf` reads a field out of authored JSON,
+ * so a `language` of `../../../etc/passwd` would otherwise decide where this
+ * tool writes.
+ */
+const SAFE_GROUP = /^[a-z][a-z0-9-]*$/;
+
+function assertSafeGroup(group: unknown, plan: ShardPlan, key: string, index: number): string {
+  if (typeof group !== "string" || !SAFE_GROUP.test(group)) {
+    throw new Error(
+      `${plan.path}: ${key}[${index}] has group ${JSON.stringify(group)}, ` +
+        `which is not a safe shard filename (want ${SAFE_GROUP.source})`,
+    );
+  }
+  if (WINDOWS_RESERVED.has(group.toUpperCase())) {
+    throw new Error(
+      `${plan.path}: ${key}[${index}] has group '${group}', a Windows reserved ` +
+        `device name — a shard called '${group}.json' cannot be checked out on Windows`,
+    );
+  }
+  return group;
+}
+
+/**
+ * The default ordinal: `(index + 1) * ORDINAL_STRIDE` — 0010, 0020, …
+ *
+ * Spaced by ten so a new element can be inserted between two others without
+ * renaming its neighbours, because a mass rename is a mass merge conflict and
+ * that is the thing being removed.
+ *
+ * A section that already carries its own ordering number overrides this with
+ * `ordinalOf`. `chapters.json` returns the chapter number, so chapter 7 lives
+ * in `0007.json` for as long as it is chapter 7 — a name a human can predict
+ * without consulting the directory, which matters when the point of the
+ * exercise is that two authors write two different files without coordinating.
+ */
+function ordinalFor(section: ShardSection, element: unknown, index: number): number {
+  return section.ordinalOf === undefined
+    ? (index + 1) * ORDINAL_STRIDE
+    : section.ordinalOf(element, index);
+}
+
+/** A section's shard path within `X.d/`, e.g. `path/0010-ES-PATH-001.json`. */
+function sectionShardPath(section: ShardSection, name: string): string {
+  return section.dir === undefined ? name : `${section.dir}/${name}`;
+}
+
 
 /**
  * The tracks whose `chapters.json` has been sharded.
@@ -189,8 +301,12 @@ const CHAPTER_SHARDED_TRACKS: readonly string[] = [
 function chaptersPlan(track: string): ShardPlan {
   return {
     path: `${track}/chapters.json`,
-    listKey: "chapters",
-    ordinalOf: (element) => (element as { chapter?: unknown }).chapter as number,
+    sections: [
+      {
+        key: "chapters",
+        ordinalOf: (element) => (element as { chapter?: unknown }).chapter as number,
+      },
+    ],
     // GENERATED, not removed — and this was measured rather than chosen.
     //
     // Deleting the monolith is what fully removes the conflict, and it was the
@@ -224,18 +340,140 @@ function chaptersPlan(track: string): ShardPlan {
   };
 }
 
+/**
+ * The tracks whose `curriculum.json` has been sharded.
+ *
+ * All but `marwadi`, whose committed file writes its `lessons` arrays inline on
+ * one line and so does not round-trip through `JSON.stringify(…, null, 2)`.
+ * Same call, same reason, as the three absent from `CHAPTER_SHARDED_TRACKS`.
+ */
+const CURRICULUM_SHARDED_TRACKS: readonly string[] = [
+  "arabic", "bengali", "chinese", "french", "german", "gujarati", "hindi",
+  "italian", "japanese", "kannada", "latin", "malayalam", "marathi", "persian",
+  "portuguese", "punjabi", "russian", "sanskrit", "spanish", "tamil", "telugu",
+  "urdu",
+];
+
+/**
+ * `<track>/curriculum.json` -> three sibling directories under `curriculum.d/`.
+ *
+ * ```text
+ * curriculum.d/_meta.json                        version, language, conceptAliases, _keys
+ * curriculum.d/path/0010-ES-PATH-001.json        the authored ladder
+ * curriculum.d/extensions/0010-ES-EXT-001-….json the track's own additions
+ * curriculum.d/spine/0010-SPINE-MEET-GREET.json  ONE FILE PER SPINE NODE
+ * ```
+ *
+ * `spine/` is the whole point. Every content tranche in every track appends to
+ * `spine[<node>].segments`, and there are only 33 nodes for 23 tracks' worth of
+ * authors to collide on — the single worst conflict point in the corpus. One
+ * file per node means two tranches touching two different nodes never meet.
+ *
+ * ALL THREE SECTIONS CARRY ORDINALS, including `spine`, and that last one
+ * contradicts HL21 §5.2's reasoning. The spec argued that `spine` is keyed by
+ * node id and "an object has no meaningful order", so `<NODE-ID>.json` would
+ * do. That is true of JSON semantics and false of this ledger:
+ *
+ *   * `JSON.stringify` emits object keys in insertion order, so sorted-filename
+ *     order would rewrite the key order and the monolith would not round-trip;
+ *   * no track has its spine keys in sorted order — checked, all 23;
+ *   * and the order is not arbitrary. Every one of the 23 tracks lists its spine
+ *     keys in exactly `core/spine.d/`'s ladder order, pre-A1 -> C2. It is the
+ *     same ordered ladder the spine itself is, mirrored per track.
+ *
+ * So the §2.2 trap applies here too, at the one place the spec said it did not.
+ *
+ * `path` and `extensions` need ordinals for the ordinary reason: their ids look
+ * sequential and do not sort that way. Spanish diverges at index 3, where
+ * authored `ES-PATH-004` meets sorted `ES-PATH-003-CASA` — a bare prefix sorts
+ * before the same prefix extended.
+ *
+ * `conceptAliases` is left whole in `_meta.json`: 13 keys, rarely touched, and
+ * nobody appends to it.
+ */
+function curriculumPlan(track: string): ShardPlan {
+  const idOf = (element: unknown) => (element as { id?: unknown }).id as string;
+  return {
+    path: `${track}/curriculum.json`,
+    sections: [
+      { key: "path", dir: "path", idOf },
+      { key: "spine", dir: "spine", kind: "object", idOf },
+      { key: "extensions", dir: "extensions", idOf },
+    ],
+    // Generated, for the reason on `chaptersPlan`: language-ladder globs
+    // `*/curriculum.json`, and a glob's key table is eager code. This ledger
+    // would be WORSE than chapters — roughly 1,500 keys against a 500 kB
+    // ceiling that chapters alone came within 4 kB of breaking.
+    monolith: "generated",
+  };
+}
+
 /** Ledgers HL21 has migrated so far. Grows one entry per follow-on PR. */
 export const SHARD_PLANS: readonly ShardPlan[] = [
   {
     path: "core/spine.json",
-    listKey: "nodes",
-    idOf: (element) => (element as { id?: unknown }).id as string,
+    sections: [{ key: "nodes", idOf: (element) => (element as { id?: unknown }).id as string }],
     // The one ledger that keeps its monolith, and the reason is at the top of
     // this file: language-ladder's browser bundle imports it statically.
     monolith: "generated",
   },
   ...CHAPTER_SHARDED_TRACKS.map(chaptersPlan),
+  ...CURRICULUM_SHARDED_TRACKS.map(curriculumPlan),
 ];
+
+/**
+ * `core/book-generation.json` -> `core/book-generation.d/<language>.json`.
+ *
+ * BUILT, TESTED, AND DELIBERATELY NOT IN `SHARD_PLANS`. The machinery is
+ * exercised by fixtures in `tests/grouped-shards.test.ts`, and the plan below
+ * is what enables it — one line, once the blocker is cleared.
+ *
+ * ## Why it is the odd one out
+ *
+ * The only GROUPED ledger, and the only one with no ordinal prefix. Both follow
+ * from one measurement: all six arrays are already contiguous by language and
+ * in the same alphabetical order, which is also sorted filename order for
+ * `<language>.json`. A per-language split reproduces authored order exactly, so
+ * there is nothing for an ordinal to fix.
+ *
+ * ## The spec's blocker resolved itself
+ *
+ * HL21 §5.3 recorded that `targets` spanned 27 runs for 23 languages and would
+ * need a one-time re-sort before a per-language split could be lossless.
+ * Re-measured at 1,007 entries (the spec was written at 949): 23 runs for 23
+ * languages. The split runs for hindi, kannada, spanish and telugu closed as
+ * later tranches inserted into them. No re-sort is needed.
+ *
+ * ## The blocker that replaced it
+ *
+ * `core/book-generation.json` does not round-trip through
+ * `JSON.stringify(…, null, 2)` at all. Twelve `marwadi` entries in `targets`,
+ * at lines 2911-2984, are indented two spaces deeper than the canonical form —
+ * a hand-merge artifact. 74 lines, identical line count, leading whitespace
+ * only, and `JSON.parse` of either form is deep-equal to the other.
+ *
+ * Sharding proves it: the rebuilt document is byte-identical to the CANONICAL
+ * reserialization and differs from the COMMITTED file by exactly those 74
+ * lines. So enabling this plan would require reformatting the committed file,
+ * and HL21 §8.9 says a ledger that does not round-trip is reported rather than
+ * quietly reformatted to suit the serialiser.
+ *
+ * Unlike `chapters.json` and `curriculum.json`, that cannot be worked around by
+ * skipping a track: this is ONE file shared by all 23. So the whole ledger
+ * waits for a decision that is one deliberate re-indent commit wide.
+ */
+export const BOOK_GENERATION_PLAN: ShardPlan = {
+  path: "core/book-generation.json",
+  sections: [],
+  grouping: {
+    keys: BOOK_GENERATION_GROUPED_KEYS,
+    groupOf: (element) => (element as { language?: unknown }).language as string,
+  },
+  // Generated, like the rest: `book-cli.ts` and the Python authoring scripts
+  // both read this file, and keeping one derived copy current is cheaper than
+  // rewriting every consumer in the commit that moves the data.
+  monolith: "generated",
+};
 
 /** Ordinal stride, and the width it is padded to. See the header. */
 const ORDINAL_STRIDE = 10;
@@ -263,16 +501,21 @@ const WINDOWS_RESERVED = new Set([
   "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9",
 ]);
 
-function assertSafeId(id: unknown, plan: ShardPlan, index: number): string {
+function assertSafeId(
+  id: unknown,
+  plan: ShardPlan,
+  section: ShardSection,
+  where: string,
+): string {
   if (typeof id !== "string" || !SAFE_ID.test(id)) {
     throw new Error(
-      `${plan.path}: ${plan.listKey}[${index}] has id ${JSON.stringify(id)}, ` +
+      `${plan.path}: ${section.key}${where} has id ${JSON.stringify(id)}, ` +
         `which is not a safe shard filename (want ${SAFE_ID.source})`,
     );
   }
   if (WINDOWS_RESERVED.has(id)) {
     throw new Error(
-      `${plan.path}: ${plan.listKey}[${index}] has id '${id}', a Windows reserved ` +
+      `${plan.path}: ${section.key}${where} has id '${id}', a Windows reserved ` +
         `device name — a shard called '${id}.json' cannot be checked out on Windows`,
     );
   }
@@ -445,18 +688,72 @@ export function safeLedgerPath(root: string, relative: string): string {
  * belt and braces. Both, deliberately: the key check protects this function
  * from its callers, and `defineProperty` protects it from a caller that forgets.
  */
-export function metaOf(document: Record<string, unknown>, listKey: string): Record<string, unknown> {
+export function metaOf(
+  document: Record<string, unknown>,
+  shardedKeys: readonly string[],
+): Record<string, unknown> {
+  const sharded = new Set(shardedKeys);
   const meta = Object.create(null) as Record<string, unknown>;
-  for (const [key, value] of Object.entries(document)) {
-    if (key === listKey) continue;
+  const define = (key: string, value: unknown) =>
     Object.defineProperty(meta, key, {
       value,
       enumerable: true,
       writable: true,
       configurable: true,
     });
+
+  // `_keys` FIRST, when it is needed at all. See `needsKeyOrder`.
+  const keys = Object.keys(document);
+  if (needsKeyOrder(keys, sharded)) define(KEY_ORDER_FIELD, keys);
+
+  for (const [key, value] of Object.entries(document)) {
+    if (sharded.has(key)) continue;
+    define(key, value);
   }
   return meta;
+}
+
+/**
+ * The `_meta.json` field that records the monolith's top-level key order.
+ *
+ * HL21 §2.5 chose NOT to invent this. Its reasoning was that `JSON.stringify`
+ * emits keys in insertion order, so a byte-exact rebuild only needs the sharded
+ * array to land back where it started — and since `core/spine.json` keeps its
+ * array last, appending it last is exact. Rather than record a position no
+ * ledger needed, `--shard` refused a ledger whose array was not already last,
+ * and left the decision to "whoever migrates it".
+ *
+ * `<track>/curriculum.json` is that ledger and this is that decision. It is
+ * `{version, language, path, spine, extensions}` — Spanish adds
+ * `conceptAliases` — so THREE sharded keys sit in the middle of the document
+ * with a non-sharded key after them. There is no ordering of "meta keys, then
+ * sharded keys" that reproduces it.
+ *
+ * The alternatives were worse. Reordering the monolith so the sharded keys fall
+ * last would rewrite 23 committed files to suit the tool. Hard-coding the key
+ * order in the plan would put a fact about the DATA in the CODE, where it goes
+ * stale silently the first time a track gains a key.
+ *
+ * So the order rides in `_meta.json`, next to the other document-level facts,
+ * and it is not a conflict point: key order changes approximately never, which
+ * is exactly why it was safe to leave implicit for as long as it was.
+ */
+
+/**
+ * Does this document need its key order written down?
+ *
+ * Only when the sharded keys are not already a SUFFIX of the key order — that
+ * is, when "everything else, then the sharded keys" would not reproduce the
+ * original. `core/spine.json` and `<track>/chapters.json` both keep their one
+ * array last, so they do not, and their `_meta.json` is byte-identical to what
+ * it was before this field existed. That matters: emitting `_keys`
+ * unconditionally would have rewritten all 21 already-committed shard sets to
+ * add a line none of them needs.
+ */
+function needsKeyOrder(keys: readonly string[], sharded: ReadonlySet<string>): boolean {
+  const present = keys.filter((key) => sharded.has(key));
+  const suffix = keys.slice(keys.length - present.length);
+  return present.length > 0 && !suffix.every((key) => sharded.has(key));
 }
 
 /**
@@ -469,44 +766,138 @@ export function shardContents(
   document: Record<string, unknown>,
   plan: ShardPlan,
 ): Map<string, string> {
-  const list = document[plan.listKey];
-  if (!Array.isArray(list)) {
-    throw new Error(`${plan.path}: no top-level '${plan.listKey}' array to shard`);
-  }
+  if (plan.grouping !== undefined) return groupedShardContents(document, plan, plan.grouping);
+
   const out = new Map<string, string>();
-  out.set(META_SHARD, serialize(metaOf(document, plan.listKey)));
-  const seen = new Set<string>();
-  list.forEach((element, index) => {
-    const id = plan.idOf === undefined
-      ? undefined
-      : assertSafeId(plan.idOf(element, index), plan, index);
-    if (id !== undefined) {
-      if (seen.has(id)) {
-        // Two elements with one id would produce one file, and the second would
-        // overwrite the first — a silent loss of a node, discovered later by
-        // whoever notices the count is wrong.
-        throw new Error(`${plan.path}: duplicate ${plan.listKey} id '${id}'`);
+  out.set(META_SHARD, serialize(metaOf(document, plan.sections.map((s) => s.key))));
+
+  for (const section of plan.sections) {
+    // An array section reads `[element, …]`; an object section reads
+    // `{id: element, …}` and takes its id from the KEY rather than from `idOf`,
+    // because that is where an object keeps it.
+    const raw = document[section.key];
+    const entries: { element: unknown; id: string | undefined; where: string }[] = [];
+
+    if ((section.kind ?? "array") === "object") {
+      if (typeof raw !== "object" || raw === null || Array.isArray(raw)) {
+        throw new Error(`${plan.path}: no top-level '${section.key}' object to shard`);
       }
-      seen.add(id);
+      let index = 0;
+      for (const [key, element] of Object.entries(raw as Record<string, unknown>)) {
+        entries.push({
+          element,
+          id: assertSafeId(key, plan, section, `['${key}']`),
+          where: `['${key}']`,
+        });
+        index += 1;
+      }
+      void index;
+    } else {
+      if (!Array.isArray(raw)) {
+        throw new Error(`${plan.path}: no top-level '${section.key}' array to shard`);
+      }
+      raw.forEach((element, index) => {
+        entries.push({
+          element,
+          id: section.idOf === undefined
+            ? undefined
+            : assertSafeId(section.idOf(element, index), plan, section, `[${index}]`),
+          where: `[${index}]`,
+        });
+      });
     }
-    const ordinal = plan.ordinalOf === undefined
-      ? (index + 1) * ORDINAL_STRIDE
-      : plan.ordinalOf(element, index);
-    const name = shardFilenameFor(ordinal, id);
-    // The filename check, not just the id check, and it is the one that matters
-    // for an id-less plan. `chapters.json` names its shards from the chapter
-    // NUMBER, so two entries claiming chapter 12 collide on `0012.json` with no
-    // duplicate id anywhere to notice — one chapter would overwrite the other
-    // and the ledger would come back one entry short, silently. `--check` could
-    // not catch it either: both directions would agree about the truncated set.
-    if (out.has(name)) {
-      throw new Error(
-        `${plan.path}: ${plan.listKey}[${index}] wants shard '${name}', which is ` +
-          `already taken — two elements share an ordinal${id === undefined ? "" : ` or id`}`,
+
+    const seen = new Set<string>();
+    entries.forEach(({ element, id, where }, index) => {
+      if (id !== undefined) {
+        if (seen.has(id)) {
+          // Two elements with one id would produce one file, and the second
+          // would overwrite the first — a silent loss of an element, discovered
+          // later by whoever notices the count is wrong.
+          throw new Error(`${plan.path}: duplicate ${section.key} id '${id}'`);
+        }
+        seen.add(id);
+      }
+      const name = sectionShardPath(
+        section,
+        shardFilenameFor(ordinalFor(section, element, index), id),
       );
+      // The filename check, not just the id check, and it is the one that
+      // matters for an id-less section. `chapters.json` names its shards from
+      // the chapter NUMBER, so two entries claiming chapter 12 collide on
+      // `0012.json` with no duplicate id anywhere to notice — one chapter would
+      // overwrite the other and the ledger would come back one entry short,
+      // silently. `--check` could not catch it either: both directions would
+      // agree about the truncated set.
+      if (out.has(name)) {
+        throw new Error(
+          `${plan.path}: ${section.key}${where} wants shard '${name}', which is ` +
+            `already taken — two elements share an ordinal${id === undefined ? "" : ` or id`}`,
+        );
+      }
+      out.set(name, serialize(element));
+    });
+  }
+  return out;
+}
+
+/**
+ * One file per group, each holding that group's slice of every grouped array.
+ *
+ * The order within each per-language file is the order the elements appeared in
+ * the monolith, and the order BETWEEN files is sorted filename order. Those two
+ * facts are what make the rebuild reproduce authored order — but only because
+ * every one of the six arrays is already contiguous by language and in the same
+ * alphabetical order. That was measured across all six rather than assumed.
+ *
+ * If a future edit interleaves two languages in one array, this does not
+ * silently reorder anything: the rebuild stops matching the monolith and
+ * `--check` says so. The failure is loud, which is the property worth having,
+ * because "the arrays happen to be grouped" is not something the file format
+ * enforces.
+ *
+ * A group contributes a key only when it has entries for it, so the 17
+ * languages with no `referenceAppendices` do not each carry an empty array.
+ */
+function groupedShardContents(
+  document: Record<string, unknown>,
+  plan: ShardPlan,
+  grouping: ShardGrouping,
+): Map<string, string> {
+  const slices = new Map<string, Map<string, unknown[]>>();
+  for (const key of grouping.keys) {
+    const list = document[key];
+    if (!Array.isArray(list)) {
+      throw new Error(`${plan.path}: no top-level '${key}' array to shard`);
     }
-    out.set(name, serialize(element));
-  });
+    list.forEach((element, index) => {
+      const group = assertSafeGroup(grouping.groupOf(element, key, index), plan, key, index);
+      let byKey = slices.get(group);
+      if (byKey === undefined) {
+        byKey = new Map();
+        slices.set(group, byKey);
+      }
+      const into = byKey.get(key);
+      if (into === undefined) byKey.set(key, [element]);
+      else into.push(element);
+    });
+  }
+
+  const out = new Map<string, string>();
+  out.set(META_SHARD, serialize(metaOf(document, grouping.keys)));
+  // Sorted, so the written order matches the read order and `--shard` is
+  // idempotent down to the byte.
+  for (const group of [...slices.keys()].sort((a, b) => (a < b ? -1 : a > b ? 1 : 0))) {
+    const byKey = slices.get(group)!;
+    // Keys in the ledger's own order, not in first-seen order, so two runs over
+    // the same data always emit the same bytes.
+    const body: Record<string, unknown> = {};
+    for (const key of grouping.keys) {
+      const value = byKey.get(key);
+      if (value !== undefined) body[key] = value;
+    }
+    out.set(`${group}.json`, serialize(body));
+  }
   return out;
 }
 
@@ -532,35 +923,80 @@ export function unshardContents(root: string, plan: ShardPlan): string {
   if (shards === null) {
     throw new Error(`${plan.path}: no ${shardDirectoryFor(plan.path)} to rebuild from`);
   }
-  const meta = shards.find((shard) => shard.name === META_SHARD);
-  if (meta === undefined) throw new Error(`${plan.path}: shards are missing ${META_SHARD}`);
-  return serialize({
-    ...(meta.value as Record<string, unknown>),
-    [plan.listKey]: shards
-      .filter((shard) => shard.name !== META_SHARD)
-      .map((shard) => shard.value),
-  });
+  // ONE definition of what these files mean, shared with `loader.ts`. If the
+  // generated monolith and the document the app loads were assembled by two
+  // different pieces of code, they could disagree — and `--check` compares the
+  // monolith against THIS function, so it would report agreement while the app
+  // read something else.
+  return serialize(
+    plan.grouping === undefined
+      ? mergeSectionedShards(shards, plan.sections)
+      : mergeGroupedShards(shards, plan.grouping.keys),
+  );
 }
 
 /**
- * The array must already be the last top-level key. See `unshardContents`.
+ * Refuse a ledger that cannot round-trip, before anything is written.
  *
- * Checked at `--shard` time, where the fix is obvious and local, rather than
- * discovered at `--check` time as a diff nobody can account for.
+ * This USED to be `assertListIsLast`: HL21 §2.5 required the sharded array to
+ * be the last top-level key, because the rebuild appended it last and there was
+ * no way to say otherwise. `<track>/curriculum.json` is the ledger that
+ * refusal was waiting for, and `_keys` is the answer — so the position check is
+ * gone and what remains is the one thing `_keys` cannot rescue.
+ *
+ * A ledger whose `_meta.json` would carry a literal `_keys` of its own. The
+ * rebuild reads that field as the recorded key order and deletes it, so a
+ * document that genuinely has a top-level `_keys` would lose it silently and
+ * come back with its keys in whatever order the field happened to describe. No
+ * ledger has one today; the check costs nothing and closes the collision before
+ * it can be discovered as a corrupted rebuild.
  */
-function assertListIsLast(document: Record<string, unknown>, plan: ShardPlan): void {
-  const keys = Object.keys(document);
-  // An absent array is a different complaint with a different fix, and
-  // `shardContents` words it properly. Saying "'nodes' must be the last key (it
-  // is followed by ["version"])" about a document with no `nodes` at all sends
-  // the reader to reorder keys that are already in the right order.
-  if (!keys.includes(plan.listKey)) return;
-  if (keys.at(-1) !== plan.listKey) {
+function assertShardable(document: Record<string, unknown>, plan: ShardPlan): void {
+  if (Object.hasOwn(document, KEY_ORDER_FIELD)) {
     throw new Error(
-      `${plan.path}: '${plan.listKey}' must be the last top-level key to round-trip ` +
-        `byte-exactly (it is followed by ${JSON.stringify(keys.slice(keys.indexOf(plan.listKey) + 1))}). ` +
-        `Move it last in the monolith, or teach shard-cli to record its position.`,
+      `${plan.path}: has a top-level '${KEY_ORDER_FIELD}' key, which shard-cli ` +
+        `reserves to record the document's key order. Rename it before sharding.`,
     );
+  }
+  if (plan.grouping !== undefined && plan.sections.length > 0) {
+    // Two rules for the same bytes. Whichever ran second would overwrite the
+    // first's shards, and `--check` would compare against only one of them.
+    throw new Error(
+      `${plan.path}: a plan may split by element OR by group, not both`,
+    );
+  }
+  // Two sections may not share a key or a directory.
+  //
+  // A shared DIRECTORY is the dangerous one: shards are claimed by directory
+  // prefix, so both sections would consume the same files and the ledger would
+  // come back with the same elements under two keys. Nothing downstream could
+  // tell that from a ledger that genuinely repeats itself, and `--check` would
+  // agree with itself about the duplicate.
+  //
+  // Cheap to state here, where a plan is written once, rather than to detect at
+  // merge time where it looks like data corruption.
+  const seenKeys = new Set<string>();
+  const seenDirs = new Set<string>();
+  for (const section of plan.sections) {
+    if (seenKeys.has(section.key)) {
+      throw new Error(`${plan.path}: two sections both shard '${section.key}'`);
+    }
+    seenKeys.add(section.key);
+    const dir = section.dir ?? "";
+    if (seenDirs.has(dir)) {
+      throw new Error(
+        `${plan.path}: two sections share the shard directory ` +
+          `'${section.dir ?? "(top level)"}', so each would claim the other's shards`,
+      );
+    }
+    seenDirs.add(dir);
+  }
+
+  const keys = plan.grouping?.keys ?? plan.sections.map((section) => section.key);
+  for (const key of keys) {
+    if (!Object.hasOwn(document, key)) {
+      throw new Error(`${plan.path}: no top-level '${key}' to shard`);
+    }
   }
 }
 
@@ -603,7 +1039,7 @@ export function shardLedger(root: string, plan: ShardPlan): string[] {
   // skipped the symlink refusal, the dangerous-key check and the parse-error
   // scrubbing all at once — three controls lost to one convenience.
   const document = readLedgerFile<Record<string, unknown>>(monolith);
-  assertListIsLast(document, plan);
+  assertShardable(document, plan);
   const contents = shardContents(document, plan);
   const dir = shardDirectoryFor(monolith);
 
@@ -622,6 +1058,12 @@ export function shardLedger(root: string, plan: ShardPlan): string[] {
   }
 
   mkdirSync(dir, { recursive: true });
+  // One directory per section that asked for one. Created up front rather than
+  // lazily inside the write loop so that a plan naming a section directory it
+  // cannot create fails before any shard is written, not halfway through.
+  for (const section of plan.sections) {
+    if (section.dir !== undefined) mkdirSync(join(dir, section.dir), { recursive: true });
+  }
   const written: string[] = [];
   // The monolith goes LAST, after every shard is safely on disk, so an
   // interrupted run leaves the ledger readable in one form or the other rather

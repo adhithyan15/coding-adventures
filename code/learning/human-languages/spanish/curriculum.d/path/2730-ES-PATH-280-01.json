@@ -1,0 +1,15 @@
+{
+  "id": "ES-PATH-280-01",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ES-C280-queso",
+    "ES-C280-huevo",
+    "ES-C280-manzana",
+    "ES-C280-dinero"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-280-COMPRA"
+  ],
+  "after": []
+}

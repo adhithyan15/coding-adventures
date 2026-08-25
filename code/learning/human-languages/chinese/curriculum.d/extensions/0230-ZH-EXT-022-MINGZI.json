@@ -1,0 +1,15 @@
+{
+  "id": "ZH-EXT-022-MINGZI",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "lexis",
+  "canDo": "I can write 名 and 字, recognise 名字 as the word for a name, and say why its literal reading -- name-character -- describes what a Chinese name actually is.",
+  "prerequisites": [
+    "ZH-EXT-021-NO-INFLECTION"
+  ],
+  "lessons": [
+    "ZH-W08-ming",
+    "ZH-W08-zi",
+    "ZH-C08-mingzi"
+  ]
+}

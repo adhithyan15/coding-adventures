@@ -1,0 +1,13 @@
+{
+  "id": "FR-PATH-029",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "FR-C08-heure",
+    "FR-C08-midi-minuit"
+  ],
+  "before": [],
+  "inline": [
+    "FR-EXT-029-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

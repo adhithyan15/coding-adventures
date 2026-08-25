@@ -1,0 +1,13 @@
+{
+  "id": "LA-PATH-011",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "LA-C08-caput",
+    "LA-C08-manus"
+  ],
+  "before": [],
+  "inline": [
+    "LA-EXT-011-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

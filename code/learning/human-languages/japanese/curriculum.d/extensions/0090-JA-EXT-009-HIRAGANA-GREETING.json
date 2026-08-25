@@ -1,0 +1,19 @@
+{
+  "id": "JA-EXT-009-HIRAGANA-GREETING",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can write five more hiragana signs from memory and read the daytime greeting from them, including the sign pronounced wa because it is a topic marker rather than the sign for that sound.",
+  "prerequisites": [
+    "JA-EXT-008-HIRAGANA-YES-NO",
+    "JA-EXT-002-TOPIC-PARTICLE-SPELLING"
+  ],
+  "lessons": [
+    "JA-W01-ko",
+    "JA-W01-n",
+    "JA-W01-ni",
+    "JA-W01-chi",
+    "JA-W01-wa",
+    "JA-W01-konnichiwa-read"
+  ]
+}

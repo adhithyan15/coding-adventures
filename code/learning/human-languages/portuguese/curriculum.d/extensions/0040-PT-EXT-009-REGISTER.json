@@ -1,0 +1,11 @@
+{
+  "id": "PT-EXT-009-REGISTER",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "register",
+  "canDo": "I can choose the Portuguese form that fits this relationship and setting.",
+  "prerequisites": [],
+  "lessons": [
+    "PT-C02-formal-practice"
+  ]
+}

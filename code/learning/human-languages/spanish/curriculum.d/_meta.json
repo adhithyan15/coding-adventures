@@ -1,0 +1,53 @@
+{
+  "_keys": [
+    "version",
+    "language",
+    "path",
+    "spine",
+    "extensions",
+    "conceptAliases"
+  ],
+  "version": 1,
+  "language": "spanish",
+  "conceptAliases": {
+    "CONNECTIVE-IF": [
+      "ES-CONDITION-SI-REAL"
+    ],
+    "CONDITIONAL-REAL": [
+      "ES-CONDITION-SI-FUTURE"
+    ],
+    "TENSE-BACKSHIFT": [
+      "ES-REPORT-BACKSHIFT"
+    ],
+    "REPORTED-SPEECH": [
+      "ES-REPORT-QUE-OBLIGATORY"
+    ],
+    "SPEECH-ACT-REPORT": [
+      "ES-REPORT-DECIR-PRETERITE"
+    ],
+    "MODAL-WOULD": [
+      "ES-CONDITIONAL"
+    ],
+    "VOICE-PASSIVE": [
+      "ES-GRAMMAR-SE-PASSIVE-AGREEMENT"
+    ],
+    "RELATIVE-CLAUSE": [
+      "ES-GRAMMAR-RELATIVE-QUE"
+    ],
+    "ABSTRACT-NOUN": [
+      "ES-FRIEND-DAD"
+    ],
+    "NOMINALIZATION": [
+      "ES-GRAMMAR-LO-QUE"
+    ],
+    "HONORIFIC-SYSTEM": [
+      "ES-REGISTER-TU-USTED"
+    ],
+    "DIALECT-FEATURE": [
+      "ES-PRONOUN-VOS"
+    ],
+    "ORTHOGRAPHY-HISTORICAL": [
+      "ES-SOUND-HERMANO-H"
+    ]
+  }
+}

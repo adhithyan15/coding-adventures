@@ -1,0 +1,11 @@
+{
+  "id": "TA-EXT-024-LANGUAGE-SPECIFIC",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can use the additional Tamil material required at this point in the path.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C20-pathinondru-irupathu"
+  ]
+}

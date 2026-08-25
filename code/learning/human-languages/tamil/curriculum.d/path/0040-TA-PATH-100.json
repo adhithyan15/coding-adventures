@@ -1,0 +1,36 @@
+{
+  "id": "TA-PATH-100",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "TA-S01-va",
+    "TA-S02-nna",
+    "TA-S03-nnna",
+    "TA-S04-na",
+    "TA-S05-rra",
+    "TA-S06-ka",
+    "TA-S07-ma",
+    "TA-S08-pulli",
+    "TA-S09-i-sign",
+    "TA-S101-letter-pa",
+    "TA-S102-vowel-sign-oo",
+    "TA-S112-letter-e",
+    "TA-S113-letter-la",
+    "TA-S114-vowel-sign-aa",
+    "TA-S115-letter-llla",
+    "TA-S116-letter-ca",
+    "TA-S117-letter-ra",
+    "TA-S118-letter-tta",
+    "TA-S119-letter-a",
+    "TA-S120-letter-aa",
+    "TA-S121-vowel-sign-u",
+    "TA-S122-letter-ta",
+    "TA-S123-vowel-sign-ee",
+    "TA-S124-letter-ya"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-100-SCRIPT-DRIZZLE",
+    "TA-EXT-100-SCRIPT-RECOGNITION"
+  ],
+  "after": []
+}

@@ -1,0 +1,13 @@
+{
+  "id": "UR-EXT-003-SCRIPT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can read Urdu kyā and select ye's consonantal value from the learned word.",
+  "prerequisites": [
+    "UR-EXT-001-INLINE-SCRIPT"
+  ],
+  "lessons": [
+    "UR-C03-kya"
+  ]
+}

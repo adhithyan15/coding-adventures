@@ -1,0 +1,11 @@
+{
+  "id": "GE-PATH-024",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "GE-C19-bitte-requests",
+    "GE-C20-entschuldigung"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

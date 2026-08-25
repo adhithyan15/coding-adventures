@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-037-LO-QUE",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "lessons": [
+    "ES-C53-lo-que"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-037-LO-QUE"
+  ],
+  "after": []
+}

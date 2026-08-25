@@ -1,0 +1,12 @@
+{
+  "id": "TE-PATH-001",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "TE-C01-namaskaram"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-001-INLINE-SCRIPT"
+  ],
+  "after": []
+}
