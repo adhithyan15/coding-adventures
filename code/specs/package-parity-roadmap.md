@@ -7144,6 +7144,54 @@ changed paths had zero exact overlap across 13 other live open PRs. GitHub
 reports the branch mergeable with required checks queued; auto-merge remains
 disabled until every check is terminal and acceptable.
 
+### Post-#12773 refresh and TypeScript orphan-crate selection
+
+PR #12773 reached 30 terminal acceptable checks: 24 succeeded, five skipped,
+and one completed neutrally, with no failure or pending job. GitHub reported the
+branch clean and mergeable, so the loop enabled squash auto-merge. GitHub merged
+the exact reviewed head `fbe53cb7aba011d1295ecd7bc7b2bda50a7b2546` as
+`3e114a1d37e919505671cad222cc8cea4f964801` at
+`2026-08-25T12:17:10Z` without a manual merge command. A late fetch advanced
+exact `origin/main` to `65729fcf2acae0df975a6e8c2b7db50bcad4e21f` through
+PR #12772; its rejected-frameset diagnostic positions remain in the existing
+portable HTML-frontend owner and do not overlap this build-tool slice.
+
+The regenerated collision report remains structurally unchanged: 15
+established lanes, 1,373 implementation identities, 4,566 package slots, 175
+high-consensus packages with 276 missing slots, 122 five-to-nine-lane packages
+with 926 gaps, 166 two-to-four-lane packages with 2,087 gaps, 910 singletons
+with 12,740 gaps, and 721 Rust singletons. Canonical collisions and unknown
+language buckets remain zero; OCaml remains correctly emerging at zero
+packages.
+
+Every intervening commit is classified before selection. PR #12767 extends the
+existing Mermaid XY chart owner with legend configuration; #12733 and #12770
+extend shared Chinese and Persian script-ductus data; and #12771 extends the
+existing WAST parser, portable WebAssembly conformance, and corpus-host owners
+with the six `v128.loadNxM_s/u` instructions. None changes a package identity
+or BUILD marker. PR #12745 does expose one genuinely unowned portable contract:
+contextual `>>` and `>>>` splitting with transactional rollback and memo
+coherence in nested generic parsing. The state now records a neutral contract
+root and a dependent established-lane umbrella. PR #12773 also exposes a
+separate selection-blocked host-authority review for the Unicode generator's
+PATH-resolved Node execution and temporary TypeScript runner. Six orphan
+consumers now explicitly depend on their same-language tracked-artifact
+consumer so no lane is falsely ready without its reviewed Unicode substrate.
+
+The selected next owner is
+`build-tool-typescript-orphan-crate-validation-conformance` on exact base
+`65729fcf2acae0df975a6e8c2b7db50bcad4e21f`. Its corpus, TypeScript discovery,
+and TypeScript tracked-artifact prerequisites are all merged. This bounded,
+process-free consumer advances the widest remaining orphan lane at 446
+packages and reuses the source-pinned Unicode 17 tables without adding
+filesystem enumeration, Git, process, environment, or network authority. Its
+six expected paths have zero exact overlap across all 10 live open PRs and 33
+non-main remote heads; the target branch was absent before the fresh worktree
+was created. Extra-CI and OCaml work remain collision-unsafe while PRs #12149
+and #12162 own their required Go entry-point and validator surfaces. The
+reconciled graph has 499 unique owners and 761 complete acyclic dependency
+edges, with exactly one in-progress owner and no active PR.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
