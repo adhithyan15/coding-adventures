@@ -2495,9 +2495,24 @@ def _run_bounded_process(
             stderr=subprocess.PIPE,
             **options,
         )
-        windows_job = (
-            _create_windows_kill_on_close_job(process) if os.name == "nt" else None
-        )
+        try:
+            windows_job = (
+                _create_windows_kill_on_close_job(process) if os.name == "nt" else None
+            )
+        except Exception as setup_error:
+            try:
+                _terminate_process_tree(process)
+                process.wait(timeout=10)
+            except (OSError, subprocess.SubprocessError):
+                raise RuntimeError(
+                    "could not terminate suspended emitted-runtime process"
+                ) from setup_error
+            finally:
+                if process.stdout is not None:
+                    process.stdout.close()
+                if process.stderr is not None:
+                    process.stderr.close()
+            raise
         if os.name == "nt":
             try:
                 _resume_windows_process(process.pid)

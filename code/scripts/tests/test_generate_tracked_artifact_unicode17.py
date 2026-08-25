@@ -534,6 +534,46 @@ class UnicodeDownloadBoundaryTests(unittest.TestCase):
             )
         terminate.assert_called_once()
 
+    @unittest.skipUnless(os.name == "nt", "Windows Job Object regression")
+    def test_bounded_process_reaps_a_job_setup_failure(self) -> None:
+        started: list[subprocess.Popen] = []
+        real_popen = subprocess.Popen
+
+        def start_process(*args, **kwargs):
+            process = real_popen(*args, **kwargs)
+            started.append(process)
+            return process
+
+        try:
+            with (
+                mock.patch.object(
+                    generator.subprocess,
+                    "Popen",
+                    side_effect=start_process,
+                ),
+                mock.patch.object(
+                    generator,
+                    "_create_windows_kill_on_close_job",
+                    side_effect=OSError("job setup failed"),
+                ),
+                self.assertRaisesRegex(OSError, "job setup failed"),
+            ):
+                generator._run_bounded_process(
+                    [sys.executable, "-c", "pass"],
+                    cwd=Path(__file__).resolve().parent,
+                    env=generator._lua_self_check_environment(),
+                    input_text="",
+                    timeout=10,
+                    output_limit=64,
+                )
+            self.assertEqual(len(started), 1)
+            self.assertIsNotNone(started[0].poll())
+        finally:
+            for process in started:
+                if process.poll() is None:
+                    process.kill()
+                    process.wait(timeout=5)
+
 
 if __name__ == "__main__":
     unittest.main()

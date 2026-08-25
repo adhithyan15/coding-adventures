@@ -7578,9 +7578,9 @@ The repository-pinned Lua 5.4.7 toolchain passes syntax compilation, 19
 focused validator tests, and the complete 72-test Lua build-tool suite. LuaCov
 measures the validator at 98.23% and the generated Unicode module at 84.06%; the
 package-wide total is 51.24% because unchanged CLI, resolver, and bundled test
-framework code remains outside this bounded consumer. All 22 generator tests
-and six pinned-Lua setup tests pass on Windows; the Job Object ownership test is
-an expected platform skip on POSIX. Ruff, changed-source Luacheck, workflow
+framework code remains outside this bounded consumer. All 23 generator tests
+and six pinned-Lua setup tests pass on Windows; the two Job Object failure-path
+tests are expected platform skips on POSIX. Ruff, changed-source Luacheck, workflow
 YAML parsing, generated-byte verification, and the full emitted Lua Unicode
 self-check pass.
 
@@ -7599,12 +7599,14 @@ checks pass; no package dependency changed. Generator subprocess authority
 remains explicitly selection-blocked under its separate review owner.
 
 The branch rebased without conflict onto exact `origin/main`
-`3ef6d4713e358c47035b733c6f9b3ccb46c270c1` after classifying intervening HTML
-parser diagnostics, Malayalam script and language-ladder coverage, Mermaid XY
-rendering, and Java-to-semantic-IR lowering under their existing owners. None
-adds or removes a package identity, BUILD/build-tool marker, or Lua tranche
-path. The focused package, generator, full-vector, Go oracle, build-plan, lint,
-and syntax gates were rerun successfully after the rebase.
+`acfb0704bf9ea5898e262e9d98f157e3cff10270` after classifying intervening HTML
+parser diagnostics and Malayalam script data under their existing owners. The
+merged SIMD lane-memory completion, ALGOL power-one selector writes, and
+Mermaid XY axis theme colors remain inside the neutral/parity owners registered
+before selection and the existing WAST/conformance, ALGOL, and Mermaid XY
+owners. None adds or removes a package identity, BUILD/build-tool marker, or
+Lua tranche path. The focused package, generator, full-vector, Go oracle,
+build-plan, lint, and syntax gates were rerun successfully after the rebase.
 
 ## Autonomous Loop Protocol
 
