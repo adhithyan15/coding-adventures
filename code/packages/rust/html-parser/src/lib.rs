@@ -7868,20 +7868,26 @@ impl HtmlParser {
                 ));
             }
             "p" if self.has_open_element("head") && !self.has_open_element("body") => {
-                self.diagnostics.push(ParserDiagnostic::new(
-                    "unexpected-p-end-tag-before-body",
-                    "end tag `</p>` before body content was ignored",
-                ));
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-p-end-tag-before-body",
+                        "end tag `</p>` before body content was ignored",
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
             }
             "p" if !self.has_open_element("p")
                 && !self.has_open_element("body")
                 && !self.document_has_body_element()
                 && !self.body_has_non_whitespace_child() =>
             {
-                self.diagnostics.push(ParserDiagnostic::new(
-                    "unexpected-p-end-tag-before-body",
-                    "end tag `</p>` before body content was ignored",
-                ));
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-p-end-tag-before-body",
+                        "end tag `</p>` before body content was ignored",
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
             }
             "p" if self.current_parent_has_table_cell_ancestor()
                 && !self.current_parent_has_element_in_table_scope("p") =>
@@ -27680,6 +27686,14 @@ mod tests {
         .at_emission(Some(end_tag_position(source, "p")))
     }
 
+    fn unexpected_p_end_tag_before_body(source: &str, occurrence: usize) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-p-end-tag-before-body",
+            "end tag `</p>` before body content was ignored",
+        )
+        .at_emission(Some(end_tag_position_at(source, "p", occurrence)))
+    }
+
     fn unexpected_li_end_tag(source: &str) -> ParserDiagnostic {
         ParserDiagnostic::new(
             "unexpected-li-end-tag",
@@ -39712,7 +39726,8 @@ mod tests {
 
     #[test]
     fn ignores_stray_paragraph_end_tag_before_body_starts() {
-        let output = parse_html_with_diagnostics("<!doctype html><head></p><meta><p>").unwrap();
+        let source = "<!doctype html><head></p><meta><p>";
+        let output = parse_html_with_diagnostics(source).unwrap();
 
         let head = head(&output.document);
         assert_eq!(head.children.len(), 1);
@@ -39723,10 +39738,7 @@ mod tests {
         assert_eq!(element(&body.children[0]).name, "p");
         assert_eq!(
             output.parser_diagnostics,
-            vec![ParserDiagnostic::new(
-                "unexpected-p-end-tag-before-body",
-                "end tag `</p>` before body content was ignored"
-            )]
+            vec![unexpected_p_end_tag_before_body(source, 0)]
         );
 
         for source in [
@@ -39736,13 +39748,50 @@ mod tests {
             let output = parse_html_with_diagnostics(source).unwrap();
             assert_eq!(
                 output.parser_diagnostics,
-                vec![ParserDiagnostic::new(
-                    "unexpected-p-end-tag-before-body",
-                    "end tag `</p>` before body content was ignored"
-                )],
+                vec![unexpected_p_end_tag_before_body(source, 0)],
                 "source {source:?}"
             );
         }
+
+        let repeated = "<!doctype html><head></p></head><!--é-->\r\n</p>";
+        let output = parse_html_with_diagnostics(repeated).unwrap();
+        assert_eq!(
+            output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-p-end-tag-before-body")
+                .collect::<Vec<_>>(),
+            vec![
+                &unexpected_p_end_tag_before_body(repeated, 0),
+                &unexpected_p_end_tag_before_body(repeated, 1),
+            ]
+        );
+
+        for excluded in ["<!doctype html></p", "<!doctype html><body></p>"] {
+            let output = parse_html_with_diagnostics(excluded).unwrap();
+            assert!(output
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "unexpected-p-end-tag-before-body"));
+        }
+
+        let fragment = parse_html_fragment_with_diagnostics("</p>").unwrap();
+        assert!(fragment
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-p-end-tag-before-body"));
+
+        let mut unpositioned = HtmlParser::new();
+        unpositioned.process_token(Token::EndTag {
+            name: "p".to_string(),
+        });
+        unpositioned.process_token(Token::Eof);
+        let diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-p-end-tag-before-body")
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
     }
 
     #[test]
