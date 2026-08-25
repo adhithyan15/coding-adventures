@@ -5783,6 +5783,70 @@ impl Compiler {
             })
     }
 
+    fn body_changes_unconditional_identity_assignment_dependency(
+        &self,
+        node: &GrammarASTNode,
+        name: &str,
+    ) -> bool {
+        let targets_name = |variable: &GrammarASTNode| {
+            array_subscripts(variable).is_none()
+                && direct_tokens(variable).into_iter().any(|token| {
+                    token.effective_type_name() == "NAME" && token.value == name
+                })
+        };
+        if node.rule_name == "assign_stmt" {
+            let writes_name = direct_nodes(node)
+                .into_iter()
+                .filter(|child| child.rule_name == "left_part")
+                .filter_map(|left| first_direct_node(left, "variable"))
+                .any(&targets_name);
+            if writes_name {
+                return first_direct_node(node, "expression").is_none_or(|expression| {
+                    !self.selector_expression_unconditionally_preserves_name(expression, name)
+                });
+            }
+        }
+        if node.rule_name == "for_stmt"
+            && first_direct_node(node, "variable").is_some_and(&targets_name)
+        {
+            return true;
+        }
+        direct_nodes(node).into_iter().any(|child| {
+            self.body_changes_unconditional_identity_assignment_dependency(child, name)
+        })
+    }
+
+    fn selector_expression_unconditionally_preserves_name(
+        &self,
+        node: &GrammarASTNode,
+        name: &str,
+    ) -> bool {
+        let preserves_name = self.require_var(name).is_ok_and(|binding| match binding.ty {
+            ScalarType::Integer => self.integer_identity_expression_preserves_name(node, name),
+            ScalarType::Boolean => self.boolean_identity_expression_preserves_name(node, name),
+            ScalarType::Real => self.real_unit_identity_expression_preserves_name(node, name),
+            ScalarType::String => {
+                exact_bare_variable_expression_name(node).as_deref() == Some(name)
+            }
+        });
+        if preserves_name {
+            return true;
+        }
+        if !matches!(node.rule_name.as_str(), "expression" | "arith_expr")
+            || !direct_tokens(node).iter().any(|token| token.value == "if")
+        {
+            return false;
+        }
+        let branches: Vec<&GrammarASTNode> = direct_nodes(node)
+            .into_iter()
+            .filter(|child| child.rule_name == node.rule_name)
+            .collect();
+        branches.len() == 2
+            && branches.into_iter().all(|branch| {
+                self.selector_expression_unconditionally_preserves_name(branch, name)
+            })
+    }
+
     fn selector_expression_intrinsically_preserves_name(
         &self,
         node: &GrammarASTNode,
@@ -5790,19 +5854,7 @@ impl Compiler {
         effect_root: &GrammarASTNode,
         remaining_dependency_depth: usize,
     ) -> bool {
-        let identity_write_preserves_name = self.require_var(name).is_ok_and(|binding| {
-            match binding.ty {
-                ScalarType::Integer => self.integer_identity_expression_preserves_name(node, name),
-                ScalarType::Boolean => self.boolean_identity_expression_preserves_name(node, name),
-                ScalarType::Real => {
-                    self.real_unit_identity_expression_preserves_name(node, name)
-                }
-                ScalarType::String => {
-                    exact_bare_variable_expression_name(node).as_deref() == Some(name)
-                }
-            }
-        });
-        if identity_write_preserves_name {
+        if self.selector_expression_unconditionally_preserves_name(node, name) {
             return true;
         }
         if !matches!(node.rule_name.as_str(), "expression" | "arith_expr")
@@ -5839,7 +5891,7 @@ impl Compiler {
                                 && self.active_by_name_binding(dependency).is_none()
                         })
                         && if remaining_dependency_depth == 0 {
-                            !body_changes_bare_self_assignment_dependency(
+                            !self.body_changes_unconditional_identity_assignment_dependency(
                                 effect_root,
                                 dependency,
                             )
@@ -7882,35 +7934,6 @@ fn recursive_tokens(node: &GrammarASTNode) -> Vec<&Token> {
     out
 }
 
-fn body_changes_bare_self_assignment_dependency(node: &GrammarASTNode, name: &str) -> bool {
-    let targets_name = |variable: &GrammarASTNode| {
-        array_subscripts(variable).is_none()
-            && direct_tokens(variable).into_iter().any(|token| {
-                token.effective_type_name() == "NAME" && token.value == name
-            })
-    };
-    if node.rule_name == "assign_stmt" {
-        let writes_name = direct_nodes(node)
-            .into_iter()
-            .filter(|child| child.rule_name == "left_part")
-            .filter_map(|left| first_direct_node(left, "variable"))
-            .any(&targets_name);
-        if writes_name {
-            return first_direct_node(node, "expression").is_none_or(|expression| {
-                !expression_is_bare_self_or_equal_leaf_conditional(expression, name)
-            });
-        }
-    }
-    if node.rule_name == "for_stmt"
-        && first_direct_node(node, "variable").is_some_and(&targets_name)
-    {
-        return true;
-    }
-    direct_nodes(node)
-        .into_iter()
-        .any(|child| body_changes_bare_self_assignment_dependency(child, name))
-}
-
 fn collect_expression_dependency_names(
     node: &GrammarASTNode,
     target_name: &str,
@@ -8435,28 +8458,6 @@ fn literal_numeric_one(node: &GrammarASTNode) -> bool {
     }
     let child_nodes = direct_nodes(node);
     tokens.is_empty() && child_nodes.len() == 1 && literal_numeric_one(child_nodes[0])
-}
-
-fn expression_is_bare_self_or_equal_leaf_conditional(
-    node: &GrammarASTNode,
-    name: &str,
-) -> bool {
-    if exact_bare_variable_expression_name(node).as_deref() == Some(name) {
-        return true;
-    }
-    if !matches!(node.rule_name.as_str(), "expression" | "arith_expr")
-        || !direct_tokens(node).iter().any(|token| token.value == "if")
-    {
-        return false;
-    }
-    let branches: Vec<&GrammarASTNode> = direct_nodes(node)
-        .into_iter()
-        .filter(|child| child.rule_name == node.rule_name)
-        .collect();
-    branches.len() == 2
-        && branches
-            .into_iter()
-            .all(|branch| expression_is_bare_self_or_equal_leaf_conditional(branch, name))
 }
 
 /// Return the name of a bare scalar variable node. Array elements are kept
@@ -10614,6 +10615,25 @@ mod tests {
             "test",
         )
         .expect("the tenth bounded selector dependency may choose its preserving leaf");
+    }
+
+    #[test]
+    fn al4_tenth_selector_dependency_accepts_conditional_identity_write() {
+        compile_source(
+            "begin integer i, n, limit, choose; boolean other, flag, gate, key, last, final, ultimate, terminal, horizon, frontier, boundary, threshold; n := 3; limit := 3; choose := 1; other := true; flag := true; gate := true; key := true; last := true; final := true; ultimate := true; terminal := true; horizon := true; frontier := true; boundary := true; threshold := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := if flag then other else false; flag := if gate then flag else false; gate := if key then gate else false; key := if last then key else false; last := if final then last else false; final := if ultimate then final else false; ultimate := if terminal then ultimate else false; terminal := if horizon then terminal else false; horizon := if frontier then horizon else false; frontier := if boundary then frontier else false; boundary := if threshold then boundary and true else false or boundary end; print(i + 0.25) end",
+            "test",
+        )
+        .expect("computed identity leaves do not require an eleventh selector proof");
+    }
+
+    #[test]
+    fn al4_tenth_selector_dependency_rejects_conditional_changing_write() {
+        let err = compile_source(
+            "begin integer i, n, limit, choose; boolean other, flag, gate, key, last, final, ultimate, terminal, horizon, frontier, boundary, threshold; n := 3; limit := 3; choose := 1; other := true; flag := true; gate := true; key := true; last := true; final := true; ultimate := true; terminal := true; horizon := true; frontier := true; boundary := true; threshold := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := if flag then other else false; flag := if gate then flag else false; gate := if key then gate else false; key := if last then key else false; last := if final then last else false; final := if ultimate then final else false; ultimate := if terminal then ultimate else false; terminal := if horizon then terminal else false; horizon := if frontier then horizon else false; frontier := if boundary then frontier else false; boundary := if threshold then boundary and true else false end; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("a changing leaf still requires an out-of-budget selector proof");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]

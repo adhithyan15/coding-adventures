@@ -2621,6 +2621,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — unconditional identity leaves do not consume an extra
+    // selector-dependency level at the bounded proof cap.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, limit, choose; boolean other, flag, gate, key, last, final, ultimate, terminal, horizon, frontier, boundary, threshold; n := 3; limit := 3; choose := 1; other := true; flag := true; gate := true; key := true; last := true; final := true; ultimate := true; terminal := true; horizon := true; frontier := true; boundary := true; threshold := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := if flag then other else false; flag := if gate then flag else false; gate := if key then gate else false; key := if last then key else false; last := if final then last else false; final := if ultimate then final else false; ultimate := if terminal then ultimate else false; terminal := if horizon then terminal else false; horizon := if frontier then horizon else false; frontier := if boundary then frontier else false; boundary := if threshold then boundary and true else false or boundary end; print(i + 0.25) end",
+        expect: Expect::Stdout("3.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a variable-free false body condition makes its dependency
     // write unreachable, so capped while analysis keeps the stable local.
     Prog {
@@ -10562,6 +10571,31 @@ fn algol_grouped_selector_identity_runs_on_every_available_standard_backend() {
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the grouped selector did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_conditional_identity_selector_write_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("boundary := if threshold then boundary and true else false or boundary")
+        })
+        .expect("the ALGOL conditional identity selector must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the conditional identity selector did not run"
             );
             continue;
         };

@@ -955,7 +955,11 @@ backend immediately) come before the enabler-dependent items.
   and signed integer zero are also exact identities; negative one and other
   signed changing expressions remain conservative. Complete supported boolean,
   integer, and real identity expressions may likewise be nested in parentheses;
-  grouped changing expressions remain conservative. For finite real
+  grouped changing expressions remain conservative. At the terminal bounded
+  dependency level, a conditional write whose two branches are complete
+  supported identities of the same scalar is also preserving without following
+  its selector; a changing branch remains conservative and does not extend the
+  ten-level proof budget. For finite real
   selectors, multiplication and division by exact positive one are likewise
   preserving, including left-associative chains of those operations; additive
   zero remains conservative because it can change the sign bit of negative
