@@ -860,17 +860,18 @@
     {
       "language": "spanish",
       "chapter": 85,
-      "sourceHash": "fnv1a64:2463aff457edbb03",
+      "sourceHash": "fnv1a64:48b9cdd8739208a3",
       "lessonIds": [
         "ES-C42-me-objeto",
-        "ES-C42-te"
+        "ES-C42-te",
+        "ES-C42-te-thee"
       ],
       "tex": "spanish/book/chapters/ch85-pronoun-me-te.tex"
     },
     {
       "language": "spanish",
       "chapter": 86,
-      "sourceHash": "fnv1a64:5f7490cccec2e8d5",
+      "sourceHash": "fnv1a64:be83d856b6d026a0",
       "lessonIds": [
         "ES-C42-repaso-objeto"
       ],
@@ -888,16 +889,17 @@
     {
       "language": "spanish",
       "chapter": 88,
-      "sourceHash": "fnv1a64:27795b9dc379fdf5",
+      "sourceHash": "fnv1a64:d14bd38a501a7942",
       "lessonIds": [
-        "ES-C45-nos"
+        "ES-C45-nos",
+        "ES-C45-nosotros"
       ],
       "tex": "spanish/book/chapters/ch88-pronoun-nos.tex"
     },
     {
       "language": "spanish",
       "chapter": 89,
-      "sourceHash": "fnv1a64:4b79b0e3f430eee9",
+      "sourceHash": "fnv1a64:0ab44564e12c6371",
       "lessonIds": [
         "ES-C45-los-las"
       ],
@@ -906,7 +908,7 @@
     {
       "language": "spanish",
       "chapter": 90,
-      "sourceHash": "fnv1a64:d2fb001200a7e53e",
+      "sourceHash": "fnv1a64:81c69340c1ca4a9d",
       "lessonIds": [
         "ES-C45-os"
       ],
@@ -915,7 +917,7 @@
     {
       "language": "spanish",
       "chapter": 91,
-      "sourceHash": "fnv1a64:c767cb3dc7024934",
+      "sourceHash": "fnv1a64:c7dbb2bd7dd52785",
       "lessonIds": [
         "ES-C45-repaso-ocho"
       ],
@@ -924,7 +926,7 @@
     {
       "language": "spanish",
       "chapter": 92,
-      "sourceHash": "fnv1a64:3e415101f3935157",
+      "sourceHash": "fnv1a64:ef44800e1662437e",
       "lessonIds": [
         "ES-C45-sintesis-sin-repetir"
       ],
@@ -933,7 +935,7 @@
     {
       "language": "spanish",
       "chapter": 93,
-      "sourceHash": "fnv1a64:2588dada20535d8c",
+      "sourceHash": "fnv1a64:67e217315b956359",
       "lessonIds": [
         "ES-C46-le"
       ],
@@ -942,7 +944,7 @@
     {
       "language": "spanish",
       "chapter": 94,
-      "sourceHash": "fnv1a64:ee39c849586403ba",
+      "sourceHash": "fnv1a64:440485d6d74db034",
       "lessonIds": [
         "ES-C46-les"
       ],
@@ -951,7 +953,7 @@
     {
       "language": "spanish",
       "chapter": 95,
-      "sourceHash": "fnv1a64:986a201e68560e9a",
+      "sourceHash": "fnv1a64:0a8c39863a464492",
       "lessonIds": [
         "ES-C46-cual-pide"
       ],
@@ -960,7 +962,7 @@
     {
       "language": "spanish",
       "chapter": 96,
-      "sourceHash": "fnv1a64:9ba9b1a61c1d5e93",
+      "sourceHash": "fnv1a64:0614ae805e768080",
       "lessonIds": [
         "ES-C46-repaso-dos-sistemas"
       ],
@@ -969,7 +971,7 @@
     {
       "language": "spanish",
       "chapter": 97,
-      "sourceHash": "fnv1a64:0e569ed3232a22e9",
+      "sourceHash": "fnv1a64:0818e91dc3c88fb7",
       "lessonIds": [
         "ES-C46-sintesis-dar-y-decir"
       ],
@@ -978,7 +980,7 @@
     {
       "language": "spanish",
       "chapter": 98,
-      "sourceHash": "fnv1a64:02c1cf46f9218a6d",
+      "sourceHash": "fnv1a64:91a7fbeab5eec4c4",
       "lessonIds": [
         "ES-C47-me-lo"
       ],
@@ -987,7 +989,7 @@
     {
       "language": "spanish",
       "chapter": 99,
-      "sourceHash": "fnv1a64:8d8f620d0b534293",
+      "sourceHash": "fnv1a64:ca6d6f029c045616",
       "lessonIds": [
         "ES-C47-se-lo"
       ],
@@ -996,7 +998,7 @@
     {
       "language": "spanish",
       "chapter": 100,
-      "sourceHash": "fnv1a64:940dd2b505d04cb2",
+      "sourceHash": "fnv1a64:4d0c5521e560491b",
       "lessonIds": [
         "ES-C47-por-que-se"
       ],
@@ -1005,7 +1007,7 @@
     {
       "language": "spanish",
       "chapter": 101,
-      "sourceHash": "fnv1a64:f32690216cb251e5",
+      "sourceHash": "fnv1a64:d80de7249fce6682",
       "lessonIds": [
         "ES-C47-repaso-dobles"
       ],
@@ -1014,7 +1016,7 @@
     {
       "language": "spanish",
       "chapter": 102,
-      "sourceHash": "fnv1a64:3c4bfc650c30cac4",
+      "sourceHash": "fnv1a64:f68093df87f011ff",
       "lessonIds": [
         "ES-C47-sintesis-dos-a-la-vez"
       ],
@@ -2202,16 +2204,17 @@
     {
       "language": "spanish",
       "chapter": 228,
-      "sourceHash": "fnv1a64:48959a428959bac0",
+      "sourceHash": "fnv1a64:602e0bb79bf0105b",
       "lessonIds": [
-        "ES-C60-mal"
+        "ES-C60-mal",
+        "ES-C60-apocope"
       ],
       "tex": "spanish/book/chapters/ch228-mal.tex"
     },
     {
       "language": "spanish",
       "chapter": 229,
-      "sourceHash": "fnv1a64:828770b3ca60254e",
+      "sourceHash": "fnv1a64:94c021d9fadc8388",
       "lessonIds": [
         "ES-C60-repaso-grado"
       ],
@@ -2418,16 +2421,17 @@
     {
       "language": "spanish",
       "chapter": 252,
-      "sourceHash": "fnv1a64:9d818af2e6a86fd6",
+      "sourceHash": "fnv1a64:28f38ff65213bab8",
       "lessonIds": [
-        "ES-C65-ahora-hoy"
+        "ES-C65-ahora-hoy",
+        "ES-C65-hoy"
       ],
       "tex": "spanish/book/chapters/ch252-ahora-hoy.tex"
     },
     {
       "language": "spanish",
       "chapter": 253,
-      "sourceHash": "fnv1a64:ce37a5bcc9708337",
+      "sourceHash": "fnv1a64:ed02ddfedd03b21b",
       "lessonIds": [
         "ES-C65-unos-unas"
       ],
@@ -2445,16 +2449,17 @@
     {
       "language": "spanish",
       "chapter": 255,
-      "sourceHash": "fnv1a64:a951790dda8f3a58",
+      "sourceHash": "fnv1a64:a0d12847774df06f",
       "lessonIds": [
-        "ES-C65-vi-di"
+        "ES-C65-vi-di",
+        "ES-C65-di"
       ],
       "tex": "spanish/book/chapters/ch255-vi-di.tex"
     },
     {
       "language": "spanish",
       "chapter": 256,
-      "sourceHash": "fnv1a64:c7a5da121807d2e6",
+      "sourceHash": "fnv1a64:432690c1e3684b76",
       "lessonIds": [
         "ES-C65-repaso-parejas"
       ],
@@ -2508,16 +2513,17 @@
     {
       "language": "spanish",
       "chapter": 262,
-      "sourceHash": "fnv1a64:225d0bd3d65a403b",
+      "sourceHash": "fnv1a64:b2f6dba4a2c5f380",
       "lessonIds": [
-        "ES-C67-primero"
+        "ES-C67-primero",
+        "ES-C67-primer-libro"
       ],
       "tex": "spanish/book/chapters/ch262-primero.tex"
     },
     {
       "language": "spanish",
       "chapter": 263,
-      "sourceHash": "fnv1a64:3a4cdb8796df5590",
+      "sourceHash": "fnv1a64:10b607a72cb8eda3",
       "lessonIds": [
         "ES-C67-uno-otro"
       ],
@@ -3441,6 +3447,33 @@
         "ES-C336-repaso-seis-en-uso"
       ],
       "tex": "spanish/book/chapters/ch336-repaso-seis-en-uso.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 337,
+      "sourceHash": "fnv1a64:1b7a7a153f9a9d86",
+      "lessonIds": [
+        "ES-W01-frase-propia"
+      ],
+      "tex": "spanish/book/chapters/ch337-escribir-frase-propia.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 338,
+      "sourceHash": "fnv1a64:9a50d85d1ee87a21",
+      "lessonIds": [
+        "ES-W01-ficha-personal"
+      ],
+      "tex": "spanish/book/chapters/ch338-escribir-ficha-personal.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 339,
+      "sourceHash": "fnv1a64:7e967e1afa94d266",
+      "lessonIds": [
+        "ES-W01-con-reloj"
+      ],
+      "tex": "spanish/book/chapters/ch339-escribir-con-reloj.tex"
     }
   ]
 }

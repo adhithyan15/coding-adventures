@@ -1,0 +1,226 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 338,
+  "title": "Writing --- Four Lines About You",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:2e120037083aa97c",
+  "lessons": [
+    {
+      "id": "ES-W01-ficha-personal",
+      "sequence": 5900,
+      "title": "Four lines about you",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "four lines of your own about yourself, chosen and ordered from language you already hold",
+      "script": "latin",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:7edd294c8355e83c",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Last time you chose two things and put them in an order. Nothing new went on the page, and it was still your own line."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now four of them, and the same rule holds: no word that the course has not already given you."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — controlled composition",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A clinic asks the person at the desk to write four facts about themselves. Here is your whole supply:"
+            },
+            {
+              "kind": "speech",
+              "text": "me llamo, tengo … años, soy de …, vivo en …, gracias."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write four lines. Your name, your age, where you are from, where you live — then close with the courtesy word."
+            },
+            {
+              "kind": "speech",
+              "text": "Each line is a frame with one blank you fill from your own life:"
+            },
+            {
+              "kind": "speech",
+              "text": "Me llamo ______. Tengo ______ años. Soy de ______. Vivo en ______."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then gracias on its own line."
+            },
+            {
+              "kind": "speech",
+              "text": "Two things are being asked of you, and only one of them is Spanish. The Spanish is the frames, and you have held every one of them for a long time. The other thing is deciding which frame answers which question, and stopping when the four facts are on the page. Writing what was asked and nothing more is a skill of its own."
+            },
+            {
+              "kind": "speech",
+              "text": "Now compare. Soy de names the place you came from; vivo en names the place you are now. If both of your blanks hold the same word, that is a true answer, not a mistake — plenty of people never moved."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "your four lines aloud, and hear that every word was already yours",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: your four lines aloud, and hear that every word was already yours]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-W01-ficha-personal-age",
+              "prompt": "Write the line that gives your age. Use the frame, with a blank where the number goes.",
+              "assesses": [
+                "ES-WRITING-CONTROLLED-COMPOSITION",
+                "ES-GRAMMAR-AGE-WITH-TENER",
+                "ES-LEX-CUANTOS-ANOS"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "tengo ___ años",
+                "tengo anos",
+                "tengo ___ anos."
+              ],
+              "feedback": {
+                "correct": "Spanish HAS years where English IS them.",
+                "incorrect": "Tengo ___ anos -- the verb is tener, not ser."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-W01-ficha-personal-from",
+              "prompt": "Which frame answers where you are FROM, and which answers where you live NOW?",
+              "assesses": [
+                "ES-WRITING-CONTROLLED-COMPOSITION",
+                "ES-GRAMMAR-ORIGIN-WITH-SER",
+                "ES-LEX-DE"
+              ],
+              "responseSeconds": 18,
+              "acceptedResponses": [
+                "soy de for from, vivo en for now",
+                "soy de / vivo en",
+                "soy de is origin, vivo en is where you live"
+              ],
+              "feedback": {
+                "correct": "One verb for where you began, one for where you are.",
+                "incorrect": "Soy de names the origin; vivo en names the address."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-W01-ficha-personal-close",
+              "prompt": "Write the line that says where you live, then the word that closes the form.",
+              "assesses": [
+                "ES-WRITING-CONTROLLED-COMPOSITION",
+                "ES-LEX-GRACIAS",
+                "ES-LEX-VIVIR",
+                "ES-LEX-EN",
+                "ES-GRAMMAR-IR-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 22,
+              "acceptedResponses": [
+                "vivo en ___. gracias",
+                "vivo en, gracias",
+                "vivo en ___. gracias."
+              ],
+              "feedback": {
+                "correct": "Four facts and a courtesy, which is what the desk asked for.",
+                "incorrect": "Vivo en ___, then gracias."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many words on your page were new? (None.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And which verb carries your age? (Tener — you have the years.) Next: the same four lines, with a clock running."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

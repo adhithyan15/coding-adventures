@@ -4,11 +4,11 @@
   "chapter": 101,
   "title": "Review --- The Pairs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:8383cec902cde9e8",
+  "sourceHash": "fnv1a64:ce4eb7d5a8a5195d",
   "lessons": [
     {
       "id": "ES-C47-repaso-dobles",
-      "sequence": 1239,
+      "sequence": 1240,
       "title": "Review — the pairs",
       "headword": "(review)",
       "romanization": "(review)",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:bb3ee9d20dbfa14a",
+      "sourceHash": "fnv1a64:ad5c7c5e2d90357e",
       "notice": {
         "modality": "sight",
         "needs": [

@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 88,
   "title": "Nos --- Us, and the Word Inside -mos",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:8ace7d2514a9d404",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:48c59af10dd92c26",
   "lessons": [
     {
       "id": "ES-C45-nos",
@@ -12,14 +12,14 @@
       "title": "nos — \"us\"",
       "headword": "nos",
       "romanization": "nos",
-      "gloss": "\"us\" — and the word hiding inside the verb ending you have used since hablamos",
+      "gloss": "\"us\" — the object pronoun that speaks for more than one person",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ccbfdfbae7589f2b",
+      "sourceHash": "fnv1a64:1bc9362dede62d3a",
       "notice": null,
       "blocks": [
         {
@@ -68,33 +68,6 @@
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Nos is Latin nōs, which meant both we and us — the language had not yet split them into two words."
-            },
-            {
-              "kind": "speech",
-              "text": "You have been carrying it for a long time without being shown. The -mos ending on hablamos, comemos, tenemos is that same nōs, worn down and glued to the back of the verb. Every time you said \"we speak,\" you were saying nos twice: once in the ending, and once by not needing to say it at all."
-            },
-            {
-              "kind": "speech",
-              "text": "And the word for \"we\" itself:"
-            },
-            {
-              "kind": "speech",
-              "text": "nosotros — we, literally nos + otros, \"we others.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Spanish added otros to the plain nos somewhere in the Middle Ages, to make clear the speaker meant this group and not the person being addressed. Nothing else in the family did it quite this way, and the seam is still visible in the word."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -116,11 +89,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"hablamos\" and hear the nos at the end of it",
+              "instruction": "\"Te quiero\" then \"Nos quieren\" — one person, then a group",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"hablamos\" and hear the *nos* at the end of it]"
+              "source": "[YOU SAY: \"Te quiero\" then \"Nos quieren\" — one person, then a group]"
             },
             {
               "kind": "activity",
@@ -144,7 +117,180 @@
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C45-nos-ending",
+              "id": "ES-C45-nos-count",
+              "prompt": "Me quieren and nos quieren differ in one thing. What?",
+              "assesses": [
+                "ES-LEX-NOS-OBJECT",
+                "ES-GRAMMAR-ME-DIRECT-OBJECT"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "how many people are on the receiving end",
+                "one person versus more than one",
+                "me is one, nos is more"
+              ],
+              "feedback": {
+                "correct": "One letter, and it changes who you speak for.",
+                "incorrect": "Me is one person; nos is that person and somebody else."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C45-nos-slot",
+              "prompt": "Where does nos stand in nos quieren?",
+              "assesses": [
+                "ES-GRAMMAR-NOS-DIRECT-OBJECT",
+                "ES-GRAMMAR-TE-DIRECT-OBJECT",
+                "ES-GRAMMAR-QUERER-PRESENT-PLURAL"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "in front of the verb",
+                "before the verb",
+                "the same slot as me and te"
+              ],
+              "feedback": {
+                "correct": "The same slot me and te have always taken.",
+                "incorrect": "In front of the verb, exactly where me and te go."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"they love us.\" (Nos quieren.) And which slot did nos take? (The one in front of the verb.) Next: where nos came from, and the verb ending that has been carrying it all along."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C45-nosotros",
+      "sequence": 1227,
+      "title": "nosotros — the word inside -mos",
+      "headword": "nosotros",
+      "romanization": "nosotros",
+      "gloss": "\"we\" — the word hiding inside the verb ending you have used since hablamos",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:47004e99bc40969d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"they love us.\" (Nos quieren.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "That little nos has been somewhere else in your Spanish for a very long time, and nobody has pointed at it yet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Nos is Latin nōs, which meant both we and us — the language had not yet split them into two words."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have been carrying it without being shown. The -mos ending on hablamos, comemos, tenemos is that same nōs, worn down and glued to the back of the verb. Every time you said \"we speak,\" you were saying nos twice: once in the ending, and once by not needing to say it at all."
+            },
+            {
+              "kind": "speech",
+              "text": "And the word for \"we\" itself:"
+            },
+            {
+              "kind": "speech",
+              "text": "nosotros — we, literally nos + otros, \"we others.\""
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish added otros to the plain nos somewhere in the Middle Ages, to make clear the speaker meant this group and not the person being addressed. Nothing else in the family did it quite this way, and the seam is still visible in the word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"hablamos\" and hear the nos at the end of it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"hablamos\" and hear the *nos* at the end of it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"nosotros hablamos\" and hear it twice",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"nosotros hablamos\" and hear it twice]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C45-nosotros-ending",
               "prompt": "Which verb ending is the same ancient word as nos?",
               "assesses": [
                 "ES-ETYMON-NOS-OTROS",
@@ -164,7 +310,7 @@
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C45-nos-word",
+              "id": "ES-C45-nosotros-word",
               "prompt": "What are the two pieces inside nosotros, and what do they mean together?",
               "assesses": [
                 "ES-LEX-NOSOTROS"
@@ -179,11 +325,31 @@
                 "correct": "The seam is still visible.",
                 "incorrect": "nos + otros, literally we others."
               }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C45-nosotros-twice",
+              "prompt": "Nosotros hablamos carries the same ancient word in two places. Name them.",
+              "assesses": [
+                "ES-LEX-NOS-OBJECT",
+                "ES-LEX-NOSOTROS"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "nosotros and the -mos ending",
+                "nos in nosotros and mos in hablamos",
+                "the pronoun and the ending"
+              ],
+              "feedback": {
+                "correct": "Twice in three words.",
+                "incorrect": "The nos of nosotros, and the -mos of hablamos."
+              }
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -195,7 +361,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"they love us.\" (Nos quieren.) What is nosotros made of? (Nos + otros — \"we others.\") Next: the plural of lo and la, and you will not need to be told what they are."
+              "text": "What is nosotros made of? (Nos + otros — \"we others.\") And which ending is the same word worn down? (-mos.) Next: the plural of lo and la, and you will not need to be told what they are."
             }
           ]
         }
