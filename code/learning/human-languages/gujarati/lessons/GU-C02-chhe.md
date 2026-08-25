@@ -47,9 +47,10 @@ syllable.
 **છે** (*chhe*, "is") is Gujarati's **copula** — and, unusually, it is *not* the
 *hai* of Hindi or the *asti* of Sanskrit. It grew from an Old Gujarati form
 (*achhaï*) along its own path, so it is one of the words that most quickly marks a
-sentence as *Gujarati* rather than Hindi. Its forms run: **હું છું** (*hũ chhũ*,
-"I am"), **તું છે** (*tũ chhe*, "you are"), **તે છે** (*te chhe*, "he/she/it is"),
-**તમે છો** (*tame chho*, "you are," respectful).
+sentence as *Gujarati* rather than Hindi. Hear its forms first: *hũ chhũ* ("I
+am"), *tũ chhe* ("you are," familiar), **તે છે** (*te chhe*, "he/she/it is"),
+and *tame chho* ("you are," respectful). The later pronoun lessons will put the
+first, familiar-you, and respectful-you forms into Gujarati script gently.
 
 ## Grammar Lens: the verb goes last
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C02-CHHE-01, GU-CONCEPT-C02-NAAM-01] -->

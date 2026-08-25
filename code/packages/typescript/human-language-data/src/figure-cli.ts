@@ -1,6 +1,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, normalize, relative as pathRelative, resolve } from "node:path";
 import { assertRelativeManifestPath } from "./manifest-path.js";
+import { readLedgerFile } from "./shard.js";
 import { pathToFileURL } from "node:url";
 import { defaultCurriculumRoot, loadLessons } from "./loader.js";
 import { renderFigure, type FigureTarget } from "./figure.js";
@@ -26,7 +27,13 @@ export const FIGURE_CONFIG_PATH = "core/figure-generation.json";
 export const FIGURE_HASH_MANIFEST_PATH = "core/generated-figure-hashes.json";
 
 function loadConfig(root: string): FigureGenerationConfig {
-  return JSON.parse(readFileSync(join(root, FIGURE_CONFIG_PATH), "utf8")) as FigureGenerationConfig;
+  // Through the guarded door, like `book-cli`'s sibling `loadConfig`.
+  // `readLedgerFile` rather than `readMaybeSharded` because this ledger has no
+  // `X.d/` today — and if it ever gets one, this read fails loudly instead of
+  // quietly handing the generator a stale copy of its own target list. That is
+  // exactly the failure `book-cli`'s comment describes, which is why it is
+  // worth a line on a file nobody has sharded yet.
+  return readLedgerFile<FigureGenerationConfig>(join(root, FIGURE_CONFIG_PATH));
 }
 
 /** Every generated SVG must remain under one track's book/figures directory. */

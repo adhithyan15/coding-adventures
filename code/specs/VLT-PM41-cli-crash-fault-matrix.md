@@ -454,15 +454,35 @@ whose command was failing.
 Neither of these is a Phase 1A blocker; both are recorded so they are not
 rediscovered.
 
-**The owner-state file has weaker rename durability than the configuration
-file.** `storage-fs` treats the parent-directory `fsync` after `rename` as
-best-effort and discards its result, while `vault-pm-local-host` hard-fails on
-the same operation for `vault-pm.toml`. Under a true power cut — which this
-drill does not model, since `SIGKILL` does not lose the page cache — a
-completed owner-state rename could be lost while the configuration rename
-survives. VLT-PM00 §11.2 permits best-effort directory fsync, so this is a
-documented weakness rather than a contract violation, but the asymmetry
-deserves a decision.
+**The owner-state file had weaker rename durability than the configuration
+file. Resolved.** `storage-fs` used to treat the parent-directory `fsync`
+after `rename` as best-effort and discard its result, while
+`vault-pm-local-host` hard-fails on the same operation for `vault-pm.toml`.
+Under a true power cut — which this drill does not model, since `SIGKILL`
+does not lose the page cache — a completed owner-state rename could have been
+lost while the configuration rename survived. VLT-PM00 §11.2 permits
+best-effort directory fsync, so this was a documented weakness rather than a
+contract violation, but the asymmetry deserved a decision.
+
+The decision: `storage-fs` now hard-fails the same way `vault-pm-local-host`
+does, on every platform where the failure is even observable. Both files
+carry the identical requirement — the owner-state record and `vault-pm.toml`
+sit under the same crash-safety journal, and recovery on both sides assumes a
+durable `Ok`, not an ambiguous one — so there was no argument for the
+asymmetry to resolve in the *other* direction (loosening `vault-pm.toml` to
+match `storage-fs`'s old behavior). The one remaining split is Windows, where
+`std::fs::File::open` cannot open a directory handle at all inside a
+`#![forbid(unsafe_code)]` crate; there the fsync stays a no-op because there
+is nothing to attempt, not because the guarantee is considered unnecessary.
+See STR01-storage-fs-backend.md, "Directory-fsync durability," for the full
+argument, and `storage-fs`'s `fsync_parent_directory` for the implementation.
+`delete` gained the identical parent-directory fsync in the same change
+(previously it had none at all — see backlog item #19), closing a
+defense-in-depth durability gap that was independent of, and not load-bearing
+for, the confidentiality fix in
+`vault-pm-application-storage-core::supersede_generation` (VLT-PM43), which
+already overwrites sensitive bodies through the fsync-durable `put` path
+before ever calling `delete`.
 
 **An interrupted generation zero can strand unreachable bytes.** A crash
 between the `PreparedInit` write and the configuration write leaves an

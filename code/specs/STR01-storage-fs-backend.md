@@ -70,10 +70,61 @@ Every `put` writes to `<key>.tmp` first:
 2. Write header + meta_json + body.
 3. `fsync` the tmp file so the bytes hit the platter.
 4. `rename(<key>.tmp, <key>)` — atomic on POSIX.
-5. Best-effort `fsync` of the parent directory (some
-   filesystems need this for true rename durability).
+5. `fsync` the parent directory so the rename itself is durable.
 
 The crate never exposes a "partial write" to a reader.
+
+`delete` fsyncs the same parent directory after `remove_file`, for the
+identical reason: an unlink is a directory-entry change too, and a crash
+before that entry's disappearance is committed can resurrect the file. This
+closes a real gap flagged in an earlier security review (`delete` used to do
+no fsync at all) — see "Directory-fsync durability" below for what depends on
+it, and `vault-pm-application-storage-core`'s `supersede_generation`, which
+independently overwrites sensitive bodies through the fsync-durable `put`
+path *before* calling `delete`, for the confidentiality property that does
+not depend on this.
+
+### Directory-fsync durability: hard failure, split by platform
+
+Step 5's failure handling used to be uniformly best-effort ("if that fails we
+don't error — some filesystems don't support directory fsync"), discarding
+the `Result` outright. That was inconsistent with `vault-pm-local-host`,
+which hard-fails the identical parent-directory `fsync` for `vault-pm.toml`
+(`sync_directory` in `unix.rs`) — flagged as an open asymmetry in VLT-PM41
+§8.1. The two files carry the same durability requirement: this crate's
+records are how `vault-pm-application-storage-core` persists owner state
+(`PreparedInit` / `Active` / `PendingPublication` / `PendingRotation`), which
+sits under the exact same crash-safety journal as `vault-pm.toml`, and
+recovery on both sides assumes a `put`/`compare_exchange`/`delete` that
+returned `Ok` is durable rather than merely visible through the page cache.
+
+The resolution, decided here rather than left open:
+
+- **Unix (Linux, macOS): hard-fail.** A parent-directory `fsync` failure
+  propagates as `StorageError::Unavailable` — the same class the tmp-file
+  `fsync` in step 3 already uses. The record or unlink has already happened
+  by this point (the rename/`remove_file` in step 4 succeeded), so the error
+  means "durability is unconfirmed," not "nothing was written." Callers
+  already have a mechanism built for exactly that ambiguity — the
+  crash-safety journal replays or verifies the tail of a mutation rather than
+  assuming success from a returned `Ok`.
+- **Windows: stays a no-op**, but not because directory durability doesn't
+  matter there — it does — but because `std::fs::File::open` cannot open a
+  directory on Windows at all (`CreateFileW` needs `FILE_FLAG_BACKUP_SEMANTICS`,
+  which safe `std::fs` never sets), and this crate is
+  `#![forbid(unsafe_code)]`, so it has no escape hatch to the raw Win32 call
+  the way `vault-pm-local-host`'s `windows.rs` does (which instead gets its
+  durability from `MOVEFILE_WRITE_THROUGH` on the rename itself — a
+  different primitive with no directory-handle equivalent). Hard-failing on
+  Windows would mean every `put`/`delete` fails unconditionally on that
+  platform, which is a regression, not a fix. NTFS also journals directory
+  metadata changes (including renames and deletes) in its own `$LogFile`, so
+  the userspace fsync this crate performs on Unix is compensating for a
+  weaker guarantee that Windows's filesystem does not need compensated for
+  in the same way.
+
+`FsStorageBackendSummary::parent_directory_fsync_best_effort` reports this
+split directly (`cfg!(windows)`) rather than the old unconditional `true`.
 
 ## Initialize / crash recovery
 
@@ -124,6 +175,8 @@ impl StorageBackend for FsStorageBackend {
 | Caller supplies arbitrary key bytes                                            | Hex-encoded filenames                                | covered by all roundtrip tests with default chars                   |
 | Metadata-validator rejection (must be object)                                  | Defaults missing metadata to empty object            | covered by `put_get_roundtrip` (metadata round-trips)               |
 | Backend leaks plaintext                                                        | Stack invariant: VLT01 above; STR-FILE never sees pt | structural — the `body: Vec<u8>` is opaque                          |
+| `put`'s rename is durable in the live process but not on disk after a crash    | Unix: parent-directory `fsync` hard-fails to `Unavailable` rather than being discarded | `put_hard_fails_when_parent_directory_cannot_be_fsynced`            |
+| `delete`'s unlink is durable in the live process but not on disk after a crash | Unix: parent-directory `fsync` after `remove_file`, hard-failing the same way          | `delete_fsyncs_the_parent_directory`, `delete_hard_fails_when_parent_directory_cannot_be_fsynced` |
 
 ## Out of scope (future PRs)
 

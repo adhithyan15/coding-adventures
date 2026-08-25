@@ -94,6 +94,34 @@ import { basename, join } from "node:path";
 /** The suffix that turns a monolith path into its shard directory. */
 export const SHARD_DIR_SUFFIX = ".d";
 
+/**
+ * A ledger file that is present and readable but is not valid JSON.
+ *
+ * A distinct type rather than a plain `Error`, because two callers legitimately
+ * want to TOLERATE this one failure and no others. `trackScript` falls back to
+ * the built-in script map for "a malformed `track.json`"; `listExamInventories`
+ * omits an unparseable file so that one bad inventory cannot stop the whole
+ * plan from being computed. Both used a bare `catch {}`, which was accurate
+ * when the only thing that could go wrong was a parse.
+ *
+ * It is not accurate any more, and this class exists because widening
+ * `readLedgerFile`'s throw surface silently widened what those catches
+ * absorbed. A symlinked ledger, a `__proto__` key, a file squatting at `X.d`,
+ * an `EBUSY` from the Windows indexer — all of them landed in `catch {}` and
+ * came back as "no declaration". For `trackScript` the consequence is concrete:
+ * `parse.ts` resolves an absent script to `latin`, so a track whose script is
+ * declared only in `track.json` would silently re-parse as Latin rather than
+ * failing. That is exactly the "I could not tell, so I said no" fallback
+ * `isAbsentErrno` was written to remove, reintroduced one layer up.
+ *
+ * A tagged class rather than matching on message text: the message is a
+ * human-readable string that a later edit is entitled to reword, and a control
+ * that breaks when somebody improves an error message is not a control.
+ */
+export class LedgerParseError extends Error {
+  override readonly name = "LedgerParseError";
+}
+
 /** One shard, as read off disk. */
 export interface Shard<T = unknown> {
   /** Bare filename, e.g. `0010-SPINE-MEET-GREET.json`. Sorted on. */
@@ -146,7 +174,18 @@ export function isSharded(monolithPath: string): boolean {
   let stat;
   try {
     stat = lstatSync(dir);
-  } catch {
+  } catch (cause) {
+    const code = (cause as NodeJS.ErrnoException).code;
+    if (!isAbsentErrno(code)) {
+      // Never assert absence you did not establish. See `isAbsentErrno`.
+      throw new Error(
+        `shard: cannot tell whether '${dir}' exists (${code ?? "unknown error"}) — ` +
+          `refusing to report it as absent, because that would silently fall back ` +
+          `to '${basename(monolithPath)}', which since HL21 is a generated artifact ` +
+          `and may be stale`,
+        { cause },
+      );
+    }
     return false;
   }
   if (stat.isSymbolicLink()) {
@@ -155,7 +194,53 @@ export function isSharded(monolithPath: string): boolean {
         `directory beside its ledger, so that reads cannot leave the checkout`,
     );
   }
-  return stat.isDirectory();
+  if (!stat.isDirectory()) {
+    // The second conflation in this function, and the same shape as the first.
+    // `return stat.isDirectory()` reported a FILE squatting at `X.d` as "not
+    // sharded", which sends the reader to restore a directory whose name is
+    // already taken — and, worse, silently falls back to the monolith on the
+    // way. `shardLedger` refuses this case explicitly on the WRITE side; the
+    // reader let it through, which is the same reader/writer asymmetry
+    // `assertRealFile` exists to record.
+    throw new Error(
+      `shard: '${dir}' exists and is not a directory — the shard directory's name ` +
+        `is already taken, so this ledger can be neither read as shards nor ` +
+        `honestly fallen back to`,
+    );
+  }
+  return true;
+}
+
+/**
+ * Does this `lstat` errno mean "there is nothing there"?
+ *
+ * A pure predicate rather than an inline `catch {}`, and that is the entire
+ * fix. `lstat` fails for many reasons and exactly two of them mean ABSENT:
+ *
+ *   ENOENT   nothing at that path
+ *   ENOTDIR  a parent component is a file, so the path cannot exist
+ *
+ * Everything else — `EACCES`/`EPERM`, `EBUSY` (on Windows the search indexer,
+ * an antivirus scanner or a sync client holding the directory), `EMFILE` /
+ * `ENFILE` (out of descriptors, which a 102-file parallel vitest run genuinely
+ * reaches), `EIO`, `ELOOP` — means "I could not tell". Collapsing those into
+ * `false` is not a conservative default; it is an assertion of a fact nobody
+ * checked, and since #12690 it is the dangerous direction: "not sharded" sends
+ * every reader to a monolith that is now a generated artifact.
+ *
+ * The sibling bug in `doc-shard.ts` (PR #12731) is what this is mirroring. There
+ * it made `--check` print "BACKLOG.d is missing" and exit 1 for a directory
+ * sitting on disk with 109 shards in it. `SHARD_PLANS` covers 44 ledgers, so
+ * this path has 44 chances per run to do the same thing.
+ *
+ * Pure and exported because it is the only way to TEST it: `vi.spyOn` cannot
+ * patch a `node:fs` export under ESM — the module namespace is not
+ * configurable — so the classification has to be reachable without provoking a
+ * real `EBUSY`. `shard-cli`'s `statIfPresent` already drew this line correctly
+ * and now shares this predicate rather than keeping a second copy of it.
+ */
+export function isAbsentErrno(code: string | undefined): boolean {
+  return code === "ENOENT" || code === "ENOTDIR";
 }
 
 /**
@@ -271,7 +356,7 @@ export function readShards<T = unknown>(monolithPath: string): Shard<T>[] | null
       // The filename is the whole point of this message. A bare
       // "Unexpected token } in JSON at position 412" against a merged read of 33
       // files tells the reader nothing they can open an editor on.
-      throw new Error(
+      throw new LedgerParseError(
         `shard '${name}' in '${dir}': malformed JSON — ${describeParseFailure(cause)}`,
         { cause: scrubbedCause(cause) },
       );
@@ -324,6 +409,20 @@ export function assertRealFile(path: string, what = "ledger"): void {
   }
 }
 
+/** How to treat a monolith whose `X.d/` is sitting right next to it. */
+export interface ReadLedgerOptions {
+  /**
+   * Read the monolith even when `X.d/` exists.
+   *
+   * Exactly one kind of caller may say yes: the shard TOOLING, whose whole job
+   * is to hold the two representations side by side — `--shard` re-splits the
+   * monolith, `--check` byte-compares it against the rebuild. For everybody
+   * else this flag is the bug, which is why it is opt-IN and named for what it
+   * permits rather than for what it disables.
+   */
+  readonly allowShardedSibling?: boolean;
+}
+
 /**
  * Read one JSON ledger file with every guard applied.
  *
@@ -332,8 +431,57 @@ export function assertRealFile(path: string, what = "ledger"): void {
  * the dangerous-key check and the parse-error scrubbing all at once — three
  * controls lost to one convenience. Nothing outside this module should be
  * calling `readFileSync` on a ledger.
+ *
+ * ---------------------------------------------------------------------------
+ * The fourth guard: a monolith that is no longer the source of truth
+ * ---------------------------------------------------------------------------
+ *
+ * The three guards above all answer "is this file safe to read". This one
+ * answers a different and, in day-to-day terms, likelier question: "is this
+ * file still the ANSWER?"
+ *
+ * Since HL21, `<track>/chapters.d/`, `<track>/curriculum.d/` and
+ * `core/book-generation.d/` are the source of truth, and the `.json` beside
+ * them is a GENERATED artifact — kept only because a browser bundle cannot
+ * `readdirSync` (§4.3). A generated artifact is current exactly as long as
+ * somebody remembers to re-run the generator, and `--check` is what catches
+ * them when they do not. In the window between an edit to the shards and that
+ * check, the monolith holds STALE bytes that still parse, still validate, and
+ * still look like a complete ledger.
+ *
+ * So a reader that opens the monolith directly gets a plausible wrong answer
+ * with no error anywhere — the worst shape a failure can take, and the one this
+ * package keeps rediscovering. `loadTrackChapters` already carries a long
+ * comment about the migration silently shrinking the corpus; that was the same
+ * fault arriving through the other door.
+ *
+ * The fix is to make the mistake impossible to make QUIETLY. If `X.d/` exists,
+ * this function refuses rather than serving the derived copy, and names the
+ * directory that actually holds the data. Callers that know the ledger's shape
+ * use `readMaybeSharded`, which reads the shards and never reaches this line;
+ * callers that do not are told to, instead of being handed stale bytes.
+ *
+ * Refusing rather than guessing a merge is deliberate, and it is spec §2.3's
+ * rule ("fall back, never guess") pointed the other way. This function cannot
+ * know whether `X.d/` folds into `{...meta, list}`, into several sections, or
+ * per-language — three shapes exist today — and inventing one would produce a
+ * document no generator would ever emit.
  */
-export function readLedgerFile<T = unknown>(path: string): T {
+export function readLedgerFile<T = unknown>(
+  path: string,
+  options: ReadLedgerOptions = {},
+): T {
+  // Only for a `.json` path, because only a `.json` path HAS an `X.d`:
+  // `shardDirectoryFor` refuses anything else outright, and this guard must not
+  // turn "you passed a .tex" into the confusing error that would produce.
+  if (options.allowShardedSibling !== true && path.endsWith(".json") && isSharded(path)) {
+    throw new Error(
+      `'${path}': is sharded into '${shardDirectoryFor(path)}', which is the source ` +
+        `of truth — this file is a generated artifact and may be stale. Read the ` +
+        `shards through 'readMaybeSharded' with this ledger's merge, rather than ` +
+        `reading the monolith directly.`,
+    );
+  }
   assertRealFile(path);
   let text: string;
   try {
@@ -345,7 +493,7 @@ export function readLedgerFile<T = unknown>(path: string): T {
   try {
     value = JSON.parse(text) as T;
   } catch (cause) {
-    throw new Error(`'${path}': malformed JSON — ${describeParseFailure(cause)}`, {
+    throw new LedgerParseError(`'${path}': malformed JSON — ${describeParseFailure(cause)}`, {
       cause: scrubbedCause(cause),
     });
   }

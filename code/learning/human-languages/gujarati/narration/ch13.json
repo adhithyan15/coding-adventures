@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Eye, Ear, Mouth, and Nose",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:0cc5e0bbbf453e5b",
+  "sourceHash": "fnv1a64:5bd0bcabb2cc3198",
   "lessons": [
     {
       "id": "GU-C12-aankh",
@@ -313,7 +313,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:685ab11aa0e037e8",
+      "sourceHash": "fnv1a64:644a8ac16f6aad2c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -371,7 +371,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Every verb infinitive in this book ends in the neuter -વું: hovũ, javũ, jāṇvũ, lakhvũ — a whole word class marked by that one nasalized ending. મોઢું shows the same ending doing the same job on a noun: moḍhũ is neuter, and the nasalized -ũ is the single most recognizable tell for it. Not every neuter noun wears it — પાણી and નાક (nāk) do not — but when you do see or hear a word end this way, neuter is the way to bet. And do not confuse it with આંખ (āṅkh)'s nasal: that one sat in the middle of a feminine word and marked nothing about gender at all. This one sits at the end, and it does."
+              "text": "Every verb infinitive in this book ends in the neuter -વું: hovũ, javũ, jāṇvũ, lakhvũ — a whole word class marked by that one nasalized ending. મોઢું shows the same ending doing the same job on a noun: moḍhũ is neuter, and the nasalized -ũ is the single most recognizable tell for it. Not every neuter noun wears it — પાણી and later nāk do not — but when you do see or hear a word end this way, neuter is the way to bet. And do not confuse it with આંખ (āṅkh)'s nasal: that one sat in the middle of a feminine word and marked nothing about gender at all. This one sits at the end, and it does."
             }
           ]
         },

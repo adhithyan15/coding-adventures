@@ -1,6 +1,7 @@
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { dirname, join, normalize, relative as pathRelative, resolve } from "node:path";
 import { assertRelativeManifestPath } from "./manifest-path.js";
+import { readLedgerFile } from "./shard.js";
 import { pathToFileURL } from "node:url";
 import {
   defaultCurriculumRoot,
@@ -29,7 +30,12 @@ function loadGeneratedBookChapters(root: string): GeneratedBookChapterRef[] {
     .filter((candidate) => candidate.isFile() && candidate.name.endsWith(".json"))
     .sort((left, right) => left.name.localeCompare(right.name))) {
     const language = entry.name.slice(0, -".json".length);
-    const manifest = JSON.parse(readFileSync(join(directory, entry.name), "utf8")) as GeneratedBookManifest;
+    // `readLedgerFile`, not a bare parse. `core/generated-book-hashes/` is a
+    // plain per-language directory rather than an HL21 `X.d/`, so there is no
+    // monolith here to go stale — but the symlink refusal, the dangerous-key
+    // rejection and the parse-error scrubbing apply to any repo JSON, and the
+    // `.sort()` above already treats these files exactly as shards are treated.
+    const manifest = readLedgerFile<GeneratedBookManifest>(join(directory, entry.name));
     if (manifest.version !== 1 || !Array.isArray(manifest.chapters)) {
       throw new Error(`${entry.name} must declare version 1 and chapters[]`);
     }
