@@ -3,7 +3,8 @@
     "GU-PATH-005",
     "GU-PATH-014",
     "GU-PATH-C2P",
-    "GU-PATH-017"
+    "GU-PATH-017",
+    "GU-PATH-018"
   ],
   "omits": [
     "PRONOUN-ME"

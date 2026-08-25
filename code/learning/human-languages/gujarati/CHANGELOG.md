@@ -2,6 +2,16 @@
 
 ## [Unreleased]
 
+### Added — exact Gujarati R4 bridge B (#12858)
+
+- Add six zero-new-atom Chapter 16 lessons at positions 97–102. Name, my, the
+  copula, the complete name frame, and the pleased-to-meet-you close each return
+  exactly 61 lessons after introduction, with separate listening and model-free
+  writing scores.
+- Use the sixth position, whose matching source is a zero-atom checkpoint, to
+  close measured R3 debt through the familiar wellbeing dialogue. No filler or
+  new language is introduced.
+
 ### Added — exact Gujarati R4 bridge A (#12857)
 
 - Add six zero-new-atom, four-minute-or-shorter Chapter 15 lessons at track

@@ -294,6 +294,25 @@
       "json": "gujarati/narration/ch15.json",
       "textHash": "fnv1a64:98d0a6d84e45fffe",
       "jsonHash": "fnv1a64:f66f2a3d08e5fb98"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 16,
+      "sourceHash": "fnv1a64:fcf8033884a643c0",
+      "lessonIds": [
+        "GU-R16-naam-r4",
+        "GU-R16-maarun-r4",
+        "GU-R16-chhe-r4",
+        "GU-R16-my-name-is-r4",
+        "GU-R16-anand-r4",
+        "GU-R16-wellbeing-r3"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "gujarati/narration/ch16.txt",
+      "json": "gujarati/narration/ch16.json",
+      "textHash": "fnv1a64:f8c2c5da1a7bae82",
+      "jsonHash": "fnv1a64:223f1332cffcc1f5"
     }
   ],
   "findings": []
