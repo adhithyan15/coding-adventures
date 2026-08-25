@@ -6770,8 +6770,8 @@ entry-point files it must change.
 
 Before the first push, `origin/main` advanced without path conflict through ADJ
 facts PR #12684, Go build-tool PR #12687, Persian ductus PR #12688, vault-auth
-PR #12685, and Rust html-parser PR #12689 to
-`e7bf788e7fee0bb160978f83cd5149746b8bba0a`; the selected branch rebased there
+PR #12685, Rust html-parser PR #12689, and ADJ loop-state PR #12691 to
+`48c0096df92b73c66ba116e9f7023de2e8701e39`; the selected branch rebased there
 normally. The refreshed schema-3 collision report remains unchanged in
 topology and counts. PR #12687 also exposes a new portable build-tool contract
 gap: Go alone now parses `# needs-toolchain: NAME` BUILD comments and applies
@@ -6784,7 +6784,8 @@ the umbrella is decomposed into engine children. The complete graph is now 491
 owners and 749 edges, and no eligible behavior from that main advance remains
 unowned.
 
-The C# implementation now exposes one process-free orphan-crate snapshot
+Validated implementation head `4dd44395b2a508c51045d10ea8d4ef8342f76819`
+exposes one process-free orphan-crate snapshot
 validator and exactly consumes all four neutral fixtures. It covers direct and
 ancestor BUILD ownership, closer empty BUILD precedence, fixed platform
 filename ranking, exact artifact exclusions, invalid and stale exemptions,
