@@ -22,7 +22,7 @@ The current native pipeline supports documented subsets of:
 - `quadrantChart`
 - `journey`
 
-The `xychart` subset preserves chart orientation, titles, accessibility
+The `xychart` pipeline preserves chart orientation, titles, accessibility
 metadata, categorical and numeric axes, named bar and line series, and optional
 labels on individual data points. Line point labels resolve into positioned,
 backend-neutral text for both vertical and horizontal charts. When categories
@@ -40,6 +40,8 @@ width, and color. Tick visibility, length, stroke width, and color lower
 independently for each axis into backend-neutral Paint paths. Bottom-axis label
 rotation reserves its rotated bounds during layout and lowers through transformed
 backend-neutral Paint glyphs.
+The pinned Mermaid 11.16.1 parser acceptance corpus and native Metal render
+fixtures pass, so `xychart` is tracked at `full` compatibility.
 
 Each supported family lowers into the shared Diagram IR and can continue
 through its family layout package:
