@@ -6677,8 +6677,10 @@ packages with 276 gaps, 909 singleton packages with 12,726 gaps, 720 Rust
 singletons, zero collisions, and zero unknown buckets. OCaml remains correctly
 emerging at zero packages. Current `origin/main` then advanced by one
 package-neutral HTML-parser commit to
-`42ae3e50152fc5373451cd9eee257a789f279782`; regenerating the report there
-changes no inventory count and exposes no eligible unowned gap.
+`42ae3e50152fc5373451cd9eee257a789f279782`, then by package-neutral Spanish
+curriculum PR #12679 to `9a1085ed881483121163e5735d650fab7bd95611`;
+regenerating the report at each revision changes no inventory count and exposes
+no eligible unowned gap.
 
 The reconciled graph contains 488 owners and 745 dependency edges with no
 duplicate IDs, missing prerequisites, or cycles. The Vault HID native-authority
@@ -6714,7 +6716,9 @@ and complete acyclic 488-owner/745-edge graph remain clean, and seven current
 open PRs have zero exact overlap with the six-path diff. An independent
 exact-head security review found no new filesystem, process, network,
 environment, credential, diagnostic, dependency, or execution-authority
-surface and no publication blocker.
+surface and no publication blocker. After a conflict-free rebase over Spanish
+curriculum PR #12679, the exact same 310-run Ruby suite, syntax checks, Go tests
+and vet, and collision report all pass again.
 
 ## Autonomous Loop Protocol
 
