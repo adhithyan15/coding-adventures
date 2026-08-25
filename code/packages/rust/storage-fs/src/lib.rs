@@ -114,6 +114,18 @@ pub struct FsStorageBackendSummary {
     /// Whether writes use write-tmp, fsync, atomic rename.
     pub atomic_write_rename: bool,
     /// Whether `initialize` removes stranded `.tmp` files.
+    ///
+    /// Scope, since the recovery walk is now cached: the sweep happens on the
+    /// FIRST successful `initialize()` of each `FsStorageBackend`, not on every
+    /// call. A `.tmp` stranded after that point survives until a new backend is
+    /// constructed over the root — which is the realistic recovery path anyway,
+    /// since stranded tmp files come from a write interrupted by a crash.
+    ///
+    /// Nothing reads them in the meantime: `list()` skips the extension, and
+    /// `get()`/`put()` address records by `hex_encode(key)`, which is `[0-9a-f]`
+    /// only and so can never name a `.tmp` file. Growth is bounded at one per
+    /// key, because the tmp path is deterministic and opened with
+    /// `truncate(true)`.
     pub tmp_files_cleaned_on_initialize: bool,
     /// Whether the parent directory fsync is best-effort.
     pub parent_directory_fsync_best_effort: bool,
@@ -472,17 +484,37 @@ fn io_to_storage(e: io::Error) -> StorageError {
 /// A missing directory IS genuinely empty, so `NotFound` alone maps to no
 /// entries: namespaces are created lazily, so a root with no namespace
 /// subdirectory yet is an ordinary cold start rather than a fault.
-fn read_dir_total(path: &Path) -> Result<Vec<PathBuf>, StorageError> {
-    let entries = match fs::read_dir(path) {
-        Ok(entries) => entries,
-        Err(e) if e.kind() == io::ErrorKind::NotFound => return Ok(Vec::new()),
-        Err(e) => return Err(io_to_storage(e)),
-    };
-    let mut paths = Vec::new();
-    for entry in entries {
-        paths.push(entry.map_err(io_to_storage)?.path());
+/// Returns the iterator rather than a collected `Vec` so the walk stays O(1) in
+/// memory. Record counts are not bounded anywhere -- `validate_path_like` caps
+/// the character set and shape of a key, never how many there are -- so
+/// materialising every path would allocate in proportion to the store, on the
+/// daemon's reconcile path.
+fn read_dir_total(path: &Path) -> Result<Option<fs::ReadDir>, StorageError> {
+    match fs::read_dir(path) {
+        Ok(entries) => Ok(Some(entries)),
+        Err(e) if e.kind() == io::ErrorKind::NotFound => Ok(None),
+        Err(e) => Err(io_to_storage(e)),
     }
-    Ok(paths)
+}
+
+/// `Path::is_dir()` answers `false` for *any* stat failure, so on its own it
+/// converts EACCES, EIO, ELOOP or ESTALE into "not a directory" and skips a
+/// namespace that may hold the highest revision on disk. That is the same
+/// swallow `read_dir_total` exists to prevent, and it is worth its own helper
+/// precisely because the standard-library method makes it invisible.
+///
+/// `NotFound` is the one honest `false`: a namespace unlinked mid-walk really
+/// has no records left to read.
+///
+/// `fs::metadata` rather than `DirEntry::file_type()`, deliberately -- metadata
+/// follows symlinks and `file_type` does not, and following them preserves the
+/// behaviour `is_dir()` had here.
+fn metadata_total(path: &Path) -> Result<Option<fs::Metadata>, StorageError> {
+    match fs::metadata(path) {
+        Ok(metadata) => Ok(Some(metadata)),
+        Err(e) if e.kind() == io::ErrorKind::NotFound => Ok(None),
+        Err(e) => Err(io_to_storage(e)),
+    }
 }
 
 // ─────────────────────────────────────────────────────────────────────
@@ -552,29 +584,64 @@ impl StorageBackend for FsStorageBackend {
         // already issued. An unreadable directory is "I could not tell", which
         // must never be recorded as "there was nothing there".
         let mut highest: u64 = 0;
-        for e in read_dir_total(&self.root)? {
-            let ns_path = e;
-            if !ns_path.is_dir() {
-                continue;
-            }
-            for p in read_dir_total(&ns_path)? {
-                if p.extension().and_then(|s| s.to_str()) == Some("tmp") {
-                    let _ = fs::remove_file(&p);
+        if let Some(namespaces) = read_dir_total(&self.root)? {
+            for entry in namespaces {
+                let ns_path = entry.map_err(io_to_storage)?.path();
+                if !metadata_total(&ns_path)?.is_some_and(|m| m.is_dir()) {
                     continue;
                 }
-                // Note the asymmetry with the directory reads above, which is
-                // deliberate. A failed `read_dir` means we may have seen NONE of
-                // the records, so the floor we computed is worthless and the
-                // caller must be told. A single unparseable record means we saw
-                // all the others: it is bit rot, a torn write, or a foreign
-                // file, it contributes no revision, and aborting the walk over
-                // it would let one bad record stop the daemon -- the failure
-                // mode #12137 is about. So this one stays tolerant.
-                if let Ok(Some((meta, _))) = read_record_full(&p) {
-                    if let Some(n) = revision_to_u64(&meta.revision) {
-                        if n > highest {
-                            highest = n;
+                let Some(records) = read_dir_total(&ns_path)? else {
+                    continue;
+                };
+                for record in records {
+                    let p = record.map_err(io_to_storage)?.path();
+                    if p.extension().and_then(|s| s.to_str()) == Some("tmp") {
+                        let _ = fs::remove_file(&p);
+                        continue;
+                    }
+
+                    // Only regular files are records. A namespace directory can
+                    // legitimately contain other things -- vault-pm nests a
+                    // directory per named target under its root -- and opening
+                    // one of those as a record yields EISDIR, an I/O error that
+                    // the arm below would propagate. Discriminate by TYPE here
+                    // so that the error arm keeps its meaning: it should fire
+                    // for a file we could not read, never for something that was
+                    // never a record to begin with.
+                    if !metadata_total(&p)?.is_some_and(|m| m.is_file()) {
+                        continue;
+                    }
+
+                    // The asymmetry here is deliberate, but it is a split
+                    // between ERROR KINDS, not between records and directories.
+                    //
+                    // "This file is not a record" is a local fact: we still read
+                    // every other record, so the floor is sound, and refusing to
+                    // start over one corrupt file is the failure mode #12137 is
+                    // about. Tolerate it.
+                    //
+                    // "I could not read this file" is not local at all. It means
+                    // the same thing a failed `read_dir` means, and it fails in
+                    // correlated ways -- under fd exhaustion EVERY record read
+                    // fails while the directory reads still succeed, so the
+                    // floor silently collapses to zero and, being cached, every
+                    // revision the instance issues afterwards is one already
+                    // handed out. Propagate it.
+                    //
+                    // `read_record_full` already draws exactly this line:
+                    // `io_to_storage` yields `Unavailable`, while format and
+                    // parse failures yield `Backend`.
+                    match read_record_full(&p) {
+                        Ok(Some((meta, _))) => {
+                            if let Some(n) = revision_to_u64(&meta.revision) {
+                                if n > highest {
+                                    highest = n;
+                                }
+                            }
                         }
+                        Ok(None) => {}
+                        Err(StorageError::Backend { .. }) => {}
+                        Err(e) => return Err(e),
                     }
                 }
             }
@@ -1228,6 +1295,131 @@ mod tests {
             n2,
             n1
         );
+        let _ = fs::remove_dir_all(&root);
+    }
+
+    #[test]
+    fn initialize_tolerates_an_unparseable_record() {
+        // The counterweight to the two tests below. Propagating I/O failures
+        // must NOT turn into refusing to start over a corrupt file: one
+        // undecodable record stopping the daemon is #12137, and this crate must
+        // not reintroduce it while closing the I/O hole.
+        let root = temp_root();
+        let be = FsStorageBackend::new(&root);
+        be.initialize().unwrap();
+        let r1 = be.put(put_input("ns", "k", b"v")).unwrap();
+        drop(be);
+
+        // Garbage and an empty file, beside a good record, both readable.
+        let ns_dir = root.join(hex_encode(b"ns"));
+        fs::write(ns_dir.join(hex_encode(b"junk")), b"not a record at all").unwrap();
+        fs::write(ns_dir.join(hex_encode(b"empty")), b"").unwrap();
+
+        let be2 = FsStorageBackend::new(&root);
+        be2.initialize()
+            .expect("an unparseable record must not stop initialize (#12137)");
+
+        // The good record was still seen, so the floor is intact.
+        let r2 = be2.put(put_input("ns", "k2", b"v2")).unwrap();
+        let n1 = revision_to_u64(&r1.revision).unwrap();
+        let n2 = revision_to_u64(&r2.revision).unwrap();
+        assert!(n2 > n1, "floor lost across a corrupt sibling: {} <= {}", n2, n1);
+        let _ = fs::remove_dir_all(&root);
+    }
+
+    #[test]
+    fn initialize_ignores_non_record_entries_inside_a_namespace() {
+        // Regression test for a real break, caught by running the downstream
+        // consumers. `vault-pm` nests a directory per named target under its
+        // storage root, so a namespace directory legitimately contains
+        // subdirectories. Opening one as a record yields EISDIR -- an I/O error
+        // -- and propagating I/O errors (correctly, for unreadable FILES) turned
+        // every vault-pm CLI command into "storage unavailable".
+        //
+        // The error arm must fire for a record we could not read, never for
+        // something that was never a record.
+        let root = temp_root();
+        let be = FsStorageBackend::new(&root);
+        be.initialize().unwrap();
+        let r1 = be.put(put_input("ns", "k", b"v")).unwrap();
+        drop(be);
+
+        fs::create_dir_all(root.join(hex_encode(b"ns")).join("nested-target")).unwrap();
+
+        let be2 = FsStorageBackend::new(&root);
+        be2.initialize()
+            .expect("a subdirectory inside a namespace must not fail initialize");
+
+        // The real record was still read, so the floor survived.
+        let r2 = be2.put(put_input("ns", "k2", b"v2")).unwrap();
+        let n1 = revision_to_u64(&r1.revision).unwrap();
+        let n2 = revision_to_u64(&r2.revision).unwrap();
+        assert!(n2 > n1, "floor lost beside a nested dir: {} <= {}", n2, n1);
+        let _ = fs::remove_dir_all(&root);
+    }
+
+    #[test]
+    #[cfg(unix)]
+    fn initialize_reports_an_unreadable_record_instead_of_lowering_the_floor() {
+        // An I/O failure reading a record is "I could not tell", exactly as a
+        // failed read_dir is. It matters because these fail in CORRELATED ways:
+        // under fd exhaustion every record read fails while the directory reads
+        // succeed, so a tolerant walk collapses the floor to zero and caches it.
+        use std::os::unix::fs::PermissionsExt;
+
+        let root = temp_root();
+        let seed = FsStorageBackend::new(&root);
+        seed.initialize().unwrap();
+        seed.put(put_input("ns", "k", b"v")).unwrap();
+        drop(seed);
+
+        let record = root.join(hex_encode(b"ns")).join(hex_encode(b"k"));
+        let original = fs::metadata(&record).unwrap().permissions();
+        fs::set_permissions(&record, fs::Permissions::from_mode(0o000)).unwrap();
+        let permissions_bite = File::open(&record).is_err();
+
+        let outcome = FsStorageBackend::new(&root).initialize();
+        fs::set_permissions(&record, original).unwrap();
+
+        if permissions_bite {
+            assert!(
+                outcome.is_err(),
+                "an unreadable record must be reported, not silently skipped"
+            );
+        }
+        let _ = fs::remove_dir_all(&root);
+    }
+
+    #[test]
+    #[cfg(unix)]
+    fn initialize_reports_an_unstattable_namespace() {
+        // `Path::is_dir()` answers false for ANY stat failure. A root that is
+        // listable but not traversable (0o400) therefore made every namespace
+        // look like "not a directory", skipping the whole store while returning
+        // Ok -- the same swallow, one line below the guard against it.
+        use std::os::unix::fs::PermissionsExt;
+
+        let root = temp_root();
+        let seed = FsStorageBackend::new(&root);
+        seed.initialize().unwrap();
+        seed.put(put_input("ns", "k", b"v")).unwrap();
+        drop(seed);
+
+        let original = fs::metadata(&root).unwrap().permissions();
+        fs::set_permissions(&root, fs::Permissions::from_mode(0o400)).unwrap();
+        let ns_dir = root.join(hex_encode(b"ns"));
+        // Listable, but stat on the child fails.
+        let permissions_bite = fs::read_dir(&root).is_ok() && fs::metadata(&ns_dir).is_err();
+
+        let outcome = FsStorageBackend::new(&root).initialize();
+        fs::set_permissions(&root, original).unwrap();
+
+        if permissions_bite {
+            assert!(
+                outcome.is_err(),
+                "a namespace that cannot be stat-ed must be reported, not skipped"
+            );
+        }
         let _ = fs::remove_dir_all(&root);
     }
 

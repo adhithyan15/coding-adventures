@@ -32,14 +32,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   smart-home state, i.e. one that grows with data an agent can influence.
   Measured at ~480 ms per call against a 473 ms baseline tick (#12139).
 
-- Made `initialize()`'s directory walk total. Every `read_dir` failure was
-  swallowed by `if let Ok(..)`, which was survivable only while the scan re-ran
-  on the next call: a transient `EACCES`/`EMFILE`/`EIO` produced `highest = 0`
-  and the following tick corrected it. Cached, a swallowed error would have
-  frozen the counter at a bogus floor for the life of the backend. Directory
-  read failures now propagate; an individual unparseable record is still
-  tolerated, because aborting the walk over one bad record is the failure mode
-  #12137 is about.
+- Made `initialize()`'s recovery walk total. Every failure was swallowed by an
+  `if let Ok(..)`, which was survivable only while the scan re-ran on the next
+  call: a transient `EACCES`/`EMFILE`/`EIO` produced `highest = 0` and the
+  following tick corrected it. Cached, a swallowed error freezes the counter at
+  a bogus floor for the life of the backend, and every revision it then issues
+  is one already handed out. Three distinct swallows are closed:
+
+  - `fs::read_dir` failures on the root and on each namespace.
+  - `Path::is_dir()`, which answers `false` for ANY stat failure, so a root that
+    was listable but not traversable made every namespace look like "not a
+    directory" and skipped the entire store while returning `Ok`.
+  - I/O failures reading a record. These matter most, because they fail in
+    CORRELATED ways: under fd exhaustion every record read fails while the
+    directory reads still succeed, collapsing the floor to zero.
+
+  The tolerance that remains is drawn on error KIND, not on records versus
+  directories: an unparseable record (`StorageError::Backend`) is a local fact
+  and is skipped, because refusing to start over one corrupt file is the failure
+  mode #12137 is about, while an unreadable one (`StorageError::Unavailable`)
+  means "I could not tell" and propagates.
+
+- Kept the walk O(1) in memory. Record counts are unbounded — `validate_path_like`
+  caps a key's character set and shape, never how many keys exist — so the walk
+  streams its directory iterators rather than collecting paths.
 
 - Made the counter seed monotone (`fetch_max`, not `store`). `put()` does not
   require `initialize()`, so a first `initialize()` may legitimately run after
