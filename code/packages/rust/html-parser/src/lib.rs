@@ -5226,10 +5226,13 @@ impl HtmlParser {
             && !self.has_open_element("body")
             && !self.document_has_body_element()
         {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-pre-body-void-start-tag",
-                format!("start tag `<{name}>` before body was ignored"),
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-pre-body-void-start-tag",
+                    format!("start tag `<{name}>` before body was ignored"),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             return;
         }
         if !in_foreign_content
@@ -27745,6 +27748,18 @@ mod tests {
         .at_emission(Some(start_tag_position_at(source, name, occurrence)))
     }
 
+    fn unexpected_pre_body_void_start_tag(
+        source: &str,
+        name: &str,
+        occurrence: usize,
+    ) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-pre-body-void-start-tag",
+            format!("start tag `<{name}>` before body was ignored"),
+        )
+        .at_emission(Some(start_tag_position_at(source, name, occurrence)))
+    }
+
     fn nested_heading_start_tag(
         source: &str,
         name: &str,
@@ -39861,6 +39876,56 @@ mod tests {
             .find(|diagnostic| {
                 diagnostic.code == "unexpected-head-content-start-tag-after-head"
             })
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
+    }
+
+    #[test]
+    fn positions_void_start_tags_ignored_before_body() {
+        let source = "<!doctype html><param><!--é-->\r\n<param>";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        assert_eq!(
+            output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-pre-body-void-start-tag")
+                .collect::<Vec<_>>(),
+            vec![
+                &unexpected_pre_body_void_start_tag(source, "param", 0),
+                &unexpected_pre_body_void_start_tag(source, "param", 1),
+            ]
+        );
+
+        for excluded in [
+            "<!doctype html><param",
+            "<!doctype html><body><param>",
+            "<!doctype html><object><param></object>",
+            "<!doctype html><svg><param></param></svg>",
+        ] {
+            let output = parse_html_with_diagnostics(excluded).unwrap();
+            assert!(output
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "unexpected-pre-body-void-start-tag"));
+        }
+
+        let fragment = parse_html_fragment_with_diagnostics("<param>").unwrap();
+        assert!(fragment
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-pre-body-void-start-tag"));
+
+        let mut unpositioned = HtmlParser::new();
+        unpositioned.process_token(Token::StartTag {
+            name: "param".to_string(),
+            attributes: Vec::new(),
+            self_closing: false,
+        });
+        unpositioned.process_token(Token::Eof);
+        let diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-pre-body-void-start-tag")
             .unwrap();
         assert_eq!(diagnostic.position, None);
     }
