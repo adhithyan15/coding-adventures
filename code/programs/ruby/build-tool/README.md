@@ -16,6 +16,7 @@ This is a standalone program (not a publishable gem) that orchestrates building 
 | `cache`      | JSON cache file for incremental builds              |
 | `executor`   | Parallel execution via threads + Open3              |
 | `reporter`   | Human-readable build report formatting              |
+| `validator`  | Pure tracked-artifact snapshot policy validation     |
 
 ## Usage
 
@@ -76,6 +77,28 @@ fallback remains available only when a valid selected target intentionally
 provides no structured command list. Failure diagnostics redact the checkout
 root while retaining the package identity and stable evaluation detail.
 
+## Tracked Artifact Validation
+
+`BuildTool::Validator.validate_tracked_artifact_snapshot` validates an
+in-memory snapshot of tracked repository entries without reading the
+filesystem or following links. It applies the shared build-tool v1 portable
+path policy in the required precedence order, normalizes `\` to `/`, uses
+Unicode scalar lengths and ordering, treats entry kinds as inert metadata, and
+returns deterministic diagnostics whose rendered path is always `repository`.
+
+The validator uses the generated `TrackedArtifactUnicode17` module for pinned
+Unicode 17 NFC, NFKC, full default case folding, and uppercase behavior instead
+of inheriting the host Ruby runtime's Unicode tables. Regenerate and verify all
+language targets with:
+
+```bash
+python code/scripts/generate_tracked_artifact_unicode17.py
+python code/scripts/generate_tracked_artifact_unicode17.py --check
+```
+
+The generated Unicode data is redistributed under the Unicode License v3;
+the complete notice is shipped as `UNICODE-LICENSE.txt`.
+
 ## Testing
 
 ```bash
@@ -85,11 +108,14 @@ bundle exec rake test
 
 The `test/test_identity_registry.rb` and `test/test_resolution_utf8.rb` coverage
 exercise shared language-neutral discovery, dependency, valid-text, and
-invalid-text fixtures plus real CLI subprocesses. The full Rake suite enforces
-the whole-program coverage threshold. Starlark evaluator tests are mandatory: the
-suite removes ambient `RUBYLIB` and `RUBYOPT` injection in a subprocess and
-proves that the repository-local interpreter loads through the build tool's
-declared bundle rather than skipping when it is unavailable.
+invalid-text fixtures plus real CLI subprocesses. `test/test_validator.rb`
+consumes every shared tracked-artifact fixture and covers hostile-path
+redaction, Unicode 17 sentinels, separator normalization, deterministic
+ordering, and inert entry kinds. The full Rake suite enforces the whole-program
+coverage threshold. Starlark evaluator tests are mandatory: the suite removes
+ambient `RUBYLIB` and `RUBYOPT` injection in a subprocess and proves that the
+repository-local interpreter loads through the build tool's declared bundle
+rather than skipping when it is unavailable.
 
 ## Dependencies
 

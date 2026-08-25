@@ -33,6 +33,7 @@ LICENSE_TARGETS = (
     Path("code/programs/dotnet/build-tool-csharp/UNICODE-LICENSE.txt"),
     Path("code/programs/dotnet/build-tool-fsharp/UNICODE-LICENSE.txt"),
     Path("code/programs/typescript/build-tool/UNICODE-LICENSE.txt"),
+    Path("code/programs/ruby/build-tool/UNICODE-LICENSE.txt"),
 )
 SOURCES = {
     "UnicodeData.txt": "2e1efc1dcb59c575eedf5ccae60f95229f706ee6d031835247d843c11d96470c",
@@ -60,6 +61,9 @@ CSHARP_TARGET = Path(
 )
 TYPESCRIPT_TARGET = Path(
     "code/programs/typescript/build-tool/src/tracked-artifact-unicode17.ts"
+)
+RUBY_TARGET = Path(
+    "code/programs/ruby/build-tool/lib/build_tool/tracked_artifact_unicode17.rb"
 )
 
 
@@ -960,6 +964,250 @@ export function fullUppercase(value: string): string {{
 '''
 
 
+def _render_ruby(
+    tables: tuple[
+        list[tuple[int, int]],
+        list[tuple[int, bool, tuple[int, ...]]],
+        list[tuple[int, int, int]],
+        list[tuple[int, tuple[int, ...]]],
+        list[tuple[int, tuple[int, ...]]],
+    ],
+) -> str:
+    """Render the process-free Ruby implementation from the pinned UCD rows."""
+    combining, decomposition, composition, folding, uppercase = tables
+    combining_text = "\n".join(f"      {cp:X};{ccc}" for cp, ccc in combining)
+    decomposition_text = "\n".join(
+        f"      {cp:X};{'K' if compat else 'C'};{','.join(f'{value:X}' for value in mapping)}"
+        for cp, compat, mapping in decomposition
+    )
+    composition_text = "\n".join(
+        f"      {left:X},{right:X};{result:X}" for left, right, result in composition
+    )
+    folding_text = "\n".join(
+        f"      {line}" for line in _mapping_lines(folding).splitlines()
+    )
+    uppercase_text = "\n".join(
+        f"      {line}" for line in _mapping_lines(uppercase).splitlines()
+    )
+    hashes = ", ".join(f"{name} sha256:{digest}" for name, digest in SOURCES.items())
+    header = f'''# frozen_string_literal: true
+
+# Generated Unicode {UNICODE_VERSION} data and algorithms.
+# DO NOT EDIT. Run `python code/scripts/generate_tracked_artifact_unicode17.py`.
+# Sources: {UCD_BASE}
+# {hashes}
+# Unicode License v3: every source and binary distribution carries the full
+# notice as UNICODE-LICENSE.txt (sha256:{LICENSE_SHA256}).
+
+module BuildTool
+  # A deliberately source-embedded Unicode snapshot for validation policy.
+  #
+  # Ruby's host tables move with the runtime. Keeping normalization and casing
+  # here makes one validator result independent of the installed Ruby version.
+  module TrackedArtifactUnicode17
+    module_function
+
+    UNICODE_VERSION = "{UNICODE_VERSION}"
+
+    COMBINING_DATA = <<~UNICODE_COMBINING
+{combining_text}
+    UNICODE_COMBINING
+    DECOMPOSITION_DATA = <<~UNICODE_DECOMPOSITION
+{decomposition_text}
+    UNICODE_DECOMPOSITION
+    COMPOSITION_DATA = <<~UNICODE_COMPOSITION
+{composition_text}
+    UNICODE_COMPOSITION
+    FOLDING_DATA = <<~UNICODE_FOLDING
+{folding_text}
+    UNICODE_FOLDING
+    UPPERCASE_DATA = <<~UNICODE_UPPERCASE
+{uppercase_text}
+    UNICODE_UPPERCASE
+'''
+    body = r"""
+    COMBINING_DATA.freeze
+    DECOMPOSITION_DATA.freeze
+    COMPOSITION_DATA.freeze
+    FOLDING_DATA.freeze
+    UPPERCASE_DATA.freeze
+
+    S_BASE = 0xAC00
+    L_BASE = 0x1100
+    V_BASE = 0x1161
+    T_BASE = 0x11A7
+    L_COUNT = 19
+    V_COUNT = 21
+    T_COUNT = 28
+    N_COUNT = V_COUNT * T_COUNT
+    S_COUNT = L_COUNT * N_COUNT
+
+    def data_lines(data)
+      data.each_line(chomp: true).reject(&:empty?)
+    end
+
+    def parse_hex_list(value)
+      return [] if value.empty?
+
+      value.split(",").map { |item| Integer(item, 16) }
+    end
+
+    def parse_combining
+      data_lines(COMBINING_DATA).to_h do |line|
+        scalar, value = line.split(";", 2)
+        [Integer(scalar, 16), Integer(value, 10)]
+      end.freeze
+    end
+
+    def parse_decomposition
+      data_lines(DECOMPOSITION_DATA).to_h do |line|
+        scalar, kind, mapping = line.split(";", 3)
+        [Integer(scalar, 16), [kind == "K", parse_hex_list(mapping).freeze].freeze]
+      end.freeze
+    end
+
+    def pair_key(left, right)
+      (left * 0x110000) + right
+    end
+
+    def parse_composition
+      data_lines(COMPOSITION_DATA).to_h do |line|
+        pair, composite = line.split(";", 2)
+        left, right = pair.split(",", 2)
+        [pair_key(Integer(left, 16), Integer(right, 16)), Integer(composite, 16)]
+      end.freeze
+    end
+
+    def parse_mapping(data)
+      data_lines(data).to_h do |line|
+        scalar, mapping = line.split(";", 2)
+        [Integer(scalar, 16), parse_hex_list(mapping).freeze]
+      end.freeze
+    end
+
+    COMBINING = parse_combining
+    DECOMPOSITION = parse_decomposition
+    COMPOSITION = parse_composition
+    FOLDING = parse_mapping(FOLDING_DATA)
+    UPPERCASE = parse_mapping(UPPERCASE_DATA)
+
+    def combining_class(scalar)
+      COMBINING.fetch(scalar, 0)
+    end
+
+    def decompose_scalar(scalar, compatibility, output)
+      if scalar >= S_BASE && scalar < S_BASE + S_COUNT
+        index = scalar - S_BASE
+        output << L_BASE + (index / N_COUNT)
+        output << V_BASE + ((index % N_COUNT) / T_COUNT)
+        trailing = T_BASE + (index % T_COUNT)
+        output << trailing unless trailing == T_BASE
+        return
+      end
+
+      row = DECOMPOSITION[scalar]
+      if row.nil? || (row[0] && !compatibility)
+        output << scalar
+        return
+      end
+      row[1].each { |mapped| decompose_scalar(mapped, compatibility, output) }
+    end
+
+    def canonical_order(scalars)
+      index = 0
+      while index < scalars.length
+        if combining_class(scalars[index]).zero?
+          index += 1
+          next
+        end
+
+        ending = index + 1
+        ending += 1 while ending < scalars.length && !combining_class(scalars[ending]).zero?
+        ((index + 1)...ending).each do |current|
+          value = scalars[current]
+          value_class = combining_class(value)
+          insertion = current
+          while insertion > index && combining_class(scalars[insertion - 1]) > value_class
+            scalars[insertion] = scalars[insertion - 1]
+            insertion -= 1
+          end
+          scalars[insertion] = value
+        end
+        index = ending
+      end
+    end
+
+    def compose_pair(left, right)
+      if left >= L_BASE && left < L_BASE + L_COUNT &&
+          right >= V_BASE && right < V_BASE + V_COUNT
+        return S_BASE + (((left - L_BASE) * V_COUNT) + right - V_BASE) * T_COUNT
+      end
+      if left >= S_BASE && left < S_BASE + S_COUNT &&
+          ((left - S_BASE) % T_COUNT).zero? && right > T_BASE && right < T_BASE + T_COUNT
+        return left + right - T_BASE
+      end
+
+      COMPOSITION[pair_key(left, right)]
+    end
+
+    def normalize(value, compatibility)
+      decomposed = []
+      value.codepoints.each { |scalar| decompose_scalar(scalar, compatibility, decomposed) }
+      canonical_order(decomposed)
+      return "" if decomposed.empty?
+
+      output = [decomposed[0]]
+      starter_index = 0
+      starter = decomposed[0]
+      last_class = combining_class(starter).zero? ? 0 : 255
+      decomposed.drop(1).each do |scalar|
+        scalar_class = combining_class(scalar)
+        composite = compose_pair(starter, scalar) if last_class.zero? || last_class < scalar_class
+        unless composite.nil?
+          output[starter_index] = composite
+          starter = composite
+          next
+        end
+
+        output << scalar
+        if scalar_class.zero?
+          starter_index = output.length - 1
+          starter = scalar
+        end
+        last_class = scalar_class
+      end
+      output.pack("U*")
+    end
+
+    def map_scalars(value, table)
+      value.codepoints.flat_map { |scalar| table.fetch(scalar, [scalar]) }.pack("U*")
+    end
+
+    def nfc(value)
+      normalize(value, false)
+    end
+
+    def nfkc(value)
+      normalize(value, true)
+    end
+
+    def casefold(value)
+      map_scalars(value, FOLDING)
+    end
+
+    def nfkc_casefold(value)
+      casefold(nfkc(value))
+    end
+
+    def full_uppercase(value)
+      map_scalars(value, UPPERCASE)
+    end
+  end
+end
+"""
+    return header + body
+
+
 def _load_generated_module(path: Path):
     spec = importlib.util.spec_from_file_location("tracked_unicode17_generated", path)
     if spec is None or spec.loader is None:
@@ -1177,6 +1425,89 @@ def _self_check_typescript(
         raise RuntimeError(f"generated TypeScript Unicode self-check failed: {detail}")
 
 
+_RUBY_SELF_CHECK = r"""# frozen_string_literal: true
+
+require "json"
+require_relative "tracked_artifact_unicode17"
+
+unicode = BuildTool::TrackedArtifactUnicode17
+payload = JSON.parse($stdin.read)
+fail_vector = lambda do |kind, index|
+  raise "#{kind} Ruby self-check failed at vector #{index}"
+end
+
+raise "generated Ruby Unicode version drift" unless unicode::UNICODE_VERSION == payload.fetch("unicodeVersion")
+
+payload.fetch("normalization").each_with_index do |row, index|
+  c1, c2, c3, c4, c5 = row
+  valid = unicode.nfc(c1) == c2 && unicode.nfc(c2) == c2 &&
+          unicode.nfc(c3) == c2 && unicode.nfc(c4) == c4 &&
+          unicode.nfc(c5) == c4 && unicode.nfkc(c1) == c4 &&
+          unicode.nfkc(c2) == c4 && unicode.nfkc(c3) == c4 &&
+          unicode.nfkc(c4) == c4 && unicode.nfkc(c5) == c4
+  fail_vector.call("normalization", index) unless valid
+end
+
+payload.fetch("folding").each_with_index do |row, index|
+  source, expected_fold, expected_nfkc_fold = row
+  fail_vector.call("case-fold", index) unless unicode.casefold(source) == expected_fold
+  unless unicode.nfkc_casefold(source) == expected_nfkc_fold
+    fail_vector.call("NFKC-case-fold", index)
+  end
+end
+
+payload.fetch("uppercase").each_with_index do |row, index|
+  fail_vector.call("full-uppercase", index) unless unicode.full_uppercase(row[0]) == row[1]
+end
+
+outlined = "\u{1CCE3}\u{1CCE4}\u{1CCD9}\u{1CCDA}_\u{1CCE2}\u{1CCE4}\u{1CCD9}\u{1CCEA}\u{1CCE1}\u{1CCDA}\u{1CCE8}"
+unless unicode.nfkc_casefold(outlined) == "node_modules"
+  raise "Unicode 17 outlined-letter Ruby sentinel failed"
+end
+unless unicode.nfc("\u{105D2}\u0307") == "\u{105C9}"
+  raise "Unicode 17 Todhri Ruby sentinel failed"
+end
+
+$stdout.write("ok\n")
+"""
+
+
+def _self_check_ruby(
+    root: Path,
+    ruby_output: str,
+    sources: dict[str, str],
+    python_module,
+) -> None:
+    del root  # Kept parallel with the TypeScript self-check call signature.
+    ruby = shutil.which("ruby")
+    if ruby is None:
+        raise RuntimeError("Ruby Unicode self-check requires Ruby on PATH")
+
+    with tempfile.TemporaryDirectory(prefix="unicode17-ruby-check-") as temporary:
+        temporary_path = Path(temporary)
+        generated_path = temporary_path / "tracked_artifact_unicode17.rb"
+        runner_path = temporary_path / "self_check.rb"
+        generated_path.write_text(ruby_output, encoding="utf-8", newline="\n")
+        runner_path.write_text(_RUBY_SELF_CHECK, encoding="utf-8", newline="\n")
+        result = subprocess.run(
+            [ruby, str(runner_path)],
+            cwd=temporary_path,
+            input=json.dumps(
+                _typescript_self_check_payload(python_module, sources),
+                ensure_ascii=True,
+                separators=(",", ":"),
+            ),
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            timeout=180,
+            check=False,
+        )
+    if result.returncode != 0 or result.stdout != "ok\n":
+        detail = result.stderr.strip() or result.stdout.strip() or "no diagnostic"
+        raise RuntimeError(f"generated Ruby Unicode self-check failed: {detail}")
+
+
 def _write_or_check(root: Path, target: Path, content: str, check: bool) -> None:
     absolute = root / target
     content = content.replace("\r\n", "\n")
@@ -1219,15 +1550,18 @@ def main() -> int:
     python_output = _render_python(tables)
     csharp_output = _render_csharp(tables)
     typescript_output = _render_typescript(tables)
+    ruby_output = _render_ruby(tables)
     for target in PYTHON_TARGETS:
         _write_or_check(root, target, python_output, args.check)
     _write_or_check(root, CSHARP_TARGET, csharp_output, args.check)
     _write_or_check(root, TYPESCRIPT_TARGET, typescript_output, args.check)
+    _write_or_check(root, RUBY_TARGET, ruby_output, args.check)
     for target in LICENSE_TARGETS:
         _write_bytes_or_check(root, target, upstream_license, args.check)
     python_module = _load_generated_module(root / PYTHON_TARGETS[0])
     _self_check(python_module, sources)
     _self_check_typescript(root, typescript_output, sources, python_module)
+    _self_check_ruby(root, ruby_output, sources, python_module)
     print(
         f"Unicode {UNICODE_VERSION} generated and verified: "
         f"{len(tables[0])} combining, {len(tables[1])} decomposition, "

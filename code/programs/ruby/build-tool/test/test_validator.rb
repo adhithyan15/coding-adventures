@@ -247,7 +247,7 @@ class TestValidator < Minitest::Test
   end
 
   TRACKED_ARTIFACT_CASES.each do |fixture_name|
-    define_method("test_matches_shared_#{fixture_name.delete_suffix('.json').tr('-', '_')}_fixture") do
+    define_method("test_matches_shared_#{fixture_name.delete_suffix(".json").tr("-", "_")}_fixture") do
       fixture = JSON.parse((CONFORMANCE_CASES / fixture_name).read)
       snapshot = fixture.fetch("input").fetch("options").fetch("tracked_artifact_snapshot")
 
@@ -327,19 +327,19 @@ class TestValidator < Minitest::Test
     assert_equal "NON_NFC", diagnostics[0].fetch("details").fetch("problem")
 
     outlined = "NODE_MODULES".codepoints.map do |scalar|
-      scalar == 0x5F ? scalar : 0x1CCD6 + scalar - 0x41
+      (scalar == 0x5F) ? scalar : 0x1CCD6 + scalar - 0x41
     end.pack("U*")
     assert_equal "node_modules", unicode.nfkc_casefold(outlined)
     assert_equal "TRACKED_ARTIFACT_FORBIDDEN",
-                 BuildTool::Validator.validate_tracked_artifact_snapshot(
-                   [{"ordinal" => 2, "path" => "code/#{outlined}/file.rb", "entry_kind" => "regular"}]
-                 )[0].fetch("code")
+      BuildTool::Validator.validate_tracked_artifact_snapshot(
+        [{"ordinal" => 2, "path" => "code/#{outlined}/file.rb", "entry_kind" => "regular"}]
+      )[0].fetch("code")
 
     assert_equal "CONIN$", unicode.full_uppercase("conın$")
     assert_equal "RESERVED_BASENAME",
-                 BuildTool::Validator.validate_tracked_artifact_snapshot(
-                   [{"ordinal" => 3, "path" => "code/conın$.txt/file.rb", "entry_kind" => "regular"}]
-                 )[0].fetch("details").fetch("problem")
+      BuildTool::Validator.validate_tracked_artifact_snapshot(
+        [{"ordinal" => 3, "path" => "code/conın$.txt/file.rb", "entry_kind" => "regular"}]
+      )[0].fetch("details").fetch("problem")
 
     assert_equal "q\u0300", unicode.nfc("q\u0300")
     assert_empty BuildTool::Validator.validate_tracked_artifact_snapshot(
@@ -358,17 +358,18 @@ class TestValidator < Minitest::Test
     )
 
     assert_equal ["#{private_use}/node_modules/b", "#{supplementary}/node_modules/a"],
-                 diagnostics.map { |diagnostic| diagnostic.fetch("path") }
+      diagnostics.map { |diagnostic| diagnostic.fetch("path") }
   end
 
   def test_tracked_artifact_entry_kind_is_inert_metadata
+    paths = %w[a b c]
     diagnostics = BuildTool::Validator.validate_tracked_artifact_snapshot(
       %w[regular symlink reparse].each_with_index.map do |entry_kind, index|
-        {"ordinal" => index + 1, "path" => "node_modules/#{entry_kind}", "entry_kind" => entry_kind}
+        {"ordinal" => index + 1, "path" => "node_modules/#{paths[index]}", "entry_kind" => entry_kind}
       end
     )
 
     assert_equal %w[regular symlink reparse],
-                 diagnostics.map { |diagnostic| diagnostic.fetch("details").fetch("entry_kind") }
+      diagnostics.map { |diagnostic| diagnostic.fetch("details").fetch("entry_kind") }
   end
 end
