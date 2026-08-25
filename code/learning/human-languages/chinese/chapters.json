@@ -301,6 +301,27 @@
           "ZH-SCRIPT-SHENG-01"
         ]
       }
+    },
+    {
+      "chapter": 14,
+      "title": "One small step into school",
+      "label": "ch:zh-primary-three",
+      "canDo": "I can understand, say, read and write 小, 小学 and 小学生, gaining only the three-stroke 小 before recombining it with the already secure 学 and 生.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "ZH-C14-practice",
+        "kind": "writing",
+        "summary": "One new glyph expands into three official Level 1 words, each checked independently in listening, speaking, unassisted reading and no-model writing.",
+        "assesses": [
+          "ZH-PERFORMANCE-PRIMARY-THREE-FOUR-SKILL-01",
+          "ZH-LEX-XIAO-01",
+          "ZH-LEX-XIAOXUE-01",
+          "ZH-LEX-XIAOXUESHENG-01",
+          "ZH-SCRIPT-XIAO-01"
+        ]
+      }
     }
   ]
 }

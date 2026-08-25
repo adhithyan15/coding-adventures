@@ -252,6 +252,28 @@
         "ZH-EXT-035-SCHOOL-FOUR-SKILL"
       ],
       "after": []
+    },
+    {
+      "id": "ZH-PATH-013",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "ZH-C14-hear-xiao",
+        "ZH-W14-xiao",
+        "ZH-C14-xiao",
+        "ZH-C14-hear-xiaoxue",
+        "ZH-C14-xiaoxue",
+        "ZH-C14-hear-xiaoxuesheng",
+        "ZH-C14-xiaoxuesheng",
+        "ZH-R14-primary-three",
+        "ZH-C14-practice"
+      ],
+      "before": [],
+      "inline": [
+        "ZH-EXT-036-PRIMARY-MEANING-FIRST",
+        "ZH-EXT-037-PRIMARY-SCRIPT",
+        "ZH-EXT-038-PRIMARY-FOUR-SKILL"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -291,7 +313,8 @@
         "ZH-PATH-007",
         "ZH-PATH-008",
         "ZH-PATH-011",
-        "ZH-PATH-012"
+        "ZH-PATH-012",
+        "ZH-PATH-013"
       ],
       "omits": [
         "PRONOUN-ME",
@@ -1144,6 +1167,51 @@
       "lessons": [
         "ZH-R13-school-six",
         "ZH-C13-practice"
+      ]
+    },
+    {
+      "id": "ZH-EXT-036-PRIMARY-MEANING-FIRST",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "lexis",
+      "canDo": "I can understand and say 小, 小学 and 小学生, with the unfamiliar spoken meaning of 小 arriving before its character.",
+      "prerequisites": [
+        "ZH-EXT-035-SCHOOL-FOUR-SKILL"
+      ],
+      "lessons": [
+        "ZH-C14-hear-xiao",
+        "ZH-C14-hear-xiaoxue",
+        "ZH-C14-hear-xiaoxuesheng"
+      ]
+    },
+    {
+      "id": "ZH-EXT-037-PRIMARY-SCRIPT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can write 小 from ordered strokes, then read and write 小学 and 小学生 without pinyin.",
+      "prerequisites": [
+        "ZH-EXT-036-PRIMARY-MEANING-FIRST"
+      ],
+      "lessons": [
+        "ZH-W14-xiao",
+        "ZH-C14-xiao",
+        "ZH-C14-xiaoxue",
+        "ZH-C14-xiaoxuesheng"
+      ]
+    },
+    {
+      "id": "ZH-EXT-038-PRIMARY-FOUR-SKILL",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "assessment",
+      "canDo": "I can pass separate listening, speaking, reading and writing checks for 小, 小学 and 小学生; no strong skill compensates for a weak one.",
+      "prerequisites": [
+        "ZH-EXT-037-PRIMARY-SCRIPT"
+      ],
+      "lessons": [
+        "ZH-R14-primary-three",
+        "ZH-C14-practice"
       ]
     }
   ]
