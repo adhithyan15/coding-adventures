@@ -256,6 +256,12 @@ The repository also retains `dotnet` for programs hosted by the shared .NET
 engine; it is not a separate package-parity denominator. An unrecognized
 component is reported as `unknown` rather than borrowed from a substring.
 
+Cabal's exact, case-sensitive `dist-newstyle` directory component is generated
+build output and is therefore excluded before BUILD-file membership is tested.
+A similarly named source component such as `dist-newstyle-example` is not
+excluded. The shared language-registry fixture makes this exclusion normative
+for every discovery implementation.
+
 If two discovered directories still produce one qualified name, discovery
 fails with `DUPLICATE_PACKAGE_IDENTITY`. The diagnostic includes the duplicate
 package identity and every repository-relative package path in sorted order;

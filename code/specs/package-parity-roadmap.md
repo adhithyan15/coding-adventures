@@ -6542,6 +6542,63 @@ PRs. GitHub reports the PR non-draft and mergeable while required checks are
 queued. Auto-merge remains disabled until every required check is terminal and
 acceptable.
 
+PR #12659 completed all 30 reported checks: 24 successes, five expected skips,
+and one neutral aggregate. GitHub reported the branch clean and mergeable, so
+the loop enabled squash auto-merge; GitHub merged it as
+`9cfe95f38364e3bc1609548c7b85b57c6b0fc72d` at
+`2026-08-25T02:42:16Z` without a manual merge command. The mandatory
+post-merge collision report remains schema 3 with 15 established lanes, 1,371
+implementation identities, 4,564 slots, 175 high-consensus packages with 276
+gaps, 908 singleton packages with 12,712 gaps, 719 Rust singletons, zero
+collisions, and zero unknown buckets. OCaml remains correctly emerging at zero
+packages, and exact comparison with the stored inventory finds no added or
+removed identity or slot and no newly unowned portable gap.
+
+The post-merge dependency audit found that Ruby, Swift, and TypeScript cannot
+yet take their tracked-artifact children through the required complete engine
+suites: each retains a separately registered `dist-newstyle` discovery
+failure. Their tracked-artifact owners now explicitly depend on the Ruby,
+Swift, and TypeScript discovery repairs, respectively. The complete 486-owner
+graph remains dependency-complete and acyclic while its edge count rises from
+736 to 739. Elixir, Haskell, Lua, and Perl remain immediately ready tracked-
+artifact consumers; Ruby, Swift, and TypeScript correctly become two-step
+chains rather than nominally ready children with known red validation.
+
+The next selected owner is
+`build-tool-typescript-dist-newstyle-discovery-exclusion`. Its language-
+identity prerequisite is merged, the exact shared fixture already reproduces
+the one generated Cabal-directory false package, and the bounded engine-only
+repair unlocks the widest affected tracked-artifact lane at 446 TypeScript
+package directories. Eight live open PRs have zero exact overlap on the
+TypeScript build-tool, state, or roadmap surfaces, and the target remote branch
+was absent before the fresh exact-main worktree was created. The strategic
+OCaml process-free substrate remains collision-unsafe while PRs #12149 and
+#12162 own exact Go validator and main paths.
+
+The TypeScript repair now has red-to-green evidence at exact rebased main
+`a6b3c9d3b95e4d310b57a3b194c4b035b58b8bfc`: the focused regression initially
+failed in all three expected assertions, then all 284 TypeScript build-tool
+tests passed across 12 files. Overall coverage is 89.43% statements, 82.06%
+branches, 92.75% functions, and 89.36% lines; `discovery.ts` is 93.68%, 89.23%,
+100%, and 93.4%, respectively. The neutral corpus validates 111 cases and 269
+files; the focused package-parity, capability, Haskell, and OCaml suite passes
+66 tests plus 806 subtests with two expected Windows symlink skips. The Go
+build tool passes its full test, vet, and trimpath build gates, and a real
+forced TypeScript dry validation evaluates 45 Starlark BUILD files and reports
+476 of 476 packages `WOULD-BUILD`, with the orphan-crate check clean. The
+schema-3 collision report and the complete 486-owner, 739-edge acyclic state
+graph remain unchanged. Production dependency audit reports zero
+vulnerabilities; the full audit exposes one pre-existing development-only
+`nanoid` advisory below Vitest, while this branch changes neither dependency
+metadata nor runtime authority.
+
+Two read-only security reviews pass the exact-component boundary, credential,
+dependency, and production-authority checks. The branch rebased twice without
+conflict over four non-overlapping WASM, HTML-parser, Spanish, and human-
+language debt-ceiling commits; after the final rebase, all 38 focused discovery
+tests pass, the collision report is unchanged, and the 486-owner, 739-edge
+graph remains complete and acyclic.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

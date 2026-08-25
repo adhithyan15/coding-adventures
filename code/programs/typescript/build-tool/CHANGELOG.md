@@ -6,6 +6,9 @@ All notable changes to the TypeScript build tool will be documented in this file
 
 ### Fixed
 
+- Exclude Cabal `dist-newstyle` output from package discovery while preserving
+  similarly named source directories, matching the shared language-registry
+  fixture.
 - Normalize Git-diff package roots to repository-relative forward-slash paths
   and make the Git integration fixtures shell-independent on Windows.
 - Emit build-plan package `rel_path` values with portable forward slashes on
