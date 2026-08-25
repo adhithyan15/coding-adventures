@@ -8,12 +8,15 @@
 // migration that silently drops content is the failure this whole convention is
 // supposed to make impossible.
 
-import { readFileSync, readdirSync } from "node:fs";
+import { mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
-import { describe, expect, it } from "vitest";
+import { afterAll, describe, expect, it } from "vitest";
 import {
   DOC_META_SHARD,
   type DocShardPlan,
+  isAbsentErrno,
+  isDocSharded,
   docShardContents,
   docShardDirectoryFor,
   docShardFilename,
@@ -109,6 +112,63 @@ describe("splitDocument", () => {
     const { preamble, sections } = splitDocument("# T\n\njust prose\n", 2);
     expect(sections).toHaveLength(0);
     expect(preamble).toBe("# T\n\njust prose\n");
+  });
+});
+
+describe("isDocSharded — absent versus UNKNOWN", () => {
+  // A `--check` that says "missing" when it means "I could not read it" is a
+  // gate that fails closed, intermittently, with a message that sends the reader
+  // to look for a deleted directory. This block exists because the first version
+  // did exactly that: `catch { return false }` collapsed every errno into
+  // "absent", and a real run printed "BACKLOG.d is missing" and exited 1 with
+  // 109 shards sitting in the directory.
+  const tmp = mkdtempSync(join(tmpdir(), "doc-shard-"));
+
+  afterAll(() => rmSync(tmp, { recursive: true, force: true }));
+
+  it("returns false for a genuinely absent directory (the HL21 §2.3 fallback)", () => {
+    expect(isDocSharded(join(tmp, "NOPE.md"))).toBe(false);
+  });
+
+  it("returns false for ENOTDIR — a parent component that is a file", () => {
+    // `<file>/INNER.d` cannot exist, so "not sharded" is the correct answer
+    // rather than a guess.
+    const file = join(tmp, "plain.txt");
+    writeFileSync(file, "x");
+    expect(isDocSharded(join(file, "INNER.md"))).toBe(false);
+  });
+
+  it("REFUSES when something that is not a directory occupies the name", () => {
+    // Previously returned false, so `--check` reported "missing" about a name
+    // that was already taken — the reader would go and try to restore it.
+    const doc = join(tmp, "SQUAT.md");
+    writeFileSync(doc, "# x\n");
+    writeFileSync(join(tmp, "SQUAT.d"), "not a directory");
+    expect(() => isDocSharded(doc)).toThrow(/exists but is not a directory/);
+  });
+
+  it("CLASSIFIES every other errno as unknown, not as absent", () => {
+    // The classification that caused the flaky gate, stated directly. EBUSY and
+    // friends cannot be provoked portably, and `vi.spyOn` cannot patch a
+    // `node:fs` export under ESM — the module namespace is not configurable. So
+    // the decision is extracted as a pure predicate and pinned here, which is
+    // also the honest thing to test: the bug was never in the syscall, it was in
+    // what the code concluded from the syscall's failure.
+    for (const absent of ["ENOENT", "ENOTDIR"]) {
+      expect(isAbsentErrno(absent)).toBe(true);
+    }
+    for (const unknown of [
+      "EBUSY",   // Windows: search indexer, antivirus, or a sync client holds it
+      "EACCES",
+      "EPERM",
+      "EMFILE",  // a 102-file parallel test run genuinely reaches this
+      "ENFILE",
+      "EIO",
+      "ELOOP",
+      undefined, // an error with no `code` at all is still not "absent"
+    ]) {
+      expect(isAbsentErrno(unknown)).toBe(false);
+    }
   });
 });
 

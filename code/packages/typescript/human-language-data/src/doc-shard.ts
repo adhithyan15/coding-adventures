@@ -222,13 +222,64 @@ export function docShardDirectoryFor(documentPath: string): string {
  * is worse. A link here is refused loudly rather than followed, and rather than
  * silently falling back to the monolith — a quiet fallback would hide it.
  */
+/**
+ * The only two `lstat` failures that mean "there is no shard directory".
+ *
+ * Exported and pure so the CLASSIFICATION can be tested directly. The
+ * alternative — spying on `node:fs` — does not work under ESM (the module
+ * namespace is not configurable), and threading an injectable `stat` through
+ * the reader to make it mockable would change the shape of production code to
+ * suit a test. The decision worth pinning is which errnos mean absence, and
+ * that is a pure function of the code.
+ *
+ *   ENOENT   nothing at that path
+ *   ENOTDIR  a PARENT component is a file, so the path cannot exist
+ *
+ * Every other code — EBUSY, EACCES, EPERM, EMFILE, ENFILE, EIO, ELOOP — means
+ * the question could not be answered. See `isDocSharded` for why answering it
+ * anyway was a live defect rather than a tidiness point.
+ */
+export function isAbsentErrno(code: string | undefined): boolean {
+  return code === "ENOENT" || code === "ENOTDIR";
+}
+
 export function isDocSharded(documentPath: string): boolean {
   const dir = docShardDirectoryFor(documentPath);
   let stat;
   try {
     stat = lstatSync(dir);
-  } catch {
-    return false;
+  } catch (cause) {
+    // A BARE `catch { return false }` was wrong here, and wrong in a way that
+    // matters more than it looks. `lstat` fails for many reasons and only one of
+    // them means "absent": EBUSY (another process holds the directory — on
+    // Windows that is the search indexer, an antivirus scanner, or a sync
+    // client), EACCES/EPERM, EMFILE/ENFILE (out of descriptors, which a
+    // 102-file parallel test run genuinely causes on this repo), EIO, ELOOP.
+    //
+    // Collapsing all of those into `false` made `--check` print
+    // "BACKLOG.d is missing" and exit 1 about a directory sitting right there
+    // with 109 shards in it. That is the worst possible shape for a CI gate: it
+    // fails CLOSED, it fails INTERMITTENTLY, and it fails with a message that
+    // sends the reader hunting for a deleted directory. A red check that means
+    // nothing teaches everyone to ignore red checks, which costs more than the
+    // merge conflicts this file exists to remove.
+    //
+    // Exactly two codes mean "there is no shard directory", and both are the
+    // legitimate HL21 §2.3 fallback — read the monolith as before:
+    //   ENOENT   nothing at that path
+    //   ENOTDIR  a PARENT component is a file, so the path cannot exist
+    //
+    // Everything else means "I could not tell", and the honest answer to a
+    // question you could not answer is to say so rather than to guess the
+    // convenient one. `statIfPresent` in `doc-shard-cli.ts` already drew exactly
+    // this line; this function simply had not.
+    const code = (cause as NodeJS.ErrnoException).code;
+    if (isAbsentErrno(code)) return false;
+    throw new Error(
+      `doc-shard: cannot determine whether '${dir}' exists (${code ?? "unknown error"}) — ` +
+        `refusing to report it as missing when the answer is unknown`,
+      { cause },
+    );
   }
   if (stat.isSymbolicLink()) {
     throw new Error(
@@ -236,7 +287,17 @@ export function isDocSharded(documentPath: string): boolean {
         `directory beside its document, so that reads cannot leave the checkout`,
     );
   }
-  return stat.isDirectory();
+  if (!stat.isDirectory()) {
+    // The same conflation one step later. A FILE squatting at `X.d` returned
+    // `false` and was reported as "missing", sending the reader to restore a
+    // directory whose name is already taken. `shardDocument` refuses this case
+    // explicitly; the reader had been letting it through.
+    throw new Error(
+      `doc-shard: '${dir}' exists but is not a directory — ` +
+        `something is occupying the shard directory's name`,
+    );
+  }
+  return true;
 }
 
 /**
