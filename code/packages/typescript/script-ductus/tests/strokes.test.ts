@@ -3139,6 +3139,12 @@ describe("handwriting ductus", () => {
     expect(DUCTUS["ல"].strokes[0].segments).toHaveLength(4);
   });
 
+  it("ள lifts between its three pen-down runs", () => {
+    expect(penLifts(DUCTUS["ள"])).toBe(2);
+    expect(DUCTUS["ள"].strokes).toHaveLength(3);
+    expect(DUCTUS["ள"].strokes.map((stroke) => stroke.segments.length)).toEqual([3, 2, 1]);
+  });
+
   it("ற lifts between its three pen-down runs", () => {
     expect(penLifts(DUCTUS["ற"])).toBe(2);
     expect(DUCTUS["ற"].strokes).toHaveLength(3);
@@ -6116,6 +6122,14 @@ describe("handwriting ductus", () => {
     expect(src.url).toContain("tamilscript");
     expect(src.citation).toMatch(/Appendix I.*Frame 9.*ல/);
     expect(src.variation, "must not present one order as the only order").toMatch(/variation|no single/i);
+  });
+
+  it("ள's three-run order traces to Frame 12", () => {
+    const src = DUCTUS["ள"].source;
+    expect(src.url).toContain("tamilscript");
+    expect(src.citation).toMatch(/Appendix I.*Frame 12.*ள.*p\. 195/);
+    expect(src.variation).toMatch(/Module 12.*retroflex lateral.*six movements.*three pen-down runs/i);
+    expect(src.variation, "must not present one order as the only order").toMatch(/variation|one attested/i);
   });
 
   it("ற's stroke order traces to Frame 10", () => {
