@@ -1,0 +1,135 @@
+% ============================================================================
+% suffix-meaning — common English derivational suffixes and what they
+% actually mean (adj-facts-stdlib, LANGUAGE).
+% ============================================================================
+% A suffix attaches to the END of a base word and changes its meaning —
+% "-less" in "hopeless" doesn't name a thing, it marks the base word as
+% LACKING what it names. Recall is a binding query:
+%
+%     ? suffix_meaning(_ful, $M)
+%       % full_of
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `suffix_meaning(suffix, meaning)` carrying the source citation,
+% so the lookup above is the ordinary SLD binding query — the engine
+% returns the meaning WITH its source, on the CPU, with zero model calls,
+% and abstains on any suffix not one of these seven source-cited examples.
+% The query also runs BACKWARD — bind a meaning and recall which suffix
+% carries it:
+%
+%     ? suffix_meaning($S, without)
+%       % _less
+%
+% DESIGN NOTE — why `suffix` is a LEADING-UNDERSCORE atom label rather than
+% the punctuated form: ADJ atom labels cannot contain hyphens, so this
+% table reuses and MIRRORS the atom-label convention `prefix-meaning.adj`
+% already introduced for the opposite attachment position — that table
+% marks a prefix with a TRAILING underscore (`un_` stands for "un-",
+% attaching to the FRONT of a word); this table marks a suffix with a
+% LEADING underscore instead (`_ful` stands for "-ful", attaching to the
+% END of a word). Empirically verified against the real built
+% `adj-lang-cli` binary in a scratch table before writing this file: the
+% lexer's `IDENT` token pattern (`[a-z_][a-z0-9_]*`) accepts a leading
+% underscore exactly as it accepts a trailing one, and both the forward
+% and reverse binding queries above resolve correctly. The header prose
+% below quotes the ORIGINAL punctuated form, so the mapping remains
+% independently checkable against the cited page.
+%
+% A SECOND, reused convention from `digraph-sound.adj`/
+% `diphthong-sound.adj`: the source's own chart bundles "-able, -ible"
+% into ONE row sharing ONE definition. Rather than inventing a combined
+% atom, this table ships each spelling as its OWN row pointing at the
+% SAME meaning atom (`is_or_can_be`) — the identical many-keys-to-one-
+% value shape `diphthong-sound.adj`'s `oi`/`oy` → `oi_sound` pair already
+% established, so a reverse query on `is_or_can_be` genuinely binds BOTH
+% spellings, not an invented merged one.
+%
+% Provenance: quoted verbatim from Reading Rockets' "Common Suffixes"
+% chart (a PDF reference table, "Reproduced with permission from Corwin
+% Press"), which pairs each suffix with a definition and an example word
+% directly, the SAME table-shaped citation style `prefix-meaning.adj`
+% already established for a similarly-shaped Grammarly source:
+%
+%     suffix (this table's atom label)   meaning                       example word     definition (verbatim)
+%     -----------------------------------  -----------------------------  ---------------  -------------------------------
+%     _ful                                  full_of                       helpful          "full of"
+%     _less                                 without                       hopeless         "without"
+%     _able                                 is_or_can_be                  affordable       "is; can be"
+%     _ible                                 is_or_can_be                  sensible         "is; can be"
+%     _ness                                 state_of_or_condition_of      openness         "state of; condition of"
+%     _en                                   made_of                       golden           "made of"
+%     _y                                    characterized_by              gloomy           "characterized by"
+%
+% curl-fetched the raw PDF directly and read it byte-for-byte before
+% writing this file (not just an AI-summarized WebFetch) — the same
+% "read the primary document directly" discipline
+% `meniscus-reading-point.adj` established for a PDF source.
+% `trust consensus` — Reading Rockets is a reputable secondary
+% literacy-education reference, not a primary/official standards body,
+% the same tier this stdlib already reserves for its other Reading
+% Rockets citations (`word-families.adj`, `syllable-count.adj`,
+% `onset-rime.adj`, `initial-sound.adj`, `syllable-segmentation.adj`,
+% `syllable-blending.adj`, and others) — this is the FIRST citation of
+% this specific "Common Suffixes" chart in this stdlib, a genuinely
+% DIFFERENT page within an ALREADY-vetted source family, confirmed via a
+% full-tree grep that no existing table names "suffix" as a row value.
+%
+% This is deliberately a GENUINELY DIFFERENT source family from the one
+% that failed twice before: Grammarly's own suffixes article (already
+% cited by `plural-s-sound.adj`/`past-tense-ed-sound.adj`/
+% `superlative-adjective-rule.adj` for INFLECTIONAL suffix SOUND/spelling
+% rules) has no clean per-suffix semantic-meaning table for DERIVATIONAL
+% suffixes — its prose bundles multiple senses and grammatical categories
+% per paragraph rather than one clean short phrase per suffix, the exact
+% blocker two prior scoping rounds hit. Reading Rockets' chart is
+% purpose-built as a one-suffix-per-row lookup table, the same shape
+% Grammarly's PREFIX article (but not its suffix prose) already had.
+%
+% Deliberately EXCLUDES every suffix this chart also lists that is purely
+% INFLECTIONAL (a grammatical marker with no semantic meaning of its own,
+% already covered by a sibling library in this stdlib): `-ed` (past
+% tense — `past-tense-ed-sound.adj`), `-s`/`-es` (plural —
+% `plural-s-sound.adj`), `-er` (comparative "more") and `-est`
+% (superlative "most") — `superlative-adjective-rule.adj`. Those four
+% rows exist in the source's own chart but are NOT rows here; this table
+% covers only the meaning-BEARING derivational suffixes, the same
+% distinction `prefix-meaning.adj` draws against `metric-prefixes.adj`
+% (a different kind of prefix, unit scale rather than word meaning).
+%
+% NOTE — a real spelling COLLISION the source's own chart surfaces but
+% this table does NOT need to resolve: `-er` also appears as a genuinely
+% DIFFERENT, agentive suffix ("one who; person connected with", as in
+% "teacher") distinct from the excluded comparative `-er` ("more", as in
+% "taller") — the SAME kind of heteronym-in-spelling risk
+% `long-vowel-team-sound.adj` resolved for `ow`/`ow_long_o`. Neither
+% sense of `-er` is a row in THIS table (both are excluded — the
+% agentive sense as a genuine future extension candidate, the
+% comparative sense as inflectional), so no disambiguated atom is needed
+% yet; flagged here for whichever future round adds the agentive `-er`
+% sense as a new row.
+%
+% A suffix not one of these seven — e.g. `_ic` ("having characteristics
+% of", as in "poetic"), a real suffix the SAME chart also covers, but
+% deliberately still not a row here (its definition text is a
+% near-duplicate of the chart's own separate, also-unshipped `-al`/`-ial`
+% row, avoiding the near-synonym pile-up `prefix-meaning.adj`'s own
+% design note already cautions against) — is NOT a row, so a recall
+% ABSTAINS on it rather than inventing a meaning. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table suffix_meaning {
+    columns suffix, meaning
+
+    row (_ful, full_of)
+    row (_less, without)
+    row (_able, is_or_can_be)
+    row (_ible, is_or_can_be)
+    row (_ness, state_of_or_condition_of)
+    row (_en, made_of)
+    row (_y, characterized_by)
+
+    source "full of"
+    locator "https://www.readingrockets.org/sites/default/files/migrated/Suffixes-Chart.pdf"
+    trust consensus
+}
