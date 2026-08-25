@@ -1,5 +1,30 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.60 — 2026-08-24 — SIMD widen PR38: i8x16.shuffle text-form encoding (task #229-231)
+
+### Added
+
+- New `SimdOpKind::Shuffle` match arms in both `encode_stream_instr`
+  (flat/stream form) and `encode_flat_instr` (folded form) -- the real
+  WAT grammar, confirmed against the vendored `simd_lane.wast` corpus
+  itself (`(i8x16.shuffle 0 1 2 ... 15 (local.get 0) (local.get 1))`),
+  puts all 16 lane-index literals BEFORE the two v128 operand
+  expressions, same "immediates lead, operands trail" convention as
+  `ExtractLane*`/`ReplaceLane*`, just 16 immediates instead of 1. In
+  folded form the 16 leading atoms are `args[0..16]`, the two operand
+  expressions recurse through `encode_instr_list` as `args[16..]`; in
+  flat/stream form the 16 trailing atoms are read directly (the two
+  operands are already emitted onto `out` by whatever preceding
+  instructions produced them), consuming exactly 16 tokens. Each byte's
+  own `0..=31` range check is deferred to `wasm-validator` (validation-
+  time, not this parser's job), reusing the existing `parse_lane_index`
+  digit grammar (decimal/hex/underscore) for each of the 16 literals.
+- 2 new tests: one confirming both forms encode the 16-byte immediate
+  in exact source order for the identity case, one confirming the same
+  for a genuinely mixed (non-monotonic) immediate, matching the shape of
+  immediates the real `simd_lane.wast` corpus's `v8x16_shuffle-3`/`-4`
+  functions actually use.
+
 ## 0.1.59 — 2026-08-24 — SIMD widen PR37: extract_lane/replace_lane family, remaining shapes + real lane-index literal grammar (task #226-228)
 
 ### Added

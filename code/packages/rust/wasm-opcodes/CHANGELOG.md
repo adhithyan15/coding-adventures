@@ -2,6 +2,38 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.41] - 2026-08-24 - SIMD widen PR38: i8x16.shuffle (task #229-231)
+
+### Added
+
+- 1 new `SIMD_OPS` entry: `i8x16.shuffle` (sub-opcode `0x0D`). 208 SIMD
+  opcodes total, up from 207. The sub-opcode value was fetched live from
+  the SIMD proposal's own `BinarySIMD.md` and the W3C core spec's
+  "Vector Instructions" section (`0xFD 13`, decimal 13 = `0x0D`),
+  confirmed to sit in the one-entry gap between the already-implemented
+  `v128.const` (`0x0C`) and `i8x16.swizzle` (`0x0E`), completing the
+  `0x0C`-`0x23` const/shuffle/swizzle/extract_lane encoding run.
+- 1 new `SimdOpKind` variant: `Shuffle`. The most structurally complex
+  SIMD opcode implemented in this campaign so far -- it pops TWO v128
+  operands and carries a 16-byte RAW (non-LEB128) immediate, one lane
+  index per output lane, each valid in `0..=31` (indexing into the
+  COMBINED 32-lane space of both operands, unlike every prior
+  lane-index family, which indexes into a single operand's own narrower
+  lane count). This is a genuinely new operand shape: no prior
+  `SimdOpKind` combines a multi-operand BINARY pop with a
+  multi-byte immediate.
+- `simd_i8x16_shuffle_has_the_real_verified_sub_opcode_value`: pins the
+  `0x0D` value and its immediate neighbors (`0x0C`/`0x0E`) so a future
+  table edit can't silently shift this entry.
+
+### Fixed
+
+- `simd_op_unknown_sub_opcode_returns_none`'s "not yet implemented"
+  assertion for `i8x16.shuffle` no longer holds (it's implemented as of
+  this release) -- retargeted at a genuinely nonexistent SIMD op name
+  instead, so the test still exercises the intended "unknown name
+  returns `None`" behavior.
+
 ## [0.2.40] - 2026-08-24 - SIMD widen PR37: extract_lane/replace_lane family, remaining shapes (task #226-228)
 
 ### Added

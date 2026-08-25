@@ -983,6 +983,83 @@ fn valid_i8x16_swizzle_pops_two_v128_pushes_v128() {
     assert_valid("(module (func (param v128 v128) (result v128) (i8x16.swizzle (local.get 0) (local.get 1))))");
 }
 
+// ── SIMD widen PR38 (task #229-231): i8x16.shuffle ───────────────────────
+//
+// The most structurally complex SIMD opcode implemented in this campaign
+// so far: two V128 operands (same BINARY shape as `swizzle` above) PLUS a
+// 16-byte immediate whose valid range (0-31) is WIDER than every prior
+// lane-index family (0-15 for i8x16, down to 0-1 for i64x2/f64x2) because
+// it indexes into the COMBINED 32-lane space of both operands, not one
+// operand's own lane count. These tests deliberately probe out-of-range
+// bytes at the FIRST, a MIDDLE, and the LAST of the 16 positions, to
+// confirm `read_shuffle_lane_indices` genuinely checks every position
+// (not just the first or last it happens to see).
+
+#[test]
+fn valid_i8x16_shuffle_pops_two_v128_pushes_v128() {
+    // Identity-shuffle immediate (0-15): every byte in range, pops two
+    // v128 operands, pushes one v128 -- the ordinary BINARY shape.
+    assert_valid(
+        "(module (func (param v128 v128) (result v128)
+           (i8x16.shuffle 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 (local.get 0) (local.get 1))))",
+    );
+}
+
+#[test]
+fn valid_i8x16_shuffle_accepts_indices_spanning_the_full_0_31_range() {
+    // Confirms the full valid range end-to-end, not just the low half:
+    // 31 (the maximum valid value, selecting the SECOND operand's last
+    // lane) must validate, same as every value below it.
+    assert_valid(
+        "(module (func (param v128 v128) (result v128)
+           (i8x16.shuffle 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 (local.get 0) (local.get 1))))",
+    );
+}
+
+#[test]
+fn invalid_i8x16_shuffle_index_out_of_range_at_position_0() {
+    // The FIRST byte at value 32 -- one past the valid 0-31 range.
+    assert_invalid(
+        "(module (func (param v128 v128) (result v128)
+           (i8x16.shuffle 32 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 (local.get 0) (local.get 1))))",
+    );
+}
+
+#[test]
+fn invalid_i8x16_shuffle_index_out_of_range_at_position_8() {
+    // A MIDDLE byte (position 8) out of range -- confirms the validator
+    // checks every position, not just the ones at either end.
+    assert_invalid(
+        "(module (func (param v128 v128) (result v128)
+           (i8x16.shuffle 0 1 2 3 4 5 6 7 32 9 10 11 12 13 14 15 (local.get 0) (local.get 1))))",
+    );
+}
+
+#[test]
+fn invalid_i8x16_shuffle_index_out_of_range_at_position_15() {
+    // The LAST byte (position 15) at value 255, the maximum a single
+    // byte can hold -- confirms the validator checks the final position
+    // too, not just the ones before it.
+    assert_invalid(
+        "(module (func (param v128 v128) (result v128)
+           (i8x16.shuffle 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 255 (local.get 0) (local.get 1))))",
+    );
+}
+
+#[test]
+fn invalid_i8x16_shuffle_given_only_one_v128_operand() {
+    // Confirms the type checker actually enforces TWO v128 operands (the
+    // BINARY shape), not just accepting whatever's on the stack -- only
+    // one operand expression is supplied here, so the second pop must
+    // fail (stack underflow), same discipline as `invalid_i8x16_replace_
+    // lane_given_a_v128_in_the_i32_slot` above for a different shape
+    // mismatch.
+    assert_invalid(
+        "(module (func (param v128) (result v128)
+           (i8x16.shuffle 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 (local.get 0))))",
+    );
+}
+
 #[test]
 fn valid_i8x16_extract_lane_s_and_u_pop_v128_push_i32() {
     // SIMD widen PR18: i8x16.extract_lane_s/_u -- same "pop v128 + lane

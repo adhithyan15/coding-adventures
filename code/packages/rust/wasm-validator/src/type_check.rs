@@ -193,6 +193,42 @@ fn read_lane_index(code: &[u8], offset: &mut usize, func_idx: usize, op_name: &s
     Ok(lane_idx)
 }
 
+/// Read and validate `i8x16.shuffle`'s 16-byte raw (non-LEB128)
+/// lane-index immediate, advancing `offset` past all 16 bytes -- SIMD
+/// widen PR38 (task #229-231), the direct extension of
+/// [`read_lane_index`]'s single-byte pattern to this instruction's 16
+/// bytes at once. The KEY difference from every `extract_lane`/
+/// `replace_lane` range check above: `shuffle` indexes into the
+/// COMBINED 32-lane array of its TWO v128 operands (lanes 0-15 from the
+/// first, 16-31 from the second), so every one of the 16 bytes here must
+/// be `0..=31`, not `0..=15` (`i8x16`'s own single-operand lane count).
+///
+/// This is a hard VALIDATION-TIME rejection, not merely a runtime
+/// concern: a module with even ONE byte out of range is invalid and
+/// rejected right here, before it can ever execute -- matching the WASM
+/// spec's own requirement that an out-of-range `laneidx` makes a module
+/// invalid. This is also this crate's half of the security property this
+/// PR's own review scrutinizes most closely: because EVERY one of the 16
+/// bytes is checked (not just the first or the last), `wasm-execution`'s
+/// own gather (see that crate's `SimdOpKind::Shuffle`... well, its
+/// `sub_opcode == 0x0D` dispatch arm in `register_simd`, since `Shuffle`
+/// is intercepted before the generic `SimdOpKind` lookup there) can
+/// never be reached with an out-of-range index for any module that
+/// passed this check.
+fn read_shuffle_lane_indices(code: &[u8], offset: &mut usize, func_idx: usize) -> Result<[u8; 16], ValidationError> {
+    let mut indices = [0u8; 16];
+    for (i, slot) in indices.iter_mut().enumerate() {
+        let lane_idx = read_lane_index(code, offset, func_idx, "i8x16.shuffle")?;
+        if lane_idx > 31 {
+            return Err(ValidationError::Other(format!(
+                "function #{func_idx}: i8x16.shuffle lane index at position {i} is {lane_idx}, but must be in 0..=31 (indexes into the combined 32-lane space of both v128 operands)"
+            )));
+        }
+        *slot = lane_idx;
+    }
+    Ok(indices)
+}
+
 /// Enter dead code: truncate to this (innermost) frame's own floor and
 /// mark it unreachable. Called by `unreachable`, `br`, and `return`.
 fn mark_unreachable(stack: &mut Vec<StackType>, frame: &mut ControlFrame) {
@@ -1429,6 +1465,28 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                             return Err(ValidationError::Other(format!("function #{func_idx}: truncated v128.const literal")));
                         }
                         offset += 16;
+                        push_val(&mut stack, ValueType::V128);
+                    }
+                    wasm_opcodes::SimdOpKind::Shuffle => {
+                        // i8x16.shuffle (SIMD widen PR38, task #229-231):
+                        // pops two V128 operands (the BINARY shape shared
+                        // with `Swizzle`/`Add`/etc. below), plus reads AND
+                        // validates its 16-byte raw lane-index immediate
+                        // via `read_shuffle_lane_indices` -- see that
+                        // function's own doc comment for the full
+                        // security reasoning (every one of the 16 bytes
+                        // must be `0..=31`, checked here at VALIDATION
+                        // time, so `wasm-execution`'s gather can never
+                        // see an out-of-range index for a module that
+                        // passes this check). The immediate is read
+                        // before the two V128 pops below purely to match
+                        // the binary encoding's own byte order (the
+                        // immediate comes right after the sub-opcode,
+                        // before any further bytes) -- the type checker's
+                        // stack effect doesn't depend on this ordering.
+                        read_shuffle_lane_indices(code, &mut offset, func_idx)?;
+                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         push_val(&mut stack, ValueType::V128);
                     }
                     wasm_opcodes::SimdOpKind::Splat
