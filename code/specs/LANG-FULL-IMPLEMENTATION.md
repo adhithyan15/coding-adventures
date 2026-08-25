@@ -947,7 +947,9 @@ backend immediately) come before the enabler-dependent items.
   literal exponent chain evaluates to one is also preserving because the
   existing power lowerer returns the base directly without a multiply or
   runtime power call. Dynamic and otherwise non-unit exponents remain
-  conservative. For finite real
+  conservative. Leading unary plus, including integer identity tails, is
+  likewise preserving because lowering returns its operand unchanged; unary
+  minus remains conservative. For finite real
   selectors, multiplication and division by exact positive one are likewise
   preserving, including left-associative chains of those operations; additive
   zero remains conservative because it can change the sign bit of negative
