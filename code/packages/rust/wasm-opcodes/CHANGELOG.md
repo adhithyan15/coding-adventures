@@ -2,6 +2,42 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.48] - 2026-08-25 - SIMD PR46: v128.load32_lane/store32_lane
+
+### Added
+
+- 2 new `SIMD_OPS` entries, the THIRD bite of the `v128.loadN_lane`/
+  `storeN_lane` family PR44 opened, one width up from the 16-bit pair:
+  234 SIMD opcodes total, up from 232.
+  - `v128.load32_lane` (`0x56`), `v128.store32_lane` (`0x5A`).
+  - Both sub-opcode values re-verified live against the SIMD proposal's
+    own `BinarySIMD.md` at the time of this PR (`m:memarg,
+    i:ImmLaneIdx4`); neither collided with any pre-existing table
+    entry -- they sit strictly between `v128.load16_lane`/`v128.load64_
+    lane` and `v128.store16_lane`/`v128.store64_lane` respectively, in
+    the exact `0x56`/`0x5A` gap PR44/PR45's own table comments and
+    sub-opcode-value tests already flagged as "not yet implemented".
+- 2 new `SimdOpKind` variants: `Load32Lane`, `Store32Lane`. Deliberately
+  scoped to JUST the 32-bit width pair -- the remaining 2 opcodes
+  (64-bit width) are a later PR's scope, same one-family-per-PR cadence
+  PR40-45 established.
+- Dedicated sub-opcode-value test
+  (`simd_load32_lane_and_store32_lane_have_the_real_verified_sub_opcode_values`)
+  confirming both values plus the surrounding gap (`0x57`/`0x5B`, still
+  unimplemented).
+
+### Changed
+
+- `simd_ops_table_has_the_expected_232_entries_and_no_duplicates`
+  renamed to `simd_ops_table_has_the_expected_234_entries_and_no_
+  duplicates` and its assertion bumped to 234.
+- `simd_load8_lane_and_store8_lane_have_the_real_verified_sub_opcode_
+  values`'s and `simd_load16_lane_and_store16_lane_have_the_real_
+  verified_sub_opcode_values`'s own gap assertions updated: `0x56`/
+  `0x5A` are no longer part of the "not yet implemented" gap (now
+  covered by this PR's own dedicated test above) -- only `0x57`/`0x5B`
+  (64-bit width) remain unimplemented.
+
 ## [0.2.47] - 2026-08-25 - SIMD PR45: v128.load16_lane/store16_lane
 
 ### Added
