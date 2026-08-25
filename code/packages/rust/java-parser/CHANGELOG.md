@@ -2,7 +2,34 @@
 
 All notable changes to the `coding-adventures-java-parser` crate will be documented in this file.
 
-## [0.1.0] - 2026-04-11
+## [0.1.1] - 2026-08-24
+
+### Added
+- Real construct-coverage tests (JV02 spec's M0 hardening pass): interface
+  declarations with a generic type parameter and method signature, class
+  declarations with `extends`/`implements`, a generic class with a field,
+  a lambda expression, `try`/`catch`/`finally` with a `throws` clause, an
+  `@Override` annotation on a method, an enum declaration, and varargs +
+  a method reference. Previously this crate's only construct-level test
+  (`parses_basic_class`) checked nothing beyond `ast.rule_name ==
+  "program"` on a bare `class Hello { }`. Uses the engine's own
+  `parser::grammar_parser::find_nodes`/`collect_tokens` walkers to assert
+  named rules genuinely appear in the parsed tree, rather than only that
+  parsing didn't error.
+
+### Known gap (not fixed here, tracked separately)
+- Multi-level generic nesting (`Map<String, List<Integer>>`) fails to
+  parse: the lexer merges the two closing `>` characters into a single
+  `">>"`-valued token (the same shape a real right-shift operator would
+  produce — see `coding-adventures-java-lexer`'s own CHANGELOG for the
+  same finding), and this crate has no contextual token-splitting logic
+  to re-derive two separate closers from it. Confirmed to be a shared
+  `parser` crate (`GrammarParser`) engine gap, not Java-specific
+  (identically reproducible in `csharp-parser`) — not fixed in this PR,
+  which is scoped to test coverage; tracked as its own follow-up.
+
+No public API change — version bump reflects the added test coverage
+only.
 
 ### Added
 - `create_java_parser(source, version)` — factory function that loads the appropriate `java{version}.grammar` and returns a configured `GrammarParser`. The `version` parameter selects the Java edition: `"1.0"`, `"1.1"`, `"1.4"`, `"5"`, `"7"`, `"8"`, `"10"`, `"14"`, `"17"`, `"21"` (default: `"21"`).
