@@ -6623,14 +6623,25 @@ The next selected owner is
 `build-tool-swift-dist-newstyle-discovery-exclusion`. It is the highest-
 leverage collision-free tranche: the bounded exact-component repair unlocks
 three direct owners and five unfinished descendants, versus two and four for
-Ruby. Eight live open PRs have zero exact path overlap, the remote target
+Ruby. Six live open PRs have zero exact path overlap, the remote target
 branch was absent, and the fresh worktree starts at the merged PR #12669
 revision. OCaml remains a stronger strategic chain but collision-unsafe while
 PRs #12149 and #12162 own its exact Go validator and entry-point surfaces.
-Before publication, the branch rebased without conflict over three non-
-overlapping Rust WASM, ADJ, and Tamil commits to
-`b7bf7f6b1430de01855ea44831cddd4f767d229a`; the refreshed collision report is
-unchanged.
+Before publication, the branch rebased twice without conflict over five non-
+overlapping Rust WASM, ADJ, Tamil, Vault, and HTML-parser commits to
+`69bf8c4a87f8a0de0a14e3adcc5be77b8ceffeb6`.
+
+That final rebase adds one inventory identity: the Rust-only
+`vault-webauthn-ctap2-hid` native adapter. The refreshed collision report now
+contains 1,372 implementation identities, 4,565 slots, 909 singleton packages
+with 12,726 gaps, and 720 Rust singletons; all other bands are unchanged, with
+zero collisions or unknown buckets and OCaml still emerging at zero packages.
+The adapter's physical FIDO2 enumeration, USB HID I/O through native `hidapi`,
+worker thread, timeout, and nonempty FFI capability make it a concrete native-
+runtime exception rather than a portable all-language target. A new selection-
+blocked owner now records the required capability, dependency-provenance,
+device policy, timeout-retention, error, zeroization, and hardware-evidence
+review, leaving no newly unowned eligible portable gap.
 
 The Swift repair has red-to-green evidence on that exact base: its focused
 regression first failed on the absent registry member and emitted Cabal decoy,
@@ -6645,8 +6656,8 @@ validation evaluates 45 Starlark BUILD files and reports all 165 Swift packages
 `WOULD-BUILD` with the orphan-crate check clean.
 
 Both package build fronts pass repeated clean-status runs, package metadata and
-the normal release build pass, the collision report is unchanged, and the
-487-owner, 744-edge graph remains complete and acyclic. The warnings-as-errors
+the normal release build pass, the collision report remains clean, and the
+488-owner, 745-edge graph remains complete and acyclic. The warnings-as-errors
 release variant reproduces only three pre-existing warnings in untouched
 `BuildTool.swift` and `Executor.swift`; Swift formatting similarly has no
 checked-in configuration and reports the package's existing style baseline.

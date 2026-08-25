@@ -13,16 +13,16 @@
   },
   "active_pr": null,
   "last_inventory": {
-    "revision": "b7bf7f6b1430de01855ea44831cddd4f767d229a",
+    "revision": "69bf8c4a87f8a0de0a14e3adcc5be77b8ceffeb6",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1371,
-    "implementation_package_slots": 4564,
+    "implementation_identities": 1372,
+    "implementation_package_slots": 4565,
     "high_consensus_packages": 175,
     "high_consensus_missing_slots": 276,
-    "singleton_packages": 908,
-    "singleton_missing_slots": 12712,
-    "rust_singletons": 719,
+    "singleton_packages": 909,
+    "singleton_missing_slots": 12726,
+    "rust_singletons": 720,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -167,6 +167,16 @@
       "notes": "Discovered by the complete dependency audit for PR #12669 and reproduced again at exact post-merge main. npm audit reports HIGH GHSA-2v37-7h3g-55p8 because development-only nanoid 3.3.16 is below 3.3.18 through Vitest, Vite, and PostCSS; npm audit --omit=dev is clean, the build tool has zero runtime dependencies, and npm reports a focused fix available. Raise only the pinned transitive development floor, prove the complete package and coverage suites plus npm audit are clean, and do not mix this dependency-maintenance item into portable validator or discovery behavior."
     },
     {
+      "id": "vault-webauthn-ctap2-hid-native-authority-exception-review",
+      "title": "Review the Vault CTAP2 HID adapter's native-authority exception",
+      "status": "pending",
+      "depends_on": ["capability-schema-category-action-constraints"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered in the collision-clean 69bf8c4a inventory after merged PR #12668 added the Rust-only vault-webauthn-ctap2-hid package. This is a concrete native-runtime adapter, not a portable all-language target: it enumerates and communicates with physical FIDO2 authenticators through ctap-hid-fido2 and hidapi, invokes platform HID libraries through ffi:call, spawns a bounded worker thread, and owns hardware-touch timeout behavior. Review the existing nonempty capability profile, native dependency provenance, device-selection and serialization policy, timeout thread retention, static error taxonomy, secret zeroization, and platform/hardware evidence; preserve vault-auth's injected Ctap2Transport as the portable boundary and do not manufacture all-language USB-HID adapters. This host-authority exception is excluded from autonomous parity selection."
+    },
+    {
       "id": "build-tool-rust-windows-isolated-target-artifact-hygiene",
       "title": "Keep the Rust Windows build front door artifact-clean",
       "status": "pending",
@@ -182,10 +192,11 @@
       "depends_on": ["build-tool-swift-language-identity-registry"],
       "branch": "codex/build-tool-swift-dist-newstyle-discovery-exclusion",
       "pr_number": null,
-      "selection_revision": "b7bf7f6b1430de01855ea44831cddd4f767d229a",
-      "implementation_revision": "ce48761b3243ecff7039a3ec08f0c880c34b75df",
-      "selection_notes": "Selected after PR #12669 completed 30 terminal acceptable checks and merged through squash auto-merge at exact origin/main 67391c12334b0193f67fba16864dbcaf8190d647, then rebased without conflict over three non-overlapping Rust WASM, ADJ, and Tamil commits to b7bf7f6b1430de01855ea44831cddd4f767d229a. The mandatory schema-3 inventory remains 15 established lanes, 1,371 implementation identities, 4,564 slots, 175 high-consensus packages with 276 gaps, 908 singletons with 12,712 gaps, 719 Rust singletons, zero collisions, and zero unknown buckets; exact comparison with the stored 9cfe inventory finds no identity or slot delta and no newly unowned portable package. Dependency reconciliation adds the same registered discovery prerequisite to the TypeScript, Ruby, and Swift orphan consumers plus Swift absolute-file handling, and separately registers the fixable development-only nanoid advisory. The resulting 487-owner, 744-edge graph is complete and acyclic. This bounded exact-component Swift repair has the highest immediate leverage: it unlocks three direct children and five unfinished descendants, versus Ruby's two direct children and TypeScript tracked-artifact conformance's one umbrella descendant. Eight live open PRs have zero exact overlap on the Swift build-tool, state, or roadmap surfaces, and the target remote branch was absent before the clean exact-main worktree was created. OCaml remains collision-unsafe while PRs #12149 and #12162 own exact Go validator and main surfaces.",
-      "validation_notes": "The focused regression first failed with both the missing registry member and emitted Cabal decoy, then the exact-main Swift 6.3.3 suite passed all 27 tests. Discovery coverage remains 91.33% line coverage; Hasher reaches 51.49%, and overall production line coverage is 47.24%. Focused tests prove exact lower-case dist-newstyle exclusion, preservation of Dist-Newstyle and dist-newstyle-example, and reuse of the same registry by source hashing. The process-free neutral corpus validates 111 cases and 269 files; 148 focused package-parity, capability, Haskell, OCaml, and conformance tests pass with two expected Windows symlink skips. The Go build tool passes its full test, vet, and trimpath build gates, and a real forced Swift dry validation evaluates 45 Starlark BUILD files and reports all 165 Swift packages WOULD-BUILD with the orphan-crate check clean. BUILD and BUILD_windows each pass repeated clean-status runs; swift package dump-package and the normal release build pass. The warnings-as-errors release variant reproduces only three pre-existing warnings in untouched BuildTool.swift and Executor.swift, while package-local swift-format lint likewise reports the repository's pre-existing unconfigured style baseline. The refreshed schema-3 inventory remains 15 established lanes, 1,371 implementation identities, 4,564 slots, 175 high-consensus packages with 276 gaps, 908 singletons with 12,712 gaps, 719 Rust singletons, zero collisions, and zero unknown buckets. The 487-owner, 744-edge state graph remains dependency-complete and acyclic. Package.swift has no external dependencies, the diff introduces no new runtime authority or credential path, git diff --check and secret scanning pass, and an independent security review found no production blocker after requesting and receiving explicit case and Hasher assertions.",
+      "selection_revision": "69bf8c4a87f8a0de0a14e3adcc5be77b8ceffeb6",
+      "implementation_revision": "8d7131e591741de235c4dc864488a1cd82c1307c",
+      "validation_revision": "27a18d814e947f60214b9aff3922f4cf927d7bda",
+      "selection_notes": "Selected after PR #12669 completed 30 terminal acceptable checks and merged through squash auto-merge at exact origin/main 67391c12334b0193f67fba16864dbcaf8190d647, then rebased twice without conflict over five non-overlapping Rust WASM, ADJ, Tamil, Vault, and HTML-parser commits to 69bf8c4a87f8a0de0a14e3adcc5be77b8ceffeb6. The mandatory schema-3 inventory is now 15 established lanes, 1,372 implementation identities, 4,565 slots, 175 high-consensus packages with 276 gaps, 909 singletons with 12,726 gaps, 720 Rust singletons, zero collisions, and zero unknown buckets. The sole inventory delta is the new native Vault CTAP2 HID adapter, which is registered as a selection-blocked exception review rather than a portable gap. Dependency reconciliation adds the same registered discovery prerequisite to the TypeScript, Ruby, and Swift orphan consumers plus Swift absolute-file handling, and separately registers the fixable development-only nanoid advisory. The resulting 488-owner, 745-edge graph is complete and acyclic. This bounded exact-component Swift repair has the highest immediate leverage: it unlocks three direct children and five unfinished descendants, versus Ruby's two direct children and TypeScript tracked-artifact conformance's one umbrella descendant. Six live open PRs have zero exact overlap on the six Swift build-tool, state, and roadmap surfaces, and the target remote branch remains absent. OCaml remains collision-unsafe while PRs #12149 and #12162 own exact Go validator and main surfaces.",
+      "validation_notes": "The focused regression first failed with both the missing registry member and emitted Cabal decoy, then the exact-main Swift 6.3.3 suite passed all 27 tests. Discovery coverage remains 91.33% line coverage; Hasher reaches 51.49%, and overall production line coverage is 47.24%. Focused tests prove exact lower-case dist-newstyle exclusion, preservation of Dist-Newstyle and dist-newstyle-example, and reuse of the same registry by source hashing. The process-free neutral corpus validates 111 cases and 269 files; 148 focused package-parity, capability, Haskell, OCaml, and conformance tests pass with two expected Windows symlink skips. The Go build tool passes its full test, vet, and trimpath build gates, and a real forced Swift dry validation evaluates 45 Starlark BUILD files and reports all 165 Swift packages WOULD-BUILD with the orphan-crate check clean. BUILD and BUILD_windows each pass repeated clean-status runs; swift package dump-package and the normal release build pass. The warnings-as-errors release variant reproduces only three pre-existing warnings in untouched BuildTool.swift and Executor.swift, while package-local swift-format lint likewise reports the repository's pre-existing unconfigured style baseline. The refreshed schema-3 inventory is 15 established lanes, 1,372 implementation identities, 4,565 slots, 175 high-consensus packages with 276 gaps, 909 singletons with 12,726 gaps, 720 Rust singletons, zero collisions, and zero unknown buckets; the new Rust Vault HID singleton has a selection-blocked native-authority owner. The 488-owner, 745-edge state graph remains dependency-complete and acyclic. Package.swift has no external dependencies, the diff introduces no new runtime authority or credential path, git diff --check and secret scanning pass, and an independent security review found no production blocker after requesting and receiving explicit case and Hasher assertions.",
       "notes": "Discovered before the post-#12584 selection by running the exact shared discovery-language-registry fixture with Swift 6.3.3 on Windows. The fixture emits the generated code/packages/haskell/dist-newstyle decoy while the other expected identities match. Add the neutral exclusion in its own engine-scoped tranche and rerun the complete Swift test and coverage gates; do not widen the Ruby/Rust repair."
     },
     {
