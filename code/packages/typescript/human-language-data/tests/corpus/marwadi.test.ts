@@ -81,17 +81,23 @@ it("pins Marwadi's complete pre-A1 writing ramp", () => {
     "delayed-copy",
     "observe-trace",
     "delayed-copy",
+    "observe-trace",
+    "delayed-copy",
+    "delayed-copy",
+    "delayed-copy",
+    "delayed-copy",
+    "delayed-copy",
   ]);
 });
 
 it("pins Marwadi-owned chapters and objective activities", () => {
   const lessons = loadTrackLessons("marwadi");
-  expect(lessons).toHaveLength(130);
+  expect(lessons).toHaveLength(147);
   expect(new Set(lessons.map((lesson) => Number(lesson.frontmatter.chapter)))).toEqual(
-    new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]),
+    new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]),
   );
   const activities = lessons.flatMap((lesson) => compileLessonActivities(lesson.blocks));
-  expect(activities).toHaveLength(130);
+  expect(activities).toHaveLength(147);
   expect(lessons.every((lesson) => compileLessonActivities(lesson.blocks).length === 1)).toBe(true);
   expect(activities.map((activity) => activity.id).sort()).toEqual([
     "MW-C01-practice-answer",
@@ -175,6 +181,18 @@ it("pins Marwadi-owned chapters and objective activities", () => {
     "MW-C12-mausam-dictation",
     "MW-C12-thandi-dictation",
     "MW-C12-weather-six-payoff",
+    "MW-C13-bhaav-dictation",
+    "MW-C13-dukan-dictation",
+    "MW-C13-hear-bhaav-meaning",
+    "MW-C13-hear-dukan-meaning",
+    "MW-C13-hear-vastu-meaning",
+    "MW-C13-shopping-three-payoff",
+    "MW-C13-vastu-dictation",
+    "MW-C14-hear-samaan-meaning",
+    "MW-C14-hear-sasta-meaning",
+    "MW-C14-samaan-dictation",
+    "MW-C14-sasta-dictation",
+    "MW-C14-shopping-five-payoff",
     "MW-R08-family-foundation-three",
     "MW-R08-family-map-four",
     "MW-R08-script-close-three",
@@ -189,6 +207,10 @@ it("pins Marwadi-owned chapters and objective activities", () => {
     "MW-R12-script-close-recall",
     "MW-R12-weather-first-two-recall",
     "MW-R12-weather-new-three-recall",
+    "MW-R13-shopping-close-recall",
+    "MW-R13-shopping-three-recall",
+    "MW-R14-shopping-close-recall",
+    "MW-R14-shopping-new-two-recall",
     "MW-W01-aa-matra-change",
     "MW-W01-ra-read",
     "MW-W01-raam-build",
@@ -224,12 +246,13 @@ it("pins Marwadi-owned chapters and objective activities", () => {
     "MW-W12-au-matra-write",
     "MW-W12-dda-write",
     "MW-W12-ga-write",
+    "MW-W13-u-matra-write",
   ]);
 
   const closure = measureScriptClosure(lessons);
   expect(closure.violations.filter((violation) => violation.language === "marwadi")).toEqual([]);
   expect(closure.tracks.find((track) => track.language === "marwadi")).toMatchObject({
-    lessonCount: 130,
+    lessonCount: 147,
     neverTaughtGlyphs: 0,
     violations: 0,
   });

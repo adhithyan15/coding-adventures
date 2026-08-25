@@ -353,6 +353,49 @@
       "json": "marwadi/narration/ch17.json",
       "textHash": "fnv1a64:917a039dcac48053",
       "jsonHash": "fnv1a64:683e46a164b25996"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 18,
+      "sourceHash": "fnv1a64:4cfad76bf34a267f",
+      "lessonIds": [
+        "MW-C13-hear-dukan",
+        "MW-W13-u-matra",
+        "MW-C13-dukan",
+        "MW-C13-hear-vastu",
+        "MW-C13-vastu",
+        "MW-C13-hear-bhaav",
+        "MW-C13-bhaav",
+        "MW-R13-shopping-three",
+        "MW-C13-shopping-three",
+        "MW-R13-shopping-close"
+      ],
+      "voiceLessons": 9,
+      "drivablePrefix": 1,
+      "text": "marwadi/narration/ch18.txt",
+      "json": "marwadi/narration/ch18.json",
+      "textHash": "fnv1a64:58d4c1d29091a68b",
+      "jsonHash": "fnv1a64:badf5f6bfe78f48c"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 19,
+      "sourceHash": "fnv1a64:82f88c569d9be245",
+      "lessonIds": [
+        "MW-C14-hear-sasta",
+        "MW-C14-sasta",
+        "MW-C14-hear-samaan",
+        "MW-C14-samaan",
+        "MW-R14-shopping-new-two",
+        "MW-C14-shopping-five",
+        "MW-R14-shopping-close"
+      ],
+      "voiceLessons": 7,
+      "drivablePrefix": 7,
+      "text": "marwadi/narration/ch19.txt",
+      "json": "marwadi/narration/ch19.json",
+      "textHash": "fnv1a64:9a4fa3c9be9b8ec5",
+      "jsonHash": "fnv1a64:4bf20cff2ea24dfa"
     }
   ],
   "findings": []

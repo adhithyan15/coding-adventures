@@ -136,6 +136,23 @@ memory demand at a time.
 | S128 | `MW-R12-weather-new-three` | retrieve weather, heat, and cold | mixed four-skill recall |
 | S129 | `MW-C12-weather-six` | pass the six-word weather map | non-compensatory listening, speaking, reading, and writing |
 | S130 | `MW-R12-script-close` | close the writing loop for **ौ**, **ग**, and **ड** | hidden-model signs and words |
+| S131 | `MW-C13-hear-dukan` | hear *dukān* as shop | none; meaning precedes the new vowel mark |
+| S132 | `MW-W13-u-matra` | distinguish short **ु** from familiar **ू** | observe, trace, copy one vowel mark |
+| S133 | `MW-C13-dukan` | assemble **दुकान** | delayed copy and dictation |
+| S134 | `MW-C13-hear-vastu` | hear *vastu* as item or thing | none; meaning precedes spelling |
+| S135 | `MW-C13-vastu` | assemble **वस्तु** with the known short-u mark | delayed copy and dictation |
+| S136 | `MW-C13-hear-bhaav` | hear *bhāv* as price | none; meaning precedes spelling |
+| S137 | `MW-C13-bhaav` | assemble **भाव** from known signs | delayed copy and dictation |
+| S138 | `MW-R13-shopping-three` | retrieve shop, item, and price | mixed four-skill recall |
+| S139 | `MW-C13-shopping-three` | pass the three-word shopping map | non-compensatory listening, speaking, reading, and writing |
+| S140 | `MW-R13-shopping-close` | close the first shopping loop | hidden-model three-word recall |
+| S141 | `MW-C14-hear-sasta` | hear *sastā* as cheap | none; meaning precedes spelling |
+| S142 | `MW-C14-sasta` | assemble **सस्ता** from known signs | delayed copy and dictation |
+| S143 | `MW-C14-hear-samaan` | hear *sāmān* as goods | none; meaning precedes spelling |
+| S144 | `MW-C14-samaan` | assemble **सामान** from known signs | delayed copy and dictation |
+| S145 | `MW-R14-shopping-new-two` | retrieve cheap and goods | mixed four-skill recall |
+| S146 | `MW-C14-shopping-five` | pass the five-word shopping map | non-compensatory listening, speaking, reading, and writing |
+| S147 | `MW-R14-shopping-close` | close the five-word shopping loop | hidden-model five-word recall |
 
 Reviews use expanding spacing: repeat S7 the next day, after three days, after
 one week, and after two weeks. A failed written recall sends the learner back to

@@ -24,7 +24,8 @@ reading, and writing. Every lesson is at most five minutes.
 
 ## What this starter edition can honestly claim
 
-After Chapter 13, a learner can recognise, read, say, copy, and write the polite
+Across the current nineteen chapters, a learner can recognise, read, say, copy,
+and write the polite
 greeting **राम-राम सा**, answer it, and offer formal **आभार** after a kindness.
 They can also answer yes respectfully with **हां सा**, and retrieve **पाणी**
 as the Marwadi word for water in all four skills. They can exchange one name,
@@ -36,8 +37,11 @@ pretending that the still-untaught location question is complete. Chapter 16
 adds **हवा, बादल, बरसात** as wind, cloud, and rain, using no new Devanagari
 signs and without pretending that a complete weather exchange is taught.
 Chapter 17 adds **मौसम, गर्मी, ठंडी** as weather, heat, and cold after isolating
-only **ौ**, **ग**, and **ड**. The track now contains 130 canonical lessons and
-34 distinct taught headwords. That is still a small pre-A1
+only **ौ**, **ग**, and **ड**. Chapters 18–19 add **दुकान, वस्तु, भाव, सस्ता,
+सामान** as shop, item, price, cheap, and goods after isolating only short **ु**.
+The words form a five-part map in all four skills, while a complete price
+question and bargaining exchange remain untaught. The track now contains 147
+canonical lessons and 39 distinct taught headwords. That is still a small pre-A1
 capability, not completion of pre-A1 and not exam readiness. The curriculum map
 records every untouched spine concept explicitly so the remaining work stays
 measurable.
@@ -77,6 +81,10 @@ still-untaught weather question or a full conversation is complete. Chapter 17
 uses the same source's **मौसम, गर्मी, ठंडी** while recording that it groups the
 last two with summer and winter; the first teaching move keeps the narrower
 heat and cold meanings rather than collapsing weather and seasons.
+Marwari Pathshala Lesson 9 supplies **दुकान, वस्तु, भाव, सस्ता, सामान** for
+Chapters 18–19. The book teaches the five words before attempting the source's
+longer shopping phrases and therefore does not yet claim a complete purchase or
+bargaining exchange.
 
 - [Rajasthan Foundation: Rajasthani Language](https://foundation.rajasthan.gov.in/RajasthaniLanguage.aspx)
 - [Rajasthan State Archives: learning Rajasthani (Marwari)](https://rsad.artandculture.rajasthan.gov.in/content/raj/art-and-culture/rajasthan-state-archives-bikaner/en/download.html)
@@ -87,6 +95,7 @@ heat and cold meanings rather than collapsing weather and seasons.
 - [SIL International, *Marwari–English Dictionary* (2015)](https://nepal.sil.org/resources/archives/63768)
 - [Marwari Pathshala, Lesson 4: relations](https://www.marwaripathshala.com/marwari-lesson-4-english)
 - [Marwari Pathshala, Lesson 7: weather and seasons](https://www.marwaripathshala.com/marwari-lesson-7-english)
+- [Marwari Pathshala, Lesson 9: shopping and bargaining](https://www.marwaripathshala.com/marwari-lesson-9-english)
 - [Marwari Pathshala, D glossary](https://www.marwaripathshala.com/d-glossary-of-rajasthani-language)
 - [Society for Endangered Languages, Marwari Swadesh list](https://selindia.org/wp-content/uploads/2025/05/SWL-Marwari_IPA.pdf)
 - [Turner, *A Comparative Dictionary of the Indo-Aryan Languages*](https://dsal.uchicago.edu/dictionaries/soas/)

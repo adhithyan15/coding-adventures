@@ -267,6 +267,39 @@
         "MW-R12-script-close"
       ],
       "tex": "marwadi/book/chapters/ch17-weather-six.tex"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 18,
+      "sourceHash": "fnv1a64:31f2852fa752cf27",
+      "lessonIds": [
+        "MW-C13-hear-dukan",
+        "MW-W13-u-matra",
+        "MW-C13-dukan",
+        "MW-C13-hear-vastu",
+        "MW-C13-vastu",
+        "MW-C13-hear-bhaav",
+        "MW-C13-bhaav",
+        "MW-R13-shopping-three",
+        "MW-C13-shopping-three",
+        "MW-R13-shopping-close"
+      ],
+      "tex": "marwadi/book/chapters/ch18-shopping-three.tex"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 19,
+      "sourceHash": "fnv1a64:bd22d96d9014e3f5",
+      "lessonIds": [
+        "MW-C14-hear-sasta",
+        "MW-C14-sasta",
+        "MW-C14-hear-samaan",
+        "MW-C14-samaan",
+        "MW-R14-shopping-new-two",
+        "MW-C14-shopping-five",
+        "MW-R14-shopping-close"
+      ],
+      "tex": "marwadi/book/chapters/ch19-shopping-five.tex"
     }
   ]
 }

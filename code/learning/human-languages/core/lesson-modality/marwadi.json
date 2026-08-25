@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:104b9429c8ce4133",
+  "sourceHash": "fnv1a64:6f65ac44ed9a9ad7",
   "summary": {
-    "totalLessons": 130,
-    "voice": 85,
+    "totalLessons": 147,
+    "voice": 101,
     "sight": 6,
-    "pen": 39,
-    "drivableLessons": 85,
-    "drivablePercent": 65,
+    "pen": 40,
+    "drivableLessons": 101,
+    "drivablePercent": 69,
     "trackCount": 1,
-    "chapterCount": 17,
-    "drivablePrefixTotal": 34,
-    "fullyDrivableChapters": 2,
+    "chapterCount": 19,
+    "drivablePrefixTotal": 42,
+    "fullyDrivableChapters": 3,
     "unstartableChapters": 3,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -26,12 +26,12 @@
   "tracks": [
     {
       "language": "marwadi",
-      "lessonCount": 130,
-      "voice": 85,
+      "lessonCount": 147,
+      "voice": 101,
       "sight": 6,
-      "pen": 39,
-      "drivablePercent": 65,
-      "drivablePrefixTotal": 34,
+      "pen": 40,
+      "drivablePercent": 69,
+      "drivablePrefixTotal": 42,
       "modalities": [
         "voice",
         "sight",
@@ -351,6 +351,46 @@
           "drivable": false,
           "drivableLessonIds": [
             "MW-C12-hear-mausam"
+          ]
+        },
+        {
+          "chapter": 18,
+          "lessonCount": 10,
+          "voice": 9,
+          "sight": 0,
+          "pen": 1,
+          "modalities": [
+            "voice",
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": "MW-W13-u-matra",
+          "drivable": false,
+          "drivableLessonIds": [
+            "MW-C13-hear-dukan"
+          ]
+        },
+        {
+          "chapter": 19,
+          "lessonCount": 7,
+          "voice": 7,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 7,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "MW-C14-hear-sasta",
+            "MW-C14-sasta",
+            "MW-C14-hear-samaan",
+            "MW-C14-samaan",
+            "MW-R14-shopping-new-two",
+            "MW-C14-shopping-five",
+            "MW-R14-shopping-close"
           ]
         }
       ]
@@ -2920,6 +2960,317 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:49ff6b162224de28"
+    },
+    {
+      "id": "MW-C13-hear-dukan",
+      "language": "marwadi",
+      "chapter": 18,
+      "sequence": 1310,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:0427eaa1542d9910"
+    },
+    {
+      "id": "MW-W13-u-matra",
+      "language": "marwadi",
+      "chapter": 18,
+      "sequence": 1320,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:b076618785134dbc",
+      "detachableSegments": [
+        "Script — one mark"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "MW-C13-dukan",
+      "language": "marwadi",
+      "chapter": 18,
+      "sequence": 1330,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:0ef8de73fed357d1"
+    },
+    {
+      "id": "MW-C13-hear-vastu",
+      "language": "marwadi",
+      "chapter": 18,
+      "sequence": 1340,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:919c150a6fa65776"
+    },
+    {
+      "id": "MW-C13-vastu",
+      "language": "marwadi",
+      "chapter": 18,
+      "sequence": 1350,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:605005dd224ad897"
+    },
+    {
+      "id": "MW-C13-hear-bhaav",
+      "language": "marwadi",
+      "chapter": 18,
+      "sequence": 1360,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:17fb35093869d064"
+    },
+    {
+      "id": "MW-C13-bhaav",
+      "language": "marwadi",
+      "chapter": 18,
+      "sequence": 1370,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e7c7b31f7e22da6c"
+    },
+    {
+      "id": "MW-R13-shopping-three",
+      "language": "marwadi",
+      "chapter": 18,
+      "sequence": 1380,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:208c70132fa2f586"
+    },
+    {
+      "id": "MW-C13-shopping-three",
+      "language": "marwadi",
+      "chapter": 18,
+      "sequence": 1390,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:74f721a2bf0ad88b"
+    },
+    {
+      "id": "MW-R13-shopping-close",
+      "language": "marwadi",
+      "chapter": 18,
+      "sequence": 1400,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:14cef151a956ab64"
+    },
+    {
+      "id": "MW-C14-hear-sasta",
+      "language": "marwadi",
+      "chapter": 19,
+      "sequence": 1410,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:6c05fca4bb72c18b"
+    },
+    {
+      "id": "MW-C14-sasta",
+      "language": "marwadi",
+      "chapter": 19,
+      "sequence": 1420,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:8e3e18765f9b19b4"
+    },
+    {
+      "id": "MW-C14-hear-samaan",
+      "language": "marwadi",
+      "chapter": 19,
+      "sequence": 1430,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:86d2d44f5c2c5671"
+    },
+    {
+      "id": "MW-C14-samaan",
+      "language": "marwadi",
+      "chapter": 19,
+      "sequence": 1440,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:5d141c7c3a25e4bd"
+    },
+    {
+      "id": "MW-R14-shopping-new-two",
+      "language": "marwadi",
+      "chapter": 19,
+      "sequence": 1450,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:db1ac09a038c3e08"
+    },
+    {
+      "id": "MW-C14-shopping-five",
+      "language": "marwadi",
+      "chapter": 19,
+      "sequence": 1460,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e4a403f13d7dc930"
+    },
+    {
+      "id": "MW-R14-shopping-close",
+      "language": "marwadi",
+      "chapter": 19,
+      "sequence": 1470,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:6aa3353416b2d9f6"
     }
   ],
   "findings": []

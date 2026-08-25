@@ -43,9 +43,15 @@ Chapter 17 adds thirteen more meaning-first lessons for **मौसम, गर�
 isolating only **ौ**, **ग**, and **ड** before those forms are decoded. The new
 three-word map then joins wind, cloud, and rain in a six-word four-skill payoff.
 The strict report remains all-zero at 130 lessons.
+Chapters 18–19 add seventeen meaning-first lessons for **दुकान, वस्तु, भाव,
+सस्ता, सामान**. Only short **ु** is new; it is isolated before **दुकान** and
+**वस्तु** are decoded, while every other form reuses secure signs. The slice
+closes with a five-word four-skill payoff but leaves price questions and
+bargaining phrases as explicit debt. The strict report remains all-zero at 147
+lessons, including R1–R4 continuity.
 
-This brings the first vocabulary expansion from 11 to 34 distinct taught
-headwords: 23 of the issue's intended 35 new headwords are complete, leaving 12
+This brings the first vocabulary expansion from 11 to 39 distinct taught
+headwords: 28 of the issue's intended 35 new headwords are complete, leaving 7
 new headwords in this tranche. The earlier 17-word remaining figure counted toward a
 35-word total rather than the issue's explicit allowance of 35 additions and is
 superseded here. The next independent slice should favor high-frequency
