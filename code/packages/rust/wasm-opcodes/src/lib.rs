@@ -2335,6 +2335,33 @@ pub enum SimdOpKind {
     /// helper, matching this table's existing per-kind-duplication
     /// convention).
     RelaxedSwizzle,
+    /// `i16x8.relaxed_q15mulr_s` (SIMD relaxed-SIMD epic, PR2 -- see
+    /// `code/specs/W19-wasm-relaxed-simd-first-slice.md`) -- sub-opcode
+    /// `0x111`, the SECOND relaxed-simd opcode implemented after
+    /// [`Self::RelaxedSwizzle`]. Same `(v128, v128) -> v128` binary shape,
+    /// same per-lane Q15 rounding fixed-point multiply as
+    /// [`Self::Q15mulrSatI16x8S`] -- the only difference the relaxed-simd
+    /// spec allows is in the SINGLE lane pattern where both operand lanes
+    /// are `i16::MIN` (`-32768`): the strict MVP op must saturate that
+    /// overflow to `i16::MAX`, but the relaxed op is permitted to return
+    /// EITHER `i16::MAX` (saturate) OR `i16::MIN` (wrap) in that one case
+    /// -- an implementation-defined choice the real upstream
+    /// `i16x8_relaxed_q15mulr_s.wast` corpus encodes with the same
+    /// `either` combinator [`Self::RelaxedSwizzle`] uses. Verified BY
+    /// HAND against that corpus's actual `either` pairs (not assumed from
+    /// spec prose): for the file's one overflow-bearing test case (lanes
+    /// `[-32768,-32767,32767,0,...]` x `[-32768,-32768,32767,0,...]`),
+    /// [`Self::Q15mulrSatI16x8S`]'s existing saturating body computes
+    /// `[32767, 32767, 32766, 0,0,0,0,0]` lane-for-lane -- an EXACT,
+    /// literal match to the corpus's second `either` alternative (not
+    /// merely "a member of some looser equivalence"). So this opcode
+    /// reuses [`Self::Q15mulrSatI16x8S`]'s body verbatim, exactly the
+    /// same "reuse an existing strict op's deterministic behavior as a
+    /// valid relaxed choice" pattern [`Self::RelaxedSwizzle`] established
+    /// for `Swizzle`. See `wasm-execution`'s
+    /// `SimdOpKind::RelaxedQ15mulrI16x8S` match arm (own arm, not shared,
+    /// matching this table's per-kind-duplication convention).
+    RelaxedQ15mulrI16x8S,
 }
 
 /// One entry in the SIMD opcode table: everything a consumer needs to
@@ -3153,6 +3180,20 @@ pub static SIMD_OPS: &[SimdOpInfo] = &[
     // did, including the hand-checked `either`-pair semantics that let
     // this reuse `Swizzle`'s existing execution body unchanged).
     SimdOpInfo { name: "i8x16.relaxed_swizzle", sub_opcode: 0x100, kind: SimdOpKind::RelaxedSwizzle },
+
+    // ── Relaxed SIMD epic, PR2 -- see code/specs/
+    // W19-wasm-relaxed-simd-first-slice.md ──────────────────────────────
+    //
+    // `i16x8.relaxed_q15mulr_s`, sub-opcode `0x111` -- confirmed against
+    // the same relaxed-simd Overview.md encoding table `relaxed_swizzle`
+    // above cites. `0x111` (273 decimal) LEB128-encodes as the 2-byte
+    // sequence `[0x91, 0x02]` (low 7 bits `0x11` with the continuation
+    // bit set -> `0x91`, remaining bits `0x02`), same 2-byte-continuation
+    // shape every other relaxed-simd row uses. See `SimdOpKind::
+    // RelaxedQ15mulrI16x8S`'s own doc comment for the hand-verified
+    // `either`-pair semantics that let this reuse `Q15mulrSatI16x8S`'s
+    // existing execution body unchanged.
+    SimdOpInfo { name: "i16x8.relaxed_q15mulr_s", sub_opcode: 0x111, kind: SimdOpKind::RelaxedQ15mulrI16x8S },
 ];
 
 /// Look up a SIMD opcode by its LEB128-decoded sub-opcode value (the
@@ -3571,8 +3612,8 @@ mod tests {
     // ── SIMD (0xFD prefix, v128 first slice) ─────────────────────────────────
 
     #[test]
-    fn simd_ops_table_has_the_expected_237_entries_and_no_duplicates() {
-        assert_eq!(SIMD_OPS.len(), 237);
+    fn simd_ops_table_has_the_expected_238_entries_and_no_duplicates() {
+        assert_eq!(SIMD_OPS.len(), 238);
 
         let mut seen_sub_opcodes = std::collections::HashSet::new();
         let mut seen_names = std::collections::HashSet::new();
@@ -4864,5 +4905,21 @@ mod tests {
         assert_eq!(op.name, "i8x16.relaxed_swizzle");
         assert_eq!(op.kind, SimdOpKind::RelaxedSwizzle);
         assert_eq!(get_simd_op_by_name("i8x16.relaxed_swizzle").map(|o| o.sub_opcode), Some(0x100));
+    }
+
+    // ── Relaxed SIMD epic, PR2 -- see code/specs/
+    // W19-wasm-relaxed-simd-first-slice.md ──────────────────────────────
+
+    #[test]
+    fn simd_relaxed_q15mulr_s_has_the_real_verified_sub_opcode_value() {
+        // Relaxed SIMD epic PR2: `i16x8.relaxed_q15mulr_s` (0x111) --
+        // second relaxed-simd opcode, same Overview.md encoding table as
+        // `relaxed_swizzle` above. `0x111` (273 decimal) LEB128-encodes
+        // as `[0x91, 0x02]` (low 7 bits `0x11` with the continuation bit
+        // set, remaining bits `0x02`).
+        let op = get_simd_op(0x111).expect("0x111 should be i16x8.relaxed_q15mulr_s");
+        assert_eq!(op.name, "i16x8.relaxed_q15mulr_s");
+        assert_eq!(op.kind, SimdOpKind::RelaxedQ15mulrI16x8S);
+        assert_eq!(get_simd_op_by_name("i16x8.relaxed_q15mulr_s").map(|o| o.sub_opcode), Some(0x111));
     }
 }
