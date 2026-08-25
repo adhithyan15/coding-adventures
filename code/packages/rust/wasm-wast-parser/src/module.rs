@@ -1906,6 +1906,10 @@ fn encode_stream_instr(
             | wasm_opcodes::SimdOpKind::ExtendHighI16x8S
             | wasm_opcodes::SimdOpKind::ExtendLowI16x8U
             | wasm_opcodes::SimdOpKind::ExtendHighI16x8U
+            | wasm_opcodes::SimdOpKind::ExtendLowI32x4S
+            | wasm_opcodes::SimdOpKind::ExtendHighI32x4S
+            | wasm_opcodes::SimdOpKind::ExtendLowI32x4U
+            | wasm_opcodes::SimdOpKind::ExtendHighI32x4U
             | wasm_opcodes::SimdOpKind::NarrowI16x8S
             | wasm_opcodes::SimdOpKind::NarrowI16x8U
             | wasm_opcodes::SimdOpKind::NarrowI32x4S
@@ -2771,6 +2775,10 @@ fn encode_flat_instr(
             | wasm_opcodes::SimdOpKind::ExtendHighI16x8S
             | wasm_opcodes::SimdOpKind::ExtendLowI16x8U
             | wasm_opcodes::SimdOpKind::ExtendHighI16x8U
+            | wasm_opcodes::SimdOpKind::ExtendLowI32x4S
+            | wasm_opcodes::SimdOpKind::ExtendHighI32x4S
+            | wasm_opcodes::SimdOpKind::ExtendLowI32x4U
+            | wasm_opcodes::SimdOpKind::ExtendHighI32x4U
             | wasm_opcodes::SimdOpKind::NarrowI16x8S
             | wasm_opcodes::SimdOpKind::NarrowI16x8U
             | wasm_opcodes::SimdOpKind::NarrowI32x4S
@@ -6300,6 +6308,43 @@ mod tests {
         assert!(flat_code.windows(3).any(|w| w == [0xFD, 0x8A, 0x01]), "missing i16x8.extend_high_i8x16_u: {flat_code:?}");
         assert!(flat_code.windows(3).any(|w| w == [0xFD, 0xA7, 0x01]), "missing i32x4.extend_low_i16x8_s: {flat_code:?}");
         assert!(flat_code.windows(3).any(|w| w == [0xFD, 0xAA, 0x01]), "missing i32x4.extend_high_i16x8_u: {flat_code:?}");
+    }
+
+    #[test]
+    fn simd_i64x2_extend_low_high_family_encodes_the_real_two_byte_leb128_sub_opcodes() {
+        // SIMD widen PR36 (task #223-225): i64x2.extend_low/high_i32x4_s/
+        // _u (0xC7/0xC8/0xC9/0xCA) -- the third and FINAL rung of the
+        // "extend" family (i16x8/i32x4 rungs above, PR26). All four
+        // sub-opcode values are >= 128, so each encodes as a real 2-byte
+        // LEB128 sequence (`[byte, 0x01]`), same shape as the two rungs
+        // above, one lane width up. UNARY (one v128 operand), exercised
+        // here in both folded and flat/stream form (this crate's two
+        // independent encoders).
+        let folded = parse_module(
+            r#"(module
+                 (func (param v128) (result v128) (i64x2.extend_low_i32x4_s (local.get 0)))
+                 (func (param v128) (result v128) (i64x2.extend_high_i32x4_s (local.get 0)))
+                 (func (param v128) (result v128) (i64x2.extend_low_i32x4_u (local.get 0)))
+                 (func (param v128) (result v128) (i64x2.extend_high_i32x4_u (local.get 0))))"#,
+        )
+        .unwrap();
+        assert!(code_of(&folded, 0).windows(3).any(|w| w == [0xFD, 0xC7, 0x01]), "i64x2.extend_low_i32x4_s: {:?}", code_of(&folded, 0));
+        assert!(code_of(&folded, 1).windows(3).any(|w| w == [0xFD, 0xC8, 0x01]), "i64x2.extend_high_i32x4_s: {:?}", code_of(&folded, 1));
+        assert!(code_of(&folded, 2).windows(3).any(|w| w == [0xFD, 0xC9, 0x01]), "i64x2.extend_low_i32x4_u: {:?}", code_of(&folded, 2));
+        assert!(code_of(&folded, 3).windows(3).any(|w| w == [0xFD, 0xCA, 0x01]), "i64x2.extend_high_i32x4_u: {:?}", code_of(&folded, 3));
+
+        let flat = parse_module(
+            r#"(module (func (param v128) (result v128)
+                 local.get 0
+                 i64x2.extend_low_i32x4_s
+                 drop
+                 local.get 0
+                 i64x2.extend_high_i32x4_u))"#,
+        )
+        .unwrap();
+        let flat_code = code_of(&flat, 0);
+        assert!(flat_code.windows(3).any(|w| w == [0xFD, 0xC7, 0x01]), "missing i64x2.extend_low_i32x4_s: {flat_code:?}");
+        assert!(flat_code.windows(3).any(|w| w == [0xFD, 0xCA, 0x01]), "missing i64x2.extend_high_i32x4_u: {flat_code:?}");
     }
 
     #[test]

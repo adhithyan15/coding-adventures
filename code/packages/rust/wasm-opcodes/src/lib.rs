@@ -1517,6 +1517,28 @@ pub enum SimdOpKind {
     /// `i32x4.extend_high_i16x8_u` -- same HIGH-4-lanes shape as
     /// [`Self::ExtendHighI16x8S`], but zero-extended, not sign-extended.
     ExtendHighI16x8U,
+    /// `i64x2.extend_low_i32x4_s` -- reinterpret the ONE popped `v128` as
+    /// 4 `i32` lanes, take only the LOW 2 lanes (indices 0-1),
+    /// sign-extend each to `i64`, producing an `i64x2` result. Same
+    /// pattern one lane width up from [`Self::ExtendLowI16x8S`] --
+    /// EXACTLY the lane-selection + sign-extend half of
+    /// [`Self::ExtmulLowI64x2S`], minus the multiply. Third and FINAL
+    /// rung of the "extend" family (`i16x8`-from-`i8x16` in
+    /// [`Self::ExtendLowI8x16S`], `i32x4`-from-`i16x8` in this same
+    /// variant's `I16x8` sibling, `i64x2`-from-`i32x4` here).
+    ExtendLowI32x4S,
+    /// `i64x2.extend_high_i32x4_s` -- same as [`Self::ExtendLowI32x4S`],
+    /// but takes the HIGH 2 lanes (indices 2-3) of the operand `v128`
+    /// instead of the low 2. Mirrors [`Self::ExtmulHighI64x2S`]'s lane
+    /// selection, minus the multiply.
+    ExtendHighI32x4S,
+    /// `i64x2.extend_low_i32x4_u` -- same LOW-2-lanes shape as
+    /// [`Self::ExtendLowI32x4S`], but each `i32` lane is zero-extended
+    /// (read as `u32`) instead of sign-extended.
+    ExtendLowI32x4U,
+    /// `i64x2.extend_high_i32x4_u` -- same HIGH-2-lanes shape as
+    /// [`Self::ExtendHighI32x4S`], but zero-extended, not sign-extended.
+    ExtendHighI32x4U,
     /// `i8x16.narrow_i16x8_s` -- BINARY (the opposite shape from
     /// [`Self::ExtendLowI8x16S`]'s UNARY): pop TWO `v128`s, each read as
     /// 8 `i16` lanes. Each `i16` lane of BOTH operands is SIGNED-
@@ -2284,6 +2306,28 @@ pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "i32x4.extend_high_i16x8_s", sub_opcode: 0xA8, kind: SimdOpKind::ExtendHighI16x8S },
     SimdOpInfo { name: "i32x4.extend_low_i16x8_u", sub_opcode: 0xA9, kind: SimdOpKind::ExtendLowI16x8U },
     SimdOpInfo { name: "i32x4.extend_high_i16x8_u", sub_opcode: 0xAA, kind: SimdOpKind::ExtendHighI16x8U },
+    // SIMD widen PR36 (task #223-225): i64x2.extend_low/high_i32x4_s/_u
+    // (0xC7/0xC8/0xC9/0xCA) -- the THIRD and FINAL rung of the "extend"
+    // family (i16x8-from-i8x16 and i32x4-from-i16x8 both landed in
+    // PR26 above; this completes i64x2-from-i32x4), EXACTLY the
+    // lane-selection + sign/zero-extend half of the already-implemented
+    // ExtmulLowI64x2S/ExtmulHighI64x2S/etc. handlers, minus the multiply
+    // -- same shape as PR26's own i16x8/i32x4 rungs, one lane width up.
+    // Each sub-opcode byte fetched live from BinarySIMD.md and
+    // cross-checked against every existing `SIMD_OPS` entry: the closest
+    // neighbors are `i64x2.bitmask` at 0xC4 (just below) and
+    // `i64x2.shl` at 0xCB (just above) -- 0xC7-0xCA sit in the gap
+    // between them with no collision (0xC5/0xC6 remain unassigned/
+    // unimplemented, not part of this PR). This PR also vendors
+    // `simd_int_to_int_extend.wast`, the upstream corpus file dedicated
+    // to the whole 3-rung extend family -- it exercises PR26's
+    // already-implemented i16x8/i32x4 opcodes too, so a correct
+    // implementation should pass 100% of the file, not just the new
+    // i64x2 opcodes' directives.
+    SimdOpInfo { name: "i64x2.extend_low_i32x4_s", sub_opcode: 0xC7, kind: SimdOpKind::ExtendLowI32x4S },
+    SimdOpInfo { name: "i64x2.extend_high_i32x4_s", sub_opcode: 0xC8, kind: SimdOpKind::ExtendHighI32x4S },
+    SimdOpInfo { name: "i64x2.extend_low_i32x4_u", sub_opcode: 0xC9, kind: SimdOpKind::ExtendLowI32x4U },
+    SimdOpInfo { name: "i64x2.extend_high_i32x4_u", sub_opcode: 0xCA, kind: SimdOpKind::ExtendHighI32x4U },
     // SIMD widen PR27 (task #196-198): i8x16.narrow_i16x8_s/_u
     // (0x65/0x66) and i16x8.narrow_i32x4_s/_u (0x85/0x86) -- the
     // "narrow" family, the saturating-demote OPPOSITE of PR26's
@@ -2891,8 +2935,8 @@ mod tests {
     // ── SIMD (0xFD prefix, v128 first slice) ─────────────────────────────────
 
     #[test]
-    fn simd_ops_table_has_the_expected_193_entries_and_no_duplicates() {
-        assert_eq!(SIMD_OPS.len(), 193);
+    fn simd_ops_table_has_the_expected_197_entries_and_no_duplicates() {
+        assert_eq!(SIMD_OPS.len(), 197);
 
         let mut seen_sub_opcodes = std::collections::HashSet::new();
         let mut seen_names = std::collections::HashSet::new();
@@ -3581,6 +3625,27 @@ mod tests {
             ("i32x4.extend_high_i16x8_s", 0xA8, SimdOpKind::ExtendHighI16x8S),
             ("i32x4.extend_low_i16x8_u", 0xA9, SimdOpKind::ExtendLowI16x8U),
             ("i32x4.extend_high_i16x8_u", 0xAA, SimdOpKind::ExtendHighI16x8U),
+        ] {
+            let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
+            assert_eq!(op.name, name);
+            assert_eq!(op.kind, kind);
+            assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
+        }
+    }
+
+    #[test]
+    fn simd_i64x2_extend_low_high_widening_family_has_the_real_verified_sub_opcode_values() {
+        // SIMD widen PR36 (task #223-225): i64x2.extend_low/high_i32x4_s/_u
+        // (0xC7/0xC8/0xC9/0xCA) -- fetched live from BinarySIMD.md,
+        // cross-checked against the already-implemented i64x2.bitmask
+        // (0xC4)/i64x2.shl (0xCB) entries: 0xC7-0xCA sit in the gap
+        // between them with no collision. THIRD and FINAL rung of the
+        // "extend" family (i16x8/i32x4 both landed in PR26 above).
+        for (name, sub_opcode, kind) in [
+            ("i64x2.extend_low_i32x4_s", 0xC7, SimdOpKind::ExtendLowI32x4S),
+            ("i64x2.extend_high_i32x4_s", 0xC8, SimdOpKind::ExtendHighI32x4S),
+            ("i64x2.extend_low_i32x4_u", 0xC9, SimdOpKind::ExtendLowI32x4U),
+            ("i64x2.extend_high_i32x4_u", 0xCA, SimdOpKind::ExtendHighI32x4U),
         ] {
             let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
             assert_eq!(op.name, name);

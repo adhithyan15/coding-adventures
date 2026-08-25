@@ -1285,6 +1285,44 @@ fn invalid_i16x8_extend_low_i8x16_s_given_no_operand_at_all() {
 }
 
 #[test]
+fn valid_simd_i64x2_extend_low_high_family() {
+    // SIMD widen PR36 (task #223-225): i64x2.extend_low/high_i32x4_s/_u
+    // -- the third and FINAL rung of the "extend" family (i16x8/i32x4
+    // rungs landed in PR26 above), UNARY (pop one v128, push one v128),
+    // same shape as those two rungs one lane width up. The type checker
+    // never sees the narrower (i32) lane interpretation or the wider
+    // (i64) result lane interpretation, just the opaque V128 type in
+    // and out.
+    assert_valid(
+        r#"(module
+             (func (param v128) (result v128) (i64x2.extend_low_i32x4_s (local.get 0)))
+             (func (param v128) (result v128) (i64x2.extend_high_i32x4_s (local.get 0)))
+             (func (param v128) (result v128) (i64x2.extend_low_i32x4_u (local.get 0)))
+             (func (param v128) (result v128) (i64x2.extend_high_i32x4_u (local.get 0))))"#,
+    );
+}
+
+#[test]
+fn invalid_i64x2_extend_low_i32x4_s_given_an_i32_operand_instead_of_v128() {
+    // Confirms the type checker actually enforces V128 in the operand
+    // slot, not just accepting whatever's on the stack.
+    assert_invalid("(module (func (param i32) (result v128) (i64x2.extend_low_i32x4_s (local.get 0))))");
+}
+
+#[test]
+fn invalid_i64x2_extend_high_i32x4_u_given_an_i32_operand_instead_of_v128() {
+    assert_invalid("(module (func (param i32) (result v128) (i64x2.extend_high_i32x4_u (local.get 0))))");
+}
+
+#[test]
+fn invalid_i64x2_extend_low_i32x4_s_given_no_operand_at_all() {
+    // Confirms the type checker rejects an empty stack, not just a
+    // wrong-typed one -- the pop must fail on an underflow, same
+    // discipline as every other UNARY SIMD op's own invalid test.
+    assert_invalid("(module (func (result v128) (i64x2.extend_low_i32x4_s)))");
+}
+
+#[test]
 fn valid_simd_narrow_saturating_family() {
     // SIMD widen PR27 (task #196-198): i8x16.narrow_i16x8_s/_u and
     // i16x8.narrow_i32x4_s/_u -- the saturating-demote OPPOSITE of PR26's

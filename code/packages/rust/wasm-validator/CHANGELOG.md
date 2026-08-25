@@ -2,6 +2,22 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.48] - 2026-08-24 (task #223-225 — SIMD widen PR36: i64x2.extend_low/high_i32x4_s/u type rules)
+
+### Added
+
+- `SimdOpKind::ExtendLowI32x4S`/`ExtendHighI32x4S`/`ExtendLowI32x4U`/
+  `ExtendHighI32x4U` join the existing UNARY `v128->v128` arm alongside
+  `ExtendLowI16x8S`/etc. (PR26) -- the third and FINAL rung of the
+  "extend" family, one lane width up. Even though the runtime reads a
+  narrower (`i32`) source lane width and writes a wider (`i64`) result
+  lane width, the type checker still only ever sees the opaque `V128`
+  type on both sides, same pop-one-push-one shape as every other rung.
+- New tests: `valid_simd_i64x2_extend_low_high_family`,
+  `invalid_i64x2_extend_low_i32x4_s_given_an_i32_operand_instead_of_v128`,
+  `invalid_i64x2_extend_high_i32x4_u_given_an_i32_operand_instead_of_v128`,
+  `invalid_i64x2_extend_low_i32x4_s_given_no_operand_at_all`.
+
 ## [0.2.47] - 2026-08-24 (task #220-222 — SIMD widen PR35: f64x2.abs/min/max/pmin/pmax type rules)
 
 ### Added

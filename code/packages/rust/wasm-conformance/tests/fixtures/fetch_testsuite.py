@@ -548,6 +548,18 @@ TESTSUITE_FILES = [
     # f32x4 pair. See the NOTICE file for the real vendored/pass counts.
     "simd_f64x2.wast",
     "simd_f64x2_pmin_pmax.wast",
+    # SIMD widen PR36 (task #223-225): simd_int_to_int_extend.wast --
+    # vendors the dedicated upstream file for i64x2.extend_low/
+    # high_i32x4_s/_u (0xC7-0xCA), this PR's 4 new opcodes, completing
+    # the THIRD and FINAL rung of the "extend" family (i16x8-from-i8x16
+    # and i32x4-from-i16x8 both landed opcode-only in PR26; this
+    # completes i64x2-from-i32x4). Unlike PR26/PR27/PR28's split
+    # simd_conversions.wast handling, this single upstream file already
+    # bundles ALL THREE extend rungs together in one `(module ...)` --
+    # so it exercises PR26's already-implemented i16x8/i32x4 opcodes too,
+    # not just this PR's new i64x2 ones. See the NOTICE file for the
+    # real vendored/pass counts.
+    "simd_int_to_int_extend.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under

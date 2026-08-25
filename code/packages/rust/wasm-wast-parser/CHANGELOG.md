@@ -1,5 +1,23 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.58 — 2026-08-24 — SIMD widen PR36: i64x2.extend_low/high_i32x4_s/u text-form (task #223-225)
+
+### Added
+
+- `SimdOpKind::ExtendLowI32x4S`/`ExtendHighI32x4S`/`ExtendLowI32x4U`/
+  `ExtendHighI32x4U` join the shared "no immediate beyond the opcode
+  byte itself" SIMD dispatch arm (already used for `ExtendLowI16x8S`/
+  etc., PR26) in both the folded (`encode_stream_instr`) and flat
+  (`encode_flat_instr`) instruction encoders -- verified byte-identical
+  at both call sites before editing. All four sub-opcodes are looked up
+  by name from `wasm_opcodes::SIMD_OPS` (data-driven, via
+  `get_simd_op_by_name`), so no new encoding logic was needed. All four
+  sub-opcode values (`0xC7`/`0xC8`/`0xC9`/`0xCA`) are `>= 0x80`, so each
+  encodes as a real 2-byte LEB128 sequence (`[0xFD, byte, 0x01]`), same
+  as `ExtendLowI16x8S`/etc. (PR26) before them.
+- New test:
+  `simd_i64x2_extend_low_high_family_encodes_the_real_two_byte_leb128_sub_opcodes`
+
 ## 0.1.57 — 2026-08-24 — SIMD widen PR35: f64x2.abs/min/max/pmin/pmax text-form (task #220-222)
 
 ### Added
