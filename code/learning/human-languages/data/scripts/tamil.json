@@ -275,23 +275,23 @@
       "sound": "na",
       "role": "consonant",
       "inherentVowel": "a",
-      "components": ["a straight top bar", "a vertical on the left", "a second vertical in the middle", "a right stroke that curls below the baseline and sweeps left into a descender"],
+      "components": ["a left upright joined to the top bar", "a separately started middle upright", "a separately started right bowl that curls below the baseline and sweeps left into a descender"],
       "strokeOrder": [
-        "start at the lower-left tail and sweep around the low bowl to its upper junction",
-        "without lifting, climb to the top and carry left along the bar to the first descent",
-        "without lifting, draw the first upright straight down — then lift once",
-        "set the pen at the bottom of the adjacent middle upright and rise to the top",
-        "without lifting again, carry the top bar to the right edge — then lift a second time",
-        "set the pen at the upper right curve, descend around it and sweep left into the below-baseline tail — and only now lift"
+        "start at the lower left and draw the left upright upward",
+        "without lifting, carry the top bar to the right — then lift once",
+        "set the pen at the top-right junction and make the short return left to the middle upright",
+        "without lifting, draw the middle upright straight down — then lift a second time",
+        "set the pen at the upper junction and descend around the outside of the right bowl",
+        "without lifting, turn through the bottom and sweep left into the below-baseline tail — and only now lift"
       ],
-      "strokeOrderNote": "three strokes — three joined opening movements, one lift, the joined middle rise and top bar, a second lift, then the right-hand descent and tail; cited to Radhakrishnan, Tamil Script Learners Manual, Frame 12, ந",
+      "strokeOrderNote": "three strokes — joined movements 1–2 form the left upright and top bar, one lift precedes joined movements 3–4's return and middle descent, and a second precedes joined movements 5–6's right bowl and tail; cited to Radhakrishnan, Tamil Script Learners Manual, Appendix I, Frame 5, ந",
       "penLifts": 2,
       "strokeOrderSource": {
-        "citation": "Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 12, ந (Univ. of Texas at Austin), p. 195",
+        "citation": "Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 5, ந (University of Texas at Austin), p. 193",
         "url": "https://sites.la.utexas.edu/tamilscript/files/2009/08/hw_lettersinstructions.pdf",
-        "variation": "Tamil handwriting is taught with school-to-school variation; there is no single national stroke-order standard. Frame 12 uses a looped handwritten form; the vendored Noto face straightens that family resemblance into two stems and a curled right descent, so the evidenced order is adapted to the rendered outline without inventing lifts."
+        "variation": "Module 5 identifies ந as the voiced dental nasal and notes that its extended final curve may be omitted. Appendix I Frame 5 numbers six movements in three pen-down runs: joined movements 1–2, joined movements 3–4, and joined movements 5–6. Tamil handwriting varies by school; this is one attested order fitted to the bundled Noto Sans Tamil outline."
       },
-      "notes": "The dental n, tongue against the teeth. Contrast ன (alveolar) and ண (retroflex). Frame 12 numbers six movements, not six strokes: the first three stay joined, one lift precedes the rising middle stem and top bar, and a second precedes the right-hand descent. The Noto-backed path keeps that order while honestly following the font's straighter typographic form."
+      "notes": "The dental n, tongue against the teeth. Contrast ன (alveolar) and ண (retroflex). Frame 5's first row is ந; its six numbered movements are three strokes, not six: movements 1–2 join the left upright to the top bar, movements 3–4 join the short return to the middle descent, and movements 5–6 join the right bowl to the optional extended tail."
     },
     {
       "glyph": "ன",

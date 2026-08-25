@@ -162,7 +162,7 @@
     {
       "language": "tamil",
       "chapter": 8,
-      "sourceHash": "fnv1a64:ea7959a569399c22",
+      "sourceHash": "fnv1a64:7c72931baba25ce5",
       "lessonIds": [
         "TA-C08-tayavuseytu",
         "TA-C08-sollungal",
@@ -179,8 +179,8 @@
       "drivablePrefix": 2,
       "text": "tamil/narration/ch08.txt",
       "json": "tamil/narration/ch08.json",
-      "textHash": "fnv1a64:d59b130a3d183c4c",
-      "jsonHash": "fnv1a64:b34d4c2614449fe8"
+      "textHash": "fnv1a64:75be8cf34026ac9e",
+      "jsonHash": "fnv1a64:d9daad024cf72c97"
     },
     {
       "language": "tamil",

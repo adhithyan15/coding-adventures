@@ -442,10 +442,10 @@ export const ductusKey = (script: string, glyph: string): string => `${script}:$
 // ற is Frame 10: movements 1-2 make the left arch and first middle descent,
 // movement 3 restarts on the adjacent middle descent, and movements 4-5 join
 // the right arch to the below-baseline sweep and descender.
-// ந is Frame 12: movements 1-3 stay joined through the opening body and first
-// descent; movements 4-5 restart on the middle rise and continue through the
-// top bar; movement 6 restarts on the right-hand descent and tail. The cited
-// looped handwriting is fitted to Noto's straighter typographic form.
+// ந is Frame 5's first row: movements 1-2 join the left upright to the top
+// bar; movements 3-4 restart with the short return and middle descent; and
+// movements 5-6 restart around the right bowl and continue into its optional
+// extended tail. The attested handwriting is fitted to Noto's outline.
 // ன is Frame 13's first row: movements 1-5 join its left spiral, single inner
 // arch, and top bar; movement 6 restarts on the separate right upright. ண is
 // the adjacent row: movements 1-6 stay joined through the added inner arch and
@@ -12079,65 +12079,21 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       {
         segments: [
           {
-            label: "sweep from the lower-left tail around the low bowl",
+            label: "draw the left upright upward",
             path: [
-              { x: 92, y: -300 },
-              { x: 92, y: -235 },
-              { x: 110, y: -185 },
-              { x: 160, y: -140 },
-              { x: 250, y: -120 },
-              { x: 360, y: -120 },
-              { x: 470, y: -105 },
-              { x: 570, y: -70 },
-              { x: 640, y: -15 },
-              { x: 690, y: 75 },
-              { x: 698, y: 160 },
-              { x: 680, y: 235 },
-              { x: 625, y: 300 },
-              { x: 550, y: 325 },
-              { x: 430, y: 300 },
-            ],
-          },
-          {
-            label: "climb to the top and carry left to the first descent",
-            path: [
-              { x: 430, y: 300 },
-              { x: 390, y: 350 },
-              { x: 390, y: 420 },
-              { x: 390, y: 518 },
-              { x: 300, y: 518 },
-              { x: 210, y: 518 },
-              { x: 130, y: 518 },
-            ],
-          },
-          {
-            label: "descend the first upright",
-            path: [
-              { x: 130, y: 518 },
-              { x: 130, y: 380 },
-              { x: 130, y: 220 },
               { x: 130, y: 25 },
-            ],
-          },
-        ],
-      },
-      {
-        segments: [
-          {
-            label: "rise on the adjacent middle upright",
-            path: [
-              { x: 390, y: 25 },
-              { x: 390, y: 180 },
-              { x: 390, y: 350 },
-              { x: 390, y: 518 },
+              { x: 130, y: 220 },
+              { x: 130, y: 380 },
+              { x: 130, y: 518 },
             ],
           },
           {
             label: "carry the top bar right",
             path: [
+              { x: 130, y: 518 },
+              { x: 250, y: 518 },
               { x: 390, y: 518 },
-              { x: 470, y: 518 },
-              { x: 540, y: 518 },
+              { x: 500, y: 518 },
               { x: 605, y: 518 },
             ],
           },
@@ -12146,7 +12102,29 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       {
         segments: [
           {
-            label: "descend the right curve and sweep into the tail",
+            label: "return left to the middle upright",
+            path: [
+              { x: 605, y: 518 },
+              { x: 540, y: 518 },
+              { x: 465, y: 518 },
+              { x: 390, y: 518 },
+            ],
+          },
+          {
+            label: "descend the middle upright",
+            path: [
+              { x: 390, y: 518 },
+              { x: 390, y: 350 },
+              { x: 390, y: 180 },
+              { x: 390, y: 25 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "descend around the right bowl",
             path: [
               { x: 540, y: 325 },
               { x: 620, y: 300 },
@@ -12157,6 +12135,12 @@ export const DUCTUS: Record<string, LetterDuctus> = {
               { x: 575, y: -70 },
               { x: 470, y: -105 },
               { x: 360, y: -120 },
+              { x: 250, y: -120 },
+            ],
+          },
+          {
+            label: "sweep left into the below-baseline tail",
+            path: [
               { x: 250, y: -120 },
               { x: 160, y: -140 },
               { x: 110, y: -185 },
@@ -12169,10 +12153,10 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: {
       citation:
-        "Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 12, ந (Univ. of Texas at Austin), p. 195",
+        "Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 5, ந (University of Texas at Austin), p. 193",
       url: "https://sites.la.utexas.edu/tamilscript/files/2009/08/hw_lettersinstructions.pdf",
       variation:
-        "Tamil handwriting is taught with school-to-school variation; there is no single national stroke-order standard. Frame 12 uses a looped handwritten form; the vendored Noto face straightens that family resemblance into two stems and a curled right descent, so the evidenced order is adapted to the rendered outline without inventing lifts.",
+        "Module 5 identifies ந as the voiced dental nasal and notes that its extended final curve may be omitted. Appendix I Frame 5 numbers six movements in three pen-down runs: joined movements 1–2, joined movements 3–4, and joined movements 5–6. Tamil handwriting varies by school; this is one attested order fitted to the bundled Noto Sans Tamil outline.",
     },
   },
   ன: {
