@@ -2,6 +2,86 @@
 
 All notable changes to this package are documented here.
 
+## [0.69.0] - 2026-08-25
+
+### Added
+
+- **`export_portable_with_passphrase_best_effort` / `audited_export_
+  portable_with_passphrase_best_effort`: an explicit, opt-in export that
+  excludes a poisoned item instead of failing the whole export** (VLT-PM05
+  §13.9). Closes the backlog item VLT-PM05 §13.2 opened and deliberately
+  left unrepaired: "one poisoned record blocks the whole export... partial
+  export is a format and verification change, not a local one." This is
+  that format change.
+
+  - **The bug, confirmed with a real reproduction.**
+    `export_portable_with_passphrase` walks every current candidate of
+    every item and calls `encode_item_revision` on each one; the first
+    `BoundExceeded` (an oversized first-party, opaque, or quarantined
+    record, or a conflict with one such candidate — §13.1/§13.3/§13.5/
+    §13.8) propagates through the surrounding `?` and denies the *whole*
+    export, not just the one poisoned item. `portable_export_best_effort_
+    excludes_a_synced_oversized_item_and_keeps_the_rest` pins this
+    directly: a real peer-synced 1.5 MiB oversized-opaque item, alongside
+    one perfectly ordinary item, denies `Strict` export entirely before
+    this change and after it.
+
+  - **Options weighed and rejected before this one.** Silently skipping the
+    poisoned item unconditionally (the shape §13.3 used for vault open) was
+    rejected as a *default* or *unconditional* behavior: unlike open,
+    export has a genuine completeness tradeoff a silent default cannot make
+    safely on the operator's behalf — an artifact missing an item, with no
+    record of that fact, is indistinguishable from a smaller vault that
+    never had it. A persistent "quarantine" mutation that replaces the
+    poisoned payload with an inert catalog marker was also rejected: it
+    requires authenticating and publishing a new commit *before* the
+    operator can get a backup at all, which is strictly more friction than
+    the escape hatch this codebase already shipped (`item delete`, then
+    `export`), and it duplicates that working mechanism across a large new
+    surface (search, list, six conflict-merge preconditions, audit
+    rendering) for no benefit over it.
+
+  - **The fix.** `PortableExportCompletenessV1::{Strict, BestEffort}` picks
+    the behavior; `Strict` is the unmodified default every existing caller
+    still gets (`export_portable_with_passphrase`'s signature and return
+    type — `PortableExportArtifactV1` — are unchanged). `BestEffort` is
+    reached only through the two new, additive methods, and returns
+    `PortableExportOutcomeV1 { artifact, excluded_item_ids }`. An item is
+    excluded *whole*, never as a partial candidate set: if any one current
+    candidate cannot be re-encoded, the item's entire scratch buffer of
+    already-encoded sibling candidates is zeroized and discarded rather
+    than partially folded in — keeping only the small candidate of a mixed
+    conflict would silently hand the target an unconflicted item where the
+    source actually had one, a correctness defect worse than the omission
+    itself. `portable_export_best_effort_excludes_a_whole_mixed_conflict_
+    not_just_its_oversized_half` pins this directly.
+
+  - **The wire format.** The plaintext snapshot gains one new field,
+    `6: excluded_item_ids Array<Bytes[16]>`, emitted only when non-empty —
+    an ordinary export, or a `BestEffort` export that excluded nothing,
+    stays the exact five-field shape every prior version of this module
+    already writes and reads, so no existing backup's readability changes
+    and no `VERSION` bump was needed. Field 6 is outside `snapshot_hash`'s
+    own domain (the same shape `candidate_count` already has) and is
+    instead structurally cross-checked on read: bounded length
+    (`MAX_CATALOG_ENTRIES`), no duplicate id, and disjoint from every item
+    id actually present among `entries` — a producer must never claim one
+    item both present and excluded.
+    `excluded_item_ids_field_is_optional_and_self_consistency_checked`
+    pins all three checks directly against a real, hand-edited artifact.
+
+  - **`OpenedPortableSnapshotV1::excluded_item_count()`** exposes the
+    aggregate on the import side, the same shape
+    `attachment_bearing_item_count` (VLT-PM47 §8.3) already uses — a count,
+    not the identities, because those belong to the *source* vault the
+    importing operator does not otherwise have visibility into.
+    `PortableExportOutcomeV1::excluded_item_ids()` is deliberately wider on
+    the *export* side: every id it returns is already visible to that same
+    operator through this exact vault's own `item list`.
+
+  - **CLI.** `vault-pm export FILE [--best-effort]`
+    (`vault-pm-cli`'s CHANGELOG has the corresponding entry).
+
 ## [0.68.0] - 2026-08-24
 
 ### Fixed
