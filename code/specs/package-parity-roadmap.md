@@ -7608,6 +7608,15 @@ owners. None adds or removes a package identity, BUILD/build-tool marker, or
 Lua tranche path. The focused package, generator, full-vector, Go oracle,
 build-plan, lint, and syntax gates were rerun successfully after the rebase.
 
+Independent split security review passed the pure Lua adapter and generated
+Unicode substrate without a finding. Generator and CI review found and then
+closed executable/environment, bounded-output, timeout-tree,
+early-root-descendant, Job Object ownership, and suspended setup-failure risks.
+The final reviews of validated code revision
+`422fdaa06cd23ff64fd745ab626f1bcbe242da14` returned `SECURITY REVIEW PASSED`:
+CI is read-only with checkout credentials disabled, all external inputs remain
+hash-pinned, and no actionable security issue remains.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
