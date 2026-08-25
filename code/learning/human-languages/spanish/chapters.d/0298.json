@@ -1,0 +1,21 @@
+{
+  "chapter": 298,
+  "title": "Five More Short Answers --- Maybe, Could Be, Indeed, No Doubt, Out of the Question",
+  "label": "ch:mas-respuestas",
+  "canDo": "I can answer someone in Spanish anywhere from maybe to out of the question, and say how strong each answer is.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "ES-C298-ni-hablar",
+    "kind": "production",
+    "summary": "Complete ES-C298-ni-hablar: give all five answers in order, from the weakest to the flattest.",
+    "assesses": [
+      "ES-LEX-C298-ANSWER-01",
+      "ES-LEX-C298-ANSWER-02",
+      "ES-LEX-C298-ANSWER-03",
+      "ES-LEX-C298-ANSWER-04",
+      "ES-LEX-C298-ANSWER-05"
+    ]
+  }
+}

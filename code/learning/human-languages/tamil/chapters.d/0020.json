@@ -1,0 +1,20 @@
+{
+  "chapter": 20,
+  "title": "Numbers Eleven to Twenty and Weather",
+  "label": "ch:ta-numbers-and-weather",
+  "canDo": "I can count eleven to twenty as the transparent compounds they are, and say what the weather is doing.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE",
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "TA-C20-vaanilai",
+    "kind": "production",
+    "summary": "Take vāṉilai apart into vāṉam plus nilai, then report the weather with mazhai peykiRathu.",
+    "assesses": [
+      "TA-ETYMON-MANI-HOMOPHONE-TIME-01",
+      "TA-LEX-VAANILAI-01",
+      "TA-LEX-VAANILAI-02"
+    ]
+  }
+}

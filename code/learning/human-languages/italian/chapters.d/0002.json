@@ -1,0 +1,32 @@
+{
+  "chapter": 2,
+  "title": "How Are You?",
+  "label": "ch:it-how-are-you",
+  "canDo": "I can ask an Italian how they are, formally or informally, answer for myself, and hand the question back.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK",
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "IT-C02-practice",
+    "kind": "dialogue",
+    "summary": "The full Come stai? exchange run both ways — sta and Lei for respect, stai and tu for a friend — answered with sto bene or così così and closed with grazie / prego.",
+    "assesses": [
+      "IT-SOUND-PREGO-02",
+      "IT-ETYMON-PREGO-03",
+      "IT-SOUND-COME-02",
+      "IT-ETYMON-COME-03",
+      "IT-SOUND-STARE-02",
+      "IT-ETYMON-STARE-03",
+      "IT-GRAMMAR-STARE-04",
+      "IT-ETYMON-COME-STAI-02",
+      "IT-GRAMMAR-COME-STA-02",
+      "IT-GRAMMAR-COME-VA-02",
+      "IT-SOUND-COSI-COSI-02",
+      "IT-ETYMON-COSI-COSI-03",
+      "IT-GRAMMAR-COSI-COSI-04",
+      "IT-LEX-PRACTICE-02",
+      "IT-NOTICE-PRACTICE-03"
+    ]
+  }
+}

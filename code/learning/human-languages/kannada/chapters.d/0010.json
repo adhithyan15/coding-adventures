@@ -1,0 +1,20 @@
+{
+  "chapter": 10,
+  "title": "Days of the Week",
+  "label": "ch:ka-days-of-the-week",
+  "canDo": "I can name any day of the week in Kannada, including the Sunday that uses a different sun-name from Hindi's.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "KA-C10-vaara",
+    "kind": "task",
+    "summary": "Run Somavāra through Śanivāra, then name Sunday ಭಾನುವಾರ and say why it is Bhānu here where Hindi says Ravi.",
+    "assesses": [
+      "KA-ETYMON-C09-KSHAMISI-01",
+      "KA-ETYMON-C09-KSHAMISI-02",
+      "KA-PRAGMATICS-C09-KSHAMISI-03",
+      "KA-LEX-C10-VAARA-01"
+    ]
+  }
+}

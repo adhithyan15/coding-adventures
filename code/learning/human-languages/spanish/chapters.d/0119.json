@@ -1,0 +1,19 @@
+{
+  "chapter": 119,
+  "title": "Hecho, Dicho, Visto, Puesto",
+  "label": "ch:irregular-participles",
+  "canDo": "I can use the four irregular participles and say why those four.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "ES-C49-participios-irregulares",
+    "kind": "task",
+    "summary": "Complete ES-C49-participios-irregulares: give the four forms, name the English noun that is hecho, and say why these four break the rule.",
+    "assesses": [
+      "ES-GRAMMAR-IRREGULAR-PARTICIPLES",
+      "ES-ETYMON-FACTUM-DICTUM"
+    ],
+    "note": "They are not broken forms; they are Latin participles inherited whole, older than the -ado/-ido machinery that replaced them everywhere else."
+  }
+}

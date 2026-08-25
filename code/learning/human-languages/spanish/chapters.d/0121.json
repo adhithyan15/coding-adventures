@@ -1,0 +1,19 @@
+{
+  "chapter": 121,
+  "title": "Synthesis --- Two Shores, Two Answers",
+  "label": "ch:synthesis-perfect",
+  "canDo": "I can say what the perfect does that the preterite does not, and that today takes different tenses in Spain and Latin America.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "ES-C49-sintesis-dos-orillas",
+    "kind": "task",
+    "summary": "Complete ES-C49-sintesis-dos-orillas: contrast he comido with comi, and say which tense Madrid and Mexico City choose for today.",
+    "assesses": [
+      "ES-GRAMMAR-PERFECT-REGIONAL-SPLIT",
+      "ES-GRAMMAR-PERFECT-COMPLETE"
+    ],
+    "note": "Third split decided by geography rather than meaning, after vosotros and os. Stated with a default so the reader is not left choosing in the dark."
+  }
+}

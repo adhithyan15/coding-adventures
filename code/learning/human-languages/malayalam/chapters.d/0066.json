@@ -1,0 +1,21 @@
+{
+  "chapter": 66,
+  "title": "Out in the Paddy",
+  "label": "ch:ml-out-in-the-paddy",
+  "canDo": "I can name paddy, grass, an ear of grain, a plough and the harvest in Malayalam.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "ML-C66-harvest",
+    "kind": "production",
+    "summary": "Complete ML-C66-harvest and say all five words in order.",
+    "assesses": [
+      "ML-LEX-C66-PADDY-01",
+      "ML-LEX-C66-PADDY-02",
+      "ML-LEX-C66-PADDY-03",
+      "ML-LEX-C66-PADDY-04",
+      "ML-LEX-C66-PADDY-05"
+    ]
+  }
+}

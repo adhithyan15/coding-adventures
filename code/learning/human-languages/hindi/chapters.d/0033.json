@@ -1,0 +1,18 @@
+{
+  "chapter": 33,
+  "title": "Good Afternoon",
+  "label": "ch:hi-good-afternoon",
+  "canDo": "I can wish someone good afternoon in Hindi and say honestly how rarely शुभ दोपहर is actually used.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "HI-C33-shubh-dopahar",
+    "kind": "production",
+    "summary": "Say शुभ दोपहर with दोपहर in its widened sense, then rank it honestly below नमस्ते/नमस्कार for everyday afternoons.",
+    "assesses": [
+      "HI-CONCEPT-C33-SHUBH-DOPAHAR-01",
+      "HI-CONCEPT-C33-SHUBH-DOPAHAR-02"
+    ]
+  }
+}

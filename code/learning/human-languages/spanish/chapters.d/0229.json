@@ -1,0 +1,17 @@
+{
+  "chapter": 229,
+  "title": "Review --- One Scale, One Habit",
+  "label": "ch:repaso-grado",
+  "canDo": "I can place a thing on a scale, and recognise a shortened word.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C60-repaso-grado",
+    "kind": "task",
+    "summary": "I can place a thing on a scale, and recognise a shortened word.",
+    "assesses": [
+      "ES-GRAMMAR-APOCOPE-PATTERN"
+    ]
+  }
+}

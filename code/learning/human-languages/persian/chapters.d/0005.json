@@ -1,0 +1,21 @@
+{
+  "chapter": 5,
+  "title": "Take Leave",
+  "label": "ch:fa-take-leave",
+  "canDo": "I can open a short Persian conversation, check how the other person is, and close it with khodâ hâfez.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "FA-C05-practice",
+    "kind": "dialogue",
+    "summary": "A four-line interaction with a beginning and an end: salâm, the wellbeing check, then khodâ hâfez from both voices.",
+    "assesses": [
+      "FA-DIALOGUE-WELLBEING",
+      "FA-LEX-KHODAHAFEZ",
+      "FA-SCRIPT-KHODAHAFEZ-JOINED",
+      "FA-PRAGMATICS-STANDARD-FAREWELL",
+      "FA-DIALOGUE-TAKE-LEAVE"
+    ]
+  }
+}

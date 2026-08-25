@@ -1,0 +1,22 @@
+{
+  "chapter": 39,
+  "title": "Tea, Coffee, Milk",
+  "label": "ch:ka-tea-coffee-milk",
+  "canDo": "I can politely ask for tea, coffee or milk in Kannada, and trace each word along the road it travelled to get here.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "KA-C39-haalu",
+    "kind": "production",
+    "summary": "Ask ದಯವಿಟ್ಟು ಚಹಾ, ಕಾಫಿ or ಹಾಲು, follow chā through Persian and kāphi through five languages, then explain hālu — the word Chapter 32 already recited unglossed as proof of the p → h law.",
+    "assesses": [
+      "KA-LEX-C39-CHAHA-01",
+      "KA-ETYMON-C39-CHAHA-02",
+      "KA-LEX-C39-KAAPI-01",
+      "KA-ETYMON-C39-KAAPI-02",
+      "KA-LEX-C39-HAALU-01",
+      "KA-ETYMON-C39-HAALU-02"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 30,
+  "title": "Good Night",
+  "label": "ch:la-good-night",
+  "canDo": "I can wish someone a good night in Latin, and say why the wish takes the accusative case.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "LA-C30-bonam-noctem",
+    "kind": "dialogue",
+    "summary": "Wish someone bonam noctem, and say why it is not bona nox — Latin wishes take the accusative.",
+    "assesses": [
+      "LA-LEX-NOX-01",
+      "LA-ETYMON-NOX-02",
+      "LA-GRAMMAR-NOX-03",
+      "LA-GRAMMAR-BONAM-NOCTEM-01",
+      "LA-GRAMMAR-BONAM-NOCTEM-02"
+    ]
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "chapter": 4,
+  "title": "How Are You?",
+  "label": "ch:fa-how-are-you",
+  "canDo": "I can ask how someone is in careful respectful Persian and answer that I am well, thank you.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "FA-C04-practice",
+    "kind": "dialogue",
+    "summary": "The careful wellbeing exchange in two moves: hâl-e shomâ chetor ast? answered khubam, mamnun.",
+    "assesses": [
+      "FA-LEX-WELLBEING-QUESTION",
+      "FA-GRAMMAR-HAL-E-SHOMA",
+      "FA-PRAGMATICS-WELLBEING-FORMAL",
+      "FA-LEX-KHUBAM-REPLY",
+      "FA-GRAMMAR-PERSONAL-COPULA-AM",
+      "FA-DIALOGUE-NAME-EXCHANGE",
+      "FA-DIALOGUE-WELLBEING"
+    ]
+  }
+}

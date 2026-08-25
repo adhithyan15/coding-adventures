@@ -1,0 +1,26 @@
+{
+  "chapter": 9,
+  "title": "People You'd Introduce",
+  "label": "ch:ur-people",
+  "canDo": "I can name my brother, sister, friend and family in Urdu, and choose merā or merī correctly for each noun's grammatical gender.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "UR-C09-khandan",
+    "kind": "production",
+    "summary": "Say merā bhāī, merī bahan, merā dost and merā khāndān with merā/merī chosen correctly for each noun, and sort the four into inherited bhāī/bahan against Persian dost/khāndān — the same native-versus-borrowed split Chapter 8's verbs drew.",
+    "assesses": [
+      "UR-LEX-BHAI",
+      "UR-ETYMON-BHAI-BROTHER",
+      "UR-SCRIPT-HAMZA-YE",
+      "UR-LEX-BAHAN",
+      "UR-GRAMMAR-MERA-GENDER-AGREEMENT",
+      "UR-ETYMON-BAHAN-SHARE",
+      "UR-LEX-DOST",
+      "UR-ETYMON-DOST-CHOOSE",
+      "UR-LEX-KHANDAN",
+      "UR-ETYMON-KHANDAN-PERSIAN"
+    ]
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "chapter": 15,
+  "title": "Noon and Midnight",
+  "label": "ch:ar-noon-and-midnight",
+  "canDo": "I can say noon and midnight in Arabic and recognise aẓ-ẓuhr as the name of the midday prayer.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "AR-C15-ad-duhr-muntasaf-al-layl",
+    "kind": "production",
+    "summary": "Say aẓ-ẓuhr and muntaṣaf al-layl, and name the religious sense Arabic's noon carries.",
+    "assesses": [
+      "AR-CONCEPT-C15-AD-DUHR-MUNTASAF-AL-LAYL-01",
+      "AR-CONCEPT-C15-AD-DUHR-MUNTASAF-AL-LAYL-02"
+    ]
+  }
+}

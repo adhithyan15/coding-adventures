@@ -1,0 +1,17 @@
+{
+  "chapter": 197,
+  "title": "Si + Futuro --- What Will Happen If",
+  "label": "ch:si-futuro",
+  "canDo": "I can put the result of a condition in the future, and keep si in the present.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ES-C55-si-futuro",
+    "kind": "task",
+    "summary": "I can put the result of a condition in the future, and keep si in the present.",
+    "assesses": [
+      "ES-GRAMMAR-SI-FUTURE-RESULT"
+    ]
+  }
+}

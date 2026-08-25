@@ -1,0 +1,28 @@
+{
+  "chapter": 20,
+  "title": "Taking, Asking, Helping, Liking",
+  "label": "ch:pt-taking-asking-helping-liking",
+  "canDo": "I can say that I take, ask, help and like in Portuguese, choose between its two verbs for taking, and keep de attached to gostar.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "PT-C20-gostar",
+    "kind": "production",
+    "summary": "The chapter's last lesson closes the set: after gostar de the reader produces the eight first-person forms of both verb chapters in one run - penso, entendo, leio, escrevo, pego, pergunto, ajudo, gosto - explains why the de cannot be dropped, and ties gostar back to saber as the second Portuguese verb that stopped meaning to taste.",
+    "assesses": [
+      "PT-LEX-PENSAR-02",
+      "PT-LEX-ENTENDER-COMPREENDER-02",
+      "PT-LEX-LER-02",
+      "PT-LEX-ESCREVER-02",
+      "PT-LEX-TOMAR-PEGAR-02",
+      "PT-LEX-PERGUNTAR-02",
+      "PT-LEX-AJUDAR-02",
+      "PT-LEX-SABER-CONHECER-02",
+      "PT-ETYMON-SABER-CONHECER-03",
+      "PT-LEX-GOSTAR-02",
+      "PT-ETYMON-GOSTAR-03",
+      "PT-GRAMMAR-GOSTAR-DE-04"
+    ]
+  }
+}

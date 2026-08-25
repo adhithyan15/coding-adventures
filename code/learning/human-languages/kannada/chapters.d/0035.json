@@ -1,0 +1,20 @@
+{
+  "chapter": 35,
+  "title": "Family and Friends",
+  "label": "ch:ka-family-and-friends",
+  "canDo": "I can name my family as a group in Kannada and name a friend, and say which of the two words is native and which is a Sanskrit loan.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "KA-C35-snehita",
+    "kind": "production",
+    "summary": "Say ಇದು ನನ್ನ ಕುಟುಂಬ and ಇವನು ನನ್ನ ಸ್ನೇಹಿತ, trace kuṭumba and snēhita back to Sanskrit, and set snēhita beside the native pair ಗೆಳೆಯ/ಗೆಳತಿ.",
+    "assesses": [
+      "KA-LEX-C35-KUTUMBA-01",
+      "KA-ETYMON-C35-KUTUMBA-02",
+      "KA-LEX-C35-SNEHITA-01",
+      "KA-ETYMON-C35-SNEHITA-02"
+    ]
+  }
+}

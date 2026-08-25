@@ -1,0 +1,26 @@
+{
+  "chapter": 4,
+  "title": "Farewells",
+  "label": "ch:pt-farewells",
+  "canDo": "I can close a Portuguese conversation and pick the goodbye that matches when I will next see the person.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "PT-C04-practice",
+    "kind": "dialogue",
+    "summary": "Open with Olá, ask Tudo bem?, then choose the exit — até logo, até amanhã, até breve, or adeus, to God, for the one that means for good.",
+    "assesses": [
+      "PT-SOUND-ADEUS-02",
+      "PT-ETYMON-ADEUS-03",
+      "PT-SOUND-ATE-LOGO-02",
+      "PT-ETYMON-ATE-LOGO-03",
+      "PT-SOUND-ATE-AMANHA-02",
+      "PT-ETYMON-ATE-AMANHA-03",
+      "PT-SOUND-ATE-BREVE-02",
+      "PT-ETYMON-ATE-BREVE-03",
+      "PT-LEX-C04-PRACTICE-02",
+      "PT-NOTICE-C04-PRACTICE-03"
+    ]
+  }
+}

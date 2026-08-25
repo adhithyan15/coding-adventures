@@ -1,0 +1,19 @@
+{
+  "chapter": 118,
+  "title": "Has, Ha, Hemos, Habeis, Han",
+  "label": "ch:perfect-complete",
+  "canDo": "I can use every form of haber with a participle.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "ES-C49-haber-completo",
+    "kind": "task",
+    "summary": "Complete ES-C49-haber-completo: give all six forms and say why haber is shorter than an ordinary verb.",
+    "assesses": [
+      "ES-GRAMMAR-PERFECT-COMPLETE",
+      "ES-ETYMON-HABERE"
+    ],
+    "note": "Five of six forms are one syllable, and the reason is frequency -- the same reason ser and ir are worn strange."
+  }
+}

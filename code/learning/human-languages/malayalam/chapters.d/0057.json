@@ -1,0 +1,21 @@
+{
+  "chapter": 57,
+  "title": "Five More of the Body",
+  "label": "ch:ml-five-more-of-the-body",
+  "canDo": "I can name five more parts of the body in Malayalam.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "ML-C57-bone",
+    "kind": "production",
+    "summary": "Complete ML-C57-bone and say all five words in order.",
+    "assesses": [
+      "ML-LEX-C57-FRAME-01",
+      "ML-LEX-C57-FRAME-02",
+      "ML-LEX-C57-FRAME-03",
+      "ML-LEX-C57-FRAME-04",
+      "ML-LEX-C57-FRAME-05"
+    ]
+  }
+}

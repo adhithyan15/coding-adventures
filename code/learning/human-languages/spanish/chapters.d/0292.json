@@ -1,0 +1,21 @@
+{
+  "chapter": 292,
+  "title": "Naming the Land --- Village, Hill, Valley, Lake, Mountain",
+  "label": "ch:la-tierra",
+  "canDo": "I can name the village, a hill, a valley, a lake and a mountain in Spanish, and say where I am from.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "ES-C292-montana",
+    "kind": "production",
+    "summary": "Complete ES-C292-montana: name all five features of a landscape and place a village among them.",
+    "assesses": [
+      "ES-LEX-C292-LAND-01",
+      "ES-LEX-C292-LAND-02",
+      "ES-LEX-C292-LAND-03",
+      "ES-LEX-C292-LAND-04",
+      "ES-LEX-C292-LAND-05"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "chapter": 36,
+  "title": "Beber, and Two Ways to Ask",
+  "label": "ch:spanish-beber-preguntas",
+  "canDo": "I can say what I drink, and ask what and where with que and donde.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C07-practice",
+    "kind": "task",
+    "summary": "A second -er verb that needs no new pattern, and the two question words that turn the forms outward.",
+    "assesses": [
+      "ES-LEX-BEBER",
+      "ES-LEX-QUE",
+      "ES-LEX-DONDE",
+      "ES-LEX-EN"
+    ]
+  }
+}

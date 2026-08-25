@@ -1,0 +1,18 @@
+{
+  "chapter": 24,
+  "title": "See You Tomorrow",
+  "label": "ch:ar-see-you-tomorrow",
+  "canDo": "I can part from someone in Arabic with ilā l-ghad, 'until tomorrow'.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "AR-C24-ila-al-ghad",
+    "kind": "production",
+    "summary": "Say ilā l-ghad, point to the ilā already known from ilā l-liqāʾ, and follow gh-d-w from 'dawn' to 'tomorrow'.",
+    "assesses": [
+      "AR-CONCEPT-C24-ILA-AL-GHAD-01",
+      "AR-CONCEPT-C24-ILA-AL-GHAD-02"
+    ]
+  }
+}

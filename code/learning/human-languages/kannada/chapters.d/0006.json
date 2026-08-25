@@ -1,0 +1,20 @@
+{
+  "chapter": 6,
+  "title": "Case Endings and Dative Subjects",
+  "label": "ch:ka-dative-case",
+  "canDo": "I can say that I know Kannada the way Kannada itself says it — with no subject at all, marking myself with the dative -ge.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "KA-C06-dative-subject",
+    "kind": "production",
+    "summary": "Say ನನಗೆ ಕನ್ನಡ ಗೊತ್ತು — \"to-me Kannada known\" — set against ನಾನು ಕನ್ನಡ ಮಾತನಾಡುತ್ತೇನೆ, then line up the four Dravidian datives -ge · -ukku · -ku · -ikku.",
+    "assesses": [
+      "KA-GRAMMAR-C06-DATIVE-STACKING-01",
+      "KA-LEX-C06-DATIVE-SUBJECT-01",
+      "KA-GRAMMAR-C06-DATIVE-SUBJECT-02",
+      "KA-GRAMMAR-C06-DATIVE-SUBJECT-03"
+    ]
+  }
+}

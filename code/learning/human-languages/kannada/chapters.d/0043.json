@@ -1,0 +1,20 @@
+{
+  "chapter": 43,
+  "title": "More Everyday Verbs",
+  "label": "ch:ka-more-verbs",
+  "canDo": "I can tell someone to come, sit, stand and give in Kannada.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "KA-C43-give",
+    "kind": "production",
+    "summary": "Complete KA-C43-give and say all four verbs in order.",
+    "assesses": [
+      "KA-LEX-COME",
+      "KA-LEX-SIT",
+      "KA-LEX-STAND",
+      "KA-LEX-GIVE"
+    ]
+  }
+}

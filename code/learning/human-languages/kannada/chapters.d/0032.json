@@ -1,0 +1,23 @@
+{
+  "chapter": 32,
+  "title": "The Core Verbs",
+  "label": "ch:ka-core-verbs",
+  "canDo": "I can build a Kannada verb as stem plus tense plus person, swap the middle bead for the past, hear the p → h law that separates Kannada from its three sisters, and say why ಗೊತ್ತು carries no person at all.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "KA-C32-gottu",
+    "kind": "production",
+    "summary": "Say ನನಗೆ ಗೊತ್ತು, name the three slots that built iruttēne, hōguttēne and nōḍuttēne, explain which slot ಗೊತ್ತು leaves empty and where its person went instead, and give the sound-law behind pōgu → hōgu.",
+    "assesses": [
+      "KA-LEX-C32-IRU-01",
+      "KA-GRAMMAR-C32-IRU-02",
+      "KA-LEX-C32-HOOGU-01",
+      "KA-ETYMON-C32-HOOGU-02",
+      "KA-LEX-C32-NOODU-01",
+      "KA-LEX-C32-GOTTU-01",
+      "KA-GRAMMAR-C32-GOTTU-02"
+    ]
+  }
+}

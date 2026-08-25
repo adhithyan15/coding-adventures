@@ -1,0 +1,21 @@
+{
+  "chapter": 48,
+  "title": "Naming Who Someone Is",
+  "label": "ch:te-roles",
+  "canDo": "I can say what someone's role is in Telugu --- teacher, student, doctor, farmer, guest --- and name the root that two of those words share.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "TE-C48-guest",
+    "kind": "production",
+    "summary": "Complete TE-C48-guest and demonstrate the chapter promise.",
+    "assesses": [
+      "TE-LEX-C48-ROLE-01",
+      "TE-LEX-C48-ROLE-02",
+      "TE-LEX-C48-ROLE-03",
+      "TE-LEX-C48-ROLE-04",
+      "TE-LEX-C48-ROLE-05"
+    ]
+  }
+}

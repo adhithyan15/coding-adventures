@@ -1,0 +1,28 @@
+{
+  "chapter": 7,
+  "title": "The Core Verbs",
+  "label": "ch:sa-core-verbs",
+  "canDo": "I can say that someone is, becomes, goes, comes, eats, sees and knows in Sanskrit; I can name each verb by its dhātu rather than by its present form, say which of the three gaṇa patterns builds its stem, and point at the English word that descends from the same root.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "SA-C07-janati",
+    "kind": "production",
+    "summary": "Say जानाति, name its root ज्ञा and the syllable -ना- its class plants inside the word, run back through the chapter's six verbs as root plus class plus ending, separate the one that is a prefixed form of another, and pair गम्, अद्, पश् and भू with come, eat, inspect and be.",
+    "assesses": [
+      "SA-LEX-ASTI-BHAVATI-BE",
+      "SA-GRAMMAR-DHATU-GANA",
+      "SA-LEX-GACCHATI-GO",
+      "SA-ETYMON-GWEM-COME-VENUE",
+      "SA-LEX-AGACCHATI-COME",
+      "SA-GRAMMAR-UPASARGA-PREFIX",
+      "SA-LEX-KHADATI-EAT",
+      "SA-ETYMON-AD-EAT-COGNATE",
+      "SA-LEX-PASHYATI-SEE",
+      "SA-ETYMON-SPEK-DESCENDANTS",
+      "SA-LEX-JANATI-KNOW",
+      "SA-ETYMON-GNO-DESCENDANTS"
+    ]
+  }
+}

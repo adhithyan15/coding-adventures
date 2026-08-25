@@ -1,0 +1,20 @@
+{
+  "chapter": 15,
+  "title": "When You Don't Understand",
+  "label": "ch:repair",
+  "canDo": "I can say that I did not understand, and ask for it more slowly.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "ES-R03-repaso-reparar",
+    "kind": "dialogue",
+    "summary": "The two sentences that rescue a conversation, and the thanks that closes it.",
+    "assesses": [
+      "ES-LEX-NO-ENTIENDO-01",
+      "ES-ETYMON-INTENDERE-02",
+      "ES-LEX-MAS-DESPACIO-01",
+      "ES-ETYMON-SPATIUM-02"
+    ]
+  }
+}

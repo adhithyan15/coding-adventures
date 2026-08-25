@@ -1,0 +1,22 @@
+{
+  "chapter": 17,
+  "title": "Head and Hand",
+  "label": "ch:it-head-and-hand",
+  "canDo": "I can name the head and the hand in Italian and get la mano right despite its -o ending.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "IT-C17-mano",
+    "kind": "task",
+    "summary": "Say la testa and la mano, pluralise to le mani, and explain the feminine article on an -o word through Latin's lost fourth declension.",
+    "assesses": [
+      "IT-LEX-TESTA-02",
+      "IT-ETYMON-TESTA-03",
+      "IT-ETYMON-TESTA-04",
+      "IT-LEX-MANO-02",
+      "IT-GRAMMAR-MANO-03",
+      "IT-ETYMON-MANO-04"
+    ]
+  }
+}

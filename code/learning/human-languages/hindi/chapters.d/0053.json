@@ -1,0 +1,21 @@
+{
+  "chapter": 53,
+  "title": "More of the Body",
+  "label": "ch:hi-more-of-the-body",
+  "canDo": "I can name five more parts of the body when I say how I am.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "HI-C53-lip",
+    "kind": "production",
+    "summary": "Complete HI-C53-lip and say all five words in order.",
+    "assesses": [
+      "HI-LEX-C53-BODY-01",
+      "HI-LEX-C53-BODY-02",
+      "HI-LEX-C53-BODY-03",
+      "HI-LEX-C53-BODY-04",
+      "HI-LEX-C53-BODY-05"
+    ]
+  }
+}

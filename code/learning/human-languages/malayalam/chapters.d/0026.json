@@ -1,0 +1,19 @@
+{
+  "chapter": 26,
+  "title": "Morning",
+  "label": "ch:ml-morning",
+  "canDo": "I can say morning in Malayalam with rāvile and hear the night-word hidden inside it.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "ML-C26-raavile",
+    "kind": "production",
+    "summary": "Say rāvile, pull rāvŭ 'night' out of it, and place prabhātaṁ beside it as the Sanskrit alternative.",
+    "assesses": [
+      "ML-CONCEPT-C26-RAAVILE-01",
+      "ML-CONCEPT-C26-RAAVILE-02",
+      "ML-CONCEPT-C26-RAAVILE-03"
+    ]
+  }
+}

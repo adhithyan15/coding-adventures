@@ -1,0 +1,21 @@
+{
+  "chapter": 38,
+  "title": "Thinking, Reading, Writing",
+  "label": "ch:la-mind-verbs",
+  "canDo": "I can say I think, I read, I understand and I write in Latin, produce the he-or-she form of each, and name the English words each verb built.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "LA-C38-scribo",
+    "kind": "production",
+    "summary": "The chapter closes on scrībō: after learning it the reader produces all four first-person forms and all four third-person forms in sequence — cōgitō, legō, intellegō, scrībō and cōgitat, legit, intellegit, scrībit.",
+    "assesses": [
+      "LA-LEX-COGITO-01",
+      "LA-LEX-LEGO-01",
+      "LA-LEX-INTELLEGO-01",
+      "LA-LEX-SCRIBO-01",
+      "LA-ETYMON-SCRIBO-02"
+    ]
+  }
+}

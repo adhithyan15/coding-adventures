@@ -1,0 +1,21 @@
+{
+  "chapter": 58,
+  "title": "Inside the House",
+  "label": "ch:hi-inside-the-house",
+  "canDo": "I can name five parts of a house when I greet someone at it.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "HI-C58-sheet",
+    "kind": "production",
+    "summary": "Complete HI-C58-sheet and say all five words in order.",
+    "assesses": [
+      "HI-LEX-C58-HOUSE-01",
+      "HI-LEX-C58-HOUSE-02",
+      "HI-LEX-C58-HOUSE-03",
+      "HI-LEX-C58-HOUSE-04",
+      "HI-LEX-C58-HOUSE-05"
+    ]
+  }
+}

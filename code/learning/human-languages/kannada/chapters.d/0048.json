@@ -1,0 +1,21 @@
+{
+  "chapter": 48,
+  "title": "Naming Who Someone Is",
+  "label": "ch:ka-roles",
+  "canDo": "I can say what someone's role is in Kannada --- teacher, student, doctor, farmer, guest --- and name the root that two of those words share.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "KA-C48-guest",
+    "kind": "production",
+    "summary": "Complete KA-C48-guest and say all five words in order.",
+    "assesses": [
+      "KA-LEX-C48-ROLE-01",
+      "KA-LEX-C48-ROLE-02",
+      "KA-LEX-C48-ROLE-03",
+      "KA-LEX-C48-ROLE-04",
+      "KA-LEX-C48-ROLE-05"
+    ]
+  }
+}

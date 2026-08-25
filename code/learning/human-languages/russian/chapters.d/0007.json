@@ -1,0 +1,29 @@
+{
+  "chapter": 7,
+  "title": "Friend and Siblings",
+  "label": "ch:russian-friend-and-siblings",
+  "canDo": "I can name a friend, brother and sister in Russian, build a feminine person-noun with по-...-а, and say which pronoun, ты or вы, goes with each.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "RU-C07-sestra",
+    "kind": "production",
+    "summary": "The chapter closes on сестра, брат's securely cognate pair: the reader produces друг, подруга, брат and сестра with their genders, builds the по-...-а feminine pattern on подруга, and names all four as exactly who Chapter 2's ты was for. It reaches back to Chapter 5's брать/брат minimal pair and rescues three Chapter 2 atoms — the ты/вы comparison, the vy-politeness pragmatics, and the ty/thou etymology — that nothing had revisited since.",
+    "assesses": [
+      "RU-LEX-DRUG",
+      "RU-ETYMON-DRUG-ACCOMPANY",
+      "RU-LEX-PODRUGA",
+      "RU-GRAMMAR-FEMININE-SUFFIX-A",
+      "RU-LEX-BRAT-NOUN",
+      "RU-ETYMON-BRAT-BROTHER",
+      "RU-LEX-SESTRA",
+      "RU-ETYMON-SESTRA-SISTER",
+      "RU-LEX-BRAT",
+      "RU-ETYMON-BRAT-BEAR",
+      "RU-COMPARISON-POLITE-PRONOUNS",
+      "RU-PRAGMATICS-VY-POLITENESS",
+      "RU-ETYMON-TY-THOU"
+    ]
+  }
+}

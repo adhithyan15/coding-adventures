@@ -1,0 +1,18 @@
+{
+  "chapter": 14,
+  "title": "Heart",
+  "label": "ch:mr-heart",
+  "canDo": "I can name the heart in Marathi, name three English words that share its root, and say what makes it different from every other word this book has taken apart: it never drifted at all.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "MR-C13-hrudaya",
+    "kind": "production",
+    "summary": "The reader produces हृदय and its three secure English cousins — heart, cordial, cardiac — then sets it against वाचणे's drift from speaking to reading, समजणे's drift from waking to understanding, and डोळा's replacement of the old eye-word, naming हृदय as the one word among them that never drifted at all.",
+    "assesses": [
+      "MR-LEX-HRUDAYA",
+      "MR-ETYMON-HRUDAYA-KERD"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 24,
+  "title": "-dad --- Twelve Hundred More",
+  "label": "ch:friend-dad",
+  "canDo": "I can read a -dad word I have never met, and say why it looks less like its English partner.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C56-dad",
+    "kind": "task",
+    "summary": "Complete ES-C56-dad: convert university, read realidad unseen, and explain the uneven erosion.",
+    "assesses": [
+      "ES-FRIEND-DAD-TY",
+      "ES-ETYMON-TATEM"
+    ],
+    "note": "Harder to spot than -cion because English wore -tatem down further, through French, to -ty. Same relationship, more erosion on one side."
+  }
+}

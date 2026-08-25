@@ -1,0 +1,21 @@
+{
+  "chapter": 293,
+  "title": "Further Down --- Neck, Shoulder, Back, Knee, Ankle",
+  "label": "ch:mas-del-cuerpo",
+  "canDo": "I can name the neck, the shoulder, the back, the knee and the ankle in Spanish, and say which one hurts.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "ES-C293-tobillo",
+    "kind": "production",
+    "summary": "Complete ES-C293-tobillo: name all five places in order and say that each one hurts.",
+    "assesses": [
+      "ES-LEX-C293-BODY-01",
+      "ES-LEX-C293-BODY-02",
+      "ES-LEX-C293-BODY-03",
+      "ES-LEX-C293-BODY-04",
+      "ES-LEX-C293-BODY-05"
+    ]
+  }
+}

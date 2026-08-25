@@ -1,0 +1,19 @@
+{
+  "chapter": 55,
+  "title": "Estar in the Plural",
+  "label": "ch:spanish-estar-plural",
+  "canDo": "I can use all six present forms of estar, and say why its plural is regular where ser's is not.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C09-repaso-ser-estar",
+    "kind": "dialogue",
+    "summary": "One Latin verb against two - which is the whole reason one paradigm is plain and the other is not.",
+    "assesses": [
+      "ES-GRAMMAR-ESTAR-PRESENT-COMPLETE",
+      "ES-GRAMMAR-ESTAR-PRESENT-1PL",
+      "ES-GRAMMAR-ESTAR-PRESENT-3PL"
+    ]
+  }
+}

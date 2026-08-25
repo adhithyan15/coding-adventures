@@ -1,0 +1,21 @@
+{
+  "chapter": 286,
+  "title": "Where It Hurts --- Eye, Mouth, Throat, Pain, Fever",
+  "label": "ch:donde-duele",
+  "canDo": "I can name the eye, the mouth and the throat in Spanish, and say that there is a pain or a fever.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "ES-C286-fiebre",
+    "kind": "production",
+    "summary": "Complete ES-C286-fiebre: name all five, and separate the three places from the two things that are wrong.",
+    "assesses": [
+      "ES-LEX-C286-BODY-01",
+      "ES-LEX-C286-BODY-02",
+      "ES-LEX-C286-BODY-03",
+      "ES-LEX-C286-BODY-04",
+      "ES-LEX-C286-BODY-05"
+    ]
+  }
+}

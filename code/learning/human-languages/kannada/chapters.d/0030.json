@@ -1,0 +1,22 @@
+{
+  "chapter": 30,
+  "title": "Good Evening",
+  "label": "ch:ka-good-evening",
+  "canDo": "I can wish someone good evening in Kannada.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "KA-C30-shubha-sanje",
+    "kind": "dialogue",
+    "summary": "Say ಶುಭ ಸಂಜೆ, correct the common claim that ಸಂಜೆ is native Dravidian, and keep ನಮಸ್ಕಾರ as the all-hours fallback.",
+    "assesses": [
+      "KA-ETYMON-C27-SANJE-01",
+      "KA-ETYMON-C27-SANJE-02",
+      "KA-ETYMON-C29-SHUBHODAYA-01",
+      "KA-PRAGMATICS-C29-SHUBHODAYA-02",
+      "KA-ETYMON-C30-SHUBHA-SANJE-01",
+      "KA-PRAGMATICS-C30-SHUBHA-SANJE-02"
+    ]
+  }
+}

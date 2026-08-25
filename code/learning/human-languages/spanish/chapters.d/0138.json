@@ -1,0 +1,20 @@
+{
+  "chapter": 138,
+  "title": "Days of the Week",
+  "label": "ch:spanish-days-of-the-week",
+  "canDo": "I can name all seven days of the week in Spanish and say why the last two broke away from the planet names.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "ES-C21-sabado-domingo",
+    "kind": "task",
+    "summary": "Run lunes to domingo straight through, then pair each weekend day against its English twin — sábado against Saturn's day, domingo against the Sun's.",
+    "assesses": [
+      "ES-LEX-WEEKDAYS-01",
+      "ES-ETYMON-WEEKDAYS-02",
+      "ES-LEX-WEEKEND-01",
+      "ES-ETYMON-WEEKEND-02"
+    ]
+  }
+}

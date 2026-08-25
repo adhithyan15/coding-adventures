@@ -1,0 +1,18 @@
+{
+  "chapter": 18,
+  "title": "Telling Time",
+  "label": "ch:hi-telling-time",
+  "canDo": "I can tell someone what o'clock it is in Hindi.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "HI-C18-ghanta",
+    "kind": "production",
+    "summary": "Say एक बज रहा है and दो बज रहे हैं — the hour striking, exactly as the ghaṇṭā bell once did.",
+    "assesses": [
+      "HI-CONCEPT-C18-GHANTA-01",
+      "HI-CONCEPT-C18-GHANTA-02"
+    ]
+  }
+}

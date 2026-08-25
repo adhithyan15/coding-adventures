@@ -1,0 +1,20 @@
+{
+  "chapter": 112,
+  "title": "Cuando --- Both Pasts in One Sentence",
+  "label": "ch:cuando",
+  "canDo": "I can join a scene and an event with cuando, using the right tense for each.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "ES-C48-cuando",
+    "kind": "task",
+    "summary": "Complete ES-C48-cuando: build estudiaba cuando hablo Ana and say which tense sets the room.",
+    "assesses": [
+      "ES-LEX-CUANDO",
+      "ES-GRAMMAR-BACKDROP-AND-EVENT",
+      "ES-ETYMON-QUANDO"
+    ],
+    "note": "Fills a gap while it is needed: cuando was never taught, and the contrast cannot be shown in a single sentence without it."
+  }
+}

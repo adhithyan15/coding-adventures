@@ -1,0 +1,17 @@
+{
+  "chapter": 208,
+  "title": "Si Tuviera --- Supposing What Is Not So",
+  "label": "ch:si-tuviera",
+  "canDo": "I can say what would happen if something untrue were true.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ES-C56-si-tuviera",
+    "kind": "task",
+    "summary": "I can say what would happen if something untrue were true.",
+    "assesses": [
+      "ES-GRAMMAR-SI-UNREAL-CONDITION"
+    ]
+  }
+}

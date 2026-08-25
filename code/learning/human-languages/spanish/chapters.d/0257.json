@@ -1,0 +1,17 @@
+{
+  "chapter": 257,
+  "title": "Hablo --- One Form, Two Readings",
+  "label": "ch:hablo-dos",
+  "canDo": "I can use the plain present for both a habit and this moment.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C66-hablo-dos-lecturas",
+    "kind": "task",
+    "summary": "I can use the plain present for both a habit and this moment.",
+    "assesses": [
+      "ES-GRAMMAR-PRESENT-ACTUAL-AND-DURATIVE"
+    ]
+  }
+}

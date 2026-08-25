@@ -1,0 +1,20 @@
+{
+  "chapter": 8,
+  "title": "Please",
+  "label": "ch:ml-please",
+  "canDo": "I can say please in Malayalam, and soften a request with the everyday verb ending instead.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "ML-C08-dayavayi",
+    "kind": "production",
+    "summary": "Say dayavāyi, split it into daya 'compassion' plus -vāyi, then use the plainer -u verb ending as the everyday alternative.",
+    "assesses": [
+      "ML-CONCEPT-C08-DAYAVAYI-01",
+      "ML-CONCEPT-C08-DAYAVAYI-02",
+      "ML-CONCEPT-C08-DAYAVAYI-03",
+      "ML-CONCEPT-C08-DAYAVAYI-04"
+    ]
+  }
+}

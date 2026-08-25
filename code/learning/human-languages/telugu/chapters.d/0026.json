@@ -1,0 +1,23 @@
+{
+  "chapter": 26,
+  "title": "Morning",
+  "label": "ch:te-morning",
+  "canDo": "I can say \"morning\" in Telugu with the same word that sits inside the morning greeting.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "TE-C26-udayam",
+    "kind": "production",
+    "summary": "Say ఉదయం, Telugu's broadest morning word, note the real native competitors poddu and vēkuva, and see that Kannada splits this job across two unrelated words.",
+    "assesses": [
+      "TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-01",
+      "TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-02",
+      "TE-GRAMMAR-C17-MADHYAAHNAM-ARDHARAATRI-03",
+      "TE-ETYMON-C23-ROJU-01",
+      "TE-PRAGMATICS-C23-ROJU-02",
+      "TE-ETYMON-C26-UDAYAM-01",
+      "TE-PRAGMATICS-C26-UDAYAM-02"
+    ]
+  }
+}

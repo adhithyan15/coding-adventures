@@ -1,0 +1,21 @@
+{
+  "chapter": 49,
+  "title": "Courtesy",
+  "label": "ch:ta-courtesy",
+  "canDo": "I can thank somebody warmly in Tamil, show respect, and wish them well.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "TA-C49-many-thanks",
+    "kind": "production",
+    "summary": "Complete TA-C49-many-thanks and say all five words in order.",
+    "assesses": [
+      "TA-LEX-C49-COURTESY-01",
+      "TA-LEX-C49-COURTESY-02",
+      "TA-LEX-C49-COURTESY-03",
+      "TA-LEX-C49-COURTESY-04",
+      "TA-LEX-C49-COURTESY-05"
+    ]
+  }
+}

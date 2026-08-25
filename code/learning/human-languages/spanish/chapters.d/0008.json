@@ -1,0 +1,21 @@
+{
+  "chapter": 8,
+  "title": "How Are You",
+  "label": "ch:how-are-you",
+  "canDo": "I can ask a stranger how they are.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "ES-C04-repaso-como-esta",
+    "kind": "dialogue",
+    "summary": "Greeting plus the question that opens almost every conversation.",
+    "assesses": [
+      "ES-LEX-ESTAR",
+      "ES-ETYMON-STARE",
+      "ES-GRAMMAR-ESTAR-ESTA-ESTAS",
+      "ES-GRAMMAR-STATE-LOCATION-ESTAR",
+      "ES-LEX-COMO-ESTA-USTED"
+    ]
+  }
+}

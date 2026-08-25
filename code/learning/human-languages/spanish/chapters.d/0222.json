@@ -1,0 +1,17 @@
+{
+  "chapter": 222,
+  "title": "Ese --- Pointing at What Is by You",
+  "label": "ch:ese",
+  "canDo": "I can point at something on my listener's side.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C59-ese",
+    "kind": "task",
+    "summary": "I can point at something on my listener's side.",
+    "assesses": [
+      "ES-GRAMMAR-DEMONSTRATIVE-ESE"
+    ]
+  }
+}

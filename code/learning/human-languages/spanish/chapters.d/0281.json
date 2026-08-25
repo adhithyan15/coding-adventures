@@ -1,0 +1,24 @@
+{
+  "chapter": 281,
+  "title": "Four Ordinary Adjectives --- New, Old, Clean, Dirty",
+  "label": "ch:cuatro-adjetivos",
+  "canDo": "I can say new, old, clean and dirty in Spanish, and say what each of them meant in Latin before it meant what it means now.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C281-sucio",
+    "kind": "task",
+    "summary": "Complete ES-C281-sucio: say each adjective with its four endings, and give the Latin sense it started from.",
+    "assesses": [
+      "ES-LEX-NUEVO",
+      "ES-ETYMON-NUEVO",
+      "ES-LEX-VIEJO",
+      "ES-ETYMON-VIEJO",
+      "ES-LEX-LIMPIO",
+      "ES-ETYMON-LIMPIO",
+      "ES-LEX-SUCIO",
+      "ES-ETYMON-SUCIO"
+    ]
+  }
+}

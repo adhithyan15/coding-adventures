@@ -1,0 +1,26 @@
+{
+  "chapter": 5,
+  "title": "The Three Words for You",
+  "label": "ch:three-yous",
+  "canDo": "I can choose between tú and usted, and recognise vos.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "ES-C03-repaso-tu-usted",
+    "kind": "dialogue",
+    "summary": "The Three Words for You — the chapter run end to end.",
+    "assesses": [
+      "ES-LEX-TU",
+      "ES-LEX-USTED",
+      "ES-LEX-QUIEN",
+      "ES-ETYMON-TU-THOU",
+      "ES-REGISTER-TU-USTED",
+      "ES-GRAMMAR-USTED-THIRD-PERSON",
+      "ES-LEX-VOS-01",
+      "ES-CULTURE-VOSEO-02",
+      "ES-ETYMON-VOS-03",
+      "ES-ETYMON-VUESTRA-MERCED"
+    ]
+  }
+}

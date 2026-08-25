@@ -1,0 +1,18 @@
+{
+  "chapter": 2,
+  "title": "Introducing Yourself",
+  "label": "ch:introductions",
+  "canDo": "I can introduce myself in Malayalam, give my name, and understand the other person's name.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "ML-C02-practice",
+    "kind": "task",
+    "summary": "Complete ML-C02-practice, the canonical closing checkpoint, and demonstrate the chapter promise: introduce myself in Malayalam, give my name, and understand the other person's name.",
+    "assesses": [
+      "ML-SCRIPT-GUIDED-COPY-SANTOSHAM-02"
+    ],
+    "note": "The checkpoint now directly assesses the chapter's first typed writing atom with a model-visible copy. The legacy spoken lessons still have no typed knowledge atoms, so their representativeness remains authored until migration."
+  }
+}

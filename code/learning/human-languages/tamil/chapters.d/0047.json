@@ -1,0 +1,21 @@
+{
+  "chapter": 47,
+  "title": "Short Replies",
+  "label": "ch:ta-replies",
+  "canDo": "I can answer with five short replies in Tamil, from a flat agreement to a hedge.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "TA-C47-just-so",
+    "kind": "production",
+    "summary": "Complete TA-C47-just-so and say all five words in order.",
+    "assesses": [
+      "TA-LEX-C47-REPLY-01",
+      "TA-LEX-C47-REPLY-02",
+      "TA-LEX-C47-REPLY-03",
+      "TA-LEX-C47-REPLY-04",
+      "TA-LEX-C47-REPLY-05"
+    ]
+  }
+}

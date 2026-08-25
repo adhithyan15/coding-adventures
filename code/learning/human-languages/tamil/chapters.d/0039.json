@@ -1,0 +1,25 @@
+{
+  "chapter": 39,
+  "title": "Asking for What You Want",
+  "label": "ch:ta-asking-for-what-you-want",
+  "canDo": "I can say எனக்குத் … வேண்டும் with myself in the dative and no subject at all, decline with வேண்டாம் rather than இல்லை, ask a price with எவ்வளவு and say why age took எத்தனை instead, put ஒரு in front of a noun where ஒன்று cannot go, and read ஒ in both shapes of \"one\".",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "TA-C39-oru",
+    "kind": "production",
+    "summary": "Order one tea end to end — ask தேநீர் எவ்வளவு?, say ஒரு தேநீர் வேண்டும், decline the second with வேண்டாம் — and say why ஒன்று cannot stand in front of the noun.",
+    "assesses": [
+      "TA-LEX-ORU-01",
+      "TA-GRAMMAR-ORU-ATTRIBUTIVE-02",
+      "TA-LEX-VENDUM-01",
+      "TA-GRAMMAR-VENDAAM-NEGATION-02",
+      "TA-LEX-EVVALAVU-01",
+      "TA-GRAMMAR-EVVALAVU-VS-ETHANAI-02",
+      "TA-GRAMMAR-DATIVE-UKKU-01",
+      "TA-LEX-NUMBERS-1-5-01",
+      "TA-LEX-TENEER-01"
+    ]
+  }
+}

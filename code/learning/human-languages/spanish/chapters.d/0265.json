@@ -1,0 +1,17 @@
+{
+  "chapter": 265,
+  "title": "Hoy Como en Casa --- The Pieces That Move",
+  "label": "ch:hoy-como",
+  "canDo": "I can move when and where around a sentence, and use the front for emphasis.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C67-hoy-como-en-casa",
+    "kind": "task",
+    "summary": "I can move when and where around a sentence, and use the front for emphasis.",
+    "assesses": [
+      "ES-GRAMMAR-CIRCUMSTANTIAL-MOVES"
+    ]
+  }
+}

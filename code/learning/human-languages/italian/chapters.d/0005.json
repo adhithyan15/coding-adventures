@@ -1,0 +1,31 @@
+{
+  "chapter": 5,
+  "title": "The First Verbs",
+  "label": "ch:it-first-verbs",
+  "canDo": "I can build my own Italian sentences with -are verbs and drop the subject pronoun the way Italians do.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO",
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "IT-C05-practice",
+    "kind": "production",
+    "summary": "Conjugate parlare, abitare and lavorare across io, tu and lui with no pronoun spoken, then answer for yourself what you speak, where you live and where you work.",
+    "assesses": [
+      "IT-SOUND-PARLARE-02",
+      "IT-ETYMON-PARLARE-03",
+      "IT-GRAMMAR-PARLARE-04",
+      "IT-SOUND-ABITARE-02",
+      "IT-ETYMON-ABITARE-03",
+      "IT-GRAMMAR-ABITARE-04",
+      "IT-SOUND-LAVORARE-02",
+      "IT-ETYMON-LAVORARE-03",
+      "IT-GRAMMAR-LAVORARE-04",
+      "IT-LEX-PARLO-ITALIANO-02",
+      "IT-LEX-PARLO-ITALIANO-03",
+      "IT-GRAMMAR-PRACTICE-02",
+      "IT-GRAMMAR-PRACTICE-03",
+      "IT-NOTICE-PRACTICE-04"
+    ]
+  }
+}

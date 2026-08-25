@@ -176,12 +176,23 @@ jobs:
           # teaching a lesson that no longer exists, to someone driving who cannot
           # check. Byte-for-byte, before anything expensive runs.
           npm run check:narration
-          # HL21: core/spine.d/ is the source of truth and core/spine.json is
-          # generated from it. The monolith survives only because
-          # language-ladder's browser bundle statically imports it and a browser
-          # cannot read a directory. A derived file nothing verifies is worse
-          # than no file, so a stale monolith fails here rather than quietly
-          # serving the app an old spine. Regenerate with `npm run unshard`.
+          # HL21: every sharded ledger is checked here, in one of two directions.
+          #
+          # core/spine.d/ is the source of truth and core/spine.json is GENERATED
+          # from it. That monolith survives only because language-ladder's
+          # browser bundle statically imports it and a browser cannot read a
+          # directory. A derived file nothing verifies is worse than no file, so
+          # a stale monolith fails here rather than quietly serving the app an
+          # old spine. Regenerate with `npm run unshard`.
+          #
+          # <track>/chapters.d/ is checked for the OPPOSITE thing: those twenty
+          # monoliths were DELETED by the migration, because a chapters ledger
+          # that is regenerated on every append would still collide on every
+          # append and the sharding would have bought nothing. So the check
+          # fails if `<track>/chapters.json` comes back — which is what a bad
+          # merge does when one side of the history still has it. The loader
+          # prefers `.d/`, so a resurrected monolith is not merely redundant: it
+          # is edited, committed, and silently ignored.
           npm run check:shards
           mkdir -p "$GITHUB_WORKSPACE/dist/human-languages/books"
           npm run --silent report -- --format json \

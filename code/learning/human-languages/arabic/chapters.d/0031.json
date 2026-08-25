@@ -1,0 +1,21 @@
+{
+  "chapter": 31,
+  "title": "Understanding, Reading, Writing",
+  "label": "ch:ar-understanding-reading-writing",
+  "canDo": "I can say the Arabic for 'he understood', 'he read', 'he asked' and 'he wrote', and build a whole family of nouns off each root using the doer, done-to and ma- place shapes I already know.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "AR-C31-kataba",
+    "kind": "production",
+    "summary": "Run ك-ت-ب through every pattern the track has taught — kitāb, kātib, maktūb, maktab, maktaba — naming the earlier word that wears each shape (qāʾil and qāriʾ for the doer, maqūl and mafhūm and maqrūʾ for the done-to, madhhab and masʾala for the ma- place), then place the root beside Hebrew katav and English ketubah.",
+    "assesses": [
+      "AR-CONCEPT-C31-KATABA-01",
+      "AR-CONCEPT-C31-KATABA-02",
+      "AR-CONCEPT-C31-SAALA-01",
+      "AR-CONCEPT-C31-QARAA-02",
+      "AR-CONCEPT-C31-FAHIMA-02"
+    ]
+  }
+}

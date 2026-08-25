@@ -1,0 +1,21 @@
+{
+  "chapter": 59,
+  "title": "What the Air Carries",
+  "label": "ch:ml-what-the-air-carries",
+  "canDo": "I can name wind, sand, mud, smoke and an ember in Malayalam.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "ML-C59-ember",
+    "kind": "production",
+    "summary": "Complete ML-C59-ember and say all five words in order.",
+    "assesses": [
+      "ML-LEX-C59-AIR-01",
+      "ML-LEX-C59-AIR-02",
+      "ML-LEX-C59-AIR-03",
+      "ML-LEX-C59-AIR-04",
+      "ML-LEX-C59-AIR-05"
+    ]
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "chapter": 11,
+  "title": "The Heart",
+  "label": "ch:ur-heart",
+  "canDo": "I can name my heart in Urdu and trace dil to the same Indo-European root as Sanskrit hṛdaya and English heart, arriving by the Persian road instead of the Sanskrit one.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "UR-C11-dil",
+    "kind": "production",
+    "summary": "Say merā dil, and trace it through Middle Persian and Proto-Iranian back to the same PIE \\*ḱērd- that gives Sanskrit hṛdaya, English heart, Latin cor and Greek kardía — dil and hṛdaya split at the Indo-Iranian fork, not opposite lineages but the same root by two roads, echoing pūchhnā and porsīdan.",
+    "assesses": [
+      "UR-LEX-DIL",
+      "UR-ETYMON-DIL-HEART-PIE"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 310,
+  "title": "El Cuarto Y La Mesa --- Key, Shower, Table, Light, Bathroom",
+  "label": "ch:el-cuarto-y-la-mesa",
+  "canDo": "I can ask a stranger in Spanish for the five things a room and a table make me ask for: the key, the shower, the table, the light and the bathroom.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "ES-C310-bano",
+    "kind": "production",
+    "summary": "Complete ES-C310-bano: ask for all five, ending with the question every traveller needs first --- donde esta el bano.",
+    "assesses": [
+      "ES-LEX-C310-ASK-01",
+      "ES-LEX-C310-ASK-02",
+      "ES-LEX-C310-ASK-03",
+      "ES-LEX-C310-ASK-04",
+      "ES-LEX-C310-ASK-05"
+    ]
+  }
+}

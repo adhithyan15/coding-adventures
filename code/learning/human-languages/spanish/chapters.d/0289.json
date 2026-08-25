@@ -1,0 +1,21 @@
+{
+  "chapter": 289,
+  "title": "Overhead --- Daybreak, Sky, Cloud, Star, Shade",
+  "label": "ch:lo-de-arriba",
+  "canDo": "I can name the daybreak, the sky, a cloud, a star and the shade in Spanish.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "ES-C289-sombra",
+    "kind": "production",
+    "summary": "Complete ES-C289-sombra: name all five overhead in order, from first light to the shade under a tree.",
+    "assesses": [
+      "ES-LEX-C289-SKY-01",
+      "ES-LEX-C289-SKY-02",
+      "ES-LEX-C289-SKY-03",
+      "ES-LEX-C289-SKY-04",
+      "ES-LEX-C289-SKY-05"
+    ]
+  }
+}

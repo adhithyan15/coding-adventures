@@ -1,0 +1,20 @@
+{
+  "chapter": 162,
+  "title": "Review --- Three Verbs That Behave",
+  "label": "ch:spanish-review-ordinary-verbs",
+  "canDo": "I can use all three verbs and say what they have in common: the sentence is about the one doing it.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C35-repaso-tres",
+    "kind": "dialogue",
+    "summary": "Three origins - tidy, reshaped, and genuinely unknown - and the shared shape about to be broken.",
+    "assesses": [
+      "ES-LEX-TOMAR-01",
+      "ES-LEX-PREGUNTAR-03",
+      "ES-LEX-AYUDAR-05",
+      "ES-ETYMON-AYUDAR-06"
+    ]
+  }
+}

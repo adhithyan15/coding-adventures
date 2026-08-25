@@ -1,0 +1,19 @@
+{
+  "chapter": 21,
+  "title": "Dog and Cat",
+  "label": "ch:ta-dog-and-cat",
+  "canDo": "I can say dog and cat in Tamil and say which of the two rests on an undisputed Dravidian root and which sits inside a three-way family split.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C21-naay-poonai",
+    "kind": "production",
+    "summary": "Say nāy and pūnai, then place Kannada's bekku and Telugu's pilli as two other roots entirely rather than variants of the same word.",
+    "assesses": [
+      "TA-LEX-PATHINONDRU-IRUPATHU-01",
+      "TA-LEX-NAAY-POONAI-01",
+      "TA-ETYMON-NAAY-POONAI-02"
+    ]
+  }
+}

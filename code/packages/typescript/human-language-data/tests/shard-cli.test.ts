@@ -64,6 +64,10 @@ describe("shard/unshard on a scratch ledger", () => {
     path: "core/toy.json",
     listKey: "nodes",
     idOf: (element) => (element as { id?: unknown }).id as string,
+    // These fixtures exercise the shard/unshard round trip itself, so they keep
+    // the monolith the way `core/spine.json` does. The `"removed"` disposition
+    // has its own suite in chapters-shards.test.ts.
+    monolith: "generated",
   };
 
   const document = {
@@ -172,6 +176,10 @@ describe("refusals", () => {
     path: "core/toy.json",
     listKey: "nodes",
     idOf: (element) => (element as { id?: unknown }).id as string,
+    // These fixtures exercise the shard/unshard round trip itself, so they keep
+    // the monolith the way `core/spine.json` does. The `"removed"` disposition
+    // has its own suite in chapters-shards.test.ts.
+    monolith: "generated",
   };
 
   it("refuses an id that is not a safe filename", () => {
@@ -246,6 +254,10 @@ describe("the writer cannot be walked outside the checkout", () => {
     path: "core/toy.json",
     listKey: "nodes",
     idOf: (element) => (element as { id?: unknown }).id as string,
+    // These fixtures exercise the shard/unshard round trip itself, so they keep
+    // the monolith the way `core/spine.json` does. The `"removed"` disposition
+    // has its own suite in chapters-shards.test.ts.
+    monolith: "generated",
   };
 
   function trySymlink(target: string, path: string): boolean {
@@ -388,6 +400,77 @@ describe("shardFilename", () => {
     expect(() => shardFilename(999, "OVERFLOW")).toThrow(/does not fit 4 digits/);
     // And the ordering claim the guard protects, stated outright.
     expect(["9990-A.json", "10000-B.json"].sort()).toEqual(["10000-B.json", "9990-A.json"]);
+  });
+});
+
+describe("a plan that names shards by its own ordinal, with no id", () => {
+  // The `<track>/chapters.json` shape: identity IS the number, so the filename
+  // is the padded number and nothing else.
+  let root: string;
+
+  const plan: ShardPlan = {
+    path: "core/toy.json",
+    listKey: "chapters",
+    ordinalOf: (element) => (element as { chapter: number }).chapter,
+    monolith: "generated",
+  };
+
+  const document = {
+    version: 1,
+    language: "toy",
+    chapters: [{ chapter: 2 }, { chapter: 9 }, { chapter: 10 }, { chapter: 11 }],
+  };
+
+  beforeEach(() => {
+    root = mkdtempSync(join(tmpdir(), "hl-shard-ordinal-"));
+    mkdirSync(join(root, "core"));
+    writeFileSync(join(root, "core", "toy.json"), `${JSON.stringify(document, null, 2)}\n`, "utf8");
+  });
+
+  afterEach(() => {
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  it("names each shard for its own number, zero-padded", () => {
+    shardLedger(root, plan);
+    expect(listShardNames(join(root, "core", "toy.json"))).toEqual([
+      "0002.json",
+      "0009.json",
+      "0010.json",
+      "0011.json",
+      "_meta.json",
+    ]);
+  });
+
+  it("round-trips byte-exactly", () => {
+    const before = readFileSync(join(root, "core", "toy.json"), "utf8");
+    shardLedger(root, plan);
+    expect(unshardContents(root, plan)).toBe(before);
+  });
+
+  it("would have re-sorted the ledger under UNPADDED names", () => {
+    // THE trap, in four chapters. This is the test that fails if someone decides
+    // the padding is noise and renames the shards to `2.json`, `9.json`, … —
+    // under which sorted order is 10, 11, 2, 9 and chapter 2 lands last.
+    const unpadded = document.chapters.map((c) => `${c.chapter}.json`);
+    expect([...unpadded].sort()).toEqual(["10.json", "11.json", "2.json", "9.json"]);
+    expect([...unpadded].sort()).not.toEqual(unpadded);
+
+    // Padded, the same four sort into authored order.
+    const padded = document.chapters.map((c) => `${String(c.chapter).padStart(4, "0")}.json`);
+    expect([...padded].sort()).toEqual(padded);
+  });
+
+  it("refuses two elements that claim the same number", () => {
+    // With no id, a duplicate chapter number is a duplicate FILENAME and the
+    // second element would overwrite the first — one chapter gone, no error, and
+    // `--check` agreeing with itself about the truncated set ever after.
+    writeFileSync(
+      join(root, "core", "toy.json"),
+      `${JSON.stringify({ ...document, chapters: [{ chapter: 3 }, { chapter: 3 }] }, null, 2)}\n`,
+      "utf8",
+    );
+    expect(() => shardLedger(root, plan)).toThrow(/already taken/);
   });
 });
 

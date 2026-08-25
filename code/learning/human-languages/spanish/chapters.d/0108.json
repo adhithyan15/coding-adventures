@@ -1,0 +1,19 @@
+{
+  "chapter": 108,
+  "title": "Ver --- Seeing",
+  "label": "ch:spanish-ver",
+  "canDo": "I can say what I see, with a verb whose stem keeps a letter Latin had.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "ES-C16-ver",
+    "kind": "task",
+    "summary": "videre, and the e that other verbs dropped but ver kept.",
+    "assesses": [
+      "ES-LEX-VER",
+      "ES-GRAMMAR-VER-PRESENT-SINGULAR",
+      "ES-ETYMON-VER-VIDERE"
+    ]
+  }
+}

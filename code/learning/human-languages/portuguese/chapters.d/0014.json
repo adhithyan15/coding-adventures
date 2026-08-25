@@ -1,0 +1,23 @@
+{
+  "chapter": 14,
+  "title": "Having and Telling Your Age",
+  "label": "ch:pt-having-and-age",
+  "canDo": "I can ask a Portuguese speaker's age and give my own, holding my years with ter rather than being them.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "PT-C14-idade",
+    "kind": "task",
+    "summary": "Ask Quantos anos tens?, answer Tenho vinte anos — literally I hold twenty years — and set Portuguese's simplified ano against Spanish's palatalised año.",
+    "assesses": [
+      "PT-LEX-TER-02",
+      "PT-ETYMON-TER-03",
+      "PT-GRAMMAR-NUMEROS-16-20-02",
+      "PT-NOTICE-NUMEROS-16-20-03",
+      "PT-LEX-IDADE-02",
+      "PT-ETYMON-IDADE-03",
+      "PT-GRAMMAR-IDADE-04"
+    ]
+  }
+}

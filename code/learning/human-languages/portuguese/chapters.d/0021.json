@@ -1,0 +1,25 @@
+{
+  "chapter": 21,
+  "title": "Bringing, Getting, Waiting, Buying",
+  "label": "ch:pt-bringing-getting-waiting-buying",
+  "canDo": "I can say that I bring, get, wait for and buy in Portuguese, use conseguir for managing to do a thing, let esperar carry waiting, hoping and expecting at once, and tell comprar's Latin root from the identically spelled one behind English compare.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "PT-C21-comprar",
+    "kind": "production",
+    "summary": "The chapter's last lesson closes the set: after comprar the reader produces all four first-person forms in one run - trago, consigo, espero, compro - separates the comparare that gave comprar (com- + parare, 'to procure') from the identically spelled comparare that gave English compare (com- + par, 'equal'), and re-reads tenho comprado as 'I have been buying', not 'I have bought'.",
+    "assesses": [
+      "PT-LEX-TRAZER-02",
+      "PT-ETYMON-TRAZER-03",
+      "PT-LEX-CONSEGUIR-02",
+      "PT-ETYMON-CONSEGUIR-03",
+      "PT-LEX-ESPERAR-02",
+      "PT-GRAMMAR-ESPERAR-04",
+      "PT-ETYMON-ESPERAR-03",
+      "PT-LEX-COMPRAR-02",
+      "PT-ETYMON-COMPRAR-03"
+    ]
+  }
+}

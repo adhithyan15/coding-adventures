@@ -1,0 +1,20 @@
+{
+  "chapter": 29,
+  "title": "Good Morning",
+  "label": "ch:ka-good-morning",
+  "canDo": "I can wish someone good morning in Kannada and judge when it will sound too formal.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "KA-C29-shubhodaya",
+    "kind": "dialogue",
+    "summary": "Say ಶುಭೋದಯ — śubha + udaya, \"auspicious rising\" — and note the formal/written skew that makes ನಮಸ್ಕಾರ the safer casual morning greeting.",
+    "assesses": [
+      "KA-ETYMON-C26-BELAGGE-01",
+      "KA-PRAGMATICS-C26-BELAGGE-02",
+      "KA-ETYMON-C29-SHUBHODAYA-01",
+      "KA-PRAGMATICS-C29-SHUBHODAYA-02"
+    ]
+  }
+}

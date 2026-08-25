@@ -1,0 +1,17 @@
+{
+  "chapter": 244,
+  "title": "Comíamos, Éramos, Íbamos --- Every One With an Accent",
+  "label": "ch:comiamos",
+  "canDo": "I can use the whole imperfect, including all three irregulars.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C63-comiamos",
+    "kind": "task",
+    "summary": "I can use the whole imperfect, including all three irregulars.",
+    "assesses": [
+      "ES-GRAMMAR-IMPERFECT-COMPLETE"
+    ]
+  }
+}

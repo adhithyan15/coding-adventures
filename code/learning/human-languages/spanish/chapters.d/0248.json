@@ -1,0 +1,17 @@
+{
+  "chapter": 248,
+  "title": "¡Qué Grande! --- The Same Word, Exclaiming",
+  "label": "ch:que-grande",
+  "canDo": "I can react to something with force, in two words.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C64-que-grande",
+    "kind": "task",
+    "summary": "I can react to something with force, in two words.",
+    "assesses": [
+      "ES-GRAMMAR-EXCLAMATIVE-QUE"
+    ]
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "chapter": 8,
+  "title": "The Mind and the Palm Leaf",
+  "label": "ch:sa-mind-verbs",
+  "canDo": "I can say that someone thinks, understands, reads and writes in Sanskrit; I can name the class that plants -अय- inside a verb, build \"understands\" out of a prefix and a verb I already had, say what लिख् meant before it meant write, and tell a word worn down by speech (तद्भव) from one carried over whole (तत्सम).",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "SA-C08-likhati",
+    "kind": "production",
+    "summary": "Say लिखति, give the scratching sense its root carried first, run the chapter's four verbs back as root plus class plus ending — the planted -अय- of चिन्तयति, the अव- prefix and the waking बुध् behind understanding, the plain -a- of पठति and लिखति — sort Bengali lekhā and Hindi cintā into तद्भव and तत्सम, and name the two word-histories that needed a label rather than a claim.",
+    "assesses": [
+      "SA-LEX-CINTAYATI-THINK",
+      "SA-GRAMMAR-GANA-TEN-AYA",
+      "SA-LEX-AVAGACCHATI-UNDERSTAND",
+      "SA-ETYMON-BUDH-AWAKE-BUDDHA",
+      "SA-LEX-PATHATI-READ",
+      "SA-HISTORY-TATSAMA-TADBHAVA",
+      "SA-LEX-LIKHATI-WRITE",
+      "SA-ETYMON-LIKH-SCRATCH",
+      "SA-GRAMMAR-DHATU-GANA",
+      "SA-ETYMON-PUNCH-DISPUTED"
+    ]
+  }
+}

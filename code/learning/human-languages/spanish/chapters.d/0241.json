@@ -1,0 +1,17 @@
+{
+  "chapter": 241,
+  "title": "Hablasteis --- The Form You Were Promised",
+  "label": "ch:hablasteis",
+  "canDo": "I can use every person of the -ar preterite.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C63-hablasteis",
+    "kind": "task",
+    "summary": "I can use every person of the -ar preterite.",
+    "assesses": [
+      "ES-GRAMMAR-AR-PRETERITE-2PL"
+    ]
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "chapter": 15,
+  "title": "Water and Bread",
+  "label": "ch:hi-water-and-bread",
+  "canDo": "I can ask for water and bread in Hindi and say what पानी literally means.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "HI-C15-paani-roti",
+    "kind": "production",
+    "summary": "Ask for पानी and रोटी, then unpack पानी as 'the drinkable one' — pā, to drink, plus -nīya, fit for.",
+    "assesses": [
+      "HI-CONCEPT-C15-PAANI-ROTI-01",
+      "HI-CONCEPT-C15-PAANI-ROTI-02"
+    ]
+  }
+}

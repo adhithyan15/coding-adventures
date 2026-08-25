@@ -1,0 +1,21 @@
+{
+  "chapter": 50,
+  "title": "Courtesy Words",
+  "label": "ch:hi-courtesy",
+  "canDo": "I can thank someone in Hindi at the weight the occasion asks for.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "HI-C50-salutation",
+    "kind": "production",
+    "summary": "Complete HI-C50-salutation and say all five words in order.",
+    "assesses": [
+      "HI-LEX-C50-COURTESY-01",
+      "HI-LEX-C50-COURTESY-02",
+      "HI-LEX-C50-COURTESY-03",
+      "HI-LEX-C50-COURTESY-04",
+      "HI-LEX-C50-COURTESY-05"
+    ]
+  }
+}

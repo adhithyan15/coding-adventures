@@ -1,0 +1,18 @@
+{
+  "chapter": 29,
+  "title": "Good Morning",
+  "label": "ch:ml-good-morning",
+  "canDo": "I can greet someone in the morning in Malayalam with suprabhātaṁ.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "ML-C29-suprabhaatham",
+    "kind": "production",
+    "summary": "Say suprabhātaṁ, split su- from prabhātaṁ, and show it is NOT built on śubha the way good night is.",
+    "assesses": [
+      "ML-CONCEPT-C29-SUPRABHAATHAM-01",
+      "ML-CONCEPT-C29-SUPRABHAATHAM-02"
+    ]
+  }
+}

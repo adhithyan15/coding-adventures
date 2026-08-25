@@ -1,0 +1,20 @@
+{
+  "chapter": 11,
+  "title": "Colours",
+  "label": "ch:ta-colours",
+  "canDo": "I can name black, white, red, and blue in Tamil and say which three are native and which one is the Sanskrit loan.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C11-nirangal",
+    "kind": "production",
+    "summary": "Say karuppu, veḷḷai and sivappu as the native three, nīlam as the borrowed one, and hear veḷḷai echo veḷḷi from last chapter.",
+    "assesses": [
+      "TA-GRAMMAR-VAARA-KIZHAMAI-01",
+      "TA-ETYMON-NIRANGAL-01",
+      "TA-ETYMON-NIRANGAL-02",
+      "TA-PRAGMATICS-NIRANGAL-03"
+    ]
+  }
+}

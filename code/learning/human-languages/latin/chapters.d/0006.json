@@ -1,0 +1,20 @@
+{
+  "chapter": 6,
+  "title": "Colours",
+  "label": "ch:la-colours",
+  "canDo": "I can say black, white, red, and blue in Latin, and explain why its blue was never as settled as its red.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C06-ruber-caeruleus",
+    "kind": "production",
+    "summary": "Say niger, albus, ruber, and caeruleus in turn, and split ruber's two children between French rouge and Spanish rojo.",
+    "assesses": [
+      "LA-LEX-NIGER-ALBUS-01",
+      "LA-PRAGMATICS-NIGER-ALBUS-02",
+      "LA-ETYMON-RUBER-CAERULEUS-01",
+      "LA-ETYMON-RUBER-CAERULEUS-02"
+    ]
+  }
+}

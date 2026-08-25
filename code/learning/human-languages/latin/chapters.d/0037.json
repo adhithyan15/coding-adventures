@@ -1,0 +1,25 @@
+{
+  "chapter": 37,
+  "title": "Eight Verbs at the Core",
+  "label": "ch:la-core-verbs",
+  "canDo": "I can say I am, I have, I go, I come, I say, I see, I know and I give in Latin, produce the he-or-she form of each, and name the English words each verb left behind.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "LA-C37-do",
+    "kind": "production",
+    "summary": "The chapter's eighth verb closes the set: after learning dō, the reader produces all eight first-person forms and all eight third-person forms in sequence — sum, habeō, eō, veniō, dīcō, videō, sciō, dō and est, habet, it, venit, dīcit, videt, scit, dat.",
+    "assesses": [
+      "LA-LEX-SUM-01",
+      "LA-LEX-HABEO-01",
+      "LA-LEX-EO-01",
+      "LA-LEX-VENIO-01",
+      "LA-LEX-DICO-01",
+      "LA-LEX-VIDEO-01",
+      "LA-LEX-SCIO-01",
+      "LA-LEX-DO-01",
+      "LA-ETYMON-DO-02"
+    ]
+  }
+}

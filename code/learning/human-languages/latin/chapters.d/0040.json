@@ -1,0 +1,27 @@
+{
+  "chapter": 40,
+  "title": "Hearing, Sleeping, Sitting, Standing",
+  "label": "ch:la-sense-and-posture-verbs",
+  "canDo": "I can say I hear, I sleep, I sit and I stand in Latin, produce the he-or-she form of each, name the conjugation each belongs to, and tell an English word inherited from the shared ancestor apart from one borrowed out of Latin.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "LA-C40-sto",
+    "kind": "production",
+    "summary": "The chapter closes on stō: after learning it the reader produces all four first-person forms and all four third-person forms in sequence — audiō, dormiō, sedeō, stō and audit, dormit, sedet, stat — sorts stand from station as inherited against borrowed, and reaches back three chapters to retrieve sum and eō, neither of which had been revisited since chapter 37.",
+    "assesses": [
+      "LA-LEX-AUDIO-01",
+      "LA-LEX-DORMIO-01",
+      "LA-LEX-SEDEO-01",
+      "LA-ETYMON-SEDEO-02",
+      "LA-ETYMON-INHERITED-VS-BORROWED-03",
+      "LA-LEX-STO-01",
+      "LA-ETYMON-STO-02",
+      "LA-LEX-SUM-01",
+      "LA-ETYMON-SUM-02",
+      "LA-LEX-EO-01",
+      "LA-ETYMON-EO-02"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 312,
+  "title": "Lo Que Llevas --- Clock, Phone, Suitcase, Map, Letter",
+  "label": "ch:lo-que-llevas",
+  "canDo": "I can name and ask for the five things I travel with in Spanish: the clock, the phone, the suitcase, the map and the letter.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "ES-C312-carta",
+    "kind": "production",
+    "summary": "Complete ES-C312-carta: ask for each of the five carried things, and ask for the menu by the same word.",
+    "assesses": [
+      "ES-LEX-C312-ASK-11",
+      "ES-LEX-C312-ASK-12",
+      "ES-LEX-C312-ASK-13",
+      "ES-LEX-C312-ASK-14",
+      "ES-LEX-C312-ASK-15"
+    ]
+  }
+}

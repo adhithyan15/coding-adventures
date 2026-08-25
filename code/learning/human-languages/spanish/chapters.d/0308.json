@@ -1,0 +1,21 @@
+{
+  "chapter": 308,
+  "title": "Children and Everybody --- Boy, Girl, Lad, Lass, People",
+  "label": "ch:ninos-y-gente",
+  "canDo": "I can talk about children and about people in general in Spanish, and I can tell a real cousin word from a false friend.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "ES-C308-gente",
+    "kind": "production",
+    "summary": "Complete ES-C308-gente: name children in both genders and move from one child to people in general.",
+    "assesses": [
+      "ES-LEX-C308-KIN-11",
+      "ES-LEX-C308-KIN-12",
+      "ES-LEX-C308-KIN-13",
+      "ES-LEX-C308-KIN-14",
+      "ES-LEX-C308-KIN-15"
+    ]
+  }
+}

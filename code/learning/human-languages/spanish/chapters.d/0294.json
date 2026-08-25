@@ -1,0 +1,21 @@
+{
+  "chapter": 294,
+  "title": "Five More Things You Ask For --- Knife, Cup, Pot, Blanket, Broom",
+  "label": "ch:cinco-cosas-mas",
+  "canDo": "I can ask for a knife, a cup, a pot, a blanket and a broom in Spanish, politely.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "ES-C294-escoba",
+    "kind": "production",
+    "summary": "Complete ES-C294-escoba: ask for all five in turn, with por favor on the end of each.",
+    "assesses": [
+      "ES-LEX-C294-HOME-01",
+      "ES-LEX-C294-HOME-02",
+      "ES-LEX-C294-HOME-03",
+      "ES-LEX-C294-HOME-04",
+      "ES-LEX-C294-HOME-05"
+    ]
+  }
+}

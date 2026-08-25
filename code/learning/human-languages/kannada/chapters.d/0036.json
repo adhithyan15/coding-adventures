@@ -1,0 +1,23 @@
+{
+  "chapter": 36,
+  "title": "One Root, Three Endings",
+  "label": "ch:ka-child-son-daughter",
+  "canDo": "I can say child, son and daughter in Kannada, and show how one shared root with three different endings does the job Chapter 12 needed four separate words for.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "KA-C36-magalu",
+    "kind": "production",
+    "summary": "Line up ಮಗು, ಮಗ and ಮಗಳು against Proto-Dravidian *maka, and contrast gender-by-ending here with Chapter 12's four unrelated age-graded sibling words.",
+    "assesses": [
+      "KA-LEX-C36-MAGU-01",
+      "KA-ETYMON-C36-MAGU-02",
+      "KA-LEX-C36-MAGA-01",
+      "KA-ETYMON-C36-MAGA-02",
+      "KA-LEX-C36-MAGALU-01",
+      "KA-GRAMMAR-C36-MAGALU-02",
+      "KA-ETYMON-C36-MAGALU-03"
+    ]
+  }
+}

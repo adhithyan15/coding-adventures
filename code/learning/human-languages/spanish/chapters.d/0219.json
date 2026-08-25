@@ -1,0 +1,17 @@
+{
+  "chapter": 219,
+  "title": "También --- Your First Word, Hidden Inside",
+  "label": "ch:tambien",
+  "canDo": "I can agree with what somebody just said, in two words.",
+  "spineNodes": [
+    "SPINE-ARGUE-A-VIEW"
+  ],
+  "payoff": {
+    "lesson": "ES-C58-tambien",
+    "kind": "task",
+    "summary": "I can agree with what somebody just said, in two words.",
+    "assesses": [
+      "ES-LEX-TAMBIEN"
+    ]
+  }
+}

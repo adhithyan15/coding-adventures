@@ -1,0 +1,19 @@
+{
+  "chapter": 147,
+  "title": "Telling Time",
+  "label": "ch:spanish-telling-time",
+  "canDo": "I can tell the time in Spanish and choose correctly between es la una and son las dos.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "ES-C29-la-hora",
+    "kind": "task",
+    "summary": "Say es la una, son las dos, son las diez, and explain why one o'clock takes a singular verb while every other hour takes a plural one.",
+    "assesses": [
+      "ES-LEX-HORA-01",
+      "ES-ETYMON-HORA-02",
+      "ES-GRAMMAR-TELLING-TIME-03"
+    ]
+  }
+}

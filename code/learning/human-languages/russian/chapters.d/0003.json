@@ -1,0 +1,23 @@
+{
+  "chapter": 3,
+  "title": "Six Verbs, and the One You Never Say",
+  "label": "ch:russian-first-verbs",
+  "canDo": "I can say what I do in Russian with six everyday verbs — быть, жить, знать, говорить, видеть, идти — put each of them in the я form, negate one with не, and say a sentence like «Я — Анна» the way Russian does, by leaving the verb out entirely.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "RU-C03-idti",
+    "kind": "task",
+    "summary": "Say иду — «I am going», one trip, right now — and hear why Russian splits going-there-once from going-there-often, a distinction English carries in tone and Russian carries in the verb itself. Then place идти against the two verb families the chapter has been sorting, and meet the го- that English also inherited in go / went.",
+    "assesses": [
+      "RU-LEX-YA",
+      "RU-GRAMMAR-PRESENT-FIRST-PERSON-U",
+      "RU-GRAMMAR-TWO-VERB-FAMILIES",
+      "RU-LEX-IDTI",
+      "RU-GRAMMAR-MOTION-ONE-WAY-VS-HABITUAL",
+      "RU-ETYMON-IDTI-GO-WENT"
+    ],
+    "note": "Chapter 3 has no terminal practice lesson, so the payoff is the last lesson by sequence; it assesses 6 of the chapter's 18 atoms, below the 0.5 representativeness floor. A dedicated payoff lesson would close that, per HL-C25."
+  }
+}

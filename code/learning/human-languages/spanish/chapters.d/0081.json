@@ -1,0 +1,22 @@
+{
+  "chapter": 81,
+  "title": "Review --- All Four Words for The",
+  "label": "ch:review-articles",
+  "canDo": "I can give el, la, los and las and state the plural rule including its consonant repair.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C44-repaso-articulos",
+    "kind": "task",
+    "summary": "Complete ES-C44-repaso-articulos: give the four articles in order and state the plural rule in one sentence.",
+    "assesses": [
+      "ES-GRAMMAR-DEFINITE-ARTICLES",
+      "ES-GRAMMAR-DEFINITE-PLURAL-MASCULINE",
+      "ES-GRAMMAR-DEFINITE-PLURAL-FEMININE",
+      "ES-GRAMMAR-NOUN-PLURAL-ES",
+      "ES-GRAMMAR-NOUN-NUMBER"
+    ],
+    "note": "First chapter in which all four definite articles may appear together: the last of them was earned two chapters earlier."
+  }
+}

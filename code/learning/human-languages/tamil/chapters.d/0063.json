@@ -1,0 +1,21 @@
+{
+  "chapter": 63,
+  "title": "Asking Well",
+  "label": "ch:ta-asking-well",
+  "canDo": "I can name a request, permission, hesitancy, trust and humility in Tamil.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "TA-C63-humility",
+    "kind": "production",
+    "summary": "Complete TA-C63-humility and say all five words in order.",
+    "assesses": [
+      "TA-LEX-C63-MANNERS-01",
+      "TA-LEX-C63-MANNERS-02",
+      "TA-LEX-C63-MANNERS-03",
+      "TA-LEX-C63-MANNERS-04",
+      "TA-LEX-C63-MANNERS-05"
+    ]
+  }
+}

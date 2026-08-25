@@ -1,0 +1,17 @@
+{
+  "chapter": 246,
+  "title": "Para Mí --- The Pronouns That Stand on Their Own",
+  "label": "ch:para-mi",
+  "canDo": "I can use a pronoun after a preposition.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C64-para-mi",
+    "kind": "task",
+    "summary": "I can use a pronoun after a preposition.",
+    "assesses": [
+      "ES-GRAMMAR-TONIC-PRONOUN-AFTER-PREPOSITION"
+    ]
+  }
+}

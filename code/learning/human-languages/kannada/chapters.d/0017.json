@@ -1,0 +1,21 @@
+{
+  "chapter": 17,
+  "title": "Noon and Midnight",
+  "label": "ch:ka-noon-and-midnight",
+  "canDo": "I can say noon and midnight in Kannada and point out the \"middle\" word they share.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "KA-C17-madhyaahna-madhyaraatri",
+    "kind": "production",
+    "summary": "Say ಮಧ್ಯಾಹ್ನ and ಮಧ್ಯರಾತ್ರಿ, then isolate the madhya sitting inside both.",
+    "assesses": [
+      "KA-LEX-C16-TINGALUGALU-01",
+      "KA-PRAGMATICS-C16-TINGALUGALU-02",
+      "KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-01",
+      "KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-02",
+      "KA-PRAGMATICS-C17-MADHYAAHNA-MADHYARAATRI-03"
+    ]
+  }
+}

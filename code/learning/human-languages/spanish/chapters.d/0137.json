@@ -1,0 +1,21 @@
+{
+  "chapter": 137,
+  "title": "Lo Siento",
+  "label": "ch:spanish-sorry",
+  "canDo": "I can apologise in Spanish and choose between lo siento and perdón.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "ES-C20-perdon",
+    "kind": "task",
+    "summary": "Say lo siento for regret and perdón for fault or for catching someone's attention, hearing sentir — I feel it — inside the first and dōnāre — to give completely — inside the second.",
+    "assesses": [
+      "ES-LEX-POR-FAVOR",
+      "ES-LEX-LO-SIENTO-01",
+      "ES-ETYMON-SENTIR-02",
+      "ES-PRAGMATICS-SORRY-03",
+      "ES-ETYMON-PERDON-04"
+    ]
+  }
+}

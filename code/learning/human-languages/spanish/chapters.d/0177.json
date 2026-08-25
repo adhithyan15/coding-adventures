@@ -1,0 +1,20 @@
+{
+  "chapter": 177,
+  "title": "Por --- And Three Phrases You Already Owned",
+  "label": "ch:por",
+  "canDo": "I can use por for a cause, a route or an exchange, and say what por favor literally means.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C51-por",
+    "kind": "task",
+    "summary": "Complete ES-C51-por: say what por favor literally means and name the English word that is the per inside por.",
+    "assesses": [
+      "ES-LEX-POR",
+      "ES-GRAMMAR-POR-THROUGH-BECAUSE",
+      "ES-ETYMON-PRO-PER"
+    ],
+    "note": "The reader has carried por favor, por que and porque since the opening chapters without ever being told what por means. This chapter explains three old phrases at once."
+  }
+}

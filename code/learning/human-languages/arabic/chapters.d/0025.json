@@ -1,0 +1,18 @@
+{
+  "chapter": 25,
+  "title": "Day",
+  "label": "ch:ar-day",
+  "canDo": "I can say 'day' in Arabic and recognise its cognate in Hebrew's Yom Kippur.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "AR-C25-yawm",
+    "kind": "production",
+    "summary": "Say yawm, run it across the Semitic family, and mark the Egyptian sun-word origin as unsettled.",
+    "assesses": [
+      "AR-CONCEPT-C25-YAWM-01",
+      "AR-CONCEPT-C25-YAWM-02"
+    ]
+  }
+}

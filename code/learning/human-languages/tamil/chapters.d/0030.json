@@ -1,0 +1,20 @@
+{
+  "chapter": 30,
+  "title": "Good Evening",
+  "label": "ch:ta-good-evening",
+  "canDo": "I can greet someone with மாலை வணக்கம் from late afternoon through nightfall, built on the same two-piece pattern as the morning greeting.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "TA-C30-maalai-vanakkam",
+    "kind": "production",
+    "summary": "Greet with mālai vaṇakkam, assembling mālai plus vaṇakkam, and note the pattern was re-checked rather than assumed to carry over.",
+    "assesses": [
+      "TA-ETYMON-MAALAI-01",
+      "TA-LEX-KAALAI-VANAKKAM-01",
+      "TA-LEX-MAALAI-VANAKKAM-01",
+      "TA-PRAGMATICS-MAALAI-VANAKKAM-02"
+    ]
+  }
+}

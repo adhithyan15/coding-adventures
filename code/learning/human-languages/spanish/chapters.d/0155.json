@@ -1,0 +1,18 @@
+{
+  "chapter": 155,
+  "title": "Leer — Reading Is Gathering",
+  "label": "ch:spanish-leer",
+  "canDo": "I can say what I read, with a verb whose stem does not break.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C34-leer",
+    "kind": "task",
+    "summary": "legere, the root that gathers: collect, select, elect, and intellect.",
+    "assesses": [
+      "ES-LEX-LEER-05",
+      "ES-ETYMON-LEER-06"
+    ]
+  }
+}

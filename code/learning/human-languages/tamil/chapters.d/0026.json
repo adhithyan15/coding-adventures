@@ -1,0 +1,20 @@
+{
+  "chapter": 26,
+  "title": "Morning",
+  "label": "ch:ta-morning",
+  "canDo": "I can say காலை for morning and state accurately that its origin is uncertain, rather than asserting a Sanskrit source the dictionary itself only hedges at.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "TA-C26-kaalai",
+    "kind": "task",
+    "summary": "Say kālai, repeat the source's own \"possibly\" instead of dropping it, and read atikaalai as a transparent ati- plus kālai compound.",
+    "assesses": [
+      "TA-LEX-TRANSPARENT-MIDDLE-SYNONYMS-01",
+      "TA-PRAGMATICS-NIGHT-REGISTER-DARKNESS-01",
+      "TA-ETYMON-KAALAI-01",
+      "TA-ETYMON-KAALAI-02"
+    ]
+  }
+}

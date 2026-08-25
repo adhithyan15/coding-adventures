@@ -1,0 +1,18 @@
+{
+  "chapter": 27,
+  "title": "Evening",
+  "label": "ch:ml-evening",
+  "canDo": "I can say evening in Malayalam with vaikunnēraṁ, 'latening time'.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "ML-C27-vaikunneram",
+    "kind": "production",
+    "summary": "Say vaikunnēraṁ, trace it to vaikuka 'to get late', and flag that sources disagree on whether it also covers afternoon.",
+    "assesses": [
+      "ML-CONCEPT-C27-VAIKUNNERAM-01",
+      "ML-CONCEPT-C27-VAIKUNNERAM-02"
+    ]
+  }
+}

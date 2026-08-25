@@ -1,0 +1,18 @@
+{
+  "chapter": 31,
+  "title": "Good Morning",
+  "label": "ch:hi-good-morning",
+  "canDo": "I can wish someone good morning in Hindi and judge when सुप्रभात fits and when नमस्ते is the better choice.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "HI-C31-suprabhat",
+    "kind": "production",
+    "summary": "Say सुप्रभात, split it into su + prabhāt, and set that native Sanskrit dawn against the Persian loan सुबह.",
+    "assesses": [
+      "HI-CONCEPT-C31-SUPRABHAT-01",
+      "HI-CONCEPT-C31-SUPRABHAT-02"
+    ]
+  }
+}

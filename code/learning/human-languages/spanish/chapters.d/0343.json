@@ -1,0 +1,21 @@
+{
+  "chapter": 343,
+  "title": "Naming a Date, and the Stretches Around It",
+  "label": "ch:la-fecha-y-el-siglo",
+  "canDo": "I can say la fecha, el calendario, proximo, la epoca and el siglo, and say why a calendar began as a moneylender's account book.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "ES-C343-siglo",
+    "kind": "production",
+    "summary": "Complete ES-C343-siglo: name a date, find it on a calendar, point at the next one, and name the age it sits in.",
+    "assesses": [
+      "ES-LEX-C343-CLOCK-06",
+      "ES-LEX-C343-CLOCK-07",
+      "ES-LEX-C343-CLOCK-08",
+      "ES-LEX-C343-CLOCK-09",
+      "ES-LEX-C343-CLOCK-10"
+    ]
+  }
+}

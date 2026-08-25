@@ -1,0 +1,22 @@
+{
+  "chapter": 4,
+  "title": "Saying Your Name",
+  "label": "ch:your-name",
+  "canDo": "I can say my own name in Spanish.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "ES-C03-repaso-nombre",
+    "kind": "dialogue",
+    "summary": "Saying Your Name — the chapter run end to end.",
+    "assesses": [
+      "ES-LEX-ME",
+      "ES-GRAMMAR-OBJECT-PRONOUN",
+      "ES-LEX-LLAMO",
+      "ES-GRAMMAR-FIRST-PERSON-VERB",
+      "ES-LEX-ME-LLAMO",
+      "ES-GRAMMAR-REFLEXIVE-FIRST-PERSON"
+    ]
+  }
+}

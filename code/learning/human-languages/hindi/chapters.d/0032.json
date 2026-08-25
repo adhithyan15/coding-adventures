@@ -1,0 +1,17 @@
+{
+  "chapter": 32,
+  "title": "Good Evening",
+  "label": "ch:hi-good-evening",
+  "canDo": "I can wish someone good evening in Hindi and choose between शुभ संध्या and नमस्ते by register.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "HI-C32-evening-register",
+    "kind": "task",
+    "summary": "Pick शुभ संध्या for a written evening card and नमस्ते for a casual 7 p.m. hello, treating the split as a tendency, not a ban.",
+    "assesses": [
+      "HI-CONCEPT-C32-EVENING-REGISTER-01"
+    ]
+  }
+}

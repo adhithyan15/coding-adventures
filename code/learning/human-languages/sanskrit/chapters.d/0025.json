@@ -1,0 +1,21 @@
+{
+  "chapter": 25,
+  "title": "The Hand and the Foot",
+  "label": "ch:sa-body-more",
+  "canDo": "I can name five more parts of the body in Sanskrit, and name the sound law that ties three of them to their English cousins.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "SA-C25-hair",
+    "kind": "production",
+    "summary": "Complete SA-C25-hair and demonstrate the chapter promise.",
+    "assesses": [
+      "SA-LEX-C25-BODY-01",
+      "SA-LEX-C25-BODY-02",
+      "SA-LEX-C25-BODY-03",
+      "SA-LEX-C25-BODY-04",
+      "SA-LEX-C25-BODY-05"
+    ]
+  }
+}

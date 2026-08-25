@@ -1,0 +1,19 @@
+{
+  "chapter": 128,
+  "title": "The Subjunctive Built From the Yo Form",
+  "label": "ch:spanish-subjuntivo-yo-stem",
+  "canDo": "I can build the subjunctive of an irregular verb from its yo form.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "ES-C18-hacer-subjuntivo",
+    "kind": "task",
+    "summary": "quiera, pueda, haga - each one is its own yo form with the vowel swapped.",
+    "assesses": [
+      "ES-GRAMMAR-QUERER-SUBJUNCTIVE-SINGULAR",
+      "ES-GRAMMAR-PODER-SUBJUNCTIVE-SINGULAR",
+      "ES-GRAMMAR-HACER-SUBJUNCTIVE-SINGULAR"
+    ]
+  }
+}

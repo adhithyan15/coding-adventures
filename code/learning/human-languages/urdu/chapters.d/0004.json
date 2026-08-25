@@ -1,0 +1,22 @@
+{
+  "chapter": 4,
+  "title": "How Are You?",
+  "label": "ch:ur-how-are-you",
+  "canDo": "I can ask how someone is with respectful āp, choose kaise or kaisī for the person I am addressing, and reply that I am fine, thank you.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "UR-C04-practice",
+    "kind": "dialogue",
+    "summary": "The wellbeing exchange run both ways — āp kaise haiṅ? and āp kaisī haiṅ? — answered with the unchanging maiṅ ṭhīk hūṅ, shukriyā.",
+    "assesses": [
+      "UR-LEX-WELLBEING-QUESTION",
+      "UR-GRAMMAR-AAP-HAIN",
+      "UR-PRAGMATICS-RESPECTFUL-GENDER-CHOICE",
+      "UR-LEX-WELLBEING-REPLY",
+      "UR-GRAMMAR-WELLBEING-WORD-ORDER",
+      "UR-DIALOGUE-WELLBEING"
+    ]
+  }
+}

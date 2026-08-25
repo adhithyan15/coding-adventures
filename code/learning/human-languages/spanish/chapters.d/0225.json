@@ -1,0 +1,17 @@
+{
+  "chapter": 225,
+  "title": "Review --- Three Places, One Question",
+  "label": "ch:repaso-demostrativos",
+  "canDo": "I can choose the right pointing word without stopping to think.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C59-repaso-demostrativos",
+    "kind": "task",
+    "summary": "I can choose the right pointing word without stopping to think.",
+    "assesses": [
+      "ES-GRAMMAR-DEMONSTRATIVE-THREE-DISTANCES"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "chapter": 17,
+  "title": "Head and Hand",
+  "label": "ch:pt-head-and-hand",
+  "canDo": "I can name the head and the hand in Portuguese and explain the nasal vowel that swallowed the n of manus.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "PT-C17-mao",
+    "kind": "task",
+    "summary": "Say a cabeça and a mão, pluralise to as mãos, and follow the n of manus dissolving between vowels, as it did in lua, boa and pão.",
+    "assesses": [
+      "PT-ETYMON-CABECA-CAPUT-02",
+      "PT-LEX-MAO-02",
+      "PT-ETYMON-MAO-03",
+      "PT-GRAMMAR-MAO-04"
+    ]
+  }
+}

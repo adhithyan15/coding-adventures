@@ -1,0 +1,22 @@
+{
+  "chapter": 14,
+  "title": "From the Mouth of the Guru, One Piece at a Time",
+  "label": "ch:pa-script-first",
+  "canDo": "I can add six Gurmukhi pieces to the three learned with ਹਾਂ, then read ਨਹੀਂ and ਨਮਸਤੇ by assembling only known pieces.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "PA-W01-namaste-read",
+    "kind": "reading",
+    "summary": "The greeting assembled from five pieces the reader can each write from memory, introducing nothing new, and naming plainly the one piece of machinery still to come.",
+    "assesses": [
+      "PA-SCRIPT-NAMASTE-READ-01",
+      "PA-SCRIPT-NA-01",
+      "PA-SCRIPT-MA-01",
+      "PA-SCRIPT-SA-01",
+      "PA-SCRIPT-TA-01",
+      "PA-SCRIPT-E-MATRA-01"
+    ]
+  }
+}

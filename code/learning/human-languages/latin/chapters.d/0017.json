@@ -1,0 +1,23 @@
+{
+  "chapter": 17,
+  "title": "Dog and Cat",
+  "label": "ch:la-dog-and-cat",
+  "canDo": "I can name a dog and a cat in Latin, and say which of its two cat-words came first.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C17-canis-feles-cattus",
+    "kind": "production",
+    "summary": "Name canis, fēlēs, and cattus, then say which cat-word is Classical Latin's own and where the newcomer arrived from.",
+    "assesses": [
+      "LA-LEX-UNDECIM-VIGINTI-01",
+      "LA-LEX-UNDECIM-VIGINTI-02",
+      "LA-PRAGMATICS-UNDECIM-VIGINTI-03",
+      "LA-LEX-UNDECIM-VIGINTI-04",
+      "LA-ETYMON-CANIS-FELES-CATTUS-01",
+      "LA-LEX-CANIS-FELES-CATTUS-02",
+      "LA-PRAGMATICS-CANIS-FELES-CATTUS-03"
+    ]
+  }
+}

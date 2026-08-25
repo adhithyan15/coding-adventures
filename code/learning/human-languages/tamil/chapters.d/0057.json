@@ -1,0 +1,21 @@
+{
+  "chapter": 57,
+  "title": "Wind and Fire",
+  "label": "ch:ta-wind-and-fire",
+  "canDo": "I can name the wind, sand, mud, smoke and an ember in Tamil.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "TA-C57-ember",
+    "kind": "production",
+    "summary": "Complete TA-C57-ember and say all five words in order.",
+    "assesses": [
+      "TA-LEX-C57-FIRE-01",
+      "TA-LEX-C57-FIRE-02",
+      "TA-LEX-C57-FIRE-03",
+      "TA-LEX-C57-FIRE-04",
+      "TA-LEX-C57-FIRE-05"
+    ]
+  }
+}

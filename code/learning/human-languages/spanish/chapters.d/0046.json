@@ -1,0 +1,17 @@
+{
+  "chapter": 46,
+  "title": "Review --- the Present Tense, Whole",
+  "label": "ch:spanish-review-present-all",
+  "canDo": "I can conjugate any regular Spanish verb in the present, in any of the three families.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ES-C07-repaso-tres-familias",
+    "kind": "dialogue",
+    "summary": "Eighteen forms, every one built separately before it appeared in the grid.",
+    "assesses": [
+      "ES-GRAMMAR-PRESENT-INDICATIVE-COMPLETE"
+    ]
+  }
+}

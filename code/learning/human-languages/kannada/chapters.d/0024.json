@@ -1,0 +1,24 @@
+{
+  "chapter": 24,
+  "title": "Night",
+  "label": "ch:ka-night",
+  "canDo": "I can say \"night\" in Kannada and recognise it inside the midnight word I already knew.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "KA-C24-ratri",
+    "kind": "production",
+    "summary": "Say ರಾತ್ರಿ, find it again inside ಮಧ್ಯರಾತ್ರಿ, and note that native ಇರುಳು lost its job where ಹಗಲು kept a different one.",
+    "assesses": [
+      "KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-01",
+      "KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-02",
+      "KA-PRAGMATICS-C17-MADHYAAHNA-MADHYARAATRI-03",
+      "KA-ETYMON-C23-DINA-01",
+      "KA-ETYMON-C23-DINA-02",
+      "KA-ETYMON-C23-DINA-03",
+      "KA-ETYMON-C24-RATRI-01",
+      "KA-ETYMON-C24-RATRI-02"
+    ]
+  }
+}

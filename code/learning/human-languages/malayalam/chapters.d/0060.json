@@ -1,0 +1,21 @@
+{
+  "chapter": 60,
+  "title": "Animals Around a House",
+  "label": "ch:ml-animals-around-a-house",
+  "canDo": "I can name a cow, a goat, a hen, a crow and an elephant in Malayalam.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "ML-C60-elephant",
+    "kind": "production",
+    "summary": "Complete ML-C60-elephant and say all five words in order.",
+    "assesses": [
+      "ML-LEX-C60-ANIMAL-01",
+      "ML-LEX-C60-ANIMAL-02",
+      "ML-LEX-C60-ANIMAL-03",
+      "ML-LEX-C60-ANIMAL-04",
+      "ML-LEX-C60-ANIMAL-05"
+    ]
+  }
+}

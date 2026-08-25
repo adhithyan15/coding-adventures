@@ -1,0 +1,24 @@
+{
+  "chapter": 268,
+  "title": "Travelling --- Asking, Boarding, Staying, and When It Goes Wrong",
+  "label": "ch:viajar",
+  "canDo": "I can ask where something is, ask for a ticket and a room, and say that there is a problem.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C268-problema",
+    "kind": "task",
+    "summary": "Complete ES-C268-problema: put each of the chapter's three nouns into the donde esta frame, ask for a ticket and a room outright, and report a problem with the correct article.",
+    "assesses": [
+      "ES-LEX-DONDE-ESTA",
+      "ES-SEMANTIC-ASKING-DIRECTIONS",
+      "ES-LEX-BILLETE",
+      "ES-SEMANTIC-TRAVEL-TICKET",
+      "ES-LEX-HABITACION",
+      "ES-SEMANTIC-LODGING",
+      "ES-LEX-PROBLEMA",
+      "ES-GRAMMAR-MASCULINE-MA-NOUNS"
+    ]
+  }
+}

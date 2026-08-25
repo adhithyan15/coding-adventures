@@ -1,0 +1,21 @@
+{
+  "chapter": 329,
+  "title": "Such, Which, Then, But Rather",
+  "label": "ch:tal-y-salvo",
+  "canDo": "I can join and correct two thoughts with tal, cual, pues, sino and salvo, and say why sino needs a no earlier in the sentence.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "ES-C329-salvo",
+    "kind": "production",
+    "summary": "Complete ES-C329-salvo: pair tal with cual, conclude with pues, correct a negative with sino, and make an exception with salvo.",
+    "assesses": [
+      "ES-LEX-C329-LINK-06",
+      "ES-LEX-C329-LINK-07",
+      "ES-LEX-C329-LINK-08",
+      "ES-LEX-C329-LINK-09",
+      "ES-LEX-C329-LINK-10"
+    ]
+  }
+}

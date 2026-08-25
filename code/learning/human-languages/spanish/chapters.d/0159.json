@@ -1,0 +1,18 @@
+{
+  "chapter": 159,
+  "title": "Tomar — Taking, and a Word With No Past",
+  "label": "ch:spanish-tomar",
+  "canDo": "I can say what I take, and explain why this everyday verb has no agreed origin.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C35-tomar",
+    "kind": "task",
+    "summary": "tomar, the honest gap — and coger, the verb Latin actually left.",
+    "assesses": [
+      "ES-LEX-TOMAR-01",
+      "ES-LEX-COGER-02"
+    ]
+  }
+}

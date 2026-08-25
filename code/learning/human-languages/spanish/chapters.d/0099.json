@@ -1,0 +1,18 @@
+{
+  "chapter": 99,
+  "title": "Se Lo --- The Pair That Does Not Exist",
+  "label": "ch:se-for-le",
+  "canDo": "I can turn le or les into se in front of lo, la, los or las.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C47-se-lo",
+    "kind": "task",
+    "summary": "Complete ES-C47-se-lo: produce se lo digo, name the four words that trigger the change, and count the readings se lo digo allows.",
+    "assesses": [
+      "ES-GRAMMAR-SE-FOR-LE"
+    ],
+    "note": "The reader is asked to say le lo digo aloud first; the mouth objects before the grammar does."
+  }
+}

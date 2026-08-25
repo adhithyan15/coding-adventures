@@ -1,0 +1,21 @@
+{
+  "chapter": 8,
+  "title": "Telling Time",
+  "label": "ch:it-telling-time",
+  "canDo": "I can tell the time in Italian and use mezzogiorno and mezzanotte for the two hours that need no number.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "IT-C08-mezzogiorno-mezzanotte",
+    "kind": "task",
+    "summary": "Say è mezzogiorno and è mezzanotte, break each into mezzo or mezza plus giorno or notte, and explain why the half changes gender between them.",
+    "assesses": [
+      "IT-SOUND-ORA-02",
+      "IT-ETYMON-ORA-03",
+      "IT-GRAMMAR-ORA-04",
+      "IT-SOUND-MEZZOGIORNO-MEZZANOTTE-02",
+      "IT-ETYMON-MEZZOGIORNO-MEZZANOTTE-03"
+    ]
+  }
+}

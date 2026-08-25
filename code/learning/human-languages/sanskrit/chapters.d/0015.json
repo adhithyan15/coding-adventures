@@ -1,0 +1,22 @@
+{
+  "chapter": 15,
+  "title": "Describing Things",
+  "label": "ch:sa-describing-things",
+  "canDo": "I can point at something in Sanskrit and ask who or where it is — and I can say what the six words have in common.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C15-adjective-system",
+    "kind": "production",
+    "summary": "Say the near word, the far word and the question word in a row, and name the part that changed.",
+    "assesses": [
+      "SA-LEX-C15-ADJ-01",
+      "SA-LEX-C15-ADJ-02",
+      "SA-LEX-C15-ADJ-03",
+      "SA-LEX-C15-ADJ-04",
+      "SA-LEX-C15-ADJ-05",
+      "SA-GRAMMAR-C15-ADJ-SYSTEM"
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "chapter": 245,
+  "title": "Review --- Two Tenses Finished",
+  "label": "ch:repaso-paradigmas",
+  "canDo": "I can say both past tenses straight through, with no gaps.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C63-repaso-paradigmas",
+    "kind": "task",
+    "summary": "I can say both past tenses straight through, with no gaps.",
+    "assesses": [
+      "ES-GRAMMAR-PRETERITE-COMPLETE"
+    ]
+  }
+}

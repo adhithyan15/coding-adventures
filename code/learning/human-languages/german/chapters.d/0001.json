@@ -1,0 +1,20 @@
+{
+  "chapter": 1,
+  "title": "Greetings",
+  "label": "ch:greetings",
+  "canDo": "I can greet someone in German, recognize the reply, and choose an appropriate response.",
+  "spineNodes": [
+    "SPINE-MEET-GREET",
+    "SPINE-CHECK-WELLBEING",
+    "SPINE-DEFINITE-REFERENCE",
+    "SPINE-TIME-OF-DAY",
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "GE-C01-practice",
+    "kind": "task",
+    "summary": "Complete GE-C01-practice, the canonical closing checkpoint, and demonstrate the chapter promise: greet someone in German, recognize the reply, and choose an appropriate response.",
+    "assesses": [],
+    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 173,
+  "title": "Synthesis --- The Choices English Never Makes You Make",
+  "label": "ch:spanish-synthesis-verb-splits",
+  "canDo": "I can choose correctly between three verb pairs where English offers only one word.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C39-sintesis-elegir",
+    "kind": "dialogue",
+    "summary": "preguntar/pedir, traer/llevar, conocer/saber - the decision carries the meaning.",
+    "assesses": [
+      "ES-GRAMMAR-TRAER-LLEVAR-03",
+      "ES-GRAMMAR-CONOCER-SABER-12",
+      "ES-GRAMMAR-ASK-SPLIT-04"
+    ]
+  }
+}

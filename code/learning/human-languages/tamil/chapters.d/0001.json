@@ -1,0 +1,23 @@
+{
+  "chapter": 1,
+  "title": "Greetings",
+  "label": "ch:greetings",
+  "canDo": "I can greet someone, say yes, no and thank you, agree with sari, hold a short exchange out loud, and copy my first Tamil shape with a visible model.",
+  "spineNodes": [
+    "SPINE-MEET-GREET",
+    "SPINE-RESPOND-BASIC",
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "TA-C01-practice",
+    "kind": "task",
+    "summary": "Hold the whole exchange out loud, then copy வ once beside the visible model and compare only that shape.",
+    "assesses": [
+      "TA-PHONO-VANAKKAM-01",
+      "TA-ETYMON-VANAKKAM-02",
+      "TA-PRAGMATIC-VANAKKAM-03",
+      "TA-SCRIPT-FIRST-VISIBLE-SHAPE-00"
+    ],
+    "note": "The schema-v2 opener and its two-minute writing bridge introduce four measurable atoms. TA-C01-practice remains the terminal chapter payoff: it revisits the spoken greeting and its cultural meaning, then requires one supported copy of வ with the model visible. The other eight legacy lessons remain untyped debt; the payoff does not pretend to assess atoms they do not yet declare."
+  }
+}

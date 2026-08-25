@@ -1,0 +1,19 @@
+{
+  "chapter": 9,
+  "title": "Sorry",
+  "label": "ch:ml-sorry",
+  "canDo": "I can apologise in Malayalam with kṣamikkaṇaṁ, and use the plainer kṣamikkū when it suits.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "ML-C09-kshamikkanam",
+    "kind": "production",
+    "summary": "Say kṣamikkaṇaṁ, hear the necessitative -aṇaṁ softening it into politeness, then drop to the plain kṣamikkū.",
+    "assesses": [
+      "ML-CONCEPT-C09-KSHAMIKKANAM-01",
+      "ML-CONCEPT-C09-KSHAMIKKANAM-02",
+      "ML-CONCEPT-C09-KSHAMIKKANAM-03"
+    ]
+  }
+}

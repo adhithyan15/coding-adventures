@@ -1,0 +1,19 @@
+{
+  "chapter": 23,
+  "title": "-cion --- About Two Thousand Words, At Once",
+  "label": "ch:friend-cion",
+  "canDo": "I can turn an English -tion word into Spanish and know its gender without being told.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C56-cion",
+    "kind": "task",
+    "summary": "Complete ES-C56-cion: convert an English -tion word, give the gender, and say why the correspondence is a rule.",
+    "assesses": [
+      "ES-FRIEND-CION-TION",
+      "ES-ETYMON-TIONEM"
+    ],
+    "note": "The highest-reach lesson in the book so far: one ending, roughly two thousand words, and a gender that never has to be decided. Not a resemblance -- Latin -tionem, inherited by Spanish and borrowed by English."
+  }
+}

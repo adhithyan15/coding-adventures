@@ -1,0 +1,19 @@
+{
+  "chapter": 7,
+  "title": "Days of the Week",
+  "label": "ch:it-days-of-the-week",
+  "canDo": "I can name all seven Italian days and say why sabato and domenica broke away from the planets.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "IT-C07-giorni-2",
+    "kind": "task",
+    "summary": "Run lunedì to venerdì with the planet inside each, then sabato from the Sabbath and domenica as the Lord's day, matched against Spanish sábado and domingo.",
+    "assesses": [
+      "IT-SOUND-GIORNI-1-02",
+      "IT-GRAMMAR-GIORNI-1-03",
+      "IT-ETYMON-GIORNI-2-02"
+    ]
+  }
+}

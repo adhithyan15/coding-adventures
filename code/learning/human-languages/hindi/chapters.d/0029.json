@@ -1,0 +1,18 @@
+{
+  "chapter": 29,
+  "title": "Evening",
+  "label": "ch:hi-evening",
+  "canDo": "I can say evening in Hindi and refuse the tempting but false link between शाम and Sanskrit śyāmā.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "HI-C29-shaam",
+    "kind": "production",
+    "summary": "Say शाम, reject the śyāmā resemblance as a false cognate, and pair it with सुबह as two loans from the same source.",
+    "assesses": [
+      "HI-CONCEPT-C29-SHAAM-01",
+      "HI-CONCEPT-C29-SHAAM-02"
+    ]
+  }
+}

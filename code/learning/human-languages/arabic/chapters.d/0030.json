@@ -1,0 +1,19 @@
+{
+  "chapter": 30,
+  "title": "Knowing and Eating",
+  "label": "ch:ar-knowing-and-eating",
+  "canDo": "I can say the Arabic for 'he knew' and 'he ate', tell ʿarafa apart from ʿalima, and say plainly which of these verbs has an English cousin and which has none.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "AR-C30-akala",
+    "kind": "production",
+    "summary": "Say akala with no new letters left to learn, run its doer and done-to forms, place it beside Hebrew akhal, and restate the ʿarafa root family and its Spanish loan.",
+    "assesses": [
+      "AR-CONCEPT-C30-AKALA-01",
+      "AR-CONCEPT-C30-AKALA-02",
+      "AR-CONCEPT-C30-ARAFA-02"
+    ]
+  }
+}

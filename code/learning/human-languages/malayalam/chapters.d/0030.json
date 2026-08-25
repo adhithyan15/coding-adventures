@@ -1,0 +1,18 @@
+{
+  "chapter": 30,
+  "title": "Good Evening",
+  "label": "ch:ml-good-evening",
+  "canDo": "I can greet someone in the evening in Malayalam with śubha sāyāhnaṁ.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "ML-C30-shubha-sayaahnam",
+    "kind": "production",
+    "summary": "Say śubha sāyāhnaṁ, note it is built on the poetic sāyāhnaṁ rather than native vaikunnēraṁ, and follow sāya back to PIE.",
+    "assesses": [
+      "ML-CONCEPT-C30-SHUBHA-SAYAAHNAM-01",
+      "ML-CONCEPT-C30-SHUBHA-SAYAAHNAM-02"
+    ]
+  }
+}

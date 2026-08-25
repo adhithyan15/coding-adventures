@@ -1,0 +1,21 @@
+{
+  "chapter": 51,
+  "title": "Courtesy Words",
+  "label": "ch:te-courtesy",
+  "canDo": "I can be polite in Telugu beyond thank you --- gratitude, a good turn, respect, a blessing, a salutation --- and name the piece that two of those words share.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "TE-C51-salutation",
+    "kind": "production",
+    "summary": "Complete TE-C51-salutation and demonstrate the chapter promise.",
+    "assesses": [
+      "TE-LEX-C51-COURTESY-01",
+      "TE-LEX-C51-COURTESY-02",
+      "TE-LEX-C51-COURTESY-03",
+      "TE-LEX-C51-COURTESY-04",
+      "TE-LEX-C51-COURTESY-05"
+    ]
+  }
+}

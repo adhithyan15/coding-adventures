@@ -1,0 +1,20 @@
+{
+  "chapter": 21,
+  "title": "Nice to Meet You",
+  "label": "ch:la-nice-to-meet-you",
+  "canDo": "I can say in Latin that it is a pleasure to have met someone, and say what that phrase really proves.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "LA-C21-practice",
+    "kind": "dialogue",
+    "summary": "Two meeting scenes: names traded with quid tibi nōmen est? between strangers, and volup est convēnisse kept for the chance re-encounter Plautus actually wrote it for.",
+    "assesses": [
+      "LA-PRAGMATICS-VOLUP-EST-CONVENISSE-01",
+      "LA-PRAGMATICS-MEETING-PHRASE-CONTEXT-01",
+      "LA-PRAGMATICS-MEETING-PHRASE-CONTEXT-02",
+      "LA-DIALOGUE-MEETING-01"
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "chapter": 6,
+  "title": "Five Verbs at the Core",
+  "label": "ch:ur-core-verbs",
+  "canDo": "I can name five everyday Urdu verbs by their shared -nā ending, take that ending off to reach the stem, and say what I do in the present with the participle agreeing for gender and the copula agreeing for person.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "UR-C06-janna",
+    "kind": "production",
+    "summary": "The fifth verb runs the whole machine at once: strip -nā from all five infinitives, hold the doubled nūn that keeps jānnā apart from jānā, and put the stem into maiṅ jāntā/jāntī hūṅ.",
+    "assesses": [
+      "UR-GRAMMAR-NA-INFINITIVE",
+      "UR-GRAMMAR-PRESENT-TWO-AGREEMENTS",
+      "UR-LEX-HONA",
+      "UR-LEX-JANA",
+      "UR-LEX-ANA",
+      "UR-LEX-BOLNA",
+      "UR-LEX-JANNA",
+      "UR-SCRIPT-JANNA-DOUBLE-NUN",
+      "UR-ETYMON-JANNA-KNOW"
+    ]
+  }
+}

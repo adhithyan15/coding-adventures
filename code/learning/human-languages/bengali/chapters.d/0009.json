@@ -1,0 +1,32 @@
+{
+  "chapter": 9,
+  "title": "Taking, Asking, Helping, Liking",
+  "label": "ch:bn-conjunct-verbs",
+  "canDo": "I can take, ask, help and say what I like and whom I love in Bengali, build a fresh verb out of any noun by putting করা behind it, and say why liking happens to me while loving is something I do.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "BN-C09-bhalo-laga",
+    "kind": "production",
+    "summary": "Say āmār bhālo lāge and hear that you are not its subject, set it against āmi bhālobāsi where you are, place both beside the আমার … আছে shape that says 'I have', and run the chapter's four verbs back — neowā, jijñāsā kôrā, sāhājjo kôrā, bhālo lāgā. Six of the chapter's nine atoms. Two of the other three — the নেওয়া compound and the noun-plus-করা pattern — are retrieved by the very next lesson after the one that taught them; the third, the doubled য্য of সাহায্য, is taught in the penultimate lesson and genuinely is not revisited, which is recorded here rather than papered over with a claim the payoff does not make.",
+    "assesses": [
+      "BN-LEX-C08-BHABA-01",
+      "BN-LEX-C08-BOJHA-01",
+      "BN-GRAMMAR-C08-BOJHA-02",
+      "BN-LEX-C08-PORA-01",
+      "BN-LEX-C08-LEKHA-01",
+      "BN-GRAMMAR-C08-LEKHA-02",
+      "BN-LEX-C09-NEOWA-01",
+      "BN-LEX-C09-JIJNASA-01",
+      "BN-LEX-C09-SAHAJJO-01",
+      "BN-GRAMMAR-C07-HOWA-02",
+      "BN-GRAMMAR-C07-ASHA-02",
+      "BN-LEX-C07-KHAOWA-01",
+      "BN-GRAMMAR-C07-KHAOWA-02",
+      "BN-LEX-C09-BHALOLAGA-01",
+      "BN-GRAMMAR-C09-DATIVE-02",
+      "BN-LEX-C09-BHALOBASA-03"
+    ]
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "chapter": 29,
+  "title": "Night",
+  "label": "ch:la-night",
+  "canDo": "I can say night in Latin as nox, noctis, and see English night sitting inside it.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "LA-C29-nox",
+    "kind": "production",
+    "summary": "Say nox and noctis, match it against English night, and build equinox out of aequus plus nox.",
+    "assesses": [
+      "LA-LEX-MEDIUS-DIES-NOX-01",
+      "LA-PRAGMATICS-MEDIUS-DIES-NOX-02",
+      "LA-LEX-DIES-01",
+      "LA-ETYMON-DIES-02",
+      "LA-LEX-NOX-01",
+      "LA-ETYMON-NOX-02",
+      "LA-GRAMMAR-NOX-03"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 134,
+  "title": "Hable Usted --- The Polite Command",
+  "label": "ch:command-usted",
+  "canDo": "I can give a formal command and say why the usted form is the polite one.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C50-hable-usted",
+    "kind": "task",
+    "summary": "Complete ES-C50-hable-usted: produce hable por favor and explain why the usted command is polite.",
+    "assesses": [
+      "ES-GRAMMAR-COMMAND-USTED",
+      "ES-GRAMMAR-USTED-THIRD-PERSON"
+    ],
+    "note": "Usted is a worn-down title, so the order is aimed past the listener rather than at them -- and that indirectness IS the politeness."
+  }
+}

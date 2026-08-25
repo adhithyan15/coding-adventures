@@ -1,0 +1,22 @@
+{
+  "chapter": 5,
+  "title": "The First Verbs",
+  "label": "ch:first-verbs",
+  "canDo": "I can build short present-tense Bengali sentences with the chapter's first verbs.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "BN-C05-practice",
+    "kind": "task",
+    "summary": "Complete BN-C05-practice, the canonical closing checkpoint, and demonstrate the chapter promise: build short present-tense Bengali sentences with the chapter's first verbs.",
+    "assesses": [
+      "BN-CONCEPT-C03-AMI-01",
+      "BN-CONCEPT-C05-AMIBANGLABOLI-01",
+      "BN-CONCEPT-C05-BOLA-01",
+      "BN-CONCEPT-C05-KAJKORA-01",
+      "BN-CONCEPT-C05-PRACTICE-01",
+      "BN-CONCEPT-C05-THAKA-01"
+    ]
+  }
+}

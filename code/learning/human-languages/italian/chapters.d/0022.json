@@ -1,0 +1,28 @@
+{
+  "chapter": 22,
+  "title": "Coffee, Tea, Milk, and Sugar",
+  "label": "ch:it-coffee-tea-milk-sugar",
+  "canDo": "I can ask for coffee, tea, milk and sugar in Italian, and tell which of the four were borrowed and which was inherited.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "IT-C22-zucchero",
+    "kind": "task",
+    "summary": "The chapter's last lesson gathers il caffè, il tè, il latte and lo zucchero, meets lo on a real noun for the first time since Chapter 1 stated the rule, and sorts all four by history: caffè from Turkish, tè from Chinese, zucchero from Arabic by a different road than caffè, and latte alone never borrowed at all.",
+    "assesses": [
+      "IT-LEX-CAFFE-02",
+      "IT-ETYMON-CAFFE-03",
+      "IT-NOTICE-CAFFE-04",
+      "IT-LEX-TE-02",
+      "IT-ETYMON-TE-03",
+      "IT-NOTICE-TE-04",
+      "IT-LEX-LATTE-02",
+      "IT-ETYMON-LATTE-03",
+      "IT-ETYMON-NERO-BIANCO-02",
+      "IT-LEX-ZUCCHERO-02",
+      "IT-ETYMON-ZUCCHERO-03",
+      "IT-GRAMMAR-ZUCCHERO-04"
+    ]
+  }
+}

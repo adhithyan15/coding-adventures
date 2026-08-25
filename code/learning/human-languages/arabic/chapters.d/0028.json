@@ -1,0 +1,19 @@
+{
+  "chapter": 28,
+  "title": "Going and Coming",
+  "label": "ch:ar-going-and-coming",
+  "canDo": "I can say the Arabic for 'he went' and 'he came', read the three-consonant root under each, and explain why Arabic dictionaries list a verb as 'he did' rather than 'to do'.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "AR-C28-jaa",
+    "kind": "production",
+    "summary": "Say the going/coming pair, name the weak letter that vanishes from jāʾa and point to where it comes back, and restate the root-and-pattern engine dhahaba opened.",
+    "assesses": [
+      "AR-CONCEPT-C28-JAA-01",
+      "AR-CONCEPT-C28-JAA-02",
+      "AR-CONCEPT-C28-DHAHABA-02"
+    ]
+  }
+}

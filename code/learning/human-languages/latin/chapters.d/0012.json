@@ -1,0 +1,20 @@
+{
+  "chapter": 12,
+  "title": "Noon and Midnight",
+  "label": "ch:la-noon-and-midnight",
+  "canDo": "I can say noon and midnight in Latin, and explain why English's noon does not come from either.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "LA-C12-medius-dies-nox",
+    "kind": "task",
+    "summary": "Say medius diēs and media nox, then follow both halves into Spanish, French, and English's unrelated nōna hōra.",
+    "assesses": [
+      "LA-ETYMON-MENSES-01",
+      "LA-PRAGMATICS-MENSES-02",
+      "LA-LEX-MEDIUS-DIES-NOX-01",
+      "LA-PRAGMATICS-MEDIUS-DIES-NOX-02"
+    ]
+  }
+}

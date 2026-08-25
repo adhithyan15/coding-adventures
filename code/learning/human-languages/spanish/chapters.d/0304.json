@@ -1,0 +1,21 @@
+{
+  "chapter": 304,
+  "title": "When Bien Is Not True --- Calm, Ill, Content, Busy, Sad",
+  "label": "ch:como-estoy",
+  "canDo": "I can answer how I am honestly in Spanish: calm, ill, content, busy or sad, in the right form for who is speaking.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "ES-C304-triste",
+    "kind": "production",
+    "summary": "Complete ES-C304-triste: give all five answers, switching the four that take -o/-a and leaving the one that ends in -e alone.",
+    "assesses": [
+      "ES-LEX-C304-WELL-01",
+      "ES-LEX-C304-WELL-02",
+      "ES-LEX-C304-WELL-03",
+      "ES-LEX-C304-WELL-04",
+      "ES-LEX-C304-WELL-05"
+    ]
+  }
+}

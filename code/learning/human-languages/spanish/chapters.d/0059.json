@@ -1,0 +1,17 @@
+{
+  "chapter": 59,
+  "title": "Cansado --- a State, Not a Quality",
+  "label": "ch:cansado",
+  "canDo": "I can say how I am right now with estar and an adjective.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C09-cansado",
+    "kind": "task",
+    "summary": "I can say how I am right now with estar and an adjective.",
+    "assesses": [
+      "ES-LEX-CANSADO"
+    ]
+  }
+}

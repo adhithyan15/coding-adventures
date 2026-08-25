@@ -1,0 +1,18 @@
+{
+  "chapter": 45,
+  "title": "Comen and Viven --- Agreeing Again",
+  "label": "ch:spanish-er-ir-3pl",
+  "canDo": "I can say what they eat and what they live, with one ending shared by both families.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ES-C07-comen-viven",
+    "kind": "task",
+    "summary": "After two chapters apart the families fall back into step and stay there.",
+    "assesses": [
+      "ES-GRAMMAR-ER-PRESENT-3PL",
+      "ES-GRAMMAR-IR-PRESENT-3PL"
+    ]
+  }
+}

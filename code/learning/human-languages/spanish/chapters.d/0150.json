@@ -1,0 +1,20 @@
+{
+  "chapter": 150,
+  "title": "Dog and Cat",
+  "label": "ch:spanish-dog-and-cat",
+  "canDo": "I can name a dog and a cat in Spanish and say which of the two words still has no agreed origin.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C32-perro",
+    "kind": "task",
+    "summary": "Say gato and perro, trace cattus back toward Egypt, then admit that perro — which pushed out the older can — has no settled etymology at all.",
+    "assesses": [
+      "ES-LEX-GATO-01",
+      "ES-ETYMON-GATO-02",
+      "ES-LEX-PERRO-03",
+      "ES-EVIDENCE-PERRO-04"
+    ]
+  }
+}

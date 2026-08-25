@@ -1,0 +1,17 @@
+{
+  "chapter": 31,
+  "title": "Good Afternoon",
+  "label": "ch:ml-good-afternoon",
+  "canDo": "I can greet someone in the afternoon in Malayalam with śubha madhyāhnaṁ, and say how it differs from the everyday afternoon word.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "ML-C31-afternoon-convergence",
+    "kind": "task",
+    "summary": "Line up the three sister languages' everyday afternoon words and show where all three converge on śubha + madhyāhna.",
+    "assesses": [
+      "ML-CONCEPT-C31-AFTERNOON-CONVERGENCE-01"
+    ]
+  }
+}

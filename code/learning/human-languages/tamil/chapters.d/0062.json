@@ -1,0 +1,21 @@
+{
+  "chapter": 62,
+  "title": "Only and Still",
+  "label": "ch:ta-only-and-still",
+  "canDo": "I can say only, still, soon, at once and first of all in Tamil.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "TA-C62-first-of-all",
+    "kind": "production",
+    "summary": "Complete TA-C62-first-of-all and say all five words in order.",
+    "assesses": [
+      "TA-LEX-C62-JOIN-01",
+      "TA-LEX-C62-JOIN-02",
+      "TA-LEX-C62-JOIN-03",
+      "TA-LEX-C62-JOIN-04",
+      "TA-LEX-C62-JOIN-05"
+    ]
+  }
+}

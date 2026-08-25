@@ -1,0 +1,21 @@
+{
+  "chapter": 50,
+  "title": "Sound and Song",
+  "label": "ch:sa-sound-and-song",
+  "canDo": "I can name a sound, a question, the voice, a song and a verse in Sanskrit.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "SA-C50-verse",
+    "kind": "production",
+    "summary": "Complete SA-C50-verse and demonstrate the chapter promise.",
+    "assesses": [
+      "SA-LEX-C50-SOUND-01",
+      "SA-LEX-C50-SOUND-02",
+      "SA-LEX-C50-SOUND-03",
+      "SA-LEX-C50-SOUND-04",
+      "SA-LEX-C50-SOUND-05"
+    ]
+  }
+}

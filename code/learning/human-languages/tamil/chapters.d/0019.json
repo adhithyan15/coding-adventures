@@ -1,0 +1,19 @@
+{
+  "chapter": 19,
+  "title": "Asking Someone's Age",
+  "label": "ch:ta-asking-age",
+  "canDo": "I can ask someone's age in both the casual possessive shape and the formal dative-plus-become shape, and answer with my own.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "TA-C19-age-register-grammar",
+    "kind": "dialogue",
+    "summary": "Ask \"un vayasu enna?\" casually, ask \"unakku ettanai vayathu aakirathu?\" formally, and answer \"enakku irupathu vayathu aakirathu.\"",
+    "assesses": [
+      "TA-LEX-VAYATHU-01",
+      "TA-GRAMMAR-AGE-REGISTER-GRAMMAR-01",
+      "TA-GRAMMAR-AGE-REGISTER-GRAMMAR-02"
+    ]
+  }
+}

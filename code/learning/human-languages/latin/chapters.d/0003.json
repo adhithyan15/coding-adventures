@@ -1,0 +1,21 @@
+{
+  "chapter": 3,
+  "title": "Please",
+  "label": "ch:la-please",
+  "canDo": "I can soften a Latin request the way Romans did, with quaesō or sīs instead of a word for please.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "LA-C03-quaeso",
+    "kind": "dialogue",
+    "summary": "Attach quaesō to a real request — dā mihi aquam, quaesō — and swap in sīs for the if-you-wish version.",
+    "assesses": [
+      "LA-PHONO-SALVE-01",
+      "LA-ETYMON-SALVE-02",
+      "LA-GRAMMAR-SALVE-03",
+      "LA-ETYMON-QUAESO-01",
+      "LA-PRAGMATICS-QUAESO-02"
+    ]
+  }
+}

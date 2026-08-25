@@ -1,0 +1,21 @@
+{
+  "chapter": 1,
+  "title": "Greetings",
+  "label": "ch:greetings",
+  "canDo": "I can greet, thank, and take my leave in Hindi, and write by hand the first Devanagari letters those words are built from.",
+  "spineNodes": [
+    "SPINE-MEET-GREET",
+    "SPINE-COURTESY-THANK",
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "HI-W02-ka-ta-mouth-order",
+    "kind": "task",
+    "summary": "Write क and त in stroke order — loop or curl, spine, bar last — then say the stop series back to front along the mouth.",
+    "assesses": [
+      "HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-01",
+      "HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-02",
+      "HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-03"
+    ]
+  }
+}

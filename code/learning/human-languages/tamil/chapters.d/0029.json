@@ -1,0 +1,19 @@
+{
+  "chapter": 29,
+  "title": "Good Morning",
+  "label": "ch:ta-good-morning",
+  "canDo": "I can greet someone with காலை வணக்கம் before mid-morning and see it as காலை plus the வணக்கம் I already had, with no borrowed blessing-word in it.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "TA-C29-kaalai-vanakkam",
+    "kind": "production",
+    "summary": "Greet with kālai vaṇakkam from sunrise to about 11, naming its two known pieces and the borrowed word that is absent.",
+    "assesses": [
+      "TA-ETYMON-KAALAI-01",
+      "TA-LEX-KAALAI-VANAKKAM-01",
+      "TA-PRAGMATICS-KAALAI-VANAKKAM-02"
+    ]
+  }
+}

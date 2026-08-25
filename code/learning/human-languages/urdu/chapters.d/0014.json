@@ -1,0 +1,25 @@
+{
+  "chapter": 14,
+  "title": "Four Things You Wear",
+  "label": "ch:ur-clothing",
+  "canDo": "I can name a shirt, shoe, cap and coat in Urdu, and sort each word by which direction it was borrowed: into Urdu, out of Urdu into English, or straight from English.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "UR-C14-koat",
+    "kind": "production",
+    "summary": "Name قمیض, جوتا, ٹوپی and کوٹ, then sort all four by the direction their loan travelled: Persian and Arabic into Urdu, Urdu out into English, or English straight into Urdu — three directions in one small set of words.",
+    "assesses": [
+      "UR-LEX-TOPI",
+      "UR-ETYMON-TOPI-INTO-ENGLISH",
+      "UR-LEX-JUTA",
+      "UR-LEX-QAMIZ",
+      "UR-LEX-KOAT",
+      "UR-REGISTER-ENGLISH-LAYER",
+      "UR-LEX-KHUDA-HAFIZ",
+      "UR-LEX-WELLBEING-REPLY",
+      "UR-PRAGMATICS-STANDARD-FAREWELL"
+    ]
+  }
+}

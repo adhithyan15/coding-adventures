@@ -1,0 +1,17 @@
+{
+  "chapter": 227,
+  "title": "Bastante --- An Ending You Can Already Read",
+  "label": "ch:bastante",
+  "canDo": "I can say that something is enough, or quite so.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C60-bastante",
+    "kind": "task",
+    "summary": "I can say that something is enough, or quite so.",
+    "assesses": [
+      "ES-LEX-BASTANTE"
+    ]
+  }
+}

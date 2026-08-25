@@ -1,0 +1,19 @@
+{
+  "chapter": 163,
+  "title": "Gustar — the Verb Built the Other Way Round",
+  "label": "ch:spanish-gustar",
+  "canDo": "I can build a gustar sentence the way Spanish builds it, with the thing liked as the subject.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C35-gustar",
+    "kind": "task",
+    "summary": "me gusta el libro is the book pleasing me, so the verb agrees with the book.",
+    "assesses": [
+      "ES-LEX-GUSTAR-07",
+      "ES-ETYMON-GUSTAR-08",
+      "ES-GRAMMAR-GUSTAR-INVERSION-09"
+    ]
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "chapter": 40,
+  "title": "A Meal",
+  "label": "ch:te-a-meal",
+  "canDo": "I can say I am having a meal in Telugu, using the word an earlier chapter already used and never explained.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "TE-C40-bhojanam",
+    "kind": "production",
+    "summary": "Say భోజనం చేద్దాం, explain భోజనం against everyday తిండి the way Chapter 32 first set them side by side, and apologise for a late meal with Chapter 9's క్షమించండి.",
+    "assesses": [
+      "TE-LEX-C39-PAALU-01",
+      "TE-ETYMON-C39-PAALU-02",
+      "TE-LEX-C32-TINU-01",
+      "TE-ETYMON-C32-TINU-02",
+      "TE-LEX-C08-DAYACHESI-01",
+      "TE-ETYMON-C08-DAYACHESI-02",
+      "TE-ETYMON-C09-KSHAMINCHANDI-01",
+      "TE-ETYMON-C09-KSHAMINCHANDI-02",
+      "TE-PRAGMATICS-C09-KSHAMINCHANDI-03",
+      "TE-LEX-C40-BHOJANAM-01",
+      "TE-ETYMON-C40-BHOJANAM-02"
+    ]
+  }
+}

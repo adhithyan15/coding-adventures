@@ -1,0 +1,22 @@
+{
+  "chapter": 20,
+  "title": "Numbers 11–20 and Weather",
+  "label": "ch:ka-numbers-and-weather",
+  "canDo": "I can say what the weather is doing in Kannada and count past ten up to twenty.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE",
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "KA-C20-havamana",
+    "kind": "task",
+    "summary": "Say ಹವಾಮಾನ — the Persian hava plus Sanskrit māna — and report the weather with ಮಳೆ ಬರುತ್ತಿದೆ, \"rain is coming.\"",
+    "assesses": [
+      "KA-ETYMON-C18-GANTE-01",
+      "KA-PRAGMATICS-C18-GANTE-02",
+      "KA-GRAMMAR-C18-GANTE-03",
+      "KA-ETYMON-C20-HAVAMANA-01",
+      "KA-LEX-C20-HAVAMANA-02"
+    ]
+  }
+}

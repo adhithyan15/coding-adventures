@@ -1,0 +1,29 @@
+{
+  "chapter": 26,
+  "title": "The Body, Asking How You Are",
+  "label": "ch:pt-body-how-are-you",
+  "canDo": "I can name the eye, ear, mouth and heart in Portuguese with the right gender, and say what happened to each Latin root -- kept whole, folded by a sound law, or grown with a suffix.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "PT-C26-coracao",
+    "kind": "production",
+    "summary": "The chapter's last lesson closes the set with a one-table review of what happened to four body-part roots (kept, eroded, folded, grown), contrasts coracao's built nasal -ao against pao's and irmao's worn-down one, and reaches back to Chapter 2's Tudo bem/formal practice to give the wellbeing check-in something to answer with.",
+    "assesses": [
+      "PT-LEX-OLHO-02",
+      "PT-ETYMON-OLHO-03",
+      "PT-LEX-ORELHA-02",
+      "PT-ETYMON-ORELHA-03",
+      "PT-LEX-BOCA-02",
+      "PT-ETYMON-BOCA-03",
+      "PT-LEX-CORACAO-02",
+      "PT-ETYMON-CORACAO-03",
+      "PT-NOTICE-C26-CORPO-04",
+      "PT-LEX-C02-PRACTICE-02",
+      "PT-NOTICE-C02-PRACTICE-03",
+      "PT-LEX-FORMAL-PRACTICE-02",
+      "PT-GRAMMAR-MAO-04"
+    ]
+  }
+}

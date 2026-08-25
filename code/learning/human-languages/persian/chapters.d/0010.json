@@ -1,0 +1,26 @@
+{
+  "chapter": 10,
+  "title": "Mother, Father, Brother, Daughter",
+  "label": "ch:fa-family",
+  "canDo": "I can name my mother, father, brother, and daughter in Persian, the four secure English cousins Chapter 6 named without teaching.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "FA-C10-dokhtar",
+    "kind": "production",
+    "summary": "The chapter closes on dokhtar, daughter, then runs all four family words back to back and reuses the ezafe from esm-e man ast and kelid-e man to say dokhtar-e man, my daughter.",
+    "assesses": [
+      "FA-LEX-MADAR",
+      "FA-ETYMON-MADAR",
+      "FA-LEX-PEDAR",
+      "FA-ETYMON-PEDAR",
+      "FA-LEX-BARADAR",
+      "FA-ETYMON-BARADAR",
+      "FA-LEX-DOKHTAR",
+      "FA-ETYMON-DOKHTAR",
+      "FA-GRAMMAR-EZAFE-OWNER",
+      "FA-SCRIPT-ESM-MAN-AST"
+    ]
+  }
+}

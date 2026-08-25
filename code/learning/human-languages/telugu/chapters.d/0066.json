@@ -1,0 +1,21 @@
+{
+  "chapter": 66,
+  "title": "The Field",
+  "label": "ch:te-the-field",
+  "canDo": "I can name a Telugu field and what comes off it, and take my leave when the work is done.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "TE-C66-harvest",
+    "kind": "production",
+    "summary": "Complete TE-C66-harvest and demonstrate the chapter promise.",
+    "assesses": [
+      "TE-LEX-C66-FIELD-01",
+      "TE-LEX-C66-FIELD-02",
+      "TE-LEX-C66-FIELD-03",
+      "TE-LEX-C66-FIELD-04",
+      "TE-LEX-C66-FIELD-05"
+    ]
+  }
+}

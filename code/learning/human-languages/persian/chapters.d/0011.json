@@ -1,0 +1,32 @@
+{
+  "chapter": 11,
+  "title": "Eye, Hand, Foot, Tongue",
+  "label": "ch:fa-body",
+  "canDo": "I can name my eye, hand, foot, and tongue in Persian, and I can say zabân for both tongue and language — the word for the thing this whole track teaches.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "FA-C11-zaban",
+    "kind": "production",
+    "summary": "The chapter and the tranche close on zabân, tongue and language together, then run a short scene built from every chapter so far: the name exchange, the wellbeing question, this chapter's own requests and family and body words, and khodâhâfez to close.",
+    "assesses": [
+      "FA-LEX-CHESHM",
+      "FA-ETYMON-CHESHM",
+      "FA-LEX-DAST",
+      "FA-ETYMON-DAST",
+      "FA-LEX-PA",
+      "FA-ETYMON-PA",
+      "FA-LEX-ZABAN",
+      "FA-ETYMON-ZABAN",
+      "FA-SCRIPT-ZE",
+      "FA-SCRIPT-SHOMA-TO",
+      "FA-DIALOGUE-TAKE-LEAVE",
+      "FA-GRAMMAR-KHODAHAFEZ-ELLIPSIS",
+      "FA-SCRIPT-KHUBAM",
+      "FA-SCRIPT-CHETOR",
+      "FA-SCRIPT-HAL",
+      "FA-SCRIPT-ESM-MAN-AST"
+    ]
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "chapter": 22,
+  "title": "Green and Yellow",
+  "label": "ch:ar-green-and-yellow",
+  "canDo": "I can name green and yellow in Arabic and trace aṣfar to the same root as ṣifr, 'zero'.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C22-akhdar-asfar",
+    "kind": "production",
+    "summary": "Say akhḍar beside khuḍār, 'vegetables', then aṣfar beside ṣifr, and follow ṣifr into English zero and cipher.",
+    "assesses": [
+      "AR-CONCEPT-C22-AKHDAR-ASFAR-01",
+      "AR-CONCEPT-C22-AKHDAR-ASFAR-02"
+    ]
+  }
+}

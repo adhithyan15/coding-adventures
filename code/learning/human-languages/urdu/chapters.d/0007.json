@@ -1,0 +1,27 @@
+{
+  "chapter": 7,
+  "title": "Four Verbs of the Mind",
+  "label": "ch:ur-mind-verbs",
+  "canDo": "I can say that I think, understand, read and write in Urdu, take the -nā off each verb to reach its stem, and read the two-eyed he that turns a plain consonant into an aspirated one.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "UR-C07-likhna",
+    "kind": "production",
+    "summary": "The fourth verb arrives with no new letters at all: read لکھنا straight off, then run all four stems through maiṅ ...tā/tī hūṅ and sort the chapter's inherited verbs from the borrowed words for pen, book and script.",
+    "assesses": [
+      "UR-LEX-LIKHNA",
+      "UR-REGISTER-WRITING-BORROWED",
+      "UR-LEX-SOCHNA",
+      "UR-LEX-SAMAJHNA",
+      "UR-LEX-PARHNA",
+      "UR-SCRIPT-CHE-LETTER",
+      "UR-SCRIPT-DO-CHASHMI-HE",
+      "UR-SCRIPT-RRE-LETTER",
+      "UR-ETYMON-SOCHNA-GRIEVE",
+      "UR-ETYMON-SAMAJHNA-WAKE",
+      "UR-ETYMON-PARHNA-RECITE"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 104,
+  "title": "The Regular Preterite",
+  "label": "ch:spanish-preterito-regular",
+  "canDo": "I can say what I did with a regular -er or -ir verb, and place the written accent correctly.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "ES-C15-comer-vivir-preterite",
+    "kind": "task",
+    "summary": "-er and -ir agree again, and the accent marks the stressed final vowel.",
+    "assesses": [
+      "ES-GRAMMAR-ER-PRETERITE-SINGULAR",
+      "ES-GRAMMAR-IR-PRETERITE-SINGULAR",
+      "ES-GRAMMAR-ER-IR-PRETERITE-CONVERGENCE"
+    ]
+  }
+}

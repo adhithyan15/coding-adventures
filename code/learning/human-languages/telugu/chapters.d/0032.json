@@ -1,0 +1,23 @@
+{
+  "chapter": 32,
+  "title": "The Core Verbs",
+  "label": "ch:te-core-verbs",
+  "canDo": "I can build a Telugu verb as stem plus tense plus person, say why one form covers both \"I go\" and \"I will go\", give a polite command with -aṇḍi, and explain why ఉండు has to borrow its negative and తెలుసు has no person at all.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "TE-C32-telusu",
+    "kind": "production",
+    "summary": "Say నాకు తెలుసు, name the three slots that built uṇṭānu, veḷtānu and cūstānu, separate it from Chapter 6's నాకు తెలుగు వచ్చు — fact against skill — and recall that ఉండు switches to lē- to be negated.",
+    "assesses": [
+      "TE-LEX-C32-UNDU-01",
+      "TE-GRAMMAR-C32-UNDU-02",
+      "TE-LEX-C32-VELLU-01",
+      "TE-GRAMMAR-C32-VELLU-02",
+      "TE-LEX-C32-CUUDU-01",
+      "TE-LEX-C32-TELUSU-01",
+      "TE-GRAMMAR-C32-TELUSU-02"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 12,
+  "title": "Numbers Eleven to Twenty",
+  "label": "ch:it-numbers-eleven-to-twenty",
+  "canDo": "I can count from eleven to twenty in Italian and hear the ten jump to the front at diciassette.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "IT-C12-numeri-17-20",
+    "kind": "task",
+    "summary": "Run undici to venti, listen for the turn from se-dici to dici-assette where the ten moves to the front, and place Italian's break at 17 beside Portuguese's at 16.",
+    "assesses": [
+      "IT-GRAMMAR-NUMERI-11-16-02",
+      "IT-GRAMMAR-NUMERI-17-20-02",
+      "IT-NOTICE-NUMERI-17-20-03"
+    ]
+  }
+}

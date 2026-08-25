@@ -1,0 +1,21 @@
+{
+  "chapter": 64,
+  "title": "How Much and How Fast",
+  "label": "ch:hi-how-much-and-how-fast",
+  "canDo": "I can say how much and how fast in Hindi when I answer someone.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "HI-C64-more",
+    "kind": "production",
+    "summary": "Complete HI-C64-more and say all five words in order.",
+    "assesses": [
+      "HI-LEX-C64-MEASURE-01",
+      "HI-LEX-C64-MEASURE-02",
+      "HI-LEX-C64-MEASURE-03",
+      "HI-LEX-C64-MEASURE-04",
+      "HI-LEX-C64-MEASURE-05"
+    ]
+  }
+}

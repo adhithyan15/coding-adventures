@@ -1,0 +1,30 @@
+{
+  "chapter": 11,
+  "title": "Parting Words",
+  "label": "ch:russian-parting-words",
+  "canDo": "I can close a Russian conversation with the parting word that fits how long until I see the person again, and say good night.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "RU-C11-spokoynoy-nochi",
+    "kind": "production",
+    "summary": "The chapter closes on спокойной ночи, the last word of the day and the surest cognate in the chapter: the reader produces all six parting words in order, names ночь and покой's English cousins, and hears the до + genitive pattern that links five of the six. It is the first realization of SPINE-TAKE-LEAVE in this track, closing all six of the node's concepts, and it reaches back to Chapter 6 to rescue ф, х, чай, хлеб and the request pattern, nothing had revisited since.",
+    "assesses": [
+      "RU-LEX-DO-SVIDANIYA",
+      "RU-ETYMON-SVIDANIYA-VIDET",
+      "RU-GRAMMAR-DO-GENITIVE",
+      "RU-LEX-POKA",
+      "RU-ETYMON-POKA-KAKOI",
+      "RU-LEX-DO-SKOROGO",
+      "RU-ETYMON-SKORYI-HURRY",
+      "RU-LEX-DO-ZAVTRA",
+      "RU-ETYMON-ZAVTRA-DAWN",
+      "RU-LEX-DO-VSTRECHI",
+      "RU-ETYMON-VSTRECHA-NO-COUSIN",
+      "RU-LEX-SPOKOYNOY-NOCHI",
+      "RU-ETYMON-NOCH-NIGHT",
+      "RU-ETYMON-POKOY-QUIET"
+    ]
+  }
+}

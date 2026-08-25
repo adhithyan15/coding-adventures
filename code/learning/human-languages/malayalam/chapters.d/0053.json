@@ -1,0 +1,21 @@
+{
+  "chapter": 53,
+  "title": "Overhead",
+  "label": "ch:ml-overhead",
+  "canDo": "I can name the sky and four things in it in Malayalam.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "ML-C53-sunshine",
+    "kind": "production",
+    "summary": "Complete ML-C53-sunshine and say all five words in order.",
+    "assesses": [
+      "ML-LEX-C53-SKY-01",
+      "ML-LEX-C53-SKY-02",
+      "ML-LEX-C53-SKY-03",
+      "ML-LEX-C53-SKY-04",
+      "ML-LEX-C53-SKY-05"
+    ]
+  }
+}

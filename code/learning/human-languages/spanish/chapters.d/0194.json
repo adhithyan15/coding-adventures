@@ -1,0 +1,21 @@
+{
+  "chapter": 194,
+  "title": "Review --- Three Letters",
+  "label": "ch:review-hay",
+  "canDo": "I can use all three jobs of hay and say what it never does.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ES-C54-repaso-hay",
+    "kind": "task",
+    "summary": "Complete ES-C54-repaso-hay: give the three uses and say why a three-letter word needed four chapters.",
+    "assesses": [
+      "ES-LEX-HAY",
+      "ES-GRAMMAR-HAY-NO-AGREEMENT",
+      "ES-GRAMMAR-HAY-QUE",
+      "ES-ETYMON-HAY-IBI"
+    ],
+    "note": "Names the pattern: the smallest words need the most explaining, because constant use wears them into fossils that no longer explain themselves."
+  }
+}

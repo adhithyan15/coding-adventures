@@ -1,0 +1,21 @@
+{
+  "chapter": 39,
+  "title": "Animals",
+  "label": "ch:sa-animals",
+  "canDo": "I can name a cow, a bird, a fish, a dog and a snake in Sanskrit.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "SA-C39-snake",
+    "kind": "production",
+    "summary": "Complete SA-C39-snake and demonstrate the chapter promise.",
+    "assesses": [
+      "SA-LEX-C39-ANIMAL-01",
+      "SA-LEX-C39-ANIMAL-02",
+      "SA-LEX-C39-ANIMAL-03",
+      "SA-LEX-C39-ANIMAL-04",
+      "SA-LEX-C39-ANIMAL-05"
+    ]
+  }
+}

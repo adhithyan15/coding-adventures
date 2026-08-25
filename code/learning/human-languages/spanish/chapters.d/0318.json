@@ -1,0 +1,21 @@
+{
+  "chapter": 318,
+  "title": "Review --- Four Things Worth Saying Twice",
+  "label": "ch:repaso-pre-a1",
+  "canDo": "I can say goodbye for the short term, pick the right sorry, and say which noun's ending is lying to me.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE",
+    "SPINE-POLITE-REQUEST-REPAIR",
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "ES-C318-repaso-genero",
+    "kind": "task",
+    "summary": "Complete ES-C318-repaso-genero: place la cabeza, el vino and la mano by gender, then use the object pronoun to settle el agua.",
+    "assesses": [
+      "ES-LEX-MANO-01",
+      "ES-GRAMMAR-MANO-GENDER-02",
+      "ES-GRAMMAR-PRONOUN-REVEALS-GENDER"
+    ]
+  }
+}

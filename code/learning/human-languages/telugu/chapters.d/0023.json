@@ -1,0 +1,21 @@
+{
+  "chapter": 23,
+  "title": "Day",
+  "label": "ch:te-day",
+  "canDo": "I can say \"day\" in Telugu and choose between the everyday Persian loan and its formal Sanskrit alternate.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "TE-C23-roju",
+    "kind": "production",
+    "summary": "Say రోజు, a genuine Persian loan from rōz, and set it against the formal దినము — the mirror image of Kannada's plain dina.",
+    "assesses": [
+      "TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-01",
+      "TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-02",
+      "TE-GRAMMAR-C17-MADHYAAHNAM-ARDHARAATRI-03",
+      "TE-ETYMON-C23-ROJU-01",
+      "TE-PRAGMATICS-C23-ROJU-02"
+    ]
+  }
+}

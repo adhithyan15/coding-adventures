@@ -1,0 +1,19 @@
+{
+  "chapter": 15,
+  "title": "Weather",
+  "label": "ch:la-weather",
+  "canDo": "I can say it is raining, and name heat and sun in Latin, using its subjectless weather verbs.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "LA-C15-weather-verbs",
+    "kind": "task",
+    "summary": "Say pluit with no subject at all, then name calor and sol, and check the pl- to ll- path into llueve.",
+    "assesses": [
+      "LA-LEX-TEMPESTAS-PLUIT-01",
+      "LA-GRAMMAR-WEATHER-VERBS-01",
+      "LA-LEX-WEATHER-VERBS-02"
+    ]
+  }
+}

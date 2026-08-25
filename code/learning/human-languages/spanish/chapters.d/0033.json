@@ -1,0 +1,19 @@
+{
+  "chapter": 33,
+  "title": "Putting the -ar Verbs to Work",
+  "label": "ch:spanish-ar-practice",
+  "canDo": "I can use several -ar verbs in real sentences.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "ES-C06-practice",
+    "kind": "dialogue",
+    "summary": "The -ar present tense in action across the verbs of the last chapters.",
+    "assesses": [
+      "ES-LEX-TRABAJAR",
+      "ES-LEX-ESTUDIAR",
+      "ES-GRAMMAR-AR-PRESENT-SINGULAR"
+    ]
+  }
+}

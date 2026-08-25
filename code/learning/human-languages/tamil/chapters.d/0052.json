@@ -1,0 +1,21 @@
+{
+  "chapter": 52,
+  "title": "A Tree",
+  "label": "ch:ta-a-tree",
+  "canDo": "I can name a tree, its branch, its new shoot, its root and its seed in Tamil.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "TA-C52-seed",
+    "kind": "production",
+    "summary": "Complete TA-C52-seed and say all five words in order.",
+    "assesses": [
+      "TA-LEX-C52-TREE-01",
+      "TA-LEX-C52-TREE-02",
+      "TA-LEX-C52-TREE-03",
+      "TA-LEX-C52-TREE-04",
+      "TA-LEX-C52-TREE-05"
+    ]
+  }
+}

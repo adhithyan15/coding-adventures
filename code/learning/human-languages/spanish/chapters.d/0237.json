@@ -1,0 +1,17 @@
+{
+  "chapter": 237,
+  "title": "Comiendo, Viviendo --- Two Families, One Ending",
+  "label": "ch:comiendo",
+  "canDo": "I can form the gerund of any regular verb.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C62-comiendo",
+    "kind": "task",
+    "summary": "I can form the gerund of any regular verb.",
+    "assesses": [
+      "ES-GRAMMAR-GERUND-ER-IR"
+    ]
+  }
+}

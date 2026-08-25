@@ -1,0 +1,21 @@
+{
+  "chapter": 327,
+  "title": "Awake, Asleep, Strong, Weak",
+  "label": "ch:despierto-y-sano",
+  "canDo": "I can report on my body with despierto, dormido, fuerte, debil and sano, and say why a vowel breaks in duermo but not in dormido.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "ES-C327-sano",
+    "kind": "production",
+    "summary": "Complete ES-C327-sano: say estoy despierto and estoy dormido, put fuerte against debil, and close with sano y salvo.",
+    "assesses": [
+      "ES-LEX-C327-STATE-16",
+      "ES-LEX-C327-STATE-17",
+      "ES-LEX-C327-STATE-18",
+      "ES-LEX-C327-STATE-19",
+      "ES-LEX-C327-STATE-20"
+    ]
+  }
+}

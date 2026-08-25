@@ -1,0 +1,18 @@
+{
+  "chapter": 98,
+  "title": "Me Lo --- Both at Once",
+  "label": "ch:double-object-order",
+  "canDo": "I can put two object pronouns in front of one verb, in the right order.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C47-me-lo",
+    "kind": "task",
+    "summary": "Complete ES-C47-me-lo: produce te lo digo and me la haces, and say which pronoun leads.",
+    "assesses": [
+      "ES-GRAMMAR-DOUBLE-OBJECT-ORDER"
+    ],
+    "note": "No new pronoun. The fixed order is smaller to learn than English's free one, and the lesson says so."
+  }
+}

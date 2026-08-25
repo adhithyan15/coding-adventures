@@ -1,0 +1,19 @@
+{
+  "chapter": 37,
+  "title": "Synthesis --- Asking, and Answering",
+  "label": "ch:spanish-synthesis-three-families",
+  "canDo": "I can hold a short exchange about what someone drinks and where they live, using all three verb families.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C07-sintesis-preguntar",
+    "kind": "dialogue",
+    "summary": "Three families and two question words, and every word in the dialogue self-built.",
+    "assesses": [
+      "ES-GRAMMAR-AR-PRESENT-SINGULAR",
+      "ES-GRAMMAR-ER-PRESENT-SINGULAR",
+      "ES-GRAMMAR-IR-PRESENT-SINGULAR"
+    ]
+  }
+}

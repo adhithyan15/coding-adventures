@@ -1,0 +1,21 @@
+{
+  "chapter": 47,
+  "title": "Salt, Honey, Milk, Egg, Fish",
+  "label": "ch:la-mensa",
+  "canDo": "I can name five things on a Latin table, and I can use Grimm's Law to tell an inherited English cousin from a borrowed Latin loan.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "LA-C47-piscis",
+    "kind": "task",
+    "summary": "The fifth word of the group, taken apart against the four before it.",
+    "assesses": [
+      "LA-LEX-C47-TABLE-01",
+      "LA-LEX-C47-TABLE-02",
+      "LA-LEX-C47-TABLE-03",
+      "LA-LEX-C47-TABLE-04",
+      "LA-LEX-C47-TABLE-05"
+    ]
+  }
+}

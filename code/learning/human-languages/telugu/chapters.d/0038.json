@@ -1,0 +1,21 @@
+{
+  "chapter": 38,
+  "title": "The Heart, Two Ways",
+  "label": "ch:te-heart",
+  "canDo": "I can name my heart in Telugu two ways, the everyday native word and the literary Sanskrit loan, and trace the Sanskrit one to the same Proto-Indo-European root as the English word heart.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "TE-C38-hrudayam",
+    "kind": "production",
+    "summary": "Say నా గుండె and నా హృదయం నీది, set the everyday native word beside the literary Sanskrit loan, and trace హృదయం to the same PIE root as English heart, Latin cor and Greek kardía.",
+    "assesses": [
+      "TE-LEX-C37-NORU-01",
+      "TE-LEX-C38-GUNDE-01",
+      "TE-ETYMON-C38-GUNDE-02",
+      "TE-LEX-C38-HRUDAYAM-01",
+      "TE-ETYMON-C38-HRUDAYAM-02"
+    ]
+  }
+}

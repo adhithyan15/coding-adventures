@@ -1,0 +1,24 @@
+{
+  "chapter": 9,
+  "title": "Answering, and Handing It Back",
+  "label": "ch:answering",
+  "canDo": "I can answer how I am, choose my register, and return the question.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "ES-C04-repaso-estar",
+    "kind": "dialogue",
+    "summary": "The answer, the register choice inside it, and handing the question back.",
+    "assesses": [
+      "ES-LEX-COMO-ESTAS",
+      "ES-GRAMMAR-ESTAR-REGISTER-CONTRAST",
+      "ES-LEX-REGULAR",
+      "ES-LEX-MAS-O-MENOS",
+      "ES-ETYMON-REGULA",
+      "ES-LEX-Y",
+      "ES-PRAGMATICS-AND-YOU",
+      "ES-ETYMON-ET"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "chapter": 111,
+  "title": "Hablaba and Hablo --- Two Ways of Looking",
+  "label": "ch:aspect-not-time",
+  "canDo": "I can say that the two past tenses differ in viewpoint rather than in time.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "ES-C48-dos-miradas",
+    "kind": "task",
+    "summary": "Complete ES-C48-dos-miradas: say whether the two pasts differ in when, and identify which one views an event from outside.",
+    "assesses": [
+      "ES-GRAMMAR-ASPECT-NOT-TIME",
+      "ES-GRAMMAR-AR-PRETERITE-SINGULAR",
+      "ES-GRAMMAR-AR-IMPERFECT-SINGULAR"
+    ],
+    "note": "No new form. The chapter's work is to stop the reader looking for a rule about time, because there is not one."
+  }
+}

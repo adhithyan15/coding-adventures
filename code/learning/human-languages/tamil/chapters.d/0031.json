@@ -1,0 +1,18 @@
+{
+  "chapter": 31,
+  "title": "Good Afternoon",
+  "label": "ch:ta-good-afternoon",
+  "canDo": "I can greet someone with மதிய வணக்கம் around midday and say which word the மதிய inside it actually comes from — noon, not afternoon.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "TA-C31-afternoon-greeting-root",
+    "kind": "production",
+    "summary": "Greet with matiya vaṇakkam, trace matiyam back to madhya \"middle,\" and keep pirpakal as the separate after-plus-daytime word.",
+    "assesses": [
+      "TA-ETYMON-MATIYA-VANAKKAM-01",
+      "TA-ETYMON-AFTERNOON-GREETING-ROOT-01"
+    ]
+  }
+}

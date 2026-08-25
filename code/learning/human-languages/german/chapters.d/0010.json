@@ -1,0 +1,16 @@
+{
+  "chapter": 10,
+  "title": "Family",
+  "label": "ch:family",
+  "canDo": "I can identify close family members in German and say who someone is.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "GE-C10-geschwister",
+    "kind": "task",
+    "summary": "Complete GE-C10-geschwister, the canonical closing checkpoint, and demonstrate the chapter promise: identify close family members in German and say who someone is.",
+    "assesses": [],
+    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+  }
+}

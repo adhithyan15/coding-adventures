@@ -1,0 +1,21 @@
+{
+  "chapter": 22,
+  "title": "Dog and Cat",
+  "label": "ch:ge-dog-and-cat",
+  "canDo": "I can name a dog and a cat in German and say which of the two words German inherited and which one it borrowed.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C22-hund-katze",
+    "kind": "production",
+    "summary": "Say Hund beside English hound and the unexplained dog that displaced it, then say Katze and admit it is the borrowed Late Latin cattus — widespread, but not universal: Romanian pisică and Serbian mačka went their own way. The chapter's only lesson, so the payoff covers everything it introduces.",
+    "assesses": [
+      "GE-LEX-HUND-02",
+      "GE-ETYMON-HUND-03",
+      "GE-LEX-KATZE-04",
+      "GE-ETYMON-KATZE-05",
+      "GE-EVIDENCE-CAT-WORDS-06"
+    ]
+  }
+}

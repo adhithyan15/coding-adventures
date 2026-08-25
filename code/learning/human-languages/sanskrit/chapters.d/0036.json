@@ -1,0 +1,21 @@
+{
+  "chapter": 36,
+  "title": "More Short Replies",
+  "label": "ch:sa-replies-more",
+  "canDo": "I can say also, all, likewise, slowly and rightly in Sanskrit, and use any of the five on its own as a reply.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "SA-C36-rightly",
+    "kind": "production",
+    "summary": "Complete SA-C36-rightly and demonstrate the chapter promise.",
+    "assesses": [
+      "SA-LEX-C36-REPLY-01",
+      "SA-LEX-C36-REPLY-02",
+      "SA-LEX-C36-REPLY-03",
+      "SA-LEX-C36-REPLY-04",
+      "SA-LEX-C36-REPLY-05"
+    ]
+  }
+}

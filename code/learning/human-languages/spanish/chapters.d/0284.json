@@ -1,0 +1,21 @@
+{
+  "chapter": 284,
+  "title": "Five Short Answers --- Agreed, Sure, True, Exactly, Of Course",
+  "label": "ch:respuestas-cortas",
+  "canDo": "I can answer someone in Spanish with a single short phrase, and say what is inside each one.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "ES-C284-por-supuesto",
+    "kind": "production",
+    "summary": "Complete ES-C284-por-supuesto: give all five answers in order, and name the Latin verb inside each.",
+    "assesses": [
+      "ES-LEX-C284-REPLY-01",
+      "ES-LEX-C284-REPLY-02",
+      "ES-LEX-C284-REPLY-03",
+      "ES-LEX-C284-REPLY-04",
+      "ES-LEX-C284-REPLY-05"
+    ]
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "chapter": 9,
+  "title": "Four Core Colours",
+  "label": "ch:ar-core-colours",
+  "canDo": "I can name black, white, red and blue in Arabic and give each colour's feminine form.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C09-ahmar-azraq",
+    "kind": "production",
+    "summary": "Run the four colours in the masculine, then again in the feminine -- ḥamrāʾ, zarqāʾ -- on the same template.",
+    "assesses": [
+      "AR-CONCEPT-C09-AHMAR-AZRAQ-01",
+      "AR-CONCEPT-C09-AHMAR-AZRAQ-02"
+    ]
+  }
+}

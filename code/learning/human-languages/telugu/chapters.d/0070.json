@@ -1,0 +1,21 @@
+{
+  "chapter": 70,
+  "title": "Small Creatures",
+  "label": "ch:te-small-creatures",
+  "canDo": "I can name five small Telugu creatures and answer yes or no about them.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "TE-C70-spider",
+    "kind": "production",
+    "summary": "Complete TE-C70-spider and demonstrate the chapter promise.",
+    "assesses": [
+      "TE-LEX-C70-CREATURE-01",
+      "TE-LEX-C70-CREATURE-02",
+      "TE-LEX-C70-CREATURE-03",
+      "TE-LEX-C70-CREATURE-04",
+      "TE-LEX-C70-CREATURE-05"
+    ]
+  }
+}

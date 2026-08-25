@@ -1,0 +1,21 @@
+{
+  "chapter": 50,
+  "title": "Taking Your Leave",
+  "label": "ch:ka-leave-more",
+  "canDo": "I can take my leave in Kannada and say when I will be back, and explain why the word for the farewell itself is built on the verb for giving.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "KA-C50-farewell",
+    "kind": "production",
+    "summary": "Complete KA-C50-farewell and say all five words in order.",
+    "assesses": [
+      "KA-LEX-C50-LEAVE-01",
+      "KA-LEX-C50-LEAVE-02",
+      "KA-LEX-C50-LEAVE-03",
+      "KA-LEX-C50-LEAVE-04",
+      "KA-LEX-C50-LEAVE-05"
+    ]
+  }
+}

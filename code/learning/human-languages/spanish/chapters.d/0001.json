@@ -1,0 +1,23 @@
+{
+  "chapter": 1,
+  "title": "Hola and Buenos Días",
+  "label": "ch:first-words",
+  "canDo": "I can greet someone in Spanish, say how I am, and wish them a good day.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "ES-C01-practice",
+    "kind": "dialogue",
+    "summary": "A short doorway greeting: hola, an answer to how you are, and buenos días on the way in.",
+    "assesses": [
+      "ES-LEX-HOLA",
+      "ES-LEX-BIEN",
+      "ES-LEX-DIA",
+      "ES-LEX-BUENOS-DIAS",
+      "ES-MORPH-BUENO-BUENA",
+      "ES-GRAMMAR-NOUN-GENDER",
+      "ES-GRAMMAR-NOUN-NUMBER"
+    ]
+  }
+}

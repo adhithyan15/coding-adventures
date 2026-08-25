@@ -1,0 +1,26 @@
+{
+  "chapter": 5,
+  "title": "Taking, Asking, Helping, Loving",
+  "label": "ch:russian-verbs-of-the-hand",
+  "canDo": "I can say I take, ask, help and love in Russian, put any verb I own after люблю as a bare infinitive, and tell a suppletive aspect pair like брать·взять from an ordinary one like спрашивать·спросить.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "RU-C05-lyubit",
+    "kind": "task",
+    "summary": "Say я люблю with its inserted л, then run every verb you own through it — я люблю читать, писать, помогать, жить — and close by naming the chapter's four partners and picking out взять as the one built from a different root.",
+    "assesses": [
+      "RU-LEX-BRAT",
+      "RU-ETYMON-BRAT-BEAR",
+      "RU-GRAMMAR-SUPPLETIVE-ASPECT-PAIR",
+      "RU-LEX-SPRASHIVAT",
+      "RU-ETYMON-SPRASHIVAT-PRAY",
+      "RU-LEX-POMOGAT",
+      "RU-ETYMON-POMOGAT-MIGHT",
+      "RU-LEX-LYUBIT",
+      "RU-GRAMMAR-L-EPENTHESIS",
+      "RU-ETYMON-LYUBIT-LOVE"
+    ]
+  }
+}

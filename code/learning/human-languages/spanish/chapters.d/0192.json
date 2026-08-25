@@ -1,0 +1,18 @@
+{
+  "chapter": 192,
+  "title": "Ha + Y --- The Fossil in a Three-Letter Word",
+  "label": "ch:hay-etymology",
+  "canDo": "I can say what hay is made of and name the French phrase built from the same pieces.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ES-C54-ha-mas-y",
+    "kind": "task",
+    "summary": "Complete ES-C54-ha-mas-y: name the two pieces, say where else the y appears, and name the French equivalent.",
+    "assesses": [
+      "ES-ETYMON-HAY-IBI"
+    ],
+    "note": "The y is Latin ibi, 'there', a word Spanish otherwise lost completely; it survives only because it was welded to a verb. French kept it separate as il y a."
+  }
+}

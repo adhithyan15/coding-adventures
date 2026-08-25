@@ -1,0 +1,20 @@
+{
+  "chapter": 16,
+  "title": "Your First Verb, and the Form That Means I",
+  "label": "ch:first-verb",
+  "canDo": "I can say what I do, in one word, with no pronoun at all.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "ES-C06-pro-drop",
+    "kind": "dialogue",
+    "summary": "One word, one whole sentence — and why English cannot do the same.",
+    "assesses": [
+      "ES-LEX-HABLAR",
+      "ES-ETYMON-FABULARI",
+      "ES-GRAMMAR-AR-PRESENT-1SG",
+      "ES-GRAMMAR-PRO-DROP"
+    ]
+  }
+}

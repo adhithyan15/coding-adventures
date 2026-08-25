@@ -1,0 +1,21 @@
+{
+  "chapter": 50,
+  "title": "Taking Your Leave",
+  "label": "ch:te-leave-more",
+  "canDo": "I can take my leave in Telugu the way a Telugu speaker actually does, and say why the flat \"I am going\" is the one thing never said at a door.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "TE-C50-farewell",
+    "kind": "production",
+    "summary": "Complete TE-C50-farewell and demonstrate the chapter promise.",
+    "assesses": [
+      "TE-LEX-C50-LEAVE-01",
+      "TE-LEX-C50-LEAVE-02",
+      "TE-LEX-C50-LEAVE-03",
+      "TE-LEX-C50-LEAVE-04",
+      "TE-LEX-C50-LEAVE-05"
+    ]
+  }
+}

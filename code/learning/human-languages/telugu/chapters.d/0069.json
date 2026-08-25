@@ -1,0 +1,21 @@
+{
+  "chapter": 69,
+  "title": "Tools",
+  "label": "ch:te-tools",
+  "canDo": "I can name five Telugu tools and ask politely to borrow one.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "TE-C69-stick",
+    "kind": "production",
+    "summary": "Complete TE-C69-stick and demonstrate the chapter promise.",
+    "assesses": [
+      "TE-LEX-C69-TOOL-01",
+      "TE-LEX-C69-TOOL-02",
+      "TE-LEX-C69-TOOL-03",
+      "TE-LEX-C69-TOOL-04",
+      "TE-LEX-C69-TOOL-05"
+    ]
+  }
+}
