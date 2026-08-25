@@ -36,17 +36,23 @@ describe("Dravidian syllabaries are registered and abugida-shaped", () => {
   }
 });
 
-describe("every syllable is recognition-ready and ductus-free", () => {
+describe("every syllable is recognition-ready and only atomic parts may own ductus", () => {
   for (const id of IDS) {
-    it(`${id}: non-empty glyph + sound, role 'syllable', and NO stroke order`, () => {
+    it(`${id}: non-empty glyph + sound, syllable role, and no composed-syllable ductus`, () => {
       for (const l of byId(id).letters) {
         expect(l.glyph.length).toBeGreaterThan(0);
         expect(l.sound.length).toBeGreaterThan(0);
         expect(l.role).toBe("syllable");
-        // CONTROL: stroke order stays paused (recognition only). If ductus data
-        // ever leaked into the generated syllabary, this fails.
-        expect(l.strokeOrder).toEqual([]);
         expect(l.components.length).toBeGreaterThan(0);
+        // A base consonant is an atomic shape and may cross the source gate.
+        // A composed base-plus-vowel-sign syllable must never receive its own
+        // invented path: the learner assembles it from the verified parts.
+        if (l.components.length > 1) expect(l.strokeOrder).toEqual([]);
+        if (l.strokeOrder.length > 0) {
+          expect(l.components).toHaveLength(1);
+          expect(l.penLifts).toBeTypeOf("number");
+          expect(l.strokeOrderSource).toBeDefined();
+        }
       }
     });
   }

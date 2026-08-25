@@ -96,3 +96,21 @@ describe("atomic final consonants", () => {
     }
   });
 });
+
+describe("source-verified base consonants", () => {
+  it("keeps Malayalam ഴ as a complete sourced row in the syllable matrix", () => {
+    const malayalam = SCRIPTS.find((script) => script.script === "malayalam")!;
+    const zha = malayalam.letters.find((entry) => entry.glyph === "ഴ")!;
+    expect(zha.sound).toBe("ḻa");
+    expect(zha.penLifts).toBe(0);
+    expect(zha.strokeOrder).toHaveLength(3);
+    expect(zha.strokeOrderSource?.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Ml_%E0%B4%B4_order.gif",
+    );
+    const matrix = buildSyllableMatrix(malayalam.letters as never)!;
+    const zhaRow = matrix.rows.find((row) => row.cells[0]?.glyph === "ഴ")!;
+    expect(zhaRow.cells.map((cell) => cell.glyph)).toEqual([
+      "ഴ", "ഴാ", "ഴി", "ഴീ", "ഴു", "ഴൂ", "ഴെ", "ഴേ", "ഴൊ", "ഴോ", "ഴൈ", "ഴൌ", "ഴൃ",
+    ]);
+  });
+});

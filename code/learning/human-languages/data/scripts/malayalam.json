@@ -5587,6 +5587,172 @@
       ],
       "strokeOrder": [],
       "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഴ",
+      "sound": "ḻa",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഴ  ḻa — base consonant (inherent “a”)"
+      ],
+      "strokeOrder": [
+        "descend around the left entry arch and sweep right into the lower junction",
+        "without lifting, turn clockwise around the right loop and return through its inner side",
+        "without lifting, descend through the inner return and curl left around the lower hook"
+      ],
+      "strokeOrderNote": "Three visible movements in one continuous pen-down run: the left arch flows directly into the right loop, whose inner return descends and finishes in the lower hook.",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "Sriveenkat, Ml ഴ order.gif, Malayalam letter LLLA stroke-order animation, 00:03.0–00:07.4 (Wikimedia Commons, 1 July 2023)",
+        "url": "https://commons.wikimedia.org/wiki/File:Ml_%E0%B4%B4_order.gif",
+        "variation": "The 47-frame Gayathri-font animation writes ഴ in one uninterrupted run: left entry arch, clockwise right loop, then the descending inner return and lower hook. This is one attested pedagogical order fitted to the bundled Noto Sans Malayalam outline."
+      },
+      "notes": "Malayalam letter LLLA (U+0D34), romanized ḻa in ISO 15919; a base consonant carrying inherent a."
+    },
+    {
+      "glyph": "ഴാ",
+      "sound": "ḻā",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഴ  ḻa — base consonant",
+        "ാ  “ā” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഴി",
+      "sound": "ḻi",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഴ  ḻa — base consonant",
+        "ി  “i” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഴീ",
+      "sound": "ḻī",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഴ  ḻa — base consonant",
+        "ീ  “ī” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഴു",
+      "sound": "ḻu",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഴ  ḻa — base consonant",
+        "ു  “u” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഴൂ",
+      "sound": "ḻū",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഴ  ḻa — base consonant",
+        "ൂ  “ū” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഴെ",
+      "sound": "ḻe",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഴ  ḻa — base consonant",
+        "െ  “e” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഴേ",
+      "sound": "ḻē",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഴ  ḻa — base consonant",
+        "േ  “ē” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഴൊ",
+      "sound": "ḻo",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഴ  ḻa — base consonant",
+        "ൊ  “o” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഴോ",
+      "sound": "ḻō",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഴ  ḻa — base consonant",
+        "ോ  “ō” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഴൈ",
+      "sound": "ḻai",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഴ  ḻa — base consonant",
+        "ൈ  “ai” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഴൌ",
+      "sound": "ḻau",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഴ  ḻa — base consonant",
+        "ൌ  “au” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഴൃ",
+      "sound": "ḻr̥",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഴ  ḻa — base consonant",
+        "ൃ  “r̥” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
     }
   ],
   "independentVowels": [

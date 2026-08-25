@@ -285,7 +285,9 @@ const kannadaIndependentVowelSource = (glyph: string): StrokeSource => {
 };
 
 const malayalamAlphabetSource = (glyph: string): StrokeSource => {
-  const letter = malayalam.finalConsonants.find((candidate) => candidate.glyph === glyph);
+  const letter = [...malayalam.letters, ...malayalam.finalConsonants].find(
+    (candidate) => candidate.glyph === glyph,
+  );
   if (!letter || !("strokeOrderSource" in letter) || !letter.strokeOrderSource) {
     throw new Error(`Malayalam ${glyph} has no verified source`);
   }
@@ -13854,6 +13856,66 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: malayalamAlphabetSource("ൻ"),
+  },
+  // Sriveenkat's 47-frame animation draws ഴ as one uninterrupted run: the
+  // left entry arch reaches the lower junction, turns clockwise around the
+  // right loop, and descends through its inner return into the lower hook.
+  [ductusKey("malayalam", "ഴ")]: {
+    script: "malayalam",
+    glyph: "ഴ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "descend around the left entry arch and sweep right into the lower junction",
+            path: [
+              { x: 92, y: 525 },
+              { x: 65, y: 480 },
+              { x: 58, y: 420 },
+              { x: 68, y: 360 },
+              { x: 105, y: 300 },
+              { x: 165, y: 245 },
+              { x: 235, y: 210 },
+              { x: 300, y: 190 },
+              { x: 350, y: 185 },
+            ],
+          },
+          {
+            label: "turn clockwise around the right loop and return through its inner side",
+            path: [
+              { x: 350, y: 185 },
+              { x: 430, y: 190 },
+              { x: 500, y: 245 },
+              { x: 555, y: 330 },
+              { x: 572, y: 410 },
+              { x: 550, y: 475 },
+              { x: 500, y: 525 },
+              { x: 440, y: 535 },
+              { x: 385, y: 515 },
+              { x: 335, y: 470 },
+              { x: 305, y: 410 },
+              { x: 310, y: 350 },
+              { x: 340, y: 290 },
+              { x: 385, y: 225 },
+            ],
+          },
+          {
+            label: "descend through the inner return and curl left around the lower hook",
+            path: [
+              { x: 385, y: 225 },
+              { x: 395, y: 165 },
+              { x: 390, y: 110 },
+              { x: 355, y: 60 },
+              { x: 300, y: 30 },
+              { x: 235, y: 25 },
+              { x: 175, y: 38 },
+              { x: 125, y: 60 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: malayalamAlphabetSource("ഴ"),
   },
   எ: {
     script: "tamil",

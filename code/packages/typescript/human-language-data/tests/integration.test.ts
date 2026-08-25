@@ -39,7 +39,7 @@ describe("real curriculum", () => {
     expect(scripts.devanagari!.complete).toBe(true);
   });
 
-  it("keeps the cross-script closure queue measured after Malayalam chillu ൻ", () => {
+  it("keeps the cross-script closure queue measured after Malayalam ഴ", () => {
     const candrakkala = scripts.malayalam!.marks!.find((mark) => mark.mark === "്")!;
     expect(candrakkala.role).toBe("virama");
     expect(candrakkala.compositionOrder).toEqual([
@@ -250,6 +250,23 @@ describe("real curriculum", () => {
       /67-frame Gayathri-font animation.*left arch.*central stem.*lifts once.*right outer loop.*inner return.*hook above the line.*Noto Sans Malayalam/i,
     );
     expect(malayalamChilluN.notes).toMatch(/U\+0D7B.*vowel-free final consonant.*not the base ന/i);
+
+    const malayalamZha = scripts.malayalam!.letters.find((entry) => entry.glyph === "ഴ")!;
+    expect(malayalamZha.sound).toBe("ḻa");
+    expect(malayalamZha.role).toBe("syllable");
+    expect(malayalamZha.penLifts).toBe(0);
+    expect(malayalamZha.strokeOrder).toHaveLength(3);
+    expect(malayalamZha.strokeOrderNote).toMatch(/three visible movements.*one continuous pen-down run/i);
+    expect(malayalamZha.strokeOrderSource?.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Ml_%E0%B4%B4_order.gif",
+    );
+    expect(malayalamZha.strokeOrderSource?.citation).toMatch(
+      /Sriveenkat.*Ml ഴ order\.gif.*letter LLLA.*00:03\.0.?00:07\.4.*Wikimedia Commons.*1 July 2023/i,
+    );
+    expect(malayalamZha.strokeOrderSource?.variation).toMatch(
+      /47-frame Gayathri-font animation.*one uninterrupted run.*left entry arch.*clockwise right loop.*inner return.*lower hook.*Noto Sans Malayalam/i,
+    );
+    expect(malayalamZha.notes).toMatch(/U\+0D34.*ISO 15919.*base consonant.*inherent a/i);
 
     const tamilIndependentE = scripts.tamil!.letters.find((entry) => entry.glyph === "எ")!;
     expect(tamilIndependentE.sound).toBe("e");
@@ -590,11 +607,13 @@ describe("real curriculum", () => {
     expect(affected.get("ൽ") ?? 0).toBe(0);
     expect(missingByScript.get("malayalam.json")?.has("ൻ")).toBe(false);
     expect(affected.get("ൻ") ?? 0).toBe(0);
+    expect(missingByScript.get("malayalam.json")?.has("ഴ")).toBe(false);
+    expect(affected.get("ഴ") ?? 0).toBe(0);
     expect(missingByScript.get("kannada.json")?.has("ಅ")).toBe(false);
     expect(affected.get("ಅ") ?? 0).toBe(0);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["ഴ", 11]);
+    ).toEqual(["உ", 11]);
   });
 
   it("loaded every track (17+ and growing)", () => {
