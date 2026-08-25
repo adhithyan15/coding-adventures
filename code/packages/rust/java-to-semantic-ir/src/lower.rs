@@ -27,7 +27,7 @@
 //! synthesized SIR `main` [`Function`], it does not yet lower the *class*
 //! declaration itself into a `Stmt::NominalClassDef` at all.
 
-use parser::grammar_parser::{find_nodes, ASTNodeOrToken, GrammarASTNode};
+use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 use semantic_ir::{
     Block, EffectSet, Expr, Feature, FeatureManifest, Function, Metadata, Module, Span, Stmt,
 };
@@ -101,9 +101,10 @@ impl Lowerer {
             ));
         }
 
-        let class_decls = find_nodes(program, "class_declaration");
+        let mut class_decls = Vec::new();
+        collect_bounded(program, "class_declaration", 0, self, &mut class_decls)?;
         let class_decl = match class_decls.as_slice() {
-            [only] => only,
+            [only] => *only,
             [] => return Err(self.err_at(program, "expected one top-level class declaration, found none (JV02 M0 supports exactly one)".to_string())),
             _ => return Err(self.err_at(program, format!("expected exactly one top-level class declaration, found {} (JV02 M0 supports exactly one)", class_decls.len()))),
         };
@@ -162,11 +163,13 @@ impl Lowerer {
     /// scope is exactly this one entry-point shape.
     ///
     /// Hand-written recursive search rather than
-    /// `parser::grammar_parser::find_nodes` (used elsewhere in this file
-    /// for the top-level `class_declaration` search): that helper returns
-    /// owned `GrammarASTNode` clones, which can't be borrowed back into
-    /// `class_decl`'s own tree — this search instead walks `class_decl`
-    /// directly and returns a real borrow.
+    /// `parser::grammar_parser::find_nodes` (that shared helper is
+    /// unguarded — see [`collect_bounded`]'s own doc comment for why this
+    /// crate cannot use it on a raw, possibly-adversarial tree — and
+    /// returns owned `GrammarASTNode` clones besides, which can't be
+    /// borrowed back into `class_decl`'s own tree): this search instead
+    /// walks `class_decl` directly, depth-guarded, and returns a real
+    /// borrow.
     ///
     /// Depth-guarded like `descend_to_literal` (see that method's own doc
     /// comment for why this crate doesn't rely on the upstream parser's
@@ -387,4 +390,40 @@ fn child_nodes(node: &GrammarASTNode) -> Vec<&GrammarASTNode> {
             ASTNodeOrToken::Token(_) => None,
         })
         .collect()
+}
+
+/// Depth-guarded pre-order collection of every node named `rule_name`
+/// under `node` (inclusive). Deliberately hand-written rather than using
+/// the shared `parser::grammar_parser::find_nodes` helper: that function
+/// has no depth cap of its own, and `compile()` — the caller that
+/// ultimately reaches this — is a public entry point accepting a raw
+/// `GrammarASTNode` directly, not only one produced by `parse_java`'s own
+/// `MAX_RULE_DEPTH`-capped parser. Calling the unguarded shared helper on
+/// a possibly-adversarial tree would reintroduce the exact CWE-674
+/// uncontrolled-recursion DoS this crate's own `MAX_TREE_DEPTH` guard
+/// (see `find_main_method`'s identically-reasoned `search` helper) exists
+/// to prevent — found by `/security-review` as a second, earlier-executing
+/// instance of the same gap before this crate shipped.
+fn collect_bounded<'a>(
+    node: &'a GrammarASTNode,
+    rule_name: &str,
+    depth: usize,
+    lowerer: &Lowerer,
+    out: &mut Vec<&'a GrammarASTNode>,
+) -> Result<(), JavaLowerError> {
+    if depth >= MAX_TREE_DEPTH {
+        return Err(lowerer.err_at(
+            node,
+            format!("tree nesting exceeds {MAX_TREE_DEPTH} levels"),
+        ));
+    }
+    if node.rule_name == rule_name {
+        out.push(node);
+    }
+    for child in &node.children {
+        if let ASTNodeOrToken::Node(n) = child {
+            collect_bounded(n, rule_name, depth + 1, lowerer, out)?;
+        }
+    }
+    Ok(())
 }

@@ -279,3 +279,27 @@ fn deeply_nested_class_body_reports_depth_error_not_stack_overflow() {
         err.message
     );
 }
+
+/// The top-level `class_declaration` search (in `lower_program`, before
+/// `find_main_method` ever runs) must be depth-guarded too — a second,
+/// earlier-executing instance of the same CWE-674 gap `/security-review`
+/// found: `parser::grammar_parser::find_nodes` (originally used here) has
+/// no depth cap of its own. This tree has NO `class_declaration` or
+/// `method_declaration` anywhere, so a pre-fix version would recurse to
+/// the bottom of the whole 500-level chain before ever producing any
+/// error at all.
+#[test]
+fn deeply_nested_tree_with_no_class_declaration_reports_depth_error() {
+    let mut inner = node("leaf", vec![]);
+    for _ in 0..500 {
+        inner = node("wrapper", vec![ASTNodeOrToken::Node(inner)]);
+    }
+    let program = node("program", vec![ASTNodeOrToken::Node(inner)]);
+
+    let err = compile(&program, "prog").unwrap_err();
+    assert!(
+        err.message.contains("nesting exceeds"),
+        "expected a depth-exceeded error, got: {}",
+        err.message
+    );
+}
