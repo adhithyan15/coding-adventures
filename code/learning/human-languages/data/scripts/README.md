@@ -266,7 +266,11 @@ remains Persian-scoped rather than borrowing the independently verified Arabic
 or Urdu path for the same Unicode glyph. The later **س** row at 01:29–01:35 keeps
 its three right-to-left teeth and final bowl in one unbroken movement; its
 two-part learner path has zero lifts and stays on the vendored isolated Noto
-Naskh outline. The later **ل** demonstration at 02:29–02:32 descends its tall
+Naskh outline. Persian **ف** at 02:09–02:13 loops its small closed head
+clockwise, continues left through the broad bowl without lifting, then lifts
+once for the upper dot. Its script-owned source remains distinct from the
+separately verified Arabic and Urdu records for the same Unicode glyph. The
+later **ل** demonstration at 02:29–02:32 descends its tall
 upright and turns directly into the leftward base curve in the same unbroken
 movement; its two-part learner path has zero lifts and remains on the vendored
 isolated Noto Naskh outline. The source-adjacent **م** demonstration at
@@ -314,7 +318,13 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   that **س** body first, then place the lower-left, lower-right, and centered
   upper dots as three separately lifted strokes. The learner path preserves the
   chapter's two-below/one-above arrangement, centered dots, and optional
-  toothless body. Urdu **ک** returns to Chapter 1: both independent animations
+  toothless body. Urdu **ف** then follows from Chapter 8: its independent
+  handwriting animation loops the rounded head clockwise above the main line,
+  continues left through the shallow curved tail without lifting, then places
+  the single dot after one lift. The prose preserves the looped handwritten
+  head, optional solid calligraphic head, and tail depth between kāf and nūn;
+  Urdu provenance remains distinct from Persian and Arabic **ف**. Urdu **ک**
+  returns to Chapter 1: both independent animations
   and the prose write the main-line stem, flatter bowl, and pronounced final
   hook in one run, then lift once for the long downward slash from the upper
   right toward the stem. The learner path preserves the explicit warning not to

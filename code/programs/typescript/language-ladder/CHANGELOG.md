@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased — source-verified Persian and Urdu feh
+
+- Teach Persian and Urdu **ف** with independently cited one-lift paths.
+- Preserve their script-scoped identity and rerank Tamil dependent **ீ** next
+  at 10.
+
 ## Unreleased — source-verified Tamil independent u
 
 - Teach Tamil **உ** with its cited three-movement, zero-lift path.
