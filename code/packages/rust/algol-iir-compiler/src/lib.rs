@@ -5790,7 +5790,16 @@ impl Compiler {
         effect_root: &GrammarASTNode,
         remaining_dependency_depth: usize,
     ) -> bool {
-        if self.boolean_identity_expression_preserves_name(node, name) {
+        let identity_write_preserves_name = self.require_var(name).is_ok_and(|binding| {
+            match binding.ty {
+                ScalarType::Integer => self.integer_identity_expression_preserves_name(node, name),
+                ScalarType::Boolean => self.boolean_identity_expression_preserves_name(node, name),
+                ScalarType::Real | ScalarType::String => {
+                    exact_bare_variable_expression_name(node).as_deref() == Some(name)
+                }
+            }
+        });
+        if identity_write_preserves_name {
             return true;
         }
         if !matches!(node.rule_name.as_str(), "expression" | "arith_expr")
@@ -5907,6 +5916,42 @@ impl Compiler {
                     || (rhs_preserves && lhs_literal == Some(true))
             }
             "impl" => lhs_literal == Some(true) && rhs_preserves,
+            _ => false,
+        }
+    }
+
+    fn integer_identity_expression_preserves_name(
+        &self,
+        node: &GrammarASTNode,
+        name: &str,
+    ) -> bool {
+        if exact_bare_variable_expression_name(node).as_deref() == Some(name) {
+            return true;
+        }
+        let sequence = pieces(node);
+        if let (true, [Piece::Node(child)]) =
+            (direct_tokens(node).is_empty(), sequence.as_slice())
+        {
+            return self.integer_identity_expression_preserves_name(child, name);
+        }
+        let [Piece::Node(lhs), Piece::Op(op), Piece::Node(rhs)] = sequence.as_slice() else {
+            return false;
+        };
+        let lhs_preserves = self.integer_identity_expression_preserves_name(lhs, name);
+        let rhs_preserves = self.integer_identity_expression_preserves_name(rhs, name);
+        let lhs_literal = literal_integer_value(lhs);
+        let rhs_literal = literal_integer_value(rhs);
+        match op.as_str() {
+            "+" => {
+                (lhs_preserves && rhs_literal == Some(0))
+                    || (rhs_preserves && lhs_literal == Some(0))
+            }
+            "-" => lhs_preserves && rhs_literal == Some(0),
+            "*" => {
+                (lhs_preserves && rhs_literal == Some(1))
+                    || (rhs_preserves && lhs_literal == Some(1))
+            }
+            "div" => lhs_preserves && rhs_literal == Some(1),
             _ => false,
         }
     }
@@ -8126,6 +8171,17 @@ fn literal_boolean_value(node: &GrammarASTNode) -> Option<bool> {
         .flatten()
 }
 
+fn literal_integer_value(node: &GrammarASTNode) -> Option<i64> {
+    let tokens = direct_tokens(node);
+    if tokens.len() == 1 && tokens[0].effective_type_name() == "INTEGER_LIT" {
+        return tokens[0].value.parse().ok();
+    }
+    let child_nodes = direct_nodes(node);
+    (tokens.is_empty() && child_nodes.len() == 1)
+        .then(|| literal_integer_value(child_nodes[0]))
+        .flatten()
+}
+
 fn expression_is_bare_self_or_equal_leaf_conditional(
     node: &GrammarASTNode,
     name: &str,
@@ -10330,6 +10386,46 @@ mod tests {
             "test",
         )
         .expect_err("a boolean non-identity write may change the selector dependency");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_integer_identity_selector_writes_stay_stable() {
+        for write in [
+            "choose + 0",
+            "0 + choose",
+            "choose - 0",
+            "choose * 1",
+            "1 * choose",
+            "choose div 1",
+        ] {
+            compile_source(
+                &format!(
+                    "begin integer i, n, limit, choose; boolean other; n := 3; limit := 3; choose := 1; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := other; choose := {write} end; print(i + 0.25) end"
+                ),
+                "test",
+            )
+            .unwrap_or_else(|_| panic!("integer identity write {write:?} must stay stable"));
+        }
+    }
+
+    #[test]
+    fn al4_integer_non_identity_selector_write_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n, limit, choose; boolean other; n := 3; limit := 3; choose := 1; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := other; choose := choose * 0 end; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("an integer non-identity write may change the selector dependency");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_real_selector_identity_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := choose + 0.0 end; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("real arithmetic identities require a separate floating-point proof");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
