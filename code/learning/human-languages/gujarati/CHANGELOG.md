@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Added — exact Gujarati R4 bridge D (#12860)
+
+- Add five zero-new-atom Chapter 18 lessons at positions 109–113, returning the
+  respectful wellbeing exchange and *we will meet* exactly 61 lessons after
+  introduction.
+- Keep recognition and model-free writing separate, and use the final farewell
+  lesson to close four compatible R3 windows before the doorway R4 checkpoint.
+
 ### Added — exact Gujarati R4 bridge B (#12858)
 
 - Add six zero-new-atom Chapter 16 lessons at positions 97–102. Name, my, the
