@@ -1,6 +1,6 @@
 [package]
 name = "wasm-opcodes"
-version = "0.2.34"
+version = "0.2.35"
 edition = "2021"
 description = "Complete WASM 1.0 opcode table with metadata (name, immediates, stack effects, category). v0.2.1: adds the 5 single-byte sign-extension opcodes (i32/i64.extend8_s/16_s, i64.extend32_s, 0xC0-0xC4) (WASM03). The 8 trunc_sat opcodes from the same proposal are NOT here -- they use a two-byte 0xFC-prefixed encoding this crate's single-byte OpcodeInfo table deliberately doesn't model; callers special-case the 0xFC prefix directly (see wasm-wast-parser/wasm-execution). Note: this Cargo.toml's version had drifted from the changelog (last said 0.1.0, changelog's last real entry is 0.2.0) -- corrected here, not a WASM03 change."
 

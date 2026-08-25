@@ -6414,6 +6414,60 @@ fn register_simd(vm: &mut GenericVM) {
                 let handle = push_v128(ctx, result)?;
                 push_wasm(vm, WasmValue::V128(handle));
             }
+            SimdOpKind::EqF64x2
+            | SimdOpKind::NeF64x2
+            | SimdOpKind::LtF64x2
+            | SimdOpKind::GtF64x2
+            | SimdOpKind::LeF64x2
+            | SimdOpKind::GeF64x2 => {
+                // f64x2.eq/ne/lt/gt/le/ge (SIMD widen PR32): BINARY, pop
+                // two v128s, compare each of the 2 `f64` lane pairs with
+                // ordinary IEEE-754 comparison, push one v128 boolean
+                // mask (all-1s/all-0s per lane) -- a direct 2-lane mirror
+                // of the `f32x4` comparison family just above (PR30),
+                // same lane-wise BINARY shape and mask convention as
+                // every other lane width's comparison family
+                // (`Eq`/`EqI16x8`/`EqI8x16`/`EqI64x2`/`EqF32x4` etc.).
+                // Unlike the integer families, there is no signed/
+                // unsigned split. Rust's native `f64` `==`/`!=`/`<`/`>`/
+                // `<=`/`>=` operators are already IEEE-754 compliant, so
+                // no bespoke NaN handling is needed: `NaN == x` and
+                // `NaN <op> x` for any ordered `<op>` are already false,
+                // and `NaN != x` (including `x == NaN`) is already true,
+                // matching this family's spec-mandated semantics exactly
+                // (same "native operator is already correct" discipline
+                // as `AddF64x2`/`SubF64x2`/`DivF64x2` above).
+                let rhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let lhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let rhs = *ctx
+                    .v128_heap
+                    .get(rhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let lhs = *ctx
+                    .v128_heap
+                    .get(lhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+
+                let mask = |b: bool| if b { -1i64 } else { 0i64 };
+
+                let mut result = [0u8; 16];
+                for i in 0..2 {
+                    let l = f64::from_le_bytes(lhs[i * 8..i * 8 + 8].try_into().unwrap());
+                    let r = f64::from_le_bytes(rhs[i * 8..i * 8 + 8].try_into().unwrap());
+                    let out = match op.kind {
+                        SimdOpKind::EqF64x2 => mask(l == r),
+                        SimdOpKind::NeF64x2 => mask(l != r),
+                        SimdOpKind::LtF64x2 => mask(l < r),
+                        SimdOpKind::GtF64x2 => mask(l > r),
+                        SimdOpKind::LeF64x2 => mask(l <= r),
+                        SimdOpKind::GeF64x2 => mask(l >= r),
+                        _ => unreachable!("only EqF64x2/NeF64x2/LtF64x2/GtF64x2/LeF64x2/GeF64x2 reach this arm"),
+                    };
+                    result[i * 8..i * 8 + 8].copy_from_slice(&out.to_le_bytes());
+                }
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
             SimdOpKind::TruncSatF32x4S | SimdOpKind::TruncSatF32x4U => {
                 // i32x4.trunc_sat_f32x4_s/_u (SIMD widen PR20): UNARY,
                 // pop one v128, convert each of the 4 `f32` lanes to a
@@ -15273,6 +15327,190 @@ mod tests {
         let code = f32x4_cmp_lane_code(lhs, lhs, 0x46, 0); // ge, equal operands
         let mut engine = simd_engine(code);
         assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(-1)], "-5.0 >= -5.0 must be true");
+    }
+
+    // ── f64x2.eq/ne/lt/gt/le/ge (SIMD widen PR32, task #211-213) ────────────
+
+    /// Build the code for one `f64x2` comparison sub-opcode applied to two
+    /// `v128.const f64x2` operands, returning the raw `v128` result --
+    /// unlike `f32x4`'s own comparison tests above, there is no
+    /// `i64x2.extract_lane` opcode in this crate, so these tests read the
+    /// whole 16-byte mask back via `simd_engine_returning_v128` and
+    /// compare it against `v128_const_bytes_i64x2`'s own -1/0 mask
+    /// encoding, same approach as `i64x2_cmp_family_is_signed_and_
+    /// correctly_ordered` above.
+    fn f64x2_cmp_code(lhs: [f64; 2], rhs: [f64; 2], sub_opcode: u8) -> Vec<u8> {
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_f64x2(lhs));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes_f64x2(rhs));
+        // 0x47-0x4C are all < 0x80, so each is a single-byte LEB128 value
+        // (no continuation byte) -- same shape as `f32x4`'s own 0x41-0x46
+        // above.
+        code.extend([0xFD, sub_opcode]);
+        code.push(0x0B);
+        code
+    }
+
+    /// `f64x2.eq`/`ne`/`lt`/`gt`/`le`/`ge`: the boolean-mask convention
+    /// (all-1s/all-0s per lane) on ordinary, non-NaN operands -- one
+    /// equal-lane and one unequal-lane case per predicate, direct 2-lane
+    /// mirror of `f32x4_cmp_family_uses_the_mask_convention_on_ordinary_
+    /// values` above.
+    #[test]
+    fn f64x2_cmp_family_uses_the_mask_convention_on_ordinary_values() {
+        let mask = |b: bool| if b { -1i64 } else { 0i64 };
+        for (sub_opcode, name, equal_expect, less_expect) in [
+            (0x47u8, "eq", true, false),
+            (0x48u8, "ne", false, true),
+            (0x49u8, "lt", false, true),
+            (0x4Au8, "gt", false, false),
+            (0x4Bu8, "le", true, true),
+            (0x4Cu8, "ge", true, false),
+        ] {
+            // lane 0: 3.0 vs 3.0 (equal); lane 1: 2.0 vs 5.0 (less).
+            let lhs = [3.0f64, 2.0f64];
+            let rhs = [3.0f64, 5.0f64];
+            let code = f64x2_cmp_code(lhs, rhs, sub_opcode);
+            let mut engine = simd_engine_returning_v128(code);
+            let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+            let expect = v128_const_bytes_i64x2([mask(equal_expect), mask(less_expect)]);
+            assert_eq!(
+                results[0],
+                Some(V128Bytes(expect.try_into().unwrap())),
+                "f64x2.{name}(lane0=3.0 vs 3.0, lane1=2.0 vs 5.0) mask mismatch"
+            );
+        }
+    }
+
+    /// `f64x2.eq`/`lt`/`gt`/`le`/`ge`: a NaN operand on either side makes
+    /// the comparison false, per IEEE-754 unordered-comparison semantics
+    /// -- checked for every predicate except `ne` (opposite rule, covered
+    /// separately below), and for NaN appearing in either operand
+    /// position. Direct 2-lane mirror of `f32x4_ordered_cmp_family_is_
+    /// false_when_either_operand_is_nan` above.
+    #[test]
+    fn f64x2_ordered_cmp_family_is_false_when_either_operand_is_nan() {
+        for (sub_opcode, name) in [(0x47u8, "eq"), (0x49u8, "lt"), (0x4Au8, "gt"), (0x4Bu8, "le"), (0x4Cu8, "ge")] {
+            // NaN on the left.
+            let code = f64x2_cmp_code([f64::NAN; 2], [5.0; 2], sub_opcode);
+            let mut engine = simd_engine_returning_v128(code);
+            let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+            assert_eq!(
+                results[0],
+                Some(V128Bytes(v128_const_bytes_i64x2([0, 0]).try_into().unwrap())),
+                "f64x2.{name}(NaN, 5.0) must be false (mask 0) in every lane"
+            );
+
+            // NaN on the right.
+            let code = f64x2_cmp_code([5.0; 2], [f64::NAN; 2], sub_opcode);
+            let mut engine = simd_engine_returning_v128(code);
+            let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+            assert_eq!(
+                results[0],
+                Some(V128Bytes(v128_const_bytes_i64x2([0, 0]).try_into().unwrap())),
+                "f64x2.{name}(5.0, NaN) must be false (mask 0) in every lane"
+            );
+
+            // NaN compared with itself.
+            let code = f64x2_cmp_code([f64::NAN; 2], [f64::NAN; 2], sub_opcode);
+            let mut engine = simd_engine_returning_v128(code);
+            let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+            assert_eq!(
+                results[0],
+                Some(V128Bytes(v128_const_bytes_i64x2([0, 0]).try_into().unwrap())),
+                "f64x2.{name}(NaN, NaN) must be false (mask 0) in every lane"
+            );
+        }
+    }
+
+    /// `f64x2.ne`: the one predicate where a NaN operand makes the result
+    /// TRUE, not false -- including comparing NaN with itself. Direct
+    /// 2-lane mirror of `f32x4_ne_is_true_when_either_operand_is_nan_
+    /// including_nan_vs_itself` above.
+    #[test]
+    fn f64x2_ne_is_true_when_either_operand_is_nan_including_nan_vs_itself() {
+        let all_true = v128_const_bytes_i64x2([-1, -1]);
+
+        let code = f64x2_cmp_code([f64::NAN; 2], [5.0; 2], 0x48);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(results[0], Some(V128Bytes(all_true.clone().try_into().unwrap())), "f64x2.ne(NaN, 5.0) must be true (mask -1)");
+
+        let code = f64x2_cmp_code([5.0; 2], [f64::NAN; 2], 0x48);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(results[0], Some(V128Bytes(all_true.clone().try_into().unwrap())), "f64x2.ne(5.0, NaN) must be true (mask -1)");
+
+        let code = f64x2_cmp_code([f64::NAN; 2], [f64::NAN; 2], 0x48);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(results[0], Some(V128Bytes(all_true.try_into().unwrap())), "f64x2.ne(NaN, NaN) must be true (mask -1)");
+    }
+
+    /// `f64x2.eq`/`ne`: IEEE-754 treats `+0.0` and `-0.0` as numerically
+    /// equal, unlike a bitwise comparison of their (different) bit
+    /// patterns -- `eq` must be true and `ne` must be false across every
+    /// sign combination. Direct 2-lane mirror of `f32x4_eq_ne_treat_
+    /// positive_and_negative_zero_as_equal` above.
+    #[test]
+    fn f64x2_eq_ne_treat_positive_and_negative_zero_as_equal() {
+        for (lhs, rhs) in [(0.0f64, 0.0f64), (0.0f64, -0.0f64), (-0.0f64, 0.0f64), (-0.0f64, -0.0f64)] {
+            let code = f64x2_cmp_code([lhs; 2], [rhs; 2], 0x47); // eq
+            let mut engine = simd_engine_returning_v128(code);
+            let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+            assert_eq!(
+                results[0],
+                Some(V128Bytes(v128_const_bytes_i64x2([-1, -1]).try_into().unwrap())),
+                "f64x2.eq({lhs}, {rhs}) must be true (+0.0 == -0.0 per IEEE-754)"
+            );
+
+            let code = f64x2_cmp_code([lhs; 2], [rhs; 2], 0x48); // ne
+            let mut engine = simd_engine_returning_v128(code);
+            let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+            assert_eq!(
+                results[0],
+                Some(V128Bytes(v128_const_bytes_i64x2([0, 0]).try_into().unwrap())),
+                "f64x2.ne({lhs}, {rhs}) must be false (+0.0 == -0.0 per IEEE-754)"
+            );
+        }
+    }
+
+    /// `f64x2.lt`/`gt`/`le`/`ge`: ordinary negative-vs-positive lane
+    /// ordering, proving the normal (non-NaN, non-zero-tie) path is
+    /// correct. Direct 2-lane mirror of `f32x4_ordered_cmp_family_
+    /// orders_negative_and_positive_values_correctly` above.
+    #[test]
+    fn f64x2_ordered_cmp_family_orders_negative_and_positive_values_correctly() {
+        let lhs = [-5.0f64, -5.0f64];
+        let rhs = [3.0f64, 3.0f64];
+        let all_true = v128_const_bytes_i64x2([-1, -1]);
+        let all_false = v128_const_bytes_i64x2([0, 0]);
+
+        let code = f64x2_cmp_code(lhs, rhs, 0x49); // lt
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(results[0], Some(V128Bytes(all_true.clone().try_into().unwrap())), "-5.0 < 3.0 must be true");
+
+        let code = f64x2_cmp_code(lhs, rhs, 0x4A); // gt
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(results[0], Some(V128Bytes(all_false.try_into().unwrap())), "-5.0 > 3.0 must be false");
+
+        let code = f64x2_cmp_code(rhs, lhs, 0x4A); // gt, operands swapped
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(results[0], Some(V128Bytes(all_true.clone().try_into().unwrap())), "3.0 > -5.0 must be true");
+
+        let code = f64x2_cmp_code(lhs, lhs, 0x4B); // le, equal operands
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(results[0], Some(V128Bytes(all_true.clone().try_into().unwrap())), "-5.0 <= -5.0 must be true");
+
+        let code = f64x2_cmp_code(lhs, lhs, 0x4C); // ge, equal operands
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(results[0], Some(V128Bytes(all_true.try_into().unwrap())), "-5.0 >= -5.0 must be true");
     }
 
     // ── i32x4<->f32x4 conversions (SIMD widen PR20, task #177-179) ──────────
