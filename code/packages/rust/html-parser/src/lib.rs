@@ -7852,10 +7852,13 @@ impl HtmlParser {
                 self.document_tail_mode = DocumentTailMode::AfterBody;
             }
             "br" => {
-                self.diagnostics.push(ParserDiagnostic::new(
-                    "unexpected-br-end-tag",
-                    "end tag `</br>` was recovered as a `br` start tag",
-                ));
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-br-end-tag",
+                        "end tag `</br>` was recovered as a `br` start tag",
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
                 self.pop_head_descendants();
                 self.append_start_tag("br".to_string(), Vec::new(), true);
             }
@@ -27694,6 +27697,14 @@ mod tests {
         .at_emission(Some(end_tag_position_at(source, "p", occurrence)))
     }
 
+    fn unexpected_br_end_tag(source: &str, occurrence: usize) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-br-end-tag",
+            "end tag `</br>` was recovered as a `br` start tag",
+        )
+        .at_emission(Some(end_tag_position_at(source, "br", occurrence)))
+    }
+
     fn unexpected_li_end_tag(source: &str) -> ParserDiagnostic {
         ParserDiagnostic::new(
             "unexpected-li-end-tag",
@@ -38478,11 +38489,16 @@ mod tests {
 
     #[test]
     fn fosters_recovered_br_end_tag_before_table_rows() {
-        let document = parse_html("<table><tr></body></br></table>").unwrap();
+        let source = "<table><tr></body></br></table>";
+        let output = parse_html_with_diagnostics(source).unwrap();
 
-        let body = body(&document);
+        let body = body(&output.document);
         assert_eq!(element(&body.children[0]).name, "br");
         assert_eq!(element(&body.children[1]).name, "table");
+        assert!(output
+            .parser_diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic == &unexpected_br_end_tag(source, 0)));
     }
 
     #[test]
@@ -47829,10 +47845,7 @@ mod tests {
             output.parser_diagnostics,
             vec![
                 unexpected_p_end_tag(source),
-                ParserDiagnostic::new(
-                    "unexpected-br-end-tag",
-                    "end tag `</br>` was recovered as a `br` start tag"
-                )
+                unexpected_br_end_tag(source, 0),
             ]
         );
 
@@ -47845,6 +47858,48 @@ mod tests {
         assert_eq!(body.children[2], Node::text("Middle"));
         assert_eq!(element(&body.children[3]).name, "br");
         assert_eq!(body.children[4], Node::text("After"));
+    }
+
+    #[test]
+    fn positions_recovered_br_end_tags_at_token_emission() {
+        let source = "<!doctype html></br><!--é-->\r\n</br>";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        assert_eq!(
+            output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-br-end-tag")
+                .collect::<Vec<_>>(),
+            vec![
+                &unexpected_br_end_tag(source, 0),
+                &unexpected_br_end_tag(source, 1),
+            ]
+        );
+
+        let fragment_source = "</br>";
+        let fragment = parse_html_fragment_with_diagnostics(fragment_source).unwrap();
+        assert!(fragment
+            .parser_diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic == &unexpected_br_end_tag(fragment_source, 0)));
+
+        let incomplete = parse_html_with_diagnostics("<!doctype html></br").unwrap();
+        assert!(incomplete
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-br-end-tag"));
+
+        let mut unpositioned = HtmlParser::new();
+        unpositioned.process_token(Token::EndTag {
+            name: "br".to_string(),
+        });
+        unpositioned.process_token(Token::Eof);
+        let diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-br-end-tag")
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
     }
 
     #[test]
