@@ -1359,6 +1359,42 @@ fn invalid_i16x8_relaxed_q15mulr_s_given_an_i32_operand_instead_of_v128() {
     assert_invalid("(module (func (param v128 i32) (result v128) (i16x8.relaxed_q15mulr_s (local.get 0) (local.get 1))))");
 }
 
+#[test]
+fn valid_f32x4_relaxed_min_max_pop_two_v128_push_v128() {
+    // Relaxed SIMD epic PR3 (see code/specs/
+    // W19-wasm-relaxed-simd-first-slice.md): f32x4.relaxed_min/
+    // relaxed_max -- same pop-two-push-one v128 shape as plain
+    // f32x4.pmin/pmax above; their implementation-defined NaN/signed-zero
+    // handling is entirely a runtime concern, invisible to the type
+    // checker.
+    assert_valid("(module (func (param v128 v128) (result v128) (f32x4.relaxed_min (local.get 0) (local.get 1))))");
+    assert_valid("(module (func (param v128 v128) (result v128) (f32x4.relaxed_max (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn invalid_f32x4_relaxed_min_max_given_an_i32_operand_instead_of_v128() {
+    // Confirms the type checker actually enforces V128 for both operands,
+    // not just accepting whatever's on the stack.
+    assert_invalid("(module (func (param v128 i32) (result v128) (f32x4.relaxed_min (local.get 0) (local.get 1))))");
+    assert_invalid("(module (func (param i32 v128) (result v128) (f32x4.relaxed_max (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn valid_f64x2_relaxed_min_max_pop_two_v128_push_v128() {
+    // 2-lane mirror of `valid_f32x4_relaxed_min_max_pop_two_v128_push_v128`
+    // above -- same pop-two-push-one v128 shape as plain f64x2.pmin/pmax.
+    assert_valid("(module (func (param v128 v128) (result v128) (f64x2.relaxed_min (local.get 0) (local.get 1))))");
+    assert_valid("(module (func (param v128 v128) (result v128) (f64x2.relaxed_max (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn invalid_f64x2_relaxed_min_max_given_an_i32_operand_instead_of_v128() {
+    // Confirms the type checker actually enforces V128 for both operands,
+    // not just accepting whatever's on the stack.
+    assert_invalid("(module (func (param v128 i32) (result v128) (f64x2.relaxed_min (local.get 0) (local.get 1))))");
+    assert_invalid("(module (func (param i32 v128) (result v128) (f64x2.relaxed_max (local.get 0) (local.get 1))))");
+}
+
 // ── SIMD widen PR38 (task #229-231): i8x16.shuffle ───────────────────────
 //
 // The most structurally complex SIMD opcode implemented in this campaign

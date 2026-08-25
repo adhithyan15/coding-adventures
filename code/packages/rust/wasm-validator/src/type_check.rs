@@ -1591,7 +1591,11 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     | wasm_opcodes::SimdOpKind::MinF64x2
                     | wasm_opcodes::SimdOpKind::MaxF64x2
                     | wasm_opcodes::SimdOpKind::PminF64x2
-                    | wasm_opcodes::SimdOpKind::PmaxF64x2 => {
+                    | wasm_opcodes::SimdOpKind::PmaxF64x2
+                    | wasm_opcodes::SimdOpKind::RelaxedMinF32x4
+                    | wasm_opcodes::SimdOpKind::RelaxedMaxF32x4
+                    | wasm_opcodes::SimdOpKind::RelaxedMinF64x2
+                    | wasm_opcodes::SimdOpKind::RelaxedMaxF64x2 => {
                         // `dot_i16x8_s`/`extmul_low`/`high_i16x8_s`/`_u`/
                         // `i8x16.add`/`sub`/`i16x8.add`/`sub`/`mul`/
                         // `i8x16.min_s`/`min_u`/`max_s`/`max_u`/`avgr_u`/
@@ -1673,6 +1677,14 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         // implementation-defined at RUNTIME -- entirely
                         // invisible here, still just two V128 pops, one
                         // V128 push.
+                        // `f32x4.relaxed_min`/`relaxed_max`,
+                        // `f64x2.relaxed_min`/`relaxed_max` (relaxed SIMD
+                        // epic PR3) join too: same `(v128, v128) -> v128`
+                        // shape as `PminF32x4`/`PmaxF32x4`/`PminF64x2`/
+                        // `PmaxF64x2` above, whose bodies they reuse
+                        // verbatim -- the NaN/signed-zero handling choice
+                        // is, same as every other kind in this arm,
+                        // entirely a runtime concern, invisible here.
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         push_val(&mut stack, ValueType::V128);

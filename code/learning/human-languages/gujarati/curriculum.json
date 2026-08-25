@@ -332,6 +332,34 @@
         "GU-EXT-021-R4-BRIDGE-A"
       ],
       "after": []
+    },
+    {
+      "id": "GU-PATH-018",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "GU-R16-naam-r4",
+        "GU-R16-maarun-r4",
+        "GU-R16-chhe-r4",
+        "GU-R16-my-name-is-r4",
+        "GU-R16-anand-r4"
+      ],
+      "before": [],
+      "inline": [
+        "GU-EXT-022-R4-BRIDGE-B"
+      ],
+      "after": []
+    },
+    {
+      "id": "GU-PATH-C3R3",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "GU-R16-wellbeing-r3"
+      ],
+      "before": [],
+      "inline": [
+        "GU-EXT-023-WELLBEING-R3"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -373,7 +401,8 @@
         "GU-PATH-005",
         "GU-PATH-014",
         "GU-PATH-C2P",
-        "GU-PATH-017"
+        "GU-PATH-017",
+        "GU-PATH-018"
       ],
       "omits": [
         "PRONOUN-ME"
@@ -384,7 +413,8 @@
       "segments": [
         "GU-PATH-006",
         "GU-PATH-015",
-        "GU-PATH-C3P"
+        "GU-PATH-C3P",
+        "GU-PATH-C3R3"
       ],
       "omits": [
         "WORD-GOOD",
@@ -963,6 +993,36 @@
         "GU-R15-nna-r4",
         "GU-R15-sha-r4",
         "GU-R15-name-exchange-r3"
+      ]
+    },
+    {
+      "id": "GU-EXT-022-R4-BRIDGE-B",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "consolidation",
+      "canDo": "I can rebuild the introduction through five exact fourth-window returns with independent listening and writing.",
+      "prerequisites": [
+        "GU-EXT-021-R4-BRIDGE-A"
+      ],
+      "lessons": [
+        "GU-R16-naam-r4",
+        "GU-R16-maarun-r4",
+        "GU-R16-chhe-r4",
+        "GU-R16-my-name-is-r4",
+        "GU-R16-anand-r4"
+      ]
+    },
+    {
+      "id": "GU-EXT-023-WELLBEING-R3",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "consolidation",
+      "canDo": "I can independently retrieve the familiar wellbeing exchange after a durable interval.",
+      "prerequisites": [
+        "GU-EXT-022-R4-BRIDGE-B"
+      ],
+      "lessons": [
+        "GU-R16-wellbeing-r3"
       ]
     }
   ]

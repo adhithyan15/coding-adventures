@@ -488,10 +488,26 @@ fn parse_expected(e: &SExpr) -> Result<Expected, WastParseError> {
         // match arm lives in, so an `either` arm can in principle be any
         // other `Expected` shape (a NaN class, a nested `either`, etc.),
         // not just a plain `v128.const`/`ConstValue`.
+        // `(either A B ...)` -- relaxed SIMD epic PR3 generalizes this arm
+        // from exactly 2 children to N (>= 2 required): the real
+        // `relaxed_min_max.wast` corpus (see `code/specs/
+        // W19-wasm-relaxed-simd-first-slice.md`) is the first
+        // relaxed-simd file whose `either` groups carry FOUR
+        // alternatives, not the two `i8x16_relaxed_swizzle.wast`/
+        // `i16x8_relaxed_q15mulr_s.wast` each used -- the original
+        // `items[1]`/`items[2]`-only version would have silently DROPPED
+        // alternatives 3 and 4 rather than erroring, a real correctness
+        // bug (a test whose actual result matches only the 3rd/4th
+        // alternative would wrongly fail to grade as passing).
+        // `Expected::Either` itself stays binary (its own doc comment
+        // already anticipated "a nested `either`") -- N children fold
+        // into a right-leaning chain of nested `Either`s here, so
+        // `value_matches_expected`'s existing `||`-based grading in
+        // `wasm-conformance` needs no changes at all to support this.
         ("either", _) => {
-            let a = parse_expected(expect_get(items, 1)?)?;
-            let b = parse_expected(expect_get(items, 2)?)?;
-            Ok(Expected::Either(Box::new(a), Box::new(b)))
+            let mut alternatives = items[1..].iter().map(parse_expected);
+            let first = alternatives.next().ok_or(WastParseError::UnexpectedEof)??;
+            alternatives.try_fold(first, |acc, next| Ok(Expected::Either(Box::new(acc), Box::new(next?))))
         }
         _ => Ok(Expected::Value(parse_const_value(e)?)),
     }
@@ -939,6 +955,76 @@ mod tests {
                 assert_eq!(
                     expected[0],
                     Expected::Either(Box::new(Expected::NanCanonicalF32), Box::new(Expected::Value(ConstValue::F32Bits(0))))
+                );
+            }
+            other => panic!("expected AssertReturn, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn either_with_four_alternatives_folds_into_nested_binary_either() {
+        // Relaxed SIMD epic PR3: the real `relaxed_min_max.wast` corpus
+        // is the first relaxed-simd file whose `either` groups carry FOUR
+        // alternatives, not the two `i8x16_relaxed_swizzle.wast`/
+        // `i16x8_relaxed_q15mulr_s.wast` each used. Confirms
+        // `parse_expected`'s generalized `either` arm doesn't silently
+        // drop alternatives 3 and 4 the way the original items[1]/
+        // items[2]-only version would have -- it folds all N children
+        // into a right-leaning chain of nested `Expected::Either`s.
+        let dirs = parse_script(
+            r#"(assert_return (invoke "f")
+                   (either (v128.const i32x4 0 0 0 0)
+                           (v128.const i32x4 1 1 1 1)
+                           (v128.const i32x4 2 2 2 2)
+                           (v128.const i32x4 3 3 3 3)))"#,
+        )
+        .unwrap();
+        let v128_of = |n: i32| {
+            let mut bytes = [0u8; 16];
+            for lane in 0..4 {
+                bytes[lane * 4..lane * 4 + 4].copy_from_slice(&n.to_le_bytes());
+            }
+            Expected::Value(ConstValue::V128(bytes))
+        };
+        match &dirs[0] {
+            Directive::AssertReturn { expected, .. } => {
+                assert_eq!(
+                    expected[0],
+                    Expected::Either(
+                        Box::new(Expected::Either(Box::new(Expected::Either(Box::new(v128_of(0)), Box::new(v128_of(1)))), Box::new(v128_of(2)))),
+                        Box::new(v128_of(3)),
+                    )
+                );
+            }
+            other => panic!("expected AssertReturn, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn either_with_four_alternatives_on_scalar_i32_expected_values() {
+        // Same generalized `either` arm, exercised on plain scalar
+        // `i32.const` alternatives (not `v128.const`) inside a real
+        // `(module ...)` + `assert_return` script, to confirm the N-ary
+        // fold isn't somehow special-cased to `v128` shapes -- grading
+        // itself (the recursive `||` in `wasm-conformance::
+        // value_matches_expected`) is that crate's own test coverage,
+        // not this crate's; this test only confirms the parse tree here.
+        let dirs = parse_script(
+            r#"(module (func (export "f") (param i32) (result i32) (local.get 0)))
+               (assert_return (invoke "f" (i32.const 3)) (either (i32.const 0) (i32.const 1) (i32.const 2) (i32.const 3)))"#,
+        )
+        .unwrap();
+        match &dirs[1] {
+            Directive::AssertReturn { expected, .. } => {
+                assert_eq!(
+                    expected[0],
+                    Expected::Either(
+                        Box::new(Expected::Either(
+                            Box::new(Expected::Either(Box::new(Expected::Value(ConstValue::I32(0))), Box::new(Expected::Value(ConstValue::I32(1))))),
+                            Box::new(Expected::Value(ConstValue::I32(2))),
+                        )),
+                        Box::new(Expected::Value(ConstValue::I32(3))),
+                    )
                 );
             }
             other => panic!("expected AssertReturn, got {other:?}"),

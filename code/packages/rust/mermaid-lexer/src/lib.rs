@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.67.0";
+pub const VERSION: &str = "0.68.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -25,6 +25,7 @@ const REQUIREMENT_TOKEN_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/requirement.tokens");
 const XYCHART_TOKEN_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/xychart.tokens");
+const GANTT_TOKEN_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/gantt.tokens");
 
 fn create_lexer<'a>(source: &'a str, grammar_source: &str, grammar_name: &str) -> GrammarLexer<'a> {
     let grammar = parse_token_grammar(grammar_source)
@@ -82,6 +83,10 @@ pub fn create_mermaid_requirement_lexer(source: &str) -> GrammarLexer<'_> {
 
 pub fn create_mermaid_xychart_lexer(source: &str) -> GrammarLexer<'_> {
     create_lexer(source, XYCHART_TOKEN_GRAMMAR_SOURCE, "xychart.tokens")
+}
+
+pub fn create_mermaid_gantt_lexer(source: &str) -> GrammarLexer<'_> {
+    create_lexer(source, GANTT_TOKEN_GRAMMAR_SOURCE, "gantt.tokens")
 }
 
 pub fn tokenize_mermaid(source: &str) -> Vec<Token> {
@@ -281,6 +286,11 @@ pub fn try_tokenize_mermaid_xychart(source: &str) -> Result<Vec<Token>, String> 
     lexer.tokenize().map_err(|error| error.to_string())
 }
 
+pub fn try_tokenize_mermaid_gantt(source: &str) -> Result<Vec<Token>, String> {
+    let mut lexer = create_mermaid_gantt_lexer(source);
+    lexer.tokenize().map_err(|error| error.to_string())
+}
+
 pub fn try_tokenize_mermaid_requirement(source: &str) -> Result<Vec<Token>, String> {
     let mut lexer = create_mermaid_requirement_lexer(source);
     lexer.tokenize().map_err(|error| error.to_string())
@@ -297,7 +307,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.67.0");
+        assert_eq!(VERSION, "0.68.0");
     }
 
     #[test]
@@ -318,6 +328,23 @@ mod tests {
         ] {
             assert!(names.contains(&expected));
         }
+    }
+
+    #[test]
+    fn tokenizes_gantt_core_statements_case_insensitively() {
+        let tokens = try_tokenize_mermaid_gantt(
+            "GANTT\nTITLE Project\naccTitle: Timeline\nSECTION Build\nTask :done, t1, 2026-01-01, 2d\n",
+        )
+        .unwrap();
+        let names: Vec<_> = tokens
+            .iter()
+            .filter_map(|token| token.type_name.as_deref())
+            .collect();
+        assert!(names.contains(&"HEADER"));
+        assert!(names.contains(&"TITLE_STATEMENT"));
+        assert!(names.contains(&"ACC_TITLE_STATEMENT"));
+        assert!(names.contains(&"SECTION_STATEMENT"));
+        assert!(names.contains(&"TASK_STATEMENT"));
     }
 
     #[test]

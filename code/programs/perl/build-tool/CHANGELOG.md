@@ -8,8 +8,25 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## Unreleased
 
+### Added
+
+- A pure tracked-artifact snapshot validator independently consumes all five
+  language-neutral fixtures, including redacted portable-path failures,
+  Unicode-scalar length and ordering, inert link metadata, Windows reserved
+  basenames, and exact, case, nested, and Unicode-compatible `node_modules`
+  aliases.
+- Generated source-embedded Unicode 17.0.0 normalization, full default-fold,
+  and full-uppercase tables keep validation independent of host Perl tables;
+  the generator verifies the emitted module against every official vector.
+
 ### Fixed
 
+- The emitted-Perl verifier requires an explicit reviewed Perl 5.38.2
+  executable, uses taint mode with a minimal environment and no ambient Perl
+  module paths, retains at most 8 KiB from each child stream, and unconditionally
+  terminates the isolated process tree after every exit. Windows assigns the
+  suspended child to a kill-on-close Job Object before resuming it; POSIX uses
+  an isolated process group.
 - Lua `.rockspec` dependency metadata now follows the shared strict UTF-8
   contract. Invalid bytes fail closed with the stable
   `METADATA_INVALID_UTF8` diagnostic and CLI exit code 2 without leaking host

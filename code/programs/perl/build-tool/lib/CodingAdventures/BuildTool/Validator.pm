@@ -2,12 +2,119 @@ package CodingAdventures::BuildTool::Validator;
 
 use strict;
 use warnings;
+use utf8;
 use File::Basename qw(basename);
 use File::Spec ();
+use CodingAdventures::BuildTool::TrackedArtifactUnicode17 ();
 
 my %CI_MANAGED_TOOLCHAIN_LANGUAGES = map { $_ => 1 } qw(
     python ruby typescript rust elixir lua perl java kotlin haskell
 );
+
+my $TRACKED_ARTIFACT_COMPONENT_IDENTITY = 'node_modules';
+my $TRACKED_ARTIFACT_REDACTED_PATH = 'repository';
+our $TRACKED_ARTIFACT_UNICODE_VERSION =
+    $CodingAdventures::BuildTool::TrackedArtifactUnicode17::UNICODE_VERSION;
+my %WINDOWS_RESERVED_BASENAMES = map { $_ => 1 } (
+    qw(CON PRN AUX NUL CONIN$ CONOUT$ CLOCK$),
+    map({ "COM$_" } 1 .. 9),
+    map({ "LPT$_" } 1 .. 9),
+    map({ "COM$_" } qw(¹ ² ³)),
+    map({ "LPT$_" } qw(¹ ² ³)),
+);
+
+# Validate caller-supplied inert records without reading a checkout, following
+# links, consulting Git, launching a process, or inheriting host Unicode data.
+sub validate_tracked_artifact_snapshot {
+    my ($entries, $unicode_version) = @_;
+    $unicode_version //= $TRACKED_ARTIFACT_UNICODE_VERSION;
+    die "tracked artifact Unicode version must be $TRACKED_ARTIFACT_UNICODE_VERSION\n"
+        unless $unicode_version eq $TRACKED_ARTIFACT_UNICODE_VERSION;
+
+    my @diagnostics;
+    for my $entry (@{$entries || []}) {
+        my ($normalized_path, $problem) = _normalize_tracked_artifact_path($entry->{path});
+        my %details = (
+            ordinal => $entry->{ordinal},
+            entry_kind => $entry->{entry_kind},
+        );
+        if (defined $problem) {
+            $details{problem} = $problem;
+            push @diagnostics, {
+                code => 'TRACKED_ARTIFACT_PATH_INVALID',
+                severity => 'error',
+                path => $TRACKED_ARTIFACT_REDACTED_PATH,
+                details => \%details,
+            };
+            next;
+        }
+
+        my $forbidden = 0;
+        for my $component (split m{/}, $normalized_path, -1) {
+            if (CodingAdventures::BuildTool::TrackedArtifactUnicode17::nfkc_casefold($component)
+                    eq $TRACKED_ARTIFACT_COMPONENT_IDENTITY) {
+                $forbidden = 1;
+                last;
+            }
+        }
+        next unless $forbidden;
+        push @diagnostics, {
+            code => 'TRACKED_ARTIFACT_FORBIDDEN',
+            severity => 'error',
+            path => $normalized_path,
+            details => \%details,
+        };
+    }
+
+    @diagnostics = sort {
+        $a->{code} cmp $b->{code}
+            || $a->{path} cmp $b->{path}
+            || _canonical_tracked_details($a->{details}) cmp _canonical_tracked_details($b->{details})
+    } @diagnostics;
+    return \@diagnostics;
+}
+
+sub _normalize_tracked_artifact_path {
+    my ($path) = @_;
+    my $normalized = $path // '';
+    return (undef, 'EMPTY') unless length($normalized);
+    return (undef, 'TOO_LONG') if length($normalized) > 512;
+    $normalized =~ s{\\}{/}g;
+    my @scalars = unpack('U*', $normalized);
+    return (undef, 'TOO_LONG') if @scalars > 512;
+    return (undef, 'NON_NFC')
+        unless CodingAdventures::BuildTool::TrackedArtifactUnicode17::nfc($normalized)
+            eq $normalized;
+    return (undef, 'ABSOLUTE') if substr($normalized, 0, 1) eq '/';
+    return (undef, 'DRIVE_QUALIFIED') if $normalized =~ /^[A-Za-z]:/;
+
+    my @segments = split m{/}, $normalized, -1;
+    return (undef, 'EMPTY_SEGMENT') if grep { $_ eq '' } @segments;
+    return (undef, 'UNSAFE_CHARACTER') if grep {
+        $_ < 32 || $_ == 0x3C || $_ == 0x3E || $_ == 0x3A ||
+            $_ == 0x22 || $_ == 0x7C || $_ == 0x3F || $_ == 0x2A
+    } @scalars;
+
+    for my $segment (@segments) {
+        return (undef, 'DOT_SEGMENT') if $segment eq '.' || $segment eq '..';
+        return (undef, 'TRAILING_DOT_OR_SPACE') if $segment =~ /[. ]\z/;
+
+        my ($basename) = split /\./, $segment, 2;
+        my $uppercase =
+            CodingAdventures::BuildTool::TrackedArtifactUnicode17::full_uppercase($basename);
+        return (undef, 'RESERVED_BASENAME') if $WINDOWS_RESERVED_BASENAMES{$uppercase};
+    }
+    return ($normalized, undef);
+}
+
+sub _canonical_tracked_details {
+    my ($details) = @_;
+    return join("\0", map { defined($_) ? $_ : '' } (
+        $details->{entry_kind},
+        $details->{ordinal},
+        $details->{problem},
+    ));
+}
 
 sub validate_ci_full_build_toolchains {
     my ($root, $packages) = @_;

@@ -6769,10 +6769,13 @@ impl HtmlParser {
                     )
                     .at_emission(self.current_token_emission_position),
                 );
-                self.diagnostics.push(ParserDiagnostic::new(
-                    "formatting-element-not-in-table-scope",
-                    "active anchor was outside table scope during adoption-agency recovery",
-                ));
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "formatting-element-not-in-table-scope",
+                        "active anchor was outside table scope during adoption-agency recovery",
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
             }
         }
 
@@ -8190,12 +8193,15 @@ impl HtmlParser {
                 return;
             }
             if is_formatting_element(name) && self.has_table_context_above(index) {
-                self.diagnostics.push(ParserDiagnostic::new(
-                    "unexpected-formatting-end-tag-in-table",
-                    format!(
-                        "end tag `</{name}>` could not close a formatting element across table scope"
-                    ),
-                ));
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-formatting-end-tag-in-table",
+                        format!(
+                            "end tag `</{name}>` could not close a formatting element across table scope"
+                        ),
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
                 if self.open_element_is_fostered_before_open_table(index) {
                     self.capture_formatting_above(index);
                     self.open_elements.truncate(index);
@@ -27903,6 +27909,20 @@ mod tests {
         .at_emission(Some(end_tag_position_at(source, name, occurrence)))
     }
 
+    fn unexpected_formatting_end_tag_in_table(
+        source: &str,
+        name: &str,
+        occurrence: usize,
+    ) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-formatting-end-tag-in-table",
+            format!(
+                "end tag `</{name}>` could not close a formatting element across table scope"
+            ),
+        )
+        .at_emission(Some(end_tag_position_at(source, name, occurrence)))
+    }
+
     fn unexpected_p_end_tag(source: &str) -> ParserDiagnostic {
         ParserDiagnostic::new(
             "unexpected-p-end-tag",
@@ -28077,6 +28097,17 @@ mod tests {
         ParserDiagnostic::new(
             "nested-anchor-start-tag",
             "start tag `<a>` triggered adoption-agency recovery for an active anchor",
+        )
+        .at_emission(Some(start_tag_position_at(source, "a", occurrence)))
+    }
+
+    fn formatting_element_not_in_table_scope(
+        source: &str,
+        occurrence: usize,
+    ) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "formatting-element-not-in-table-scope",
+            "active anchor was outside table scope during adoption-agency recovery",
         )
         .at_emission(Some(start_tag_position_at(source, "a", occurrence)))
     }
@@ -42139,16 +42170,59 @@ mod tests {
 
     #[test]
     fn reports_formatting_end_tag_recovery_across_table_scope() {
-        let output =
-            parse_html_with_diagnostics("<!DOCTYPE html><font><table></font></table></font>")
-                .unwrap();
+        let source = "<!DOCTYPE html><font><table></font></table></font>";
+        let output = parse_html_with_diagnostics(source).unwrap();
         assert_eq!(
             output.parser_diagnostics,
-            vec![ParserDiagnostic::new(
-                "unexpected-formatting-end-tag-in-table",
-                "end tag `</font>` could not close a formatting element across table scope"
-            )]
+            vec![unexpected_formatting_end_tag_in_table(source, "font", 0)]
         );
+    }
+
+    #[test]
+    fn positions_formatting_end_tag_table_diagnostics_at_token_emission() {
+        let source = "<!doctype html><!--é-->\r\n<font><table></font>";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        assert!(output.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic == &unexpected_formatting_end_tag_in_table(source, "font", 0)
+        }));
+        assert!(source.len() > source.chars().count());
+
+        let incomplete = parse_html_with_diagnostics("<!doctype html><font><table></font").unwrap();
+        assert!(incomplete.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-formatting-end-tag-in-table"
+        }));
+
+        let matching =
+            parse_html_with_diagnostics("<!doctype html><font><table></table></font>").unwrap();
+        assert!(matching.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-formatting-end-tag-in-table"
+        }));
+
+        let mut unpositioned = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        for token in [
+            Token::StartTag {
+                name: "font".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "table".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::EndTag {
+                name: "font".to_string(),
+            },
+            Token::Eof,
+        ] {
+            unpositioned.process_token(token);
+        }
+        let diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-formatting-end-tag-in-table")
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
     }
 
     #[test]
@@ -42871,9 +42945,8 @@ mod tests {
                 .parser_diagnostics
                 .iter()
                 .find(|diagnostic| diagnostic.code == "formatting-element-not-in-table-scope")
-                .unwrap()
-                .position,
-            None
+                .unwrap(),
+            &formatting_element_not_in_table_scope(repeated_source, 0)
         );
 
         for source in [
@@ -42937,10 +43010,7 @@ mod tests {
                     == [
                         formatting_start_tag_in_table_recovery(source, "a"),
                         nested_anchor_start_tag(source, 0),
-                        ParserDiagnostic::new(
-                            "formatting-element-not-in-table-scope",
-                            "active anchor was outside table scope during adoption-agency recovery",
-                        ),
+                        formatting_element_not_in_table_scope(source, 0),
                     ]
             }), "source {source:?}");
         }
@@ -42972,6 +43042,50 @@ mod tests {
             diagnostic.code != "formatting-element-not-in-table-scope"
                 && diagnostic.code != "unexpected-formatting-start-tag-in-table"
         }));
+    }
+
+    #[test]
+    fn positions_formatting_element_table_scope_diagnostics_at_token_emission() {
+        let source = "<!doctype html><A><!--é-->\r\n<table><a>";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        assert!(output.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic == &formatting_element_not_in_table_scope(source, 0)
+        }));
+        assert!(source.len() > source.chars().count());
+
+        let incomplete = parse_html_with_diagnostics("<!doctype html><A><table><a").unwrap();
+        assert!(incomplete
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "formatting-element-not-in-table-scope"));
+
+        let mut unpositioned = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        for token in [
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "table".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Eof,
+        ] {
+            unpositioned.process_token(token);
+        }
+        let diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| diagnostic.code == "formatting-element-not-in-table-scope")
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
     }
 
     #[test]

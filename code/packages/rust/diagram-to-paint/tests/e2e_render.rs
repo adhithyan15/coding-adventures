@@ -25,7 +25,7 @@ mod apple {
     use dot_parser::parse_to_diagram;
     use layout_ir::font_spec;
     use mermaid_parser::{
-        parse_c4_diagram, parse_er_diagram, parse_gitgraph, parse_journey, parse_pie,
+        parse_c4_diagram, parse_er_diagram, parse_gantt, parse_gitgraph, parse_journey, parse_pie,
         parse_quadrant_chart, parse_requirement_diagram, parse_sankey, parse_sequence_diagram,
         parse_state_diagram, parse_to_diagram as parse_mermaid_to_diagram, parse_xychart,
     };
@@ -775,6 +775,53 @@ line "Target" [35, 50, 68, 82]"##,
         assert_eq!(
             metadata["accessibility.description"],
             "GitGraph rendered through Metal"
+        );
+    }
+
+    #[test]
+    fn render_mermaid_gantt_to_png() {
+        let gantt = parse_gantt(
+            "gantt\naccTitle: Native Gantt\naccDescr: Gantt rendered through Metal\ntitle Release timeline\ndateFormat YYYY-MM-DD\nsection Build\nParser :done, parser, 2026-01-01, 4d\nPaint :active, paint, after parser, 3d\nsection Ship\nRelease :milestone, release, after paint, 0d",
+        )
+        .expect("Mermaid Gantt parse failed");
+        let temporal = TemporalDiagram {
+            kind: TemporalKind::Gantt,
+            title: gantt.title.clone(),
+            body: TemporalBody::Gantt(gantt),
+        };
+        let layout = layout_temporal_diagram(&temporal, 800.0);
+
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_temporal(
+            &layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color {
+                    r: 255,
+                    g: 255,
+                    b: 255,
+                    a: 255,
+                },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 12.0),
+                title_font: font_spec("Helvetica", 16.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_gantt_e2e.png").expect("PNG write failed");
+        assert!(pixels.width > 0);
+        assert!(pixels.height > 0);
+        assert!(!scene.instructions.is_empty());
+        let metadata = scene.metadata.as_ref().expect("accessibility metadata");
+        assert_eq!(metadata["accessibility.title"], "Native Gantt");
+        assert_eq!(
+            metadata["accessibility.description"],
+            "Gantt rendered through Metal"
         );
     }
 

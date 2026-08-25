@@ -41,6 +41,7 @@ LICENSE_TARGETS = (
     Path("code/programs/ruby/build-tool/UNICODE-LICENSE.txt"),
     Path("code/programs/elixir/build-tool/UNICODE-LICENSE.txt"),
     Path("code/programs/lua/build-tool/UNICODE-LICENSE.txt"),
+    Path("code/programs/perl/build-tool/UNICODE-LICENSE.txt"),
 )
 SOURCES = {
     "UnicodeData.txt": "2e1efc1dcb59c575eedf5ccae60f95229f706ee6d031835247d843c11d96470c",
@@ -77,6 +78,10 @@ ELIXIR_TARGET = Path(
 )
 LUA_TARGET = Path(
     "code/programs/lua/build-tool/lib/build_tool/tracked_artifact_unicode17.lua"
+)
+PERL_TARGET = Path(
+    "code/programs/perl/build-tool/lib/CodingAdventures/BuildTool/"
+    "TrackedArtifactUnicode17.pm"
 )
 
 
@@ -1716,6 +1721,243 @@ return Unicode
     return header + body
 
 
+def _render_perl(
+    tables: tuple[
+        list[tuple[int, int]],
+        list[tuple[int, bool, tuple[int, ...]]],
+        list[tuple[int, int, int]],
+        list[tuple[int, tuple[int, ...]]],
+        list[tuple[int, tuple[int, ...]]],
+    ],
+) -> str:
+    """Render the process-free Perl implementation from the pinned UCD rows."""
+    combining, decomposition, composition, folding, uppercase = tables
+    combining_text = "\n".join(f"{cp:X};{ccc}" for cp, ccc in combining)
+    decomposition_text = "\n".join(
+        f"{cp:X};{'K' if compat else 'C'};{','.join(f'{value:X}' for value in mapping)}"
+        for cp, compat, mapping in decomposition
+    )
+    composition_text = "\n".join(
+        f"{left:X},{right:X};{result:X}" for left, right, result in composition
+    )
+    folding_text = _mapping_lines(folding)
+    uppercase_text = _mapping_lines(uppercase)
+    hashes = ", ".join(f"{name} sha256:{digest}" for name, digest in SOURCES.items())
+    header = f"""package CodingAdventures::BuildTool::TrackedArtifactUnicode17;
+
+use strict;
+use warnings;
+
+# Generated Unicode {UNICODE_VERSION} data and algorithms.
+# DO NOT EDIT. Run `python code/scripts/generate_tracked_artifact_unicode17.py`.
+# Sources: {UCD_BASE}
+# {hashes}
+# Unicode License v3: every source and binary distribution carries the full
+# notice as UNICODE-LICENSE.txt (sha256:{LICENSE_SHA256}).
+
+# Perl's host Unicode tables move with the interpreter. These source-embedded
+# rows keep validator results independent of the installed Perl version.
+our $UNICODE_VERSION = '{UNICODE_VERSION}';
+
+my $COMBINING_DATA = <<'UNICODE_COMBINING';
+{combining_text}
+UNICODE_COMBINING
+my $DECOMPOSITION_DATA = <<'UNICODE_DECOMPOSITION';
+{decomposition_text}
+UNICODE_DECOMPOSITION
+my $COMPOSITION_DATA = <<'UNICODE_COMPOSITION';
+{composition_text}
+UNICODE_COMPOSITION
+my $FOLDING_DATA = <<'UNICODE_FOLDING';
+{folding_text}
+UNICODE_FOLDING
+my $UPPERCASE_DATA = <<'UNICODE_UPPERCASE';
+{uppercase_text}
+UNICODE_UPPERCASE
+"""
+    body = r"""
+my $S_BASE = 0xAC00;
+my $L_BASE = 0x1100;
+my $V_BASE = 0x1161;
+my $T_BASE = 0x11A7;
+my $L_COUNT = 19;
+my $V_COUNT = 21;
+my $T_COUNT = 28;
+my $N_COUNT = $V_COUNT * $T_COUNT;
+my $S_COUNT = $L_COUNT * $N_COUNT;
+
+sub _data_lines {
+    my ($data) = @_;
+    return grep { length($_) } split /\n/, $data;
+}
+
+sub _hex_list {
+    my ($value) = @_;
+    return () unless length($value);
+    return map { hex($_) } split /,/, $value;
+}
+
+my %COMBINING = map {
+    my ($scalar, $value) = split /;/, $_, 2;
+    (hex($scalar) => 0 + $value);
+} _data_lines($COMBINING_DATA);
+
+my %DECOMPOSITION = map {
+    my ($scalar, $kind, $mapping) = split /;/, $_, 3;
+    (hex($scalar) => [$kind eq 'K', [_hex_list($mapping)]]);
+} _data_lines($DECOMPOSITION_DATA);
+
+my %COMPOSITION = map {
+    my ($pair, $result) = split /;/, $_, 2;
+    my ($left, $right) = split /,/, $pair, 2;
+    (hex($left) . ',' . hex($right) => hex($result));
+} _data_lines($COMPOSITION_DATA);
+
+sub _parse_mapping {
+    my ($data) = @_;
+    return map {
+        my ($scalar, $mapping) = split /;/, $_, 2;
+        (hex($scalar) => [_hex_list($mapping)]);
+    } _data_lines($data);
+}
+
+my %FOLDING = _parse_mapping($FOLDING_DATA);
+my %UPPERCASE = _parse_mapping($UPPERCASE_DATA);
+
+sub _combining_class {
+    my ($scalar) = @_;
+    return $COMBINING{$scalar} // 0;
+}
+
+sub _decompose_scalar {
+    my ($scalar, $compatibility, $output) = @_;
+    if ($scalar >= $S_BASE && $scalar < $S_BASE + $S_COUNT) {
+        my $index = $scalar - $S_BASE;
+        push @{$output}, $L_BASE + int($index / $N_COUNT);
+        push @{$output}, $V_BASE + int(($index % $N_COUNT) / $T_COUNT);
+        my $trailing = $T_BASE + ($index % $T_COUNT);
+        push @{$output}, $trailing unless $trailing == $T_BASE;
+        return;
+    }
+
+    my $row = $DECOMPOSITION{$scalar};
+    if (!defined($row) || ($row->[0] && !$compatibility)) {
+        push @{$output}, $scalar;
+        return;
+    }
+    _decompose_scalar($_, $compatibility, $output) for @{$row->[1]};
+}
+
+sub _canonical_order {
+    my ($scalars) = @_;
+    my $index = 0;
+    while ($index < @{$scalars}) {
+        if (_combining_class($scalars->[$index]) == 0) {
+            ++$index;
+            next;
+        }
+        my $ending = $index + 1;
+        ++$ending while $ending < @{$scalars} && _combining_class($scalars->[$ending]) != 0;
+        for my $current ($index + 1 .. $ending - 1) {
+            my $value = $scalars->[$current];
+            my $value_class = _combining_class($value);
+            my $insertion = $current;
+            while ($insertion > $index &&
+                    _combining_class($scalars->[$insertion - 1]) > $value_class) {
+                $scalars->[$insertion] = $scalars->[$insertion - 1];
+                --$insertion;
+            }
+            $scalars->[$insertion] = $value;
+        }
+        $index = $ending;
+    }
+}
+
+sub _compose_pair {
+    my ($left, $right) = @_;
+    if ($left >= $L_BASE && $left < $L_BASE + $L_COUNT &&
+            $right >= $V_BASE && $right < $V_BASE + $V_COUNT) {
+        return $S_BASE + ((($left - $L_BASE) * $V_COUNT) + $right - $V_BASE) * $T_COUNT;
+    }
+    if ($left >= $S_BASE && $left < $S_BASE + $S_COUNT &&
+            (($left - $S_BASE) % $T_COUNT) == 0 &&
+            $right > $T_BASE && $right < $T_BASE + $T_COUNT) {
+        return $left + $right - $T_BASE;
+    }
+    return $COMPOSITION{"$left,$right"};
+}
+
+sub _normalize {
+    my ($value, $compatibility) = @_;
+    my @decomposed;
+    _decompose_scalar($_, $compatibility, \@decomposed) for unpack('U*', $value);
+    _canonical_order(\@decomposed);
+    return '' unless @decomposed;
+
+    my @output = ($decomposed[0]);
+    my $starter_index = 0;
+    my $starter = $decomposed[0];
+    my $last_class = _combining_class($starter) == 0 ? 0 : 255;
+    for my $scalar (@decomposed[1 .. $#decomposed]) {
+        my $scalar_class = _combining_class($scalar);
+        my $composite = ($last_class == 0 || $last_class < $scalar_class)
+            ? _compose_pair($starter, $scalar)
+            : undef;
+        if (defined $composite) {
+            $output[$starter_index] = $composite;
+            $starter = $composite;
+            next;
+        }
+
+        push @output, $scalar;
+        if ($scalar_class == 0) {
+            $starter_index = $#output;
+            $starter = $scalar;
+        }
+        $last_class = $scalar_class;
+    }
+    return pack('U*', @output);
+}
+
+sub _map_scalars {
+    my ($value, $table) = @_;
+    my @output;
+    for my $scalar (unpack('U*', $value)) {
+        push @output, exists($table->{$scalar}) ? @{$table->{$scalar}} : $scalar;
+    }
+    return pack('U*', @output);
+}
+
+sub nfc {
+    my ($value) = @_;
+    return _normalize($value, 0);
+}
+
+sub nfkc {
+    my ($value) = @_;
+    return _normalize($value, 1);
+}
+
+sub casefold {
+    my ($value) = @_;
+    return _map_scalars($value, \%FOLDING);
+}
+
+sub nfkc_casefold {
+    my ($value) = @_;
+    return casefold(nfkc($value));
+}
+
+sub full_uppercase {
+    my ($value) = @_;
+    return _map_scalars($value, \%UPPERCASE);
+}
+
+1;
+"""
+    return header + body
+
+
 def _load_generated_module(path: Path):
     spec = importlib.util.spec_from_file_location("tracked_unicode17_generated", path)
     if spec is None or spec.loader is None:
@@ -2237,6 +2479,86 @@ io.write("ok\n")
 """
 
 
+_PERL_SELF_CHECK = r"""use strict;
+use warnings;
+use CodingAdventures::BuildTool::TrackedArtifactUnicode17 ();
+
+binmode STDIN, ':raw';
+binmode STDOUT, ':raw';
+binmode STDERR, ':raw';
+
+sub from_scalar_field {
+    my ($value) = @_;
+    return '' unless length($value);
+    return pack('U*', map { hex($_) } split /,/, $value);
+}
+
+my %counts = (N => 0, F => 0, U => 0);
+my $saw_version = 0;
+while (my $line = <STDIN>) {
+    $line =~ s/\r?\n\z//;
+    my @fields = split /;/, $line, -1;
+    my $kind = shift @fields;
+    if ($kind eq 'V') {
+        die "generated Perl Unicode version drift\n"
+            unless $fields[0] eq $CodingAdventures::BuildTool::TrackedArtifactUnicode17::UNICODE_VERSION;
+        $saw_version = 1;
+    }
+    elsif ($kind eq 'N') {
+        ++$counts{N};
+        my ($c1, $c2, $c3, $c4, $c5) = map { from_scalar_field($_) } @fields;
+        my $valid =
+            CodingAdventures::BuildTool::TrackedArtifactUnicode17::nfc($c1) eq $c2 &&
+            CodingAdventures::BuildTool::TrackedArtifactUnicode17::nfc($c2) eq $c2 &&
+            CodingAdventures::BuildTool::TrackedArtifactUnicode17::nfc($c3) eq $c2 &&
+            CodingAdventures::BuildTool::TrackedArtifactUnicode17::nfc($c4) eq $c4 &&
+            CodingAdventures::BuildTool::TrackedArtifactUnicode17::nfc($c5) eq $c4 &&
+            CodingAdventures::BuildTool::TrackedArtifactUnicode17::nfkc($c1) eq $c4 &&
+            CodingAdventures::BuildTool::TrackedArtifactUnicode17::nfkc($c2) eq $c4 &&
+            CodingAdventures::BuildTool::TrackedArtifactUnicode17::nfkc($c3) eq $c4 &&
+            CodingAdventures::BuildTool::TrackedArtifactUnicode17::nfkc($c4) eq $c4 &&
+            CodingAdventures::BuildTool::TrackedArtifactUnicode17::nfkc($c5) eq $c4;
+        die "normalization Perl self-check failed at vector $counts{N}\n" unless $valid;
+    }
+    elsif ($kind eq 'F') {
+        ++$counts{F};
+        my $source = from_scalar_field($fields[0]);
+        die "case-fold Perl self-check failed at vector $counts{F}\n"
+            unless CodingAdventures::BuildTool::TrackedArtifactUnicode17::casefold($source)
+                eq from_scalar_field($fields[1]);
+        die "NFKC-case-fold Perl self-check failed at vector $counts{F}\n"
+            unless CodingAdventures::BuildTool::TrackedArtifactUnicode17::nfkc_casefold($source)
+                eq from_scalar_field($fields[2]);
+    }
+    elsif ($kind eq 'U') {
+        ++$counts{U};
+        die "full-uppercase Perl self-check failed at vector $counts{U}\n"
+            unless CodingAdventures::BuildTool::TrackedArtifactUnicode17::full_uppercase(
+                from_scalar_field($fields[0])
+            ) eq from_scalar_field($fields[1]);
+    }
+    else {
+        die "unknown Perl self-check record\n";
+    }
+}
+die "missing generated Perl Unicode version\n" unless $saw_version;
+
+my $outlined = pack(
+    'U*',
+    0x1CCE3, 0x1CCE4, 0x1CCD9, 0x1CCDA, 0x5F, 0x1CCE2,
+    0x1CCE4, 0x1CCD9, 0x1CCEA, 0x1CCE1, 0x1CCDA, 0x1CCE8,
+);
+die "Unicode 17 outlined-letter Perl sentinel failed\n"
+    unless CodingAdventures::BuildTool::TrackedArtifactUnicode17::nfkc_casefold($outlined)
+        eq 'node_modules';
+die "Unicode 17 Todhri Perl sentinel failed\n"
+    unless CodingAdventures::BuildTool::TrackedArtifactUnicode17::nfc(
+        pack('U*', 0x105D2, 0x0307)
+    ) eq pack('U*', 0x105C9);
+print "ok\n";
+"""
+
+
 _LUA_OUTPUT_LIMIT = 8192
 _WINDOWS_CREATE_SUSPENDED = 0x00000004
 _WINDOWS_JOB_OBJECT_EXTENDED_LIMIT_INFORMATION = 9
@@ -2569,6 +2891,15 @@ def _lua_self_check_environment() -> dict[str, str]:
     }
 
 
+def _perl_self_check_environment() -> dict[str, str]:
+    """Retain only Windows loader state; Perl receives no module/user paths."""
+    return {
+        name: value
+        for name in ("SystemRoot", "WINDIR")
+        if (value := os.environ.get(name)) is not None
+    }
+
+
 def _self_check_lua(
     root: Path,
     lua_output: str,
@@ -2613,6 +2944,55 @@ def _self_check_lua(
         raise RuntimeError(f"generated Lua Unicode self-check failed: {detail}")
 
 
+def _self_check_perl(
+    root: Path,
+    perl_output: str,
+    sources: dict[str, str],
+    python_module,
+    perl_executable: Path,
+) -> None:
+    del root  # Kept parallel with the other emitted-runtime call signatures.
+    perl = perl_executable.expanduser().resolve(strict=True)
+    if not perl.is_file():
+        raise RuntimeError(f"Perl Unicode self-check executable is not a file: {perl}")
+    environment = _perl_self_check_environment()
+
+    with tempfile.TemporaryDirectory(prefix="unicode17-perl-check-") as temporary:
+        temporary_path = Path(temporary)
+        lib_path = temporary_path / "lib"
+        module_path = (
+            lib_path / "CodingAdventures" / "BuildTool" / "TrackedArtifactUnicode17.pm"
+        )
+        runner_path = temporary_path / "self_check.pl"
+        module_path.parent.mkdir(parents=True)
+        module_path.write_text(perl_output, encoding="utf-8", newline="\n")
+        runner_path.write_text(_PERL_SELF_CHECK, encoding="utf-8", newline="\n")
+        version = _run_bounded_process(
+            [str(perl), "-T", "-v"],
+            cwd=temporary_path,
+            env=environment,
+            input_text="",
+            timeout=10,
+        )
+        version_lines = (version.stdout + version.stderr).splitlines()
+        if version.returncode != 0 or not any(
+            line.startswith("This is perl 5, version 38, subversion 2 (v5.38.2)")
+            for line in version_lines
+        ):
+            raise RuntimeError("Perl Unicode self-check requires pinned Perl 5.38.2")
+        result = _run_bounded_process(
+            [str(perl), "-T", "-I", str(lib_path), str(runner_path)],
+            cwd=temporary_path,
+            env=environment,
+            input_text=_lua_self_check_payload(python_module, sources),
+            timeout=180,
+        )
+    normalized_stdout = result.stdout.replace("\r\n", "\n")
+    if result.returncode != 0 or normalized_stdout != "ok\n":
+        detail = result.stderr.strip() or result.stdout.strip() or "no diagnostic"
+        raise RuntimeError(f"generated Perl Unicode self-check failed: {detail}")
+
+
 def _write_or_check(root: Path, target: Path, content: str, check: bool) -> None:
     absolute = root / target
     content = content.replace("\r\n", "\n")
@@ -2639,7 +3019,7 @@ def _write_bytes_or_check(
 def _selected_runtime_self_checks(requested: list[str] | None) -> tuple[str, ...]:
     """Return the emitted runtimes whose official-vector checks must run."""
     if requested is None:
-        return ("typescript", "ruby", "elixir", "lua")
+        return ("typescript", "ruby", "elixir", "lua", "perl")
     return tuple(dict.fromkeys(requested))
 
 
@@ -2649,7 +3029,7 @@ def main() -> int:
     parser.add_argument(
         "--self-check-runtime",
         action="append",
-        choices=("typescript", "ruby", "elixir", "lua"),
+        choices=("typescript", "ruby", "elixir", "lua", "perl"),
         help=(
             "limit emitted-runtime official-vector checks; repeat to select more "
             "than one runtime (default: every emitted runtime)"
@@ -2660,6 +3040,14 @@ def main() -> int:
         type=Path,
         help=(
             "exact repository-pinned Lua 5.4.7 executable used when the Lua "
+            "emitted-runtime check is selected"
+        ),
+    )
+    parser.add_argument(
+        "--perl-executable",
+        type=Path,
+        help=(
+            "exact reviewed Perl 5.38.2 executable used when the Perl "
             "emitted-runtime check is selected"
         ),
     )
@@ -2682,6 +3070,7 @@ def main() -> int:
     ruby_output = _render_ruby(tables)
     elixir_output = _render_elixir(tables)
     lua_output = _render_lua(tables)
+    perl_output = _render_perl(tables)
     for target in PYTHON_TARGETS:
         _write_or_check(root, target, python_output, args.check)
     _write_or_check(root, CSHARP_TARGET, csharp_output, args.check)
@@ -2689,6 +3078,7 @@ def main() -> int:
     _write_or_check(root, RUBY_TARGET, ruby_output, args.check)
     _write_or_check(root, ELIXIR_TARGET, elixir_output, args.check)
     _write_or_check(root, LUA_TARGET, lua_output, args.check)
+    _write_or_check(root, PERL_TARGET, perl_output, args.check)
     for target in LICENSE_TARGETS:
         _write_bytes_or_check(root, target, upstream_license, args.check)
     python_module = _load_generated_module(root / PYTHON_TARGETS[0])
@@ -2709,6 +3099,16 @@ def main() -> int:
             sources,
             python_module,
             args.lua_executable,
+        )
+    if "perl" in selected_runtimes:
+        if args.perl_executable is None:
+            parser.error("--perl-executable is required for the Perl self-check")
+        _self_check_perl(
+            root,
+            perl_output,
+            sources,
+            python_module,
+            args.perl_executable,
         )
     print(
         f"Unicode {UNICODE_VERSION} generated and verified: "

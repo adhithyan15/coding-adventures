@@ -1,0 +1,16 @@
+% ============================================================================
+% suffix-meaning.query.adj — worked recall over the suffix-meaning library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does this
+% suffix mean?" (direct) or "which suffix means this?" (reverse) — it
+% states no fact of its own — it only `import`s the grounded table and
+% asks binding queries.
+% ============================================================================
+
+import "suffix-meaning.adj"
+
+? suffix_meaning(_ful, $M)           % expect full_of (direct)
+? suffix_meaning($S, without)        % expect _less (reverse)
+? suffix_meaning($S, is_or_can_be)   % expect BOTH _able and _ible (reverse, many-to-one)
+? suffix_meaning(_en, $M)            % expect made_of (direct, material category)
+? suffix_meaning(_ic, $M)            % expect abstain -- a real suffix the same source chart also covers, but not one of the seven tabled here

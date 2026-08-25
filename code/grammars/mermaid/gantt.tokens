@@ -1,0 +1,20 @@
+# @version 1
+# Mermaid 11.16.1 Gantt core token grammar.
+# Upstream: packages/mermaid/src/diagrams/gantt/parser/gantt.jison
+
+case_sensitive: false
+
+skip:
+  WHITESPACE          = /[ \t]+/
+  COMMENT             = /(?:%%|#)[^\r\n]*/
+
+NEWLINE               = /\r?\n/
+SEMICOLON             = ";"
+HEADER                = /gantt/
+ACC_DESCR_BLOCK       = /accDescr[ \t]*\{[^}]*\}/
+ACC_TITLE_STATEMENT   = /accTitle[ \t]*:[^#\r\n;]+/
+ACC_DESCR_STATEMENT   = /accDescr[ \t]*:[^#\r\n;]+/
+TITLE_STATEMENT       = /title[ \t]+[^\r\n;]+/
+DATE_FORMAT_STATEMENT = /dateFormat[ \t]+[^#\r\n;]+/
+SECTION_STATEMENT     = /section[ \t]+[^\r\n;]+/
+TASK_STATEMENT        = /[^#:\r\n;]+:[^#\r\n;]+/

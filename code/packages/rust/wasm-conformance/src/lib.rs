@@ -1032,6 +1032,34 @@ mod tests {
     }
 
     #[test]
+    fn either_nested_four_way_matches_any_of_the_four_alternatives() {
+        // Relaxed SIMD epic PR3: the real `relaxed_min_max.wast` corpus
+        // is the first relaxed-simd file whose `either` groups carry FOUR
+        // alternatives (see `wasm-wast-parser`'s generalized `either`
+        // parsing arm, which folds N children into a right-leaning chain
+        // of nested `Expected::Either`s). This confirms grading itself --
+        // the existing recursive `||` in `value_matches_expected`, which
+        // needed NO code changes for this -- correctly accepts a match on
+        // the 3RD or 4TH alternative too, not just the first two the
+        // original binary-only `either` arm would have exposed.
+        let nested = Expected::Either(
+            Box::new(Expected::Either(
+                Box::new(Expected::Either(
+                    Box::new(Expected::Value(ConstValue::I32(0))),
+                    Box::new(Expected::Value(ConstValue::I32(1))),
+                )),
+                Box::new(Expected::Value(ConstValue::I32(2))),
+            )),
+            Box::new(Expected::Value(ConstValue::I32(3))),
+        );
+        assert!(value_matches_expected(&WasmValue::I32(0), None, &nested));
+        assert!(value_matches_expected(&WasmValue::I32(1), None, &nested));
+        assert!(value_matches_expected(&WasmValue::I32(2), None, &nested));
+        assert!(value_matches_expected(&WasmValue::I32(3), None, &nested));
+        assert!(!value_matches_expected(&WasmValue::I32(4), None, &nested));
+    }
+
+    #[test]
     fn assert_trap_passes_on_real_trap_fails_on_normal_return() {
         let results = outcomes(
             r#"

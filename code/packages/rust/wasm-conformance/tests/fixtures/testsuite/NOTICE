@@ -1940,6 +1940,53 @@ gradeable, `NotYetSupported` unchanged at 67); `assert_return` rose from
 unchanged at 545). No other already-vendored file's stats changed --
 zero regressions.
 
+extended 2026-08-25 (relaxed SIMD epic PR3 -- see code/specs/
+               W19-wasm-relaxed-simd-first-slice.md -- relaxed_min_max.
+               wast, `f32x4.relaxed_min`/`relaxed_max` (sub-opcodes
+               0x10d/0x10e) and `f64x2.relaxed_min`/`relaxed_max`
+               (sub-opcodes 0x10f/0x110), same pinned commit, no
+               re-pin): the THIRD file from the relaxed-simd proposal,
+               byte-identical (8577 bytes) against a fresh re-fetch at
+               this pinned SHA. Lives at the testsuite repo ROOT like
+               every other file above, no `PROPOSAL_FILES` entry
+               needed. Grades 1/1 `module` and 24/24 `assert_return`,
+               ALL REAL passes. This is the FIRST relaxed-simd file
+               whose `either` groups carry FOUR alternatives, not the
+               two every prior relaxed-simd file used -- forced a
+               genuine generalization of `wasm-wast-parser`'s `either`
+               parsing arm (folds N children into a right-leaning chain
+               of nested `Expected::Either`s instead of assuming
+               exactly 2 -- the original 2-only version would have
+               silently DROPPED alternatives 3 and 4 rather than
+               erroring, a real correctness bug); `wasm-conformance`'s
+               existing recursive `||`-based grading needed NO changes
+               at all to support the deeper nesting. Confirmed BY HAND
+               that this repo's chosen behavior for all 4 opcodes
+               (reusing the existing `f32x4.pmin`/`pmax`/`f64x2.pmin`/
+               `pmax` bodies verbatim -- `lane_b < lane_a ? lane_b :
+               lane_a` for min, `lane_a < lane_b ? lane_b : lane_a` for
+               max, both falling back to the first/lower-pushed operand
+               unchanged on a NaN or a signed-zero tie) computes, for
+               EVERY `either` group in this file, an EXACT, literal
+               match to that group's second alternative -- not merely
+               "a member of some looser equivalence" -- so, same as
+               PR1/PR2, no new numeric semantics were needed for these
+               4 opcodes, only reuse of existing bodies plus the
+               generic `either` N-ary fix above. The remaining 4
+               relaxed-simd files at this pinned SHA
+               (`i32x4_relaxed_trunc.wast` -- flagged as having ZERO
+               real assert_return directives, weaker coverage than
+               every other relaxed-simd file -- `relaxed_dot_product.
+               wast`, `relaxed_laneselect.wast`, `relaxed_madd_nmadd.
+               wast`) remain unvendored, each its own future PR's
+               scope.
+
+Aggregate `module` rose from 1270/1271 to 1271/1272 (+1 pass, +1
+gradeable, `NotYetSupported` unchanged at 67); `assert_return` rose from
+44631/44648 to 44655/44672 (+24 pass, +24 gradeable, `NotYetSupported`
+unchanged at 545). No other already-vendored file's stats changed --
+zero regressions.
+
 The vendored files are licensed under the Apache License, Version 2.0 --
 see the accompanying LICENSE file, itself vendored verbatim from the same
 pinned commit.

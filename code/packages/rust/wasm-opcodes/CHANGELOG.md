@@ -2,6 +2,32 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.52] - 2026-08-25 - Relaxed SIMD epic PR3: f32x4/f64x2 relaxed_min/relaxed_max
+
+### Added
+
+- 4 new `SIMD_OPS` entries, the THIRD/FOURTH/FIFTH/SIXTH relaxed-simd
+  opcodes (see `code/specs/W19-wasm-relaxed-simd-first-slice.md`):
+  `f32x4.relaxed_min` (`0x10d`), `f32x4.relaxed_max` (`0x10e`),
+  `f64x2.relaxed_min` (`0x10f`), `f64x2.relaxed_max` (`0x110`) -- 242
+  SIMD opcodes total, up from 238.
+- Sub-opcode values confirmed against the same relaxed-simd Overview.md
+  encoding table `relaxed_swizzle`/`relaxed_q15mulr_s` cite. `0x10d`
+  (269), `0x10e` (270), `0x10f` (271), `0x110` (272) all LEB128-encode
+  as 2-byte sequences (`[0x8D, 0x02]`, `[0x8E, 0x02]`, `[0x8F, 0x02]`,
+  `[0x90, 0x02]`).
+- 4 new `SimdOpKind` variants: `RelaxedMinF32x4`, `RelaxedMaxF32x4`,
+  `RelaxedMinF64x2`, `RelaxedMaxF64x2`. Same `(v128, v128) -> v128`
+  binary shape as every other relaxed-simd op. Hand-verified against the
+  real upstream `relaxed_min_max.wast` corpus's own `either` groups
+  (the FIRST relaxed-simd file whose `either` groups carry FOUR
+  alternatives, not two): this repo's existing `PminF32x4`/`PmaxF32x4`/
+  `PminF64x2`/`PmaxF64x2` bodies (a plain `<`-based conditional select
+  that returns the first operand unchanged on a NaN or a signed-zero
+  tie) reproduce the corpus's second `either` alternative EXACTLY in
+  every one of that file's test cases, so these 4 opcodes reuse those
+  bodies verbatim -- no new numeric semantics needed.
+
 ## [0.2.51] - 2026-08-25 - Relaxed SIMD epic PR2: i16x8.relaxed_q15mulr_s
 
 ### Added

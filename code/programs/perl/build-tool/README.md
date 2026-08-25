@@ -88,6 +88,27 @@ the package and repository-relative manifest, and make the CLI exit with code
 2. Diagnostics never expose the checkout path or silently replace invalid
 input bytes; a well-formed literal Unicode replacement character remains valid.
 
+## Tracked-Artifact Validation
+
+`CodingAdventures::BuildTool::Validator::validate_tracked_artifact_snapshot`
+is a pure adapter over caller-supplied path and entry-kind records. It consumes
+all five language-neutral fixtures, normalizes separators lexically, redacts
+unsafe paths, rejects exact, case, nested, and Unicode compatibility aliases of
+`node_modules`, applies Unicode-scalar length and ordering rules, and enforces
+full-uppercase Windows reserved basenames. Regular, symlink, and reparse kinds
+remain inert metadata; the adapter never opens or follows them.
+
+Generated source-embedded Unicode 17.0.0 NFC, NFKC, full default-fold, and
+full-uppercase tables keep policy independent of the installed Perl runtime's
+Unicode data. Regenerate the module and its Unicode License v3 notice with an
+explicit reviewed Perl 5.38.2 executable:
+
+```bash
+python code/scripts/generate_tracked_artifact_unicode17.py \
+  --self-check-runtime perl \
+  --perl-executable /absolute/path/to/perl
+```
+
 ## Architecture
 
 | Module | Responsibility |
@@ -103,6 +124,8 @@ input bytes; a well-formed literal Unicode replacement character remains valid.
 | `Plan.pm` | JSON build plan serialisation |
 | `GlobMatch.pm` | Glob-to-regex conversion for Starlark `srcs` |
 | `StarlarkEval.pm` | Starlark BUILD detection and rule mapping |
+| `Validator.pm` | Build contracts and pure tracked-artifact snapshot policy |
+| `TrackedArtifactUnicode17.pm` | Generated, source-embedded Unicode 17 policy tables |
 
 ## Perl Idioms
 

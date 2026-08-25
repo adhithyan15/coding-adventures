@@ -101,7 +101,7 @@ class UnicodeDownloadBoundaryTests(unittest.TestCase):
     ) -> None:
         self.assertEqual(
             generator._selected_runtime_self_checks(None),
-            ("typescript", "ruby", "elixir", "lua"),
+            ("typescript", "ruby", "elixir", "lua", "perl"),
         )
 
     def test_runtime_self_check_selection_can_isolate_elixir_for_ci(self) -> None:
@@ -292,6 +292,42 @@ class UnicodeDownloadBoundaryTests(unittest.TestCase):
             generator.LICENSE_TARGETS,
         )
 
+    def test_perl_renderer_exports_the_pinned_process_free_api(self) -> None:
+        rendered = generator._render_perl(
+            (
+                [(0x0300, 230)],
+                [(0x00C0, False, (0x0041, 0x0300))],
+                [(0x0041, 0x0300, 0x00C0)],
+                [(0x0041, (0x0061,))],
+                [(0x0061, (0x0041,))],
+            )
+        )
+
+        self.assertIn(
+            "package CodingAdventures::BuildTool::TrackedArtifactUnicode17;", rendered
+        )
+        self.assertIn("our $UNICODE_VERSION = '17.0.0';", rendered)
+        self.assertIn("sub nfc", rendered)
+        self.assertIn("sub nfkc", rendered)
+        self.assertIn("sub casefold", rendered)
+        self.assertIn("sub nfkc_casefold", rendered)
+        self.assertIn("sub full_uppercase", rendered)
+        self.assertNotIn("Unicode::Normalize", rendered)
+        self.assertNotIn("uc(", rendered)
+
+    def test_perl_output_and_license_are_declared_targets(self) -> None:
+        self.assertEqual(
+            generator.PERL_TARGET,
+            Path(
+                "code/programs/perl/build-tool/lib/CodingAdventures/BuildTool/"
+                "TrackedArtifactUnicode17.pm"
+            ),
+        )
+        self.assertIn(
+            Path("code/programs/perl/build-tool/UNICODE-LICENSE.txt"),
+            generator.LICENSE_TARGETS,
+        )
+
     def test_typescript_self_check_runs_every_official_vector_family(self) -> None:
         sources = {
             "NormalizationTest.txt": "0041;0041;0041;0041;0041; # LATIN A\n",
@@ -450,6 +486,52 @@ class UnicodeDownloadBoundaryTests(unittest.TestCase):
         self.assertNotIn("PATH", invocation["env"])
         self.assertNotIn("LUA_INIT", invocation["env"])
         self.assertNotIn("LUA_PATH", invocation["env"])
+
+    def test_perl_self_check_runs_every_official_vector_family(self) -> None:
+        sources = {
+            "NormalizationTest.txt": "0041;0041;0041;0041;0041; # LATIN A\n",
+            "CaseFolding.txt": "0041; C; 0061; # LATIN A\n",
+            "UnicodeData.txt": ";".join(["0061"] + [""] * 11 + ["0041"] + [""] * 2),
+            "SpecialCasing.txt": "0061; 0061; 0041; 0041; ; # LATIN A\n",
+        }
+
+        class _Module:
+            @staticmethod
+            def nfkc_casefold(value: str) -> str:
+                return value.lower()
+
+        executable = Path(sys.executable).resolve()
+        version = subprocess.CompletedProcess(
+            [], 0, "This is perl 5, version 38, subversion 2 (v5.38.2)\n", ""
+        )
+        completed = subprocess.CompletedProcess([], 0, "ok\r\n", "")
+        with mock.patch.object(
+            generator,
+            "_run_bounded_process",
+            side_effect=(version, completed),
+        ) as run:
+            generator._self_check_perl(
+                Path("C:/repo"),
+                "1;\n",
+                sources,
+                _Module(),
+                executable,
+            )
+
+        version_command = run.call_args_list[0].args[0]
+        self.assertEqual(version_command, [str(executable), "-T", "-v"])
+        command = run.call_args_list[1].args[0]
+        self.assertEqual(command[:2], [str(executable), "-T"])
+        self.assertIn("-I", command)
+        invocation = run.call_args_list[1].kwargs
+        self.assertEqual(
+            invocation["input_text"],
+            "V;17.0.0\nN;41;41;41;41;41\nF;41;61;61\nU;61;41\n",
+        )
+        self.assertEqual(invocation["timeout"], 180)
+        self.assertNotIn("PATH", invocation["env"])
+        self.assertNotIn("PERL5OPT", invocation["env"])
+        self.assertNotIn("PERL5LIB", invocation["env"])
 
     def test_bounded_process_discards_output_past_the_limit(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

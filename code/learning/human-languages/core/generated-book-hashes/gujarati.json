@@ -218,6 +218,20 @@
         "GU-R15-name-exchange-r3"
       ],
       "tex": "gujarati/book/chapters/ch15-r4-script-names.tex"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 16,
+      "sourceHash": "fnv1a64:4c648b3812ed5d69",
+      "lessonIds": [
+        "GU-R16-naam-r4",
+        "GU-R16-maarun-r4",
+        "GU-R16-chhe-r4",
+        "GU-R16-my-name-is-r4",
+        "GU-R16-anand-r4",
+        "GU-R16-wellbeing-r3"
+      ],
+      "tex": "gujarati/book/chapters/ch16-r4-introduction.tex"
     }
   ]
 }

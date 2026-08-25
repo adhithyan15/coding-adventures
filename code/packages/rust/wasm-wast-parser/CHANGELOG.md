@@ -1,5 +1,38 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.71 — 2026-08-25 — Relaxed SIMD epic PR3: f32x4/f64x2 relaxed_min/relaxed_max, N-ary `either`
+
+### Added
+
+- `SimdOpKind::RelaxedMinF32x4`/`RelaxedMaxF32x4`/`RelaxedMinF64x2`/
+  `RelaxedMaxF64x2` joined the existing no-immediate SIMD match arm
+  (same list `RelaxedSwizzle`/`RelaxedQ15mulrI16x8S` are already in) in
+  both `encode_stream_instr` and `encode_flat_instr` -- all 4 opcodes
+  take no immediate beyond the opcode itself, identical encoding shape
+  to `f32x4.pmin`/`pmax`/`f64x2.pmin`/`pmax`. Third/fourth/fifth/sixth
+  opcodes of the relaxed-simd epic -- see `code/specs/
+  W19-wasm-relaxed-simd-first-slice.md`.
+
+### Changed
+
+- **Generalized `parse_expected`'s `(either A B)` arm from exactly 2
+  children to N (>= 2)**: the real `relaxed_min_max.wast` corpus is the
+  FIRST relaxed-simd file whose `either` groups carry FOUR alternatives,
+  not the two `i8x16_relaxed_swizzle.wast`/`i16x8_relaxed_q15mulr_s.
+  wast` each used. The original `items[1]`/`items[2]`-only version would
+  have silently DROPPED alternatives 3 and 4 rather than erroring -- a
+  real correctness bug (a test whose actual result matches only the
+  3rd/4th alternative would have wrongly failed to grade as passing).
+  `Expected::Either` itself stays binary (its own doc comment already
+  anticipated "a nested `either`") -- N children now fold into a
+  right-leaning chain of nested `Either`s, so `wasm-conformance`'s
+  existing recursive `||`-based grading needed NO changes at all to
+  support the deeper nesting.
+- New tests: `either_with_four_alternatives_folds_into_nested_binary_
+  either` (v128 shape, mirrors the real corpus) and `either_with_four_
+  alternatives_on_scalar_i32_expected_values` (confirms the fold isn't
+  v128-specific).
+
 ## 0.1.70 — 2026-08-25 — Relaxed SIMD epic PR2: i16x8.relaxed_q15mulr_s
 
 ### Added

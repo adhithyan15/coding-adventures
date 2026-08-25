@@ -6,6 +6,8 @@ use FindBin qw($Bin);
 use lib "$Bin/../lib";
 
 use Test2::V0;
+use Cwd qw(abs_path);
+use JSON::PP ();
 use File::Temp qw(tempdir);
 use File::Path qw(make_path);
 
@@ -27,6 +29,15 @@ sub write_file {
     open(my $fh, '>', $path) or die "Cannot create $path: $!";
     print {$fh} $content;
     close($fh);
+}
+
+sub read_json {
+    my ($path) = @_;
+    open(my $fh, '<:raw', $path) or die "Cannot read $path: $!";
+    local $/;
+    my $payload = <$fh>;
+    close($fh);
+    return JSON::PP->new->utf8->decode($payload);
 }
 
 subtest 'fails without normalized outputs' => sub {
@@ -199,6 +210,34 @@ BUILD
         ),
         undef,
         'validation passes'
+    );
+};
+
+subtest 'tracked-artifact validator consumes every language-neutral fixture' => sub {
+    my $repo_root = abs_path("$Bin/../../../../..");
+    my $cases = "$repo_root/code/specs/fixtures/build-tool-v1/cases";
+
+    for my $name (qw(clean forbidden aliases invalid unicode-boundaries)) {
+        my $fixture = read_json("$cases/validation-tracked-artifacts-$name.json");
+        my $snapshot = $fixture->{input}{options}{tracked_artifact_snapshot};
+        my $actual = CodingAdventures::BuildTool::Validator::validate_tracked_artifact_snapshot(
+            $snapshot->{entries},
+            $snapshot->{unicode_version},
+        );
+        is($actual, $fixture->{expected}{diagnostics}, "$name diagnostics match");
+    }
+};
+
+subtest 'tracked-artifact validator rejects Unicode version drift' => sub {
+    like(
+        dies {
+            CodingAdventures::BuildTool::Validator::validate_tracked_artifact_snapshot(
+                [],
+                '16.0.0',
+            );
+        },
+        qr/tracked artifact Unicode version must be 17\.0\.0/,
+        'version mismatch fails closed',
     );
 };
 
