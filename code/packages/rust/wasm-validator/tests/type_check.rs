@@ -1582,6 +1582,63 @@ fn invalid_i8x16_add_sat_s_given_an_i32_result_type_instead_of_v128() {
 }
 
 #[test]
+fn valid_f32x4_max_pmin_pmax_family() {
+    // SIMD widen PR34 (task #217-219): f32x4.max/pmin/pmax -- the last 3
+    // opcodes of f32x4's arithmetic family, closing the gap left by PR19
+    // (abs/mul/min) and PR29 (neg/sqrt/add/sub/div). All 3 are BINARY
+    // (pop two v128s, push one) -- same shape as `f32x4.min` above. `max`
+    // mirrors `min`'s NaN-canonicalizing/signed-zero runtime subtlety;
+    // `pmin`/`pmax` are DELIBERATELY SIMPLER `<`-based conditional
+    // selects (see wasm-opcodes' `SimdOpKind::PminF32x4`/`PmaxF32x4` doc
+    // comments) -- but both are entirely invisible to the type checker,
+    // which only ever sees the opaque V128 type on both sides.
+    assert_valid(
+        r#"(module
+             (func (param v128 v128) (result v128) (f32x4.max (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (f32x4.pmin (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (f32x4.pmax (local.get 0) (local.get 1))))"#,
+    );
+}
+
+#[test]
+fn invalid_f32x4_max_given_an_i32_operand_instead_of_v128() {
+    // Confirms the type checker actually enforces V128 in both operand
+    // slots, not just accepting whatever's on the stack -- one operand
+    // here is a plain i32, so the pop (expecting V128) must reject it.
+    assert_invalid("(module (func (param v128 i32) (result v128) (f32x4.max (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn invalid_f32x4_pmin_given_an_i32_operand_instead_of_v128() {
+    assert_invalid("(module (func (param v128 i32) (result v128) (f32x4.pmin (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn invalid_f32x4_pmax_given_an_i32_operand_instead_of_v128() {
+    assert_invalid("(module (func (param v128 i32) (result v128) (f32x4.pmax (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn invalid_f32x4_pmax_given_only_one_operand_instead_of_two() {
+    // Confirms the type checker rejects a stack underflow, not just a
+    // wrong-typed operand -- BINARY ops need TWO v128s on the stack, and
+    // this one only pushes one before the op runs.
+    assert_invalid("(module (func (param v128) (result v128) (f32x4.pmax (local.get 0))))");
+}
+
+#[test]
+fn invalid_f32x4_pmin_given_no_operand_at_all() {
+    assert_invalid("(module (func (result v128) (f32x4.pmin)))");
+}
+
+#[test]
+fn invalid_f32x4_max_given_an_i32_result_type_instead_of_v128() {
+    // Confirms the type checker enforces the RESULT type too, not just
+    // operand types.
+    assert_invalid("(module (func (param v128 v128) (result i32) (f32x4.max (local.get 0) (local.get 1))))");
+}
+
+#[test]
 fn valid_v128_local_and_global_round_trip() {
     // `ValueType::V128` used as a local type and a global type, not just
     // a param/result -- proves the value-type parser and validator agree

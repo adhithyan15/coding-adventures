@@ -100,7 +100,11 @@ Fetched:       2026-08-13 (initial slice, W05/PR3), extended 2026-08-14 (WASM08)
                extended 2026-08-24 (task #214-216 -- simd_i8x16_sat_arith.wast/
                simd_i16x8_sat_arith.wast, 8 new opcodes (i8x16.add_sat_s/_u/
                sub_sat_s/_u, i16x8.add_sat_s/_u/sub_sat_s/_u), same pinned
-               commit, no re-pin -- see below)
+               commit, no re-pin),
+               extended 2026-08-24 (task #217-219 -- simd_f32x4.wast/
+               simd_f32x4_pmin_pmax.wast, 3 new opcodes (f32x4.max/pmin/
+               pmax), same pinned commit, no re-pin -- see below; the best
+               directive-per-opcode ratio in this campaign so far)
 Fetch method:  code/packages/rust/wasm-conformance/tests/fixtures/fetch_testsuite.py
 
 The pinned commit was resolved via:
@@ -984,6 +988,64 @@ pre-existing, unrelated baseline failures (17 `assert_return`, 1
 and tracked separately, none touching `i8x16.*_sat_*`/`i16x8.*_sat_*` or
 this campaign) are byte-for-byte unchanged by this PR, confirming zero
 regressions. No other already-vendored file's stats changed.
+
+SIMD widen PR34 (task #217-219) implements `f32x4.max` (`0xE9`),
+`f32x4.pmin` (`0xEA`), `f32x4.pmax` (`0xEB`) and vendors `simd_f32x4.wast`/
+`simd_f32x4_pmin_pmax.wast` -- the last 3 opcodes of f32x4's arithmetic
+family, closing the gap left by PR19 (abs/mul/min) and PR29 (neg/sqrt/
+add/sub/div). `f32x4.max` is the exact BINARY per-lane transplant of
+this crate's own scalar `f32.max` handler, mirroring `f32x4.min`'s
+NaN-propagating, signed-zero-aware `fmax` (NOT Rust's native
+`f32::max()`/IEEE `maxNum`) -- if EITHER operand is NaN the result is
+NaN, and for a `-0.0`/`+0.0` tie, `+0.0` wins (the opposite tie-break
+from `min`'s `-0.0`). `f32x4.pmin`/`f32x4.pmax` are DELIBERATELY
+DIFFERENT and SIMPLER -- "pseudo-min"/"pseudo-max", a plain IEEE-754
+`<`-based conditional select (`pmin(a, b) = b < a ? b : a`,
+`pmax(a, b) = a < b ? b : a`) with NO NaN canonicalization: since
+IEEE-754 `<` is always `false` when either operand is NaN, `pmin`/`pmax`
+return the FIRST operand `a` UNCHANGED whenever either operand is NaN --
+NOT a canonicalized NaN the way `min`/`max` would produce. This is the
+classic point of confusion/bugs porting real WASM SIMD implementations,
+so it was implemented as a genuinely separate code path (not a
+transplant of `min`/`max`'s NaN logic) and tested explicitly at both
+operand positions. Each sub-opcode byte fetched live from `BinarySIMD.md`
+and cross-checked against the already-implemented `f32x4.min` (`0xE8`)
+entry: `0xE9`/`0xEA`/`0xEB` sit immediately past it with no gap, all
+three confirmed free of collision with every existing `SIMD_OPS` entry.
+
+`simd_f32x4.wast` is the upstream corpus's general f32x4 smoke-test file
+(covers all of `abs`/`neg`/`sqrt`/`add`/`sub`/`mul`/`div`/`min`/`max`,
+already-implemented ops included, plus this PR's new `max`); the
+`pmin`/`pmax` pseudo-min/pseudo-max semantics get their own much larger
+dedicated corpus file, `simd_f32x4_pmin_pmax.wast` -- together, at 3
+opcodes for 2 files totaling 4674 real directives (788 for
+`simd_f32x4.wast`: 2 module, 772 assert_return, 8 assert_invalid, 8
+assert_malformed; 3886 for `simd_f32x4_pmin_pmax.wast`: 1 module, 3872
+assert_return, 6 assert_invalid, 8 assert_malformed), the best
+directive-per-opcode ratio in this campaign so far.
+
+100% pass on every directive kind across both files (`simd_f32x4.wast`:
+2/2 module, 772/772 assert_return, 8/8 assert_invalid, 8/8
+assert_malformed; `simd_f32x4_pmin_pmax.wast`: 1/1 module, 3872/3872
+assert_return, 6/6 assert_invalid, 8/8 assert_malformed) -- including
+every one of `simd_f32x4_pmin_pmax.wast`'s own NaN-operand-order
+vectors, the highest-risk correctness area for this PR (a `pmin`/`pmax`
+implementation that wrongly reused `min`/`max`'s NaN-canonicalization
+logic would have failed a meaningful chunk of that file's 3872
+`assert_return` directives; it did not). Aggregate `assert_return` rose
+from 34011/34028 to 38655/38672 (+4644 pass, +4644 gradeable, exactly
+these two files' combined `assert_return` count, `fail` unchanged at
+17); `assert_invalid` rose from 1838/1838 to 1852/1852 (+14, exactly
+these two files' combined count, still 100.0% of gradeable directives);
+`assert_malformed` rose from 335/335 to 351/351 (+16, exactly these two
+files' combined count, still 100.0% of gradeable directives); `module`
+pass count rose from 1186/1187 to 1189/1190 (+3, exactly these two
+files' combined module count, all passing). The pre-existing, unrelated
+baseline failures (17 `assert_return`, 1 `module`, 1 `assert_unlinkable`,
+2 `register` -- present before this PR and tracked separately, none
+touching `f32x4.max`/`pmin`/`pmax` or this campaign) are byte-for-byte
+unchanged by this PR, confirming zero regressions. No other
+already-vendored file's stats changed.
 
 The vendored files are licensed under the Apache License, Version 2.0 --
 see the accompanying LICENSE file, itself vendored verbatim from the same

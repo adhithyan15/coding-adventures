@@ -2,7 +2,33 @@
 
 All notable changes to this package will be documented in this file.
 
-## [0.2.36] - 2026-08-24 - SIMD widen PR33: i8x16/i16x8 add_sat/sub_sat (task #214-216)
+## [0.2.37] - 2026-08-24 - SIMD widen PR34: f32x4.max/pmin/pmax (task #217-219)
+
+### Added
+
+- 3 new `SIMD_OPS` entries: `f32x4.max` (`0xE9`), `f32x4.pmin` (`0xEA`),
+  `f32x4.pmax` (`0xEB`) -- the last 3 opcodes of f32x4's arithmetic
+  family, sitting immediately past the already-implemented `f32x4.min`'s
+  `0xE8` (PR19) with no gap. 188 SIMD opcodes total, up from 185. Each
+  sub-opcode byte fetched live from the SIMD proposal's own
+  `BinarySIMD.md` and cross-checked against the already-implemented
+  `f32x4.min` entry: `0xE9`/`0xEA`/`0xEB` run contiguously past it,
+  confirmed free of collision with every existing `SIMD_OPS` entry.
+- 3 new `SimdOpKind` variants: `MaxF32x4`, `PminF32x4`, `PmaxF32x4`.
+  `MaxF32x4` mirrors `MinF32x4`'s WASM-spec `fmax` NaN-propagating,
+  signed-zero-aware semantics exactly (the exact per-lane transplant of
+  this crate's own scalar `f32.max` opcode, `0x97`). `PminF32x4`/
+  `PmaxF32x4` are a DIFFERENT, deliberately SIMPLER "pseudo-min"/
+  "pseudo-max" shape -- a plain IEEE-754 `<`-based conditional select
+  (`pmin(a, b) = b < a ? b : a`, `pmax(a, b) = a < b ? b : a`) with NO
+  NaN canonicalization: since IEEE-754 `<` is always `false` when either
+  operand is NaN, `pmin`/`pmax` return the FIRST operand `a` UNCHANGED
+  whenever either operand is NaN, NOT a canonicalized NaN result the way
+  `MinF32x4`/`MaxF32x4` would produce -- the classic point of confusion
+  porting real WASM SIMD implementations, deliberately NOT implemented
+  by reusing `min`/`max`'s NaN logic.
+- Table-size test updated from 185 to 188 entries. New test
+  `simd_f32x4_max_pmin_pmax_have_the_real_verified_sub_opcode_values`.
 
 ### Added
 

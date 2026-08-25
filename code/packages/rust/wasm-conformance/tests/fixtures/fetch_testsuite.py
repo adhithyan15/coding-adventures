@@ -511,6 +511,23 @@ TESTSUITE_FILES = [
     # NOTICE file for the real vendored/pass counts.
     "simd_i8x16_sat_arith.wast",
     "simd_i16x8_sat_arith.wast",
+    # SIMD widen PR34 (task #217-219): simd_f32x4.wast and
+    # simd_f32x4_pmin_pmax.wast -- vendors the dedicated upstream files
+    # for f32x4.max (0xE9), f32x4.pmin (0xEA), f32x4.pmax (0xEB), this
+    # PR's 3 new opcodes, closing the f32x4 arithmetic family (abs/mul/
+    # min in PR19, neg/sqrt/add/sub/div in PR29, this PR's max/pmin/pmax).
+    # `simd_f32x4.wast` is the upstream corpus's general f32x4 smoke-test
+    # file (covers all of abs/neg/sqrt/add/sub/mul/div/min/max, already-
+    # implemented ops included, plus this PR's new ones); the deliberately
+    # DIFFERENT, deliberately SIMPLER "pseudo-min"/"pseudo-max" semantics
+    # (a plain IEEE-754 `<`-based conditional select, NOT the same code
+    # path as `min`/`max`'s NaN canonicalization -- see wasm-opcodes'
+    # `SimdOpKind::PminF32x4`/`PmaxF32x4` doc comments) get their own
+    # dedicated, much larger corpus file, `simd_f32x4_pmin_pmax.wast` --
+    # together the best directive-per-opcode ratio in this campaign so
+    # far. See the NOTICE file for the real vendored/pass counts.
+    "simd_f32x4.wast",
+    "simd_f32x4_pmin_pmax.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under
