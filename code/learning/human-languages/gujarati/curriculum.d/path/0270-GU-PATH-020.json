@@ -1,0 +1,13 @@
+{
+  "id": "GU-PATH-020",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "GU-R18-how-are-you-r4",
+    "GU-R18-majaa-r4"
+  ],
+  "before": [],
+  "inline": [
+    "GU-EXT-026-R4-BRIDGE-D-WELLBEING-A"
+  ],
+  "after": []
+}

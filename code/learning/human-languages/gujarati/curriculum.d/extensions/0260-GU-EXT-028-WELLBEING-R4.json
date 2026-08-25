@@ -1,0 +1,13 @@
+{
+  "id": "GU-EXT-028-WELLBEING-R4",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "consolidation",
+  "canDo": "I can rebuild and write the complete wellbeing exchange at R4.",
+  "prerequisites": [
+    "GU-EXT-027-VANDHO-R4"
+  ],
+  "lessons": [
+    "GU-R18-wellbeing-r4"
+  ]
+}

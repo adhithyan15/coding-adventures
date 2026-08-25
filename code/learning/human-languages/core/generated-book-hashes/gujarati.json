@@ -246,6 +246,19 @@
         "GU-R17-kem-r4"
       ],
       "tex": "gujarati/book/chapters/ch17-r4-respectful-questions.tex"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 18,
+      "sourceHash": "fnv1a64:c43620faab548ea7",
+      "lessonIds": [
+        "GU-R18-how-are-you-r4",
+        "GU-R18-majaa-r4",
+        "GU-R18-no-problem-r4",
+        "GU-R18-wellbeing-r4",
+        "GU-R18-farewell-r4"
+      ],
+      "tex": "gujarati/book/chapters/ch18-r4-wellbeing-farewells.tex"
     }
   ]
 }

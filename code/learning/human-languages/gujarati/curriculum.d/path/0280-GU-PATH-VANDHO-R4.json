@@ -1,0 +1,12 @@
+{
+  "id": "GU-PATH-VANDHO-R4",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "lessons": [
+    "GU-R18-no-problem-r4"
+  ],
+  "before": [],
+  "inline": [
+    "GU-EXT-027-VANDHO-R4"
+  ],
+  "after": []
+}

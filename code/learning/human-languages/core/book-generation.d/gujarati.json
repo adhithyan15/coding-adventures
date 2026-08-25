@@ -142,6 +142,13 @@
       "output": "gujarati/book/chapters/ch17-r4-respectful-questions.tex",
       "unicodeScript": "Gujarati",
       "scriptCommand": "gu"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 18,
+      "output": "gujarati/book/chapters/ch18-r4-wellbeing-farewells.tex",
+      "unicodeScript": "Gujarati",
+      "scriptCommand": "gu"
     }
   ]
 }

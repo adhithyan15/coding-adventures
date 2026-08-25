@@ -1,0 +1,25 @@
+{
+  "chapter": 18,
+  "title": "Fourth Return: Wellbeing and Farewells",
+  "label": "ch:gu-r4-wellbeing-farewells",
+  "canDo": "I can retrieve and write the respectful wellbeing exchange and two familiar farewells without a model.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING",
+    "SPINE-COURTESY-THANK",
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "GU-R18-farewell-r4",
+    "kind": "production",
+    "summary": "Five zero-atom lessons close the next exact R4 windows and end with independent farewell production at coherent R3 and R4 intervals.",
+    "assesses": [
+      "GU-CONCEPT-C03-MAJAA-01",
+      "GU-CONCEPT-C03-PRACTICE-01",
+      "GU-CONCEPT-C03-TAMEKEMCHHO-01",
+      "GU-CONCEPT-C03-VANDHONAHI-01",
+      "GU-CONCEPT-C04-KAALE-01",
+      "GU-CONCEPT-C04-MALISHUN-01",
+      "GU-CONCEPT-C04-PACHHAMALISHUN-01"
+    ]
+  }
+}
