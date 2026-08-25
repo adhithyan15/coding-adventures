@@ -4896,6 +4896,78 @@
       "json": "spanish/narration/ch323.json",
       "textHash": "fnv1a64:a7ef93b48647e06f",
       "jsonHash": "fnv1a64:8de8138c31f6287c"
+    },
+    {
+      "language": "spanish",
+      "chapter": 324,
+      "sourceHash": "fnv1a64:dbc9bfedfc8063e8",
+      "lessonIds": [
+        "ES-C324-verdad",
+        "ES-C324-falso",
+        "ES-C324-acaso",
+        "ES-C324-menos",
+        "ES-C324-siquiera"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch324.txt",
+      "json": "spanish/narration/ch324.json",
+      "textHash": "fnv1a64:8ff220827c570903",
+      "jsonHash": "fnv1a64:ffba6e0a90dae291"
+    },
+    {
+      "language": "spanish",
+      "chapter": 325,
+      "sourceHash": "fnv1a64:8f080bbaa2473bf6",
+      "lessonIds": [
+        "ES-C325-pais",
+        "ES-C325-ciudad",
+        "ES-C325-barrio",
+        "ES-C325-plaza",
+        "ES-C325-lugar"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch325.txt",
+      "json": "spanish/narration/ch325.json",
+      "textHash": "fnv1a64:55b9f9bfc20327b5",
+      "jsonHash": "fnv1a64:8920ffdf5d1f7ee3"
+    },
+    {
+      "language": "spanish",
+      "chapter": 326,
+      "sourceHash": "fnv1a64:cc7d61e86d697a34",
+      "lessonIds": [
+        "ES-C326-nervioso",
+        "ES-C326-valiente",
+        "ES-C326-solo",
+        "ES-C326-libre",
+        "ES-C326-listo"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch326.txt",
+      "json": "spanish/narration/ch326.json",
+      "textHash": "fnv1a64:1e41d9f694c38b02",
+      "jsonHash": "fnv1a64:0aaec201852475d0"
+    },
+    {
+      "language": "spanish",
+      "chapter": 327,
+      "sourceHash": "fnv1a64:f212bea65a4adfa3",
+      "lessonIds": [
+        "ES-C327-despierto",
+        "ES-C327-dormido",
+        "ES-C327-fuerte",
+        "ES-C327-debil",
+        "ES-C327-sano"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch327.txt",
+      "json": "spanish/narration/ch327.json",
+      "textHash": "fnv1a64:7b90b6edc5ab7d67",
+      "jsonHash": "fnv1a64:d7fd163b7f5be06c"
     }
   ],
   "findings": []

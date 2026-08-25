@@ -1,0 +1,772 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 326,
+  "title": "Five Ways to Be",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:cc7d61e86d697a34",
+  "lessons": [
+    {
+      "id": "ES-C326-nervioso",
+      "sequence": 5420,
+      "title": "nervioso — an ending you already own, on a fibre you already have",
+      "headword": "nervioso",
+      "romanization": "nervioso",
+      "gloss": "nervous — Latin nervosus from nervus, a sinew; English nerve, nervous and neuron are the same fibre, and -oso is the -ous you already know",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d6d9d693ed64d34b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the square, then another place. (La plaza; otro lugar.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "-oso — the ending that answers to English -ous."
+            },
+            {
+              "kind": "speech",
+              "text": "estar — the verb this word takes."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ner-BYO-so, the weight on the third-from-last beat. The v is soft, made without the lips quite meeting, and io glides through as one. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nervioso — \"nervous.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin nervus was not a nerve. It was a sinew — a tendon, a bowstring, the tough cord that makes a thing pull. Its Greek twin is neûron, the same word on the other side of the sea, which is why English ended up with nerve from the Latin and neuron, neurology and neurotic from the Greek."
+            },
+            {
+              "kind": "speech",
+              "text": "Nervōsus therefore meant full of sinew — strong, tough, wiry. English kept that older sense a long while: nervous prose is still prose with muscle in it. Only when doctors began calling the body's signalling cords nerves did the adjective turn inward and start meaning anxious in both languages at once."
+            },
+            {
+              "kind": "speech",
+              "text": "The build is one you can already take apart. Nervus plus the Latin -ōsus gives Spanish -oso, which is the English -ous — the ending behind famoso and famous, curioso and curious. And the -o switches for a woman: nerviosa."
+            },
+            {
+              "kind": "speech",
+              "text": "One thing to fix now. Being nervous is a state you are in, not a thing you are, so it takes estar: estoy nervioso, not soy nervioso."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first of five ways to answer ¿cómo estás? with something other than bien."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nervioso",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nervioso*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "estoy nervioso",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *estoy nervioso*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nervioso — nerviosa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nervioso — nerviosa*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was a nervus before it was a nerve? (A sinew — a bowstring.) And which Spanish verb does nervioso take? (Estar.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C326-valiente",
+      "sequence": 5430,
+      "title": "valiente — the opposite of nervioso, and a verb you already say",
+      "headword": "valiente",
+      "romanization": "valiente",
+      "gloss": "brave — the old present participle of valer, from Latin valere, to be strong or be worth; English valiant, valour, value and valid are the same root",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c3221021762f5dcc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say another place, then I am nervous. (Otro lugar; estoy nervioso.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "más vale pájaro en mano — the vale in it is this verb."
+            },
+            {
+              "kind": "speech",
+              "text": "triste — the word that showed why an -e ending never switches."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ba-LYEN-te, the weight on the middle beat. The v is soft again, and ie rides through as one glide. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "valiente — \"brave.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin valēre meant to be strong, and from there to be worth — because what is strong is what holds up, and what holds up is what is worth having. Both meanings survived. Spanish valer is to be worth, and its old present participle, the one being strong, hardened into the adjective valiente."
+            },
+            {
+              "kind": "speech",
+              "text": "You have been saying the verb already. In the proverb about the bird in the hand, más vale is is worth more. And the everyday Spanish vale — okay, fine, agreed — is the same form: it holds, it stands."
+            },
+            {
+              "kind": "speech",
+              "text": "English took the whole family. Valiant is valiente through French. Valour is the strength. Value is the worth. Something valid stands up; something invalid does not, and an invalid person was once somebody whose strength had gone. To prevail is to be stronger in front. To convalesce is to grow strong together with your body again. Even the Latin farewell valē — be strong — is the same word, and it is what the Spanish vale is descended from."
+            },
+            {
+              "kind": "speech",
+              "text": "It ends in -e, so there is nothing to switch: un chico valiente, una chica valiente."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two states that face each other, and a root you can hear in vale all day."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "valiente",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *valiente*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nervioso — valiente",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nervioso — valiente*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "una chica valiente",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *una chica valiente*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What were the two meanings of valēre? (To be strong, and to be worth.) And why does valiente stay the same for a woman? (It ends in -e.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C326-solo",
+      "sequence": 5440,
+      "title": "solo — one word, two meanings, and an accent that no longer exists",
+      "headword": "solo",
+      "romanization": "solo",
+      "gloss": "alone, and also only — Latin solus; the accent that once separated the two meanings was abolished in 2010, so five letters now do both jobs",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d77f86bc30178f50",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say I am nervous, then brave. (Estoy nervioso; valiente.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "SO-lo, two even beats, the weight on the first. Both o sounds stay short and pure — Spanish never lets an o slide off into a second vowel the way English go does. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "solo — \"alone.\" And also \"only.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin sōlus meant alone, and English is full of it. Your sole purpose is your only one. A musician plays a solo, alone. A solitary person keeps to solitude. Desolate ground has been left all alone. A soliloquy is speaking alone on a stage."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish put the one word to two jobs. Estoy solo is I am alone. Solo quiero agua is I only want water. Same five letters, two meanings, and for most of the twentieth century Spanish separated them in writing: the only one was spelled sólo, with an accent, and the alone one was not."
+            },
+            {
+              "kind": "speech",
+              "text": "That accent is gone. In 2010 the Royal Spanish Academy ruled it unnecessary, because the sentence around the word already tells you which meaning is running. You will still see sólo in older books and from writers who kept the habit, and neither spelling is a mistake to read — but the rule now is that both are written solo."
+            },
+            {
+              "kind": "speech",
+              "text": "There is one difference the spelling never showed anyway. Alone describes a person, so it switches: a woman says estoy sola. Only describes the sentence, not a person, so it never moves: solo stays solo for everybody."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A word that does two jobs, and the reason the accent it used to carry was dropped."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "estoy solo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *estoy solo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "estoy sola",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *estoy sola*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "solo quiero agua",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *solo quiero agua*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What two things can solo mean? (Alone, and only.) And which of the two changes to sola for a woman? (Alone — the only one never moves.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C326-libre",
+      "sequence": 5450,
+      "title": "libre — not the same word as libro, and Spanish keeps them apart",
+      "headword": "libre",
+      "romanization": "libre",
+      "gloss": "free — Latin liber meaning unowned, which is a different Latin word from the liber that gave libro; English liberty, liberal and deliver come off this one",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3830d1b35c442322",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say brave, then I only want water. (Valiente; solo quiero agua.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el libro — close enough to trip you, and a different word underneath."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "LEE-bre, the weight on the first beat. The b is soft between vowels, and the r is one flick — hold it any longer and you have said libre with a roll it does not want. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "libre — \"free.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin had two words spelled liber and they had nothing to do with each other. One was the inner bark of a tree, the surface people wrote on before paper, and it became the word for a book — Spanish libro, English library. The other meant not owned by anybody: a free person rather than a slave."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish inherited both and kept them clearly apart: libro for the object, libre for the condition. English inherited both too, but sent them to different shelves — library from the bark, liberty from the free person — so the collision is invisible until somebody points at it."
+            },
+            {
+              "kind": "speech",
+              "text": "The free liber is a large family in English. Liberty and liberate are plain. A liberal was originally a free person's education, the kind a citizen rather than a labourer received. And to deliver is dē-līberāre, to set free from something — which is why a delivery is a parcel released to you."
+            },
+            {
+              "kind": "speech",
+              "text": "Libre ends in -e, so it never switches. And it does one thing English cannot: English free covers both unowned and costing nothing, while Spanish splits them — libre is the first, gratis is the second."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four states, and a pair of look-alikes you will never confuse again."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "libre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *libre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el libro — libre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el libro — libre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "estoy libre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *estoy libre*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Are libro and libre the same Latin word? (No — one was tree bark, the other meant unowned.) And which Spanish word means free of charge? (Gratis.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C326-listo",
+      "sequence": 5460,
+      "title": "listo — the word where ser and estar change the meaning outright",
+      "headword": "listo",
+      "romanization": "listo",
+      "gloss": "clever with ser, ready with estar — one word whose meaning is decided by the verb in front of it; the RAE traces it to Gothic lists, cunning",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c6fee290c8b60ed5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say I am alone, then free. (Estoy solo; libre.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ser vs estar — the split this word finally pays off."
+            },
+            {
+              "kind": "speech",
+              "text": "blanco from blank — the Germanic layer of Spanish, already met."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "LEES-to, the weight on the first beat. No vowel goes in front of the st — Spanish usually refuses that cluster at the start of a word, but in the middle it runs clean. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "listo — \"clever,\" or \"ready,\" and which one depends entirely on the verb."
+            },
+            {
+              "kind": "speech",
+              "text": "Ser listo is to be clever. That is what somebody is: a standing fact about them. Estar listo is to be ready. That is what somebody is right now, and in ten minutes it may have changed."
+            },
+            {
+              "kind": "speech",
+              "text": "You were taught the ser/estar split a long way back as a rule about permanent and temporary. Here is where the rule stops being an abstraction and starts paying rent. With most adjectives, choosing the wrong verb sounds odd. With listo, it says something else entirely. Es lista praises her mind. Está lista means she has her coat on."
+            },
+            {
+              "kind": "speech",
+              "text": "The word's own history is a smaller surprise. The Royal Spanish Academy traces listo to Gothic lists, cunning — Spanish has a Germanic layer left by the Visigoths, and you have met it already in blanco, which came from a Germanic blank rather than from Latin. German still uses the word: List is a clever trick, and listig means crafty. English once had it too, as Old English list, skill or craft, and then let it go — one of the places where Spanish kept a Germanic word that English dropped."
+            },
+            {
+              "kind": "speech",
+              "text": "The -o switches: listo, lista."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five states of mind — and proof that ser and estar are not decoration."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "estoy listo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *estoy listo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "es listo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *es listo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "soy lista, pero no estoy lista",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *soy lista, pero no estoy lista*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which verb makes listo mean clever? (Ser.) And which makes it mean ready? (Estar.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

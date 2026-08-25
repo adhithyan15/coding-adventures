@@ -6326,6 +6326,90 @@
           "ES-LEX-C323-WHEN-20"
         ]
       }
+    },
+    {
+      "chapter": 324,
+      "title": "True, False, and Not Even",
+      "label": "ch:verdad-y-siquiera",
+      "canDo": "I can weigh what somebody has told me with verdad, falso, acaso, menos and ni siquiera, and say which two Latin twins gave mas and menos.",
+      "spineNodes": [
+        "SPINE-RESPOND-BASIC"
+      ],
+      "payoff": {
+        "lesson": "ES-C324-siquiera",
+        "kind": "production",
+        "summary": "Complete ES-C324-siquiera: call a claim la verdad or falso, hedge it with acaso, size it with mas o menos, and empty it out with ni siquiera.",
+        "assesses": [
+          "ES-LEX-C324-TRUE-01",
+          "ES-LEX-C324-TRUE-02",
+          "ES-LEX-C324-TRUE-03",
+          "ES-LEX-C324-TRUE-04",
+          "ES-LEX-C324-TRUE-05"
+        ]
+      }
+    },
+    {
+      "chapter": 325,
+      "title": "Country, City, Neighbourhood",
+      "label": "ch:pais-y-lugar",
+      "canDo": "I can name five nested places in Spanish — el pais, la ciudad, el barrio, la plaza and el lugar — and say which one of them is Arabic rather than Latin.",
+      "spineNodes": [
+        "SPINE-MEET-GREET"
+      ],
+      "payoff": {
+        "lesson": "ES-C325-lugar",
+        "kind": "production",
+        "summary": "Complete ES-C325-lugar: say where you are from with pais and ciudad, place yourself in a barrio and a plaza, and name a spot with lugar.",
+        "assesses": [
+          "ES-LEX-C325-PLACE-06",
+          "ES-LEX-C325-PLACE-07",
+          "ES-LEX-C325-PLACE-08",
+          "ES-LEX-C325-PLACE-09",
+          "ES-LEX-C325-PLACE-10"
+        ]
+      }
+    },
+    {
+      "chapter": 326,
+      "title": "Five Ways to Be",
+      "label": "ch:nervioso-y-listo",
+      "canDo": "I can say I am nervous, brave, alone, free or ready in Spanish, and say why ser listo and estar listo mean two different things.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "ES-C326-listo",
+        "kind": "production",
+        "summary": "Complete ES-C326-listo: answer with nervioso or valiente, say estoy solo and estoy libre, and split ser listo from estar listo.",
+        "assesses": [
+          "ES-LEX-C326-STATE-11",
+          "ES-LEX-C326-STATE-12",
+          "ES-LEX-C326-STATE-13",
+          "ES-LEX-C326-STATE-14",
+          "ES-LEX-C326-STATE-15"
+        ]
+      }
+    },
+    {
+      "chapter": 327,
+      "title": "Awake, Asleep, Strong, Weak",
+      "label": "ch:despierto-y-sano",
+      "canDo": "I can report on my body with despierto, dormido, fuerte, debil and sano, and say why a vowel breaks in duermo but not in dormido.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "ES-C327-sano",
+        "kind": "production",
+        "summary": "Complete ES-C327-sano: say estoy despierto and estoy dormido, put fuerte against debil, and close with sano y salvo.",
+        "assesses": [
+          "ES-LEX-C327-STATE-16",
+          "ES-LEX-C327-STATE-17",
+          "ES-LEX-C327-STATE-18",
+          "ES-LEX-C327-STATE-19",
+          "ES-LEX-C327-STATE-20"
+        ]
+      }
     }
   ]
 }

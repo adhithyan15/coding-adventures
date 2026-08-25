@@ -4072,6 +4072,70 @@
       "after": []
     },
     {
+      "id": "ES-PATH-324-01",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "ES-C324-verdad",
+        "ES-C324-falso",
+        "ES-C324-acaso",
+        "ES-C324-menos",
+        "ES-C324-siquiera"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-324-TRUE"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-325-01",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "ES-C325-pais",
+        "ES-C325-ciudad",
+        "ES-C325-barrio",
+        "ES-C325-plaza",
+        "ES-C325-lugar"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-325-PLACE"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-326-01",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "ES-C326-nervioso",
+        "ES-C326-valiente",
+        "ES-C326-solo",
+        "ES-C326-libre",
+        "ES-C326-listo"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-326-STATE"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-327-01",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "ES-C327-despierto",
+        "ES-C327-dormido",
+        "ES-C327-fuerte",
+        "ES-C327-debil",
+        "ES-C327-sano"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-327-STATE"
+      ],
+      "after": []
+    },
+    {
       "id": "ES-PATH-310-01",
       "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
       "lessons": [
@@ -4207,7 +4271,8 @@
         "ES-PATH-005",
         "ES-PATH-282-01",
         "ES-PATH-289-01",
-        "ES-PATH-296-01"
+        "ES-PATH-296-01",
+        "ES-PATH-325-01"
       ],
       "omits": [
         "GREETING-FORMAL",
@@ -4238,7 +4303,8 @@
         "ES-PATH-298-01",
         "ES-PATH-316-01",
         "ES-PATH-317-01",
-        "ES-PATH-319-04"
+        "ES-PATH-319-04",
+        "ES-PATH-324-01"
       ],
       "omits": [
         "RESPONSE-YESNO",
@@ -4285,7 +4351,9 @@
         "ES-PATH-314-01",
         "ES-PATH-315-01",
         "ES-PATH-318-03",
-        "ES-PATH-318-04"
+        "ES-PATH-318-04",
+        "ES-PATH-326-01",
+        "ES-PATH-327-01"
       ],
       "omits": [
         "WORD-GOOD"
@@ -8408,6 +8476,66 @@
         "ES-C323-antes",
         "ES-C323-despues",
         "ES-C323-mientras"
+      ]
+    },
+    {
+      "id": "ES-EXT-324-TRUE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can call a claim la verdad or falso, hedge it with acaso, size it with mas o menos, and empty it out with ni siquiera.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C324-verdad",
+        "ES-C324-falso",
+        "ES-C324-acaso",
+        "ES-C324-menos",
+        "ES-C324-siquiera"
+      ]
+    },
+    {
+      "id": "ES-EXT-325-PLACE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name the country, the city, the neighbourhood, the square and the spot I am standing in.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C325-pais",
+        "ES-C325-ciudad",
+        "ES-C325-barrio",
+        "ES-C325-plaza",
+        "ES-C325-lugar"
+      ]
+    },
+    {
+      "id": "ES-EXT-326-STATE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can say I am nervous, brave, alone, free or ready, and choose ser or estar for listo on purpose.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C326-nervioso",
+        "ES-C326-valiente",
+        "ES-C326-solo",
+        "ES-C326-libre",
+        "ES-C326-listo"
+      ]
+    },
+    {
+      "id": "ES-EXT-327-STATE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can say I am awake, asleep, strong, weak or well in Spanish.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C327-despierto",
+        "ES-C327-dormido",
+        "ES-C327-fuerte",
+        "ES-C327-debil",
+        "ES-C327-sano"
       ]
     },
     {

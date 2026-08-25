@@ -5242,6 +5242,26 @@
       "output": "spanish/book/chapters/ch323-antes-y-despues.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 324,
+      "output": "spanish/book/chapters/ch324-verdad-y-siquiera.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 325,
+      "output": "spanish/book/chapters/ch325-pais-y-lugar.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 326,
+      "output": "spanish/book/chapters/ch326-nervioso-y-listo.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 327,
+      "output": "spanish/book/chapters/ch327-despierto-y-sano.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "output": "tamil/book/chapters/ch06-dative-case.tex",
