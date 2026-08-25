@@ -259,6 +259,15 @@
         "GU-R18-farewell-r4"
       ],
       "tex": "gujarati/book/chapters/ch18-r4-wellbeing-farewells.tex"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 19,
+      "sourceHash": "fnv1a64:38a78bafa5b475c2",
+      "lessonIds": [
+        "GU-R19-doorway-nine-r4"
+      ],
+      "tex": "gujarati/book/chapters/ch19-doorway-r4.tex"
     }
   ]
 }

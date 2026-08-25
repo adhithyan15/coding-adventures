@@ -350,6 +350,20 @@
       "json": "gujarati/narration/ch18.json",
       "textHash": "fnv1a64:b0ec5efc3beb747e",
       "jsonHash": "fnv1a64:0fb1e03561c2ad43"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 19,
+      "sourceHash": "fnv1a64:401ac6320deb466e",
+      "lessonIds": [
+        "GU-R19-doorway-nine-r4"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "gujarati/narration/ch19.txt",
+      "json": "gujarati/narration/ch19.json",
+      "textHash": "fnv1a64:1f5ca943693878af",
+      "jsonHash": "fnv1a64:c502718ca918b6e1"
     }
   ],
   "findings": []

@@ -1280,6 +1280,13 @@
       "scriptCommand": "gu"
     },
     {
+      "language": "gujarati",
+      "chapter": 19,
+      "output": "gujarati/book/chapters/ch19-doorway-r4.tex",
+      "unicodeScript": "Gujarati",
+      "scriptCommand": "gu"
+    },
+    {
       "language": "hindi",
       "chapter": 1,
       "output": "hindi/book/chapters/ch01-greetings.tex",
