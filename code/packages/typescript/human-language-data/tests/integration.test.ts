@@ -104,6 +104,23 @@ describe("real curriculum", () => {
       /horn.*dead consonants.*conjuncts.*not a universal handwriting direction.*no standalone ductus claim/i,
     );
 
+    const kannadaAnusvara = scripts.kannada!.marks!.find((mark) => mark.mark === "ಂ")!;
+    expect(kannadaAnusvara.role).toBe("anusvara");
+    expect(kannadaAnusvara.compositionOrder).toEqual([
+      "write the Kannada carrier first",
+      "add the anusvara to mark consonant nasalization",
+    ]);
+    expect(kannadaAnusvara.example).toEqual({ base: "ಅ", combined: "ಅಂ", sound: "aṃ" });
+    expect(kannadaAnusvara.compositionSource?.url).toBe(
+      "https://www.unicode.org/L2/L2012/12289-index-cnvrt.pdf",
+    );
+    expect(kannadaAnusvara.compositionSource?.citation).toMatch(
+      /Indic Scripts in Unicode.*Kannada.*376.*consonant nasalization sign.*U\+0C82.*KANNADA SIGN ANUSVARA.*2012.*Unicode Standard 17\.0/i,
+    );
+    expect(kannadaAnusvara.compositionSource?.variation).toMatch(
+      /consonant-nasalization role.*not a universal handwriting direction.*pen-lift count.*encoded composition convention.*no standalone ductus claim/i,
+    );
+
     const tamilU = scripts.tamil!.marks!.find((mark) => mark.mark === "ு")!;
     expect(tamilU.role).toBe("vowel-sign");
     expect(tamilU.compositionOrder).toEqual([
@@ -322,9 +339,11 @@ describe("real curriculum", () => {
     expect(affected.get("ட") ?? 0).toBe(0);
     expect(missingByScript.get("tamil.json")?.has("ே")).toBe(false);
     expect(affected.get("ே") ?? 0).toBe(0);
+    expect(missingByScript.get("kannada.json")?.has("ಂ")).toBe(false);
+    expect(affected.get("ಂ") ?? 0).toBe(0);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["ಂ", 24]);
+    ).toEqual(["ள", 20]);
   });
 
   it("loaded every track (17+ and growing)", () => {
