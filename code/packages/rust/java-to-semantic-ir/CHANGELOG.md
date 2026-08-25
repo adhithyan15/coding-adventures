@@ -98,6 +98,27 @@ All notable changes to the `java-to-semantic-ir` crate will be documented in thi
   and rejects a manifest that doesn't declare it — an M1-established
   convention (already applied to local declarations) this milestone's new
   `Param`-emitting code path had not yet picked up.
+- **Caught by `/security-review` before push (MEDIUM, algorithmic-
+  complexity DoS, CWE-407)**: `has_mutual_recursion`'s first version
+  probed every call-graph edge with its own independent reachability
+  search (`reaches`, ported from `python-to-semantic-ir`), giving the
+  whole check `O(E·(V+E))` time. Unlike this crate's other guarded
+  traversals, nothing bounds the number of *sibling* methods in one
+  class body, so a large, densely-interconnected call graph (many
+  methods each calling many others) was reachable from ordinary — if
+  very large — valid Java source, not just an adversarial hand-built
+  tree, making this a real (if higher-effort-to-trigger) DoS risk rather
+  than a purely theoretical one. Fixed by replacing the per-edge probe
+  with a single `O(V+E)` three-color DFS cycle detection (a back edge to
+  a still-`Gray` node — one still on the current DFS path — is exactly a
+  cycle; an edge from a node to itself is skipped so plain self-recursion
+  still doesn't count), implemented with an explicit work-stack rather
+  than real recursion, since the method count isn't otherwise bounded.
+  Three new regression tests cover a 3-method cycle (not just an
+  adjacent pair), two unrelated self-recursive methods with no edge
+  between them, and a non-cyclic call chain — proving the rewritten
+  algorithm still gets both the positive and negative cases right, not
+  just the original 2-cycle/self-recursion pair.
 
 ## [0.4.0] - 2026-08-25
 

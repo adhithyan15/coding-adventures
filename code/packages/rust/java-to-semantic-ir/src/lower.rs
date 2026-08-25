@@ -846,24 +846,68 @@ impl Lowerer {
         self.first_child_named(statement, "return_statement")
     }
 
-    /// Does any top-level method reach back to a method it's called by,
-    /// through one or more calls (a cycle of length ≥ 2 in
-    /// `call_graph`)? Mirrors `python-to-semantic-ir`'s identical
-    /// `has_mutual_recursion`/`reaches` pair exactly — plain self-
-    /// recursion (`f` calling `f`) does not count.
+    /// Does the call graph contain a cycle of length ≥ 2 (two or more
+    /// methods that call each other, however indirectly)? Plain self-
+    /// recursion (`f` calling `f` directly) does not count.
+    ///
+    /// A single linear-time (`O(V+E)`) three-color DFS, not the naive
+    /// "probe every edge with its own reachability search" approach
+    /// (`O(E·(V+E))`, which `python-to-semantic-ir`'s otherwise-
+    /// identically-purposed `has_mutual_recursion`/`reaches` pair uses):
+    /// found by `/security-review` as a real algorithmic-complexity DoS
+    /// risk (CWE-407) on a large, densely-interconnected call graph (many
+    /// methods each calling many others) — unlike this crate's other
+    /// guarded traversals, nothing bounds the number of *sibling* methods
+    /// in one class body, so the naive approach's edge-count-squared
+    /// blowup was reachable from ordinary (if very large) valid Java
+    /// source, not just an adversarial hand-built tree. A back edge to a
+    /// node still `Gray` (on the current DFS path) is exactly a cycle;
+    /// skipping an edge from a node to itself is what excludes plain
+    /// self-recursion. Implemented with an explicit work-stack, not real
+    /// recursion — the number of methods in one class is not otherwise
+    /// bounded, so a real call stack here would reintroduce the same
+    /// class of uncontrolled-recursion risk this crate's other depth
+    /// guards exist to prevent.
     fn has_mutual_recursion(&self) -> bool {
-        let graph: HashMap<&str, &HashSet<String>> = self
+        #[derive(Clone, Copy, PartialEq)]
+        enum Color {
+            White,
+            Gray,
+            Black,
+        }
+
+        let graph: HashMap<&str, Vec<&str>> = self
             .call_graph
             .iter()
-            .map(|(n, callees)| (n.as_str(), callees))
+            .map(|(n, callees)| (n.as_str(), callees.iter().map(|c| c.as_str()).collect()))
             .collect();
-        for (f, callees) in &self.call_graph {
-            for g in callees.iter() {
-                if g == f {
-                    continue;
-                }
-                if reaches(&graph, g, f) {
-                    return true;
+        let mut color: HashMap<&str, Color> = graph.keys().map(|k| (*k, Color::White)).collect();
+
+        for &start in graph.keys() {
+            if color[start] != Color::White {
+                continue;
+            }
+            let mut stack: Vec<(&str, usize)> = vec![(start, 0)];
+            color.insert(start, Color::Gray);
+            while let Some(&(node, idx)) = stack.last() {
+                let children = &graph[node];
+                if idx < children.len() {
+                    let child = children[idx];
+                    stack.last_mut().expect("just matched Some above").1 += 1;
+                    if child == node {
+                        continue; // self-loop -- plain self-recursion, not mutual
+                    }
+                    match color.get(child).copied().unwrap_or(Color::White) {
+                        Color::White => {
+                            color.insert(child, Color::Gray);
+                            stack.push((child, 0));
+                        }
+                        Color::Gray => return true, // back edge to a distinct on-stack node -> real cycle
+                        Color::Black => {}
+                    }
+                } else {
+                    color.insert(node, Color::Black);
+                    stack.pop();
                 }
             }
         }
@@ -2932,31 +2976,6 @@ fn qualified_name_text(class_type: &GrammarASTNode) -> Option<String> {
     } else {
         Some(names.join("."))
     }
-}
-
-/// Iterative (not recursive — the call graph is small and could in
-/// principle contain a cycle, so this needs a `visited` set rather than a
-/// depth guard) reachability check: can `from` reach `target` by
-/// following zero or more `call_graph` edges? Ported verbatim from
-/// `python-to-semantic-ir`'s identically-named, identically-shaped
-/// helper.
-fn reaches(graph: &HashMap<&str, &HashSet<String>>, from: &str, target: &str) -> bool {
-    let mut stack = vec![from.to_string()];
-    let mut visited = HashSet::new();
-    while let Some(cur) = stack.pop() {
-        if cur == target {
-            return true;
-        }
-        if !visited.insert(cur.clone()) {
-            continue;
-        }
-        if let Some(callees) = graph.get(cur.as_str()) {
-            for c in callees.iter() {
-                stack.push(c.clone());
-            }
-        }
-    }
-    false
 }
 
 fn child_nodes(node: &GrammarASTNode) -> Vec<&GrammarASTNode> {

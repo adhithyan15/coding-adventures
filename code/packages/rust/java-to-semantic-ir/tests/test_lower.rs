@@ -1549,6 +1549,47 @@ fn mutual_recursion_between_two_methods_sets_the_manifest_feature() {
 }
 
 #[test]
+fn mutual_recursion_through_a_three_method_cycle_sets_the_manifest_feature() {
+    // a -> b -> c -> a: a cycle of length 3, not directly adjacent pairs
+    // calling each other -- exercises `has_mutual_recursion`'s DFS
+    // finding a back edge several frames deep, not just a 2-node cycle.
+    let m = compile_ok(&class_src(
+        "public static void main(String[] args) { } \
+         static int a(int n) { return b(n); } \
+         static int b(int n) { return c(n); } \
+         static int c(int n) { return a(n); }",
+    ));
+    assert!(m.manifest.contains(Feature::MutualRecursion));
+}
+
+#[test]
+fn independent_self_recursive_methods_with_no_cross_calls_are_not_mutual_recursion() {
+    // Two unrelated self-recursive methods (no edge between them at all)
+    // must not be flagged -- each is its own singleton DFS component
+    // with only a self-loop, which `has_mutual_recursion` explicitly
+    // skips.
+    let m = compile_ok(&class_src(
+        "public static void main(String[] args) { } \
+         static int f(int n) { return f(n); } \
+         static int g(int n) { return g(n); }",
+    ));
+    assert!(!m.manifest.contains(Feature::MutualRecursion));
+}
+
+#[test]
+fn a_call_chain_with_no_cycle_is_not_mutual_recursion() {
+    // a -> b -> c, no edge back to a or b anywhere -- a plain DAG, not a
+    // cycle -- must not be flagged.
+    let m = compile_ok(&class_src(
+        "public static void main(String[] args) { } \
+         static int a(int n) { return b(n); } \
+         static int b(int n) { return c(n); } \
+         static int c(int n) { return n; }",
+    ));
+    assert!(!m.manifest.contains(Feature::MutualRecursion));
+}
+
+#[test]
 fn void_method_call_as_a_bare_statement_lowers_to_expr_stmt() {
     let m = compile_ok(&class_src(
         "static void noop(int x) { } \
