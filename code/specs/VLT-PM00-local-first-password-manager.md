@@ -251,9 +251,9 @@ and merge semantics are shared even when the host execution model differs.
 |---|---|---|---|
 | envelope encryption | `vault-sealed-store` | algorithms, validation, rotation logic | accept injected root KEK; do not require semantic storage names |
 | typed records | `vault-records` | login/note/card/TOTP/API/DB codecs | add identity, SSH, passkey, collection metadata, migration registry |
-| custody | `vault-key-custody` | trait, passphrase custodian, selection policy | real OS keychain/TPM/Secure Enclave providers |
+| custody | `vault-key-custody` | trait, passphrase custodian, selection policy | real OS keychain/TPM/Secure Enclave/`YubikeyPrfCustodian` providers (hardware-key design in `VLT-PM51` §8, not yet implemented) |
 | multi-recipient wrapping | `vault-recipients` | passphrase and X25519 wraps | signed recipient/device registry and revocation ceremony |
-| authentication | `vault-auth` | password and TOTP factors | WebAuthn/FIDO2-PRF and replay state where enabled |
+| authentication | `vault-auth` | password, TOTP, and `WebAuthnPrfAuthenticator` scaffold factors | real WebAuthn/FIDO2-PRF hardware I/O, ECDSA P-256 verification, and replay state where enabled (`VLT-PM51`) |
 | policy | `vault-policy` | local RBAC/decorators | product action/resource vocabulary |
 | audit | `vault-audit`, `vault-pm-audit` | generic signed chain plus closed product operation events | encrypted repository integration, access enforcement, and cross-device witnesses |
 | sync | `vault-sync` | version vectors, conflict types, OR-set | persistent signed commit DAG and no-loss conflict archive |
