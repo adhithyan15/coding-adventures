@@ -11,14 +11,9 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 12819,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/12819",
-    "branch": "codex/build-tool-elixir-tracked-artifact-validation-conformance",
-    "status": "open"
-  },
+  "active_pr": null,
   "last_inventory": {
-    "revision": "e9f7e8e8c5957a90f5dc775c30ca3f5793d74f8f",
+    "revision": "a939778e7f7ce375bc5b4deefdb3467ca487ab54",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1373,
@@ -168,7 +163,7 @@
       "depends_on": ["build-tool-pure-domain-corpus"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered when the C# orphan consumer rebased over merged PR #12687. Go now recognizes shell BUILD comments of the form '# needs-toolchain: NAME' and adds those names only for affected packages, but the behavior has no language-neutral toolchain-detection fixture or cross-engine contract. Define a closed process-free snapshot for exact directive syntax, canonical toolchain names, empty and unknown values, stable deduplication, multiple declarations, platform BUILD precedence, affected-only selection, forced-full behavior, and deterministic results; then make the canonical Go oracle consume it without consulting a checkout, process, environment, or network."
+      "notes": "Discovered when the C# orphan consumer rebased over merged PR #12687. Go now recognizes shell BUILD comments of the form '# needs-toolchain: NAME' and adds those names only for affected packages, but the behavior has no language-neutral toolchain-detection fixture or cross-engine contract. The post-#12819 audit also found that java-to-semantic-ir's new Python execution proof silently skips when python3 is unavailable while its unchanged BUILD files declare no Python marker; cover that concrete consumer in the corpus and remaining-engine adoption rather than creating a duplicate owner. Define a closed process-free snapshot for exact directive syntax, canonical toolchain names, empty and unknown values, stable deduplication, multiple declarations, platform BUILD precedence, affected-only selection, forced-full behavior, and deterministic results; then make the canonical Go oracle consume it without consulting a checkout, process, environment, or network."
     },
     {
       "id": "build-tool-extra-ci-toolchain-declaration-remaining-engines",
@@ -5223,7 +5218,7 @@
     {
       "id": "build-tool-elixir-tracked-artifact-validation-conformance",
       "title": "Make the Elixir build tool consume tracked-artifact validation",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "build-tool-tracked-artifact-validation-corpus",
         "build-tool-tracked-artifact-unicode-cross-runtime-corpus-hardening",
@@ -5242,6 +5237,10 @@
       "validation_notes": "The Elixir engine now exposes a pure validate_tracked_artifact_snapshot/1,2 adapter and independently consumes all five language-neutral fixtures. It implements the closed portable-path precedence, lexical slash normalization, Unicode-scalar limits and ordering, invalid-path redaction while retaining normalized safe forbidden paths, NFKC plus full default folding for exact node_modules components, full-uppercase reserved basenames, inert regular/symlink/reparse kinds, and canonical detail sorting without Git, filesystem, process, environment, or network authority. Generated source-embedded Unicode 17.0.0 tables provide NFC, NFKC, full folding, NFKC-fold, and full uppercase without host BEAM tables; the generator pins exact upstream sizes and SHA-256 identities, carries the complete Unicode License v3 notice, and executes Python plus emitted TypeScript, Ruby, and Elixir across 20,034 normalization vectors, 1,585 C/F folding rows, 1,581 unconditional uppercase mappings, derived NFKC-fold expectations, and both Unicode 17 sentinels. Fifteen generator tests and real normal/check generation pass. Elixir 1.18.4 on OTP 29 passes warnings-as-errors compilation, changed-file formatting, 20 focused validator tests, and the complete 230-test suite with two expected skips. Coverage measures Validator at 96.30% and the generated Unicode module at 80.85%; the unchanged package-wide CLI/Resolver/GitDiff zero-coverage baseline leaves total coverage at 52.77% against Mix's default 90% threshold and remains outside this bounded consumer slice. The neutral corpus validates all 111 cases and 269 files; 201 conformance tests pass with 23 expected platform skips, plus 10 package-parity, seven capability, five Haskell-capability, and 46 OCaml-lock tests with two expected Windows skips. The Go build tool passes all packages, vet, trimpath compilation, BUILD validation, and a forced Elixir dry plan over 285 packages. The exact schema-3 inventory remains 15 established lanes, 1,373 identities, 4,566 slots, 175 high-consensus packages with 276 gaps, 910 singletons with 12,740 gaps, 721 Rust singletons, zero collisions, and zero unknown buckets. Hex reports no retired or advisory package; production npm audit reports no vulnerability, while the unchanged development-only nanoid advisory remains under its registered owner. Ruff lint/format and Bandit medium/high gates pass. Two independent split security reviews passed in one round with no finding. An independent correctness review found that the generator's Elixir subprocess boundary was unit-tested with mocks but not durably executed in CI; the branch now adds a required, read-only pinned Elixir 1.18.4/OTP 27.3.4.11 job that runs the real emitted-module check over every official vector, and the CI gate explicitly requires it. The generator's PATH, inherited environment, temporary-file, output, failure, and process-tree authority remains truthfully registered under the selection-blocked host-authority review.",
       "final_review_notes": "A focused post-fix review found no remaining actionable correctness, CI, or security issue. It confirmed that the unconditional pinned Elixir job is a required CI-gate dependency, that --check byte-validates every generated artifact before compiling freshly rendered Elixir, that all official normalization/folding/NFKC-fold/uppercase vectors and both sentinels execute, and that the job adds read-only repository permission with no secret or new action-supplier authority.",
       "publication_notes": "Opened ready-for-review PR #12819 from clean validated head 5771510efc0083c8186ab632bb368618c21e52ff after a normal first push. Immediately before publication, exact origin/main remained 07a09f4ccc93eb74fa12072d493238d93a027b6b, the target remote branch and prior PR were absent, and all ten other open PRs had zero exact overlap across the 12 changed paths. GitHub reports the PR non-draft and mergeable with required checks queued or in progress, including the new required Unicode 17 generated Elixir conformance job; auto-merge remains disabled until every required check is terminal and acceptable and no merge conflict exists.",
+      "merged_head_revision": "33df983e3f6eba67e05aa2f6f71bc5de1c3f33b0",
+      "merge_revision": "a939778e7f7ce375bc5b4deefdb3467ca487ab54",
+      "merged_at": "2026-08-25T16:50:05Z",
+      "merge_notes": "All 31 reported checks reached terminal acceptable conclusions: 25 successes and six expected skips, with no failure or pending job. GitHub reported the branch clean and mergeable; the loop enabled squash auto-merge, and GitHub merged PR #12819 without a manual merge command.",
       "notes": "Consume the closed process-free tracked-artifact snapshot and diagnostics in the Elixir engine without adding Git, filesystem, or process authority."
     },
     {
@@ -5261,15 +5260,17 @@
     {
       "id": "build-tool-lua-tracked-artifact-validation-conformance",
       "title": "Make the Lua build tool consume tracked-artifact validation",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": [
         "build-tool-tracked-artifact-validation-corpus",
         "build-tool-tracked-artifact-unicode-cross-runtime-corpus-hardening",
         "build-tool-tracked-artifact-trailing-empty-segment-cross-runtime-hardening",
         "build-tool-tracked-artifact-unicode-version-contract"
       ],
-      "branch": null,
+      "branch": "codex/build-tool-lua-tracked-artifact-validation-conformance",
       "pr_number": null,
+      "selection_revision": "a939778e7f7ce375bc5b4deefdb3467ca487ab54",
+      "selection_notes": "Selected only after PR #12819 completed all 31 terminal acceptable checks and GitHub merged reviewed head 33df983e3f6eba67e05aa2f6f71bc5de1c3f33b0 through squash auto-merge as a939778e7f7ce375bc5b4deefdb3467ca487ab54 at 2026-08-25T16:50:05Z without a manual merge command. The collision-checked exact-main schema-3 report remains 15 established lanes, 1,373 identities, 4,566 slots, 175 high-consensus packages with 276 gaps, 910 singletons with 12,740 gaps, 721 Rust singletons, zero canonical collisions, and zero unknown buckets; OCaml remains correctly emerging at zero packages. Every intervening commit is classified before selection. ADJ Dolch tracking, HTML diagnostics, vault-pm export behavior, Kannada and Gujarati script work, and Java-to-semantic-IR lowering remain under existing owners; the Java execution proof's undeclared Python requirement is added to the existing extra-CI toolchain owner. Rust-only SIMD lane-memory semantics across three nominally 15/15 WebAssembly identities and the Rust ALGOL IIR selector semantics are newly unowned portable behavior, so four dependency-shaped neutral/parity owners are registered before selecting this tranche. No commit adds or removes a package identity or BUILD/build-tool marker. All four Lua dependencies are merged. Lua is the widest remaining tracked-artifact lane at 252 packages, ahead of Perl at 251, Haskell at 204, and Swift at 161; it has two existing direct children and three unfinished descendants through the Lua orphan validator and both completion umbrellas. Registering its real generator subprocess verification under the excluded host-authority review increases its leverage to three direct children and four unfinished descendants without assigning native authority work to this pure consumer. The expected Lua validator, generated Unicode, generator and test, fixture README, Unicode license, tests, package docs, CI, state, and roadmap surfaces have zero exact overlap across all nine live open PRs and all non-main remote heads; the target branch and prior PR were absent before creating the fresh worktree. Elixir orphan validation is newly ready but has only one unfinished descendant. The strategically broader OCaml process-free substrate and extra-CI corpus remain collision-unsafe while live PRs #12149 and #12162 own their required Go validator and main surfaces, and PR #12824 owns the otherwise-ready Mermaid XY surfaces.",
       "notes": "Consume the closed process-free tracked-artifact snapshot and diagnostics in the Lua engine without adding Git, filesystem, or process authority."
     },
     {
@@ -5602,6 +5603,43 @@
       "notes": "Completion umbrella for established shared-parser, Java-parser, and C#-parser lanes after the neutral nested-generic contract closes. Decompose into coherent language or shared-engine children before delivery, preserve each language's shift-token grammar, and do not infer cross-lane support from the current Rust implementation."
     },
     {
+      "id": "wasm-simd-lane-memory-language-neutral-conformance",
+      "title": "Specify SIMD lane-memory behavior with language-neutral fixtures",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the post-#12819 commit audit after Rust alone gained the v128.load8/16/32/64_lane and v128.store8/16/32/64_lane family across wasm-opcodes, wasm-validator, and wasm-execution, even though all three identities report 15/15 package presence. Define a language-neutral contract for binary sub-opcodes, memarg and lane ordering, width-specific lane bounds, little-endian lane replacement and extraction, stack typing, memory traps, multi-memory behavior, and deterministic diagnostics. Reuse the existing WAST-parser and official-corpus owners for syntax/corpus consumption rather than duplicating them."
+    },
+    {
+      "id": "wasm-simd-lane-memory-established-lane-parity",
+      "title": "Bring SIMD lane-memory semantics to every established applicable lane",
+      "status": "pending",
+      "depends_on": ["wasm-simd-lane-memory-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Completion umbrella for the shared wasm-opcodes, wasm-validator, and wasm-execution identities after the neutral lane-memory contract closes. Deliver coherent language or shared-engine children, preserve the applicable runtime boundary, and do not infer behavioral parity from 15/15 package-directory presence."
+    },
+    {
+      "id": "algol-iir-compiler-language-neutral-conformance",
+      "title": "Specify ALGOL IIR compiler selector semantics with language-neutral fixtures",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the post-#12819 commit audit after the Rust algol-iir-compiler added bounded chained-Boolean selector identity semantics and seven-backend results without an exact portable owner. Pin accepted and rejected programs, the ten-level selector bound, identity-chain behavior, fail-closed counterexamples, and canonical IIR/runtime results independently of the existing generic singleton-classification umbrella."
+    },
+    {
+      "id": "algol-iir-compiler-applicable-lane-parity",
+      "title": "Bring ALGOL IIR compiler semantics to every applicable interpreter-IR lane",
+      "status": "pending",
+      "depends_on": ["algol-iir-compiler-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Completion umbrella for applicable interpreter-IR lanes after the neutral ALGOL IIR selector contract closes. Decompose the applicable engine and backend lanes into coherent children before delivery, and keep this umbrella excluded from autonomous selection until that mapping is explicit."
+    },
+    {
       "id": "build-tool-tracked-artifact-unicode-generator-host-authority-review",
       "title": "Review tracked-artifact Unicode generator host authority",
       "status": "pending",
@@ -5609,12 +5647,13 @@
         "build-tool-tracked-artifact-unicode-version-contract",
         "build-tool-typescript-tracked-artifact-validation-conformance",
         "build-tool-ruby-tracked-artifact-validation-conformance",
-        "build-tool-elixir-tracked-artifact-validation-conformance"
+        "build-tool-elixir-tracked-artifact-validation-conformance",
+        "build-tool-lua-tracked-artifact-validation-conformance"
       ],
       "branch": null,
       "pr_number": null,
       "selection_blocked": true,
-      "notes": "Discovered after merged PR #12773 extended the shared Unicode 17 generator to resolve `node` through PATH, write temporary TypeScript sources and runner files, and invoke `tsx` for full-vector verification. The Ruby tracked-artifact consumer extends the same native generator boundary to PATH-resolved `ruby`, temporary Ruby source and runner files, inherited `RUBYOPT`/`RUBYLIB` and other environment state, buffered child output, and child diagnostics. The selected Elixir consumer adds PATH-resolved `elixir`, temporary emitted modules and runners, inherited `ERL_AFLAGS`/`ERL_FLAGS`/`ELIXIR_ERL_OPTIONS` and related runtime state, buffered child output, and child diagnostics to that same generator boundary. Review executable identity and version pinning, environment and PATH authority, temporary-directory containment and cleanup, command construction, dependency resolution, bounded output and diagnostics, process failures and process-tree cleanup, offline determinism, credential redaction, and truthful capabilities separately from the pure runtime validators. This native generator-shell authority work is excluded from autonomous portable selection."
+      "notes": "Discovered after merged PR #12773 extended the shared Unicode 17 generator to resolve `node` through PATH, write temporary TypeScript sources and runner files, and invoke `tsx` for full-vector verification. The Ruby tracked-artifact consumer extends the same native generator boundary to PATH-resolved `ruby`, temporary Ruby source and runner files, inherited `RUBYOPT`/`RUBYLIB` and other environment state, buffered child output, and child diagnostics. The merged Elixir consumer adds PATH-resolved `elixir`, temporary emitted modules and runners, inherited `ERL_AFLAGS`/`ERL_FLAGS`/`ELIXIR_ERL_OPTIONS` and related runtime state, buffered child output, and child diagnostics. The selected Lua consumer adds the equivalent PATH-resolved `lua` boundary, temporary emitted modules and runners, inherited `LUA_PATH`/`LUA_CPATH` and other environment state, buffered child output, and child diagnostics. Review executable identity and version pinning, environment and PATH authority, temporary-directory containment and cleanup, command construction, dependency resolution, bounded output and diagnostics, process failures and process-tree cleanup, offline determinism, credential redaction, and truthful capabilities separately from the pure runtime validators. This native generator-shell authority work is excluded from autonomous portable selection."
     }
   ]
 }
