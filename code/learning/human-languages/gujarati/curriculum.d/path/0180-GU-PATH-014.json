@@ -5,11 +5,13 @@
     "GU-C11-mitra",
     "GU-C11-kutumb",
     "GU-C11-bhai",
-    "GU-C11-bahen"
+    "GU-C11-bahen",
+    "GU-R13-doorway-nine-r3"
   ],
   "before": [],
   "inline": [
-    "GU-EXT-014-LANGUAGE-SPECIFIC"
+    "GU-EXT-014-LANGUAGE-SPECIFIC",
+    "GU-EXT-020-DOORWAY-DURABLE-RETRIEVAL"
   ],
   "after": []
 }

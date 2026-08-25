@@ -7,14 +7,14 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:ec24a08006f0eda7",
+  "sourceHash": "fnv1a64:43c81f782c31d26f",
   "summary": {
-    "totalLessons": 90,
+    "totalLessons": 91,
     "voice": 15,
     "sight": 43,
-    "pen": 32,
+    "pen": 33,
     "drivableLessons": 15,
-    "drivablePercent": 17,
+    "drivablePercent": 16,
     "trackCount": 1,
     "chapterCount": 14,
     "drivablePrefixTotal": 9,
@@ -26,11 +26,11 @@
   "tracks": [
     {
       "language": "gujarati",
-      "lessonCount": 90,
+      "lessonCount": 91,
       "voice": 15,
       "sight": 43,
-      "pen": 32,
-      "drivablePercent": 17,
+      "pen": 33,
+      "drivablePercent": 16,
       "drivablePrefixTotal": 9,
       "modalities": [
         "voice",
@@ -229,12 +229,13 @@
         },
         {
           "chapter": 13,
-          "lessonCount": 4,
+          "lessonCount": 5,
           "voice": 0,
           "sight": 4,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
-            "sight"
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 0,
           "firstNonVoiceLesson": "GU-C11-mitra",
@@ -2169,6 +2170,29 @@
       "detachableSegments": [
         "The letters in this word"
       ]
+    },
+    {
+      "id": "GU-R13-doorway-nine-r3",
+      "language": "gujarati",
+      "chapter": 13,
+      "sequence": 575,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:3e29912a91218801",
+      "detachableSegments": [
+        "Writing — from sound"
+      ],
+      "delivery": "script"
     },
     {
       "id": "GU-C12-aankh",

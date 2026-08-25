@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
-  "lessonCount": 90,
-  "atomMeasurableLessons": 90,
+  "lessonCount": 91,
+  "atomMeasurableLessons": 91,
   "atomMeasurementBlindLessons": 0,
   "durationViolations": 0,
   "atomLessonSpikes": 2,
@@ -18,15 +18,15 @@
   "forwardReferences": 0,
   "atomsTaught": 131,
   "atomsNeverRevisited": 8,
-  "reinforcementWindowMisses": 161,
+  "reinforcementWindowMisses": 157,
   "reinforcementMissesByWindow": {
     "R1": 21,
-    "R2": 65,
-    "R3": 65,
-    "R4": 10
+    "R2": 67,
+    "R3": 58,
+    "R4": 11
   },
   "payoffSurprises": 0,
-  "writingPracticeLessons": 75,
+  "writingPracticeLessons": 76,
   "firstWritingPracticeAt": 1,
   "lessonsBeforeWritingPractice": 1,
   "findings": [
@@ -54,7 +54,7 @@
     {
       "language": "gujarati",
       "kind": "reinforcement",
-      "count": 161,
+      "count": 157,
       "unit": "missed window(s)",
       "detail": "add retrieval at the expanding R1-R4 intervals"
     }

@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+### Added — durable doorway retrieval closes R3 (#12835)
+
+- Add one zero-new-atom, four-minute checkpoint after Chapter 13's meaning
+  lessons, where all nine doorway forms are at the measured R3 distance.
+- Shuffle reading and dictation independently so serial memory cannot replace
+  recognition or model-free writing, and keep the two scores separate.
+
 ### Added — doorway retrieval earns R1 and R2 (#12834)
 
 - Add two zero-new-atom micro-lessons at the exact expanding intervals: the

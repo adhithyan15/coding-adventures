@@ -244,19 +244,20 @@
     {
       "language": "gujarati",
       "chapter": 13,
-      "sourceHash": "fnv1a64:a6263a0357f8706d",
+      "sourceHash": "fnv1a64:10370952859476cb",
       "lessonIds": [
         "GU-C11-mitra",
         "GU-C11-kutumb",
         "GU-C11-bhai",
-        "GU-C11-bahen"
+        "GU-C11-bahen",
+        "GU-R13-doorway-nine-r3"
       ],
       "voiceLessons": 0,
       "drivablePrefix": 0,
       "text": "gujarati/narration/ch13.txt",
       "json": "gujarati/narration/ch13.json",
-      "textHash": "fnv1a64:aed0e17637eb57d6",
-      "jsonHash": "fnv1a64:488f2c3495cf46b0"
+      "textHash": "fnv1a64:a625389ad10e55bb",
+      "jsonHash": "fnv1a64:23c7bc21f98e372c"
     },
     {
       "language": "gujarati",
