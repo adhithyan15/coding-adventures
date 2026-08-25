@@ -37,6 +37,20 @@ class _Response:
 
 
 class UnicodeDownloadBoundaryTests(unittest.TestCase):
+    def test_runtime_self_check_selection_defaults_to_every_emitted_runtime(
+        self,
+    ) -> None:
+        self.assertEqual(
+            generator._selected_runtime_self_checks(None),
+            ("typescript", "ruby", "elixir"),
+        )
+
+    def test_runtime_self_check_selection_can_isolate_elixir_for_ci(self) -> None:
+        self.assertEqual(
+            generator._selected_runtime_self_checks(["elixir"]),
+            ("elixir",),
+        )
+
     def test_download_requires_exact_origin_url_size_and_digest(self) -> None:
         url = "https://www.unicode.org/test.txt"
         payload = b"abc"

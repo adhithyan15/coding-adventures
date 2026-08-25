@@ -11,6 +11,10 @@ All notable changes to this project will be documented in this file.
   validator consumes all five language-neutral fixtures and uses generated,
   source-embedded Unicode 17 tables for NFC, NFKC, full default case folding,
   and uppercase behavior; the Unicode License v3 notice ships with the source.
+- CI pins Elixir 1.18.4 and OTP 27.3.4.11 while compiling the generated module
+  and exercising every official Unicode 17 normalization, folding, and
+  unconditional-uppercase vector, so runtime conformance cannot drift behind
+  mocked generator-boundary tests.
 - The Perl BUILD-contract helper now uses supported `Enum.filter/2` and
   `Enum.map/2` calls, preserving behavior while keeping warnings-as-errors
   compilation clean on the pinned Elixir toolchain.

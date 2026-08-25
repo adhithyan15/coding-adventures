@@ -122,6 +122,10 @@ The generator runs emitted Python, TypeScript, Ruby, and Elixir code over every
 official normalization, case-folding, and unconditional uppercase vector plus
 the Unicode 17 version sentinels. The generated data is redistributed under the
 Unicode License v3; the complete notice is shipped as `UNICODE-LICENSE.txt`.
+CI repeats the real emitted-Elixir check on the pinned Elixir 1.18.4 / OTP
+27.3.4.11 toolchain with
+`--check --self-check-runtime elixir`; omitting `--self-check-runtime` retains
+the default local gate across every emitted runtime.
 
 ## Testing
 

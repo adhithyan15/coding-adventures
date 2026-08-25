@@ -1844,9 +1844,25 @@ def _write_bytes_or_check(
     absolute.write_bytes(content)
 
 
+def _selected_runtime_self_checks(requested: list[str] | None) -> tuple[str, ...]:
+    """Return the emitted runtimes whose official-vector checks must run."""
+    if requested is None:
+        return ("typescript", "ruby", "elixir")
+    return tuple(dict.fromkeys(requested))
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--check", action="store_true")
+    parser.add_argument(
+        "--self-check-runtime",
+        action="append",
+        choices=("typescript", "ruby", "elixir"),
+        help=(
+            "limit emitted-runtime official-vector checks; repeat to select more "
+            "than one runtime (default: every emitted runtime)"
+        ),
+    )
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[2]
     license_payload = (root / LICENSE_PATH).read_bytes()
@@ -1875,14 +1891,19 @@ def main() -> int:
         _write_bytes_or_check(root, target, upstream_license, args.check)
     python_module = _load_generated_module(root / PYTHON_TARGETS[0])
     _self_check(python_module, sources)
-    _self_check_typescript(root, typescript_output, sources, python_module)
-    _self_check_ruby(root, ruby_output, sources, python_module)
-    _self_check_elixir(root, elixir_output, sources, python_module)
+    selected_runtimes = _selected_runtime_self_checks(args.self_check_runtime)
+    if "typescript" in selected_runtimes:
+        _self_check_typescript(root, typescript_output, sources, python_module)
+    if "ruby" in selected_runtimes:
+        _self_check_ruby(root, ruby_output, sources, python_module)
+    if "elixir" in selected_runtimes:
+        _self_check_elixir(root, elixir_output, sources, python_module)
     print(
         f"Unicode {UNICODE_VERSION} generated and verified: "
         f"{len(tables[0])} combining, {len(tables[1])} decomposition, "
         f"{len(tables[2])} composition, {len(tables[3])} folding, "
-        f"{len(tables[4])} uppercase rows"
+        f"{len(tables[4])} uppercase rows; emitted runtime checks "
+        f"{','.join(selected_runtimes)}"
     )
     return 0
 
