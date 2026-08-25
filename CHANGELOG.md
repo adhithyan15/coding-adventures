@@ -50,6 +50,45 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Changes to `check-book-compile.sh`, `latexmk-safe.rc` and the new lint now
   appear in the workflow's path filters. They did not before, so a pull request
   editing the script that compiles every book never ran it.
+- **Split the write-scoped token away from the job that executes pull-request
+  code.** The old `build-and-publish` job held `permissions: contents: write`
+  on a `pull_request` trigger while running `npm ci`, a TypeScript build, seven
+  `node` checks and XeLaTeX over repository content — and `actions/checkout`'s
+  default `persist-credentials: true` left that token in `.git/config` inside
+  the workspace latexmk enters. Hardening the latexmk call while leaving that in
+  place would have fixed one door in a room with no walls. Now `build` has
+  `contents: read` and `persist-credentials: false`; a separate `publish` job
+  holds `contents: write`, runs no repository code, and is gated at job level on
+  a push to `main`.
+- **The compile now emits a `--manifest` of what it actually built, and the
+  collection step publishes from that.** Re-deriving the list with
+  `find -type d -name book` asked a different question: `check-book-compile.sh`
+  skips a directory with no `book.tex`, so a pull request adding nothing but
+  `<track>/book/book.pdf` would have had an attacker-authored file uploaded as a
+  build artifact and, on `main`, published to Pages and attached to the Release.
+  Verified by planting exactly that file and watching it stay out of the
+  manifest.
+- Added a `book.pdf` symlink guard to `check-book-compile.sh` (the adjacent
+  figure-PDF guard existed; this one did not) and a matching check on the
+  consuming side, so the two steps need not trust each other.
+- Deleted the workflow's own SVG-to-PDF conversion step. It duplicated what
+  `check-book-compile.sh` does per track, and unlike the script it wrote to an
+  unchecked derived path, so a committed `figures/diagram.pdf` symlink made
+  `rsvg-convert` open an arbitrary runner-writable path for writing.
+- The shell-escape verification step now counts the logs it read and fails if it
+  read fewer than the compile reported. A loop over zero files left `offenders`
+  at 0 and printed a confident all-clear — the same hollow-gate shape as the
+  `--strict` fix, in the step meant to prove the fix works.
+- The latexmkrc lint runs twice: early for a fast failure, and again immediately
+  before the compile. Between the two, the job runs `npm ci` and seven `node`
+  scripts, all pull-request-controlled and all able to write a `latexmkrc` after
+  the early check has passed.
+- `npm ci` for `human-language-data` now passes `--ignore-scripts`, matching its
+  four sibling installs. It was the only one without it, so a dependency's
+  `postinstall` ran on a pull-request runner.
+- Read-side TeX exposure (`openin_any`) and third-party action SHA pinning are
+  tracked separately rather than guessed at here — see the linked issues. An
+  unverified control is worse than an acknowledged gap.
 
 ### Added - Python uv BUILD-front idempotence audit
 

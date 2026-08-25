@@ -4506,3 +4506,73 @@ passing has not been observed working. Both directions were run here: `--strict`
 track with a figure and no converter fails with the dependency named; the same command
 with a converter on `PATH` compiles the book and reports `compiled 1, skipped 0,
 failed 0`.
+
+## Fixing the RCE is not the fix if the job still hands the attacker a write token
+
+The security review of the latexmk hardening above found the real ranking, and it was not
+the one the PR started with. Closing the `latexmkrc` `eval` mattered — but the same job
+was `pull_request`-triggered with `permissions: contents: write`, ran `npm ci` (without
+`--ignore-scripts`), a TypeScript build and seven `node dist/*.js` checks, all
+pull-request-controlled, and `actions/checkout@v4` defaults to
+`persist-credentials: true`, which leaves the write-scoped token in `.git/config` **inside
+the workspace latexmk `cd`s into**. Anyone who could have used the latexmk hole already
+had a dozen easier ones.
+
+**Ask what the job is holding, not only what it is running.** The durable fix is
+structural: the job that executes repository content gets `contents: read` and
+`persist-credentials: false`; a separate job holds `contents: write`, runs no repository
+code, has no `actions/checkout` at all, and is gated at JOB level (not step level) on
+`github.event_name == 'push' && github.ref == 'refs/heads/main'`. Step-level `if:` on the
+publish steps was already there and was not enough — the token is scoped to the job, so it
+is live for every earlier step in it regardless.
+
+When splitting, remember the aggregating gate job: `needs: [detect, build-and-publish]`
+and `needs['build-and-publish'].result` both have to move, and the new publish job must
+**not** become a dependency of the gate, or the gate can never pass on a pull request.
+
+## "Which artifacts did we build?" and "which directories look like books?" are different questions
+
+The same review caught a regression this PR introduced. Splitting compile from collection
+left the collector re-deriving its work list with `find -type d -name book`, while the
+compiler skipped any directory with no `book.tex`. Two enumerations, one of them
+attacker-extensible: a PR adding only `code/learning/human-languages/anything/book/book.pdf`
+gets that file uploaded as a build artifact and, on `main`, pushed to Pages and attached
+to the Release — an attacker-authored PDF served as a book. Make it a symlink and `cp`
+dereferences it, so the bytes of whatever it names go out instead.
+
+**The rule: a producer that hands work downstream must say what it produced.** Add a
+`--manifest` the compile appends to on success, and have the consumer read that file.
+One writer, one reader, nothing to disagree about. Re-deriving a list is not a check on
+the first derivation — it is a second, independent, silently-different answer.
+
+Two corollaries, both bit here:
+- Guard the OUTPUT path for a symlink, not only the input. `figures/*.svg` was vetted with
+  `find -type f` and the derived `${svg%.svg}.pdf` was written unchecked; `book.pdf` had no
+  guard at all even though XeLaTeX opens it for writing. `[ -L "$out" ]` before writing,
+  and again before publishing, because the two steps should not have to trust each other.
+- Deleting a duplicated step beats hardening it. The workflow's own SVG conversion existed
+  only because the script's conversion was invisible from the YAML; the script's copy had
+  the symlink guard and the workflow's did not.
+
+## Count what you inspected, or the loop that inspects nothing reports success
+
+Also from the same review, in — of all places — the step added to *prove* the hardening
+was in effect:
+
+```bash
+offenders=0
+while IFS= read -r log; do ... done < <(find … -name book.log | sort)
+test "$offenders" -eq 0
+echo "Shell escape disabled in every book.log"     # printed after reading zero files
+```
+
+`find` inside a process substitution has an exit status `set -o pipefail` cannot see, and
+a loop body that never executes leaves the counter at its initial value. Zero matches is
+indistinguishable from a clean corpus. Any later change that adds `-outdir=` to the
+latexmk line disarms the check silently, and the job stays green while asserting the
+opposite.
+
+**Every verification loop needs a `checked` counter and a floor**, and the floor should
+come from the producer (`wc -l < manifest`) rather than a hardcoded number that goes stale
+when a track is added. This is the same failure as `compiled 0, skipped 1, failed 0` two
+lessons up — which is the point: the shape recurs, including inside the fix for itself.

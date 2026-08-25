@@ -115,6 +115,15 @@ def scan(book_root: Path) -> tuple[list[Path], list[tuple[Path, OSError]]]:
     directory it cannot open, which would turn "unreadable" into "empty" at the
     exact moment that distinction matters most. The ``onerror`` hook is what
     keeps the two apart.
+
+    ``followlinks`` is left at its default of ``False`` **on purpose** — do not
+    "fix" it. Following links here buys nothing and costs a symlink-loop hang in
+    a step that runs before everything else in the build. It is not a bypass: a
+    link whose target is inside ``book_root`` has that target walked on its own
+    account, and a link pointing outside is rejected at compile time by the
+    containment check in ``check-book-compile.sh``, which compares each book
+    directory's fully-resolved path against the book root before latexmk is
+    allowed anywhere near it.
     """
     hits: list[Path] = []
     unreadable: list[tuple[Path, OSError]] = []

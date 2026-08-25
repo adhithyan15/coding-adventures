@@ -55,14 +55,28 @@
 #
 #   ./code/scripts/check-book-compile.sh --strict            # every track, gate mode
 #   ./code/scripts/check-book-compile.sh --strict spanish    # one track, gate mode
+#
+# `--manifest=FILE`: WHAT THIS RUN ACTUALLY COMPILED
+# --------------------------------------------------
+# Anything downstream that publishes a `book.pdf` must know which ones this run
+# produced. Re-deriving that list with a second `find` is not the same question
+# and gets a different answer: this script skips a directory with no `book.tex`,
+# so a `find -type d -name book` would happily hand a `<track>/book/book.pdf`
+# that no compile here ever touched — an attacker-supplied PDF, or a symlink —
+# to whatever collects the results.
+#
+# So the compile records what it compiled, and the consumer reads that. One
+# writer, one reader, no second opinion to disagree with.
 
 set -uo pipefail
 
 STRICT=0
+MANIFEST=""
 WANTED=()
 for arg in "$@"; do
   case "$arg" in
     --strict) STRICT=1 ;;
+    --manifest=*) MANIFEST="${arg#--manifest=}" ;;
     -h|--help)
       sed -n '2,50p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'
       exit 0 ;;
@@ -70,6 +84,12 @@ for arg in "$@"; do
     *)  WANTED+=("$arg") ;;
   esac
 done
+
+if [ -n "$MANIFEST" ]; then
+  # Truncate up front. A stale manifest from a previous run is worse than none:
+  # the consumer would publish books this run never looked at.
+  : > "$MANIFEST" || { echo "cannot write manifest: $MANIFEST" >&2; exit 2; }
+fi
 
 # `pwd -P`, so the containment comparison below is between two fully-resolved
 # paths. Comparing a resolved directory against an unresolved prefix would fail
@@ -112,6 +132,22 @@ export shell_escape
 # its own configuration, with `openout_any` set to `p`, `a`, or unset alike).
 openout_any=p
 export openout_any
+
+# NOT set here, and the omission is deliberate rather than an oversight:
+#
+#   openin_any   TeX Live ships `a` (any file). The READ side is a real
+#                exposure — `book.tex` and its chapters are repository content,
+#                so `\openin`/`\read` can pull an arbitrary readable file into
+#                the typeset PDF without needing `\write18` at all. `p` would
+#                close it, but `p` is also known to interfere with kpathsea
+#                package lookup, and MiKTeX ignores the variable outright (see
+#                the note above), so it cannot be verified on the authoring box
+#                — only by a full 23-book TeX Live run. Shipping an unverified
+#                `openin_any=p` would redden every book on a guess.
+#                Tracked separately; the mitigation in the meantime is upstream,
+#                by not handing the build a token to read: the workflow checks
+#                out with `persist-credentials: false` and publishes only from
+#                `main`.
 
 FAILED=0
 COMPILED=0
@@ -174,6 +210,17 @@ for dir in "$BOOKS"/*/book; do
        FAILED=$((FAILED + 1)); continue ;;
   esac
 
+  # The same symlink reasoning as the figure PDFs below, for the output latexmk
+  # is about to write. `figures/foo.pdf` was guarded and `book.pdf` was not,
+  # which is the more valuable of the two: XeLaTeX opens it for writing, so a
+  # committed `book.pdf -> ../../../../.git/config` is a write THROUGH the link
+  # onto whatever it names, and anything downstream that publishes `book.pdf`
+  # reads back out through it.
+  if [ -L "$dir/book.pdf" ]; then
+    printf 'FAIL %-12s book.pdf is a symlink\n' "$track"
+    FAILED=$((FAILED + 1)); continue
+  fi
+
   # NUL-delimited: a filename containing a newline would otherwise split into
   # two array entries. Not an injection (every expansion below is quoted), but a
   # spurious failure is still a failure nobody can act on.
@@ -234,6 +281,9 @@ for dir in "$BOOKS"/*/book; do
       >"$log" 2>&1; then
     printf 'ok   %-12s\n' "$track"
     COMPILED=$((COMPILED + 1))
+    # Record the real, containment-checked directory, not the glob's `$dir`, so
+    # a consumer resolving these paths lands where this script actually built.
+    [ -n "$MANIFEST" ] && printf '%s\n' "$real_dir" >> "$MANIFEST"
   else
     printf 'FAIL %-12s\n' "$track"
     # The lines that say what actually broke, not the 400 that surround them.
