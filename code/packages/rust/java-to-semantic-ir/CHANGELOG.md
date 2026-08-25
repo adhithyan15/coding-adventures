@@ -2,6 +2,122 @@
 
 All notable changes to the `java-to-semantic-ir` crate will be documented in this file.
 
+## [0.6.0] - 2026-08-25
+
+### Added
+
+- JV02 milestone M3b: lambda expressions.
+- Lambda expressions (`(int x) -> x + 1`, `(int a, int b) -> { return a +
+  b; }`) lower to `Expr::MakeClosure`, hoisting the body to a synthesized
+  top-level `Function` (`__lambda_N`, mirroring how `main` itself is
+  already synthesized). Every parameter must be explicitly typed — the
+  untyped-inferred forms (a bare `x -> ...` with no parentheses, an
+  untyped `(x) -> ...`, and `var`-inferred parameters) are rejected:
+  Java infers an untyped/`var` lambda parameter's type from the lambda's
+  own target functional-interface type (the abstract method it
+  implements), and this frontend has no visibility into that at all (no
+  functional-interface declarations exist yet — a later SIR29
+  milestone), so guessing would be a real mis-lowering, not a
+  convenience. `lambda_parameter_kind_name`/`lambda_parameter_kind_name_
+  pairs` handle both possible CST shapes for `var x` defensively (the
+  literal `"var" NAME` grammar alternative, and — mirroring the same
+  PEG-ordering ambiguity M1's own module doc comment already documents
+  for top-level `var` declarations — `var` absorbed into the `type`
+  alternative), rather than assuming which one the parser actually
+  produces.
+- Captures, discovered *on-resolve*: mirrors `javascript-to-semantic-ir`'s
+  identically-reasoned approach (a capture falls out of ordinary name
+  resolution the first time a lambda body references a name it doesn't
+  declare itself, no separate free-variable pre-scan), adapted from that
+  crate's one-scope-frame-per-*function* design to this crate's own
+  one-frame-per-*block* `locals` stack via a new `closure_stack:
+  Vec<ClosureFrame>` — each open lambda records the `locals.len()` at
+  the moment its own scope began, so "does this reference cross a
+  lambda boundary" is just "did the name resolve at a frame index below
+  that mark." A reference crossing more than one nested lambda boundary
+  (a lambda capturing from an enclosing lambda's own enclosing scope) is
+  threaded through every intermediate boundary in turn, exactly mirroring
+  `javascript-to-semantic-ir`'s own `resolve_local_chain`. `lookup_local`
+  gained a frame-index-aware sibling (`lookup_local_with_frame`) and a
+  new capture-aware `resolve_name`, which every `VarRef`/`Assign`-
+  building call site (bare-name reads, compound-assignment, increment/
+  decrement) now calls instead of `lookup_local` directly — when no
+  lambda is currently open, `resolve_name` behaves identically to
+  `lookup_local`, so this is a pure superset for every M1–M3a construct.
+- Assigning to (or incrementing/decrementing) a captured local is
+  rejected with a clear error ("local variables referenced from a lambda
+  body must be effectively final") — Java's own real rule, not just a
+  gap this frontend happens to have.
+- Both `lambda_body` shapes: an expression body (the lambda's value
+  directly, `Block { stmts: vec![], value, span }`) and a block body
+  (`lower_lambda_block_body`, a variant of M3a's own `lower_method_body_
+  block` for the one place they genuinely differ — a lambda has no
+  *declared* return type to validate the tail-position `return`'s
+  expression against, so whatever `Kind` it naturally produces is simply
+  used, not checked; the "`return` only in tail position" rule itself is
+  unconditional either way, since SIR still has no `Stmt::Return`
+  primitive regardless of whether there's a declared type to check
+  against).
+- A new `Kind::Closure` variant (a lambda's own result kind) — lets a
+  lambda be the initializer of a `var`-inferred local (`var f = (int x)
+  -> x + 1;`, inferring `f: Closure`) or a bare expression statement,
+  without this frontend needing any real functional-interface type
+  system, mirroring `Kind::Void`'s own "not a real value kind, exists so
+  `lower_expr`'s uniform return shape has something to produce" role.
+- 24 new tests in `tests/test_lower.rs` (every lambda-parameter/body
+  shape, captures from both `Local`- and `Param`-scoped enclosing
+  declarations, captures crossing *two* nested lambda boundaries with
+  each capture's own value-scope asserted precisely, tail-position-
+  return validation, `Feature::Closures` manifest declaration,
+  effectively-final rejection on assignment/increment, every untyped/
+  `var`-parameter rejection, and a depth-guard regression test) plus a
+  doc-comment explanation in `tests/e2e_python.rs` of why no execution-
+  proof test exists this milestone (a lowered closure has no way to be
+  *invoked* — that needs `Expr::IndirectCall`, not wired up here — so
+  there is nothing a lambda-using program could do that produces
+  observably different output than not using one at all).
+- **A depth-guard design decision made before writing any code, not a
+  bug found afterward**: `lower_lambda_expression` deliberately threads
+  the *ambient* `depth` counter through every recursive call it makes
+  (including its own body's), rather than resetting to a fresh budget at
+  its own boundary the way `lower_method_declaration`'s method-body
+  lowering safely does. A `method_declaration` can never nest inside
+  another one at the source level (a `class_body`'s own methods are
+  always flat siblings), so resetting the depth budget once per method
+  body is safe; lambda *expressions* can nest arbitrarily inside each
+  other via ordinary expression or statement syntax (`x -> (y -> (z ->
+  ...))`, or a block-bodied lambda's own tail `return` producing another
+  lambda), so copying the method-body precedent here would have let
+  nested lambdas bypass `MAX_EXPR_DEPTH`/`MAX_STMT_DEPTH` entirely — a
+  fresh, unbounded budget at every lambda boundary instead of one
+  shared, bounded one. Caught by explicitly asking, before writing the
+  lambda-lowering code, whether the M3a precedent this new code would
+  naturally copy was actually safe to copy here — it wasn't, since
+  lambdas (unlike methods) are a genuinely recursive source-level
+  construct. `deeply_nested_lambda_expressions_report_depth_error_not_
+  stack_overflow` is the regression test.
+- **Caught by `/security-review` before push (MEDIUM, silent function-
+  name collision)**: the synthesized `__lambda_N` name was committed to
+  with no check against `self.method_signatures` (every real, user-
+  declared method name, already fully populated before any lambda is
+  lowered). `__lambda_0` is a legal Java method name, so a class
+  declaring a real method by that exact name *and* containing a lambda
+  that would otherwise become the first one synthesized is a real,
+  reachable case, not a hypothetical one — `Module.functions` would end
+  up with two entries sharing one name, a collision `compile()` itself
+  does not reject (only a separate `semantic_ir::validate()` call would,
+  and only if the caller makes it). This broke the exact discipline this
+  crate's own `lower_do_while_statement` already established for its
+  `__do_while_N` synthetic flag name: probe for a collision before
+  committing to the synthetic name, not after. Fixed by looping/bumping
+  `lambda_counter` past any `method_signatures` collision, mirroring the
+  do-while flag-name precedent exactly.
+  `synthesized_lambda_name_does_not_collide_with_a_real_method_named_
+  lambda_0` is the regression test — a real method named `__lambda_0`
+  plus a lambda that would otherwise claim that exact name, asserting
+  both functions survive with distinct names and the real method's own
+  identity (params, body) is untouched.
+
 ## [0.5.0] - 2026-08-25
 
 ### Added

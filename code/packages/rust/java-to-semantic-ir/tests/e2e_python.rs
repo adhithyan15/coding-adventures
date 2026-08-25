@@ -468,3 +468,21 @@ fn void_method_call_runs_without_crashing_in_python() {
 // manifest_feature` in `tests/test_lower.rs` cover the structural lowering
 // claim (the call resolves, `Feature::MutualRecursion` is set correctly)
 // without ever actually running the loop.
+
+// No execution-proof test for JV02 M3b's lambda expressions either, for
+// an analogous reason: this milestone lowers a lambda *literal* to
+// `Expr::MakeClosure` (a real, structurally-verified closure value, with
+// real capture-value threading -- see `tests/test_lower.rs`'s own
+// `nested_lambda_captures_transitively_across_both_boundaries` test), but
+// has no way to *invoke* the resulting value -- that needs `Expr::
+// IndirectCall`, wiring "a bare NAME that resolves to a local holding a
+// closure, not a known method name, calls through the value instead,"
+// which this milestone does not add (a real, disclosed gap, not an
+// oversight -- M3a's own `lower_call_expression` only recognizes callee
+// names present in `method_signatures`). Without invocation, there is
+// nothing a Java program using a lambda this milestone can lower could
+// possibly do that produces *observably different* output than not using
+// one at all, so an execution-proof harness has nothing meaningful to
+// assert on. Every positive lambda test in `tests/test_lower.rs` still
+// asserts the lowered `Module` passes `semantic_ir::validate()`, which is
+// the honest ceiling of what's provable here.
