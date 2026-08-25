@@ -1,5 +1,23 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.57 — 2026-08-24 — SIMD widen PR35: f64x2.abs/min/max/pmin/pmax text-form (task #220-222)
+
+### Added
+
+- `SimdOpKind::AbsF64x2`/`MinF64x2`/`MaxF64x2`/`PminF64x2`/`PmaxF64x2`
+  join the shared "no immediate beyond the opcode byte itself" SIMD
+  dispatch arm (already used for `AbsF32x4`/`MinF32x4`/`MaxF32x4`/etc.)
+  in both the folded (`encode_stream_instr`) and flat
+  (`encode_flat_instr`) instruction encoders -- verified byte-identical
+  at both call sites before editing. All five sub-opcodes are looked up
+  by name from `wasm_opcodes::SIMD_OPS` (data-driven, via
+  `get_simd_op_by_name`). All five sub-opcode values (`0xEC`/`0xF4`/
+  `0xF5`/`0xF6`/`0xF7`) are `>= 0x80`, so each encodes as a real 2-byte
+  LEB128 sequence (`[0xFD, byte, 0x01]`), same as `f64x2.neg`/`div`
+  (PR31) before them.
+- New test:
+  `f64x2_abs_min_max_pmin_pmax_family_encodes_the_real_two_byte_leb128_sub_opcodes`
+
 ## 0.1.56 — 2026-08-24 — SIMD widen PR34: f32x4.max/pmin/pmax text-form (task #217-219)
 
 ### Added

@@ -104,7 +104,12 @@ Fetched:       2026-08-13 (initial slice, W05/PR3), extended 2026-08-14 (WASM08)
                extended 2026-08-24 (task #217-219 -- simd_f32x4.wast/
                simd_f32x4_pmin_pmax.wast, 3 new opcodes (f32x4.max/pmin/
                pmax), same pinned commit, no re-pin -- see below; the best
-               directive-per-opcode ratio in this campaign so far)
+               directive-per-opcode ratio in this campaign so far),
+               extended 2026-08-24 (task #220-222 -- simd_f64x2.wast/
+               simd_f64x2_pmin_pmax.wast, 5 new opcodes (f64x2.abs/min/
+               max/pmin/pmax), same pinned commit, no re-pin -- see below;
+               closes the f64x2 arithmetic family, mirroring PR34's
+               f32x4 closure)
 Fetch method:  code/packages/rust/wasm-conformance/tests/fixtures/fetch_testsuite.py
 
 The pinned commit was resolved via:
@@ -1046,6 +1051,74 @@ baseline failures (17 `assert_return`, 1 `module`, 1 `assert_unlinkable`,
 touching `f32x4.max`/`pmin`/`pmax` or this campaign) are byte-for-byte
 unchanged by this PR, confirming zero regressions. No other
 already-vendored file's stats changed.
+
+SIMD widen PR35 (task #220-222) implements `f64x2.abs` (`0xEC`),
+`f64x2.min` (`0xF4`), `f64x2.max` (`0xF5`), `f64x2.pmin` (`0xF6`),
+`f64x2.pmax` (`0xF7`) and vendors `simd_f64x2.wast`/
+`simd_f64x2_pmin_pmax.wast` -- closing the f64x2 arithmetic family (neg/
+sqrt/add/sub/mul/div in PR31, this PR's abs/min/max/pmin/pmax), a direct
+structural mirror of PR34's f32x4 closure, plus `abs` (f32x4.abs already
+existed since PR19; f64x2.abs did not). `f64x2.abs` is a pure bit
+operation (clear the sign bit of each of the 2 `f64` lanes, `f64::abs()`
+in Rust is directly correct, no NaN/signed-zero subtlety). `f64x2.min`/
+`f64x2.max` are the exact BINARY per-lane transplants of this crate's own
+scalar `f64.min`/`f64.max` handlers, direct 2-lane mirrors of
+`f32x4.min`/`f32x4.max`'s NaN-propagating, signed-zero-aware `fmin`/
+`fmax` (NOT Rust's native `f64::min()`/`f64::max()`/IEEE `minNum`/
+`maxNum`) -- if EITHER operand is NaN the result is NaN, and for a
+`-0.0`/`+0.0` tie, `-0.0` wins `min`'s tie and `+0.0` wins `max`'s.
+`f64x2.pmin`/`f64x2.pmax` are DELIBERATELY DIFFERENT and SIMPLER, direct
+2-lane mirrors of `f32x4.pmin`/`f32x4.pmax` -- "pseudo-min"/"pseudo-max",
+a plain IEEE-754 `<`-based conditional select (`pmin(a, b) = b < a ? b :
+a`, `pmax(a, b) = a < b ? b : a`) with NO NaN canonicalization: since
+IEEE-754 `<` is always `false` when either operand is NaN, `pmin`/`pmax`
+return the FIRST operand `a` UNCHANGED whenever either operand is NaN --
+NOT a canonicalized NaN the way `min`/`max` would produce. This is the
+same classic point of confusion/bugs porting real WASM SIMD
+implementations that PR34's f32x4 pair guards against, so it was
+implemented as a genuinely separate code path (not a transplant of
+`min`/`max`'s NaN logic) and tested explicitly at both operand
+positions. Each sub-opcode byte fetched live from `BinarySIMD.md` and
+cross-checked against the already-implemented `f64x2.neg` (`0xED`) and
+`f64x2.div` (`0xF3`) entries: `0xEC` sits immediately before `neg`'s
+`0xED` (previously called out as "still unimplemented" in PR31's own
+comment), `0xF4`-`0xF7` sit immediately past `div`'s `0xF3` with no gap
+(likewise previously called out as "still unimplemented"), all five
+confirmed free of collision with every existing `SIMD_OPS` entry.
+
+`simd_f64x2.wast` is the upstream corpus's general f64x2 smoke-test file
+(covers all of `neg`/`sqrt`/`add`/`sub`/`mul`/`div`/`min`/`max`,
+already-implemented ops included, plus this PR's new `abs`/`min`/`max`);
+the `pmin`/`pmax` pseudo-min/pseudo-max semantics get their own much
+larger dedicated corpus file, `simd_f64x2_pmin_pmax.wast` -- the same
+split PR34 used for f32x4. Together, at 5 opcodes for 2 files totaling
+4687 real directives (801 for `simd_f64x2.wast`: 2 module, 793
+assert_return, 8 assert_invalid, 0 assert_malformed; 3886 for
+`simd_f64x2_pmin_pmax.wast`: 1 module, 3872 assert_return, 6
+assert_invalid, 8 assert_malformed).
+
+100% pass on every directive kind across both files (`simd_f64x2.wast`:
+2/2 module, 793/793 assert_return, 8/8 assert_invalid; `simd_f64x2_pmin_
+pmax.wast`: 1/1 module, 3872/3872 assert_return, 6/6 assert_invalid, 8/8
+assert_malformed) -- including every one of `simd_f64x2_pmin_pmax.wast`'s
+own NaN-operand-order vectors, the highest-risk correctness area for this
+PR (a `pmin`/`pmax` implementation that wrongly reused `min`/`max`'s
+NaN-canonicalization logic would have failed a meaningful chunk of that
+file's 3872 `assert_return` directives; it did not). Aggregate
+`assert_return` rose from 38655/38672 to 43320/43337 (+4665 pass, +4665
+gradeable, exactly these two files' combined `assert_return` count,
+`fail` unchanged at 17); `assert_invalid` rose from 1852/1852 to
+1866/1866 (+14, exactly these two files' combined count, still 100.0% of
+gradeable directives); `assert_malformed` rose from 351/351 to 359/359
+(+8, exactly `simd_f64x2_pmin_pmax.wast`'s own count, `simd_f64x2.wast`
+has none); `module` pass count rose from 1189/1190 to 1192/1193 (+3,
+exactly these two files' combined module count, all passing). The
+pre-existing, unrelated baseline failures (17 `assert_return`, 1
+`module`, 1 `assert_unlinkable`, 2 `register` -- present before this PR
+and tracked separately, none touching `f64x2.abs`/`min`/`max`/`pmin`/
+`pmax` or this campaign) are byte-for-byte unchanged by this PR,
+confirming zero regressions. No other already-vendored file's stats
+changed.
 
 The vendored files are licensed under the Apache License, Version 2.0 --
 see the accompanying LICENSE file, itself vendored verbatim from the same

@@ -2,6 +2,42 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.38] - 2026-08-24 - SIMD widen PR35: f64x2.abs/min/max/pmin/pmax (task #220-222)
+
+### Added
+
+- 5 new `SIMD_OPS` entries: `f64x2.abs` (`0xEC`), `f64x2.min` (`0xF4`),
+  `f64x2.max` (`0xF5`), `f64x2.pmin` (`0xF6`), `f64x2.pmax` (`0xF7`) --
+  closes the f64x2 arithmetic family, a direct structural mirror of
+  PR34's f32x4.max/pmin/pmax, plus `abs` (f32x4.abs already existed
+  since PR19; f64x2.abs did not exist yet). 193 SIMD opcodes total, up
+  from 188. Each sub-opcode byte fetched live from the SIMD proposal's
+  own `BinarySIMD.md` and cross-checked against the already-implemented
+  `f64x2.neg` (`0xED`) and `f64x2.div` (`0xF3`) entries: `0xEC` sits
+  immediately before `neg`'s `0xED`, `0xF4`-`0xF7` sit immediately past
+  `div`'s `0xF3` with no gap, both runs previously called out as "still
+  unimplemented" in PR31's own comment, all five confirmed free of
+  collision with every existing `SIMD_OPS` entry.
+- 5 new `SimdOpKind` variants: `AbsF64x2`, `MinF64x2`, `MaxF64x2`,
+  `PminF64x2`, `PmaxF64x2`. `AbsF64x2` is a direct 2-lane mirror of
+  `AbsF32x4` -- a pure bit operation, no NaN/signed-zero subtlety.
+  `MinF64x2`/`MaxF64x2` are direct 2-lane mirrors of `MinF32x4`/
+  `MaxF32x4`'s WASM-spec `fmin`/`fmax` NaN-propagating, signed-zero-aware
+  semantics exactly (the exact per-lane transplants of this crate's own
+  scalar `f64.min`/`f64.max` opcodes). `PminF64x2`/`PmaxF64x2` are direct
+  2-lane mirrors of `PminF32x4`/`PmaxF32x4`'s DIFFERENT, deliberately
+  SIMPLER "pseudo-min"/"pseudo-max" shape -- a plain IEEE-754 `<`-based
+  conditional select (`pmin(a, b) = b < a ? b : a`, `pmax(a, b) = a < b ?
+  b : a`) with NO NaN canonicalization: since IEEE-754 `<` is always
+  `false` when either operand is NaN, `pmin`/`pmax` return the FIRST
+  operand `a` UNCHANGED whenever either operand is NaN, NOT a
+  canonicalized NaN result the way `MinF64x2`/`MaxF64x2` would produce --
+  the same classic point of confusion porting real WASM SIMD
+  implementations that `f32x4.pmin`/`pmax` guard against, deliberately
+  NOT implemented by reusing `min`/`max`'s NaN logic.
+- Table-size test updated from 188 to 193 entries. New test
+  `simd_f64x2_abs_min_max_pmin_pmax_have_the_real_verified_sub_opcode_values`.
+
 ## [0.2.37] - 2026-08-24 - SIMD widen PR34: f32x4.max/pmin/pmax (task #217-219)
 
 ### Added

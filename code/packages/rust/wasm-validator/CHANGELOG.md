@@ -2,6 +2,31 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.47] - 2026-08-24 (task #220-222 — SIMD widen PR35: f64x2.abs/min/max/pmin/pmax type rules)
+
+### Added
+
+- `SimdOpKind::MinF64x2`/`MaxF64x2`/`PminF64x2`/`PmaxF64x2` join the
+  existing BINARY `v128,v128->v128` arm alongside their `f32x4`
+  equivalents -- same pop-two-push-one `V128` shape. `min`/`max`'s
+  NaN-canonicalizing/signed-zero runtime subtlety and `pmin`/`pmax`'s
+  deliberately simpler `<`-based conditional-select semantics are both
+  entirely runtime concerns, invisible to the type checker.
+- `SimdOpKind::AbsF64x2` joins the existing UNARY `v128->v128` arm
+  alongside `AbsF32x4`/`NegF64x2`/`SqrtF64x2` -- a pure bit operation,
+  no new type-checker machinery needed, same pop-one-push-one `V128`
+  shape.
+- New tests: `valid_f64x2_abs_min_max_pmin_pmax_family`,
+  `invalid_f64x2_abs_given_an_i32_operand_instead_of_v128`,
+  `invalid_f64x2_abs_given_no_operand_at_all`,
+  `invalid_f64x2_min_given_an_i32_operand_instead_of_v128`,
+  `invalid_f64x2_max_given_an_i32_operand_instead_of_v128`,
+  `invalid_f64x2_pmin_given_an_i32_operand_instead_of_v128`,
+  `invalid_f64x2_pmax_given_an_i32_operand_instead_of_v128`,
+  `invalid_f64x2_pmax_given_only_one_operand_instead_of_two`,
+  `invalid_f64x2_pmin_given_no_operand_at_all`,
+  `invalid_f64x2_min_given_an_i32_result_type_instead_of_v128`.
+
 ## [0.2.46] - 2026-08-24 (task #217-219 — SIMD widen PR34: f32x4.max/pmin/pmax type rules)
 
 ### Added

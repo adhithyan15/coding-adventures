@@ -2,6 +2,42 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.45] - 2026-08-24 (task #220-222 — SIMD widen PR35: f64x2.abs/min/max/pmin/pmax)
+
+### Added
+
+- New dispatch arm for `AbsF64x2`: UNARY, direct 2-lane mirror of
+  `AbsF32x4` -- a pure bit operation (clear the sign bit of each of the
+  2 `f64` lanes), no NaN/signed-zero subtlety, `f64::abs()` is directly
+  correct.
+- New dispatch arm for `MinF64x2`: BINARY, direct 2-lane mirror of
+  `MinF32x4`'s exact NaN-canonicalization boilerplate -- if either lane
+  is NaN the result lane is NaN; for a `-0.0`/`+0.0` tie, `-0.0` wins.
+- New dispatch arm for `MaxF64x2`: BINARY, direct 2-lane mirror of
+  `MaxF32x4`, same pop-order/lane shape as `MinF64x2` -- if either lane
+  is NaN the result lane is NaN; for a `-0.0`/`+0.0` tie, `+0.0` wins
+  (the mirror-image tie-break from `MinF64x2`'s `-0.0`).
+- New dispatch arm for `PminF64x2`/`PmaxF64x2`: BINARY, direct 2-lane
+  mirror of `PminF32x4`/`PmaxF32x4` -- a genuinely DIFFERENT and
+  SIMPLER code path than `MaxF64x2`/`MinF64x2` -- a plain IEEE-754
+  `<`-based conditional select (`pmin(a, b) = b < a ? b : a`,
+  `pmax(a, b) = a < b ? b : a`), no NaN canonicalization. Since
+  IEEE-754 `<` is always `false` when either operand is NaN, this
+  returns the FIRST operand (`a`) unchanged whenever either operand is
+  NaN -- NOT a canonicalized NaN the way `MaxF64x2`/`MinF64x2` would
+  produce.
+- New tests: `f64x2_abs_clears_sign_bit_and_leaves_nan_lane_nan`,
+  `f64x2_min_propagates_nan_in_either_lane_regardless_of_operand_order`,
+  `f64x2_min_signed_zero_tie_returns_negative_zero`,
+  `f64x2_min_normal_case_picks_the_smaller_value`,
+  `f64x2_max_propagates_nan_in_either_lane_regardless_of_operand_order`,
+  `f64x2_max_signed_zero_tie_returns_positive_zero`,
+  `f64x2_max_normal_case_picks_the_larger_value`,
+  `f64x2_pmin_pmax_return_the_first_operand_unchanged_when_either_
+  operand_is_nan` (the highest-risk correctness case in this PR, tested
+  at both operand positions for both `pmin` and `pmax`),
+  `f64x2_pmin_pmax_normal_case_matches_plain_less_than_select`.
+
 ## [0.9.44] - 2026-08-24 (task #217-219 — SIMD widen PR34: f32x4.max/pmin/pmax)
 
 ### Added

@@ -6669,6 +6669,137 @@ fn register_simd(vm: &mut GenericVM) {
                 let handle = push_v128(ctx, result)?;
                 push_wasm(vm, WasmValue::V128(handle));
             }
+            SimdOpKind::AbsF64x2 => {
+                // f64x2.abs (SIMD widen PR35): UNARY, pop one v128, clear
+                // the sign bit of each of the 2 `f64` lanes, push one
+                // v128. Direct 2-lane mirror of `AbsF32x4` -- a pure bit
+                // operation with no NaN/signed-zero subtlety, `f64::abs()`
+                // is correct here, unlike `MinF64x2`/`MaxF64x2` below.
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let mut result = [0u8; 16];
+                for i in 0..2 {
+                    let v = f64::from_le_bytes(bytes[i * 8..i * 8 + 8].try_into().unwrap());
+                    let out = v.abs();
+                    result[i * 8..i * 8 + 8].copy_from_slice(&out.to_le_bytes());
+                }
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::MinF64x2 => {
+                // f64x2.min (SIMD widen PR35): BINARY, pop two v128s, take
+                // the WASM-spec `fmin` (NOT Rust's `f64::min()`/IEEE
+                // `minNum`) of each of the 2 `f64` lane pairs -- direct
+                // 2-lane mirror of `MinF32x4`: if EITHER lane is NaN, the
+                // result lane is NaN (propagated, not silently dropped);
+                // for a -0.0/+0.0 tie, -0.0 wins.
+                let rhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let lhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let rhs = *ctx
+                    .v128_heap
+                    .get(rhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let lhs = *ctx
+                    .v128_heap
+                    .get(lhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let mut result = [0u8; 16];
+                for i in 0..2 {
+                    let l = f64::from_le_bytes(lhs[i * 8..i * 8 + 8].try_into().unwrap());
+                    let r = f64::from_le_bytes(rhs[i * 8..i * 8 + 8].try_into().unwrap());
+                    let out = if l.is_nan() || r.is_nan() {
+                        f64::NAN
+                    } else if l == 0.0 && r == 0.0 {
+                        if l.is_sign_negative() || r.is_sign_negative() { -0.0 } else { 0.0 }
+                    } else {
+                        l.min(r)
+                    };
+                    result[i * 8..i * 8 + 8].copy_from_slice(&out.to_le_bytes());
+                }
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::MaxF64x2 => {
+                // f64x2.max (SIMD widen PR35): BINARY, pop two v128s, take
+                // the WASM-spec `fmax` (NOT Rust's `f64::max()`/IEEE
+                // `maxNum`) of each of the 2 `f64` lane pairs -- direct
+                // 2-lane mirror of `MaxF32x4`: if EITHER lane is NaN, the
+                // result lane is NaN (propagated); for a -0.0/+0.0 tie,
+                // +0.0 wins -- the mirror-image tie-break from `MinF64x2`
+                // above, which picks -0.0.
+                let rhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let lhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let rhs = *ctx
+                    .v128_heap
+                    .get(rhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let lhs = *ctx
+                    .v128_heap
+                    .get(lhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let mut result = [0u8; 16];
+                for i in 0..2 {
+                    let l = f64::from_le_bytes(lhs[i * 8..i * 8 + 8].try_into().unwrap());
+                    let r = f64::from_le_bytes(rhs[i * 8..i * 8 + 8].try_into().unwrap());
+                    let out = if l.is_nan() || r.is_nan() {
+                        f64::NAN
+                    } else if l == 0.0 && r == 0.0 {
+                        if l.is_sign_positive() || r.is_sign_positive() { 0.0 } else { -0.0 }
+                    } else {
+                        l.max(r)
+                    };
+                    result[i * 8..i * 8 + 8].copy_from_slice(&out.to_le_bytes());
+                }
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::PminF64x2 | SimdOpKind::PmaxF64x2 => {
+                // f64x2.pmin/f64x2.pmax (SIMD widen PR35): BINARY, pop two
+                // v128s -- `a` (pushed first, so popped SECOND/lower on
+                // the stack) and `b` (pushed second, popped FIRST/on top)
+                // -- and compute each of the 2 lanes with a PLAIN
+                // IEEE-754 `<`-based conditional select, direct 2-lane
+                // mirror of `PminF32x4`/`PmaxF32x4`:
+                //   pmin(a, b) = b < a ? b : a
+                //   pmax(a, b) = a < b ? b : a
+                // DELIBERATELY NOT the same code path as `MinF64x2`/
+                // `MaxF64x2` above -- no NaN canonicalization, no
+                // signed-zero tie-break special case, just Rust's native
+                // `<` operator (always `false` if either operand is NaN),
+                // so `pmin`/`pmax` return `a` (the FIRST/lower-pushed
+                // operand) UNCHANGED whenever either operand is NaN -- NOT
+                // a canonicalized `f64::NAN` the way `min`/`max` would
+                // produce. Same highest-risk-correctness-area discipline
+                // as `f32x4.pmin`/`f32x4.pmax`: copying `MinF64x2`/
+                // `MaxF64x2`'s NaN-canonicalization logic here would be
+                // WRONG.
+                let rhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let lhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let b = *ctx
+                    .v128_heap
+                    .get(rhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let a = *ctx
+                    .v128_heap
+                    .get(lhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let mut result = [0u8; 16];
+                for i in 0..2 {
+                    let lane_a = f64::from_le_bytes(a[i * 8..i * 8 + 8].try_into().unwrap());
+                    let lane_b = f64::from_le_bytes(b[i * 8..i * 8 + 8].try_into().unwrap());
+                    let out = match op.kind {
+                        SimdOpKind::PminF64x2 => if lane_b < lane_a { lane_b } else { lane_a },
+                        SimdOpKind::PmaxF64x2 => if lane_a < lane_b { lane_b } else { lane_a },
+                        _ => unreachable!("only PminF64x2/PmaxF64x2 reach this arm"),
+                    };
+                    result[i * 8..i * 8 + 8].copy_from_slice(&out.to_le_bytes());
+                }
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
             SimdOpKind::TruncSatF32x4S | SimdOpKind::TruncSatF32x4U => {
                 // i32x4.trunc_sat_f32x4_s/_u (SIMD widen PR20): UNARY,
                 // pop one v128, convert each of the 4 `f32` lanes to a
@@ -15776,6 +15907,264 @@ mod tests {
             let out = f64x2_lanes(results[0].unwrap());
             assert!(out.iter().all(|v| v.is_nan()), "f64x2.{name}(NaN, 5.0) must be NaN in every lane, got {out:?}");
         }
+    }
+
+    // ── f64x2.abs/min/max/pmin/pmax (SIMD widen PR35, task #220-222) ────────
+
+    /// `f64x2.abs`: clears the sign bit of each lane -- a normal negative
+    /// lane becomes positive, a positive lane is unchanged, `-0.0` becomes
+    /// `+0.0`, and a NaN lane stays NaN. Direct 2-lane mirror of
+    /// `f32x4_abs_clears_sign_bit_and_leaves_nan_lane_nan` above.
+    #[test]
+    fn f64x2_abs_clears_sign_bit_and_leaves_nan_lane_nan() {
+        let lanes = [-3.5f64, 2.0f64];
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_f64x2(lanes));
+        code.extend([0xFD, 0xEC, 0x01]); // f64x2.abs (LEB128: [0xEC, 0x01] for sub-opcode 0xEC)
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f64x2_lanes(results[0].unwrap());
+        assert_eq!(out[0], 3.5, "abs(-3.5) must be 3.5");
+        assert_eq!(out[1], 2.0, "abs(2.0) must stay 2.0");
+
+        let lanes2 = [-0.0f64, f64::NAN];
+        let mut code2 = vec![0xFD, 0x0C];
+        code2.extend(v128_const_bytes_f64x2(lanes2));
+        code2.extend([0xFD, 0xEC, 0x01]);
+        code2.push(0x0B);
+        let mut engine2 = simd_engine_returning_v128(code2);
+        let (_, results2) = engine2.call_function_with_v128(0, &[]).unwrap();
+        let out2 = f64x2_lanes(results2[0].unwrap());
+        assert!(out2[0] == 0.0 && out2[0].is_sign_positive(), "abs(-0.0) must clear the sign bit to +0.0, got {}", out2[0]);
+        assert!(out2[1].is_nan(), "abs(NaN) must stay NaN, got {}", out2[1]);
+    }
+
+    /// `f64x2.min`: the MOST IMPORTANT correctness case for this opcode.
+    /// WASM's `fmin` is NOT Rust's native `f64::min()`/IEEE `minNum` -- if
+    /// EITHER operand is NaN the result must be NaN (propagated), in BOTH
+    /// operand orders. Direct 2-lane mirror of
+    /// `f32x4_min_propagates_nan_in_either_lane_regardless_of_operand_order`.
+    #[test]
+    fn f64x2_min_propagates_nan_in_either_lane_regardless_of_operand_order() {
+        let min_code = |lhs: [f64; 2], rhs: [f64; 2]| {
+            let mut code = vec![0xFD, 0x0C];
+            code.extend(v128_const_bytes_f64x2(lhs));
+            code.extend([0xFD, 0x0C]);
+            code.extend(v128_const_bytes_f64x2(rhs));
+            code.extend([0xFD, 0xF4, 0x01]); // f64x2.min (LEB128: [0xF4, 0x01] for sub-opcode 0xF4)
+            code.push(0x0B);
+            code
+        };
+
+        // min(NaN, 5.0) in every lane.
+        let mut engine = simd_engine_returning_v128(min_code([f64::NAN; 2], [5.0; 2]));
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f64x2_lanes(results[0].unwrap());
+        assert!(out.iter().all(|v| v.is_nan()), "min(NaN, 5.0) must be NaN in every lane, got {out:?}");
+
+        // min(5.0, NaN) -- the OTHER operand order -- must also be NaN.
+        let mut engine = simd_engine_returning_v128(min_code([5.0; 2], [f64::NAN; 2]));
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f64x2_lanes(results[0].unwrap());
+        assert!(out.iter().all(|v| v.is_nan()), "min(5.0, NaN) must be NaN in every lane, got {out:?}");
+    }
+
+    /// `f64x2.min`: WASM's signed-zero tie-break -- `-0.0` wins a
+    /// `-0.0`/`+0.0` tie (`min(+0.0, -0.0) == -0.0`), checked by its
+    /// ACTUAL SIGN BIT via `is_sign_negative()`, not `== 0.0`. Direct
+    /// 2-lane mirror of `f32x4_min_signed_zero_tie_returns_negative_zero`.
+    #[test]
+    fn f64x2_min_signed_zero_tie_returns_negative_zero() {
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_f64x2([0.0f64; 2]));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes_f64x2([-0.0f64; 2]));
+        code.extend([0xFD, 0xF4, 0x01]); // f64x2.min
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f64x2_lanes(results[0].unwrap());
+        assert!(
+            out.iter().all(|v| *v == 0.0 && v.is_sign_negative()),
+            "min(+0.0, -0.0) must be -0.0 (checked by sign bit, not just == 0.0) in every lane, got {out:?}"
+        );
+    }
+
+    /// `f64x2.min`: an ordinary non-edge-case lane-wise minimum, proving
+    /// the normal path still works once the NaN/signed-zero special cases
+    /// above are handled explicitly. Direct 2-lane mirror of
+    /// `f32x4_min_normal_case_picks_the_smaller_value`.
+    #[test]
+    fn f64x2_min_normal_case_picks_the_smaller_value() {
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_f64x2([-3.0f64, 2.0f64]));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes_f64x2([2.0f64, -3.0f64]));
+        code.extend([0xFD, 0xF4, 0x01]); // f64x2.min
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f64x2_lanes(results[0].unwrap());
+        assert_eq!(out, [-3.0, -3.0], "f64x2.min must pick the smaller value in each lane");
+    }
+
+    /// `f64x2.max`: the mirror-image of
+    /// `f64x2_min_propagates_nan_in_either_lane_regardless_of_operand_order`
+    /// above. WASM's `fmax` is NOT Rust's native `f64::max()`/IEEE
+    /// `maxNum` -- if EITHER operand is NaN the result must be NaN
+    /// (propagated), in BOTH operand orders.
+    #[test]
+    fn f64x2_max_propagates_nan_in_either_lane_regardless_of_operand_order() {
+        let max_code = |lhs: [f64; 2], rhs: [f64; 2]| {
+            let mut code = vec![0xFD, 0x0C];
+            code.extend(v128_const_bytes_f64x2(lhs));
+            code.extend([0xFD, 0x0C]);
+            code.extend(v128_const_bytes_f64x2(rhs));
+            code.extend([0xFD, 0xF5, 0x01]); // f64x2.max (LEB128: [0xF5, 0x01] for sub-opcode 0xF5)
+            code.push(0x0B);
+            code
+        };
+
+        // max(NaN, 5.0) in every lane.
+        let mut engine = simd_engine_returning_v128(max_code([f64::NAN; 2], [5.0; 2]));
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f64x2_lanes(results[0].unwrap());
+        assert!(out.iter().all(|v| v.is_nan()), "max(NaN, 5.0) must be NaN in every lane, got {out:?}");
+
+        // max(5.0, NaN) -- the OTHER operand order -- must also be NaN.
+        let mut engine = simd_engine_returning_v128(max_code([5.0; 2], [f64::NAN; 2]));
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f64x2_lanes(results[0].unwrap());
+        assert!(out.iter().all(|v| v.is_nan()), "max(5.0, NaN) must be NaN in every lane, got {out:?}");
+    }
+
+    /// `f64x2.max`: WASM's signed-zero tie-break -- `+0.0` wins a
+    /// `-0.0`/`+0.0` tie (`max(+0.0, -0.0) == +0.0`), the mirror-image of
+    /// `f64x2.min`'s `-0.0`-wins tie-break, checked by ACTUAL SIGN BIT via
+    /// `is_sign_negative()`, not `== 0.0`.
+    #[test]
+    fn f64x2_max_signed_zero_tie_returns_positive_zero() {
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_f64x2([0.0f64; 2]));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes_f64x2([-0.0f64; 2]));
+        code.extend([0xFD, 0xF5, 0x01]); // f64x2.max
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f64x2_lanes(results[0].unwrap());
+        assert!(
+            out.iter().all(|v| *v == 0.0 && v.is_sign_positive()),
+            "max(+0.0, -0.0) must be +0.0 (checked by sign bit, not just == 0.0) in every lane, got {out:?}"
+        );
+    }
+
+    /// `f64x2.max`: an ordinary non-edge-case lane-wise maximum, proving
+    /// the normal path still works once the NaN/signed-zero special cases
+    /// above are handled explicitly.
+    #[test]
+    fn f64x2_max_normal_case_picks_the_larger_value() {
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_f64x2([-3.0f64, 2.0f64]));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes_f64x2([2.0f64, -3.0f64]));
+        code.extend([0xFD, 0xF5, 0x01]); // f64x2.max
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f64x2_lanes(results[0].unwrap());
+        assert_eq!(out, [2.0, 2.0], "f64x2.max must pick the larger value in each lane");
+    }
+
+    /// `f64x2.pmin`/`f64x2.pmax`: THE MOST IMPORTANT correctness case for
+    /// this pair, and the classic point of confusion porting real WASM
+    /// SIMD implementations. Unlike `f64x2.min`/`f64x2.max` above, `pmin`/
+    /// `pmax` do NOT canonicalize NaN -- per spec, `pmin(a, b) = b < a ?
+    /// b : a` and `pmax(a, b) = a < b ? b : a`, using IEEE-754 `<`
+    /// directly (always `false` when either operand is NaN). That means
+    /// whenever EITHER operand is NaN, the result must be the FIRST
+    /// operand `a` UNCHANGED -- NaN if `a` itself is NaN, but the ORDINARY
+    /// (non-NaN) value if only `b` is NaN. This is checked at BOTH operand
+    /// positions, for both `pmin` and `pmax`, proving the implementation
+    /// is a plain first-operand-preserving select, not a
+    /// NaN-canonicalizing `min`/`max` transplant. Direct 2-lane mirror of
+    /// `f32x4_pmin_pmax_return_the_first_operand_unchanged_when_either_operand_is_nan`.
+    #[test]
+    fn f64x2_pmin_pmax_return_the_first_operand_unchanged_when_either_operand_is_nan() {
+        let op_code = |lhs: [f64; 2], rhs: [f64; 2], sub_opcode: u8| {
+            let mut code = vec![0xFD, 0x0C];
+            code.extend(v128_const_bytes_f64x2(lhs));
+            code.extend([0xFD, 0x0C]);
+            code.extend(v128_const_bytes_f64x2(rhs));
+            code.extend([0xFD, sub_opcode, 0x01]);
+            code.push(0x0B);
+            code
+        };
+
+        // pmin(NaN, 5.0): a=NaN is the first operand -> result must be NaN
+        // (a itself, unchanged), NOT a canonicalized NaN from min-style logic.
+        let mut engine = simd_engine_returning_v128(op_code([f64::NAN; 2], [5.0; 2], 0xF6));
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f64x2_lanes(results[0].unwrap());
+        assert!(out.iter().all(|v| v.is_nan()), "pmin(NaN, 5.0) must return the first operand (NaN) in every lane, got {out:?}");
+
+        // pmin(5.0, NaN): a=5.0 is the first operand, b=NaN -> `b < a` is
+        // false (IEEE-754 NaN comparisons are always false), so the result
+        // must be `a` (5.0) UNCHANGED, NOT NaN -- THE classic bug: an
+        // implementation that reuses min's NaN-propagation logic would
+        // wrongly return NaN here.
+        let mut engine = simd_engine_returning_v128(op_code([5.0; 2], [f64::NAN; 2], 0xF6));
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f64x2_lanes(results[0].unwrap());
+        assert_eq!(out, [5.0; 2], "pmin(5.0, NaN) must return the first operand (5.0) UNCHANGED, not NaN -- got {out:?}");
+
+        // pmax(NaN, 5.0): a=NaN is the first operand -> result must be NaN.
+        let mut engine = simd_engine_returning_v128(op_code([f64::NAN; 2], [5.0; 2], 0xF7));
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f64x2_lanes(results[0].unwrap());
+        assert!(out.iter().all(|v| v.is_nan()), "pmax(NaN, 5.0) must return the first operand (NaN) in every lane, got {out:?}");
+
+        // pmax(5.0, NaN): a=5.0 is the first operand, b=NaN -> `a < b` is
+        // false -> result must be `a` (5.0) UNCHANGED, NOT NaN.
+        let mut engine = simd_engine_returning_v128(op_code([5.0; 2], [f64::NAN; 2], 0xF7));
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f64x2_lanes(results[0].unwrap());
+        assert_eq!(out, [5.0; 2], "pmax(5.0, NaN) must return the first operand (5.0) UNCHANGED, not NaN -- got {out:?}");
+    }
+
+    /// `f64x2.pmin`/`f64x2.pmax`: ordinary non-NaN values, proving the
+    /// normal `<`-based select path works once the NaN edge case above is
+    /// handled explicitly. `pmin`/`pmax` are plain conditional selects, so
+    /// on ordinary finite values they must match `min`/`max` exactly.
+    /// Direct 2-lane mirror of
+    /// `f32x4_pmin_pmax_normal_case_matches_plain_less_than_select`.
+    #[test]
+    fn f64x2_pmin_pmax_normal_case_matches_plain_less_than_select() {
+        let lhs = [-3.0f64, 2.0f64];
+        let rhs = [2.0f64, -3.0f64];
+
+        let mut pmin_code = vec![0xFD, 0x0C];
+        pmin_code.extend(v128_const_bytes_f64x2(lhs));
+        pmin_code.extend([0xFD, 0x0C]);
+        pmin_code.extend(v128_const_bytes_f64x2(rhs));
+        pmin_code.extend([0xFD, 0xF6, 0x01]); // f64x2.pmin (LEB128: [0xF6, 0x01] for sub-opcode 0xF6)
+        pmin_code.push(0x0B);
+        let mut pmin_engine = simd_engine_returning_v128(pmin_code);
+        let (_, pmin_results) = pmin_engine.call_function_with_v128(0, &[]).unwrap();
+        let pmin_out = f64x2_lanes(pmin_results[0].unwrap());
+        assert_eq!(pmin_out, [-3.0, -3.0], "f64x2.pmin must pick the smaller value in each lane on ordinary finite operands");
+
+        let mut pmax_code = vec![0xFD, 0x0C];
+        pmax_code.extend(v128_const_bytes_f64x2(lhs));
+        pmax_code.extend([0xFD, 0x0C]);
+        pmax_code.extend(v128_const_bytes_f64x2(rhs));
+        pmax_code.extend([0xFD, 0xF7, 0x01]); // f64x2.pmax (LEB128: [0xF7, 0x01] for sub-opcode 0xF7)
+        pmax_code.push(0x0B);
+        let mut pmax_engine = simd_engine_returning_v128(pmax_code);
+        let (_, pmax_results) = pmax_engine.call_function_with_v128(0, &[]).unwrap();
+        let pmax_out = f64x2_lanes(pmax_results[0].unwrap());
+        assert_eq!(pmax_out, [2.0, 2.0], "f64x2.pmax must pick the larger value in each lane on ordinary finite operands");
     }
 
     // ── f32x4.eq/ne/lt/gt/le/ge (SIMD widen PR30, task #205-207) ────────────
