@@ -58,7 +58,7 @@ Every verb infinitive in this book ends in the neuter **-વું**: *hovũ*,
 *javũ*, *jāṇvũ*, *lakhvũ* — a whole word class marked by that one nasalized
 ending. **મોઢું** shows the same ending doing the same job on a **noun**:
 *moḍhũ* is **neuter**, and the nasalized *-ũ* is the single most recognizable
-tell for it. Not every neuter noun wears it — **પાણી** and **નાક** do not —
+tell for it. Not every neuter noun wears it — **પાણી** and later *nāk* do not —
 but when you do see or hear a word end this way, neuter is the way to bet.
 And do not confuse it with **આંખ**'s nasal: that one sat in the **middle** of
 a feminine word and marked nothing about gender at all. This one sits at the

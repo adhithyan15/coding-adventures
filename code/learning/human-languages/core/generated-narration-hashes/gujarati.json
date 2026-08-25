@@ -30,7 +30,7 @@
     {
       "language": "gujarati",
       "chapter": 2,
-      "sourceHash": "fnv1a64:f2da50ad8281f7ec",
+      "sourceHash": "fnv1a64:9aa5417f46ee5710",
       "lessonIds": [
         "GU-C01-aabhaar",
         "GU-C01-aavjo",
@@ -45,13 +45,13 @@
       "drivablePrefix": 0,
       "text": "gujarati/narration/ch02.txt",
       "json": "gujarati/narration/ch02.json",
-      "textHash": "fnv1a64:4e4b6d354bd316a9",
-      "jsonHash": "fnv1a64:c2de5ff66c1f6683"
+      "textHash": "fnv1a64:a5809492de1eb8e8",
+      "jsonHash": "fnv1a64:0eaacd824d120be2"
     },
     {
       "language": "gujarati",
       "chapter": 3,
-      "sourceHash": "fnv1a64:d6ec24575b6947f5",
+      "sourceHash": "fnv1a64:04abedd8a0974b05",
       "lessonIds": [
         "GU-C02-naam",
         "GU-C02-maarun",
@@ -67,8 +67,8 @@
       "drivablePrefix": 0,
       "text": "gujarati/narration/ch03.txt",
       "json": "gujarati/narration/ch03.json",
-      "textHash": "fnv1a64:8e4fc5dfd0f1219b",
-      "jsonHash": "fnv1a64:2a781a018918a214"
+      "textHash": "fnv1a64:7f622b950f89b251",
+      "jsonHash": "fnv1a64:15f0e22702a59d20"
     },
     {
       "language": "gujarati",
@@ -162,7 +162,7 @@
     {
       "language": "gujarati",
       "chapter": 9,
-      "sourceHash": "fnv1a64:31c7072aa3aeabd1",
+      "sourceHash": "fnv1a64:e6d6ef775ac44e88",
       "lessonIds": [
         "GU-C08-vicharvun",
         "GU-C08-samajvun",
@@ -173,8 +173,8 @@
       "drivablePrefix": 0,
       "text": "gujarati/narration/ch09.txt",
       "json": "gujarati/narration/ch09.json",
-      "textHash": "fnv1a64:c96007734149fba4",
-      "jsonHash": "fnv1a64:8a39e2933f39e2ae"
+      "textHash": "fnv1a64:13974e0be518b9a8",
+      "jsonHash": "fnv1a64:9cb55249b50667d1"
     },
     {
       "language": "gujarati",
@@ -230,7 +230,7 @@
     {
       "language": "gujarati",
       "chapter": 13,
-      "sourceHash": "fnv1a64:0cc5e0bbbf453e5b",
+      "sourceHash": "fnv1a64:5bd0bcabb2cc3198",
       "lessonIds": [
         "GU-C12-aankh",
         "GU-C12-kaan",
@@ -241,8 +241,8 @@
       "drivablePrefix": 0,
       "text": "gujarati/narration/ch13.txt",
       "json": "gujarati/narration/ch13.json",
-      "textHash": "fnv1a64:cd14a89a758e1df6",
-      "jsonHash": "fnv1a64:6ff5da236b2d9ea7"
+      "textHash": "fnv1a64:0e563dcc7e4c2f06",
+      "jsonHash": "fnv1a64:fe4128af5cf80f98"
     }
   ],
   "findings": []

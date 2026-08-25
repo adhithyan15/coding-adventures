@@ -43,7 +43,7 @@ India, it is really an invitation to return.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C01-AAVJO-01, GU-CONCEPT-C01-NAMASTE-01] -->
 
-**આવજો** (*āvjo*) is the polite imperative of **આવવું** (*āvvũ*, "to come") —
+**આવજો** (*āvjo*) is the polite imperative of *āvvũ*, "to come" —
 literally "**[please] come [again]**." A Gujarati never signs off by saying "I'm
 leaving"; the parting word is *come*. It is the same "promise of return" that
 runs through the whole subcontinent — Tamil *pōy varugiṟēṉ* ("I'll go and come

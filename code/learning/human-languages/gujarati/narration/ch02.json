@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Courtesy and Responses",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f2da50ad8281f7ec",
+  "sourceHash": "fnv1a64:9aa5417f46ee5710",
   "lessons": [
     {
       "id": "GU-C01-aabhaar",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7ce92355c98bc038",
+      "sourceHash": "fnv1a64:584e28dd4cdac7c4",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -189,7 +189,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "આવજો (āvjo) is the polite imperative of આવવું (āvvũ, \"to come\") — literally \"[please] come [again].\" A Gujarati never signs off by saying \"I'm leaving\"; the parting word is come. It is the same \"promise of return\" that runs through the whole subcontinent — Tamil pōy varugiṟēṉ (\"I'll go and come back\"), Bengali āshi (\"I'll come\"), Hindi phir milenge (\"we'll meet again\") — here made into a single warm word built on the verb to come. (To one person, familiarly: આવજે āvje.)"
+              "text": "આવજો (āvjo) is the polite imperative of āvvũ, \"to come\" — literally \"[please] come [again].\" A Gujarati never signs off by saying \"I'm leaving\"; the parting word is come. It is the same \"promise of return\" that runs through the whole subcontinent — Tamil pōy varugiṟēṉ (\"I'll go and come back\"), Bengali āshi (\"I'll come\"), Hindi phir milenge (\"we'll meet again\") — here made into a single warm word built on the verb to come. (To one person, familiarly: આવજે āvje.)"
             }
           ]
         },

@@ -49,7 +49,7 @@ The stem is **વિચાર-** *vichār-*: *hũ vichārũ chhũ*, "I think."
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 **વિ** is **વ** *va* wearing **િ**, the short-*i* sign — and that sign stands to
-the **left** of its letter although the sound comes after it. Then **ચા**: the
+the **left** of its letter although the sound comes after it. Then *chā*: the
 letter **ચ** *cha*, already yours from *chār*, "four," under the long-*ā* sign.
 Then **ર** *ra*, and the ending **વું**.
 
