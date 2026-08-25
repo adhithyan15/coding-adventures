@@ -6557,6 +6557,50 @@
           "ES-LEX-C334-BODY-35"
         ]
       }
+    },
+    {
+      "chapter": 335,
+      "title": "Review --- Six Words That Arrived Last",
+      "label": "ch:repaso-seis-palabras",
+      "canDo": "I can give la pareja, el bebe, la entrada, el cambio, el calor and la edad from the English, each with its article.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "ES-C335-repaso-seis-palabras",
+        "kind": "task",
+        "summary": "Complete ES-C335-repaso-seis-palabras: name the noun that is both a doorway and a ticket, name the one that is both an exchange and the coins, and give all six back from the English.",
+        "assesses": [
+          "ES-LEX-C309-KIN-19",
+          "ES-LEX-C309-KIN-20",
+          "ES-LEX-C313-ASK-19",
+          "ES-LEX-C313-ASK-20",
+          "ES-LEX-C334-BODY-34",
+          "ES-LEX-C334-BODY-35"
+        ]
+      }
+    },
+    {
+      "chapter": 336,
+      "title": "Review --- The Same Six, In Use",
+      "label": "ch:repaso-seis-en-uso",
+      "canDo": "I can buy una entrada, ask for el cambio, name a bebe and a pareja, and report my calor and my edad in whole turns.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "ES-C336-repaso-seis-en-uso",
+        "kind": "task",
+        "summary": "Complete ES-C336-repaso-seis-en-uso: split tengo calor from hace calor, ask an age with the noun, and put all six inside a turn of four words or fewer.",
+        "assesses": [
+          "ES-LEX-C309-KIN-19",
+          "ES-LEX-C309-KIN-20",
+          "ES-LEX-C313-ASK-19",
+          "ES-LEX-C313-ASK-20",
+          "ES-LEX-C334-BODY-34",
+          "ES-LEX-C334-BODY-35"
+        ]
+      }
     }
   ]
 }
