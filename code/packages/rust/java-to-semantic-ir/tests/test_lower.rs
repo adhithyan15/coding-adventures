@@ -1,5 +1,7 @@
-//! JV02 milestone M0/M1 tests: literals, a synthesized `main` function
-//! (M0), and local variable declarations/re-assignment/operators (M1).
+//! JV02 milestone M0/M1/M2a tests: literals, a synthesized `main`
+//! function (M0); local variable declarations/re-assignment/operators
+//! (M1); if/while/do-while, and compound-assignment/increment/decrement
+//! as bare statements (M2a).
 //!
 //! Every positive test also asserts the lowered [`Module`] passes
 //! `semantic_ir::validate()` — not just that lowering itself didn't
@@ -8,6 +10,7 @@
 //! the shared SIR validator is not actually working, just runnable).
 
 use java_to_semantic_ir::{compile, compile_source};
+use lexer::token::{Token, TokenType};
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 use semantic_ir::{Expr, Function, Module, Stmt};
 
@@ -403,10 +406,77 @@ fn assignment_to_undeclared_variable_is_an_error() {
 }
 
 #[test]
-fn compound_assignment_is_unsupported() {
-    let err = compile_source(&wrap("int x = 1; x += 1;"), "prog").unwrap_err();
+fn compound_assignment_as_a_statement_desugars_to_assign() {
+    let m = compile_ok(&wrap("int x = 1; x += 2;"));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::Assign {
+            name,
+            value: Expr::BuiltinCall { name: op, args, .. },
+            ..
+        } => {
+            assert_eq!(name, "x");
+            assert_eq!(op, "+");
+            assert!(matches!(&args[0], Expr::VarRef { name, .. } if name == "x"));
+            assert!(matches!(&args[1], Expr::IntLit { value: 2, .. }));
+        }
+        other => panic!("expected Assign(BuiltinCall(\"+\")), got {other:?}"),
+    }
+}
+
+#[test]
+fn every_compound_assignment_operator_desugars_to_its_builtin_name() {
+    for (src_op, builtin_name) in [("-=", "-"), ("*=", "*"), ("%=", "%")] {
+        let src = format!("int x = 5; x {src_op} 2;");
+        let m = compile_ok(&wrap(&src));
+        match &main_fn(&m).body.stmts[1] {
+            Stmt::Assign {
+                value: Expr::BuiltinCall { name, .. },
+                ..
+            } => {
+                assert_eq!(name, builtin_name, "for source operator `{src_op}`");
+            }
+            other => panic!("expected Assign(BuiltinCall), got {other:?}"),
+        }
+    }
+}
+
+#[test]
+fn compound_divide_assignment_selects_div_trunc_or_div_true() {
+    let m = compile_ok(&wrap("int x = 5; x /= 2;"));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::Assign {
+            value: Expr::BuiltinCall { name, .. },
+            ..
+        } => assert_eq!(name, "div_trunc"),
+        other => panic!("expected Assign(BuiltinCall(\"div_trunc\")), got {other:?}"),
+    }
+    let m = compile_ok(&wrap("double x = 5.0; x /= 2.0;"));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::Assign {
+            value: Expr::BuiltinCall { name, .. },
+            ..
+        } => assert_eq!(name, "div_true"),
+        other => panic!("expected Assign(BuiltinCall(\"div_true\")), got {other:?}"),
+    }
+}
+
+#[test]
+fn compound_plus_assignment_on_a_string_concatenates() {
+    let m = compile_ok(&wrap(r#"String s = "a"; s += "b";"#));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::Assign {
+            value: Expr::StrConcat { parts, .. },
+            ..
+        } => assert_eq!(parts.len(), 2),
+        other => panic!("expected Assign(StrConcat), got {other:?}"),
+    }
+}
+
+#[test]
+fn bitwise_compound_assignment_is_unsupported() {
+    let err = compile_source(&wrap("int x = 1; x &= 1;"), "prog").unwrap_err();
     assert!(
-        err.message.contains("compound assignment"),
+        err.message.contains("unsupported assignment operator"),
         "unexpected message: {}",
         err.message
     );
@@ -666,10 +736,68 @@ fn prefix_increment_is_unsupported() {
 }
 
 #[test]
-fn postfix_increment_is_unsupported() {
-    let err = compile_source(&wrap("int x = 1; x++;"), "prog").unwrap_err();
+fn postfix_increment_as_a_statement_desugars_to_assign() {
+    let m = compile_ok(&wrap("int x = 1; x++;"));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::Assign {
+            name,
+            value: Expr::BuiltinCall { name: op, args, .. },
+            ..
+        } => {
+            assert_eq!(name, "x");
+            assert_eq!(op, "+");
+            assert!(matches!(&args[0], Expr::VarRef { name, .. } if name == "x"));
+            assert!(matches!(&args[1], Expr::IntLit { value: 1, .. }));
+        }
+        other => panic!("expected Assign(BuiltinCall(\"+\")), got {other:?}"),
+    }
+}
+
+#[test]
+fn prefix_decrement_as_a_statement_desugars_to_assign() {
+    let m = compile_ok(&wrap("int x = 1; --x;"));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::Assign {
+            name,
+            value: Expr::BuiltinCall { name: op, args, .. },
+            ..
+        } => {
+            assert_eq!(name, "x");
+            assert_eq!(op, "-");
+            assert!(matches!(&args[0], Expr::VarRef { name, .. } if name == "x"));
+            assert!(matches!(&args[1], Expr::IntLit { value: 1, .. }));
+        }
+        other => panic!("expected Assign(BuiltinCall(\"-\")), got {other:?}"),
+    }
+}
+
+#[test]
+fn increment_on_a_float_variable_uses_a_float_one() {
+    let m = compile_ok(&wrap("double x = 1.0; x++;"));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::Assign {
+            value: Expr::BuiltinCall { args, .. },
+            ..
+        } => {
+            assert!(
+                matches!(&args[1], Expr::FloatLit { value, .. } if (*value - 1.0).abs() < 1e-9)
+            );
+        }
+        other => panic!("expected Assign(BuiltinCall), got {other:?}"),
+    }
+}
+
+#[test]
+fn increment_on_undeclared_variable_is_an_error() {
+    let err = compile_source(&wrap("x++;"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn increment_on_a_boolean_variable_is_an_error() {
+    let err = compile_source(&wrap("boolean b = true; b++;"), "prog").unwrap_err();
     assert!(
-        err.message.contains("increment"),
+        err.message.contains("numeric"),
         "unexpected message: {}",
         err.message
     );
@@ -787,6 +915,172 @@ fn lambda_expression_is_unsupported() {
     assert!(err.is_err());
 }
 
+// ── M2a: if/else ─────────────────────────────────────────────────────────
+
+#[test]
+fn if_with_else_lowers_to_expr_if() {
+    let m = compile_ok(&wrap("if (true) { int x = 1; } else { int x = 2; }"));
+    match &main_fn(&m).body.stmts[0] {
+        Stmt::ExprStmt {
+            expr:
+                Expr::If {
+                    then_branch,
+                    else_branch,
+                    ..
+                },
+            ..
+        } => {
+            assert_eq!(then_branch.stmts.len(), 1);
+            assert_eq!(else_branch.stmts.len(), 1);
+        }
+        other => panic!("expected ExprStmt(If), got {other:?}"),
+    }
+}
+
+#[test]
+fn if_without_else_gets_a_synthetic_empty_block() {
+    let m = compile_ok(&wrap("if (true) { int x = 1; }"));
+    match &main_fn(&m).body.stmts[0] {
+        Stmt::ExprStmt {
+            expr:
+                Expr::If {
+                    then_branch,
+                    else_branch,
+                    ..
+                },
+            ..
+        } => {
+            assert_eq!(then_branch.stmts.len(), 1);
+            assert_eq!(else_branch.stmts.len(), 0);
+            assert!(matches!(else_branch.value, Expr::NilLit { .. }));
+        }
+        other => panic!("expected ExprStmt(If), got {other:?}"),
+    }
+}
+
+#[test]
+fn if_with_a_brace_less_single_statement_body() {
+    let m = compile_ok(&wrap("int x = 1; if (true) x = 2;"));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::ExprStmt {
+            expr: Expr::If { then_branch, .. },
+            ..
+        } => {
+            assert_eq!(then_branch.stmts.len(), 1);
+            assert!(matches!(&then_branch.stmts[0], Stmt::Assign { .. }));
+        }
+        other => panic!("expected ExprStmt(If), got {other:?}"),
+    }
+}
+
+#[test]
+fn if_condition_must_be_boolean() {
+    let err = compile_source(&wrap("if (1) {}"), "prog").unwrap_err();
+    assert!(
+        err.message.contains("boolean"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn a_local_declared_inside_an_if_body_does_not_leak_past_it() {
+    // `x` inside the `if` body is a *different* declaration from the
+    // outer `x` -- this must lower and validate cleanly (real block
+    // scoping, not a flat namespace), and the outer `x` must still be
+    // the one referenced afterward.
+    let m = compile_ok(&wrap("int x = 1; if (true) { int x = 2; } int y = x;"));
+    match &main_fn(&m).body.stmts[2] {
+        Stmt::LetStarBinding {
+            value: Expr::VarRef { name, .. },
+            ..
+        } => assert_eq!(name, "x"),
+        other => panic!("expected LetStarBinding(VarRef), got {other:?}"),
+    }
+}
+
+#[test]
+fn referencing_an_if_body_local_after_the_if_is_an_error() {
+    let err = compile_source(&wrap("if (true) { int x = 1; } int y = x;"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+// ── M2a: while / do-while ────────────────────────────────────────────────
+
+#[test]
+fn while_loop_lowers_to_stmt_while() {
+    let m = compile_ok(&wrap("int x = 0; while (x < 10) { x = x + 1; }"));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::While { cond, body, .. } => {
+            assert!(matches!(cond, Expr::BuiltinCall { name, .. } if name == "<"));
+            assert_eq!(body.stmts.len(), 1);
+        }
+        other => panic!("expected While, got {other:?}"),
+    }
+}
+
+#[test]
+fn while_condition_must_be_boolean() {
+    let err = compile_source(&wrap("while (1) {}"), "prog").unwrap_err();
+    assert!(
+        err.message.contains("boolean"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn do_while_desugars_to_body_once_then_while() {
+    let m = compile_ok(&wrap("int x = 0; do { x = x + 1; } while (x < 10);"));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::ExprStmt {
+            expr: Expr::Block(block),
+            ..
+        } => {
+            assert_eq!(
+                block.stmts.len(),
+                2,
+                "expected [once-executed copy, Stmt::While]"
+            );
+            assert!(matches!(&block.stmts[0], Stmt::Assign { .. }));
+            match &block.stmts[1] {
+                Stmt::While { body, .. } => assert_eq!(body.stmts.len(), 1),
+                other => panic!("expected the second spliced statement to be While, got {other:?}"),
+            }
+        }
+        other => panic!("expected ExprStmt(Block), got {other:?}"),
+    }
+}
+
+#[test]
+fn a_local_declared_inside_a_do_while_body_does_not_leak_past_it() {
+    let m = compile_ok(&wrap(
+        "int i = 0; do { int x = i; i = i + 1; } while (i < 3); int y = i;",
+    ));
+    assert_eq!(main_fn(&m).body.stmts.len(), 3);
+}
+
+// ── M2a: switch / break / continue have no SIR IR yet ───────────────────
+
+#[test]
+fn switch_statement_is_unsupported() {
+    let err =
+        compile_source(&wrap("int x = 1; switch (x) { default: break; }"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn break_inside_a_while_loop_is_an_error() {
+    let err = compile_source(&wrap("while (true) { break; }"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn continue_inside_a_while_loop_is_an_error() {
+    let err = compile_source(&wrap("while (true) { continue; }"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
 // ── depth-guard regression (CWE-674, found by /security-review) ────────
 
 fn node(rule_name: &str, children: Vec<ASTNodeOrToken>) -> GrammarASTNode {
@@ -843,6 +1137,105 @@ fn deeply_nested_tree_with_no_class_declaration_reports_depth_error() {
         inner = node("wrapper", vec![ASTNodeOrToken::Node(inner)]);
     }
     let program = node("program", vec![ASTNodeOrToken::Node(inner)]);
+
+    let err = compile(&program, "prog").unwrap_err();
+    assert!(
+        err.message.contains("nesting exceeds"),
+        "expected a depth-exceeded error, got: {}",
+        err.message
+    );
+}
+
+/// A minimal, hand-built `expression -> primary -> literal -> TOKEN
+/// "true"` chain -- `lower_expr`'s dispatch is purely by grammar
+/// `rule_name`, not by requiring every "official" precedence level in
+/// between, so this three-node chain lowers exactly like a full
+/// `assignment_expression -> ... -> literal` chain would, just without
+/// the boilerplate. Reused below to keep a pathologically deep
+/// hand-built `if`-nesting tree's *condition* subtrees cheap to build.
+fn bool_true_expr() -> GrammarASTNode {
+    let tok = Token {
+        type_: TokenType::Keyword,
+        value: "true".to_string(),
+        line: 1,
+        column: 1,
+        type_name: None,
+        flags: None,
+        cv: None,
+    };
+    node(
+        "expression",
+        vec![ASTNodeOrToken::Node(node(
+            "primary",
+            vec![ASTNodeOrToken::Node(node(
+                "literal",
+                vec![ASTNodeOrToken::Token(tok)],
+            ))],
+        ))],
+    )
+}
+
+/// `lower_statement`/`lower_if_statement`/`lower_body`/`lower_block_node`'s
+/// mutual recursion must not overflow the native stack on pathologically
+/// deep `if`-nesting handed directly to the public `compile()` entry
+/// point, mirroring `find_main_method`'s own identically-reasoned guard.
+/// In practice, real *parsed* Java source nesting this deep would already
+/// be rejected by `collect_bounded`'s own blanket per-raw-node
+/// `MAX_TREE_DEPTH` cap first (it walks every grammar node from `program`
+/// down, not just statement boundaries, so it grows much faster per
+/// source-level nesting than this statement-specific guard does) — this
+/// hand-built tree keeps every level's raw node count minimal (one
+/// `block` + one `block_statement` + one `if_statement` + `bool_true_expr`'s
+/// fixed three nodes + one `statement` wrapping the next level) precisely
+/// so `MAX_STMT_DEPTH` is the guard that actually fires here, proving it
+/// is not dead code even though `collect_bounded` dominates for realistic
+/// deeply-nested *parsed* input.
+#[test]
+fn deeply_nested_if_statements_report_depth_error_not_stack_overflow() {
+    // innermost: an empty block (no further statement -- just needs to be
+    // a valid `statement` alternative to stop the chain; a "block" is the
+    // simplest since it needs no expression).
+    let mut stmt = node(
+        "statement",
+        vec![ASTNodeOrToken::Node(node("block", vec![]))],
+    );
+    for _ in 0..40 {
+        let if_stmt = node(
+            "if_statement",
+            vec![
+                ASTNodeOrToken::Node(bool_true_expr()),
+                ASTNodeOrToken::Node(stmt),
+            ],
+        );
+        let inner_stmt = node("statement", vec![ASTNodeOrToken::Node(if_stmt)]);
+        let block_stmt = node("block_statement", vec![ASTNodeOrToken::Node(inner_stmt)]);
+        let block = node("block", vec![ASTNodeOrToken::Node(block_stmt)]);
+        stmt = node("statement", vec![ASTNodeOrToken::Node(block)]);
+    }
+    let block_stmt = node("block_statement", vec![ASTNodeOrToken::Node(stmt)]);
+    let block = node("block", vec![ASTNodeOrToken::Node(block_stmt)]);
+    let method_body = node("method_body", vec![ASTNodeOrToken::Node(block)]);
+    let method_declarator = node(
+        "method_declarator",
+        vec![ASTNodeOrToken::Token(Token {
+            type_: TokenType::Name,
+            value: "main".to_string(),
+            line: 1,
+            column: 1,
+            type_name: None,
+            flags: None,
+            cv: None,
+        })],
+    );
+    let method_decl = node(
+        "method_declaration",
+        vec![
+            ASTNodeOrToken::Node(method_declarator),
+            ASTNodeOrToken::Node(method_body),
+        ],
+    );
+    let class_decl = node("class_declaration", vec![ASTNodeOrToken::Node(method_decl)]);
+    let program = node("program", vec![ASTNodeOrToken::Node(class_decl)]);
 
     let err = compile(&program, "prog").unwrap_err();
     assert!(

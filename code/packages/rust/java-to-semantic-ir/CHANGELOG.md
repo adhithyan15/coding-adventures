@@ -2,6 +2,76 @@
 
 All notable changes to the `java-to-semantic-ir` crate will be documented in this file.
 
+## [0.3.0] - 2026-08-25
+
+### Added
+
+- JV02 milestone M2a: `if`/`else`, `while`, `do`/`while`, and compound
+  assignment/increment/decrement as bare statements.
+- `if`/`else` lowers to `Stmt::ExprStmt` wrapping `Expr::If` (the IR's
+  conditional is an expression, not a statement — see that node's own
+  doc comment); an absent `else` becomes a synthetic empty, `NilLit`-
+  valued block, matching the established `javascript-to-semantic-ir`/
+  `ruby-to-semantic-ir` precedent for the same shape.
+- `do`/`while` desugars to "run the body once, then `while`" — the
+  already-lowered body `Block` is cloned once (`Stmt`/`Block` both
+  derive `Clone`) rather than re-walking the CST, wrapped in a synthetic
+  `Expr::Block` so the once-executed copy's own locals go out of scope
+  at exactly the point Java's own do-while body scope ends, not the
+  surrounding function.
+- Compound assignment (`+= -= *= /= %=`) and increment/decrement (`++`/
+  `--`, prefix and postfix) — but only as a bare statement (`i++;`,
+  `x += 1;`), desugaring to `Stmt::Assign` by reusing M1's own
+  `combine_additive`/`combine_multiplicative` op-selection (so `s += "b"`
+  on a `String` correctly concatenates, for free). Using either as a
+  *value* (`y = i++;`) remains out of scope.
+- **Real lexical scoping**: `Lowerer.locals` becomes a stack of scope
+  frames (`push_scope`/`pop_scope`/`declare_local`/`lookup_local`),
+  mirroring the SIR validator's own `Block`-scoped `LocalEnv` mark/
+  rewind discipline exactly — a local declared inside an `if`/`while`/
+  `do`-`while` body is not visible after it, in both Java and the
+  validator's own contract. M1's flat `HashMap` was correct only because
+  M1 had no nested blocks yet; M2a is where that stopped being true.
+- A third depth guard, `MAX_STMT_DEPTH`, bounds the new statement/block-
+  lowering mutual recursion (`lower_statement` → `lower_if_statement`/
+  `lower_while_statement`/`lower_do_while_statement` → `lower_body` →
+  `lower_block_node` → `lower_block_statement` → …) — a CWE-674 guard
+  for the same reason `MAX_EXPR_DEPTH`/`MAX_TREE_DEPTH` exist. In
+  practice, real *parsed* deeply-nested `if` source already trips the
+  pre-existing `collect_bounded`'s blanket per-raw-node `MAX_TREE_DEPTH`
+  cap first (it walks every grammar node, not just statement boundaries,
+  so it grows much faster per source-level nesting) — a new hand-built-
+  tree regression test
+  (`deeply_nested_if_statements_report_depth_error_not_stack_overflow`)
+  specifically engineers a tree with minimal raw-node depth per level so
+  `MAX_STMT_DEPTH` is the guard that actually fires, proving it is not
+  dead code.
+- `switch`, `break`, and `continue` are explicitly out of scope: a
+  repo-wide grep confirms `semantic-ir` has **no** `Switch`/`Match`/
+  `Case`/`Break`/`Continue` IR node at all — these need their own
+  spec-level design decision (Java's `switch` fall-through semantics in
+  particular), not a mechanical translation, so each is tracked as a
+  separate backlog item rather than silently dropped or half-implemented.
+  Every occurrence is rejected with a clean error via the same
+  unhandled-statement-kind catch-all every other unsupported statement
+  hits — no special-casing was needed to guarantee this.
+- 24 new tests in `tests/test_lower.rs` (if/else shape, brace-less
+  bodies, boolean-condition requirements, block-scope leak prevention in
+  both directions, while/do-while shape, every compound-assignment
+  operator including the `/=` div_trunc/div_true selection and `+=` on
+  `String`, every increment/decrement shape, switch/break/continue
+  rejection, and the new depth-guard regression) plus 6 new execution-
+  proof tests in `tests/e2e_python.rs` (if/else both branches, while,
+  do-while — specifically covering the "condition already false on
+  entry, but the body still runs once" case a plain pretest `while`
+  would get wrong — compound-assignment chaining, and increment inside
+  a while loop), all running real computed output through `python3`.
+- **Caught by the crate's own test suite while writing this milestone**
+  (not `/security-review`): two tests from M1's own suite
+  (`compound_assignment_is_unsupported`, `postfix_increment_is_unsupported`)
+  asserted M1's now-superseded scope boundary; repurposed into positive
+  tests of the new desugaring instead of being silently deleted.
+
 ## [0.2.0] - 2026-08-25
 
 ### Added
