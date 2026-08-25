@@ -2,6 +2,116 @@
 
 All notable changes to the `parser` crate will be documented in this file.
 
+## [0.4.4] - 2026-08-25
+
+### Added — contextual `>>`/`>>>` token-splitting for nested generic-argument-list closers
+
+C-family grammars (Java, C#) lex a run of consecutive `>` characters into a
+single `RIGHT_SHIFT`/`UNSIGNED_RIGHT_SHIFT`-typed token — the same shape a
+real `x >> 2`/`x >>> 1` shift expression uses — because a context-free
+lexer cannot tell `Map<String, List<Integer>>`'s two adjacent closing `>`s
+apart from an actual right-shift operator without knowing it's inside a
+type-argument list. Only the *parser* has that context: it only ever asks
+for a lone `GREATER_THAN` when closing exactly one generic-argument-list
+level. `match_token_reference` now recognizes this specific situation —
+`expected_type == "GREATER_THAN"` against an actual `RIGHT_SHIFT`/
+`UNSIGNED_RIGHT_SHIFT` token whose value is a bare run of `>` characters —
+and splits off one `>` as the match, writing the shorter remainder token
+back into the token stream at the same position so the very next match
+attempt sees it fresh. This is what lets `Map<String, List<Integer>>`
+close both nesting levels from one merged `>>` token, one `GREATER_THAN`
+at a time, and `Box<Box<Box<T>>>` close three levels from one `>>>`.
+Deliberately narrow: only fires for that exact (expected, actual) pairing,
+so grammars that don't share Java/C#'s token-naming convention (the vast
+majority this shared engine also serves) never take the new branch at
+all — confirmed inert for every other grammar in this repo.
+
+**Backtracking correctness, found and closed by three rounds of
+`/security-review`**: mutating `self.tokens[self.pos]` in place inside a
+general backtracking PEG engine is unsound unless the mutation is
+undone whenever the attempt that caused it is abandoned. Three real
+issues surfaced, each fixed before this landed:
+
+1. **Stale packrat-memo reuse** (round 1): the `memo: HashMap<(usize,
+   usize), MemoEntry>` cache assumes the token stream never changes
+   after parsing starts, so a cached rule result spanning the mutated
+   position could be served stale after a split. First fixed with a
+   full `self.memo.clear()` on every split.
+2. **`clear()` is an algorithmic-complexity DoS** (round 2): the memo
+   table grows with how much of the file has already been parsed, so a
+   full clear on every split turns ordinary, non-adversarial Java/C#
+   source with many nested-generic occurrences into roughly
+   O(fileLength²) parsing — not just pathological input. Tightened to
+   `retain`, dropping only entries whose recorded span reached the
+   mutated position.
+3. **The mutation itself was never undone on backtrack** (round 2,
+   deeper finding): every other kind of "try, maybe fail, roll back" in
+   this engine (`Sequence`, `Alternation`, `Repetition`, lookahead
+   predicates, rule-level failure) restores `self.pos` alone, because
+   until splitting existed, `self.pos` was the only mutable state an
+   abandoned attempt could have touched. A failed `Alternation` arm (or
+   a lookahead predicate documented as "consume no input") that
+   triggered a split left the *mutated* token behind for a sibling
+   attempt expecting the original merged shape — silently corrupting an
+   otherwise-unrelated parse, demonstrated with a minimal synthetic
+   grammar. Fixed with a new `split_undo_log: Vec<(usize, Token)>` and a
+   `Checkpoint { pos, undo_len }` pair (`checkpoint()`/`restore_to()`)
+   that every backtracking site in `match_element` and
+   `parse_rule_inner` now uses instead of a bare `self.pos` save/restore,
+   so an abandoned attempt undoes the token mutation too, via the same
+   `set_token_and_invalidate_memo` helper the forward split uses (memo
+   invalidation is symmetric: an entry cached *while* a token was split
+   is just as stale, in the opposite direction, once the split is
+   undone).
+4. **Off-by-one in the invalidation boundary** (round 3, found via the
+   above machinery on a real grammar, not the synthetic repro): a split
+   deliberately does *not* advance `self.pos`, so a rule whose own last
+   step *was* a split ends with `end_pos == pos` — the same signature an
+   *ordinary* (non-split) rule has for "never touched `pos`." The
+   original `entry.end_pos <= pos` keep-condition treated both cases
+   alike, silently keeping a stale entry for the split-ending rule.
+   Reproduced concretely: `class C { Map<String, List<Integer>> f; }`
+   forces `class_body_declaration = method_declaration | field_declaration`
+   to try `method_declaration` first (splitting `>>` while parsing the
+   return type), fail at the missing `(`, and backtrack to
+   `field_declaration` — the stale entry for the *inner* `List<Integer>`
+   closer left one `>` unconsumed, breaking the retry. Fixed by dropping
+   entries on `end_pos == pos` too (`entry.end_pos < pos` to keep).
+5. **Out-of-bounds panic in the split write itself** (round 3): `current()`
+   falls back to *reading* `tokens[len - 1]` once `self.pos` runs past
+   the end of the stream, but the split branch *wrote* to
+   `self.tokens[self.pos]` using the raw, un-clamped `self.pos` —
+   indexing with an out-of-range value panics. Never observed through
+   this repo's own Java/C# pipelines (both always append a trailing EOF
+   token first), but `GrammarParser` is a public, reusable engine with
+   no enforced "must end in EOF" precondition. Fixed by only attempting
+   a split when `self.pos < self.tokens.len()` — splitting a token
+   you're not genuinely positioned at doesn't make sense anyway.
+6. **`restore_to` scanned the memo table once per reverted split, not
+   once per backtrack** (round 3): a single abandoned deeply-nested
+   attempt (bounded by a frontend's own `max_depth`) could multiply the
+   already-accepted per-split `retain` cost by however many layers it
+   unwound. Fixed by reverting all the batch's tokens first (each a
+   plain O(1) index write), tracking the smallest position touched, then
+   issuing exactly one `retain` call against that minimum — `retain`'s
+   effect is monotonic in its threshold, so invalidating once against
+   the smallest touched position produces the same result as the
+   per-entry version, in one scan instead of up to `max_depth` of them.
+
+New tests: three synthetic-grammar unit tests in `parser` itself —
+two reproduce the round-2 finding directly (a failed `Alternation` arm
+and a `PositiveLookahead`, each undoing their own split), one reproduces
+the round-3 out-of-bounds panic (a token stream with no trailing EOF).
+In both `coding-adventures-java-parser` and `coding-adventures-csharp-parser`:
+two- and three-level nested generics parse and produce the expected
+number of `type_arguments`/`type_argument_list` nodes; a real `>>`/`>>>`
+shift expression still survives as a single, unsplit token; a nested
+generic and a real shift expression coexisting in one file don't corrupt
+each other; 300 scattered nested-generic field declarations in one file
+(600 closer-splits) still parse correctly; and (java-parser only, the
+round-3 memo-boundary repro) a class-body field with a nested generic
+survives the `method_declaration`-vs-`field_declaration` backtrack.
+
 ## [0.4.3] - 2026-08-03
 
 ### Fixed — `GrammarElement::Literal` matched a `String` token by its content, not just an operator lexeme
