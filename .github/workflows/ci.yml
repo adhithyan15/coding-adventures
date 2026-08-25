@@ -719,6 +719,7 @@ jobs:
           python3 code/scripts/generate_tracked_artifact_unicode17.py
           --check
           --self-check-runtime lua
+          --lua-executable .lua/bin/lua
 
   # ── Job 10: Build and test ─────────────────────────────────────
   #

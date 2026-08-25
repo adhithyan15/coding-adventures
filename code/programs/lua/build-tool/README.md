@@ -79,7 +79,8 @@ normalization or casing behavior from the installed Lua runtime. Regenerate
 the module and its Unicode License v3 notice with:
 
 ```bash
-python code/scripts/generate_tracked_artifact_unicode17.py
+python code/scripts/generate_tracked_artifact_unicode17.py \
+  --lua-executable .lua/bin/lua
 ```
 
 ## Dependencies

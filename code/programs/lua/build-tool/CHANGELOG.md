@@ -14,6 +14,10 @@
 
 ### Fixed
 
+- The emitted-Lua Unicode verifier now requires an explicit pinned Lua 5.4.7
+  executable, ignores Lua initialization and module-path environment state,
+  bounds retained child output, and terminates the isolated process tree on
+  timeout.
 - Lua `.rockspec` dependency metadata now follows the shared strict UTF-8
   contract. Invalid bytes fail closed with the stable
   `METADATA_INVALID_UTF8` diagnostic and CLI exit code 2 without leaking host

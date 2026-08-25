@@ -14,10 +14,13 @@ import argparse
 import hashlib
 import importlib.util
 import json
+import os
 import shutil
+import signal
 import subprocess
 import sys
 import tempfile
+import threading
 import urllib.parse
 import urllib.request
 from pathlib import Path
@@ -2232,16 +2235,133 @@ io.write("ok\n")
 """
 
 
+_LUA_OUTPUT_LIMIT = 8192
+
+
+def _terminate_process_tree(process: subprocess.Popen) -> None:
+    """Terminate an isolated emitted-runtime process and its descendants."""
+    if process.poll() is not None:
+        return
+    try:
+        if os.name == "nt":
+            system_root = os.environ.get("SystemRoot") or os.environ.get("WINDIR")
+            taskkill = Path(system_root or "C:/Windows") / "System32/taskkill.exe"
+            if taskkill.is_file():
+                subprocess.run(
+                    [str(taskkill), "/PID", str(process.pid), "/T", "/F"],
+                    stdin=subprocess.DEVNULL,
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                    timeout=5,
+                    check=False,
+                    env=_lua_self_check_environment(),
+                )
+        else:
+            try:
+                os.killpg(process.pid, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
+    except (OSError, subprocess.SubprocessError):
+        pass
+    finally:
+        if process.poll() is None:
+            process.kill()
+
+
+def _run_bounded_process(
+    command: list[str],
+    *,
+    cwd: Path,
+    env: dict[str, str],
+    input_text: str,
+    timeout: int,
+    output_limit: int = _LUA_OUTPUT_LIMIT,
+) -> subprocess.CompletedProcess:
+    """Run an isolated child while draining but retaining only bounded output."""
+
+    def drain(stream, target: list[bytes]) -> None:
+        retained = bytearray()
+        try:
+            while chunk := stream.read(8192):
+                remaining = output_limit - len(retained)
+                if remaining > 0:
+                    retained.extend(chunk[:remaining])
+        finally:
+            stream.close()
+            target.append(bytes(retained))
+
+    options: dict[str, object] = {}
+    if os.name == "nt":
+        options["creationflags"] = subprocess.CREATE_NEW_PROCESS_GROUP
+    else:
+        options["start_new_session"] = True
+
+    stdout: list[bytes] = []
+    stderr: list[bytes] = []
+    with tempfile.TemporaryFile() as input_stream:
+        input_stream.write(input_text.encode("utf-8"))
+        input_stream.seek(0)
+        process = subprocess.Popen(
+            command,
+            cwd=cwd,
+            env=env,
+            stdin=input_stream,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            **options,
+        )
+        assert process.stdout is not None
+        assert process.stderr is not None
+        readers = (
+            threading.Thread(target=drain, args=(process.stdout, stdout), daemon=True),
+            threading.Thread(target=drain, args=(process.stderr, stderr), daemon=True),
+        )
+        for reader in readers:
+            reader.start()
+        try:
+            returncode = process.wait(timeout=timeout)
+        except subprocess.TimeoutExpired as error:
+            _terminate_process_tree(process)
+            process.wait(timeout=10)
+            raise RuntimeError(
+                f"emitted-runtime self-check exceeded {timeout} seconds"
+            ) from error
+        finally:
+            for reader in readers:
+                reader.join(timeout=10)
+        if any(reader.is_alive() for reader in readers):
+            _terminate_process_tree(process)
+            raise RuntimeError("emitted-runtime output readers did not terminate")
+
+    return subprocess.CompletedProcess(
+        command,
+        returncode,
+        stdout[0].decode("utf-8", errors="replace"),
+        stderr[0].decode("utf-8", errors="replace"),
+    )
+
+
+def _lua_self_check_environment() -> dict[str, str]:
+    """Retain only Windows loader state; Lua receives no user initialization."""
+    return {
+        name: value
+        for name in ("SystemRoot", "WINDIR")
+        if (value := os.environ.get(name)) is not None
+    }
+
+
 def _self_check_lua(
     root: Path,
     lua_output: str,
     sources: dict[str, str],
     python_module,
+    lua_executable: Path,
 ) -> None:
     del root  # Kept parallel with the other emitted-runtime call signatures.
-    lua = shutil.which("lua")
-    if lua is None:
-        raise RuntimeError("Lua Unicode self-check requires Lua on PATH")
+    lua = lua_executable.expanduser().resolve(strict=True)
+    if not lua.is_file():
+        raise RuntimeError(f"Lua Unicode self-check executable is not a file: {lua}")
+    environment = _lua_self_check_environment()
 
     with tempfile.TemporaryDirectory(prefix="unicode17-lua-check-") as temporary:
         temporary_path = Path(temporary)
@@ -2249,17 +2369,27 @@ def _self_check_lua(
         runner_path = temporary_path / "self_check.lua"
         generated_path.write_text(lua_output, encoding="utf-8", newline="\n")
         runner_path.write_text(_LUA_SELF_CHECK, encoding="utf-8", newline="\n")
-        result = subprocess.run(
-            [lua, str(runner_path)],
+        version = _run_bounded_process(
+            [str(lua), "-E", "-v"],
             cwd=temporary_path,
-            input=_lua_self_check_payload(python_module, sources),
-            capture_output=True,
-            text=True,
-            encoding="utf-8",
-            timeout=180,
-            check=False,
+            env=environment,
+            input_text="",
+            timeout=10,
         )
-    if result.returncode != 0 or result.stdout != "ok\n":
+        version_text = version.stdout + version.stderr
+        if version.returncode != 0 or not any(
+            line.startswith("Lua 5.4.7") for line in version_text.splitlines()[:1]
+        ):
+            raise RuntimeError("Lua Unicode self-check requires pinned Lua 5.4.7")
+        result = _run_bounded_process(
+            [str(lua), "-E", str(runner_path)],
+            cwd=temporary_path,
+            env=environment,
+            input_text=_lua_self_check_payload(python_module, sources),
+            timeout=180,
+        )
+    normalized_stdout = result.stdout.replace("\r\n", "\n")
+    if result.returncode != 0 or normalized_stdout != "ok\n":
         detail = result.stderr.strip() or result.stdout.strip() or "no diagnostic"
         raise RuntimeError(f"generated Lua Unicode self-check failed: {detail}")
 
@@ -2306,6 +2436,14 @@ def main() -> int:
             "than one runtime (default: every emitted runtime)"
         ),
     )
+    parser.add_argument(
+        "--lua-executable",
+        type=Path,
+        help=(
+            "exact repository-pinned Lua 5.4.7 executable used when the Lua "
+            "emitted-runtime check is selected"
+        ),
+    )
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[2]
     license_payload = (root / LICENSE_PATH).read_bytes()
@@ -2344,7 +2482,15 @@ def main() -> int:
     if "elixir" in selected_runtimes:
         _self_check_elixir(root, elixir_output, sources, python_module)
     if "lua" in selected_runtimes:
-        _self_check_lua(root, lua_output, sources, python_module)
+        if args.lua_executable is None:
+            parser.error("--lua-executable is required for the Lua self-check")
+        _self_check_lua(
+            root,
+            lua_output,
+            sources,
+            python_module,
+            args.lua_executable,
+        )
     print(
         f"Unicode {UNICODE_VERSION} generated and verified: "
         f"{len(tables[0])} combining, {len(tables[1])} decomposition, "

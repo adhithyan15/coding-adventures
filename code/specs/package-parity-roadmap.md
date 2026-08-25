@@ -7565,13 +7565,16 @@ the complete Unicode License v3 notice, and checks the emitted Lua module over
 every official normalization, C/F folding, unconditional uppercase, derived
 NFKC-fold, and Unicode 17 sentinel vector. A required read-only CI job builds
 the repository-pinned Lua 5.4.7 toolchain and runs that real emitted-runtime
-check; the stable CI gate explicitly requires its result.
+check through an explicit executable path; the stable CI gate explicitly
+requires its result. The generator invokes Lua with `-E` under a minimal
+environment, retains at most 8 KiB from each output stream, and terminates the
+isolated process tree on timeout.
 
 The repository-pinned Lua 5.4.7 toolchain passes syntax compilation, 19
 focused validator tests, and the complete 72-test Lua build-tool suite. LuaCov
 measures the validator at 98.23% and the generated Unicode module at 84.06%; the
 package-wide total is 51.24% because unchanged CLI, resolver, and bundled test
-framework code remains outside this bounded consumer. All 18 generator tests
+framework code remains outside this bounded consumer. All 20 generator tests
 and six pinned-Lua setup tests pass. Ruff, changed-source Luacheck, workflow
 YAML parsing, generated-byte verification, and the full emitted Lua Unicode
 self-check pass.

@@ -362,27 +362,71 @@ class UnicodeDownloadBoundaryTests(unittest.TestCase):
             def nfkc_casefold(value: str) -> str:
                 return value.lower()
 
-        completed = subprocess.CompletedProcess([], 0, "ok\n", "")
-        with (
-            mock.patch.object(generator.shutil, "which", return_value="lua"),
-            mock.patch.object(
-                generator.subprocess, "run", return_value=completed
-            ) as run,
-        ):
+        executable = Path(sys.executable).resolve()
+        version = subprocess.CompletedProcess([], 0, "", "Lua 5.4.7\n")
+        completed = subprocess.CompletedProcess([], 0, "ok\r\n", "")
+        with mock.patch.object(
+            generator,
+            "_run_bounded_process",
+            side_effect=(version, completed),
+        ) as run:
             generator._self_check_lua(
                 Path("C:/repo"),
                 "return {}\n",
                 sources,
                 _Module(),
+                executable,
             )
 
-        invocation = run.call_args.kwargs
+        version_command = run.call_args_list[0].args[0]
+        self.assertEqual(version_command, [str(executable), "-E", "-v"])
+        command = run.call_args_list[1].args[0]
+        self.assertEqual(command[:2], [str(executable), "-E"])
+        invocation = run.call_args_list[1].kwargs
         self.assertEqual(
-            invocation["input"],
+            invocation["input_text"],
             "V;17.0.0\nN;41;41;41;41;41\nF;41;61;61\nU;61;41\n",
         )
         self.assertEqual(invocation["timeout"], 180)
-        self.assertFalse(invocation["check"])
+        self.assertNotIn("PATH", invocation["env"])
+        self.assertNotIn("LUA_INIT", invocation["env"])
+        self.assertNotIn("LUA_PATH", invocation["env"])
+
+    def test_bounded_process_discards_output_past_the_limit(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            completed = generator._run_bounded_process(
+                [
+                    sys.executable,
+                    "-c",
+                    (
+                        "import sys; sys.stdout.write('x' * 4096); "
+                        "sys.stderr.write('y' * 4096)"
+                    ),
+                ],
+                cwd=Path(temporary),
+                env=generator._lua_self_check_environment(),
+                input_text="",
+                timeout=10,
+                output_limit=64,
+            )
+
+        self.assertEqual(completed.returncode, 0)
+        self.assertEqual(len(completed.stdout), 64)
+        self.assertEqual(len(completed.stderr), 64)
+
+    def test_bounded_process_terminates_a_timed_out_process_tree(self) -> None:
+        with (
+            tempfile.TemporaryDirectory() as temporary,
+            self.assertRaisesRegex(RuntimeError, "exceeded 1 seconds"),
+        ):
+            generator._run_bounded_process(
+                [sys.executable, "-c", "import time; time.sleep(60)"],
+                cwd=Path(temporary),
+                env=generator._lua_self_check_environment(),
+                input_text="",
+                timeout=1,
+                output_limit=64,
+            )
 
 
 if __name__ == "__main__":
