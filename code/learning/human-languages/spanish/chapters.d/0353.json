@@ -1,0 +1,21 @@
+{
+  "chapter": 353,
+  "title": "Five Buildings You May Have To Find",
+  "label": "ch:el-hospital-y-el-banco",
+  "canDo": "I can say el hospital, el banco, la farmacia, la biblioteca and el museo, and ask where any one of them is.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ES-C353-museo",
+    "kind": "production",
+    "summary": "Complete ES-C353-museo: name five buildings a town has, and ask a stranger where one of them is.",
+    "assesses": [
+      "ES-LEX-C353-WHERE-21",
+      "ES-LEX-C353-WHERE-22",
+      "ES-LEX-C353-WHERE-23",
+      "ES-LEX-C353-WHERE-24",
+      "ES-LEX-C353-WHERE-25"
+    ]
+  }
+}
