@@ -11,7 +11,11 @@
         "RU-W02-false-friends-s-n",
         "RU-W03-new-shapes-b-d",
         "RU-W04-privet-letters-p-i",
-        "RU-W05-privet-letters-e-t"
+        "RU-W05-privet-letters-e-t",
+        "RU-W05-privet-observe",
+        "RU-W05-privet-guided-copy",
+        "RU-W05-privet-delayed-copy",
+        "RU-W05-privet-dictation"
       ],
       "before": [],
       "inline": [
@@ -682,7 +686,7 @@
       "stage": "pre-A1",
       "kind": "required",
       "category": "script",
-      "canDo": "I can recognize the first Russian script pattern inside a greeting I already understand.",
+      "canDo": "I can recognize and write one Russian greeting by tracing, supported copying, delayed copying, and heard-word dictation.",
       "prerequisites": [],
       "lessons": [
         "RU-C01-privet",
@@ -690,7 +694,11 @@
         "RU-W02-false-friends-s-n",
         "RU-W03-new-shapes-b-d",
         "RU-W04-privet-letters-p-i",
-        "RU-W05-privet-letters-e-t"
+        "RU-W05-privet-letters-e-t",
+        "RU-W05-privet-observe",
+        "RU-W05-privet-guided-copy",
+        "RU-W05-privet-delayed-copy",
+        "RU-W05-privet-dictation"
       ]
     },
     {
