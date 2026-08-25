@@ -2,6 +2,44 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.49] - 2026-08-24 (task #226-228 — SIMD widen PR37: extract_lane/replace_lane family, remaining shapes + lane-index bounds retrofit)
+
+### Added
+
+- Type-check arms for the 10 new opcodes: `i16x8.extract_lane_s`/`_u`
+  (pop V128, push I32), `i16x8.replace_lane`/`i32x4.replace_lane` (pop
+  I32 + V128, push V128), `i64x2.extract_lane` (pop V128, push I64 --
+  the first `extract_lane` family member whose result isn't I32),
+  `i64x2.replace_lane` (pop I64 + V128, push V128), `f32x4.extract_lane`
+  (pop V128, push F32), `f32x4.replace_lane` (pop F32 + V128, push
+  V128), `f64x2.extract_lane` (pop V128, push F64), `f64x2.replace_lane`
+  (pop F64 + V128, push V128).
+- **Lane-index bounds validation, new AND retrofitted onto the existing
+  4 opcodes.** Before this PR, the type checker only confirmed the
+  lane-index immediate byte was PRESENT (not truncated) -- never that
+  its VALUE was in range, so an out-of-range lane index (e.g.
+  `i32x4.extract_lane 4`) would pass validation and only be caught by
+  `wasm-execution`'s runtime bounds check, contrary to the WASM spec's
+  own requirement that an out-of-range `laneidx` makes the module
+  INVALID at validation time, not merely trapping at runtime. New shared
+  `read_lane_index` helper reads the immediate byte (still the common
+  truncation check); every lane-immediate `SimdOpKind` arm -- the 10 new
+  ones AND the 4 pre-existing ones (`ExtractLane`/`ExtractLaneI8x16S`/
+  `ExtractLaneI8x16U`/`ReplaceLaneI8x16`) -- now applies its own
+  shape-specific range check immediately after (0-15 `i8x16`, 0-7
+  `i16x8`, 0-3 `i32x4`/`f32x4`, 0-1 `i64x2`/`f64x2`), rejecting via
+  `ValidationError::Other` before the module can ever be instantiated.
+  Retrofitting the pre-existing opcodes (not just the 10 new ones) was
+  necessary for real conformance-suite correctness: the vendored
+  `simd_lane.wast` file's `assert_invalid` directives exercise
+  out-of-range lane indices for `i8x16`/`i32x4` too, and the WASM spec
+  test harness convention (`assert_invalid` = "module fails
+  VALIDATION") only grades correctly once the validator itself performs
+  the rejection.
+- New tests: an `assert_invalid` case for every one of the 14
+  lane-immediate opcodes' out-of-range lane index, plus valid/operand-
+  type-mismatch coverage for the 10 new opcodes.
+
 ## [0.2.48] - 2026-08-24 (task #223-225 — SIMD widen PR36: i64x2.extend_low/high_i32x4_s/u type rules)
 
 ### Added
