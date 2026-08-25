@@ -77,19 +77,40 @@ issues surfaced, each fixed before this landed:
    `field_declaration` — the stale entry for the *inner* `List<Integer>`
    closer left one `>` unconsumed, breaking the retry. Fixed by dropping
    entries on `end_pos == pos` too (`entry.end_pos < pos` to keep).
+5. **Out-of-bounds panic in the split write itself** (round 3): `current()`
+   falls back to *reading* `tokens[len - 1]` once `self.pos` runs past
+   the end of the stream, but the split branch *wrote* to
+   `self.tokens[self.pos]` using the raw, un-clamped `self.pos` —
+   indexing with an out-of-range value panics. Never observed through
+   this repo's own Java/C# pipelines (both always append a trailing EOF
+   token first), but `GrammarParser` is a public, reusable engine with
+   no enforced "must end in EOF" precondition. Fixed by only attempting
+   a split when `self.pos < self.tokens.len()` — splitting a token
+   you're not genuinely positioned at doesn't make sense anyway.
+6. **`restore_to` scanned the memo table once per reverted split, not
+   once per backtrack** (round 3): a single abandoned deeply-nested
+   attempt (bounded by a frontend's own `max_depth`) could multiply the
+   already-accepted per-split `retain` cost by however many layers it
+   unwound. Fixed by reverting all the batch's tokens first (each a
+   plain O(1) index write), tracking the smallest position touched, then
+   issuing exactly one `retain` call against that minimum — `retain`'s
+   effect is monotonic in its threshold, so invalidating once against
+   the smallest touched position produces the same result as the
+   per-entry version, in one scan instead of up to `max_depth` of them.
 
-New tests: two synthetic-grammar unit tests in `parser` itself
-reproduce the round-2 finding directly (a failed `Alternation` arm and a
-`PositiveLookahead`, each undoing their own split). In both
-`coding-adventures-java-parser` and `coding-adventures-csharp-parser`:
+New tests: three synthetic-grammar unit tests in `parser` itself —
+two reproduce the round-2 finding directly (a failed `Alternation` arm
+and a `PositiveLookahead`, each undoing their own split), one reproduces
+the round-3 out-of-bounds panic (a token stream with no trailing EOF).
+In both `coding-adventures-java-parser` and `coding-adventures-csharp-parser`:
 two- and three-level nested generics parse and produce the expected
 number of `type_arguments`/`type_argument_list` nodes; a real `>>`/`>>>`
 shift expression still survives as a single, unsplit token; a nested
 generic and a real shift expression coexisting in one file don't corrupt
 each other; 300 scattered nested-generic field declarations in one file
 (600 closer-splits) still parse correctly; and (java-parser only, the
-round-3 repro) a class-body field with a nested generic survives the
-`method_declaration`-vs-`field_declaration` backtrack.
+round-3 memo-boundary repro) a class-body field with a nested generic
+survives the `method_declaration`-vs-`field_declaration` backtrack.
 
 ## [0.4.3] - 2026-08-03
 

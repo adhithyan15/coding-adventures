@@ -656,20 +656,41 @@ impl GrammarParser {
     /// why: an entry memoized *while* the token was in its split state is
     /// just as stale, in the opposite direction, once the split is undone).
     fn restore_to(&mut self, checkpoint: Checkpoint) {
+        // Revert every mutated token directly (O(1) each — plain index
+        // assignment, no memo scan), tracking the smallest position
+        // touched. `HashMap::retain`'s effect is monotonic in its
+        // threshold (a smaller `pos` invalidates a superset of what a
+        // larger one would), so invalidating once against the *minimum*
+        // touched position produces exactly the same result as running
+        // `set_token_and_invalidate_memo`'s scan once per popped entry —
+        // just in one scan instead of up to `max_depth` of them.
+        // `/security-review` (round 3) flagged the naive per-entry-scan
+        // version as a real cost multiplier: a single abandoned,
+        // deeply-nested-generic attempt could otherwise pay for a full
+        // memo-table scan once per layer unwound, not once per backtrack.
+        let mut min_touched_pos: Option<usize> = None;
         while self.split_undo_log.len() > checkpoint.undo_len {
             let (pos, original) = self.split_undo_log.pop().expect(
                 "loop condition guarantees split_undo_log.len() > checkpoint.undo_len >= 0",
             );
-            self.set_token_and_invalidate_memo(pos, original);
+            self.tokens[pos] = original;
+            min_touched_pos = Some(min_touched_pos.map_or(pos, |m| m.min(pos)));
+        }
+        if let Some(pos) = min_touched_pos {
+            self.memo.retain(|_, entry| entry.end_pos < pos);
         }
         self.pos = checkpoint.pos;
     }
 
     /// Overwrite the token at `pos`, and invalidate every memoized rule
-    /// result whose completed parse could have read `pos` — used both when
-    /// performing an angle-bracket split (`match_token_reference`) and
-    /// when undoing one on backtrack (`restore_to`), since either
-    /// direction changes what a later re-read of `pos` would see.
+    /// result whose completed parse could have read `pos` — used when
+    /// performing an angle-bracket split (`match_token_reference`).
+    /// `restore_to` needs the same invalidation logic when *undoing* a
+    /// split on backtrack, but batches it across however many splits a
+    /// single checkpoint unwinds into one memo scan rather than calling
+    /// this once per reverted token, so it inlines the equivalent
+    /// `retain` call itself instead of reusing this method directly — see
+    /// `restore_to`'s own doc comment for why that batching is necessary.
     ///
     /// A rule's own `end_pos` (recorded at the moment its result was
     /// memoized) is normally "the first position this rule's completed
@@ -1075,20 +1096,41 @@ impl GrammarParser {
             // this exact C-family token-naming convention (the vast
             // majority of grammars this shared engine also serves) never
             // take this branch at all.
-            if let Some((consumed, remainder)) = split_angle_bracket_run(token, expected_type) {
-                let split_pos = self.pos;
-                let original = token.clone();
-                // Record the pre-split token so a backtrack that abandons
-                // whatever is currently being attempted can undo this
-                // mutation via `restore_to` — see `split_undo_log`'s own
-                // doc comment. Without this, a failed `Alternation` arm or
-                // a lookahead predicate that triggers a split would leave
-                // the mutated (shorter) token behind for a sibling attempt
-                // that expects the original merged `>>`/`>>>` shape,
-                // silently corrupting an otherwise-unrelated parse.
-                self.split_undo_log.push((split_pos, original));
-                self.set_token_and_invalidate_memo(split_pos, remainder);
-                return Some(vec![ASTNodeOrToken::Token(consumed)]);
+            // `self.pos < self.tokens.len()` guards a real, if currently
+            // latent, panic (`/security-review` round 3): once `self.pos`
+            // runs past the end of the token stream, `current()` (just
+            // above) falls back to *reading* `tokens[len - 1]` without
+            // moving `self.pos` there — but a split needs to *write* the
+            // remainder back to wherever `token` actually lives, and
+            // `self.tokens[self.pos]` indexing with the raw, out-of-range
+            // `self.pos` would panic. This repo's own Java/C# pipelines
+            // always append a trailing EOF token (never itself
+            // `RIGHT_SHIFT`/`UNSIGNED_RIGHT_SHIFT`-shaped) before
+            // `self.pos` could run this far, so the guard is never
+            // observed to fire today — but `GrammarParser` is a public,
+            // reusable engine with no enforced "must end in EOF"
+            // precondition (and exposes `add_pre_parse` hooks that could
+            // truncate the token list), so this is real hardening against
+            // misuse of that public surface, not dead code. Splitting a
+            // token you're not genuinely positioned at doesn't make sense
+            // anyway — there's nothing wrong with simply not matching here.
+            if self.pos < self.tokens.len() {
+                if let Some((consumed, remainder)) = split_angle_bracket_run(token, expected_type) {
+                    let split_pos = self.pos;
+                    let original = token.clone();
+                    // Record the pre-split token so a backtrack that
+                    // abandons whatever is currently being attempted can
+                    // undo this mutation via `restore_to` — see
+                    // `split_undo_log`'s own doc comment. Without this, a
+                    // failed `Alternation` arm or a lookahead predicate
+                    // that triggers a split would leave the mutated
+                    // (shorter) token behind for a sibling attempt that
+                    // expects the original merged `>>`/`>>>` shape,
+                    // silently corrupting an otherwise-unrelated parse.
+                    self.split_undo_log.push((split_pos, original));
+                    self.set_token_and_invalidate_memo(split_pos, remainder);
+                    return Some(vec![ASTNodeOrToken::Token(consumed)]);
+                }
             }
         }
 
@@ -1902,6 +1944,42 @@ mod tests {
             .map(|t| t.value.clone())
             .collect();
         assert_eq!(matched_values, vec![">>".to_string()]);
+    }
+
+    /// Regression guard for a panic `/security-review` (round 3) found in
+    /// the split path itself: once `self.pos` runs past the end of the
+    /// token stream, `current()` falls back to *reading* the last token
+    /// without moving `self.pos` there, but the (pre-fix) split branch
+    /// still *wrote* to `self.tokens[self.pos]` using the raw,
+    /// out-of-range `self.pos` — an index-out-of-bounds panic. This
+    /// repo's own Java/C# pipelines always append a trailing EOF token
+    /// first, so the guard never fires in practice today, but
+    /// `GrammarParser` is a public, reusable engine with no enforced
+    /// "must end in EOF" precondition. This grammar deliberately omits an
+    /// EOF token to reach that state directly.
+    #[test]
+    fn split_past_end_of_token_stream_does_not_panic() {
+        let grammar = ParserGrammar {
+            rules: vec![GrammarRule {
+                name: "start".to_string(),
+                body: GrammarElement::Sequence {
+                    elements: vec![
+                        GrammarElement::TokenReference { name: "RIGHT_SHIFT".to_string() },
+                        GrammarElement::TokenReference { name: "GREATER_THAN".to_string() },
+                    ],
+                },
+                line_number: 1,
+            }],
+            version: 0,
+        };
+
+        // No trailing EOF token -- after matching RIGHT_SHIFT, self.pos
+        // runs past the end of this single-token stream.
+        let tokens = vec![tok_named(TokenType::Name, ">>", "RIGHT_SHIFT")];
+
+        let mut parser = GrammarParser::new(tokens, grammar);
+        // Must fail cleanly (no second token to close with), not panic.
+        assert!(parser.parse().is_err());
     }
 
     // -----------------------------------------------------------------------
