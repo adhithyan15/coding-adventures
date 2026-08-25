@@ -135,7 +135,11 @@ Fetched:       2026-08-13 (initial slice, W05/PR3), extended 2026-08-14 (WASM08)
                load{8,16,32,64}_lane/store{8,16,32,64}_lane family PR39
                deferred and PR40/PR41 opened -- the lane-load/store
                family, still not implemented, needs its own new
-               instruction shape)
+               instruction shape),
+               extended 2026-08-25 (SIMD PR43 -- simd_align.wast, ZERO new
+               opcodes, same pinned commit, no re-pin -- see below;
+               alignment-hint coverage for opcodes already implemented by
+               PR15/PR39-42)
 Fetch method:  code/packages/rust/wasm-conformance/tests/fixtures/fetch_testsuite.py
 
 The pinned commit was resolved via:
@@ -1494,6 +1498,67 @@ failures (17 `assert_return`, 1 `module`, 1 `assert_unlinkable`, 2
 touching the load_extend family) are byte-for-byte unchanged by this PR,
 confirming zero regressions. No other already-vendored file's stats
 changed.
+
+`simd_align.wast` (SIMD PR43) adds ZERO new opcodes -- unlike PR40/41/42
+above, this file's every instruction (`v128.load`, `v128.store`, the
+`v128.load{8,16,32,64}_splat` family, and the `v128.load{8x8,16x4,32x2}_
+{s,u}` family) was already implemented before this PR. It exercises
+`align=` HINT coverage only: valid alignments (1/2/4/8/16, a strict
+subset or equal to each opcode's natural access size), invalid
+alignments (exceeding natural size, expected to be REJECTED at
+validation time), and malformed alignments (non-power-of-two or
+negative, expected to be rejected at parse time), plus a "misaligned
+loads/stores don't trap" runtime check. The remaining piece of the wider
+load_extend/load_splat/load_zero/load{8,16,32,64}_lane/
+store{8,16,32,64}_lane family PR39 opened -- the lane-load/store shape
+(v128 operand PLUS lane-index immediate PLUS memarg all at once) -- is
+still not implemented and this file needs none of it.
+
+The file is self-contained: 46 modules (one per valid align= variant
+across `v128.load`/`v128.store`/the splat family/the load_extend family,
+plus 2 modules for the "misaligned doesn't trap" and "aligned/unaligned
+read-write" runtime checks), 8 `assert_return` directives (the runtime
+misalignment-tolerance checks), 12 `assert_invalid` directives
+(align=32/16 exceeding each opcode's natural alignment, one per
+opcode-and-natural-size pairing), and 34 `assert_malformed` directives
+(align=-1/0/3/7, i.e. negative or non-power-of-two alignment tokens,
+across the same opcode set).
+
+Pass rate: 100% module (46/46) and assert_return (8/8) -- these
+exercise only ALREADY-implemented opcode execution paths, unaffected by
+alignment validation depth. `assert_invalid` grades 0/12, ALL 12 marked
+`NotYetSupported`: this repo's SIMD memarg decode path (`wasm-validator`'s
+`type_check.rs`, the arm shared by `v128.load`/`v128.store`/the splat/
+load_zero/load_extend families) decodes the `align` byte to correctly
+consume the right number of encoded bytes, but never compares it against
+each opcode's natural alignment the way the plain scalar `iNN.load`/
+`iNN.store` arm does via `memory_op_shape`/`max_align_for` -- so an
+over-large `align=` on a v128 op currently validates successfully
+instead of being rejected. `assert_malformed` grades 12/34 pass (the
+negative-align cases, e.g. `align=-1`, which fail to parse as a `u32`
+token regardless of alignment semantics and so are correctly rejected as
+"unknown operator" already) with 22 `NotYetSupported` (the non-negative,
+non-power-of-two cases, e.g. `align=0`/`align=3`/`align=7`, which this
+repo's `parse_memarg` accepts via `u32::trailing_zeros()` without ever
+checking `is_power_of_two()` first). Both gaps are real, pre-existing,
+and shared with the plain (non-SIMD) `align.wast` already vendored here
+(whose own `assert_malformed` tally already carries 46 `NotYetSupported`
+for the identical non-power-of-two-alignment class) -- vendoring this
+file surfaces the SAME class of gap for the v128 opcode family rather
+than introducing a new one, consistent with this repo's existing
+"vendor now, track gaps as NotYetSupported, close them in a dedicated
+follow-up" convention used throughout this corpus (see e.g. `global.
+wast`, `select.wast`, `table_init.wast` above).
+
+Aggregate `module` rose from 1214/1215 to 1260/1261 (+46 pass, +46
+gradeable, `NotYetSupported` unchanged at 67); `assert_return` rose from
+44392/44409 to 44400/44417 (+8 pass, +8 gradeable, `NotYetSupported`
+unchanged at 545); `assert_invalid` stayed at 2013/2013 pass but
+`NotYetSupported` rose from 76 to 88 (+12, exactly this file's own gap
+above); `assert_malformed` rose from 513/513 to 525/525 pass (+12) with
+`NotYetSupported` rising from 516 to 538 (+22, exactly this file's own
+gap above). No other already-vendored file's stats changed -- zero
+regressions.
 
 The vendored files are licensed under the Apache License, Version 2.0 --
 see the accompanying LICENSE file, itself vendored verbatim from the same
