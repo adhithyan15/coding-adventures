@@ -23,7 +23,11 @@
 //! string concatenation to `Expr::StrConcat`, and the JavaScript backend
 //! does not accept `Feature::StringInterpolation` yet (`StrConcat` is in
 //! its own "deferred, rejected at capability check" list) — the Python
-//! backend already does, so one backend covers every M1 construct.
+//! backend already does, so one backend covers every M1 construct. M2a
+//! adds `if`/`while`/`do`-`while`; the Python backend already accepts
+//! `Feature::Loops` and has real codegen for `Expr::If`/`Expr::Block`
+//! (the do-while desugaring's own synthetic wrapper), so no new backend
+//! gap opens up for this milestone either.
 
 use std::fs::OpenOptions;
 use std::io::Write as _;
@@ -224,4 +228,113 @@ fn var_type_inference_runs_in_python() {
         &wrap("var x = 10; var y = 4; var z = x - y; z;"),
     );
     assert_eq!(out, "6");
+}
+
+#[test]
+fn if_else_branching_runs_in_python() {
+    if !python_available() {
+        eprintln!("skipping if_else_branching_runs_in_python: `python3` not available");
+        return;
+    }
+    let out = run_via_python(
+        "if_else",
+        &wrap("int x = 10; if (x > 5) { x = 1; } else { x = 2; } x;"),
+    );
+    assert_eq!(out, "1");
+}
+
+#[test]
+fn if_without_else_runs_in_python() {
+    if !python_available() {
+        eprintln!("skipping if_without_else_runs_in_python: `python3` not available");
+        return;
+    }
+    let out = run_via_python(
+        "if_no_else",
+        &wrap("int x = 10; if (x < 5) { x = 999; } x;"),
+    );
+    assert_eq!(out, "10");
+}
+
+#[test]
+fn while_loop_runs_in_python() {
+    if !python_available() {
+        eprintln!("skipping while_loop_runs_in_python: `python3` not available");
+        return;
+    }
+    let out = run_via_python(
+        "while_loop",
+        &wrap("int x = 0; while (x < 5) { x = x + 1; } x;"),
+    );
+    assert_eq!(out, "5");
+}
+
+#[test]
+fn do_while_loop_runs_in_python() {
+    if !python_available() {
+        eprintln!("skipping do_while_loop_runs_in_python: `python3` not available");
+        return;
+    }
+    // Proves the body-executes-once-unconditionally semantic specifically:
+    // the condition is already false on entry, so a plain pretest `while`
+    // would run zero times, but do-while must still run once.
+    let out = run_via_python(
+        "do_while_loop",
+        &wrap("int x = 10; do { x = x + 1; } while (x < 5); x;"),
+    );
+    assert_eq!(out, "11");
+}
+
+#[test]
+fn compound_assignment_chain_runs_in_python() {
+    if !python_available() {
+        eprintln!("skipping compound_assignment_chain_runs_in_python: `python3` not available");
+        return;
+    }
+    let out = run_via_python(
+        "compound_assign_chain",
+        &wrap("int x = 10; x += 5; x -= 2; x *= 2; x;"),
+    );
+    assert_eq!(out, "26");
+}
+
+#[test]
+fn increment_in_a_while_loop_runs_in_python() {
+    if !python_available() {
+        eprintln!("skipping increment_in_a_while_loop_runs_in_python: `python3` not available");
+        return;
+    }
+    let out = run_via_python(
+        "increment_while",
+        &wrap("int sum = 0; int i = 0; while (i < 5) { sum = sum + i; i++; } sum;"),
+    );
+    assert_eq!(out, "10");
+}
+
+#[test]
+fn do_while_flag_name_collision_does_not_corrupt_a_real_variable() {
+    if !python_available() {
+        eprintln!(
+            "skipping do_while_flag_name_collision_does_not_corrupt_a_real_variable: `python3` not available"
+        );
+        return;
+    }
+    // Real execution proof for the /security-review finding fixed
+    // alongside this milestone: a user variable literally named
+    // `__do_while_0` (a legal Java identifier) must be mutated by the
+    // loop body exactly like any other local. The pre-fix desugaring
+    // generated its synthetic flag as a bare `__do_while_0` with no
+    // collision check, silently shadowing this exact variable — the
+    // mutation inside the loop body would apply to the *synthetic*
+    // flag instead, so the real variable would come back unmodified
+    // (`1`) rather than the correct `2`.
+    let out = run_via_python(
+        "do_while_flag_collision",
+        &wrap(concat!(
+            "int __do_while_0 = 1; ",
+            "do { __do_while_0 = __do_while_0 + 1; } while (false); ",
+            "__do_while_0;"
+        )),
+    );
+    assert_eq!(out, "2");
 }

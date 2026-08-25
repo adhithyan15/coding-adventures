@@ -1,11 +1,11 @@
 //! The lowering pass from `coding_adventures_java_parser`'s generic
-//! [`GrammarASTNode`] CST → [`semantic_ir::Module`], **v0.2.0 (JV02
-//! milestone M1)**.
+//! [`GrammarASTNode`] CST → [`semantic_ir::Module`], **v0.3.0 (JV02
+//! milestone M2a)**.
 //!
 //! # Scope
 //!
 //! Java requires an explicit `class`/`main`-method wrapper at the source
-//! level — this milestone recognizes exactly one shape and returns a clean
+//! level — this crate recognizes exactly one shape and returns a clean
 //! [`JavaLowerError`] for anything else, rather than silently
 //! mis-lowering:
 //!
@@ -15,7 +15,7 @@
 //! - Literal expressions: integer (`42`), floating-point (`3.14`), boolean
 //!   (`true`/`false`), `null`, and string (`"str"`) literals.
 //!
-//! **Supported (M1, new):**
+//! **Supported (M1, unchanged):**
 //! - Local variable declarations with an explicit primitive type
 //!   (`int`/`long`/`short`/`byte`/`char`/`float`/`double`/`boolean`) or
 //!   `String`, each requiring an initializer (`int x = 1;`).
@@ -31,13 +31,42 @@
 //!   semantics for mixed-type concatenation, e.g. `"n=" + 5`).
 //! - Parenthesized sub-expressions.
 //!
-//! **Deliberately out of scope for v0.2.0** (each rejected with an
+//! **Supported (M2a, new):**
+//! - `if`/`else` (an absent `else` becomes a synthetic empty, nil-valued
+//!   block — matching the established `javascript-to-semantic-ir`/
+//!   `ruby-to-semantic-ir` precedent for the same "the IR's `If` is an
+//!   expression with two non-optional branches" shape).
+//! - `while` and `do`/`while` (the latter desugars to a synthetic flag-
+//!   guarded pretest loop, lowering the body exactly once — see
+//!   `lower_do_while_statement`'s own doc comment for why, and for the
+//!   exact desugared shape).
+//! - Compound assignment (`+= -= *= /= %=`) and increment/decrement
+//!   (`++`/`--`, prefix and postfix) — but **only as a bare statement**
+//!   (`i++;`, `x += 1;`), desugaring to `Stmt::Assign` by reusing M1's own
+//!   `combine_additive`/`combine_multiplicative` op-selection. Using
+//!   either as a *value* (`y = i++;`) remains out of scope — that needs
+//!   pre-increment-value capture semantics this milestone doesn't build.
+//!
+//! Every block (an `if`/`while`/`do`-`while` body) is its own lexical
+//! scope, mirroring the SIR validator's own `Block`-scoped `LocalEnv`
+//! mark/rewind discipline exactly (a local declared inside an `if` body is
+//! not visible after it, in both Java and the validator's own contract).
+//!
+//! **Deliberately out of scope for v0.3.0** (each rejected with an
 //! explicit [`JavaLowerError`], tracked in
 //! [JV02](../../../specs/JV02-java-to-semantic-ir.md)'s own milestone
-//! table as M2 onward): control flow, method calls, field/array access,
-//! lambdas, casts, `instanceof`, the ternary conditional, bitwise
-//! operators (`& | ^ ~ << >> >>>`), compound assignment (`+=` etc.),
-//! increment/decrement (`++`/`--`), uninitialized declarations, multiple
+//! table): `for`/enhanced-`for` (JV02 M2b — needs the scope infrastructure
+//! this milestone builds, sequenced right after it), `switch` (SIR has no
+//! `Switch`/`Match`/`Case` IR node at all — confirmed by a repo-wide grep,
+//! not assumed — so this needs its own spec-level design decision before
+//! any frontend can target it, tracked as a separate backlog item, not
+//! silently dropped), method calls, field/array access, lambdas, casts,
+//! `instanceof`, the ternary conditional, bitwise operators
+//! (`& | ^ ~ << >> >>>`), increment/decrement or compound assignment used
+//! as a *value* rather than a bare statement, `break`/`continue` (SIR has
+//! no IR primitive for either — every loop body this milestone lowers
+//! must not contain one, checked structurally, not merely "happens not to
+//! occur in the test corpus"), uninitialized declarations, multiple
 //! declarators per statement, C-style array-bracket declarators, array
 //! initializers, and reference types other than `String`.
 //!
@@ -87,6 +116,22 @@ const MAX_EXPR_DEPTH: usize = 64;
 /// `GrammarASTNode`, not guaranteed to have come from a depth-capped
 /// parser.
 const MAX_TREE_DEPTH: usize = 64;
+
+/// Maximum nesting depth through the *statement*/block-lowering chain
+/// (`lower_statement` → `lower_if_statement`/`lower_while_statement`/
+/// `lower_do_while_statement` → `lower_body` → `lower_block_node` →
+/// `lower_block_statement` → `lower_statement` → …) — a third,
+/// conceptually distinct recursion budget from [`MAX_EXPR_DEPTH`]
+/// (expression-precedence chain) and [`MAX_TREE_DEPTH`] (raw CST
+/// tree-walking in `find_main_method`/`collect_bounded`). Real Java source
+/// can nest `if`/`while`/`do`-`while` bodies arbitrarily deep
+/// (`if (a) if (b) if (c) …`), and `compile()` is a public entry point
+/// accepting a raw `GrammarASTNode`, not only one produced by
+/// `parse_java`'s own depth-capped parser — without this guard, a deeply
+/// nested control-flow tree handed straight to `compile()` would be a
+/// CWE-674 uncontrolled-recursion DoS, the same class of bug this crate's
+/// other two depth guards already exist to prevent.
+const MAX_STMT_DEPTH: usize = 64;
 
 /// Synthetic file name used for all spans (the CST does not carry the
 /// original path).
@@ -139,12 +184,27 @@ struct Lowerer {
     /// declares *exactly* what the module emits (mirrors every other SIR
     /// frontend's own `observed` accumulator).
     observed: FeatureManifest,
-    /// Declared kind of every local variable seen so far in the `main`
-    /// method body. M1's `main` body is still a flat statement list (no
-    /// nested blocks/control flow yet — that lands in M2, which is also
-    /// where real lexical scoping becomes necessary), so a single flat
-    /// map is sufficient and correct for this milestone.
-    locals: HashMap<String, Kind>,
+    /// A stack of scope frames, innermost last. M2a introduces real block
+    /// scoping (`if`/`while`/`do`-`while` bodies) — mirrors the SIR
+    /// validator's own `LocalEnv` mark/rewind discipline exactly (see
+    /// `semantic_ir::validator`'s `check_block`, which pushes a mark
+    /// before a `Block`'s statements and rewinds it after): a name
+    /// declared inside a nested block is visible only within that block
+    /// and any blocks nested inside *it*, never after it ends nor to a
+    /// sibling block. `push_scope`/`pop_scope`/`declare_local`/
+    /// `lookup_local` below are this crate's own mirror of that stack,
+    /// not merely a leak-prevention bookkeeping list — a Java program can
+    /// shadow an outer local with the same name in a nested block-scoped
+    /// language (in fact Java forbids that specific case, but this
+    /// frontend is not a full type-checker — see [`Kind`]'s own doc
+    /// comment — so a real lookup, not just presence-tracking, is what
+    /// this needs).
+    locals: Vec<HashMap<String, Kind>>,
+    /// Counter for the synthetic flag variable each `do`-`while` lowers
+    /// (`__do_while_0`, `__do_while_1`, …) — see `lower_do_while_statement`'s
+    /// own doc comment. Guarantees uniqueness across sibling do-while
+    /// statements in the same function; never consulted by name lookup.
+    do_while_counter: usize,
 }
 
 impl Lowerer {
@@ -152,8 +212,39 @@ impl Lowerer {
         Self {
             module_name: module_name.to_string(),
             observed: FeatureManifest::new(),
-            locals: HashMap::new(),
+            locals: Vec::new(),
+            do_while_counter: 0,
         }
+    }
+
+    /// Enter a new innermost lexical scope. Every `Block` this crate
+    /// lowers (`main`'s own top-level body, and every `if`/`while`/`do`-
+    /// `while` body) gets exactly one push/pop pair around its own
+    /// statement-lowering — see `lower_block_node`/`lower_body`.
+    fn push_scope(&mut self) {
+        self.locals.push(HashMap::new());
+    }
+
+    /// Leave the innermost scope; its declared names go out of scope.
+    fn pop_scope(&mut self) {
+        self.locals.pop();
+    }
+
+    /// Declare `name` in the *innermost* currently-active scope.
+    fn declare_local(&mut self, name: String, kind: Kind) {
+        self.locals
+            .last_mut()
+            .expect("declare_local called with no active scope (push_scope was not called)")
+            .insert(name, kind);
+    }
+
+    /// Look up `name`, searching from the innermost scope outward —
+    /// exactly the lexical-shadowing order a real name lookup needs.
+    fn lookup_local(&self, name: &str) -> Option<Kind> {
+        self.locals
+            .iter()
+            .rev()
+            .find_map(|frame| frame.get(name).copied())
     }
 
     fn lower_program(&mut self, program: &GrammarASTNode) -> Result<Module, JavaLowerError> {
@@ -180,13 +271,7 @@ impl Lowerer {
             .first_child_named(method_body, "block")
             .ok_or_else(|| self.err_at(method_body, "main method body has no block".to_string()))?;
 
-        let mut stmts = Vec::new();
-        for block_stmt in child_nodes(block) {
-            if block_stmt.rule_name != "block_statement" {
-                continue;
-            }
-            stmts.push(self.lower_block_statement(block_stmt)?);
-        }
+        let body = self.lower_block_node(block, 0)?;
 
         let span = Span::point(FILE, 1, 1);
         let main = Function {
@@ -194,11 +279,7 @@ impl Lowerer {
             params: vec![],
             return_type: None,
             captures: vec![],
-            body: Block {
-                stmts,
-                value: Expr::NilLit { span: span.clone() },
-                span: span.clone(),
-            },
+            body,
             effects: EffectSet::PURE,
             metadata: Metadata::new(),
             span: span.clone(),
@@ -291,7 +372,80 @@ impl Lowerer {
         None
     }
 
-    // ── statement-level lowering ────────────────────────────────────
+    // ── statement/block-level lowering ──────────────────────────────
+
+    /// Lower a `block` node (`LBRACE { block_statement } RBRACE`) into a
+    /// [`Block`], pushing a fresh scope for its own statements and
+    /// popping it before returning — the scope boundary a Java `{ }`
+    /// itself introduces, mirroring the SIR validator's own `check_block`
+    /// mark/rewind exactly (see the `locals` field's own doc comment).
+    fn lower_block_node(
+        &mut self,
+        block_node: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<Block, JavaLowerError> {
+        if depth >= MAX_STMT_DEPTH {
+            return Err(self.err_at(
+                block_node,
+                format!("statement/block nesting exceeds {MAX_STMT_DEPTH} levels"),
+            ));
+        }
+        let span = self.span_of(block_node);
+        self.push_scope();
+        let mut stmts = Vec::new();
+        for block_stmt in child_nodes(block_node) {
+            if block_stmt.rule_name != "block_statement" {
+                continue;
+            }
+            match self.lower_block_statement(block_stmt, depth + 1) {
+                Ok(s) => stmts.push(s),
+                Err(e) => {
+                    self.pop_scope();
+                    return Err(e);
+                }
+            }
+        }
+        self.pop_scope();
+        Ok(Block {
+            stmts,
+            value: Expr::NilLit { span: span.clone() },
+            span,
+        })
+    }
+
+    /// Lower a `statement` node used in a *body position* (the sole
+    /// statement after an `if`/`while`/`do` with no braces, e.g. `if (x)
+    /// foo();`) into a [`Block`]. If the statement is itself a brace-
+    /// delimited `block`, delegates straight to `lower_block_node`
+    /// (avoiding a redundant extra scope layer); otherwise wraps the one
+    /// lowered statement in a fresh scope of its own — Java gives even a
+    /// brace-less body its own scope for any (rare, since M1 requires an
+    /// initializer and a bare non-declaration statement can't introduce a
+    /// name) declaration it might contain.
+    fn lower_body(
+        &mut self,
+        stmt_node: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<Block, JavaLowerError> {
+        if depth >= MAX_STMT_DEPTH {
+            return Err(self.err_at(
+                stmt_node,
+                format!("statement/block nesting exceeds {MAX_STMT_DEPTH} levels"),
+            ));
+        }
+        if let Some(block_node) = self.first_child_named(stmt_node, "block") {
+            return self.lower_block_node(block_node, depth + 1);
+        }
+        let span = self.span_of(stmt_node);
+        self.push_scope();
+        let stmt = self.lower_statement(stmt_node, depth + 1);
+        self.pop_scope();
+        Ok(Block {
+            stmts: vec![stmt?],
+            value: Expr::NilLit { span: span.clone() },
+            span,
+        })
+    }
 
     /// Lower one `block_statement`. `block_statement = var_declaration |
     /// class_declaration | statement`, and (a grammar quirk) `statement`
@@ -302,36 +456,320 @@ impl Lowerer {
     fn lower_block_statement(
         &mut self,
         block_stmt: &GrammarASTNode,
+        depth: usize,
     ) -> Result<Stmt, JavaLowerError> {
         if let Some(var_decl) = self.first_child_named(block_stmt, "var_declaration") {
             return self.lower_var_declaration_node(var_decl);
         }
-        let statement = self.first_child_named(block_stmt, "statement").ok_or_else(|| {
-            self.err_at(
-                block_stmt,
-                "unsupported statement kind (JV02 M1 supports only variable declarations, assignment, and bare expression statements — control flow is deferred to JV02 M2)"
-                    .to_string(),
-            )
-        })?;
+        let statement = self
+            .first_child_named(block_stmt, "statement")
+            .ok_or_else(|| {
+                self.err_at(
+                    block_stmt,
+                    "unsupported statement kind (JV02 M2a does not lower this yet)".to_string(),
+                )
+            })?;
+        self.lower_statement(statement, depth)
+    }
+
+    /// Lower a `statement` node (dispatching on which alternative of
+    /// `statement = block | var_declaration | ... | if_statement | ...`
+    /// the parser took) into a single [`Stmt`]. Shared by
+    /// `lower_block_statement` (a statement inside a `{ }`) and
+    /// `lower_body` (a brace-less single-statement body).
+    fn lower_statement(
+        &mut self,
+        statement: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<Stmt, JavaLowerError> {
+        if depth >= MAX_STMT_DEPTH {
+            return Err(self.err_at(
+                statement,
+                format!("statement/block nesting exceeds {MAX_STMT_DEPTH} levels"),
+            ));
+        }
         if let Some(var_decl) = self.first_child_named(statement, "var_declaration") {
             return self.lower_var_declaration_node(var_decl);
         }
-        let expr_stmt = self.first_child_named(statement, "expression_statement").ok_or_else(|| {
-            self.err_at(
-                statement,
-                "unsupported statement kind (JV02 M1 supports only variable declarations, assignment, and bare expression statements — control flow is deferred to JV02 M2)"
-                    .to_string(),
-            )
-        })?;
-        let expression = self
-            .first_child_named(expr_stmt, "expression")
+        if let Some(if_stmt) = self.first_child_named(statement, "if_statement") {
+            return self.lower_if_statement(if_stmt, depth);
+        }
+        if let Some(while_stmt) = self.first_child_named(statement, "while_statement") {
+            return self.lower_while_statement(while_stmt, depth);
+        }
+        if let Some(do_while_stmt) = self.first_child_named(statement, "do_while_statement") {
+            return self.lower_do_while_statement(do_while_stmt, depth);
+        }
+        if let Some(expr_stmt) = self.first_child_named(statement, "expression_statement") {
+            let expression = self
+                .first_child_named(expr_stmt, "expression")
+                .ok_or_else(|| {
+                    self.err_at(
+                        expr_stmt,
+                        "expression statement has no expression".to_string(),
+                    )
+                })?;
+            return self.lower_expr_statement(expression);
+        }
+        Err(self.err_at(
+            statement,
+            "unsupported statement kind (JV02 M2a supports variable declarations, assignment, if/while/do-while, and bare expression statements — for-loops are JV02 M2b, switch/break/continue have no SIR IR yet, everything else is deferred further)"
+                .to_string(),
+        ))
+    }
+
+    /// `if_statement = "if" LPAREN expression RPAREN statement [ "else"
+    /// statement ] ;`. Lowers to `Stmt::ExprStmt` wrapping `Expr::If` —
+    /// the IR's conditional is an expression with no statement-level
+    /// counterpart (see `Expr::If`'s own doc comment), the same
+    /// convention `javascript-to-semantic-ir`/`ruby-to-semantic-ir` use.
+    /// An absent `else` becomes a synthetic empty, `NilLit`-valued block.
+    fn lower_if_statement(
+        &mut self,
+        if_stmt: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<Stmt, JavaLowerError> {
+        let span = self.span_of(if_stmt);
+        let cond_node = self
+            .first_child_named(if_stmt, "expression")
+            .ok_or_else(|| {
+                self.err_at(if_stmt, "malformed `if` (missing condition)".to_string())
+            })?;
+        let (cond, cond_kind) = self.lower_expr(cond_node, 0)?;
+        if cond_kind != Kind::Bool {
+            return Err(self.err_at(cond_node, "`if` condition must be boolean".to_string()));
+        }
+        let branches: Vec<&GrammarASTNode> = child_nodes(if_stmt)
+            .into_iter()
+            .filter(|n| n.rule_name == "statement")
+            .collect();
+        let (then_stmt, else_stmt) = match branches.as_slice() {
+            [then] => (*then, None),
+            [then, els] => (*then, Some(*els)),
+            _ => {
+                return Err(self.err_at(
+                    if_stmt,
+                    "malformed `if` (unexpected statement count)".to_string(),
+                ))
+            }
+        };
+        let then_branch = self.lower_body(then_stmt, depth + 1)?;
+        let else_branch = match else_stmt {
+            Some(e) => self.lower_body(e, depth + 1)?,
+            None => Block {
+                stmts: vec![],
+                value: Expr::NilLit { span: span.clone() },
+                span: span.clone(),
+            },
+        };
+        Ok(Stmt::ExprStmt {
+            expr: Expr::If {
+                cond: Box::new(cond),
+                then_branch: Box::new(then_branch),
+                else_branch: Box::new(else_branch),
+                span: span.clone(),
+            },
+            span,
+        })
+    }
+
+    /// `while_statement = "while" LPAREN expression RPAREN statement ;`
+    fn lower_while_statement(
+        &mut self,
+        while_stmt: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<Stmt, JavaLowerError> {
+        let span = self.span_of(while_stmt);
+        let cond_node = self
+            .first_child_named(while_stmt, "expression")
             .ok_or_else(|| {
                 self.err_at(
-                    expr_stmt,
-                    "expression statement has no expression".to_string(),
+                    while_stmt,
+                    "malformed `while` (missing condition)".to_string(),
                 )
             })?;
-        self.lower_expr_statement(expression)
+        let (cond, cond_kind) = self.lower_expr(cond_node, 0)?;
+        if cond_kind != Kind::Bool {
+            return Err(self.err_at(cond_node, "`while` condition must be boolean".to_string()));
+        }
+        let body_stmt = self
+            .first_child_named(while_stmt, "statement")
+            .ok_or_else(|| {
+                self.err_at(while_stmt, "malformed `while` (missing body)".to_string())
+            })?;
+        let body = self.lower_body(body_stmt, depth + 1)?;
+        self.observed.add(Feature::Loops);
+        Ok(Stmt::While { cond, body, span })
+    }
+
+    /// `do_while_statement = "do" statement "while" LPAREN expression
+    /// RPAREN SEMICOLON ;`. SIR's `Stmt::While` is pretest-only (there is
+    /// no do-while primitive), so this desugars `do S while (C);` to a
+    /// synthetic flag-guarded pretest loop — `boolean __do_while_N =
+    /// true; while (__do_while_N || C) { S; __do_while_N = false; }` —
+    /// lowering `S` exactly **once**.
+    ///
+    /// An earlier version instead built the more literal `{ S; while (C)
+    /// S }` shape by lowering `S` once and *cloning* its already-lowered
+    /// `Block.stmts` for the second copy. `/security-review` caught that
+    /// as a real resource-exhaustion DoS: cloning duplicates whatever
+    /// nested `do`/`while` structure `S` *itself* already contains, so
+    /// `N` levels of nested `do`/`while` — ordinary, valid, brace-less
+    /// Java source, no adversarial tree needed — produced `O(2^N)`
+    /// emitted IR nodes from `O(N)` source bytes (the same amplification
+    /// shape as XML "billion laughs"), invisible to `MAX_STMT_DEPTH`
+    /// since the blowup happens on each stack frame's *return* (the
+    /// clone), not from call-stack recursion depth. The flag-guarded
+    /// rewrite here has no clone at all, so emitted IR size is always
+    /// linear in source size.
+    ///
+    /// `__do_while_N`'s uniqueness comes from `do_while_counter` (a
+    /// monotonic per-`Lowerer` counter — two sibling do-while statements
+    /// in the same function must not share a flag) *and* a collision
+    /// check against every currently-visible name via `lookup_local`:
+    /// the flag lives in the enclosing scope for the duration of the
+    /// synthetic `Expr::Block` (it is not itself scope-pushed), so it
+    /// must not collide with any real Java local already in scope at
+    /// this point — `__do_while_0` is a legal Java identifier, so a
+    /// program that happens to declare a variable by that exact name is
+    /// a real, reachable case, not a hypothetical one.
+    fn lower_do_while_statement(
+        &mut self,
+        node: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<Stmt, JavaLowerError> {
+        let span = self.span_of(node);
+        let body_stmt = self.first_child_named(node, "statement").ok_or_else(|| {
+            self.err_at(node, "malformed `do`/`while` (missing body)".to_string())
+        })?;
+        let mut body = self.lower_body(body_stmt, depth + 1)?;
+        let cond_node = self.first_child_named(node, "expression").ok_or_else(|| {
+            self.err_at(
+                node,
+                "malformed `do`/`while` (missing condition)".to_string(),
+            )
+        })?;
+        let (cond, cond_kind) = self.lower_expr(cond_node, 0)?;
+        if cond_kind != Kind::Bool {
+            return Err(self.err_at(
+                cond_node,
+                "`do`/`while` condition must be boolean".to_string(),
+            ));
+        }
+        self.observed.add(Feature::Loops);
+        self.observed.add(Feature::ShortCircuit);
+        self.observed.add(Feature::MutableBindings);
+
+        // Desugar `do S while (C);` to a flag-guarded pretest loop, NOT a
+        // literal "run S once, then while (C) S" duplication of S's own
+        // already-lowered IR. An earlier version of this desugaring did
+        // clone the lowered body for the once-executed copy — caught by
+        // `/security-review` as a real resource-exhaustion DoS: cloning
+        // duplicates whatever nested do-while structure S *itself*
+        // already contains, so N levels of nested do-while (valid,
+        // ordinary, brace-less Java source — no adversarial tree needed)
+        // produce O(2^N) emitted IR nodes from O(N) source bytes, the
+        // same amplification-attack shape as XML "billion laughs". The
+        // `MAX_STMT_DEPTH` guard does not catch this: the blowup happens
+        // on each stack frame's *return* (the clone), not from the call-
+        // stack depth itself, which stays correctly bounded throughout.
+        //
+        // This rewrite lowers S exactly once — no cloning — so emitted
+        // IR size is always linear in source size, regardless of
+        // nesting depth:
+        //
+        //   boolean __do_while_N = true;
+        //   while (__do_while_N || C) { S; __do_while_N = false; }
+        //
+        // `__do_while_N`'s uniqueness comes from a per-`Lowerer` counter
+        // (`do_while_counter`), not just its `__`-prefix: two sibling
+        // do-while statements in the same function must not share a
+        // flag. It is never *declared* via `declare_local` (real Java
+        // source can never look this name up), but it still must not
+        // *collide* with a real Java local visible at either of the two
+        // points it's referenced — `__do_while_0` is a legal Java
+        // identifier, so a program that happens to declare a variable by
+        // that exact name is a real, reachable case, checked against
+        // two different scopes for two different reasons (both caught
+        // by `/security-review`, in two separate rounds — an earlier
+        // version checked neither):
+        //  - `lookup_local` — the *ambient* scope active right here,
+        //    before `S` is lowered — covers a same-named local declared
+        //    in an *enclosing* scope (the flag declaration and its
+        //    `flag || C` reference both live in that ambient scope).
+        //  - `body_declares_name` — `S`'s own *top-level* statements
+        //    (already lowered into `body.stmts` above) — covers a
+        //    same-named local `S` declares directly (not nested inside
+        //    a further sub-block of `S`, which would be a distinct,
+        //    already-popped inner scope of its own): the appended
+        //    `__do_while_N = false;` flag-clear lives at exactly that
+        //    top level, so it's the one place body-local collisions can
+        //    actually reach it. `lookup_local` alone can't see this: by
+        //    the time this code runs, `lower_body`'s own scope for `S`
+        //    has already been pushed *and popped* (that's the correct,
+        //    real Java scope boundary — a `do`/`while` body's own locals
+        //    must not leak past it), so a name `S` declares is already
+        //    gone from `self.locals` again. Missing this check would
+        //    leave the flag-clear assignment resolving to `S`'s own
+        //    shadowing local under any backend with real block scoping
+        //    (unlike this crate's own Python execution-proof harness,
+        //    whose flat function-level scoping happens not to manifest
+        //    the bug for the cases tried) — silently leaving the outer
+        //    flag never cleared, so `flag || C` never goes false: an
+        //    infinite loop, the same DoS-by-nontermination class as the
+        //    exponential-blowup finding this desugaring already fixed
+        //    once, reached a different way.
+        let mut flag_name = format!("__do_while_{}", self.do_while_counter);
+        self.do_while_counter += 1;
+        while self.lookup_local(&flag_name).is_some() || body_declares_name(&body, &flag_name) {
+            flag_name = format!("__do_while_{}", self.do_while_counter);
+            self.do_while_counter += 1;
+        }
+
+        let flag_decl = Stmt::LetStarBinding {
+            name: flag_name.clone(),
+            sir_type: None,
+            value: Expr::BoolLit {
+                value: true,
+                span: span.clone(),
+            },
+            span: span.clone(),
+        };
+        let flag_ref = Expr::VarRef {
+            name: flag_name.clone(),
+            scope: Scope::Local,
+            span: span.clone(),
+        };
+        let loop_cond = Expr::LogicalOr {
+            lhs: Box::new(flag_ref),
+            rhs: Box::new(cond),
+            span: span.clone(),
+        };
+        body.stmts.push(Stmt::Assign {
+            name: flag_name,
+            scope: Scope::Local,
+            value: Expr::BoolLit {
+                value: false,
+                span: span.clone(),
+            },
+            span: span.clone(),
+        });
+
+        Ok(Stmt::ExprStmt {
+            expr: Expr::Block(Box::new(Block {
+                stmts: vec![
+                    flag_decl,
+                    Stmt::While {
+                        cond: loop_cond,
+                        body,
+                        span: span.clone(),
+                    },
+                ],
+                value: Expr::NilLit { span: span.clone() },
+                span: span.clone(),
+            })),
+            span,
+        })
     }
 
     fn lower_var_declaration_node(
@@ -434,7 +872,7 @@ impl Lowerer {
                 value_kind
             }
         };
-        self.locals.insert(name.clone(), kind);
+        self.declare_local(name.clone(), kind);
 
         // `Stmt::LetStarBinding`, not `LetBinding`: Java's local
         // declarations are strictly sequential — `int x = 1; int y = x +
@@ -523,10 +961,13 @@ impl Lowerer {
         Err(self.err_at(type_node, "malformed type node".to_string()))
     }
 
-    /// Lower a full expression-statement's `expression` node: either a
-    /// bare-name-target assignment (`x = <rhs>;` → `Stmt::Assign`) or an
-    /// ordinary value expression evaluated for effect (→ `Stmt::ExprStmt`,
-    /// matching M0's existing behavior for e.g. `42;`).
+    /// Lower a full expression-statement's `expression` node. Handled in
+    /// order: a bare-name-target plain or compound assignment (`x = ...`,
+    /// `x += ...`, etc. → `Stmt::Assign`); a bare increment/decrement
+    /// (`i++;`, `--i;` → `Stmt::Assign`, desugared the same way compound
+    /// assignment is); or an ordinary value expression evaluated for
+    /// effect (→ `Stmt::ExprStmt`, matching M0's existing behavior for
+    /// e.g. `42;`).
     fn lower_expr_statement(
         &mut self,
         expression: &GrammarASTNode,
@@ -555,25 +996,37 @@ impl Lowerer {
                     .ok_or_else(|| {
                         self.err_at(op_node, "malformed assignment operator".to_string())
                     })?;
-                if op_tok.value != "=" {
-                    return Err(self.err_at(
-                        op_node,
-                        format!(
-                            "compound assignment operator `{}` is not supported yet (deferred; write it as a plain `=` with the operator spelled out on the right-hand side)",
-                            op_tok.value
-                        ),
-                    ));
-                }
                 let name = self.extract_bare_name(lvalue_node, 0)?;
-                if !self.locals.contains_key(&name) {
-                    return Err(self.err_at(
+                let declared_kind = self.lookup_local(&name).ok_or_else(|| {
+                    self.err_at(
                         lvalue_node,
                         format!("assignment to undeclared local variable `{name}`"),
-                    ));
-                }
-                let (value, _kind) = self.lower_expr(rhs_node, 0)?;
-                self.observed.add(Feature::MutableBindings);
+                    )
+                })?;
                 let span = self.span_of(inner);
+                let value = match op_tok.value.as_str() {
+                    "=" => self.lower_expr(rhs_node, 0)?.0,
+                    "+=" | "-=" | "*=" | "/=" | "%=" => {
+                        let (rhs, rhs_kind) = self.lower_expr(rhs_node, 0)?;
+                        let lhs_span = self.span_of(lvalue_node);
+                        let lhs_expr = Expr::VarRef { name: name.clone(), scope: Scope::Local, span: lhs_span };
+                        let op_char = op_tok.value.chars().next().expect("non-empty operator token");
+                        match op_char {
+                            '+' | '-' => self.combine_additive(lhs_expr, declared_kind, rhs, rhs_kind, op_char, op_node)?.0,
+                            '*' | '/' | '%' => {
+                                self.combine_multiplicative(lhs_expr, declared_kind, rhs, rhs_kind, op_char, op_node)?.0
+                            }
+                            _ => unreachable!("compound assignment operator token was matched but its leading char isn't one of + - * / %"),
+                        }
+                    }
+                    other => {
+                        return Err(self.err_at(
+                            op_node,
+                            format!("unsupported assignment operator `{other}` (deferred to a later JV02 milestone)"),
+                        ))
+                    }
+                };
+                self.observed.add(Feature::MutableBindings);
                 return Ok(Stmt::Assign {
                     name,
                     scope: Scope::Local,
@@ -582,15 +1035,125 @@ impl Lowerer {
                 });
             }
         }
+        if let Some((target_node, op)) = self.bare_incdec_target(inner, 0)? {
+            let name = self.extract_bare_name(target_node, 0)?;
+            let declared_kind = self.lookup_local(&name).ok_or_else(|| {
+                self.err_at(
+                    target_node,
+                    format!("`{op}{op}` on undeclared local variable `{name}`"),
+                )
+            })?;
+            if !matches!(declared_kind, Kind::Int | Kind::Float) {
+                return Err(self.err_at(
+                    target_node,
+                    format!("`{op}{op}` requires a numeric operand"),
+                ));
+            }
+            let span = self.span_of(inner);
+            let lhs_expr = Expr::VarRef {
+                name: name.clone(),
+                scope: Scope::Local,
+                span: span.clone(),
+            };
+            let one = if declared_kind == Kind::Float {
+                Expr::FloatLit {
+                    value: 1.0,
+                    span: span.clone(),
+                }
+            } else {
+                Expr::IntLit {
+                    value: 1,
+                    span: span.clone(),
+                }
+            };
+            let (value, _) =
+                self.combine_additive(lhs_expr, declared_kind, one, declared_kind, op, inner)?;
+            self.observed.add(Feature::MutableBindings);
+            return Ok(Stmt::Assign {
+                name,
+                scope: Scope::Local,
+                value,
+                span,
+            });
+        }
         let (expr, _kind) = self.lower_expr(inner, 0)?;
         let span = self.span_of(expression);
         Ok(Stmt::ExprStmt { expr, span })
     }
 
+    /// Walks the same single-child expression-precedence chain
+    /// `lower_expr` does, looking for a *bare* `i++`/`i--`/`++i`/`--i`
+    /// shape with no other real operator present at any level above it —
+    /// i.e. the entire statement is exactly an increment/decrement, not
+    /// one nested inside a larger expression (`y = i++` is a different,
+    /// still-unsupported shape — see `lower_unary`/`lower_postfix`'s own
+    /// rejection of increment/decrement in *value* position, which this
+    /// helper does not change). Returns `None` — not an error — for any
+    /// other expression shape, so the caller can fall through to ordinary
+    /// value-expression lowering. `'+'`/`'-'` in the returned tuple mean
+    /// `++`/`--` respectively, matching `combine_additive`'s own operator
+    /// convention.
+    fn bare_incdec_target<'a>(
+        &self,
+        node: &'a GrammarASTNode,
+        depth: usize,
+    ) -> Result<Option<(&'a GrammarASTNode, char)>, JavaLowerError> {
+        if depth >= MAX_EXPR_DEPTH {
+            return Err(self.err_at(
+                node,
+                format!("expression nesting exceeds {MAX_EXPR_DEPTH} levels"),
+            ));
+        }
+        match node.rule_name.as_str() {
+            "unary_expression" => match node.children.as_slice() {
+                [ASTNodeOrToken::Token(t), ASTNodeOrToken::Node(inner)]
+                    if t.value == "++" || t.value == "--" =>
+                {
+                    Ok(Some((
+                        inner,
+                        t.value.chars().next().expect("non-empty operator token"),
+                    )))
+                }
+                [ASTNodeOrToken::Node(only)] => self.bare_incdec_target(only, depth + 1),
+                _ => Ok(None),
+            },
+            "postfix_expression" => {
+                let op = node.children.iter().skip(1).find_map(|c| match c {
+                    ASTNodeOrToken::Token(t) if t.value == "++" || t.value == "--" => {
+                        Some(t.value.chars().next().expect("non-empty operator token"))
+                    }
+                    _ => None,
+                });
+                match (node.children.first(), op) {
+                    (Some(ASTNodeOrToken::Node(target)), Some(op)) => Ok(Some((target, op))),
+                    _ => Ok(None),
+                }
+            }
+            "expression"
+            | "assignment_expression"
+            | "conditional_expression"
+            | "logical_or_expression"
+            | "logical_and_expression"
+            | "bitwise_or_expression"
+            | "bitwise_xor_expression"
+            | "bitwise_and_expression"
+            | "equality_expression"
+            | "relational_expression"
+            | "shift_expression"
+            | "additive_expression"
+            | "multiplicative_expression"
+            | "unary_expression_not_plus_minus" => match node.children.as_slice() {
+                [ASTNodeOrToken::Node(only)] => self.bare_incdec_target(only, depth + 1),
+                _ => Ok(None),
+            },
+            _ => Ok(None),
+        }
+    }
+
     /// Walk an assignment target's `unary_expression` chain down to its
     /// `primary`, requiring it to be a bare `NAME` — `foo.bar = x`,
     /// `arr[0] = x`, and any other non-simple target are out of scope for
-    /// M1 (rejected here rather than mis-lowered).
+    /// M1/M2a (rejected here rather than mis-lowered).
     fn extract_bare_name(
         &self,
         node: &GrammarASTNode,
@@ -607,7 +1170,7 @@ impl Lowerer {
                 [ASTNodeOrToken::Token(t)] if t.type_ == lexer::token::TokenType::Name => Ok(t.value.clone()),
                 _ => Err(self.err_at(
                     node,
-                    "assignment target must be a simple local variable (JV02 M1 does not support field or indexed assignment targets)".to_string(),
+                    "assignment target must be a simple local variable (field or indexed assignment targets are not supported yet)".to_string(),
                 )),
             };
         }
@@ -615,7 +1178,7 @@ impl Lowerer {
             [ASTNodeOrToken::Node(only)] => self.extract_bare_name(only, depth + 1),
             _ => Err(self.err_at(
                 node,
-                "assignment target must be a simple local variable (JV02 M1 does not support field or indexed assignment targets)".to_string(),
+                "assignment target must be a simple local variable (field or indexed assignment targets are not supported yet)".to_string(),
             )),
         }
     }
@@ -1260,7 +1823,7 @@ impl Lowerer {
             // lexeme here.
             [ASTNodeOrToken::Token(t)] if t.type_ == lexer::token::TokenType::Name => {
                 let name = t.value.clone();
-                let kind = *self.locals.get(&name).ok_or_else(|| {
+                let kind = self.lookup_local(&name).ok_or_else(|| {
                     self.err_at(node, format!("reference to undeclared local variable `{name}`"))
                 })?;
                 let span = self.span_of(node);
@@ -1372,6 +1935,19 @@ fn kinds_compatible_for_compare(a: Kind, b: Kind) -> bool {
         (a, b),
         (Kind::Bool, Kind::Bool) | (Kind::Int | Kind::Float, Kind::Int | Kind::Float)
     )
+}
+
+/// Does `block`'s own *top-level* statement list declare a local named
+/// `name`? Deliberately shallow — does not recurse into a nested
+/// sub-block's own statements, since those live in a distinct,
+/// already-scope-popped-by-the-time-this-runs frame of their own (see
+/// `lower_do_while_statement`'s own doc comment for why only the
+/// top level matters for its particular collision check).
+fn body_declares_name(block: &Block, name: &str) -> bool {
+    block.stmts.iter().any(|s| match s {
+        Stmt::LetBinding { name: n, .. } | Stmt::LetStarBinding { name: n, .. } => n == name,
+        _ => false,
+    })
 }
 
 /// The [`Kind`] of an `Expr` freshly produced by `lower_literal` — only

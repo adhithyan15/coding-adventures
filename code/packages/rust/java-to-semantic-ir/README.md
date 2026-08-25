@@ -4,7 +4,7 @@ Java CST → narrow-waist Semantic IR. The first frontend for
 [SIR29](../../../specs/SIR29-nominal-static-oop-profile.md), the
 nominal/static-dispatch OOP profile extension of the SIR10 narrow-waist IR.
 See [JV02](../../../specs/JV02-java-to-semantic-ir.md) for this frontend's
-full milestone plan (M0 + M1 here, through M9).
+full milestone plan (M0 + M1 + M2a here, through M9).
 
 ## Where this fits
 
@@ -34,51 +34,62 @@ let module = compile_source(
 )?;
 ```
 
-## Scope (v0.2.0 — JV02 milestones M0 + M1)
+## Scope (v0.3.0 — JV02 milestones M0 + M1 + M2a)
 
 Java requires an explicit `class`/`main`-method wrapper at the source level
 (unlike Ruby/Python/JS, which allow bare top-level statements) — this crate
 recognizes exactly that minimal shape: one top-level class declaring a
-`public static void main(String[] args)` method, whose body is a flat
-sequence of statements. Supported so far: literal expressions (`42`/`3.14`/
-`true`/`false`/`null`/`"str"`, M0); local variable declarations (explicit
-primitive/`String` types, or `var` type inference), re-assignment,
-arithmetic/comparison/logical operators, and `+`-based string concatenation
-(M1). Everything else — control flow, method calls, field/array access,
-lambdas, casts, `instanceof`, the ternary conditional, bitwise/shift
-operators, additional classes/methods/fields, and every SIR29 construct
-(`NominalClassDef`/`InterfaceDef`/`MethodDef`/`VirtualCall`) — is out of
-scope so far and returns a clean `JavaLowerError` rather than being
-silently mis-lowered. See `src/lower.rs`'s own module doc comment for the
-exact boundary, and the JV02 spec's milestone table for what M2 onward
-adds.
+`public static void main(String[] args)` method. Supported so far: literal
+expressions (`42`/`3.14`/`true`/`false`/`null`/`"str"`, M0); local variable
+declarations (explicit primitive/`String` types, or `var` type inference),
+re-assignment, arithmetic/comparison/logical operators, and `+`-based
+string concatenation (M1); `if`/`else`, `while`, `do`/`while`, and compound-
+assignment/increment/decrement as bare statements (M2a) — every `if`/
+`while`/`do`-`while` body is its own real lexical scope, mirroring the SIR
+validator's own block-scoping contract exactly (a name declared inside one
+does not leak past it). Everything else — `for`-loops (JV02 M2b, next),
+`switch`/`break`/`continue` (SIR has no IR node for any of the three —
+confirmed by a repo-wide grep, not assumed — so this needs a spec-level
+design decision before any frontend can target it), method calls, field/
+array access, lambdas, casts, `instanceof`, the ternary conditional,
+bitwise/shift operators, additional classes/methods/fields, and every
+SIR29 construct (`NominalClassDef`/`InterfaceDef`/`MethodDef`/
+`VirtualCall`) — is out of scope so far and returns a clean
+`JavaLowerError` rather than being silently mis-lowered. See
+`src/lower.rs`'s own module doc comment for the exact boundary, and the
+JV02 spec's milestone table for what comes next.
 
 ### Testing
 
 - `tests/test_lower.rs` — unit tests over every construct this crate
-  supports (both milestones) and every documented scope-boundary rejection.
-  Every positive test also asserts the lowered `Module` passes
+  supports (all three milestones) and every documented scope-boundary
+  rejection, including block-scope leak prevention in both directions (a
+  local declared inside an `if`/`do`-`while` body is invisible after it;
+  the outer scope's own name of the same spelling is unaffected). Every
+  positive test also asserts the lowered `Module` passes
   `semantic_ir::validate()` — not just that lowering itself didn't error.
-- `tests/e2e_python.rs` — this crate's first execution-proof test, per
-  JV02's own "Verification" section. Real Java source lowers through this
-  crate, then through the Python backend (`semantic-ir-to-python`, a dev-
+- `tests/e2e_python.rs` — execution-proof tests, per JV02's own
+  "Verification" section. Real Java source lowers through this crate,
+  then through the Python backend (`semantic-ir-to-python`, a dev-
   dependency), then runs under `python3`, asserting on real computed
-  output. Python, not JavaScript: the JavaScript backend does not accept
+  output — including the do-while "condition already false on entry, but
+  the body still runs once" case a plain pretest `while` would get wrong.
+  Python, not JavaScript: the JavaScript backend does not accept
   `Feature::StringInterpolation` yet, and M1's `+`-based string
-  concatenation needs it. Since M1 has no way to produce observable output
-  on its own terms (`System.out.println` is a method call, out of scope
-  until M3), the harness redirects `main`'s trailing block value to its
-  last statement's expression after lowering — a test-harness convenience,
-  not a frontend behavior change — so the backend's own unconditional
-  `return <block.value>` epilogue gives it something to observe. This
-  test's `python3` dependency is unrelated to the JV02 spec's own
-  `needs_java` CI toolchain-detection gap (already fixed, in `code/
-  programs/go/build-tool`) — that gap is about getting a JDK for a future
-  milestone's own `javac`/`java` oracle comparison, which only becomes
-  meaningful once real Java source can produce output to compare (M3+);
-  `python3` is a toolchain other cross-language backend tests in this repo
-  already depend on. Gracefully skips when `python3` is absent from
-  `PATH`.
+  concatenation needs it. Since M1/M2a have no way to produce observable
+  output on their own terms (`System.out.println` is a method call, out
+  of scope until M3), the harness redirects `main`'s trailing block value
+  to its last statement's expression after lowering — a test-harness
+  convenience, not a frontend behavior change — so the backend's own
+  unconditional `return <block.value>` epilogue gives it something to
+  observe. This test's `python3` dependency is unrelated to the JV02
+  spec's own `needs_java` CI toolchain-detection gap (already fixed, in
+  `code/programs/go/build-tool`) — that gap is about getting a JDK for a
+  future milestone's own `javac`/`java` oracle comparison, which only
+  becomes meaningful once real Java source can produce output to compare
+  (M3+); `python3` is a toolchain other cross-language backend tests in
+  this repo already depend on. Gracefully skips when `python3` is absent
+  from `PATH`.
 
 ## How it fits in the stack
 

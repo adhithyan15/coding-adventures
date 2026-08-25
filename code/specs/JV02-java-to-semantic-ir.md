@@ -11,12 +11,22 @@ the Java frontend/backend initiative, immediately after
 third slice, `semantic-ir-to-java`, follows once this frontend is usable
 end-to-end.
 
-**Implementation progress**: M0 (hardening + `main` + literals) and M1
+**Implementation progress**: M0 (hardening + `main` + literals), M1
 (local variable declarations, re-assignment, arithmetic/comparison/
-logical operators, `+`-based string concatenation) are merged — see
-`code/packages/rust/java-to-semantic-ir`'s own `CHANGELOG.md` for the
-exact per-milestone construct list and the real correctness bugs each
-milestone's own test suite caught before shipping. M2 onward are pending.
+logical operators, `+`-based string concatenation), and M2a (`if`/
+`else`, `while`, `do`/`while`, compound-assignment/increment/decrement
+as bare statements) are merged — see `code/packages/rust/
+java-to-semantic-ir`'s own `CHANGELOG.md` for the exact per-milestone
+construct list and the real correctness bugs each milestone's own test
+suite caught before shipping. M2's own scope split into two PRs (M2a
+above; M2b — classic/enhanced `for`-loops — next) once implementation
+revealed how much scope-stack infrastructure `if`/`while`/`do`-`while`
+alone already needed. `switch` was also discovered, during M2a, to have
+no corresponding SIR IR node at all (confirmed by a repo-wide grep, not
+assumed) — it needs its own spec-level design decision (Java's
+fall-through semantics in particular) before any frontend can target
+it, tracked as a separate backlog item rather than folded into "M2"
+implicitly. M2b onward are pending.
 
 ## Motivation
 
@@ -126,9 +136,27 @@ the same way Ruby/Python/JS's top-level-statement wrapper does).
 comparison/logical operators, string concatenation (`+` on `String`).
 
 **M2 — control flow.** `if`/`else`, `while`, classic `for`, enhanced
-`for` (`for (T x : xs)` → `ForEach`), `do`/`while`, `switch` (statement
-form; `switch` *expressions*, Java 14+, are a later-milestone stretch
-goal, not M2-blocking).
+`for` (`for (T x : xs)` → `ForEach`), `do`/`while`. Split into two PRs
+once implementation revealed the real size of the scope-stack
+infrastructure `if`/`while`/`do`-`while` alone need (every `Block` is
+its own lexical scope, mirroring the SIR validator's own `LocalEnv`
+mark/rewind discipline): **M2a** — `if`/`else`, `while`, `do`/`while`,
+plus compound-assignment/increment/decrement as bare statements (a real
+practical necessity for the classic `for`'s own update clause, pulled
+forward from M2b since it's needed there too). **M2b** — classic and
+enhanced `for`, desugared to `Stmt::While` (mirroring `c-to-semantic-ir`'s
+own precedent for C's identically-general three-clause `for`, chosen
+over `javascript-to-semantic-ir`'s stricter canonical-`ForRange`-only
+approach since Java's classic `for` is highly variable in shape).
+`switch` (statement form; `switch` *expressions*, Java 14+, are a
+later-milestone stretch goal regardless) turned out to need its own
+spec-level design decision, not a mechanical translation: `semantic-ir`
+has **no** `Switch`/`Match`/`Case` IR node at all (confirmed by a
+repo-wide grep during M2a's implementation, not assumed from reading
+the spec), and Java's `switch` fall-through semantics don't map onto
+existing IR surface the way `if`/`while` did — tracked as its own
+backlog item, not M2-blocking. `break`/`continue` have the identical
+gap (no IR primitive) and the identical "own design decision" status.
 
 **M3 — methods / calls / lambdas.** Static and instance top-level-
 function-shaped methods (still not class-nested — that's M6), calls,

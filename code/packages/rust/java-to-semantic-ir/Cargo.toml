@@ -1,8 +1,8 @@
 [package]
 name = "java-to-semantic-ir"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
-description = "Java (GrammarASTNode CST) → narrow-waist Semantic IR. JV02 frontend, milestone M1: local variable declarations, re-assignment, and operators."
+description = "Java (GrammarASTNode CST) → narrow-waist Semantic IR. JV02 frontend, milestone M2a: if/while/do-while and compound-assignment/increment/decrement statements."
 
 [dependencies]
 coding-adventures-java-lexer = { path = "../java-lexer" }
