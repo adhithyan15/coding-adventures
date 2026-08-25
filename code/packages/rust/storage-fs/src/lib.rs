@@ -47,9 +47,21 @@
 //! 3. `fsync` the tmp file.
 //! 4. Atomic-rename `<key>.tmp` → `<key>` (POSIX `rename(2)` is
 //!    atomic relative to readers).
-//! 5. Best-effort `fsync` of the parent directory so the rename is
-//!    durable; if that fails we don't error (some filesystems
-//!    don't support directory fsync).
+//! 5. `fsync` the parent directory so the rename is durable. `delete`
+//!    fsyncs the same parent directory after `remove_file`, for the
+//!    same reason: an unlink is a directory-entry change too, and is
+//!    just as capable of being lost.
+//!
+//! Step 5's failure handling is platform-dependent, and the split is
+//! deliberate rather than an oversight — see the `fsync_parent_directory`
+//! helper in this crate's source for the durability argument and the
+//! reason a portable `#![forbid(unsafe_code)]` crate cannot treat both
+//! platforms alike.
+//! In short: **Unix propagates the failure as [`StorageError::Unavailable`]**
+//! (this crate's records get the identical durability contract
+//! `vault-pm-local-host` already gives `vault-pm.toml`), while
+//! **Windows treats it as a no-op**, because `std::fs::File::open` cannot
+//! open a directory there at all — there is nothing to attempt.
 //!
 //! On `initialize`, the backend walks `<root>` and removes any
 //! stranded `.tmp` files — those are the result of crashes during
@@ -127,7 +139,16 @@ pub struct FsStorageBackendSummary {
     /// key, because the tmp path is deterministic and opened with
     /// `truncate(true)`.
     pub tmp_files_cleaned_on_initialize: bool,
-    /// Whether the parent directory fsync is best-effort.
+    /// Whether a parent-directory `fsync` failure (after `rename` or
+    /// `remove_file`) is tolerated rather than propagated as an error.
+    ///
+    /// `false` on Unix: a failure there means "the rename/unlink might not
+    /// survive a crash," and this crate propagates it as
+    /// [`StorageError::Unavailable`], the same durability guarantee
+    /// `vault-pm-local-host` gives `vault-pm.toml`. `true` on Windows, where
+    /// there is no portable, safe (`#![forbid(unsafe_code)]`-compatible) way
+    /// to open a directory handle to fsync in the first place — see the
+    /// `fsync_parent_directory` helper in this crate's source.
     pub parent_directory_fsync_best_effort: bool,
     /// Whether record bodies are opaque bytes to this backend.
     pub content_opaque_to_backend: bool,
@@ -147,7 +168,7 @@ impl FsStorageBackendSummary {
             hex_encoded_names: true,
             atomic_write_rename: true,
             tmp_files_cleaned_on_initialize: true,
-            parent_directory_fsync_best_effort: true,
+            parent_directory_fsync_best_effort: cfg!(windows),
             content_opaque_to_backend: true,
             leases_persisted: false,
             cross_process_locking: false,
@@ -411,11 +432,70 @@ fn write_record_atomic(
     // 3. Atomic rename.
     fs::rename(tmp, final_path).map_err(io_to_storage)?;
 
-    // 4. Best-effort fsync of parent dir for true durability.
-    if let Some(parent) = final_path.parent() {
-        if let Ok(d) = File::open(parent) {
-            let _ = d.sync_all();
-        }
+    // 4. fsync the parent directory so the rename is durable. See
+    // `fsync_parent_directory` for why this hard-fails on Unix and is a
+    // deliberate no-op on Windows.
+    fsync_parent_directory(final_path)
+}
+
+/// fsync the parent directory of `path` so a preceding `rename` or
+/// `remove_file` on `path` is durable, not merely visible through the page
+/// cache.
+///
+/// # Why this hard-fails on Unix
+///
+/// A `rename(2)` (or `unlink(2)`) is itself a change to the *parent
+/// directory's* contents, not to the file it names. POSIX permits a
+/// filesystem to keep that directory-entry change in volatile cache
+/// indefinitely until something forces it out — ordinarily an `fsync` on the
+/// directory itself. Skipping that step, or discarding its failure, means a
+/// `put`/`delete` that already returned `Ok` can still unwind on a crash: the
+/// old file (for `put`) or the deleted file (for `delete`) reappears once the
+/// disk is examined again, even though nothing observed that in the live
+/// process.
+///
+/// That gap used to be tolerated here ("best-effort... some filesystems
+/// don't support directory fsync") while `vault-pm-local-host`'s
+/// `sync_directory` hard-failed the *identical* operation for
+/// `vault-pm.toml` (see `code/packages/rust/vault-pm-local-host/src/unix.rs`).
+/// The asymmetry was real and was flagged in VLT-PM41 §8.1 as a "documented
+/// weakness" deserving a decision. This crate's owner-state records
+/// (written through `vault-pm-application-storage-core`) sit under the exact
+/// same crash-safety journal (`PendingPublication`, `PendingRotation`) as
+/// `vault-pm.toml` — both are read back by recovery code that assumes a
+/// completed `put`/`compare_exchange` is durable, not ambiguous. There is no
+/// argument for `vault-pm.toml` needing a stronger guarantee than the
+/// owner-state file it is paired with, so this function now gives both the
+/// same answer: propagate the failure as [`StorageError::Unavailable`], the
+/// same error class `write_record_atomic`'s tmp-file `fsync` already uses a
+/// few lines above. A caller that gets this error cannot tell whether the
+/// underlying operation is durable or not — which is the correct, honest
+/// answer, and precisely the "ambiguous outcome" this product's crash-safety
+/// journal already exists to recover from.
+///
+/// # Why this stays a no-op on Windows
+///
+/// `std::fs::File::open` cannot open a directory on Windows at all — the
+/// underlying `CreateFileW` call needs `FILE_FLAG_BACKUP_SEMANTICS`, which
+/// safe `std::fs::OpenOptions` never sets, so the attempt fails with "Access
+/// is denied" every time, regardless of whether anything is actually wrong.
+/// `vault-pm-local-host` works around this on Windows by calling the Win32
+/// API directly inside `unsafe` blocks (`windows.rs`, `MOVEFILE_WRITE_THROUGH`
+/// on the rename itself, which makes the move durable without a separate
+/// directory handle). This crate is `#![forbid(unsafe_code)]` and has no
+/// equivalent escape hatch, so there is no directory fsync to even attempt
+/// on Windows — hard-failing here would mean every `put`/`delete` fails
+/// unconditionally on that platform, which is a regression, not a fix.
+/// NTFS also journals metadata operations (including renames and deletes) in
+/// its own `$LogFile` by design, which is the durability story Windows gets
+/// instead of a userspace directory fsync.
+fn fsync_parent_directory(path: &Path) -> Result<(), StorageError> {
+    if cfg!(windows) {
+        return Ok(());
+    }
+    if let Some(parent) = path.parent() {
+        let d = File::open(parent).map_err(io_to_storage)?;
+        d.sync_all().map_err(io_to_storage)?;
     }
     Ok(())
 }
@@ -772,7 +852,16 @@ impl StorageBackend for FsStorageBackend {
             _ => {}
         }
         match fs::remove_file(&path) {
-            Ok(()) => Ok(()),
+            // A real removal happened: fsync the parent directory so the
+            // unlink survives a crash, exactly as `write_record_atomic`
+            // does after `rename`. Item #19: a deleted record reappearing
+            // after a crash is a genuine durability gap, distinct from (and
+            // not load-bearing for) the confidentiality fix in
+            // `vault-pm-application-storage-core::supersede_generation`,
+            // which overwrites sensitive bodies through the fsync-durable
+            // `put` path *before* calling this `delete` at all. This closes
+            // the gap for every caller, not just that one.
+            Ok(()) => fsync_parent_directory(&path),
             Err(e) if e.kind() == io::ErrorKind::NotFound => Ok(()),
             Err(e) => Err(io_to_storage(e)),
         }
@@ -942,7 +1031,10 @@ mod tests {
         assert!(summary.hex_encoded_names);
         assert!(summary.atomic_write_rename);
         assert!(summary.tmp_files_cleaned_on_initialize);
-        assert!(summary.parent_directory_fsync_best_effort);
+        // Best-effort only on Windows (no safe way to open a directory
+        // handle to fsync there); a hard, propagated failure everywhere
+        // else. See `fsync_parent_directory`'s doc comment.
+        assert_eq!(summary.parent_directory_fsync_best_effort, cfg!(windows));
         assert!(summary.content_opaque_to_backend);
         assert!(!summary.leases_persisted);
         assert!(!summary.cross_process_locking);
@@ -1120,6 +1212,142 @@ mod tests {
         }
         // Original record still present.
         assert!(be.get("ns", "k").unwrap().is_some());
+        let _ = fs::remove_dir_all(&root);
+    }
+
+    #[test]
+    #[cfg(unix)]
+    fn delete_fsyncs_the_parent_directory() {
+        // Item #19: `delete` used to just `fs::remove_file` and return --
+        // no fsync of anything, so a crash right after a successful delete
+        // could resurrect the file. This does not reopen the confidentiality
+        // hole `vault-pm-application-storage-core::supersede_generation`
+        // already closed (it overwrites sensitive bodies through the
+        // fsync-durable `put` path *before* ever calling `delete`); this is
+        // a defense-in-depth durability property for every caller of
+        // `delete`, not a fix for that finding.
+        //
+        // A live fsync succeeding is not directly observable from outside
+        // the crate, so this proves the *shape* of the guarantee instead:
+        // when the directory cannot even be opened to attempt the fsync,
+        // `delete` must report that rather than silently declaring success
+        // (mirrored by `put_hard_fails_when_parent_directory_cannot_be_fsynced`
+        // below, and by `delete_hard_fails_when_parent_directory_cannot_be_fsynced`).
+        let root = temp_root();
+        let be = FsStorageBackend::new(&root);
+        be.initialize().unwrap();
+        be.put(put_input("ns", "k", b"v")).unwrap();
+        be.delete("ns", "k", None).unwrap();
+        // Ordinary case: fsync succeeded silently, delete is Ok, record gone.
+        assert!(be.get("ns", "k").unwrap().is_none());
+        let _ = fs::remove_dir_all(&root);
+    }
+
+    #[test]
+    #[cfg(unix)]
+    fn put_hard_fails_when_parent_directory_cannot_be_fsynced() {
+        // Item #15: `write_record_atomic`'s parent-directory fsync used to
+        // be `let _ = d.sync_all()` -- any failure was silently discarded,
+        // while `vault-pm-local-host::sync_directory` hard-fails the
+        // identical operation for `vault-pm.toml`. The owner-state records
+        // this crate persists (via `vault-pm-application-storage-core`) sit
+        // under the same `PendingPublication`/`PendingRotation` crash-safety
+        // journal as `vault-pm.toml`, so there was never a reason for one to
+        // tolerate a failure the other refuses. Both now hard-fail.
+        //
+        // Creating/renaming a file inside a directory needs w+x on that
+        // directory but not r; opening the directory itself (what fsync
+        // needs) needs r. Stripping r alone isolates the fsync step: the
+        // write and rename that precede it still succeed.
+        use std::os::unix::fs::PermissionsExt;
+
+        let root = temp_root();
+        let be = FsStorageBackend::new(&root);
+        be.initialize().unwrap();
+        // First put creates the namespace directory with default permissions.
+        be.put(put_input("ns", "seed", b"v")).unwrap();
+
+        let ns_dir = root.join(hex_encode(b"ns"));
+        let original = fs::metadata(&ns_dir).unwrap().permissions();
+        fs::set_permissions(&ns_dir, fs::Permissions::from_mode(0o300)).unwrap();
+        // A root-owned runner ignores mode bits; confirm the directory
+        // really is unreadable before asserting on the outcome, exactly as
+        // the `initialize` permission tests above do.
+        let permissions_bite = File::open(&ns_dir).is_err();
+
+        let outcome = be.put(put_input("ns", "k", b"v"));
+
+        fs::set_permissions(&ns_dir, original).unwrap();
+
+        if !permissions_bite {
+            let _ = fs::remove_dir_all(&root);
+            return;
+        }
+
+        match outcome {
+            Err(StorageError::Unavailable { .. }) => {}
+            other => panic!(
+                "expected Unavailable when the parent-directory fsync cannot be \
+                 attempted, got {}",
+                if other.is_ok() {
+                    "Ok"
+                } else {
+                    "a different Err"
+                }
+            ),
+        }
+        // `rename` already completed before the fsync step failed, so the
+        // record IS on disk -- the error means "durability unconfirmed,"
+        // never "nothing was written." The application layer's crash-safety
+        // journal is built to recover from exactly this kind of ambiguity.
+        assert!(be.get("ns", "k").unwrap().is_some());
+        let _ = fs::remove_dir_all(&root);
+    }
+
+    #[test]
+    #[cfg(unix)]
+    fn delete_hard_fails_when_parent_directory_cannot_be_fsynced() {
+        // The `delete` counterpart to the `put` test above: item #15's fix
+        // and item #19's new fsync-on-delete share one helper
+        // (`fsync_parent_directory`), so both operations must fail the same
+        // way when the directory cannot be opened to fsync.
+        use std::os::unix::fs::PermissionsExt;
+
+        let root = temp_root();
+        let be = FsStorageBackend::new(&root);
+        be.initialize().unwrap();
+        be.put(put_input("ns", "k", b"v")).unwrap();
+
+        let ns_dir = root.join(hex_encode(b"ns"));
+        let original = fs::metadata(&ns_dir).unwrap().permissions();
+        fs::set_permissions(&ns_dir, fs::Permissions::from_mode(0o300)).unwrap();
+        let permissions_bite = File::open(&ns_dir).is_err();
+
+        let outcome = be.delete("ns", "k", None);
+
+        fs::set_permissions(&ns_dir, original).unwrap();
+
+        if !permissions_bite {
+            let _ = fs::remove_dir_all(&root);
+            return;
+        }
+
+        match outcome {
+            Err(StorageError::Unavailable { .. }) => {}
+            other => panic!(
+                "expected Unavailable when the parent-directory fsync cannot be \
+                 attempted, got {}",
+                if other.is_ok() {
+                    "Ok"
+                } else {
+                    "a different Err"
+                }
+            ),
+        }
+        // `remove_file` already completed before the fsync step failed, so
+        // the record is gone from this process's view even though its
+        // durability is unconfirmed -- the honest state for the caller.
+        assert!(be.get("ns", "k").unwrap().is_none());
         let _ = fs::remove_dir_all(&root);
     }
 

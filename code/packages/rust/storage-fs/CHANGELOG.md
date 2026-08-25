@@ -9,6 +9,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **`put`'s parent-directory `fsync` failure is no longer discarded (backlog
+  item #15).** It used to be `let _ = d.sync_all()` — any failure was
+  silently swallowed, while `vault-pm-local-host` hard-fails the identical
+  operation for `vault-pm.toml`. That asymmetry was flagged as an open
+  question in VLT-PM41 §8.1: the owner-state records this crate persists
+  carry the same crash-safety requirement as `vault-pm.toml` (both are read
+  back by recovery code that assumes a durable `Ok`), so there was no
+  argument for tolerating a failure here that the config file refuses to
+  tolerate. On Unix, a failure now propagates as `StorageError::Unavailable`
+  — the same error class the tmp-file `fsync` already uses. On Windows it
+  stays a no-op, but for a structural reason rather than neglect:
+  `std::fs::File::open` cannot open a directory handle there at all inside a
+  `#![forbid(unsafe_code)]` crate, so there is nothing to attempt. See
+  `code/specs/STR01-storage-fs-backend.md`, "Directory-fsync durability," for
+  the full argument.
+- **`delete` now fsyncs its parent directory too (backlog item #19).**
+  Previously `delete` performed no fsync of any kind — a crash right after a
+  successful delete could resurrect the file. This is defense-in-depth, not
+  a fix for an open vulnerability: the one HIGH finding that depended on
+  delete durability (the retired passphrase-rotation wrap,
+  `vault-pm-application-storage-core::supersede_generation`) was already
+  closed independently, by overwriting the sensitive body through the
+  fsync-durable `put` path before ever calling `delete`. This change gives
+  every other caller of `delete` the same durability `put` already had, using
+  the identical `fsync_parent_directory` helper and identical hard-fail
+  policy.
 - Stopped `initialize()` re-issuing a revision that had already been handed out.
   The recovery scan ended in `revision_counter.store(highest)` performed WITHOUT
   `write_lock`, the lock `put()` holds while allocating revisions via

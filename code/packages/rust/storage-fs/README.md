@@ -52,8 +52,18 @@ let rec = be.put(StoragePutInput {
 
 Writes follow the standard "write-tmp / fsync / rename" pattern.
 POSIX `rename(2)` is atomic with respect to concurrent readers.
-A best-effort `fsync` of the parent directory is performed for
-durability on filesystems that need it.
+The parent directory is then `fsync`ed so the rename itself is
+durable, not just the tmp file's contents. `delete` fsyncs the
+same parent directory after removing the file, for the identical
+reason — an unlink is a directory-entry change too.
+
+On Unix, a directory-fsync failure is a hard error
+(`StorageError::Unavailable`), matching the durability guarantee
+`vault-pm-local-host` gives `vault-pm.toml`. On Windows it is a
+no-op, because `std::fs::File::open` cannot open a directory
+handle at all in a `#![forbid(unsafe_code)]` crate — see
+[`STR01-storage-fs-backend.md`](../../../specs/STR01-storage-fs-backend.md)
+for the full argument.
 
 `initialize()` cleans up any stranded `.tmp` files and seeds the
 in-memory revision counter from the highest revision on disk so
@@ -69,7 +79,8 @@ the in-memory backend.
 `fs_storage_backend_summary()` and `FsStorageBackend::surface_summary()`
 return a payload-free description of the STR-FILE backend contract:
 record format version, path-safe hex names, atomic write+rename,
-startup `.tmp` cleanup, best-effort parent directory fsync, opaque
+startup `.tmp` cleanup, whether a parent-directory fsync failure is
+tolerated (`true` only on Windows — see "Crash safety" above), opaque
 record bodies, process-local leases, and no cross-process writer
 locking.
 
