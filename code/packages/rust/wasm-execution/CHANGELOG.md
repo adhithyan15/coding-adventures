@@ -2,6 +2,50 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.51] - 2026-08-25 (SIMD PR40: v128.loadN_splat family)
+
+### Added
+
+- `v128.load8_splat`/`load16_splat`/`load32_splat`/`load64_splat`
+  (`SimdOpKind::Load8Splat`/`Load16Splat`/`Load32Splat`/`Load64Splat`,
+  sub-opcodes `0x07`-`0x0A`): pop the `i32` base address, add the
+  instruction's own `memarg` offset, bounds-checked read of 1/2/4/8 raw
+  bytes (little-endian) from memory 0, broadcast into all 16/8/4/2 lanes
+  of a new `v128`. First opcodes in this crate that fuse a real
+  linear-memory read with a lane broadcast in one instruction. Reuses
+  the existing narrow scalar loaders (`load_i32_8u`/`load_i32_16u`) and
+  full-width loaders (`load_i32`/`load_i64`) purely for their
+  bounds-checked reads -- same memory-0-only scope as `v128.load`/
+  `v128.store` (SIMD widen PR15).
+
+### Fixed
+
+- The `0xFD`-prefixed SIMD instruction decoder's memarg-detection gate
+  (`sub_opcode == 0x00 || sub_opcode == 0x0B`, deciding whether an
+  instruction's `align`/`offset` immediate gets decoded into `aux` at
+  all) only recognized `v128.load`/`v128.store`. Widened to also cover
+  `0x07..=0x0A` -- without this, every `v128.loadN_splat` with a
+  non-zero `offset=` immediate would have silently fallen through to the
+  "no immediate" decode arm (leaving `aux` at 0) and read from the wrong
+  address. Caught by `v128_load8_splat_honors_a_nonzero_memarg_offset`
+  and the upstream `simd_load_splat.wast` corpus's own offset-variant
+  `assert_return` directives, all of which would otherwise silently
+  mis-grade.
+
+### Tests
+
+- `v128_load8_splat_broadcasts_one_byte_into_all_16_lanes`,
+  `v128_load16_splat_broadcasts_two_bytes_into_all_8_lanes`,
+  `v128_load32_splat_broadcasts_four_bytes_into_all_4_lanes`,
+  `v128_load64_splat_broadcasts_eight_bytes_into_both_lanes`: each reads
+  back the exact bytes a plain scalar `i32.store`/`i64.store` wrote to
+  real memory, broadcast into every lane -- same "prove it reads genuine
+  `LinearMemory` content" discipline as the existing `v128.load` tests.
+- `v128_load8_splat_honors_a_nonzero_memarg_offset`: pins the decoder-gate
+  fix above.
+- `v128_load_splat_family_past_the_end_of_memory_traps_cleanly_not_panic`:
+  all 4 widths trap, not panic, when `address + width` overruns memory.
+
 ## [0.9.50] - 2026-08-25 (PR39 CI fix: f32x4/f64x2 rounding family cross-platform NaN quieting)
 
 ### Fixed

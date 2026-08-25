@@ -594,6 +594,15 @@ TESTSUITE_FILES = [
     # the NOTICE file for the real vendored/pass counts.
     "simd_f32x4_rounding.wast",
     "simd_f64x2_rounding.wast",
+    # SIMD PR40: simd_load_splat.wast -- v128.load8_splat/load16_splat/
+    # load32_splat/load64_splat (sub-opcodes 0x07-0x0A), the FIRST opcodes
+    # in this table that fuse a real linear-memory read with a lane
+    # broadcast in one instruction (previously `v128.load`/`v128.store`
+    # only moved raw bytes with no lane reinterpretation, and `*.splat`
+    # only broadcast an already-on-stack scalar with no memory access).
+    # First bite into the wider load-extend/splat/zero/lane family opened
+    # by this PR's scoping pass -- see this file's own doc comment.
+    "simd_load_splat.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under

@@ -2094,20 +2094,26 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         push_val(&mut stack, ValueType::V128);
                     }
-                    wasm_opcodes::SimdOpKind::Load | wasm_opcodes::SimdOpKind::Store => {
-                        // v128.load/v128.store (SIMD widen PR15): a
-                        // standard `memarg` immediate (align, offset[,
-                        // memidx]) -- decoded exactly like every scalar
-                        // `iNN.load`/`iNN.store` (mirrors the `0x28..=
-                        // 0x3E` arm's own `MULTI_MEMORY_FLAG` handling)
-                        // so a stray multi-memory encoding still
-                        // consumes the right number of bytes and doesn't
-                        // desync the rest of the function body. Unlike
-                        // the scalar arm, this first slice's EXECUTOR
-                        // unconditionally targets memory 0 (see
-                        // wasm-execution's own scope note) -- so an
-                        // explicit non-zero memidx must be REJECTED here,
-                        // not merely bounds-checked against
+                    wasm_opcodes::SimdOpKind::Load
+                    | wasm_opcodes::SimdOpKind::Store
+                    | wasm_opcodes::SimdOpKind::Load8Splat
+                    | wasm_opcodes::SimdOpKind::Load16Splat
+                    | wasm_opcodes::SimdOpKind::Load32Splat
+                    | wasm_opcodes::SimdOpKind::Load64Splat => {
+                        // v128.load/v128.store (SIMD widen PR15), plus the
+                        // v128.loadN_splat family (SIMD PR40): a standard
+                        // `memarg` immediate (align, offset[, memidx]) --
+                        // decoded exactly like every scalar `iNN.load`/
+                        // `iNN.store` (mirrors the `0x28..=0x3E` arm's own
+                        // `MULTI_MEMORY_FLAG` handling) so a stray
+                        // multi-memory encoding still consumes the right
+                        // number of bytes and doesn't desync the rest of
+                        // the function body. Unlike the scalar arm, this
+                        // first slice's EXECUTOR unconditionally targets
+                        // memory 0 (see wasm-execution's own scope note,
+                        // which the load_splat family inherits unchanged)
+                        // -- so an explicit non-zero memidx must be
+                        // REJECTED here, not merely bounds-checked against
                         // `ctx.memory_count`. Bounds-checking alone would
                         // let a module targeting a real, in-bounds memory
                         // 1 validate successfully and then silently read/
@@ -2132,7 +2138,18 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                             }
                         }
                         match simd_op.kind {
-                            wasm_opcodes::SimdOpKind::Load => {
+                            wasm_opcodes::SimdOpKind::Load
+                            | wasm_opcodes::SimdOpKind::Load8Splat
+                            | wasm_opcodes::SimdOpKind::Load16Splat
+                            | wasm_opcodes::SimdOpKind::Load32Splat
+                            | wasm_opcodes::SimdOpKind::Load64Splat => {
+                                // v128.load and the whole loadN_splat
+                                // family share the identical type
+                                // signature: pop one i32 base address,
+                                // push one v128 result -- the "splat"
+                                // half (broadcasting the narrow loaded
+                                // value across lanes) changes nothing at
+                                // the TYPE level, only at execution time.
                                 pop_expect(&mut stack, frame!(), ValueType::I32)?;
                                 push_val(&mut stack, ValueType::V128);
                             }
@@ -2140,7 +2157,7 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                                 pop_expect(&mut stack, frame!(), ValueType::V128)?;
                                 pop_expect(&mut stack, frame!(), ValueType::I32)?;
                             }
-                            _ => unreachable!("only Load/Store reach this arm"),
+                            _ => unreachable!("only Load/Store/Load8Splat/Load16Splat/Load32Splat/Load64Splat reach this arm"),
                         }
                     }
                 }
