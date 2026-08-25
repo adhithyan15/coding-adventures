@@ -27,7 +27,7 @@ mod apple {
     use mermaid_parser::{
         parse_c4_diagram, parse_er_diagram, parse_gitgraph, parse_journey, parse_pie,
         parse_quadrant_chart, parse_requirement_diagram, parse_sankey, parse_sequence_diagram,
-        parse_state_diagram, parse_to_diagram as parse_mermaid_to_diagram,
+        parse_state_diagram, parse_to_diagram as parse_mermaid_to_diagram, parse_xychart,
     };
     use paint_codec_png::write_png;
     use paint_instructions::PaintInstruction;
@@ -420,6 +420,56 @@ mod apple {
             metadata["accessibility.description"],
             "Pie rendered through Metal"
         );
+    }
+
+    #[test]
+    fn render_configured_mermaid_xy_to_png() {
+        let diagram = parse_xychart(
+            r##"%%{init: {"xyChart": {"width": 720, "height": 440, "titleFontSize": 24, "titlePadding": 14, "showDataLabel": true, "showDataLabelOutsideBar": true}, "themeVariables": {"xyChart": {"dataLabelColor": "#0b5d4b"}}}}%%
+xychart
+title "Quarterly Throughput"
+x-axis [Q1, Q2, Q3, Q4]
+y-axis "Requests" 0 --> 100
+bar "Observed" [28, 46, 71, 88]
+line "Target" [35, 50, 68, 82]"##,
+        )
+        .expect("configured XY chart should parse");
+        let layout = layout_chart_diagram(&diagram, 600.0, 400.0);
+        assert_eq!((layout.width, layout.height), (720.0, 440.0));
+        assert_eq!(
+            layout
+                .items
+                .iter()
+                .filter(|item| matches!(item, diagram_ir::LayoutedChartItem::BarLabel { .. }))
+                .count(),
+            4
+        );
+
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_chart(
+            &layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color {
+                    r: 255,
+                    g: 255,
+                    b: 255,
+                    a: 255,
+                },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 12.0),
+                title_font: font_spec("Helvetica", 16.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_xy_config_e2e.png").expect("PNG write failed");
+
+        assert_eq!((pixels.width, pixels.height), (720, 440));
+        assert!(!scene.instructions.is_empty());
     }
 
     #[test]

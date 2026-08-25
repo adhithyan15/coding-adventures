@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.15.0
+
+- Honor Mermaid XY-chart dimensions and title configuration and resolve optional inside/outside bar-value labels into backend-neutral text bounds.
+
 ## 0.14.0
 
 - Lay out inferred and explicit numeric Mermaid XY x-axes with evenly distributed series positions and numeric ticks.

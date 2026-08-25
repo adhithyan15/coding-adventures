@@ -28,6 +28,9 @@ labels on individual data points. Line point labels resolve into positioned,
 backend-neutral text for both vertical and horizontal charts. When categories
 are omitted, series receive Mermaid's inferred one-based numeric x-axis;
 explicit numeric x-axis ranges distribute data points evenly across that range.
+Core `xyChart` init configuration preserves authored chart dimensions, title
+visibility, title size and padding, and optional inside/outside bar-value
+labels. Configured data-label colors also reach backend-neutral Paint glyphs.
 
 Each supported family lowers into the shared Diagram IR and can continue
 through its family layout package:

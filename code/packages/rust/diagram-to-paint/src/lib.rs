@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.58.0";
+pub const VERSION: &str = "0.61.0";
 
 use std::collections::HashMap;
 
@@ -684,6 +684,25 @@ where
                 }
             }
             LayoutedChartItem::PointLabel {
+                x,
+                y,
+                width,
+                height,
+                text,
+                font_size,
+                color,
+            } => {
+                text_children.push(text_node(
+                    text,
+                    *x,
+                    *y,
+                    *width,
+                    *height,
+                    font_with_size(&lf, Some(*font_size)),
+                    css_to_color(color),
+                ));
+            }
+            LayoutedChartItem::BarLabel {
                 x,
                 y,
                 width,
@@ -3582,7 +3601,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.58.0");
+        assert_eq!(crate::VERSION, "0.61.0");
     }
 
     #[test]
@@ -4278,7 +4297,7 @@ mod tests {
     }
 
     #[test]
-    fn chart_point_labels_lower_to_backend_neutral_glyphs() {
+    fn chart_point_and_bar_labels_lower_to_backend_neutral_glyphs() {
         let shaper = FakeShaper;
         let metrics = FakeMetrics;
         let resolver = FakeResolver;
@@ -4289,22 +4308,37 @@ mod tests {
             accessibility_title: None,
             accessibility_description: None,
             title_box: None,
-            items: vec![LayoutedChartItem::PointLabel {
-                x: 100.0,
-                y: 80.0,
-                width: 60.0,
-                height: 14.4,
-                text: "Peak".into(),
-                font_size: 12.0,
-                color: "#ef4444".into(),
-            }],
+            items: vec![
+                LayoutedChartItem::PointLabel {
+                    x: 100.0,
+                    y: 80.0,
+                    width: 60.0,
+                    height: 14.4,
+                    text: "Peak".into(),
+                    font_size: 12.0,
+                    color: "#ef4444".into(),
+                },
+                LayoutedChartItem::BarLabel {
+                    x: 160.0,
+                    y: 120.0,
+                    width: 40.0,
+                    height: 14.4,
+                    text: "42".into(),
+                    font_size: 12.0,
+                    color: "#123456".into(),
+                },
+            ],
         };
 
         let scene = diagram_to_paint_chart(&layout, &opts);
-        assert!(scene
-            .instructions
-            .iter()
-            .any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
+        assert_eq!(
+            scene
+                .instructions
+                .iter()
+                .filter(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_)))
+                .count(),
+            2
+        );
     }
 
     #[test]

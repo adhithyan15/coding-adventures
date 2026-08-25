@@ -1,5 +1,9 @@
 # Changelog — diagram-to-paint
 
+## 0.61.0
+
+- Shape resolved Mermaid XY bar-value label bounds and colors into backend-neutral Paint glyph runs.
+
 ## 0.60.0
 
 - Shape resolved Mermaid XY point labels into backend-neutral Paint glyph runs.
