@@ -11,7 +11,12 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 12659,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/12659",
+    "branch": "codex/build-tool-tracked-artifact-unicode-version-contract",
+    "status": "open"
+  },
   "last_inventory": {
     "revision": "88ff366eb5bacc5ad112beb760ec6f6801bd905b",
     "schema_version": 3,
@@ -4919,7 +4924,7 @@
     {
       "id": "build-tool-tracked-artifact-unicode-version-contract",
       "title": "Pin one tracked-artifact Unicode normalization and casing version",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": [
         "build-tool-tracked-artifact-unicode-cross-runtime-corpus-hardening",
         "build-tool-python-tracked-artifact-validation-conformance",
@@ -4928,12 +4933,17 @@
         "build-tool-rust-tracked-artifact-validation-conformance"
       ],
       "branch": "codex/build-tool-tracked-artifact-unicode-version-contract",
-      "pr_number": null,
+      "pr_number": 12659,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/12659",
+      "opened_at": "2026-08-25T02:15:31Z",
+      "opened_revision": "711c6ffe91d76e62be029fa0fdf2fd3cd0ec781b",
       "selection_revision": "530938671414502ae74e3506527cc5081a19ddac",
       "selection_notes": "Selected after PR #12644 completed 30 terminal acceptable checks and merged through squash auto-merge. The exact-main schema-3 collision report remains 15 established lanes, 1,371 identities, 4,564 slots, 908 singletons with 12,712 gaps, 719 Rust singletons, zero collisions, and zero unknown buckets; OCaml remains emerging at zero packages. All five explicit prerequisites, including the independently reviewed F# facade, are merged. This bounded process-free shared Unicode-data tranche directly gates 11 owners and 20 unfinished descendants. Seven live PRs and the target remote branch have zero exact overlap on the neutral, Python, C#, F#, state, or roadmap surfaces. Broader Rust classification and network-authority umbrellas outrank it only as audits, while OCaml's process-free substrate remains collision-unsafe against PRs #12149 and #12162.",
       "implementation_revision": "1317eed779e8ee72ef1c203a278c38fd1d5e23c8",
       "final_review_revision": "4af6b822842b6788eb856aae30f2ee77954f9237",
+      "final_revision": "711c6ffe91d76e62be029fa0fdf2fd3cd0ec781b",
       "validation_notes": "The neutral schema and all five tracked-artifact cases now require Unicode 17.0.0; generated source-embedded tables give the neutral oracle, Python, C#, and the F# facade the same NFC, NFKC-then-full-default-folding, and root full-uppercase behavior already pinned by Rust. The generator pins exact byte counts and SHA-256 digests for five official Unicode 17 data files plus the Unicode License v3 notice, refuses redirects and non-exact HTTPS origin or final URLs, reads only the exact cap plus one byte, and verifies the complete official normalization, case-folding, and final full-uppercase mappings plus version-delta sentinels. Its normal and check modes pass with 968 combining, 5,914 decomposition, 965 composition, 1,585 folding, and 1,581 uppercase rows; four focused download-boundary tests pass. The process-free corpus validates 111 cases and 269 files; 201 build-tool conformance tests pass with 23 expected platform skips. Python passes 427 tests at 90.07% line coverage, focused Ruff and MyPy, Bandit, wheel and sdist builds, and exact mixed-license metadata and notice inspection. C# passes 30 tests at 94.51% line coverage; F# passes seven tests with 100% F# line, branch, and method coverage. Both .NET publish and NuGet outputs declare MIT AND Unicode-3.0 and carry the exact 1,995-byte notice. Rust passes 143 unit plus three CLI integration tests, Clippy, cargo-audit over 57 dependencies, and 80.53% line coverage with validator.rs at 99.01%; NuGet reports no vulnerable direct or transitive packages. The Go build-tool lane passes all packages, vet, trimpath compilation, and a real validation dry run over 5,071 packages. Package-parity, capability, Haskell, and OCaml suites pass with only expected Windows symlink skips; the 486-owner, 736-edge state graph is complete and acyclic. Two security reviews identified and then confirmed focused fixes for redirect/body-cap and license-distribution risks; the final review passed with no credential, dependency, authority, or remaining security finding. After two conflict-free rebases over eight non-overlapping WASM, HTML-parser, vault, and human-language commits, the exact-main schema-3 report at 88ff366eb5bacc5ad112beb760ec6f6801bd905b remains 15 lanes, 1,371 identities, 4,564 slots, zero collisions, and zero unknown buckets.",
+      "publication_notes": "Opened ready-for-review PR #12659 from clean validated head 711c6ffe91d76e62be029fa0fdf2fd3cd0ec781b after a normal first push. Immediately before publication, the branch was based on exact origin/main 88ff366eb5bacc5ad112beb760ec6f6801bd905b, the target remote branch was absent, and all 42 changed paths had zero exact overlap across seven other live open PRs. GitHub reports the PR non-draft and mergeable, blocked only by queued required checks; auto-merge remains disabled until every required check is terminal and acceptable.",
       "notes": "Discovered during the Rust tracked-artifact dependency audit. The governing NFKC-casefold and full-uppercase behavior does not yet name one Unicode data version, while host runtimes and third-party tables may differ. The selected Rust child uses one exactly pinned Unicode 17.0.0 snapshot for NFC/NFKC, full default folding, and reserved-basename uppercase. Pin the neutral contract and fixtures to a reviewed data version, reconcile Python and the C#/F# shared engine, and require every later build-tool consumer to prove the same table semantics."
     },
     {

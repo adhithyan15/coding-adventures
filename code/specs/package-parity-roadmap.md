@@ -6533,6 +6533,15 @@ eight non-overlapping commits, the collision-checked report at exact main
 4,564 slots, 908 singletons with 12,712 gaps, 719 Rust singletons, zero
 collisions, and zero unknown buckets.
 
+Ready-for-review PR #12659 now carries the bounded Unicode-version contract
+from validated head `711c6ffe91d76e62be029fa0fdf2fd3cd0ec781b`. Immediately before
+publication the branch was based on exact main
+`88ff366eb5bacc5ad112beb760ec6f6801bd905b`; the target remote branch was absent,
+and its 42 changed paths had zero exact overlap across seven other live open
+PRs. GitHub reports the PR non-draft and mergeable while required checks are
+queued. Auto-merge remains disabled until every required check is terminal and
+acceptable.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
