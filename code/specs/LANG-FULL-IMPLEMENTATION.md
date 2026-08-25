@@ -936,7 +936,10 @@ backend immediately) come before the enabler-dependent items.
   follow the same finite rule; cyclic and deeper proofs fail closed. Computed
   boolean identity writes (`x and true`, `x or false`, `x eqv true`, and
   `true impl x`, including valid symmetric forms) also preserve a selector
-  dependency without consuming another depth level. Other computed selector
+  dependency without consuming another depth level. Structural integer
+  identity writes using `+ 0`, `- 0`, `* 1`, and `div 1` (including valid
+  commutative forms) receive the same bounded treatment. Real arithmetic and
+  other computed selector
   assignments, differing,
   computed, or otherwise
   unsupported selector-dependency writes, dynamically selected differing selector leaves,

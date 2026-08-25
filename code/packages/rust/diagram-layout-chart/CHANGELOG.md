@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.16.0
+
+- Resolve Mermaid XY axis label/title visibility, typography and padding plus optional axis spines and authored spine widths.
+
 ## 0.15.0
 
 - Honor Mermaid XY-chart dimensions and title configuration and resolve optional inside/outside bar-value labels into backend-neutral text bounds.

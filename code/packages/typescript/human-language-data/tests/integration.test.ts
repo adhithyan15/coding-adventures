@@ -376,6 +376,22 @@ describe("real curriculum", () => {
       /one uninterrupted stroke.*folded shoulder.*leftward baseline.*90-degree angle.*does not drop below.*Naskh.*Nastaliq.*Urdu-specific/i,
     );
 
+    const urduWaw = scripts["urdu-nastaliq"]!.letters.find((letter) => letter.glyph === "و")!;
+    expect(urduWaw.strokeOrder).toEqual([
+      "shape the independent wāw's looped head",
+      "continue down and left through the tail without lifting",
+    ]);
+    expect(urduWaw.penLifts).toBe(0);
+    expect(urduWaw.strokeOrderSource?.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/dal-re-and-waw/",
+    );
+    expect(urduWaw.strokeOrderSource?.citation).toMatch(
+      /Zer o Zabar.*independent و.*Wāw instructions.*Northwestern University Libraries Open Textbook.*2026/i,
+    );
+    expect(urduWaw.strokeOrderSource?.variation).toMatch(
+      /one uninterrupted stroke.*head as a loop.*tail without lifting.*nonconnector.*v\/w.*o, au, and ū.*Noto Naskh fallback.*Nastaliq.*Urdu-specific/i,
+    );
+
     const gaps = validate({ taxonomy, lessons, scripts }).filter(
       (issue) => issue.level === "warning" && issue.code === "uncovered-glyphs",
     );
@@ -416,6 +432,8 @@ describe("real curriculum", () => {
     expect(affected.get("ய") ?? 0).toBe(0);
     expect(missingByScript.get("perso-arabic.json")?.has("د")).toBe(false);
     expect(missingByScript.get("urdu-nastaliq.json")?.has("د")).toBe(false);
+    expect(missingByScript.get("urdu-nastaliq.json")?.has("و")).toBe(false);
+    expect(affected.get("و") ?? 0).toBe(0);
     expect(affected.get("د") ?? 0).toBe(0);
     expect(missingByScript.get("perso-arabic.json")?.has("ر")).toBe(false);
     expect(missingByScript.get("tamil.json")?.has("ச")).toBe(false);
@@ -434,7 +452,7 @@ describe("real curriculum", () => {
     expect(affected.get("అ") ?? 0).toBe(0);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["و", 16]);
+    ).toEqual(["എ", 15]);
   });
 
   it("loaded every track (17+ and growing)", () => {

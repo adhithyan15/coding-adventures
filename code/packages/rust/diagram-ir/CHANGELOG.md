@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.68.0
+
+- Preserve Mermaid XY x/y-axis label, title, and spine visibility, typography, padding, and width configuration.
+
 ## 0.67.0
 
 - Preserve authored Mermaid XY-chart dimensions, title visibility and typography, bar data-label placement, and data-label color in semantic chart IR.

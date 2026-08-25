@@ -12,13 +12,13 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 12700,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/12700",
-    "branch": "codex/build-tool-csharp-orphan-crate-validation-conformance",
+    "number": 12715,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/12715",
+    "branch": "codex/build-tool-fsharp-orphan-crate-validation-conformance",
     "status": "open"
   },
   "last_inventory": {
-    "revision": "671d62d2c1c536da2778c03347e030fae77f6c33",
+    "revision": "fc01df1ae0b68af15f7a493d610f348c32edf60f",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1372,
@@ -4818,7 +4818,7 @@
     {
       "id": "build-tool-csharp-orphan-crate-validation-conformance",
       "title": "Make the C# build tool consume orphan-crate validation",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-orphan-crate-validation-corpus"],
       "branch": "codex/build-tool-csharp-orphan-crate-validation-conformance",
       "pr_number": 12700,
@@ -4826,6 +4826,10 @@
       "opened_at": "2026-08-25T06:23:56Z",
       "opened_revision": "29b203f905a4982dfcdf60dee340b273ca635643",
       "final_revision": "29b203f905a4982dfcdf60dee340b273ca635643",
+      "merged_head_revision": "924a1bb297a00f97bc94e48d2ef41cbee8c968d9",
+      "merge_revision": "c68b31d8daa9b82e2b59b139364dd990d8244a27",
+      "merged_at": "2026-08-25T06:55:04Z",
+      "merge_notes": "All 29 reported checks reached terminal acceptable conclusions: 23 successes and six expected skips, with no failures or pending work. GitHub reported the branch clean and mergeable; the loop enabled squash auto-merge, and GitHub merged PR #12700 without a manual merge command.",
       "implementation_revision": "4dd44395b2a508c51045d10ea8d4ef8342f76819",
       "validation_revision": "4dd44395b2a508c51045d10ea8d4ef8342f76819",
       "selection_revision": "8bda602ea0546ae6c078faa1f833f835d43fb233",
@@ -4839,14 +4843,24 @@
     {
       "id": "build-tool-fsharp-orphan-crate-validation-conformance",
       "title": "Make the F# build tool consume orphan-crate validation",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [
         "build-tool-orphan-crate-validation-corpus",
         "build-tool-csharp-orphan-crate-validation-conformance"
       ],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Consume the closed process-free orphan-crate snapshot and diagnostics through the supported F# build-tool lane without assuming the C# engine or facade supplies unreviewed parity, and without adding filesystem enumeration or process authority."
+      "branch": "codex/build-tool-fsharp-orphan-crate-validation-conformance",
+      "pr_number": 12715,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/12715",
+      "opened_at": "2026-08-25T07:21:51Z",
+      "opened_revision": "aa6a49c93aeb533fe75846ef74ad6d8512147e6d",
+      "final_revision": "aa6a49c93aeb533fe75846ef74ad6d8512147e6d",
+      "selection_revision": "fc01df1ae0b68af15f7a493d610f348c32edf60f",
+      "implementation_revision": "128832d6f52459f2e8553fa096a643c9e73aedc2",
+      "validation_revision": "128832d6f52459f2e8553fa096a643c9e73aedc2",
+      "selection_notes": "Selected after PR #12700 completed 29 terminal acceptable checks and merged through squash auto-merge as c68b31d8daa9b82e2b59b139364dd990d8244a27, followed by package-marker-neutral human-language, WASM, storage-fs, and HTML-parser commits on current origin/main fc01df1ae0b68af15f7a493d610f348c32edf60f. The collision-checked schema-3 inventory remains 15 established lanes, 1,372 implementation identities, 4,565 slots, 175 high-consensus packages with 276 gaps, 909 singletons with 12,726 gaps, 720 Rust singletons, zero collisions, and zero unknown buckets; OCaml remains emerging at zero packages. The refresh registers the newly exposed storage-fs persistent revision-floor native-authority review before selection and binds PR #12698's Rust conformance growth to its existing portable WASM owner. This newly unlocked process-free F# facade is dependency-ready, has zero exact overlap across live PRs and remote heads, and advances the reviewed shared .NET orphan validator into another supported implementation lane. The higher-leverage extra-CI-toolchain corpus remains collision-unsafe as currently owned because its canonical Go-normalization half overlaps live PRs #12149 and #12162 on main.go; OCaml shares that collision.",
+      "notes": "Consume the closed process-free orphan-crate snapshot and diagnostics through the supported F# build-tool lane without assuming the C# engine or facade supplies unreviewed parity, and without adding filesystem enumeration or process authority.",
+      "validation_notes": "The conformance specification now requires every established shared-engine front door to expose a language-native orphan-snapshot adapter and consume every registered neutral fixture without acquiring discovery authority. The F# regression first failed at compile time because validateOrphanCrateSnapshot was absent, then the new no-inline F# facade passed all four clean, unlisted, invalid-exemption, and stale-exemption fixtures with exact diagnostic arrays and pending counts. The formatted Release suite passes 11 tests, the shared C# downstream passes 43 tests, warnings-as-errors build and publish pass, both canonical F# BUILD commands pass twice, and the F# assembly records 100% line, branch, and method coverage while the exercised shared C# engine records 92.39% line coverage. Fantomas 7.0.6 is clean. The process-free neutral corpus validates 111 cases and 269 files; 146 focused repository tests and 928 subtests pass with two expected Windows skips. The Go build tool passes all packages, vet, and trimpath compilation, and a real forced F# dry run evaluates 45 Starlark BUILD files, discovers 199 packages, preserves the five reviewed orphan exemptions, and reports all 199 as WOULD-BUILD. NuGet vulnerability audits report no vulnerable production or test dependencies. The exact-base schema-3 inventory remains 15 established lanes, 1,372 identities, 4,565 slots, zero collisions, and zero unknown buckets; the 492-owner/749-edge state graph is unique, dependency-complete, and acyclic with exactly this one active pr-open item. Diff, JSON, dependency-scope, credential, artifact, and production-authority checks pass: the sole added file read is the test-only fixed neutral fixture, while production only delegates caller-supplied records. Independent implementation/security, fixture/inventory, and state/roadmap reviews found no remaining publication blocker after the README paragraph-spacing cleanup.",
+      "publication_notes": "Opened ready-for-review PR #12715 from clean validated head aa6a49c93aeb533fe75846ef74ad6d8512147e6d after a normal first push. Immediately before publication, origin/main and the branch merge base both equaled fc01df1ae0b68af15f7a493d610f348c32edf60f, the seven changed paths had zero exact overlap with live open PRs or remote heads, and GitHub reported the PR non-draft and mergeable. Required checks are queued, so auto-merge remains disabled until every check is terminal and acceptable and GitHub reports no conflict."
     },
     {
       "id": "build-tool-elixir-orphan-crate-validation-conformance",
@@ -5408,7 +5422,17 @@
       "depends_on": ["wasm-wast-parser-established-lane-parity"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered in the collision-clean 1887d6eed6 inventory after merged PR #11132 added the fixture-only Rust wasm-conformance root. Define a language-neutral pinned corpus manifest, in-order directive execution, module registry behavior, bit-exact and NaN comparison, stable outcome and report schemas, drift accounting, and execution/resource bounds across established runtime lanes. wasm-execution, wasm-validator, and wasm-runtime already exist in all fifteen lanes, so W05's current single-target statement is not a permanent parity exception. External PR #11146 merged as 93a27bfec2 and the collision-clean e57bec0744 refresh cleared the temporary overlap block; the dependency chain still prevents premature selection."
+      "notes": "Discovered in the collision-clean 1887d6eed6 inventory after merged PR #11132 added the fixture-only Rust wasm-conformance root. Define a language-neutral pinned corpus manifest, in-order directive execution, module registry behavior, bit-exact and NaN comparison, stable outcome and report schemas, drift accounting, and execution/resource bounds across established runtime lanes. wasm-execution, wasm-validator, and wasm-runtime already exist in all fifteen lanes, so W05's current single-target statement is not a permanent parity exception. External PR #11146 merged as 93a27bfec2 and the collision-clean e57bec0744 refresh cleared the temporary overlap block; the dependency chain still prevents premature selection. Merged PR #12698 expands the current Rust oracle to all 274 i8x16.shuffle assert_return directives across 12 modules; that is corpus evidence owned here rather than a new package or separate parity node."
+    },
+    {
+      "id": "storage-fs-persistent-revision-floor-native-authority-review",
+      "title": "Review and close storage-fs persistent revision uniqueness",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered after merged PR #12686 made single-instance initialization idempotent but explicitly documented that deleting the highest surviving record lets a fresh backend reuse an issued revision, and that multiple backend instances sharing one root remain uncoordinated. Reconcile the overclaims in STR01 and the package README with a reviewed durable monotone floor or epoch design, crash and rollback behavior, cross-process locking, no-follow/path containment, atomic publication and fsync semantics, restart and two-instance tests, and truthful native filesystem/clock authority. This host-authority work is excluded from autonomous portable selection."
     },
     {
       "id": "wasm-conformance-host-authority-review",

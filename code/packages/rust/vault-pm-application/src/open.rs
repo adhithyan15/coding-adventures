@@ -2357,6 +2357,29 @@ impl UnlockedVaultV1 {
         Ok(matches!(candidate.state(), ItemState::Live(_)).then_some(candidate.revision_id()))
     }
 
+    /// A revision identifying `item_id` for deletion, tolerant of conflict.
+    ///
+    /// Unlike [`Self::current_item_revision`], a conflicted item does not
+    /// fail here: [`delete_item`] (the free function) tombstones *every*
+    /// current candidate as a causal parent regardless of which one is
+    /// named, so any one live candidate identifies the item just as well as
+    /// the sole candidate would in the unconflicted case. `None` means
+    /// there is nothing live to delete — the item is missing, or every
+    /// current candidate (one or, after a concurrent double-delete, several)
+    /// is already a tombstone — which callers already treat as `NotFound`,
+    /// matching `current_item_revision`'s own `None` for a lone tombstone.
+    fn current_item_revision_for_delete(&self, item_id: ItemId) -> Option<RevisionId> {
+        self.current_catalog
+            .items
+            .get(&item_id)
+            .and_then(|candidates| {
+                candidates
+                    .iter()
+                    .find(|candidate| matches!(candidate.state(), ItemState::Live(_)))
+                    .map(ItemCandidate::revision_id)
+            })
+    }
+
     /// Return the exact sole current live revision capability only after its
     /// item-read event and next owner state are durable.
     ///
@@ -3201,14 +3224,22 @@ impl UnlockedVaultV1 {
         (Ok((expected_revision, current)), Some(expected_revision))
     }
 
-    /// Delete the sole expected current live revision by publishing a causal
-    /// tombstone and return the resulting durable active owner state.
+    /// Delete the item `expected_revision` currently belongs to by
+    /// publishing a causal tombstone, and return the resulting durable
+    /// active owner state.
     ///
-    /// A revision absent from the current catalog returns `NotFound`; a
-    /// conflicted or already-tombstoned target returns `ConflictRequired`.
-    /// Advisory deletion and commit times are supplied separately and do not
-    /// establish causality. The session and randomness are consumed on every
-    /// return path.
+    /// `expected_revision` must name that item's current *live* candidate; a
+    /// revision absent from the current catalog returns `NotFound`, and a
+    /// revision that names an already-tombstoned candidate (a lone
+    /// tombstone, or every candidate of a concurrent double-delete) returns
+    /// `ConflictRequired`. Otherwise this succeeds however many candidates
+    /// are current: a conflicted item is not a precondition failure any
+    /// more, and the resulting tombstone names *every* current candidate —
+    /// live or tombstone — as a causal parent (VLT-PM05 §13.8), the same
+    /// multi-parent shape [`Self::resolve_item_conflict`] already uses to
+    /// fold a conflict into one outcome. Advisory deletion and commit times
+    /// are supplied separately and do not establish causality. The session
+    /// and randomness are consumed on every return path.
     pub fn delete_item(
         self,
         expected_revision: RevisionId,
@@ -3232,13 +3263,17 @@ impl UnlockedVaultV1 {
         )
     }
 
-    /// Delete the sole current live revision selected internally by item ID.
+    /// Delete an item selected internally by item ID, whether it currently
+    /// has one candidate or is mid-conflict.
     ///
-    /// This keeps the exact optimistic-mutation revision capability inside the
-    /// application boundary. Missing and tombstoned items return `NotFound`;
-    /// current conflicts return `ConflictRequired`. When an audit epoch is
-    /// active, the resulting `ItemDelete` event binds the internally selected
-    /// revision atomically with the causal tombstone publication.
+    /// This keeps the exact optimistic-mutation revision capability inside
+    /// the application boundary, using the delete-tolerant candidate lookup
+    /// rather than [`Self::current_item_revision`] — the latter fails
+    /// closed on any conflict, which is exactly the precondition VLT-PM05
+    /// §13.8 relaxed here. A missing item, or one with no live candidate at
+    /// all, returns `NotFound`; every other case deletes the item outright,
+    /// folding all of its current candidates into the tombstone's causal
+    /// parents.
     pub fn delete_current_item(
         self,
         item_id: ItemId,
@@ -3248,7 +3283,7 @@ impl UnlockedVaultV1 {
         local_state_store: &dyn LocalStateStore,
     ) -> Result<ActiveStateV1, ApplicationError> {
         let expected_revision = self
-            .current_item_revision(item_id)?
+            .current_item_revision_for_delete(item_id)
             .ok_or(ApplicationError::NotFound)?;
         self.delete_item(
             expected_revision,
@@ -3259,13 +3294,17 @@ impl UnlockedVaultV1 {
         )
     }
 
-    /// Delete the sole current live revision, recording failed preconditions.
+    /// Delete an item selected internally by item ID, recording failed
+    /// preconditions.
     ///
     /// Successful deletion uses the ordinary atomic mutation publication, so
-    /// the `ItemDelete` event and tombstone share one causal commit. Missing,
-    /// tombstoned, and conflicted items instead publish a failed `ItemDelete`
-    /// event before the closed operation error becomes observable. Audit-event
-    /// publication failure supersedes and withholds that operation error.
+    /// the `ItemDelete` event and tombstone share one causal commit. Missing
+    /// items and items with no live candidate at all instead publish a
+    /// failed `ItemDelete` event before the closed operation error becomes
+    /// observable. A conflicted item with at least one live candidate is no
+    /// longer such a failure (VLT-PM05 §13.8): it deletes normally, naming
+    /// every current candidate as a causal parent. Audit-event publication
+    /// failure supersedes and withholds that operation error.
     #[allow(clippy::too_many_arguments)]
     pub fn audited_delete_current_item(
         self,
@@ -3278,8 +3317,8 @@ impl UnlockedVaultV1 {
     ) -> Result<crate::AuditedAccessResultV1<()>, ApplicationError> {
         self.require_audit_epoch()?;
         let expected_revision = self
-            .current_item_revision(item_id)
-            .and_then(|revision| revision.ok_or(ApplicationError::NotFound));
+            .current_item_revision_for_delete(item_id)
+            .ok_or(ApplicationError::NotFound);
         match expected_revision {
             Ok(expected_revision) => {
                 let active = self.delete_item(
@@ -16396,6 +16435,253 @@ mod tests {
         let candidates = &session.current_catalog.items[&item_id];
         assert_eq!(candidates.len(), 1);
         assert!(matches!(candidates[0].state(), ItemState::Tombstone(_)));
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // Two conflicting oversized-opaque candidates for the same item --
+    // VLT-PM05 §13.8's bug. Each candidate alone is exactly the shape
+    // `a_synced_oversized_opaque_item_can_be_deleted` above already
+    // fixed: it opens, and a *sole* current candidate in that shape
+    // deletes cleanly because a tombstone never re-encodes the payload.
+    // What is new here is that both candidates are *current at once* --
+    // a real, unreconciled conflict -- which used to have no way out at
+    // all: `delete_current_item` refused with `ConflictRequired` because
+    // its precondition assumed exactly one current candidate, and
+    // `conflict choose` refused too, for an unrelated reason: choosing a
+    // candidate re-encodes *that candidate's own payload* into the new
+    // resolution revision, and an oversized payload fails that re-encode
+    // the same way it always did on any write path.
+    // ─────────────────────────────────────────────────────────────────
+
+    /// A peer commit carrying two conflicting live oversized-opaque
+    /// candidates for one item -- `pending_live_conflict_publication`'s
+    /// two-candidate shape, one level down, with each candidate poisoned
+    /// the way `peer_opaque_revision_plaintext` poisons a single one.
+    fn peer_conflicting_oversized_publication(
+        active: &ActiveStateV1,
+        item_id: ItemId,
+    ) -> (PublicationJournalV1, Vec<RevisionId>) {
+        let fixture = generation_zero_bytes();
+        let root_key: [u8; 32] = fixture[48..80].try_into().unwrap();
+        let keys = V1Keys::derive(active.vault_id(), &root_key).unwrap();
+        let mut objects = Vec::new();
+        let mut revision_ids = Vec::new();
+        // Different payload lengths are enough on their own to give the
+        // two sealed revisions different content, and therefore different
+        // ids; the nonces differ too so the fixture does not depend on
+        // that alone.
+        for (index, payload_bytes) in [PEER_OPAQUE_PAYLOAD_BYTES, PEER_OPAQUE_PAYLOAD_BYTES + 4096]
+            .into_iter()
+            .enumerate()
+        {
+            let base = 0xd0u8.wrapping_add(index as u8 * 3);
+            let frame = seal_object(
+                &keys,
+                ObjectKind::ItemRevision,
+                &peer_opaque_revision_plaintext(item_id, payload_bytes),
+                &ObjectRandomness::new([base; 32], [base + 1; 24], [base + 2; 24]),
+            )
+            .unwrap();
+            revision_ids.push(RevisionId::new(*frame.id().unwrap().as_bytes()));
+            objects.push(frame);
+        }
+        revision_ids.sort_unstable();
+        let catalog = CatalogV1::new(BTreeMap::from([(item_id, revision_ids.clone())])).unwrap();
+        let catalog_frame = seal_object(
+            &keys,
+            ObjectKind::Catalog,
+            &catalog.encode().unwrap(),
+            &ObjectRandomness::new([0xd6; 32], [0xd7; 24], [0xd8; 24]),
+        )
+        .unwrap();
+        (
+            publication_for_catalog(active, objects, catalog_frame),
+            revision_ids,
+        )
+    }
+
+    /// Sync two peer-authored conflicting oversized-opaque candidates for
+    /// one item into a fresh vault and return everything needed to reopen
+    /// it, plus both revision ids sorted the same way the catalog stores
+    /// them.
+    #[allow(clippy::type_complexity)]
+    fn vault_with_synced_conflicting_oversized_items() -> (
+        BootstrapLocator,
+        MemoryLocalStateStore,
+        MemoryBootstrapStore,
+        V1ApplicationRepositoryFactory<InMemoryObjectStore>,
+        ItemId,
+        Vec<RevisionId>,
+    ) {
+        let (locator, local, bootstrap, factory) = initialized();
+        let exact_active = local.0.lock().unwrap().clone().unwrap();
+        let LocalVaultStateV1::Active(active) = LocalVaultStateV1::decode(&exact_active).unwrap()
+        else {
+            panic!("fixture must be active")
+        };
+        let item_id = ItemId::new([0x6d; 16]);
+        let (publication, revision_ids) = peer_conflicting_oversized_publication(&active, item_id);
+        peer_publishes(locator, &local, &bootstrap, &factory, publication);
+        (locator, local, bootstrap, factory, item_id, revision_ids)
+    }
+
+    #[test]
+    fn a_synced_conflicted_pair_of_oversized_opaque_items_leaves_the_vault_openable() {
+        // The reachability proof: both halves of this fixture are already
+        // individually covered by §13.3's fix (each is exactly the shape
+        // `a_synced_oversized_opaque_record_leaves_the_vault_openable`
+        // pins), and this shows that holds when they are also concurrent
+        // with each other, which is the situation this section's bug lives
+        // in.
+        let (locator, local, bootstrap, factory, item_id, revision_ids) =
+            vault_with_synced_conflicting_oversized_items();
+        let session = active_session(locator, &local, &bootstrap, &factory);
+        let candidates = &session.current_catalog.items[&item_id];
+        assert_eq!(candidates.len(), 2);
+        let mut seen: Vec<RevisionId> = candidates.iter().map(ItemCandidate::revision_id).collect();
+        seen.sort_unstable();
+        assert_eq!(seen, revision_ids);
+        for candidate in candidates {
+            assert!(matches!(candidate.state(), ItemState::Live(_)));
+        }
+    }
+
+    #[test]
+    fn a_synced_conflicted_pair_of_oversized_opaque_items_denies_conflict_choose() {
+        // Not this section's bug, but the reason deletion is the fix
+        // rather than a documentation-only change: `conflict choose`
+        // (`resolve_item_conflict`) re-encodes the *selected* candidate's
+        // own payload into the new resolution revision, and an oversized
+        // payload cannot be re-encoded on any write path -- this is
+        // §13.1/§13.3's ordinary write-side ceiling, reached through the
+        // conflict-resolution door instead of `item edit`. This residual
+        // stays open after this section's fix: deletion is the escape
+        // hatch, not conflict choose.
+        let (locator, local, bootstrap, factory, _item_id, revision_ids) =
+            vault_with_synced_conflicting_oversized_items();
+        let session = active_session(locator, &local, &bootstrap, &factory);
+        let error = session
+            .resolve_item_conflict(
+                revision_ids[0],
+                750,
+                resolve_item_conflict_randomness(0x6d),
+                &local,
+            )
+            .unwrap_err();
+        assert_eq!(
+            error,
+            ApplicationError::BoundExceeded,
+            "conflict choose must fail on the encode ceiling, not on some other precondition",
+        );
+    }
+
+    #[test]
+    fn a_synced_conflicted_pair_of_oversized_opaque_items_can_be_deleted() {
+        // The fix. Before it, `delete_current_item`'s precondition
+        // (`current_item_revision`) required exactly one current
+        // candidate and returned `ConflictRequired` for this fixture's two
+        // -- reverting only the `delete_item`/`current_item_revision_for_
+        // delete` repair while keeping this test reproduces that error
+        // directly. After it, deletion tombstones the item naming *both*
+        // current oversized candidates as causal parents -- the same
+        // multi-parent shape `resolve_item_conflict` already used -- and
+        // never touches either poisoned payload, so it works on the same
+        // terms §13.2/§13.3 established for the single-candidate case.
+        let (locator, local, bootstrap, factory, item_id, revision_ids) =
+            vault_with_synced_conflicting_oversized_items();
+
+        let session = active_session(locator, &local, &bootstrap, &factory);
+        session
+            .delete_current_item(item_id, 751, 752, delete_item_randomness(0x6e), &local)
+            .unwrap();
+
+        let session = active_session(locator, &local, &bootstrap, &factory);
+        let candidates = &session.current_catalog.items[&item_id];
+        assert_eq!(candidates.len(), 1);
+        assert!(matches!(candidates[0].state(), ItemState::Tombstone(_)));
+        let mut causal_parents: Vec<RevisionId> =
+            candidates[0].causal_parents().iter().copied().collect();
+        causal_parents.sort_unstable();
+        assert_eq!(
+            causal_parents, revision_ids,
+            "the tombstone must name every candidate that was current at delete time",
+        );
+    }
+
+    #[test]
+    fn a_synced_conflict_between_a_live_item_and_an_oversized_candidate_can_be_deleted() {
+        // A mixed conflict: one ordinary small live candidate, one
+        // oversized one, both current. This is the case a fix that only
+        // special-cased "every candidate is oversized" would miss --
+        // deletion has to fold in *whichever* candidates are current, not
+        // just poisoned ones.
+        let (locator, local, bootstrap, factory) = initialized();
+        let exact_active = local.0.lock().unwrap().clone().unwrap();
+        let LocalVaultStateV1::Active(active) = LocalVaultStateV1::decode(&exact_active).unwrap()
+        else {
+            panic!("fixture must be active")
+        };
+        let item_id = ItemId::new([0x6f; 16]);
+        let fixture = generation_zero_bytes();
+        let root_key: [u8; 32] = fixture[48..80].try_into().unwrap();
+        let keys = V1Keys::derive(active.vault_id(), &root_key).unwrap();
+
+        let small_candidate = ItemCandidate::new(
+            RevisionId::new([0; 32]),
+            [],
+            ItemState::Live(Box::new(new_login_document(
+                item_id,
+                "Keep small",
+                "small-secret",
+            ))),
+        )
+        .unwrap();
+        let small_frame = seal_object(
+            &keys,
+            ObjectKind::ItemRevision,
+            &encode_item_revision(small_candidate.causal_parents(), small_candidate.state())
+                .unwrap(),
+            &ObjectRandomness::new([0xe0; 32], [0xe1; 24], [0xe2; 24]),
+        )
+        .unwrap();
+        let small_revision_id = RevisionId::new(*small_frame.id().unwrap().as_bytes());
+
+        let oversized_frame = seal_object(
+            &keys,
+            ObjectKind::ItemRevision,
+            &peer_opaque_revision_plaintext(item_id, PEER_OPAQUE_PAYLOAD_BYTES),
+            &ObjectRandomness::new([0xe3; 32], [0xe4; 24], [0xe5; 24]),
+        )
+        .unwrap();
+        let oversized_revision_id = RevisionId::new(*oversized_frame.id().unwrap().as_bytes());
+
+        let mut revision_ids = vec![small_revision_id, oversized_revision_id];
+        revision_ids.sort_unstable();
+        let catalog = CatalogV1::new(BTreeMap::from([(item_id, revision_ids.clone())])).unwrap();
+        let catalog_frame = seal_object(
+            &keys,
+            ObjectKind::Catalog,
+            &catalog.encode().unwrap(),
+            &ObjectRandomness::new([0xe6; 32], [0xe7; 24], [0xe8; 24]),
+        )
+        .unwrap();
+        let publication =
+            publication_for_catalog(&active, vec![small_frame, oversized_frame], catalog_frame);
+        peer_publishes(locator, &local, &bootstrap, &factory, publication);
+
+        let session = active_session(locator, &local, &bootstrap, &factory);
+        session
+            .delete_current_item(item_id, 753, 754, delete_item_randomness(0x6f), &local)
+            .unwrap();
+
+        let session = active_session(locator, &local, &bootstrap, &factory);
+        let candidates = &session.current_catalog.items[&item_id];
+        assert_eq!(candidates.len(), 1);
+        assert!(matches!(candidates[0].state(), ItemState::Tombstone(_)));
+        let mut causal_parents: Vec<RevisionId> =
+            candidates[0].causal_parents().iter().copied().collect();
+        causal_parents.sort_unstable();
+        assert_eq!(causal_parents, revision_ids);
     }
 
     // ─────────────────────────────────────────────────────────────────

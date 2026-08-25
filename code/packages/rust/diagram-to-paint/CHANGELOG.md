@@ -1,5 +1,9 @@
 # Changelog — diagram-to-paint
 
+## 0.62.0
+
+- Lower resolved Mermaid XY axis label font sizes and spine widths into backend-neutral Paint glyphs and paths.
+
 ## 0.61.0
 
 - Shape resolved Mermaid XY bar-value label bounds and colors into backend-neutral Paint glyph runs.

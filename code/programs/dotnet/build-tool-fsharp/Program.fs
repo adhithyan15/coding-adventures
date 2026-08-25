@@ -12,10 +12,16 @@ open CodingAdventures.BuildTool.CSharp
 // the language-paired programs stay behaviorally identical instead of drifting.
 
 [<MethodImpl(MethodImplOptions.NoInlining)>]
-let validateTrackedArtifactSnapshot
-    (unicodeVersion: string)
-    (entries: IReadOnlyList<TrackedArtifactEntry>) =
+let validateTrackedArtifactSnapshot (unicodeVersion: string) (entries: IReadOnlyList<TrackedArtifactEntry>) =
     Validator.ValidateTrackedArtifactSnapshot(unicodeVersion, entries)
+
+// An F# front door is evidence only when callers can enter the reviewed
+// process-free contract through an F# symbol. Keeping this facade deliberately
+// thin preserves the shared .NET implementation while making the language
+// boundary visible to tests, documentation, and coverage tools.
+[<MethodImpl(MethodImplOptions.NoInlining)>]
+let validateOrphanCrateSnapshot (snapshot: OrphanCrateSnapshot) =
+    Validator.ValidateOrphanCrateSnapshot(snapshot)
 
 [<EntryPoint>]
 let main argv =

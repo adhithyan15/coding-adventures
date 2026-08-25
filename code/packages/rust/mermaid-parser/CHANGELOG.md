@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.126.0
+
+- Preserve nested Mermaid XY x/y-axis label, title, and spine configuration independently.
+
 ## 0.125.0
 
 - Preserve Mermaid XY-chart core init configuration for dimensions, title rendering, bar data labels, and data-label color.

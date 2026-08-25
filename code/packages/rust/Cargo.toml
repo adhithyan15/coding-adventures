@@ -216,6 +216,7 @@ members = [
     "javascript-tokens",
     "java-lexer",
     "java-parser",
+    "java-to-semantic-ir",
     "jit-compiler",
     "jsdoc-comment-extractor",
     "jsdoc-lexer",

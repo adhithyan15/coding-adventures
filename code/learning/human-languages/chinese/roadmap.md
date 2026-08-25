@@ -1,16 +1,26 @@
-# Mandarin Roadmap — Absolute Beginner toward B1
+# Mandarin Roadmap — Pre-A1 Foundations toward C2 Exam Readiness
 
 Mandarin follows the shared communicative spine and extends it where the language
 genuinely needs different machinery: tone, character composition, and the
-character-versus-word distinction. The unit is one expression per lesson, under
-five minutes. Characters are learned inside useful words, never as a gated
-character list.
+character-versus-word distinction. The unit is one expression per lesson, never
+more than five minutes. Characters are learned inside useful words, never as a
+gated character list, and unfamiliar meanings arrive orally before dense new
+forms whenever combining both would make a cliff.
 
-This track exists as a **scale test**. Every other track in this curriculum is
-Indo-European or Dravidian, and the method's signature device — anchoring a new
-word to English words the reader already owns through a shared ancestor — depends
-on that shared ancestry. Mandarin has none. What replaces the cousin web, and what
-breaks when it is removed, is recorded honestly here and in
+This file is a design and dependency roadmap, not the authored inventory.
+[`chapters.json`](./chapters.json) and [`curriculum.json`](./curriculum.json) are
+authoritative for what has shipped; chapter shards become the authoring source
+when the HL21 migration lands. The long horizon is the program contract in
+[`HL16`](../../../specs/HL16-exam-ready-books-and-writing-ramp.md): cumulative reading,
+listening, speaking, and staged writing from pre-A1 through C2, ending in full
+timed exam-style performance. A heading here marked delivered proves only its
+bounded capability, never an entire CEFR level.
+
+This track exists as a **scale test** across family, script, and tone. The
+method's signature device — anchoring a new word to English words the reader
+already owns through a shared ancestor — depends on shared ancestry Mandarin
+does not have. What replaces the cousin web, and what breaks when it is removed,
+is recorded honestly here and in
 [`README.md`](./README.md) rather than papered over.
 
 ## Chapter 1 — Nǐ hǎo: hello, character by character *(authored)*
@@ -193,27 +203,33 @@ in the font but has **no `letters` entry and no ductus**. That is the one
 genuinely blocked next step in this corner of the track, and it costs a
 hand-authored, font-checked ductus rather than a re-subset.
 
-## Times of day *(planned)*
+## Times of day *(delivered, HL-C242)*
 
 **早上好** *zǎoshang hǎo*, reusing 好 in the productive `X + 好` greeting frame.
 Realises part of `SPINE-TIME-OF-DAY` and pays back Chapter 1 by showing that 好
 was a building block, not a one-off.
 
-## Part II onward *(sketch)*
+## Part II onward — cumulative pre-A1 to C2 build *(planned)*
 
-Measure words, the 是…的 frame, location with 在, the aspect marker 了, and
-the resultative complements — each introduced on the first word that needs it.
-Traditional characters are a labelled future variety, not a silent substitute for
-the simplified forms taught here.
+Continue the official vocabulary tranche with oral meaning, source-verified
+stroke order, staged copying-to-dictation, and separate four-skill payoffs. Then
+add measure words, the 是…的 frame, location with 在, the aspect marker 了, and
+resultative complements — each on the first useful expression that needs it.
+
+Every later rung must add authentic or explicitly project-defined task shapes,
+non-compensatory skill gates, timed writing, speaking interaction, answer keys,
+and scoring rubrics. Intermediate chapters accumulate toward those tasks; merely
+touching a CEFR label is not attainment. Traditional characters are a labelled
+future variety, not a silent substitute for the simplified forms taught here.
 
 ## The font constraint, recorded because it shapes the plan
 
 The vendored `_fonts/NotoSansSC-Subset.ttf` covers every CJK codepoint that
 appears **anywhere** in [`data/scripts/chinese.json`](../data/scripts/chinese.json)
 — not merely the inventoried `letters`, but also every character named inside
-another character's components, stroke notes or citations. That is 51 characters
-against 29 inventoried glyphs, and the gap is load-bearing: 夕, 十, 目, 儿, 寸,
-身 and 青 are all printable without being taught. **Read the font's cmap before
+another character's components, stroke notes or citations. The resulting gap
+between printable and inventoried glyphs is load-bearing: components can be
+shown without being taught as standalone characters. **Read the font's cmap before
 concluding a character is unavailable** — this file previously asserted the
 narrower rule and sent a chapter down a re-subset path it did not need. A character
 mentioned nowhere in that file does need an entry plus a re-run of
@@ -221,8 +237,8 @@ mentioned nowhere in that file does need an entry plus a re-run of
 fetch the ~17 MB upstream Noto Sans SC. 对 *duì* is the live example: absent
 entirely, hence untypesettable, hence untaught.
 
-Every chapter delivered so far was authored inside the existing subset, and the
-planned ones above were ordered the same way. This is still a real constraint on
-chapter order that no alphabetic track in this curriculum has, because a Noto
-subset for an alphabet covers the whole writing system at once — but it is a
-narrower constraint than this file used to claim.
+This remains a real constraint on chapter order that no alphabetic track in this
+curriculum has, because a Noto subset for an alphabet covers the whole writing
+system at once. It is still narrower than this file once claimed: inspect the
+inventory and cmap, then extend and re-subset when the selected vocabulary truly
+requires a missing character.

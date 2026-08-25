@@ -858,21 +858,21 @@ inference from the encoding shape.
 The hatch covers exactly one case, and the boundary is worth stating
 because the two it does not cover are worse, not better:
 
-- **It requires a single current candidate.** Deletion asserts one live
-  candidate and returns `ConflictRequired` otherwise, so an oversized
-  record on an item that is *also* conflicted cannot be deleted by the
-  ordinary path at all.
+- **It requires a single current candidate.** Deletion asserted one live
+  candidate and returned `ConflictRequired` otherwise, so an oversized
+  record on an item that is *also* conflicted used to be undeletable by the
+  ordinary path at all. **This one is now fixed too**; §13.8 states the
+  repair, which folds every current candidate into the resulting
+  tombstone's causal parents rather than requiring exactly one.
 - **It requires a first-party record.** An oversized *opaque* record used
   to be not merely unwritable but undecodable, which denied the whole
   vault rather than one item. **This one is now fixed**; §13.3 states the
-  repair and the invariant it establishes. The remaining exclusion is the
-  conflicted-item case above.
+  repair and the invariant it establishes.
 
-The conflicted-item exclusion is pre-existing and is not reachable
-through anything this product will author, since the encode ceiling
-refuses to produce such a record in the first place; it needs a peer with
-a larger framing budget. It is tracked as follow-on work alongside the
-two repairs above, against this section.
+The conflicted-item exclusion named above is not reachable through anything
+this product will author on its own, since the encode ceiling refuses to
+produce such a record in the first place; it needs a peer with a larger
+framing budget, exactly like the oversized-opaque case below it.
 
 ### 13.3 Vault open never fails because of one item's payload size
 
@@ -1608,6 +1608,170 @@ time field 5 fails — still gets wiped.
 `encode_item_revision_wipes_the_records_plaintext_on_bound_exceeded` cover
 Instance 2 on both the ordinary path and the routine, expected
 `BoundExceeded` failure this section opens with.
+
+### 13.8 A conflicted oversized item had no working escape hatch
+
+§13.2 named this residual explicitly and left it unrepaired: "an oversized
+record on an item that is *also* conflicted cannot be deleted by the
+ordinary path at all," tracked as follow-on work. This section closes it.
+
+**Confirmed reachable, not assumed.** Before writing any fix, this was
+proven with a real reproduction rather than trusted from the code reading
+below. `peer_conflicting_oversized_publication` (`open.rs`) synthesises two
+concurrent, peer-authored live candidates for the same item — the same
+two-candidate shape `pending_live_conflict_publication` already used for an
+ordinary conflict, one level down: each candidate here is oversized-opaque
+(1.5 MiB, comfortably above the 1 MiB encode ceiling and comfortably below
+the 16 MiB plaintext gate, `peer_opaque_revision_plaintext`'s existing
+fixture), and both are named current in one catalog entry rather than one
+superseding the other. Delivered through the shared object store the way a
+real sync would deliver it (`peer_publishes`), then opened:
+
+- `a_synced_conflicted_pair_of_oversized_opaque_items_leaves_the_vault_openable`
+  confirms the vault opens with both candidates live and current —
+  expected, since each individually is exactly §13.3's already-fixed shape.
+- Reverting only this section's repair (keeping the reproduction) and
+  running `a_synced_conflicted_pair_of_oversized_opaque_items_can_be_deleted`
+  reproduces the bug directly: `delete_current_item` returns
+  `ConflictRequired`, because its precondition
+  (`current_item_revision`/`delete_item`) required exactly one current
+  candidate before this fix, unconditionally, regardless of what either
+  candidate's payload was.
+- `a_synced_conflicted_pair_of_oversized_opaque_items_denies_conflict_choose`
+  confirms the bug report's second half: `conflict choose`
+  (`resolve_item_conflict`) does not hit the multi-candidate precondition at
+  all — it operates on revision ids, never decodes a payload, and does not
+  care how many candidates are current — but it still fails, with
+  `BoundExceeded`, because resolving a conflict re-encodes the *selected*
+  candidate's own payload into the new resolution revision, and an oversized
+  payload cannot be re-encoded on any write path (§13.1/§13.3). This is not
+  this section's bug — it is the ordinary, already-understood write-side
+  ceiling, reached through a different door — but it is why documenting an
+  "authored merge" workaround alone would not have been a complete fix: nothing
+  provided by conflict resolution can select an oversized candidate as the
+  outcome, ever.
+
+**Why the previous "authored merge" advice was not adopted as the fix.**
+Before this repair, the only documented recovery was `conflict merge <type>`
+(`merge_item_conflict`), which accepts a caller-authored replacement
+document, requires it to declare the same `schema()` and `created_at_ms()` as
+every currently-live candidate, and republishes it with every current
+candidate — live or tombstone — named as a causal parent. That precondition
+check reads only `ItemDocument::schema()`/`created_at_ms()`, never
+`payload()`, so it is unaffected by which candidates are oversized,
+`Quarantined`, or `Opaque`; an authored merge *can* resolve a conflict
+between two poisoned candidates, provided the operator supplies a small,
+valid replacement document. Two properties made this an incomplete answer
+rather than the fix:
+
+- **It cannot express "just get rid of it."** The recourse §13.2 established
+  for a single poisoned item is deletion, which asks nothing of the operator
+  beyond confirming the item id — no replacement content, no schema
+  knowledge, nothing decoded. An authored merge instead requires composing a
+  new, valid record of the declared type before the operator can be rid of
+  two records they may not be able to read at all. For a `Quarantined`
+  candidate this is achievable (the declared content type is known); for an
+  `Opaque` one whose content type this build does not even recognise, the
+  operator cannot construct a conforming replacement, because "conforming"
+  is undefined for a type this software has no schema for.
+- **It has no answer when the candidates disagree on schema or
+  `created_at_ms`.** `merge_item_conflict` requires one document that
+  matches *every* currently-live candidate simultaneously; if a peer
+  (buggy or adversarial — item ids are 128-bit random draws, so two
+  legitimate peers colliding on one by chance is not the threat model, but a
+  peer choosing to reuse an id is not prevented by anything this layer
+  checks) publishes a second live candidate under the same item id with a
+  different declared schema or creation time, no single authored document
+  can ever satisfy the precondition for both, and `merge_item_conflict`
+  returns `InvalidInput` no matter what the operator supplies. Combined with
+  an oversized payload denying `conflict choose` (above), that combination
+  was completely unrecoverable before this fix: no command in the product's
+  surface could ever make the item go away. This is the scenario that
+  decided the fix, not the ordinary matching-schema case merge already
+  handled — a universal escape hatch cannot have a precondition an
+  adversarial peer controls.
+
+**Fix.** `delete_item` (`mutation.rs`) no longer requires the item it is
+deleting to have exactly one current candidate. It still requires
+`expected_revision` to name that item's current *live* candidate — the same
+freshness contract `replace_item`'s and `restore_item`'s own
+`expected_revision` already enforce, and, as a round-1 security review
+pointed out, a check the first draft of this fix accidentally loosened:
+that draft accepted `expected_revision` naming *any* current candidate of
+the item as long as *some other* current candidate was live, which let the
+audit event's recorded `selected_revision` name an already-dead sibling
+instead of the live content actually being destroyed. The corrected check
+requires the exact candidate `expected_revision` names to be live —
+deleting an item via a revision that is not itself a live candidate (a lone
+tombstone, or, reachable only via a concurrent double-delete, every
+candidate of a multi-way conflict) still returns `ConflictRequired`, exactly
+as before, because there is nothing live at that revision to delete. Once
+that check passes, the resulting tombstone names *every* current
+candidate — live or already-tombstone — as a causal parent:
+
+```rust
+let causal_parents = candidates
+    .iter()
+    .map(ItemCandidate::revision_id)
+    .collect::<BTreeSet<_>>();
+```
+
+This is verbatim the shape `resolve_item_conflict` already used to fold a
+conflict's every current candidate into one causal successor; the bug
+report's premise — "the shape already exists in `resolve_item_conflict`" —
+was correct, and the fix is exactly that shape, redirected at a tombstone
+instead of a chosen candidate. The tombstone itself is unchanged
+(`Tombstone { item_id, deleted_at_ms }`, no payload field), so this
+repair adds nothing to what `encode_any_record` is ever asked to encode:
+deletion of a conflicted item costs exactly what deletion of an
+unconflicted one always cost, because `encode_item_revision` encodes the
+causal-parent *set* — fixed-width 32-byte revision ids — never the
+candidates' payloads. A conflict with `N` current candidates therefore adds
+`~34` bytes per extra parent to the tombstone's own encode (the same
+per-candidate cost §13.2's catalog-entry derivation already priced), nothing
+proportional to any candidate's payload size, however large.
+
+`Session::delete_current_item`/`audited_delete_current_item` resolved
+`expected_revision` via `current_item_revision`, which fails closed
+(`ConflictRequired`) on any conflict by design — that behaviour is still
+correct for every other caller of `current_item_revision` (`item edit`'s
+preconditions, `attachment add`'s), which have no multi-candidate answer to
+give. Deletion needed its own resolution: a new, delete-only helper,
+`current_item_revision_for_delete`, returns any one live candidate's
+revision id when one exists (regardless of how many other candidates —
+live or tombstone — are also current), and `None` only when there is no
+live candidate at all. Because `delete_item` now folds in every current
+candidate on its own, which specific live revision this helper returns is
+immaterial to the result; it exists only to locate the item and to satisfy
+`delete_item`'s freshness precondition.
+
+**What this does not change.** `conflict choose` and `conflict merge <type>`
+keep their existing behaviour and existing limits exactly as described
+above — this section adds a working delete path alongside them, it does not
+touch either. A caller who wants to keep the item rather than discard it
+still needs an authored merge (or, once one candidate is small enough,
+`conflict choose`); a caller who wants the poisoned conflict gone entirely
+now has a direct, single-command path that asks nothing about either
+candidate's content, matching the same "delete is the universal escape
+hatch" guarantee VLT-PM05 §13.2/§13.3 established and VLT-PM05 §13.5
+extended to `Quarantined` records.
+
+**Tests.** `open.rs`: `peer_conflicting_oversized_publication` and
+`vault_with_synced_conflicting_oversized_items` build the reproduction
+fixture described above.
+`a_synced_conflicted_pair_of_oversized_opaque_items_leaves_the_vault_openable`
+is the reachability proof;
+`a_synced_conflicted_pair_of_oversized_opaque_items_denies_conflict_choose`
+pins the `BoundExceeded` residual on `conflict choose` that this fix
+deliberately leaves in place;
+`a_synced_conflicted_pair_of_oversized_opaque_items_can_be_deleted` pins the
+fix itself — deletion succeeds and the resulting tombstone's causal parents
+are exactly the two original oversized revision ids, confirming the
+multi-parent naming, not just that deletion no longer errors.
+`a_synced_conflict_between_a_live_item_and_an_oversized_candidate_can_be_deleted`
+covers the mixed case — one ordinary small live candidate concurrent with
+one oversized one — so the fix is confirmed to fold in *whichever*
+candidates are current rather than only ones that happen to be poisoned.
 
 ## 14. Required verification
 

@@ -225,6 +225,7 @@ const URDU_ALEF = DUCTUS[ductusKey("urdu-nastaliq", "ا")];
 const URDU_JIM = DUCTUS[ductusKey("urdu-nastaliq", "ج")];
 const URDU_DAL = DUCTUS[ductusKey("urdu-nastaliq", "د")];
 const URDU_RE = DUCTUS[ductusKey("urdu-nastaliq", "ر")];
+const URDU_WAW = DUCTUS[ductusKey("urdu-nastaliq", "و")];
 const URDU_SIN = DUCTUS[ductusKey("urdu-nastaliq", "س")];
 const URDU_SHIN = DUCTUS[ductusKey("urdu-nastaliq", "ش")];
 const URDU_KAF = DUCTUS[ductusKey("urdu-nastaliq", "ک")];
@@ -3236,6 +3237,18 @@ describe("handwriting ductus", () => {
     expect(down[0].y).toBeGreaterThan(down.at(-1)!.y);
     expect(curve[0]).toEqual(down.at(-1));
     expect(curve[0].x).toBeGreaterThan(curve.at(-1)!.x);
+  });
+
+  it("Urdu independent و joins its looped head directly to the leftward tail", () => {
+    expect(URDU_WAW.script).toBe("urdu-nastaliq");
+    expect(penLifts(URDU_WAW)).toBe(0);
+    expect(URDU_WAW.strokes).toHaveLength(1);
+    expect(URDU_WAW.strokes[0].segments).toHaveLength(2);
+    const head = URDU_WAW.strokes[0].segments[0].path;
+    const tail = URDU_WAW.strokes[0].segments[1].path;
+    expect(tail[0]).toEqual(head.at(-1));
+    expect(tail[0].x).toBeGreaterThan(tail.at(-1)!.x);
+    expect(tail[0].y).toBeGreaterThan(tail.at(-1)!.y);
   });
 
   it("Urdu independent س joins its three close teeth directly to the final bowl", () => {

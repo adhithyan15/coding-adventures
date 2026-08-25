@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.125.0";
+pub const VERSION: &str = "0.126.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -520,7 +520,7 @@ use diagram_ir::{
     SequenceParticipantGroup, SequenceParticipantKind, SequenceProperty, SequenceTextWrap,
     SeriesKind, StructuralDiagram, StructuralGroup, StructuralKind, StructuralNode,
     StructuralNodeKind, StructuralNodeMetadata, StructuralRelationship, TaskStart, TaskStatus,
-    TemporalBody, TemporalDiagram, TemporalKind, XyChartConfig,
+    TemporalBody, TemporalDiagram, TemporalKind, XyAxisConfig, XyChartConfig,
 };
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -1891,18 +1891,19 @@ fn xychart_metadata_value(token: &Token) -> String {
 }
 
 fn parse_xychart_config(source: &str) -> XyChartConfig {
+    let chart_source = mermaid_directive_object(source, "xyChart").unwrap_or(source);
     let positive_number = |key| {
-        quadrant_directive_value(source, key)
+        quadrant_directive_value(chart_source, key)
             .and_then(|value| value.parse::<f64>().ok())
             .filter(|value| *value > 0.0)
     };
     let non_negative_number = |key| {
-        quadrant_directive_value(source, key)
+        quadrant_directive_value(chart_source, key)
             .and_then(|value| value.parse::<f64>().ok())
             .filter(|value| *value >= 0.0)
     };
     let boolean = |key| {
-        quadrant_directive_value(source, key).and_then(|value| {
+        quadrant_directive_value(chart_source, key).and_then(|value| {
             match value.to_ascii_lowercase().as_str() {
                 "true" => Some(true),
                 "false" => Some(false),
@@ -1920,6 +1921,38 @@ fn parse_xychart_config(source: &str) -> XyChartConfig {
         show_data_label: boolean("showDataLabel"),
         show_data_label_outside_bar: boolean("showDataLabelOutsideBar"),
         data_label_color: quadrant_directive_value(source, "dataLabelColor"),
+        x_axis: parse_xychart_axis_config(chart_source, "xAxis"),
+        y_axis: parse_xychart_axis_config(chart_source, "yAxis"),
+    }
+}
+
+fn parse_xychart_axis_config(source: &str, key: &str) -> XyAxisConfig {
+    let Some(axis_source) = mermaid_directive_object(source, key) else {
+        return XyAxisConfig::default();
+    };
+    let number = |key| {
+        quadrant_directive_value(axis_source, key)
+            .and_then(|value| value.parse::<f64>().ok())
+            .filter(|value| *value >= 0.0)
+    };
+    let boolean = |key| {
+        quadrant_directive_value(axis_source, key).and_then(|value| {
+            match value.to_ascii_lowercase().as_str() {
+                "true" => Some(true),
+                "false" => Some(false),
+                _ => None,
+            }
+        })
+    };
+    XyAxisConfig {
+        show_label: boolean("showLabel"),
+        label_font_size: number("labelFontSize").filter(|value| *value > 0.0),
+        label_padding: number("labelPadding"),
+        show_title: boolean("showTitle"),
+        title_font_size: number("titleFontSize").filter(|value| *value > 0.0),
+        title_padding: number("titlePadding"),
+        show_axis_line: boolean("showAxisLine"),
+        axis_line_width: number("axisLineWidth").filter(|value| *value > 0.0),
     }
 }
 
@@ -2412,6 +2445,42 @@ fn quadrant_directive_value(source: &str, key: &str) -> Option<String> {
             .find([',', '}', ' '])
             .unwrap_or(after_colon.len());
         return Some(after_colon[..end].trim().to_string());
+    }
+    None
+}
+
+fn mermaid_directive_object<'a>(source: &'a str, key: &str) -> Option<&'a str> {
+    let key_start = ['"', '\'']
+        .into_iter()
+        .find_map(|quote| source.find(&format!("{quote}{key}{quote}")))?;
+    let after_key = &source[key_start + key.len() + 2..];
+    let object_start = after_key.find('{')?;
+    let object = &after_key[object_start..];
+    let mut depth = 0usize;
+    let mut quote = None;
+    let mut escaped = false;
+    for (index, character) in object.char_indices() {
+        if let Some(active_quote) = quote {
+            if escaped {
+                escaped = false;
+            } else if character == '\\' {
+                escaped = true;
+            } else if character == active_quote {
+                quote = None;
+            }
+            continue;
+        }
+        match character {
+            '"' | '\'' => quote = Some(character),
+            '{' => depth += 1,
+            '}' => {
+                depth -= 1;
+                if depth == 0 {
+                    return Some(&object[1..index]);
+                }
+            }
+            _ => {}
+        }
     }
     None
 }
@@ -6070,7 +6139,7 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     #[test]
     fn xychart_preserves_core_init_configuration() {
         let diagram = parse_xychart(
-            "%%{init: {\"xyChart\": {\"width\": 720, \"height\": 440, \"titleFontSize\": 24, \"titlePadding\": 14, \"showTitle\": false, \"showDataLabel\": true, \"showDataLabelOutsideBar\": true}, \"themeVariables\": {\"xyChart\": {\"dataLabelColor\": \"#123456\"}}}}%%\nxychart\ntitle Hidden\nbar [10, 20]\n",
+            "%%{init: {\"xyChart\": {\"width\": 720, \"height\": 440, \"titleFontSize\": 24, \"titlePadding\": 14, \"showTitle\": false, \"showDataLabel\": true, \"showDataLabelOutsideBar\": true, \"xAxis\": {\"showLabel\": false, \"labelFontSize\": 13, \"labelPadding\": 7, \"showTitle\": false, \"titleFontSize\": 18, \"titlePadding\": 9, \"showAxisLine\": false, \"axisLineWidth\": 4}, \"yAxis\": {\"showLabel\": true, \"labelFontSize\": 15, \"labelPadding\": 8, \"showTitle\": true, \"titleFontSize\": 19, \"titlePadding\": 10, \"showAxisLine\": true, \"axisLineWidth\": 5}}, \"themeVariables\": {\"xyChart\": {\"dataLabelColor\": \"#123456\"}}}}%%\nxychart\ntitle Hidden\nbar [10, 20]\n",
         )
         .unwrap();
 
@@ -6085,6 +6154,17 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
             diagram.xy_config.data_label_color.as_deref(),
             Some("#123456")
         );
+        assert_eq!(diagram.xy_config.x_axis.show_label, Some(false));
+        assert_eq!(diagram.xy_config.x_axis.label_font_size, Some(13.0));
+        assert_eq!(diagram.xy_config.x_axis.label_padding, Some(7.0));
+        assert_eq!(diagram.xy_config.x_axis.show_title, Some(false));
+        assert_eq!(diagram.xy_config.x_axis.title_font_size, Some(18.0));
+        assert_eq!(diagram.xy_config.x_axis.title_padding, Some(9.0));
+        assert_eq!(diagram.xy_config.x_axis.show_axis_line, Some(false));
+        assert_eq!(diagram.xy_config.x_axis.axis_line_width, Some(4.0));
+        assert_eq!(diagram.xy_config.y_axis.show_label, Some(true));
+        assert_eq!(diagram.xy_config.y_axis.label_font_size, Some(15.0));
+        assert_eq!(diagram.xy_config.y_axis.axis_line_width, Some(5.0));
     }
 
     #[test]
@@ -8001,7 +8081,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.125.0");
+        assert_eq!(crate::VERSION, "0.126.0");
     }
 
     #[test]
