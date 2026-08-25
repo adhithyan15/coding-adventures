@@ -51,6 +51,9 @@ bucket. Programs retain a `programs` identity segment, such as
 `go/programs/build-tool`, so a library and program with the same basename stay
 distinct. Specification fixture trees are excluded, and duplicate qualified
 identities fail closed with exit code `2` and repository-relative paths.
+Cabal's exact, case-sensitive `dist-newstyle` directory component is also
+excluded as generated build output. Source directories such as
+`Dist-Newstyle` and `dist-newstyle-example` remain discoverable.
 
 The resolver preserves those identities in metadata edges and in qualified
 dependencies declared by the selected legacy BUILD file's

@@ -6666,6 +6666,33 @@ changes, credential paths, or secret-like diff hits. An independent security
 review found no production blocker after its requested explicit case and
 Hasher assertions were added.
 
+PR #12678 completed all 32 reported checks: 26 successes, five expected skips,
+and one neutral aggregate. GitHub reported the branch clean and mergeable, so
+the loop enabled squash auto-merge; GitHub merged it as
+`834b6a01530906f64f218d41edf233e5537a7c8d` at
+`2026-08-25T04:47:50Z` without a manual merge command. The post-merge
+collision report at that exact revision remains schema 3 with 15 established
+lanes, 1,372 implementation identities, 4,565 slots, 175 high-consensus
+packages with 276 gaps, 909 singleton packages with 12,726 gaps, 720 Rust
+singletons, zero collisions, and zero unknown buckets. OCaml remains correctly
+emerging at zero packages. Current `origin/main` then advanced by one
+package-neutral HTML-parser commit to
+`42ae3e50152fc5373451cd9eee257a789f279782`; regenerating the report there
+changes no inventory count and exposes no eligible unowned gap.
+
+The reconciled graph contains 488 owners and 745 dependency edges with no
+duplicate IDs, missing prerequisites, or cycles. The Vault HID native-authority
+exception and TypeScript `nanoid` development advisory retain explicit pending
+owners. Completing Swift discovery unlocks its tracked-artifact, orphan-crate,
+and Windows absolute-file owners, but the ready Ruby discovery repair has the
+highest immediate build-tool leverage: it unlocks two direct consumers and
+four unfinished descendants. The next selected owner is therefore
+`build-tool-dist-newstyle-discovery-exclusion-remaining-engines`, now a bounded
+Ruby-only exact-component repair. Six live open PRs have no exact overlap with
+its Ruby build-tool, state, or roadmap surfaces. OCaml remains strategically
+important but collision-unsafe while PRs #12149 and #12162 own its exact Go
+validator and entry-point surfaces.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
