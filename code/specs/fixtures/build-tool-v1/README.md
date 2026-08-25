@@ -78,7 +78,7 @@ The 111-case bootstrap corpus covers every process-free v1 domain:
   scalar-ordered diagnostics, full-uppercase Windows reserved basenames, and
   one exact Unicode 17.0.0 snapshot with Todhri NFC and outlined-letter NFKC
   case-fold version sentinels. The source-embedded Python, .NET, TypeScript,
-  Ruby, Elixir, and Lua tables are
+  Ruby, Elixir, Lua, and Perl tables are
   regenerated from hash-pinned Unicode Consortium inputs by
   `code/scripts/generate_tracked_artifact_unicode17.py`; the derived tables
   retain the Unicode License v3 notice in `UNICODE-LICENSE.txt`, and the

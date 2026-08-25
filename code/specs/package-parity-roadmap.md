@@ -7683,6 +7683,63 @@ the ALGOL neutral contract overlaps PR #12847. After selection the ledger has
 141 merged owners, 363 pending owners, exactly one in-progress owner, and no
 active parity PR.
 
+### Perl tracked-artifact implementation
+
+The Perl build tool now exposes one pure
+`validate_tracked_artifact_snapshot` adapter and exactly consumes all five
+language-neutral fixtures. It preserves the closed portable-path precedence,
+lexical separator normalization, hostile-path redaction, Unicode-scalar limits
+and ordering, NFKC plus full-fold `node_modules` identities, full-uppercase
+Windows reserved basenames, inert entry kinds, and canonical deterministic
+diagnostics. Inputs are rejected above 512 Perl characters before regex or
+scalar-unpack work, and the adapter adds no Git, checkout, link-following,
+process, environment, or network authority.
+
+Generated source-embedded Unicode 17.0.0 tables provide NFC, NFKC, full case
+folding, NFKC-fold, and full uppercase independently of the host Perl Unicode
+tables. The pinned generator checks exact upstream byte counts and SHA-256
+identities, emits the complete Unicode License v3 notice, and verifies every
+official normalization, C/F folding, unconditional-uppercase, derived
+NFKC-fold, outlined-letter, and Todhri vector against the emitted Perl source.
+A required read-only `ubuntu-24.04` job checks the runner's pinned Perl 5.38.2,
+uses an explicit executable path with taint mode and an isolated module path,
+and feeds its result into the stable CI gate. The verifier reuses the hardened
+minimal-environment, 8-KiB-per-stream, bounded-time process-tree runner; Windows
+assigns a suspended root to a kill-on-close Job Object before resuming it, and
+POSIX isolates and cleans the process group.
+
+The exact Strawberry Perl 5.38.2.2 portable toolchain passes Perl syntax, nine
+focused validator subtests, and the complete 14-file, 129-test package suite.
+An independently mirrored repo-shaped distribution passes dependency install,
+`Makefile.PL`, and `gmake test`, confirming that the generated module ships in
+the MakeMaker artifact. Focused Devel::Cover measurement reports 100% statement
+and subroutine coverage for the validator and 82.0% total for that module;
+generated Unicode code reaches 82.0% statement coverage. Strict changed-source
+Perl::Critic passes with the two documented explicit-return/sort policies
+excluded. All 26 generator tests, Ruff checks, formatting, workflow YAML
+parsing, generated-byte verification, and the real full-vector Perl self-check
+pass.
+
+The neutral corpus validates 111 cases and 269 files. Schema, runner,
+package-parity, capability-taxonomy, Haskell-capability, and OCaml-lock suites
+pass 148 tests with two expected platform skips. The Go oracle passes all
+packages with coverage, vet, and trimpath compilation; a fresh binary evaluates
+45 Starlark BUILD files and validates a forced dry plan over 258 discovered
+packages. The refreshed schema-3 report remains 15 established lanes, 1,373
+implementation identities, 4,566 slots, 175 high-consensus packages with 276
+gaps, 910 singletons with 12,740 gaps, 721 Rust singletons, zero collisions,
+and zero unknown buckets.
+
+Bandit medium/high, strict JSON, state-graph, diff, and direct CPAN-module
+security checks pass; no tracked dependency changes. CPAN::Audit reports no
+advisories for the exact direct module versions. Its separate upstream Perl
+5.38.2 scan reports inherited interpreter notices, but this bounded consumer
+uses no attacker-supplied regex or pack templates, no threads, and no
+non-ASCII transliteration left-hand side. Independent split reviews found no
+actionable issue in the validator, generated substrate, generator, CI, tests,
+license, or metadata. Generator subprocess authority remains explicitly
+selection-blocked under its separate review owner.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
