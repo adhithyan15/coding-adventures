@@ -472,10 +472,10 @@ arrays, and a Spanish tranche touches only that file.
 
 **Difficulty: medium-high**, entirely because of that normalization step.
 
-> **THE BLOCKER ABOVE RESOLVED ITSELF. A DIFFERENT ONE REPLACED IT.**
-> The machinery is built and tested; `BOOK_GENERATION_PLAN` is exported from
-> `shard-cli.ts` and is deliberately **not** in `SHARD_PLANS`, one line from
-> being enabled.
+> **DONE. Both blockers cleared.** `core/book-generation.d/<language>.json`,
+> 24 files, byte-exact round trip. This was the last of the shared ledgers.
+>
+> **The blocker this section records resolved itself.**
 >
 > Re-measured at 1,007 `targets` (this spec was written at 949): every one of
 > the six arrays is contiguous by language, and `targets` is **23 runs for 23
@@ -486,26 +486,38 @@ arrays, and a Spanish tranche touches only that file.
 > prefix and no normalization commit**. A test pins that contiguity, so an
 > append to the end of `targets` reopens the question loudly.
 >
-> What blocks it now is formatting. `core/book-generation.json` does not
-> round-trip through `JSON.stringify(…, null, 2)` at all:
+> **A second blocker replaced it, and was cleared deliberately.** The committed
+> file did not round-trip through `JSON.stringify(…, null, 2)` at all: 74
+> differing lines at **2911–2984**, identical line count, **leading whitespace
+> only** — twelve `marwadi` entries in `targets` indented two spaces deeper than
+> canonical, a hand-merge artifact.
 >
-> - 74 differing lines, a contiguous run at **2911–2984**;
-> - identical line count either way (6,658);
-> - **every difference is leading whitespace only** — twelve `marwadi` entries
->   in `targets` indented two spaces deeper than canonical, a hand-merge artifact;
-> - `JSON.parse` of either form is deep-equal to the other.
+> Unlike `chapters.json` and `curriculum.json`, a track cannot be skipped here —
+> it is one file shared by all 23 — so §8's "report, do not reformat" would have
+> meant "never shard it". It was re-indented in **its own commit**, proved
+> whitespace-only by **deep-comparing the parsed structures** (plus top-level key
+> order, every array length, and the key order of all 1,160 elements) rather than
+> by reading the diff.
 >
-> Sharding proves it: the rebuilt document is byte-identical to the CANONICAL
-> reserialization and differs from the COMMITTED file by exactly those 74 lines.
+> **That exemption is narrow and should not be generalised.** This is a BUILD
+> MANIFEST — `(language, chapter, output, scriptSet)` triples nobody reads for
+> meaning — so whitespace in it is not content. The four remaining
+> non-round-tripping files are hand-maintained CURRICULUM DATA, where churn
+> buries real edits in review; they keep their monoliths. See §8.9.
 >
-> Unlike `chapters.json` and `curriculum.json`, this cannot be worked around by
-> skipping a track — it is one file shared by all 23. So the whole ledger waits
-> on a deliberate re-indent commit whose entire content is the reformatting. A
-> test states the blocker as an executable fact and **fails the day the file is
-> re-indented**, which is exactly when the plan should be enabled.
+> `tests/grouped-shards.test.ts` used to assert the file does NOT round-trip, as
+> an executable statement of the blocker. It is now **inverted**: the file must
+> STAY canonical, so a hand-edit reintroducing stray indentation — the way the
+> first one arrived, through a merge nobody looked at closely — fails
+> immediately rather than surfacing months later as an unaccountable `--check`
+> failure.
 >
 > `scriptSets` → `_meta.json` confirmed: 8 keys, keyed by script set, carrying no
-> `language`. Every element of the other six arrays carries one.
+> `language`. Every element of the other six arrays carries one. No `_keys` is
+> needed — the six grouped arrays are already a suffix of the document.
+>
+> `src/book-cli.ts` now reads through `readMaybeSharded`; it was the last
+> non-loader read of any of the three ledgers in `src/`.
 
 ### 5.4 `<track>/book/book.tex` → **generated, not sharded**
 
