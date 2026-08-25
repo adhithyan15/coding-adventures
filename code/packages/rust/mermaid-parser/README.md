@@ -32,8 +32,8 @@ Core `xyChart` init configuration preserves authored chart dimensions and
 orientation, with an explicit syntax orientation taking precedence, plus title
 visibility, title size and padding, named-series legend visibility, typography,
 and padding, minimum plot-space reservation, and optional inside/outside
-bar-value labels. Configured data-label colors also reach backend-neutral Paint
-glyphs.
+bar-value labels. Configured chart background, title, data-label, and plot
+palette colors also reach backend-neutral Paint scenes and instructions.
 Nested x/y-axis configuration independently controls label and title visibility,
 font sizes, padding, and theme colors, along with axis-line visibility, stroke
 width, and color. Tick visibility, length, stroke width, and color lower

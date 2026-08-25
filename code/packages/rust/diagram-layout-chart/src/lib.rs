@@ -95,6 +95,16 @@ const SERIES_COLORS: &[&str] = &[
     "#3b82f6", "#ef4444", "#22c55e", "#f59e0b", "#a855f7", "#14b8a6",
 ];
 
+fn xy_series_color(diagram: &ChartDiagram, index: usize) -> String {
+    diagram
+        .xy_config
+        .plot_color_palette
+        .as_ref()
+        .filter(|palette| !palette.is_empty())
+        .map(|palette| palette[index % palette.len()].clone())
+        .unwrap_or_else(|| SERIES_COLORS[index % SERIES_COLORS.len()].into())
+}
+
 /// Lay out a `ChartDiagram` on a canvas of `cw × ch` pixels.
 pub fn layout_chart_diagram(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagram {
     match diagram.kind {
@@ -274,7 +284,7 @@ fn layout_xy_vertical(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChart
             y: MARGIN + title_padding + title_font_size * 0.5,
             text: t.clone(),
             font_size: Some(title_font_size),
-            color: None,
+            color: diagram.xy_config.title_color.clone(),
         });
     }
 
@@ -436,7 +446,7 @@ fn layout_xy_vertical(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChart
     let mut legend_entries: Vec<LegendEntry> = Vec::new();
 
     for (si, series) in diagram.series.iter().enumerate() {
-        let color = SERIES_COLORS[si % SERIES_COLORS.len()].to_string();
+        let color = xy_series_color(diagram, si);
         if let Some(lbl) = series.label.as_ref().filter(|_| show_legend) {
             legend_entries.push(LegendEntry {
                 color: color.clone(),
@@ -571,6 +581,7 @@ fn layout_xy_vertical(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChart
     LayoutedChartDiagram {
         width: cw,
         height: ch,
+        background_color: diagram.xy_config.background_color.clone(),
         accessibility_title: diagram.accessibility_title.clone(),
         accessibility_description: diagram.accessibility_description.clone(),
         title_box: None,
@@ -711,7 +722,7 @@ fn layout_xy_horizontal(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedCha
             y: MARGIN + title_padding + title_font_size * 0.5,
             text: title.clone(),
             font_size: Some(title_font_size),
-            color: None,
+            color: diagram.xy_config.title_color.clone(),
         });
     }
     if has_x_title {
@@ -854,7 +865,7 @@ fn layout_xy_horizontal(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedCha
     let mut bar_series_index = 0usize;
     let mut legend_entries = Vec::new();
     for (series_index, series) in diagram.series.iter().enumerate() {
-        let color = SERIES_COLORS[series_index % SERIES_COLORS.len()].to_string();
+        let color = xy_series_color(diagram, series_index);
         if let Some(label) = series.label.as_ref().filter(|_| show_legend) {
             legend_entries.push(LegendEntry {
                 color: color.clone(),
@@ -986,6 +997,7 @@ fn layout_xy_horizontal(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedCha
     LayoutedChartDiagram {
         width: cw,
         height: ch,
+        background_color: diagram.xy_config.background_color.clone(),
         accessibility_title: diagram.accessibility_title.clone(),
         accessibility_description: diagram.accessibility_description.clone(),
         title_box: None,
@@ -1057,6 +1069,7 @@ fn layout_pie(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagram 
     LayoutedChartDiagram {
         width: cw,
         height: ch,
+        background_color: None,
         accessibility_title: diagram.accessibility_title.clone(),
         accessibility_description: diagram.accessibility_description.clone(),
         title_box: None,
@@ -1172,6 +1185,7 @@ fn layout_sankey(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagr
     LayoutedChartDiagram {
         width: cw,
         height: ch,
+        background_color: None,
         accessibility_title: diagram.accessibility_title.clone(),
         accessibility_description: diagram.accessibility_description.clone(),
         title_box: None,
@@ -1350,6 +1364,7 @@ fn layout_quadrant(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDia
     LayoutedChartDiagram {
         width: cw,
         height: ch,
+        background_color: None,
         accessibility_title: diagram.accessibility_title.clone(),
         accessibility_description: diagram.accessibility_description.clone(),
         title_box: None,
@@ -1533,6 +1548,9 @@ mod tests {
     fn xy_core_config_controls_dimensions_title_and_bar_labels() {
         let mut diagram = xy_diagram();
         diagram.xy_config = XyChartConfig {
+            background_color: None,
+            title_color: None,
+            plot_color_palette: None,
             width: Some(720.0),
             height: Some(440.0),
             chart_orientation: None,
@@ -1588,6 +1606,36 @@ mod tests {
         assert!(horizontal.items.iter().any(|item| matches!(
             item,
             LayoutedChartItem::AxisSpine { y1, y2, .. } if (*y2 - *y1) >= 396.0
+        )));
+    }
+
+    #[test]
+    fn xy_chart_theme_controls_background_title_and_series_colors() {
+        let mut diagram = xy_diagram();
+        diagram.xy_config.background_color = Some("#010203".into());
+        diagram.xy_config.title_color = Some("#040506".into());
+        diagram.xy_config.plot_color_palette = Some(vec!["#070809".into(), "#0a0b0c".into()]);
+
+        let layout = layout_chart_diagram(&diagram, 600.0, 400.0);
+        assert_eq!(layout.background_color.as_deref(), Some("#010203"));
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
+            LayoutedChartItem::DataLabel { text, color, .. }
+                if text == "Test" && color.as_deref() == Some("#040506")
+        )));
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
+            LayoutedChartItem::Bar { color, .. } if color == "#070809"
+        )));
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
+            LayoutedChartItem::LinePath { color, .. } if color == "#0a0b0c"
+        )));
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
+            LayoutedChartItem::Legend { entries, .. }
+                if entries.iter().map(|entry| entry.color.as_str()).collect::<Vec<_>>()
+                    == vec!["#070809", "#0a0b0c"]
         )));
     }
 
