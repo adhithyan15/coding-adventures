@@ -2,6 +2,31 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.43] - 2026-08-24 (task #214-216 — SIMD widen PR33: i8x16/i16x8 add_sat/sub_sat)
+
+### Added
+
+- Two new dispatch arms covering `AddSatI8x16S`/`AddSatI8x16U`/
+  `SubSatI8x16S`/`SubSatI8x16U` and `AddSatI16x8S`/`AddSatI16x8U`/
+  `SubSatI16x8S`/`SubSatI16x8U`: BINARY, same pop-order/lane-count shape
+  as `AddI8x16`/`SubI8x16`/`AddI16x8`/`SubI16x8`, but the result is
+  CLAMPED to the lane type's range instead of wrapped. Signed lanes are
+  computed in a wider intermediate type (`i16` for `i8x16`, `i32` for
+  `i16x8` -- both provably wide enough that the widened add/sub itself
+  never overflows) then `.clamp()`-ed to the target signed range before
+  the narrowing cast back down. Unsigned lanes are computed in a signed
+  wider type (`i32` for `i8x16`, `i64` for `i16x8`) specifically so a
+  negative intermediate difference clamps to `0` instead of wrapping or
+  panicking, then `.clamp()`-ed to `0..=<unsigned MAX>`.
+- New tests: `i8x16_add_sat_s_and_sub_sat_s_saturate_signed_overflow_and_underflow`,
+  `i8x16_add_sat_u_and_sub_sat_u_saturate_unsigned_overflow_and_underflow_to_zero_not_wrap`,
+  `i16x8_add_sat_s_and_sub_sat_s_saturate_signed_overflow_and_underflow`,
+  `i16x8_add_sat_u_and_sub_sat_u_saturate_unsigned_overflow_and_underflow_to_zero_not_wrap`
+  -- each covers normal in-range results, overflow saturation, underflow
+  saturation (including the classic unsigned-subtraction-goes-negative
+  case, e.g. `3u8 - 10u8` must be `0`, not `249`), and exact boundary
+  values at `MIN`/`MAX`.
+
 ## [0.9.42] - 2026-08-24 (task #211-213 — SIMD widen PR32: f64x2 eq/ne/lt/gt/le/ge)
 
 ### Added

@@ -1739,6 +1739,73 @@ pub enum SimdOpKind {
     /// NaN-is-false discipline as [`Self::LtF64x2`]. Native Rust `f64`
     /// `>=` already implements this correctly.
     GeF64x2,
+    /// `i8x16.add_sat_s` -- pop two `v128`s, each read as 16 `i8` lanes.
+    /// Same BINARY pop-order/lane-count shape as [`Self::AddI8x16`], but
+    /// the sum of each lane pair is computed in a WIDER intermediate type
+    /// (`i16`, never overflows -- `i8` magnitudes are at most 127, so
+    /// `127 + 127 == 254` sits nowhere near `i16`'s `+/-32767` bound)
+    /// then SIGNED-saturated to `i8::MIN..=i8::MAX` before the narrowing
+    /// cast back to `i8` -- unlike `AddI8x16`'s `wrapping_add`, an
+    /// out-of-range sum here clamps instead of wrapping. Same
+    /// compute-in-a-wider-type-then-clamp discipline as
+    /// [`Self::NarrowI16x8S`], except the wider-typed value is produced
+    /// by an add here rather than being the operand itself.
+    AddSatI8x16S,
+    /// `i8x16.add_sat_u` -- same BINARY/wider-intermediate shape as
+    /// [`Self::AddSatI8x16S`], but both lanes are read as UNSIGNED `u8`
+    /// (zero-extended into `u16`, sum computed in `u16` -- never
+    /// overflows, `255 + 255 == 510` is well inside `u16`'s `65535`
+    /// bound), then UNSIGNED-saturated to `0..=u8::MAX` (255) before the
+    /// narrowing cast back to `u8`. Same "compute unsigned in a wider
+    /// unsigned type" discipline as [`Self::NarrowI16x8U`], adapted to a
+    /// binary add instead of a single wide operand.
+    AddSatI8x16U,
+    /// `i8x16.sub_sat_s` -- same BINARY/wider-intermediate shape as
+    /// [`Self::AddSatI8x16S`], but subtracts (`l as i16 - r as i16`)
+    /// instead of adding -- the difference is likewise always
+    /// representable in `i16` (max magnitude `127 - (-128) == 255`),
+    /// then SIGNED-saturated to `i8::MIN..=i8::MAX`.
+    SubSatI8x16S,
+    /// `i8x16.sub_sat_u` -- same BINARY/wider-intermediate shape as
+    /// [`Self::AddSatI8x16U`], but subtracts (`l as u16 - r as u16`,
+    /// computed via `i32` to avoid an unsigned-subtraction underflow
+    /// panic when `r > l`) instead of adding, then UNSIGNED-saturated to
+    /// `0..=u8::MAX`. This is the classic bug spot for the whole
+    /// saturating family: an underflowing unsigned subtraction (e.g.
+    /// `3u8 - 10u8`) must clamp to `0`, NOT wrap around to a large
+    /// unsigned byte (e.g. `249`) the way [`Self::SubI8x16`]'s
+    /// `wrapping_sub` deliberately does -- explicit unit tests cover
+    /// this direction.
+    SubSatI8x16U,
+    /// `i16x8.add_sat_s` -- same SIGNED-saturating-add shape as
+    /// [`Self::AddSatI8x16S`], one lane width up: pop two `v128`s, each
+    /// read as 8 `i16` lanes, sum each pair in a wider `i32` intermediate
+    /// (never overflows -- `i16` magnitudes are at most 32767, so
+    /// `32767 + 32767 == 65534` sits nowhere near `i32`'s `+/-2^31` bound),
+    /// SIGNED-saturate to `i16::MIN..=i16::MAX`, cast down to `i16`.
+    /// Direct mirror of [`Self::AddSatI8x16S`] at `i16x8` width.
+    AddSatI16x8S,
+    /// `i16x8.add_sat_u` -- same UNSIGNED-saturating-add shape as
+    /// [`Self::AddSatI8x16U`], one lane width up: both lanes read as `u16`
+    /// (zero-extended into `u32`, sum computed in `u32` -- never
+    /// overflows, `65535 + 65535 == 131070` is well inside `u32`'s bound),
+    /// UNSIGNED-saturated to `0..=u16::MAX` (65535). Direct mirror of
+    /// [`Self::AddSatI8x16U`] at `i16x8` width.
+    AddSatI16x8U,
+    /// `i16x8.sub_sat_s` -- same SIGNED-saturating-subtract shape as
+    /// [`Self::SubSatI8x16S`], one lane width up: subtracts in `i32`
+    /// (max magnitude `32767 - (-32768) == 65535`, always representable),
+    /// SIGNED-saturates to `i16::MIN..=i16::MAX`.
+    SubSatI16x8S,
+    /// `i16x8.sub_sat_u` -- same UNSIGNED-saturating-subtract shape as
+    /// [`Self::SubSatI8x16U`], one lane width up: subtracts in `i64` (to
+    /// avoid an unsigned-subtraction underflow panic when `r > l`, same
+    /// discipline as [`Self::SubSatI8x16U`]'s `i32` intermediate),
+    /// UNSIGNED-saturates to `0..=u16::MAX`. Same "underflow clamps to
+    /// zero, does NOT wrap" discipline as every other `_u` member of this
+    /// family -- explicit unit tests cover this direction at this lane
+    /// width too.
+    SubSatI16x8U,
 }
 
 /// One entry in the SIMD opcode table: everything a consumer needs to
@@ -2220,6 +2287,42 @@ pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "f64x2.gt", sub_opcode: 0x4A, kind: SimdOpKind::GtF64x2 },
     SimdOpInfo { name: "f64x2.le", sub_opcode: 0x4B, kind: SimdOpKind::LeF64x2 },
     SimdOpInfo { name: "f64x2.ge", sub_opcode: 0x4C, kind: SimdOpKind::GeF64x2 },
+    // SIMD widen PR33 (task #214-216): i8x16.add_sat_s/_u (0x6F/0x70),
+    // i8x16.sub_sat_s/_u (0x72/0x73), i16x8.add_sat_s/_u (0x8F/0x90),
+    // i16x8.sub_sat_s/_u (0x92/0x93) -- the saturating integer add/sub
+    // family, BINARY same pop-order/lane-count shape as the
+    // already-implemented `i8x16.add`/`.sub` (PR-early) and
+    // `i16x8.add`/`.sub` (PR-early), except the result is CLAMPED to the
+    // lane type's range instead of wrapped on overflow/underflow --
+    // simpler than this crate's existing float `trunc_sat` handlers (no
+    // NaN/infinity edge cases, just compute-in-a-wider-type-then-clamp-
+    // then-cast on integer results), same clamp mechanic
+    // `NarrowI16x8S/U`/`NarrowI32x4S/U` (PR27) already established for
+    // this codebase, adapted from "clamp an already-computed wide
+    // operand" to "clamp the result of a wide-intermediate add/sub".
+    // Each sub-opcode byte fetched live from `BinarySIMD.md` and
+    // cross-checked against every existing `SIMD_OPS` entry: `0x6F`/
+    // `0x70` sit immediately past `i8x16.add`'s `0x6E` with no gap and
+    // immediately before `i8x16.shl`'s `0x6B`..`i8x16.shr_u`'s `0x6D`
+    // run and `i8x16.sub`'s `0x71` (both just outside this pair, no
+    // overlap); `0x72`/`0x73` sit immediately past `i8x16.sub`'s `0x71`
+    // with no gap; `0x8F`/`0x90` sit immediately past `i16x8.add`'s
+    // `0x8E` with no gap; `0x92`/`0x93` sit immediately past
+    // `i16x8.sub`'s `0x91` with no gap -- all eight confirmed free of
+    // collision with every existing `SIMD_OPS` entry (PR27's `0x85`/
+    // `0x86` `narrow_i32x4_s/_u` and PR26's `0x87`-`0x8A` `extend`
+    // run sit well clear of the `0x8F`-`0x93` cluster). This PR also
+    // vendors `simd_i8x16_sat_arith.wast` and `simd_i16x8_sat_arith.wast`
+    // -- see `code/packages/rust/wasm-conformance/tests/fixtures/
+    // fetch_testsuite.py`.
+    SimdOpInfo { name: "i8x16.add_sat_s", sub_opcode: 0x6F, kind: SimdOpKind::AddSatI8x16S },
+    SimdOpInfo { name: "i8x16.add_sat_u", sub_opcode: 0x70, kind: SimdOpKind::AddSatI8x16U },
+    SimdOpInfo { name: "i8x16.sub_sat_s", sub_opcode: 0x72, kind: SimdOpKind::SubSatI8x16S },
+    SimdOpInfo { name: "i8x16.sub_sat_u", sub_opcode: 0x73, kind: SimdOpKind::SubSatI8x16U },
+    SimdOpInfo { name: "i16x8.add_sat_s", sub_opcode: 0x8F, kind: SimdOpKind::AddSatI16x8S },
+    SimdOpInfo { name: "i16x8.add_sat_u", sub_opcode: 0x90, kind: SimdOpKind::AddSatI16x8U },
+    SimdOpInfo { name: "i16x8.sub_sat_s", sub_opcode: 0x92, kind: SimdOpKind::SubSatI16x8S },
+    SimdOpInfo { name: "i16x8.sub_sat_u", sub_opcode: 0x93, kind: SimdOpKind::SubSatI16x8U },
 ];
 
 /// Look up a SIMD opcode by its LEB128-decoded sub-opcode value (the
@@ -2638,8 +2741,8 @@ mod tests {
     // ── SIMD (0xFD prefix, v128 first slice) ─────────────────────────────────
 
     #[test]
-    fn simd_ops_table_has_the_expected_177_entries_and_no_duplicates() {
-        assert_eq!(SIMD_OPS.len(), 177);
+    fn simd_ops_table_has_the_expected_185_entries_and_no_duplicates() {
+        assert_eq!(SIMD_OPS.len(), 185);
 
         let mut seen_sub_opcodes = std::collections::HashSet::new();
         let mut seen_names = std::collections::HashSet::new();
@@ -3443,5 +3546,39 @@ mod tests {
             assert!(op.name.starts_with("f32x4."), "0x{f32x4_sub_opcode:02x} should still be an f32x4 op, got {}", op.name);
         }
         assert_eq!(get_simd_op(0x4D).map(|o| o.name), Some("v128.not"));
+    }
+
+    #[test]
+    fn simd_sat_add_sub_family_has_the_real_verified_sub_opcode_values() {
+        // SIMD widen PR33 (task #214-216): i8x16.add_sat_s (0x6F),
+        // i8x16.add_sat_u (0x70), i8x16.sub_sat_s (0x72),
+        // i8x16.sub_sat_u (0x73), i16x8.add_sat_s (0x8F),
+        // i16x8.add_sat_u (0x90), i16x8.sub_sat_s (0x92),
+        // i16x8.sub_sat_u (0x93) -- fetched live from BinarySIMD.md and
+        // cross-checked against the already-implemented i8x16.add
+        // (0x6E)/i8x16.sub (0x71)/i16x8.add (0x8E)/i16x8.sub (0x91)
+        // entries.
+        for (name, sub_opcode, kind) in [
+            ("i8x16.add_sat_s", 0x6F, SimdOpKind::AddSatI8x16S),
+            ("i8x16.add_sat_u", 0x70, SimdOpKind::AddSatI8x16U),
+            ("i8x16.sub_sat_s", 0x72, SimdOpKind::SubSatI8x16S),
+            ("i8x16.sub_sat_u", 0x73, SimdOpKind::SubSatI8x16U),
+            ("i16x8.add_sat_s", 0x8F, SimdOpKind::AddSatI16x8S),
+            ("i16x8.add_sat_u", 0x90, SimdOpKind::AddSatI16x8U),
+            ("i16x8.sub_sat_s", 0x92, SimdOpKind::SubSatI16x8S),
+            ("i16x8.sub_sat_u", 0x93, SimdOpKind::SubSatI16x8U),
+        ] {
+            let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
+            assert_eq!(op.name, name);
+            assert_eq!(op.kind, kind);
+            assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
+        }
+        // i8x16.add (0x6E) and i8x16.sub (0x71) bracket the 0x6F/0x70
+        // pair with no overlap; i16x8.add (0x8E) and i16x8.sub (0x91)
+        // bracket the 0x8F/0x90 pair the same way.
+        assert_eq!(get_simd_op(0x6E).map(|o| o.name), Some("i8x16.add"));
+        assert_eq!(get_simd_op(0x71).map(|o| o.name), Some("i8x16.sub"));
+        assert_eq!(get_simd_op(0x8E).map(|o| o.name), Some("i16x8.add"));
+        assert_eq!(get_simd_op(0x91).map(|o| o.name), Some("i16x8.sub"));
     }
 }

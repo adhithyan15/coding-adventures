@@ -1496,6 +1496,92 @@ fn invalid_f64x2_ge_given_an_i32_result_type_instead_of_v128() {
 }
 
 #[test]
+fn valid_simd_sat_add_sub_family() {
+    // SIMD widen PR33 (task #214-216): i8x16.add_sat_s/_u,
+    // i8x16.sub_sat_s/_u, i16x8.add_sat_s/_u, i16x8.sub_sat_s/_u -- same
+    // BINARY (pop TWO v128 operands, push one) shape as the already-
+    // implemented `i8x16.add`/`.sub`/`i16x8.add`/`.sub`, and the same
+    // "type checker only ever sees the opaque V128 type" discipline as
+    // `NarrowI16x8S/_U`/`NarrowI32x4S/_U` above -- the
+    // compute-in-a-wider-type-then-clamp saturation arithmetic is
+    // entirely a runtime concern, invisible here.
+    assert_valid(
+        r#"(module
+             (func (param v128 v128) (result v128) (i8x16.add_sat_s (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i8x16.add_sat_u (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i8x16.sub_sat_s (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i8x16.sub_sat_u (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i16x8.add_sat_s (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i16x8.add_sat_u (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i16x8.sub_sat_s (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i16x8.sub_sat_u (local.get 0) (local.get 1))))"#,
+    );
+}
+
+#[test]
+fn invalid_i8x16_add_sat_s_given_an_i32_operand_instead_of_v128() {
+    // Confirms the type checker actually enforces V128 in both operand
+    // slots, not just accepting whatever's on the stack -- one operand
+    // here is a plain i32, so the pop (expecting V128) must reject it.
+    assert_invalid("(module (func (param v128 i32) (result v128) (i8x16.add_sat_s (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn invalid_i8x16_add_sat_u_given_an_i32_operand_instead_of_v128() {
+    assert_invalid("(module (func (param v128 i32) (result v128) (i8x16.add_sat_u (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn invalid_i8x16_sub_sat_s_given_an_i32_operand_instead_of_v128() {
+    assert_invalid("(module (func (param v128 i32) (result v128) (i8x16.sub_sat_s (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn invalid_i8x16_sub_sat_u_given_an_i32_operand_instead_of_v128() {
+    assert_invalid("(module (func (param v128 i32) (result v128) (i8x16.sub_sat_u (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn invalid_i16x8_add_sat_s_given_an_i32_operand_instead_of_v128() {
+    assert_invalid("(module (func (param v128 i32) (result v128) (i16x8.add_sat_s (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn invalid_i16x8_add_sat_u_given_an_i32_operand_instead_of_v128() {
+    assert_invalid("(module (func (param v128 i32) (result v128) (i16x8.add_sat_u (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn invalid_i16x8_sub_sat_s_given_an_i32_operand_instead_of_v128() {
+    assert_invalid("(module (func (param v128 i32) (result v128) (i16x8.sub_sat_s (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn invalid_i16x8_sub_sat_u_given_an_i32_operand_instead_of_v128() {
+    assert_invalid("(module (func (param v128 i32) (result v128) (i16x8.sub_sat_u (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn invalid_i8x16_add_sat_s_given_only_one_operand_instead_of_two() {
+    // Confirms the type checker rejects a stack underflow, not just a
+    // wrong-typed operand -- BINARY ops need TWO v128s on the stack, and
+    // this one only pushes one before the op runs.
+    assert_invalid("(module (func (param v128) (result v128) (i8x16.add_sat_s (local.get 0))))");
+}
+
+#[test]
+fn invalid_i16x8_sub_sat_u_given_no_operand_at_all() {
+    assert_invalid("(module (func (result v128) (i16x8.sub_sat_u)))");
+}
+
+#[test]
+fn invalid_i8x16_add_sat_s_given_an_i32_result_type_instead_of_v128() {
+    // Confirms the type checker enforces the RESULT type too, not just
+    // operand types.
+    assert_invalid("(module (func (param v128 v128) (result i32) (i8x16.add_sat_s (local.get 0) (local.get 1))))");
+}
+
+#[test]
 fn valid_v128_local_and_global_round_trip() {
     // `ValueType::V128` used as a local type and a global type, not just
     // a param/result -- proves the value-type parser and validator agree

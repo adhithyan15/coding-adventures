@@ -1922,7 +1922,22 @@ fn encode_stream_instr(
             | wasm_opcodes::SimdOpKind::LtF64x2
             | wasm_opcodes::SimdOpKind::GtF64x2
             | wasm_opcodes::SimdOpKind::LeF64x2
-            | wasm_opcodes::SimdOpKind::GeF64x2 => {
+            | wasm_opcodes::SimdOpKind::GeF64x2
+            | wasm_opcodes::SimdOpKind::AddSatI8x16S
+            | wasm_opcodes::SimdOpKind::AddSatI8x16U
+            | wasm_opcodes::SimdOpKind::SubSatI8x16S
+            | wasm_opcodes::SimdOpKind::SubSatI8x16U
+            | wasm_opcodes::SimdOpKind::AddSatI16x8S
+            | wasm_opcodes::SimdOpKind::AddSatI16x8U
+            | wasm_opcodes::SimdOpKind::SubSatI16x8S
+            | wasm_opcodes::SimdOpKind::SubSatI16x8U => {
+                // `i8x16.add_sat_s`/`_u`/`.sub_sat_s`/`_u`/
+                // `i16x8.add_sat_s`/`_u`/`.sub_sat_s`/`_u` (SIMD widen
+                // PR33) join too: same BINARY (pop two v128s, push one),
+                // same no-immediate encoding shape as `NarrowI16x8S/_U`
+                // just above -- the compute-in-a-wider-type-then-clamp
+                // saturation arithmetic is entirely a runtime concern,
+                // invisible at this encoding level.
                 // All of these take NO immediate beyond the opcode byte
                 // itself -- their operands are ordinary stack values,
                 // pushed by whatever preceding instruction(s) already ran
@@ -2748,7 +2763,20 @@ fn encode_flat_instr(
             | wasm_opcodes::SimdOpKind::LtF64x2
             | wasm_opcodes::SimdOpKind::GtF64x2
             | wasm_opcodes::SimdOpKind::LeF64x2
-            | wasm_opcodes::SimdOpKind::GeF64x2 => {
+            | wasm_opcodes::SimdOpKind::GeF64x2
+            | wasm_opcodes::SimdOpKind::AddSatI8x16S
+            | wasm_opcodes::SimdOpKind::AddSatI8x16U
+            | wasm_opcodes::SimdOpKind::SubSatI8x16S
+            | wasm_opcodes::SimdOpKind::SubSatI8x16U
+            | wasm_opcodes::SimdOpKind::AddSatI16x8S
+            | wasm_opcodes::SimdOpKind::AddSatI16x8U
+            | wasm_opcodes::SimdOpKind::SubSatI16x8S
+            | wasm_opcodes::SimdOpKind::SubSatI16x8U => {
+                // `i8x16.add_sat_s`/`_u`/`.sub_sat_s`/`_u`/
+                // `i16x8.add_sat_s`/`_u`/`.sub_sat_s`/`_u` (SIMD widen
+                // PR33) join too, same reasoning as `NarrowI16x8S/_U`
+                // just above -- BINARY, no immediate of their own -- see
+                // the matching comment in `encode_stream_instr` above.
                 // `Swizzle` (i8x16.swizzle, SIMD widen PR18) joins this
                 // arm too: a plain BINARY v128,v128->v128 op with no
                 // lane-index immediate, same shape as `AddI8x16` -- see
@@ -5923,6 +5951,88 @@ mod tests {
             assert!(code.windows(2).any(|w| w == [0xFD, 0x4B]), "missing f64x2.le: {code:?}");
             assert!(code.windows(2).any(|w| w == [0xFD, 0x4C]), "missing f64x2.ge: {code:?}");
         }
+    }
+
+    #[test]
+    fn simd_sat_add_sub_family_encodes_the_real_sub_opcodes() {
+        // SIMD widen PR33 (task #214-216): i8x16.add_sat_s (0x6F),
+        // i8x16.add_sat_u (0x70), i8x16.sub_sat_s (0x72),
+        // i8x16.sub_sat_u (0x73), i16x8.add_sat_s (0x8F),
+        // i16x8.add_sat_u (0x90), i16x8.sub_sat_s (0x92),
+        // i16x8.sub_sat_u (0x93). The i8x16 quartet is all < 128, so each
+        // encodes as a single-byte LEB128 (`[0xFD, sub_opcode]`); the
+        // i16x8 quartet is all >= 128, so each encodes as a real 2-byte
+        // LEB128 sequence (`[0xFD, sub_opcode, 0x01]`), same split as
+        // every other lane-width pair in this table. All eight are
+        // BINARY (two v128 operands) -- same "no immediate beyond the
+        // opcode bytes themselves" shape as `i8x16.narrow_i16x8_s/_u`/
+        // `i16x8.narrow_i32x4_s/_u` above. Exercised in both folded and
+        // flat/stream form (this crate's two independent encoders).
+        let folded = parse_module(
+            r#"(module
+                 (func (param v128 v128) (result v128) (i8x16.add_sat_s (local.get 0) (local.get 1)))
+                 (func (param v128 v128) (result v128) (i8x16.add_sat_u (local.get 0) (local.get 1)))
+                 (func (param v128 v128) (result v128) (i8x16.sub_sat_s (local.get 0) (local.get 1)))
+                 (func (param v128 v128) (result v128) (i8x16.sub_sat_u (local.get 0) (local.get 1)))
+                 (func (param v128 v128) (result v128) (i16x8.add_sat_s (local.get 0) (local.get 1)))
+                 (func (param v128 v128) (result v128) (i16x8.add_sat_u (local.get 0) (local.get 1)))
+                 (func (param v128 v128) (result v128) (i16x8.sub_sat_s (local.get 0) (local.get 1)))
+                 (func (param v128 v128) (result v128) (i16x8.sub_sat_u (local.get 0) (local.get 1))))"#,
+        )
+        .unwrap();
+        assert!(code_of(&folded, 0).windows(2).any(|w| w == [0xFD, 0x6F]), "i8x16.add_sat_s: {:?}", code_of(&folded, 0));
+        assert!(code_of(&folded, 1).windows(2).any(|w| w == [0xFD, 0x70]), "i8x16.add_sat_u: {:?}", code_of(&folded, 1));
+        assert!(code_of(&folded, 2).windows(2).any(|w| w == [0xFD, 0x72]), "i8x16.sub_sat_s: {:?}", code_of(&folded, 2));
+        assert!(code_of(&folded, 3).windows(2).any(|w| w == [0xFD, 0x73]), "i8x16.sub_sat_u: {:?}", code_of(&folded, 3));
+        assert!(code_of(&folded, 4).windows(3).any(|w| w == [0xFD, 0x8F, 0x01]), "i16x8.add_sat_s: {:?}", code_of(&folded, 4));
+        assert!(code_of(&folded, 5).windows(3).any(|w| w == [0xFD, 0x90, 0x01]), "i16x8.add_sat_u: {:?}", code_of(&folded, 5));
+        assert!(code_of(&folded, 6).windows(3).any(|w| w == [0xFD, 0x92, 0x01]), "i16x8.sub_sat_s: {:?}", code_of(&folded, 6));
+        assert!(code_of(&folded, 7).windows(3).any(|w| w == [0xFD, 0x93, 0x01]), "i16x8.sub_sat_u: {:?}", code_of(&folded, 7));
+
+        let flat = parse_module(
+            r#"(module (func (param v128 v128) (result v128)
+                 local.get 0
+                 local.get 1
+                 i8x16.add_sat_s
+                 drop
+                 local.get 0
+                 local.get 1
+                 i8x16.add_sat_u
+                 drop
+                 local.get 0
+                 local.get 1
+                 i8x16.sub_sat_s
+                 drop
+                 local.get 0
+                 local.get 1
+                 i8x16.sub_sat_u
+                 drop
+                 local.get 0
+                 local.get 1
+                 i16x8.add_sat_s
+                 drop
+                 local.get 0
+                 local.get 1
+                 i16x8.add_sat_u
+                 drop
+                 local.get 0
+                 local.get 1
+                 i16x8.sub_sat_s
+                 drop
+                 local.get 0
+                 local.get 1
+                 i16x8.sub_sat_u))"#,
+        )
+        .unwrap();
+        let flat_code = code_of(&flat, 0);
+        assert!(flat_code.windows(2).any(|w| w == [0xFD, 0x6F]), "missing i8x16.add_sat_s: {flat_code:?}");
+        assert!(flat_code.windows(2).any(|w| w == [0xFD, 0x70]), "missing i8x16.add_sat_u: {flat_code:?}");
+        assert!(flat_code.windows(2).any(|w| w == [0xFD, 0x72]), "missing i8x16.sub_sat_s: {flat_code:?}");
+        assert!(flat_code.windows(2).any(|w| w == [0xFD, 0x73]), "missing i8x16.sub_sat_u: {flat_code:?}");
+        assert!(flat_code.windows(3).any(|w| w == [0xFD, 0x8F, 0x01]), "missing i16x8.add_sat_s: {flat_code:?}");
+        assert!(flat_code.windows(3).any(|w| w == [0xFD, 0x90, 0x01]), "missing i16x8.add_sat_u: {flat_code:?}");
+        assert!(flat_code.windows(3).any(|w| w == [0xFD, 0x92, 0x01]), "missing i16x8.sub_sat_s: {flat_code:?}");
+        assert!(flat_code.windows(3).any(|w| w == [0xFD, 0x93, 0x01]), "missing i16x8.sub_sat_u: {flat_code:?}");
     }
 
     #[test]

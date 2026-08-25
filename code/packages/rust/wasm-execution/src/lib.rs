@@ -4948,6 +4948,69 @@ fn register_simd(vm: &mut GenericVM) {
                 let handle = push_v128(ctx, result)?;
                 push_wasm(vm, WasmValue::V128(handle));
             }
+            SimdOpKind::AddSatI8x16S | SimdOpKind::AddSatI8x16U | SimdOpKind::SubSatI8x16S | SimdOpKind::SubSatI8x16U => {
+                // i8x16.add_sat_s/_u, i8x16.sub_sat_s/_u (SIMD widen
+                // PR33): same BINARY pop-order/lane-count shape as
+                // `AddI8x16`/`SubI8x16` just above, but the result is
+                // CLAMPED to the lane type's range instead of wrapped.
+                // Signed lanes are computed in `i16` (never overflows --
+                // `i8` magnitudes are at most 127, so the widest possible
+                // sum/difference, `254`/`255`, sits nowhere near `i16`'s
+                // `+/-32767` bound), then `.clamp()`ed to
+                // `i8::MIN..=i8::MAX` before the narrowing `as i8 as u8`
+                // cast -- the clamp always runs BEFORE the cast, so the
+                // cast is a value-preserving truncation of an
+                // already-in-range value, never UB, never a silent wrap.
+                // Unsigned lanes are computed in `i32` (wide enough to
+                // hold both the `u8` zero-extended operands AND a
+                // negative intermediate difference without underflow
+                // panicking), then `.clamp()`ed to `0..=u8::MAX` -- this
+                // is the classic bug spot for the family: an underflowing
+                // unsigned subtraction (e.g. `3u8 - 10u8`) must clamp to
+                // `0`, NOT wrap around to a large unsigned byte the way
+                // `SubI8x16`'s `wrapping_sub` deliberately does.
+                let rhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let lhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let rhs = *ctx
+                    .v128_heap
+                    .get(rhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let lhs = *ctx
+                    .v128_heap
+                    .get(lhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+
+                let mut result = [0u8; 16];
+                for i in 0..16 {
+                    let out = match op.kind {
+                        SimdOpKind::AddSatI8x16S => {
+                            let l = lhs[i] as i8 as i16;
+                            let r = rhs[i] as i8 as i16;
+                            (l + r).clamp(i8::MIN as i16, i8::MAX as i16) as i8 as u8
+                        }
+                        SimdOpKind::AddSatI8x16U => {
+                            let l = lhs[i] as i32;
+                            let r = rhs[i] as i32;
+                            (l + r).clamp(0, u8::MAX as i32) as u8
+                        }
+                        SimdOpKind::SubSatI8x16S => {
+                            let l = lhs[i] as i8 as i16;
+                            let r = rhs[i] as i8 as i16;
+                            (l - r).clamp(i8::MIN as i16, i8::MAX as i16) as i8 as u8
+                        }
+                        SimdOpKind::SubSatI8x16U => {
+                            let l = lhs[i] as i32;
+                            let r = rhs[i] as i32;
+                            (l - r).clamp(0, u8::MAX as i32) as u8
+                        }
+                        _ => unreachable!("only AddSat/SubSatI8x16S/U reach this arm"),
+                    };
+                    result[i] = out;
+                }
+
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
             SimdOpKind::NegI8x16 => {
                 // i8x16.neg: UNARY, same shape as `i32x4.neg`/`.abs` --
                 // pops exactly ONE v128, negates each of the 16 `i8`
@@ -4996,6 +5059,64 @@ fn register_simd(vm: &mut GenericVM) {
                         SimdOpKind::SubI16x8 => l.wrapping_sub(r),
                         SimdOpKind::MulI16x8 => l.wrapping_mul(r),
                         _ => unreachable!("only AddI16x8/SubI16x8/MulI16x8 reach this arm"),
+                    };
+                    result[i * 2..i * 2 + 2].copy_from_slice(&out.to_le_bytes());
+                }
+
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::AddSatI16x8S | SimdOpKind::AddSatI16x8U | SimdOpKind::SubSatI16x8S | SimdOpKind::SubSatI16x8U => {
+                // i16x8.add_sat_s/_u, i16x8.sub_sat_s/_u (SIMD widen
+                // PR33): same 8-lane `i16` BINARY shape as
+                // `AddI16x8`/`SubI16x8` above, one lane width up from
+                // `AddSat/SubSatI8x16S/U`. Signed lanes computed in `i32`
+                // (never overflows -- `i16` magnitudes are at most
+                // 32767, so the widest possible sum/difference, 65534/
+                // 65535, sits nowhere near `i32`'s `+/-2^31` bound), then
+                // clamped to `i16::MIN..=i16::MAX`. Unsigned lanes
+                // computed in `i64` (wide enough to hold both the `u16`
+                // zero-extended operands AND a negative intermediate
+                // difference without underflow panicking), then clamped
+                // to `0..=u16::MAX` -- same "underflow clamps to zero,
+                // does NOT wrap" discipline as the `i8x16` family.
+                let rhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let lhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let rhs = *ctx
+                    .v128_heap
+                    .get(rhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let lhs = *ctx
+                    .v128_heap
+                    .get(lhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+
+                let mut result = [0u8; 16];
+                for i in 0..8 {
+                    let l16 = i16::from_le_bytes(lhs[i * 2..i * 2 + 2].try_into().unwrap());
+                    let r16 = i16::from_le_bytes(rhs[i * 2..i * 2 + 2].try_into().unwrap());
+                    let out: u16 = match op.kind {
+                        SimdOpKind::AddSatI16x8S => {
+                            let l = l16 as i32;
+                            let r = r16 as i32;
+                            (l + r).clamp(i16::MIN as i32, i16::MAX as i32) as i16 as u16
+                        }
+                        SimdOpKind::AddSatI16x8U => {
+                            let l = l16 as u16 as i64;
+                            let r = r16 as u16 as i64;
+                            (l + r).clamp(0, u16::MAX as i64) as u16
+                        }
+                        SimdOpKind::SubSatI16x8S => {
+                            let l = l16 as i32;
+                            let r = r16 as i32;
+                            (l - r).clamp(i16::MIN as i32, i16::MAX as i32) as i16 as u16
+                        }
+                        SimdOpKind::SubSatI16x8U => {
+                            let l = l16 as u16 as i64;
+                            let r = r16 as u16 as i64;
+                            (l - r).clamp(0, u16::MAX as i64) as u16
+                        }
+                        _ => unreachable!("only AddSat/SubSatI16x8S/U reach this arm"),
                     };
                     result[i * 2..i * 2 + 2].copy_from_slice(&out.to_le_bytes());
                 }
@@ -10116,6 +10237,144 @@ mod tests {
         );
     }
 
+    /// `i8x16.add_sat_s`/`i8x16.sub_sat_s` (SIMD widen PR33): SIGNED
+    /// saturation -- normal in-range results pass through as plain
+    /// arithmetic, but a sum/difference outside `i8::MIN..=i8::MAX`
+    /// CLAMPS to the nearer bound instead of wrapping the way
+    /// `i8x16.add`/`.sub`'s `wrapping_add`/`wrapping_sub` deliberately do.
+    /// Covers: normal in-range, overflow-saturation (add), underflow-
+    /// saturation (sub), and exact boundary values (`i8::MAX`/`i8::MIN`
+    /// combined with `0` must pass through unchanged, not saturate).
+    #[test]
+    fn i8x16_add_sat_s_and_sub_sat_s_saturate_signed_overflow_and_underflow() {
+        // Normal in-range: 1 + 2 == 3, no saturation involved.
+        let mut add_normal = vec![0xFD, 0x0C];
+        add_normal.extend(v128_const_bytes_i8x16([1; 16]));
+        add_normal.extend([0xFD, 0x0C]);
+        add_normal.extend(v128_const_bytes_i8x16([2; 16]));
+        add_normal.extend([0xFD, 0x6F]); // i8x16.add_sat_s
+        add_normal.push(0x0B);
+        let mut add_normal_engine = simd_engine_returning_v128(add_normal);
+        let (_, add_normal_bytes) = add_normal_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(add_normal_bytes[0], Some(V128Bytes(v128_const_bytes_i8x16([3; 16]).try_into().unwrap())), "1+2 in range must be plain 3");
+
+        // Overflow saturation: i8::MAX + 1 must clamp to i8::MAX, NOT wrap to i8::MIN.
+        let mut add_overflow = vec![0xFD, 0x0C];
+        add_overflow.extend(v128_const_bytes_i8x16([i8::MAX; 16]));
+        add_overflow.extend([0xFD, 0x0C]);
+        add_overflow.extend(v128_const_bytes_i8x16([1; 16]));
+        add_overflow.extend([0xFD, 0x6F]);
+        add_overflow.push(0x0B);
+        let mut add_overflow_engine = simd_engine_returning_v128(add_overflow);
+        let (_, add_overflow_bytes) = add_overflow_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            add_overflow_bytes[0],
+            Some(V128Bytes(v128_const_bytes_i8x16([i8::MAX; 16]).try_into().unwrap())),
+            "i8::MAX + 1 must saturate to i8::MAX, not wrap to i8::MIN"
+        );
+
+        // Underflow saturation: i8::MIN - 1 must clamp to i8::MIN, NOT wrap to i8::MAX.
+        let mut sub_underflow = vec![0xFD, 0x0C];
+        sub_underflow.extend(v128_const_bytes_i8x16([i8::MIN; 16]));
+        sub_underflow.extend([0xFD, 0x0C]);
+        sub_underflow.extend(v128_const_bytes_i8x16([1; 16]));
+        sub_underflow.extend([0xFD, 0x72]); // i8x16.sub_sat_s
+        sub_underflow.push(0x0B);
+        let mut sub_underflow_engine = simd_engine_returning_v128(sub_underflow);
+        let (_, sub_underflow_bytes) = sub_underflow_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            sub_underflow_bytes[0],
+            Some(V128Bytes(v128_const_bytes_i8x16([i8::MIN; 16]).try_into().unwrap())),
+            "i8::MIN - 1 must saturate to i8::MIN, not wrap to i8::MAX"
+        );
+
+        // Boundary values: i8::MAX + 0 and i8::MIN - 0 must pass through
+        // unchanged (exactly at the bound, not saturating past it).
+        let mut boundary = vec![0xFD, 0x0C];
+        boundary.extend(v128_const_bytes_i8x16([i8::MAX, i8::MIN, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]));
+        boundary.extend([0xFD, 0x0C]);
+        boundary.extend(v128_const_bytes_i8x16([0; 16]));
+        boundary.extend([0xFD, 0x6F]); // i8x16.add_sat_s
+        boundary.push(0x0B);
+        let mut boundary_engine = simd_engine_returning_v128(boundary);
+        let (_, boundary_bytes) = boundary_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            boundary_bytes[0],
+            Some(V128Bytes(v128_const_bytes_i8x16([i8::MAX, i8::MIN, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]).try_into().unwrap())),
+            "i8::MAX+0 and i8::MIN+0 sit exactly at the bound, must pass through unchanged"
+        );
+    }
+
+    /// `i8x16.add_sat_u`/`i8x16.sub_sat_u` (SIMD widen PR33): UNSIGNED
+    /// saturation -- the classic bug spot for this family. An
+    /// underflowing unsigned subtraction (`r > l`) must clamp to `0`, NOT
+    /// wrap around to a large unsigned byte the way `i8x16.sub`'s
+    /// `wrapping_sub` would (e.g. `3u8 - 10u8` must be `0`, not `249`).
+    /// Lane values are expressed as `i8` byte patterns reinterpreted as
+    /// `u8` (e.g. `-1_i8` is the byte `0xFF`, i.e. `255u8`), matching this
+    /// test module's existing `i8x16.narrow_i16x8_u` convention.
+    #[test]
+    fn i8x16_add_sat_u_and_sub_sat_u_saturate_unsigned_overflow_and_underflow_to_zero_not_wrap() {
+        // Normal in-range: 10u8 + 20u8 == 30u8, no saturation.
+        let mut add_normal = vec![0xFD, 0x0C];
+        add_normal.extend(v128_const_bytes_i8x16([10; 16]));
+        add_normal.extend([0xFD, 0x0C]);
+        add_normal.extend(v128_const_bytes_i8x16([20; 16]));
+        add_normal.extend([0xFD, 0x70]); // i8x16.add_sat_u
+        add_normal.push(0x0B);
+        let mut add_normal_engine = simd_engine_returning_v128(add_normal);
+        let (_, add_normal_bytes) = add_normal_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(add_normal_bytes[0], Some(V128Bytes(v128_const_bytes_i8x16([30; 16]).try_into().unwrap())), "10u8+20u8 in range must be plain 30");
+
+        // Overflow saturation: 255u8 (-1_i8) + 10u8 must clamp to 255u8 (-1_i8), NOT wrap to 9u8.
+        let mut add_overflow = vec![0xFD, 0x0C];
+        add_overflow.extend(v128_const_bytes_i8x16([-1; 16])); // 0xFF == 255u8
+        add_overflow.extend([0xFD, 0x0C]);
+        add_overflow.extend(v128_const_bytes_i8x16([10; 16]));
+        add_overflow.extend([0xFD, 0x70]);
+        add_overflow.push(0x0B);
+        let mut add_overflow_engine = simd_engine_returning_v128(add_overflow);
+        let (_, add_overflow_bytes) = add_overflow_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            add_overflow_bytes[0],
+            Some(V128Bytes(v128_const_bytes_i8x16([-1; 16]).try_into().unwrap())),
+            "255u8 + 10u8 must saturate to 255u8, not wrap to 9u8"
+        );
+
+        // THE classic bug spot: unsigned underflow must clamp to 0, NOT
+        // wrap to a large unsigned byte. 3u8 - 10u8 must be 0, not 249u8.
+        let mut sub_underflow = vec![0xFD, 0x0C];
+        sub_underflow.extend(v128_const_bytes_i8x16([3; 16]));
+        sub_underflow.extend([0xFD, 0x0C]);
+        sub_underflow.extend(v128_const_bytes_i8x16([10; 16]));
+        sub_underflow.extend([0xFD, 0x73]); // i8x16.sub_sat_u
+        sub_underflow.push(0x0B);
+        let mut sub_underflow_engine = simd_engine_returning_v128(sub_underflow);
+        let (_, sub_underflow_bytes) = sub_underflow_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            sub_underflow_bytes[0],
+            Some(V128Bytes(v128_const_bytes_i8x16([0; 16]).try_into().unwrap())),
+            "3u8 - 10u8 must saturate to 0, NOT wrap to 249u8 (0xF9) via bit-reinterpretation"
+        );
+
+        // Boundary: 0u8 - 0u8 == 0 (exactly at the lower bound, not
+        // underflowing past it) and 255u8 - 0u8 == 255u8 (exactly at the
+        // upper bound).
+        let mut boundary = vec![0xFD, 0x0C];
+        boundary.extend(v128_const_bytes_i8x16([0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]));
+        boundary.extend([0xFD, 0x0C]);
+        boundary.extend(v128_const_bytes_i8x16([0; 16]));
+        boundary.extend([0xFD, 0x73]); // i8x16.sub_sat_u
+        boundary.push(0x0B);
+        let mut boundary_engine = simd_engine_returning_v128(boundary);
+        let (_, boundary_bytes) = boundary_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            boundary_bytes[0],
+            Some(V128Bytes(v128_const_bytes_i8x16([0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]).try_into().unwrap())),
+            "0u8-0u8 and 255u8-0u8 sit exactly at the bounds, must pass through unchanged"
+        );
+    }
+
     /// `i8x16.neg`: UNARY, same shape as `i32x4.neg`/`.abs`, including the
     /// two's-complement wrapping edge case (`i8::MIN.wrapping_neg() ==
     /// i8::MIN`, since `-i8::MIN` doesn't fit in an `i8`) -- the same
@@ -10188,6 +10447,139 @@ mod tests {
             wrap_bytes[0],
             Some(V128Bytes(v128_const_bytes_i16x8([i16::MIN; 8]).try_into().unwrap())),
             "i16::MAX + 1 must wrap to i16::MIN"
+        );
+    }
+
+    /// `i16x8.add_sat_s`/`i16x8.sub_sat_s` (SIMD widen PR33): SIGNED
+    /// saturation, one lane width up from `i8x16.add_sat_s`/`.sub_sat_s`
+    /// -- normal in-range results pass through as plain arithmetic, a
+    /// sum/difference outside `i16::MIN..=i16::MAX` CLAMPS to the nearer
+    /// bound instead of wrapping.
+    #[test]
+    fn i16x8_add_sat_s_and_sub_sat_s_saturate_signed_overflow_and_underflow() {
+        // Normal in-range: 1 + 2 == 3.
+        let mut add_normal = vec![0xFD, 0x0C];
+        add_normal.extend(v128_const_bytes_i16x8([1; 8]));
+        add_normal.extend([0xFD, 0x0C]);
+        add_normal.extend(v128_const_bytes_i16x8([2; 8]));
+        add_normal.extend([0xFD, 0x8F, 0x01]); // i16x8.add_sat_s (LEB128 for sub-opcode 0x8F)
+        add_normal.push(0x0B);
+        let mut add_normal_engine = simd_engine_returning_v128(add_normal);
+        let (_, add_normal_bytes) = add_normal_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(add_normal_bytes[0], Some(V128Bytes(v128_const_bytes_i16x8([3; 8]).try_into().unwrap())), "1+2 in range must be plain 3");
+
+        // Overflow saturation: i16::MAX + 1 must clamp to i16::MAX, NOT wrap to i16::MIN.
+        let mut add_overflow = vec![0xFD, 0x0C];
+        add_overflow.extend(v128_const_bytes_i16x8([i16::MAX; 8]));
+        add_overflow.extend([0xFD, 0x0C]);
+        add_overflow.extend(v128_const_bytes_i16x8([1; 8]));
+        add_overflow.extend([0xFD, 0x8F, 0x01]);
+        add_overflow.push(0x0B);
+        let mut add_overflow_engine = simd_engine_returning_v128(add_overflow);
+        let (_, add_overflow_bytes) = add_overflow_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            add_overflow_bytes[0],
+            Some(V128Bytes(v128_const_bytes_i16x8([i16::MAX; 8]).try_into().unwrap())),
+            "i16::MAX + 1 must saturate to i16::MAX, not wrap to i16::MIN"
+        );
+
+        // Underflow saturation: i16::MIN - 1 must clamp to i16::MIN, NOT wrap to i16::MAX.
+        let mut sub_underflow = vec![0xFD, 0x0C];
+        sub_underflow.extend(v128_const_bytes_i16x8([i16::MIN; 8]));
+        sub_underflow.extend([0xFD, 0x0C]);
+        sub_underflow.extend(v128_const_bytes_i16x8([1; 8]));
+        sub_underflow.extend([0xFD, 0x92, 0x01]); // i16x8.sub_sat_s (LEB128 for sub-opcode 0x92)
+        sub_underflow.push(0x0B);
+        let mut sub_underflow_engine = simd_engine_returning_v128(sub_underflow);
+        let (_, sub_underflow_bytes) = sub_underflow_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            sub_underflow_bytes[0],
+            Some(V128Bytes(v128_const_bytes_i16x8([i16::MIN; 8]).try_into().unwrap())),
+            "i16::MIN - 1 must saturate to i16::MIN, not wrap to i16::MAX"
+        );
+
+        // Boundary values: i16::MAX + 0 and i16::MIN + 0 must pass through unchanged.
+        let mut boundary = vec![0xFD, 0x0C];
+        boundary.extend(v128_const_bytes_i16x8([i16::MAX, i16::MIN, 0, 0, 0, 0, 0, 0]));
+        boundary.extend([0xFD, 0x0C]);
+        boundary.extend(v128_const_bytes_i16x8([0; 8]));
+        boundary.extend([0xFD, 0x8F, 0x01]); // i16x8.add_sat_s
+        boundary.push(0x0B);
+        let mut boundary_engine = simd_engine_returning_v128(boundary);
+        let (_, boundary_bytes) = boundary_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            boundary_bytes[0],
+            Some(V128Bytes(v128_const_bytes_i16x8([i16::MAX, i16::MIN, 0, 0, 0, 0, 0, 0]).try_into().unwrap())),
+            "i16::MAX+0 and i16::MIN+0 sit exactly at the bound, must pass through unchanged"
+        );
+    }
+
+    /// `i16x8.add_sat_u`/`i16x8.sub_sat_u` (SIMD widen PR33): UNSIGNED
+    /// saturation, one lane width up from `i8x16.add_sat_u`/`.sub_sat_u`
+    /// -- same classic bug spot: an underflowing unsigned subtraction
+    /// (`r > l`) must clamp to `0`, NOT wrap around to a large unsigned
+    /// value the way `i16x8.sub`'s `wrapping_sub` would (e.g.
+    /// `3u16 - 10u16` must be `0`, not `65529`). Lane values are
+    /// expressed as `i16` bit patterns reinterpreted as `u16` (e.g.
+    /// `-1_i16` is the bit pattern `0xFFFF`, i.e. `65535u16`), matching
+    /// this test module's existing `i16x8.narrow_i32x4_u` convention.
+    #[test]
+    fn i16x8_add_sat_u_and_sub_sat_u_saturate_unsigned_overflow_and_underflow_to_zero_not_wrap() {
+        // Normal in-range: 100u16 + 200u16 == 300u16, no saturation.
+        let mut add_normal = vec![0xFD, 0x0C];
+        add_normal.extend(v128_const_bytes_i16x8([100; 8]));
+        add_normal.extend([0xFD, 0x0C]);
+        add_normal.extend(v128_const_bytes_i16x8([200; 8]));
+        add_normal.extend([0xFD, 0x90, 0x01]); // i16x8.add_sat_u (LEB128 for sub-opcode 0x90)
+        add_normal.push(0x0B);
+        let mut add_normal_engine = simd_engine_returning_v128(add_normal);
+        let (_, add_normal_bytes) = add_normal_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(add_normal_bytes[0], Some(V128Bytes(v128_const_bytes_i16x8([300; 8]).try_into().unwrap())), "100u16+200u16 in range must be plain 300");
+
+        // Overflow saturation: 65535u16 (-1_i16) + 10u16 must clamp to 65535u16, NOT wrap to 9u16.
+        let mut add_overflow = vec![0xFD, 0x0C];
+        add_overflow.extend(v128_const_bytes_i16x8([-1; 8])); // 0xFFFF == 65535u16
+        add_overflow.extend([0xFD, 0x0C]);
+        add_overflow.extend(v128_const_bytes_i16x8([10; 8]));
+        add_overflow.extend([0xFD, 0x90, 0x01]);
+        add_overflow.push(0x0B);
+        let mut add_overflow_engine = simd_engine_returning_v128(add_overflow);
+        let (_, add_overflow_bytes) = add_overflow_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            add_overflow_bytes[0],
+            Some(V128Bytes(v128_const_bytes_i16x8([-1; 8]).try_into().unwrap())),
+            "65535u16 + 10u16 must saturate to 65535u16, not wrap to 9u16"
+        );
+
+        // THE classic bug spot: unsigned underflow must clamp to 0, NOT
+        // wrap to a large unsigned value. 3u16 - 10u16 must be 0, not 65529u16.
+        let mut sub_underflow = vec![0xFD, 0x0C];
+        sub_underflow.extend(v128_const_bytes_i16x8([3; 8]));
+        sub_underflow.extend([0xFD, 0x0C]);
+        sub_underflow.extend(v128_const_bytes_i16x8([10; 8]));
+        sub_underflow.extend([0xFD, 0x93, 0x01]); // i16x8.sub_sat_u (LEB128 for sub-opcode 0x93)
+        sub_underflow.push(0x0B);
+        let mut sub_underflow_engine = simd_engine_returning_v128(sub_underflow);
+        let (_, sub_underflow_bytes) = sub_underflow_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            sub_underflow_bytes[0],
+            Some(V128Bytes(v128_const_bytes_i16x8([0; 8]).try_into().unwrap())),
+            "3u16 - 10u16 must saturate to 0, NOT wrap to 65529u16 (0xFFF9) via bit-reinterpretation"
+        );
+
+        // Boundary: 0u16 - 0u16 == 0 and 65535u16 - 0u16 == 65535u16, both exactly at the bounds.
+        let mut boundary = vec![0xFD, 0x0C];
+        boundary.extend(v128_const_bytes_i16x8([0, -1, 0, 0, 0, 0, 0, 0]));
+        boundary.extend([0xFD, 0x0C]);
+        boundary.extend(v128_const_bytes_i16x8([0; 8]));
+        boundary.extend([0xFD, 0x93, 0x01]); // i16x8.sub_sat_u
+        boundary.push(0x0B);
+        let mut boundary_engine = simd_engine_returning_v128(boundary);
+        let (_, boundary_bytes) = boundary_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            boundary_bytes[0],
+            Some(V128Bytes(v128_const_bytes_i16x8([0, -1, 0, 0, 0, 0, 0, 0]).try_into().unwrap())),
+            "0u16-0u16 and 65535u16-0u16 sit exactly at the bounds, must pass through unchanged"
         );
     }
 

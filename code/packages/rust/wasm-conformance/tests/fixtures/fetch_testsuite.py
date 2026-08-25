@@ -501,6 +501,16 @@ TESTSUITE_FILES = [
     # this campaign so far -- larger than PR30's simd_f32x4_cmp.wast --
     # see the NOTICE file for the real vendored/pass counts.
     "simd_f64x2_cmp.wast",
+    # SIMD widen PR33 (task #214-216): simd_i8x16_sat_arith.wast and
+    # simd_i16x8_sat_arith.wast -- vendors the dedicated upstream files
+    # for i8x16.add_sat_s/_u/.sub_sat_s/_u (0x6F/0x70/0x72/0x73) and
+    # i16x8.add_sat_s/_u/.sub_sat_s/_u (0x8F/0x90/0x92/0x93), this PR's 8
+    # new opcodes -- the saturating integer add/sub family, simpler than
+    # the float trunc_sat corpus files already vendored (no NaN/infinity
+    # edge cases, just compute-then-clamp on integer results). See the
+    # NOTICE file for the real vendored/pass counts.
+    "simd_i8x16_sat_arith.wast",
+    "simd_i16x8_sat_arith.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under
