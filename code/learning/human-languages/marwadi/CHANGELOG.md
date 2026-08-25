@@ -1,5 +1,86 @@
 # Changelog
 
+## Unreleased — complete the first shopping and transport vocabulary tranche
+
+- Added twenty-five <=5-minute sessions across Chapters 20--22 for **कपड़ा,
+  महंगो, बस, गाड़ी, ठेला, रिक्शा, घोड़ो**, bringing the track to 172 lessons
+  and 46 distinct taught headwords.
+- Secured every meaning by ear before spelling, isolated only the nukta and
+  **श**, and reused **ड़** across clothes, vehicle, and horse.
+- Closed seven-word shopping and five-word transport maps with separately
+  scored listening, speaking, reading, and independent writing.
+- Kept bargaining, ticket, timetable, location, and transport problem-report
+  exchanges as explicit later work; vocabulary contact does not claim those
+  tasks are complete.
+- Grounded the forms in Marwari Pathshala Lessons 9--10 and added exact R1--R4
+  recalls as they became due; the strict ramp remains all-zero at 172 lessons.
+
+## Unreleased — first shopping vocabulary
+
+- Added seventeen <=5-minute sessions across Chapters 18–19 for **दुकान,
+  वस्तु, भाव, सस्ता, सामान**, bringing the track to 147 lessons and 39
+  distinct taught headwords.
+- Secured every meaning by ear before spelling, isolated only short **ु**, and
+  reused the complete earlier script inventory for the other forms.
+- Closed both the three-word foundation and five-word map with separately
+  scored listening, speaking, reading, and independent writing.
+- Kept a full price question and bargaining exchange as explicit later work;
+  vocabulary contact alone does not claim completion of a shopping task.
+- Grounded all five forms in Marwari Pathshala Lesson 9.
+- Added exact R2–R4 recalls as they became due; the strict ramp remains
+  all-zero across 147 lessons.
+
+## Unreleased — weather, heat, and cold
+
+- Added thirteen <=5-minute Chapter 17 sessions for **मौसम, गर्मी, ठंडी**,
+  bringing the track to 130 lessons and 34 distinct taught headwords.
+- Secured each meaning by ear before spelling and isolated only **ौ**, **ग**, and
+  **ड**, one sign per lesson, before independent decoding.
+- Joined the three additions to wind, cloud, and rain in separately scored
+  listening, speaking, reading, and independent-writing tasks.
+- Preserved the source's broader summer/winter labels as scope notes while
+  teaching the narrower heat/cold contrast first.
+- Added exact R3/R4 recalls newly due for the name, wellbeing, leave-taking,
+  place, and travel atoms; the strict ramp remains all-zero at 130 lessons.
+
+## Unreleased — first weather nouns
+
+- Added nine <=5-minute Chapter 16 sessions for **हवा, बादल, बरसात**,
+  bringing the track to 117 lessons and 31 distinct taught headwords.
+- Secured meaning by ear before spelling and reused only previously taught
+  signs, so vocabulary grows without a hidden script jump.
+- Closed with separately scored listening, speaking, reading, and independent
+  writing while leaving a complete weather question and exchange as explicit debt.
+- Grounded all three forms in Marwari Pathshala Lesson 7.
+- Added exact R3/R4 recalls newly due at this track length; the strict gentle
+  ramp remains all-zero across all 117 lessons.
+
+## Unreleased — first direction and travel nouns
+
+- Added 16 <=5-minute sessions across Chapters 14–15 for **बाजार, घर, मंदिर,
+  हाथ, पैसा**, bringing the track to 108 lessons and 28 distinct taught
+  headwords.
+- Secured each meaning by ear before spelling, introduced only **ज** and **घ**,
+  and reused the complete earlier script inventory for the other three words.
+- Kept the location question explicitly untaught while providing a genuine
+  four-skill vocabulary foundation for a later directions exchange.
+- Preserved an all-zero strict ramp after adding exact R1–R4 recalls, including
+  newly due long-distance reviews of early greeting, water, and name atoms.
+
+## Unreleased — first family vocabulary tranche
+
+- Added 38 <=5-minute sessions across Chapters 10–13 for **मां, बाप, भाई,
+  बहन, दादा, दादी, परिवार, नाना, नानी, पति, पत्नी, बच्चा**, bringing the track
+  to 92 lessons and 23 distinct taught headwords.
+- Secured every meaning by ear before spelling, reused the existing Devanagari
+  inventory, and introduced only **ब**, **द**, and **व** in isolated writing steps.
+- Added **त** and **च** in isolated script steps for the second relationship
+  slice; every other new form reuses the existing Devanagari inventory.
+- Closed each slice with independent four-skill payoffs and exact expanding-window recalls;
+  the strict gentle-ramp and script-closure reports have no findings.
+- Grounded the forms in Marwari Pathshala, the SIL dictionary archive, and the
+  Marwari Swadesh list while naming regional and household variation explicitly.
+
 ## Unreleased — see you later
 
 - Added seven <=5-minute sessions for **पाछे मिलसू**: sound and meaning first,

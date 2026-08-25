@@ -120,6 +120,22 @@ describe("real curriculum", () => {
       /encoded carrier-first composition.*normally ligates.*not a universal handwriting direction.*no standalone ductus claim/i,
     );
 
+    const tamilEe = scripts.tamil!.marks!.find((mark) => mark.mark === "ே")!;
+    expect(tamilEe.compositionOrder).toEqual([
+      "in handwriting, write the ē vowel sign to the left before the primary consonant",
+      "write the Tamil consonant carrier after it; read the result as consonant plus ē",
+    ]);
+    expect(tamilEe.example).toEqual({ base: "க", combined: "கே", sound: "kē" });
+    expect(tamilEe.compositionSource?.url).toBe(
+      "https://sites.la.utexas.edu/tamilscript/category/3-moduals/module-07",
+    );
+    expect(tamilEe.compositionSource?.citation).toMatch(
+      /Tamil Script Learners Manual.*Module 7.*Frame 7.*secondary symbol for ē.*written before the primary consonant.*University of Texas at Austin.*2009/i,
+    );
+    expect(tamilEe.compositionSource?.variation).toMatch(
+      /handwritten sign-before-carrier order.*left-side placement.*does not supply a standalone directional path or pen-lift count.*no ductus is inferred/i,
+    );
+
     const teluguAnusvara = scripts.telugu!.marks!.find((mark) => mark.mark === "ం")!;
     expect(teluguAnusvara.role).toBe("anusvara");
     expect(teluguAnusvara.compositionOrder).toEqual([
@@ -304,9 +320,11 @@ describe("real curriculum", () => {
     expect(affected.get("ச") ?? 0).toBe(0);
     expect(missingByScript.get("tamil.json")?.has("ட")).toBe(false);
     expect(affected.get("ட") ?? 0).toBe(0);
+    expect(missingByScript.get("tamil.json")?.has("ே")).toBe(false);
+    expect(affected.get("ே") ?? 0).toBe(0);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["ே", 29]);
+    ).toEqual(["ಂ", 24]);
   });
 
   it("loaded every track (17+ and growing)", () => {

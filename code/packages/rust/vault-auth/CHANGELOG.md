@@ -9,6 +9,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `WebAuthnPrfAuthenticator` (bind-mode) — scaffold for a FIDO2
+  hardware security key (YubiKey and other CTAP2-compliant
+  authenticators) unlock factor via the CTAP2 `hmac-secret` extension
+  (WebAuthn's `prf` extension). Ships the real registration-time
+  shape (`relying_party_id`, `credential_id`, `public_key_cose`) and
+  trait plumbing (`kind() == "webauthn-prf"`, `mode() == Mode::Bind`);
+  `verify()` unconditionally returns `AuthError::Unimplemented` until
+  a follow-up PR adds real CTAP2/WebAuthn hardware transport and
+  ECDSA P-256 signature verification — mirrors
+  `vault-key-custody::TpmCustodian`'s exact fail-closed pattern for
+  the identical reason. Full design, protocol survey
+  (FIDO2/CTAP2 `hmac-secret` chosen over YubiKey-proprietary
+  HMAC-SHA1 challenge-response), and dependency recommendation
+  (`ctap-hid-fido2`, not yet added) in
+  `code/specs/VLT-PM51-hardware-security-keys.md`.
+- `AuthError::Unimplemented { backend: &'static str }` — new variant
+  used by `WebAuthnPrfAuthenticator::verify`.
 - Built-in versus extension factor counts and gate/bind contribution
   consistency helpers on `AuthAssertionSetSummary`.
 - `TotpAlgorithm` — `Sha1`, `Sha256`, or `Sha512`, per RFC 6238 §1.2.

@@ -96,7 +96,11 @@ Fetched:       2026-08-13 (initial slice, W05/PR3), extended 2026-08-14 (WASM08)
                6 new opcodes (f32x4.eq/ne/lt/gt/le/ge), same pinned
                commit, no re-pin -- see below; now the single biggest
                directive-count win in this campaign, surpassing PR29's
-               simd_f32x4_arith.wast)
+               simd_f32x4_arith.wast),
+               extended 2026-08-24 (task #214-216 -- simd_i8x16_sat_arith.wast/
+               simd_i16x8_sat_arith.wast, 8 new opcodes (i8x16.add_sat_s/_u/
+               sub_sat_s/_u, i16x8.add_sat_s/_u/sub_sat_s/_u), same pinned
+               commit, no re-pin -- see below)
 Fetch method:  code/packages/rust/wasm-conformance/tests/fixtures/fetch_testsuite.py
 
 The pinned commit was resolved via:
@@ -926,6 +930,59 @@ passing). The pre-existing, unrelated baseline failures (17 `assert_
 return`, 1 `module`, 1 `assert_unlinkable`, 2 `register` -- present
 before this PR and tracked separately, none touching `f64x2` or this
 campaign) are byte-for-byte unchanged by this PR, confirming zero
+regressions. No other already-vendored file's stats changed.
+
+SIMD widen PR33 (task #214-216) implements `i8x16.add_sat_s` (`0x6F`),
+`i8x16.add_sat_u` (`0x70`), `i8x16.sub_sat_s` (`0x72`),
+`i8x16.sub_sat_u` (`0x73`), `i16x8.add_sat_s` (`0x8F`),
+`i16x8.add_sat_u` (`0x90`), `i16x8.sub_sat_s` (`0x92`),
+`i16x8.sub_sat_u` (`0x93`) and vendors `simd_i8x16_sat_arith.wast`/
+`simd_i16x8_sat_arith.wast` -- the saturating integer add/sub family,
+BINARY, same pop-order/lane-count shape as the already-implemented
+`i8x16.add`/`.sub`/`i16x8.add`/`.sub`, except the result is CLAMPED to
+the lane type's range instead of wrapped on overflow/underflow. Each
+sub-opcode byte fetched live from `BinarySIMD.md` and cross-checked
+against every existing `SIMD_OPS` entry: `0x6F`/`0x70` sit immediately
+past `i8x16.add`'s `0x6E` with no gap, `0x72`/`0x73` sit immediately
+past `i8x16.sub`'s `0x71` with no gap, `0x8F`/`0x90` sit immediately
+past `i16x8.add`'s `0x8E` with no gap, `0x92`/`0x93` sit immediately
+past `i16x8.sub`'s `0x91` with no gap -- all eight confirmed free of
+collision with every existing `SIMD_OPS` entry. Simpler than this
+crate's existing float `trunc_sat` handlers (no NaN/infinity edge
+cases): each lane's signed sum/difference is computed in a wider
+intermediate type (`i16` for `i8x16`, `i32` for `i16x8`, both provably
+wide enough that the widened arithmetic itself never overflows) then
+`.clamp()`-ed to the target range before the narrowing cast back down --
+same compute-in-a-wider-type-then-clamp discipline PR27's
+`NarrowI16x8S/U`/`NarrowI32x4S/U` already established for this
+codebase, adapted from "clamp an already-computed wide operand" to
+"clamp the result of a wide-intermediate add/sub". The unsigned variants
+get particular scrutiny, since an underflowing unsigned subtraction is
+this whole family's classic bug spot: `_u` lanes are computed in a
+signed wider type (`i32`/`i64`) specifically so a negative intermediate
+difference clamps to `0` instead of panicking or wrapping, verified by
+explicit unit tests covering exactly this direction (e.g. `3u8 - 10u8`
+must be `0`, not `249`; `3u16 - 10u16` must be `0`, not `65529`) at both
+lane widths.
+
+100% pass on every directive kind across both files, including every
+one of the corpus's own boundary-value and underflow/overflow-
+saturation vectors (2/2 modules each, `simd_i8x16_sat_arith.wast`:
+188/188 `assert_return`, 12/12 `assert_invalid`, 12/12
+`assert_malformed`; `simd_i16x8_sat_arith.wast`: 204/204
+`assert_return`, 12/12 `assert_invalid`, 4/4 `assert_malformed`).
+Aggregate `assert_return` rose from 33619/33636 to 34011/34028 (+392
+pass, +392 gradeable, exactly these two files' combined `assert_return`
+count, `fail` unchanged at 17); `assert_invalid` rose from 1814/1814 to
+1838/1838 (+24, exactly these two files' combined count, still 100.0%
+of gradeable directives); `assert_malformed` rose from 319/319 to
+335/335 (+16, exactly these two files' combined count, still 100.0% of
+gradeable directives); `module` pass count rose from 1182/1183 to
+1186/1187 (+4, one per module across both files, all passing). The
+pre-existing, unrelated baseline failures (17 `assert_return`, 1
+`module`, 1 `assert_unlinkable`, 2 `register` -- present before this PR
+and tracked separately, none touching `i8x16.*_sat_*`/`i16x8.*_sat_*` or
+this campaign) are byte-for-byte unchanged by this PR, confirming zero
 regressions. No other already-vendored file's stats changed.
 
 The vendored files are licensed under the Apache License, Version 2.0 --

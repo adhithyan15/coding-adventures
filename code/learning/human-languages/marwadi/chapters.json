@@ -185,6 +185,216 @@
         "summary": "A source-attested see-you-later line taught sound-first, written through four isolated units, and scored separately in all four skills.",
         "assesses": ["MW-LEX-PACHHE-01", "MW-LEX-MILSOO-01", "MW-FAREWELL-LATER-HEARD-01", "MW-SCRIPT-CHHA-01", "MW-SCRIPT-E-MATRA-01", "MW-SCRIPT-I-MATRA-01", "MW-SCRIPT-LA-01", "MW-SCRIPT-PACHHE-MILSOO-01", "MW-PERFORMANCE-FAREWELL-LATER-FOUR-SKILL-01"]
       }
+    },
+    {
+      "chapter": 10,
+      "title": "Four Family Words: Meaning First, One New Sign",
+      "label": "ch:mw-family-four",
+      "canDo": "I can recognise, say, read, and independently write four source-attested close-family labels after learning only one new Devanagari sign.",
+      "spineNodes": ["SPINE-EXCHANGE-NAMES"],
+      "payoff": {
+        "lesson": "MW-C08-family-four",
+        "kind": "four-skill-vocabulary-map",
+        "summary": "Four close-family labels secured by ear before writing, with only ब added and every skill scored separately.",
+        "assesses": [
+          "MW-LEX-MAA-01",
+          "MW-LEX-BAAP-01",
+          "MW-LEX-BHAI-01",
+          "MW-LEX-BAHAN-01",
+          "MW-SCRIPT-BA-01",
+          "MW-SCRIPT-MAA-01",
+          "MW-SCRIPT-BAAP-01",
+          "MW-SCRIPT-BHAI-01",
+          "MW-SCRIPT-BAHAN-01",
+          "MW-PERFORMANCE-FAMILY-FOUR-FOUR-SKILL-01"
+        ]
+      }
+    },
+    {
+      "chapter": 11,
+      "title": "Grandparents and Family: Two New Signs",
+      "label": "ch:mw-family-seven",
+      "canDo": "I can add paternal grandfather, paternal grandmother, and family to the earlier four-word map while keeping regional and household variation explicit.",
+      "spineNodes": ["SPINE-EXCHANGE-NAMES"],
+      "payoff": {
+        "lesson": "MW-C08-family-seven",
+        "kind": "four-skill-vocabulary-map",
+        "summary": "Three more family labels secured by ear before writing, with only द and व added one sign at a time before the seven-word map.",
+        "assesses": [
+          "MW-LEX-MAA-01",
+          "MW-LEX-BAAP-01",
+          "MW-LEX-BHAI-01",
+          "MW-LEX-BAHAN-01",
+          "MW-LEX-DADA-01",
+          "MW-LEX-DADI-01",
+          "MW-LEX-PARIVAAR-01",
+          "MW-SCRIPT-DA-01",
+          "MW-SCRIPT-VA-01",
+          "MW-SCRIPT-DADA-01",
+          "MW-SCRIPT-DADI-01",
+          "MW-SCRIPT-PARIVAAR-01",
+          "MW-PERFORMANCE-FAMILY-SEVEN-FOUR-SKILL-01"
+        ]
+      }
+    },
+    {
+      "chapter": 12,
+      "title": "Maternal Grandparents and Husband: One New Sign",
+      "label": "ch:mw-family-ten",
+      "canDo": "I can add maternal grandfather, maternal grandmother, and husband to the family map after learning only one new Devanagari sign.",
+      "spineNodes": ["SPINE-EXCHANGE-NAMES"],
+      "payoff": {
+        "lesson": "MW-R09-maternal-three",
+        "kind": "four-skill-vocabulary-map",
+        "summary": "Three source-attested relationship labels begin by ear, reuse the established script except for त, and finish in four separately scored skills.",
+        "assesses": [
+          "MW-LEX-NANA-01",
+          "MW-SCRIPT-NANA-01",
+          "MW-LEX-NANI-01",
+          "MW-SCRIPT-NANI-01",
+          "MW-LEX-PATI-01",
+          "MW-SCRIPT-TA-01",
+          "MW-SCRIPT-PATI-01",
+          "MW-PERFORMANCE-FAMILY-TEN-FOUR-SKILL-01"
+        ]
+      }
+    },
+    {
+      "chapter": 13,
+      "title": "Wife and Child: One New Sign",
+      "label": "ch:mw-family-twelve",
+      "canDo": "I can add wife and child to a twelve-label family map while recognizing that the source records an alternative wife label.",
+      "spineNodes": ["SPINE-EXCHANGE-NAMES"],
+      "payoff": {
+        "lesson": "MW-C09-family-twelve",
+        "kind": "four-skill-vocabulary-map",
+        "summary": "Wife and child begin by ear, add only च, and join the earlier labels in a non-compensatory four-skill payoff.",
+        "assesses": [
+          "MW-LEX-PATNI-01",
+          "MW-SCRIPT-PATNI-01",
+          "MW-LEX-BACHCHA-01",
+          "MW-SCRIPT-CHA-01",
+          "MW-SCRIPT-BACHCHA-01",
+          "MW-PERFORMANCE-FAMILY-TWELVE-FOUR-SKILL-01"
+        ]
+      }
+    },
+    {
+      "chapter": 14,
+      "title": "Three Useful Places: Two New Signs",
+      "label": "ch:mw-places-three",
+      "canDo": "I can recognise, say, read, and write market, home, and temple after learning only ज and घ.",
+      "spineNodes": ["SPINE-POLITE-REQUEST-REPAIR"],
+      "payoff": {
+        "lesson": "MW-R10-places-three",
+        "kind": "four-skill-vocabulary-map",
+        "summary": "Three source-attested destinations begin by ear, add two signs separately, and finish in four scored skills without pretending the location question is taught.",
+        "assesses": ["MW-LEX-BAJAR-01", "MW-SCRIPT-JA-01", "MW-SCRIPT-BAJAR-01", "MW-LEX-GHAR-01", "MW-SCRIPT-GHA-01", "MW-SCRIPT-GHAR-01", "MW-LEX-MANDIR-01", "MW-SCRIPT-MANDIR-01", "MW-PERFORMANCE-PLACES-THREE-FOUR-SKILL-01"]
+      }
+    },
+    {
+      "chapter": 15,
+      "title": "Hand and Money: No New Signs",
+      "label": "ch:mw-travel-five",
+      "canDo": "I can add hand and money to the three-place map in listening, speaking, reading, and writing without learning another sign.",
+      "spineNodes": ["SPINE-POLITE-REQUEST-REPAIR"],
+      "payoff": {
+        "lesson": "MW-C10-travel-five",
+        "kind": "four-skill-vocabulary-map",
+        "summary": "Hand and money arrive by ear, reuse the complete script inventory, and join the three places in a non-compensatory four-skill payoff.",
+        "assesses": ["MW-LEX-HAATH-01", "MW-SCRIPT-HAATH-01", "MW-LEX-PAISA-01", "MW-SCRIPT-PAISA-01", "MW-PERFORMANCE-TRAVEL-FIVE-FOUR-SKILL-01"]
+      }
+    },
+    {
+      "chapter": 16,
+      "title": "Wind, Cloud, and Rain: No New Signs",
+      "label": "ch:mw-weather-three",
+      "canDo": "I can recognise, say, read, and write wind, cloud, and rain using only signs already secured in earlier chapters.",
+      "spineNodes": ["SPINE-POLITE-REQUEST-REPAIR"],
+      "payoff": {
+        "lesson": "MW-C11-weather-three",
+        "kind": "four-skill-vocabulary-map",
+        "summary": "Three source-attested weather nouns begin by ear, reuse the established script inventory, and finish in four separately scored skills without claiming a weather conversation is complete.",
+        "assesses": ["MW-LEX-HAWA-01", "MW-SCRIPT-HAWA-01", "MW-LEX-BAADAL-01", "MW-SCRIPT-BAADAL-01", "MW-LEX-BARSAAT-01", "MW-SCRIPT-BARSAAT-01", "MW-PERFORMANCE-WEATHER-THREE-FOUR-SKILL-01"]
+      }
+    },
+    {
+      "chapter": 17,
+      "title": "Weather, Heat, and Cold: Three New Signs",
+      "label": "ch:mw-weather-six",
+      "canDo": "I can add weather, heat, and cold to the earlier wind-cloud-rain map after learning only the au mark, ग, and ड.",
+      "spineNodes": ["SPINE-POLITE-REQUEST-REPAIR"],
+      "payoff": {
+        "lesson": "MW-C12-weather-six",
+        "kind": "four-skill-vocabulary-map",
+        "summary": "Three more source-attested weather words begin by ear, add three signs one at a time, and join the earlier map in four separately scored skills without claiming a complete weather exchange.",
+        "assesses": ["MW-LEX-MAUSAM-01", "MW-SCRIPT-AU-MATRA-01", "MW-SCRIPT-MAUSAM-01", "MW-LEX-GARMI-01", "MW-SCRIPT-GA-01", "MW-SCRIPT-GARMI-01", "MW-LEX-THANDI-01", "MW-SCRIPT-DDA-01", "MW-SCRIPT-THANDI-01", "MW-PERFORMANCE-WEATHER-SIX-FOUR-SKILL-01"]
+      }
+    },
+    {
+      "chapter": 18,
+      "title": "Shop, Item, and Price: One New Vowel Mark",
+      "label": "ch:mw-shopping-three",
+      "canDo": "I can recognise, say, read, and write shop, item, and price after learning only the short-u vowel mark.",
+      "spineNodes": ["SPINE-POLITE-REQUEST-REPAIR"],
+      "payoff": {
+        "lesson": "MW-C13-shopping-three",
+        "kind": "four-skill-vocabulary-map",
+        "summary": "Three source-attested shopping words begin by ear, add one vowel mark, and finish in four separately scored skills without claiming a complete buying exchange.",
+        "assesses": ["MW-LEX-DUKAN-01", "MW-SCRIPT-U-MATRA-01", "MW-SCRIPT-DUKAN-01", "MW-LEX-VASTU-01", "MW-SCRIPT-VASTU-01", "MW-LEX-BHAAV-01", "MW-SCRIPT-BHAAV-01", "MW-PERFORMANCE-SHOPPING-THREE-FOUR-SKILL-01"]
+      }
+    },
+    {
+      "chapter": 19,
+      "title": "Cheap and Goods: No New Signs",
+      "label": "ch:mw-shopping-five",
+      "canDo": "I can add cheap and goods to the shop-item-price map in listening, speaking, reading, and writing without learning another sign.",
+      "spineNodes": ["SPINE-POLITE-REQUEST-REPAIR"],
+      "payoff": {
+        "lesson": "MW-C14-shopping-five",
+        "kind": "four-skill-vocabulary-map",
+        "summary": "Two more source-attested shopping words reuse the secure script inventory and join the earlier three in a non-compensatory four-skill payoff.",
+        "assesses": ["MW-LEX-SASTA-01", "MW-SCRIPT-SASTA-01", "MW-LEX-SAMAAN-01", "MW-SCRIPT-SAMAAN-01", "MW-PERFORMANCE-SHOPPING-FIVE-FOUR-SKILL-01"]
+      }
+    },
+    {
+      "chapter": 20,
+      "title": "Clothes and Expensive: One Dot Below",
+      "label": "ch:mw-shopping-seven",
+      "canDo": "I can add clothes and expensive to the shopping map after learning only the nukta that changes ड to ड़.",
+      "spineNodes": ["SPINE-POLITE-REQUEST-REPAIR"],
+      "payoff": {
+        "lesson": "MW-C15-shopping-seven",
+        "kind": "four-skill-vocabulary-map",
+        "summary": "Two source-attested shopping words begin by ear, add one dotted consonant, and join the earlier five words in four separately scored skills.",
+        "assesses": ["MW-LEX-KAPDA-01", "MW-SCRIPT-NUKTA-01", "MW-SCRIPT-RRA-01", "MW-SCRIPT-KAPDA-01", "MW-LEX-MAHANGO-01", "MW-SCRIPT-MAHANGO-01", "MW-PERFORMANCE-SHOPPING-SEVEN-FOUR-SKILL-01"]
+      }
+    },
+    {
+      "chapter": 21,
+      "title": "Bus, Vehicle, and Cart: No New Signs",
+      "label": "ch:mw-transport-three",
+      "canDo": "I can recognise, say, read, and write bus, vehicle, and cart using only signs already secured in earlier chapters.",
+      "spineNodes": ["SPINE-POLITE-REQUEST-REPAIR"],
+      "payoff": {
+        "lesson": "MW-C16-transport-three",
+        "kind": "four-skill-vocabulary-map",
+        "summary": "Three source-attested transport words begin by ear, reuse the established script inventory, and finish in four separately scored skills without claiming a ticket or timetable exchange.",
+        "assesses": ["MW-LEX-BAS-01", "MW-SCRIPT-BAS-01", "MW-LEX-GAADI-01", "MW-SCRIPT-GAADI-01", "MW-LEX-THELA-01", "MW-SCRIPT-THELA-01", "MW-PERFORMANCE-TRANSPORT-THREE-FOUR-SKILL-01"]
+      }
+    },
+    {
+      "chapter": 22,
+      "title": "Rickshaw and Horse: One New Consonant",
+      "label": "ch:mw-transport-five",
+      "canDo": "I can add rickshaw and horse to the transport map after learning only श and reusing the dotted consonant from clothes.",
+      "spineNodes": ["SPINE-POLITE-REQUEST-REPAIR"],
+      "payoff": {
+        "lesson": "MW-C17-transport-five",
+        "kind": "four-skill-vocabulary-map",
+        "summary": "Two more source-attested transport words begin by ear, add only श, and join the earlier three in a non-compensatory four-skill payoff.",
+        "assesses": ["MW-LEX-RIKSHA-01", "MW-SCRIPT-SHA-01", "MW-SCRIPT-RIKSHA-01", "MW-LEX-GHODO-01", "MW-SCRIPT-GHODO-01", "MW-PERFORMANCE-TRANSPORT-FIVE-FOUR-SKILL-01"]
+      }
     }
   ]
 }

@@ -50,6 +50,17 @@
 //!   `code_at`/`formatted_code_at` also make it usable as a
 //!   *generator*, which is what a password manager displaying a
 //!   stored seed's current code needs.
+//! - `WebAuthnPrfAuthenticator` (bind-mode) — *scaffold*, per
+//!   `code/specs/VLT-PM51-hardware-security-keys.md`. Wires the
+//!   registration-time shape (relying-party id, credential id,
+//!   stored COSE public key) and the trait plumbing for a FIDO2
+//!   hardware security key (YubiKey and other CTAP2-compliant
+//!   authenticators) contributing key material via the CTAP2
+//!   `hmac-secret` extension (WebAuthn's `prf` extension).
+//!   `verify()` returns `AuthError::Unimplemented` until a follow-up
+//!   PR adds real CTAP2/WebAuthn hardware transport and ECDSA P-256
+//!   assertion-signature verification — see VLT-PM51 §6/§7 for why
+//!   both are deferred rather than partially implemented.
 //! - `combine_key_contributions(vault_id, factors)` —
 //!   HKDF-Extract(salt = vault_id, ikm = ordered concat of bind-
 //!   mode factor outputs, info = "VLT05/key/v1") → 32-byte unlock
@@ -205,6 +216,15 @@ pub enum AuthError {
     Crypto,
     /// `combine_key_contributions` got an empty factor list.
     NoBindFactors,
+    /// Authenticator implementation is a scaffold not yet usable.
+    /// Returned by [`WebAuthnPrfAuthenticator`] until the CTAP2/
+    /// WebAuthn hardware transport and ECDSA P-256 assertion
+    /// verification land (`vault-key-custody::TpmCustodian` uses
+    /// the identical pattern for a hardware-bound key custodian).
+    Unimplemented {
+        /// Static name of the backend that needs implementing.
+        backend: &'static str,
+    },
 }
 
 impl core::fmt::Display for AuthError {
@@ -218,6 +238,13 @@ impl core::fmt::Display for AuthError {
             AuthError::Crypto => "vault-auth: underlying cryptographic operation failed",
             AuthError::NoBindFactors => {
                 "vault-auth: combine_key_contributions called with no bind-mode factors"
+            }
+            AuthError::Unimplemented { backend } => {
+                return write!(
+                    f,
+                    "vault-auth: {} backend not yet implemented in this build",
+                    backend
+                );
             }
         };
         write!(f, "{}", s)
@@ -698,7 +725,140 @@ impl Authenticator for TotpAuthenticator {
 }
 
 // ─────────────────────────────────────────────────────────────────────
-// 4. Tests
+// 4. WebAuthnPrfAuthenticator — scaffold (VLT-PM51)
+// ─────────────────────────────────────────────────────────────────────
+//
+// A FIDO2 hardware security key (YubiKey and any other CTAP2-compliant
+// authenticator — this is a standards-based factor, not a YubiKey-only
+// one) can contribute key material to the unlock derivation through the
+// CTAP2 `hmac-secret` extension, surfaced to browsers as the WebAuthn
+// `prf` extension. `code/specs/VLT-PM51-hardware-security-keys.md`
+// covers the full design and the reasoning behind every choice below;
+// the short version:
+//
+// * This is a **bind-mode, additive, second factor** — exactly the same
+//   shape `PasswordAuthenticator` already has, composed the same way
+//   through `combine_key_contributions`. It never replaces the
+//   passphrase path; VLT-PM51 §4 works through why an unlock-time
+//   hardware requirement without a software fallback would violate
+//   this product's existing "the CLI always works without the agent /
+//   without a keychain" design language.
+// * The wire shape a real implementation needs — relying-party id,
+//   credential id, the COSE public key recorded at registration — is
+//   real and captured now, so higher layers (VLT06 policy composition,
+//   a future registration ceremony) can already be written against a
+//   stable type.
+// * `verify()` unconditionally returns `AuthError::Unimplemented`.
+//   Two follow-up pieces are needed before it can do anything else: a
+//   CTAP2/WebAuthn hardware transport (VLT-PM51 recommends
+//   `ctap-hid-fido2`, not yet a dependency of this crate) to obtain a
+//   live assertion from a physical key, and an ECDSA P-256 signature
+//   verifier (no primitive for it exists anywhere in this workspace
+//   today) to authenticate that assertion before trusting its
+//   `hmac-secret` output as key material. Validating only the parts of
+//   an assertion that don't need the missing signature check — RP-ID
+//   hash, flags, extension presence — would answer "is this shaped
+//   like a valid credential" while a caller asking `verify()` means
+//   "is this a valid credential," and printing those two questions
+//   identically is worse than refusing outright. `TpmCustodian` in
+//   `vault-key-custody` makes the identical call for the identical
+//   reason and this type mirrors it exactly.
+
+/// FIDO2/WebAuthn hardware security key authenticator using the CTAP2
+/// `hmac-secret` extension (WebAuthn's `prf` extension) as a bind-mode
+/// unlock factor. Works with any CTAP2-compliant authenticator that
+/// implements `hmac-secret` — YubiKey 5-series and many others, not a
+/// vendor-specific integration.
+///
+/// *Scaffold* — see the module-level comment above and
+/// `code/specs/VLT-PM51-hardware-security-keys.md`. `verify()` always
+/// returns [`AuthError::Unimplemented`] until a follow-up PR adds real
+/// hardware I/O and ECDSA P-256 signature verification.
+pub struct WebAuthnPrfAuthenticator {
+    /// Relying-party id this credential was registered under (e.g.
+    /// `"vault-pm"`). Bound into every real assertion's `authData` as
+    /// `SHA-256(rpId)`; a mismatch there is what stops a credential
+    /// registered for one vault from authenticating a different one.
+    relying_party_id: String,
+    /// Opaque credential id returned by the authenticator at
+    /// registration time. Sent back to the authenticator to select
+    /// which resident/non-resident credential to assert with.
+    credential_id: Vec<u8>,
+    /// COSE-encoded public key (`canonical-cbor`-shaped, RFC 8949
+    /// §4.2.3) recorded at registration. Retained now; consumed once
+    /// signature verification lands, so the wrapping type stops taking
+    /// registration data it can't yet fully validate.
+    public_key_cose: Vec<u8>,
+}
+
+impl WebAuthnPrfAuthenticator {
+    /// Build from the three pieces a registration ceremony records:
+    /// relying-party id, credential id, and the credential's COSE
+    /// public key.
+    pub fn new(
+        relying_party_id: impl Into<String>,
+        credential_id: impl Into<Vec<u8>>,
+        public_key_cose: impl Into<Vec<u8>>,
+    ) -> Result<Self, AuthError> {
+        let relying_party_id = relying_party_id.into();
+        let credential_id = credential_id.into();
+        let public_key_cose = public_key_cose.into();
+        if relying_party_id.is_empty() {
+            return Err(AuthError::InvalidParameter {
+                what: "relying_party_id is empty",
+            });
+        }
+        if credential_id.is_empty() {
+            return Err(AuthError::InvalidParameter {
+                what: "credential_id is empty",
+            });
+        }
+        if public_key_cose.is_empty() {
+            return Err(AuthError::InvalidParameter {
+                what: "public_key_cose is empty",
+            });
+        }
+        Ok(Self {
+            relying_party_id,
+            credential_id,
+            public_key_cose,
+        })
+    }
+
+    /// The relying-party id this credential was registered under.
+    pub fn relying_party_id(&self) -> &str {
+        &self.relying_party_id
+    }
+
+    /// The opaque credential id recorded at registration.
+    pub fn credential_id(&self) -> &[u8] {
+        &self.credential_id
+    }
+
+    /// The COSE-encoded public key recorded at registration.
+    pub fn public_key_cose(&self) -> &[u8] {
+        &self.public_key_cose
+    }
+}
+
+impl Authenticator for WebAuthnPrfAuthenticator {
+    fn kind(&self) -> &'static str {
+        "webauthn-prf"
+    }
+    fn mode(&self) -> Mode {
+        Mode::Bind
+    }
+    /// Always fails closed. See the module-level comment above for why
+    /// this doesn't attempt partial validation of the credential bytes.
+    fn verify(&self, _credential: &[u8]) -> Result<AuthAssertion, AuthError> {
+        Err(AuthError::Unimplemented {
+            backend: "FIDO2 CTAP2 hmac-secret (WebAuthn PRF)",
+        })
+    }
+}
+
+// ─────────────────────────────────────────────────────────────────────
+// 5. Tests
 // ─────────────────────────────────────────────────────────────────────
 
 #[cfg(test)]
@@ -1186,10 +1346,111 @@ mod tests {
             AuthError::InvalidParameter { what: "x" },
             AuthError::Crypto,
             AuthError::NoBindFactors,
+            AuthError::Unimplemented {
+                backend: "FIDO2 CTAP2 hmac-secret (WebAuthn PRF)",
+            },
         ];
         for e in &errs {
             let s = e.to_string();
             assert!(s.starts_with("vault-auth:"));
         }
+    }
+
+    // --- WebAuthnPrfAuthenticator (scaffold) ---
+
+    fn sample_webauthn_prf() -> WebAuthnPrfAuthenticator {
+        WebAuthnPrfAuthenticator::new(
+            "vault-pm",
+            b"credential-id-bytes".to_vec(),
+            b"cose-public-key-bytes".to_vec(),
+        )
+        .unwrap()
+    }
+
+    #[test]
+    fn webauthn_prf_reports_bind_mode_and_kind() {
+        let auth = sample_webauthn_prf();
+        assert_eq!(auth.kind(), "webauthn-prf");
+        assert_eq!(auth.mode(), Mode::Bind);
+    }
+
+    #[test]
+    fn webauthn_prf_accessors_round_trip_construction_inputs() {
+        let auth = sample_webauthn_prf();
+        assert_eq!(auth.relying_party_id(), "vault-pm");
+        assert_eq!(auth.credential_id(), b"credential-id-bytes");
+        assert_eq!(auth.public_key_cose(), b"cose-public-key-bytes");
+    }
+
+    #[test]
+    fn webauthn_prf_verify_always_returns_unimplemented() {
+        let auth = sample_webauthn_prf();
+        // Fails closed regardless of what's handed in — including
+        // empty bytes and a payload shaped like a plausible assertion.
+        // See the module-level comment above `WebAuthnPrfAuthenticator`
+        // for why partial validation is deliberately not attempted.
+        for credential in [&b""[..], &b"anything at all"[..]] {
+            match auth.verify(credential) {
+                Err(AuthError::Unimplemented { backend }) => {
+                    assert!(backend.contains("hmac-secret") || backend.contains("PRF"));
+                }
+                other => panic!(
+                    "expected Unimplemented, got {}",
+                    if other.is_ok() { "Ok" } else { "different Err" }
+                ),
+            }
+        }
+    }
+
+    #[test]
+    fn webauthn_prf_rejects_empty_relying_party_id() {
+        match WebAuthnPrfAuthenticator::new("", b"cred".to_vec(), b"key".to_vec()) {
+            Err(AuthError::InvalidParameter { .. }) => {}
+            other => panic!(
+                "expected InvalidParameter, got {}",
+                if other.is_ok() { "Ok" } else { "different Err" }
+            ),
+        }
+    }
+
+    #[test]
+    fn webauthn_prf_rejects_empty_credential_id() {
+        match WebAuthnPrfAuthenticator::new("vault-pm", Vec::<u8>::new(), b"key".to_vec()) {
+            Err(AuthError::InvalidParameter { .. }) => {}
+            other => panic!(
+                "expected InvalidParameter, got {}",
+                if other.is_ok() { "Ok" } else { "different Err" }
+            ),
+        }
+    }
+
+    #[test]
+    fn webauthn_prf_rejects_empty_public_key() {
+        match WebAuthnPrfAuthenticator::new("vault-pm", b"cred".to_vec(), Vec::<u8>::new()) {
+            Err(AuthError::InvalidParameter { .. }) => {}
+            other => panic!(
+                "expected InvalidParameter, got {}",
+                if other.is_ok() { "Ok" } else { "different Err" }
+            ),
+        }
+    }
+
+    #[test]
+    fn webauthn_prf_kind_is_counted_as_extension_factor_in_summaries() {
+        // vault-pm's own summarize_auth_assertions bucket for kinds
+        // other than "password"/"totp" is "extension" — pin that a
+        // successful webauthn-prf assertion (once verify() is real)
+        // would land there, matching the existing extension-factor
+        // test in this module.
+        let assertion = AuthAssertion {
+            kind: "webauthn-prf",
+            mode: Mode::Bind,
+            key_contribution: Some(Zeroizing::new(vec![1, 2, 3, 4])),
+        };
+        let summary = summarize_auth_assertions(&[&assertion]);
+        assert_eq!(summary.extension_count, 1);
+        assert_eq!(summary.password_count, 0);
+        assert_eq!(summary.totp_count, 0);
+        assert!(summary.can_derive_unlock_key());
     }
 }

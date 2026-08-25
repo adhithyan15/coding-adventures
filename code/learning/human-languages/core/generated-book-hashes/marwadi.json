@@ -127,6 +127,228 @@
         "MW-C07-practice"
       ],
       "tex": "marwadi/book/chapters/ch09-see-you-later.tex"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:9856485b115ca3d8",
+      "lessonIds": [
+        "MW-C08-hear-maa",
+        "MW-C08-maa",
+        "MW-C08-hear-baap",
+        "MW-W08-ba",
+        "MW-C08-baap",
+        "MW-C08-hear-bhai",
+        "MW-C08-bhai",
+        "MW-C08-hear-bahan",
+        "MW-C08-bahan",
+        "MW-C08-family-four"
+      ],
+      "tex": "marwadi/book/chapters/ch10-family-four.tex"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:7d325c69aaa5a969",
+      "lessonIds": [
+        "MW-C08-hear-dada",
+        "MW-W08-da",
+        "MW-C08-dada",
+        "MW-C08-hear-dadi",
+        "MW-C08-dadi",
+        "MW-C08-hear-parivaar",
+        "MW-W08-va",
+        "MW-C08-parivaar",
+        "MW-R08-family-foundation",
+        "MW-R08-family-map",
+        "MW-C08-family-seven",
+        "MW-R08-script-close"
+      ],
+      "tex": "marwadi/book/chapters/ch11-family-seven.tex"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:2cd592df647dba28",
+      "lessonIds": [
+        "MW-C09-hear-nana",
+        "MW-C09-nana",
+        "MW-C09-hear-nani",
+        "MW-C09-nani",
+        "MW-C09-hear-pati",
+        "MW-W09-ta",
+        "MW-C09-pati",
+        "MW-R09-maternal-three"
+      ],
+      "tex": "marwadi/book/chapters/ch12-maternal-and-husband.tex"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:b1b0c7c7b47953d2",
+      "lessonIds": [
+        "MW-C09-hear-patni",
+        "MW-C09-patni",
+        "MW-C09-hear-bachcha",
+        "MW-W09-cha",
+        "MW-C09-bachcha",
+        "MW-R09-family-new-five",
+        "MW-C09-family-twelve",
+        "MW-R09-script-close"
+      ],
+      "tex": "marwadi/book/chapters/ch13-wife-and-child.tex"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 14,
+      "sourceHash": "fnv1a64:3333da0f2d4f97a4",
+      "lessonIds": [
+        "MW-C10-hear-bajar",
+        "MW-W10-ja",
+        "MW-C10-bajar",
+        "MW-C10-hear-ghar",
+        "MW-W10-gha",
+        "MW-C10-ghar",
+        "MW-C10-hear-mandir",
+        "MW-C10-mandir",
+        "MW-R10-places-three"
+      ],
+      "tex": "marwadi/book/chapters/ch14-three-places.tex"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 15,
+      "sourceHash": "fnv1a64:75d49d894c151acd",
+      "lessonIds": [
+        "MW-C10-hear-haath",
+        "MW-C10-haath",
+        "MW-C10-hear-paisa",
+        "MW-C10-paisa",
+        "MW-R10-travel-five",
+        "MW-C10-travel-five",
+        "MW-R10-script-close"
+      ],
+      "tex": "marwadi/book/chapters/ch15-hand-and-money.tex"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 16,
+      "sourceHash": "fnv1a64:c2d63e547acf335e",
+      "lessonIds": [
+        "MW-C11-hear-hawa",
+        "MW-C11-hawa",
+        "MW-C11-hear-baadal",
+        "MW-C11-baadal",
+        "MW-C11-hear-barsaat",
+        "MW-C11-barsaat",
+        "MW-R11-weather-three",
+        "MW-C11-weather-three",
+        "MW-R11-weather-close"
+      ],
+      "tex": "marwadi/book/chapters/ch16-weather-three.tex"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 17,
+      "sourceHash": "fnv1a64:13d3cc40f1541814",
+      "lessonIds": [
+        "MW-C12-hear-mausam",
+        "MW-W12-au-matra",
+        "MW-C12-mausam",
+        "MW-C12-hear-garmi",
+        "MW-W12-ga",
+        "MW-C12-garmi",
+        "MW-R12-weather-first-two",
+        "MW-C12-hear-thandi",
+        "MW-W12-dda",
+        "MW-C12-thandi",
+        "MW-R12-weather-new-three",
+        "MW-C12-weather-six",
+        "MW-R12-script-close"
+      ],
+      "tex": "marwadi/book/chapters/ch17-weather-six.tex"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 18,
+      "sourceHash": "fnv1a64:31f2852fa752cf27",
+      "lessonIds": [
+        "MW-C13-hear-dukan",
+        "MW-W13-u-matra",
+        "MW-C13-dukan",
+        "MW-C13-hear-vastu",
+        "MW-C13-vastu",
+        "MW-C13-hear-bhaav",
+        "MW-C13-bhaav",
+        "MW-R13-shopping-three",
+        "MW-C13-shopping-three",
+        "MW-R13-shopping-close"
+      ],
+      "tex": "marwadi/book/chapters/ch18-shopping-three.tex"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 19,
+      "sourceHash": "fnv1a64:bd22d96d9014e3f5",
+      "lessonIds": [
+        "MW-C14-hear-sasta",
+        "MW-C14-sasta",
+        "MW-C14-hear-samaan",
+        "MW-C14-samaan",
+        "MW-R14-shopping-new-two",
+        "MW-C14-shopping-five",
+        "MW-R14-shopping-close"
+      ],
+      "tex": "marwadi/book/chapters/ch19-shopping-five.tex"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 20,
+      "sourceHash": "fnv1a64:f1a8ca7bbf3a4729",
+      "lessonIds": [
+        "MW-C15-hear-kapda",
+        "MW-W15-nukta",
+        "MW-C15-kapda",
+        "MW-C15-hear-mahango",
+        "MW-C15-mahango",
+        "MW-R15-shopping-new-two",
+        "MW-C15-shopping-seven",
+        "MW-R15-shopping-close"
+      ],
+      "tex": "marwadi/book/chapters/ch20-shopping-seven.tex"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 21,
+      "sourceHash": "fnv1a64:147cf2692686f1c1",
+      "lessonIds": [
+        "MW-C16-hear-bas",
+        "MW-C16-bas",
+        "MW-C16-hear-gaadi",
+        "MW-C16-gaadi",
+        "MW-C16-hear-thela",
+        "MW-C16-thela",
+        "MW-R16-transport-three",
+        "MW-C16-transport-three",
+        "MW-R16-transport-close"
+      ],
+      "tex": "marwadi/book/chapters/ch21-transport-three.tex"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 22,
+      "sourceHash": "fnv1a64:7112a7db655ee1e3",
+      "lessonIds": [
+        "MW-C17-hear-riksha",
+        "MW-W17-sha",
+        "MW-C17-riksha",
+        "MW-C17-hear-ghodo",
+        "MW-C17-ghodo",
+        "MW-R17-transport-new-two",
+        "MW-C17-transport-five",
+        "MW-R17-script-close"
+      ],
+      "tex": "marwadi/book/chapters/ch22-transport-five.tex"
     }
   ]
 }
