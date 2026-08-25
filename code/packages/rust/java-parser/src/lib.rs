@@ -258,6 +258,26 @@ mod tests {
     // `>` at a time.
     // -------------------------------------------------------------------
 
+    /// Regression guard for a `/security-review` (round 3) finding on the
+    /// shared-engine fix: a class-body field (as opposed to a method-body
+    /// local variable, covered by the tests above) forces the grammar's
+    /// `class_body_declaration = method_declaration | field_declaration`
+    /// `Alternation` to try `method_declaration` first (splitting the
+    /// nested generic's `>>` while parsing the return type), fail at the
+    /// missing `(`, backtrack, and retry as `field_declaration` — which
+    /// must re-parse the exact same nested-generic type from scratch. An
+    /// earlier version of the shared engine's memo-invalidation fix left
+    /// a stale cached result for the *inner* `List<Integer>` closer behind
+    /// after that backtrack (its own `end_pos` happened to equal the split
+    /// position, since splits don't advance the cursor, and the flawed
+    /// predicate treated that as "didn't touch it"), corrupting the retry.
+    #[test]
+    fn class_body_field_with_nested_generic_survives_method_vs_field_backtracking() {
+        let ast = parse_java("class C { Map<String, List<Integer>> field0; }", "21").unwrap();
+        assert_eq!(find_nodes(&ast, "type_arguments").len(), 2);
+        assert!(!find_nodes(&ast, "field_declaration").is_empty());
+    }
+
     #[test]
     fn two_level_nested_generic_closes_from_a_merged_right_shift_token() {
         let ast = parse_java(
