@@ -2,6 +2,34 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.43] - 2026-08-25 - SIMD PR40: v128.loadN_splat family
+
+### Added
+
+- 4 new `SIMD_OPS` entries, opening the `v128.loadN_splat` family (the
+  smallest slice of the wider `load_extend`/`load_splat`/`load_zero`/
+  `load{8,16,32,64}_lane`/`store{8,16,32,64}_lane` memory-access family
+  PR39 deferred): 220 SIMD opcodes total, up from 216.
+  - `v128.load8_splat` (`0x07`), `v128.load16_splat` (`0x08`),
+    `v128.load32_splat` (`0x09`), `v128.load64_splat` (`0x0A`).
+  - Every sub-opcode value verified live against the SIMD proposal's own
+    `BinarySIMD.md` at the time of this PR; none collided with any
+    pre-existing table entry -- this contiguous run sits immediately
+    after `v128.load32x2_u` (`0x06`, not yet implemented) and
+    immediately before `v128.store` (`0x0B`).
+- 4 new `SimdOpKind` variants: `Load8Splat`, `Load16Splat`, `Load32Splat`,
+  `Load64Splat`. The FIRST opcodes in this table that fuse a real
+  linear-memory read with a lane broadcast in one instruction -- a new
+  instruction SHAPE, not just new arithmetic over already-loaded v128s
+  (unlike `Load`/`Store`, which move raw bytes with no lane
+  reinterpretation, and unlike `SplatI8x16` etc., which broadcast an
+  already-on-stack scalar with no memory access).
+- `simd_load_splat_family_has_the_real_verified_sub_opcode_values`: pins
+  all 4 new sub-opcode values and confirms `v128.load`/`v128.store`
+  bracket this run with no overlap.
+- `simd_ops_table_has_the_expected_220_entries_and_no_duplicates`
+  (renamed from the 216-entry version): bumps the total-count assertion.
+
 ## [0.2.42] - 2026-08-25 - SIMD widen PR39: f32x4/f64x2 rounding family
 
 ### Added

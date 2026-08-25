@@ -2088,6 +2088,32 @@ pub enum SimdOpKind {
     /// established one-family-per-PR cadence (e.g. PR30/PR32's
     /// comparison families, PR34/PR35's max/pmin/pmax families).
     NearestF64x2,
+    /// `v128.load8_splat` (SIMD PR40) -- pop the `i32` base address, add
+    /// this instruction's own `memarg` offset, bounds-checked read of
+    /// exactly 1 raw byte from memory 0, broadcast that byte into all 16
+    /// lanes of a new `v128`. Same "load then broadcast" shape as
+    /// [`Self::Load`] (memory access) fused with [`Self::SplatI8x16`]
+    /// (lane broadcast) -- the FIRST opcode in this table that combines a
+    /// memory access with a lane-broadcast in a single instruction, unlike
+    /// [`Self::Load`] (which just copies 16 raw bytes verbatim, no lane
+    /// reinterpretation) and unlike [`Self::SplatI8x16`] (which broadcasts
+    /// an already-on-stack scalar, no memory access at all). Opens the
+    /// `v128.loadN_splat` family (this PR's whole scope) -- see
+    /// `code/specs/W13-wasm-simd-v128-first-slice.md`'s staged-PR plan
+    /// and the upstream `simd_load_splat.wast` corpus this PR vendors.
+    Load8Splat,
+    /// `v128.load16_splat` (SIMD PR40) -- same "load then broadcast" shape
+    /// as [`Self::Load8Splat`], but reads 2 raw bytes (little-endian) and
+    /// broadcasts that 16-bit value into all 8 lanes of the result.
+    Load16Splat,
+    /// `v128.load32_splat` (SIMD PR40) -- same "load then broadcast" shape
+    /// as [`Self::Load8Splat`], but reads 4 raw bytes (little-endian) and
+    /// broadcasts that 32-bit value into all 4 lanes of the result.
+    Load32Splat,
+    /// `v128.load64_splat` (SIMD PR40) -- same "load then broadcast" shape
+    /// as [`Self::Load8Splat`], but reads 8 raw bytes (little-endian) and
+    /// broadcasts that 64-bit value into both lanes of the result.
+    Load64Splat,
 }
 
 /// One entry in the SIMD opcode table: everything a consumer needs to
@@ -2732,6 +2758,23 @@ pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "f64x2.floor", sub_opcode: 0x75, kind: SimdOpKind::FloorF64x2 },
     SimdOpInfo { name: "f64x2.trunc", sub_opcode: 0x7A, kind: SimdOpKind::TruncF64x2 },
     SimdOpInfo { name: "f64x2.nearest", sub_opcode: 0x94, kind: SimdOpKind::NearestF64x2 },
+
+    // ── v128.loadN_splat family (SIMD PR40) ─────────────────────────────
+    //
+    // Sub-opcode values verified live against the SIMD proposal's own
+    // BinarySIMD.md (https://github.com/WebAssembly/spec/blob/main/
+    // proposals/simd/BinarySIMD.md) at the time of this PR -- 0x07-0x0A
+    // sit in the same "load" sub-opcode block as `v128.load` (0x00) and
+    // `v128.load32x2_s`/`_u` (0x05/0x06, not yet implemented), none of
+    // which collided with any pre-existing entry in this table. See each
+    // variant's own doc comment above (`SimdOpKind::Load8Splat` etc.) for
+    // the exact "load then broadcast" semantics. This PR also vendors
+    // `simd_load_splat.wast` -- see `code/packages/rust/wasm-conformance/
+    // tests/fixtures/fetch_testsuite.py`.
+    SimdOpInfo { name: "v128.load8_splat", sub_opcode: 0x07, kind: SimdOpKind::Load8Splat },
+    SimdOpInfo { name: "v128.load16_splat", sub_opcode: 0x08, kind: SimdOpKind::Load16Splat },
+    SimdOpInfo { name: "v128.load32_splat", sub_opcode: 0x09, kind: SimdOpKind::Load32Splat },
+    SimdOpInfo { name: "v128.load64_splat", sub_opcode: 0x0A, kind: SimdOpKind::Load64Splat },
 ];
 
 /// Look up a SIMD opcode by its LEB128-decoded sub-opcode value (the
@@ -3150,8 +3193,8 @@ mod tests {
     // ── SIMD (0xFD prefix, v128 first slice) ─────────────────────────────────
 
     #[test]
-    fn simd_ops_table_has_the_expected_216_entries_and_no_duplicates() {
-        assert_eq!(SIMD_OPS.len(), 216);
+    fn simd_ops_table_has_the_expected_220_entries_and_no_duplicates() {
+        assert_eq!(SIMD_OPS.len(), 220);
 
         let mut seen_sub_opcodes = std::collections::HashSet::new();
         let mut seen_names = std::collections::HashSet::new();
@@ -4172,5 +4215,34 @@ mod tests {
         // with no overlap.
         assert_eq!(get_simd_op(0xED).map(|o| o.name), Some("f64x2.neg"));
         assert_eq!(get_simd_op(0xF3).map(|o| o.name), Some("f64x2.div"));
+    }
+
+    #[test]
+    fn simd_load_splat_family_has_the_real_verified_sub_opcode_values() {
+        // SIMD PR40 (v128.loadN_splat family): v128.load8_splat (0x07),
+        // v128.load16_splat (0x08), v128.load32_splat (0x09),
+        // v128.load64_splat (0x0A) -- fetched live from BinarySIMD.md.
+        // This contiguous run sits immediately after `v128.load32x2_u`
+        // (0x06, not yet implemented) and immediately before `v128.store`
+        // (0x0B). The `load_zero` family (`v128.load32_zero` 0x5C,
+        // `v128.load64_zero` 0x5D, not yet implemented) lives well
+        // outside this run, confirmed against BinarySIMD.md -- not a
+        // simple "next after splat" continuation.
+        for (name, sub_opcode, kind) in [
+            ("v128.load8_splat", 0x07, SimdOpKind::Load8Splat),
+            ("v128.load16_splat", 0x08, SimdOpKind::Load16Splat),
+            ("v128.load32_splat", 0x09, SimdOpKind::Load32Splat),
+            ("v128.load64_splat", 0x0A, SimdOpKind::Load64Splat),
+        ] {
+            let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
+            assert_eq!(op.name, name);
+            assert_eq!(op.kind, kind);
+            assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
+        }
+        // v128.load (0x00) and v128.store (0x0B) bracket this run with no
+        // overlap -- the load_splat family sits strictly between them in
+        // the sub-opcode space.
+        assert_eq!(get_simd_op(0x00).map(|o| o.name), Some("v128.load"));
+        assert_eq!(get_simd_op(0x0B).map(|o| o.name), Some("v128.store"));
     }
 }
