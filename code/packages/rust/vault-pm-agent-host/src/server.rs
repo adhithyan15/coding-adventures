@@ -539,8 +539,24 @@ mod tests {
         }
 
         // Freeing exactly one slot lets exactly one more connection through.
-        silent.pop();
-        assert!(client::ping(&path).unwrap());
+        //
+        // Dropping a `UnixStream` here closes the socket on *this* (the
+        // client) side immediately, but the server's handler thread for that
+        // connection only learns of the close — and only then releases the
+        // slot via `ConnectionSlotGuard` — the next time its blocking read
+        // notices EOF or an error, which is scheduled independently and not
+        // guaranteed to have happened by the time `pop` returns. A single
+        // immediate `ping` therefore races the server's own slot release: on
+        // a loaded machine (this raced in CI, see the concurrency-cap PR's
+        // linked flake) the ping can lose that race and be refused exactly
+        // like the overflow connection above. Poll with the same bounded
+        // retry `wait_until_ready` already uses elsewhere in this file
+        // (e.g. right after `run_in_background`) instead of asserting the
+        // slot is free on the very first attempt.
+        assert!(
+            client::wait_until_ready(&path, CONNECTION_TIMEOUT),
+            "a freed slot must become usable within one connection timeout"
+        );
 
         drop(silent);
         client::shutdown(&path).unwrap();
