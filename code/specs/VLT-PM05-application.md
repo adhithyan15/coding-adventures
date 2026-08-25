@@ -505,6 +505,75 @@ became visible. Gaps are valid. The application never generates different
 signed bytes for a reserved counter, preventing self-equivocation after a crash
 or ambiguous provider response.
 
+### 7.3 Reclaiming a generation zero orphaned before configuration
+
+§7.1's journal is durably installed under a freshly drawn random
+`BootstrapLocator` *before* the caller (the CLI composition root, for `init`
+and `vault create`) writes the configuration record that makes that locator
+discoverable again. That ordering is required, not incidental: it is what lets
+§7.1's resume path find a crash-resumable journal the instant configuration
+names a locator at all.
+
+It has a mirror-image cost. A crash strictly *between* the `PreparedInit`
+write and the configuration write leaves the journal durable under a locator
+that nothing durable anywhere ever names — the value that would have named it
+lived only in the crashed process's memory. No later command can discover it,
+resume it, or complete it; §7.1's resume path is unreachable because it is
+only ever entered by decoding a locator *out of* configuration. The bytes are
+not lost data — nothing a user created ever existed there — but they are a
+permanent storage leak of ciphertext, salts, and public identifiers absent a
+sweep. VLT-PM41 §8 records the finding.
+
+This is a narrower problem than VLT-PM00 §19.4 general garbage collection,
+which reconciles the *immutable repository object store* against verified
+heads, retained conflicts, history windows, and multi-device grace periods,
+and remains Phase 2 work. The generation-zero case needs none of that
+machinery: a `PreparedInit` record can only exist without a configuration
+reference because of exactly this crash window, since every later transition
+in §7's state machine happens only after the configuration write that names
+the locator has already durably succeeded (§7.1 step 5's `Active` replacement,
+and every `PendingPublication`/`PendingRotation` transition after it, all
+require an already-`Active` — and therefore already-configured — starting
+state). So the state alone is sufficient evidence: a record decoding as
+`PreparedInit` whose locator no live configuration names is provably an
+orphan of this leak, full stop, and every other state is provably never one.
+
+The storage-core adapter (`vault-pm-application-storage-core`) exposes this as
+one operation, run by the CLI composition root immediately before it installs
+a new locator's own `PreparedInit`, holding the same platform-wide writer lock
+that already serializes `init` and `vault create`:
+
+```rust
+impl<B: StorageBackend> StorageCoreApplicationStore<B> {
+    pub fn reclaim_orphaned_preparations(
+        &self,
+        live_locators: &BTreeSet<BootstrapLocator>,
+    ) -> Result<usize, LocalStateStoreError>;
+}
+```
+
+It lists every record in the shared local-state namespace, and for each one
+whose key decodes to a locator absent from `live_locators`, decodes the body
+strictly and deletes it only if it decodes exactly as `LocalVaultStateV1::PreparedInit`
+— compare-and-delete against the exact revision observed, so a record that
+changes between the list and the delete is left alone rather than torn out
+from under a concurrent write. `Active`, `PendingPublication`, and
+`PendingRotation` records are never inspected against `live_locators` at all;
+the state check alone protects them unconditionally, which is the entire
+safety argument — `live_locators` is consulted first only as defense in depth,
+not as the property a real vault's durability rests on. A record this store
+did not write, or whose body fails to decode, is left untouched: reclaiming is
+opt-in per record, never a default for anything unrecognized.
+
+`init`'s fresh-vault path (no configuration exists) calls this with an empty
+`live_locators`, since nothing on that platform home can legitimately
+reference any locator yet. `vault create`'s fresh-target path calls this with
+every locator the current configuration already names, immediately before
+installing the new target's own journal under a different one. Both call
+sites are additive: they run once, before the caller's own
+`compare_exchange(locator, None, ...)`, and change nothing about §7.1's
+resume path for a locator configuration already names.
+
 ## 8. Open and trust
 
 `open` performs:

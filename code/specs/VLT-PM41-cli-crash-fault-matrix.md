@@ -484,12 +484,41 @@ for, the confidentiality fix in
 already overwrites sensitive bodies through the fsync-durable `put` path
 before ever calling `delete`.
 
-**An interrupted generation zero can strand unreachable bytes.** A crash
-between the `PreparedInit` write and the configuration write leaves an
-owner-state record under a random locator that no configuration references.
-It is opaque, unreachable, and never collected. The same is true of object
-frames written before an abandoned mutation's announcement. Physical garbage
-collection is VLT-PM00 §19.4 and Phase 2 work; this is one more input to it.
+**An interrupted generation zero can strand unreachable bytes. Resolved for
+the owner-state record; the object-frame case remains open.** A crash between
+the `PreparedInit` write and the configuration write leaves an owner-state
+record under a random locator that no configuration references. It is opaque,
+unreachable, and was never collected.
+
+Backlog item #16. The finding is kept in the past tense it was written in, for
+the same reason §8's main finding is: deleting the record would delete the
+evidence that the fix works.
+
+**The decision.** Physical garbage collection of the *immutable repository
+object store* — VLT-PM00 §19.4 — reconciles verified heads, retained
+conflicts, history windows, and multi-device grace periods, and correctly
+remains Phase 2 work; it was never the right tool for this narrower case, and
+still is not. The owner-state record's leak has a much smaller cause: a
+`PreparedInit` can only exist without a configuration reference because of
+this exact crash window, since every later transition in VLT-PM05 §7's state
+machine happens strictly after the configuration write that names the
+locator. The state alone is therefore sufficient evidence that a given record
+is this leak's orphan, with no reachability graph, retention policy, or
+multi-device consensus required. VLT-PM05 §7.3 specifies the resulting
+`StorageCoreApplicationStore::reclaim_orphaned_preparations`, run by `init`
+and `vault create`'s fresh-locator paths immediately before they install a new
+locator's own journal, under the same writer lock that already serializes
+both commands. It never inspects `Active`, `PendingPublication`, or
+`PendingRotation` records against configuration at all — the decoded state is
+the entire safety argument, not the caller-supplied set of live locators.
+
+**What remains open.** "The same is true of object frames written before an
+abandoned mutation's announcement" is a different mechanism — an interrupted
+`publish_mutation` can leave immutable object frames in the repository store
+that the abandoned commit never references — and this change does not touch
+it. That case sits squarely inside VLT-PM00 §19.4's mark-and-sweep, which
+needs the reachability graph this narrower fix deliberately avoids building,
+and remains Phase 2 work.
 
 ## 9. Acceptance gates
 

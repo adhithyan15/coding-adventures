@@ -2,6 +2,23 @@
 
 ## Unreleased
 
+- Added `StorageCoreApplicationStore::reclaim_orphaned_preparations`, for
+  `VLT-PM05-application.md` §7.3 and backlog item #16 (VLT-PM41 §8). `init`
+  and `vault create` both install a `PreparedInit` journal under a freshly
+  drawn random locator *before* the caller writes the configuration record
+  that makes that locator discoverable again, so a crash strictly between
+  those two writes strands the journal forever under a locator nothing
+  durable will ever name again — a storage leak, not a correctness or
+  availability defect. Every later state a locator's record can be found in
+  requires that configuration write to have already succeeded, so a record
+  decoding as `PreparedInit` whose locator is absent from the caller's live
+  set is provably this leak's orphan and every other state is provably never
+  one; `reclaim_orphaned_preparations` deletes exactly and only those,
+  compare-and-delete against the exact observed revision so a record that
+  changes between the list and the delete is left alone. `init`'s fresh-vault
+  path and `vault create`'s fresh-target path in `vault-pm-cli` both call it,
+  under the same writer lock that already serializes them, immediately before
+  installing their own new locator's journal.
 - Implemented `BootstrapStore::supersede_generation` over the backend's
   idempotent `delete`, for `VLT-PM43-cli-passphrase-rotation.md` §5.4.
   Generations are installed under their own immutable per-ID keys, so a
