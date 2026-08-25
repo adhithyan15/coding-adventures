@@ -6,7 +6,7 @@
   "system": "abugida",
   "signature": "Rounded, curvy letters, most crowned with a small tick or check-mark headstroke; no continuous top line.",
   "complete": false,
-  "notes": "Syllabary generated from Unicode by generate_syllabary.py: each syllable is a base consonant (varga order) composed with a core vowel sign. Romanization is ISO-15919. The independent (word-initial) vowels are in `independentVowels`; the script's own digits are in `digits`. Recognition only — stroke order is a separate, source-gated effort and is omitted. Parts, not the grid: when stroke data does arrive it is authored only for the base consonants (the entries with a single `components` line) and for the vowel signs; a syllable's figure is assembled from its parts and is never authored separately. `penLifts` is absent from every entry here, and absent means NOT VERIFIED — never none — and must never be inferred from the length of `strokeOrder`.",
+  "notes": "Syllabary generated from Unicode by generate_syllabary.py: each syllable is a base consonant (varga order) composed with a core vowel sign. Romanization is ISO-15919. The independent (word-initial) vowels are in `independentVowels`; the script's own digits are in `digits`. Stroke order is a separate, source-gated effort: only source-verified entries carry it, beginning with independent vowel అ. Parts, not the grid: handwriting is authored only for independent vowels, base consonants (the entries with a single `components` line), and vowel signs; a syllable's figure is assembled from its parts and is never authored separately. When `penLifts` is absent it means NOT VERIFIED — never none — and must never be inferred from the length of `strokeOrder`.",
   "letters": [
     {
       "glyph": "క",
@@ -5440,10 +5440,23 @@
       "sound": "a",
       "role": "vowel",
       "components": [
-        "అ  a — independent vowel (word-initial)"
+        "the rounded left lobe flowing into the broad lower bowl",
+        "the rounded right lobe returning along the inner bar"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "turn around the left lobe",
+        "sweep around the broad lower bowl",
+        "turn around the right lobe",
+        "return left along the inner bar"
+      ],
+      "strokeOrderNote": "Four numbered movements in two pen-down runs: movements 1–2 stay joined around the left lobe and lower bowl; after one lift, movements 3–4 stay joined around the right lobe and back along the inner bar.",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "Sathish Shanmugam, Write Telugu Alphabets, independent vowel అ tracing screen, movements 1–4 (version 2.6)",
+        "url": "https://write-telugu-alphabets.en.aptoide.com/app",
+        "variation": "The tracing screen numbers four directional movements and marks two pen-down starts; the visible joins group movements 1–2 and 3–4. Telugu letter direction is not uniform across the script, so this is one attested pedagogical order fitted to the bundled Noto Sans Telugu outline."
+      },
+      "notes": "Independent short a used when a word or syllable begins with a vowel; it is distinct from the inherent a carried by an unmarked consonant."
     },
     {
       "glyph": "ఆ",

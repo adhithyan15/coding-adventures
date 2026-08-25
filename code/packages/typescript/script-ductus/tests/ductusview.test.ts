@@ -18,7 +18,7 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { parseFont, boundsOf } from "../src/truetype";
-import { DUCTUS, penPathD, type LetterDuctus } from "../src/strokes";
+import { DUCTUS, ductusKey, penPathD, type LetterDuctus } from "../src/strokes";
 import {
   ductusFilmstrip,
   ductusFor,
@@ -77,6 +77,11 @@ const gujaratiOutline = (character: string): GlyphOutline => {
   return { path: g.path, bounds: boundsOf(g.contours) };
 };
 
+const teluguOutline = (character: string): GlyphOutline => {
+  const g = parseFont(load("NotoSansTelugu-Static.ttf")).glyphFor(character)!;
+  return { path: g.path, bounds: boundsOf(g.contours) };
+};
+
 const MA = DUCTUS["ம"];
 const outline = tamilOutline("ம");
 const A = DUCTUS["அ"];
@@ -85,6 +90,8 @@ const AA = DUCTUS["ஆ"];
 const aaOutline = tamilOutline("ஆ");
 const I = DUCTUS["இ"];
 const iOutline = tamilOutline("இ");
+const TELUGU_A = DUCTUS[ductusKey("telugu", "అ")];
+const teluguAOutline = teluguOutline("అ");
 const KA = DUCTUS["க"];
 const kaOutline = tamilOutline("க");
 const CA = DUCTUS["ச"];
@@ -875,6 +882,31 @@ describe("அ — a real cited two-stroke filmstrip", () => {
     expect(done).toHaveLength(1);
     expect(done[0].attrs.d).toBe(penPathD(A.strokes[0], 1));
     expect(pen.attrs.d).toBe(penPathD(A.strokes[1], 1));
+  });
+});
+
+describe("Telugu అ — two joined movement pairs", () => {
+  const steps = ductusSteps(TELUGU_A);
+  const strip = ductusFilmstrip(TELUGU_A, teluguAOutline);
+
+  it("places one lift between movements 2 and 3", () => {
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, true, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1, 1]);
+  });
+
+  it("reports four movements in two strokes", () => {
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 4 movements");
+  });
+
+  it("keeps the first run visible while the inner bar returns left", () => {
+    const last = strip.frames[3];
+    const done = byTag(last, "path").filter((path) => path.attrs.class === "ductus__done");
+    const pen = byTag(last, "path").find((path) => path.attrs.class === "ductus__pen")!;
+    expect(done).toHaveLength(1);
+    expect(done[0].attrs.d).toBe(penPathD(TELUGU_A.strokes[0], 1));
+    expect(pen.attrs.d).toBe(penPathD(TELUGU_A.strokes[1], 1));
   });
 });
 
