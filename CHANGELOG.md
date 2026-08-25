@@ -6,6 +6,51 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Security — the books workflow ran `latexmk` unhardened, and its compile gate was never wired up
+
+- **Fixed arbitrary code execution in `.github/workflows/human-languages-books.yml`.**
+  The job compiled every book with `latexmk -xelatex … book.tex` after `cd`-ing
+  into `code/learning/human-languages/<track>/book`. `latexmk` reads `latexmkrc`
+  / `.latexmkrc` from its working directory and hands them to Perl's `eval`, and
+  that directory is repository content — so a pull request adding
+  `<track>/book/latexmkrc` executed arbitrary Perl on the runner before any TeX
+  was parsed. The same invocation ran with TeX Live's *restricted* shell escape
+  rather than none. Demonstrated by execution, not by inspection: a benign
+  marker `latexmkrc` was written by the old command line and not by the new one.
+- **Root cause was drift, so the fix removes the second call site rather than
+  copying flags into it.** `-norc -r code/scripts/latexmk-safe.rc` was already
+  correct in `check-book-compile.sh`, `build-books-locally.sh`,
+  `verify-human-languages.sh` and every track's `book/build.sh` — and absent from
+  the workflow, the only place the books are compiled at scale. The workflow now
+  invokes `check-book-compile.sh` itself, so there is one hardened invocation in
+  the repository and CI cannot drift from it again.
+- **Added `code/scripts/check_no_book_latexmkrc.py`**, a repository lint that
+  fails if any casing of `latexmkrc` / `.latexmkrc` appears under the book tree,
+  plus 15 unit tests. Defence in depth: a flag protects the call sites somebody
+  remembered to type it at, and this protects the ones not written yet. It
+  reports an unreadable directory as `COULD NOT DETERMINE` with its `errno`
+  named, and exits non-zero — never as "clean".
+- **Added a CI step that verifies the hardening was in effect** by grepping every
+  `book.log` for XeTeX's own `write18 enabled` banner, rather than trusting that
+  the flags were typed. This catches a moved rc file and the older-`latexmk`
+  quirk where `-xelatex` overwrites `$pdflatex` and the rc's `$xelatex` is never
+  consulted.
+- **`check-book-compile.sh` gained `--strict`, and CI now runs it.** The script
+  was the only gate proving the generated LaTeX actually compiles and no workflow
+  referenced it; worse, with no SVG-to-PDF converter installed it printed
+  `compiled 0, skipped 1, failed 0` and exited **0** — a gate reporting success
+  having verified nothing. `--strict` turns every "could not verify" into a
+  failure that names the missing dependency, and fails a run that compiled zero
+  books. Local runs stay lenient and now say so in their own output, so a local
+  pass is never mistaken for a CI-grade pass.
+- **`check-book-compile.sh` now pins `openout_any=p`** rather than inheriting the
+  local distribution's `texmf.cnf` default. `TEXMFOUTPUT` is deliberately left
+  unset and the reason is recorded in the script: files under it are *exempt*
+  from the paranoid check, so setting it would widen what TeX may touch.
+- Changes to `check-book-compile.sh`, `latexmk-safe.rc` and the new lint now
+  appear in the workflow's path filters. They did not before, so a pull request
+  editing the script that compiles every book never ran it.
+
 ### Added - Python uv BUILD-front idempotence audit
 
 - Added a versioned specification, deterministic JSON/Markdown reporter, and

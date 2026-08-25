@@ -22,7 +22,14 @@ on:
       - "code/packages/typescript/human-language-data/**"
       - "code/scripts/build_human_language_book_catalog.py"
       - "code/scripts/scan_latex_log_warnings.py"
+      # The compile gate and its hardening. These were absent from this list,
+      # which meant a pull request editing the script that compiles every book
+      # never ran it — the books gate went green on the strength of nothing.
+      - "code/scripts/check-book-compile.sh"
+      - "code/scripts/check_no_book_latexmkrc.py"
+      - "code/scripts/latexmk-safe.rc"
       - "code/scripts/tests/test_build_human_language_book_catalog.py"
+      - "code/scripts/tests/test_check_no_book_latexmkrc.py"
       - "code/scripts/tests/test_scan_latex_log_warnings.py"
       - ".github/workflows/human-languages-books.yml"
   pull_request:
@@ -76,7 +83,11 @@ jobs:
             code/packages/typescript/human-language-data \
             code/scripts/build_human_language_book_catalog.py \
             code/scripts/scan_latex_log_warnings.py \
+            code/scripts/check-book-compile.sh \
+            code/scripts/check_no_book_latexmkrc.py \
+            code/scripts/latexmk-safe.rc \
             code/scripts/tests/test_build_human_language_book_catalog.py \
+            code/scripts/tests/test_check_no_book_latexmkrc.py \
             code/scripts/tests/test_scan_latex_log_warnings.py \
             .github/workflows/human-languages-books.yml
           diff_status=$?
@@ -107,6 +118,28 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      # FIRST, before Node, before TeX, before anything reads repository content
+      # as code. `latexmk` reads `latexmkrc` / `.latexmkrc` from its working
+      # directory and `eval`s it as Perl, and its working directory during the
+      # build below is `<track>/book` — repository content. Every invocation in
+      # this repository passes `-norc` so that directory is never consulted, but
+      # a flag only protects the call sites somebody remembered to type it at.
+      # This is the second control: the payload must not be in the tree at all.
+      #
+      # Its own tests run first, for the same reason the warning scanner's do —
+      # a silently broken gate is worse than no gate.
+      - name: Test the latexmkrc lint
+        run: |
+          set -euo pipefail
+          python3 -m unittest discover -s code/scripts/tests \
+            -p 'test_check_no_book_latexmkrc.py' -v
+
+      - name: Reject any latexmkrc under a book directory
+        run: |
+          set -euo pipefail
+          python3 code/scripts/check_no_book_latexmkrc.py \
+            --book-root code/learning/human-languages
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -258,7 +291,75 @@ jobs:
           test "$figure_count" -gt 0
           echo "Converted $figure_count generated figure(s)"
 
+      # Compile every book through `check-book-compile.sh`, the same script a
+      # human runs locally — not through a second, parallel `latexmk` command
+      # line maintained here.
+      #
+      # That distinction is the entire point of this step. This job used to
+      # inline its own invocation:
+      #
+      #     latexmk -xelatex -interaction=nonstopmode -halt-on-error book.tex
+      #
+      # with no `-norc`, so `<track>/book/latexmkrc` — repository content, added
+      # by any pull request — was read and `eval`ed as Perl before a line of TeX
+      # was parsed, and with TeX Live's *restricted* shell escape rather than
+      # none. Both risks were closed in `check-book-compile.sh`,
+      # `build-books-locally.sh`, `verify-human-languages.sh` and every track's
+      # `book/build.sh` at the time, and in this file at no time. The hardening
+      # was present everywhere except the one place that compiles the books at
+      # scale, because it was added call site by call site and nobody swept.
+      #
+      # Copying the flags here would fix today and re-open the same gap the next
+      # time the local script learns something. Calling the script means there is
+      # one invocation in the repository and CI cannot drift from it.
+      #
+      # `--strict` is what makes this a gate rather than a report: without it the
+      # script SKIPS any track whose figures it cannot convert and exits 0, so a
+      # runner missing `rsvg-convert` would produce "compiled 0, skipped 1,
+      # failed 0" and a green check having verified nothing. With it, "I could
+      # not verify this" is a failure that names the missing dependency.
+      # `librsvg2-bin` is installed above, so the converter is present here and
+      # `--strict` should never have cause to fire — which is exactly the state
+      # in which you want it armed.
       - name: Build every book
+        run: |
+          set -euo pipefail
+          bash code/scripts/check-book-compile.sh --strict
+
+      # Prove the hardening was in effect, rather than trusting that the flags
+      # were typed. XeTeX announces its shell-escape state in every book.log:
+      #
+      #   " restricted \write18 enabled."   TeX Live's default -- what this job
+      #                                     ran with before the fix
+      #   "\write18 enabled."               fully unrestricted
+      #   (no line at all)                  disabled, which is what we require
+      #
+      # So the logs the build just wrote are direct evidence. If a future change
+      # drops `-r latexmk-safe.rc`, moves the rc, or hits the older-latexmk quirk
+      # where `-xelatex` overwrites `$pdflatex` and the rc's `$xelatex` is never
+      # consulted, this step goes red with the offending file named — none of
+      # which any amount of reading the YAML would catch.
+      - name: Verify shell escape was disabled for every book
+        run: |
+          set -euo pipefail
+          offenders=0
+          while IFS= read -r log; do
+            if grep -q 'write18 enabled' "$log"; then
+              echo "::error::$log reports shell escape ENABLED; latexmk-safe.rc was not in effect."
+              grep -n 'write18' "$log" | head -3
+              offenders=$((offenders + 1))
+            fi
+          done < <(
+            find code/learning/human-languages \
+              -path '*/book/book.log' -type f | sort
+          )
+          test "$offenders" -eq 0
+          echo "Shell escape disabled in every book.log"
+
+      # Collect the PDFs the step above left in each book directory. Separate
+      # from the compile so a packaging mistake here can never be mistaken for a
+      # LaTeX failure there, and vice versa.
+      - name: Collect book PDFs
         run: |
           set -euo pipefail
           output_dir="dist/human-languages/books"
@@ -267,13 +368,15 @@ jobs:
 
           while IFS= read -r book_dir; do
             language=$(basename "$(dirname "$book_dir")")
-            echo "::group::Build $language"
-            (
-              cd "$book_dir"
-              latexmk -xelatex -interaction=nonstopmode -halt-on-error book.tex
-            )
+            # `--strict` already failed the job if any book did not compile, so
+            # a missing PDF here means the compile and this loop disagree about
+            # which directories are books. Say that, rather than letting `cp`
+            # report a bare "No such file or directory".
+            if [ ! -s "$book_dir/book.pdf" ]; then
+              echo "::error::$book_dir/book.pdf is missing or empty after a successful strict compile."
+              exit 1
+            fi
             cp "$book_dir/book.pdf" "$output_dir/$language.pdf"
-            echo "::endgroup::"
             book_count=$((book_count + 1))
           done < <(
             find code/learning/human-languages \
@@ -281,7 +384,7 @@ jobs:
           )
 
           test "$book_count" -gt 0
-          echo "Built $book_count human-language books"
+          echo "Collected $book_count human-language books"
 
       # `latexmk -halt-on-error` stops on hard TeX errors but is perfectly happy
       # with a log full of warnings, so every track's "zero overfull boxes, zero

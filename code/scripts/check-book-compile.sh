@@ -37,8 +37,39 @@
 #
 # Install `librsvg2-bin` (Linux), `librsvg` (brew), or Inkscape to get full
 # coverage.
+#
+# `--strict`: A SKIP IS NOT A PASS
+# --------------------------------
+# The lenient behaviour above is right for a laptop and wrong for a gate. "I
+# could not verify this track" and "I verified this track and it is fine" are
+# different answers, and collapsing them means a CI job can report success
+# having compiled nothing at all — which is exactly what this script did when it
+# was first wired into CI on a runner without `rsvg-convert`:
+#
+#     compiled 0, skipped 1, failed 0        # exit 0
+#
+# So `--strict` turns every "could not determine" into a failure that names the
+# missing dependency, and additionally fails when the run verified zero books.
+# CI passes `--strict`. Local runs stay lenient, and say so in their own output
+# so a local pass is never mistaken for a CI-grade pass.
+#
+#   ./code/scripts/check-book-compile.sh --strict            # every track, gate mode
+#   ./code/scripts/check-book-compile.sh --strict spanish    # one track, gate mode
 
 set -uo pipefail
+
+STRICT=0
+WANTED=()
+for arg in "$@"; do
+  case "$arg" in
+    --strict) STRICT=1 ;;
+    -h|--help)
+      sed -n '2,50p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'
+      exit 0 ;;
+    -*) echo "unknown option: $arg" >&2; exit 2 ;;
+    *)  WANTED+=("$arg") ;;
+  esac
+done
 
 # `pwd -P`, so the containment comparison below is between two fully-resolved
 # paths. Comparing a resolved directory against an unresolved prefix would fail
@@ -62,9 +93,33 @@ RC="$ROOT/code/scripts/latexmk-safe.rc"
 shell_escape=f
 export shell_escape
 
+# Pin the paranoid `\openout` policy rather than inheriting whatever the local
+# distribution's `texmf.cnf` happens to say. TeX Live already ships `p`, so on a
+# stock runner this changes nothing; it is here so the guarantee comes from this
+# script rather than from a distro default that a future image bump could move.
+#
+# `p` refuses `\openout` to absolute paths, to anything reachable via `..`, and
+# to dotfiles. The books only ever write `book.aux`, `book.log`, `book.pdf` and
+# friends into the book directory, so nothing legitimate is lost.
+#
+# TEXMFOUTPUT is deliberately NOT set. It is not the same kind of knob: files
+# under TEXMFOUTPUT are exempt from the paranoid check, so setting it WIDENS
+# what TeX may touch. Leaving it unset keeps `p` at its most restrictive.
+#
+# Caveat recorded honestly: this was verified by reasoning and by TeX Live's
+# documented default, not differentially on the authoring box — MiKTeX ignores
+# the `openout_any` environment variable entirely (it blocks `../` writes under
+# its own configuration, with `openout_any` set to `p`, `a`, or unset alike).
+openout_any=p
+export openout_any
+
 FAILED=0
 COMPILED=0
 SKIPPED=0
+# Tracks that could not be verified, with the reason. Reported separately from
+# FAILED because "broken" and "unknown" are different findings, and only
+# `--strict` collapses the second into a non-zero exit.
+UNVERIFIED=()
 
 # One converter, whichever is present. `convert` is NOT probed: on Windows that
 # name belongs to the NTFS filesystem conversion tool, and running it against an
@@ -91,11 +146,11 @@ svg_to_pdf() {
 }
 
 command -v latexmk >/dev/null 2>&1 || {
-  echo "latexmk is not on PATH — install a TeX distribution (MiKTeX, TeX Live)." >&2
+  echo "CANNOT VERIFY: latexmk is not on PATH, so no book was compiled." >&2
+  echo "  install a TeX distribution (TeX Live: 'latexmk texlive-xetex'; MiKTeX on Windows)" >&2
   exit 2
 }
 
-WANTED=("$@")
 for dir in "$BOOKS"/*/book; do
   [ -f "$dir/book.tex" ] || continue
   track="$(basename "$(dirname "$dir")")"
@@ -132,9 +187,15 @@ for dir in "$BOOKS"/*/book; do
     < <(/usr/bin/find "$dir/figures" -name '*.svg' -type f -print0 2>/dev/null)
 
   if [ ${#svgs[@]} -gt 0 ] && [ -z "$CONVERTER" ]; then
-    printf 'SKIP %-12s %d figure(s) need an SVG-to-PDF converter (rsvg-convert, inkscape or magick)\n' \
-      "$track" "${#svgs[@]}"
-    SKIPPED=$((SKIPPED + 1))
+    reason="$(printf '%d figure(s) need an SVG-to-PDF converter; none of rsvg-convert, inkscape or magick is on PATH (install librsvg2-bin)' "${#svgs[@]}")"
+    if [ "$STRICT" = 1 ]; then
+      printf 'FAIL %-12s CANNOT VERIFY: %s\n' "$track" "$reason"
+      FAILED=$((FAILED + 1))
+    else
+      printf 'SKIP %-12s CANNOT VERIFY: %s\n' "$track" "$reason"
+      SKIPPED=$((SKIPPED + 1))
+    fi
+    UNVERIFIED+=("$track: $reason")
     continue
   fi
 
@@ -177,10 +238,42 @@ for dir in "$BOOKS"/*/book; do
     printf 'FAIL %-12s\n' "$track"
     # The lines that say what actually broke, not the 400 that surround them.
     grep -E "^! |Emergency stop|Fatal error|Missing character" "$log" | head -10
+    # In gate mode nobody can re-run this locally to see more, so include the
+    # tail as well: the grep above misses failures latexmk reports itself
+    # (a missing \input, a font it could not resolve) which never reach book.log
+    # in that form.
+    [ "$STRICT" = 1 ] && { echo "  --- last 40 lines ---"; tail -n 40 "$log" | sed 's/^/  /'; }
     FAILED=$((FAILED + 1))
   fi
   rm -f "$log"
 done
 
 printf '\ncompiled %d, skipped %d, failed %d\n' "$COMPILED" "$SKIPPED" "$FAILED"
+
+# A run that compiled nothing is not a pass. This is the shape that made the
+# gate hollow in the first place: "compiled 0, skipped 1, failed 0" and exit 0.
+if [ "$STRICT" = 1 ] && [ "$COMPILED" = 0 ]; then
+  echo "STRICT: no book was compiled, so this run verified nothing." >&2
+  if [ ${#UNVERIFIED[@]} -gt 0 ]; then
+    printf '  %s\n' "${UNVERIFIED[@]}" >&2
+  else
+    echo "  no track matched the requested selection: ${WANTED[*]:-<all>}" >&2
+  fi
+  exit 1
+fi
+
+if [ "$STRICT" = 1 ]; then
+  [ "$FAILED" = 0 ] || exit 1
+  echo "STRICT: every selected track was compiled and verified."
+  exit 0
+fi
+
+# Lenient mode. Say plainly that this is weaker than the gate, so a green local
+# run is never read as the gate having passed.
+if [ ${#UNVERIFIED[@]} -gt 0 ]; then
+  echo
+  echo "NOTE: this was a lenient (non-gate) run and ${#UNVERIFIED[@]} track(s) were NOT verified:"
+  printf '  %s\n' "${UNVERIFIED[@]}"
+  echo "CI runs this script with --strict, where each of those is a failure."
+fi
 [ "$FAILED" = 0 ] || exit 1
