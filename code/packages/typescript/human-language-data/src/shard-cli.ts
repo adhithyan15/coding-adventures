@@ -803,10 +803,29 @@ export function runShardCli(
       actual = readFileSync(monolith, "utf8");
     }
     if (actual !== expected) {
-      // Same failure, same fix, one message — as `modality-cli` puts it.
+      // BOTH directions are named, and that is a correction rather than a
+      // flourish. This message used to say only "run 'npm run unshard'", which
+      // was right while `core/spine.json` was the only sharded ledger: the
+      // spine's monolith is purely derived, so rebuilding it from the shards is
+      // always the recovery.
+      //
+      // It stopped being right when AUTHORED ledgers were sharded.
+      // `<track>/chapters.json` is edited directly by the Python authoring
+      // scripts in `learning/human-languages/data/scripts/`, which read the
+      // monolith, append a chapter, and write the whole file back. An author who
+      // does that and then follows this message runs `--unshard` and DISCARDS
+      // the chapter they just wrote, because unshard overwrites the monolith
+      // from shards that never saw it.
+      //
+      // A drift message that walks the reader into destroying their own work is
+      // worse than no message. So say which side is newer and let them choose:
+      // the tool cannot know which edit was intended, but the person who just
+      // made it can.
       process.stderr.write(
-        `${plan.path}: generated monolith is missing or stale. ` +
-          `Run 'npm run unshard' and commit the result.\n`,
+        `${plan.path}: the monolith and ${shardDirectoryFor(plan.path)} disagree.\n` +
+          `  If you edited the shards:   npm run unshard ${plan.path}\n` +
+          `  If you edited the monolith: npm run shard ${plan.path}\n` +
+          `  Then commit the result. Do not hand-merge either side.\n`,
       );
       failed = true;
     }
