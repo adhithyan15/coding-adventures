@@ -1,0 +1,21 @@
+{
+  "chapter": 354,
+  "title": "Where The Town Goes When The Work Stops",
+  "label": "ch:el-hotel-y-el-cine",
+  "canDo": "I can say el hotel, el restaurante, el cine, el parque and el jardin, and say which one I am going to.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ES-C354-jardin",
+    "kind": "production",
+    "summary": "Complete ES-C354-jardin: name five places you go when the work is done, and say which one you are going to.",
+    "assesses": [
+      "ES-LEX-C354-WHERE-26",
+      "ES-LEX-C354-WHERE-27",
+      "ES-LEX-C354-WHERE-28",
+      "ES-LEX-C354-WHERE-29",
+      "ES-LEX-C354-WHERE-30"
+    ]
+  }
+}

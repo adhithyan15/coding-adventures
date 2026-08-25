@@ -2,6 +2,28 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.52] - 2026-08-25 (SIMD PR40: v128.loadN_splat family)
+
+### Added
+
+- Type-check coverage for the 4 new load-splat opcodes
+  (`v128.load8_splat`/`load16_splat`/`load32_splat`/`load64_splat`):
+  joined the existing `Load`/`Store` memarg-decoding match arm --
+  identical memarg parsing (align, offset[, memidx]) and identical
+  multi-memory-memidx rejection (fail closed until real multi-memory
+  support lands, same security-review discipline as `v128.load`/
+  `v128.store` from PR15/task #162-164), just with a pop-I32/push-V128
+  type rule shared with `Load` (the "splat" half of the semantics is a
+  pure execution-time concern, invisible to the type checker).
+- 5 new unit tests in `tests/type_check.rs`: `valid_v128_load_splat_
+  family` (all 4 opcodes build cleanly with a declared memory),
+  `invalid_v128_load_splat_family_with_no_memory_at_all`,
+  `invalid_v128_load_splat_family_wrong_operand_type` (mirrors the
+  upstream `simd_load_splat.wast` corpus's own type-mismatch checks),
+  and `invalid_v128_load8_splat_explicit_nonzero_memidx_is_rejected_
+  not_silently_redirected_to_memory_0` (mirrors the existing `v128.load`
+  security-review test for the shared memidx-rejection code path).
+
 ## [0.2.51] - 2026-08-25 (SIMD widen PR39: f32x4/f64x2 rounding family)
 
 ### Added

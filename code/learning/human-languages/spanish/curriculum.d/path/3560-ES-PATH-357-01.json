@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-357-01",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "ES-C357-navidad",
+    "ES-C357-pascua",
+    "ES-C357-vispera",
+    "ES-C357-regalo",
+    "ES-C357-tarjeta"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-357-SPAN"
+  ],
+  "after": []
+}

@@ -1,0 +1,871 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 359,
+  "title": "What It Weighs, And How Much There Is",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ec3d89ffff2acda5",
+  "lessons": [
+    {
+      "id": "ES-C359-metro",
+      "sequence": 6870,
+      "title": "el metro — one Spanish word, two Greek ancestors",
+      "headword": "el metro",
+      "romanization": "el metro",
+      "gloss": "a metre — Greek metron, a measure, as in diameter and geometry; the underground metro is a different word, short for metropolitano, from meter a mother plus polis a city",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6ac4da98bde61a14",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the kind, then the brand. (La clase; la marca.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el número — what comes in front of it."
+            },
+            {
+              "kind": "speech",
+              "text": "la ciudad — what the other metro runs under."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ME-tro, two beats with the weight on the first. The tr is one cluster, with a tapped r. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el metro — \"the metre,\" and also \"the underground.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Those are two different words that happen to have arrived at the same shape, and keeping them apart is the point of this lesson."
+            },
+            {
+              "kind": "speech",
+              "text": "The first is Greek métron, a measure. It is everywhere:"
+            },
+            {
+              "kind": "speech",
+              "text": "a diameter is a measure across;"
+            },
+            {
+              "kind": "speech",
+              "text": "geometry is earth-measuring, which is what it was for — resurveying Egypt after the Nile flooded;"
+            },
+            {
+              "kind": "speech",
+              "text": "symmetry is measuring together;"
+            },
+            {
+              "kind": "speech",
+              "text": "and every -meter on an instrument is a measurer."
+            },
+            {
+              "kind": "speech",
+              "text": "When the French Revolution wanted a unit that belonged to nobody, it went to Greek and called it a mètre."
+            },
+            {
+              "kind": "speech",
+              "text": "The second metro is a train, and it has nothing to do with measuring. It is short for ferrocarril metropolitano, and metropolis is mḗtēr, a mother, plus pólis, a city: the mother city, the one that sent out colonies."
+            },
+            {
+              "kind": "speech",
+              "text": "So one Spanish word, two Greek ancestors, no relation between them."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The unit of length, and a warning that a short word can have two histories."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el metro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el metro*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un metro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un metro*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tres metros",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tres metros*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does métron mean? (A measure.) And what is the metro you ride short for? (Metropolitano — the mother city.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C359-gramo",
+      "sequence": 6880,
+      "title": "el gramo — the same word as grammar",
+      "headword": "el gramo",
+      "romanization": "el gramo",
+      "gloss": "a gram — Greek gramma, a written thing and also a small weight, from graphein to scratch; grammar, program, diagram and telegram are the same gramma",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dad2b07b3c3d5452",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the brand, then the metre. (La marca; el metro.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la palabra — written, like its cousin."
+            },
+            {
+              "kind": "speech",
+              "text": "el cine — where you met graphein before."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "GRA-mo, two beats with the weight on the first. The g before a is hard, and gr is one cluster. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el gramo — \"the gram.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Greek grámma is what has been written — a letter, a mark, a scratch — from gráphein, to scratch or write. You met gráphein in el cine, inside the cinematógrafo."
+            },
+            {
+              "kind": "speech",
+              "text": "It also named a very small unit of weight, because a small weight is a scratch on a balance beam. That is the one the metric system picked up."
+            },
+            {
+              "kind": "speech",
+              "text": "Which means el gramo and la gramática are the same Greek word. Grammar is the art of letters; a gram is a written mark on a scale. Nothing else connects them."
+            },
+            {
+              "kind": "speech",
+              "text": "The same gramma is all over Spanish and English:"
+            },
+            {
+              "kind": "speech",
+              "text": "el programa — written in advance;"
+            },
+            {
+              "kind": "speech",
+              "text": "el diagrama — written across;"
+            },
+            {
+              "kind": "speech",
+              "text": "el telegrama — written far;"
+            },
+            {
+              "kind": "speech",
+              "text": "anagram — written back;"
+            },
+            {
+              "kind": "speech",
+              "text": "epigram — written on."
+            },
+            {
+              "kind": "speech",
+              "text": "And a Spanish note worth keeping: el programa, el diagrama and el telegrama all end in -a and are all masculine, because Greek neuters in -ma came into Spanish that way."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The unit of weight, and a Greek word that turns out to be underneath grammar."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el gramo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el gramo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cien gramos",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cien gramos*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un gramo y un metro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un gramo y un metro*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does grámma mean? (Something written.) And which everyday word for the rules of a language is the same root? (Grammar.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C359-kilo",
+      "sequence": 6890,
+      "title": "el kilo — the Greek thousand, not the Latin one",
+      "headword": "el kilo",
+      "romanization": "el kilo",
+      "gloss": "a kilo — Greek khilioi, a thousand; it is not Latin mille, so kilo and the mil of mil gracias are two unrelated thousands",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b7d8c2b9b9e33b0b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the metre, then the gram. (El metro; el gramo.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mil gracias — the other thousand."
+            },
+            {
+              "kind": "speech",
+              "text": "el gramo — what it counts a thousand of."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "KI-lo, two beats with the weight on the first. The k is hard; this is one of the few Spanish words that keeps a k at all. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el kilo — \"the kilo.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The men who built the metric system made one tidy decision: the prefixes that make a unit bigger come from Greek, and the ones that make it smaller come from Latin."
+            },
+            {
+              "kind": "speech",
+              "text": "So kilo-, hecto- and deca- are Greek, and deci-, centi- and mili- are Latin. You can read a metric word and know which way it is going before you know what it means."
+            },
+            {
+              "kind": "speech",
+              "text": "Kilo- is Greek khīlioi, a thousand. A kilogramo is a thousand gramos; a kilómetro is a thousand metros. Spanish clips both in ordinary speech and says un kilo, diez kilos."
+            },
+            {
+              "kind": "speech",
+              "text": "And here is what it is not. Latin's thousand is mille, and you already have it: it is the mil in mil gracias. English keeps mille in mile, which is mille passūs, a thousand paces, and in million, a big thousand."
+            },
+            {
+              "kind": "speech",
+              "text": "Two languages, two thousands, and no relation between them at all — which is why kilo and mil look nothing alike."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The unit you buy food in, and a rule of thumb for reading every other metric word."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el kilo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el kilo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un kilo de arroz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un kilo de arroz*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dos kilos",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dos kilos*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which language does kilo- come from? (Greek.) And which thousand is the mil of mil gracias? (The Latin one, mille.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C359-litro",
+      "sequence": 6900,
+      "title": "el litro — the same word as the pound",
+      "headword": "el litro",
+      "romanization": "el litro",
+      "gloss": "a litre — Greek litra, a Sicilian unit, the same word Latin took as libra, the pound; a pound is still abbreviated lb, and Libra is the scales in the sky",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:da851f1c338e522e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the gram, then the kilo. (El gramo; el kilo.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el agua — what it measures most often."
+            },
+            {
+              "kind": "speech",
+              "text": "la cantidad — the plain word for how much."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "LI-tro, two beats with the weight on the first. The l is clear, and tr is one cluster. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el litro — \"the litre.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Lítra was a unit of weight in Greek Sicily, and Latin borrowed it as lībra, the pound. So the litro in a bottle and the libra on an old set of scales are one word that split in two: French took the Greek shape for the new metric measure, and Spanish took that from French."
+            },
+            {
+              "kind": "speech",
+              "text": "The Latin half is hiding all over English, and nobody sees it because it is never spelled the way it sounds:"
+            },
+            {
+              "kind": "speech",
+              "text": "a pound is abbreviated lb — that is lībra, not pound;"
+            },
+            {
+              "kind": "speech",
+              "text": "Libra is the scales in the sky, the constellation shaped like a balance;"
+            },
+            {
+              "kind": "speech",
+              "text": "to deliberate is dē-lībrāre, to weigh a thing thoroughly before deciding;"
+            },
+            {
+              "kind": "speech",
+              "text": "equilibrium is equal weights;"
+            },
+            {
+              "kind": "speech",
+              "text": "and a level is a lībella, a little balance."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish kept la libra for the pound as well, so both halves of the split are still in the language, one in the kitchen and one in the history books."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The unit you buy liquid in, and an old weight hiding inside five English words."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el litro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el litro*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un litro de agua",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un litro de agua*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dos litros de agua",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dos litros de agua*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which Latin word is litro a twin of? (Lībra, the pound.) And why is a pound written lb? (From lībra.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C359-peso",
+      "sequence": 6910,
+      "title": "el peso — the weight that turned into money",
+      "headword": "el peso",
+      "romanization": "el peso",
+      "gloss": "weight — Latin pensum, a thing weighed out, from pendere to weigh and to hang; pension, spend, expensive, pendant and ponder are all still weighing something",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:987dd9a400755eba",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the kilo, then the litre. (El kilo; el litro.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "contar — the other way to find out how much."
+            },
+            {
+              "kind": "speech",
+              "text": "la moneda — what took its name from it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "PE-so, two beats with the weight on the first. The s is clear, never buzzed. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el peso — \"the weight.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin pendere meant two things at once: to hang, and to weigh. That is not two meanings — it is one, because the way you weighed a thing was to hang it from a balance. Pēnsum is what came off the scale: a portion, weighed out."
+            },
+            {
+              "kind": "speech",
+              "text": "Then money got involved. Before coins were trusted, you paid in metal and you weighed it, so paying and weighing became one act. English is still full of the consequences:"
+            },
+            {
+              "kind": "speech",
+              "text": "a pension is a payment weighed out at intervals;"
+            },
+            {
+              "kind": "speech",
+              "text": "to spend is expendere, to weigh out;"
+            },
+            {
+              "kind": "speech",
+              "text": "something expensive cost a lot of weighing;"
+            },
+            {
+              "kind": "speech",
+              "text": "to compensate is to weigh one thing against another."
+            },
+            {
+              "kind": "speech",
+              "text": "The hanging survived too, in a pendant and a pendulum, both of which dangle. And to ponder is ponderāre, to weigh a thing in your mind — which is also what pensive does."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish then named a coin after the weight and shipped it across an ocean, which is why so much of the Americas still counts in pesos."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A length, a weight and a volume, all with a number in front: el metro, el gramo, el kilo, el litro, el peso."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el peso",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el peso*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el peso del pan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el peso del pan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un kilo, un litro, un metro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un kilo, un litro, un metro*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What two things did pendere mean? (To hang and to weigh.) And why is a coin called un peso? (It was named after the weight of metal.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

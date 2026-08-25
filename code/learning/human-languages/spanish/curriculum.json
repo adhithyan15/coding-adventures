@@ -4648,6 +4648,118 @@
         "ES-EXT-352-COUNT"
       ],
       "after": []
+    },
+    {
+      "id": "ES-PATH-353-01",
+      "spine_node": "SPINE-ASK-LOCATION",
+      "lessons": [
+        "ES-C353-hospital",
+        "ES-C353-banco",
+        "ES-C353-farmacia",
+        "ES-C353-biblioteca",
+        "ES-C353-museo"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-353-PLACE"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-354-01",
+      "spine_node": "SPINE-ASK-LOCATION",
+      "lessons": [
+        "ES-C354-hotel",
+        "ES-C354-restaurante",
+        "ES-C354-cine",
+        "ES-C354-parque",
+        "ES-C354-jardin"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-354-PLACE"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-355-01",
+      "spine_node": "SPINE-ASK-LOCATION",
+      "lessons": [
+        "ES-C355-pared",
+        "ES-C355-techo",
+        "ES-C355-piso",
+        "ES-C355-rincon",
+        "ES-C355-fondo"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-355-PLACE"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-356-01",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "ES-C356-desde",
+        "ES-C356-cita",
+        "ES-C356-etapa",
+        "ES-C356-ocasion",
+        "ES-C356-repente"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-356-SPAN"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-357-01",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "ES-C357-navidad",
+        "ES-C357-pascua",
+        "ES-C357-vispera",
+        "ES-C357-regalo",
+        "ES-C357-tarjeta"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-357-SPAN"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-358-01",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C358-color",
+        "ES-C358-tamano",
+        "ES-C358-forma",
+        "ES-C358-clase",
+        "ES-C358-marca"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-358-REF"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-359-01",
+      "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+      "lessons": [
+        "ES-C359-metro",
+        "ES-C359-gramo",
+        "ES-C359-kilo",
+        "ES-C359-litro",
+        "ES-C359-peso"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-359-COUNT"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -4806,7 +4918,9 @@
         "ES-PATH-342-01",
         "ES-PATH-343-01",
         "ES-PATH-348-01",
-        "ES-PATH-349-01"
+        "ES-PATH-349-01",
+        "ES-PATH-356-01",
+        "ES-PATH-357-01"
       ],
       "omits": [
         "TIME-MORNING",
@@ -4829,7 +4943,10 @@
         "ES-PATH-340-01",
         "ES-PATH-341-01",
         "ES-PATH-346-01",
-        "ES-PATH-347-01"
+        "ES-PATH-347-01",
+        "ES-PATH-353-01",
+        "ES-PATH-354-01",
+        "ES-PATH-355-01"
       ],
       "omits": [],
       "relocates": {}
@@ -4920,7 +5037,8 @@
         "ES-PATH-280-01",
         "ES-PATH-281-01",
         "ES-PATH-345-01",
-        "ES-PATH-350-01"
+        "ES-PATH-350-01",
+        "ES-PATH-358-01"
       ],
       "omits": [],
       "relocates": {}
@@ -4932,7 +5050,8 @@
         "ES-PATH-026",
         "ES-PATH-344-01",
         "ES-PATH-351-01",
-        "ES-PATH-352-01"
+        "ES-PATH-352-01",
+        "ES-PATH-359-01"
       ],
       "omits": [],
       "relocates": {}
@@ -9428,6 +9547,111 @@
         "ES-C352-mayoria",
         "ES-C352-resto",
         "ES-C352-escaso"
+      ]
+    },
+    {
+      "id": "ES-EXT-353-PLACE",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five buildings a town has and ask where one of them is.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C353-hospital",
+        "ES-C353-banco",
+        "ES-C353-farmacia",
+        "ES-C353-biblioteca",
+        "ES-C353-museo"
+      ]
+    },
+    {
+      "id": "ES-EXT-354-PLACE",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name the places a town keeps for the hours nobody is working.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C354-hotel",
+        "ES-C354-restaurante",
+        "ES-C354-cine",
+        "ES-C354-parque",
+        "ES-C354-jardin"
+      ]
+    },
+    {
+      "id": "ES-EXT-355-PLACE",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name the surfaces of a room and say where in it a thing stands.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C355-pared",
+        "ES-C355-techo",
+        "ES-C355-piso",
+        "ES-C355-rincon",
+        "ES-C355-fondo"
+      ]
+    },
+    {
+      "id": "ES-EXT-356-SPAN",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can say when something starts, name a fixed time, and say that something happened without warning.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C356-desde",
+        "ES-C356-cita",
+        "ES-C356-etapa",
+        "ES-C356-ocasion",
+        "ES-C356-repente"
+      ]
+    },
+    {
+      "id": "ES-EXT-357-SPAN",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name the two feasts a Spanish year turns on, the day before one, and what arrives with it.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C357-navidad",
+        "ES-C357-pascua",
+        "ES-C357-vispera",
+        "ES-C357-regalo",
+        "ES-C357-tarjeta"
+      ]
+    },
+    {
+      "id": "ES-EXT-358-REF",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can pick out one thing among several by naming its colour, its size, its shape, its kind or its maker.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C358-color",
+        "ES-C358-tamano",
+        "ES-C358-forma",
+        "ES-C358-clase",
+        "ES-C358-marca"
+      ]
+    },
+    {
+      "id": "ES-EXT-359-COUNT",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can put a number and a unit on how long, how heavy and how much of a thing there is.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C359-metro",
+        "ES-C359-gramo",
+        "ES-C359-kilo",
+        "ES-C359-litro",
+        "ES-C359-peso"
       ]
     }
   ],

@@ -1,5 +1,22 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.62 — 2026-08-25 — SIMD PR40: v128.loadN_splat family text-form encoding
+
+### Added
+
+- 4 new `SimdOpKind` variants (`Load8Splat`/`Load16Splat`/`Load32Splat`/
+  `Load64Splat`) joined the existing memarg-encoding match arm in both
+  `encode_stream_instr` and `encode_flat_instr` alongside `Load`/`Store`
+  -- identical `parse_memarg` (align, offset) handling, no explicit
+  leading memidx token support (memory 0 only, same scope as
+  `v128.load`/`v128.store`). Only the sub-opcode value differs between
+  all six kinds sharing this arm now.
+- 1 new unit test:
+  `v128_load_splat_family_encodes_the_real_sub_opcodes_with_a_memarg`,
+  covering the folded form with an explicit `offset=` attribute for all
+  4 opcodes plus the flat/stream form for one, mirroring
+  `v128_load_and_store_encode_the_real_sub_opcodes_with_a_memarg`.
+
 ## 0.1.61 — 2026-08-25 — SIMD widen PR39: f32x4/f64x2 rounding family text-form encoding
 
 ### Added

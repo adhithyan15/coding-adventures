@@ -11,7 +11,9 @@
     "ES-PATH-342-01",
     "ES-PATH-343-01",
     "ES-PATH-348-01",
-    "ES-PATH-349-01"
+    "ES-PATH-349-01",
+    "ES-PATH-356-01",
+    "ES-PATH-357-01"
   ],
   "omits": [
     "TIME-MORNING",

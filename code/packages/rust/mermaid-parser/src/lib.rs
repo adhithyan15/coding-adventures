@@ -1951,6 +1951,9 @@ fn parse_xychart_axis_config(source: &str, key: &str) -> XyAxisConfig {
         show_title: boolean("showTitle"),
         title_font_size: number("titleFontSize").filter(|value| *value > 0.0),
         title_padding: number("titlePadding"),
+        show_tick: boolean("showTick"),
+        tick_length: number("tickLength"),
+        tick_width: number("tickWidth").filter(|value| *value > 0.0),
         show_axis_line: boolean("showAxisLine"),
         axis_line_width: number("axisLineWidth").filter(|value| *value > 0.0),
     }
@@ -6139,7 +6142,7 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     #[test]
     fn xychart_preserves_core_init_configuration() {
         let diagram = parse_xychart(
-            "%%{init: {\"xyChart\": {\"width\": 720, \"height\": 440, \"titleFontSize\": 24, \"titlePadding\": 14, \"showTitle\": false, \"showDataLabel\": true, \"showDataLabelOutsideBar\": true, \"xAxis\": {\"showLabel\": false, \"labelFontSize\": 13, \"labelPadding\": 7, \"showTitle\": false, \"titleFontSize\": 18, \"titlePadding\": 9, \"showAxisLine\": false, \"axisLineWidth\": 4}, \"yAxis\": {\"showLabel\": true, \"labelFontSize\": 15, \"labelPadding\": 8, \"showTitle\": true, \"titleFontSize\": 19, \"titlePadding\": 10, \"showAxisLine\": true, \"axisLineWidth\": 5}}, \"themeVariables\": {\"xyChart\": {\"dataLabelColor\": \"#123456\"}}}}%%\nxychart\ntitle Hidden\nbar [10, 20]\n",
+            "%%{init: {\"xyChart\": {\"width\": 720, \"height\": 440, \"titleFontSize\": 24, \"titlePadding\": 14, \"showTitle\": false, \"showDataLabel\": true, \"showDataLabelOutsideBar\": true, \"xAxis\": {\"showLabel\": false, \"labelFontSize\": 13, \"labelPadding\": 7, \"showTitle\": false, \"titleFontSize\": 18, \"titlePadding\": 9, \"showTick\": false, \"tickLength\": 11, \"tickWidth\": 3, \"showAxisLine\": false, \"axisLineWidth\": 4}, \"yAxis\": {\"showLabel\": true, \"labelFontSize\": 15, \"labelPadding\": 8, \"showTitle\": true, \"titleFontSize\": 19, \"titlePadding\": 10, \"showTick\": true, \"tickLength\": 12, \"tickWidth\": 4, \"showAxisLine\": true, \"axisLineWidth\": 5}}, \"themeVariables\": {\"xyChart\": {\"dataLabelColor\": \"#123456\"}}}}%%\nxychart\ntitle Hidden\nbar [10, 20]\n",
         )
         .unwrap();
 
@@ -6160,10 +6163,16 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         assert_eq!(diagram.xy_config.x_axis.show_title, Some(false));
         assert_eq!(diagram.xy_config.x_axis.title_font_size, Some(18.0));
         assert_eq!(diagram.xy_config.x_axis.title_padding, Some(9.0));
+        assert_eq!(diagram.xy_config.x_axis.show_tick, Some(false));
+        assert_eq!(diagram.xy_config.x_axis.tick_length, Some(11.0));
+        assert_eq!(diagram.xy_config.x_axis.tick_width, Some(3.0));
         assert_eq!(diagram.xy_config.x_axis.show_axis_line, Some(false));
         assert_eq!(diagram.xy_config.x_axis.axis_line_width, Some(4.0));
         assert_eq!(diagram.xy_config.y_axis.show_label, Some(true));
         assert_eq!(diagram.xy_config.y_axis.label_font_size, Some(15.0));
+        assert_eq!(diagram.xy_config.y_axis.show_tick, Some(true));
+        assert_eq!(diagram.xy_config.y_axis.tick_length, Some(12.0));
+        assert_eq!(diagram.xy_config.y_axis.tick_width, Some(4.0));
         assert_eq!(diagram.xy_config.y_axis.axis_line_width, Some(5.0));
     }
 

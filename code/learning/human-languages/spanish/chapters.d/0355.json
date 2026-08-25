@@ -1,0 +1,21 @@
+{
+  "chapter": 355,
+  "title": "Inside The Building, Not Outside It",
+  "label": "ch:la-pared-y-el-techo",
+  "canDo": "I can say la pared, el techo, el piso, el rincon and el fondo, and place a thing inside a room instead of inside a town.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ES-C355-fondo",
+    "kind": "production",
+    "summary": "Complete ES-C355-fondo: name the wall, the ceiling and the floor of a room, and put a thing in its corner or at its back.",
+    "assesses": [
+      "ES-LEX-C355-WHERE-31",
+      "ES-LEX-C355-WHERE-32",
+      "ES-LEX-C355-WHERE-33",
+      "ES-LEX-C355-WHERE-34",
+      "ES-LEX-C355-WHERE-35"
+    ]
+  }
+}

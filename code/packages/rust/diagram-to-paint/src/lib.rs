@@ -647,6 +647,19 @@ where
                     *stroke_width,
                 )));
             }
+            LayoutedChartItem::AxisTickMark {
+                x1,
+                y1,
+                x2,
+                y2,
+                stroke_width,
+            } => {
+                instructions.push(PaintInstruction::Path(line_path(
+                    &[Point { x: *x1, y: *y1 }, Point { x: *x2, y: *y2 }],
+                    "#6b7280",
+                    *stroke_width,
+                )));
+            }
             LayoutedChartItem::GridLine { x1, y1, x2, y2 } => {
                 instructions.push(PaintInstruction::Path(PaintPath {
                     base: PaintBase::default(),

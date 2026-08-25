@@ -1785,6 +1785,41 @@
       "language": "spanish",
       "chapter": 352,
       "output": "spanish/book/chapters/ch352-el-conjunto-y-el-resto.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 353,
+      "output": "spanish/book/chapters/ch353-el-hospital-y-el-banco.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 354,
+      "output": "spanish/book/chapters/ch354-el-hotel-y-el-cine.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 355,
+      "output": "spanish/book/chapters/ch355-la-pared-y-el-techo.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 356,
+      "output": "spanish/book/chapters/ch356-desde-y-de-repente.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 357,
+      "output": "spanish/book/chapters/ch357-la-navidad-y-la-pascua.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 358,
+      "output": "spanish/book/chapters/ch358-el-color-y-el-tamano.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 359,
+      "output": "spanish/book/chapters/ch359-el-kilo-y-el-litro.tex"
     }
   ]
 }

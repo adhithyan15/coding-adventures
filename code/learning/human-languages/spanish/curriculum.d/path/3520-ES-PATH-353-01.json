@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-353-01",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "lessons": [
+    "ES-C353-hospital",
+    "ES-C353-banco",
+    "ES-C353-farmacia",
+    "ES-C353-biblioteca",
+    "ES-C353-museo"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-353-PLACE"
+  ],
+  "after": []
+}

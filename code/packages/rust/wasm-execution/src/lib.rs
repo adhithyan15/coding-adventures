@@ -1537,19 +1537,23 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
                     opcode: 0xFD,
                     operand: DecodedOperand::Simd { sub_opcode, aux: lane_idx as u32 },
                 });
-            } else if sub_opcode == 0x00 || sub_opcode == 0x0B {
-                // v128.load / v128.store (SIMD widen PR15): a standard
+            } else if sub_opcode == 0x00 || sub_opcode == 0x0B || (0x07..=0x0A).contains(&sub_opcode) {
+                // v128.load / v128.store (SIMD widen PR15), plus the
+                // v128.loadN_splat family (SIMD PR40, sub-opcodes
+                // 0x07-0x0A -- `v128.load8_splat`/`load16_splat`/
+                // `load32_splat`/`load64_splat`): all carry a standard
                 // `memarg` immediate (align, offset[, memidx]) -- reuses
                 // the SAME decoder every scalar `iNN.load`/`iNN.store`
                 // uses, so the multi-memory proposal's flags-bit `0x40`
                 // (if a producer ever combines it with SIMD) still
                 // consumes the right number of bytes and doesn't desync
                 // the rest of the function body. This first v128.load/
-                // store slice always executes against memory 0 (see the
-                // executor in `register_simd`) -- the smallest real
-                // slice per this PR's scope, not a decode bug; a later
-                // PR can widen it to real multi-memory support the same
-                // way WASM92 did for the scalar family.
+                // store slice (and the load_splat family added in PR40)
+                // always executes against memory 0 (see the executor in
+                // `register_simd`) -- the smallest real slice per this
+                // PR's scope, not a decode bug; a later PR can widen it
+                // to real multi-memory support the same way WASM92 did
+                // for the scalar family.
                 let (operand, consumed) = decode_immediates(code, offset, &["memarg"]);
                 offset += consumed;
                 let mem_offset = match operand {
@@ -6250,6 +6254,77 @@ fn register_simd(vm: &mut GenericVM) {
                 let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
                 let addr = (base as u32 as usize).wrapping_add(aux);
                 get_memory_at(ctx, 0)?.write_bytes(addr, &bytes).map_err(VMError::from)?;
+            }
+            SimdOpKind::Load8Splat => {
+                // v128.load8_splat (SIMD PR40): pop the i32 base address,
+                // add this instruction's own memarg offset (packed into
+                // `aux`, same convention as `Load`/`Store` above),
+                // bounds-checked 1-byte read from memory 0, broadcast
+                // that single byte into all 16 lanes of a new v128 -- a
+                // "load then broadcast" fusion of `Load`'s memory access
+                // and `SplatI8x16`'s lane-broadcast shape (see this
+                // opcode's own `SimdOpKind::Load8Splat` doc comment in
+                // wasm-opcodes). Reuses the scalar `load_i32_8u` narrow
+                // loader purely for its bounds-checked byte read -- the
+                // zero-extension to i32 it also does is irrelevant here,
+                // since only the low byte is ever read back out.
+                let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+                let addr = (base as u32 as usize).wrapping_add(aux);
+                let byte = get_memory_at(ctx, 0)?.load_i32_8u(addr).map_err(VMError::from)? as u8;
+                let bytes = [byte; 16];
+                let handle = push_v128(ctx, bytes)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::Load16Splat => {
+                // v128.load16_splat (SIMD PR40): same "load then
+                // broadcast" shape as `Load8Splat`, but reads 2 raw bytes
+                // (little-endian) via the scalar `load_i32_16u` narrow
+                // loader and broadcasts that 16-bit value into all 8
+                // lanes.
+                let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+                let addr = (base as u32 as usize).wrapping_add(aux);
+                let value = get_memory_at(ctx, 0)?.load_i32_16u(addr).map_err(VMError::from)? as u16;
+                let lane = value.to_le_bytes();
+                let mut bytes = [0u8; 16];
+                for i in 0..8 {
+                    bytes[i * 2..i * 2 + 2].copy_from_slice(&lane);
+                }
+                let handle = push_v128(ctx, bytes)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::Load32Splat => {
+                // v128.load32_splat (SIMD PR40): same "load then
+                // broadcast" shape as `Load8Splat`, but reads 4 raw bytes
+                // (little-endian) via the existing full-width `load_i32`
+                // loader and broadcasts that 32-bit value into all 4
+                // lanes.
+                let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+                let addr = (base as u32 as usize).wrapping_add(aux);
+                let value = get_memory_at(ctx, 0)?.load_i32(addr).map_err(VMError::from)?;
+                let lane = value.to_le_bytes();
+                let mut bytes = [0u8; 16];
+                for i in 0..4 {
+                    bytes[i * 4..i * 4 + 4].copy_from_slice(&lane);
+                }
+                let handle = push_v128(ctx, bytes)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::Load64Splat => {
+                // v128.load64_splat (SIMD PR40): same "load then
+                // broadcast" shape as `Load8Splat`, but reads 8 raw bytes
+                // (little-endian) via the existing full-width `load_i64`
+                // loader and broadcasts that 64-bit value into both
+                // lanes.
+                let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+                let addr = (base as u32 as usize).wrapping_add(aux);
+                let value = get_memory_at(ctx, 0)?.load_i64(addr).map_err(VMError::from)?;
+                let lane = value.to_le_bytes();
+                let mut bytes = [0u8; 16];
+                for i in 0..2 {
+                    bytes[i * 8..i * 8 + 8].copy_from_slice(&lane);
+                }
+                let handle = push_v128(ctx, bytes)?;
+                push_wasm(vm, WasmValue::V128(handle));
             }
             SimdOpKind::SplatI8x16 => {
                 // i8x16.splat (SIMD widen PR16): pop one i32, broadcast
@@ -12708,6 +12783,200 @@ mod tests {
             host_functions: vec![None],
         });
         assert!(store_engine.call_function(0, &[]).is_err(), "v128.store past the end of memory must trap, not panic");
+    }
+
+    /// `v128.load8_splat` (SIMD PR40): store a known 4-byte pattern via a
+    /// plain scalar `i32.store`, then `v128.load8_splat` from the SAME
+    /// address must read back exactly the LOW byte of that pattern,
+    /// broadcast into all 16 lanes -- proving both the real-memory read
+    /// (not some internal alias) and the broadcast itself.
+    #[test]
+    fn v128_load8_splat_broadcasts_one_byte_into_all_16_lanes() {
+        let addr: i32 = 0;
+        let mut code = vec![0x41]; // i32.const (addr, for the scalar store)
+        code.extend(wasm_leb128::encode_signed(addr as i64));
+        code.push(0x41); // i32.const (value)
+        code.extend(wasm_leb128::encode_signed(0x0403_0201_i64)); // LE bytes: 01 02 03 04
+        code.push(0x36); // i32.store
+        code.extend(wasm_leb128::encode_unsigned(0)); // align
+        code.extend(wasm_leb128::encode_unsigned(0)); // offset
+        code.push(0x41); // i32.const (addr, for the splat load)
+        code.extend(wasm_leb128::encode_signed(addr as i64));
+        code.push(0xFD);
+        code.push(0x07); // v128.load8_splat
+        code.extend(wasm_leb128::encode_unsigned(0)); // align
+        code.extend(wasm_leb128::encode_unsigned(0)); // offset
+        code.push(0x0B); // end
+
+        let mut engine = simd_engine_returning_v128_with_memory(code);
+        let (_, v128_results) = engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            v128_results[0],
+            Some(V128Bytes([1u8; 16])),
+            "v128.load8_splat must broadcast the single byte at the address into all 16 lanes"
+        );
+    }
+
+    /// `v128.load16_splat` (SIMD PR40): same scalar-store setup as
+    /// `v128_load8_splat_broadcasts_one_byte_into_all_16_lanes`, but reads
+    /// back the low 2 bytes (little-endian) broadcast into all 8 lanes.
+    #[test]
+    fn v128_load16_splat_broadcasts_two_bytes_into_all_8_lanes() {
+        let addr: i32 = 0;
+        let mut code = vec![0x41];
+        code.extend(wasm_leb128::encode_signed(addr as i64));
+        code.push(0x41);
+        code.extend(wasm_leb128::encode_signed(0x0403_0201_i64)); // LE bytes: 01 02 03 04
+        code.push(0x36); // i32.store
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.push(0x41);
+        code.extend(wasm_leb128::encode_signed(addr as i64));
+        code.push(0xFD);
+        code.push(0x08); // v128.load16_splat
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.push(0x0B);
+
+        let mut engine = simd_engine_returning_v128_with_memory(code);
+        let (_, v128_results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let mut expected = [0u8; 16];
+        for i in 0..8 {
+            expected[i * 2] = 1;
+            expected[i * 2 + 1] = 2;
+        }
+        assert_eq!(
+            v128_results[0],
+            Some(V128Bytes(expected)),
+            "v128.load16_splat must broadcast the 2 bytes (LE) at the address into all 8 lanes"
+        );
+    }
+
+    /// `v128.load32_splat` (SIMD PR40): same setup, but reads back all 4
+    /// stored bytes broadcast into all 4 lanes.
+    #[test]
+    fn v128_load32_splat_broadcasts_four_bytes_into_all_4_lanes() {
+        let addr: i32 = 0;
+        let mut code = vec![0x41];
+        code.extend(wasm_leb128::encode_signed(addr as i64));
+        code.push(0x41);
+        code.extend(wasm_leb128::encode_signed(0x0403_0201_i64));
+        code.push(0x36); // i32.store
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.push(0x41);
+        code.extend(wasm_leb128::encode_signed(addr as i64));
+        code.push(0xFD);
+        code.push(0x09); // v128.load32_splat
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.push(0x0B);
+
+        let mut engine = simd_engine_returning_v128_with_memory(code);
+        let (_, v128_results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let mut expected = [0u8; 16];
+        for i in 0..4 {
+            expected[i * 4..i * 4 + 4].copy_from_slice(&[1, 2, 3, 4]);
+        }
+        assert_eq!(
+            v128_results[0],
+            Some(V128Bytes(expected)),
+            "v128.load32_splat must broadcast the 4 bytes (LE) at the address into all 4 lanes"
+        );
+    }
+
+    /// `v128.load64_splat` (SIMD PR40): stores a full 8-byte pattern via a
+    /// scalar `i64.store` (4-byte `i32.store` isn't wide enough), then
+    /// reads it back broadcast into both lanes.
+    #[test]
+    fn v128_load64_splat_broadcasts_eight_bytes_into_both_lanes() {
+        let addr: i32 = 0;
+        let mut code = vec![0x41]; // i32.const (addr, for the scalar store)
+        code.extend(wasm_leb128::encode_signed(addr as i64));
+        code.push(0x42); // i64.const (value)
+        code.extend(wasm_leb128::encode_signed(0x0807_0605_0403_0201_i64)); // LE bytes: 01..08
+        code.push(0x37); // i64.store
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.push(0x41);
+        code.extend(wasm_leb128::encode_signed(addr as i64));
+        code.push(0xFD);
+        code.push(0x0A); // v128.load64_splat
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.push(0x0B);
+
+        let mut engine = simd_engine_returning_v128_with_memory(code);
+        let (_, v128_results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let mut expected = [0u8; 16];
+        expected[0..8].copy_from_slice(&[1, 2, 3, 4, 5, 6, 7, 8]);
+        expected[8..16].copy_from_slice(&[1, 2, 3, 4, 5, 6, 7, 8]);
+        assert_eq!(
+            v128_results[0],
+            Some(V128Bytes(expected)),
+            "v128.load64_splat must broadcast the 8 bytes (LE) at the address into both lanes"
+        );
+    }
+
+    /// The `v128.loadN_splat` family's memarg OFFSET immediate must be
+    /// honored, not just the base address on the stack -- this is the
+    /// decoder-level regression this PR's own fix targets: the SIMD
+    /// decoder's `sub_opcode == 0x00 || sub_opcode == 0x0B` gate (which
+    /// decides whether a memarg gets decoded into `aux` at all) had to be
+    /// widened to also cover `0x07..=0x0A`, or every `load_splat` with a
+    /// non-zero `offset=` immediate would silently read from the WRONG
+    /// address (falling through to the "no immediate" decode arm, which
+    /// leaves `aux` at 0).
+    #[test]
+    fn v128_load8_splat_honors_a_nonzero_memarg_offset() {
+        let addr: i32 = 0;
+        let mut code = vec![0x41]; // i32.const (addr, for the scalar store)
+        code.extend(wasm_leb128::encode_signed(addr as i64));
+        code.push(0x41);
+        code.extend(wasm_leb128::encode_signed(0x0403_0201_i64)); // LE bytes: 01 02 03 04
+        code.push(0x36); // i32.store
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.push(0x41); // i32.const 0 (base address for the splat load)
+        code.extend(wasm_leb128::encode_signed(0i64));
+        code.push(0xFD);
+        code.push(0x07); // v128.load8_splat
+        code.extend(wasm_leb128::encode_unsigned(0)); // align
+        code.extend(wasm_leb128::encode_unsigned(2)); // offset=2 -> reads byte index 2 (value 3)
+        code.push(0x0B);
+
+        let mut engine = simd_engine_returning_v128_with_memory(code);
+        let (_, v128_results) = engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            v128_results[0],
+            Some(V128Bytes([3u8; 16])),
+            "v128.load8_splat must add the memarg offset to the base address before reading"
+        );
+    }
+
+    /// `v128.loadN_splat` at an address where `address + width` overruns
+    /// the end of memory must trap cleanly, not panic -- same "verify
+    /// bounds guards adversarially" discipline as `v128.load`/`v128.store`
+    /// above, checked for all 4 new widths.
+    #[test]
+    fn v128_load_splat_family_past_the_end_of_memory_traps_cleanly_not_panic() {
+        // 1-page (65536-byte) memory. For each width, pick an address such
+        // that `address + width` overruns it by exactly 1 byte.
+        for (sub_opcode, width) in [(0x07u8, 1i32), (0x08, 2), (0x09, 4), (0x0A, 8)] {
+            let addr: i32 = 65536 - width + 1;
+            let mut code = vec![0x41];
+            code.extend(wasm_leb128::encode_signed(addr as i64));
+            code.push(0xFD);
+            code.push(sub_opcode);
+            code.extend(wasm_leb128::encode_unsigned(0));
+            code.extend(wasm_leb128::encode_unsigned(0));
+            code.push(0x0B);
+            let mut engine = simd_engine_returning_v128_with_memory(code);
+            assert!(
+                engine.call_function(0, &[]).is_err(),
+                "sub-opcode {sub_opcode:#04x} (width {width}) must trap when address+width overruns memory, not panic"
+            );
+        }
     }
 
     /// `call_function_with_v128` must resolve the REAL bytes of a `v128`

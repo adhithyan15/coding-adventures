@@ -11,7 +11,7 @@ fn main() {
     use text_native_coretext::{CoreTextMetrics, CoreTextResolver, CoreTextShaper};
 
     let diagram = parse_xychart(
-        r##"%%{init: {"xyChart": {"width": 720, "height": 440, "titleFontSize": 24, "titlePadding": 14, "showDataLabel": true, "showDataLabelOutsideBar": true, "xAxis": {"labelFontSize": 13, "labelPadding": 7, "titleFontSize": 17, "titlePadding": 8, "axisLineWidth": 4}, "yAxis": {"labelFontSize": 15, "labelPadding": 8, "titleFontSize": 18, "titlePadding": 9, "axisLineWidth": 5}}, "themeVariables": {"xyChart": {"dataLabelColor": "#0b5d4b"}}}}%%
+        r##"%%{init: {"xyChart": {"width": 720, "height": 440, "titleFontSize": 24, "titlePadding": 14, "showDataLabel": true, "showDataLabelOutsideBar": true, "xAxis": {"labelFontSize": 13, "labelPadding": 7, "titleFontSize": 17, "titlePadding": 8, "showTick": false, "axisLineWidth": 4}, "yAxis": {"labelFontSize": 15, "labelPadding": 8, "titleFontSize": 18, "titlePadding": 9, "tickLength": 12, "tickWidth": 4, "axisLineWidth": 5}}, "themeVariables": {"xyChart": {"dataLabelColor": "#0b5d4b"}}}}%%
 xychart
 title "Quarterly Throughput"
 x-axis "Quarter" [Q1, Q2, Q3, Q4]

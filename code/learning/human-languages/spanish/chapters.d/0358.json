@@ -1,0 +1,21 @@
+{
+  "chapter": 358,
+  "title": "Which One: By Colour, Size And Shape",
+  "label": "ch:el-color-y-el-tamano",
+  "canDo": "I can say el color, el tamano, la forma, la clase and la marca, and single out one thing from several without pointing at it.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C358-marca",
+    "kind": "production",
+    "summary": "Complete ES-C358-marca: single out one thing among several by its colour, its size, its shape, its kind and its maker.",
+    "assesses": [
+      "ES-LEX-C358-REF-11",
+      "ES-LEX-C358-REF-12",
+      "ES-LEX-C358-REF-13",
+      "ES-LEX-C358-REF-14",
+      "ES-LEX-C358-REF-15"
+    ]
+  }
+}

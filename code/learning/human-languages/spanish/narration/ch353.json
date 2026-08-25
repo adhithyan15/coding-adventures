@@ -1,0 +1,795 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 353,
+  "title": "Five Buildings You May Have To Find",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a9fbd1f6333b5aa8",
+  "lessons": [
+    {
+      "id": "ES-C353-hospital",
+      "sequence": 6570,
+      "title": "el hospital — the guest house that became a sick house",
+      "headword": "el hospital",
+      "romanization": "el hospital",
+      "gloss": "hospital — Latin hospitale, a house kept for guests, from hospes, which meant the host and the guest at once; English host, hotel, hostel and hospitality all come off it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2d4929432d8ed228",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say what is left over, then scarce. (El resto; escaso.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la salud — what you go there to get back."
+            },
+            {
+              "kind": "speech",
+              "text": "el dolor — what takes you there."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "os-pi-TAL, three beats with the weight on the last. The h says nothing at all. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el hospital — \"the hospital.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin hospes is one of the strangest nouns Rome had. It meant host and it meant guest, in one word, because the obligation ran both ways: you fed the traveller today and he fed you next year. Neither of you was the important one."
+            },
+            {
+              "kind": "speech",
+              "text": "A hospitāle was a house kept for such people. Monasteries ran them along the pilgrim roads, and the guests who stayed longest were the ones too ill to walk on. Over a few centuries the guest house quietly became a sick house, and the name stayed put."
+            },
+            {
+              "kind": "speech",
+              "text": "English took the word three separate times, by three separate roads, and ended up with three buildings where Rome had one. Two of them are hospital and hostel; the third is waiting for you in the next chapter. Add hospice and hospitality and it has the set."
+            },
+            {
+              "kind": "speech",
+              "text": "There is a darker cousin. Latin hostis started as the stranger too, but the stranger you did not take in — so English hostile and hospitable are two answers to the same knock at the door."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first of five buildings you can ask a stranger for by name."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el hospital",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el hospital*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un hospital",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un hospital*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "¿dónde está el hospital?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *¿dónde está el hospital?*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What two people did hospes mean at the same time? (The host and the guest.) And which English word for a cheap place to sleep is the same Latin word? (Hostel.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C353-banco",
+      "sequence": 6580,
+      "title": "el banco — the bench the money sat on",
+      "headword": "el banco",
+      "romanization": "el banco",
+      "gloss": "bank — a Germanic word for a bench; the money-changers of medieval Italy worked at a bench, and a broken bench, banca rotta, is English bankrupt",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:acd71266bdd35451",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say scarce, then the hospital. (Escaso; el hospital.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el dinero — what it holds for you."
+            },
+            {
+              "kind": "speech",
+              "text": "la moneda — the small hard piece of it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "BAN-ko, two beats with the weight on the first. The b is soft between vowels and firm at the start. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el banco — \"the bank,\" and also \"the bench.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Both meanings are alive in Spanish at once, and that is not an accident: they are the same object, four hundred years apart."
+            },
+            {
+              "kind": "speech",
+              "text": "The word is Germanic — a bank, a bench — and Italian took it as banco. In the Italian trading cities a man who changed one city's coins for another's set up a plank on trestles in la plaza and worked at it in the open. People stopped saying \"the man at the bench\" and started saying \"the bench.\""
+            },
+            {
+              "kind": "speech",
+              "text": "When one of them could not pay, his creditors broke the plank. Banca rotta, a broken bench, is where English gets bankrupt — a word about furniture."
+            },
+            {
+              "kind": "speech",
+              "text": "The bench is also the seat: Italian banchetto, a little bench, is English banquet, because you sat on a bench to eat. And plain English bench is the same Germanic word, arriving on its own."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A word you now own twice over — the place that holds your money, and the seat in the square outside it."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el banco",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el banco*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un banco",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un banco*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el dinero está en el banco",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el dinero está en el banco*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was a banco before it was a bank? (A bench.) And what did the creditors do to it to make somebody bankrupt? (They broke it.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C353-farmacia",
+      "sequence": 6590,
+      "title": "la farmacia — the shop of the word that would not choose",
+      "headword": "la farmacia",
+      "romanization": "la farmacia",
+      "gloss": "pharmacy, chemist's — Greek pharmakon, a drug that could cure or kill; the Greek word never chose between the remedy and the poison, and English pharmacy keeps it whole",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0a0049650067b0e3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the hospital, then the bank. (El hospital; el banco.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el remedio — what you go in for."
+            },
+            {
+              "kind": "speech",
+              "text": "la fiebre — one reason to go."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "far-MA-sia, with the weight on the second beat. The c before i is soft, and ia runs together as one glide. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la farmacia — \"the pharmacy,\" the chemist's shop."
+            },
+            {
+              "kind": "speech",
+              "text": "Greek phármakon is a famous problem. It means a drug, and Greek used the one noun for the thing that heals and the thing that kills. Translators have argued about it for two thousand years, because a Greek sentence about a pharmakon often refuses to tell you which one is meant."
+            },
+            {
+              "kind": "speech",
+              "text": "The Greeks were not being careless. The difference between a medicine and a poison is how much of it you take, and a word that covers both is honest about that."
+            },
+            {
+              "kind": "speech",
+              "text": "Pharmakeía was the handling of such things, and it walked into Latin, into French, and into Spanish as farmacia. English kept the same undecided root in pharmacy, pharmacist and pharmacology."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish also kept a short technical twin, el fármaco, for the substance itself, so the shop and the drug in it are one word wearing two shapes."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The place to go when the hospital is more than you need."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la farmacia",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la farmacia*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "una farmacia",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *una farmacia*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "¿dónde está la farmacia?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *¿dónde está la farmacia?*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What two opposite things did phármakon mean? (A remedy and a poison.) And what decides which one you have? (How much of it you take.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C353-biblioteca",
+      "sequence": 6600,
+      "title": "la biblioteca — the book-chest, and the port it is named after",
+      "headword": "la biblioteca",
+      "romanization": "la biblioteca",
+      "gloss": "library — Greek biblion, a book, plus theke, a chest, so a book-chest; the same theke gave Spanish bodega and botica, French boutique and English apothecary",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0494f41999f446fe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the bank, then the pharmacy. (El banco; la farmacia.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el libro — what fills it."
+            },
+            {
+              "kind": "speech",
+              "text": "leer — what you go there to do."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bi-blio-TE-ka, four beats with the weight on the third. The b is soft, and io runs together. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la biblioteca — \"the library.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Two Greek words are bolted together here, and both are worth having."
+            },
+            {
+              "kind": "speech",
+              "text": "Biblíon is a book — a small bíblos, which was the papyrus you wrote on. And biblos is a place name. Byblos was the Phoenician port that shipped Egyptian papyrus to Greece, and the Greeks named the material after the harbour it came from, the way English named china after a country. So every book in the world is quietly named after a town in Lebanon."
+            },
+            {
+              "kind": "speech",
+              "text": "Thḗkē is a chest, a case, a thing you put things in, from tithénai, to put. So a bibliotheke is a book-chest."
+            },
+            {
+              "kind": "speech",
+              "text": "That second half went everywhere. An apothḗkē was a store-room, and it came down into Spanish twice as la bodega and la botica, into French as boutique, and into English as apothecary. A wine cellar, a chemist's, a shop and a druggist are one Greek chest."
+            },
+            {
+              "kind": "speech",
+              "text": "English took the first half instead, in Bible and bibliography."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The building where the books live, and a Greek word for a chest you will meet again in a wine cellar."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la biblioteca",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la biblioteca*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el libro está en la biblioteca",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el libro está en la biblioteca*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "¿dónde está la biblioteca?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *¿dónde está la biblioteca?*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which port gave its name to every book? (Byblos.) And what does the -teca half mean on its own? (A chest, a place to put things.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C353-museo",
+      "sequence": 6610,
+      "title": "el museo — the house of the Muses, which was once a research institute",
+      "headword": "el museo",
+      "romanization": "el museo",
+      "gloss": "museum — Greek mouseion, a seat of the Muses; the Mouseion at Alexandria was a place scholars lived and worked, and the same Muses are inside English music",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:adf6bed4466ebd43",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the pharmacy, then the library. (La farmacia; la biblioteca.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ver — what you go there to do."
+            },
+            {
+              "kind": "speech",
+              "text": "viejo — what most of what is in it is."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mu-SE-o, three beats with the weight on the second. Each vowel keeps its own beat; nothing runs together. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el museo — \"the museum.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A mouseîon is a seat of the Moûsai, the Muses — nine goddesses who between them owned poetry, song, dance, history and astronomy. To a Greek those were one field, and the Muse was who you asked for help before starting."
+            },
+            {
+              "kind": "speech",
+              "text": "The most famous mouseion was at Alexandria, and it was nothing like a museum. It was a walled institution where scholars lived at royal expense, ate together, argued, and worked — with the great library attached to it. Eratosthenes measured the size of the earth there. It was a research institute, and the glass cases came much later."
+            },
+            {
+              "kind": "speech",
+              "text": "Mousikḗ tékhnē is \"the art of the Muses,\" and English shortened it to music. So a museum and a song are two rooms in the same house."
+            },
+            {
+              "kind": "speech",
+              "text": "And when an English poet begs the Muse for a first line, he is asking one of the nine for exactly what the Alexandrians asked for: something worth writing down."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five buildings, all of them askable for by name: el hospital, el banco, la farmacia, la biblioteca, el museo."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el museo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el museo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el hospital, el banco, la farmacia, la biblioteca",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el hospital, el banco, la farmacia, la biblioteca*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "¿dónde está el museo?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *¿dónde está el museo?*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was the Mouseion at Alexandria really for? (Scholars lived and worked there.) And which everyday English word comes off the same Muses? (Music.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
