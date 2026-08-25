@@ -1,0 +1,406 @@
+{
+  "glossaries": [
+    {
+      "language": "tamil",
+      "output": "tamil/book/chapters/appendix-glossary.tex",
+      "scriptSet": "tamil-comparisons"
+    }
+  ],
+  "answerKeys": [
+    {
+      "language": "tamil",
+      "output": "tamil/book/chapters/appendix-answer-key.tex",
+      "scriptSet": "tamil-comparisons"
+    }
+  ],
+  "indexes": [
+    {
+      "language": "tamil",
+      "output": "tamil/book/chapters/appendix-index.tex",
+      "scriptSet": "tamil-comparisons"
+    }
+  ],
+  "targets": [
+    {
+      "language": "tamil",
+      "chapter": 6,
+      "output": "tamil/book/chapters/ch06-dative-case.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 7,
+      "output": "tamil/book/chapters/ch07-numbers-1-10.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 8,
+      "output": "tamil/book/chapters/ch08-please.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 9,
+      "output": "tamil/book/chapters/ch09-sorry.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 10,
+      "output": "tamil/book/chapters/ch10-days.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 11,
+      "output": "tamil/book/chapters/ch11-colours.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 12,
+      "output": "tamil/book/chapters/ch12-family.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 13,
+      "output": "tamil/book/chapters/ch13-body-parts.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 14,
+      "output": "tamil/book/chapters/ch14-seasons.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 15,
+      "output": "tamil/book/chapters/ch15-water-and-rice.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 16,
+      "output": "tamil/book/chapters/ch16-months.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 17,
+      "output": "tamil/book/chapters/ch17-noon-and-midnight.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 18,
+      "output": "tamil/book/chapters/ch18-telling-time.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 19,
+      "output": "tamil/book/chapters/ch19-age.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 20,
+      "output": "tamil/book/chapters/ch20-numbers-and-weather.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 21,
+      "output": "tamil/book/chapters/ch21-dog-and-cat.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 22,
+      "output": "tamil/book/chapters/ch22-green-and-yellow.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 23,
+      "output": "tamil/book/chapters/ch23-day.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 24,
+      "output": "tamil/book/chapters/ch24-night.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 25,
+      "output": "tamil/book/chapters/ch25-good-night.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 26,
+      "output": "tamil/book/chapters/ch26-morning.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 27,
+      "output": "tamil/book/chapters/ch27-evening.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 28,
+      "output": "tamil/book/chapters/ch28-afternoon.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 29,
+      "output": "tamil/book/chapters/ch29-good-morning.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 30,
+      "output": "tamil/book/chapters/ch30-good-evening.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 31,
+      "output": "tamil/book/chapters/ch31-good-afternoon.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 32,
+      "output": "tamil/book/chapters/ch32-core-verbs.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 33,
+      "output": "tamil/book/chapters/ch33-verbs-of-the-mind.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 34,
+      "output": "tamil/book/chapters/ch34-verbs-between-people.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 35,
+      "output": "tamil/book/chapters/ch35-arriving-at-a-house.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 36,
+      "output": "tamil/book/chapters/ch36-what-you-are-offered.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 37,
+      "output": "tamil/book/chapters/ch37-your-town-your-friend.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 38,
+      "output": "tamil/book/chapters/ch38-keeping-well-and-leaving.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 39,
+      "output": "tamil/book/chapters/ch39-asking-for-what-you-want.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 40,
+      "output": "tamil/book/chapters/ch40-pointing-and-asking.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 41,
+      "output": "tamil/book/chapters/ch41-describing-things.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 42,
+      "output": "tamil/book/chapters/ch42-more-verbs.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 43,
+      "output": "tamil/book/chapters/ch43-household.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 44,
+      "output": "tamil/book/chapters/ch44-things-you-ask-for.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 45,
+      "output": "tamil/book/chapters/ch45-more-of-the-body.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 46,
+      "output": "tamil/book/chapters/ch46-who-somebody-is.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 47,
+      "output": "tamil/book/chapters/ch47-short-replies.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 48,
+      "output": "tamil/book/chapters/ch48-setting-out.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 49,
+      "output": "tamil/book/chapters/ch49-courtesy.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 50,
+      "output": "tamil/book/chapters/ch50-at-the-doorway.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 51,
+      "output": "tamil/book/chapters/ch51-overhead.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 52,
+      "output": "tamil/book/chapters/ch52-a-tree.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 53,
+      "output": "tamil/book/chapters/ch53-the-land.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 54,
+      "output": "tamil/book/chapters/ch54-things-in-the-house.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 55,
+      "output": "tamil/book/chapters/ch55-the-rest-of-you.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 56,
+      "output": "tamil/book/chapters/ch56-how-much.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 57,
+      "output": "tamil/book/chapters/ch57-wind-and-fire.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 58,
+      "output": "tamil/book/chapters/ch58-around-the-yard.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 59,
+      "output": "tamil/book/chapters/ch59-in-the-kitchen.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 60,
+      "output": "tamil/book/chapters/ch60-things-people-make.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 61,
+      "output": "tamil/book/chapters/ch61-how-the-body-feels.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 62,
+      "output": "tamil/book/chapters/ch62-only-and-still.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 63,
+      "output": "tamil/book/chapters/ch63-asking-well.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 64,
+      "output": "tamil/book/chapters/ch64-the-harvest.tex",
+      "scriptSet": "tamil-comparisons"
+    }
+  ],
+  "handwritten": [
+    {
+      "language": "tamil",
+      "chapter": 1,
+      "output": "tamil/book/chapters/ch01-greetings.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 2,
+      "output": "tamil/book/chapters/ch02-introductions.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 3,
+      "output": "tamil/book/chapters/ch03-responding.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 4,
+      "output": "tamil/book/chapters/ch04-farewells.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 5,
+      "output": "tamil/book/chapters/ch05-first-verbs.tex"
+    }
+  ]
+}

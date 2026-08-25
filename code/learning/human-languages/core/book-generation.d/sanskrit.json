@@ -1,0 +1,377 @@
+{
+  "glossaries": [
+    {
+      "language": "sanskrit",
+      "output": "sanskrit/book/chapters/appendix-glossary.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    }
+  ],
+  "answerKeys": [
+    {
+      "language": "sanskrit",
+      "output": "sanskrit/book/chapters/appendix-answer-key.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    }
+  ],
+  "indexes": [
+    {
+      "language": "sanskrit",
+      "output": "sanskrit/book/chapters/appendix-index.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    }
+  ],
+  "targets": [
+    {
+      "language": "sanskrit",
+      "chapter": 6,
+      "output": "sanskrit/book/chapters/ch06-numbers-1-5.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 7,
+      "output": "sanskrit/book/chapters/ch07-core-verbs.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 8,
+      "output": "sanskrit/book/chapters/ch08-mind-verbs.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 9,
+      "output": "sanskrit/book/chapters/ch09-doing-verbs.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 10,
+      "output": "sanskrit/book/chapters/ch10-request-nouns.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 11,
+      "output": "sanskrit/book/chapters/ch11-people-nouns.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 12,
+      "output": "sanskrit/book/chapters/ch12-face-nouns-1.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 13,
+      "output": "sanskrit/book/chapters/ch13-face-nouns-2.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 14,
+      "output": "sanskrit/book/chapters/ch14-pointing-and-asking.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 15,
+      "output": "sanskrit/book/chapters/ch15-describing-things.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 16,
+      "output": "sanskrit/book/chapters/ch16-places.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 17,
+      "output": "sanskrit/book/chapters/ch17-time.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 18,
+      "output": "sanskrit/book/chapters/ch18-asking.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 19,
+      "output": "sanskrit/book/chapters/ch19-numbers.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 20,
+      "output": "sanskrit/book/chapters/ch20-people.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 21,
+      "output": "sanskrit/book/chapters/ch21-more-verbs.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 22,
+      "output": "sanskrit/book/chapters/ch22-more-verbs.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 23,
+      "output": "sanskrit/book/chapters/ch23-kinship.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 24,
+      "output": "sanskrit/book/chapters/ch24-things-you-ask-for.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 25,
+      "output": "sanskrit/book/chapters/ch25-hand-and-foot.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 26,
+      "output": "sanskrit/book/chapters/ch26-roles.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 27,
+      "output": "sanskrit/book/chapters/ch27-replies.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 28,
+      "output": "sanskrit/book/chapters/ch28-taking-leave.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 29,
+      "output": "sanskrit/book/chapters/ch29-courtesy.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 30,
+      "output": "sanskrit/book/chapters/ch30-welcoming-a-guest.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 31,
+      "output": "sanskrit/book/chapters/ch31-the-sky.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 32,
+      "output": "sanskrit/book/chapters/ch32-the-tree.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 33,
+      "output": "sanskrit/book/chapters/ch33-river-and-road.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 34,
+      "output": "sanskrit/book/chapters/ch34-more-of-the-body.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 35,
+      "output": "sanskrit/book/chapters/ch35-in-the-house.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 36,
+      "output": "sanskrit/book/chapters/ch36-more-short-replies.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 37,
+      "output": "sanskrit/book/chapters/ch37-more-courtesy.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 38,
+      "output": "sanskrit/book/chapters/ch38-fire-and-stone.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 39,
+      "output": "sanskrit/book/chapters/ch39-animals.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 40,
+      "output": "sanskrit/book/chapters/ch40-in-the-kitchen.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 41,
+      "output": "sanskrit/book/chapters/ch41-things-people-make.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 42,
+      "output": "sanskrit/book/chapters/ch42-more-replies.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 43,
+      "output": "sanskrit/book/chapters/ch43-good-manners.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 44,
+      "output": "sanskrit/book/chapters/ch44-colours.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 45,
+      "output": "sanskrit/book/chapters/ch45-times-of-the-day.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 46,
+      "output": "sanskrit/book/chapters/ch46-sun-and-shade.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 47,
+      "output": "sanskrit/book/chapters/ch47-parts-of-a-house.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 48,
+      "output": "sanskrit/book/chapters/ch48-more-animals.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 49,
+      "output": "sanskrit/book/chapters/ch49-small-answers.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 50,
+      "output": "sanskrit/book/chapters/ch50-sound-and-song.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 51,
+      "output": "sanskrit/book/chapters/ch51-more-of-the-family.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    }
+  ],
+  "handwritten": [
+    {
+      "language": "sanskrit",
+      "chapter": 1,
+      "output": "sanskrit/book/chapters/ch01-greetings.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 2,
+      "output": "sanskrit/book/chapters/ch02-introductions.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 3,
+      "output": "sanskrit/book/chapters/ch03-responding.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 4,
+      "output": "sanskrit/book/chapters/ch04-farewells.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 5,
+      "output": "sanskrit/book/chapters/ch05-first-verbs.tex"
+    }
+  ]
+}

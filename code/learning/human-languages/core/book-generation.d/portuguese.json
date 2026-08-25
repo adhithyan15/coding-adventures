@@ -1,0 +1,162 @@
+{
+  "glossaries": [
+    {
+      "language": "portuguese",
+      "output": "portuguese/book/chapters/appendix-glossary.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "ptar"
+    }
+  ],
+  "answerKeys": [
+    {
+      "language": "portuguese",
+      "output": "portuguese/book/chapters/appendix-answer-key.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "ptar"
+    }
+  ],
+  "indexes": [
+    {
+      "language": "portuguese",
+      "output": "portuguese/book/chapters/appendix-index.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "ptar"
+    }
+  ],
+  "targets": [
+    {
+      "language": "portuguese",
+      "chapter": 2,
+      "output": "portuguese/book/chapters/ch02-how-are-you.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 3,
+      "output": "portuguese/book/chapters/ch03-introductions.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 4,
+      "output": "portuguese/book/chapters/ch04-farewells.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "ptar"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 5,
+      "output": "portuguese/book/chapters/ch05-first-verbs.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 6,
+      "output": "portuguese/book/chapters/ch06-numbers-1-10.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 7,
+      "output": "portuguese/book/chapters/ch07-days-of-the-week.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 8,
+      "output": "portuguese/book/chapters/ch08-telling-time.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 9,
+      "output": "portuguese/book/chapters/ch09-months-and-seasons.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 10,
+      "output": "portuguese/book/chapters/ch10-family.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 11,
+      "output": "portuguese/book/chapters/ch11-bread-water-wine.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 12,
+      "output": "portuguese/book/chapters/ch12-numbers-11-20.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 13,
+      "output": "portuguese/book/chapters/ch13-colours.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 14,
+      "output": "portuguese/book/chapters/ch14-having-and-age.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 15,
+      "output": "portuguese/book/chapters/ch15-past-portuguese-kept.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 16,
+      "output": "portuguese/book/chapters/ch16-ser-and-estar.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 17,
+      "output": "portuguese/book/chapters/ch17-head-and-hand.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 18,
+      "output": "portuguese/book/chapters/ch18-core-verbs.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 19,
+      "output": "portuguese/book/chapters/ch19-mind-verbs.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 20,
+      "output": "portuguese/book/chapters/ch20-taking-asking-helping-liking.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 21,
+      "output": "portuguese/book/chapters/ch21-bringing-getting-waiting-buying.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 22,
+      "output": "portuguese/book/chapters/ch22-answering-meeting-playing.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 23,
+      "output": "portuguese/book/chapters/ch23-coffee-tea-milk.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 24,
+      "output": "portuguese/book/chapters/ch24-cheese-egg-rice-sugar.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 25,
+      "output": "portuguese/book/chapters/ch25-people-you-introduce.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 26,
+      "output": "portuguese/book/chapters/ch26-body-how-are-you.tex"
+    }
+  ],
+  "handwritten": [
+    {
+      "language": "portuguese",
+      "chapter": 1,
+      "output": "portuguese/book/chapters/ch01-greetings.tex"
+    }
+  ]
+}

@@ -1,0 +1,127 @@
+{
+  "glossaries": [
+    {
+      "language": "marathi",
+      "output": "marathi/book/chapters/appendix-glossary.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "mr"
+    }
+  ],
+  "answerKeys": [
+    {
+      "language": "marathi",
+      "output": "marathi/book/chapters/appendix-answer-key.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "mr"
+    }
+  ],
+  "indexes": [
+    {
+      "language": "marathi",
+      "output": "marathi/book/chapters/appendix-index.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "mr"
+    }
+  ],
+  "targets": [
+    {
+      "language": "marathi",
+      "chapter": 1,
+      "output": "marathi/book/chapters/ch01-namaskar-script.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "mr"
+    },
+    {
+      "language": "marathi",
+      "chapter": 2,
+      "output": "marathi/book/chapters/ch02-courtesy-responses.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "mr"
+    },
+    {
+      "language": "marathi",
+      "chapter": 7,
+      "output": "marathi/book/chapters/ch07-numbers-1-5.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "mr"
+    },
+    {
+      "language": "marathi",
+      "chapter": 8,
+      "output": "marathi/book/chapters/ch08-core-verbs.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "mr"
+    },
+    {
+      "language": "marathi",
+      "chapter": 9,
+      "output": "marathi/book/chapters/ch09-mind-and-page.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "mr"
+    },
+    {
+      "language": "marathi",
+      "chapter": 10,
+      "output": "marathi/book/chapters/ch10-doing-verbs.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "mr"
+    },
+    {
+      "language": "marathi",
+      "chapter": 11,
+      "output": "marathi/book/chapters/ch11-request-food-drink.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "mr"
+    },
+    {
+      "language": "marathi",
+      "chapter": 12,
+      "output": "marathi/book/chapters/ch12-friend-and-family.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "mr"
+    },
+    {
+      "language": "marathi",
+      "chapter": 13,
+      "output": "marathi/book/chapters/ch13-face-parts.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "mr"
+    },
+    {
+      "language": "marathi",
+      "chapter": 14,
+      "output": "marathi/book/chapters/ch14-heart.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "mr"
+    },
+    {
+      "language": "marathi",
+      "chapter": 15,
+      "output": "marathi/book/chapters/ch15-family-memory.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "mr"
+    }
+  ],
+  "handwritten": [
+    {
+      "language": "marathi",
+      "chapter": 3,
+      "output": "marathi/book/chapters/ch03-introductions.tex"
+    },
+    {
+      "language": "marathi",
+      "chapter": 4,
+      "output": "marathi/book/chapters/ch04-responding.tex"
+    },
+    {
+      "language": "marathi",
+      "chapter": 5,
+      "output": "marathi/book/chapters/ch05-farewells.tex"
+    },
+    {
+      "language": "marathi",
+      "chapter": 6,
+      "output": "marathi/book/chapters/ch06-first-verbs.tex"
+    }
+  ]
+}

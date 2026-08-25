@@ -1,0 +1,241 @@
+{
+  "glossaries": [
+    {
+      "language": "arabic",
+      "output": "arabic/book/chapters/appendix-glossary.tex",
+      "scriptSet": "arabic-main"
+    }
+  ],
+  "answerKeys": [
+    {
+      "language": "arabic",
+      "output": "arabic/book/chapters/appendix-answer-key.tex",
+      "scriptSet": "arabic-main"
+    }
+  ],
+  "indexes": [
+    {
+      "language": "arabic",
+      "output": "arabic/book/chapters/appendix-index.tex",
+      "scriptSet": "arabic-main"
+    }
+  ],
+  "targets": [
+    {
+      "language": "arabic",
+      "chapter": 3,
+      "output": "arabic/book/chapters/ch03-how-are-you.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 4,
+      "output": "arabic/book/chapters/ch04-farewells.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 5,
+      "output": "arabic/book/chapters/ch05-yes-and-no.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 6,
+      "output": "arabic/book/chapters/ch06-please.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 7,
+      "output": "arabic/book/chapters/ch07-sorry.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 8,
+      "output": "arabic/book/chapters/ch08-days.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 9,
+      "output": "arabic/book/chapters/ch09-colours.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 10,
+      "output": "arabic/book/chapters/ch10-family.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 11,
+      "output": "arabic/book/chapters/ch11-head-and-hand.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 12,
+      "output": "arabic/book/chapters/ch12-seasons.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 13,
+      "output": "arabic/book/chapters/ch13-water-and-bread.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 14,
+      "output": "arabic/book/chapters/ch14-months.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 15,
+      "output": "arabic/book/chapters/ch15-noon-and-midnight.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 16,
+      "output": "arabic/book/chapters/ch16-telling-time.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 17,
+      "output": "arabic/book/chapters/ch17-age.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 18,
+      "output": "arabic/book/chapters/ch18-weather.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 19,
+      "output": "arabic/book/chapters/ch19-numbers-1-5.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 20,
+      "output": "arabic/book/chapters/ch20-numbers-11-20.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 21,
+      "output": "arabic/book/chapters/ch21-dog-and-cat.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 22,
+      "output": "arabic/book/chapters/ch22-green-and-yellow.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 23,
+      "output": "arabic/book/chapters/ch23-youre-welcome.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 24,
+      "output": "arabic/book/chapters/ch24-see-you-tomorrow.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 25,
+      "output": "arabic/book/chapters/ch25-day.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 26,
+      "output": "arabic/book/chapters/ch26-night.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 27,
+      "output": "arabic/book/chapters/ch27-good-night.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 28,
+      "output": "arabic/book/chapters/ch28-going-and-coming.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 29,
+      "output": "arabic/book/chapters/ch29-saying-and-seeing.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 30,
+      "output": "arabic/book/chapters/ch30-knowing-and-eating.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 31,
+      "output": "arabic/book/chapters/ch31-understanding-reading-writing.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 32,
+      "output": "arabic/book/chapters/ch32-taking-thinking-helping-loving.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 33,
+      "output": "arabic/book/chapters/ch33-asking-for-a-drink.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 34,
+      "output": "arabic/book/chapters/ch34-asking-for-food.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 35,
+      "output": "arabic/book/chapters/ch35-people-you-introduce.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 36,
+      "output": "arabic/book/chapters/ch36-cups-plates-and-more-than-one.tex",
+      "scriptSet": "arabic-main"
+    }
+  ],
+  "handwritten": [
+    {
+      "language": "arabic",
+      "chapter": 1,
+      "output": "arabic/book/chapters/ch01-greetings.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 2,
+      "output": "arabic/book/chapters/ch02-introductions.tex"
+    }
+  ]
+}

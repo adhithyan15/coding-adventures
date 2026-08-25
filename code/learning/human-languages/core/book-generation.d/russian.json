@@ -1,0 +1,143 @@
+{
+  "referenceAppendices": [
+    {
+      "language": "russian",
+      "title": "Pronunciation & Cyrillic Reference",
+      "source": "russian/pronunciation-reference.md",
+      "output": "russian/book/chapters/appendix-pronunciation.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
+    }
+  ],
+  "glossaries": [
+    {
+      "language": "russian",
+      "output": "russian/book/chapters/appendix-glossary.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
+    }
+  ],
+  "answerKeys": [
+    {
+      "language": "russian",
+      "output": "russian/book/chapters/appendix-answer-key.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
+    }
+  ],
+  "indexes": [
+    {
+      "language": "russian",
+      "output": "russian/book/chapters/appendix-index.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
+    }
+  ],
+  "targets": [
+    {
+      "language": "russian",
+      "chapter": 1,
+      "output": "russian/book/chapters/ch01-greetings-and-courtesy.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
+    },
+    {
+      "language": "russian",
+      "chapter": 2,
+      "output": "russian/book/chapters/ch02-introducing-yourself.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
+    },
+    {
+      "language": "russian",
+      "chapter": 3,
+      "output": "russian/book/chapters/ch03-first-verbs.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
+    },
+    {
+      "language": "russian",
+      "chapter": 4,
+      "output": "russian/book/chapters/ch04-verbs-of-the-mind.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
+    },
+    {
+      "language": "russian",
+      "chapter": 5,
+      "output": "russian/book/chapters/ch05-verbs-of-the-hand.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
+    },
+    {
+      "language": "russian",
+      "chapter": 6,
+      "output": "russian/book/chapters/ch06-water-coffee-tea-bread.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
+    },
+    {
+      "language": "russian",
+      "chapter": 7,
+      "output": "russian/book/chapters/ch07-friend-and-siblings.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
+    },
+    {
+      "language": "russian",
+      "chapter": 8,
+      "output": "russian/book/chapters/ch08-family.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
+    },
+    {
+      "language": "russian",
+      "chapter": 9,
+      "output": "russian/book/chapters/ch09-face-parts.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
+    },
+    {
+      "language": "russian",
+      "chapter": 10,
+      "output": "russian/book/chapters/ch10-heart.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
+    },
+    {
+      "language": "russian",
+      "chapter": 11,
+      "output": "russian/book/chapters/ch11-parting-words.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
+    },
+    {
+      "language": "russian",
+      "chapter": 12,
+      "output": "russian/book/chapters/ch12-mother-and-father.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
+    },
+    {
+      "language": "russian",
+      "chapter": 13,
+      "output": "russian/book/chapters/ch13-milk-cheese-juice-soup.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
+    },
+    {
+      "language": "russian",
+      "chapter": 14,
+      "output": "russian/book/chapters/ch14-script-eleven.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
+    },
+    {
+      "language": "russian",
+      "chapter": 15,
+      "output": "russian/book/chapters/ch15-script-eight.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
+    }
+  ]
+}

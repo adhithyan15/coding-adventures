@@ -1,0 +1,120 @@
+{
+  "glossaries": [
+    {
+      "language": "punjabi",
+      "output": "punjabi/book/chapters/appendix-glossary.tex",
+      "unicodeScript": "Gurmukhi",
+      "scriptCommand": "pa"
+    }
+  ],
+  "answerKeys": [
+    {
+      "language": "punjabi",
+      "output": "punjabi/book/chapters/appendix-answer-key.tex",
+      "unicodeScript": "Gurmukhi",
+      "scriptCommand": "pa"
+    }
+  ],
+  "indexes": [
+    {
+      "language": "punjabi",
+      "output": "punjabi/book/chapters/appendix-index.tex",
+      "unicodeScript": "Gurmukhi",
+      "scriptCommand": "pa"
+    }
+  ],
+  "targets": [
+    {
+      "language": "punjabi",
+      "chapter": 1,
+      "output": "punjabi/book/chapters/ch01-greetings.tex",
+      "unicodeScript": "Gurmukhi",
+      "scriptCommand": "pa"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 6,
+      "output": "punjabi/book/chapters/ch06-numbers-1-5.tex",
+      "unicodeScript": "Gurmukhi",
+      "scriptCommand": "pa"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 7,
+      "output": "punjabi/book/chapters/ch07-core-verbs.tex",
+      "unicodeScript": "Gurmukhi",
+      "scriptCommand": "pa"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 8,
+      "output": "punjabi/book/chapters/ch08-mind-and-tone.tex",
+      "unicodeScript": "Gurmukhi",
+      "scriptCommand": "pa"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 9,
+      "output": "punjabi/book/chapters/ch09-taking-and-liking.tex",
+      "unicodeScript": "Gurmukhi",
+      "scriptCommand": "pa"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 10,
+      "output": "punjabi/book/chapters/ch10-request-food-drink.tex",
+      "unicodeScript": "Gurmukhi",
+      "scriptCommand": "pa"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 11,
+      "output": "punjabi/book/chapters/ch11-friend-and-family.tex",
+      "unicodeScript": "Gurmukhi",
+      "scriptCommand": "pa"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 12,
+      "output": "punjabi/book/chapters/ch12-face-parts.tex",
+      "unicodeScript": "Gurmukhi",
+      "scriptCommand": "pa"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 13,
+      "output": "punjabi/book/chapters/ch13-heart-and-head.tex",
+      "unicodeScript": "Gurmukhi",
+      "scriptCommand": "pa"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 14,
+      "output": "punjabi/book/chapters/ch14-script-first.tex",
+      "unicodeScript": "Gurmukhi",
+      "scriptCommand": "pa"
+    }
+  ],
+  "handwritten": [
+    {
+      "language": "punjabi",
+      "chapter": 2,
+      "output": "punjabi/book/chapters/ch02-introductions.tex"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 3,
+      "output": "punjabi/book/chapters/ch03-responding.tex"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 4,
+      "output": "punjabi/book/chapters/ch04-farewells.tex"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 5,
+      "output": "punjabi/book/chapters/ch05-first-verbs.tex"
+    }
+  ]
+}

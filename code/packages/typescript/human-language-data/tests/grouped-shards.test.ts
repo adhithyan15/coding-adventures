@@ -2,27 +2,41 @@
 // file per language, rather than one file per element.
 //
 // ---------------------------------------------------------------------------
-// Why this suite exists for a plan that is not enabled
+// The two blockers this ledger had, and what now keeps them shut
 // ---------------------------------------------------------------------------
 //
 // `core/book-generation.json` is the only ledger this projection is for, and it
-// is NOT in `SHARD_PLANS` — it cannot round-trip byte-exactly, for a reason
-// that is a decision rather than a bug (see the last describe block). The
-// machinery is finished and proved here against fixtures and against the real
-// ledger's DATA, so that enabling it later is one line plus one re-indent
-// commit, not a rebuild.
+// took longer than the others because it had two separate blockers.
 //
-// The alternative was to leave the projection unwritten until the blocker
-// cleared, which would have meant re-deriving all of this — including the
-// measurement that the spec's ORIGINAL blocker had already resolved itself —
-// from scratch, months later, by someone who had not measured it.
+// The one HL21 §5.3 recorded — `targets` split across 27 runs for 23 languages,
+// needing a one-time re-sort — RESOLVED ITSELF, as later tranches inserted into
+// the existing runs. It is 23-for-23 now. The test below pins that contiguity,
+// because a tranche appending to the END of `targets` would reopen it.
+//
+// The one that replaced it was formatting: twelve `marwadi` entries indented two
+// spaces deeper than canonical, so the committed file did not round-trip at all.
+// That was re-indented in its own commit, proved whitespace-only by
+// deep-comparing the parsed structures rather than by reading a 6,693-line diff.
+// The test that used to assert "this file does NOT round-trip" is now inverted
+// and asserts it STAYS canonical — so a hand-edit reintroducing stray
+// indentation, the same way the first one arrived, fails here immediately.
 
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { BOOK_GENERATION_PLAN, SHARD_PLANS, shardContents } from "../src/shard-cli.js";
+import {
+  BOOK_GENERATION_PLAN,
+  SHARD_PLANS,
+  runShardCli,
+  shardContents,
+  unshardContents,
+} from "../src/shard-cli.js";
 import { defaultCurriculumRoot } from "../src/loader.js";
-import { BOOK_GENERATION_GROUPED_KEYS, mergeGroupedShards } from "../src/shard.js";
+import {
+  BOOK_GENERATION_GROUPED_KEYS,
+  listShardNames,
+  mergeGroupedShards,
+} from "../src/shard.js";
 
 const root = defaultCurriculumRoot();
 const codeUnit = (a: string, b: string) => (a < b ? -1 : a > b ? 1 : 0);
@@ -168,35 +182,60 @@ describe("the grouped merge validates its _meta.json like its siblings do", () =
   });
 });
 
-describe("why this plan is not in SHARD_PLANS", () => {
-  it("is absent, deliberately", () => {
-    expect(SHARD_PLANS.some((p) => p.path === "core/book-generation.json")).toBe(false);
+describe("the plan is enabled and the ledger is sharded on disk", () => {
+  it("is in SHARD_PLANS", () => {
+    expect(SHARD_PLANS.some((p) => p.path === "core/book-generation.json")).toBe(true);
   });
 
-  it("because the COMMITTED file does not round-trip, by 74 lines of whitespace", () => {
-    // Twelve `marwadi` entries in `targets` are indented two spaces deeper than
-    // the canonical form — a hand-merge artifact at lines 2911-2984.
-    //
-    // This test is the blocker, stated as an executable fact rather than a
-    // comment. It FAILS THE DAY SOMEBODY RE-INDENTS THE FILE, which is exactly
-    // when the plan should be enabled — so the fix and the signal to act on it
-    // arrive together.
-    const canonical = serialize(document);
-    expect(committed).not.toBe(canonical);
+  it("passes --check", () => {
+    expect(runShardCli(["--check", "core/book-generation.json"])).toBe(0);
+  });
 
-    const committedLines = committed.split("\n");
-    const canonicalLines = canonical.split("\n");
-    expect(committedLines).toHaveLength(canonicalLines.length);
+  it("has one shard per language plus _meta.json, on disk", () => {
+    const names = listShardNames(join(root, "core", "book-generation.json"));
+    expect(names[0]).toBe("_meta.json");
+    expect(names).toHaveLength(24);
+    expect(names).toContain("spanish.json");
+    // Flat: a grouped ledger has no subdirectories, and a shard in one would be
+    // consumed as a second slice for that language.
+    for (const name of names) expect(name).not.toContain("/");
+  });
 
-    const differing = committedLines
-      .map((line, i) => (line === canonicalLines[i] ? -1 : i))
-      .filter((i) => i >= 0);
-    expect(differing).toHaveLength(74);
+  it("rebuilds the committed monolith byte for byte", () => {
+    const plan = SHARD_PLANS.find((p) => p.path === "core/book-generation.json")!;
+    expect(unshardContents(root, plan)).toBe(committed);
+  });
 
-    // Every difference is leading whitespace only — the data is untouched.
-    for (const i of differing) {
-      expect(committedLines[i]!.trim()).toBe(canonicalLines[i]!.trim());
+  it("gives a Spanish tranche exactly one file to touch", () => {
+    // The property the whole projection exists for. Spanish's slice of all six
+    // arrays lives in one file, so a tranche appending a chapter target writes
+    // `spanish.json` and collides with nobody working on another language.
+    const spanish = JSON.parse(
+      readFileSync(join(root, "core", "book-generation.d", "spanish.json"), "utf8"),
+    ) as Record<string, { language: string }[]>;
+    for (const [key, entries] of Object.entries(spanish)) {
+      expect(BOOK_GENERATION_GROUPED_KEYS, `unexpected key ${key}`).toContain(key);
+      for (const entry of entries) expect(entry.language).toBe("spanish");
     }
-    expect(JSON.parse(committed)).toEqual(JSON.parse(canonical));
+    expect(spanish.targets.length).toBeGreaterThan(0);
+  });
+
+  it("STAYS round-trippable, so it never blocks the plan again", () => {
+    // This test used to assert the opposite. `core/book-generation.json` had
+    // twelve `marwadi` entries in `targets` indented two spaces deeper than
+    // canonical — a hand-merge artifact at lines 2911-2984 — so the file could
+    // not be sharded losslessly, and the test stated that blocker as an
+    // executable fact that would fail the day somebody re-indented it.
+    //
+    // Somebody did. The re-indent landed as its own commit, proved
+    // whitespace-only by deep-comparing the parsed structures rather than by
+    // reading the diff, and the assertion is now inverted: the file must STAY
+    // canonical.
+    //
+    // That inversion is the point. A hand-edit that reintroduces stray
+    // indentation — the same way the first one arrived, through a merge nobody
+    // looked at closely — now fails here immediately, rather than surfacing
+    // months later as a `--check` failure nobody can account for.
+    expect(committed).toBe(serialize(document));
   });
 });
