@@ -144,34 +144,49 @@ correct for the 32- and 64-byte tags of the wider hashes. The
 `10^digits` modulus is computed in `u64`, because `digits` is legal
 up to 10 and `10^10` exceeds `u32::MAX`.
 
-## `WebAuthnPrfAuthenticator` (scaffold)
+## `WebAuthnPrfAuthenticator`
 
-Added by `VLT-PM51-hardware-security-keys.md`. Bind-mode: a FIDO2
-hardware security key (YubiKey and other CTAP2-compliant
+Added by `VLT-PM51-hardware-security-keys.md` (slice 1); real CTAP2
+hardware I/O added by that same document's slice 2. Bind-mode: a
+FIDO2 hardware security key (YubiKey and other CTAP2-compliant
 authenticators — a standards-based factor, not vendor-specific)
 contributes key material via the CTAP2 `hmac-secret` extension
 (WebAuthn's `prf` extension).
 
 ```rust
-pub struct WebAuthnPrfAuthenticator { /* relying_party_id, credential_id, public_key_cose */ }
+pub struct WebAuthnPrfAuthenticator { /* relying_party_id, credential_id, public_key_cose, transport, touch_timeout */ }
 
 impl WebAuthnPrfAuthenticator {
     pub fn new(relying_party_id: impl Into<String>,
                credential_id: impl Into<Vec<u8>>,
-               public_key_cose: impl Into<Vec<u8>>) -> Result<Self, AuthError>;
+               public_key_cose: impl Into<Vec<u8>>,
+               transport: impl Ctap2Transport + Send + Sync + 'static) -> Result<Self, AuthError>;
+    pub fn with_touch_timeout(/* as above, plus */ touch_timeout: Duration) -> Result<Self, AuthError>;
 }
 ```
 
 `kind()` is `"webauthn-prf"`, `mode()` is `Mode::Bind`. `verify()`
-always returns `AuthError::Unimplemented { backend: "FIDO2 CTAP2
-hmac-secret (WebAuthn PRF)" }`, regardless of input — the identical
-pattern `vault-key-custody::TpmCustodian` uses for `wrap`/`unwrap`.
-Two pieces are missing before `verify()` can do anything else: a real
-CTAP2/WebAuthn hardware transport, and an ECDSA P-256 signature
-verifier (no elliptic-curve primitive exists anywhere in this
-workspace today). `VLT-PM51` §6 explains at length why `verify()`
-refuses unconditionally rather than validating the parts of an
-assertion that don't need the missing signature check.
+performs a real CTAP2 `GetAssertion` (with `hmac-secret`) through the
+`Ctap2Transport` this instance was built with, checks the response's
+rpId hash, credential id, user-presence flag, and `hmac-secret`
+presence, and *only after all of that passes* still returns
+`AuthError::Unimplemented { backend: "ECDSA P-256 assertion-signature
+verification (WebAuthn PRF)" }` — the one remaining piece is an ECDSA
+P-256 signature verifier, which no primitive in this workspace
+implements yet. `VLT-PM51` §13 covers the full check sequence; §6/§7
+(slice 1) explain the original reasoning for never partially
+validating an assertion, which still holds — this slice moved *where*
+the refusal happens, not *whether* it happens.
+
+`Ctap2Transport`, `Ctap2AssertionRequest`, `Ctap2AssertionResponse`,
+and `Ctap2TransportError` are the transport-agnostic types this
+authenticator is built against; the real, `ctap-hid-fido2`/`hidapi`-
+backed implementation (`HidCtap2Transport`) lives in the sibling crate
+`coding_adventures_vault_webauthn_ctap2_hid`, kept separate so this
+crate never gains a native/hardware dependency (`VLT-PM51` §12).
+Unit tests exercise `verify()`'s full logic against an in-process fake
+transport; `vault-webauthn-ctap2-hid`'s own tests exercise the real
+dependency for real, with no hardware attached (`VLT-PM51` §15).
 
 This lets:
 
@@ -183,9 +198,8 @@ This lets:
   (both dispatch on `Mode`, not `kind`, so neither needs a change once
   `verify()` is real).
 
-Future PR: a CTAP2/WebAuthn hardware transport (`VLT-PM51` §5
-recommends `ctap-hid-fido2`) plus ECDSA P-256 verification, landing
-together since neither is independently useful without the other.
+Still deferred: ECDSA P-256 verification itself — `VLT-PM51` §16 has
+the full list of what remains after slice 2.
 
 ## `AuthError`
 
@@ -197,8 +211,17 @@ pub enum AuthError {
     Crypto,
     NoBindFactors,
     Unimplemented { backend: &'static str },
+    HardwareUnavailable,
+    HardwareTimeout,
+    HardwareTransport { detail: &'static str },
 }
 ```
+
+The last three variants are `WebAuthnPrfAuthenticator`-specific,
+covering "no device attached," "no touch within the timeout," and
+"transport failed for any other reason" respectively — see `VLT-PM51`
+§14 for the full taxonomy and why `HardwareTimeout` also covers an
+authenticator that affirmatively declines the request.
 
 ## Threat model & test coverage
 
@@ -214,7 +237,13 @@ pub enum AuthError {
 | Caller forgets to supply any bind factor                   | `NoBindFactors`                                                     | `combine_no_factors_rejected`                                     |
 | Argon2id timing leak on tag compare                        | `ct_eq` constant-time                                               | implicit via the upstream `ct-compare` crate's tests              |
 | Attacker-controlled bytes in error logs                    | All `Display` strings are static literals                           | `error_messages_are_static_literals`                              |
-| A `webauthn-prf` assertion validated only "shaped like" real | `verify()` refuses unconditionally rather than partially validating | `webauthn_prf_verify_always_returns_unimplemented` (tried against both empty and plausible-looking input) |
+| A `webauthn-prf` assertion accepted on partial (non-cryptographic) validation alone | `verify()` still refuses (`Unimplemented`) even after a real hardware round trip passes every structural check | `webauthn_prf_verify_still_refuses_after_a_correct_hardware_round_trip` |
+| Hardware key answering for the wrong relying party / wrong credential | rpId hash and credential id compared against the registered values | `webauthn_prf_verify_rejects_wrong_relying_party_hash`, `webauthn_prf_verify_rejects_credential_id_mismatch` |
+| Hardware key assertion without a physical touch | `user_present` flag checked | `webauthn_prf_verify_rejects_missing_user_presence` |
+| Hardware key without `hmac-secret` support | Extension-output presence checked | `webauthn_prf_verify_rejects_missing_hmac_secret_extension` |
+| No hardware key attached blocking the unlock path | `HardwareUnavailable`, returned fast via cheap enumeration | `webauthn_prf_verify_maps_no_device_to_hardware_unavailable` (fake transport); wall-clock timing test in `vault-webauthn-ctap2-hid` (real transport) |
+| Hardware key never touched / declined hanging `verify()` | Bounded `touch_timeout` (default 30s, 1s..=120s) | `webauthn_prf_verify_maps_touch_timeout`, `webauthn_prf_rejects_touch_timeout_below_minimum`, `webauthn_prf_rejects_touch_timeout_above_maximum` |
+| `hmac-secret` key derivation drifting across unlock attempts | Salt derived only from registration-time data (rpId + credential id), never from the per-attempt challenge | `webauthn_prf_hmac_secret_salt_is_stable_across_attempts_and_independent_of_credential_bytes` |
 | Hardware-key construction with missing registration data   | Constructor validation (empty rp id / credential id / public key)   | `webauthn_prf_rejects_empty_relying_party_id`, `webauthn_prf_rejects_empty_credential_id`, `webauthn_prf_rejects_empty_public_key` |
 
 ## Out of scope (this PR)
@@ -226,10 +255,12 @@ pub enum AuthError {
 - Replay-cache integration: this crate exposes `verify_at_time`
   returning the matched step; persisting last-used-step per
   secret and rejecting replays is the caller's job.
-- Real WebAuthn-PRF hardware I/O and ECDSA P-256 signature
-  verification — `WebAuthnPrfAuthenticator` ships as a scaffold
-  (see above); `VLT-PM51-hardware-security-keys.md` covers the full
-  design and the follow-up work that completes it.
+- ECDSA P-256 signature verification — the one piece still standing
+  between `WebAuthnPrfAuthenticator::verify()`'s current final `Err`
+  and a real `Ok(...)`; no elliptic-curve signature primitive exists
+  anywhere in this workspace yet. `VLT-PM51-hardware-security-keys.md`
+  §16 covers the full list of what remains after real CTAP2 hardware
+  I/O landed in that document's slice 2.
 - Plain-signature (gate-mode) `WebAuthnAuthenticator` — not needed
   until a factor without `hmac-secret` support is required.
 

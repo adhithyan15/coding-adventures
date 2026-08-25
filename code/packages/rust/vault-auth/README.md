@@ -6,16 +6,21 @@ TOTP, WebAuthn, FIDO2-PRF, OPAQUE, SMS, OIDC, mTLS, AppRole,
 Kubernetes-SA, etc. — without the vault core caring which.
 
 This v0.1 ships **PasswordAuthenticator** and **TotpAuthenticator**,
-plus a **`WebAuthnPrfAuthenticator` scaffold** — the trait plumbing
-and registration-time shape (relying-party id, credential id, COSE
-public key) for a FIDO2 hardware security key (YubiKey and other
-CTAP2-compliant authenticators) as a bind-mode unlock factor via the
-CTAP2 `hmac-secret` extension. `verify()` always returns
-`AuthError::Unimplemented` until a follow-up PR adds real hardware
-I/O and ECDSA P-256 signature verification — see
+plus **`WebAuthnPrfAuthenticator`** — a FIDO2 hardware security key
+(YubiKey and other CTAP2-compliant authenticators) as a bind-mode
+unlock factor via the CTAP2 `hmac-secret` extension. As of VLT-PM51's
+second slice, `verify()` performs a real CTAP2 `GetAssertion` (with
+`hmac-secret`) through a `Ctap2Transport` — the trait boundary this
+crate defines so it stays free of any native/hardware dependency; the
+real, USB-HID-backed implementation lives in the sibling crate
+[`vault-webauthn-ctap2-hid`](../vault-webauthn-ctap2-hid) — and checks
+everything about the response that doesn't need an ECDSA P-256
+signature verifier. `verify()` still always returns
+`AuthError::Unimplemented` as its *final* answer, because that one
+primitive doesn't exist anywhere in this workspace yet — see
 [`VLT-PM51-hardware-security-keys.md`](../../../specs/VLT-PM51-hardware-security-keys.md)
-for the full design, the protocol/dependency survey, and why real
-hardware support is deferred rather than partially built.
+for the full design, the protocol/dependency survey, and exactly
+what's real versus still deferred.
 Successful assertions can also be projected into credential-safe
 `AuthAssertionSummary` / `AuthAssertionSetSummary` read models so
 policy and audit layers can inspect factor coverage without touching

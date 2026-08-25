@@ -882,6 +882,20 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libcairo2-dev
 
+      # VLT-PM51 slice 2 (vault-webauthn-ctap2-hid): ctap-hid-fido2's
+      # `hidapi` dependency uses the `linux-static-hidraw` feature on
+      # Linux, which links against `libudev` via pkg-config at build
+      # time (confirmed by reading hidapi's own build.rs -- the
+      # libusb-based backends aren't compiled in, so libusb-1.0-0-dev
+      # is not needed here, only libudev-dev). macOS links the
+      # preinstalled IOKit/CoreFoundation frameworks and Windows links
+      # SetupAPI, neither of which needs a package install step.
+      - name: Install native HID dependencies (vault-webauthn-ctap2-hid)
+        if: needs.detect.outputs.needs_rust == 'true' && runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libudev-dev
+
       - name: Install Venture Qt acceptance dependencies
         if: (needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_mosaic_qt_runtime == 'true') && runner.os == 'Linux'
         uses: jurplel/install-qt-action@v4

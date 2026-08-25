@@ -9,21 +9,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- `WebAuthnPrfAuthenticator` (bind-mode) — scaffold for a FIDO2
-  hardware security key (YubiKey and other CTAP2-compliant
-  authenticators) unlock factor via the CTAP2 `hmac-secret` extension
-  (WebAuthn's `prf` extension). Ships the real registration-time
-  shape (`relying_party_id`, `credential_id`, `public_key_cose`) and
-  trait plumbing (`kind() == "webauthn-prf"`, `mode() == Mode::Bind`);
-  `verify()` unconditionally returns `AuthError::Unimplemented` until
-  a follow-up PR adds real CTAP2/WebAuthn hardware transport and
-  ECDSA P-256 signature verification — mirrors
-  `vault-key-custody::TpmCustodian`'s exact fail-closed pattern for
-  the identical reason. Full design, protocol survey
-  (FIDO2/CTAP2 `hmac-secret` chosen over YubiKey-proprietary
-  HMAC-SHA1 challenge-response), and dependency recommendation
-  (`ctap-hid-fido2`, not yet added) in
+- **VLT-PM51 slice 2 — real CTAP2 hardware I/O behind
+  `WebAuthnPrfAuthenticator::verify()`.** `verify()` now performs a
+  live CTAP2 `GetAssertion` (with the `hmac-secret` extension)
+  through a new `Ctap2Transport` trait, and checks everything about
+  the response that doesn't require an ECDSA P-256 signature
+  verifier: the rpId hash, the credential id, the user-presence flag,
+  and that `hmac-secret` actually fired. Only after all of that
+  passes does `verify()` reach its final, still-unconditional
+  `AuthError::Unimplemented` — because ECDSA P-256 verification still
+  doesn't exist anywhere in this workspace. `Ctap2Transport` is
+  defined here (protocol boundary only, zero native dependency); the
+  real `ctap-hid-fido2`/`hidapi`-backed implementation is the new
+  sibling crate `coding_adventures_vault_webauthn_ctap2_hid`, kept
+  separate so this trust-sensitive crate never gains a native/
+  hardware dependency. Full design in
   `code/specs/VLT-PM51-hardware-security-keys.md`.
+- `Ctap2AssertionRequest`, `Ctap2AssertionResponse`,
+  `Ctap2TransportError`, `Ctap2Transport` — the transport-agnostic
+  CTAP2 request/response/error/trait types `WebAuthnPrfAuthenticator`
+  is built against.
+- `AuthError::HardwareUnavailable`, `AuthError::HardwareTimeout`,
+  `AuthError::HardwareTransport { detail }` — new variants covering
+  the transport's error taxonomy (no device / touch timeout / other
+  transport failure).
+- `WebAuthnPrfAuthenticator::new`/`with_touch_timeout` now take a
+  `Ctap2Transport` at construction time, plus
+  `DEFAULT_TOUCH_TIMEOUT`/`MIN_TOUCH_TIMEOUT`/`MAX_TOUCH_TIMEOUT`
+  (30s default, 1s..=120s bounds) governing how long `verify()` waits
+  for a physical touch before failing closed.
+- **Breaking.** `WebAuthnPrfAuthenticator::new` gained a required
+  fourth parameter (the transport). No external callers existed at
+  the time of this change (confirmed by search).
+- `WebAuthnPrfAuthenticator` (bind-mode) — original scaffold for a
+  FIDO2 hardware security key (YubiKey and other CTAP2-compliant
+  authenticators) unlock factor via the CTAP2 `hmac-secret` extension
+  (WebAuthn's `prf` extension), shipped in VLT-PM51 slice 1 with the
+  registration-time shape (`relying_party_id`, `credential_id`,
+  `public_key_cose`) and trait plumbing (`kind() == "webauthn-prf"`,
+  `mode() == Mode::Bind`); superseded by the real hardware I/O above.
 - `AuthError::Unimplemented { backend: &'static str }` — new variant
   used by `WebAuthnPrfAuthenticator::verify`.
 - Built-in versus extension factor counts and gate/bind contribution
