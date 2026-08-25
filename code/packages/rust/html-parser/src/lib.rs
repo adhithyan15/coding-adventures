@@ -5533,10 +5533,13 @@ impl HtmlParser {
                             .is_some_and(|name| matches!(name, "option" | "optgroup"))
                     });
                 if has_open_select_group {
-                    self.diagnostics.push(ParserDiagnostic::new(
-                        "unexpected-hr-start-tag-in-select",
-                        "start tag `<hr>` left an option or optgroup in select scope after implied-end-tag generation",
-                    ));
+                    self.diagnostics.push(
+                        ParserDiagnostic::new(
+                            "unexpected-hr-start-tag-in-select",
+                            "start tag `<hr>` left an option or optgroup in select scope after implied-end-tag generation",
+                        )
+                        .at_emission(self.current_token_emission_position),
+                    );
                     self.append_node(Node::element(name, attributes));
                     return;
                 }
@@ -27676,6 +27679,14 @@ mod tests {
         )))
     }
 
+    fn unexpected_hr_start_tag_in_select(source: &str, occurrence: usize) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-hr-start-tag-in-select",
+            "start tag `<hr>` left an option or optgroup in select scope after implied-end-tag generation",
+        )
+        .at_emission(Some(start_tag_position_at(source, "hr", occurrence)))
+    }
+
     fn nested_heading_start_tag(
         source: &str,
         name: &str,
@@ -43992,10 +44003,9 @@ mod tests {
             "<!doctype html><table><tr><td><select><optgroup><option><span>one<hr>two",
         ] {
             let output = parse_html_with_diagnostics(source).unwrap();
-            assert!(output.parser_diagnostics.contains(&ParserDiagnostic::new(
-                "unexpected-hr-start-tag-in-select",
-                "start tag `<hr>` left an option or optgroup in select scope after implied-end-tag generation",
-            )));
+            assert!(output
+                .parser_diagnostics
+                .contains(&unexpected_hr_start_tag_in_select(source, 0)));
 
             let wrapper = find_first_element_in_nodes(&output.document.children, "span")
                 .or_else(|| find_first_element_in_nodes(&output.document.children, "div"))
@@ -44031,6 +44041,72 @@ mod tests {
                 .iter()
                 .all(|diagnostic| diagnostic.code != "unexpected-hr-start-tag-in-select"));
         }
+
+        let repeated_source =
+            "<!doctype html><!--é-->\r\n<select><optgroup><div><hr></div><div><hr>";
+        let repeated = parse_html_with_diagnostics(repeated_source).unwrap();
+        assert_eq!(
+            repeated
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-hr-start-tag-in-select")
+                .collect::<Vec<_>>(),
+            vec![
+                &unexpected_hr_start_tag_in_select(repeated_source, 0),
+                &unexpected_hr_start_tag_in_select(repeated_source, 1),
+            ]
+        );
+
+        let authored_fragment_source = "<select><optgroup><div><hr>";
+        let authored_fragment =
+            parse_html_fragment_for_context_with_diagnostics(authored_fragment_source, "div")
+                .unwrap();
+        assert!(authored_fragment
+            .parser_diagnostics
+            .contains(&unexpected_hr_start_tag_in_select(
+                authored_fragment_source,
+                0,
+            )));
+
+        let incomplete =
+            parse_html_with_diagnostics("<!doctype html><select><optgroup><div><hr").unwrap();
+        assert!(incomplete
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-hr-start-tag-in-select"));
+
+        let mut unpositioned = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        for token in [
+            Token::StartTag {
+                name: "select".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "optgroup".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "div".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "hr".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Eof,
+        ] {
+            unpositioned.process_token(token);
+        }
+        let diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-hr-start-tag-in-select")
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
     }
 
     #[test]
