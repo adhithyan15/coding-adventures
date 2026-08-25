@@ -12,13 +12,13 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 12786,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/12786",
-    "branch": "codex/build-tool-typescript-orphan-crate-validation-conformance",
+    "number": 12802,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/12802",
+    "branch": "codex/build-tool-ruby-tracked-artifact-validation-conformance",
     "status": "open"
   },
   "last_inventory": {
-    "revision": "8ca94c2ef717427004c8a1c073fde078f0aa92f9",
+    "revision": "3e29b2fee9572cf6a244c0bc8a889b655c2a3c22",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1373,
@@ -4989,7 +4989,7 @@
     {
       "id": "build-tool-typescript-orphan-crate-validation-conformance",
       "title": "Make the TypeScript build tool consume orphan-crate validation",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "build-tool-orphan-crate-validation-corpus",
         "build-tool-typescript-dist-newstyle-discovery-exclusion",
@@ -5000,15 +5000,19 @@
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/12786",
       "opened_at": "2026-08-25T13:02:21Z",
       "opened_revision": "fe1f7adc7d20e44ef7ab753abf0c99a702330d99",
+      "final_revision": "2235050c40295ad636a2ea1727af9f023809a207",
+      "merge_revision": "655997ff5081d74dd16281d3e2c34a940695df7d",
+      "merged_at": "2026-08-25T13:36:11Z",
       "selection_revision": "65729fcf2acae0df975a6e8c2b7db50bcad4e21f",
       "selection_notes": "Selected only after PR #12773 completed 30 terminal acceptable checks and GitHub merged it through squash auto-merge as 3e114a1d37e919505671cad222cc8cea4f964801 without a manual merge command. A late fetch advanced exact origin/main to 65729fcf2acae0df975a6e8c2b7db50bcad4e21f; PR #12772's rejected-frameset positions remain in the existing portable HTML-parser owner and do not overlap this slice. The exact-main schema-3 collision report remains 15 established lanes, 1,373 identities, 4,566 slots, 175 high-consensus packages with 276 gaps, 910 singletons with 12,740 gaps, 721 Rust singletons, zero collisions, and zero unknown buckets; OCaml remains correctly emerging at zero packages. Every earlier intervening commit was also classified before selection: Mermaid legend configuration, Chinese and Persian ductus data, and WebAssembly load-extend coverage remain in existing owners; the newly exposed contextual generic-closer parser contract and Unicode-generator host authority are registered as separate pending owners. The audit also corrected six orphan consumers to depend on their same-language tracked-artifact Unicode substrate. All three TypeScript orphan prerequisites are merged. This bounded process-free consumer advances the widest remaining orphan lane at 446 packages, reuses the reviewed source-pinned Unicode 17 substrate, and has zero exact path overlap across all 10 live open PRs and 33 non-main remote heads; the target branch was absent before the fresh worktree was created. Higher-descendant extra-CI and OCaml work remains collision-unsafe while PRs #12149 and #12162 own required Go entry-point and validator surfaces.",
       "notes": "Consume the closed process-free orphan-crate snapshot and diagnostics in the TypeScript engine without adding filesystem enumeration or process authority.",
       "implementation_revision": "dbcc0ece8d90507b0a3844451fd214088aa759e1",
       "validation_revision": "ed74330505e209a36022933a7b2c7129a664691c",
       "rebase_revision": "8ca94c2ef717427004c8a1c073fde078f0aa92f9",
-      "implementation_notes": "The TypeScript engine now exposes a pure validateOrphanCrateSnapshot adapter over inert manifest, BUILD, and exemption records. It implements exact artifact-component pruning, nearest rooted BUILD membership, fixed missing-evidence rank, closed invalid and stale precedence, unsafe-path redaction, Unicode-scalar limits and ordering, Python-equivalent whitespace and ensure_ascii detail ordering, NFKC plus full-fold duplicate detection, and full-uppercase reserved-name membership. It consumes all four shared fixtures plus adversarial astral, whitespace, BUILD-recognition, duplicate, precedence, and Unicode-detail probes without adding Git, filesystem, process, environment, clock, random, or network authority.",
+      "implementation_notes": "The TypeScript engine now exposes a pure validateOrphanCrateSnapshot adapter over inert manifest, BUILD, and exemption records. It implements exact artifact-component pruning, nearest rooted BUILD membership, fixed missing-evidence rank, closed invalid and stale precedence, unsafe-path redaction, Unicode-scalar limits and ordering, Python-equivalent whitespace and ensure_ascii detail ordering, NFC plus full default casefold duplicate detection, and full-uppercase reserved-name membership. It consumes all four shared fixtures plus adversarial astral, whitespace, BUILD-recognition, duplicate, precedence, and Unicode-detail probes without adding Git, filesystem, process, environment, clock, random, or network authority.",
       "validation_notes": "Red-to-green evidence first produced 16 missing-export failures, then the complete TypeScript build-tool suite passed 324 tests across 12 files. V8 coverage is 90.5% statements, 83.93% branches, 94.84% functions, and 90.43% lines overall; validator.ts reaches 100% statements, lines, and functions plus 97.01% branches. A temporary pinned TypeScript 5.9.2 and @types/node 22.20.1 toolchain passes tsc --noEmit; the literal BUILD install and coverage commands pass without changing package metadata. The Unicode 17 generator check, the 111-case/269-file neutral corpus, conformance, package-parity, capability, Haskell, OCaml-lock, strict JSON, state-DAG, diff, and collision gates pass. The Go build tool passes all packages, vet, and trimpath compilation; a real forced TypeScript dry validation evaluates 45 Starlark files, discovers 476 packages, preserves the five-entry orphan ledger, and reports all 476 WOULD-BUILD. npm pack contains exactly 18 allowlisted files including the Unicode notice and no bundled dependencies; npm audit --omit=dev reports zero vulnerabilities, while the full audit retains only the registered development-only nanoid advisory. Independent correctness review matched the Python oracle over 2,500 deterministic randomized and 139 systematic snapshots; independent security review found no new authority, path-disclosure, dependency, credential, license, or packaging blocker. The branch rebased conflict-free onto 8ca94c2ef717427004c8a1c073fde078f0aa92f9. Intervening PR #12774 extends the existing ADJ fact/test/capability owner, PR #12768 extends existing Gujarati curriculum/generated-data owners, PR #12779 extends existing Rust algol-iir-compiler, lang-aot, and full-language-spec owners, and PR #12778 extends the existing Rust HTML-frontend diagnostics owner; none changes a package or BUILD marker or overlaps the six selected paths. The refreshed schema-3 report remains 15 established lanes, 1,373 identities, 4,566 slots, zero collisions, and zero unknown buckets. At the live audit, 14 open PRs and 37 non-main remote heads had zero overlap with this slice; PR #12780 temporarily owns Rust parser surfaces needed by the separately pending contextual generic-closer owner.",
-      "publication_notes": "Opened ready-for-review PR #12786 from clean validated head fe1f7adc7d20e44ef7ab753abf0c99a702330d99 after a normal first push. Immediately before publication, the target remote branch and prior PR were absent. Current main then advanced to 207cd2bd13422b5047631ac0062c4f1954f5db41 only through ADJ curriculum-loop state bookkeeping already covered by the existing ADJ owner; it has no package marker or overlap with this six-path slice. GitHub reports the branch mergeable with required checks queued, so auto-merge remains disabled until every check is terminal and acceptable."
+      "publication_notes": "Opened ready-for-review PR #12786 from clean validated head fe1f7adc7d20e44ef7ab753abf0c99a702330d99 after a normal first push. Immediately before publication, the target remote branch and prior PR were absent. Current main then advanced to 207cd2bd13422b5047631ac0062c4f1954f5db41 only through ADJ curriculum-loop state bookkeeping already covered by the existing ADJ owner; it has no package marker or overlap with this six-path slice. GitHub reports the branch mergeable with required checks queued, so auto-merge remains disabled until every check is terminal and acceptable.",
+      "merge_notes": "All 30 reported checks reached terminal acceptable conclusions: 24 successes, five expected skips, and one neutral CodeQL gate, with no failures or pending work. GitHub reported the branch clean and mergeable; the loop enabled squash auto-merge, and GitHub merged PR #12786 as 655997ff5081d74dd16281d3e2c34a940695df7d without a manual merge command."
     },
     {
       "id": "build-tool-go-orphan-crate-host-scanner-security-review",
@@ -5295,7 +5299,7 @@
     {
       "id": "build-tool-ruby-tracked-artifact-validation-conformance",
       "title": "Make the Ruby build tool consume tracked-artifact validation",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [
         "build-tool-tracked-artifact-validation-corpus",
         "build-tool-tracked-artifact-unicode-cross-runtime-corpus-hardening",
@@ -5303,8 +5307,17 @@
         "build-tool-tracked-artifact-unicode-version-contract",
         "build-tool-dist-newstyle-discovery-exclusion-remaining-engines"
       ],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/build-tool-ruby-tracked-artifact-validation-conformance",
+      "pr_number": 12802,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/12802",
+      "opened_at": "2026-08-25T14:25:28Z",
+      "opened_revision": "8593e7fce3160c2fa25d87844f7c632d929c6733",
+      "selection_revision": "143aa30a07bb5f90b84d202e7710e50e3d099fe2",
+      "selection_notes": "Selected only after PR #12786 completed all 30 terminal acceptable checks and GitHub merged it through squash auto-merge as 655997ff5081d74dd16281d3e2c34a940695df7d without a manual merge command. The exact-main schema-3 report at 143aa30a07bb5f90b84d202e7710e50e3d099fe2 remains 15 established lanes, 1,373 identities, 4,566 slots, 175 high-consensus packages with 276 gaps, 910 singletons with 12,740 gaps, 721 Rust singletons, zero canonical collisions, and zero unknown buckets; OCaml remains correctly emerging at zero packages. Every intervening commit was classified before selection: ADJ lifecycle state and Japanese/Russian curriculum are bookkeeping/content only; Malayalam and Persian/Urdu ductus, WASM SIMD alignment, Mermaid XY orientation, rejected HTML-head diagnostics, the Vault test-only retry, and the Dolch fact-table extension remain inside their existing script-ductus, WebAssembly, Mermaid, HTML-frontend, Vault native-authority, and ADJ capability owners. No commit added or removed a package identity, BUILD marker, build-tool marker, or newly unowned portable contract. All five Ruby tracked-artifact dependencies are merged. Ruby is the widest remaining tracked-artifact lane at 298 packages and this consumer has two direct children plus three unfinished descendants, including the Ruby orphan validator and both completion umbrellas. Its expected Ruby validator, generated Unicode, generator, license, tests, README, CHANGELOG, state, and roadmap surfaces have zero overlap across all seven live open PRs and current non-main remote heads; the target branch and prior PR were absent before creating the fresh worktree. Higher-leverage extra-CI and OCaml work remains collision-unsafe while PRs #12149 and #12162 own required Go entry-point and validator surfaces, and PR #12780 owns Rust parser surfaces required by contextual generic-closer work.",
+      "implementation_revision": "8350634b869b3a284660ab1152b0aab7cfaa4c1c",
+      "validation_notes": "The Ruby engine now exposes one pure in-memory tracked-artifact snapshot validator and independently consumes all five language-neutral fixtures. It implements the closed portable-path precedence; slash normalization; Unicode-scalar length and diagnostic ordering; hostile invalid-path redaction while retaining normalized safe forbidden paths; NFKC plus full default folding for exact node_modules components; full-uppercase reserved basenames; inert regular, symlink, and reparse kinds; and canonical detail sorting without Git, filesystem, process, environment, or network authority. A generated source-embedded Unicode 17.0.0 module supplies NFC, NFKC, full folding, NFKC-fold, and full uppercase; exact upstream sizes and SHA-256 identities plus the complete Unicode License v3 notice are pinned. The generator runs Python, emitted TypeScript, and emitted Ruby across all official normalization, folding, uppercase, derived NFKC-fold, and Unicode 17 sentinel vectors, and its 10-test suite is now an explicit CI gate. The canonical Ruby BUILD front passes 321 tests and 717 assertions with one expected macOS-only skip, 89.57% line and 73.36% branch coverage; Bundle check and Ruby syntax checks pass. The neutral corpus validates all 111 cases and 269 files; 201 conformance tests pass with 23 expected platform skips. Package-parity, capability-taxonomy, Haskell-capability, and OCaml-lock suites pass; the exact-main schema-3 inventory remains 15 lanes, 1,373 identities, 4,566 slots, 175 high-consensus packages with 276 gaps, 910 singletons with 12,740 gaps, 721 Rust singletons, zero collisions, and zero unknown buckets. The Go build tool passes all packages, vet, trimpath compilation, BUILD validation, and a forced Ruby dry plan over 305 packages with the five-entry orphan ledger intact. Ruby advisory audit reports no vulnerability and production npm audit reports none; the unchanged development-only nanoid advisory remains in its registered owner. Bandit reports no medium or high issue; its three low subprocess notices are captured by the expanded selection-blocked Unicode-generator host-authority owner. Strict JSON and the 499-owner, 762-edge complete acyclic state graph pass. Three independent read-only audits found no remaining correctness, supply-chain, metadata, ownership, or integration defect; the required split security review passed in one round and the exact-head documentation recheck also passed.",
+      "rebase_notes": "Rebased without conflict onto exact origin/main 3e29b2fee9572cf6a244c0bc8a889b655c2a3c22 after classifying the intervening ADJ tracking-only finalization and rejected-body HTML parser diagnostics under the existing ADJ capability and HTML frontend owners. Neither changes a package identity, BUILD/build-tool marker, selected surface, or newly unowned portable contract. The refreshed collision inventory is structurally unchanged, all 12 live open PRs have zero exact overlap across this branch's 11 changed paths, and the target remote branch remains absent.",
+      "publication_notes": "Opened ready-for-review PR #12802 from clean validated head 8593e7fce3160c2fa25d87844f7c632d929c6733 after a normal first push. Immediately before publication, exact origin/main remained 3e29b2fee9572cf6a244c0bc8a889b655c2a3c22, the target remote branch and prior PR were absent, and all 12 other open PRs had zero exact overlap across the 11 changed paths. GitHub reports the PR mergeable with required checks queued, so auto-merge remains disabled until every required check is terminal and acceptable and no merge conflict exists.",
       "notes": "Consume the closed process-free tracked-artifact snapshot and diagnostics in the Ruby engine without adding Git, filesystem, or process authority."
     },
     {
@@ -5580,12 +5593,13 @@
       "status": "pending",
       "depends_on": [
         "build-tool-tracked-artifact-unicode-version-contract",
-        "build-tool-typescript-tracked-artifact-validation-conformance"
+        "build-tool-typescript-tracked-artifact-validation-conformance",
+        "build-tool-ruby-tracked-artifact-validation-conformance"
       ],
       "branch": null,
       "pr_number": null,
       "selection_blocked": true,
-      "notes": "Discovered after merged PR #12773 extended the shared Unicode 17 generator to resolve `node` through PATH, write temporary TypeScript sources and runner files, and invoke `tsx` for full-vector verification. Review executable identity and version pinning, environment and PATH authority, temporary-directory containment and cleanup, command construction, dependency resolution, process failures and diagnostics, offline determinism, credential redaction, and truthful capabilities separately from the pure runtime validator. This native generator-shell authority work is excluded from autonomous portable selection."
+      "notes": "Discovered after merged PR #12773 extended the shared Unicode 17 generator to resolve `node` through PATH, write temporary TypeScript sources and runner files, and invoke `tsx` for full-vector verification. The Ruby tracked-artifact consumer extends the same native generator boundary to PATH-resolved `ruby`, temporary Ruby source and runner files, inherited `RUBYOPT`/`RUBYLIB` and other environment state, buffered child output, and child diagnostics. Review executable identity and version pinning, environment and PATH authority, temporary-directory containment and cleanup, command construction, dependency resolution, bounded output and diagnostics, process failures and process-tree cleanup, offline determinism, credential redaction, and truthful capabilities separately from the pure runtime validators. This native generator-shell authority work is excluded from autonomous portable selection."
     }
   ]
 }

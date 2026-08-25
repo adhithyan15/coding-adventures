@@ -7174,9 +7174,12 @@ contextual `>>` and `>>>` splitting with transactional rollback and memo
 coherence in nested generic parsing. The state now records a neutral contract
 root and a dependent established-lane umbrella. PR #12773 also exposes a
 separate selection-blocked host-authority review for the Unicode generator's
-PATH-resolved Node execution and temporary TypeScript runner. Six orphan
-consumers now explicitly depend on their same-language tracked-artifact
-consumer so no lane is falsely ready without its reviewed Unicode substrate.
+PATH-resolved Node execution and temporary TypeScript runner. The Ruby
+tracked-artifact consumer extends that same owner to PATH-resolved Ruby,
+inherited Ruby environment state, temporary Ruby sources and runner, buffered
+child output, diagnostics, and process-tree cleanup. Six orphan consumers now
+explicitly depend on their same-language tracked-artifact consumer so no lane
+is falsely ready without its reviewed Unicode substrate.
 
 The selected next owner is
 `build-tool-typescript-orphan-crate-validation-conformance` on exact base
@@ -7189,7 +7192,7 @@ six expected paths have zero exact overlap across all 10 live open PRs and 33
 non-main remote heads; the target branch was absent before the fresh worktree
 was created. Extra-CI and OCaml work remain collision-unsafe while PRs #12149
 and #12162 own their required Go entry-point and validator surfaces. The
-reconciled graph has 499 unique owners and 761 complete acyclic dependency
+reconciled graph has 499 unique owners and 762 complete acyclic dependency
 edges, with exactly one in-progress owner and no active PR.
 
 ### TypeScript orphan-crate implementation
@@ -7199,8 +7202,9 @@ over inert manifest, BUILD, and exemption records. It matches the closed
 language-neutral contract for exact generated-artifact components, nearest
 rooted BUILD membership, fixed missing-evidence rank, invalid and stale
 precedence, hostile-path redaction, Unicode-scalar limits and ordering,
-Python-equivalent whitespace and canonical detail ordering, NFKC plus full-fold
-duplicate detection, and full-uppercase reserved basenames. All four shared
+Python-equivalent whitespace and canonical detail ordering, NFC plus full
+default casefold duplicate detection, and full-uppercase reserved basenames.
+All four shared
 fixtures plus adversarial astral, whitespace, BUILD-recognition, duplicate,
 precedence, and Unicode-detail cases are consumed without adding Git,
 filesystem, process, environment, clock, random, or network authority.
@@ -7249,6 +7253,110 @@ bookkeeping at `207cd2bd13422b5047631ac0062c4f1954f5db41`; that commit is
 covered by the existing ADJ owner and has no package marker or selected-path
 overlap. GitHub reports PR #12786 mergeable with required checks queued, so
 auto-merge remains disabled until every check is terminal and acceptable.
+
+### Post-#12786 refresh and Ruby tracked-artifact selection
+
+PR #12786 reached 30 terminal acceptable checks: 24 succeeded, five skipped,
+and one CodeQL aggregate completed neutrally, with no failure or pending job.
+GitHub reported the branch clean and mergeable, so the loop enabled squash
+auto-merge. GitHub merged reviewed head
+`2235050c40295ad636a2ea1727af9f023809a207` as
+`655997ff5081d74dd16281d3e2c34a940695df7d` at
+`2026-08-25T13:36:11Z` without a manual merge command.
+
+The exact-main schema-3 collision report at
+`143aa30a07bb5f90b84d202e7710e50e3d099fe2` remains structurally unchanged:
+15 established lanes, 1,373 implementation identities, 4,566 package slots,
+175 high-consensus packages with 276 missing slots, 122 five-to-nine-lane
+packages with 926 gaps, 166 two-to-four-lane packages with 2,087 gaps, 910
+singletons with 12,740 gaps, and 721 Rust singletons. Canonical collisions and
+unknown language buckets remain zero; OCaml remains correctly emerging at zero
+packages.
+
+Every intervening commit is classified before selection. PR #12781 is ADJ
+lifecycle bookkeeping; #12775 and #12787 are Japanese and Russian curriculum
+content. PR #12782 extends the existing script-ductus neutral and lane owners;
+#12783 extends the existing WAST parser, portable WebAssembly core, and host
+authority owners; #12785 extends the existing Mermaid XY neutral and lane
+owners; and #12788 extends the existing HTML-frontend diagnostics owner. None
+adds or removes a package identity, BUILD marker, build-tool marker, or newly
+unowned portable contract.
+
+The later exact-main advance remains ownership-complete and non-overlapping:
+#12777 changes only a test-only Vault socket retry under the existing Vault
+native-authority review; #12791 adds Persian and Urdu kheh data under the
+existing script-ductus owners; and #12790 extends the Dolch fact table and its
+Rust CLI evidence under the existing ADJ capability owner. None adds a package,
+BUILD, or build-tool marker, and none touches the selected Ruby surfaces.
+
+The selected next owner is
+`build-tool-ruby-tracked-artifact-validation-conformance`. All five declared
+dependencies are merged. Ruby is the widest remaining tracked-artifact lane at
+298 packages, and this consumer has two direct children plus three unfinished
+descendants through the Ruby orphan validator and both completion umbrellas.
+Its Ruby validator, generated Unicode, generator, license, tests, README,
+CHANGELOG, state, and roadmap surfaces have zero overlap across all seven live
+open PRs and current non-main remote heads; the target branch and prior PR were
+absent before the fresh worktree was created. Extra-CI and OCaml remain
+collision-unsafe while PRs #12149 and #12162 own required Go entry-point and
+validator surfaces, and PR #12780 owns the Rust parser surfaces required by
+contextual generic-closer work. The reconciled graph remains 499 unique owners
+and 762 complete acyclic dependency edges, with exactly one in-progress owner
+and no active PR.
+
+### Ruby tracked-artifact implementation
+
+The Ruby engine now exposes a pure in-memory tracked-artifact snapshot
+validator and independently consumes all five language-neutral fixtures. It
+implements the closed portable-path precedence, lexical slash normalization,
+Unicode-scalar limits and ordering, invalid-path redaction, normalized safe
+forbidden paths, NFKC plus full default folding for exact `node_modules`
+components, full-uppercase reserved basenames, inert entry kinds, and canonical
+diagnostic ordering. The runtime adapter adds no Git, filesystem, process,
+environment, or network authority.
+
+Generated source-embedded Unicode 17.0.0 tables provide NFC, NFKC, full
+folding, NFKC-fold, and full-uppercase behavior without inheriting the host
+Ruby tables. The generator pins every upstream size and SHA-256 identity,
+ships the complete Unicode License v3 notice, and runs Python, emitted
+TypeScript, and emitted Ruby over every official normalization, folding,
+uppercase, derived NFKC-fold, and Unicode 17 sentinel family. Its 10-test suite
+is now an explicit CI gate. The separate selection-blocked generator authority
+owner now depends on this Ruby consumer and truthfully covers PATH-resolved
+Ruby, inherited environment state, temporary sources and runners, buffered
+output, diagnostics, and process-tree cleanup.
+
+The canonical Ruby BUILD front passes 321 tests and 717 assertions with one
+expected macOS-only skip, 89.57% line coverage, and 73.36% branch coverage;
+Bundle check, StandardRB's substantive rules, and Ruby syntax checks pass. The
+neutral corpus validates all 111 cases across 269 files, and the full build-tool
+conformance family passes 201 tests with 23 expected platform skips. The
+package-parity, capability, Haskell, and OCaml gates pass. The Go build tool
+passes all packages, vet, trimpath compilation, BUILD validation, and a forced
+Ruby dry plan over 305 packages while preserving the five-entry orphan ledger.
+Ruby advisory audit and production npm audit report no vulnerability; the
+unchanged development-only `nanoid` advisory remains registered separately.
+Bandit reports no medium or high issue, and its low child-process notices are
+owned by the generator authority review. Strict JSON and the 499-owner,
+762-edge complete acyclic state graph pass.
+
+Three independent read-only audits found no remaining correctness,
+supply-chain, metadata, ownership, or integration defect. The required split
+security review passed in one round, and its exact-head documentation recheck
+also passed. A conflict-free rebase advanced the branch to exact `origin/main`
+`3e29b2fee9572cf6a244c0bc8a889b655c2a3c22`; the intervening ADJ tracking-only
+finalization and rejected-body HTML parser diagnostics remain under existing
+owners and do not add identities or overlap. The refreshed schema-3 inventory
+remains 15 established lanes, 1,373 identities, 4,566 slots, zero collisions,
+and zero unknown buckets. All 12 live open PRs have zero exact overlap across
+this branch's 11 changed paths.
+
+Ready-for-review PR #12802 opened from clean validated head
+`8593e7fce3160c2fa25d87844f7c632d929c6733` after a normal first push. Exact
+`origin/main` remained at the reviewed base, and the target branch and prior PR
+were absent immediately before publication. GitHub reports the PR mergeable
+with required checks queued, so auto-merge remains disabled until every check
+is terminal and acceptable and no merge conflict exists.
 
 ## Autonomous Loop Protocol
 

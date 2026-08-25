@@ -121,6 +121,37 @@ class UnicodeDownloadBoundaryTests(unittest.TestCase):
             generator.LICENSE_TARGETS,
         )
 
+    def test_ruby_renderer_exports_the_pinned_process_free_api(self) -> None:
+        rendered = generator._render_ruby(
+            (
+                [(0x0300, 230)],
+                [(0x00C0, False, (0x0041, 0x0300))],
+                [(0x0041, 0x0300, 0x00C0)],
+                [(0x0041, (0x0061,))],
+                [(0x0061, (0x0041,))],
+            )
+        )
+
+        self.assertIn('UNICODE_VERSION = "17.0.0"', rendered)
+        self.assertIn("def nfc", rendered)
+        self.assertIn("def nfkc_casefold", rendered)
+        self.assertIn("def full_uppercase", rendered)
+        self.assertNotIn("unicode_normalize", rendered)
+        self.assertNotIn("downcase", rendered)
+
+    def test_ruby_output_and_license_are_declared_targets(self) -> None:
+        self.assertEqual(
+            generator.RUBY_TARGET,
+            Path(
+                "code/programs/ruby/build-tool/lib/build_tool/"
+                "tracked_artifact_unicode17.rb"
+            ),
+        )
+        self.assertIn(
+            Path("code/programs/ruby/build-tool/UNICODE-LICENSE.txt"),
+            generator.LICENSE_TARGETS,
+        )
+
     def test_typescript_self_check_runs_every_official_vector_family(self) -> None:
         sources = {
             "NormalizationTest.txt": "0041;0041;0041;0041;0041; # LATIN A\n",
@@ -155,6 +186,42 @@ class UnicodeDownloadBoundaryTests(unittest.TestCase):
                     sources,
                     _Module(),
                 )
+
+        invocation = run.call_args.kwargs
+        payload = json.loads(invocation["input"])
+        self.assertEqual(payload["unicodeVersion"], "17.0.0")
+        self.assertEqual(payload["normalization"], [["A", "A", "A", "A", "A"]])
+        self.assertEqual(payload["folding"], [["A", "a", "a"]])
+        self.assertEqual(payload["uppercase"], [["a", "A"]])
+        self.assertEqual(invocation["timeout"], 180)
+        self.assertFalse(invocation["check"])
+
+    def test_ruby_self_check_runs_every_official_vector_family(self) -> None:
+        sources = {
+            "NormalizationTest.txt": "0041;0041;0041;0041;0041; # LATIN A\n",
+            "CaseFolding.txt": "0041; C; 0061; # LATIN A\n",
+            "UnicodeData.txt": ";".join(["0061"] + [""] * 11 + ["0041"] + [""] * 2),
+            "SpecialCasing.txt": "0061; 0061; 0041; 0041; ; # LATIN A\n",
+        }
+
+        class _Module:
+            @staticmethod
+            def nfkc_casefold(value: str) -> str:
+                return value.lower()
+
+        completed = subprocess.CompletedProcess([], 0, "ok\n", "")
+        with (
+            mock.patch.object(generator.shutil, "which", return_value="ruby"),
+            mock.patch.object(
+                generator.subprocess, "run", return_value=completed
+            ) as run,
+        ):
+            generator._self_check_ruby(
+                Path("C:/repo"),
+                "module BuildTool; module TrackedArtifactUnicode17; end; end\n",
+                sources,
+                _Module(),
+            )
 
         invocation = run.call_args.kwargs
         payload = json.loads(invocation["input"])
