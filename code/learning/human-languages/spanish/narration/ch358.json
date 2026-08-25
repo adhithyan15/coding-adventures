@@ -1,0 +1,823 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 358,
+  "title": "Which One: By Colour, Size And Shape",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5b80baf88ebc0eb5",
+  "lessons": [
+    {
+      "id": "ES-C358-color",
+      "sequence": 6820,
+      "title": "el color — a covering, and the hiding under it",
+      "headword": "el color",
+      "romanization": "el color",
+      "gloss": "colour — Latin color, from celare to hide, because a colour is what covers a thing; conceal, cell, occult and even hell are the same hiding",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ece8b7fca942ab97",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the present, then the card. (El regalo; la tarjeta.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rojo — one answer to it."
+            },
+            {
+              "kind": "speech",
+              "text": "verde — another."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ko-LOR, two beats with the weight on the last. The l is clear and forward, never swallowed. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el color — \"the colour.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin cēlāre is to hide, and color is built on it. A colour is the coat over a surface — the thing that stops you seeing what the surface is actually made of. To a Roman, painting something was covering it up."
+            },
+            {
+              "kind": "speech",
+              "text": "The hiding is scattered through English:"
+            },
+            {
+              "kind": "speech",
+              "text": "to conceal is to hide, with the Latin verb almost intact;"
+            },
+            {
+              "kind": "speech",
+              "text": "an occult thing is a covered one;"
+            },
+            {
+              "kind": "speech",
+              "text": "a cell and a cellar are places to hide things, from cella, a store room;"
+            },
+            {
+              "kind": "speech",
+              "text": "a helmet hides a head, and hull is what covers a seed."
+            },
+            {
+              "kind": "speech",
+              "text": "And then the good one. English hell is the same ancient root, arriving down the Germanic road rather than the Latin one — the covered place, the hidden place, before any theology was attached to it. Latin c comes out as Germanic h, which is the swap you already met standing between cien and hundred."
+            },
+            {
+              "kind": "speech",
+              "text": "Once you have el color, you can pick one thing out of five without pointing at it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first of five ways to single out one thing among several."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el color",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el color*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "¿de qué color?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *¿de qué color?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el color rojo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el color rojo*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does cēlāre mean? (To hide.) And what Latin sound turns into an English h? (A c, as in cien and hundred.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C358-tamano",
+      "sequence": 6830,
+      "title": "el tamaño — so big, welded into a noun",
+      "headword": "el tamaño",
+      "romanization": "el tamaño",
+      "gloss": "size — Latin tam magnum, so big, welded shut; the tam is the tan inside tambien and tampoco, and magnus is the magn- of magnify and magnitude",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1a1f184e45ec7e31",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the card, then the colour. (La tarjeta; el color.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "grande — one answer to it."
+            },
+            {
+              "kind": "speech",
+              "text": "también — where its first half is hiding."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ta-MA-ño, three beats with the weight on the second. The ñ is the n-with-a-y sound. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el tamaño — \"the size.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Two Latin words, hammered flat. Tam magnum is \"so big,\" and Spanish welded it into one word."
+            },
+            {
+              "kind": "speech",
+              "text": "It was an adjective first. Un tamaño error meant \"an error that big,\" and you can still meet it in older writing. Then people kept asking ¿de qué tamaño? — \"of what so-big?\" — and the answer hardened into a noun. Spanish now uses it for size the way English uses a word borrowed from French."
+            },
+            {
+              "kind": "speech",
+              "text": "Both halves are worth having on their own."
+            },
+            {
+              "kind": "speech",
+              "text": "Tam is the tan you already own. También is tan bien, \"so well,\" which slid into \"also.\" Tampoco is tan poco, \"so little,\" which slid into \"neither.\" The same little word, three times."
+            },
+            {
+              "kind": "speech",
+              "text": "Magnus, great, is the magn- in English magnify, magnitude, magnificent and magnate, the ma- in major and maximum, and the mas- in master, who is the greater one. Spanish has it in magno — as in Alejandro Magno."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The second way to single a thing out, and a Latin pair you have been using in two other words."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el tamaño",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el tamaño*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "¿de qué tamaño?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *¿de qué tamaño?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un tamaño grande",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un tamaño grande*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What two Latin words are inside tamaño? (Tam and magnum — so big.) And which word you know already carries the same tam? (También.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C358-forma",
+      "sequence": 6840,
+      "title": "la forma — one Latin word that arrived twice",
+      "headword": "la forma",
+      "romanization": "la forma",
+      "gloss": "shape — Latin forma, which came into Spanish twice; the borrowed half is la forma, and the inherited half is hermoso, beautiful, from formosus, well shaped",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6bba956d7b29da6f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the colour, then the size. (El color; el tamaño.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la cosa — what has one."
+            },
+            {
+              "kind": "speech",
+              "text": "f becomes h — the change that gave it a twin."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "FOR-ma, two beats with the weight on the first. The r is a single tap. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la forma — \"the shape,\" \"the form.\""
+            },
+            {
+              "kind": "speech",
+              "text": "This word came into Spanish twice, and the two arrivals do not look alike."
+            },
+            {
+              "kind": "speech",
+              "text": "The short road is the one you can see. Forma was borrowed out of Latin books with nothing changed at all, and it means shape. English borrowed it the same way and built a shelf from it: form, formal, format, formula, uniform, transform, reform, conform."
+            },
+            {
+              "kind": "speech",
+              "text": "The long road is the good one. Latin formōsus meant \"well shaped.\" It came down through mouths rather than books, and words that did that turned their Latin f into a Spanish h — facere to hacer, fabulari to hablar. Do it to formōsus and you get hermoso, which no longer means shapely. It means beautiful."
+            },
+            {
+              "kind": "speech",
+              "text": "So la forma and hermoso are the same Latin word, and the difference between them is eight hundred years of being said out loud."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The third way to single a thing out, and a doublet with the same root at both ends."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la forma",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la forma*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la forma de la mesa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la forma de la mesa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el color y la forma",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el color y la forma*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does formōsus mean in Latin? (Well shaped.) And what does its Spanish descendant hermoso mean now? (Beautiful.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C358-clase",
+      "sequence": 6850,
+      "title": "la clase — six bands of Romans, sorted by money",
+      "headword": "la clase",
+      "romanization": "la clase",
+      "gloss": "a class, a kind, a lesson — Latin classis, one of the six bands Rome sorted its citizens into by wealth; a writer of the top band was classicus, which is where classic comes from",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ad531404a3806707",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the size, then the shape. (El tamaño; la forma.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el tipo — the word standing beside it."
+            },
+            {
+              "kind": "speech",
+              "text": "cl-, pl-, fl- becomes ll- — the change this word escaped."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "KLA-se, two beats with the weight on the first. The cl stays a hard k plus l, both sounded. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la clase — \"the class,\" \"the kind,\" and also \"the lesson.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Rome counted its citizens every five years and sorted them into classēs by what they owned. There were six, and where you stood decided what armour you brought to war and how much your vote weighed."
+            },
+            {
+              "kind": "speech",
+              "text": "A writer good enough to belong at the top was classicus — first class. That is where English classic comes from, and it is worth knowing that the word never meant old. It meant top band. A classic film made last year is being called first-rate, not ancient."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish uses la clase for three things at once: the social band, the kind of thing, and the room where a lesson happens."
+            },
+            {
+              "kind": "speech",
+              "text": "One sound to notice. A word that came down through mouths and started cl- usually comes out of Spanish as ll-: Latin clamāre gave llamar, plēnus gave lleno, flamma gave llama. Clase kept its cl- untouched, and that is the fingerprint of a word that came in from books instead."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The fourth way to single a thing out, and the difference between a word that was said and one that was read."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la clase",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la clase*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "¿qué clase de queso?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *¿qué clase de queso?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "una clase de cosa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *una clase de cosa*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did classicus mean? (Of the top band, first class.) And what usually happens to an inherited Spanish word that starts cl-? (It comes out as ll-.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C358-marca",
+      "sequence": 6860,
+      "title": "la marca — a boundary before it was a sign",
+      "headword": "la marca",
+      "romanization": "la marca",
+      "gloss": "a mark, a brand — Germanic marka, a boundary; the border lands were marches, their lords marquises, and Latin margo, an edge, is the cousin that gives margin",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f98a82bcc4a342b2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the shape, then the kind. (La forma; la clase.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el nombre — what it sits next to."
+            },
+            {
+              "kind": "speech",
+              "text": "la huella — a mark of a different kind."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "MAR-ka, two beats with the weight on the first. The r before the c is a single tap. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la marca — \"the mark,\" and then \"the brand.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The Germanic marka was a boundary first. Not a sign — an edge, the line where one people's land stopped and another's began. The sign came second: the stone, the cut in a tree, the thing you put there so the edge could be seen."
+            },
+            {
+              "kind": "speech",
+              "text": "From the boundary meaning:"
+            },
+            {
+              "kind": "speech",
+              "text": "a march is a border land, which is why the country between England and Wales is the Welsh Marches;"
+            },
+            {
+              "kind": "speech",
+              "text": "the lord who held one was a marquis, ranked above a count because a border is harder to hold than a middle;"
+            },
+            {
+              "kind": "speech",
+              "text": "and Denmark is the mark of the Danes."
+            },
+            {
+              "kind": "speech",
+              "text": "From the sign meaning: English mark, to remark (to mark a thing again, out loud), and to demarcate. Latin had a cousin, margō, an edge, which gives margin — the boundary of a page."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish la marca kept both. It is the mark on a thing, and then the maker who put it there: the brand. So asking ¿de qué marca? is asking whose sign is on it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five ways to single a thing out without pointing: el color, el tamaño, la forma, la clase, la marca."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la marca",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la marca*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "¿de qué marca?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *¿de qué marca?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el color, el tamaño, la forma y la clase",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el color, el tamaño, la forma y la clase*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was a marka before it was a sign? (A boundary.) And why does a marquis outrank a count? (He held a border.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

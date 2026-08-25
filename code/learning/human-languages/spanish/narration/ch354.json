@@ -1,0 +1,811 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 354,
+  "title": "Where The Town Goes When The Work Stops",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a717cfb272e9c5c1",
+  "lessons": [
+    {
+      "id": "ES-C354-hotel",
+      "sequence": 6620,
+      "title": "el hotel — the same word as hospital, worn down in France",
+      "headword": "el hotel",
+      "romanization": "el hotel",
+      "gloss": "hotel — French hotel, from Old French hostel, from the same Latin hospitale as hospital; the little hat on the French o is a headstone for a lost s",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4c7862ac18cc6378",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the library, then the museum. (La biblioteca; el museo.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el hospital — the same Latin word, taken by a different road."
+            },
+            {
+              "kind": "speech",
+              "text": "la maleta — what you carry in."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "o-TEL, two beats with the weight on the last. The h goes unsaid, the same way it did in el hospital. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el hotel — \"the hotel.\""
+            },
+            {
+              "kind": "speech",
+              "text": "You already have this word. It is hospitāle again, the guest house from the last chapter, arriving by a longer and rougher road."
+            },
+            {
+              "kind": "speech",
+              "text": "Old French said hostel. Then French did to that s what French does to almost every s before a consonant: it dropped it. What is left behind is the little hat — hôtel — which is a headstone marking the spot. The same hat stands over forêt for forest, île for isle, pâte for paste."
+            },
+            {
+              "kind": "speech",
+              "text": "English borrowed the word twice, once before the s fell and once after, so English has both hostel and hotel and treats them as different things."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish had no need of it — it already had hospital, and la posada and el mesón for an inn — so hotel came late, straight from French, with its foreign stress on the last beat still attached."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A place to sleep, and a rule of thumb for reading French words with a hat on them."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el hotel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el hotel*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un hotel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un hotel*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "¿dónde está el hotel?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *¿dónde está el hotel?*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter does the French circumflex stand in for? (A lost s.) And which Spanish word is hotel a cousin of? (Hospital.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C354-restaurante",
+      "sequence": 6630,
+      "title": "el restaurante — a soup that turned into a room",
+      "headword": "el restaurante",
+      "romanization": "el restaurante",
+      "gloss": "restaurant — French restaurant, a thing that restores, from Latin restaurare; the first restaurant was a broth sold to people who felt weak, and the room took the name of the soup",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bd39baa7aa36c0ad",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the museum, then the hotel. (El museo; el hotel.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la comida — what it sells."
+            },
+            {
+              "kind": "speech",
+              "text": "el plato — what it arrives on."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "res-tau-RAN-te, four beats with the weight on the third. The au is one glide, not two beats. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el restaurante — \"the restaurant.\""
+            },
+            {
+              "kind": "speech",
+              "text": "In Paris in the 1760s, a restaurant was something you drank. It was a strong meat broth, sold to people who felt weak — a restorative. The word is the French present participle of restaurer: a thing that restores."
+            },
+            {
+              "kind": "speech",
+              "text": "Shops opened to sell it. They were called restaurants after the broth, the way a chocolate shop is named after chocolate. Then the shops started serving other food, and other food at small tables, and within thirty years the word had climbed off the soup and onto the room."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin restaurāre is re- plus instaurāre, to set up — so to restore is to set a thing up again. English took it whole as restore and Spanish as restaurar, and both still mean putting a thing back the way it was."
+            },
+            {
+              "kind": "speech",
+              "text": "Which is a fair description of what a good meal does."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The place to eat when the food is not at home."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el restaurante",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el restaurante*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un restaurante",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un restaurante*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "comer en el restaurante",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *comer en el restaurante*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was a restaurant before it was a room? (A restorative broth.) And what does restaurar mean? (To put a thing back as it was.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C354-cine",
+      "sequence": 6640,
+      "title": "el cine — a movement-writer, cut down to one syllable",
+      "headword": "el cine",
+      "romanization": "el cine",
+      "gloss": "cinema — short for cinematografo, Greek kinema movement plus graphein to write, a movement-writer; the same kinein is in English kinetic",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:36a04a3674ac10db",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the hotel, then the restaurant. (El hotel; el restaurante.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ver — what you do there."
+            },
+            {
+              "kind": "speech",
+              "text": "la luz — what they turn off first."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "SI-ne, two beats with the weight on the first. The c before e is soft. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el cine — \"the cinema,\" and the art as well as the building."
+            },
+            {
+              "kind": "speech",
+              "text": "The Lumière brothers needed a name for their machine and did what the nineteenth century always did: they went to Greek. Kínēma is a movement, from kineîn, to move. Gráphein is to write or scratch. Bolt them together and you have a cinématographe, a movement-writer."
+            },
+            {
+              "kind": "speech",
+              "text": "Nobody was going to say that twice. Spanish sheared off everything after the first two beats and kept el cine. English kept a different piece and got cinema. German kept a third and got Kino. Three languages, one word, cut in three places."
+            },
+            {
+              "kind": "speech",
+              "text": "Kineîn survives uncut in English kinetic, and in kinesiology and telekinesis."
+            },
+            {
+              "kind": "speech",
+              "text": "And gráphein you have met already, in the -graphy of bibliography — the book-writing that lives next door to la biblioteca."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A word that is a stump of a much longer one, and the Greek verb for moving."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el cine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el cine*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un cine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un cine*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vamos al cine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vamos al cine*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does kínēma mean? (Movement.) And what was the full word Spanish cut cine out of? (Cinematógrafo.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C354-parque",
+      "sequence": 6650,
+      "title": "el parque — the fence, not the grass",
+      "headword": "el parque",
+      "romanization": "el parque",
+      "gloss": "park — Frankish parrik, an enclosure, through Medieval Latin parricus; a park was a fence before it was grass, and the English dialect word paddock is the same fence",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0a7908bc32047fbe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the restaurant, then the cinema. (El restaurante; el cine.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el árbol — what stands in it."
+            },
+            {
+              "kind": "speech",
+              "text": "el banco — the word you now own twice."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "PAR-ke, two beats with the weight on the first. The qu is a plain hard k; the u is silent. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el parque — \"the park.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The oldest meaning of this word is a fence."
+            },
+            {
+              "kind": "speech",
+              "text": "Frankish parrik was an enclosure, and Medieval Latin wrote it parricus. A park was a piece of ground a lord had fenced so that the deer inside it stayed inside it and the villagers outside it stayed outside. Nothing in the word is about grass, or trees, or benches. It is about the boundary."
+            },
+            {
+              "kind": "speech",
+              "text": "English has the same word twice: park, and the dialect paddock, which is parrock with the r and the d swapped around the way spoken words do."
+            },
+            {
+              "kind": "speech",
+              "text": "What changed is who the fence is for. A royal park kept people out. A city park, which is a nineteenth-century idea, keeps a piece of green from being built on — the fence now protects the grass from the town rather than the deer from the villagers."
+            },
+            {
+              "kind": "speech",
+              "text": "And when the motor car arrived, Spanish put it in the enclosure too, and got aparcar."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A green square with a fence in its history, and the seat you already know how to name."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el parque",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el parque*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un parque",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un parque*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el banco está en el parque",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el banco está en el parque*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was a park before it was grass? (A fenced enclosure.) And what was kept inside the fence? (Deer.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C354-jardin",
+      "sequence": 6660,
+      "title": "el jardín — the second fence in a row",
+      "headword": "el jardín",
+      "romanization": "el jardín",
+      "gloss": "garden — Frankish gardo, an enclosure, the same Germanic word English kept as yard and borrowed back from French as garden; kindergarten is a children's enclosure",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6f38eecb3c47de21",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the cinema, then the park. (El cine; el parque.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la flor — what grows in it."
+            },
+            {
+              "kind": "speech",
+              "text": "el parque — the other enclosure."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jar-DIN, two beats with the weight on the last, which is why it carries a written accent. The j is the rough Spanish sound at the back. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el jardín — \"the garden.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Two fences in a row. El parque came from a Frankish enclosure, and so does this one: gardo, a Germanic word for a fenced piece of ground, which French took as jardin and Spanish took from French."
+            },
+            {
+              "kind": "speech",
+              "text": "English has the same word without the French detour. A yard is gardo arriving on its own, straight down the Germanic road. Then English borrowed the French shape back on top, and now it has yard and garden side by side and treats them as different sizes of the same thing."
+            },
+            {
+              "kind": "speech",
+              "text": "The enclosure shows up in places English does not think of as words about fences:"
+            },
+            {
+              "kind": "speech",
+              "text": "kindergarten, a children's enclosure, named by the German who invented it because he thought children should be grown rather than taught;"
+            },
+            {
+              "kind": "speech",
+              "text": "Stuttgart, a stud-farm enclosure;"
+            },
+            {
+              "kind": "speech",
+              "text": "Asgard, the enclosure of the Norse gods;"
+            },
+            {
+              "kind": "speech",
+              "text": "and the -chard of orchard, which is a wort-yard, a herb enclosure."
+            },
+            {
+              "kind": "speech",
+              "text": "So a garden, a farmyard and the home of Odin are one Germanic fence."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five places to go when the work is done: el hotel, el restaurante, el cine, el parque, el jardín."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el jardín",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el jardín*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el hotel, el restaurante, el cine, el parque",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el hotel, el restaurante, el cine, el parque*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "¿dónde está el jardín?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *¿dónde está el jardín?*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which plain English word is the same Germanic word as jardín? (Yard.) And what is a kindergarten, word for word? (A children's garden.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
