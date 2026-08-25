@@ -7414,6 +7414,62 @@ with exactly one in-progress owner and no active PR. The strategically broader
 OCaml process-free substrate and extra-CI corpus remain collision-unsafe while
 live PRs #12149 and #12162 own their required Go validator and main surfaces.
 
+### Elixir tracked-artifact implementation
+
+The Elixir engine now exposes pure
+`validate_tracked_artifact_snapshot/1,2` entry points and independently consumes
+all five language-neutral fixtures. The adapter implements the closed
+portable-path precedence, lexical slash normalization, Unicode-scalar limits
+and ordering, root-redacted invalid paths, normalized safe forbidden paths,
+NFKC plus full default folding for exact `node_modules` components,
+full-uppercase reserved basenames, inert entry kinds, and canonical diagnostic
+ordering. It adds no Git, filesystem, process, environment, or network
+authority.
+
+Generated, source-embedded Unicode 17.0.0 tables provide NFC, NFKC, full
+folding, NFKC-fold, and full uppercase without inheriting the host BEAM tables.
+The generator pins exact upstream byte counts and SHA-256 identities, carries
+the complete Unicode License v3 notice, and runs Python plus emitted
+TypeScript, Ruby, and Elixir over all 20,034 official normalization vectors,
+1,585 C/F folding rows, 1,581 unconditional uppercase mappings, derived
+NFKC-fold expectations, and the two Unicode 17 sentinels. Both real generation
+and byte-check mode pass, as do all 15 generator tests.
+
+Elixir 1.18.4 passes warnings-as-errors compilation, changed-file formatting,
+20 focused validator tests, and the complete 230-test suite with two expected
+skips. Coverage measures `BuildTool.Validator` at 96.30% and the generated
+Unicode module at 80.85%; the package-wide 52.77% result remains below Mix's
+default 90% threshold because the unchanged CLI, resolver, and Git-diff modules
+have no coverage instrumentation, and is recorded rather than hidden or folded
+into this bounded consumer. The neutral corpus validates all 111 cases and 269
+files; 201 conformance tests pass with 23 expected platform skips. The focused
+package-parity, capability, Haskell-capability, and OCaml-lock families pass 68
+tests with two expected Windows skips.
+
+The Go build tool passes all packages, vet, trimpath compilation, BUILD
+validation, and a forced Elixir dry plan over 285 packages. The refreshed
+schema-3 inventory remains 15 established lanes, 1,373 implementation
+identities, 4,566 slots, zero collisions, and zero unknown buckets. Hex reports
+no retired or advisory dependency; production npm audit reports no
+vulnerability, while the unchanged development-only `nanoid` advisory remains
+under its registered owner. Ruff, Bandit medium/high, diff, strict JSON, and
+state-graph checks pass. Two independent split security reviews passed in one
+round. An independent correctness review found that mocks covered the generator
+subprocess boundary without making the real Elixir vector check durable in CI;
+the branch now adds a required read-only job on pinned Elixir 1.18.4 and OTP
+27.3.4.11, and the stable CI gate explicitly requires its real full-vector
+result. A focused post-fix review found no remaining correctness, workflow, or
+security defect. Generator host authority remains separately selection-blocked
+and truthfully owns PATH, environment, temporary-file, output, failure, and
+process cleanup risks.
+
+The branch rebased without conflict onto exact `origin/main`
+`07a09f4ccc93eb74fa12072d493238d93a027b6b` after classifying intervening HTML
+frontend diagnostics, vault-pm export handling, and Java-to-semantic-IR
+lowering under their existing owners. All ten live open PRs have zero exact
+overlap across this branch's 12 changed paths, and the target remote branch
+remains absent.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
