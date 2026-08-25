@@ -442,6 +442,20 @@ describe("validateOrphanCrateSnapshot", () => {
     ]);
   });
 
+  it("ignores BUILD records outside the recognized rooted filename set", () => {
+    const result = validateOrphanCrateSnapshot({
+      directories: ["code/packages/rust/demo"],
+      manifests: [{ path: "code/packages/rust/demo", kind: "package" }],
+      build_files: [
+        { path: "BUILD", state: "runnable" },
+        { path: "code/packages/rust/demo/NOT_BUILD", state: "runnable" },
+      ],
+      exemptions: [],
+    });
+
+    expect(result.diagnostics[0]?.code).toBe("ORPHAN_CRATE_UNLISTED");
+  });
+
   it("uses NFC plus full case folding for duplicate exemption identity", () => {
     const result = validateOrphanCrateSnapshot({
       directories: ["code/packages/rust/Straße"],
