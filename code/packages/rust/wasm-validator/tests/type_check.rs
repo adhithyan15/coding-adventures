@@ -2815,3 +2815,77 @@ fn invalid_f64x2_trunc_given_an_i32_result_type_instead_of_v128() {
 fn invalid_f64x2_nearest_given_an_i32_operand_instead_of_v128() {
     assert_invalid("(module (func (param i32) (result v128) (f64x2.nearest (local.get 0))))");
 }
+
+/// Security-review regression: `v128.load8_lane`/`v128.store8_lane`'s new
+/// combined memarg+lane-index arm implements the SAME multi-memory-flag
+/// (`0x40` bit on the `align` byte -> a trailing memidx LEB128) handling
+/// the pre-existing `Load`/`Store`/etc. arm does. A hand-built raw byte
+/// stream setting that flag (with an explicit, in-bounds `memidx=0`)
+/// exercises the ONE place this new arm's byte-consumption could
+/// plausibly disagree with `wasm-execution`'s own decoder: does the
+/// validator's `sz1+sz2+[sz3]+1` (align, offset, optional memidx, lane)
+/// consumption match `decode_function_body`'s own `decode_immediates(...,
+/// &["memarg"])` (which independently implements the identical `0x40`-flag
+/// handling) plus its own trailing lane-byte read? If either side consumed
+/// a different number of bytes, the two decoders would desync: the module
+/// would validate one byte-length reading of the lane index and the
+/// SECOND byte (memidx or the real lane byte) but the executor would
+/// misread the immediately-following `end` opcode as part of the SIMD
+/// instruction's own operand instead.
+///
+/// Asserts BOTH that the module validates (a `memidx` of `0` -- the only
+/// memory this repo's SIMD family targets -- is accepted, not rejected)
+/// AND that `wasm-execution`'s independent decoder produces exactly the 4
+/// expected instructions with the CORRECT lane value (`3`, the byte
+/// immediately after the memidx, not `0`, the memidx byte itself) and a
+/// real trailing `end` (opcode `0x0B`) recognized as its own instruction
+/// -- proof the two decoders agree on where the lane-load instruction
+/// ends and the next one begins.
+#[test]
+fn v128_load8_lane_with_the_multi_memory_flag_bit_set_validates_and_decodes_consistently() {
+    use wasm_types::*;
+    // v128.load8_lane with the multi-memory flag bit (0x40) set on the
+    // align byte, explicit memidx=0 following the offset, per the
+    // multi-memory proposal's memarg encoding.
+    // bytes: align=0x40|0x01=0x41, offset=0, memidx=0, lane=3
+    let mut code = vec![0x20, 0x00]; // local.get 0 (i32 addr)
+    code.push(0xFD);
+    code.push(0x0C); // v128.const
+    code.extend([0u8; 16]);
+    code.push(0xFD);
+    code.push(0x54); // v128.load8_lane
+    code.push(0x41); // align byte: 0x40 flag | 0x01 align
+    code.push(0x00); // offset = 0
+    code.push(0x00); // memidx = 0
+    code.push(0x03); // lane = 3
+    code.push(0x0B); // end
+
+    let module = WasmModule {
+        types: vec![FuncType { params: vec![ValueType::I32], results: vec![ValueType::V128] }],
+        functions: vec![0],
+        memories: vec![MemoryType { limits: Limits { min: 1, max: None }, shared: false }],
+        code: vec![FunctionBody { locals: vec![], code: code.clone() }],
+        ..Default::default()
+    };
+
+    assert!(
+        wasm_validator::validate(&module).is_ok(),
+        "an explicit memidx=0 (this repo's only supported memory) must validate, not be rejected"
+    );
+
+    let decoded = wasm_execution::decode_function_body(&module.code[0]);
+    assert_eq!(decoded.len(), 4, "the decoder must produce exactly 4 instructions (local.get, v128.const, v128.load8_lane, end) -- a desync would merge/split these");
+    assert_eq!(decoded[2].opcode, 0xFD);
+    match &decoded[2].operand {
+        wasm_execution::DecodedOperand::SimdMemLane { sub_opcode, offset, lane } => {
+            assert_eq!(*sub_opcode, 0x54);
+            assert_eq!(*offset, 0);
+            assert_eq!(
+                *lane, 3,
+                "the decoder must land on lane=3 (the real lane byte, right after the memidx), not lane=0 (the memidx byte itself) -- proof it correctly skipped the memidx"
+            );
+        }
+        other => panic!("expected DecodedOperand::SimdMemLane, got {other:?}"),
+    }
+    assert_eq!(decoded[3].opcode, 0x0B, "the trailing `end` must be recognized as its own instruction, not swallowed into the SIMD op's operand");
+}
