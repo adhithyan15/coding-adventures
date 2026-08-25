@@ -5920,29 +5920,58 @@ impl Compiler {
         if negated {
             return false;
         }
-        let [Piece::Node(lhs), Piece::Op(op), Piece::Node(rhs)] = sequence.as_slice() else {
+        if let [Piece::Node(lhs), Piece::Op(op), Piece::Node(rhs)] = sequence.as_slice() {
+            if op == "impl" {
+                return literal_boolean_value(lhs) == Some(true)
+                    && self.boolean_identity_expression_preserves_name(rhs, name);
+            }
+        }
+        if sequence.len() < 3 || sequence.len().is_multiple_of(2) {
+            return false;
+        }
+        let Piece::Node(first) = &sequence[0] else {
             return false;
         };
-        let lhs_preserves = self.boolean_identity_expression_preserves_name(lhs, name);
-        let rhs_preserves = self.boolean_identity_expression_preserves_name(rhs, name);
-        let lhs_literal = literal_boolean_value(lhs);
-        let rhs_literal = literal_boolean_value(rhs);
-        match op.as_str() {
-            "and" => {
-                (lhs_preserves && rhs_literal == Some(true))
-                    || (rhs_preserves && lhs_literal == Some(true))
-            }
-            "or" => {
-                (lhs_preserves && rhs_literal == Some(false))
-                    || (rhs_preserves && lhs_literal == Some(false))
-            }
-            "eqv" => {
-                (lhs_preserves && rhs_literal == Some(true))
-                    || (rhs_preserves && lhs_literal == Some(true))
-            }
-            "impl" => lhs_literal == Some(true) && rhs_preserves,
-            _ => false,
+        let Piece::Op(first_op) = &sequence[1] else {
+            return false;
+        };
+        let neutral = match first_op.as_str() {
+            "and" | "eqv" => true,
+            "or" => false,
+            _ => return false,
+        };
+        if sequence
+            .iter()
+            .skip(1)
+            .step_by(2)
+            .any(|piece| !matches!(piece, Piece::Op(op) if op == first_op))
+        {
+            return false;
         }
+        let mut preserves = self.boolean_identity_expression_preserves_name(first, name);
+        let mut is_neutral = literal_boolean_value(first) == Some(neutral);
+        for index in (1..sequence.len()).step_by(2) {
+            let Piece::Node(rhs) = &sequence[index + 1] else {
+                return false;
+            };
+            let rhs_preserves = self.boolean_identity_expression_preserves_name(rhs, name);
+            let rhs_is_neutral = literal_boolean_value(rhs) == Some(neutral);
+            if preserves {
+                if !rhs_is_neutral {
+                    return false;
+                }
+            } else if is_neutral {
+                if rhs_preserves {
+                    preserves = true;
+                    is_neutral = false;
+                } else if !rhs_is_neutral {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+        preserves
     }
 
     fn integer_identity_expression_preserves_name(
@@ -10497,6 +10526,9 @@ mod tests {
             "false or flag",
             "flag eqv true",
             "true impl flag",
+            "true and flag and true",
+            "false or flag or false",
+            "true eqv flag eqv true",
         ] {
             compile_source(
                 &format!(
@@ -10516,6 +10548,20 @@ mod tests {
         )
         .expect_err("a boolean non-identity write may change the selector dependency");
         assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_boolean_non_identity_selector_chains_remain_conservative() {
+        for write in ["flag and true and false", "true impl flag impl true"] {
+            let err = compile_source(
+                &format!(
+                    "begin integer i, n, limit, choose; boolean other, flag; n := 3; limit := 3; choose := 1; other := true; flag := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := if flag then other else false; flag := {write} end; print(i + 0.25) end"
+                ),
+                "test",
+            )
+            .expect_err("boolean non-identity chains must fail closed");
+            assert!(format!("{err:?}").contains("cannot print a real value"));
+        }
     }
 
     #[test]
