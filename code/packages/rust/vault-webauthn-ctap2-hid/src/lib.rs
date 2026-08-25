@@ -62,6 +62,7 @@
 //! `code/specs/VLT-PM51-hardware-security-keys.md` for the full
 //! testability design and why that gap is acceptable.
 
+#![forbid(unsafe_code)]
 #![deny(missing_docs)]
 
 use coding_adventures_vault_auth::{
@@ -107,13 +108,18 @@ use std::thread;
 /// not) or the crate's/device's own internal handling gives up, at
 /// which point its result is silently discarded (the caller has long
 /// since moved on). A single abandoned attempt's thread is bounded
-/// and self-terminating; it is not a leak that grows the process's
-/// memory or open-handle count without limit, but repeated timeouts
-/// against an unresponsive device do accumulate live background
-/// threads until each one resolves. A future PR could tighten this
-/// with a lower-level transport that exposes `hidapi`'s own read
-/// timeout directly instead of going through `ctap-hid-fido2`'s
-/// blocking convenience API.
+/// and self-terminating. This used to compound across *subsequent*
+/// attempts against the same stuck device too — an early draft's
+/// `HID_ACCESS_LOCK` used a blocking acquire, so every new attempt
+/// spawned another thread that also blocked forever on the same
+/// lock, accumulating unboundedly. A security review caught that;
+/// `HID_ACCESS_LOCK` now uses `try_lock`, so a contended attempt fails
+/// fast instead of queuing (see that lock's own doc comment) — at
+/// most one thread is ever tied up by a stuck device at a time, not
+/// one per attempt. A future PR could remove that one remaining
+/// thread too, with a lower-level transport that exposes `hidapi`'s
+/// own read timeout directly instead of going through
+/// `ctap-hid-fido2`'s blocking convenience API.
 #[derive(Debug, Default, Clone, Copy)]
 pub struct HidCtap2Transport {
     _private: (),
@@ -158,16 +164,42 @@ impl HidCtap2Transport {
 /// once regardless of what any particular driver does with the
 /// attempt.
 ///
-/// One consequence worth knowing: if an earlier attempt's worker
-/// thread is still running past its own caller's `touch_timeout` (see
-/// [`HidCtap2Transport`]'s doc on abandoned threads), a new attempt
-/// blocks on this lock until that earlier worker finishes — which can
-/// make the new attempt's own `touch_timeout` elapse waiting for the
-/// lock, surfacing as [`Ctap2TransportError::TouchTimedOut`] before
-/// this attempt's own hardware round trip ever starts. That is a
-/// real, documented trade-off, not a bug: it is still strictly safer
-/// than the crash it replaces.
+/// This lock is acquired with `try_lock`, never a blocking `lock` —
+/// see the "one attempt in flight at a time" paragraph below for why
+/// blocking here would be its own bug, not merely a trade-off.
 static HID_ACCESS_LOCK: std::sync::Mutex<()> = std::sync::Mutex::new(());
+
+/// At most one hardware attempt in flight at a time, by design — and
+/// enforced with `try_lock`, not a blocking acquire.
+///
+/// An earlier security review of this exact lock caught a real
+/// compounding-DoS shape in a first draft that *did* block: if one
+/// attempt's worker thread is still stuck (see [`HidCtap2Transport`]'s
+/// doc on abandoned threads — a device that never answers
+/// `GetAssertion` leaves its worker holding this lock forever), every
+/// *subsequent* `verify()` call would still spawn a fresh worker
+/// thread that blocks acquiring the same lock. Each of those new
+/// threads is *also* never released once its own `touch_timeout`
+/// elapses (the caller gives up, but nothing kills the thread) — so a
+/// single unresponsive or malicious USB device could accumulate one
+/// permanently-blocked thread per unlock attempt, unboundedly, for as
+/// long as attempts kept coming.
+///
+/// `try_lock` closes that: when the lock is already held, this
+/// returns [`Ctap2TransportError::Failed`] immediately instead of
+/// spawning a thread that would just queue up behind the stuck one.
+/// At most one thread is ever blocked on real (or stuck) hardware I/O
+/// at a time; every contended attempt fails fast and exits its worker
+/// thread almost immediately.
+fn try_acquire_hid_access() -> Result<std::sync::MutexGuard<'static, ()>, Ctap2TransportError> {
+    match HID_ACCESS_LOCK.try_lock() {
+        Ok(guard) => Ok(guard),
+        Err(std::sync::TryLockError::WouldBlock) => Err(Ctap2TransportError::Failed {
+            detail: "another hardware operation is already in progress",
+        }),
+        Err(std::sync::TryLockError::Poisoned(poisoned)) => Ok(poisoned.into_inner()),
+    }
+}
 
 impl Ctap2Transport for HidCtap2Transport {
     fn get_hmac_secret_assertion(
@@ -186,17 +218,17 @@ impl Ctap2Transport for HidCtap2Transport {
             // (inside `FidoKeyHidFactory::create`) and `GetAssertion`
             // alike — happens under `HID_ACCESS_LOCK`, on this one
             // worker thread, for the attempt's entire duration. See
-            // that lock's doc for why.
-            let _guard = HID_ACCESS_LOCK
-                .lock()
-                .unwrap_or_else(std::sync::PoisonError::into_inner);
-            let outcome = run_get_assertion(
-                &relying_party_id,
-                &credential_id,
-                &challenge,
-                &hmac_secret_salt,
-            );
-            drop(_guard);
+            // that lock's doc for why acquisition is `try_lock`, not
+            // a blocking `lock`.
+            let outcome = match try_acquire_hid_access() {
+                Ok(_guard) => run_get_assertion(
+                    &relying_party_id,
+                    &credential_id,
+                    &challenge,
+                    &hmac_secret_salt,
+                ),
+                Err(contended) => Err(contended),
+            };
             // Best-effort: if the caller already timed out and moved
             // on, `result_rx` is gone and this send fails silently —
             // see the struct doc for why that's the accepted
@@ -295,8 +327,18 @@ fn map_assertion(assertion: Assertion) -> Result<Ctap2AssertionResponse, Ctap2Tr
             })?;
 
     let hmac_secret_output = assertion.extensions.into_iter().find_map(|extension| {
-        if let Gext::HmacSecret(Some(bytes)) = extension {
-            Some(coding_adventures_zeroize::Zeroizing::new(bytes.to_vec()))
+        if let Gext::HmacSecret(Some(mut bytes)) = extension {
+            // `bytes` is the genuinely secret hmac-secret output.
+            // Copy it into the wipe-on-drop wrapper, then zeroize
+            // this local `[u8; 32]` explicitly rather than letting it
+            // fall out of scope untouched — otherwise the copy inside
+            // `Zeroizing` gets wiped later but this duplicate on the
+            // stack never does. Same discipline `TotpAlgorithm::mac`
+            // documents and applies elsewhere in `vault-auth` for the
+            // identical reason.
+            let output = coding_adventures_zeroize::Zeroizing::new(bytes.to_vec());
+            coding_adventures_zeroize::Zeroize::zeroize(&mut bytes);
+            Some(output)
         } else {
             None
         }
@@ -398,12 +440,62 @@ mod tests {
         );
         if let Err(Ctap2TransportError::NoDeviceAvailable) = result {
             // Expected on a CI runner / a dev machine with no key
-            // attached.
+            // attached — or `HardwareTransport`/`Failed` if this
+            // happened to race the contention test below, which is
+            // also fine (see that test's own comment).
         } else {
             // A real device answered (or something else happened) —
             // not this test's concern, since it only targets the
             // no-hardware fast-fail path. The timing assertion above
             // already ran regardless.
+        }
+    }
+
+    /// Pins the fix for a real finding from this crate's own security
+    /// review: `HID_ACCESS_LOCK` used to be acquired with a blocking
+    /// `lock()`, so a `verify()` call against an unresponsive or
+    /// malicious device (one that never answers `GetAssertion`) would
+    /// leave its worker thread holding the lock forever — and every
+    /// *subsequent* attempt would still spawn a fresh worker thread
+    /// that also blocked on the same lock, accumulating one
+    /// permanently-stuck thread per attempt with no bound. `try_lock`
+    /// closes that: a contended attempt must fail fast with a
+    /// specific error, never queue.
+    ///
+    /// This test never touches real `ctap-hid-fido2`/`hidapi` APIs —
+    /// holding `HID_ACCESS_LOCK` on the test thread makes the
+    /// transport's internal `try_acquire_hid_access()` fail before
+    /// `run_get_assertion` (the only place real hidapi calls happen)
+    /// is ever reached, so it's safe to run alongside the
+    /// one-thread-only real-hardware test above without reintroducing
+    /// the cross-thread `hidapi` hazard that test's own doc explains.
+    #[test]
+    fn transport_fails_fast_without_queuing_when_hid_access_is_already_held() {
+        let _held = HID_ACCESS_LOCK
+            .lock()
+            .unwrap_or_else(std::sync::PoisonError::into_inner);
+        let transport = HidCtap2Transport::new();
+        let request = Ctap2AssertionRequest {
+            relying_party_id: "vault-pm",
+            credential_id: b"test-credential-id",
+            challenge: [0x33; 32],
+            hmac_secret_salt: [0x44; 32],
+            touch_timeout: Duration::from_secs(10),
+        };
+        let started = std::time::Instant::now();
+        let result = transport.get_hmac_secret_assertion(&request);
+        assert!(
+            started.elapsed() < Duration::from_secs(10),
+            "a contended lock must fail fast, not queue behind the touch timeout"
+        );
+        match result {
+            Err(Ctap2TransportError::Failed { detail }) => {
+                assert_eq!(detail, "another hardware operation is already in progress");
+            }
+            other => panic!(
+                "expected Failed(already in progress), got {}",
+                if other.is_ok() { "Ok" } else { "different Err" }
+            ),
         }
     }
 

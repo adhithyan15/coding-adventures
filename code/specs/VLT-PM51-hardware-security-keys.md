@@ -801,6 +801,34 @@ semantically correct behavior for a single physical USB device
 regardless of the crash. `vault-webauthn-ctap2-hid`'s `CHANGELOG.md`
 and the `HID_ACCESS_LOCK` doc comment carry the full account.
 
+**A second real bug this document's own `/security-review` round
+found and fixed.** `HID_ACCESS_LOCK` originally used a blocking
+`lock()`. The reviewer traced the compounding failure mode that opens:
+a device that never answers `GetAssertion` leaves its worker thread
+holding the lock forever (the abandoned-thread trade-off above already
+names this), but with a *blocking* lock, every **subsequent**
+`verify()` call still spawns a fresh worker thread that also blocks
+acquiring the same lock — accumulating one permanently-stuck thread
+per attempt, unboundedly, for as long as attempts kept coming against
+the same stuck device. The fix: `HID_ACCESS_LOCK` is now acquired with
+`try_lock`, never a blocking `lock`. A contended attempt fails fast
+with `Ctap2TransportError::Failed { detail: "another hardware
+operation is already in progress" }` instead of queuing, so at most
+one thread is ever blocked on real (or stuck) hardware I/O at a time.
+`transport_fails_fast_without_queuing_when_hid_access_is_already_held`
+pins this without touching real `hidapi` at all — holding the lock on
+the test thread makes the contended path return before
+`run_get_assertion` is ever reached, so the test is safe to run
+alongside the one-thread-only real-hardware test in the same suite.
+The same review also caught an un-zeroized stack copy of the
+`hmac-secret` output in `map_assertion` (the extracted bytes were
+copied into `Zeroizing` but the original local was never explicitly
+wiped) and the absence of `#![forbid(unsafe_code)]` on this crate
+(which has zero `unsafe` blocks, so the lint costs nothing to add and
+turns a manual-inspection claim into a compiler-enforced one); both
+are fixed. `vault-webauthn-ctap2-hid`'s `CHANGELOG.md` has the full
+account of all three findings.
+
 ## 16. Explicitly still deferred (after slice 2)
 
 - **ECDSA P-256 assertion-signature verification.** Unchanged from §7:
