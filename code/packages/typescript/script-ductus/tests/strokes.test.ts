@@ -238,6 +238,7 @@ const URDU_GHUNNA = DUCTUS[ductusKey("urdu-nastaliq", "ں")];
 const URDU_HE = DUCTUS[ductusKey("urdu-nastaliq", "ہ")];
 const URDU_YE = DUCTUS[ductusKey("urdu-nastaliq", "ی")];
 const URDU_BARI_YE = DUCTUS[ductusKey("urdu-nastaliq", "ے")];
+const KANNADA_A = DUCTUS[ductusKey("kannada", "ಅ")];
 const TELUGU_A = DUCTUS[ductusKey("telugu", "అ")];
 const MALAYALAM_A = DUCTUS[ductusKey("malayalam", "അ")];
 const MALAYALAM_E = DUCTUS[ductusKey("malayalam", "എ")];
@@ -622,6 +623,17 @@ describe("handwriting ductus", () => {
     expect(TELUGU_A.strokes.map((stroke) => stroke.segments.map((segment) => segment.label))).toEqual([
       ["turn around the left lobe", "sweep around the broad lower bowl"],
       ["turn around the right lobe", "return left along the inner bar"],
+    ]);
+  });
+
+  it("Kannada ಅ keeps all four animated movements in one pen-down run", () => {
+    expect(penLifts(KANNADA_A)).toBe(0);
+    expect(KANNADA_A.strokes).toHaveLength(1);
+    expect(KANNADA_A.strokes[0].segments.map((segment) => segment.label)).toEqual([
+      "turn clockwise around the compact left loop",
+      "sweep around the broad lower bowl",
+      "turn counterclockwise around the rounded right loop",
+      "return left along the inward horizontal bar",
     ]);
   });
 
@@ -4038,6 +4050,9 @@ describe("handwriting ductus", () => {
   it("routes each verified ductus to the owning script font", () => {
     expect(verifiedLetterFont("అ", TELUGU_A.source.url)).toBe(
       "_fonts/NotoSansTelugu-Static.ttf",
+    );
+    expect(verifiedLetterFont("ಅ", KANNADA_A.source.url)).toBe(
+      "_fonts/NotoSansKannada-Static.ttf",
     );
     expect(verifiedLetterFont("എ", MALAYALAM_E.source.url)).toBe(
       "_fonts/NotoSansMalayalam-Static.ttf",

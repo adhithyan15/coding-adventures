@@ -37,12 +37,11 @@ at Latin spelling: **“Greet one person: SAL-weh — literally, be well.”**
 ## Writing — dictation and transcription
 <!-- hl-knowledge: introduces=[]; assesses=[LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02, LA-GRAMMAR-SALVE-03] -->
 <!-- hl-writing-stage: dictation-transcription -->
+<!-- hl-activity: {"id":"LA-W01-salve-dictation-check","kind":"text","assesses":["LA-PHONO-SALVE-01","LA-ETYMON-SALVE-02","LA-GRAMMAR-SALVE-03"],"prompt":"From the cue SAL-weh, meaning be well to one person, write the Latin greeting with its long-vowel mark.","answer":"salvē","accepted":[],"feedback":{"correct":"Yes: the heard greeting is written salvē, including the macron over final ē.","incorrect":"The answer is salvē. Compare your attempt letter by letter and check that final ē carries its macron."},"response_seconds":25} -->
 
 Write the one-word Latin greeting from the sound and meaning cue. Remember that
 the final vowel is long, so its written vowel carries the macron. Do not copy from
 an earlier page. Stop after one attempt.
-
-<!-- hl-activity: {"id":"LA-W01-salve-dictation-check","kind":"text","assesses":["LA-PHONO-SALVE-01","LA-ETYMON-SALVE-02","LA-GRAMMAR-SALVE-03"],"prompt":"From the cue SAL-weh, meaning be well to one person, write the Latin greeting with its long-vowel mark.","answer":"salvē","accepted":["salvē"],"feedback":{"correct":"Yes: the heard greeting is written salvē, including the macron over final ē.","incorrect":"The answer is salvē. Compare your attempt letter by letter and check that final ē carries its macron."},"response_seconds":25} -->
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02, LA-GRAMMAR-SALVE-03] -->

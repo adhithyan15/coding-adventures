@@ -13,6 +13,7 @@ import cyrillic from "../../../../learning/human-languages/data/scripts/cyrillic
 import devanagari from "../../../../learning/human-languages/data/scripts/devanagari.json";
 import gujarati from "../../../../learning/human-languages/data/scripts/gujarati.json";
 import hebrew from "../../../../learning/human-languages/data/scripts/hebrew.json";
+import kannada from "../../../../learning/human-languages/data/scripts/kannada.json";
 import malayalam from "../../../../learning/human-languages/data/scripts/malayalam.json";
 import persoArabic from "../../../../learning/human-languages/data/scripts/perso-arabic.json";
 import telugu from "../../../../learning/human-languages/data/scripts/telugu.json";
@@ -271,6 +272,14 @@ const malayalamIndependentVowelSource = (glyph: string): StrokeSource => {
   const letter = malayalam.independentVowels.find((candidate) => candidate.glyph === glyph);
   if (!letter || !("strokeOrderSource" in letter) || !letter.strokeOrderSource) {
     throw new Error(`Malayalam independent vowel ${glyph} has no verified source`);
+  }
+  return letter.strokeOrderSource;
+};
+
+const kannadaIndependentVowelSource = (glyph: string): StrokeSource => {
+  const letter = kannada.independentVowels.find((candidate) => candidate.glyph === glyph);
+  if (!letter || !("strokeOrderSource" in letter) || !letter.strokeOrderSource) {
+    throw new Error(`Kannada ${glyph} has no verified source`);
   }
   return letter.strokeOrderSource;
 };
@@ -13356,6 +13365,76 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       variation:
         "Tamil handwriting is taught with school-to-school variation; there is no single national stroke-order standard. This is one attested order.",
     },
+  },
+  // Gopala Krishna A's 35-frame animation keeps the pencil down throughout:
+  // the compact left loop flows into the broad bowl, rises through the right
+  // loop, and returns left along the inner bar. These four movements preserve
+  // that one-run order on the bundled Noto Sans Kannada outline.
+  [ductusKey("kannada", "ಅ")]: {
+    script: "kannada",
+    glyph: "ಅ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "turn clockwise around the compact left loop",
+            path: [
+              { x: 110, y: 400 },
+              { x: 125, y: 460 },
+              { x: 180, y: 525 },
+              { x: 242, y: 528 },
+              { x: 310, y: 490 },
+              { x: 345, y: 430 },
+              { x: 335, y: 380 },
+              { x: 285, y: 330 },
+              { x: 220, y: 312 },
+              { x: 160, y: 330 },
+              { x: 115, y: 370 },
+            ],
+          },
+          {
+            label: "sweep around the broad lower bowl",
+            path: [
+              { x: 115, y: 370 },
+              { x: 75, y: 300 },
+              { x: 90, y: 210 },
+              { x: 150, y: 115 },
+              { x: 270, y: 55 },
+              { x: 420, y: 28 },
+              { x: 550, y: 45 },
+              { x: 670, y: 100 },
+              { x: 750, y: 200 },
+              { x: 785, y: 320 },
+            ],
+          },
+          {
+            label: "turn counterclockwise around the rounded right loop",
+            path: [
+              { x: 785, y: 320 },
+              { x: 770, y: 410 },
+              { x: 720, y: 500 },
+              { x: 640, y: 525 },
+              { x: 570, y: 480 },
+              { x: 535, y: 420 },
+              { x: 555, y: 365 },
+              { x: 610, y: 325 },
+              { x: 680, y: 280 },
+            ],
+          },
+          {
+            label: "return left along the inward horizontal bar",
+            path: [
+              { x: 680, y: 280 },
+              { x: 600, y: 280 },
+              { x: 500, y: 280 },
+              { x: 420, y: 280 },
+              { x: 375, y: 280 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: kannadaIndependentVowelSource("ಅ"),
   },
   [ductusKey("telugu", "అ")]: {
     script: "telugu",

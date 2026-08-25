@@ -35,6 +35,18 @@ describe("independent (word-initial) vowels", () => {
     });
   });
 
+  it("keeps Kannada independent ಅ sourced while its sibling vowels remain unverified", () => {
+    const kannada = SCRIPTS.find((s) => s.script === "kannada")!;
+    const iv = kannada.independentVowels!;
+    expect(iv[0]!.glyph).toBe("ಅ");
+    expect(iv[0]!.strokeOrder).toHaveLength(4);
+    expect(iv[0]!.penLifts).toBe(0);
+    expect(iv[0]!.strokeOrderSource?.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-a.gif",
+    );
+    expect(iv.slice(1).every((v) => v.strokeOrder.length === 0)).toBe(true);
+  });
+
   it("CONTROL: they are SEPARATE from the syllabary — letters, isSyllabary and the matrix are untouched", () => {
     const telugu = SCRIPTS.find((s) => s.script === "telugu")!;
     // None of the independent-vowel glyphs leak into the consonant syllable list…

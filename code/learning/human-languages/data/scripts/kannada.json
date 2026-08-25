@@ -6,7 +6,7 @@
   "system": "abugida",
   "signature": "Rounded and looping like Telugu (its sister script), most letters topped by a small curved headstroke; no continuous top line.",
   "complete": false,
-  "notes": "Syllabary generated from Unicode by generate_syllabary.py: each syllable is a base consonant (varga order) composed with a core vowel sign. Romanization is ISO-15919. The independent (word-initial) vowels are in `independentVowels`; the script's own digits are in `digits`. Recognition only — stroke order is a separate, source-gated effort and is omitted. Parts, not the grid: when stroke data does arrive it is authored only for the base consonants (the entries with a single `components` line) and for the vowel signs; a syllable's figure is assembled from its parts and is never authored separately. `penLifts` is absent from every entry here, and absent means NOT VERIFIED — never none — and must never be inferred from the length of `strokeOrder`.",
+  "notes": "Syllabary generated from Unicode by generate_syllabary.py: each syllable is a base consonant (varga order) composed with a core vowel sign. Romanization is ISO-15919. The independent (word-initial) vowels are in `independentVowels`; the script's own digits are in `digits`. Stroke order is a separate, source-gated effort: only source-verified entries carry it, beginning with independent short a ಅ. Parts, not the grid: handwriting is authored only for independent vowels, base consonants (the entries with a single `components` line), and vowel signs; a syllable's figure is assembled from its parts and is never authored separately. When `penLifts` is absent it means NOT VERIFIED — never none — and must never be inferred from the length of `strokeOrder`.",
   "letters": [
     {
       "glyph": "ಕ",
@@ -5440,10 +5440,24 @@
       "sound": "a",
       "role": "vowel",
       "components": [
-        "ಅ  a — independent vowel (word-initial)"
+        "the compact left loop",
+        "the broad lower bowl",
+        "the rounded right loop",
+        "the inward horizontal bar"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "turn clockwise around the compact left loop",
+        "without lifting, descend into the broad lower bowl and sweep up its right side",
+        "without lifting, turn counterclockwise around the rounded right loop",
+        "without lifting, return left along the inward horizontal bar"
+      ],
+      "strokeOrderNote": "Four visible movements in one continuous pen-down run: the left loop flows through the lower bowl and right loop before the inner bar returns left.",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "Gopala Krishna A, Kannada-alphabet-a.gif, animation of Kannada independent vowel ಅ, 00:00.0–00:03.4 (Wikimedia Commons, 25 May 2016)",
+        "url": "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-a.gif",
+        "variation": "The 35-frame animation writes ಅ in one uninterrupted run: compact left loop, broad lower bowl, rounded right loop, then the inner horizontal bar returning left. This attested pedagogical order is fitted to the bundled Noto Sans Kannada outline rather than copying the animation's handwritten proportions."
+      }
     },
     {
       "glyph": "ಆ",

@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+### Fixed — compile the new writing activities
+
+- Move the delayed-copy and dictation activity directives before learner-facing
+  prose, as required by the canonical block parser.
+- Keep `salvē` as the sole normalized answer instead of duplicating it in the
+  accepted-variant list.
+
 ### Added — complete the gentle pre-A1 writing runway (#12804)
 
 - Follow the visible-model `salvē` copy with one delayed-copy microstep and one
