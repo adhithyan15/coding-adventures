@@ -2,6 +2,10 @@
 
 ## 2026-08-25
 
+- Pinned tracked-artifact snapshots to Unicode 17.0.0 and added version-delta
+  vectors for Todhri NFC composition and outlined-letter NFKC case folding.
+  The neutral oracle, Python, C#, F#, and Rust consumers now reject host-table
+  drift while retaining the process-free authority boundary.
 - Added forward- and backslash trailing-separator records to the invalid
   tracked-artifact fixture. Both normalize to a trailing empty path component
   and must report redacted `EMPTY_SEGMENT` diagnostics.

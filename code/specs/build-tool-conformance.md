@@ -919,7 +919,11 @@ expected result provide no filesystem, Git, process, environment, or network
 authority.
 
 The process-free `tracked_artifact_absence` check consumes one closed
-`tracked_artifact_snapshot`. Its `entries` are bounded inert records with a
+`tracked_artifact_snapshot`. Its required `unicode_version` is exactly
+`17.0.0`. NFC, NFKC, full default case folding, and locale-independent full
+uppercase must all use that one reviewed Unicode data snapshot; adapters must
+not inherit normalization or casing tables from the host runtime. Its `entries`
+are bounded inert records with a
 strictly increasing positive `ordinal`, a raw `path` of zero through 513
 Unicode scalar values, and an
 `entry_kind` of `regular`, `symlink`, or `reparse`. Entry kind is metadata, not

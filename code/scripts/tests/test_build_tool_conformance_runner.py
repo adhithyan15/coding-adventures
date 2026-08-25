@@ -907,7 +907,15 @@ class PureDomainValidationTests(unittest.TestCase):
         ]
         self.assertEqual(
             forbidden,
-            ["\ue000/node_modules/b", "\U00010000/node_modules/a"],
+            [
+                "\ue000/node_modules/b",
+                "\U00010000/node_modules/a",
+                (
+                    "\U0001cce3\U0001cce4\U0001ccd9\U0001ccda_"
+                    "\U0001cce2\U0001cce4\U0001ccd9\U0001ccea"
+                    "\U0001cce1\U0001ccda\U0001cce8/version.txt"
+                ),
+            ],
         )
 
     def test_tracked_artifact_snapshot_requires_increasing_ordinals(self) -> None:

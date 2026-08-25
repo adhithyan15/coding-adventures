@@ -10,6 +10,7 @@ import pytest
 
 from build_tool.discovery import Package
 from build_tool.validator import (
+    TRACKED_ARTIFACT_UNICODE_VERSION,
     TrackedArtifactEntry,
     ValidationDiagnostic,
     validate_build_contracts,
@@ -233,15 +234,27 @@ luarocks make --local --deps-mode=none coding-adventures-safe-pkg-0.1.0-1.rocksp
 @pytest.mark.parametrize("case_name", TRACKED_ARTIFACT_CASES)
 def test_validate_tracked_artifacts_consumes_shared_cases(case_name):
     case = json.loads((CONFORMANCE_CASES / case_name).read_text(encoding="utf-8"))
+    unicode_version = case["input"]["options"]["tracked_artifact_snapshot"][
+        "unicode_version"
+    ]
     entries = cast(
         list[TrackedArtifactEntry],
         case["input"]["options"]["tracked_artifact_snapshot"]["entries"],
     )
     expected = cast(list[ValidationDiagnostic], case["expected"]["diagnostics"])
 
-    diagnostics = validate_tracked_artifact_snapshot(entries)
+    diagnostics = validate_tracked_artifact_snapshot(
+        entries,
+        unicode_version=unicode_version,
+    )
 
     assert diagnostics == expected
+
+
+def test_validate_tracked_artifacts_rejects_unicode_version_drift():
+    assert TRACKED_ARTIFACT_UNICODE_VERSION == "17.0.0"
+    with pytest.raises(ValueError, match="Unicode version must be 17.0.0"):
+        validate_tracked_artifact_snapshot([], unicode_version="15.1.0")
 
 
 @pytest.mark.parametrize(

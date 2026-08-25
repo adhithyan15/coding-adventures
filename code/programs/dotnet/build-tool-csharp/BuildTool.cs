@@ -1867,6 +1867,8 @@ public sealed record TrackedArtifactDiagnostic(
 
 public static class Validator
 {
+    public const string TrackedArtifactUnicodeVersion = TrackedArtifactUnicode17.Version;
+
     private const string ForbiddenTrackedArtifactComponent = "node_modules";
     private const string RedactedTrackedArtifactPath = "repository";
 
@@ -1894,6 +1896,19 @@ public static class Validator
     public static IReadOnlyList<TrackedArtifactDiagnostic> ValidateTrackedArtifactSnapshot(
         IReadOnlyList<TrackedArtifactEntry> entries)
     {
+        return ValidateTrackedArtifactSnapshot(TrackedArtifactUnicodeVersion, entries);
+    }
+
+    public static IReadOnlyList<TrackedArtifactDiagnostic> ValidateTrackedArtifactSnapshot(
+        string unicodeVersion,
+        IReadOnlyList<TrackedArtifactEntry> entries)
+    {
+        if (!string.Equals(unicodeVersion, TrackedArtifactUnicodeVersion, StringComparison.Ordinal))
+        {
+            throw new ArgumentException(
+                $"tracked artifact Unicode version must be {TrackedArtifactUnicodeVersion}",
+                nameof(unicodeVersion));
+        }
         var diagnostics = new List<TrackedArtifactDiagnostic>();
         foreach (var entry in entries)
         {
@@ -2002,7 +2017,7 @@ public static class Validator
             return (null, "TOO_LONG");
         }
 
-        if (!normalized.IsNormalized(NormalizationForm.FormC))
+        if (!string.Equals(normalized, TrackedArtifactUnicode17.Nfc(normalized), StringComparison.Ordinal))
         {
             return (null, "NON_NFC");
         }
@@ -2057,11 +2072,7 @@ public static class Validator
         // mathematical script letters, and ligatures before invariant folding.
         // Sharp-s is the remaining full case-fold expansion that can produce
         // ASCII-only output after NFKC, so handle it explicitly.
-        var identity = component
-            .Normalize(NormalizationForm.FormKC)
-            .Replace("\u00df", "ss", StringComparison.Ordinal)
-            .Replace("\u1e9e", "ss", StringComparison.Ordinal)
-            .ToLowerInvariant();
+        var identity = TrackedArtifactUnicode17.NfkcCaseFold(component);
         return string.Equals(identity, ForbiddenTrackedArtifactComponent, StringComparison.Ordinal);
     }
 
@@ -2070,7 +2081,7 @@ public static class Validator
         // The closed reserved-name set is ASCII. U+0131 DOTLESS I is the only
         // full-uppercase-to-ASCII mapping that can participate in one of those
         // names and differs from .NET's invariant single-scalar casing.
-        return value.Replace('\u0131', 'i').ToUpperInvariant();
+        return TrackedArtifactUnicode17.FullUppercase(value);
     }
 
     private static int CompareUnicodeScalars(string left, string right)

@@ -1283,9 +1283,13 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
+        "unicode_version",
         "entries"
       ],
       "properties": {
+        "unicode_version": {
+          "const": "17.0.0"
+        },
         "entries": {
           "type": "array",
           "maxItems": 16384,

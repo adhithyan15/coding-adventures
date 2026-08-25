@@ -27,6 +27,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any, Sequence
 
+import tracked_artifact_unicode17 as tracked_unicode
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_FIXTURE_ROOT = REPO_ROOT / "code" / "specs" / "fixtures" / "build-tool-v1"
@@ -1229,7 +1230,7 @@ def _normalize_tracked_artifact_path(path: str) -> tuple[str | None, str | None]
         return None, "EMPTY"
     if len(normalized) > 512:
         return None, "TOO_LONG"
-    if normalized != unicodedata.normalize("NFC", normalized):
+    if normalized != tracked_unicode.nfc(normalized):
         return None, "NON_NFC"
     if normalized.startswith("/"):
         return None, "ABSOLUTE"
@@ -1244,13 +1245,18 @@ def _normalize_tracked_artifact_path(path: str) -> tuple[str | None, str | None]
             return None, "DOT_SEGMENT"
         if segment.endswith((" ", ".")):
             return None, "TRAILING_DOT_OR_SPACE"
-        basename = segment.split(".", 1)[0].upper()
+        basename = tracked_unicode.full_uppercase(segment.split(".", 1)[0])
         if basename in WINDOWS_RESERVED_BASENAMES:
             return None, "RESERVED_BASENAME"
     return normalized, None
 
 
 def _validate_tracked_artifact_snapshot(snapshot: dict[str, Any]) -> None:
+    if snapshot["unicode_version"] != tracked_unicode.UNICODE_VERSION:
+        raise ConformanceError(
+            "CASE_VALIDATION_SNAPSHOT_INCONSISTENT",
+            "tracked artifact Unicode version does not match the pinned runtime",
+        )
     ordinals = [entry["ordinal"] for entry in snapshot["entries"]]
     if ordinals != sorted(ordinals) or len(ordinals) != len(set(ordinals)):
         raise ConformanceError(
@@ -1928,7 +1934,7 @@ def _expected_tracked_artifact_validation(
                 "valid tracked artifact path did not normalize",
             )
         if any(
-            unicodedata.normalize("NFKC", component).casefold()
+            tracked_unicode.nfkc_casefold(component)
             == TRACKED_ARTIFACT_COMPONENT_IDENTITY
             for component in normalized_path.split("/")
         ):

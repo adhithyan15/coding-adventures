@@ -22,9 +22,10 @@ types. Its F# test surface independently consumes all five language-neutral
 conformance fixtures, including hostile-path redaction, Unicode-scalar length
 and ordering boundaries, Unicode compatibility aliases, and Windows reserved
 basenames. The shared cases also require trailing slash and backslash paths to
-report redacted `EMPTY_SEGMENT` diagnostics. The facade does not enumerate Git,
-inspect the filesystem, launch a process, read the environment, or access the
-network.
+report redacted `EMPTY_SEGMENT` diagnostics and carry the exact Unicode 17.0.0
+table version consumed by the generated shared .NET engine. The facade does
+not enumerate Git, inspect the filesystem, launch a process, read the
+environment, or access the network.
 
 ## Usage
 

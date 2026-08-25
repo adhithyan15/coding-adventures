@@ -11,14 +11,9 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 12644,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/12644",
-    "branch": "codex/build-tool-tracked-artifact-trailing-empty-segment",
-    "status": "open"
-  },
+  "active_pr": null,
   "last_inventory": {
-    "revision": "ee13dca795810c618dcbfce660dd707838a8e5ef",
+    "revision": "530938671414502ae74e3506527cc5081a19ddac",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1371,
@@ -4894,12 +4889,13 @@
     {
       "id": "build-tool-tracked-artifact-trailing-empty-segment-cross-runtime-hardening",
       "title": "Reject trailing empty tracked-artifact path segments across runtimes",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "build-tool-tracked-artifact-validation-corpus",
         "build-tool-tracked-artifact-unicode-cross-runtime-corpus-hardening",
         "build-tool-python-tracked-artifact-validation-conformance",
         "build-tool-csharp-tracked-artifact-validation-conformance",
+        "build-tool-fsharp-tracked-artifact-validation-conformance",
         "build-tool-rust-tracked-artifact-validation-conformance"
       ],
       "branch": "codex/build-tool-tracked-artifact-trailing-empty-segment",
@@ -4907,6 +4903,10 @@
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/12644",
       "opened_at": "2026-08-25T00:48:02Z",
       "opened_revision": "e317ff99b3e53f3d32325136a677da392242e50c",
+      "merged_head_revision": "be83978198954c3803d4214a1f60eb30df2870f3",
+      "merge_revision": "6d9882fbff004af242851589d34dc78bee59b654",
+      "merged_at": "2026-08-25T01:04:14Z",
+      "merge_notes": "All 30 reported checks reached terminal acceptable conclusions: 24 successes, five expected skips, and one neutral aggregate, with no failures or pending work. GitHub reported the branch clean and mergeable; the loop enabled squash auto-merge, and GitHub merged PR #12644 without a manual merge command.",
       "selection_revision": "293f79290187d2dd3b1a993f9b11df2198cb5787",
       "selection_notes": "Selected only after PR #12633 completed 29 terminal acceptable checks and GitHub merged it through squash auto-merge at exact main 293f79290187d2dd3b1a993f9b11df2198cb5787. The collision-checked schema-3 inventory is unchanged at 15 established lanes, 1,370 implementation identities, 4,563 slots, 175 high-consensus identities with 276 gaps, 122 identities in five to nine lanes with 926 gaps, 166 identities in two to four lanes with 2,087 gaps, 907 singletons with 12,698 gaps, 718 Rust singletons, zero collisions, and zero unknown buckets; OCaml remains correctly emerging with zero packages. All five prerequisites are merged. This bounded neutral-fixture plus reviewed Python/C#/F# shared-engine repair directly gates 11 owners and 20 unfinished descendants. It ties the Unicode-version sibling for leverage but wins the dependency-first pass because it closes a reproduced correctness defect: trailing slash and backslash paths are accepted despite the contract assigning EMPTY_SEGMENT to every empty component. Seven live open PRs have zero exact overlap on the fixture, oracle, Python, C#, F#, state, or roadmap candidate surfaces, and the target branch was absent before creation from exact origin/main. No package identity, slot, or newly unowned portable gap appeared in the post-merge audit.",
       "implementation_revision": "d679355eae87695920f977719705f5da4fc3e253",
@@ -4919,15 +4919,18 @@
     {
       "id": "build-tool-tracked-artifact-unicode-version-contract",
       "title": "Pin one tracked-artifact Unicode normalization and casing version",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": [
         "build-tool-tracked-artifact-unicode-cross-runtime-corpus-hardening",
         "build-tool-python-tracked-artifact-validation-conformance",
         "build-tool-csharp-tracked-artifact-validation-conformance",
+        "build-tool-fsharp-tracked-artifact-validation-conformance",
         "build-tool-rust-tracked-artifact-validation-conformance"
       ],
-      "branch": null,
+      "branch": "codex/build-tool-tracked-artifact-unicode-version-contract",
       "pr_number": null,
+      "selection_revision": "530938671414502ae74e3506527cc5081a19ddac",
+      "selection_notes": "Selected after PR #12644 completed 30 terminal acceptable checks and merged through squash auto-merge. The exact-main schema-3 collision report remains 15 established lanes, 1,371 identities, 4,564 slots, 908 singletons with 12,712 gaps, 719 Rust singletons, zero collisions, and zero unknown buckets; OCaml remains emerging at zero packages. All five explicit prerequisites, including the independently reviewed F# facade, are merged. This bounded process-free shared Unicode-data tranche directly gates 11 owners and 20 unfinished descendants. Seven live PRs and the target remote branch have zero exact overlap on the neutral, Python, C#, F#, state, or roadmap surfaces. Broader Rust classification and network-authority umbrellas outrank it only as audits, while OCaml's process-free substrate remains collision-unsafe against PRs #12149 and #12162.",
       "notes": "Discovered during the Rust tracked-artifact dependency audit. The governing NFKC-casefold and full-uppercase behavior does not yet name one Unicode data version, while host runtimes and third-party tables may differ. The selected Rust child uses one exactly pinned Unicode 17.0.0 snapshot for NFC/NFKC, full default folding, and reserved-basename uppercase. Pin the neutral contract and fixtures to a reviewed data version, reconcile Python and the C#/F# shared engine, and require every later build-tool consumer to prove the same table semantics."
     },
     {

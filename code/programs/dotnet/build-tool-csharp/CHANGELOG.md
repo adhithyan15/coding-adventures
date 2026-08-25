@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Pinned tracked-artifact NFC, NFKC, full default folding, and root full
+  uppercase to generated source-embedded Unicode 17.0.0 tables, with explicit
+  snapshot-version validation and version-delta fixture coverage.
 - Added the first C# implementation of the monorepo build tool.
 - Implemented package discovery, dependency resolution, git-diff change
   detection, cache fallback, plan emission, CI toolchain detection, and

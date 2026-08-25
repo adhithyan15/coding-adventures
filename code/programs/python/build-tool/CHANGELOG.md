@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.10] - 2026-08-25
+
+### Added
+
+- **Pinned Unicode policy tables**: tracked-artifact NFC, NFKC, full default
+  folding, and root full-uppercase now use source-embedded Unicode 17.0.0 data
+  generated from hash-verified Unicode Consortium inputs instead of the host
+  Python runtime's Unicode database.
+
 ## [0.3.9] - 2026-08-25
 
 ### Fixed
