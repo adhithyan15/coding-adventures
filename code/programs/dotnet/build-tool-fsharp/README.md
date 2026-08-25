@@ -8,7 +8,9 @@ This program exposes the same incremental build engine as the new C# build
 tool, but with an F# executable and test surface so the repo now has both .NET
 language front doors represented. It also exposes
 `validateTrackedArtifactSnapshot`, an F# facade for validating an inert
-tracked-artifact snapshot supplied by a caller.
+tracked-artifact snapshot supplied by a caller, and
+`validateOrphanCrateSnapshot`, an F# facade for validating an inert
+orphan-crate and exemption-ledger snapshot.
 
 ## Why share the engine?
 
@@ -26,6 +28,15 @@ report redacted `EMPTY_SEGMENT` diagnostics and carry the exact Unicode 17.0.0
 table version consumed by the generated shared .NET engine. The facade does
 not enumerate Git, inspect the filesystem, launch a process, read the
 environment, or access the network.
+
+The orphan-crate facade likewise consumes all four shared validation fixtures
+through an F# symbol. Those cases cover direct and ancestor BUILD ownership,
+empty BUILD diagnostics, exact generated-directory exclusions, valid pending
+debt, invalid exemption redaction, and stale exemption cleanup. The F# boundary
+accepts only caller-supplied records; it does not discover directories, open a
+manifest or BUILD file, consult Git, launch a process, read the environment, or
+access the network.
+
 Build, publish, and package outputs declare the shared engine's mixed MIT and
 Unicode-3.0 licensing and include the full `UNICODE-LICENSE.txt` notice.
 

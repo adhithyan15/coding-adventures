@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Added a pure F# orphan-crate validation facade and independently consumed all
+  four language-neutral orphan coverage and exemption-ledger fixtures through
+  that F# boundary without adding filesystem, Git, process, environment, or
+  network authority.
 - Required the explicit Unicode 17.0.0 snapshot version at the F# facade and
   independently exercised the shared generated .NET normalization/casing
   substrate through the version-delta fixture. Build, publish, and package
