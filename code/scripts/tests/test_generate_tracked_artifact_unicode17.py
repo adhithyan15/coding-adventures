@@ -1,10 +1,14 @@
 from __future__ import annotations
 
+import ctypes
 import hashlib
 import json
+import os
+import signal
 import subprocess
 import sys
 import tempfile
+import time
 import unittest
 import urllib.request
 from pathlib import Path
@@ -14,6 +18,61 @@ SCRIPTS_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(SCRIPTS_DIR))
 
 import generate_tracked_artifact_unicode17 as generator
+
+
+def _test_process_is_running(process_id: int) -> bool:
+    if os.name != "nt":
+        try:
+            os.kill(process_id, 0)
+        except OSError:
+            return False
+        return True
+    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    kernel32.OpenProcess.argtypes = (ctypes.c_ulong, ctypes.c_int, ctypes.c_ulong)
+    kernel32.OpenProcess.restype = ctypes.c_void_p
+    kernel32.WaitForSingleObject.argtypes = (ctypes.c_void_p, ctypes.c_ulong)
+    kernel32.WaitForSingleObject.restype = ctypes.c_ulong
+    kernel32.CloseHandle.argtypes = (ctypes.c_void_p,)
+    kernel32.CloseHandle.restype = ctypes.c_int
+    handle = kernel32.OpenProcess(0x00100000, False, process_id)
+    if not handle:
+        return False
+    try:
+        return kernel32.WaitForSingleObject(handle, 0) == 0x00000102
+    finally:
+        kernel32.CloseHandle(handle)
+
+
+def _terminate_test_process(process_id: int) -> None:
+    if os.name != "nt":
+        os.kill(process_id, signal.SIGTERM)
+        return
+    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    kernel32.OpenProcess.argtypes = (ctypes.c_ulong, ctypes.c_int, ctypes.c_ulong)
+    kernel32.OpenProcess.restype = ctypes.c_void_p
+    kernel32.TerminateProcess.argtypes = (ctypes.c_void_p, ctypes.c_uint)
+    kernel32.TerminateProcess.restype = ctypes.c_int
+    kernel32.WaitForSingleObject.argtypes = (ctypes.c_void_p, ctypes.c_ulong)
+    kernel32.WaitForSingleObject.restype = ctypes.c_ulong
+    kernel32.CloseHandle.argtypes = (ctypes.c_void_p,)
+    kernel32.CloseHandle.restype = ctypes.c_int
+    handle = kernel32.OpenProcess(0x0001 | 0x00100000, False, process_id)
+    if not handle:
+        return
+    try:
+        kernel32.TerminateProcess(handle, 1)
+        kernel32.WaitForSingleObject(handle, 5000)
+    finally:
+        kernel32.CloseHandle(handle)
+
+
+def _wait_for_test_process_exit(process_id: int, timeout: float = 5) -> bool:
+    deadline = time.monotonic() + timeout
+    while _test_process_is_running(process_id):
+        if time.monotonic() >= deadline:
+            return False
+        time.sleep(0.01)
+    return True
 
 
 class _Response:
@@ -427,6 +486,53 @@ class UnicodeDownloadBoundaryTests(unittest.TestCase):
                 timeout=1,
                 output_limit=64,
             )
+
+    def test_bounded_process_contains_descendants_after_root_exit(self) -> None:
+        child_source = "import time; time.sleep(60)"
+        root_source = (
+            "import subprocess, sys; "
+            "child = subprocess.Popen("
+            "[sys.executable, '-c', sys.argv[1]], "
+            "stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, "
+            "stderr=subprocess.DEVNULL); "
+            "print(child.pid, flush=True)"
+        )
+        child_pid = None
+        try:
+            completed = generator._run_bounded_process(
+                [sys.executable, "-c", root_source, child_source],
+                cwd=Path(__file__).resolve().parent,
+                env=generator._lua_self_check_environment(),
+                input_text="",
+                timeout=10,
+                output_limit=64,
+            )
+            self.assertEqual(completed.returncode, 0)
+            child_pid = int(completed.stdout.strip())
+            self.assertTrue(_wait_for_test_process_exit(child_pid))
+        finally:
+            if child_pid is not None and _test_process_is_running(child_pid):
+                _terminate_test_process(child_pid)
+
+    @unittest.skipUnless(os.name == "nt", "Windows Job Object regression")
+    def test_bounded_process_does_not_reuse_a_consumed_windows_job(self) -> None:
+        with (
+            mock.patch.object(
+                generator,
+                "_terminate_process_tree",
+                side_effect=RuntimeError("cleanup failed"),
+            ) as terminate,
+            self.assertRaisesRegex(RuntimeError, "cleanup failed"),
+        ):
+            generator._run_bounded_process(
+                [sys.executable, "-c", "pass"],
+                cwd=Path(__file__).resolve().parent,
+                env=generator._lua_self_check_environment(),
+                input_text="",
+                timeout=10,
+                output_limit=64,
+            )
+        terminate.assert_called_once()
 
 
 if __name__ == "__main__":

@@ -16,8 +16,10 @@
 
 - The emitted-Lua Unicode verifier now requires an explicit pinned Lua 5.4.7
   executable, ignores Lua initialization and module-path environment state,
-  bounds retained child output, and terminates the isolated process tree on
-  timeout.
+  bounds retained child output, and terminates the isolated process tree after
+  every exit. Windows starts the verifier suspended inside a kill-on-close Job
+  Object; POSIX uses an isolated process group. Timeout, early-root-exit, and
+  cleanup-error regressions cover descendant containment.
 - Lua `.rockspec` dependency metadata now follows the shared strict UTF-8
   contract. Invalid bytes fail closed with the stable
   `METADATA_INVALID_UTF8` diagnostic and CLI exit code 2 without leaking host

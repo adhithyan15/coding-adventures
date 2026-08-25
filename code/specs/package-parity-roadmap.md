@@ -7568,14 +7568,19 @@ the repository-pinned Lua 5.4.7 toolchain and runs that real emitted-runtime
 check through an explicit executable path; the stable CI gate explicitly
 requires its result. The generator invokes Lua with `-E` under a minimal
 environment, retains at most 8 KiB from each output stream, and terminates the
-isolated process tree on timeout.
+isolated process tree after every verifier exit. Windows starts the verifier
+suspended, assigns it to a kill-on-close Job Object before resuming it, and
+waits for job accounting to reach zero; POSIX always kills the isolated process
+group. Real timeout and early-root-exit descendant probes plus a cleanup-error
+ownership regression cover the boundary.
 
 The repository-pinned Lua 5.4.7 toolchain passes syntax compilation, 19
 focused validator tests, and the complete 72-test Lua build-tool suite. LuaCov
 measures the validator at 98.23% and the generated Unicode module at 84.06%; the
 package-wide total is 51.24% because unchanged CLI, resolver, and bundled test
-framework code remains outside this bounded consumer. All 20 generator tests
-and six pinned-Lua setup tests pass. Ruff, changed-source Luacheck, workflow
+framework code remains outside this bounded consumer. All 22 generator tests
+and six pinned-Lua setup tests pass on Windows; the Job Object ownership test is
+an expected platform skip on POSIX. Ruff, changed-source Luacheck, workflow
 YAML parsing, generated-byte verification, and the full emitted Lua Unicode
 self-check pass.
 
