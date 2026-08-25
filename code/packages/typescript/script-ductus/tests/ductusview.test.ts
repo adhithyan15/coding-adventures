@@ -82,6 +82,11 @@ const teluguOutline = (character: string): GlyphOutline => {
   return { path: g.path, bounds: boundsOf(g.contours) };
 };
 
+const malayalamOutline = (character: string): GlyphOutline => {
+  const g = parseFont(load("NotoSansMalayalam-Static.ttf")).glyphFor(character)!;
+  return { path: g.path, bounds: boundsOf(g.contours) };
+};
+
 const MA = DUCTUS["ம"];
 const outline = tamilOutline("ம");
 const A = DUCTUS["அ"];
@@ -92,6 +97,8 @@ const I = DUCTUS["இ"];
 const iOutline = tamilOutline("இ");
 const TELUGU_A = DUCTUS[ductusKey("telugu", "అ")];
 const teluguAOutline = teluguOutline("అ");
+const MALAYALAM_E = DUCTUS[ductusKey("malayalam", "എ")];
+const malayalamEOutline = malayalamOutline("എ");
 const KA = DUCTUS["க"];
 const kaOutline = tamilOutline("க");
 const CA = DUCTUS["ச"];
@@ -932,6 +939,31 @@ describe("Telugu అ — two joined movement pairs", () => {
     expect(done).toHaveLength(1);
     expect(done[0].attrs.d).toBe(penPathD(TELUGU_A.strokes[0], 1));
     expect(pen.attrs.d).toBe(penPathD(TELUGU_A.strokes[1], 1));
+  });
+});
+
+describe("Malayalam എ — joined body, then a separate broad outer arch", () => {
+  const steps = ductusSteps(MALAYALAM_E);
+  const strip = ductusFilmstrip(MALAYALAM_E, malayalamEOutline);
+
+  it("places one lift before the broad outer arch", () => {
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1]);
+  });
+
+  it("reports three movements in two strokes", () => {
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 3 movements");
+  });
+
+  it("keeps the joined body visible while the outer arch completes", () => {
+    const last = strip.frames[2];
+    const done = byTag(last, "path").filter((path) => path.attrs.class === "ductus__done");
+    const pen = byTag(last, "path").find((path) => path.attrs.class === "ductus__pen")!;
+    expect(done).toHaveLength(1);
+    expect(done[0].attrs.d).toBe(penPathD(MALAYALAM_E.strokes[0], 1));
+    expect(pen.attrs.d).toBe(penPathD(MALAYALAM_E.strokes[1], 1));
   });
 });
 

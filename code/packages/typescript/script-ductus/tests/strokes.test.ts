@@ -237,6 +237,7 @@ const URDU_HE = DUCTUS[ductusKey("urdu-nastaliq", "ہ")];
 const URDU_YE = DUCTUS[ductusKey("urdu-nastaliq", "ی")];
 const URDU_BARI_YE = DUCTUS[ductusKey("urdu-nastaliq", "ے")];
 const TELUGU_A = DUCTUS[ductusKey("telugu", "అ")];
+const MALAYALAM_E = DUCTUS[ductusKey("malayalam", "എ")];
 
 const fontForDuctus = (letter: LetterDuctus) => {
   const script = SCRIPTS.find((candidate) => candidate.script === letter.script);
@@ -611,6 +612,18 @@ describe("handwriting ductus", () => {
     expect(TELUGU_A.strokes.map((stroke) => stroke.segments.map((segment) => segment.label))).toEqual([
       ["turn around the left lobe", "sweep around the broad lower bowl"],
       ["turn around the right lobe", "return left along the inner bar"],
+    ]);
+  });
+
+  it("Malayalam എ keeps its joined body separate from the broad outer arch", () => {
+    expect(penLifts(MALAYALAM_E)).toBe(1);
+    expect(MALAYALAM_E.strokes).toHaveLength(2);
+    expect(MALAYALAM_E.strokes.map((stroke) => stroke.segments.map((segment) => segment.label))).toEqual([
+      [
+        "turn around the compact left hook and carry the middle bar right",
+        "climb the upright, retrace it downward, and loop below the line",
+      ],
+      ["sweep up and over through the broad outer arch, ending below the line"],
     ]);
   });
 
@@ -3955,6 +3968,9 @@ describe("handwriting ductus", () => {
   it("routes each verified ductus to the owning script font", () => {
     expect(verifiedLetterFont("అ", TELUGU_A.source.url)).toBe(
       "_fonts/NotoSansTelugu-Static.ttf",
+    );
+    expect(verifiedLetterFont("എ", MALAYALAM_E.source.url)).toBe(
+      "_fonts/NotoSansMalayalam-Static.ttf",
     );
     expect(verifiedLetterFont("人", CHINESE_REN.source.url)).toBe(
       "_fonts/NotoSansSC-Subset.ttf",
