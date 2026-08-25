@@ -936,7 +936,9 @@ backend immediately) come before the enabler-dependent items.
   follow the same finite rule; cyclic and deeper proofs fail closed. Computed
   boolean identity writes (`x and true`, `x or false`, `x eqv true`, and
   `true impl x`, including valid symmetric forms) also preserve a selector
-  dependency without consuming another depth level. Structural integer
+  dependency without consuming another depth level. Even chains of unary
+  `not` receive the same treatment, while odd chains remain changing.
+  Structural integer
   identity writes using `+ 0`, `- 0`, `* 1`, and `div 1` (including valid
   commutative forms) receive the same bounded treatment. For finite real
   selectors, multiplication and division by exact positive one are likewise
