@@ -7523,7 +7523,12 @@ impl HtmlParser {
                         format!("end tag `</{name}>` did not match an open element"),
                     )
                 };
-                self.diagnostics.push(ParserDiagnostic::new(code, message));
+                let diagnostic = ParserDiagnostic::new(code, message);
+                self.diagnostics.push(if code == "unexpected-non-current-end-tag" {
+                    diagnostic.at_emission(self.current_token_emission_position)
+                } else {
+                    diagnostic
+                });
                 return;
             }
         }
@@ -7531,10 +7536,13 @@ impl HtmlParser {
             && self.has_authored_open_html_element(name)
             && self.open_html_element_in_scope_index(name).is_none()
         {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-non-current-end-tag",
-                format!("end tag `</{name}>` was seen before its open element was current"),
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-non-current-end-tag",
+                    format!("end tag `</{name}>` was seen before its open element was current"),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             return;
         }
         if self.has_open_svg_html_integration_point()
@@ -8185,10 +8193,15 @@ impl HtmlParser {
                 && self
                     .has_element_above(index, |candidate| !is_implied_end_tag_element(candidate));
             if reports_scope_error {
-                self.diagnostics.push(ParserDiagnostic::new(
-                    "unexpected-non-current-end-tag",
-                    format!("end tag `</{name}>` was seen before its open element was current"),
-                ));
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-non-current-end-tag",
+                        format!(
+                            "end tag `</{name}>` was seen before its open element was current"
+                        ),
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
             }
             if special_scope_blocks_end_tag(name)
                 && self.has_special_element_above(index)
@@ -27562,6 +27575,18 @@ mod tests {
         .at_emission(Some(end_tag_position(source, name)))
     }
 
+    fn unexpected_non_current_end_tag(
+        source: &str,
+        name: &str,
+        occurrence: usize,
+    ) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-non-current-end-tag",
+            format!("end tag `</{name}>` was seen before its open element was current"),
+        )
+        .at_emission(Some(end_tag_position_at(source, name, occurrence)))
+    }
+
     fn unexpected_p_end_tag(source: &str) -> ParserDiagnostic {
         ParserDiagnostic::new(
             "unexpected-p-end-tag",
@@ -33926,12 +33951,7 @@ mod tests {
                 output.parser_diagnostics,
                 vec![
                     generic_foreign_end_tag_mismatch(&source, target_name),
-                    ParserDiagnostic::new(
-                        "unexpected-non-current-end-tag",
-                        format!(
-                            "end tag `</{target_name}>` was seen before its open element was current"
-                        )
-                    ),
+                    unexpected_non_current_end_tag(&source, target_name, 0),
                 ],
                 "source {source:?}"
             );
@@ -33950,13 +33970,14 @@ mod tests {
             let output = parse_html_with_diagnostics(source).unwrap();
             assert_eq!(
                 output.parser_diagnostics,
-                vec![ParserDiagnostic::new(
-                    "unexpected-non-current-end-tag",
+                vec![unexpected_non_current_end_tag(
+                    source,
                     if source.contains("<x-box") {
-                        "end tag `</x-box>` was seen before its open element was current"
+                        "x-box"
                     } else {
-                        "end tag `</span>` was seen before its open element was current"
-                    }
+                        "span"
+                    },
+                    0,
                 )],
                 "source {source:?}"
             );
@@ -34025,7 +34046,7 @@ mod tests {
     }
 
     #[test]
-    fn positions_generic_foreign_end_tag_mismatches_at_token_emission() {
+    fn positions_generic_foreign_and_non_current_end_tags_at_token_emission() {
         let source = "<!doctype html><!--é-->\r\n<x-box><svg><foreignObject></x-box>";
         let output = parse_html_with_diagnostics(source).unwrap();
         let diagnostic = output
@@ -34041,7 +34062,30 @@ mod tests {
             .iter()
             .find(|diagnostic| diagnostic.code == "unexpected-non-current-end-tag")
             .unwrap();
-        assert_eq!(companion.position, None);
+        assert_eq!(companion.position, Some(end_tag_position(source, "x-box")));
+
+        let repeated_source =
+            "<!doctype html><!--é-->\r\n<figcaption></figcaption><figcaption><article></figcaption>";
+        let repeated = parse_html_with_diagnostics(repeated_source).unwrap();
+        let diagnostics = repeated
+            .parser_diagnostics
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-non-current-end-tag")
+            .collect::<Vec<_>>();
+        assert_eq!(diagnostics.len(), 1);
+        assert_eq!(
+            diagnostics[0],
+            &unexpected_non_current_end_tag(repeated_source, "figcaption", 1)
+        );
+        assert!(repeated_source.len() > repeated_source.chars().count());
+
+        let incomplete = parse_html_with_diagnostics(
+            "<!doctype html><figcaption><article></figcaption",
+        )
+        .unwrap();
+        assert!(incomplete.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-non-current-end-tag"
+        }));
 
         let mut unpositioned =
             HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
@@ -34068,12 +34112,10 @@ mod tests {
         ] {
             unpositioned.process_token(token);
         }
-        let diagnostic = unpositioned
+        assert!(unpositioned
             .diagnostics()
             .iter()
-            .find(|diagnostic| diagnostic.code == "unexpected-end-tag-in-foreign-content")
-            .unwrap();
-        assert_eq!(diagnostic.position, None);
+            .all(|diagnostic| diagnostic.position.is_none()));
     }
 
     #[test]
@@ -39949,10 +39991,7 @@ mod tests {
             ("<!doctype html><select><menuitem></select>", "select"),
         ] {
             let output = parse_html_with_diagnostics(source).unwrap();
-            let expected = ParserDiagnostic::new(
-                "unexpected-non-current-end-tag",
-                format!("end tag `</{end_tag}>` was seen before its open element was current"),
-            );
+            let expected = unexpected_non_current_end_tag(source, end_tag, 0);
             assert!(
                 output
                     .parser_diagnostics
@@ -40952,11 +40991,7 @@ mod tests {
                 diagnostic.code != "unexpected-non-current-formatting-end-tag"
             }));
             assert!(output.parser_diagnostics.iter().any(|diagnostic| {
-                diagnostic
-                    == &ParserDiagnostic::new(
-                        "unexpected-non-current-end-tag",
-                        "end tag `</b>` was seen before its open element was current",
-                    )
+                diagnostic == &unexpected_non_current_end_tag(&source, "b", 0)
             }));
         }
 
@@ -40969,7 +41004,12 @@ mod tests {
             diagnostic.code != "unexpected-non-current-formatting-end-tag"
         }));
         assert!(fragment.parser_diagnostics.iter().any(|diagnostic| {
-            diagnostic.code == "unexpected-non-current-end-tag"
+            diagnostic
+                == &unexpected_non_current_end_tag(
+                    "<p><b><div><marquee></p></b></div>X",
+                    "b",
+                    0,
+                )
         }));
 
         let fostered =
@@ -41065,10 +41105,7 @@ mod tests {
         assert_eq!(
             output.parser_diagnostics,
             vec![
-                ParserDiagnostic::new(
-                    "unexpected-non-current-end-tag",
-                    "end tag `</p>` was seen before its open element was current",
-                ),
+                unexpected_non_current_end_tag(source, "p", 0),
                 ParserDiagnostic::new(
                     "unexpected-formatting-end-tag-without-open-element",
                     "end tag `</b>` triggered adoption-agency recovery after its formatting element left the open stack",
