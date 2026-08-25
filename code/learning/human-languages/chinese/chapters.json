@@ -322,6 +322,29 @@
           "ZH-SCRIPT-XIAO-01"
         ]
       }
+    },
+    {
+      "chapter": 15,
+      "title": "A wider school map",
+      "label": "ch:zh-school-compounds",
+      "canDo": "I can understand, say, read and write 中学, 中学生, 同学 and 上学 after gaining only 中 and 同 through source-verified, gently staged handwriting practice.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "ZH-C15-practice",
+        "kind": "writing",
+        "summary": "Four official Level 1 school words are retrieved across four spaced reviews, then checked independently in listening, speaking, unassisted reading and no-model writing.",
+        "assesses": [
+          "ZH-PERFORMANCE-SCHOOL-COMPOUNDS-FOUR-SKILL-01",
+          "ZH-LEX-ZHONGXUE-01",
+          "ZH-LEX-ZHONGXUESHENG-01",
+          "ZH-LEX-TONGXUE-01",
+          "ZH-LEX-SHANGXUE-01",
+          "ZH-SCRIPT-ZHONG-01",
+          "ZH-SCRIPT-TONG-01"
+        ]
+      }
     }
   ]
 }

@@ -1,0 +1,19 @@
+{
+  "id": "ZH-EXT-040-SCHOOL-COMPOUNDS-SCRIPT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can write source-verified 中 and 同 from ordered strokes, then read and write four school compounds without pinyin.",
+  "prerequisites": [
+    "ZH-EXT-039-SCHOOL-COMPOUNDS-MEANING-FIRST"
+  ],
+  "lessons": [
+    "ZH-W15-zhong",
+    "ZH-C15-zhong",
+    "ZH-C15-zhongxue",
+    "ZH-C15-zhongxuesheng",
+    "ZH-W15-tong",
+    "ZH-C15-tongxue",
+    "ZH-C15-shangxue"
+  ]
+}

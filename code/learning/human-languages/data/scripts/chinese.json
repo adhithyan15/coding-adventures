@@ -384,6 +384,60 @@
       "notes": "Means 'small / little'. It is introduced alone before being recombined with the already taught 学 and 生."
     },
     {
+      "glyph": "中",
+      "sound": "zhōng",
+      "role": "logograph",
+      "tone": "1",
+      "components": [
+        "the left side of an open box",
+        "a joined top-and-right corner",
+        "a closing bottom horizontal",
+        "a central vertical passing through the box"
+      ],
+      "strokeOrder": [
+        "draw the left vertical shù stroke from top to bottom",
+        "lift, then draw the top horizontal left-to-right and turn down the right side without lifting",
+        "lift, then close the box with the bottom horizontal héng stroke left-to-right",
+        "lift, then draw the central vertical shù stroke from top through the box to the base"
+      ],
+      "strokeOrderNote": "source-verified PRC stroke order",
+      "penLifts": 3,
+      "strokeOrderSource": {
+        "citation": "Hanzi Writer Data 中.json, ordered stroke paths and medians 1–4 (Hanzi Writer Data snapshot 68d10a4, updated from Make Me a Hanzi, 22 June 2019)",
+        "url": "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E4%B8%AD.json",
+        "variation": "The cited PRC-order dataset supplies four ordered strokes for 中: the left side, the joined top-and-right corner, the closing bottom horizontal, and the final central vertical through the box. This learner path preserves the joined corner, close-before-centre order, and three intervening pen lifts while adapting the paths to the vendored Noto Sans SC outline."
+      },
+      "notes": "Means 'middle / centre'. In 中学 it narrows the already familiar 学 to middle school. Close the box before the final vertical passes through it."
+    },
+    {
+      "glyph": "同",
+      "sound": "tóng",
+      "role": "logograph",
+      "tone": "2",
+      "components": [
+        "the left side of the outer frame",
+        "a joined outer top-and-right corner",
+        "an inner horizontal",
+        "口 (mouth) inside the frame"
+      ],
+      "strokeOrder": [
+        "draw the outer left vertical shù stroke from top to bottom",
+        "lift, then draw the outer top horizontal and turn down the right side without lifting",
+        "lift, then draw the short inner horizontal héng stroke left-to-right",
+        "lift, then draw 口's left vertical",
+        "lift, then draw 口's top horizontal and turn down its right side without lifting",
+        "lift, then close 口 with its bottom horizontal left-to-right"
+      ],
+      "strokeOrderNote": "source-verified PRC stroke order",
+      "penLifts": 5,
+      "strokeOrderSource": {
+        "citation": "Hanzi Writer Data 同.json, ordered stroke paths and medians 1–6 (Hanzi Writer Data snapshot 68d10a4, updated from Make Me a Hanzi, 22 June 2019)",
+        "url": "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E5%90%8C.json",
+        "variation": "The cited PRC-order dataset supplies six ordered strokes for 同. Medians 1–2 build the outer frame, median 3 places the inner horizontal, and medians 4–6 complete 口 inside. This learner path preserves the two joined top-right corners, the outside-before-inside order, the close-last rule for the inner 口, and five intervening pen lifts while adapting the paths to the vendored Noto Sans SC outline."
+      },
+      "notes": "Means 'same / together'. In 同学 it joins a familiar 学 to form classmate. The inner 口 repeats a box already taught, while the outer frame stays open at the bottom."
+    },
+    {
       "glyph": "学",
       "sound": "xué",
       "role": "logograph",

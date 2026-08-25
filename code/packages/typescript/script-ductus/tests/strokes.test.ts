@@ -409,8 +409,8 @@ describe("handwriting ductus", () => {
   it("marks Chinese complete with every current-corpus row source-verified", () => {
     const chinese = SCRIPTS.find((script) => script.script === "chinese")!;
     expect(chinese.complete).toBe(true);
-    expect(chinese.letters).toHaveLength(35);
-    expect(new Set(chinese.letters.map((letter) => letter.glyph)).size).toBe(35);
+    expect(chinese.letters).toHaveLength(37);
+    expect(new Set(chinese.letters.map((letter) => letter.glyph)).size).toBe(37);
     expect(chinese.letters.every((letter) => letter.strokeOrderSource !== undefined)).toBe(true);
   });
 

@@ -274,6 +274,36 @@
         "ZH-EXT-038-PRIMARY-FOUR-SKILL"
       ],
       "after": []
+    },
+    {
+      "id": "ZH-PATH-014",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "ZH-C15-hear-zhong",
+        "ZH-W15-zhong",
+        "ZH-C15-zhong",
+        "ZH-C15-hear-zhongxue",
+        "ZH-C15-zhongxue",
+        "ZH-R15-school-map-1",
+        "ZH-C15-hear-zhongxuesheng",
+        "ZH-C15-zhongxuesheng",
+        "ZH-C15-hear-tongxue",
+        "ZH-W15-tong",
+        "ZH-C15-tongxue",
+        "ZH-R15-school-map-2",
+        "ZH-C15-hear-shangxue",
+        "ZH-C15-shangxue",
+        "ZH-R15-school-map-3",
+        "ZH-R15-school-map-4",
+        "ZH-C15-practice"
+      ],
+      "before": [],
+      "inline": [
+        "ZH-EXT-039-SCHOOL-COMPOUNDS-MEANING-FIRST",
+        "ZH-EXT-040-SCHOOL-COMPOUNDS-SCRIPT",
+        "ZH-EXT-041-SCHOOL-COMPOUNDS-FOUR-SKILL"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -314,7 +344,8 @@
         "ZH-PATH-008",
         "ZH-PATH-011",
         "ZH-PATH-012",
-        "ZH-PATH-013"
+        "ZH-PATH-013",
+        "ZH-PATH-014"
       ],
       "omits": [
         "PRONOUN-ME",
@@ -1212,6 +1243,59 @@
       "lessons": [
         "ZH-R14-primary-three",
         "ZH-C14-practice"
+      ]
+    },
+    {
+      "id": "ZH-EXT-039-SCHOOL-COMPOUNDS-MEANING-FIRST",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "lexis",
+      "canDo": "I can understand and say 中学, 中学生, 同学 and 上学, with every unfamiliar spoken meaning arriving before its new character.",
+      "prerequisites": [
+        "ZH-EXT-038-PRIMARY-FOUR-SKILL"
+      ],
+      "lessons": [
+        "ZH-C15-hear-zhong",
+        "ZH-C15-hear-zhongxue",
+        "ZH-C15-hear-zhongxuesheng",
+        "ZH-C15-hear-tongxue",
+        "ZH-C15-hear-shangxue"
+      ]
+    },
+    {
+      "id": "ZH-EXT-040-SCHOOL-COMPOUNDS-SCRIPT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can write source-verified 中 and 同 from ordered strokes, then read and write four school compounds without pinyin.",
+      "prerequisites": [
+        "ZH-EXT-039-SCHOOL-COMPOUNDS-MEANING-FIRST"
+      ],
+      "lessons": [
+        "ZH-W15-zhong",
+        "ZH-C15-zhong",
+        "ZH-C15-zhongxue",
+        "ZH-C15-zhongxuesheng",
+        "ZH-W15-tong",
+        "ZH-C15-tongxue",
+        "ZH-C15-shangxue"
+      ]
+    },
+    {
+      "id": "ZH-EXT-041-SCHOOL-COMPOUNDS-FOUR-SKILL",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "assessment",
+      "canDo": "I can retrieve the school map across four spaced passes and pass separate listening, speaking, reading and writing checks for 中学, 中学生, 同学 and 上学.",
+      "prerequisites": [
+        "ZH-EXT-040-SCHOOL-COMPOUNDS-SCRIPT"
+      ],
+      "lessons": [
+        "ZH-R15-school-map-1",
+        "ZH-R15-school-map-2",
+        "ZH-R15-school-map-3",
+        "ZH-R15-school-map-4",
+        "ZH-C15-practice"
       ]
     }
   ]

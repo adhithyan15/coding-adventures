@@ -1,0 +1,17 @@
+{
+  "id": "ZH-EXT-041-SCHOOL-COMPOUNDS-FOUR-SKILL",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "assessment",
+  "canDo": "I can retrieve the school map across four spaced passes and pass separate listening, speaking, reading and writing checks for 中学, 中学生, 同学 and 上学.",
+  "prerequisites": [
+    "ZH-EXT-040-SCHOOL-COMPOUNDS-SCRIPT"
+  ],
+  "lessons": [
+    "ZH-R15-school-map-1",
+    "ZH-R15-school-map-2",
+    "ZH-R15-school-map-3",
+    "ZH-R15-school-map-4",
+    "ZH-C15-practice"
+  ]
+}

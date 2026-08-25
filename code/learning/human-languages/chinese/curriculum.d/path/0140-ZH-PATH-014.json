@@ -1,0 +1,30 @@
+{
+  "id": "ZH-PATH-014",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "ZH-C15-hear-zhong",
+    "ZH-W15-zhong",
+    "ZH-C15-zhong",
+    "ZH-C15-hear-zhongxue",
+    "ZH-C15-zhongxue",
+    "ZH-R15-school-map-1",
+    "ZH-C15-hear-zhongxuesheng",
+    "ZH-C15-zhongxuesheng",
+    "ZH-C15-hear-tongxue",
+    "ZH-W15-tong",
+    "ZH-C15-tongxue",
+    "ZH-R15-school-map-2",
+    "ZH-C15-hear-shangxue",
+    "ZH-C15-shangxue",
+    "ZH-R15-school-map-3",
+    "ZH-R15-school-map-4",
+    "ZH-C15-practice"
+  ],
+  "before": [],
+  "inline": [
+    "ZH-EXT-039-SCHOOL-COMPOUNDS-MEANING-FIRST",
+    "ZH-EXT-040-SCHOOL-COMPOUNDS-SCRIPT",
+    "ZH-EXT-041-SCHOOL-COMPOUNDS-FOUR-SKILL"
+  ],
+  "after": []
+}

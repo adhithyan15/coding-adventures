@@ -131,6 +131,13 @@
       "output": "chinese/book/chapters/ch14-primary-three.tex",
       "unicodeScript": "Han",
       "scriptCommand": "zh"
+    },
+    {
+      "language": "chinese",
+      "chapter": 15,
+      "output": "chinese/book/chapters/ch15-school-compounds.tex",
+      "unicodeScript": "Han",
+      "scriptCommand": "zh"
     }
   ]
 }
