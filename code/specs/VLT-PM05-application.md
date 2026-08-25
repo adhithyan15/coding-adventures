@@ -2099,6 +2099,27 @@ backup does not cover it.
   would prevent. This section is about what `export` does with a record
   that already got in, not about keeping one out in the first place.
 
+**A named, deliberate limit, not an oversight: `Strict`'s failure carries no
+hint that `--best-effort` exists.** VLT-PM00 §13's error taxonomy is
+static and low-resolution by design — `Display`/`Debug` never format a
+payload, and `vault-pm-cli`'s own `CliFailure::message()` maps every
+variant to one fixed, context-free sentence (`"vault-pm: invalid
+command"` for `BoundExceeded`, identical to every other cause of that same
+variant). A `Strict` export that fails on a poisoned item gets exactly that
+sentence, with nothing pointing the operator at `--best-effort`, the same
+way a failed `item edit` on a poisoned item points at nothing either. Two
+paths were considered and both rejected in favor of leaving this alone:
+teaching this one call site to emit a different, more specific message
+would be the one exception to a discipline every other command's every
+failure mode observes uniformly, for reasons unrelated to this section
+(VLT-PM00 §14.7's closed exit-class taxonomy exists partly so a script
+parsing this product's failures never has to learn a new shape); and
+retrying automatically under `BestEffort` whenever `Strict` fails would
+reintroduce exactly the silent-default problem option 1 above was rejected
+for, just one layer later. The operator's actual discovery path is this
+spec, the CLI README, and `--help` — the same path every other flag in
+this product's surface is discovered through, `--best-effort` included.
+
 **Tests.** `open.rs`:
 `portable_export_best_effort_excludes_a_synced_oversized_item_and_keeps_the_rest`
 reproduces §13.2's residual directly (`Strict` still fails the whole
