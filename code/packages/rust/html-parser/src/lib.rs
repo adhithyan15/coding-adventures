@@ -8666,17 +8666,23 @@ impl HtmlParser {
         let Some(index) = self.open_elements.iter().rposition(|path| {
             element_at_path(&self.document, path).is_some_and(|name| name == "menuitem")
         }) else {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-menuitem-end-tag",
-                "end tag `</menuitem>` did not match the current open element",
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-menuitem-end-tag",
+                    "end tag `</menuitem>` did not match the current open element",
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             return;
         };
         if index + 1 < self.open_elements.len() {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-menuitem-end-tag",
-                "end tag `</menuitem>` did not match the current open element",
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-menuitem-end-tag",
+                    "end tag `</menuitem>` did not match the current open element",
+                )
+                .at_emission(self.current_token_emission_position),
+            );
         }
         if self
             .open_elements
@@ -27723,6 +27729,18 @@ mod tests {
         .at_emission(Some(end_tag_position_at(source, name, occurrence)))
     }
 
+    fn unexpected_menuitem_end_tag(source: &str, occurrence: usize) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-menuitem-end-tag",
+            "end tag `</menuitem>` did not match the current open element",
+        )
+        .at_emission(Some(end_tag_position_at(
+            source,
+            "menuitem",
+            occurrence,
+        )))
+    }
+
     fn unexpected_description_list_item_start_tag(
         source: &str,
         name: &str,
@@ -43471,16 +43489,75 @@ mod tests {
             let output = parse_html_with_diagnostics(source).unwrap();
             assert_eq!(
                 output.parser_diagnostics,
-                vec![ParserDiagnostic::new(
-                    "unexpected-menuitem-end-tag",
-                    "end tag `</menuitem>` did not match the current open element"
-                )],
+                vec![unexpected_menuitem_end_tag(source, 0)],
                 "source {source:?}"
             );
         }
 
         let matching = parse_html_with_diagnostics("<!doctype html><menuitem></menuitem>").unwrap();
         assert!(matching.parser_diagnostics.is_empty());
+    }
+
+    #[test]
+    fn positions_menuitem_end_tag_diagnostics_at_token_emission() {
+        let source =
+            "<!doctype html><!--é-->\r\n<menuitem><span></menuitem></menuitem>";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        assert_eq!(
+            output.parser_diagnostics,
+            vec![
+                unexpected_menuitem_end_tag(source, 0),
+                unexpected_menuitem_end_tag(source, 1),
+            ]
+        );
+        assert!(source.len() > source.chars().count());
+
+        let fragment_source = "</menuitem>";
+        let fragment =
+            parse_html_fragment_for_context_with_diagnostics(fragment_source, "div").unwrap();
+        assert_eq!(
+            fragment.parser_diagnostics,
+            vec![unexpected_menuitem_end_tag(fragment_source, 0)]
+        );
+
+        let incomplete = parse_html_with_diagnostics("<!doctype html></menuitem").unwrap();
+        assert!(incomplete
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-menuitem-end-tag"));
+
+        let matching =
+            parse_html_with_diagnostics("<!doctype html><menuitem></menuitem>").unwrap();
+        assert!(matching
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-menuitem-end-tag"));
+
+        let mut unpositioned = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        for token in [
+            Token::StartTag {
+                name: "menuitem".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "span".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::EndTag {
+                name: "menuitem".to_string(),
+            },
+            Token::Eof,
+        ] {
+            unpositioned.process_token(token);
+        }
+        let diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-menuitem-end-tag")
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
     }
 
     #[test]

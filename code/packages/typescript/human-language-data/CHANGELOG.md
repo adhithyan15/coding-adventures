@@ -31,6 +31,15 @@
   track that loses a rung under the rename now counts as the strongest form of
   the bite the test is looking for.
 
+### Added - source-verified Kannada anusvara ಂ
+
+- Add Kannada anusvara **ಂ** as the U+0C82 consonant-nasalization sign with
+  encoded carrier-first composition.
+- Avoid inventing a universal handwriting path or pen-lift count that the
+  source does not establish.
+- Remove 24 affected Kannada realizations and rerank Tamil retroflex lateral
+  **ள** first at 20.
+
 ### Added - source-verified Tamil vowel sign ே
 
 - Add Tamil long-e sign **ே** with Module 7's verified handwritten
