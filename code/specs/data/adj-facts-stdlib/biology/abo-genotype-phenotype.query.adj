@@ -1,0 +1,24 @@
+% ============================================================================
+% abo-genotype-phenotype.query.adj — worked recall over the biology
+% ABO-genotype/blood-type library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what blood type does an
+% IAIA genotype produce?" (direct binding) or "which genotype produces blood
+% type AB?" (reverse binding) — it states no biology fact of its own, it only
+% `import`s the grounded table and asks binding queries. The last query
+% demonstrates honest abstention: `ia_i` (a heterozygote with the null
+% allele) is a real genotype, but this table's own cited passage never
+% states its phenotype in continuous prose, so recalling it abstains rather
+% than inventing a blood type.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli abo-genotype-phenotype.query.adj
+% ============================================================================
+
+import "abo-genotype-phenotype.adj"
+
+? abo_genotype_phenotype(ia_ia, $BloodType)   % expect a (direct)
+? abo_genotype_phenotype(ib_ib, $BloodType)   % expect b (direct)
+? abo_genotype_phenotype(ia_ib, $BloodType)   % expect ab (direct)
+? abo_genotype_phenotype($G, ab)              % expect ia_ib (reverse)
+? abo_genotype_phenotype(ia_i, $BloodType)    % expect abstain -- source states only 3 of the 6 real genotypes

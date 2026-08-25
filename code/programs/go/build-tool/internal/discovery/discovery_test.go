@@ -62,6 +62,91 @@ func TestReadLinesMissingFile(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
+// Tests for parseExtraToolchains
+// ---------------------------------------------------------------------------
+
+func TestParseExtraToolchainsFindsDirective(t *testing.T) {
+	content := "# needs-toolchain: java\ncargo test\n"
+	got := parseExtraToolchains(content)
+	if len(got) != 1 || got[0] != "java" {
+		t.Fatalf("expected [java], got %v", got)
+	}
+}
+
+func TestParseExtraToolchainsIgnoresOrdinaryComments(t *testing.T) {
+	content := "# this is a normal comment\ncargo test\n"
+	got := parseExtraToolchains(content)
+	if got != nil {
+		t.Fatalf("expected nil, got %v", got)
+	}
+}
+
+func TestParseExtraToolchainsMultipleDirectiveLines(t *testing.T) {
+	content := "# needs-toolchain: java\n# needs-toolchain: kotlin\ncargo test\n"
+	got := parseExtraToolchains(content)
+	if len(got) != 2 || got[0] != "java" || got[1] != "kotlin" {
+		t.Fatalf("expected [java kotlin] in file order, got %v", got)
+	}
+}
+
+func TestParseExtraToolchainsDeduplicates(t *testing.T) {
+	content := "# needs-toolchain: java\n# needs-toolchain: java\ncargo test\n"
+	got := parseExtraToolchains(content)
+	if len(got) != 1 || got[0] != "java" {
+		t.Fatalf("expected deduplicated [java], got %v", got)
+	}
+}
+
+func TestParseExtraToolchainsIgnoresBlankDirective(t *testing.T) {
+	content := "# needs-toolchain:\ncargo test\n"
+	got := parseExtraToolchains(content)
+	if got != nil {
+		t.Fatalf("expected nil for a blank directive, got %v", got)
+	}
+}
+
+func TestParseExtraToolchainsNoDirective(t *testing.T) {
+	got := parseExtraToolchains("cargo build\ncargo test\n")
+	if got != nil {
+		t.Fatalf("expected nil, got %v", got)
+	}
+}
+
+// TestDiscoverPackagesPopulatesExtraToolchains is the end-to-end proof: a
+// real package directory with a "# needs-toolchain: java" BUILD comment,
+// discovered via DiscoverPackages (not calling parseExtraToolchains
+// directly), ends up with ExtraToolchains populated on its Package.
+func TestDiscoverPackagesPopulatesExtraToolchains(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"packages/rust/java-to-semantic-ir/BUILD": "# needs-toolchain: java\ncargo test\n",
+		"packages/rust/plain-crate/BUILD":         "cargo test\n",
+	})
+	packages := mustDiscoverPackages(t, root)
+
+	var withJava, plain *Package
+	for i := range packages {
+		switch packages[i].Name {
+		case "rust/java-to-semantic-ir":
+			withJava = &packages[i]
+		case "rust/plain-crate":
+			plain = &packages[i]
+		}
+	}
+	if withJava == nil {
+		t.Fatal("expected to discover rust/java-to-semantic-ir")
+	}
+	if len(withJava.ExtraToolchains) != 1 || withJava.ExtraToolchains[0] != "java" {
+		t.Fatalf("expected ExtraToolchains [java], got %v", withJava.ExtraToolchains)
+	}
+	if plain == nil {
+		t.Fatal("expected to discover rust/plain-crate")
+	}
+	if len(plain.ExtraToolchains) != 0 {
+		t.Fatalf("expected no ExtraToolchains for plain-crate, got %v", plain.ExtraToolchains)
+	}
+}
+
+// ---------------------------------------------------------------------------
 // Tests for inferLanguage
 // ---------------------------------------------------------------------------
 

@@ -234,7 +234,12 @@ below. The full-alphabet source then demonstrates Persian-added **پ** at
 HL-C09's fixed 228 prose entries. The next starter entry, **ت**, repeats the
 right-to-left bowl at 00:22–00:27, lifts to place the left dot above, then lifts
 again for the right dot. All three authored paths are checked against their
-vendored isolated Noto Naskh outlines. The later **س** row at 01:29–01:35 keeps
+vendored isolated Noto Naskh outlines. The **د** row at 01:04–01:06 folds from
+its upper tip through the shoulder and left along the baseline without lifting.
+The following **ر** row at 01:10–01:12 likewise keeps one pen-down run: descend
+through the short stroke, then sweep left through the lower curve. Its source
+remains Persian-scoped rather than borrowing the independently verified Arabic
+or Urdu path for the same Unicode glyph. The later **س** row at 01:29–01:35 keeps
 its three right-to-left teeth and final bowl in one unbroken movement; its
 two-part learner path has zero lifts and stays on the vendored isolated Noto
 Naskh outline. The later **ل** demonstration at 02:29–02:32 descends its tall

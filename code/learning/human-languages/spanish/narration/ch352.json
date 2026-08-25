@@ -1,0 +1,795 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 352,
+  "title": "The Whole Set, And How Much Of It",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8197d0927b11e2f8",
+  "lessons": [
+    {
+      "id": "ES-C352-conjunto",
+      "sequence": 6520,
+      "title": "el conjunto — the set, and the yoke that holds it",
+      "headword": "el conjunto",
+      "romanization": "el conjunto",
+      "gloss": "the set, the whole group — Latin coniunctus, yoked together, from com and iungere; English junction, join and even yoga come off the same yoking",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a3a5e8238e352c0d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say several, then triple. (Varios; el triple.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la gente — one sort of group."
+            },
+            {
+              "kind": "speech",
+              "text": "todo — the whole this names."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kon-JUN-to, three beats with the weight on the second. The j is the scraped jota. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el conjunto — \"the set,\" \"the whole group taken as one.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin iungere meant to yoke — to put two oxen under one wooden beam so they must pull together. Add com-, together, and you get coniungere, and its participle coniunctus: yoked as one."
+            },
+            {
+              "kind": "speech",
+              "text": "That is what a set is. Not things that happen to be near each other, but things counted as a unit because somebody has put them under one yoke."
+            },
+            {
+              "kind": "speech",
+              "text": "English took iungere by every road. A junction is where roads are yoked. A joint is where bones are. Conjunction is the grammar word for a yoking word — y, o, pero. Adjoin, subjugate and junta all follow."
+            },
+            {
+              "kind": "speech",
+              "text": "And the root reaches much further east. Sanskrit yoga is the same ancient word, and it means a yoking too — of body to breath, or of a mind to its task."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A name for a group of things, before we start dividing it."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el conjunto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el conjunto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un conjunto de libros",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un conjunto de libros*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "todo el conjunto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *todo el conjunto*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did Latin iungere mean? (To yoke.) And which eastern word for a discipline is the same yoking? (Yoga.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C352-entero",
+      "sequence": 6530,
+      "title": "entero — whole, meaning nobody has touched it",
+      "headword": "entero",
+      "romanization": "entero",
+      "gloss": "whole, entire — Latin integer, untouched, from in not plus tangere to touch; English integer, integrity and intact are the same untouched thing",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aef0386d71d31ebd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say triple, then the set. (El triple; el conjunto.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "todo — the nearest word you already have."
+            },
+            {
+              "kind": "speech",
+              "text": "poco — what is left if this fails."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "en-TE-ro, three beats with the weight on the second. One tapped r. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "entero — \"whole,\" \"entire.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin integer is in-, not, plus a form of tangere, to touch. A whole thing is one that nobody has laid a hand on — nothing broken off, nothing taken."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish has two words where English has one feeling. Todo is the whole counted up: all of it. Entero is the whole left unbroken: none of it missing. Todo el libro is every page; el libro entero is the book with no page torn out."
+            },
+            {
+              "kind": "speech",
+              "text": "English took integer twice. Once through French, worn down to entire. Once straight from Latin, kept whole, for a number with no fraction on it — an integer. Integrity is a character nobody has tampered with, and to integrate is to make a thing whole again."
+            },
+            {
+              "kind": "speech",
+              "text": "Tangere on its own gives tangent, tangible and contact."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A set, and a way to say the set is still complete."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "entero",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *entero*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el libro entero",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el libro entero*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un día entero",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un día entero*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What two Latin pieces make integer? (In-, not, and tangere, to touch.) And what is an integer in arithmetic? (A number with no fraction on it.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C352-mayoria",
+      "sequence": 6540,
+      "title": "la mayoría — most of them, and the greatness inside a mayor",
+      "headword": "la mayoría",
+      "romanization": "la mayoría",
+      "gloss": "most of them, the majority — Latin maior, greater, from magnus; English major, mayor and magnitude are all the same greatness",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3a02f8820111fb8d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the set, then whole. (El conjunto; entero.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el maestro — a cousin of this word."
+            },
+            {
+              "kind": "speech",
+              "text": "mucho — the vaguer way to say a lot."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ma-yo-RÍ-a, four beats with the weight on the third. The written accent on the í keeps it from folding into the a. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la mayoría — \"most of them,\" \"the majority.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin magnus was great, and its comparative maior was greater. Spanish softened the -ai- into -ayo- and got mayor, then hung the abstract ending on it: mayoría, the greater part."
+            },
+            {
+              "kind": "speech",
+              "text": "Notice that it is a comparison, not a count. A mayoría is not a number; it is whichever side is larger."
+            },
+            {
+              "kind": "speech",
+              "text": "English holds the family in several shapes. A major is the greater sort. A mayor is the greater man of a town. Majesty is greatness worn in public. Magnitude, magnify and maximum come off magnus itself."
+            },
+            {
+              "kind": "speech",
+              "text": "And you have a cousin already. El maestro goes back to Latin magister, the greater one — the man who was more than the rest of the room, which is what a teacher was supposed to be."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A word for the larger share of a set."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la mayoría",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la mayoría*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la mayoría de la gente",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la mayoría de la gente*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la mayoría de los libros",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la mayoría de los libros*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does Latin maior mean? (Greater.) And what was a magister, word for word? (The greater one in the room.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C352-resto",
+      "sequence": 6550,
+      "title": "el resto — what is left standing",
+      "headword": "el resto",
+      "romanization": "el resto",
+      "gloss": "the rest, what is left — Latin restare, to stand back, from re and stare; English rest and arrest stand on the same verb",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:74e43f91d899b38a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say whole, then most of them. (Entero; la mayoría.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "otro — the others this gathers up."
+            },
+            {
+              "kind": "speech",
+              "text": "estar — the verb standing inside it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "RES-to, two beats with the weight on the first. The r at the start of a word is rolled. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el resto — \"the rest,\" \"the remainder.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin restāre is re-, back, plus stāre, to stand. What stands back when the others have gone is what is left over."
+            },
+            {
+              "kind": "speech",
+              "text": "That verb is becoming an old friend. It is inside estar, inside la estación, inside el instante. Here it is again, standing still while the count moves on without it."
+            },
+            {
+              "kind": "speech",
+              "text": "English rest, in the sense of the remainder, is this word — and it has nothing to do with the other English rest, the one that means sleep, which is a Germanic word about a resting-place on a journey. Two words, same spelling, no relation."
+            },
+            {
+              "kind": "speech",
+              "text": "To arrest somebody is to make them stand still. Something restive will not move. A residue is what stays behind."
+            },
+            {
+              "kind": "speech",
+              "text": "It comes with de behind it: el resto de la gente, the rest of the people."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The larger share, and everything that is not in it."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el resto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el resto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el resto de la gente",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el resto de la gente*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el resto del día",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el resto del día*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does restāre mean, word for word? (To stand back.) And are the two English rests related? (No — one is Latin standing, one is Germanic sleeping.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C352-escaso",
+      "sequence": 6560,
+      "title": "escaso — scarce, because the good parts were picked out",
+      "headword": "escaso",
+      "romanization": "escaso",
+      "gloss": "scarce, in short supply — Vulgar Latin excarpsus, picked over, from ex and carpere to pluck; English scarce, excerpt and carpet are the same plucking",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:557d7d7d20a0e7a9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say most of them, then the rest. (La mayoría; el resto.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "poco — the plain word this sharpens."
+            },
+            {
+              "kind": "speech",
+              "text": "bastante — the opposite end of the scale."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "es-KA-so, three beats with the weight on the second. Both s sounds are clear, never buzzed. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "escaso — \"scarce,\" \"in short supply.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Poco says there is little. Escaso says there is less than there ought to be — the word carries a shortfall in it."
+            },
+            {
+              "kind": "speech",
+              "text": "Behind it is a late Latin excarpsus, from carpere, to pluck, with ex-, out. What is escaso is what is left after the good parts have been plucked out of it. A picked-over heap."
+            },
+            {
+              "kind": "speech",
+              "text": "Carpere is a fine root to own. An excerpt is a passage plucked out of a book. A carpet was plucked wool before it was a floor. And carpe diem is not seize the day so much as pluck the day, the way you pick fruit that will not keep."
+            },
+            {
+              "kind": "speech",
+              "text": "English scarce is the same excarpsus, arriving through Old French escars — so escaso and scarce are one word, and the Spanish shape is the more conservative of the two."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A whole set, its larger share, its remainder, and the word for when there is not enough of it."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "escaso",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *escaso*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el agua está escasa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el agua está escasa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poco o escaso",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *poco o escaso*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does carpere mean? (To pluck.) And what is an excerpt, word for word? (A passage plucked out.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 346,
+  "title": "Five Places A Town Has",
+  "label": "ch:lugares-del-pueblo",
+  "canDo": "I can name la escuela, la iglesia, el mercado, la oficina and la estacion, and say why an office was a workshop and a school was spare time.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ES-C346-estacion",
+    "kind": "production",
+    "summary": "Complete ES-C346-estacion: name five buildings a town has and ask where any of them is.",
+    "assesses": [
+      "ES-LEX-C346-WHERE-11",
+      "ES-LEX-C346-WHERE-12",
+      "ES-LEX-C346-WHERE-13",
+      "ES-LEX-C346-WHERE-14",
+      "ES-LEX-C346-WHERE-15"
+    ]
+  }
+}
