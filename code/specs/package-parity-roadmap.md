@@ -7009,6 +7009,40 @@ paths; the target remote branch was absent. The higher-descendant extra-CI
 corpus and OCaml process-free substrate remain collision-unsafe while live PRs
 #12149 and #12162 own their required Go main and validator surfaces.
 
+### Python orphan-validator implementation and exact-main refresh
+
+The Python engine now consumes the four language-neutral orphan-crate cases
+through a pure in-memory adapter. It matches the reviewed Rust oracle for
+component-wise BUILD ancestry, runnable-over-empty precedence, the fixed BUILD
+filename rank, exemption error and stale-entry precedence, Unicode 17 NFC plus
+full-fold identities, portable-path rejection and hostile-path redaction, and
+Python-ASCII-JSON diagnostic ordering. The adapter does not enumerate the
+checkout, invoke Git or another process, read the environment, open a path, or
+access the network.
+
+Both literal `BUILD_windows` and `BUILD` fronts pass from independently cleared
+uv 0.11.28 / Python 3.13.14 environments with 442 tests and 90.58% total
+coverage in each run; the focused validator passes 40 tests at 97% coverage.
+The neutral schema and runner suites pass 80 tests plus 121 subtests, and the
+complete 111-case, 269-file corpus validates. The Go oracle passes tests, vet,
+and trimpath compilation; its forced Python plan validates metadata and reports
+all 494 discovered packages would build. Ruff, strict MyPy, compileall, focused
+Bandit, uv dependency compatibility, pip-audit, wheel/sdist construction, the
+package-parity collision gate, capability suites, state graph, credential, and
+diff checks are clean. A source-wide Bandit probe retains only already-present
+process-execution findings in unchanged CI, executor, and Git-diff modules.
+
+Two conflict-free rebases brought the branch to exact `origin/main`
+`d4e91eb24f1ed9f24e834fbff264b08dcaf60511`. PR #12755's guarded curriculum
+ledger routing stays inside the existing TypeScript human-language-data owner;
+PR #12751 is ADJ loop bookkeeping only; and PR #12750's positioned void-end-tag
+diagnostics remain inside the existing Rust HTML-parser owner. None adds a
+package marker, requires a new parity owner, or overlaps the six Python
+build-tool, state, and roadmap paths. The refreshed collision report is
+unchanged at 15 established lanes, 1,373 identities, 4,566 slots, 175
+high-consensus packages with 276 gaps, 910 singletons with 12,740 gaps, 721
+Rust singletons, zero collisions, and zero unknown buckets.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
