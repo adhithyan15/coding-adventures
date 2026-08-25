@@ -197,6 +197,8 @@ const ARABIC_THAA = DUCTUS[ductusKey("arabic", "ث")];
 const ARABIC_JEEM = DUCTUS[ductusKey("arabic", "ج")];
 const ARABIC_HAA = DUCTUS[ductusKey("arabic", "ح")];
 const ARABIC_KHAA = DUCTUS[ductusKey("arabic", "خ")];
+const PERSIAN_KHEH = DUCTUS[ductusKey("perso-arabic", "خ")];
+const URDU_KHE = DUCTUS[ductusKey("urdu-nastaliq", "خ")];
 const ARABIC_DAAL = DUCTUS[ductusKey("arabic", "د")];
 const ARABIC_DHAAL = DUCTUS[ductusKey("arabic", "ذ")];
 const ARABIC_RAA = DUCTUS[ductusKey("arabic", "ر")];
@@ -6305,6 +6307,21 @@ describe("handwriting ductus", () => {
     expect(persian.url).not.toBe(urdu.url);
     expect(persian.url).not.toBe(ARABIC_DAAL.source.url);
     expect(urdu.url).not.toBe(ARABIC_DAAL.source.url);
+  });
+
+  it("Persian and Urdu خ keep body-first, dot-last script-owned sources", () => {
+    expect(PERSIAN_KHEH.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1]);
+    expect(URDU_KHE.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1]);
+    expect(penLifts(PERSIAN_KHEH)).toBe(1);
+    expect(penLifts(URDU_KHE)).toBe(1);
+    expect(PERSIAN_KHEH.source.citation).toMatch(/Persian Online.*خ.*00:49–00:54/i);
+    expect(PERSIAN_KHEH.source.variation).toMatch(/body-first.*head.*left to right.*deep bowl.*lifts once.*dot above.*Persian-scoped/i);
+    expect(URDU_KHE.source.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/khe-ze-zal-swad-and-zwad/",
+    );
+    expect(URDU_KHE.source.citation).toMatch(/Zer o Zabar.*independent خ.*Ḳhe instructions.*Northwestern/i);
+    expect(URDU_KHE.source.variation).toMatch(/deep bowl.*body-first.*lifts once.*dot above.*jīm shape.*Noto Naskh.*Nastaliq.*Urdu-specific/i);
+    expect(new Set([ARABIC_KHAA.source.url, PERSIAN_KHEH.source.url, URDU_KHE.source.url]).size).toBe(3);
   });
 
   it("Arabic independent ا traces to the University of Oregon's top-to-bottom video", () => {

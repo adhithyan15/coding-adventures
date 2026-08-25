@@ -534,7 +534,7 @@ function collect(node: SvgNode, pick: (n: SvgNode) => boolean, out: SvgNode[] = 
 const byTag = (node: SvgNode, tag: string) => collect(node, (n) => n.tag === tag);
 
 describe("ductusFor — only cited letters have a ductus", () => {
-  it("finds seventeen Tamil letters, eleven Persian letters, eighteen Arabic letters, and fifteen Urdu letters", () => {
+  it("finds seventeen Tamil letters, twelve Persian letters, eighteen Arabic letters, and sixteen Urdu letters", () => {
     expect(ductusFor("ம")?.glyph).toBe("ம");
     expect(ductusFor("அ")?.glyph).toBe("அ");
     expect(ductusFor("ஆ")?.glyph).toBe("ஆ");
@@ -577,6 +577,8 @@ describe("ductusFor — only cited letters have a ductus", () => {
     expect(ductusFor("ي", "arabic")?.glyph).toBe("ي");
     expect(ductusFor("ا", "urdu-nastaliq")?.glyph).toBe("ا");
     expect(ductusFor("ج", "urdu-nastaliq")?.glyph).toBe("ج");
+    expect(ductusFor("خ", "urdu-nastaliq")?.glyph).toBe("خ");
+    expect(ductusFor("خ", "perso-arabic")?.glyph).toBe("خ");
     expect(ductusFor("د", "urdu-nastaliq")?.glyph).toBe("د");
     expect(ductusFor("ج", "perso-arabic")).toBeUndefined();
     expect(ductusFor("ر", "urdu-nastaliq")?.glyph).toBe("ر");
@@ -597,6 +599,16 @@ describe("ductusFor — only cited letters have a ductus", () => {
     expect(ductusFor("ہ", "urdu-nastaliq")?.glyph).toBe("ہ");
     expect(ductusFor("ی", "urdu-nastaliq")?.glyph).toBe("ی");
     expect(ductusFor("ے", "urdu-nastaliq")?.glyph).toBe("ے");
+  });
+
+  it("keeps the shared Arabic, Persian, and Urdu خ independently addressable", () => {
+    const arabic = ductusFor("خ", "arabic");
+    const persian = ductusFor("خ", "perso-arabic");
+    const urdu = ductusFor("خ", "urdu-nastaliq");
+    expect(arabic?.script).toBe("arabic");
+    expect(persian?.script).toBe("perso-arabic");
+    expect(urdu?.script).toBe("urdu-nastaliq");
+    expect(new Set([arabic?.source.url, persian?.source.url, urdu?.source.url]).size).toBe(3);
   });
 
   it("keeps the shared Arabic, Persian, and Urdu د independently addressable", () => {
