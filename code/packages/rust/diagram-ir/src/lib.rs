@@ -541,6 +541,7 @@ pub struct XyAxisConfig {
 pub struct XyChartConfig {
     pub width: Option<f64>,
     pub height: Option<f64>,
+    pub chart_orientation: Option<ChartOrientation>,
     pub title_font_size: Option<f64>,
     pub title_padding: Option<f64>,
     pub show_title: Option<bool>,
