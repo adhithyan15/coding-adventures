@@ -7242,6 +7242,114 @@ fn register_simd(vm: &mut GenericVM) {
                 let handle = push_v128(ctx, result)?;
                 push_wasm(vm, WasmValue::V128(handle));
             }
+            SimdOpKind::RelaxedMaddF32x4 | SimdOpKind::RelaxedNmaddF32x4 => {
+                // f32x4.relaxed_madd/relaxed_nmadd (relaxed SIMD epic PR5
+                // -- see `code/specs/W19-wasm-relaxed-simd-first-slice.md`):
+                // the FIRST ternary SIMD op in this crate whose body is
+                // genuine per-lane FLOATING-POINT arithmetic rather than a
+                // bitwise blend (`Bitselect`/`RelaxedLaneselectI8x16` etc.
+                // above are also ternary but bitwise, lane-width-agnostic).
+                // `madd(a, b, c) = a*b+c`; `nmadd(a, b, c) = -(a*b)+c`,
+                // hand-verified against the real vendored
+                // `relaxed_madd_nmadd.wast` corpus's own "nmadd tests with
+                // negated x/y, same answers are expected [as madd]"
+                // comments (`nmadd(a,b,c) == madd(-a,b,c) ==
+                // madd(a,-b,c)` for every case in the file).
+                //
+                // The relaxed-simd spec deliberately leaves the rounding
+                // behavior implementation-defined: an engine MAY fuse the
+                // multiply and add into a single rounding step (as a real
+                // hardware FMA instruction would), OR compute them
+                // separately with two roundings. Both are spec-valid, and
+                // the corpus encodes this with `either` alternatives whose
+                // two values are the fused and unfused results
+                // respectively. This implementation picks FUSED, via
+                // Rust's `f32::mul_add`, which the language guarantees
+                // computes `(self * a) + b` with only ONE rounding step
+                // regardless of whether the target has hardware FMA (a
+                // software fallback is used otherwise, but it is still
+                // single-rounding) -- so this choice is deterministic and
+                // platform-independent, unlike a naive `a * b + c` in
+                // source, which the compiler is free to double-round on
+                // some targets and fuse on others. Hand-verified this
+                // lands on the corpus's FIRST `either` alternative in
+                // every fused-vs-unfused test case in the file (e.g.
+                // `x=0x1.000004p+0, y=0x1.0002p+0, z=-0x1.000204p+0`:
+                // `x.mul_add(y, z)` == `0x1p-37`, the corpus's first
+                // alternative; the corpus's second alternative, `0`, is
+                // what an unfused `x*y+z` computation would give instead).
+                let c_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let b_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let a_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let c = *ctx
+                    .v128_heap
+                    .get(c_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let b = *ctx
+                    .v128_heap
+                    .get(b_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let a = *ctx
+                    .v128_heap
+                    .get(a_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+
+                let mut result = [0u8; 16];
+                for i in 0..4 {
+                    let lane_a = f32::from_le_bytes(a[i * 4..i * 4 + 4].try_into().unwrap());
+                    let lane_b = f32::from_le_bytes(b[i * 4..i * 4 + 4].try_into().unwrap());
+                    let lane_c = f32::from_le_bytes(c[i * 4..i * 4 + 4].try_into().unwrap());
+                    let out = match op.kind {
+                        SimdOpKind::RelaxedMaddF32x4 => lane_a.mul_add(lane_b, lane_c),
+                        SimdOpKind::RelaxedNmaddF32x4 => (-lane_a).mul_add(lane_b, lane_c),
+                        _ => unreachable!("only RelaxedMaddF32x4/RelaxedNmaddF32x4 reach this arm"),
+                    };
+                    result[i * 4..i * 4 + 4].copy_from_slice(&out.to_le_bytes());
+                }
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::RelaxedMaddF64x2 | SimdOpKind::RelaxedNmaddF64x2 => {
+                // f64x2.relaxed_madd/relaxed_nmadd (relaxed SIMD epic
+                // PR5): direct 2-lane `f64` mirror of `RelaxedMaddF32x4`/
+                // `RelaxedNmaddF32x4` just above, same fused `mul_add`
+                // body and same single-rounding guarantee. Hand-verified
+                // against the corpus's `f64x2.relaxed_madd`/
+                // `relaxed_nmadd` cases the same way (e.g.
+                // `x=0x1.00000004p+0, y=0x1.000002p+0,
+                // z=-0x1.00000204p+0`: `x.mul_add(y, z)` == `0x1p-53`,
+                // the corpus's first `either` alternative).
+                let c_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let b_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let a_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let c = *ctx
+                    .v128_heap
+                    .get(c_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let b = *ctx
+                    .v128_heap
+                    .get(b_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let a = *ctx
+                    .v128_heap
+                    .get(a_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+
+                let mut result = [0u8; 16];
+                for i in 0..2 {
+                    let lane_a = f64::from_le_bytes(a[i * 8..i * 8 + 8].try_into().unwrap());
+                    let lane_b = f64::from_le_bytes(b[i * 8..i * 8 + 8].try_into().unwrap());
+                    let lane_c = f64::from_le_bytes(c[i * 8..i * 8 + 8].try_into().unwrap());
+                    let out = match op.kind {
+                        SimdOpKind::RelaxedMaddF64x2 => lane_a.mul_add(lane_b, lane_c),
+                        SimdOpKind::RelaxedNmaddF64x2 => (-lane_a).mul_add(lane_b, lane_c),
+                        _ => unreachable!("only RelaxedMaddF64x2/RelaxedNmaddF64x2 reach this arm"),
+                    };
+                    result[i * 8..i * 8 + 8].copy_from_slice(&out.to_le_bytes());
+                }
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
             SimdOpKind::ExtractLaneI8x16S | SimdOpKind::ExtractLaneI8x16U => {
                 // i8x16.extract_lane_s/_u (SIMD widen PR18): pop a v128,
                 // read the `aux`-selected `i8` lane back out as a plain
@@ -18570,6 +18678,181 @@ mod tests {
             bytes[0],
             Some(V128Bytes(v128_const_bytes_i64x2(expected).try_into().unwrap())),
             "i64x2.relaxed_laneselect must match the real corpus's either alternative"
+        );
+    }
+
+    // ── Relaxed SIMD epic PR5: f32x4/f64x2.relaxed_madd/relaxed_nmadd --
+    // see code/specs/W19-wasm-relaxed-simd-first-slice.md ───────────────
+
+    /// `f32x4.relaxed_madd` (sub-opcode `0x105`, `[0x85, 0x02]`): the
+    /// exact first `assert_return`/`either` case from the real vendored
+    /// `relaxed_madd_nmadd.wast` corpus (pinned `WebAssembly/testsuite`
+    /// SHA `28864811cf03bdbf880733786148feaba339582d`). `FLT_MAX * 2 -
+    /// FLT_MAX` is `FLT_MAX` if the multiply-add is fused into a single
+    /// rounding step (this repo's choice, via `f32::mul_add`), or `inf`
+    /// if unfused (a real double-rounded overflow) -- both are the
+    /// file's own `either` alternatives; this repo's fused choice must
+    /// land on the first one, `FLT_MAX`.
+    #[test]
+    fn f32x4_relaxed_madd_matches_the_real_corpus_first_either_alternative_flt_max() {
+        let flt_max = f32::MAX;
+        let a = [flt_max; 4];
+        let b = [2.0f32; 4];
+        let c = [-flt_max; 4];
+
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_f32x4(a));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes_f32x4(b));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes_f32x4(c));
+        code.extend([0xFD, 0x85, 0x02]); // f32x4.relaxed_madd (sub-opcode 0x105)
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, bytes) = engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            bytes[0],
+            Some(V128Bytes(v128_const_bytes_f32x4([flt_max; 4]).try_into().unwrap())),
+            "f32x4.relaxed_madd(FLT_MAX, 2.0, -FLT_MAX) must be FLT_MAX under this repo's fused choice, \
+             the real corpus's first either alternative"
+        );
+    }
+
+    /// `f32x4.relaxed_madd`/`relaxed_nmadd` (sub-opcodes `0x105`/`0x106`):
+    /// the real corpus's "special values" fused-multiply-add precision
+    /// test, hand-derived from the corpus's own comments --
+    /// `x=0x1.000004p+0, y=0x1.0002p+0, z=-0x1.000204p+0`: `x*y+z` fused
+    /// is exactly `0x1p-37`, while an unfused separate multiply-then-add
+    /// rounds to `0` (2 roundings). This repo's fused `mul_add` choice
+    /// must land on `0x1p-37`, the corpus's FIRST either alternative. The
+    /// corpus also asserts `nmadd` with negated `x` or negated `y` gives
+    /// the SAME answer as `madd` with the original sign -- hand-verified
+    /// this repo's `nmadd(a,b,c) = (-a).mul_add(b,c)` formula satisfies
+    /// that identity for both negation cases.
+    #[test]
+    fn f32x4_relaxed_madd_nmadd_match_the_real_corpus_special_values_precision_case() {
+        // Derived via Rust's own f32 arithmetic (exact for these small
+        // powers of two) rather than hand-transcribed hex-float literals,
+        // to avoid transcription error against the corpus's own comments.
+        let x: f32 = 1.0 + 2f32.powi(-22); // 0x1.000004p+0
+        let y: f32 = 1.0 + 2f32.powi(-15); // 0x1.0002p+0
+        let z: f32 = -(1.0 + 2f32.powi(-15) + 2f32.powi(-22)); // -0x1.000204p+0
+        let expected: f32 = 2f32.powi(-37); // 0x1p-37
+
+        let run = |name: &str, sub_opcode: u8, a_lane: f32, b_lane: f32, c_lane: f32| -> f32 {
+            let mut code = vec![0xFD, 0x0C];
+            code.extend(v128_const_bytes_f32x4([a_lane; 4]));
+            code.extend([0xFD, 0x0C]);
+            code.extend(v128_const_bytes_f32x4([b_lane; 4]));
+            code.extend([0xFD, 0x0C]);
+            code.extend(v128_const_bytes_f32x4([c_lane; 4]));
+            code.extend([0xFD, sub_opcode, 0x02]);
+            code.push(0x0B);
+            let mut engine = simd_engine_returning_v128(code);
+            let (_, bytes) = engine.call_function_with_v128(0, &[]).unwrap();
+            let V128Bytes(raw) = bytes[0].expect("result must be a v128");
+            let lane = f32::from_le_bytes(raw[0..4].try_into().unwrap());
+            assert!(lane.is_finite(), "{name}: expected a finite lane, got {lane}");
+            lane
+        };
+
+        assert_eq!(
+            run("f32x4.relaxed_madd", 0x85, x, y, z),
+            expected,
+            "f32x4.relaxed_madd(x, y, z) must be the fused 0x1p-37 result"
+        );
+        assert_eq!(
+            run("f32x4.relaxed_nmadd (negated x)", 0x86, -x, y, z),
+            expected,
+            "f32x4.relaxed_nmadd(-x, y, z) must equal relaxed_madd(x, y, z), per the corpus's own identity"
+        );
+        assert_eq!(
+            run("f32x4.relaxed_nmadd (negated y)", 0x86, x, -y, z),
+            expected,
+            "f32x4.relaxed_nmadd(x, -y, z) must equal relaxed_madd(x, y, z), per the corpus's own identity"
+        );
+    }
+
+    /// `f64x2.relaxed_madd`/`relaxed_nmadd` (sub-opcodes `0x107`/`0x108`):
+    /// the 2-lane `f64` mirror of the f32x4 precision test above,
+    /// hand-derived from the corpus's own comments -- `x=0x1.00000004p+0,
+    /// y=0x1.000002p+0, z=-0x1.00000204p+0`: fused gives `0x1p-53`.
+    #[test]
+    fn f64x2_relaxed_madd_nmadd_match_the_real_corpus_special_values_precision_case() {
+        let x: f64 = 1.0 + 2f64.powi(-30); // 0x1.00000004p+0
+        let y: f64 = 1.0 + 2f64.powi(-23); // 0x1.000002p+0
+        let z: f64 = -(1.0 + 2f64.powi(-23) + 2f64.powi(-30)); // -0x1.00000204p+0
+        let expected: f64 = 2f64.powi(-53); // 0x1p-53
+
+        let run = |name: &str, sub_opcode: u8, a_lane: f64, b_lane: f64, c_lane: f64| -> f64 {
+            let mut code = vec![0xFD, 0x0C];
+            code.extend(v128_const_bytes_f64x2([a_lane; 2]));
+            code.extend([0xFD, 0x0C]);
+            code.extend(v128_const_bytes_f64x2([b_lane; 2]));
+            code.extend([0xFD, 0x0C]);
+            code.extend(v128_const_bytes_f64x2([c_lane; 2]));
+            code.extend([0xFD, sub_opcode, 0x02]);
+            code.push(0x0B);
+            let mut engine = simd_engine_returning_v128(code);
+            let (_, bytes) = engine.call_function_with_v128(0, &[]).unwrap();
+            let V128Bytes(raw) = bytes[0].expect("result must be a v128");
+            let lane = f64::from_le_bytes(raw[0..8].try_into().unwrap());
+            assert!(lane.is_finite(), "{name}: expected a finite lane, got {lane}");
+            lane
+        };
+
+        assert_eq!(
+            run("f64x2.relaxed_madd", 0x87, x, y, z),
+            expected,
+            "f64x2.relaxed_madd(x, y, z) must be the fused 0x1p-53 result"
+        );
+        assert_eq!(
+            run("f64x2.relaxed_nmadd (negated x)", 0x88, -x, y, z),
+            expected,
+            "f64x2.relaxed_nmadd(-x, y, z) must equal relaxed_madd(x, y, z), per the corpus's own identity"
+        );
+        assert_eq!(
+            run("f64x2.relaxed_nmadd (negated y)", 0x88, x, -y, z),
+            expected,
+            "f64x2.relaxed_nmadd(x, -y, z) must equal relaxed_madd(x, y, z), per the corpus's own identity"
+        );
+    }
+
+    /// The real corpus's own `*_cmp` assertions check that TWO
+    /// invocations of the same relaxed op with the SAME inputs produce
+    /// bit-identical results (guarding against a hypothetical
+    /// nondeterministic implementation, which this repo's fixed FUSED
+    /// choice trivially satisfies). Mirrors that discipline directly:
+    /// two `f32x4.relaxed_madd` calls with identical operands must
+    /// compare bit-equal.
+    #[test]
+    fn f32x4_relaxed_madd_is_self_consistent_across_repeated_invocations() {
+        let a = [f32::MAX; 4];
+        let b = [2.0f32; 4];
+        let c = [-f32::MAX; 4];
+
+        let one_call = |code: &mut Vec<u8>| {
+            code.extend([0xFD, 0x0C]);
+            code.extend(v128_const_bytes_f32x4(a));
+            code.extend([0xFD, 0x0C]);
+            code.extend(v128_const_bytes_f32x4(b));
+            code.extend([0xFD, 0x0C]);
+            code.extend(v128_const_bytes_f32x4(c));
+            code.extend([0xFD, 0x85, 0x02]); // f32x4.relaxed_madd
+        };
+        let mut code = Vec::new();
+        one_call(&mut code);
+        code.push(0x0B);
+
+        let mut first = simd_engine_returning_v128(code.clone());
+        let (_, r1) = first.call_function_with_v128(0, &[]).unwrap();
+
+        let mut second = simd_engine_returning_v128(code);
+        let (_, r2) = second.call_function_with_v128(0, &[]).unwrap();
+
+        assert_eq!(
+            r1[0], r2[0],
+            "two f32x4.relaxed_madd calls with identical operands must produce bit-identical results"
         );
     }
 

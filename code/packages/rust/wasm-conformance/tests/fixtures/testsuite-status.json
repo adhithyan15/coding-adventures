@@ -3192,6 +3192,62 @@
         "not_yet_supported": 0
       }
     },
+    "relaxed_madd_nmadd.wast": {
+      "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exhaustion": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_invalid": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_malformed": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_return": {
+        "pass": 17,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_trap": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_unlinkable": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "module": {
+        "pass": 2,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "register": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      }
+    },
     "relaxed_min_max.wast": {
       "action": {
         "pass": 0,
@@ -7475,7 +7531,7 @@
       "not_yet_supported": 538
     },
     "assert_return": {
-      "pass": 44666,
+      "pass": 44683,
       "fail": 17,
       "trap": 0,
       "not_yet_supported": 545
@@ -7493,7 +7549,7 @@
       "not_yet_supported": 0
     },
     "module": {
-      "pass": 1272,
+      "pass": 1274,
       "fail": 1,
       "trap": 0,
       "not_yet_supported": 67

@@ -1884,7 +1884,11 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     | wasm_opcodes::SimdOpKind::RelaxedLaneselectI8x16
                     | wasm_opcodes::SimdOpKind::RelaxedLaneselectI16x8
                     | wasm_opcodes::SimdOpKind::RelaxedLaneselectI32x4
-                    | wasm_opcodes::SimdOpKind::RelaxedLaneselectI64x2 => {
+                    | wasm_opcodes::SimdOpKind::RelaxedLaneselectI64x2
+                    | wasm_opcodes::SimdOpKind::RelaxedMaddF32x4
+                    | wasm_opcodes::SimdOpKind::RelaxedNmaddF32x4
+                    | wasm_opcodes::SimdOpKind::RelaxedMaddF64x2
+                    | wasm_opcodes::SimdOpKind::RelaxedNmaddF64x2 => {
                         // The first TERNARY SIMD op in this crate: pops
                         // THREE v128s, pushes one. See
                         // `SimdOpKind::Bitselect`'s own doc comment in
@@ -1901,6 +1905,18 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         // `SimdOpKind::RelaxedLaneselectI8x16`'s own doc
                         // comment in wasm-opcodes) is entirely a runtime
                         // concern, invisible here.
+                        // `f32x4.relaxed_madd`/`relaxed_nmadd`,
+                        // `f64x2.relaxed_madd`/`relaxed_nmadd`
+                        // (relaxed-SIMD epic PR5) join too: same TERNARY
+                        // `(v128, v128, v128) -> v128` shape -- the fact
+                        // that this family's runtime body is genuine
+                        // per-lane floating-point fused-multiply-add
+                        // rather than a bitwise blend (see
+                        // `SimdOpKind::RelaxedMaddF32x4`'s own doc
+                        // comment in wasm-opcodes) is, like every other
+                        // numeric distinction in this match, entirely a
+                        // runtime concern -- still just three V128 pops,
+                        // one V128 push at this level.
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;

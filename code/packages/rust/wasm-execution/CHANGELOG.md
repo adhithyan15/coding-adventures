@@ -2,6 +2,50 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.62] - 2026-08-25 (Relaxed SIMD epic PR5: f32x4/f64x2.relaxed_madd/relaxed_nmadd)
+
+### Added
+
+- `SimdOpKind::RelaxedMaddF32x4`/`RelaxedNmaddF32x4` and
+  `SimdOpKind::RelaxedMaddF64x2`/`RelaxedNmaddF64x2` execution arms
+  (sub-opcodes `0x105`-`0x108`) -- the ELEVENTH/TWELFTH/THIRTEENTH/
+  FOURTEENTH relaxed-simd opcodes (see `code/specs/
+  W19-wasm-relaxed-simd-first-slice.md`). TERNARY: pops three v128s
+  (`a`, `b`, `c`), pushes one -- the FIRST relaxed-simd family whose
+  body is genuine per-lane FLOATING-POINT arithmetic rather than a
+  bitwise blend (`Bitselect`/`RelaxedLaneselectI8x16` etc. are also
+  ternary but bitwise, lane-width-agnostic).
+- Semantics: `madd(a,b,c) = a*b+c`; `nmadd(a,b,c) = -(a*b)+c`,
+  implemented per-lane as `a.mul_add(b, c)` and `(-a).mul_add(b, c)`
+  respectively. The relaxed-simd spec leaves the rounding
+  implementation-defined (fused, single rounding, OR unfused, double
+  rounding); this repo picks FUSED via Rust's `f32::mul_add`/
+  `f64::mul_add`, which the language guarantees is single-rounding
+  regardless of whether the target has hardware FMA (a software
+  fallback is used otherwise, but it is still single-rounding) -- so
+  this choice is deterministic and platform-independent, unlike a
+  naive `a * b + c` in source. Hand-verified against every `either`
+  pair in the real vendored `relaxed_madd_nmadd.wast` corpus that this
+  choice lands on the FIRST alternative in every fused-vs-unfused test
+  case (e.g. `x=0x1.000004p+0, y=0x1.0002p+0, z=-0x1.000204p+0`:
+  `x.mul_add(y, z)` = `0x1p-37`, the corpus's first alternative; an
+  unfused `x*y+z` would give `0`, the second).
+- Confirmed the `nmadd(a,b,c) == madd(-a,b,c) == madd(a,-b,c)` identity
+  by hand against the corpus's own "nmadd tests with negated x/y, same
+  answers are expected [as madd]" cases.
+- Verified this platform-independence claim by also running the
+  conformance suite under Linux/x86_64 via Docker (`rust:latest`,
+  `--platform linux/amd64`), in addition to native macOS/ARM64 -- both
+  agree bit-for-bit, matching the corpus's baseline exactly.
+- New tests: `f32x4_relaxed_madd_matches_the_real_corpus_first_either_alternative_flt_max`,
+  `f32x4_relaxed_madd_nmadd_match_the_real_corpus_special_values_precision_case`,
+  `f64x2_relaxed_madd_nmadd_match_the_real_corpus_special_values_precision_case`,
+  `f32x4_relaxed_madd_is_self_consistent_across_repeated_invocations` --
+  the last one mirrors the real corpus's own `*_cmp`/"test-consistent-
+  nondeterminism" assertions, confirming this repo's fixed FUSED choice
+  produces bit-identical results across repeated invocations with
+  identical operands.
+
 ## [0.9.61] - 2026-08-25 (Relaxed SIMD epic PR4: i8x16/i16x8/i32x4/i64x2.relaxed_laneselect)
 
 ### Added

@@ -2032,6 +2032,67 @@ gradeable, `NotYetSupported` unchanged at 67); `assert_return` rose from
 unchanged at 545). No other already-vendored file's stats changed --
 zero regressions.
 
+extended 2026-08-25 (relaxed SIMD epic PR5 -- see code/specs/
+               W19-wasm-relaxed-simd-first-slice.md -- relaxed_madd_nmadd.
+               wast, `f32x4.relaxed_madd`/`relaxed_nmadd`,
+               `f64x2.relaxed_madd`/`relaxed_nmadd` (sub-opcodes
+               0x105-0x108 -- re-verified LIVE against the relaxed-simd
+               Overview.md encoding table; NOT the 0x104-0x107 range
+               `RelaxedLaneselectI8x16`'s own doc comment already flagged
+               as a WRONG guess from an earlier scoping pass -- the real
+               madd/nmadd range is one higher), same pinned commit, no
+               re-pin): the FIFTH file from the relaxed-simd proposal,
+               byte-identical (12550 bytes) against a fresh re-fetch at
+               this pinned SHA. Lives at the testsuite repo ROOT like
+               every other file above, no `PROPOSAL_FILES` entry needed.
+               Grades 2/2 `module` and 17/17 `assert_return`, ALL REAL
+               passes, ZERO `NotYetSupported`. The first relaxed-simd
+               file whose opcodes are ternary FLOATING-POINT arithmetic
+               (fused multiply-add) rather than a bitwise blend
+               (`relaxed_laneselect.wast`'s ternary ops are bitwise).
+               This file's `either` groups are the fused-vs-unfused
+               rounding of the same multiply-add -- e.g. for
+               `f32x4.relaxed_madd(a=[0x1.000004p+0,...],
+               b=[0x1.0002p+0,...], c=[-0x1.000204p+0,...])`, a fused
+               single-rounding FMA gives `0x1p-37` while an unfused
+               separate-multiply-then-add gives `0` (per the file's own
+               "2 roundings" comments). Hand-verified against every
+               `either` pair in the file that this repo's chosen FUSED
+               implementation -- Rust's `f32::mul_add`/`f64::mul_add`,
+               which the language guarantees is single-rounding
+               regardless of whether the target has hardware FMA -- lands
+               on the FIRST alternative in every case, with `nmadd(a,b,c)`
+               implemented as `(-a).mul_add(b,c)` (hand-derived from the
+               file's own "nmadd tests with negated x/y, same answers are
+               expected [as madd]" comments). The file's own
+               `*_cmp`/"test-consistent-nondeterminism" assertions (which
+               check that repeated invocations with the same inputs, both
+               statically and dynamically supplied, agree bit-for-bit)
+               also pass, confirming this deterministic FUSED choice is
+               self-consistent across compile-time-constant and
+               runtime-supplied operands alike -- no actual
+               nondeterminism, just one fixed valid choice, same
+               discipline as PR1-PR4. Verified this choice is
+               platform-independent by running the same conformance
+               suite under Linux/x86_64 via Docker (`rust:latest`,
+               `--platform linux/amd64`) in addition to native macOS/ARM64
+               -- both agree bit-for-bit, because `mul_add`'s
+               single-rounding guarantee holds regardless of whether the
+               underlying hardware has a native FMA instruction (a
+               software fallback is used when it doesn't, but it is still
+               single-rounding). The remaining 2 relaxed-simd files at
+               this pinned SHA (`i32x4_relaxed_trunc.wast` -- flagged as
+               having ZERO real assert_return directives, weaker coverage
+               than every other relaxed-simd file -- `relaxed_dot_
+               product.wast`) remain unvendored, each its own future PR's
+               scope.
+
+Aggregate `module` rose from 1272/1273 to 1274/1275 (+2 pass, +2
+gradeable, `NotYetSupported` unchanged at 67); `assert_return` rose from
+44666/44683 to 44683/44700 (+17 pass, +17 gradeable, `NotYetSupported`
+unchanged at 545). No other already-vendored file's stats changed --
+zero regressions.
+
 The vendored files are licensed under the Apache License, Version 2.0 --
 see the accompanying LICENSE file, itself vendored verbatim from the same
 pinned commit.

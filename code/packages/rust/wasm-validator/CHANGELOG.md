@@ -2,6 +2,21 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.63] - 2026-08-25 (Relaxed SIMD epic PR5: f32x4/f64x2.relaxed_madd/relaxed_nmadd)
+
+### Added
+
+- `SimdOpKind::RelaxedMaddF32x4`/`RelaxedNmaddF32x4`/`RelaxedMaddF64x2`/
+  `RelaxedNmaddF64x2` now share `Bitselect`'s/`RelaxedLaneselectI8x16`'s
+  existing TERNARY type-check arm in `type_check.rs`: pop three
+  `v128`s, push one `v128`. The fact that this family's runtime body is
+  fused-multiply-add floating-point arithmetic rather than a bitwise
+  blend is entirely a runtime concern, invisible to the type checker.
+- New tests: `valid_relaxed_madd_nmadd_pops_three_v128_pushes_v128` and
+  `invalid_relaxed_madd_nmadd_given_an_i32_operand_instead_of_v128`,
+  mirroring the existing `relaxed_laneselect` coverage for all 4 new
+  opcodes.
+
 ## [0.2.62] - 2026-08-25 (Relaxed SIMD epic PR4: i8x16/i16x8/i32x4/i64x2.relaxed_laneselect)
 
 ### Added

@@ -1,5 +1,24 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.73 — 2026-08-25 — Relaxed SIMD epic PR5: f32x4/f64x2.relaxed_madd/relaxed_nmadd
+
+### Added
+
+- `SimdOpKind::RelaxedMaddF32x4`/`RelaxedNmaddF32x4`/`RelaxedMaddF64x2`/
+  `RelaxedNmaddF64x2` joined the existing no-immediate SIMD match arm
+  in both `module.rs` encoding functions (the same arm `Bitselect` and
+  every earlier relaxed-simd opcode are already in) -- these 4 opcodes
+  are TERNARY, same as `Bitselect`/`RelaxedLaneselectI8x16`, but still
+  take no immediate beyond the `0xFD` prefix + 2-byte LEB128
+  sub-opcode, so no new parsing logic was needed beyond the table
+  lookup this crate already does for every SIMD opcode.
+- No changes needed to `script.rs`'s `Expected::Either`/`parse_expected`
+  -- the N-ary `either` generalization PR3 added already handles this
+  file's `either` alternatives unchanged.
+- New test: `simd_relaxed_madd_nmadd_family_encodes_the_real_sub_opcodes`,
+  confirming all 4 new opcodes encode to their real 2-byte LEB128
+  sub-opcode values.
+
 ## 0.1.72 — 2026-08-25 — Relaxed SIMD epic PR4: i8x16/i16x8/i32x4/i64x2.relaxed_laneselect
 
 ### Added

@@ -774,6 +774,30 @@ TESTSUITE_FILES = [
     # each a later PR's scope, same one-opcode-family-per-PR cadence the
     # base SIMD epic (PR1-PR47) established.
     "relaxed_laneselect.wast",
+    # Relaxed SIMD epic PR5 (see code/specs/
+    # W19-wasm-relaxed-simd-first-slice.md): relaxed_madd_nmadd.wast --
+    # `f32x4.relaxed_madd`/`relaxed_nmadd`, `f64x2.relaxed_madd`/
+    # `relaxed_nmadd` (sub-opcodes 0x105-0x108 -- re-verified LIVE against
+    # the relaxed-simd Overview.md table; NOT the 0x104-0x107 range
+    # `RelaxedLaneselectI8x16`'s own doc comment already flagged as a
+    # wrong guess from an earlier scoping pass), the FIFTH relaxed-simd PR
+    # (12550 bytes, confirmed byte-identical against the same pinned SHA).
+    # The FIRST relaxed-simd family whose ternary body is genuine per-lane
+    # floating-point arithmetic (a fused multiply-add, `a*b+c` for madd,
+    # `-(a*b)+c` for nmadd) rather than a bitwise blend
+    # (`RelaxedLaneselectI8x16`/`Bitselect` above are ternary but
+    # bitwise). Hand-verified against every `either` pair in this file
+    # (each pair is the fused vs. unfused rounding of the same multiply-
+    # add) that this repo's chosen FUSED implementation (Rust's
+    # `f32::mul_add`/`f64::mul_add`, guaranteed single-rounding regardless
+    # of platform FMA hardware) lands on the first alternative in every
+    # case -- see `SimdOpKind::RelaxedMaddF32x4`'s own doc comment. The
+    # other 2 remaining relaxed-simd files (`i32x4_relaxed_trunc.wast` --
+    # flagged as having ZERO real `assert_return` directives, weaker
+    # coverage than every other file here -- `relaxed_dot_product.wast`)
+    # are each a later PR's scope, same one-opcode-family-per-PR cadence
+    # the base SIMD epic (PR1-PR47) established.
+    "relaxed_madd_nmadd.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under
