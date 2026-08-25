@@ -11,23 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 12633,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/12633",
-    "branch": "codex/build-tool-rust-tracked-artifact-validation-conformance",
-    "status": "open"
-  },
+  "active_pr": null,
   "last_inventory": {
-    "revision": "d0d6ab3846ca56175b8d2e66b901d1facf32202a",
+    "revision": "ee13dca795810c618dcbfce660dd707838a8e5ef",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1370,
-    "implementation_package_slots": 4563,
+    "implementation_identities": 1371,
+    "implementation_package_slots": 4564,
     "high_consensus_packages": 175,
     "high_consensus_missing_slots": 276,
-    "singleton_packages": 907,
-    "singleton_missing_slots": 12698,
-    "rust_singletons": 718,
+    "singleton_packages": 908,
+    "singleton_missing_slots": 12712,
+    "rust_singletons": 719,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -688,7 +683,12 @@
       "id": "build-tool-rockspec-utf8-remaining-engines",
       "title": "Make every remaining build-tool engine pass the rockspec UTF-8 contract",
       "status": "pending",
-      "depends_on": ["build-tool-lua-rockspec-encoding"],
+      "depends_on": [
+        "build-tool-lua-rockspec-encoding",
+        "build-tool-ruby-engine-rockspec-utf8-conformance",
+        "build-tool-haskell-engine-rockspec-utf8-conformance",
+        "build-tool-elixir-engine-rockspec-utf8-conformance"
+      ],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the Python encoding-blocker audit. Go, Rust, Swift, TypeScript, Lua, and Perl were remediated in merged PRs #9504, #9510, #9537, #9572, #9603, and #9632. Three engines remain: Ruby and Haskell use locale-sensitive text decoding, and Elixir is position-dependent. Remediate each engine against resolution/lua-utf8 and resolution/lua-invalid-utf8 in small dependency-shaped slices, preserving METADATA_INVALID_UTF8 with repository-relative path and package identity. All three remaining children are explicitly materialized below."
@@ -3727,12 +3727,12 @@
     },
     {
       "id": "vault-external-import-portable-conformance",
-      "title": "Fixture Bitwarden JSON and browser CSV Vault imports",
+      "title": "Fixture portable Vault external imports",
       "status": "pending",
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered after afa7975 added vault-import-bitwarden and vault-import-csv. Define a closed VLT15 corpus for bounded hostile JSON/CSV, exact portable-record mapping, duplicate and ragged input behavior, secret zeroization boundaries, stable redacted errors, and deterministic skipped counts. Filesystem reads, terminal ceremony, vault writes, entropy, and audit publication remain host responsibilities."
+      "notes": "Discovered after afa7975 added vault-import-bitwarden and vault-import-csv, then extended after ee13dca795 added the deterministic vault-import-otpauth URI adapter. Define closed VLT15/VLT-PM49 corpora for bounded hostile JSON/CSV and otpauth URI inputs, exact portable-record mapping, duplicate and ragged input behavior, percent/base32 decoding and default semantics, secret zeroization boundaries, stable redacted errors, and deterministic skipped counts. Filesystem reads, terminal ceremony, vault writes, entropy, and audit publication remain host responsibilities."
     },
     {
       "id": "vault-pm-agent-protocol-portable-conformance",
@@ -4889,7 +4889,7 @@
     {
       "id": "build-tool-tracked-artifact-trailing-empty-segment-cross-runtime-hardening",
       "title": "Reject trailing empty tracked-artifact path segments across runtimes",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": [
         "build-tool-tracked-artifact-validation-corpus",
         "build-tool-tracked-artifact-unicode-cross-runtime-corpus-hardening",
@@ -4897,9 +4897,12 @@
         "build-tool-csharp-tracked-artifact-validation-conformance",
         "build-tool-rust-tracked-artifact-validation-conformance"
       ],
-      "branch": null,
+      "branch": "codex/build-tool-tracked-artifact-trailing-empty-segment",
       "pr_number": null,
-      "selection_blocked": true,
+      "selection_revision": "293f79290187d2dd3b1a993f9b11df2198cb5787",
+      "selection_notes": "Selected only after PR #12633 completed 29 terminal acceptable checks and GitHub merged it through squash auto-merge at exact main 293f79290187d2dd3b1a993f9b11df2198cb5787. The collision-checked schema-3 inventory is unchanged at 15 established lanes, 1,370 implementation identities, 4,563 slots, 175 high-consensus identities with 276 gaps, 122 identities in five to nine lanes with 926 gaps, 166 identities in two to four lanes with 2,087 gaps, 907 singletons with 12,698 gaps, 718 Rust singletons, zero collisions, and zero unknown buckets; OCaml remains correctly emerging with zero packages. All five prerequisites are merged. This bounded neutral-fixture plus reviewed Python/C#/F# shared-engine repair directly gates 11 owners and 20 unfinished descendants. It ties the Unicode-version sibling for leverage but wins the dependency-first pass because it closes a reproduced correctness defect: trailing slash and backslash paths are accepted despite the contract assigning EMPTY_SEGMENT to every empty component. Seven live open PRs have zero exact overlap on the fixture, oracle, Python, C#, F#, state, or roadmap candidate surfaces, and the target branch was absent before creation from exact origin/main. No package identity, slot, or newly unowned portable gap appeared in the post-merge audit.",
+      "implementation_revision": "d679355eae87695920f977719705f5da4fc3e253",
+      "validation_notes": "The neutral contract now explicitly assigns EMPTY_SEGMENT to a separator-created trailing component. The invalid tracked-artifact fixture contains forward- and backslash trailing records, and direct tests cover both. The process-free oracle, Python engine, and shared C# engine now test every normalized component rather than only internal double separators; absolute and drive-qualified precedence remains unchanged, hostile inputs stay redacted, and the F# facade independently consumes the expanded shared fixture. Red phases failed exactly the shared fixture plus the two new direct cases in the neutral oracle and C# engine. Green validation passes the complete neutral schema and runner suites with 80 tests and 121 subtests plus all 111 corpus cases across 269 files; the Python package passes 426 tests at 90.06% total and 97% validator coverage; C# passes 29 tests with the changed predicate covered 130 times and both branch outcomes; and F# passes seven tests through its native facade. Warning-free .NET builds, the canonical Python uv front, NuGet vulnerability audits, Bandit, collision, capability-taxonomy, Haskell-capability, OCaml-lock, dependency-manifest, credential, diff, production-authority, and state-DAG checks pass. Scoped Ruff checks pass the neutral oracle and production Python validator; broader formatter, Ruff, and MyPy probes reproduce only pre-existing untouched baseline findings, while dotnet format likewise reports existing whitespace findings outside the changed predicate and does not support F#.",
       "notes": "Discovered during the Rust tracked-artifact final review. The portable-path contract assigns EMPTY_SEGMENT to every empty component, but the shared Python and C# reference validators accept a trailing slash or backslash after normalization because they only check internal double separators. The selected Rust child now rejects both trailing forms directly. Add language-neutral forward- and backslash cases, repair the reviewed Python/C# shared-engine consumers and their F# facade expectations, then make this owner a prerequisite for later engines without widening the current one-engine PR."
     },
     {
@@ -4914,7 +4917,6 @@
       ],
       "branch": null,
       "pr_number": null,
-      "selection_blocked": true,
       "notes": "Discovered during the Rust tracked-artifact dependency audit. The governing NFKC-casefold and full-uppercase behavior does not yet name one Unicode data version, while host runtimes and third-party tables may differ. The selected Rust child uses one exactly pinned Unicode 17.0.0 snapshot for NFC/NFKC, full default folding, and reserved-basename uppercase. Pin the neutral contract and fixtures to a reviewed data version, reconcile Python and the C#/F# shared engine, and require every later build-tool consumer to prove the same table semantics."
     },
     {
@@ -5092,7 +5094,7 @@
     {
       "id": "build-tool-rust-tracked-artifact-validation-conformance",
       "title": "Make the Rust build tool consume tracked-artifact validation",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "build-tool-tracked-artifact-validation-corpus",
         "build-tool-tracked-artifact-unicode-cross-runtime-corpus-hardening"
@@ -5109,6 +5111,10 @@
       "final_revision": "f0754ce362bae712b33380595394d2337b436450",
       "validation_notes": "The Rust engine now exposes one pure tracked-artifact snapshot validator and independently consumes all five language-neutral cases. It exactly implements slash normalization; the closed portable-path error precedence; hostile-input redaction; Unicode-scalar length and diagnostic ordering; NFKC plus full default case folding; full-uppercase reserved-name membership; inert regular, symlink, and reparse kinds; and canonical detail sorting. The NFC quick check is used only as a fast path: inconclusive NFC_QC=Maybe scalars fall back to an exact normalization comparison, with a q-plus-combining-grave regression proving an already-normalized path remains accepted while decomposed e-plus-acute remains invalid. One exactly pinned oxixml-unicode 0.1.2 dependency supplies a single Unicode 17.0.0 snapshot for NFC, NFKC, full folding, and full uppercase with no transitive dependency or unsafe code. The first GitHub check run exposed only the already registered Rust dist-newstyle discovery gap: actual Ubuntu and macOS logs showed test_language_registry_conformance_fixture failing after 141 passes because the generated Haskell dist-newstyle decoy was discovered. The minimal repair adds the exact case-sensitive dist-newstyle component to Rust's existing generated-artifact exclusion. The focused regression, complete all-target suite, canonical BUILD, and canonical BUILD_windows front now pass 142 unit tests plus three CLI integrations; Clippy passes all targets with warnings denied. LLVM coverage reports 98.98% validator line, 100% validator function, 94.03% discovery line, and 80.44% overall line coverage. The neutral schema and runner suites pass 80 tests plus 119 subtests, and the 111-case, 269-file corpus validates. Package-parity, capability-taxonomy, Haskell-capability, and OCaml-lock suites pass 68 tests with two expected Windows symlink skips. The Go build tool passes all packages, vet, trimpath compilation, BUILD validation, and a real no-change dry run over 45 Starlark files and 5,070 packages with the five-entry orphan ledger intact. Cargo audit scans 57 dependencies with no vulnerability; dependency, credential, diff, production-authority, and capability-manifest scopes are clean. The selected exact-base inventory at d0d6ab3846ca56175b8d2e66b901d1facf32202a remains schema 3 with 15 lanes, 1,370 identities, 4,563 slots, zero collisions, and zero unknown buckets. Later unrelated main advances through a270e3c3a687d39f208a8e003825da4cd07db277 leave GitHub mergeable with no changed-path collision, so no conflict rebase or force push was appropriate. The stable dist-newstyle owner is narrowed to Ruby-only because the Rust half closed in this PR; TypeScript and Swift remain separately owned. Three separately bounded pending owners cover trailing empty segments across Python/C#/neutral fixtures, an explicit cross-runtime Unicode-version contract, and BUILD_windows target_isolated artifact hygiene; the post-repair 467,724,669-byte generated directory was removed after validation. Three independent read-only fixture/inventory, state/roadmap, and build-tool/OCaml reviews verified the exact-component repair and found no remaining implementation, ownership, security, authority, or publication-scope defect. This tranche adds no Git, filesystem, process, environment, network, or other production authority.",
       "publication_notes": "Opened ready-for-review PR #12633 from clean validated head b445baa5f43991f96db9540b2fb86b50f8057365 after a normal first push and one focused metadata correction on the same branch. Immediately before publication, the branch was based on exact origin/main d0d6ab3846ca56175b8d2e66b901d1facf32202a, the target remote branch was absent, and all seven changed paths had zero exact overlap across six other live open PRs. The first check run reached 18 successes and six expected skips, while Ubuntu and macOS build jobs plus their aggregate gate failed on the exact registered Rust dist-newstyle fixture. Actual job logs were inspected before editing. Focused repair f0754ce362bae712b33380595394d2337b436450 was validated locally and pushed normally to the same branch without a rebase because GitHub remained mergeable; replacement checks are pending, so auto-merge remains disabled until every required check is terminal and acceptable.",
+      "merged_head_revision": "9778584119a9b19600212047b3d200be688ff03a",
+      "merged_at": "2026-08-25T00:13:59Z",
+      "merge_revision": "293f79290187d2dd3b1a993f9b11df2198cb5787",
+      "merge_notes": "All 29 reported checks reached terminal acceptable conclusions: 23 successes and six expected skips, with no failures or pending work. GitHub reported the branch clean and mergeable; the loop enabled squash auto-merge, and GitHub merged PR #12633 without a manual merge command.",
       "notes": "Consume the closed process-free tracked-artifact snapshot and diagnostics in the Rust engine without adding Git, filesystem, or process authority."
     },
     {
