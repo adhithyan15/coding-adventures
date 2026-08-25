@@ -1,0 +1,418 @@
+{
+  "glossaries": [
+    {
+      "language": "kannada",
+      "output": "kannada/book/chapters/appendix-glossary.tex",
+      "scriptSet": "kannada-comparisons"
+    }
+  ],
+  "answerKeys": [
+    {
+      "language": "kannada",
+      "output": "kannada/book/chapters/appendix-answer-key.tex",
+      "scriptSet": "kannada-comparisons"
+    }
+  ],
+  "indexes": [
+    {
+      "language": "kannada",
+      "output": "kannada/book/chapters/appendix-index.tex",
+      "scriptSet": "kannada-comparisons"
+    }
+  ],
+  "targets": [
+    {
+      "language": "kannada",
+      "chapter": 6,
+      "output": "kannada/book/chapters/ch06-dative-case.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 7,
+      "output": "kannada/book/chapters/ch07-numbers-1-10.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 8,
+      "output": "kannada/book/chapters/ch08-please.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 9,
+      "output": "kannada/book/chapters/ch09-sorry.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 10,
+      "output": "kannada/book/chapters/ch10-days.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 11,
+      "output": "kannada/book/chapters/ch11-colours.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 12,
+      "output": "kannada/book/chapters/ch12-family.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 13,
+      "output": "kannada/book/chapters/ch13-head-and-hand.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 14,
+      "output": "kannada/book/chapters/ch14-seasons.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 15,
+      "output": "kannada/book/chapters/ch15-water-and-rice.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 16,
+      "output": "kannada/book/chapters/ch16-months.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 17,
+      "output": "kannada/book/chapters/ch17-noon-and-midnight.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 18,
+      "output": "kannada/book/chapters/ch18-telling-time.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 19,
+      "output": "kannada/book/chapters/ch19-age.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 20,
+      "output": "kannada/book/chapters/ch20-numbers-and-weather.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 21,
+      "output": "kannada/book/chapters/ch21-dog-and-cat.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 22,
+      "output": "kannada/book/chapters/ch22-green-and-yellow.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 23,
+      "output": "kannada/book/chapters/ch23-day.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 24,
+      "output": "kannada/book/chapters/ch24-night.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 25,
+      "output": "kannada/book/chapters/ch25-good-night.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 26,
+      "output": "kannada/book/chapters/ch26-morning.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 27,
+      "output": "kannada/book/chapters/ch27-evening.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 28,
+      "output": "kannada/book/chapters/ch28-afternoon.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 29,
+      "output": "kannada/book/chapters/ch29-good-morning.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 30,
+      "output": "kannada/book/chapters/ch30-good-evening.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 31,
+      "output": "kannada/book/chapters/ch31-good-afternoon.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 32,
+      "output": "kannada/book/chapters/ch32-core-verbs.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 33,
+      "output": "kannada/book/chapters/ch33-mind-verbs.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 34,
+      "output": "kannada/book/chapters/ch34-social-verbs.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 35,
+      "output": "kannada/book/chapters/ch35-family-and-friends.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 36,
+      "output": "kannada/book/chapters/ch36-child-son-daughter.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 37,
+      "output": "kannada/book/chapters/ch37-face-words.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 38,
+      "output": "kannada/book/chapters/ch38-heart.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 39,
+      "output": "kannada/book/chapters/ch39-tea-coffee-milk.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 40,
+      "output": "kannada/book/chapters/ch40-a-meal.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 41,
+      "output": "kannada/book/chapters/ch41-pointing-and-asking.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 42,
+      "output": "kannada/book/chapters/ch42-describing-things.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 43,
+      "output": "kannada/book/chapters/ch43-more-verbs.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 44,
+      "output": "kannada/book/chapters/ch44-see-say.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 45,
+      "output": "kannada/book/chapters/ch45-older-generation.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 46,
+      "output": "kannada/book/chapters/ch46-things-you-ask-for.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 47,
+      "output": "kannada/book/chapters/ch47-leg-and-tooth.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 48,
+      "output": "kannada/book/chapters/ch48-roles.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 49,
+      "output": "kannada/book/chapters/ch49-replies.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 50,
+      "output": "kannada/book/chapters/ch50-taking-leave.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 51,
+      "output": "kannada/book/chapters/ch51-courtesy.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 52,
+      "output": "kannada/book/chapters/ch52-welcoming-a-guest.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 53,
+      "output": "kannada/book/chapters/ch53-the-sky.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 54,
+      "output": "kannada/book/chapters/ch54-the-tree.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 55,
+      "output": "kannada/book/chapters/ch55-river-and-road.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 56,
+      "output": "kannada/book/chapters/ch56-in-the-house.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 57,
+      "output": "kannada/book/chapters/ch57-more-of-the-body.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 58,
+      "output": "kannada/book/chapters/ch58-more-short-replies.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 59,
+      "output": "kannada/book/chapters/ch59-weather-and-ground.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 60,
+      "output": "kannada/book/chapters/ch60-animals.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 61,
+      "output": "kannada/book/chapters/ch61-in-the-kitchen.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 62,
+      "output": "kannada/book/chapters/ch62-things-people-make.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 63,
+      "output": "kannada/book/chapters/ch63-hunger-sleep-health.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 64,
+      "output": "kannada/book/chapters/ch64-joining-words.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 65,
+      "output": "kannada/book/chapters/ch65-more-good-manners.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 66,
+      "output": "kannada/book/chapters/ch66-the-field.tex",
+      "scriptSet": "kannada-comparisons"
+    }
+  ],
+  "handwritten": [
+    {
+      "language": "kannada",
+      "chapter": 1,
+      "output": "kannada/book/chapters/ch01-greetings.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 2,
+      "output": "kannada/book/chapters/ch02-introductions.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 3,
+      "output": "kannada/book/chapters/ch03-responding.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 4,
+      "output": "kannada/book/chapters/ch04-farewells.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 5,
+      "output": "kannada/book/chapters/ch05-first-verbs.tex"
+    }
+  ]
+}

@@ -408,25 +408,8 @@ function curriculumPlan(track: string): ShardPlan {
   };
 }
 
-/** Ledgers HL21 has migrated so far. Grows one entry per follow-on PR. */
-export const SHARD_PLANS: readonly ShardPlan[] = [
-  {
-    path: "core/spine.json",
-    sections: [{ key: "nodes", idOf: (element) => (element as { id?: unknown }).id as string }],
-    // The one ledger that keeps its monolith, and the reason is at the top of
-    // this file: language-ladder's browser bundle imports it statically.
-    monolith: "generated",
-  },
-  ...CHAPTER_SHARDED_TRACKS.map(chaptersPlan),
-  ...CURRICULUM_SHARDED_TRACKS.map(curriculumPlan),
-];
-
 /**
  * `core/book-generation.json` -> `core/book-generation.d/<language>.json`.
- *
- * BUILT, TESTED, AND DELIBERATELY NOT IN `SHARD_PLANS`. The machinery is
- * exercised by fixtures in `tests/grouped-shards.test.ts`, and the plan below
- * is what enables it — one line, once the blocker is cleared.
  *
  * ## Why it is the odd one out
  *
@@ -436,31 +419,31 @@ export const SHARD_PLANS: readonly ShardPlan[] = [
  * `<language>.json`. A per-language split reproduces authored order exactly, so
  * there is nothing for an ordinal to fix.
  *
- * ## The spec's blocker resolved itself
+ * Element-wise it would be over a thousand files nobody opens individually.
+ * What an author touches is "Spanish's slice of everything", so that is the
+ * file: a Spanish tranche edits `spanish.json` and nothing else.
  *
- * HL21 §5.3 recorded that `targets` spanned 27 runs for 23 languages and would
- * need a one-time re-sort before a per-language split could be lossless.
- * Re-measured at 1,007 entries (the spec was written at 949): 23 runs for 23
- * languages. The split runs for hindi, kannada, spanish and telugu closed as
- * later tranches inserted into them. No re-sort is needed.
+ * ## Both blockers are cleared
  *
- * ## The blocker that replaced it
+ * HL21 §5.3 recorded that `targets` spanned 27 runs for 23 languages and needed
+ * a one-time re-sort before a per-language split could be lossless. That
+ * resolved ITSELF: re-measured at 1,007 entries (the spec was written at 949) it
+ * is 23 runs for 23 languages, the split runs for hindi, kannada, spanish and
+ * telugu having closed as later tranches inserted into them. A test pins the
+ * contiguity so an append to the END of `targets` reopens the question loudly.
  *
- * `core/book-generation.json` does not round-trip through
- * `JSON.stringify(…, null, 2)` at all. Twelve `marwadi` entries in `targets`,
- * at lines 2911-2984, are indented two spaces deeper than the canonical form —
- * a hand-merge artifact. 74 lines, identical line count, leading whitespace
- * only, and `JSON.parse` of either form is deep-equal to the other.
+ * The blocker that replaced it was formatting: twelve `marwadi` entries in
+ * `targets` were indented two spaces deeper than canonical, so the committed
+ * file did not round-trip at all. That was re-indented in its own commit, proved
+ * whitespace-only by deep-comparing the parsed structures rather than by reading
+ * the diff. `grouped-shards.test.ts` now asserts the file STAYS canonical, so a
+ * hand-edit that reintroduces stray indentation fails immediately.
  *
- * Sharding proves it: the rebuilt document is byte-identical to the CANONICAL
- * reserialization and differs from the COMMITTED file by exactly those 74
- * lines. So enabling this plan would require reformatting the committed file,
- * and HL21 §8.9 says a ledger that does not round-trip is reported rather than
- * quietly reformatted to suit the serialiser.
- *
- * Unlike `chapters.json` and `curriculum.json`, that cannot be worked around by
- * skipping a track: this is ONE file shared by all 23. So the whole ledger
- * waits for a decision that is one deliberate re-indent commit wide.
+ * That exemption was specific and is worth not generalising: this is a BUILD
+ * MANIFEST, a list of `(language, chapter, output, scriptSet)` triples nobody
+ * reads for meaning. The other four non-round-tripping files are hand-maintained
+ * curriculum data, where whitespace churn buries real edits in review — they
+ * keep their monoliths.
  */
 export const BOOK_GENERATION_PLAN: ShardPlan = {
   path: "core/book-generation.json",
@@ -474,6 +457,21 @@ export const BOOK_GENERATION_PLAN: ShardPlan = {
   // rewriting every consumer in the commit that moves the data.
   monolith: "generated",
 };
+
+/** Ledgers HL21 has migrated so far. Grows one entry per follow-on PR. */
+export const SHARD_PLANS: readonly ShardPlan[] = [
+  {
+    path: "core/spine.json",
+    sections: [{ key: "nodes", idOf: (element) => (element as { id?: unknown }).id as string }],
+    // The one ledger that keeps its monolith, and the reason is at the top of
+    // this file: language-ladder's browser bundle imports it statically.
+    monolith: "generated",
+  },
+  ...CHAPTER_SHARDED_TRACKS.map(chaptersPlan),
+  ...CURRICULUM_SHARDED_TRACKS.map(curriculumPlan),
+  BOOK_GENERATION_PLAN,
+];
+
 
 /** Ordinal stride, and the width it is padded to. See the header. */
 const ORDINAL_STRIDE = 10;

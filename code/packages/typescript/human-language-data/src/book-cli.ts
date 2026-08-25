@@ -1,6 +1,11 @@
 import { existsSync, lstatSync, mkdirSync, readFileSync, realpathSync, writeFileSync } from "node:fs";
 import { dirname, join, normalize, relative as pathRelative, resolve, sep } from "node:path";
 import { assertRelativeManifestPath } from "./manifest-path.js";
+import {
+  BOOK_GENERATION_GROUPED_KEYS,
+  mergeGroupedShards,
+  readMaybeSharded,
+} from "./shard.js";
 import { pathToFileURL } from "node:url";
 import {
   renderBookAnswerKey,
@@ -130,9 +135,17 @@ function manifestPath(language: string): string {
 }
 
 function loadConfig(root: string): BookGenerationConfig {
-  const config = JSON.parse(
-    readFileSync(join(root, "core", "book-generation.json"), "utf8"),
-  ) as BookGenerationConfig;
+  // Through the shard reader, not a bare `readFileSync`. This was the only
+  // non-loader read of any of the three HL21 ledgers left in `src/`, and once
+  // `core/book-generation.d/` became the source of truth a direct read of the
+  // monolith would have served this generator a file that is merely DERIVED
+  // from it — correct while `--check` is green and quietly stale the moment it
+  // is not, which is exactly the window `--check` exists to close.
+  const config = readMaybeSharded<BookGenerationConfig>(
+    join(root, "core", "book-generation.json"),
+    (shards) =>
+      mergeGroupedShards(shards, BOOK_GENERATION_GROUPED_KEYS) as unknown as BookGenerationConfig,
+  );
   for (const [kind, entries] of [
     ["target", config.targets ?? []],
     ["handwritten chapter", config.handwritten ?? []],
