@@ -6793,6 +6793,153 @@
           "ES-LEX-C345-REF-05"
         ]
       }
+    },
+    {
+      "chapter": 346,
+      "title": "Five Places A Town Has",
+      "label": "ch:lugares-del-pueblo",
+      "canDo": "I can name la escuela, la iglesia, el mercado, la oficina and la estacion, and say why an office was a workshop and a school was spare time.",
+      "spineNodes": [
+        "SPINE-ASK-LOCATION"
+      ],
+      "payoff": {
+        "lesson": "ES-C346-estacion",
+        "kind": "production",
+        "summary": "Complete ES-C346-estacion: name five buildings a town has and ask where any of them is.",
+        "assesses": [
+          "ES-LEX-C346-WHERE-11",
+          "ES-LEX-C346-WHERE-12",
+          "ES-LEX-C346-WHERE-13",
+          "ES-LEX-C346-WHERE-14",
+          "ES-LEX-C346-WHERE-15"
+        ]
+      }
+    },
+    {
+      "chapter": 347,
+      "title": "Which Way, And What Is Around You",
+      "label": "ch:el-norte-y-el-sur",
+      "canDo": "I can name el norte, el sur, el oeste, el centro and alrededor, and say why three of the four compass points came into Spanish from Germanic sailors rather than from Rome.",
+      "spineNodes": [
+        "SPINE-ASK-LOCATION"
+      ],
+      "payoff": {
+        "lesson": "ES-C347-alrededor",
+        "kind": "production",
+        "summary": "Complete ES-C347-alrededor: send somebody north, south or west, name the middle of a town, and say what encircles it.",
+        "assesses": [
+          "ES-LEX-C347-WHERE-16",
+          "ES-LEX-C347-WHERE-17",
+          "ES-LEX-C347-WHERE-18",
+          "ES-LEX-C347-WHERE-19",
+          "ES-LEX-C347-WHERE-20"
+        ]
+      }
+    },
+    {
+      "chapter": 348,
+      "title": "A Moment, And Its Two Edges",
+      "label": "ch:el-principio-y-el-fin",
+      "canDo": "I can name el principio, el fin, el instante, la demora and el turno, and say why an ending began as the boundary stone of a field.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "ES-C348-turno",
+        "kind": "production",
+        "summary": "Complete ES-C348-turno: mark where a stretch of time opens and closes, name an instant inside it, report a delay, and claim your turn.",
+        "assesses": [
+          "ES-LEX-C348-CLOCK-11",
+          "ES-LEX-C348-CLOCK-12",
+          "ES-LEX-C348-CLOCK-13",
+          "ES-LEX-C348-CLOCK-14",
+          "ES-LEX-C348-CLOCK-15"
+        ]
+      }
+    },
+    {
+      "chapter": 349,
+      "title": "The Stretches A Calendar Marks",
+      "label": "ch:la-jornada-y-la-decada",
+      "canDo": "I can name la jornada, la decada, la fiesta, el aniversario and la agenda, and say why a journey was once one day's travel.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "ES-C349-agenda",
+        "kind": "production",
+        "summary": "Complete ES-C349-agenda: name a day's stretch, a decade, a holiday and an anniversary, and name the book they are written in.",
+        "assesses": [
+          "ES-LEX-C349-CLOCK-16",
+          "ES-LEX-C349-CLOCK-17",
+          "ES-LEX-C349-CLOCK-18",
+          "ES-LEX-C349-CLOCK-19",
+          "ES-LEX-C349-CLOCK-20"
+        ]
+      }
+    },
+    {
+      "chapter": 350,
+      "title": "Mine, Somebody Else's, And Which Kind",
+      "label": "ch:propio-y-ajeno",
+      "canDo": "I can say propio, ajeno, igual, distinto and el tipo, and say why English proper meant owned long before it meant correct.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C350-tipo",
+        "kind": "production",
+        "summary": "Complete ES-C350-tipo: mark a thing as yours or another's, as the same or a different one, and ask what sort it is.",
+        "assesses": [
+          "ES-LEX-C350-REF-06",
+          "ES-LEX-C350-REF-07",
+          "ES-LEX-C350-REF-08",
+          "ES-LEX-C350-REF-09",
+          "ES-LEX-C350-REF-10"
+        ]
+      }
+    },
+    {
+      "chapter": 351,
+      "title": "Counting Past Your Fingers",
+      "label": "ch:cien-y-la-cantidad",
+      "canDo": "I can say cien, la cantidad, ambos, varios and el triple, and say why cien and English hundred are the same word split by one sound change.",
+      "spineNodes": [
+        "SPINE-COUNT-ONE-TO-FIVE"
+      ],
+      "payoff": {
+        "lesson": "ES-C351-triple",
+        "kind": "production",
+        "summary": "Complete ES-C351-triple: count to a hundred, name an amount, take two together, say there are several, and treble a figure.",
+        "assesses": [
+          "ES-LEX-C351-COUNT-06",
+          "ES-LEX-C351-COUNT-07",
+          "ES-LEX-C351-COUNT-08",
+          "ES-LEX-C351-COUNT-09",
+          "ES-LEX-C351-COUNT-10"
+        ]
+      }
+    },
+    {
+      "chapter": 352,
+      "title": "The Whole Set, And How Much Of It",
+      "label": "ch:el-conjunto-y-el-resto",
+      "canDo": "I can say el conjunto, entero, la mayoria, el resto and escaso, and say why a whole thing is one nobody has touched.",
+      "spineNodes": [
+        "SPINE-COUNT-ONE-TO-FIVE"
+      ],
+      "payoff": {
+        "lesson": "ES-C352-escaso",
+        "kind": "production",
+        "summary": "Complete ES-C352-escaso: name a set, say it is whole, name most of it, name what is left, and say there is not enough.",
+        "assesses": [
+          "ES-LEX-C352-COUNT-11",
+          "ES-LEX-C352-COUNT-12",
+          "ES-LEX-C352-COUNT-13",
+          "ES-LEX-C352-COUNT-14",
+          "ES-LEX-C352-COUNT-15"
+        ]
+      }
     }
   ]
 }
