@@ -11,7 +11,12 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 12843,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/12843",
+    "branch": "codex/build-tool-lua-tracked-artifact-validation-conformance",
+    "status": "open"
+  },
   "last_inventory": {
     "revision": "a939778e7f7ce375bc5b4deefdb3467ca487ab54",
     "schema_version": 3,
@@ -5260,7 +5265,7 @@
     {
       "id": "build-tool-lua-tracked-artifact-validation-conformance",
       "title": "Make the Lua build tool consume tracked-artifact validation",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": [
         "build-tool-tracked-artifact-validation-corpus",
         "build-tool-tracked-artifact-unicode-cross-runtime-corpus-hardening",
@@ -5268,7 +5273,10 @@
         "build-tool-tracked-artifact-unicode-version-contract"
       ],
       "branch": "codex/build-tool-lua-tracked-artifact-validation-conformance",
-      "pr_number": null,
+      "pr_number": 12843,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/12843",
+      "opened_at": "2026-08-25T18:29:56Z",
+      "opened_revision": "7c4c941c330a1bc38f807b735094abd1f9ac06cd",
       "selection_revision": "a939778e7f7ce375bc5b4deefdb3467ca487ab54",
       "selection_notes": "Selected only after PR #12819 completed all 31 terminal acceptable checks and GitHub merged reviewed head 33df983e3f6eba67e05aa2f6f71bc5de1c3f33b0 through squash auto-merge as a939778e7f7ce375bc5b4deefdb3467ca487ab54 at 2026-08-25T16:50:05Z without a manual merge command. The collision-checked exact-main schema-3 report remains 15 established lanes, 1,373 identities, 4,566 slots, 175 high-consensus packages with 276 gaps, 910 singletons with 12,740 gaps, 721 Rust singletons, zero canonical collisions, and zero unknown buckets; OCaml remains correctly emerging at zero packages. Every intervening commit is classified before selection. ADJ Dolch tracking, HTML diagnostics, vault-pm export behavior, Kannada and Gujarati script work, and Java-to-semantic-IR lowering remain under existing owners; the Java execution proof's undeclared Python requirement is added to the existing extra-CI toolchain owner. Rust-only SIMD lane-memory semantics across three nominally 15/15 WebAssembly identities and the Rust ALGOL IIR selector semantics are newly unowned portable behavior, so four dependency-shaped neutral/parity owners are registered before selecting this tranche. No commit adds or removes a package identity or BUILD/build-tool marker. All four Lua dependencies are merged. Lua is the widest remaining tracked-artifact lane at 252 packages, ahead of Perl at 251, Haskell at 204, and Swift at 161; it has two existing direct children and three unfinished descendants through the Lua orphan validator and both completion umbrellas. Registering its real generator subprocess verification under the excluded host-authority review increases its leverage to three direct children and four unfinished descendants without assigning native authority work to this pure consumer. The expected Lua validator, generated Unicode, generator and test, fixture README, Unicode license, tests, package docs, CI, state, and roadmap surfaces have zero exact overlap across all nine live open PRs and all non-main remote heads; the target branch and prior PR were absent before creating the fresh worktree. Elixir orphan validation is newly ready but has only one unfinished descendant. The strategically broader OCaml process-free substrate and extra-CI corpus remain collision-unsafe while live PRs #12149 and #12162 own their required Go validator and main surfaces, and PR #12824 owns the otherwise-ready Mermaid XY surfaces.",
       "implementation_revision": "b7e9836f808d2d2f6fbd44dadcfa951ec7a2ae5d",
@@ -5278,6 +5286,7 @@
       "rebase_notes": "Rebased without conflict onto exact origin/main 4faca735e6851d24bb78f96817292dbb354c0748 after classifying intervening HTML parser diagnostics and Malayalam script data under their existing owners. The merged SIMD lane-memory completion, ALGOL power-one selector writes, Mermaid XY axis theme colors, and Java-to-Semantic-IR classic and enhanced for-loop lowering remain inside the neutral/parity owners registered before selection and the existing WAST/conformance, ALGOL, Mermaid XY, HTML frontend, and JV02 owners. The two added Python execution proofs retain the already registered extra-CI toolchain declaration gap. None adds or removes a package identity, BUILD/build-tool marker, or Lua tranche path. Focused package, generator, full-vector, Go oracle, build-plan, lint, and syntax validation was rerun successfully after the rebase.",
       "final_review_revision": "f459a4cf54cbddac899a1172a22180d91a4acadd",
       "final_review_notes": "Independent split security review passed the pure Lua validator, generated Unicode substrate, package tests, license, and metadata without a finding. Generator and CI review found executable/environment, unbounded-output, timeout-tree, early-root-exit descendant, cleanup ownership, and suspended Job Object setup-failure risks in successive rounds. The branch now requires an exact Lua 5.4.7 path and banner, invokes `-E` in a minimal environment, drains both output streams while retaining 8 KiB, contains descendants in a suspended-before-assignment Windows kill-on-close Job Object or POSIX process group, cleans after success and timeout, transfers Job Object ownership before cleanup, and reaps an unassigned suspended root if setup fails. Real timeout, early-root-exit, cleanup-error, and job-setup regressions pass. The final full reviews returned SECURITY REVIEW PASSED with no actionable issue; CI remains read-only with checkout credentials disabled and hash-pinned Unicode and Lua sources.",
+      "publication_notes": "Opened ready-for-review PR #12843 from clean validated head 7c4c941c330a1bc38f807b735094abd1f9ac06cd after a normal first push. Immediately before publication, exact origin/main remained 4faca735e6851d24bb78f96817292dbb354c0748, the target remote branch and prior PR were absent, and all eight other live open PRs had zero exact overlap across the 12 changed paths. GitHub reports the PR non-draft, mergeable, and currently blocked only by queued or in-progress required checks, including the new Unicode 17 generated Lua conformance job; auto-merge remains disabled until every required check is terminal and acceptable and no merge conflict exists.",
       "notes": "Consume the closed process-free tracked-artifact snapshot and diagnostics in the Lua engine without adding Git, filesystem, or process authority."
     },
     {
