@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-346-PLACE",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five buildings a town has -- a school, a church, a market, an office and a station -- and ask where each one is.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C346-escuela",
+    "ES-C346-iglesia",
+    "ES-C346-mercado",
+    "ES-C346-oficina",
+    "ES-C346-estacion"
+  ]
+}

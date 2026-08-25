@@ -79,7 +79,11 @@ describe("the grouped split of the real core/book-generation.json", () => {
     for (const key of BOOK_GENERATION_GROUPED_KEYS) {
       expect(after[key], key).toHaveLength((document[key] as unknown[]).length);
     }
-    expect(after.targets).toHaveLength(1007);
+    // A FLOOR, not an equality. `targets` grows with every tranche — it was 949
+    // when HL21 was written, 1,007 when this projection was built, and 1,014 by
+    // the time the suite next ran. Pinning the exact number would make every
+    // content PR edit this line, which teaches people to edit it.
+    expect(after.targets.length).toBeGreaterThanOrEqual(1007);
   });
 
   it("reproduces the canonical serialization byte for byte", () => {
@@ -116,6 +120,51 @@ describe("the spec's recorded blocker has resolved itself", () => {
       // and the runs are in alphabetical order, which is sorted-filename order
       expect(seen, `${key} runs are not alphabetical`).toEqual([...seen].sort(codeUnit));
     }
+  });
+});
+
+describe("the grouped merge validates its _meta.json like its siblings do", () => {
+  // Three guards `mergeSectionedShards` and `mergeMetaAndList` had and this one
+  // did not. Without the shape check a `_meta.json` holding `["a","b"]` spreads
+  // to `{0:"a",1:"b"}` and those fabricated numeric keys flow into the rebuilt
+  // document instead of raising anything.
+  const keys = ["targets"];
+  const shard = { name: "spanish.json", path: "x", value: { targets: [] } };
+
+  it.each([
+    ["an array", ["a", "b"]],
+    ["a string", "abc"],
+    ["null", null],
+  ])("refuses a _meta.json that is %s", (_label, value) => {
+    expect(() =>
+      mergeGroupedShards([{ name: "_meta.json", path: "m", value }, shard], keys),
+    ).toThrow(/must be a JSON object/);
+  });
+
+  it("refuses a _meta.json that carries a grouped array", () => {
+    // Otherwise merge order silently decides whether the meta copy or the
+    // shards win, and one of those is always a stale duplicate.
+    expect(() =>
+      mergeGroupedShards(
+        [{ name: "_meta.json", path: "m", value: { version: 1, targets: [] } }, shard],
+        keys,
+      ),
+    ).toThrow(/must not carry 'targets'/);
+  });
+
+  it("refuses a shard in a subdirectory, which would duplicate a language", () => {
+    // A grouped ledger is flat. `book-generation.d/sub/spanish.json` would
+    // otherwise be consumed as a second Spanish slice, silently duplicating
+    // every one of that language's entries into all six arrays.
+    expect(() =>
+      mergeGroupedShards(
+        [
+          { name: "_meta.json", path: "m", value: { version: 1 } },
+          { name: "sub/spanish.json", path: "x", value: { targets: [] } },
+        ],
+        keys,
+      ),
+    ).toThrow(/no subdirectories/);
   });
 });
 

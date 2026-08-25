@@ -9,7 +9,9 @@
     "ES-PATH-015-REVIEW-HAY",
     "ES-PATH-015-SYNTH-HAY",
     "ES-PATH-340-01",
-    "ES-PATH-341-01"
+    "ES-PATH-341-01",
+    "ES-PATH-346-01",
+    "ES-PATH-347-01"
   ],
   "omits": [],
   "relocates": {}

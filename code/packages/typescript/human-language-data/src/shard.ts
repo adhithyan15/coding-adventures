@@ -561,14 +561,47 @@ export function mergeGroupedShards(
         `the ledger's document-level fields have no home`,
     );
   }
+  // The same two guards `mergeSectionedShards` and `mergeMetaAndList` apply,
+  // which this function was missing. Without the shape check, a `_meta.json`
+  // holding `["a","b"]` spreads to `{0:"a",1:"b"}` and those fabricated numeric
+  // keys flow into the rebuilt document instead of raising anything; a bare
+  // `"abc"` does the same one character at a time.
+  if (
+    typeof metaShard.value !== "object" ||
+    metaShard.value === null ||
+    Array.isArray(metaShard.value)
+  ) {
+    throw new Error(`shard '${META_SHARD}' in '${metaShard.path}': must be a JSON object`);
+  }
   const meta = { ...(metaShard.value as Record<string, unknown>) };
   const recorded = meta[KEY_ORDER_FIELD];
   delete meta[KEY_ORDER_FIELD];
+
+  for (const key of groupedKeys) {
+    if (Object.hasOwn(meta, key)) {
+      // Otherwise the merge order silently decides whether the meta copy or the
+      // shards win, and one of those is always a stale duplicate of the other.
+      throw new Error(
+        `shard '${META_SHARD}' in '${metaShard.path}': must not carry '${key}' — ` +
+          `that array lives in the sibling shards`,
+      );
+    }
+  }
 
   const assembled = new Map<string, unknown[]>();
   for (const key of groupedKeys) assembled.set(key, []);
   for (const shard of shards) {
     if (shard.name === META_SHARD) continue;
+    // A grouped ledger is FLAT: one `<group>.json` per group, no
+    // subdirectories. Without this, `book-generation.d/sub/spanish.json` would
+    // be consumed as a second Spanish slice and silently duplicate every one of
+    // that language's entries into all six arrays.
+    if (shard.name.includes("/")) {
+      throw new Error(
+        `shard '${shard.name}' in '${metaShard.path}': a grouped ledger holds one ` +
+          `<group>.json per group and no subdirectories`,
+      );
+    }
     const slice = shard.value as Record<string, unknown>;
     if (typeof slice !== "object" || slice === null || Array.isArray(slice)) {
       throw new Error(`shard '${shard.name}': a language shard must be a JSON object`);
@@ -590,9 +623,7 @@ export function mergeGroupedShards(
     }
   }
 
-  const order = Array.isArray(recorded)
-    ? (recorded as string[])
-    : [...Object.keys(meta), ...groupedKeys];
+  const order = keyOrderFrom(recorded, meta, groupedKeys, metaShard.path);
   const document: Record<string, unknown> = {};
   const emitted = new Set<string>();
   for (const key of order) {
@@ -618,6 +649,63 @@ export function mergeGroupedShards(
     }
   }
   return document;
+}
+
+/**
+ * The key order to emit, from `_keys` when present — as a PERMUTATION, not a
+ * subset.
+ *
+ * `_keys` is attacker-controlled JSON that decides which properties the rebuilt
+ * document has, and the rebuild emits only the keys it names. A `_meta.json`
+ * carrying `"_keys": ["path","spine","extensions"]` would therefore silently
+ * drop `version`, `language` and `conceptAliases` from the document every gate
+ * reads.
+ *
+ * Today that is caught downstream by luck rather than by design: every plan is
+ * `monolith: "generated"`, so `--check` byte-compares the rebuild against a
+ * committed file and a truncation shows up as a diff. A `"removed"` ledger has
+ * no such file — `--check` only verifies that the expected shards exist — so
+ * the truncation would be invisible. `MonolithDisposition` documents `"removed"`
+ * as an intended end state, which makes this a trap laid for the next migration
+ * rather than a hypothetical.
+ *
+ * So `_keys` must name every key exactly once and invent none.
+ */
+function keyOrderFrom(
+  recorded: unknown,
+  meta: Record<string, unknown>,
+  shardedKeys: readonly string[],
+  where: string,
+): string[] {
+  const natural = [...Object.keys(meta), ...shardedKeys];
+  if (!Array.isArray(recorded)) return natural;
+  const order = recorded as unknown[];
+  const seen = new Set<string>();
+  for (const key of order) {
+    assertSafeKey(key, `${KEY_ORDER_FIELD} in '${where}'`);
+    if (seen.has(key as string)) {
+      throw new Error(
+        `shard '${META_SHARD}' in '${where}': ${KEY_ORDER_FIELD} lists ` +
+          `'${key as string}' more than once`,
+      );
+    }
+    seen.add(key as string);
+  }
+  for (const key of natural) {
+    if (!seen.has(key)) {
+      throw new Error(
+        `shard '${META_SHARD}' in '${where}': ${KEY_ORDER_FIELD} omits '${key}', ` +
+          `which would drop it from the rebuilt ledger`,
+      );
+    }
+  }
+  if (seen.size !== natural.length) {
+    throw new Error(
+      `shard '${META_SHARD}' in '${where}': ${KEY_ORDER_FIELD} names ` +
+        `${seen.size} keys but the ledger has ${natural.length}`,
+    );
+  }
+  return order as string[];
 }
 
 /** `0010-SPINE-MEET-GREET.json` -> `SPINE-MEET-GREET`; `0007.json` -> undefined. */
@@ -711,9 +799,42 @@ export function mergeSectionedShards(
     }
   }
 
-  const order = Array.isArray(recorded)
-    ? (recorded as string[])
-    : [...Object.keys(meta), ...sections.map((section) => section.key)];
+  // Every shard must have been claimed by exactly one section.
+  //
+  // Sections take their shards by directory prefix, so a file that matches no
+  // prefix — `curriculum.d/stray.json`, or anything under a directory no
+  // section names — is read, parsed, and then silently dropped. That silence is
+  // what let a poisoned shard reach the loader while `--check` stayed green:
+  // the rebuild simply omitted it, so the generated monolith still matched the
+  // committed one.
+  //
+  // `mergeGroupedShards` already refuses an unknown KEY inside a shard for this
+  // exact reason. The same reasoning applies to an unknown shard FILE.
+  const claimed = new Set<string>();
+  for (const section of sections) {
+    const prefix = section.dir === undefined ? "" : `${section.dir}/`;
+    for (const shard of shards) {
+      if (shard.name === META_SHARD) continue;
+      if (section.dir === undefined ? !shard.name.includes("/") : shard.name.startsWith(prefix)) {
+        claimed.add(shard.name);
+      }
+    }
+  }
+  for (const shard of shards) {
+    if (shard.name === META_SHARD || claimed.has(shard.name)) continue;
+    throw new Error(
+      `shard '${shard.name}' in '${metaShard.path}': belongs to no section of this ` +
+        `ledger (${sections.map((s) => s.dir ?? s.key).join(", ")}) — it would be ` +
+        `read and then silently discarded`,
+    );
+  }
+
+  const order = keyOrderFrom(
+    recorded,
+    meta,
+    sections.map((section) => section.key),
+    metaShard.path,
+  );
 
   const document: Record<string, unknown> = {};
   const emitted = new Set<string>();

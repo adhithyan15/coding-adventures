@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-350-01",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ES-C350-propio",
+    "ES-C350-ajeno",
+    "ES-C350-igual",
+    "ES-C350-distinto",
+    "ES-C350-tipo"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-350-REF"
+  ],
+  "after": []
+}

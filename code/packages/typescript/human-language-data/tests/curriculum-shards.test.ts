@@ -307,6 +307,72 @@ describe("_keys is attacker-controlled and is treated that way", () => {
   });
 });
 
+describe("a shard that belongs to no section is refused, not discarded", () => {
+  // The silence that let a poisoned shard reach the loader while `--check`
+  // stayed green: sections take their shards by directory prefix, so a file
+  // matching no prefix was read, parsed, and then dropped. The rebuild simply
+  // omitted it, so the generated monolith still matched the committed one and
+  // nothing anywhere said a word.
+  const meta = { name: "_meta.json", path: "_meta.json", value: { version: 1 } };
+  const sections = [{ key: "path", dir: "path" }];
+
+  it("refuses a stray shard at the top level", () => {
+    expect(() =>
+      mergeSectionedShards([meta, { name: "0010-STRAY.json", path: "x", value: {} }], sections),
+    ).toThrow(/belongs to no section/);
+  });
+
+  it("refuses a shard under a directory no section names", () => {
+    expect(() =>
+      mergeSectionedShards(
+        [meta, { name: "unknown/0010-X.json", path: "x", value: {} }],
+        sections,
+      ),
+    ).toThrow(/belongs to no section/);
+  });
+});
+
+describe("_keys must be a permutation, not an arbitrary subset", () => {
+  // The rebuild emits only the keys `_keys` names, so a short list silently
+  // truncates the document. `--check` catches that today only by luck — every
+  // plan is `monolith: "generated"`, so the rebuild is byte-compared against a
+  // committed file. A `"removed"` ledger has no such file, which makes this a
+  // trap laid for the next migration rather than a hypothetical.
+  const shard = { name: "0010-ALPHA.json", path: "x", value: { id: "ALPHA" } };
+
+  it("refuses _keys that omits a document key", () => {
+    expect(() =>
+      mergeSectionedShards(
+        [
+          {
+            name: "_meta.json",
+            path: "m",
+            value: { version: 1, language: "toy", _keys: ["version", "nodes"] },
+          },
+          shard,
+        ],
+        [{ key: "nodes" }],
+      ),
+    ).toThrow(/omits 'language'/);
+  });
+
+  it("accepts _keys that names every key exactly once", () => {
+    const merged = mergeSectionedShards(
+      [
+        {
+          name: "_meta.json",
+          path: "m",
+          value: { version: 1, language: "toy", _keys: ["version", "nodes", "language"] },
+        },
+        shard,
+      ],
+      [{ key: "nodes" }],
+    );
+    // and the recorded order is the emitted order
+    expect(Object.keys(merged)).toEqual(["version", "nodes", "language"]);
+  });
+});
+
 describe("the loader sees the sharded curricula", () => {
   const loaded = loadLanguageCurricula(root);
 

@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-347-01",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "lessons": [
+    "ES-C347-norte",
+    "ES-C347-sur",
+    "ES-C347-oeste",
+    "ES-C347-centro",
+    "ES-C347-alrededor"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-347-PLACE"
+  ],
+  "after": []
+}

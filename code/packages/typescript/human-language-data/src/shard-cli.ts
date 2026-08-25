@@ -264,28 +264,6 @@ function sectionShardPath(section: ShardSection, name: string): string {
   return section.dir === undefined ? name : `${section.dir}/${name}`;
 }
 
-/**
- * The id a shard filename encodes, or `undefined` if it encodes none.
- *
- * `0010-SPINE-MEET-GREET.json` -> `SPINE-MEET-GREET`; `0007.json` -> undefined.
- *
- * This is the ONLY way back to an `"object"` section's key, because an object's
- * key lives in the parent and not in the value — `curriculum.json`'s `spine` is
- * `{ "SPINE-MEET-GREET": { segments, omits, relocates } }`, and the node id
- * appears nowhere inside the braces. Keeping the shard file equal to the node
- * body is worth this small parse: it is what an author opens and edits, and
- * wrapping it as `{id, value}` to save four lines here would put a layer of
- * bookkeeping between them and the thing they came to change.
- *
- * The result is re-validated against `SAFE_ID` by the caller rather than
- * trusted, because by then it has been through a filename on disk that a pull
- * request could have chosen.
- */
-function idFromShardName(name: string): string | undefined {
-  const base = name.slice(name.lastIndexOf("/") + 1).replace(/\.json$/, "");
-  const match = /^\d+-(.+)$/.exec(base);
-  return match?.[1];
-}
 
 /**
  * The tracks whose `chapters.json` has been sharded.
