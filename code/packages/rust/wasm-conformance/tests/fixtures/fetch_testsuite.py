@@ -493,6 +493,14 @@ TESTSUITE_FILES = [
     # mirror of PR29's simd_f32x4_arith.wast, at f64x2's 2-lane width.
     # See the NOTICE file for the real vendored/pass counts.
     "simd_f64x2_arith.wast",
+    # SIMD widen PR32 (task #211-213): simd_f64x2_cmp.wast -- vendors the
+    # dedicated upstream file for f64x2.eq/ne/lt/gt/le/ge (0x47-0x4C),
+    # this PR's 6 new opcodes, closing the f64x2 comparison family gap --
+    # a direct structural mirror of PR30's simd_f32x4_cmp.wast, at
+    # f64x2's 2-lane width. The single BIGGEST directive-count win in
+    # this campaign so far -- larger than PR30's simd_f32x4_cmp.wast --
+    # see the NOTICE file for the real vendored/pass counts.
+    "simd_f64x2_cmp.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under

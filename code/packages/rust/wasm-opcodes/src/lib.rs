@@ -1693,6 +1693,52 @@ pub enum SimdOpKind {
     /// exactly, so there is NO trap and NO panic on a zero divisor, same
     /// discipline as [`Self::DivF32x4`].
     DivF64x2,
+    /// `f64x2.eq` -- pop two `v128`s, compare each of the 2 `f64` lane
+    /// pairs with ordinary IEEE-754 equality, push one `v128` boolean
+    /// mask (all-1s per lane if equal, all-0s otherwise). Direct 2-lane
+    /// mirror of [`Self::EqF32x4`] -- same BINARY shape, same mask
+    /// convention, same "native operator is already correct" discipline
+    /// (Rust's `f64` `==` already treats `+0.0 == -0.0` as true and any
+    /// `NaN` comparison as false). This family's NaN-is-false rule holds
+    /// for every member EXCEPT `ne` (see [`Self::NeF64x2`]). Native
+    /// Rust `f64` `==` already implements this correctly.
+    EqF64x2,
+    /// `f64x2.ne` -- pop two `v128`s, compare each of the 2 `f64` lane
+    /// pairs with ordinary IEEE-754 inequality, push one `v128` boolean
+    /// mask. Direct 2-lane mirror of [`Self::NeF32x4`] -- BINARY,
+    /// same shape as [`Self::EqF64x2`]. The one family member where a NaN
+    /// operand makes the result TRUE (including a lane compared with
+    /// itself), per IEEE-754's unordered-comparison rule. Native Rust
+    /// `f64` `!=` already implements this correctly.
+    NeF64x2,
+    /// `f64x2.lt` -- pop two `v128`s, compare each of the 2 `f64` lane
+    /// pairs with ordinary IEEE-754 ordered less-than, push one `v128`
+    /// boolean mask. Direct 2-lane mirror of [`Self::LtF32x4`].
+    /// BINARY, same shape as [`Self::EqF64x2`]. Any NaN operand makes the
+    /// result false. Native Rust `f64` `<` already implements this
+    /// correctly.
+    LtF64x2,
+    /// `f64x2.gt` -- pop two `v128`s, compare each of the 2 `f64` lane
+    /// pairs with ordinary IEEE-754 ordered greater-than, push one `v128`
+    /// boolean mask. Direct 2-lane mirror of [`Self::GtF32x4`].
+    /// BINARY, same shape as [`Self::EqF64x2`], same NaN-is-false
+    /// discipline as [`Self::LtF64x2`]. Native Rust `f64` `>` already
+    /// implements this correctly.
+    GtF64x2,
+    /// `f64x2.le` -- pop two `v128`s, compare each of the 2 `f64` lane
+    /// pairs with ordinary IEEE-754 ordered less-than-or-equal, push one
+    /// `v128` boolean mask. Direct 2-lane mirror of [`Self::LeF32x4`].
+    /// BINARY, same shape as [`Self::EqF64x2`], same
+    /// NaN-is-false discipline as [`Self::LtF64x2`]. Native Rust `f64`
+    /// `<=` already implements this correctly.
+    LeF64x2,
+    /// `f64x2.ge` -- pop two `v128`s, compare each of the 2 `f64` lane
+    /// pairs with ordinary IEEE-754 ordered greater-than-or-equal, push
+    /// one `v128` boolean mask. Direct 2-lane mirror of
+    /// [`Self::GeF32x4`]. BINARY, same shape as [`Self::EqF64x2`], same
+    /// NaN-is-false discipline as [`Self::LtF64x2`]. Native Rust `f64`
+    /// `>=` already implements this correctly.
+    GeF64x2,
 }
 
 /// One entry in the SIMD opcode table: everything a consumer needs to
@@ -2150,6 +2196,30 @@ pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "f64x2.sub", sub_opcode: 0xF1, kind: SimdOpKind::SubF64x2 },
     SimdOpInfo { name: "f64x2.mul", sub_opcode: 0xF2, kind: SimdOpKind::MulF64x2 },
     SimdOpInfo { name: "f64x2.div", sub_opcode: 0xF3, kind: SimdOpKind::DivF64x2 },
+    // SIMD widen PR32 (task #211-213): f64x2.eq (0x47), f64x2.ne (0x48),
+    // f64x2.lt (0x49), f64x2.gt (0x4A), f64x2.le (0x4B), f64x2.ge
+    // (0x4C) -- the f64x2 comparison family, a direct structural mirror
+    // of PR30's f32x4 comparison family (0x41-0x46), just at f64x2's
+    // 2-lane width. Each sub-opcode byte fetched live from
+    // `BinarySIMD.md` and cross-checked against every existing
+    // `SIMD_OPS` entry: `0x41`-`0x46` are the already-implemented
+    // `f32x4` comparison family (PR30), `0x47`-`0x4C` sit immediately
+    // past it with no overlap (confirmed distinct from the unrelated
+    // `ATOMIC_OPS` table's own `0x47`-`0x4C` cmpxchg/xchg entries, which
+    // live behind a completely different `0xFE` prefix, not `0xFD`), and
+    // `v128.not` (`0x4D`, just above) confirms `0x47`-`0x4C` are
+    // genuinely free. Like PR30, all six values are `< 0x80`
+    // (single-byte LEB128, no continuation byte). This PR also vendors
+    // `simd_f64x2_cmp.wast`, the single biggest directive-count win in
+    // this campaign so far -- see
+    // `code/packages/rust/wasm-conformance/tests/fixtures/
+    // fetch_testsuite.py`.
+    SimdOpInfo { name: "f64x2.eq", sub_opcode: 0x47, kind: SimdOpKind::EqF64x2 },
+    SimdOpInfo { name: "f64x2.ne", sub_opcode: 0x48, kind: SimdOpKind::NeF64x2 },
+    SimdOpInfo { name: "f64x2.lt", sub_opcode: 0x49, kind: SimdOpKind::LtF64x2 },
+    SimdOpInfo { name: "f64x2.gt", sub_opcode: 0x4A, kind: SimdOpKind::GtF64x2 },
+    SimdOpInfo { name: "f64x2.le", sub_opcode: 0x4B, kind: SimdOpKind::LeF64x2 },
+    SimdOpInfo { name: "f64x2.ge", sub_opcode: 0x4C, kind: SimdOpKind::GeF64x2 },
 ];
 
 /// Look up a SIMD opcode by its LEB128-decoded sub-opcode value (the
@@ -2568,8 +2638,8 @@ mod tests {
     // ── SIMD (0xFD prefix, v128 first slice) ─────────────────────────────────
 
     #[test]
-    fn simd_ops_table_has_the_expected_171_entries_and_no_duplicates() {
-        assert_eq!(SIMD_OPS.len(), 171);
+    fn simd_ops_table_has_the_expected_177_entries_and_no_duplicates() {
+        assert_eq!(SIMD_OPS.len(), 177);
 
         let mut seen_sub_opcodes = std::collections::HashSet::new();
         let mut seen_names = std::collections::HashSet::new();
@@ -3342,5 +3412,36 @@ mod tests {
         // binary encoding), not a placeholder for a future op this PR
         // is skipping -- same shape as f32x4's own 0xE2 gap.
         assert!(get_simd_op(0xEE).is_none(), "0xEE is an unassigned gap between f64x2.neg and f64x2.sqrt");
+    }
+
+    #[test]
+    fn simd_f64x2_cmp_family_has_the_real_verified_sub_opcode_values() {
+        // SIMD widen PR32 (task #211-213): f64x2.eq (0x47), f64x2.ne
+        // (0x48), f64x2.lt (0x49), f64x2.gt (0x4A), f64x2.le (0x4B),
+        // f64x2.ge (0x4C) -- fetched live from BinarySIMD.md, a direct
+        // structural mirror of PR30's f32x4 comparison family
+        // (0x41-0x46), just at f64x2's 2-lane width.
+        for (name, sub_opcode, kind) in [
+            ("f64x2.eq", 0x47, SimdOpKind::EqF64x2),
+            ("f64x2.ne", 0x48, SimdOpKind::NeF64x2),
+            ("f64x2.lt", 0x49, SimdOpKind::LtF64x2),
+            ("f64x2.gt", 0x4A, SimdOpKind::GtF64x2),
+            ("f64x2.le", 0x4B, SimdOpKind::LeF64x2),
+            ("f64x2.ge", 0x4C, SimdOpKind::GeF64x2),
+        ] {
+            let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
+            assert_eq!(op.name, name);
+            assert_eq!(op.kind, kind);
+            assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
+        }
+        // 0x41-0x46 (the already-implemented f32x4 comparison family,
+        // PR30) precede this run with no overlap, and v128.not (0x4D)
+        // sits immediately past it, confirming 0x47-0x4C are genuinely
+        // free.
+        for f32x4_sub_opcode in 0x41u32..=0x46u32 {
+            let op = get_simd_op(f32x4_sub_opcode).unwrap();
+            assert!(op.name.starts_with("f32x4."), "0x{f32x4_sub_opcode:02x} should still be an f32x4 op, got {}", op.name);
+        }
+        assert_eq!(get_simd_op(0x4D).map(|o| o.name), Some("v128.not"));
     }
 }

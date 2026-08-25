@@ -2,6 +2,30 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.35] - 2026-08-24 - SIMD widen PR32: f64x2 eq/ne/lt/gt/le/ge (task #211-213)
+
+### Added
+
+- 6 new `SIMD_OPS` entries: `f64x2.eq` (`0x47`), `f64x2.ne` (`0x48`),
+  `f64x2.lt` (`0x49`), `f64x2.gt` (`0x4A`), `f64x2.le` (`0x4B`),
+  `f64x2.ge` (`0x4C`) -- the `f64x2` comparison family, a direct
+  structural mirror of PR30's `f32x4` comparison family (`0x41`-`0x46`),
+  at `f64x2`'s 2-lane width. 177 SIMD opcodes total, up from 171. Each
+  sub-opcode byte fetched live from the SIMD proposal's own
+  `BinarySIMD.md` and cross-checked against every existing `SIMD_OPS`
+  entry: `0x41`-`0x46` (the already-implemented `f32x4` comparison
+  family) precede this run with no overlap, `v128.not` (`0x4D`, just
+  above) confirms `0x47`-`0x4C` are genuinely free (also confirmed
+  distinct from the unrelated `ATOMIC_OPS` table's own `0x47`-`0x4C`
+  cmpxchg/xchg entries, behind a completely different `0xFE` prefix, not
+  `0xFD`).
+- 6 new `SimdOpKind` variants: `EqF64x2`, `NeF64x2`, `LtF64x2`,
+  `GtF64x2`, `LeF64x2`, `GeF64x2`.
+- New test: `simd_f64x2_cmp_family_has_the_real_verified_sub_opcode_values`
+  (all six sub-opcode values, plus confirming `0x41`-`0x46` still resolve
+  to `f32x4` ops and `0x4D` is still `v128.not`). Table-size test updated
+  171 -> 177.
+
 ## [0.2.34] - 2026-08-24 - SIMD widen PR31: f64x2 neg/sqrt/add/sub/mul/div (task #208-210)
 
 ### Added

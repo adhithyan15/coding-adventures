@@ -2,6 +2,23 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.44] - 2026-08-24 (task #211-213 — SIMD widen PR32: f64x2 eq/ne/lt/gt/le/ge type rules)
+
+### Added
+
+- `SimdOpKind::EqF64x2`/`NeF64x2`/`LtF64x2`/`GtF64x2`/`LeF64x2`/`GeF64x2`
+  join the existing BINARY `v128,v128->v128` comparison type-check arm
+  alongside `EqF32x4`/`NeF32x4`/`LtF32x4`/`GtF32x4`/`LeF32x4`/`GeF32x4`
+  -- a direct 2-lane mirror, same pop-two-push-one `V128` shape (the
+  SIMD comparison convention: the RESULT is still `v128`, a per-lane
+  boolean mask, never a plain `i32`). The IEEE-754 comparison and
+  NaN-handling semantics are entirely a runtime concern, invisible
+  here.
+- New tests: `valid_f64x2_cmp_family`,
+  `invalid_f64x2_eq_given_an_i32_operand_instead_of_v128`,
+  `invalid_f64x2_lt_given_no_operands_at_all`,
+  `invalid_f64x2_ge_given_an_i32_result_type_instead_of_v128`.
+
 ## [0.2.43] - 2026-08-24 (task #208-210 — SIMD widen PR31: f64x2 neg/sqrt/add/sub/mul/div type rules)
 
 ### Added

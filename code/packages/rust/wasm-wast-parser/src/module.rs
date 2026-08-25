@@ -1916,7 +1916,13 @@ fn encode_stream_instr(
             | wasm_opcodes::SimdOpKind::AddF64x2
             | wasm_opcodes::SimdOpKind::SubF64x2
             | wasm_opcodes::SimdOpKind::MulF64x2
-            | wasm_opcodes::SimdOpKind::DivF64x2 => {
+            | wasm_opcodes::SimdOpKind::DivF64x2
+            | wasm_opcodes::SimdOpKind::EqF64x2
+            | wasm_opcodes::SimdOpKind::NeF64x2
+            | wasm_opcodes::SimdOpKind::LtF64x2
+            | wasm_opcodes::SimdOpKind::GtF64x2
+            | wasm_opcodes::SimdOpKind::LeF64x2
+            | wasm_opcodes::SimdOpKind::GeF64x2 => {
                 // All of these take NO immediate beyond the opcode byte
                 // itself -- their operands are ordinary stack values,
                 // pushed by whatever preceding instruction(s) already ran
@@ -1975,6 +1981,10 @@ fn encode_stream_instr(
                 // structural mirror of PR29's f32x4 arithmetic family --
                 // 2 UNARY (`neg`/`sqrt`) and 4 BINARY (`add`/`sub`/`mul`/
                 // `div`), all still no-immediate at the encoding level.
+                // `EqF64x2`/`NeF64x2`/`LtF64x2`/`GtF64x2`/`LeF64x2`/
+                // `GeF64x2` (SIMD widen PR32) join too, a direct
+                // structural mirror of PR30's f32x4 comparison family --
+                // all 6 BINARY, same no-immediate encoding shape.
                 out.push(0xFD);
                 out.extend(wasm_leb128::encode_unsigned(simd_op.sub_opcode as u64));
                 return Ok(0);
@@ -2732,7 +2742,13 @@ fn encode_flat_instr(
             | wasm_opcodes::SimdOpKind::AddF64x2
             | wasm_opcodes::SimdOpKind::SubF64x2
             | wasm_opcodes::SimdOpKind::MulF64x2
-            | wasm_opcodes::SimdOpKind::DivF64x2 => {
+            | wasm_opcodes::SimdOpKind::DivF64x2
+            | wasm_opcodes::SimdOpKind::EqF64x2
+            | wasm_opcodes::SimdOpKind::NeF64x2
+            | wasm_opcodes::SimdOpKind::LtF64x2
+            | wasm_opcodes::SimdOpKind::GtF64x2
+            | wasm_opcodes::SimdOpKind::LeF64x2
+            | wasm_opcodes::SimdOpKind::GeF64x2 => {
                 // `Swizzle` (i8x16.swizzle, SIMD widen PR18) joins this
                 // arm too: a plain BINARY v128,v128->v128 op with no
                 // lane-index immediate, same shape as `AddI8x16` -- see
@@ -2763,6 +2779,9 @@ fn encode_flat_instr(
                 // `MulF64x2`/`DivF64x2` (SIMD widen PR31) join too, same
                 // reasoning -- see the matching comment in
                 // `encode_stream_instr` above.
+                // `EqF64x2`/`NeF64x2`/`LtF64x2`/`GtF64x2`/`LeF64x2`/
+                // `GeF64x2` (SIMD widen PR32) join too, same reasoning --
+                // see the matching comment in `encode_stream_instr` above.
                 encode_instr_list(args, icx, out)?;
                 out.push(0xFD);
                 out.extend(wasm_leb128::encode_unsigned(simd_op.sub_opcode as u64));
@@ -5858,6 +5877,51 @@ mod tests {
             assert!(code.windows(2).any(|w| w == [0xFD, 0x44]), "missing f32x4.gt: {code:?}");
             assert!(code.windows(2).any(|w| w == [0xFD, 0x45]), "missing f32x4.le: {code:?}");
             assert!(code.windows(2).any(|w| w == [0xFD, 0x46]), "missing f32x4.ge: {code:?}");
+        }
+    }
+
+    #[test]
+    fn f64x2_cmp_family_encodes_the_real_single_byte_leb128_sub_opcodes() {
+        // SIMD widen PR32 (task #211-213): f64x2.eq (0x47), f64x2.ne
+        // (0x48), f64x2.lt (0x49), f64x2.gt (0x4A), f64x2.le (0x4B),
+        // f64x2.ge (0x4C) -- a direct structural mirror of PR30's f32x4
+        // comparison family above, at f64x2's 2-lane width. Like that
+        // family, all six sub-opcode values are < 0x80, so each encodes
+        // as a SINGLE byte (`[0xFD, byte]`, no continuation byte), unlike
+        // every f64x2 op added since PR31 (all >= 0x80, needing a real
+        // 2-byte LEB128 sequence). All six are BINARY (two v128
+        // operands) -- same "no immediate beyond the opcode byte itself"
+        // shape as every other comparison family in this table.
+        let folded = parse_module(
+            r#"(module (func (param v128 v128) (result v128)
+                 (f64x2.ge
+                   (f64x2.le
+                     (f64x2.gt
+                       (f64x2.lt
+                         (f64x2.ne (f64x2.eq (local.get 0) (local.get 1)) (local.get 1))
+                         (local.get 1))
+                       (local.get 1))
+                     (local.get 1))
+                   (local.get 1))))"#,
+        )
+        .unwrap();
+        let flat = parse_module(
+            r#"(module (func (param v128 v128) (result v128)
+                 local.get 0 local.get 1 f64x2.eq
+                 local.get 1 f64x2.ne
+                 local.get 1 f64x2.lt
+                 local.get 1 f64x2.gt
+                 local.get 1 f64x2.le
+                 local.get 1 f64x2.ge))"#,
+        )
+        .unwrap();
+        for code in [code_of(&folded, 0), code_of(&flat, 0)] {
+            assert!(code.windows(2).any(|w| w == [0xFD, 0x47]), "missing f64x2.eq: {code:?}");
+            assert!(code.windows(2).any(|w| w == [0xFD, 0x48]), "missing f64x2.ne: {code:?}");
+            assert!(code.windows(2).any(|w| w == [0xFD, 0x49]), "missing f64x2.lt: {code:?}");
+            assert!(code.windows(2).any(|w| w == [0xFD, 0x4A]), "missing f64x2.gt: {code:?}");
+            assert!(code.windows(2).any(|w| w == [0xFD, 0x4B]), "missing f64x2.le: {code:?}");
+            assert!(code.windows(2).any(|w| w == [0xFD, 0x4C]), "missing f64x2.ge: {code:?}");
         }
     }
 

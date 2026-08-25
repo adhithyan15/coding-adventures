@@ -2,6 +2,26 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.42] - 2026-08-24 (task #211-213 — SIMD widen PR32: f64x2 eq/ne/lt/gt/le/ge)
+
+### Added
+
+- `register_simd` gains one new dispatch arm covering `EqF64x2`/
+  `NeF64x2`/`LtF64x2`/`GtF64x2`/`LeF64x2`/`GeF64x2` (`match op.kind`
+  inside): BINARY, pops two `v128`s, compares each of the 2 `f64` lane
+  pairs with ordinary IEEE-754 comparison, pushes one `v128` boolean
+  mask (all-1s/all-0s per lane) -- a direct 2-lane mirror of PR30's
+  `f32x4` comparison family.
+- Rust's native `f64` `==`/`!=`/`<`/`>`/`<=`/`>=` operators are already
+  IEEE-754 compliant, so no bespoke NaN-detection logic is needed:
+  `NaN == x` and `NaN <op> x` for any ordered `<op>` are already false,
+  `NaN != x` (including `x == NaN`) is already true, and `+0.0 == -0.0`.
+- New tests: `f64x2_cmp_family_uses_the_mask_convention_on_ordinary_values`,
+  `f64x2_ordered_cmp_family_is_false_when_either_operand_is_nan`,
+  `f64x2_ne_is_true_when_either_operand_is_nan_including_nan_vs_itself`,
+  `f64x2_eq_ne_treat_positive_and_negative_zero_as_equal`,
+  `f64x2_ordered_cmp_family_orders_negative_and_positive_values_correctly`.
+
 ## [0.9.41] - 2026-08-24 (task #208-210 — SIMD widen PR31: f64x2 neg/sqrt/add/sub/mul/div)
 
 ### Added

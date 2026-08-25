@@ -1453,6 +1453,49 @@ fn invalid_f64x2_div_given_no_operands_at_all() {
 }
 
 #[test]
+fn valid_f64x2_cmp_family() {
+    // SIMD widen PR32 (task #211-213): f64x2.eq/ne/lt/gt/le/ge -- a
+    // direct structural mirror of PR30's f32x4 comparison family, at
+    // f64x2's 2-lane width. Same "pop two V128s, push one V128 boolean
+    // mask" shape as `f64x2.add`/`mul` above. Their IEEE-754 comparison
+    // and NaN-handling runtime semantics are entirely invisible to the
+    // type checker, same as every other f64x2 op's runtime subtlety.
+    assert_valid(
+        r#"(module
+             (func (param v128 v128) (result v128) (f64x2.eq (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (f64x2.ne (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (f64x2.lt (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (f64x2.gt (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (f64x2.le (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (f64x2.ge (local.get 0) (local.get 1))))"#,
+    );
+}
+
+#[test]
+fn invalid_f64x2_eq_given_an_i32_operand_instead_of_v128() {
+    // Confirms the type checker actually enforces V128 in both operand
+    // slots, not just accepting whatever's on the stack -- one operand
+    // here is a plain i32, so the pop (expecting V128) must reject it.
+    assert_invalid("(module (func (param v128 i32) (result v128) (f64x2.eq (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn invalid_f64x2_lt_given_no_operands_at_all() {
+    // mirrors `invalid_f32x4_lt_given_no_operands_at_all` above for the
+    // f64x2 sibling.
+    assert_invalid("(module (func (result v128) (f64x2.lt)))");
+}
+
+#[test]
+fn invalid_f64x2_ge_given_an_i32_result_type_instead_of_v128() {
+    // Confirms the type checker enforces the RESULT type too, not just
+    // operand types -- the SIMD comparison convention pushes v128 (a
+    // per-lane mask), never i32, so declaring an i32 result must be
+    // rejected.
+    assert_invalid("(module (func (param v128 v128) (result i32) (f64x2.ge (local.get 0) (local.get 1))))");
+}
+
+#[test]
 fn valid_v128_local_and_global_round_trip() {
     // `ValueType::V128` used as a local type and a global type, not just
     // a param/result -- proves the value-type parser and validator agree
