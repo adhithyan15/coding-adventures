@@ -821,16 +821,37 @@ describe("real curriculum", () => {
   it("keeps the Japanese script-before-decoding chain closed and under five minutes", () => {
     // Japanese needs three writing systems, but putting all three in Chapter 1 made
     // the learner decode before the sign lessons. Pin the repaired structure: twelve
-    // small chapters, one objective activity per lesson, and spoken repair that
-    // demands decoding only for signs the learner has earned.
+    // small chapters and spoken repair that demands decoding only for signs the
+    // learner has earned. Chapter 13 deliberately gives its reception and
+    // production checkpoints two activities each so the four skills remain
+    // separately scored; every other lesson keeps one objective activity.
     const report = buildCurriculumGapReport({ registry, lessons, books });
     const japanese = lessons.filter((lesson) => lesson.language === "japanese");
-    expect(japanese).toHaveLength(100);
+    expect(japanese).toHaveLength(117);
     expect(new Set(japanese.map((lesson) => lesson.realization.chapter))).toEqual(
-      new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]),
+      new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
     );
     expect(japanese.every((lesson) => lesson.frontmatter.schema_version === "2")).toBe(true);
-    expect(japanese.every((lesson) => compileLessonActivities(lesson.blocks).length === 1)).toBe(true);
+    expect(
+      japanese.map((lesson) => [
+        lesson.realization.lessonId,
+        compileLessonActivities(lesson.blocks).length,
+      ]),
+    ).toEqual(
+      expect.arrayContaining([
+        ["JA-C13-family-reception", 2],
+        ["JA-C13-family-check", 2],
+      ]),
+    );
+    expect(
+      japanese
+        .filter(
+          (lesson) =>
+            lesson.realization.lessonId !== "JA-C13-family-reception" &&
+            lesson.realization.lessonId !== "JA-C13-family-check",
+        )
+        .every((lesson) => compileLessonActivities(lesson.blocks).length === 1),
+    ).toBe(true);
     expect(
       report.duration.violations.filter((lesson) => lesson.language === "japanese"),
     ).toEqual([]);

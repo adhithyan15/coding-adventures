@@ -1826,6 +1826,12 @@
       "scriptSet": "japanese-main"
     },
     {
+      "language": "japanese",
+      "chapter": 13,
+      "output": "japanese/book/chapters/ch13-family-nine.tex",
+      "scriptSet": "japanese-main"
+    },
+    {
       "language": "kannada",
       "chapter": 6,
       "output": "kannada/book/chapters/ch06-dative-case.tex",
