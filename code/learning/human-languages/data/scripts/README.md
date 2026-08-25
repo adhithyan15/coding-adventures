@@ -227,6 +227,10 @@ next row keeps the analogous ண path joined through an extra inner arch and the
 top bar for six movements before the same one lift and separate upright. Frame
 12 gives ந three joined opening movements, one lift before its joined rising
 middle stem and top bar, then a second lift before the right-hand descent. The
+second row of Frame 5 gives independent **எ** six connected movements through
+its left climb, top bar, inner spiral, and lower foot, then one lift before the
+separate right upright rises. This row is distinct from dependent **ெ** in
+Frame 6, whose placement metadata makes no standalone ductus claim. The
 Tamil starter inventory is now fully verified. Persian **ا** adds the first
 right-to-left-script ductus: UT Austin's freehand lesson shows one top-to-bottom
 Naskh stem at 00:08–00:11, with no lift. The adjacent **ب** demonstration at
