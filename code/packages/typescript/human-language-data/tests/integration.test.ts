@@ -39,7 +39,7 @@ describe("real curriculum", () => {
     expect(scripts.devanagari!.complete).toBe(true);
   });
 
-  it("keeps the cross-script closure queue measured after Telugu independent ఎ", () => {
+  it("keeps the cross-script closure queue measured after Urdu pe", () => {
     const candrakkala = scripts.malayalam!.marks!.find((mark) => mark.mark === "്")!;
     expect(candrakkala.role).toBe("virama");
     expect(candrakkala.compositionOrder).toEqual([
@@ -617,6 +617,25 @@ describe("real curriculum", () => {
       /clockwise.*above the main line.*shallow curved tail.*lift.*dot.*looped head.*Noto Naskh fallback.*Nastaliq.*Urdu-specific/i,
     );
 
+    const urduPe = scripts["urdu-nastaliq"]!.letters.find((letter) => letter.glyph === "پ")!;
+    expect(urduPe.sound).toBe("p");
+    expect(urduPe.penLifts).toBe(3);
+    expect(urduPe.strokeOrder).toEqual([
+      "sweep the independent be-series bowl from right to left",
+      "after one lift, place the lower-left dot nearer the main line",
+      "after another lift, place the lower-right dot nearer the main line",
+      "after a third lift, place the lower-center dot",
+    ]);
+    expect(urduPe.strokeOrderSource?.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/pe-gaf-alif-lam/",
+    );
+    expect(urduPe.strokeOrderSource?.citation).toMatch(
+      /Zer o Zabar.*independent پ.*Pe instructions.*Northwestern/i,
+    );
+    expect(urduPe.strokeOrderSource?.variation).toMatch(
+      /bowl first.*right-to-left.*lower-left dot.*lower-right dot.*lower-center dot.*three pen lifts.*triangular arrangement.*two-dot side.*main line.*Noto Naskh fallback.*Nastaliq.*Urdu-specific/i,
+    );
+
     const gaps = validate({ taxonomy, lessons, scripts }).filter(
       (issue) => issue.level === "warning" && issue.code === "uncovered-glyphs",
     );
@@ -664,7 +683,8 @@ describe("real curriculum", () => {
     expect(affected.get("د") ?? 0).toBe(0);
     expect(missingByScript.get("perso-arabic.json")?.has("ر")).toBe(false);
     expect(missingByScript.get("perso-arabic.json")?.has("پ")).toBe(false);
-    expect(missingByScript.get("urdu-nastaliq.json")?.has("پ")).toBe(true);
+    expect(missingByScript.get("urdu-nastaliq.json")?.has("پ")).toBe(false);
+    expect(affected.get("پ") ?? 0).toBe(0);
     expect(missingByScript.get("tamil.json")?.has("ச")).toBe(false);
     expect(affected.get("ச") ?? 0).toBe(0);
     expect(missingByScript.get("tamil.json")?.has("ட")).toBe(false);
@@ -704,7 +724,7 @@ describe("real curriculum", () => {
     expect(affected.get("ಅ") ?? 0).toBe(0);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["پ", 10]);
+    ).toEqual(["ھ", 10]);
   });
 
   it("loaded every track (17+ and growing)", () => {

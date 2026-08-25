@@ -226,6 +226,7 @@ const ARABIC_YAA = DUCTUS[ductusKey("arabic", "ي")];
 const ARABIC_HAMZA = DUCTUS[ductusKey("arabic", "ء")];
 const ARABIC_LAM_ALIF = DUCTUS[ductusKey("arabic", "لا")];
 const URDU_ALEF = DUCTUS[ductusKey("urdu-nastaliq", "ا")];
+const URDU_PEH = DUCTUS[ductusKey("urdu-nastaliq", "پ")];
 const URDU_JIM = DUCTUS[ductusKey("urdu-nastaliq", "ج")];
 const URDU_DAL = DUCTUS[ductusKey("urdu-nastaliq", "د")];
 const URDU_RE = DUCTUS[ductusKey("urdu-nastaliq", "ر")];
@@ -3342,6 +3343,30 @@ describe("handwriting ductus", () => {
     expect(URDU_ALEF.strokes[0].segments).toHaveLength(1);
     const path = penPath(URDU_ALEF.strokes[0]);
     expect(path[0].y).toBeGreaterThan(path.at(-1)!.y);
+  });
+
+  it("Urdu independent پ draws its bowl before the three-dot triangle", () => {
+    expect(URDU_PEH.script).toBe("urdu-nastaliq");
+    expect(penLifts(URDU_PEH)).toBe(3);
+    expect(URDU_PEH.strokes).toHaveLength(4);
+    expect(URDU_PEH.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 1, 1, 1]);
+    expect(URDU_PEH.strokes.map((stroke) => stroke.segments[0].label)).toEqual([
+      "sweep the independent be-series bowl from right to left",
+      "after one lift, place the lower-left dot nearer the main line",
+      "after another lift, place the lower-right dot nearer the main line",
+      "after a third lift, place the lower-center dot",
+    ]);
+    const [left, right, center] = URDU_PEH.strokes.slice(1).map(
+      (stroke) => stroke.segments[0].path,
+    );
+    expect(left[0].x).toBeLessThan(right[0].x);
+    expect(center[0].y).toBeLessThan(left[0].y);
+    expect(center[0].y).toBeLessThan(right[0].y);
+    expect(URDU_PEH.source.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/pe-gaf-alif-lam/",
+    );
+    expect(URDU_PEH.source.citation).toMatch(/Zer o Zabar.*independent پ.*Pe instructions/i);
+    expect(DUCTUS["پ"].source.url).not.toBe(URDU_PEH.source.url);
   });
 
   it("Urdu independent ج places its dot, then joins the pointed head to the bowl", () => {

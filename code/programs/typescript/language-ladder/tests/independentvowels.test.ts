@@ -135,6 +135,20 @@ describe("Tamil independent vowels in the starter inventory", () => {
 });
 
 describe("shared Perso-Arabic letters retain script-owned provenance", () => {
+  it("keeps Persian and Urdu پ separate while both preserve the four-stroke triangle order", () => {
+    const persian = SCRIPTS.find((script) => script.script === "perso-arabic")!
+      .letters.find((entry) => entry.glyph === "پ")!;
+    const urdu = SCRIPTS.find((script) => script.script === "urdu-nastaliq")!
+      .letters.find((entry) => entry.glyph === "پ")!;
+    expect(persian.penLifts).toBe(3);
+    expect(urdu.penLifts).toBe(3);
+    expect(persian.strokeOrder).toHaveLength(4);
+    expect(urdu.strokeOrder).toHaveLength(4);
+    expect(urdu.strokeOrder[1]).toMatch(/lower-left dot.*main line/i);
+    expect(urdu.strokeOrder[3]).toMatch(/lower-center dot/i);
+    expect(persian.strokeOrderSource?.url).not.toBe(urdu.strokeOrderSource?.url);
+  });
+
   it("keeps Persian and Urdu ف separate while both use one lifted upper dot", () => {
     const persian = SCRIPTS.find((script) => script.script === "perso-arabic")!
       .letters.find((entry) => entry.glyph === "ف")!;
