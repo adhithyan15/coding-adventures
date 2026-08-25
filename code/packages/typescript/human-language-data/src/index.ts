@@ -147,12 +147,24 @@ export {
 // HL21: a ledger at `X.json` may instead live as the directory `X.d/`, so that
 // many authors can append to it at once without colliding on one file.
 export {
+  // Exported alongside `readLedgerFile` on purpose: a consumer that catches
+  // must be able to narrow BY TYPE. Without this the only way to tolerate a
+  // malformed ledger from outside the package is `catch {}` or matching on
+  // message text — the two patterns this change removes internally.
+  LedgerParseError,
   SHARD_DIR_SUFFIX,
+  isAbsentErrno,
   isSharded,
   listShardNames,
+  // The guarded door for a one-file ledger, exported so that a consumer outside
+  // this package has the same option its own modules do. A bare
+  // `JSON.parse(readFileSync(...))` on a curriculum ledger skips four controls;
+  // there should be somewhere else to go.
+  readLedgerFile,
   readMaybeSharded,
   readShards,
   shardDirectoryFor,
+  type ReadLedgerOptions,
   type Shard,
 } from "./shard.js";
 export {

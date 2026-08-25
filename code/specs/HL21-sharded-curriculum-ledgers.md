@@ -598,6 +598,28 @@ separate script, never wired into `vitest run`.
 4. Grep for direct reads of the monolith (`grep -rn '<name>.json'`). Route them
    through the loader, or keep the monolith as a generated artifact with a
    `--check` and say why.
+
+   > **This step is now enforced rather than remembered** (#12564). `loader.ts`
+   > held seventeen bare `JSON.parse(readFileSync(...))` reads that predated
+   > `shard.ts`; they are gone, and a test refuses the form anywhere in `src/`.
+   > More to the point, `readLedgerFile` itself now **refuses a monolith whose
+   > `X.d/` exists**, so a future migration cannot leave a stale reader behind
+   > in silence — the read fails and names the shard directory. `shard-cli`'s
+   > `--shard` is the one caller entitled to opt out, since re-splitting reads
+   > the monolith by definition.
+   >
+   > This closes a gap §4.3 leaves open. Keeping a monolith as a generated
+   > artifact is safe for the BROWSER, which globs it at build time — but it
+   > leaves a file on disk that looks authoritative to every filesystem-side
+   > reader and is current only until somebody edits a shard. Step 8 decides
+   > what the monolith is FOR; this decides who may read it.
+   >
+   > Relatedly, §2.3's "fall back, never guess" now requires that the fallback
+   > be a fact rather than a shrug: `isSharded` treats only `ENOENT` and
+   > `ENOTDIR` as absence and throws on every other errno (#12734). Answering
+   > "not sharded" because `lstat` failed for some other reason routes the
+   > reader to the generated monolith, which is the failure this section exists
+   > to prevent.
 5. Add a `ShardPlan` entry, run `--shard`, and assert the round trip is
    byte-identical **against the real ledger**, not only a fixture.
 6. Wire `--check` into CI and `verify-human-languages.sh`.
