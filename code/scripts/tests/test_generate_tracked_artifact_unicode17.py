@@ -1,7 +1,10 @@
 from __future__ import annotations
 
 import hashlib
+import json
+import subprocess
 import sys
+import tempfile
 import unittest
 import urllib.request
 from pathlib import Path
@@ -110,14 +113,57 @@ class UnicodeDownloadBoundaryTests(unittest.TestCase):
         self.assertEqual(
             generator.TYPESCRIPT_TARGET,
             Path(
-                "code/programs/typescript/build-tool/src/"
-                "tracked-artifact-unicode17.ts"
+                "code/programs/typescript/build-tool/src/tracked-artifact-unicode17.ts"
             ),
         )
         self.assertIn(
             Path("code/programs/typescript/build-tool/UNICODE-LICENSE.txt"),
             generator.LICENSE_TARGETS,
         )
+
+    def test_typescript_self_check_runs_every_official_vector_family(self) -> None:
+        sources = {
+            "NormalizationTest.txt": "0041;0041;0041;0041;0041; # LATIN A\n",
+            "CaseFolding.txt": "0041; C; 0061; # LATIN A\n",
+            "UnicodeData.txt": ";".join(["0061"] + [""] * 11 + ["0041"] + [""] * 2),
+            "SpecialCasing.txt": "0061; 0061; 0041; 0041; ; # LATIN A\n",
+        }
+
+        class _Module:
+            @staticmethod
+            def nfkc_casefold(value: str) -> str:
+                return value.lower()
+
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            tsx_cli = (
+                root
+                / "code/programs/typescript/build-tool/node_modules/tsx/dist/cli.mjs"
+            )
+            tsx_cli.parent.mkdir(parents=True)
+            tsx_cli.write_text("", encoding="utf-8")
+            completed = subprocess.CompletedProcess([], 0, "ok\n", "")
+            with (
+                mock.patch.object(generator.shutil, "which", return_value="node"),
+                mock.patch.object(
+                    generator.subprocess, "run", return_value=completed
+                ) as run,
+            ):
+                generator._self_check_typescript(
+                    root,
+                    "export {};\n",
+                    sources,
+                    _Module(),
+                )
+
+        invocation = run.call_args.kwargs
+        payload = json.loads(invocation["input"])
+        self.assertEqual(payload["unicodeVersion"], "17.0.0")
+        self.assertEqual(payload["normalization"], [["A", "A", "A", "A", "A"]])
+        self.assertEqual(payload["folding"], [["A", "a", "a"]])
+        self.assertEqual(payload["uppercase"], [["a", "A"]])
+        self.assertEqual(invocation["timeout"], 180)
+        self.assertFalse(invocation["check"])
 
 
 if __name__ == "__main__":

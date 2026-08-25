@@ -4,6 +4,21 @@ All notable changes to the TypeScript build tool will be documented in this file
 
 ## [Unreleased]
 
+### Added
+
+- Add a pure `validateTrackedArtifactSnapshot()` API that independently
+  consumes all five language-neutral tracked-artifact fixtures, redacts unsafe
+  input, normalizes separators, detects exact/case/compatibility aliases of
+  `node_modules`, and sorts diagnostics by Unicode scalar value without adding
+  Git, filesystem, process, environment, or network authority.
+- Add generated source-embedded Unicode 17.0.0 NFC, NFKC, full default case
+  folding, and full uppercase tables. The generator verifies exact upstream
+  sizes and SHA-256 identities plus official normalization/casing vectors; the
+  package now ships `UNICODE-LICENSE.txt` and declares
+  `MIT AND Unicode-3.0`.
+- Add an explicit package-file allowlist so local coverage and dependency trees
+  cannot make the npm distribution state-dependent or leak generated reports.
+
 ### Fixed
 
 - Exclude Cabal `dist-newstyle` output from package discovery while preserving

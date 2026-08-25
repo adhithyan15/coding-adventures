@@ -1,6 +1,240 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 import type { Package } from "./discovery.js";
+import {
+  UNICODE_VERSION,
+  fullUppercase,
+  nfc,
+  nfkcCasefold,
+} from "./tracked-artifact-unicode17.js";
+
+export const TRACKED_ARTIFACT_UNICODE_VERSION = UNICODE_VERSION;
+
+const TRACKED_ARTIFACT_COMPONENT_IDENTITY = "node_modules";
+const TRACKED_ARTIFACT_REDACTED_PATH = "repository";
+
+const windowsReservedBasenames = new Set([
+  "CON",
+  "PRN",
+  "AUX",
+  "NUL",
+  "CONIN$",
+  "CONOUT$",
+  "CLOCK$",
+  "COM1",
+  "COM2",
+  "COM3",
+  "COM4",
+  "COM5",
+  "COM6",
+  "COM7",
+  "COM8",
+  "COM9",
+  "LPT1",
+  "LPT2",
+  "LPT3",
+  "LPT4",
+  "LPT5",
+  "LPT6",
+  "LPT7",
+  "LPT8",
+  "LPT9",
+  "COM¹",
+  "COM²",
+  "COM³",
+  "LPT¹",
+  "LPT²",
+  "LPT³",
+]);
+
+export type TrackedArtifactEntryKind = "regular" | "symlink" | "reparse";
+
+export interface TrackedArtifactEntry {
+  readonly ordinal: number;
+  readonly path: string;
+  readonly entry_kind: TrackedArtifactEntryKind;
+}
+
+export interface TrackedArtifactDiagnosticDetails {
+  readonly ordinal: number;
+  readonly entry_kind: TrackedArtifactEntryKind;
+  readonly problem?: string;
+}
+
+export interface TrackedArtifactDiagnostic {
+  readonly code:
+    | "TRACKED_ARTIFACT_FORBIDDEN"
+    | "TRACKED_ARTIFACT_PATH_INVALID";
+  readonly severity: "error";
+  readonly path: string;
+  readonly details: TrackedArtifactDiagnosticDetails;
+}
+
+/**
+ * Validate an already bounded, inert snapshot of tracked repository paths.
+ *
+ * Snapshot construction deliberately lives outside this function. The pure
+ * adapter never enumerates a checkout, follows a link, invokes Git, opens a
+ * path, reads the environment, launches a process, or accesses the network.
+ */
+export function validateTrackedArtifactSnapshot(
+  entries: ReadonlyArray<TrackedArtifactEntry>,
+  unicodeVersion = TRACKED_ARTIFACT_UNICODE_VERSION,
+): TrackedArtifactDiagnostic[] {
+  if (unicodeVersion !== TRACKED_ARTIFACT_UNICODE_VERSION) {
+    throw new Error(
+      `tracked artifact Unicode version must be ${TRACKED_ARTIFACT_UNICODE_VERSION}`,
+    );
+  }
+
+  const diagnostics: TrackedArtifactDiagnostic[] = [];
+  for (const entry of entries) {
+    const { normalizedPath, problem } = normalizeTrackedArtifactPath(entry.path);
+    const details: TrackedArtifactDiagnosticDetails =
+      problem === undefined
+        ? { ordinal: entry.ordinal, entry_kind: entry.entry_kind }
+        : {
+            ordinal: entry.ordinal,
+            entry_kind: entry.entry_kind,
+            problem,
+          };
+
+    if (problem !== undefined) {
+      diagnostics.push({
+        code: "TRACKED_ARTIFACT_PATH_INVALID",
+        severity: "error",
+        path: TRACKED_ARTIFACT_REDACTED_PATH,
+        details,
+      });
+      continue;
+    }
+
+    if (
+      normalizedPath !== undefined &&
+      normalizedPath
+        .split("/")
+        .some(
+          (component) =>
+            nfkcCasefold(component) === TRACKED_ARTIFACT_COMPONENT_IDENTITY,
+        )
+    ) {
+      diagnostics.push({
+        code: "TRACKED_ARTIFACT_FORBIDDEN",
+        severity: "error",
+        path: normalizedPath,
+        details,
+      });
+    }
+  }
+
+  return diagnostics.sort(compareTrackedArtifactDiagnostics);
+}
+
+interface NormalizedTrackedArtifactPath {
+  readonly normalizedPath?: string;
+  readonly problem?: string;
+}
+
+function normalizeTrackedArtifactPath(
+  rawPath: string,
+): NormalizedTrackedArtifactPath {
+  // Separator replacement is intentionally lexical. Host path libraries can
+  // collapse exactly the empty, dot, and traversal components we must reject.
+  const normalizedPath = rawPath.replaceAll("\\", "/");
+  if (normalizedPath.length === 0) {
+    return { problem: "EMPTY" };
+  }
+  if (unicodeScalarCount(normalizedPath) > 512) {
+    return { problem: "TOO_LONG" };
+  }
+  if (nfc(normalizedPath) !== normalizedPath) {
+    return { problem: "NON_NFC" };
+  }
+  if (normalizedPath.startsWith("/")) {
+    return { problem: "ABSOLUTE" };
+  }
+  if (/^[A-Za-z]:/.test(normalizedPath)) {
+    return { problem: "DRIVE_QUALIFIED" };
+  }
+
+  const segments = normalizedPath.split("/");
+  if (segments.some((segment) => segment.length === 0)) {
+    return { problem: "EMPTY_SEGMENT" };
+  }
+  if (
+    [...normalizedPath].some((character) => {
+      const scalar = character.codePointAt(0)!;
+      return scalar < 0x20 || '<>:"|?*'.includes(character);
+    })
+  ) {
+    return { problem: "UNSAFE_CHARACTER" };
+  }
+
+  for (const segment of segments) {
+    if (segment === "." || segment === "..") {
+      return { problem: "DOT_SEGMENT" };
+    }
+    if (segment.endsWith(" ") || segment.endsWith(".")) {
+      return { problem: "TRAILING_DOT_OR_SPACE" };
+    }
+    const basename = fullUppercase(segment.split(".", 1)[0]);
+    if (windowsReservedBasenames.has(basename)) {
+      return { problem: "RESERVED_BASENAME" };
+    }
+  }
+
+  return { normalizedPath };
+}
+
+function unicodeScalarCount(value: string): number {
+  let count = 0;
+  for (const _character of value) {
+    count += 1;
+  }
+  return count;
+}
+
+function compareTrackedArtifactDiagnostics(
+  left: TrackedArtifactDiagnostic,
+  right: TrackedArtifactDiagnostic,
+): number {
+  const codeComparison = compareStrings(left.code, right.code);
+  if (codeComparison !== 0) {
+    return codeComparison;
+  }
+  const pathComparison = compareUnicodeScalars(left.path, right.path);
+  if (pathComparison !== 0) {
+    return pathComparison;
+  }
+  return compareStrings(canonicalDetails(left.details), canonicalDetails(right.details));
+}
+
+function compareUnicodeScalars(left: string, right: string): number {
+  const leftScalars = [...left].map((character) => character.codePointAt(0)!);
+  const rightScalars = [...right].map((character) => character.codePointAt(0)!);
+  const commonLength = Math.min(leftScalars.length, rightScalars.length);
+  for (let index = 0; index < commonLength; index += 1) {
+    if (leftScalars[index] !== rightScalars[index]) {
+      return leftScalars[index] - rightScalars[index];
+    }
+  }
+  return leftScalars.length - rightScalars.length;
+}
+
+function canonicalDetails(details: TrackedArtifactDiagnosticDetails): string {
+  const canonical: Record<string, number | string> = {
+    entry_kind: details.entry_kind,
+    ordinal: details.ordinal,
+  };
+  if (details.problem !== undefined) {
+    canonical.problem = details.problem;
+  }
+  return JSON.stringify(canonical);
+}
+
+function compareStrings(left: string, right: string): number {
+  return left < right ? -1 : left > right ? 1 : 0;
+}
 
 const CI_MANAGED_TOOLCHAIN_LANGUAGES = new Set([
   "python",
