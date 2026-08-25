@@ -2363,7 +2363,7 @@ impl UnlockedVaultV1 {
     /// fail here: [`delete_item`] (the free function) tombstones *every*
     /// current candidate as a causal parent regardless of which one is
     /// named, so any one live candidate identifies the item just as well as
-    /// the sole candidate would in the unconflicted case. `Ok(None)` means
+    /// the sole candidate would in the unconflicted case. `None` means
     /// there is nothing live to delete — the item is missing, or every
     /// current candidate (one or, after a concurrent double-delete, several)
     /// is already a tombstone — which callers already treat as `NotFound`,
