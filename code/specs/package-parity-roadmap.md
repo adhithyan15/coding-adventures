@@ -7192,6 +7192,55 @@ and #12162 own their required Go entry-point and validator surfaces. The
 reconciled graph has 499 unique owners and 761 complete acyclic dependency
 edges, with exactly one in-progress owner and no active PR.
 
+### TypeScript orphan-crate implementation
+
+The TypeScript engine now exposes a pure `validateOrphanCrateSnapshot` adapter
+over inert manifest, BUILD, and exemption records. It matches the closed
+language-neutral contract for exact generated-artifact components, nearest
+rooted BUILD membership, fixed missing-evidence rank, invalid and stale
+precedence, hostile-path redaction, Unicode-scalar limits and ordering,
+Python-equivalent whitespace and canonical detail ordering, NFKC plus full-fold
+duplicate detection, and full-uppercase reserved basenames. All four shared
+fixtures plus adversarial astral, whitespace, BUILD-recognition, duplicate,
+precedence, and Unicode-detail cases are consumed without adding Git,
+filesystem, process, environment, clock, random, or network authority.
+
+Red-to-green evidence first produced 16 expected missing-export failures. The
+complete TypeScript suite then passed 324 tests across 12 files, with 90.5%
+statement, 83.93% branch, 94.84% function, and 90.43% line coverage overall;
+`validator.ts` reaches 100% statements, lines, and functions plus 97.01%
+branches. TypeScript 5.9.2 typechecking, the literal BUILD recipe, the pinned
+Unicode 17 generator check, the 111-case/269-file neutral corpus, conformance,
+package-parity, capability, Haskell, OCaml-lock, strict-JSON, state-DAG, diff,
+and collision gates pass. The Go build tool passes tests, vet, and trimpath
+compilation; a real forced TypeScript dry plan evaluates 45 Starlark files,
+discovers 476 packages, keeps the five-entry orphan ledger clean, and reports
+all 476 WOULD-BUILD. The package tarball contains exactly 18 allowlisted files,
+including the Unicode notice and no bundled dependencies. The runtime audit is
+clean; the full audit retains only the separately registered development-only
+`nanoid` advisory.
+
+Independent differential review matched the Python oracle over 2,500
+deterministic randomized and 139 systematic snapshots. Independent security
+review found no new authority, path-disclosure, dependency, credential,
+license, or packaging blocker. The implementation and defensive BUILD-filter
+tests are committed as `dbcc0ece8d90507b0a3844451fd214088aa759e1`
+and `ed74330505e209a36022933a7b2c7129a664691c`.
+
+Before publication the branch rebased without conflict onto exact
+`origin/main` `8ca94c2ef717427004c8a1c073fde078f0aa92f9`. PR #12774
+extends the existing ADJ fact, test, and capability owner; PR #12768 extends
+existing Gujarati curriculum and generated-data owners; and PR #12779 extends
+the existing Rust `algol-iir-compiler`, `lang-aot`, and full-language-spec
+owners; PR #12778 extends the existing Rust HTML-frontend diagnostics owner.
+None changes a package identity or BUILD marker or overlaps the selected six
+paths. The
+refreshed collision report remains 15 established lanes, 1,373 identities,
+4,566 slots, zero collisions, and zero unknown buckets. At the live audit, all
+14 open PRs and 37 non-main remote heads had zero overlap with this slice;
+PR #12780 temporarily owns Rust parser surfaces needed by the separate pending
+contextual generic-closer owner.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
