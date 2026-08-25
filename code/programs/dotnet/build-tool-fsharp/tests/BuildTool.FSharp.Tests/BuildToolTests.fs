@@ -76,6 +76,71 @@ let ``force emit-plan writes a schema versioned plan`` () =
             Directory.Delete(root, true)
 
 [<Theory>]
+[<InlineData("validation-orphan-crates-clean.json")>]
+[<InlineData("validation-orphan-crates-unlisted.json")>]
+[<InlineData("validation-orphan-exemptions-invalid.json")>]
+[<InlineData("validation-orphan-exemptions-stale.json")>]
+let ``orphan crate validation matches shared conformance fixtures`` (fixtureName: string) =
+    let fixturePath =
+        Path.Combine(repositoryRoot, "code", "specs", "fixtures", "build-tool-v1", "cases", fixtureName)
+
+    use fixture = JsonDocument.Parse(File.ReadAllText(fixturePath))
+
+    let snapshot =
+        fixture.RootElement.GetProperty("input").GetProperty("options").GetProperty("orphan_snapshot")
+
+    let directories =
+        snapshot.GetProperty("directories").EnumerateArray()
+        |> Seq.map (fun path -> path.GetString())
+        |> Seq.toArray
+
+    let manifests =
+        snapshot.GetProperty("manifests").EnumerateArray()
+        |> Seq.map (fun manifest ->
+            OrphanManifest(manifest.GetProperty("path").GetString(), manifest.GetProperty("kind").GetString()))
+        |> Seq.toArray
+
+    let buildFiles =
+        snapshot.GetProperty("build_files").EnumerateArray()
+        |> Seq.map (fun buildFile ->
+            OrphanBuildFile(buildFile.GetProperty("path").GetString(), buildFile.GetProperty("state").GetString()))
+        |> Seq.toArray
+
+    let exemptions =
+        snapshot.GetProperty("exemptions").EnumerateArray()
+        |> Seq.map (fun exemption ->
+            OrphanExemption(
+                exemption.GetProperty("line").GetInt32(),
+                exemption.GetProperty("kind").GetString(),
+                exemption.GetProperty("path").GetString(),
+                exemption.GetProperty("reason").GetString()
+            ))
+        |> Seq.toArray
+
+    let actual =
+        OrphanCrateSnapshot(
+            directories :> IReadOnlyList<string>,
+            manifests :> IReadOnlyList<OrphanManifest>,
+            buildFiles :> IReadOnlyList<OrphanBuildFile>,
+            exemptions :> IReadOnlyList<OrphanExemption>
+        )
+        |> validateOrphanCrateSnapshot
+
+    let actualDiagnostics = JsonSerializer.SerializeToElement(actual.Diagnostics)
+    let expected = fixture.RootElement.GetProperty("expected")
+    let expectedDiagnostics = expected.GetProperty("diagnostics")
+
+    let expectedPendingCount =
+        expected.GetProperty("result").GetProperty("pending_exemption_count").GetInt32()
+
+    Assert.True(
+        JsonElement.DeepEquals(expectedDiagnostics, actualDiagnostics),
+        $"Expected {expectedDiagnostics.GetRawText()}, but received {actualDiagnostics.GetRawText()}."
+    )
+
+    Assert.Equal(expectedPendingCount, actual.PendingExemptionCount)
+
+[<Theory>]
 [<InlineData("validation-tracked-artifacts-clean.json")>]
 [<InlineData("validation-tracked-artifacts-forbidden.json")>]
 [<InlineData("validation-tracked-artifacts-aliases.json")>]
@@ -88,17 +153,12 @@ let ``tracked artifact validation matches shared conformance fixtures`` (fixture
     use fixture = JsonDocument.Parse(File.ReadAllText(fixturePath))
 
     let snapshot =
-        fixture.RootElement
-            .GetProperty("input")
-            .GetProperty("options")
-            .GetProperty("tracked_artifact_snapshot")
+        fixture.RootElement.GetProperty("input").GetProperty("options").GetProperty("tracked_artifact_snapshot")
 
     let unicodeVersion = snapshot.GetProperty("unicode_version").GetString()
 
     let entries =
-        snapshot
-            .GetProperty("entries")
-            .EnumerateArray()
+        snapshot.GetProperty("entries").EnumerateArray()
         |> Seq.map (fun entry ->
             TrackedArtifactEntry(
                 entry.GetProperty("ordinal").GetInt32(),

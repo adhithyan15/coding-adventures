@@ -468,6 +468,8 @@ const URDU_DAL = ductusFor("د", "urdu-nastaliq")!;
 const urduDalOutline = naskhOutline("د");
 const URDU_RE = ductusFor("ر", "urdu-nastaliq")!;
 const urduReOutline = naskhOutline("ر");
+const URDU_WAW = ductusFor("و", "urdu-nastaliq")!;
+const urduWawOutline = naskhOutline("و");
 const URDU_SIN = ductusFor("س", "urdu-nastaliq")!;
 const urduSinOutline = naskhOutline("س");
 const URDU_SHIN = ductusFor("ش", "urdu-nastaliq")!;
@@ -519,7 +521,7 @@ function collect(node: SvgNode, pick: (n: SvgNode) => boolean, out: SvgNode[] = 
 const byTag = (node: SvgNode, tag: string) => collect(node, (n) => n.tag === tag);
 
 describe("ductusFor — only cited letters have a ductus", () => {
-  it("finds seventeen Tamil letters, eleven Persian letters, eighteen Arabic letters, and fourteen Urdu letters", () => {
+  it("finds seventeen Tamil letters, eleven Persian letters, eighteen Arabic letters, and fifteen Urdu letters", () => {
     expect(ductusFor("ம")?.glyph).toBe("ம");
     expect(ductusFor("அ")?.glyph).toBe("அ");
     expect(ductusFor("ஆ")?.glyph).toBe("ஆ");
@@ -566,6 +568,7 @@ describe("ductusFor — only cited letters have a ductus", () => {
     expect(ductusFor("ج", "perso-arabic")).toBeUndefined();
     expect(ductusFor("ر", "urdu-nastaliq")?.glyph).toBe("ر");
     expect(ductusFor("ر", "perso-arabic")?.glyph).toBe("ر");
+    expect(ductusFor("و", "urdu-nastaliq")?.glyph).toBe("و");
     expect(ductusFor("س", "urdu-nastaliq")?.glyph).toBe("س");
     expect(ductusFor("ش", "urdu-nastaliq")?.glyph).toBe("ش");
     expect(ductusFor("ش", "perso-arabic")).toBeUndefined();
@@ -597,6 +600,16 @@ describe("ductusFor — only cited letters have a ductus", () => {
     const arabic = ductusFor("ر", "arabic");
     const persian = ductusFor("ر", "perso-arabic");
     const urdu = ductusFor("ر", "urdu-nastaliq");
+    expect(arabic?.script).toBe("arabic");
+    expect(persian?.script).toBe("perso-arabic");
+    expect(urdu?.script).toBe("urdu-nastaliq");
+    expect(new Set([arabic?.source.url, persian?.source.url, urdu?.source.url]).size).toBe(3);
+  });
+
+  it("keeps the shared Arabic, Persian, and Urdu و independently addressable", () => {
+    const arabic = ductusFor("و", "arabic");
+    const persian = ductusFor("و", "perso-arabic");
+    const urdu = ductusFor("و", "urdu-nastaliq");
     expect(arabic?.script).toBe("arabic");
     expect(persian?.script).toBe("perso-arabic");
     expect(urdu?.script).toBe("urdu-nastaliq");
@@ -6234,6 +6247,33 @@ describe("Urdu ر — one downward line that continues left", () => {
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(URDU_RE.strokes[0], 1),
+    );
+  });
+});
+
+describe("Urdu و — its looped head flows into the leftward tail", () => {
+  const steps = ductusSteps(URDU_WAW);
+  const strip = ductusFilmstrip(URDU_WAW, urduWawOutline);
+
+  it("shows both sourced movements in one unbroken stroke", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "shape the independent wāw's looped head",
+      "continue down and left through the tail without lifting",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0]);
+    expect(strip.frames).toHaveLength(2);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 2 movements");
+  });
+
+  it("uses Noto Naskh and completes the same pen-down run", () => {
+    const paths = byTag(strip.frames[1], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      urduWawOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(URDU_WAW.strokes[0], 1),
     );
   });
 });

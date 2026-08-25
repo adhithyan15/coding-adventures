@@ -1,6 +1,6 @@
 //! diagram-ir v0.42.0 - DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.63.0";
+pub const VERSION: &str = "0.67.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -522,6 +522,18 @@ pub struct ChartSeries {
     pub data: Vec<ChartDataPoint>,
 }
 
+#[derive(Clone, Debug, Default, PartialEq)]
+pub struct XyChartConfig {
+    pub width: Option<f64>,
+    pub height: Option<f64>,
+    pub title_font_size: Option<f64>,
+    pub title_padding: Option<f64>,
+    pub show_title: Option<bool>,
+    pub show_data_label: Option<bool>,
+    pub show_data_label_outside_bar: Option<bool>,
+    pub data_label_color: Option<String>,
+}
+
 #[derive(Clone, Debug, PartialEq)]
 pub struct PieSlice {
     pub label: String,
@@ -599,6 +611,7 @@ pub struct ChartDiagram {
     pub quadrant_labels: [Option<String>; 4],
     pub quadrant_points: Vec<QuadrantPoint>,
     pub quadrant_config: QuadrantConfig,
+    pub xy_config: XyChartConfig,
     pub orientation: ChartOrientation,
 }
 
@@ -654,6 +667,15 @@ pub enum LayoutedChartItem {
         color: String,
     },
     PointLabel {
+        x: f64,
+        y: f64,
+        width: f64,
+        height: f64,
+        text: String,
+        font_size: f64,
+        color: String,
+    },
+    BarLabel {
         x: f64,
         y: f64,
         width: f64,
@@ -1312,7 +1334,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.63.0");
+        assert_eq!(VERSION, "0.67.0");
     }
     #[test]
     fn default_direction_is_tb() {
@@ -1419,6 +1441,7 @@ mod tests {
             quadrant_labels: [None, None, None, None],
             quadrant_points: vec![],
             quadrant_config: QuadrantConfig::default(),
+            xy_config: XyChartConfig::default(),
             orientation: ChartOrientation::Vertical,
         };
         assert_eq!(d.series[0].data.len(), 2);

@@ -5131,10 +5131,13 @@ impl HtmlParser {
             && !self.document_has_body_element()
             && is_head_element(&name)
         {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-head-content-start-tag-after-head",
-                format!("start tag `<{name}>` was processed after the head had closed"),
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-head-content-start-tag-after-head",
+                    format!("start tag `<{name}>` was processed after the head had closed"),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
         }
 
         if !in_foreign_content
@@ -27730,6 +27733,18 @@ mod tests {
         .at_emission(Some(start_tag_position_at(source, "col", occurrence)))
     }
 
+    fn unexpected_head_content_start_tag_after_head(
+        source: &str,
+        name: &str,
+        occurrence: usize,
+    ) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-head-content-start-tag-after-head",
+            format!("start tag `<{name}>` was processed after the head had closed"),
+        )
+        .at_emission(Some(start_tag_position_at(source, name, occurrence)))
+    }
+
     fn nested_heading_start_tag(
         source: &str,
         name: &str,
@@ -39797,6 +39812,57 @@ mod tests {
                 diagnostic.code != "unexpected-head-content-start-tag-after-head"
             }));
         }
+    }
+
+    #[test]
+    fn positions_head_content_start_tags_after_an_explicit_head_end() {
+        let source = "<!doctype html><head><base></head><!--é-->\r\n<base>";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        assert_eq!(
+            output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| {
+                    diagnostic.code == "unexpected-head-content-start-tag-after-head"
+                })
+                .collect::<Vec<_>>(),
+            vec![&unexpected_head_content_start_tag_after_head(
+                source, "base", 1,
+            )]
+        );
+
+        for excluded in [
+            "<!doctype html><head></head><base",
+            "<!doctype html><title>x</title>",
+            "<!doctype html><body><base>",
+        ] {
+            let output = parse_html_with_diagnostics(excluded).unwrap();
+            assert!(output.parser_diagnostics.iter().all(|diagnostic| {
+                diagnostic.code != "unexpected-head-content-start-tag-after-head"
+            }));
+        }
+
+        let fragment = parse_html_fragment_with_diagnostics("<head></head><base>").unwrap();
+        assert!(fragment.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-head-content-start-tag-after-head"
+        }));
+
+        let mut unpositioned = HtmlParser::new();
+        unpositioned.explicit_head_end_seen = true;
+        unpositioned.process_token(Token::StartTag {
+            name: "base".to_string(),
+            attributes: Vec::new(),
+            self_closing: false,
+        });
+        unpositioned.process_token(Token::Eof);
+        let diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| {
+                diagnostic.code == "unexpected-head-content-start-tag-after-head"
+            })
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
     }
 
     #[test]

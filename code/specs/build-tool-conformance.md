@@ -888,6 +888,14 @@ must name one of `BUILD`, `BUILD_windows`, `BUILD_mac`, `BUILD_linux`, or
 `exemptions` retain the bounded raw kind, path, and reason plus a unique,
 strictly increasing source line so invalid policy data remains testable.
 
+Every established front door that shares an engine MUST still expose a
+language-native orphan-snapshot adapter and independently consume every
+registered `orphan_crate_coverage` fixture through that adapter. Exercising the
+shared engine only through a sibling language's test target is not front-door
+coverage. The native adapter remains an inert type-and-result boundary: it MUST
+NOT enumerate a checkout, inspect the filesystem, consult Git, launch a
+process, read the environment, or access the network.
+
 A package or virtual-workspace manifest is covered only by a runnable BUILD in
 its own directory or a component-wise ancestor through `code/`. The closest
 runnable ancestor wins using the fixed filename order above; a nearer empty

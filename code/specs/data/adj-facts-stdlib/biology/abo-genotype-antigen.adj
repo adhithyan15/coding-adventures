@@ -1,0 +1,114 @@
+% ============================================================================
+% abo-genotype-antigen — WHICH ABO red-cell antigen(s) a named GENOTYPE
+% ultimately produces, DERIVED (not just looked up) by composing two
+% already-shipped BIOLOGY facts (adj-facts-stdlib, BIOLOGY). Grounds the
+% "heredity" Major Gap ADJ-STDLIB-COVERAGE.md §5.1/§5.2 names for K-8/9-12
+% science — the FOURTH instance of that gap, and the FIRST to derive rather
+% than merely recall a heredity fact.
+% ============================================================================
+% `biology/abo-genotype-phenotype.adj` already tables WHICH blood-type
+% PHENOTYPE a given ABO GENOTYPE produces ("ia_ia -> a", "ib_ib -> b",
+% "ia_ib -> ab"); `biology/blood-groups.adj` already tables WHICH antigen(s)
+% a given blood-type PHENOTYPE carries on the red cell ("a -> a_antigen",
+% "b -> b_antigen", "ab -> a_and_b_antigens", "o -> no_antigens"). Neither
+% file states outright "an ia_ia genotype produces red cells carrying the A
+% antigen" — but genotype-phenotype's specific genotype->phenotype mapping,
+% run through blood-groups' general phenotype->antigen mapping, answers it
+% directly: this is the SAME "compose two independently-citable facts into a
+% derived, dual-cited conclusion" discipline `physics/heat-causes-phase-
+% change.adj`, `physics/force-causes-acceleration.adj`, `geology/earth-layer-
+% matter-behavior.adj`, `chemistry/measuring-tool-si-unit.adj`, and
+% `biology/animal-habitat-definition.adj` already established, applied here
+% to a SAME-DIRECTORY pair (both tables already live in `biology/`, the same
+% shape `heat-causes-phase-change.adj`/`force-causes-acceleration.adj`/
+% `animal-habitat-definition.adj` already proved out) — and to the exact
+% "heredity genotype->phenotype->antigen" opportunity
+% `abo-genotype-phenotype.adj`'s own header explicitly flagged as a future
+% slice when it deliberately reused `blood-groups.adj`'s `a`/`b`/`ab` atoms.
+%
+%     import "abo-genotype-antigen.adj"   % transitively imports abo-genotype-phenotype.adj + blood-groups.adj
+%     ? abo_genotype_antigen(ia_ia, $A)          % a_antigen
+%     ? abo_genotype_antigen(ib_ib, $A)          % b_antigen
+%     ? abo_genotype_antigen(ia_ib, $A)          % a_and_b_antigens
+%     ? abo_genotype_antigen($G, a_and_b_antigens)  % ia_ib (reverse)
+%     ? abo_genotype_antigen(ia_i, $A)           % abstain -- ia_i has no phenotype in the composed table
+%
+% This is a native `rule` (ADJ-TABLES RS-6): its body binds `$G`/`$BloodType`
+% through the already-shipped `abo_genotype_phenotype` table, then re-binds
+% `$BloodType`/`$Antigen` through the already-shipped `blood_type_antigen`
+% table -- a plain two-hop join on the literal, EXACT phenotype atom
+% (`a`/`b`/`ab`) both tables share. A query's `steps` trail therefore shows
+% THREE entries: the rule's own citation (the antigen-defining NCBI passage),
+% the `abo_genotype_phenotype` fact's citation (OpenStax), and the
+% `blood_type_antigen` fact's citation (NCBI), so a human can independently
+% verify each link. Empirically verified in a scratch dir against the real
+% built CLI binary before writing this file: all three genotypes join
+% cleanly, the reverse query correctly recovers `ia_ib`, and `ia_i`
+% correctly abstains.
+%
+% WHY this is a genuine derivation, not a coincidental atom match: a
+% genotype's PHENOTYPE label (a/b/ab) is only an intermediate name -- the
+% reason a person's blood carries the antigen(s) it does is the CHAIN from
+% inherited alleles to expressed phenotype to red-cell surface marker, the
+% exact link `abo-genotype-phenotype.adj`'s own schema has no room for (its
+% `blood_type` column is a phenotype LABEL, never the physical antigen that
+% label stands for) and `blood-groups.adj`'s own schema has no room for
+% either (it starts FROM the phenotype label, never explains where that
+% label comes from genetically). This rule closes that loop: knowing an
+% `ia_ib` genotype "has blood type AB" is a label; knowing it means the red
+% cells carry BOTH the A and the B antigen is the actual immunohematology
+% fact a transfusion-medicine reasoner needs, now a first-class, queryable,
+% dual-cited derivation instead of two disconnected recalls a learner must
+% mentally join themselves -- precisely the composition
+% `abo-genotype-phenotype.adj`'s own header named as its most promising
+% unexplored angle rather than shipping it prematurely in a larger slice.
+%
+% HONEST ABSTENTION -- the crux of why this is a narrow, faithful
+% composition and not a forced one: `abo_genotype_phenotype` tables only
+% THREE of the six real ABO genotypes (the two homozygotes and the one
+% heterozygote its cited OpenStax passage states in continuous prose);
+% `blood_type_antigen` tables all FOUR ABO phenotypes (a/b/ab/o), so every
+% phenotype the first table can ever produce joins cleanly:
+%
+%     genotype   abo_genotype_phenotype's blood_type   matches blood_type_antigen's key?   antigen
+%     ---------  -------------------------------------  ------------------------------------  -----------------
+%     ia_ia      a                                        YES (a)                               a_antigen
+%     ib_ib      b                                        YES (b)                               b_antigen
+%     ia_ib      ab                                       YES (ab)                              a_and_b_antigens
+%
+% All three rows join -- there is no partial-overlap gap on the SECOND
+% table's side. The honest abstention instead propagates from the FIRST
+% table: `ia_i`, `ib_i`, and `i_i` are three more real ABO genotypes
+% `abo-genotype-phenotype.adj`'s own header already documents abstaining on
+% (its cited passage never states their phenotype in continuous prose), so
+% this rule inherits that same abstention rather than guessing a phenotype
+% (and therefore an antigen) for them from outside knowledge -- the engine
+% never invents a link partway through a two-hop join.
+%
+% ZERO NEW SOURCING: both premises were already shipped and already cited
+% before this file existed (`abo-genotype-phenotype.adj` by OpenStax,
+% `blood-groups.adj` by NCBI Bookshelf) -- this file asserts no new genotype,
+% phenotype, or antigen fact, only the join between two already-verified
+% tables sharing a literal, exact phenotype atom.
+%
+% Confirmed via the mandatory full-tree-grep-before-scoping discipline: no
+% shipped table anywhere already names `abo_genotype_antigen`, and this exact
+% join was the SAME one `abo-genotype-phenotype.adj`'s own header flagged by
+% name as "not shipped this round to keep the slice small" -- picked up here
+% as this cycle's pre-identified target rather than freshly discovered.
+%
+% Deliberately scoped to the three genotypes `abo-genotype-phenotype.adj`
+% itself already commits to and the four phenotypes `blood-groups.adj`
+% itself already commits to -- no new genotype, phenotype, or antigen
+% content is asserted here, only the join. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+import "abo-genotype-phenotype.adj"
+import "blood-groups.adj"
+
+rule { head: abo_genotype_antigen($Genotype, $Antigen)
+       when: abo_genotype_phenotype($Genotype, $BloodType), blood_type_antigen($BloodType, $Antigen)
+       source "He called the antigens A and B, and depending upon which antigen the RBC expressed, blood either belonged to blood group A or blood group B. A third blood group contained RBCs that reacted as if they lacked the properties of A and B, and this group was later called \"O\" after the German word \"Ohne\", which means \"without\". The following year the fourth blood group, AB, was added to the ABO blood group system. These RBCs expressed both A and B antigens."
+       locator "https://www.ncbi.nlm.nih.gov/books/NBK2267/"
+       trust authoritative }
