@@ -11,9 +11,14 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 12773,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/12773",
+    "branch": "codex/build-tool-typescript-tracked-artifact-validation-conformance",
+    "status": "open"
+  },
   "last_inventory": {
-    "revision": "8149e2fe933ce4047ab417b8aa61d5af7ed49c6c",
+    "revision": "ad36477baa5ada117c52ccb682b5b26fe4ee0510",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1373,
@@ -5321,7 +5326,7 @@
     {
       "id": "build-tool-typescript-tracked-artifact-validation-conformance",
       "title": "Make the TypeScript build tool consume tracked-artifact validation",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": [
         "build-tool-tracked-artifact-validation-corpus",
         "build-tool-tracked-artifact-unicode-cross-runtime-corpus-hardening",
@@ -5330,7 +5335,10 @@
         "build-tool-typescript-dist-newstyle-discovery-exclusion"
       ],
       "branch": "codex/build-tool-typescript-tracked-artifact-validation-conformance",
-      "pr_number": null,
+      "pr_number": 12773,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/12773",
+      "opened_at": "2026-08-25T11:59:21Z",
+      "opened_revision": "eeb0f448217aa96bd170b2e719ddf64f8946aab8",
       "selection_revision": "8149e2fe933ce4047ab417b8aa61d5af7ed49c6c",
       "selection_notes": "Selected only after PR #12762 completed 30 terminal acceptable checks and merged through squash auto-merge as 8149e2fe933ce4047ab417b8aa61d5af7ed49c6c, its stale active-PR and Python-owner lifecycle were reconciled, all intervening commits were classified, and the exact collision inventory was regenerated. The schema-3 report remains 15 established lanes, 1,373 implementation identities, 4,566 slots, 175 high-consensus packages with 276 gaps, 910 singletons with 12,740 gaps, 721 Rust singletons, zero collisions, and zero unknown buckets; OCaml remains correctly emerging at zero packages. The dependency audit found that the TypeScript orphan owner was falsely ready because its engine lacks the reviewed source-pinned Unicode 17 normalization, full-fold, and uppercase substrate required by both pure validators, so this tracked-artifact consumer is now an explicit prerequisite. All five tracked-artifact dependencies are merged. This bounded process-free TypeScript slice advances the widest remaining tracked-artifact lane at 446 packages, establishes the reusable deterministic Unicode substrate, and has zero exact path overlap across all 11 live open PRs and 34 non-main remote heads. Higher-descendant extra-CI and OCaml owners remain collision-unsafe while PRs #12149 and #12162 own required Go main and validator surfaces.",
       "implementation_revision": "1fc9ee695cfceab184b0013b125802df398d6424",
@@ -5338,6 +5346,7 @@
       "rebase_revision": "ad36477baa5ada117c52ccb682b5b26fe4ee0510",
       "rebase_notes": "Rebased without conflict before publication over Rust HTML frame-position diagnostics, the native Vault generation-zero journal recovery slice, and ADJ curriculum-loop bookkeeping. Those commits remain inside the existing HTML frontend, Vault native storage/CLI, and ADJ fact/capability owners, add no implementation identity or build-tool contract, and have zero exact overlap with the TypeScript build-tool, Unicode generator, state, or roadmap implementation surfaces. The refreshed exact-main collision report remains 15 established lanes, 1,373 identities, 4,566 slots, zero collisions, and zero unknown buckets.",
       "validation_notes": "The TypeScript engine now exposes a pure validateTrackedArtifactSnapshot adapter and independently consumes all five language-neutral fixtures. It matches the closed portable-path error precedence, unsafe-input redaction, lexical slash normalization, Unicode-scalar length and ordering, exact/nested/case/compatibility aliases of node_modules, full-uppercase reserved basenames, and canonical diagnostic ordering without adding Git, filesystem, process, environment, or network authority. Generated source-embedded Unicode 17.0.0 tables supply NFC, NFKC, full default case folding, NFKC-plus-fold, and full uppercase; the generator pins exact upstream sizes and SHA-256 identities and now executes both Python and emitted TypeScript over all 20,034 official normalization vectors, 1,585 C/F folding rows, 1,581 unconditional uppercase mappings, derived NFKC-fold expectations, and Unicode 17 Todhri and outlined-letter sentinels. Seven generator tests, 34 focused validator tests, and the complete 307-test Vitest suite pass. V8 coverage is 89.61% statements, 82.16% branches, 94.18% functions, and 89.51% lines overall; validator.ts reaches 100% statements, lines, and functions plus 95.04% branches. A pinned temporary TypeScript 5.9.2 and @types/node 22.20.1 toolchain passes tsc --noEmit, both literal npm install plus coverage BUILD steps pass, and npm pack contains exactly 18 allowlisted files including the 1,995-byte Unicode license and generated substrate with no local coverage or dependency tree. npm audit --omit=dev reports zero vulnerabilities; the sole full-audit finding is the already registered development-only nanoid advisory. The complete 111-case, 269-file neutral corpus, 201 build-tool conformance tests with 23 expected skips, package-parity, capability, Haskell, and OCaml suites, and the Go build-tool test, vet, trimpath build, and BUILD validation all pass. After the conflict-free rebase, the generator, complete TypeScript suite, coverage, typecheck, diff gate, and state graph pass again; the exact-main schema-3 collision report at ad36477baa5ada117c52ccb682b5b26fe4ee0510 remains 15 established lanes, 1,373 identities, 4,566 slots, zero collisions, and zero unknown buckets. Independent differential review compared 1,183,049 Unicode inputs with Python without a mismatch, and independent security review found no authority, dependency, license, credential, or packaging blocker; its one package-allowlist finding and a separate persistent TypeScript full-vector self-check finding were both corrected and revalidated.",
+      "publication_notes": "Opened ready-for-review PR #12773 from clean validated head eeb0f448217aa96bd170b2e719ddf64f8946aab8 after a normal first push from exact origin/main ad36477baa5ada117c52ccb682b5b26fe4ee0510. Immediately before publication, the target remote branch and prior PR were absent, and all 12 changed paths had zero exact overlap across 13 other live open PRs. GitHub reports the branch mergeable and the initial required checks queued, so auto-merge remains disabled until every check is terminal and acceptable.",
       "notes": "Consume the closed process-free tracked-artifact snapshot and diagnostics in the TypeScript engine without adding Git, filesystem, or process authority."
     },
     {
