@@ -3,6 +3,147 @@ import Foundation
 import Testing
 
 struct ValidatorTests {
+    @Test(arguments: [
+        "validation-tracked-artifacts-clean.json",
+        "validation-tracked-artifacts-forbidden.json",
+        "validation-tracked-artifacts-aliases.json",
+        "validation-tracked-artifacts-invalid.json",
+        "validation-tracked-artifacts-unicode-boundaries.json",
+    ])
+    func trackedArtifactValidatorConsumesSharedFixture(_ fixtureName: String) throws {
+        let fixture = try loadSharedTrackedArtifactFixture(fixtureName)
+        let snapshot = fixture.input.options.trackedArtifactSnapshot
+
+        #expect(
+            try Validator.validateTrackedArtifactSnapshot(
+                unicodeVersion: snapshot.unicodeVersion,
+                entries: snapshot.entries
+            ) == fixture.expected.diagnostics
+        )
+    }
+
+    @Test
+    func trackedArtifactValidatorRejectsUnicodeVersionDrift() {
+        #expect(throws: TrackedArtifactValidationError.self) {
+            try Validator.validateTrackedArtifactSnapshot(
+                unicodeVersion: "15.1.0",
+                entries: []
+            )
+        }
+    }
+
+    @Test
+    func trackedArtifactValidatorCountsUnicodeScalarsAtBoundary() throws {
+        let valid = TrackedArtifactEntry(
+            ordinal: 1,
+            path: String(repeating: "😀", count: 512),
+            entryKind: .regular
+        )
+        let tooLong = TrackedArtifactEntry(
+            ordinal: 2,
+            path: String(repeating: "😀", count: 513),
+            entryKind: .regular
+        )
+
+        #expect(
+            try Validator.validateTrackedArtifactSnapshot(entries: [valid]) == []
+        )
+        #expect(
+            try Validator.validateTrackedArtifactSnapshot(entries: [tooLong]) == [
+                trackedArtifactInvalidDiagnostic(
+                    ordinal: 2,
+                    entryKind: .regular,
+                    problem: "TOO_LONG"
+                ),
+            ]
+        )
+    }
+
+    @Test
+    func trackedArtifactValidatorRedactsHostilePathsWithExactPrecedence() throws {
+        let diagnostics = try Validator.validateTrackedArtifactSnapshot(entries: [
+            TrackedArtifactEntry(ordinal: 1, path: "../bad<", entryKind: .regular),
+            TrackedArtifactEntry(ordinal: 2, path: "safe/space /file", entryKind: .symlink),
+            TrackedArtifactEntry(ordinal: 3, path: "safe/bad<name", entryKind: .reparse),
+        ])
+
+        #expect(diagnostics == [
+            trackedArtifactInvalidDiagnostic(
+                ordinal: 1,
+                entryKind: .regular,
+                problem: "UNSAFE_CHARACTER"
+            ),
+            trackedArtifactInvalidDiagnostic(
+                ordinal: 3,
+                entryKind: .reparse,
+                problem: "UNSAFE_CHARACTER"
+            ),
+            trackedArtifactInvalidDiagnostic(
+                ordinal: 2,
+                entryKind: .symlink,
+                problem: "TRAILING_DOT_OR_SPACE"
+            ),
+        ])
+        #expect(diagnostics.allSatisfy { $0.path == "repository" })
+    }
+
+    @Test
+    func trackedArtifactValidatorUsesPinnedUnicode17Behavior() throws {
+        let outlinedNodeModules =
+            "\u{1CCE3}\u{1CCE4}\u{1CCD9}\u{1CCDA}_" +
+            "\u{1CCE2}\u{1CCE4}\u{1CCD9}\u{1CCEA}\u{1CCE1}\u{1CCDA}\u{1CCE8}"
+        let diagnostics = try Validator.validateTrackedArtifactSnapshot(entries: [
+            TrackedArtifactEntry(
+                ordinal: 1,
+                path: "\(outlinedNodeModules)/version.txt",
+                entryKind: .regular
+            ),
+            TrackedArtifactEntry(
+                ordinal: 2,
+                path: "code/conın$.txt/file.cs",
+                entryKind: .reparse
+            ),
+            TrackedArtifactEntry(
+                ordinal: 3,
+                path: "code/𐗉/file.rs",
+                entryKind: .regular
+            ),
+        ])
+
+        #expect(diagnostics == [
+            TrackedArtifactDiagnostic(
+                code: "TRACKED_ARTIFACT_FORBIDDEN",
+                severity: "error",
+                path: "\(outlinedNodeModules)/version.txt",
+                details: TrackedArtifactDiagnosticDetails(
+                    ordinal: 1,
+                    entryKind: .regular,
+                    problem: nil
+                )
+            ),
+            trackedArtifactInvalidDiagnostic(
+                ordinal: 3,
+                entryKind: .regular,
+                problem: "NON_NFC"
+            ),
+            trackedArtifactInvalidDiagnostic(
+                ordinal: 2,
+                entryKind: .reparse,
+                problem: "RESERVED_BASENAME"
+            ),
+        ])
+    }
+
+    @Test
+    func trackedArtifactValidatorSortsDetailsCanonicallyAsStrings() throws {
+        let diagnostics = try Validator.validateTrackedArtifactSnapshot(entries: [
+            TrackedArtifactEntry(ordinal: 2, path: "bad<path", entryKind: .regular),
+            TrackedArtifactEntry(ordinal: 10, path: "bad<path", entryKind: .regular),
+        ])
+
+        #expect(diagnostics.map(\.details.ordinal) == [10, 2])
+    }
+
     @Test
     func validatorFlagsMissingToolchainNormalization() throws {
         let root = try makeTempDirectory(label: "validator")
@@ -203,4 +344,21 @@ struct ValidatorTests {
 
         #expect(Validator.validateBuildContracts(repoRoot: root, packages: packages) == nil)
     }
+}
+
+private func trackedArtifactInvalidDiagnostic(
+    ordinal: Int,
+    entryKind: TrackedArtifactEntryKind,
+    problem: String
+) -> TrackedArtifactDiagnostic {
+    TrackedArtifactDiagnostic(
+        code: "TRACKED_ARTIFACT_PATH_INVALID",
+        severity: "error",
+        path: "repository",
+        details: TrackedArtifactDiagnosticDetails(
+            ordinal: ordinal,
+            entryKind: entryKind,
+            problem: problem
+        )
+    )
 }

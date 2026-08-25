@@ -43,6 +43,7 @@ LICENSE_TARGETS = (
     Path("code/programs/lua/build-tool/UNICODE-LICENSE.txt"),
     Path("code/programs/perl/build-tool/UNICODE-LICENSE.txt"),
     Path("code/programs/haskell/build-tool/UNICODE-LICENSE.txt"),
+    Path("code/programs/swift/build-tool/UNICODE-LICENSE.txt"),
 )
 SOURCES = {
     "UnicodeData.txt": "2e1efc1dcb59c575eedf5ccae60f95229f706ee6d031835247d843c11d96470c",
@@ -86,6 +87,10 @@ PERL_TARGET = Path(
 )
 HASKELL_TARGET = Path(
     "code/programs/haskell/build-tool/src/TrackedArtifactUnicode17.hs"
+)
+SWIFT_TARGET = Path(
+    "code/programs/swift/build-tool/Sources/BuildToolCore/"
+    "TrackedArtifactUnicode17.swift"
 )
 
 
@@ -1926,6 +1931,283 @@ fullUppercase = mapScalars uppercase
 '''
 
 
+def _render_swift(
+    tables: tuple[
+        list[tuple[int, int]],
+        list[tuple[int, bool, tuple[int, ...]]],
+        list[tuple[int, int, int]],
+        list[tuple[int, tuple[int, ...]]],
+        list[tuple[int, tuple[int, ...]]],
+    ],
+) -> str:
+    """Render the process-free Swift implementation from pinned UCD rows."""
+    combining, decomposition, composition, folding, uppercase = tables
+    combining_text = "\n".join(
+        f"{scalar:X};{combining_class}" for scalar, combining_class in combining
+    )
+    decomposition_text = "\n".join(
+        f"{scalar:X};{'K' if compatibility else 'C'};"
+        f"{','.join(f'{value:X}' for value in values)}"
+        for scalar, compatibility, values in decomposition
+    )
+    composition_text = "\n".join(
+        f"{left:X},{right:X};{result:X}" for left, right, result in composition
+    )
+    folding_text = _mapping_lines(folding)
+    uppercase_text = _mapping_lines(uppercase)
+    hashes = ", ".join(f"{name} sha256:{digest}" for name, digest in SOURCES.items())
+    return f'''// Generated Unicode {UNICODE_VERSION} data and algorithms.
+// DO NOT EDIT. Run `python code/scripts/generate_tracked_artifact_unicode17.py`.
+// Sources: {UCD_BASE}
+// {hashes}
+// Unicode License v3: every source and binary distribution carries the full
+// notice as UNICODE-LICENSE.txt (sha256:{LICENSE_SHA256}).
+
+// Host Unicode tables move with Swift. These source-embedded rows keep the
+// tracked-artifact policy stable across compiler and operating-system updates.
+enum TrackedArtifactUnicode17 {{
+    static let unicodeVersion = "{UNICODE_VERSION}"
+
+    private struct Decomposition {{
+        let compatibility: Bool
+        let scalars: [UInt32]
+    }}
+
+    private static let combining: [UInt32: UInt32] = parseCombining("""
+{combining_text}
+""")
+
+    private static let decomposition: [UInt32: Decomposition] = parseDecomposition("""
+{decomposition_text}
+""")
+
+    private static let composition: [UInt64: UInt32] = parseComposition("""
+{composition_text}
+""")
+
+    private static let folding: [UInt32: [UInt32]] = parseMapping("""
+{folding_text}
+""")
+
+    private static let uppercase: [UInt32: [UInt32]] = parseMapping("""
+{uppercase_text}
+""")
+
+    private static let sBase: UInt32 = 0xAC00
+    private static let lBase: UInt32 = 0x1100
+    private static let vBase: UInt32 = 0x1161
+    private static let tBase: UInt32 = 0x11A7
+    private static let lCount: UInt32 = 19
+    private static let vCount: UInt32 = 21
+    private static let tCount: UInt32 = 28
+    private static let nCount: UInt32 = vCount * tCount
+    private static let sCount: UInt32 = lCount * nCount
+
+    static func nfc(_ value: String) -> String {{
+        normalize(value, compatibility: false)
+    }}
+
+    static func nfkc(_ value: String) -> String {{
+        normalize(value, compatibility: true)
+    }}
+
+    static func casefold(_ value: String) -> String {{
+        mapScalars(value, mapping: folding)
+    }}
+
+    static func nfkcCasefold(_ value: String) -> String {{
+        casefold(nfkc(value))
+    }}
+
+    static func fullUppercase(_ value: String) -> String {{
+        mapScalars(value, mapping: uppercase)
+    }}
+
+    private static func parseCombining(_ data: String) -> [UInt32: UInt32] {{
+        var result: [UInt32: UInt32] = [:]
+        for row in data.split(separator: "\\n") {{
+            let fields = row.split(separator: ";")
+            precondition(fields.count == 2)
+            result[UInt32(fields[0], radix: 16)!] = UInt32(fields[1])!
+        }}
+        return result
+    }}
+
+    private static func parseDecomposition(_ data: String) -> [UInt32: Decomposition] {{
+        var result: [UInt32: Decomposition] = [:]
+        for row in data.split(separator: "\\n") {{
+            let fields = row.split(separator: ";")
+            precondition(fields.count == 3)
+            result[UInt32(fields[0], radix: 16)!] = Decomposition(
+                compatibility: fields[1] == "K",
+                scalars: fields[2].split(separator: ",").map {{
+                    UInt32($0, radix: 16)!
+                }}
+            )
+        }}
+        return result
+    }}
+
+    private static func compositionKey(_ left: UInt32, _ right: UInt32) -> UInt64 {{
+        UInt64(left) * 0x110000 + UInt64(right)
+    }}
+
+    private static func parseComposition(_ data: String) -> [UInt64: UInt32] {{
+        var result: [UInt64: UInt32] = [:]
+        for row in data.split(separator: "\\n") {{
+            let fields = row.split(separator: ";")
+            let pair = fields[0].split(separator: ",")
+            precondition(fields.count == 2 && pair.count == 2)
+            let left = UInt32(pair[0], radix: 16)!
+            let right = UInt32(pair[1], radix: 16)!
+            result[compositionKey(left, right)] = UInt32(fields[1], radix: 16)!
+        }}
+        return result
+    }}
+
+    private static func parseMapping(_ data: String) -> [UInt32: [UInt32]] {{
+        var result: [UInt32: [UInt32]] = [:]
+        for row in data.split(separator: "\\n") {{
+            let fields = row.split(separator: ";")
+            precondition(fields.count == 2)
+            result[UInt32(fields[0], radix: 16)!] = fields[1]
+                .split(separator: ",")
+                .map {{ UInt32($0, radix: 16)! }}
+        }}
+        return result
+    }}
+
+    private static func combiningClass(_ scalar: UInt32) -> UInt32 {{
+        combining[scalar] ?? 0
+    }}
+
+    private static func decomposeScalar(
+        _ scalar: UInt32,
+        compatibility: Bool,
+        into output: inout [UInt32]
+    ) {{
+        if scalar >= sBase && scalar < sBase + sCount {{
+            let index = scalar - sBase
+            output.append(lBase + index / nCount)
+            output.append(vBase + (index % nCount) / tCount)
+            let trailing = tBase + index % tCount
+            if trailing != tBase {{
+                output.append(trailing)
+            }}
+            return
+        }}
+        guard let entry = decomposition[scalar],
+              compatibility || !entry.compatibility else {{
+            output.append(scalar)
+            return
+        }}
+        for value in entry.scalars {{
+            decomposeScalar(value, compatibility: compatibility, into: &output)
+        }}
+    }}
+
+    private static func canonicalOrder(_ input: [UInt32]) -> [UInt32] {{
+        var ordered: [UInt32] = []
+        ordered.reserveCapacity(input.count)
+        for scalar in input {{
+            let scalarClass = combiningClass(scalar)
+            if scalarClass == 0 {{
+                ordered.append(scalar)
+                continue
+            }}
+            var index = ordered.count
+            while index > 0 {{
+                let previousClass = combiningClass(ordered[index - 1])
+                if previousClass == 0 || previousClass <= scalarClass {{
+                    break
+                }}
+                index -= 1
+            }}
+            ordered.insert(scalar, at: index)
+        }}
+        return ordered
+    }}
+
+    private static func composePair(_ left: UInt32, _ right: UInt32) -> UInt32? {{
+        if left >= lBase && left < lBase + lCount,
+           right >= vBase && right < vBase + vCount {{
+            return sBase + (((left - lBase) * vCount) + right - vBase) * tCount
+        }}
+        if left >= sBase && left < sBase + sCount,
+           (left - sBase) % tCount == 0,
+           right > tBase && right < tBase + tCount {{
+            return left + right - tBase
+        }}
+        return composition[compositionKey(left, right)]
+    }}
+
+    private static func compose(_ input: [UInt32]) -> [UInt32] {{
+        guard let first = input.first else {{ return [] }}
+        var output = [first]
+        output.reserveCapacity(input.count)
+        var starterIndex = 0
+        var starter = first
+        var lastClass: UInt32 = combiningClass(first) == 0 ? 0 : UInt32.max
+        for scalar in input.dropFirst() {{
+            let scalarClass = combiningClass(scalar)
+            let composite = (lastClass == 0 || lastClass < scalarClass)
+                ? composePair(starter, scalar)
+                : nil
+            if let composite {{
+                output[starterIndex] = composite
+                starter = composite
+                continue
+            }}
+            if scalarClass == 0 {{
+                starterIndex = output.count
+                starter = scalar
+            }}
+            output.append(scalar)
+            lastClass = scalarClass
+        }}
+        return output
+    }}
+
+    private static func string(from scalars: [UInt32]) -> String {{
+        var result = String.UnicodeScalarView()
+        result.reserveCapacity(scalars.count)
+        for scalar in scalars {{
+            guard let value = Unicode.Scalar(scalar) else {{
+                preconditionFailure("invalid generated Unicode scalar")
+            }}
+            result.append(value)
+        }}
+        return String(result)
+    }}
+
+    private static func normalize(_ value: String, compatibility: Bool) -> String {{
+        var decomposed: [UInt32] = []
+        decomposed.reserveCapacity(value.unicodeScalars.count)
+        for scalar in value.unicodeScalars {{
+            decomposeScalar(scalar.value, compatibility: compatibility, into: &decomposed)
+        }}
+        return string(from: compose(canonicalOrder(decomposed)))
+    }}
+
+    private static func mapScalars(
+        _ value: String,
+        mapping: [UInt32: [UInt32]]
+    ) -> String {{
+        var output: [UInt32] = []
+        output.reserveCapacity(value.unicodeScalars.count)
+        for scalar in value.unicodeScalars {{
+            if let replacement = mapping[scalar.value] {{
+                output.append(contentsOf: replacement)
+            }} else {{
+                output.append(scalar.value)
+            }}
+        }}
+        return string(from: output)
+    }}
+}}
+'''
+
+
 def _render_perl(
     tables: tuple[
         list[tuple[int, int]],
@@ -2856,6 +3138,146 @@ main = do
 """
 
 
+_SWIFT_SELF_CHECK = r"""struct SelfCheckFailure: Error, CustomStringConvertible {
+    let description: String
+}
+
+func require(_ condition: Bool, _ message: String) throws {
+    if !condition {
+        throw SelfCheckFailure(description: message)
+    }
+}
+
+func scalarEqual(_ left: String, _ right: String) -> Bool {
+    left.unicodeScalars.elementsEqual(
+        right.unicodeScalars,
+        by: { $0.value == $1.value }
+    )
+}
+
+func fromScalarField(_ field: Substring) throws -> String {
+    var scalars: [UInt32] = []
+    if !field.isEmpty {
+        for token in field.split(separator: ",") {
+            guard let scalar = UInt32(token, radix: 16),
+                  Unicode.Scalar(scalar) != nil else {
+                throw SelfCheckFailure(description: "invalid generated Swift scalar")
+            }
+            scalars.append(scalar)
+        }
+    }
+    var result = String.UnicodeScalarView()
+    result.reserveCapacity(scalars.count)
+    for scalar in scalars {
+        result.append(Unicode.Scalar(scalar)!)
+    }
+    return String(result)
+}
+
+enum SelfCheck {
+    static func run() throws {
+        var normalizationCount = 0
+        var foldingCount = 0
+        var uppercaseCount = 0
+        var sawVersion = false
+
+        while let line = readLine(strippingNewline: true) {
+            let fields = line.split(separator: ";", omittingEmptySubsequences: false)
+            guard let kind = fields.first else {
+                throw SelfCheckFailure(description: "empty Swift self-check record")
+            }
+            switch kind {
+            case "V":
+                try require(
+                    fields.count == 2 && fields[1] == TrackedArtifactUnicode17.unicodeVersion,
+                    "generated Swift Unicode version drift"
+                )
+                sawVersion = true
+            case "N":
+                normalizationCount += 1
+                try require(fields.count == 6, "invalid Swift normalization record")
+                let c1 = try fromScalarField(fields[1])
+                let c2 = try fromScalarField(fields[2])
+                let c3 = try fromScalarField(fields[3])
+                let c4 = try fromScalarField(fields[4])
+                let c5 = try fromScalarField(fields[5])
+                try require(
+                    scalarEqual(TrackedArtifactUnicode17.nfc(c1), c2)
+                        && scalarEqual(TrackedArtifactUnicode17.nfc(c2), c2)
+                        && scalarEqual(TrackedArtifactUnicode17.nfc(c3), c2)
+                        && scalarEqual(TrackedArtifactUnicode17.nfc(c4), c4)
+                        && scalarEqual(TrackedArtifactUnicode17.nfc(c5), c4)
+                        && scalarEqual(TrackedArtifactUnicode17.nfkc(c1), c4)
+                        && scalarEqual(TrackedArtifactUnicode17.nfkc(c2), c4)
+                        && scalarEqual(TrackedArtifactUnicode17.nfkc(c3), c4)
+                        && scalarEqual(TrackedArtifactUnicode17.nfkc(c4), c4)
+                        && scalarEqual(TrackedArtifactUnicode17.nfkc(c5), c4),
+                    "normalization Swift self-check failed at vector \(normalizationCount)"
+                )
+            case "F":
+                foldingCount += 1
+                try require(fields.count == 4, "invalid Swift folding record")
+                let source = try fromScalarField(fields[1])
+                try require(
+                    scalarEqual(
+                        TrackedArtifactUnicode17.casefold(source),
+                        try fromScalarField(fields[2])
+                    ),
+                    "case-fold Swift self-check failed at vector \(foldingCount)"
+                )
+                try require(
+                    scalarEqual(
+                        TrackedArtifactUnicode17.nfkcCasefold(source),
+                        try fromScalarField(fields[3])
+                    ),
+                    "NFKC-case-fold Swift self-check failed at vector \(foldingCount)"
+                )
+            case "U":
+                uppercaseCount += 1
+                try require(fields.count == 3, "invalid Swift uppercase record")
+                try require(
+                    scalarEqual(
+                        TrackedArtifactUnicode17.fullUppercase(
+                            try fromScalarField(fields[1])
+                        ),
+                        try fromScalarField(fields[2])
+                    ),
+                    "full-uppercase Swift self-check failed at vector \(uppercaseCount)"
+                )
+            default:
+                throw SelfCheckFailure(description: "unknown Swift self-check record")
+            }
+        }
+
+        try require(sawVersion, "missing generated Swift Unicode version")
+        try require(normalizationCount > 0, "missing Swift normalization vectors")
+        try require(foldingCount > 0, "missing Swift folding vectors")
+        try require(uppercaseCount > 0, "missing Swift uppercase vectors")
+        let outlined = try fromScalarField(
+            "1CCE3,1CCE4,1CCD9,1CCDA,5F,1CCE2,1CCE4,1CCD9,1CCEA,1CCE1,1CCDA,1CCE8"
+        )
+        try require(
+            scalarEqual(
+                TrackedArtifactUnicode17.nfkcCasefold(outlined),
+                "node_modules"
+            ),
+            "Unicode 17 outlined-letter Swift sentinel failed"
+        )
+        try require(
+            scalarEqual(
+                TrackedArtifactUnicode17.nfc(try fromScalarField("105D2,307")),
+                try fromScalarField("105C9")
+            ),
+            "Unicode 17 Todhri Swift sentinel failed"
+        )
+        print("ok")
+    }
+}
+
+try SelfCheck.run()
+"""
+
+
 _LUA_OUTPUT_LIMIT = 8192
 _WINDOWS_CREATE_SUSPENDED = 0x00000004
 _WINDOWS_JOB_OBJECT_EXTENDED_LIMIT_INFORMATION = 9
@@ -3206,6 +3628,114 @@ def _haskell_self_check_environment() -> dict[str, str]:
     }
 
 
+def _swift_windows_runtime_directory(swiftc: Path) -> Path:
+    """Resolve the DLL directory paired with the pinned Windows toolchain."""
+    try:
+        swift_root = swiftc.parents[4]
+    except IndexError as error:
+        raise RuntimeError(
+            "Swift compiler path does not identify its runtime"
+        ) from error
+    runtime = (swift_root / "Runtimes" / "6.3.3" / "usr" / "bin").resolve(strict=True)
+    if not runtime.is_dir():
+        raise RuntimeError(f"Swift runtime path is not a directory: {runtime}")
+    return runtime
+
+
+def _swift_windows_sdk_directory(swiftc: Path) -> Path:
+    """Resolve the SDK directory paired with the pinned Windows toolchain."""
+    try:
+        swift_root = swiftc.parents[4]
+    except IndexError as error:
+        raise RuntimeError("Swift compiler path does not identify its SDK") from error
+    sdk = (
+        swift_root
+        / "Platforms"
+        / "6.3.3"
+        / "Windows.platform"
+        / "Developer"
+        / "SDKs"
+        / "Windows.sdk"
+    ).resolve(strict=True)
+    if not sdk.is_dir():
+        raise RuntimeError(f"Swift SDK path is not a directory: {sdk}")
+    return sdk
+
+
+def _swift_windows_linker_arguments() -> list[str]:
+    """Resolve only the registered Windows host linker library directories."""
+    program_files = Path(
+        os.environ.get("ProgramFiles(x86)", r"C:\Program Files (x86)")
+    ).resolve(strict=True)
+    visual_studio_root = program_files / "Microsoft Visual Studio" / "2022"
+    msvc_roots = [
+        edition / "VC" / "Tools" / "MSVC"
+        for edition in visual_studio_root.iterdir()
+        if edition.is_dir()
+    ]
+    msvc_versions = [
+        version.resolve(strict=True)
+        for root in msvc_roots
+        if root.is_dir()
+        for version in root.iterdir()
+        if version.is_dir()
+    ]
+    windows_kits_root = program_files / "Windows Kits" / "10" / "Lib"
+    windows_kits_versions = [
+        version.resolve(strict=True)
+        for version in windows_kits_root.iterdir()
+        if version.is_dir()
+    ]
+    if not msvc_versions or not windows_kits_versions:
+        raise RuntimeError("Swift Windows linker prerequisites are unavailable")
+
+    def version_key(path: Path) -> tuple[int, ...]:
+        try:
+            return tuple(int(part) for part in path.name.split("."))
+        except ValueError as error:
+            raise RuntimeError(
+                f"Swift linker prerequisite has a non-version directory: {path}"
+            ) from error
+
+    msvc = max(msvc_versions, key=lambda path: (version_key(path), str(path)))
+    windows_kits = max(
+        windows_kits_versions,
+        key=lambda path: (version_key(path), str(path)),
+    )
+    library_directories = (
+        msvc / "lib" / "x64",
+        windows_kits / "ucrt" / "x64",
+        windows_kits / "um" / "x64",
+    )
+    resolved_libraries = [path.resolve(strict=True) for path in library_directories]
+    if not all(path.is_dir() for path in resolved_libraries):
+        raise RuntimeError("Swift Windows linker library path is not a directory")
+    return [
+        "-use-ld=lld",
+        *[argument for path in resolved_libraries for argument in ("-L", str(path))],
+    ]
+
+
+def _swift_self_check_environment(swiftc: Path, temporary_path: Path) -> dict[str, str]:
+    """Provide only pinned toolchain and contained temporary state to Swift."""
+    environment = {
+        name: value
+        for name in ("SystemRoot", "WINDIR")
+        if (value := os.environ.get(name)) is not None
+    }
+    environment["TMP"] = str(temporary_path)
+    environment["TEMP"] = str(temporary_path)
+    environment["TMPDIR"] = str(temporary_path)
+    if os.name == "nt":
+        # The generated executable loads Swift runtime DLLs from this exact,
+        # reviewed toolchain directory rather than an inherited search path.
+        environment["PATH"] = os.pathsep.join(
+            (str(swiftc.parent), str(_swift_windows_runtime_directory(swiftc)))
+        )
+        environment["SDKROOT"] = str(_swift_windows_sdk_directory(swiftc))
+    return environment
+
+
 def _self_check_lua(
     root: Path,
     lua_output: str,
@@ -3378,6 +3908,99 @@ def _self_check_haskell(
         raise RuntimeError(f"generated Haskell Unicode self-check failed: {detail}")
 
 
+def _self_check_swift(
+    root: Path,
+    swift_output: str,
+    sources: dict[str, str],
+    python_module,
+    swift_executable: Path,
+    swiftc_executable: Path,
+) -> None:
+    del root  # Kept parallel with the other emitted-runtime call signatures.
+    swift = swift_executable.expanduser().resolve(strict=True)
+    if not swift.is_file():
+        raise RuntimeError(f"Swift runtime executable is not a file: {swift}")
+    swiftc = swiftc_executable.expanduser().resolve(strict=True)
+    if not swiftc.is_file():
+        raise RuntimeError(f"Swift compiler executable is not a file: {swiftc}")
+
+    with tempfile.TemporaryDirectory(prefix="unicode17-swift-check-") as temporary:
+        temporary_path = Path(temporary)
+        module_path = temporary_path / "TrackedArtifactUnicode17.swift"
+        runner_path = temporary_path / "main.swift"
+        module_cache_path = temporary_path / "module-cache"
+        executable_path = temporary_path / (
+            "self-check.exe" if os.name == "nt" else "self-check"
+        )
+        module_cache_path.mkdir()
+        module_path.write_text(swift_output, encoding="utf-8", newline="\n")
+        runner_path.write_text(_SWIFT_SELF_CHECK, encoding="utf-8", newline="\n")
+        environment = _swift_self_check_environment(swiftc, temporary_path)
+
+        for label, executable in (("runtime", swift), ("compiler", swiftc)):
+            version = _run_bounded_process(
+                [str(executable), "--version"],
+                cwd=temporary_path,
+                env=environment,
+                input_text="",
+                timeout=10,
+            )
+            version_lines = (
+                (version.stdout + version.stderr).replace("\r\n", "\n").splitlines()
+            )
+            if (
+                version.returncode != 0
+                or not version_lines
+                or version_lines[0] != "Swift version 6.3.3 (swift-6.3.3-RELEASE)"
+            ):
+                raise RuntimeError(
+                    f"Swift Unicode self-check requires pinned Swift 6.3.3 {label}"
+                )
+
+        compile_command = [
+            str(swiftc),
+            "-no-color-diagnostics",
+            "-module-name",
+            "Unicode17SelfCheck",
+            "-module-cache-path",
+            str(module_cache_path),
+            str(module_path),
+            str(runner_path),
+            "-o",
+            str(executable_path),
+        ]
+        if os.name == "nt":
+            compile_command[1:1] = [
+                "-sdk",
+                environment["SDKROOT"],
+                *_swift_windows_linker_arguments(),
+            ]
+        compiled = _run_bounded_process(
+            compile_command,
+            cwd=temporary_path,
+            env=environment,
+            input_text="",
+            timeout=180,
+        )
+        if compiled.returncode != 0:
+            detail = (
+                compiled.stderr.strip() or compiled.stdout.strip() or "no diagnostic"
+            )
+            raise RuntimeError(f"generated Swift Unicode compilation failed: {detail}")
+
+        result = _run_bounded_process(
+            [str(executable_path)],
+            cwd=temporary_path,
+            env=environment,
+            input_text=_lua_self_check_payload(python_module, sources),
+            timeout=180,
+        )
+    normalized_stdout = result.stdout.replace("\r\n", "\n")
+    if result.returncode != 0 or normalized_stdout != "ok\n":
+        detail = result.stderr.strip() or result.stdout.strip() or "no diagnostic"
+        raise RuntimeError(f"generated Swift Unicode self-check failed: {detail}")
+
+
 def _write_or_check(root: Path, target: Path, content: str, check: bool) -> None:
     absolute = root / target
     content = content.replace("\r\n", "\n")
@@ -3404,7 +4027,7 @@ def _write_bytes_or_check(
 def _selected_runtime_self_checks(requested: list[str] | None) -> tuple[str, ...]:
     """Return the emitted runtimes whose official-vector checks must run."""
     if requested is None:
-        return ("typescript", "ruby", "elixir", "lua", "perl", "haskell")
+        return ("typescript", "ruby", "elixir", "lua", "perl", "haskell", "swift")
     return tuple(dict.fromkeys(requested))
 
 
@@ -3414,7 +4037,7 @@ def main() -> int:
     parser.add_argument(
         "--self-check-runtime",
         action="append",
-        choices=("typescript", "ruby", "elixir", "lua", "perl", "haskell"),
+        choices=("typescript", "ruby", "elixir", "lua", "perl", "haskell", "swift"),
         help=(
             "limit emitted-runtime official-vector checks; repeat to select more "
             "than one runtime (default: every emitted runtime)"
@@ -3452,6 +4075,22 @@ def main() -> int:
             "emitted-runtime check"
         ),
     )
+    parser.add_argument(
+        "--swift-executable",
+        type=Path,
+        help=(
+            "exact reviewed Swift 6.3.3 runtime driver used when the Swift "
+            "emitted-runtime check is selected"
+        ),
+    )
+    parser.add_argument(
+        "--swiftc-executable",
+        type=Path,
+        help=(
+            "exact reviewed Swift 6.3.3 compiler used when the Swift "
+            "emitted-runtime check is selected"
+        ),
+    )
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[2]
     license_payload = (root / LICENSE_PATH).read_bytes()
@@ -3473,6 +4112,7 @@ def main() -> int:
     lua_output = _render_lua(tables)
     perl_output = _render_perl(tables)
     haskell_output = _render_haskell(tables)
+    swift_output = _render_swift(tables)
     for target in PYTHON_TARGETS:
         _write_or_check(root, target, python_output, args.check)
     _write_or_check(root, CSHARP_TARGET, csharp_output, args.check)
@@ -3482,6 +4122,7 @@ def main() -> int:
     _write_or_check(root, LUA_TARGET, lua_output, args.check)
     _write_or_check(root, PERL_TARGET, perl_output, args.check)
     _write_or_check(root, HASKELL_TARGET, haskell_output, args.check)
+    _write_or_check(root, SWIFT_TARGET, swift_output, args.check)
     for target in LICENSE_TARGETS:
         _write_bytes_or_check(root, target, upstream_license, args.check)
     python_module = _load_generated_module(root / PYTHON_TARGETS[0])
@@ -3525,6 +4166,19 @@ def main() -> int:
             python_module,
             args.runghc_executable,
             args.ghc_executable,
+        )
+    if "swift" in selected_runtimes:
+        if args.swift_executable is None:
+            parser.error("--swift-executable is required for the Swift self-check")
+        if args.swiftc_executable is None:
+            parser.error("--swiftc-executable is required for the Swift self-check")
+        _self_check_swift(
+            root,
+            swift_output,
+            sources,
+            python_module,
+            args.swift_executable,
+            args.swiftc_executable,
         )
     print(
         f"Unicode {UNICODE_VERSION} generated and verified: "

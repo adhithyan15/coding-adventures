@@ -78,13 +78,14 @@ The 111-case bootstrap corpus covers every process-free v1 domain:
   scalar-ordered diagnostics, full-uppercase Windows reserved basenames, and
   one exact Unicode 17.0.0 snapshot with Todhri NFC and outlined-letter NFKC
   case-fold version sentinels. The source-embedded Python, .NET, TypeScript,
-  Ruby, Elixir, Lua, Perl, and Haskell tables are
+  Ruby, Elixir, Lua, Perl, Haskell, and Swift tables are
   regenerated from hash-pinned Unicode Consortium inputs by
   `code/scripts/generate_tracked_artifact_unicode17.py`; the derived tables
   retain the Unicode License v3 notice in `UNICODE-LICENSE.txt`, and the
   generator byte-checks every distributable runtime module and notice copy,
-  while the Haskell lane runs every official vector with an explicit pinned
-  GHC/runghc pair and no user package or project environment;
+  while the Haskell and Swift lanes run every official vector with explicit
+  pinned compiler/runtime identities and no user package or project
+  environment;
   and
 - bounded process-free CLI parsing with deterministic typed defaults, modeled
   post-parse outcomes, exact multibyte and astral-scalar limits, and adversarial

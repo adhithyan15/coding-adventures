@@ -130,6 +130,37 @@ struct SharedDiscoveryFixture: Decodable {
     let expected: Expected
 }
 
+struct SharedTrackedArtifactFixture: Decodable {
+    struct Input: Decodable {
+        struct Options: Decodable {
+            struct Snapshot: Decodable {
+                let unicodeVersion: String
+                let entries: [TrackedArtifactEntry]
+
+                enum CodingKeys: String, CodingKey {
+                    case unicodeVersion = "unicode_version"
+                    case entries
+                }
+            }
+
+            let trackedArtifactSnapshot: Snapshot
+
+            enum CodingKeys: String, CodingKey {
+                case trackedArtifactSnapshot = "tracked_artifact_snapshot"
+            }
+        }
+
+        let options: Options
+    }
+
+    struct Expected: Decodable {
+        let diagnostics: [TrackedArtifactDiagnostic]
+    }
+
+    let input: Input
+    let expected: Expected
+}
+
 func loadSharedResolutionFixture(_ name: String) throws -> SharedResolutionFixture {
     let packageRoot = URL(fileURLWithPath: #filePath)
         .deletingLastPathComponent()
@@ -156,6 +187,21 @@ func loadSharedDiscoveryFixture(_ name: String) throws -> SharedDiscoveryFixture
         .standardizedFileURL
     return try JSONDecoder().decode(
         SharedDiscoveryFixture.self,
+        from: Data(contentsOf: fixtureURL)
+    )
+}
+
+func loadSharedTrackedArtifactFixture(_ name: String) throws -> SharedTrackedArtifactFixture {
+    let packageRoot = URL(fileURLWithPath: #filePath)
+        .deletingLastPathComponent()
+        .deletingLastPathComponent()
+        .deletingLastPathComponent()
+    let fixtureURL = packageRoot
+        .appendingPathComponent("../../../specs/fixtures/build-tool-v1/cases")
+        .appendingPathComponent(name)
+        .standardizedFileURL
+    return try JSONDecoder().decode(
+        SharedTrackedArtifactFixture.self,
         from: Data(contentsOf: fixtureURL)
     )
 }

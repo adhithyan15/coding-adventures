@@ -11,14 +11,9 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 12878,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/12878",
-    "branch": "codex/build-tool-haskell-tracked-artifact-validation-conformance",
-    "status": "open"
-  },
+  "active_pr": null,
   "last_inventory": {
-    "revision": "0ed3d402a2bf61424032ad34f88223348b915a3c",
+    "revision": "ba51676b1047f365715a2fede4fbfc27a6d0ea37",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1373,
@@ -5251,7 +5246,7 @@
     {
       "id": "build-tool-haskell-tracked-artifact-validation-conformance",
       "title": "Make the Haskell build tool consume tracked-artifact validation",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "build-tool-tracked-artifact-validation-corpus",
         "build-tool-tracked-artifact-unicode-cross-runtime-corpus-hardening",
@@ -5272,6 +5267,10 @@
       "final_review_revision": "c10419fb572795a050533ca7b48831172bcb9c0c",
       "final_review_notes": "Independent generator and CI security review passed the exact emitted-vector implementation, pinned action/toolchain objects, package-database and environment isolation, bounded streams, process-tree cleanup, Unicode provenance, license, and read-only gate without a finding. Independent adapter review found that the first resolver fixture repair incorrectly removed ambiguous multi-Cabal and duplicate-Dart-name packages from the graph. The final repair keeps every discovered package node, suppresses only ambiguous manifest aliases and dependencies, preserves Haskell directory aliases, and strengthens node and level assertions in the shared Haskell/Dart resolver tests; all 51 Haskell examples and zero-new-hint HLint comparison pass afterward. The final ownership audit found the new Mermaid Gantt pipeline and its two owners were registered, confirmed zero exact-path overlap across all seven then-live PRs, and found no other unowned or publication defect.",
       "publication_notes": "Opened ready-for-review PR #12878 from clean validated head af4d907c1832402c71978ee71c52d958dac9662b after a normal first push. Immediately before publication, exact origin/main remained 89a236a69a925673b734cacf07a1ebca4024205d, the target remote branch and prior PR were absent, and all nine live open PRs had zero exact overlap across the 14 changed paths. GitHub reports the PR non-draft and mergeable, currently blocked only by queued or in-progress checks including the new required Unicode 17 generated Haskell conformance job; auto-merge remains disabled until every required check is terminal and acceptable and no merge conflict exists.",
+      "merged_head_revision": "f29bd65249fb3f08a7638a88bee7063e52e6f020",
+      "merge_revision": "9042d13df3ea2391db6d23a0e49066e233e06ace",
+      "merged_at": "2026-08-25T22:54:56Z",
+      "merge_notes": "The first CodeQL language-detection attempt failed before checkout because GitHub's internal action-download host did not resolve. Actual logs showed no repository execution or code failure, so the loop reran only that failed job. The replacement succeeded, leaving 31 successes and six expected skips with no failure or pending work. GitHub reported the branch clean and mergeable; the loop enabled squash auto-merge, and GitHub merged PR #12878 without a manual merge command.",
       "notes": "Consume the closed process-free tracked-artifact snapshot and diagnostics in the Haskell engine without adding Git, filesystem, or process authority."
     },
     {
@@ -5412,7 +5411,7 @@
     {
       "id": "build-tool-swift-tracked-artifact-validation-conformance",
       "title": "Make the Swift build tool consume tracked-artifact validation",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": [
         "build-tool-tracked-artifact-validation-corpus",
         "build-tool-tracked-artifact-unicode-cross-runtime-corpus-hardening",
@@ -5420,8 +5419,11 @@
         "build-tool-tracked-artifact-unicode-version-contract",
         "build-tool-swift-dist-newstyle-discovery-exclusion"
       ],
-      "branch": null,
+      "branch": "codex/build-tool-swift-tracked-artifact-validation-conformance",
       "pr_number": null,
+      "selection_revision": "ba51676b1047f365715a2fede4fbfc27a6d0ea37",
+      "selection_notes": "Selected only after PR #12878 completed all repository checks following one infrastructure-only CodeQL retry and GitHub merged reviewed head f29bd65249fb3f08a7638a88bee7063e52e6f020 through squash auto-merge as 9042d13df3ea2391db6d23a0e49066e233e06ace at 2026-08-25T22:54:56Z without a manual merge command. The collision-checked exact-main schema-3 report at ba51676b1047f365715a2fede4fbfc27a6d0ea37 remains 15 established lanes, 1,373 implementation identities, 4,566 slots, 175 high-consensus packages with 276 gaps, 122 identities in five to nine lanes with 926 gaps, 166 identities in two to four lanes with 2,087 gaps, 910 singletons with 12,740 gaps, 721 Rust singletons, zero canonical collisions, and zero unknown buckets; OCaml remains correctly emerging at zero packages. Git-tree comparison from the preceding inventory finds no changed implementation bucket. Every intervening behavior is classified before selection: Java lambdas extend the JV02 owner, relaxed SIMD lane-select extends the relaxed-SIMD, WAST, conformance, and provenance owners, HTML form diagnostics extend the HTML frontend owner, conditional ALGOL selector writes extend the ALGOL IIR owner, the LaTeX workflow repair is excluded host-security hardening, and human-language plus ADJ changes remain curriculum, generated-data, or adjacent automation surfaces. No newly unowned eligible portable gap remains. All five Swift prerequisites are merged. Swift is the sole remaining tracked-artifact engine, covers 161 reported packages, directly unlocks its orphan-crate consumer, and completes the implementation dependencies of the tracked-artifact umbrella. Eight live open PRs have zero exact overlap with the expected Swift build-tool, generated Unicode, generator/test, fixture, CI, state, and roadmap surfaces; the target branch and prior PR were absent before creating the fresh clean worktree. The higher-descendant extra-CI corpus and strategically important OCaml process-free substrate remain collision-unsafe while PRs #12149 and #12162 own required Go main and validator surfaces; ready orphan-only children are narrower.",
+      "validation_notes": "The Swift engine now exposes one pure in-memory tracked-artifact snapshot validator and independently consumes all five language-neutral fixtures. It implements lexical slash normalization, the closed portable-path failure precedence, hostile invalid-path redaction, Unicode-scalar length and diagnostic ordering, NFKC plus full default folding for exact node_modules components, full-uppercase Windows reserved basenames, inert regular/symlink/reparse kinds, and canonical detail sorting without adding Git, filesystem, process, environment, or network authority. Generated source-embedded Unicode 17.0.0 tables provide NFC, NFKC, full folding, NFKC-fold, and full uppercase independently of host tables and carry the exact 1,995-byte Unicode License v3 notice. The hardened generator requires explicit exact Swift 6.3.3 swift and swiftc paths, uses isolated temporary source and module-cache state, a minimal environment, bounded retained output, and unconditional process-tree cleanup; on Windows it derives the reviewed runtime, SDK, and linker libraries from the pinned toolchain. Its scalar-exact emitted-runtime check passes all 20,034 official normalization vectors, 1,585 C/F folding rows, 1,581 unconditional uppercase mappings, derived NFKC-fold expectations, and both Unicode 17 sentinels. All 33 generator tests and all 33 Swift package tests pass. LLVM coverage reports 98.28% line and 96.92% function coverage for Validator.swift, 91.33% line coverage for the generated Unicode module, and 62.69% overall line coverage. The dependency-free Swift package describes cleanly and builds in release mode; the canonical BUILD-equivalent test front also passes. The neutral corpus validates all 111 cases and 269 files; all 201 build-tool conformance tests pass with 23 expected platform skips. Package-parity, capability-taxonomy, Haskell-capability, and OCaml-lock families pass 68 tests with two expected Windows skips. The Go build tool passes all packages, vet, and trimpath build, then a real forced Swift dry plan evaluates 45 Starlark BUILD files, discovers and validates 165 Swift packages and programs, preserves the five-entry orphan ledger, and reports all 165 WOULD-BUILD. Ruff, formatting, Bandit medium/high, workflow YAML, 11 Mosaic Swift acceptance tests, strict JSON, the 509-owner/772-edge complete acyclic state graph, collision, credential-pattern, and diff checks pass. The new required CI job pins checkout and setup-swift action SHAs, exact Swift 6.3.3 identity, least read permission, disabled checkout credentials, and the full emitted-runtime result in the stable aggregate gate. No dependency changed. Independent correctness and security review found and verified closure of scalar-equivalence masking in the official runner and Swift ownership in the excluded generator host-authority review, then found no remaining publication blocker.",
       "notes": "Consume the closed process-free tracked-artifact snapshot and diagnostics in the Swift engine without adding Git, filesystem, or process authority."
     },
     {
@@ -5453,6 +5455,28 @@
       "publication_notes": "Opened ready-for-review PR #12773 from clean validated head eeb0f448217aa96bd170b2e719ddf64f8946aab8 after a normal first push from exact origin/main ad36477baa5ada117c52ccb682b5b26fe4ee0510. Immediately before publication, the target remote branch and prior PR were absent, and all 12 changed paths had zero exact overlap across 13 other live open PRs. GitHub reports the branch mergeable and the initial required checks queued, so auto-merge remains disabled until every check is terminal and acceptable.",
       "merge_notes": "All 30 reported checks reached terminal acceptable conclusions: 24 successes, five expected skips, and one neutral aggregate, with no failures or pending work. GitHub reported the branch clean and mergeable; the loop enabled squash auto-merge, and GitHub merged PR #12773 without a manual merge command.",
       "notes": "Consume the closed process-free tracked-artifact snapshot and diagnostics in the TypeScript engine without adding Git, filesystem, or process authority."
+    },
+    {
+      "id": "human-language-books-untrusted-input-host-authority-review",
+      "title": "Review untrusted-input host authority in human-language book builds",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered during the post-PR #12878 commit audit. The merged LaTeX workflow repair closes shell escape, latexmkrc execution, symlink writes, token exposure, and artifact-selection defects, but issues #12753 and #12754 leave native host-authority questions around TeX openin_any=a reads and repository-controlled SVG ingestion through rsvg-convert. Review parser and version bounds, runner-file disclosure resistance, source containment, and artifact provenance. This is a host-security authority review rather than a portable all-language port, so selection remains blocked in the parity loop."
+    },
+    {
+      "id": "human-language-books-publish-supply-chain-authority-review",
+      "title": "Review human-language book publication supply-chain authority",
+      "status": "pending",
+      "depends_on": [
+        "human-language-books-untrusted-input-host-authority-review"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered during the post-PR #12878 commit audit from issue #12754. After the untrusted-input host-authority review, cover the mutable peaceiris/actions-gh-pages@v4 and softprops/action-gh-release@v2 references in the only write-authorized job, full-SHA pinning, artifact provenance, and repository-wide SHA-enforcement readiness. This is a native publication supply-chain review rather than a portable implementation lane, so selection remains blocked in the parity loop."
     },
     {
       "id": "human-language-data-generator-filesystem-authority-review",
@@ -5736,12 +5760,13 @@
         "build-tool-elixir-tracked-artifact-validation-conformance",
         "build-tool-lua-tracked-artifact-validation-conformance",
         "build-tool-perl-tracked-artifact-validation-conformance",
-        "build-tool-haskell-tracked-artifact-validation-conformance"
+        "build-tool-haskell-tracked-artifact-validation-conformance",
+        "build-tool-swift-tracked-artifact-validation-conformance"
       ],
       "branch": null,
       "pr_number": null,
       "selection_blocked": true,
-      "notes": "Discovered after merged PR #12773 extended the shared Unicode 17 generator to resolve `node` through PATH, write temporary TypeScript sources and runner files, and invoke `tsx` for full-vector verification. The Ruby tracked-artifact consumer extends the same native generator boundary to PATH-resolved `ruby`, temporary Ruby source and runner files, inherited `RUBYOPT`/`RUBYLIB` and other environment state, buffered child output, and child diagnostics. The merged Elixir consumer adds PATH-resolved `elixir`, temporary emitted modules and runners, inherited `ERL_AFLAGS`/`ERL_FLAGS`/`ELIXIR_ERL_OPTIONS` and related runtime state, buffered child output, and child diagnostics. The merged Lua and Perl slices close their corresponding risks with explicit pinned executable identities, runtime isolation flags, minimal environments, bounded retained output, and unconditional descendant cleanup through a Windows kill-on-close Job Object or POSIX process group, with real timeout and early-root-exit tests. The selected Haskell consumer must reuse that hardened runner, require an explicit reviewed GHC or runghc executable and exact version, prevent user package databases and GHC environment files from influencing resolution, use a minimal environment, bound retained output, and unconditionally clean descendants; full emitted-runtime verification owns those generator changes while the validator remains process-free. Review the still-open executable identity, environment and PATH authority, temporary-directory containment and cleanup, command construction, dependency resolution, bounded output and diagnostics, process failures and process-tree cleanup, offline determinism, credential redaction, and truthful capabilities across the remaining emitted runtimes separately from the pure runtime validators. This native generator-shell authority work is excluded from autonomous portable selection."
+      "notes": "Discovered after merged PR #12773 extended the shared Unicode 17 generator to resolve `node` through PATH, write temporary TypeScript sources and runner files, and invoke `tsx` for full-vector verification. The Ruby tracked-artifact consumer extends the same native generator boundary to PATH-resolved `ruby`, temporary Ruby source and runner files, inherited `RUBYOPT`/`RUBYLIB` and other environment state, buffered child output, and child diagnostics. The merged Elixir consumer adds PATH-resolved `elixir`, temporary emitted modules and runners, inherited `ERL_AFLAGS`/`ERL_FLAGS`/`ELIXIR_ERL_OPTIONS` and related runtime state, buffered child output, and child diagnostics. The merged Lua and Perl slices close their corresponding risks with explicit pinned executable identities, runtime isolation flags, minimal environments, bounded retained output, and unconditional descendant cleanup through a Windows kill-on-close Job Object or POSIX process group, with real timeout and early-root-exit tests. The merged Haskell consumer reuses that hardened runner with explicit exact GHC/runghc identities, no user package or project environment, bounded output, and descendant cleanup. The selected Swift consumer extends the same host boundary to explicit exact Swift 6.3.3 swift/swiftc identities, temporary generated and runner sources plus module-cache state, and on Windows reviewed toolchain-relative runtime, SDK, and linker-library resolution with bounded Job Object execution; full emitted-runtime verification owns those generator changes while the validator remains process-free. Review the still-open executable identity, environment and PATH authority, temporary-directory containment and cleanup, command construction, dependency resolution, bounded output and diagnostics, process failures and process-tree cleanup, offline determinism, credential redaction, and truthful capabilities across the remaining emitted runtimes separately from the pure runtime validators. This native generator-shell authority work is excluded from autonomous portable selection."
     }
   ]
 }

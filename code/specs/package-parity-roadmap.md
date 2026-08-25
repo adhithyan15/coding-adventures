@@ -7875,6 +7875,74 @@ established-lane parity umbrella were registered before publication. The state
 graph now contains 507 unique owners and 770 complete acyclic edges: 142 merged,
 364 pending, and exactly one in progress.
 
+Ready-for-review PR #12878 opened from clean validated head
+`af4d907c1832402c71978ee71c52d958dac9662b`; its state-tracking commit advanced
+the reviewed head to `f29bd65249fb3f08a7638a88bee7063e52e6f020`. One CodeQL
+language-detection attempt failed before checkout because GitHub's internal
+action-download host did not resolve. The loop inspected the actual log and
+reran only that failed infrastructure job. The replacement succeeded, leaving
+31 successes and six expected skips with no failure or pending job. GitHub
+reported the branch clean and mergeable, so the loop enabled squash auto-merge.
+GitHub merged PR #12878 as
+`9042d13df3ea2391db6d23a0e49066e233e06ace` at
+`2026-08-25T22:54:56Z` without a manual merge command.
+
+### Post-#12878 refresh and Swift tracked-artifact selection
+
+The exact-main schema-3 collision report at
+`ba51676b1047f365715a2fede4fbfc27a6d0ea37` remains structurally unchanged:
+15 established lanes, 1,373 implementation identities, 4,566 package slots,
+175 high-consensus packages with 276 missing slots, 122 identities in five to
+nine lanes with 926 gaps, 166 identities in two to four lanes with 2,087 gaps,
+910 singletons with 12,740 gaps, and 721 Rust singletons. Canonical collisions
+and unknown language buckets remain zero. OCaml remains correctly emerging at
+zero packages, and a Git-tree identity comparison with the preceding inventory
+finds no changed implementation bucket.
+
+Every intervening change is classified before selection. Java lambdas extend
+the JV02 neutral and lane owners. Relaxed SIMD lane-select extends the existing
+relaxed-SIMD, WAST-parser, conformance, and corpus-provenance owners. HTML form
+diagnostics extend the HTML frontend owner, conditional ALGOL selector writes
+extend the ALGOL IIR owner, and human-language plus ADJ changes remain
+curriculum, generated-data, or adjacent automation-state surfaces. The Mermaid
+Gantt pipeline remains covered by the two owners registered before PR #12878
+opened.
+
+The commit-level audit also registered two newly exposed, selection-blocked
+native authority reviews before confirming the next portable selection. The
+first owns residual TeX `openin_any=a` and repository-controlled SVG-ingestion
+risks in human-language book builds. Its dependent owns the write-authorized
+publication job's mutable third-party action references, full-SHA pinning, and
+artifact provenance. These host-security and supply-chain reviews do not enter
+the all-language denominator; no newly unowned eligible portable gap remains.
+
+The dependency/leverage pass selects
+`build-tool-swift-tracked-artifact-validation-conformance` on branch
+`codex/build-tool-swift-tracked-artifact-validation-conformance`. All five
+declared prerequisites are merged. Swift is the sole remaining tracked-artifact
+engine, covers 161 reported packages, directly unlocks the Swift orphan-crate
+consumer, and completes the implementation dependencies of the
+tracked-artifact umbrella. Its three unfinished descendants give it more
+immediate leverage than any ready orphan-only child.
+
+All eight live open PRs have zero exact overlap with the expected Swift
+build-tool, generated Unicode, generator and test, fixture documentation,
+license, CI, state, and roadmap surfaces. The target branch and prior PR were
+absent before the fresh clean worktree and branch were created. The
+higher-descendant extra-CI corpus and strategically important OCaml
+process-free substrate remain collision-unsafe while PRs #12149 and #12162 own
+their required Go entry-point and validator surfaces. After lifecycle
+reconciliation and selection, the graph contains 509 unique owners and 772
+complete acyclic edges: 143 merged, 365 pending, and exactly one in-progress
+owner, with no active parity PR.
+
+The selection also adds Swift as a dependency of the existing excluded Unicode
+generator host-authority review. The generated-table verification requires
+explicit Swift 6.3.3 `swift` and `swiftc` executables, isolated temporary source
+and module-cache writes, and on Windows toolchain-relative runtime, SDK, and
+linker-library selection; these native powers remain outside the pure Swift
+validator.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

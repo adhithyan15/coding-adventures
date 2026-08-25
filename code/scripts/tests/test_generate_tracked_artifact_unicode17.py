@@ -101,7 +101,7 @@ class UnicodeDownloadBoundaryTests(unittest.TestCase):
     ) -> None:
         self.assertEqual(
             generator._selected_runtime_self_checks(None),
-            ("typescript", "ruby", "elixir", "lua", "perl", "haskell"),
+            ("typescript", "ruby", "elixir", "lua", "perl", "haskell", "swift"),
         )
 
     def test_runtime_self_check_selection_can_isolate_elixir_for_ci(self) -> None:
@@ -354,6 +354,39 @@ class UnicodeDownloadBoundaryTests(unittest.TestCase):
         )
         self.assertIn(
             Path("code/programs/haskell/build-tool/UNICODE-LICENSE.txt"),
+            generator.LICENSE_TARGETS,
+        )
+
+    def test_swift_renderer_exports_the_pinned_process_free_api(self) -> None:
+        rendered = generator._render_swift(
+            (
+                [(0x0300, 230)],
+                [(0x00C0, False, (0x0041, 0x0300))],
+                [(0x0041, 0x0300, 0x00C0)],
+                [(0x0041, (0x0061,))],
+                [(0x0061, (0x0041,))],
+            )
+        )
+
+        self.assertIn("enum TrackedArtifactUnicode17", rendered)
+        self.assertIn('static let unicodeVersion = "17.0.0"', rendered)
+        self.assertIn("static func nfc(_ value: String) -> String", rendered)
+        self.assertIn("static func nfkcCasefold(_ value: String) -> String", rendered)
+        self.assertIn("static func fullUppercase(_ value: String) -> String", rendered)
+        self.assertNotIn("precomposedStringWithCanonicalMapping", rendered)
+        self.assertNotIn(".uppercased()", rendered)
+        self.assertNotIn("import Foundation", rendered)
+
+    def test_swift_output_and_license_are_declared_targets(self) -> None:
+        self.assertEqual(
+            generator.SWIFT_TARGET,
+            Path(
+                "code/programs/swift/build-tool/Sources/BuildToolCore/"
+                "TrackedArtifactUnicode17.swift"
+            ),
+        )
+        self.assertIn(
+            Path("code/programs/swift/build-tool/UNICODE-LICENSE.txt"),
             generator.LICENSE_TARGETS,
         )
 
@@ -618,6 +651,129 @@ class UnicodeDownloadBoundaryTests(unittest.TestCase):
         self.assertNotIn("PATH", invocation["env"])
         self.assertNotIn("GHC_ENVIRONMENT", invocation["env"])
         self.assertNotIn("CABAL_DIR", invocation["env"])
+
+    def test_swift_self_check_compiles_and_runs_every_official_vector_family(
+        self,
+    ) -> None:
+        sources = {
+            "NormalizationTest.txt": "0041;0041;0041;0041;0041; # LATIN A\n",
+            "CaseFolding.txt": "0041; C; 0061; # LATIN A\n",
+            "UnicodeData.txt": ";".join(["0061"] + [""] * 11 + ["0041"] + [""] * 2),
+            "SpecialCasing.txt": "0061; 0061; 0041; 0041; ; # LATIN A\n",
+        }
+
+        class _Module:
+            @staticmethod
+            def nfkc_casefold(value: str) -> str:
+                return value.lower()
+
+        executable = Path(sys.executable).resolve()
+        version = subprocess.CompletedProcess(
+            [],
+            0,
+            ("Swift version 6.3.3 (swift-6.3.3-RELEASE)\nTarget: test-target\n"),
+            "",
+        )
+        compiled = subprocess.CompletedProcess([], 0, "", "")
+        completed = subprocess.CompletedProcess([], 0, "ok\r\n", "")
+        reviewed_runtime = Path("C:/reviewed-swift-runtime")
+        reviewed_sdk = Path("C:/reviewed-swift-sdk")
+        with (
+            mock.patch.object(
+                generator,
+                "_swift_windows_runtime_directory",
+                return_value=reviewed_runtime,
+            ),
+            mock.patch.object(
+                generator,
+                "_swift_windows_sdk_directory",
+                return_value=reviewed_sdk,
+            ),
+            mock.patch.object(
+                generator,
+                "_swift_windows_linker_arguments",
+                return_value=["-use-ld=lld", "-L", "C:/reviewed-swift-libs"],
+            ),
+            mock.patch.object(
+                generator,
+                "_run_bounded_process",
+                side_effect=(version, version, compiled, completed),
+            ) as run,
+        ):
+            generator._self_check_swift(
+                Path("C:/repo"),
+                "enum TrackedArtifactUnicode17 {}\n",
+                sources,
+                _Module(),
+                executable,
+                executable,
+            )
+
+        self.assertEqual(run.call_args_list[0].args[0], [str(executable), "--version"])
+        self.assertEqual(run.call_args_list[1].args[0], [str(executable), "--version"])
+        compile_command = run.call_args_list[2].args[0]
+        self.assertEqual(compile_command[0], str(executable))
+        self.assertIn("-no-color-diagnostics", compile_command)
+        self.assertIn("-module-cache-path", compile_command)
+        self.assertIn("-o", compile_command)
+        if os.name == "nt":
+            self.assertEqual(compile_command[1:3], ["-sdk", str(reviewed_sdk)])
+            self.assertIn("-use-ld=lld", compile_command)
+            self.assertIn("C:/reviewed-swift-libs", compile_command)
+        self.assertTrue(
+            any(
+                argument.endswith("TrackedArtifactUnicode17.swift")
+                for argument in compile_command
+            )
+        )
+        self.assertTrue(
+            any(argument.endswith("main.swift") for argument in compile_command)
+        )
+        self.assertEqual(run.call_args_list[2].kwargs["input_text"], "")
+        self.assertEqual(run.call_args_list[2].kwargs["timeout"], 180)
+
+        run_command = run.call_args_list[3].args[0]
+        self.assertEqual(len(run_command), 1)
+        self.assertTrue(
+            run_command[0].endswith(
+                "self-check.exe" if os.name == "nt" else "self-check"
+            )
+        )
+        invocation = run.call_args_list[3].kwargs
+        self.assertEqual(
+            invocation["input_text"],
+            "V;17.0.0\nN;41;41;41;41;41\nF;41;61;61\nU;61;41\n",
+        )
+        self.assertEqual(invocation["timeout"], 180)
+        self.assertNotIn("HOME", invocation["env"])
+        self.assertNotIn("TOOLCHAINS", invocation["env"])
+        self.assertNotIn("SWIFT_EXEC", invocation["env"])
+        if os.name == "nt":
+            self.assertEqual(
+                invocation["env"]["PATH"],
+                os.pathsep.join((str(executable.parent), str(reviewed_runtime))),
+            )
+            self.assertEqual(invocation["env"]["SDKROOT"], str(reviewed_sdk))
+        else:
+            self.assertNotIn("PATH", invocation["env"])
+            self.assertNotIn("SDKROOT", invocation["env"])
+
+    def test_swift_self_check_requires_exact_scalar_sequences(self) -> None:
+        runner = generator._SWIFT_SELF_CHECK
+        self.assertIn("func scalarEqual(_ left: String, _ right: String)", runner)
+        self.assertIn(
+            "scalarEqual(TrackedArtifactUnicode17.nfc(c1), c2)",
+            runner,
+        )
+        self.assertIn(
+            "scalarEqual(TrackedArtifactUnicode17.nfkc(c5), c4)",
+            runner,
+        )
+        self.assertIn(
+            "scalarEqual(\n                        TrackedArtifactUnicode17.casefold(source)",
+            runner,
+        )
+        self.assertNotIn("TrackedArtifactUnicode17.nfc(c1) == c2", runner)
 
     def test_bounded_process_discards_output_past_the_limit(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

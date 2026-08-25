@@ -1,6 +1,87 @@
 import Foundation
 
+public enum TrackedArtifactEntryKind: String, Codable, Sendable {
+    case regular
+    case symlink
+    case reparse
+}
+
+public struct TrackedArtifactEntry: Codable, Equatable, Sendable {
+    public let ordinal: Int
+    public let path: String
+    public let entryKind: TrackedArtifactEntryKind
+
+    public init(ordinal: Int, path: String, entryKind: TrackedArtifactEntryKind) {
+        self.ordinal = ordinal
+        self.path = path
+        self.entryKind = entryKind
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case ordinal
+        case path
+        case entryKind = "entry_kind"
+    }
+}
+
+public struct TrackedArtifactDiagnosticDetails: Codable, Equatable, Sendable {
+    public let ordinal: Int
+    public let entryKind: TrackedArtifactEntryKind
+    public let problem: String?
+
+    public init(ordinal: Int, entryKind: TrackedArtifactEntryKind, problem: String?) {
+        self.ordinal = ordinal
+        self.entryKind = entryKind
+        self.problem = problem
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case ordinal
+        case entryKind = "entry_kind"
+        case problem
+    }
+}
+
+public struct TrackedArtifactDiagnostic: Codable, Equatable, Sendable {
+    public let code: String
+    public let severity: String
+    public let path: String
+    public let details: TrackedArtifactDiagnosticDetails
+
+    public init(
+        code: String,
+        severity: String,
+        path: String,
+        details: TrackedArtifactDiagnosticDetails
+    ) {
+        self.code = code
+        self.severity = severity
+        self.path = path
+        self.details = details
+    }
+}
+
+public struct TrackedArtifactValidationError: Error, Equatable, Sendable {
+    public let message: String
+
+    public init(message: String) {
+        self.message = message
+    }
+}
+
 public enum Validator {
+    public static let trackedArtifactUnicodeVersion = TrackedArtifactUnicode17.unicodeVersion
+
+    private static let trackedArtifactComponentIdentity = "node_modules"
+    private static let trackedArtifactRedactedPath = "repository"
+    private static let windowsReservedBasenames: Set<String> = Set(
+        ["CON", "PRN", "AUX", "NUL", "CONIN$", "CONOUT$", "CLOCK$"] +
+            ["COM", "LPT"].flatMap { prefix in
+                (1 ... 9).map { "\(prefix)\($0)" } +
+                    ["¹", "²", "³"].map { "\(prefix)\($0)" }
+            }
+    )
+
     public static let ciManagedToolchainLanguages: Set<String> = [
         "python",
         "ruby",
@@ -13,6 +94,166 @@ public enum Validator {
         "kotlin",
         "haskell",
     ]
+
+    /// Validate an already bounded, inert snapshot of tracked paths.
+    ///
+    /// Snapshot construction deliberately lives outside this pure adapter. It
+    /// does not enumerate a checkout, follow links, invoke Git, open paths,
+    /// read the environment, launch processes, or access the network.
+    public static func validateTrackedArtifactSnapshot(
+        unicodeVersion: String = trackedArtifactUnicodeVersion,
+        entries: [TrackedArtifactEntry]
+    ) throws -> [TrackedArtifactDiagnostic] {
+        guard unicodeVersion == trackedArtifactUnicodeVersion else {
+            throw TrackedArtifactValidationError(
+                message: "tracked artifact Unicode version must be \(trackedArtifactUnicodeVersion)"
+            )
+        }
+
+        return entries.compactMap { entry in
+            switch normalizeTrackedArtifactPath(entry.path) {
+            case let .failure(problem):
+                return TrackedArtifactDiagnostic(
+                    code: "TRACKED_ARTIFACT_PATH_INVALID",
+                    severity: "error",
+                    path: trackedArtifactRedactedPath,
+                    details: TrackedArtifactDiagnosticDetails(
+                        ordinal: entry.ordinal,
+                        entryKind: entry.entryKind,
+                        problem: problem.rawValue
+                    )
+                )
+            case let .success(normalizedPath):
+                let forbidden = normalizedPath.split(
+                    separator: "/",
+                    omittingEmptySubsequences: false
+                ).contains { component in
+                    unicodeScalarEqual(
+                        TrackedArtifactUnicode17.nfkcCasefold(String(component)),
+                        trackedArtifactComponentIdentity
+                    )
+                }
+                guard forbidden else { return nil }
+                return TrackedArtifactDiagnostic(
+                    code: "TRACKED_ARTIFACT_FORBIDDEN",
+                    severity: "error",
+                    path: normalizedPath,
+                    details: TrackedArtifactDiagnosticDetails(
+                        ordinal: entry.ordinal,
+                        entryKind: entry.entryKind,
+                        problem: nil
+                    )
+                )
+            }
+        }.sorted(by: trackedArtifactDiagnosticLessThan)
+    }
+
+    private enum TrackedArtifactPathProblem: String, Error {
+        case empty = "EMPTY"
+        case tooLong = "TOO_LONG"
+        case nonNFC = "NON_NFC"
+        case absolute = "ABSOLUTE"
+        case driveQualified = "DRIVE_QUALIFIED"
+        case emptySegment = "EMPTY_SEGMENT"
+        case dotSegment = "DOT_SEGMENT"
+        case trailingDotOrSpace = "TRAILING_DOT_OR_SPACE"
+        case unsafeCharacter = "UNSAFE_CHARACTER"
+        case reservedBasename = "RESERVED_BASENAME"
+    }
+
+    private static func normalizeTrackedArtifactPath(
+        _ rawPath: String
+    ) -> Result<String, TrackedArtifactPathProblem> {
+        // Separator replacement is intentionally lexical. Host path APIs can
+        // collapse exactly the empty, dot, and traversal segments we reject.
+        let normalizedPath = rawPath.replacingOccurrences(of: "\\", with: "/")
+        guard !normalizedPath.isEmpty else { return .failure(.empty) }
+        guard normalizedPath.unicodeScalars.count <= 512 else { return .failure(.tooLong) }
+        guard unicodeScalarEqual(
+            TrackedArtifactUnicode17.nfc(normalizedPath),
+            normalizedPath
+        ) else {
+            return .failure(.nonNFC)
+        }
+        guard normalizedPath.first != "/" else { return .failure(.absolute) }
+
+        let scalars = Array(normalizedPath.unicodeScalars)
+        if scalars.count >= 2,
+           asciiAlpha(scalars[0].value),
+           scalars[1].value == 0x3A {
+            return .failure(.driveQualified)
+        }
+
+        let segments = normalizedPath.split(separator: "/", omittingEmptySubsequences: false)
+        guard !segments.contains(where: \.isEmpty) else {
+            return .failure(.emptySegment)
+        }
+        if normalizedPath.unicodeScalars.contains(where: unsafeTrackedArtifactScalar) {
+            return .failure(.unsafeCharacter)
+        }
+
+        for segmentSlice in segments {
+            let segment = String(segmentSlice)
+            if segment == "." || segment == ".." {
+                return .failure(.dotSegment)
+            }
+            if segment.last == "." || segment.last == " " {
+                return .failure(.trailingDotOrSpace)
+            }
+            let basename = String(segment.split(
+                separator: ".",
+                maxSplits: 1,
+                omittingEmptySubsequences: false
+            )[0])
+            if windowsReservedBasenames.contains(
+                TrackedArtifactUnicode17.fullUppercase(basename)
+            ) {
+                return .failure(.reservedBasename)
+            }
+        }
+
+        return .success(normalizedPath)
+    }
+
+    private static func asciiAlpha(_ scalar: UInt32) -> Bool {
+        (0x41 ... 0x5A).contains(scalar) || (0x61 ... 0x7A).contains(scalar)
+    }
+
+    private static func unsafeTrackedArtifactScalar(_ scalar: Unicode.Scalar) -> Bool {
+        scalar.value < 0x20 || [0x3C, 0x3E, 0x3A, 0x22, 0x7C, 0x3F, 0x2A].contains(scalar.value)
+    }
+
+    private static func unicodeScalarEqual(_ left: String, _ right: String) -> Bool {
+        left.unicodeScalars.elementsEqual(right.unicodeScalars, by: { $0.value == $1.value })
+    }
+
+    private static func trackedArtifactDiagnosticLessThan(
+        _ left: TrackedArtifactDiagnostic,
+        _ right: TrackedArtifactDiagnostic
+    ) -> Bool {
+        if left.code != right.code { return left.code < right.code }
+        let pathComparison = compareUnicodeScalars(left.path, right.path)
+        if pathComparison != 0 { return pathComparison < 0 }
+        return canonicalDetails(left.details) < canonicalDetails(right.details)
+    }
+
+    private static func compareUnicodeScalars(_ left: String, _ right: String) -> Int {
+        let leftScalars = left.unicodeScalars.map(\.value)
+        let rightScalars = right.unicodeScalars.map(\.value)
+        for (leftValue, rightValue) in zip(leftScalars, rightScalars) where leftValue != rightValue {
+            return leftValue < rightValue ? -1 : 1
+        }
+        if leftScalars.count == rightScalars.count { return 0 }
+        return leftScalars.count < rightScalars.count ? -1 : 1
+    }
+
+    private static func canonicalDetails(_ details: TrackedArtifactDiagnosticDetails) -> String {
+        var value = "{\"entry_kind\": \"\(details.entryKind.rawValue)\", \"ordinal\": \(details.ordinal)"
+        if let problem = details.problem {
+            value += ", \"problem\": \"\(problem)\""
+        }
+        return value + "}"
+    }
 
     public static func validateCIFullBuildToolchains(repoRoot: String, packages: [BuildPackage]) -> String? {
         let ciPath = (repoRoot as NSString).appendingPathComponent(".github/workflows/ci.yml")
