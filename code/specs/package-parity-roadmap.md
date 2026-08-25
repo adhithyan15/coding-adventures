@@ -6816,6 +6816,68 @@ overlap with live open PRs. GitHub reports the PR non-draft and mergeable,
 blocked only by queued checks, so auto-merge remains disabled until every
 required check is terminal and acceptable and GitHub reports no conflict.
 
+PR #12700 subsequently completed all 29 reported checks: 23 successes and six
+expected skips, with no failures or pending work. GitHub reported the branch
+clean and mergeable, so the loop enabled squash auto-merge; GitHub merged it as
+`c68b31d8daa9b82e2b59b139364dd990d8244a27` at
+`2026-08-25T06:55:04Z` without a manual merge command. The exact merged head is
+`924a1bb297a00f97bc94e48d2ef41cbee8c968d9`.
+
+The mandatory post-merge collision inventory on current `origin/main`
+`fc01df1ae0b68af15f7a493d610f348c32edf60f` is structurally unchanged:
+schema 3, 15 established lanes, 1,372 implementation identities, 4,565 slots,
+175 high-consensus packages with 276 gaps, 122 five-to-nine-lane packages with
+926 gaps, 166 two-to-four-lane packages with 2,087 gaps, 909 singletons with
+12,726 gaps, 720 Rust singletons, zero collisions, and zero unknown buckets.
+OCaml remains emerging at zero packages. Exact comparison with the stored
+`671d62d2c1c536da2778c03347e030fae77f6c33` inventory finds no identity or
+slot addition or removal.
+
+The source and contract refresh assigns merged PR #12698's 274 successful Rust
+`i8x16.shuffle` assertions across 12 modules to the existing
+`wasm-conformance-portable-core-conformance` owner; it is expanded corpus
+evidence, not a new package or owner. Merged PR #12686 exposes one genuinely
+unowned native correctness boundary: `storage-fs` explicitly admits that a
+fresh backend can reuse an issued revision after deletion of the highest
+surviving record and that two instances sharing one root are not coordinated,
+while STR01 and the README still overclaim restart-safe monotonicity. The new
+selection-blocked
+`storage-fs-persistent-revision-floor-native-authority-review` owner covers a
+truthful contract, durable floor or epoch design, crash and rollback behavior,
+cross-process locking, no-follow containment, atomic publication and fsync,
+and restart/two-instance tests. The complete state is now an acyclic 492-owner,
+749-edge graph with no eligible unowned gap.
+
+The next selected owner is
+`build-tool-fsharp-orphan-crate-validation-conformance` on exact base
+`fc01df1ae0b68af15f7a493d610f348c32edf60f`. PR #12700 merged its last unmet
+dependency, so this bounded process-free F# facade now advances the reviewed
+shared .NET validator into another supported implementation lane and
+contributes the F# edge to the orphan-validation completion umbrella. Its
+target branch is absent and its exact F# program, tests, README, changelog,
+state, and roadmap surfaces have zero overlap with live PRs and remote heads.
+The extra-CI-toolchain corpus has greater graph leverage, but its current owner
+also requires canonical Go normalization on `main.go`, which overlaps live PRs
+#12149 and #12162; OCaml remains collision-unsafe on the same surfaces.
+
+The selected F# slice now has a validated implementation. The specification
+requires each established shared-engine front door to expose a language-native
+orphan-snapshot adapter and consume every registered neutral fixture without
+gaining discovery authority. A focused regression first failed because the F#
+symbol did not exist; the no-inline facade now drives all four clean, unlisted,
+invalid-exemption, and stale-exemption fixtures and compares exact diagnostics
+and pending counts. The formatted Release suite passes 11 tests, the shared C#
+downstream passes 43, warnings-as-errors build and publish pass, both canonical
+F# BUILD commands pass twice, and the F# assembly records 100% line, branch,
+and method coverage while the exercised shared engine records 92.39% line
+coverage. The 111-case/269-file neutral corpus, 146 focused repository tests
+plus 928 subtests with two expected Windows skips, Go test/vet/trimpath build,
+and a real 199-of-199 F# forced dry plan all pass. NuGet vulnerability,
+Fantomas 7.0.6, collision, state-DAG, diff, credential, artifact, dependency,
+and authority checks are clean. Three independent audits confirm exact fixture
+consumption, zero live-PR or remote-head path overlap, and no publication
+blocker after adding the missing README paragraph break.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
