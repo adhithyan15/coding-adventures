@@ -84,7 +84,9 @@ in-memory snapshot of tracked repository entries without reading the
 filesystem or following links. It applies the shared build-tool v1 portable
 path policy in the required precedence order, normalizes `\` to `/`, uses
 Unicode scalar lengths and ordering, treats entry kinds as inert metadata, and
-returns deterministic diagnostics whose rendered path is always `repository`.
+returns deterministic diagnostics. Invalid hostile paths are redacted to
+`repository`; forbidden-component diagnostics retain their normalized safe
+repository-relative path.
 
 The validator uses the generated `TrackedArtifactUnicode17` module for pinned
 Unicode 17 NFC, NFKC, full default case folding, and uppercase behavior instead
