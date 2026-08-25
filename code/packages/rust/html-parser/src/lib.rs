@@ -7481,10 +7481,13 @@ impl HtmlParser {
                 return;
             }
             if self.open_html_element_in_scope_index(name).is_none() {
-                self.diagnostics.push(ParserDiagnostic::new(
-                    "unexpected-marker-element-end-tag-outside-scope",
-                    format!("end tag `</{name}>` targeted an element outside ordinary scope"),
-                ));
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-marker-element-end-tag-outside-scope",
+                        format!("end tag `</{name}>` targeted an element outside ordinary scope"),
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
             }
             return;
         }
@@ -7791,10 +7794,13 @@ impl HtmlParser {
                 if self.has_authored_open_html_element(name)
                     && self.open_html_element_in_scope_index(name).is_none() =>
             {
-                self.diagnostics.push(ParserDiagnostic::new(
-                    "unexpected-marker-element-end-tag-outside-scope",
-                    format!("end tag `</{name}>` targeted an element outside ordinary scope"),
-                ));
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-marker-element-end-tag-outside-scope",
+                        format!("end tag `</{name}>` targeted an element outside ordinary scope"),
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
             }
             "head" if !self.has_open_element("head") && !self.has_open_element("body") => {
                 self.strip_next_leading_lf = false;
@@ -27150,6 +27156,18 @@ mod tests {
         .at_emission(Some(end_tag_position_at(source, "button", occurrence)))
     }
 
+    fn marker_end_tag_outside_scope(
+        source: &str,
+        name: &str,
+        occurrence: usize,
+    ) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-marker-element-end-tag-outside-scope",
+            format!("end tag `</{name}>` targeted an element outside ordinary scope"),
+        )
+        .at_emission(Some(end_tag_position_at(source, name, occurrence)))
+    }
+
     fn start_tag_position_at(
         source: &str,
         name: &str,
@@ -33738,12 +33756,7 @@ mod tests {
                 output.parser_diagnostics,
                 vec![
                     generic_foreign_end_tag_mismatch(&source, marker_name),
-                    ParserDiagnostic::new(
-                        "unexpected-marker-element-end-tag-outside-scope",
-                        format!(
-                            "end tag `</{marker_name}>` targeted an element outside ordinary scope"
-                        )
-                    ),
+                    marker_end_tag_outside_scope(&source, marker_name, 0),
                 ],
                 "source {source:?}"
             );
@@ -33780,9 +33793,10 @@ mod tests {
                     "<!doctype html><svg><foreignObject id=boundary></marquee>X</foreignObject></svg>",
                     "marquee",
                 ),
-                ParserDiagnostic::new(
-                    "unexpected-marker-element-end-tag-outside-scope",
-                    "end tag `</marquee>` targeted an element outside ordinary scope"
+                marker_end_tag_outside_scope(
+                    "<!doctype html><svg><foreignObject id=boundary></marquee>X</foreignObject></svg>",
+                    "marquee",
+                    0,
                 ),
             ]
         );
@@ -33831,6 +33845,24 @@ mod tests {
 
     #[test]
     fn positions_marker_foreign_end_tag_mismatches_at_token_emission() {
+        let repeated_source =
+            "<!doctype html><object></object><object><table></object>";
+        let repeated = parse_html_with_diagnostics(repeated_source).unwrap();
+        assert_eq!(
+            repeated
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| {
+                    diagnostic.code == "unexpected-marker-element-end-tag-outside-scope"
+                })
+                .collect::<Vec<_>>(),
+            vec![&marker_end_tag_outside_scope(
+                repeated_source,
+                "object",
+                1,
+            )]
+        );
+
         for name in ["applet", "marquee", "object"] {
             let source = format!(
                 "<!doctype html><!--é-->\r\n<{name}><math><mi></{name}>X</mi></math></{name}>"
@@ -33840,7 +33872,10 @@ mod tests {
                 output.parser_diagnostics[0],
                 generic_foreign_end_tag_mismatch(&source, name)
             );
-            assert_eq!(output.parser_diagnostics[1].position, None);
+            assert_eq!(
+                output.parser_diagnostics[1],
+                marker_end_tag_outside_scope(&source, name, 0)
+            );
 
             let eof_source = format!("<!doctype html><{name}><svg><foreignObject></{name}");
             let eof_output = parse_html_with_diagnostics(&eof_source).unwrap();
