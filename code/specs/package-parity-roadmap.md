@@ -6898,7 +6898,7 @@ clean and mergeable, so the loop enabled squash auto-merge; GitHub merged it as
 `5c716a9283e604fa1f922e6f95075fd63b166abd`.
 
 The mandatory post-merge refresh followed every intervening main commit through
-`192768b4190c852754b01c531025b8064109e709`. The collision-checked schema-3
+`82ca67c4f15dbdd6211f05bf66d34ce6608aab6a`. The collision-checked schema-3
 inventory now contains 15 established lanes, 1,373 implementation identities,
 4,566 package slots, 175 high-consensus packages with 276 missing slots, 122
 five-to-nine-lane packages with 926 missing slots, 166 two-to-four-lane packages
@@ -6929,6 +6929,33 @@ PRs have zero exact overlap with the Rust build-tool, state, or roadmap surfaces
 and the target remote branch was absent. The higher-descendant extra-CI-toolchain
 corpus and OCaml process-free substrate remain collision-unsafe while live PRs
 #12149 and #12162 own their required Go entry-point and validator surfaces.
+
+The implemented Rust consumer exposes one pure in-memory orphan snapshot
+validator without adding checkout authority. It consumes all four neutral
+fixtures and covers runnable ancestor ownership, nearer empty BUILD
+non-masking, fixed closest-empty filename rank, exact artifact exclusions,
+invalid and stale exemption precedence, pending counts, hostile-path
+redaction, NFC/full-casefold duplicate identity, deterministic Unicode-scalar
+ordering, and Python-compatible U+001C-through-U+001F blank reasons. Five
+focused tests and the full 148-test suite plus three CLI integrations pass;
+Clippy is clean with warnings denied, the release build and both canonical
+BUILD fronts pass, and LLVM coverage is 82.16% overall plus 98.54% for
+`validator.rs` with every validator function executed. The neutral corpus
+validates 111 cases across 269 files; 146 repository guard tests plus 928
+subtests pass with two expected Windows skips. The Go oracle passes tests, vet,
+trimpath compilation, and a real forced Rust plan over 45 Starlark files and
+1,157 packages with the five reviewed orphan exemptions clean and all packages
+reported `WOULD-BUILD`. Cargo audit finds no vulnerability in 57 dependencies.
+
+Before publication the branch rebased without conflict over merged ADJ
+digraph-sound, Spanish A1 PCIC inventory, and Rust WASM SIMD rounding work to
+exact `origin/main` `82ca67c4f15dbdd6211f05bf66d34ce6608aab6a`.
+Those commits remain inside existing ADJ curriculum, human-language curriculum,
+and portable WASM owners and add no package identity. The refreshed report
+therefore remains 15 established lanes, 1,373 identities, 4,566 slots, zero
+collisions, and zero unknown buckets; the generated `target_isolated/`
+directory from the exact Windows front was removed after validation, while its
+separately owned hygiene item remains pending.
 
 ## Autonomous Loop Protocol
 
