@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- Fixed backlog item #16 (VLT-PM41 §8): `begin_init` and the fresh-target
+  branch of `vault_create` now call
+  `StorageCoreApplicationStore::reclaim_orphaned_preparations` immediately
+  before installing their own new locator's `PreparedInit` journal, closing a
+  storage leak where a crash strictly between that journal's write and the
+  configuration write that would have named its locator left the journal
+  durable forever under a locator nothing could ever discover again.
+  `begin_init` passes an empty live-locator set, since no configuration exists
+  yet; `vault_create` passes every locator the current configuration already
+  names. See `VLT-PM05-application.md` §7.3 for the full argument.
 - **`import otpauth-uri FILE`**, extending `VLT-PM49-cli-external-import.md`
   §5.5, at the user's explicit request for TOTP setup via `otpauth://` URI
   instead of only manual Base32 entry. Decodes a file containing exactly one

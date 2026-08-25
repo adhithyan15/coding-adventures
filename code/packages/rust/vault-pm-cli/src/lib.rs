@@ -5134,6 +5134,16 @@ fn begin_init(
     let exact_prepared = prepared.owner_state().encode().map_err(map_application)?;
     let application_store = application_store(paths);
 
+    // There is no configuration yet, so nothing on this platform home can
+    // legitimately reference any locator: any `PreparedInit` journal already
+    // sitting in the local-state namespace is provably the unreachable
+    // remainder of an earlier generation zero that crashed before its own
+    // configuration write ever landed (VLT-PM41 §8). Reclaim it before this
+    // attempt installs its own journal under a different random locator.
+    application_store
+        .reclaim_orphaned_preparations(&BTreeSet::new())
+        .map_err(map_local_state)?;
+
     // Install the retry journal before making its random locator discoverable.
     // A crash before config publication therefore leaves only unreachable
     // opaque data; a crash after publication always has exact recovery bytes.
@@ -5277,6 +5287,21 @@ fn vault_create(
     let locator = prepared.bootstrap_locator();
     let exact_prepared = prepared.owner_state().encode().map_err(map_application)?;
     let application_store = application_store(paths);
+
+    // Every locator this configuration currently names is live and must be
+    // left untouched; anything else already sitting in the local-state
+    // namespace in `PreparedInit` is the unreachable remainder of an earlier
+    // `vault create` that crashed before its own configuration write landed
+    // (the same VLT-PM41 §8 gap `init` closes above). Reclaim it before this
+    // attempt installs its own journal under a different random locator.
+    let live_locators: BTreeSet<BootstrapLocator> = config
+        .vaults()
+        .values()
+        .map(|vault| application_locator(vault.locator()))
+        .collect();
+    application_store
+        .reclaim_orphaned_preparations(&live_locators)
+        .map_err(map_local_state)?;
 
     // The exact encrypted creation trace and retry journal become durable
     // before the new random locator is made discoverable in configuration.
@@ -11445,6 +11470,121 @@ mod tests {
         let verified = run(["--vault", "work", "audit", "verify"], &verify_host);
         assert_eq!(verified.exit_code(), ExitCode::Success, "{verified:?}");
         assert!(verified.stdout().contains("audit_events=1"));
+    }
+
+    // -----------------------------------------------------------------------
+    // VLT-PM41 §8 / backlog item #16 — reclaiming a generation zero stranded
+    // before its locator ever reached configuration
+    //
+    // `begin_init` and `vault_create` both install a `PreparedInit` journal
+    // under a freshly drawn random locator before writing the configuration
+    // record that makes that locator discoverable again (VLT-PM41 §4.2, §8).
+    // A crash strictly between those two writes leaves the journal durable
+    // forever under a locator nothing will ever name again: not a
+    // correctness or availability defect — no configured vault is ever
+    // affected — but a permanent storage leak absent a sweep.
+    // `StorageCoreApplicationStore::reclaim_orphaned_preparations` closes it;
+    // these tests drive it through the CLI surface that calls it.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn init_reclaims_a_generation_zero_orphaned_before_any_configuration_existed() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+
+        // Simulate a crash strictly between `begin_init`'s `PreparedInit`
+        // write and its configuration write: install the journal and never
+        // touch configuration at all, exactly as a `SIGKILL` in that window
+        // would leave things.
+        let mut random_bytes = [0_u8; AUDITED_GENERATION_ZERO_RANDOM_BYTES];
+        for (index, byte) in random_bytes.iter_mut().enumerate() {
+            *byte = u8::try_from(index % 251).unwrap().wrapping_add(61);
+        }
+        let orphaned = prepare_audited_generation_zero(
+            Zeroizing::new(b"never reaches configuration".to_vec()),
+            GenerationZeroPolicyV1::new(8 * 1024, 1, 1, 1_700_000_000_000).unwrap(),
+            AuditedGenerationZeroRandomness::new(random_bytes),
+        )
+        .unwrap();
+        let orphaned_locator = orphaned.bootstrap_locator();
+        let exact_orphaned = orphaned.owner_state().encode().unwrap();
+        let layout = paths.prepare().unwrap();
+        let writer = layout.try_acquire_writer().unwrap();
+        let store = application_store(&paths);
+        store
+            .compare_exchange(orphaned_locator, None, &exact_orphaned)
+            .unwrap();
+        drop(writer);
+        drop(layout);
+        drop(orphaned);
+        assert_eq!(
+            store.load(orphaned_locator).unwrap(),
+            Some(exact_orphaned),
+            "the leak: durable bytes under a locator no configuration names"
+        );
+
+        // A person retrying after a crash they may not even know happened
+        // runs an entirely ordinary `init`.
+        let host = TestHost::new(paths.clone(), [b"real vault passphrase".to_vec()]);
+        let output = run(["init"], &host);
+        assert_eq!(output.exit_code(), ExitCode::Success, "{output:?}");
+        assert_eq!(run(["status"], &host).stdout(), "Status: locked\n");
+
+        // The stranded journal from before the real vault ever existed is
+        // gone; the real vault `init` just created is unaffected by it.
+        assert_eq!(store.load(orphaned_locator).unwrap(), None);
+    }
+
+    #[test]
+    fn vault_create_reclaims_an_orphaned_target_attempt_left_by_an_earlier_crash() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let personal_passphrase = b"personal passphrase for reclaim test".to_vec();
+        let init_host =
+            TestHost::with_entropy_seed(paths.clone(), [personal_passphrase.clone()], 5);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+
+        // Simulate an earlier `vault create abandoned` that crashed strictly
+        // between its `PreparedInit` write and its configuration
+        // compare-exchange: install the journal, never touch configuration.
+        let mut random_bytes = [0_u8; AUDITED_GENERATION_ZERO_RANDOM_BYTES];
+        for (index, byte) in random_bytes.iter_mut().enumerate() {
+            *byte = u8::try_from(index % 251).unwrap().wrapping_add(97);
+        }
+        let orphaned = prepare_audited_generation_zero(
+            Zeroizing::new(b"abandoned target passphrase".to_vec()),
+            GenerationZeroPolicyV1::new(8 * 1024, 1, 1, 1_700_000_000_000).unwrap(),
+            AuditedGenerationZeroRandomness::new(random_bytes),
+        )
+        .unwrap();
+        let orphaned_locator = orphaned.bootstrap_locator();
+        let exact_orphaned = orphaned.owner_state().encode().unwrap();
+        let layout = paths.prepare().unwrap();
+        let writer = layout.try_acquire_writer().unwrap();
+        let store = application_store(&paths);
+        store
+            .compare_exchange(orphaned_locator, None, &exact_orphaned)
+            .unwrap();
+        drop(writer);
+        drop(layout);
+        drop(orphaned);
+        assert_eq!(store.load(orphaned_locator).unwrap(), Some(exact_orphaned));
+
+        // A completely unrelated new target, exactly as a person would
+        // create one, with no idea the earlier attempt ever existed.
+        let create_host =
+            TestHost::with_entropy_seed(paths.clone(), [b"work passphrase".to_vec()], 23);
+        let created = run(["vault", "create", "work"], &create_host);
+        assert_eq!(created.exit_code(), ExitCode::Success, "{created:?}");
+        assert_eq!(created.stdout(), "Vault target created.\n");
+
+        // The orphan from the earlier crash is gone...
+        assert_eq!(store.load(orphaned_locator).unwrap(), None);
+        // ...and the personal vault `init` created is completely unaffected.
+        assert_eq!(
+            run(["status"], &TestHost::new(paths, [])).stdout(),
+            "Status: locked\n"
+        );
     }
 
     #[test]
