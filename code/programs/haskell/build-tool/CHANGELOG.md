@@ -56,9 +56,9 @@ All notable changes to this package will be documented in this file.
 
 ### Changed
 
-- Keep ambiguous multi-Cabal roots and duplicate Dart manifest-name roots out
-  of the dependency graph, restoring the already-registered shared resolver
-  fixture guarantees exercised by the complete package test suite.
+- Suppress ambiguous multi-Cabal metadata and duplicate Dart manifest-name
+  aliases without dropping their discovered package nodes or Haskell directory
+  aliases, matching the shared resolver contract under forced builds.
 - Read rockspecs as raw bytes and decode strict UTF-8 before dependency
   resolution, with repository-relative diagnostics and no checkout-root leak.
 - Force existing lazy text reads to EOF before parsing so Windows file handles

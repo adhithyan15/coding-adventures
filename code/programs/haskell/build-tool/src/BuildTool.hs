@@ -672,11 +672,10 @@ filterByLanguage requested
 
 resolveDependencies :: [Package] -> IO DG.DirectedGraph
 resolveDependencies packages = do
-    resolvable <- filterResolvablePackages packages
-    aliasScopes <- buildAliasScopes resolvable
-    let knownPackageNames = Set.fromList (map packageName resolvable)
+    aliasScopes <- buildAliasScopes packages
+    let knownPackageNames = Set.fromList (map packageName packages)
     dependencyPairs <-
-        forM resolvable $ \pkg -> do
+        forM packages $ \pkg -> do
             manifestDeps <- resolvePackageDeps aliasScopes pkg
             buildDeps <- readBuildToolDeps knownPackageNames pkg
             pure (pkg, sort (nub (manifestDeps ++ buildDeps)))
@@ -690,47 +689,6 @@ resolveDependencies packages = do
             )
             DG.empty
             dependencyPairs
-
-filterResolvablePackages :: [Package] -> IO [Package]
-filterResolvablePackages packages = do
-    haskellEligibility <-
-        forM packages $ \pkg ->
-            if packageLanguage pkg == "haskell"
-                then do
-                    entries <- listDirectory (packagePath pkg)
-                    let manifests =
-                            [ entry
-                            | entry <- entries
-                            , map toLower (takeExtension entry) == ".cabal"
-                            ]
-                    pure (packageName pkg, length manifests == 1)
-                else pure (packageName pkg, True)
-    dartNames <-
-        forM packages $ \pkg ->
-            if packageLanguage pkg == "dart"
-                then do
-                    names <- readPubspecNames (packagePath pkg)
-                    pure [(name, packageName pkg) | name <- names]
-                else pure []
-    let dartNameOwners =
-            Map.fromListWith (++)
-                [ (name, [identity])
-                | (name, identity) <- concat dartNames
-                ]
-    let ambiguousDartIdentities =
-            Set.fromList
-                [ identity
-                | owners <- Map.elems dartNameOwners
-                , length (nub owners) > 1
-                , identity <- owners
-                ]
-    let eligibleHaskell = Map.fromList haskellEligibility
-    pure
-        [ pkg
-        | pkg <- packages
-        , Map.findWithDefault True (packageName pkg) eligibleHaskell
-        , packageName pkg `Set.notMember` ambiguousDartIdentities
-        ]
 
 buildAliasScopes :: [Package] -> IO (Map String (Map String String))
 buildAliasScopes packages = do
@@ -830,8 +788,9 @@ readCabalPackageNames :: FilePath -> IO [String]
 readCabalPackageNames root = do
     entries <- listDirectory root
     let cabalFiles = [root </> entry | entry <- entries, takeExtension entry == ".cabal"]
-    names <- mapM readSimpleFieldName cabalFiles
-    pure (mapMaybe id names)
+    case cabalFiles of
+        [path] -> maybeToList <$> readSimpleFieldName path
+        _ -> pure []
 
 readCargoNames :: FilePath -> IO [String]
 readCargoNames root = do
