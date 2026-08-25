@@ -137,6 +137,23 @@ describe("real curriculum", () => {
       /encoded carrier-first composition.*normally ligates.*not a universal handwriting direction.*no standalone ductus claim/i,
     );
 
+    const tamilRetroflexLa = scripts.tamil!.letters.find((entry) => entry.glyph === "ள")!;
+    expect(tamilRetroflexLa.sound).toBe("ḷa");
+    expect(tamilRetroflexLa.penLifts).toBe(2);
+    expect(tamilRetroflexLa.strokeOrder).toHaveLength(6);
+    expect(tamilRetroflexLa.strokeOrder?.[2]).toMatch(/adjoining stem straight down.*lift once/i);
+    expect(tamilRetroflexLa.strokeOrder?.[4]).toMatch(/top bar to the right edge.*lift a second time/i);
+    expect(tamilRetroflexLa.strokeOrder?.[5]).toMatch(/separate right upright.*straight down/i);
+    expect(tamilRetroflexLa.strokeOrderSource?.url).toBe(
+      "https://sites.la.utexas.edu/tamilscript/files/2009/08/hw_lettersinstructions.pdf",
+    );
+    expect(tamilRetroflexLa.strokeOrderSource?.citation).toMatch(
+      /Tamil Script Learners Manual.*Appendix I.*Frame 12.*ள.*University of Texas at Austin.*p\. 195/i,
+    );
+    expect(tamilRetroflexLa.strokeOrderSource?.variation).toMatch(
+      /Module 12.*retroflex lateral.*contrasts it with ல.*six movements.*three pen-down runs.*1.?3.*4.?5.*movement 6/i,
+    );
+
     const tamilEe = scripts.tamil!.marks!.find((mark) => mark.mark === "ே")!;
     expect(tamilEe.compositionOrder).toEqual([
       "in handwriting, write the ē vowel sign to the left before the primary consonant",
@@ -341,9 +358,11 @@ describe("real curriculum", () => {
     expect(affected.get("ே") ?? 0).toBe(0);
     expect(missingByScript.get("kannada.json")?.has("ಂ")).toBe(false);
     expect(affected.get("ಂ") ?? 0).toBe(0);
+    expect(missingByScript.get("tamil.json")?.has("ள")).toBe(false);
+    expect(affected.get("ள") ?? 0).toBe(0);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["ள", 20]);
+    ).toEqual(["అ", 20]);
   });
 
   it("loaded every track (17+ and growing)", () => {

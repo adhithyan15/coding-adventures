@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+### Added - source-verified Tamil ள
+
+- Add Tamil retroflex lateral **ள** with Appendix I Frame 12's six numbered
+  movements grouped into three pen-down runs and two lifts.
+- Remove 20 affected Tamil realizations and rerank Telugu independent vowel
+  **అ** first at 20.
+- Record the newly discovered dental **ந** provenance collision for a dedicated
+  repair before the measured queue continues.
+
 ### Changed - the `levels ATTAINED` line names its tracks
 
 - `renderCurriculumGapReport` printed `${count} tracks at ${level}`. The count
@@ -30,7 +39,6 @@
   leave a track at the same rung or a higher one — holds at every level, and a
   track that loses a rung under the rename now counts as the strongest form of
   the bite the test is looking for.
-
 ### Added - source-verified Kannada anusvara ಂ
 
 - Add Kannada anusvara **ಂ** as the U+0C82 consonant-nasalization sign with
