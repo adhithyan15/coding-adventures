@@ -934,6 +934,41 @@ impl GrammarParser {
                 self.pos += 1;
                 return Some(vec![ASTNodeOrToken::Token(tok)]);
             }
+            // Contextual token-splitting for nested generic-argument-list
+            // closers (`Map<String, List<Integer>>`, `Box<Box<Box<T>>>`)
+            // — see `split_angle_bracket_run`'s own doc comment for the
+            // full rationale. Only reached when the exact-match check
+            // above already failed, and only fires for the specific
+            // (expected "GREATER_THAN", actual "RIGHT_SHIFT"/
+            // "UNSIGNED_RIGHT_SHIFT") pairing, so grammars that don't use
+            // this exact C-family token-naming convention (the vast
+            // majority of grammars this shared engine also serves) never
+            // take this branch at all.
+            if let Some((consumed, remainder)) = split_angle_bracket_run(token, expected_type) {
+                self.tokens[self.pos] = remainder;
+                // Packrat memo entries are keyed on `(rule_idx, pos)` alone,
+                // with no notion of "which token stream state" they were
+                // computed against — the entire scheme assumes the token
+                // stream never changes after parsing starts. This mutation
+                // breaks that assumption: a memo entry cached for some rule
+                // whose span reads through `self.pos` (e.g. one that matched
+                // the pre-split `>>`/`>>>` as a single real shift-operator
+                // token) would otherwise go on being returned verbatim to
+                // any later lookup of that same `(rule, pos)` key, even
+                // though the token there has since changed. Splits are rare
+                // (only at nested-generic-closer positions), so paying for
+                // a full cache invalidation here — rather than trying to
+                // precisely identify which entries' spans crossed
+                // `self.pos` — is cheap insurance against a hard-to-spot
+                // stale-result class of bug. `in_progress` is deliberately
+                // left alone: it tracks the currently-active call stack
+                // (needed for left-recursion detection on frames that
+                // haven't returned yet), not a cache, so clearing it here
+                // would incorrectly discard live state for calls still in
+                // progress on the stack above this one.
+                self.memo.clear();
+                return Some(vec![ASTNodeOrToken::Token(consumed)]);
+            }
         }
 
         // Fall back to enum-based matching.
@@ -987,6 +1022,101 @@ impl GrammarParser {
             None
         }
     }
+}
+
+// ===========================================================================
+// Nested-generic-closer token splitting
+// ===========================================================================
+
+/// Split a merged multi-`>` token (`>>`/`>>>`) into one consumed `>` plus a
+/// shorter remainder token, when the grammar is specifically trying to
+/// match a bare `GREATER_THAN` — the classic C-family "nested generic
+/// argument list" ambiguity (`Map<String, List<Integer>>`,
+/// `Box<Box<Box<T>>>`): a context-free lexer cannot know it should *not*
+/// merge consecutive `>` characters into a single right-shift-shaped token
+/// without knowing it's inside a type-argument list, so it always merges
+/// them (the same way a real `x >> 2` right-shift expression tokenizes) —
+/// and the *parser*, which does have that context (it only ever asks for a
+/// lone `GREATER_THAN` when closing exactly one generic-argument-list
+/// level), is the only place this can be resolved.
+///
+/// Real parsers for C-family languages solve this exact problem with
+/// contextual token-splitting rather than a lexer-level special case
+/// (which would incorrectly break genuine `>>`/`>>>` shift operators
+/// elsewhere in the same grammar). This is the same technique, applied at
+/// the one call site (`match_token_reference`) where the grammar's
+/// expectation (`expected_type`) and the token's actual shape can both be
+/// seen at once.
+///
+/// Deliberately narrow: only fires for the exact
+/// (`expected_type == "GREATER_THAN"`, `actual_type_name` is
+/// `"RIGHT_SHIFT"` or `"UNSIGNED_RIGHT_SHIFT"`) pairing — the C-family
+/// token-naming convention shared by this repo's Java and C# grammars
+/// (confirmed identical in both `.tokens` files). A grammar using
+/// different token names for these operators (or not defining them at
+/// all) never reaches this function with a matching `actual_type_name`,
+/// so this is a no-op for every other language this shared engine serves
+/// — it cannot, by construction, affect Ruby/Python/Twig/etc. parsing.
+///
+/// Deliberately does NOT handle `GREATER_EQUALS`/`RIGHT_SHIFT_EQUALS`/
+/// `UNSIGNED_RIGHT_SHIFT_EQUALS` (any `>`-run with a trailing `=`) —
+/// those aren't pure `>` runs, so splitting a leading `>` off `>=` would
+/// produce a nonsensical remainder (`=`, not a valid start of any further
+/// token); `>=` immediately following a type-argument list is not valid
+/// Java/C# syntax regardless (an assignment-shaped token can't follow a
+/// generic close in an expression position), so no real program needs
+/// this case handled.
+///
+/// Returns `(consumed, remainder)`: `consumed` is the single `>` token to
+/// report as this match's result; `remainder` is written back into the
+/// parser's own token stream at the *same* position (see the call site),
+/// so the very next match attempt sees it fresh — this is what lets
+/// `Map<String, List<Integer>>` close both nesting levels from one merged
+/// `>>` token, one `GREATER_THAN` match at a time.
+fn split_angle_bracket_run(token: &Token, expected_type: &str) -> Option<(Token, Token)> {
+    if expected_type != "GREATER_THAN" {
+        return None;
+    }
+    let actual_type_name = token.type_name.as_deref()?;
+    let remainder_type_name = match actual_type_name {
+        "RIGHT_SHIFT" => "GREATER_THAN",
+        "UNSIGNED_RIGHT_SHIFT" => "RIGHT_SHIFT",
+        _ => return None,
+    };
+    // Defensive: only split a token whose value is genuinely a bare run of
+    // `>` characters matching the token name's own expected length — a
+    // malformed/unexpected token shape (should never happen given how the
+    // lexer emits these, but this function must not panic on it) falls
+    // through to the normal "no match" path instead of guessing.
+    if !token.value.chars().all(|c| c == '>') || token.value.len() < 2 {
+        return None;
+    }
+    // Both halves originate from the same source bytes as `token`, so they
+    // carry its `cv` id forward unchanged. `consumed` keeps `token`'s own
+    // flags (it starts at the same position `token` did); `remainder`
+    // starts mid-token with no newline in between, so it gets a clean
+    // `None` — these are operator tokens, so neither
+    // `TOKEN_PRECEDED_BY_NEWLINE` nor `TOKEN_CONTEXT_KEYWORD` is meaningful
+    // for it regardless.
+    let consumed = Token {
+        type_: TokenType::Name,
+        value: ">".to_string(),
+        line: token.line,
+        column: token.column,
+        type_name: Some("GREATER_THAN".to_string()),
+        flags: token.flags,
+        cv: token.cv.clone(),
+    };
+    let remainder = Token {
+        type_: TokenType::Name,
+        value: token.value[1..].to_string(),
+        line: token.line,
+        column: token.column + 1,
+        type_name: Some(remainder_type_name.to_string()),
+        flags: None,
+        cv: token.cv.clone(),
+    };
+    Some((consumed, remainder))
 }
 
 // ===========================================================================

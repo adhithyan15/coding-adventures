@@ -246,15 +246,73 @@ mod tests {
         assert!(!find_nodes(&ast, "method_declaration").is_empty());
     }
 
-    // NOTE: multi-level generic nesting (`Map<String, List<Integer>>`) is
-    // a KNOWN, tracked gap, not covered by a test here. The lexer merges
-    // the two closing `>` characters into a single ">>" token (see
-    // `coding_adventures_java_lexer`'s own
-    // `nested_generic_closing_angle_brackets_merge_into_one_token` test),
-    // and this parser has no contextual token-splitting to re-derive two
-    // separate closers from it -- `Map<String, List<Integer>>` currently
-    // fails to parse. This is a shared `parser` crate (GrammarParser)
-    // engine gap, not Java-specific (confirmed identically reproducible
-    // in `csharp-parser`), and is tracked as its own follow-up rather
-    // than silently asserted as expected-to-fail here.
+    // -------------------------------------------------------------------
+    // Nested-generics `>>`/`>>>` token-splitting (shared `parser` crate
+    // engine, see `parser::grammar_parser::split_angle_bracket_run`).
+    // The lexer merges consecutive `>` characters into a single
+    // `RIGHT_SHIFT`/`UNSIGNED_RIGHT_SHIFT`-typed token (same shape as a
+    // real shift operator -- see `coding_adventures_java_lexer`'s own
+    // `nested_generic_closing_angle_brackets_merge_into_one_token`
+    // test), and the parser now contextually re-splits it into separate
+    // `GREATER_THAN` closers whenever it specifically expects one, one
+    // `>` at a time.
+    // -------------------------------------------------------------------
+
+    #[test]
+    fn two_level_nested_generic_closes_from_a_merged_right_shift_token() {
+        let ast = parse_java(
+            "class C { void f() { Map<String, List<Integer>> m; } }",
+            "21",
+        )
+        .unwrap();
+        // Two distinct `type_arguments` nodes: the outer `Map<...>` and
+        // the inner `List<Integer>`.
+        assert_eq!(find_nodes(&ast, "type_arguments").len(), 2);
+    }
+
+    #[test]
+    fn three_level_nested_generic_closes_from_a_merged_unsigned_right_shift_token() {
+        let ast = parse_java(
+            "class C { void f() { Box<Box<Box<Integer>>> b; } }",
+            "21",
+        )
+        .unwrap();
+        assert_eq!(find_nodes(&ast, "type_arguments").len(), 3);
+    }
+
+    #[test]
+    fn real_right_shift_expression_still_parses_as_a_shift_after_the_splitting_fix() {
+        // `x >> 2` must still tokenize/parse as an actual shift operator,
+        // not be mistaken for a stray generic closer -- the split only
+        // ever fires when the grammar specifically expects a bare
+        // `GREATER_THAN`, which a shift-expression's own right-hand side
+        // never does.
+        let ast = parse_java("class C { void f() { int y = x >> 2; } }", "21").unwrap();
+        let tokens = parser::grammar_parser::collect_tokens(&ast, None);
+        assert!(
+            tokens.iter().any(|t| t.value == ">>"),
+            "expected the real `>>` shift operator to survive as a single token"
+        );
+    }
+
+    #[test]
+    fn nested_generic_and_real_shift_expression_coexist_in_one_file() {
+        // Regression guard for the packrat-memoization invalidation this
+        // fix also needed: a real shift expression parsed earlier in the
+        // same file must not leave a stale memo entry that corrupts a
+        // later nested-generic split, and vice versa.
+        let ast = parse_java(
+            "class C { void f() { int y = x >> 2; Map<String, List<Integer>> m; int z = x >>> 1; } }",
+            "21",
+        )
+        .unwrap();
+        assert_eq!(find_nodes(&ast, "type_arguments").len(), 2);
+        let tokens = parser::grammar_parser::collect_tokens(&ast, None);
+        let shift_tokens: Vec<&str> = tokens
+            .iter()
+            .filter(|t| t.value == ">>" || t.value == ">>>")
+            .map(|t| t.value.as_str())
+            .collect();
+        assert_eq!(shift_tokens, vec![">>", ">>>"]);
+    }
 }

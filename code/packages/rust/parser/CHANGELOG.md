@@ -2,6 +2,56 @@
 
 All notable changes to the `parser` crate will be documented in this file.
 
+## [0.4.4] - 2026-08-25
+
+### Added — contextual `>>`/`>>>` token-splitting for nested generic-argument-list closers
+
+C-family grammars (Java, C#) lex a run of consecutive `>` characters into a
+single `RIGHT_SHIFT`/`UNSIGNED_RIGHT_SHIFT`-typed token — the same shape a
+real `x >> 2`/`x >>> 1` shift expression uses — because a context-free
+lexer cannot tell `Map<String, List<Integer>>`'s two adjacent closing `>`s
+apart from an actual right-shift operator without knowing it's inside a
+type-argument list. Only the *parser* has that context: it only ever asks
+for a lone `GREATER_THAN` when closing exactly one generic-argument-list
+level. `match_token_reference` now recognizes this specific situation —
+`expected_type == "GREATER_THAN"` against an actual `RIGHT_SHIFT`/
+`UNSIGNED_RIGHT_SHIFT` token whose value is a bare run of `>` characters —
+and splits off one `>` as the match, writing the shorter remainder token
+back into the token stream at the same position so the very next match
+attempt sees it fresh. This is what lets `Map<String, List<Integer>>`
+close both nesting levels from one merged `>>` token, one `GREATER_THAN`
+at a time, and `Box<Box<Box<T>>>` close three levels from one `>>>`.
+Deliberately narrow: only fires for that exact (expected, actual) pairing,
+so grammars that don't share Java/C#'s token-naming convention (the vast
+majority this shared engine also serves) never take the new branch at
+all — confirmed inert for every other grammar in this repo.
+
+**Packrat-memoization interaction, considered and closed**: the `memo:
+HashMap<(usize, usize), MemoEntry>` cache is keyed purely on `(rule_idx,
+pos)`, with no notion of "which token-stream state" a cached entry was
+computed against — its whole correctness model assumes the token stream
+never changes after parsing starts. Mutating `self.tokens[self.pos]` for
+a split breaks that assumption: a memo entry for some rule whose parse
+span reads through that position (e.g. one that matched the pre-split
+`>>` as an ordinary shift operator) could otherwise be returned stale to
+a later lookup of the same key, even after the token there changed.
+Precisely identifying which cached entries' spans crossed the mutated
+position isn't cheap, and splits are rare (only at nested-generic-closer
+positions), so `match_token_reference` now clears the *entire* memo cache
+whenever a split occurs — cheap insurance against a hard-to-spot
+stale-result class of bug. `in_progress` (the left-recursion guard for
+calls still active on the current stack) is deliberately left alone; it
+isn't a cache and clearing it would discard live state for frames that
+haven't returned yet.
+
+New tests in both `coding-adventures-java-parser` and
+`coding-adventures-csharp-parser` prove: two- and three-level nested
+generics now parse and produce the expected number of `type_arguments`/
+`type_argument_list` nodes; a real `>>`/`>>>` shift expression still
+survives as a single, unsplit token; and a nested generic and a real
+shift expression coexisting in the same file don't corrupt each other via
+a stale memo entry.
+
 ## [0.4.3] - 2026-08-03
 
 ### Fixed — `GrammarElement::Literal` matched a `String` token by its content, not just an operator lexeme

@@ -144,4 +144,46 @@ mod tests {
     fn test_reasonable_nesting_stays_under_the_cap() {
         assert!(parse_csharp(&nested_paren_source(8), "12.0").is_ok());
     }
+
+    // -------------------------------------------------------------------
+    // Nested-generics `>>`/`>>>` token-splitting (shared `parser` crate
+    // engine, see `parser::grammar_parser::split_angle_bracket_run`).
+    // Identical gap/fix to `coding_adventures_java_parser`'s own tests of
+    // the same name -- the lexer merges consecutive `>` characters into a
+    // single `RIGHT_SHIFT`/`UNSIGNED_RIGHT_SHIFT`-typed token, and the
+    // parser now contextually re-splits it whenever it specifically
+    // expects a bare `GREATER_THAN`.
+    // -------------------------------------------------------------------
+
+    use parser::grammar_parser::find_nodes;
+
+    #[test]
+    fn two_level_nested_generic_closes_from_a_merged_right_shift_token() {
+        let ast = parse_csharp(
+            "class C { void M() { Dictionary<string, List<int>> m; } }",
+            "12.0",
+        )
+        .unwrap();
+        assert_eq!(find_nodes(&ast, "type_argument_list").len(), 2);
+    }
+
+    #[test]
+    fn three_level_nested_generic_closes_from_a_merged_unsigned_right_shift_token() {
+        let ast = parse_csharp(
+            "class C { void M() { Box<Box<Box<int>>> b; } }",
+            "12.0",
+        )
+        .unwrap();
+        assert_eq!(find_nodes(&ast, "type_argument_list").len(), 3);
+    }
+
+    #[test]
+    fn real_right_shift_expression_still_parses_as_a_shift_after_the_splitting_fix() {
+        let ast = parse_csharp("class C { void M() { int y = x >> 2; } }", "12.0").unwrap();
+        let tokens = parser::grammar_parser::collect_tokens(&ast, None);
+        assert!(
+            tokens.iter().any(|t| t.value == ">>"),
+            "expected the real `>>` shift operator to survive as a single token"
+        );
+    }
 }
