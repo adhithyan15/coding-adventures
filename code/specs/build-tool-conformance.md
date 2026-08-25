@@ -934,7 +934,9 @@ The resulting path must be NFC, repository-relative, at most 512 Unicode
 scalar values,
 and satisfy the shared portable-path rules: no absolute, drive-qualified, UNC,
 empty, dot, traversal, trailing-dot/space, control, reserved-character, or
-Windows-reserved segments. Invalid records produce
+Windows-reserved segments. Every empty component is invalid, including one
+created by a trailing slash or backslash after separator normalization. Invalid
+records produce
 `TRACKED_ARTIFACT_PATH_INVALID` at the fixed redacted path `repository`; details
 contain only `ordinal`, `entry_kind`, and one stable problem from `EMPTY`,
 `TOO_LONG`, `NON_NFC`, `ABSOLUTE`, `DRIVE_QUALIFIED`, `EMPTY_SEGMENT`,

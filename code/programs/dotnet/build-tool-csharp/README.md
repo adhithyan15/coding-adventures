@@ -40,4 +40,5 @@ dotnet run -- --emit-plan --plan-file build-plan.json
   exact `node_modules` component for regular files, symlinks, and reparse
   entries alike. Length limits and path ordering use Unicode scalar values,
   while Windows reserved basenames use full Unicode uppercase mapping before
-  comparison.
+  comparison. Trailing slash and backslash separators are rejected as empty
+  path components.

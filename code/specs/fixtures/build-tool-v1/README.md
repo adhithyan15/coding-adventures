@@ -73,9 +73,10 @@ The 111-case bootstrap corpus covers every process-free v1 domain:
   empty BUILD rejection, reasoned exemptions, countable PENDING debt, and
   stale-ledger cleanup, plus tracked-artifact rejection for exact, nested,
   separator-normalized, case, and Unicode-compatible `node_modules` paths,
-  inert symlink/reparse metadata, redacted unsafe paths, exact 512/513 Unicode
-  scalar boundaries, scalar-ordered diagnostics, and full-uppercase Windows
-  reserved basenames; and
+  inert symlink/reparse metadata, redacted unsafe paths, forward- and
+  backslash trailing empty segments, exact 512/513 Unicode scalar boundaries,
+  scalar-ordered diagnostics, and full-uppercase Windows reserved basenames;
+  and
 - bounded process-free CLI parsing with deterministic typed defaults, modeled
   post-parse outcomes, exact multibyte and astral-scalar limits, and adversarial
   reserved, path, Git-ref-component, shell, environment, response-file,

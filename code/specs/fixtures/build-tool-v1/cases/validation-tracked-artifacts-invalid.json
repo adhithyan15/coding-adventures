@@ -20,7 +20,9 @@
           {"ordinal": 3, "path": "C:\\repo\\node_modules\\cache.bin", "entry_kind": "reparse"},
           {"ordinal": 4, "path": "\\\\server\\share\\node_modules\\lock", "entry_kind": "regular"},
           {"ordinal": 5, "path": "code/packages/é/node_modules/x", "entry_kind": "regular"},
-          {"ordinal": 6, "path": "code//node_modules/x", "entry_kind": "regular"}
+          {"ordinal": 6, "path": "code//node_modules/x", "entry_kind": "regular"},
+          {"ordinal": 7, "path": "code/trailing/", "entry_kind": "regular"},
+          {"ordinal": 8, "path": "code\\trailing\\", "entry_kind": "regular"}
         ]
       }
     }
@@ -36,6 +38,8 @@
       {"code": "TRACKED_ARTIFACT_PATH_INVALID", "severity": "error", "path": "repository", "details": {"ordinal": 4, "entry_kind": "regular", "problem": "ABSOLUTE"}},
       {"code": "TRACKED_ARTIFACT_PATH_INVALID", "severity": "error", "path": "repository", "details": {"ordinal": 5, "entry_kind": "regular", "problem": "NON_NFC"}},
       {"code": "TRACKED_ARTIFACT_PATH_INVALID", "severity": "error", "path": "repository", "details": {"ordinal": 6, "entry_kind": "regular", "problem": "EMPTY_SEGMENT"}},
+      {"code": "TRACKED_ARTIFACT_PATH_INVALID", "severity": "error", "path": "repository", "details": {"ordinal": 7, "entry_kind": "regular", "problem": "EMPTY_SEGMENT"}},
+      {"code": "TRACKED_ARTIFACT_PATH_INVALID", "severity": "error", "path": "repository", "details": {"ordinal": 8, "entry_kind": "regular", "problem": "EMPTY_SEGMENT"}},
       {"code": "TRACKED_ARTIFACT_PATH_INVALID", "severity": "error", "path": "repository", "details": {"ordinal": 3, "entry_kind": "reparse", "problem": "DRIVE_QUALIFIED"}},
       {"code": "TRACKED_ARTIFACT_PATH_INVALID", "severity": "error", "path": "repository", "details": {"ordinal": 2, "entry_kind": "symlink", "problem": "ABSOLUTE"}}
     ]

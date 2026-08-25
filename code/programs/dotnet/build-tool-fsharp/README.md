@@ -21,8 +21,10 @@ The tracked-artifact facade deliberately reuses the reviewed C# data and result
 types. Its F# test surface independently consumes all five language-neutral
 conformance fixtures, including hostile-path redaction, Unicode-scalar length
 and ordering boundaries, Unicode compatibility aliases, and Windows reserved
-basenames. The facade does not enumerate Git, inspect the filesystem, launch a
-process, read the environment, or access the network.
+basenames. The shared cases also require trailing slash and backslash paths to
+report redacted `EMPTY_SEGMENT` diagnostics. The facade does not enumerate Git,
+inspect the filesystem, launch a process, read the environment, or access the
+network.
 
 ## Usage
 

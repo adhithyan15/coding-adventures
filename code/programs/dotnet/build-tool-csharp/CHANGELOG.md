@@ -13,3 +13,5 @@
   detection, Unicode-scalar length and ordering, full-uppercase Windows
   reserved-basename matching, and direct coverage of all five shared
   language-neutral conformance fixtures.
+- Fixed trailing slash and backslash paths to report redacted `EMPTY_SEGMENT`
+  diagnostics after separator normalization.

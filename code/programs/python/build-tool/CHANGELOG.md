@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.9] - 2026-08-25
+
+### Fixed
+
+- **Trailing empty tracked paths**: reject both slash and backslash trailing
+  separators as `EMPTY_SEGMENT` after normalization, matching the shared
+  portable-path contract without disclosing the hostile input.
+
 ## [0.3.8] - 2026-08-24
 
 ### Added

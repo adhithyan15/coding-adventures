@@ -175,7 +175,9 @@ Tracked dependency artifacts are a separate validation boundary. The closed
 `tracked_artifact_absence` snapshot supplies bounded path and entry-kind
 records as inert data. Portable engines normalize separators, reject unsafe
 paths without echoing them, and reject every case or Unicode compatibility
-alias of a `node_modules` path component. Regular files, symlinks, and reparse
+alias of a `node_modules` path component. A separator may not create an empty
+component at the end of a path: trailing slash and backslash inputs fail with
+`EMPTY_SEGMENT` after normalization. Regular files, symlinks, and reparse
 records are classified identically and never opened or followed. Native Git
 index enumeration and host-filesystem metadata collection stay outside the
 language-neutral process-free oracle.
