@@ -96,10 +96,27 @@ All notable changes to the `java-to-semantic-ir` crate will be documented in thi
   lambdas (unlike methods) are a genuinely recursive source-level
   construct. `deeply_nested_lambda_expressions_report_depth_error_not_
   stack_overflow` is the regression test.
-- **Caught by three rounds of `/security-review` before push**: see the
-  individual review-round entries below for exact findings and fixes
-  (this section left intentionally brief pending the actual review
-  rounds — updated once they run).
+- **Caught by `/security-review` before push (MEDIUM, silent function-
+  name collision)**: the synthesized `__lambda_N` name was committed to
+  with no check against `self.method_signatures` (every real, user-
+  declared method name, already fully populated before any lambda is
+  lowered). `__lambda_0` is a legal Java method name, so a class
+  declaring a real method by that exact name *and* containing a lambda
+  that would otherwise become the first one synthesized is a real,
+  reachable case, not a hypothetical one — `Module.functions` would end
+  up with two entries sharing one name, a collision `compile()` itself
+  does not reject (only a separate `semantic_ir::validate()` call would,
+  and only if the caller makes it). This broke the exact discipline this
+  crate's own `lower_do_while_statement` already established for its
+  `__do_while_N` synthetic flag name: probe for a collision before
+  committing to the synthetic name, not after. Fixed by looping/bumping
+  `lambda_counter` past any `method_signatures` collision, mirroring the
+  do-while flag-name precedent exactly.
+  `synthesized_lambda_name_does_not_collide_with_a_real_method_named_
+  lambda_0` is the regression test — a real method named `__lambda_0`
+  plus a lambda that would otherwise claim that exact name, asserting
+  both functions survive with distinct names and the real method's own
+  identity (params, body) is untouched.
 
 ## [0.5.0] - 2026-08-25
 

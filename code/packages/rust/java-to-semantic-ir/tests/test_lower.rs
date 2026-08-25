@@ -2056,6 +2056,36 @@ fn feature_closures_is_declared_when_a_lambda_is_lowered() {
 }
 
 #[test]
+fn synthesized_lambda_name_does_not_collide_with_a_real_method_named_lambda_0() {
+    // `__lambda_0` is a legal Java identifier, so a class declaring a
+    // real method by that exact name -- and containing a lambda, which
+    // would otherwise be the very first one synthesized as `__lambda_0`
+    // too -- is a real, reachable case. Regression test for a finding
+    // from `/security-review`: the synthetic name must be checked
+    // against every real method name before being committed to, the
+    // same discipline `lower_do_while_statement`'s own `__do_while_N`
+    // flag-name collision probe already uses.
+    let m = compile_ok(&class_src(
+        "public static void main(String[] args) { var f = (int x) -> x + 1; } \
+         static int __lambda_0() { return 42; }",
+    ));
+    let mut names: Vec<&str> = m.functions.iter().map(|f| f.name.as_str()).collect();
+    names.sort_unstable();
+    names.dedup();
+    assert_eq!(
+        m.functions.len(),
+        names.len(),
+        "expected every function name to be unique, got {:?}",
+        m.functions.iter().map(|f| &f.name).collect::<Vec<_>>()
+    );
+    // The real method must still be named exactly `__lambda_0`, and the
+    // synthesized closure must have been forced to a different name.
+    assert!(m.functions.iter().any(|f| f.name == "__lambda_0"
+        && f.params.is_empty()
+        && matches!(f.body.value, Expr::IntLit { value: 42, .. })));
+}
+
+#[test]
 fn assignment_to_a_captured_variable_is_an_error() {
     let err = compile_source(
         &wrap("int n = 0; var f = (int x) -> { n = n + x; return n; };"),

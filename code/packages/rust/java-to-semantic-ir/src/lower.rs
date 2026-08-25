@@ -3095,8 +3095,26 @@ impl Lowerer {
         let closure_frame = self.closure_stack.pop().expect("just pushed above");
         let (body, _body_kind) = body_result?;
 
-        let fn_name = format!("__lambda_{}", self.lambda_counter);
+        // Collision-check the synthetic name against every real,
+        // user-declared method name (`method_signatures` is fully
+        // populated before any body -- and thus any lambda -- is
+        // lowered, so this sees every method regardless of textual
+        // order) before committing to it -- mirrors `lower_do_while_
+        // statement`'s own identically-reasoned `__do_while_N` collision
+        // probe. `__lambda_0` is a legal Java method name, so a source
+        // file declaring a real method by that exact name is a real,
+        // reachable case, not a hypothetical one: without this check,
+        // `Module.functions` could end up with two entries sharing one
+        // name (the user's real method and this synthesized closure
+        // body), which `compile()` itself would not catch (only a
+        // separate `semantic_ir::validate()` call would, and only if the
+        // caller makes it) -- found by `/security-review`.
+        let mut fn_name = format!("__lambda_{}", self.lambda_counter);
         self.lambda_counter += 1;
+        while self.method_signatures.contains_key(&fn_name) {
+            fn_name = format!("__lambda_{}", self.lambda_counter);
+            self.lambda_counter += 1;
+        }
         self.observed.add(Feature::Closures);
 
         self.synthesized_functions.push(Function {
