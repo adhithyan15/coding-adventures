@@ -1896,6 +1896,9 @@ fn xychart_metadata_value(token: &Token) -> String {
 
 fn parse_xychart_config(source: &str) -> XyChartConfig {
     let chart_source = mermaid_directive_object(source, "xyChart").unwrap_or(source);
+    let theme_source = mermaid_directive_object(source, "themeVariables")
+        .and_then(|theme| mermaid_directive_object(theme, "xyChart"))
+        .unwrap_or(source);
     let positive_number = |key| {
         quadrant_directive_value(chart_source, key)
             .and_then(|value| value.parse::<f64>().ok())
@@ -1917,6 +1920,19 @@ fn parse_xychart_config(source: &str) -> XyChartConfig {
     };
 
     let mut config = XyChartConfig {
+        background_color: quadrant_directive_value(theme_source, "backgroundColor"),
+        title_color: quadrant_directive_value(theme_source, "titleColor"),
+        plot_color_palette: quadrant_directive_value(theme_source, "plotColorPalette").and_then(
+            |palette| {
+                let colors: Vec<String> = palette
+                    .split(',')
+                    .map(str::trim)
+                    .filter(|color| !color.is_empty())
+                    .map(str::to_string)
+                    .collect();
+                (!colors.is_empty()).then_some(colors)
+            },
+        ),
         width: positive_number("width"),
         height: positive_number("height"),
         chart_orientation: quadrant_directive_value(chart_source, "chartOrientation").and_then(
@@ -1936,18 +1952,18 @@ fn parse_xychart_config(source: &str) -> XyChartConfig {
         legend_padding: non_negative_number("legendPadding"),
         show_data_label: boolean("showDataLabel"),
         show_data_label_outside_bar: boolean("showDataLabelOutsideBar"),
-        data_label_color: quadrant_directive_value(source, "dataLabelColor"),
+        data_label_color: quadrant_directive_value(theme_source, "dataLabelColor"),
         x_axis: parse_xychart_axis_config(chart_source, "xAxis"),
         y_axis: parse_xychart_axis_config(chart_source, "yAxis"),
     };
-    config.x_axis.label_color = quadrant_directive_value(source, "xAxisLabelColor");
-    config.x_axis.title_color = quadrant_directive_value(source, "xAxisTitleColor");
-    config.x_axis.tick_color = quadrant_directive_value(source, "xAxisTickColor");
-    config.x_axis.axis_line_color = quadrant_directive_value(source, "xAxisLineColor");
-    config.y_axis.label_color = quadrant_directive_value(source, "yAxisLabelColor");
-    config.y_axis.title_color = quadrant_directive_value(source, "yAxisTitleColor");
-    config.y_axis.tick_color = quadrant_directive_value(source, "yAxisTickColor");
-    config.y_axis.axis_line_color = quadrant_directive_value(source, "yAxisLineColor");
+    config.x_axis.label_color = quadrant_directive_value(theme_source, "xAxisLabelColor");
+    config.x_axis.title_color = quadrant_directive_value(theme_source, "xAxisTitleColor");
+    config.x_axis.tick_color = quadrant_directive_value(theme_source, "xAxisTickColor");
+    config.x_axis.axis_line_color = quadrant_directive_value(theme_source, "xAxisLineColor");
+    config.y_axis.label_color = quadrant_directive_value(theme_source, "yAxisLabelColor");
+    config.y_axis.title_color = quadrant_directive_value(theme_source, "yAxisTitleColor");
+    config.y_axis.tick_color = quadrant_directive_value(theme_source, "yAxisTickColor");
+    config.y_axis.axis_line_color = quadrant_directive_value(theme_source, "yAxisLineColor");
     config
 }
 
@@ -6236,10 +6252,19 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     #[test]
     fn xychart_preserves_axis_theme_colors() {
         let diagram = parse_xychart(
-            "%%{init: {\"themeVariables\": {\"xyChart\": {\"xAxisLabelColor\": \"#110001\", \"xAxisTitleColor\": \"#220002\", \"xAxisTickColor\": \"#330003\", \"xAxisLineColor\": \"#440004\", \"yAxisLabelColor\": \"#550005\", \"yAxisTitleColor\": \"#660006\", \"yAxisTickColor\": \"#770007\", \"yAxisLineColor\": \"#880008\"}}}}%%\nxychart\nx-axis Quarter [Q1, Q2]\ny-axis Revenue 0 --> 20\nbar [10, 20]\n",
+            "%%{init: {\"themeVariables\": {\"xyChart\": {\"backgroundColor\": \"#010203\", \"titleColor\": \"#040506\", \"plotColorPalette\": \"#070809, #0a0b0c\", \"xAxisLabelColor\": \"#110001\", \"xAxisTitleColor\": \"#220002\", \"xAxisTickColor\": \"#330003\", \"xAxisLineColor\": \"#440004\", \"yAxisLabelColor\": \"#550005\", \"yAxisTitleColor\": \"#660006\", \"yAxisTickColor\": \"#770007\", \"yAxisLineColor\": \"#880008\"}}}}%%\nxychart\nx-axis Quarter [Q1, Q2]\ny-axis Revenue 0 --> 20\nbar [10, 20]\n",
         )
         .unwrap();
 
+        assert_eq!(
+            diagram.xy_config.background_color.as_deref(),
+            Some("#010203")
+        );
+        assert_eq!(diagram.xy_config.title_color.as_deref(), Some("#040506"));
+        assert_eq!(
+            diagram.xy_config.plot_color_palette,
+            Some(vec!["#070809".into(), "#0a0b0c".into()])
+        );
         assert_eq!(
             diagram.xy_config.x_axis.label_color.as_deref(),
             Some("#110001")

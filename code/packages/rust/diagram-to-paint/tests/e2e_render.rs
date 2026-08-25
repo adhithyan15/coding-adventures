@@ -425,7 +425,7 @@ mod apple {
     #[test]
     fn render_configured_mermaid_xy_to_png() {
         let diagram = parse_xychart(
-        r##"%%{init: {"xyChart": {"width": 720, "height": 440, "chartOrientation": "horizontal", "plotReservedSpacePercent": 55, "titleFontSize": 24, "titlePadding": 14, "showLegend": true, "legendFontSize": 21, "legendPadding": 16, "showDataLabel": true, "showDataLabelOutsideBar": true, "xAxis": {"labelFontSize": 13, "labelPadding": 7, "titleFontSize": 17, "titlePadding": 8, "showTick": false, "axisLineWidth": 4}, "yAxis": {"labelFontSize": 15, "labelPadding": 8, "titleFontSize": 18, "titlePadding": 9, "tickLength": 12, "tickWidth": 4, "axisLineWidth": 5}}, "themeVariables": {"xyChart": {"dataLabelColor": "#0b5d4b", "xAxisLabelColor": "#005f73", "xAxisTitleColor": "#0a9396", "xAxisTickColor": "#94d2bd", "xAxisLineColor": "#001219", "yAxisLabelColor": "#9b2226", "yAxisTitleColor": "#ae2012", "yAxisTickColor": "#ee9b00", "yAxisLineColor": "#ca6702"}}}}%%
+        r##"%%{init: {"xyChart": {"width": 720, "height": 440, "chartOrientation": "horizontal", "plotReservedSpacePercent": 55, "titleFontSize": 24, "titlePadding": 14, "showLegend": true, "legendFontSize": 21, "legendPadding": 16, "showDataLabel": true, "showDataLabelOutsideBar": true, "xAxis": {"labelFontSize": 13, "labelPadding": 7, "titleFontSize": 17, "titlePadding": 8, "showTick": false, "axisLineWidth": 4}, "yAxis": {"labelFontSize": 15, "labelPadding": 8, "titleFontSize": 18, "titlePadding": 9, "tickLength": 12, "tickWidth": 4, "axisLineWidth": 5}}, "themeVariables": {"xyChart": {"backgroundColor": "#fff8e7", "titleColor": "#264653", "plotColorPalette": "#2a9d8f, #e76f51", "dataLabelColor": "#0b5d4b", "xAxisLabelColor": "#005f73", "xAxisTitleColor": "#0a9396", "xAxisTickColor": "#94d2bd", "xAxisLineColor": "#001219", "yAxisLabelColor": "#9b2226", "yAxisTitleColor": "#ae2012", "yAxisTickColor": "#ee9b00", "yAxisLineColor": "#ca6702"}}}}%%
 xychart
 title "Quarterly Throughput"
 x-axis "Quarter" [Q1, Q2, Q3, Q4]
@@ -436,6 +436,7 @@ line "Target" [35, 50, 68, 82]"##,
         .expect("configured XY chart should parse");
         let layout = layout_chart_diagram(&diagram, 600.0, 400.0);
         assert_eq!((layout.width, layout.height), (720.0, 440.0));
+        assert_eq!(layout.background_color.as_deref(), Some("#fff8e7"));
         assert_eq!(diagram.orientation, diagram_ir::ChartOrientation::Horizontal);
         assert!(layout.items.iter().any(|item| matches!(
             item,
@@ -479,6 +480,19 @@ line "Target" [35, 50, 68, 82]"##,
         )));
         assert!(layout.items.iter().any(|item| matches!(
             item,
+            diagram_ir::LayoutedChartItem::Bar { color, .. } if color == "#2a9d8f"
+        )));
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
+            diagram_ir::LayoutedChartItem::LinePath { color, .. } if color == "#e76f51"
+        )));
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
+            diagram_ir::LayoutedChartItem::DataLabel { text, color, .. }
+                if text == "Quarterly Throughput" && color.as_deref() == Some("#264653")
+        )));
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
             diagram_ir::LayoutedChartItem::Legend { font_size, entries, .. }
                 if *font_size == Some(21.0) && entries.len() == 2
         )));
@@ -507,6 +521,7 @@ line "Target" [35, 50, 68, 82]"##,
         write_png(&pixels, "/tmp/mermaid_xy_config_e2e.png").expect("PNG write failed");
 
         assert_eq!((pixels.width, pixels.height), (720, 440));
+        assert_eq!(scene.background, "#fff8e7");
         assert!(!scene.instructions.is_empty());
         assert!(scene.instructions.iter().any(|instruction| matches!(
             instruction,

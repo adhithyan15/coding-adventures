@@ -544,6 +544,9 @@ pub struct XyAxisConfig {
 
 #[derive(Clone, Debug, Default, PartialEq)]
 pub struct XyChartConfig {
+    pub background_color: Option<String>,
+    pub title_color: Option<String>,
+    pub plot_color_palette: Option<Vec<String>>,
     pub width: Option<f64>,
     pub height: Option<f64>,
     pub chart_orientation: Option<ChartOrientation>,
@@ -801,6 +804,7 @@ pub enum LayoutedChartItem {
 pub struct LayoutedChartDiagram {
     pub width: f64,
     pub height: f64,
+    pub background_color: Option<String>,
     pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>,
     pub title_box: Option<LayoutedLabel>,

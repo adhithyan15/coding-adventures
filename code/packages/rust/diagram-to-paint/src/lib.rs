@@ -1153,7 +1153,10 @@ where
     PaintScene {
         width: diagram.width,
         height: diagram.height,
-        background: format!("rgb({},{},{})", bg.r, bg.g, bg.b),
+        background: diagram
+            .background_color
+            .clone()
+            .unwrap_or_else(|| format!("rgb({},{},{})", bg.r, bg.g, bg.b)),
         instructions,
         id: None,
         metadata: (!metadata.is_empty()).then_some(metadata),
@@ -4342,6 +4345,7 @@ mod tests {
         let layout = LayoutedChartDiagram {
             width: 400.0,
             height: 300.0,
+            background_color: Some("#123456".into()),
             accessibility_title: Some("Portfolio matrix".into()),
             accessibility_description: Some("Native renderer priorities".into()),
             title_box: None,
@@ -4349,6 +4353,7 @@ mod tests {
         };
 
         let scene = diagram_to_paint_chart(&layout, &opts);
+        assert_eq!(scene.background, "#123456");
         let metadata = scene.metadata.expect("chart accessibility metadata");
         assert_eq!(metadata["accessibility.title"], "Portfolio matrix");
         assert_eq!(
@@ -4366,6 +4371,7 @@ mod tests {
         let layout = LayoutedChartDiagram {
             width: 400.0,
             height: 300.0,
+            background_color: None,
             accessibility_title: None,
             accessibility_description: None,
             title_box: None,
@@ -4411,6 +4417,7 @@ mod tests {
         let layout = LayoutedChartDiagram {
             width: 400.0,
             height: 300.0,
+            background_color: None,
             accessibility_title: None,
             accessibility_description: None,
             title_box: None,
@@ -4479,6 +4486,7 @@ mod tests {
         let layout = LayoutedChartDiagram {
             width: 400.0,
             height: 300.0,
+            background_color: None,
             accessibility_title: None,
             accessibility_description: None,
             title_box: None,
