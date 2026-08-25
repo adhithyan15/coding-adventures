@@ -237,6 +237,7 @@ const URDU_HE = DUCTUS[ductusKey("urdu-nastaliq", "ہ")];
 const URDU_YE = DUCTUS[ductusKey("urdu-nastaliq", "ی")];
 const URDU_BARI_YE = DUCTUS[ductusKey("urdu-nastaliq", "ے")];
 const TELUGU_A = DUCTUS[ductusKey("telugu", "అ")];
+const MALAYALAM_A = DUCTUS[ductusKey("malayalam", "അ")];
 const MALAYALAM_E = DUCTUS[ductusKey("malayalam", "എ")];
 
 const fontForDuctus = (letter: LetterDuctus) => {
@@ -529,10 +530,10 @@ describe("handwriting ductus", () => {
         const inInk = makeInInk(glyph().contours);
         for (let s = 0; s < letter.strokes.length; s++) {
           const frac = fractionOnInk(penPath(letter.strokes[s]), inInk);
-          // Three cited handwriting animations keep a run continuous across a
+          // Four cited handwriting animations keep a run continuous across a
           // gap in Noto's printed contours: Gujarati હ and Devanagari ख's
-          // upper-right loop, plus Telugu అ's right-lobe return. Permit only
-          // those documented bridges; every
+          // upper-right loop, Telugu అ's right-lobe return, and Malayalam അ's
+          // lower-loop return. Permit only those documented bridges; every
           // other authored path retains the stricter general-purpose floor.
           const minimumInkFit = letter.script === "gujarati" && letter.glyph === "હ"
             ? 0.92
@@ -540,6 +541,8 @@ describe("handwriting ductus", () => {
               ? 0.95
             : letter.script === "telugu" && letter.glyph === "అ"
               ? 0.96
+              : letter.script === "malayalam" && letter.glyph === "അ"
+                ? 0.96
               : 0.97;
           expect(frac, `stroke ${s} strays off the glyph`).toBeGreaterThan(minimumInkFit);
         }
@@ -624,6 +627,22 @@ describe("handwriting ductus", () => {
         "climb the upright, retrace it downward, and loop below the line",
       ],
       ["sweep up and over through the broad outer arch, ending below the line"],
+    ]);
+  });
+
+  it("Malayalam അ keeps both animated runs internally joined", () => {
+    expect(penLifts(MALAYALAM_A)).toBe(1);
+    expect(MALAYALAM_A.strokes).toHaveLength(2);
+    expect(MALAYALAM_A.strokes.map((stroke) => stroke.segments.map((segment) => segment.label))).toEqual([
+      [
+        "climb the left outer arch and curve through the upper turn",
+        "circle the broad lower loop and return to the junction",
+        "sweep up through the central crown and descend the upright",
+      ],
+      [
+        "sweep up and over through the right outer arch and descend its far side",
+        "curl left around the lower inner loop",
+      ],
     ]);
   });
 
@@ -3986,6 +4005,9 @@ describe("handwriting ductus", () => {
       "_fonts/NotoSansTelugu-Static.ttf",
     );
     expect(verifiedLetterFont("എ", MALAYALAM_E.source.url)).toBe(
+      "_fonts/NotoSansMalayalam-Static.ttf",
+    );
+    expect(verifiedLetterFont("അ", MALAYALAM_A.source.url)).toBe(
       "_fonts/NotoSansMalayalam-Static.ttf",
     );
     expect(verifiedLetterFont("எ", DUCTUS["எ"].source.url)).toBe(

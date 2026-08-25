@@ -9,6 +9,12 @@
 - Pin the source's left, right, then lower-center dot order and its three lifts
   to the bundled Noto Naskh outline.
 
+### Added — source-verified Malayalam independent a
+
+- Add Malayalam **അ** as two pen-down runs: the joined left-and-central body,
+  then the right outer arch curling into its lower inner loop.
+- Pin its one lift, UT Austin handwriting clip, and Noto Sans Malayalam fit.
+
 ### Added — source-verified Tamil independent e
 
 - Add Tamil **எ** as two pen-down runs: six joined body movements, then the
