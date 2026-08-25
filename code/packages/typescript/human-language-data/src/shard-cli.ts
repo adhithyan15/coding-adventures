@@ -965,6 +965,33 @@ function assertShardable(document: Record<string, unknown>, plan: ShardPlan): vo
       `${plan.path}: a plan may split by element OR by group, not both`,
     );
   }
+  // Two sections may not share a key or a directory.
+  //
+  // A shared DIRECTORY is the dangerous one: shards are claimed by directory
+  // prefix, so both sections would consume the same files and the ledger would
+  // come back with the same elements under two keys. Nothing downstream could
+  // tell that from a ledger that genuinely repeats itself, and `--check` would
+  // agree with itself about the duplicate.
+  //
+  // Cheap to state here, where a plan is written once, rather than to detect at
+  // merge time where it looks like data corruption.
+  const seenKeys = new Set<string>();
+  const seenDirs = new Set<string>();
+  for (const section of plan.sections) {
+    if (seenKeys.has(section.key)) {
+      throw new Error(`${plan.path}: two sections both shard '${section.key}'`);
+    }
+    seenKeys.add(section.key);
+    const dir = section.dir ?? "";
+    if (seenDirs.has(dir)) {
+      throw new Error(
+        `${plan.path}: two sections share the shard directory ` +
+          `'${section.dir ?? "(top level)"}', so each would claim the other's shards`,
+      );
+    }
+    seenDirs.add(dir);
+  }
+
   const keys = plan.grouping?.keys ?? plan.sections.map((section) => section.key);
   for (const key of keys) {
     if (!Object.hasOwn(document, key)) {
