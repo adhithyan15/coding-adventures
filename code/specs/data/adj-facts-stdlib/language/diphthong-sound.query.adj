@@ -1,0 +1,16 @@
+% ============================================================================
+% diphthong-sound.query.adj — worked recall over the diphthong-sound library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what sound does this
+% diphthong make?" (direct) or "which diphthong spellings make this sound?"
+% (reverse, many-answer) — it states no fact of its own — it only `import`s
+% the grounded table and asks binding queries.
+% ============================================================================
+
+import "diphthong-sound.adj"
+
+? diphthong_sound(oi, $Sound)          % expect oi_sound (direct)
+? diphthong_sound($D, oi_sound)        % expect BOTH oi and oy (many spellings, one sound)
+? diphthong_sound(ou, $Sound)          % expect ow_sound (direct)
+? diphthong_sound($D, ow_sound)        % expect BOTH ou and ow (many spellings, one sound)
+? diphthong_sound(au, $Sound)          % expect abstain -- UFLI tables au/aw under its separate "Other Vowel Teams" unit (lesson 93), not this Diphthongs page
