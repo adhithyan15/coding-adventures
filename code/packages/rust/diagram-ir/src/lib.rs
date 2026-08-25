@@ -1,6 +1,6 @@
 //! diagram-ir v0.42.0 - DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.67.0";
+pub const VERSION: &str = "0.68.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -523,6 +523,18 @@ pub struct ChartSeries {
 }
 
 #[derive(Clone, Debug, Default, PartialEq)]
+pub struct XyAxisConfig {
+    pub show_label: Option<bool>,
+    pub label_font_size: Option<f64>,
+    pub label_padding: Option<f64>,
+    pub show_title: Option<bool>,
+    pub title_font_size: Option<f64>,
+    pub title_padding: Option<f64>,
+    pub show_axis_line: Option<bool>,
+    pub axis_line_width: Option<f64>,
+}
+
+#[derive(Clone, Debug, Default, PartialEq)]
 pub struct XyChartConfig {
     pub width: Option<f64>,
     pub height: Option<f64>,
@@ -532,6 +544,8 @@ pub struct XyChartConfig {
     pub show_data_label: Option<bool>,
     pub show_data_label_outside_bar: Option<bool>,
     pub data_label_color: Option<String>,
+    pub x_axis: XyAxisConfig,
+    pub y_axis: XyAxisConfig,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -642,12 +656,14 @@ pub enum LayoutedChartItem {
         x2: f64,
         y2: f64,
         orientation: Orientation,
+        stroke_width: f64,
     },
     AxisTick {
         x: f64,
         y: f64,
         label: String,
         orientation: Orientation,
+        font_size: f64,
     },
     GridLine {
         x1: f64,
@@ -1334,7 +1350,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.67.0");
+        assert_eq!(VERSION, "0.68.0");
     }
     #[test]
     fn default_direction_is_tb() {

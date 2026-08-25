@@ -16,12 +16,11 @@ use diagram_ir::{
 };
 use std::collections::{HashMap, VecDeque};
 
-pub const VERSION: &str = "0.15.0";
+pub const VERSION: &str = "0.16.0";
 
 const MARGIN: f64 = 24.0;
 const TITLE_H: f64 = 32.0;
 const Y_LBL_W: f64 = 48.0;
-const X_LBL_H: f64 = 24.0;
 const LEGEND_H: f64 = 28.0;
 const TICK_LEN: f64 = 6.0;
 const GRID_COUNT: usize = 5;
@@ -116,6 +115,8 @@ fn layout_xy(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagram {
 }
 
 fn layout_xy_vertical(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagram {
+    let x_config = &diagram.xy_config.x_axis;
+    let y_config = &diagram.xy_config.y_axis;
     let show_title = diagram.xy_config.show_title.unwrap_or(true);
     let has_title = show_title && diagram.title.is_some();
     let title_font_size = diagram.xy_config.title_font_size.unwrap_or(20.0);
@@ -126,22 +127,50 @@ fn layout_xy_vertical(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChart
         0.0
     };
     let has_series = !diagram.series.is_empty();
-    let has_x_title = diagram
+    let has_x_title = x_config.show_title.unwrap_or(true)
+        && diagram
         .x_axis
         .as_ref()
         .and_then(|axis| axis.title.as_ref())
         .is_some();
-    let has_y_title = diagram
+    let has_y_title = y_config.show_title.unwrap_or(true)
+        && diagram
         .y_axis
         .as_ref()
         .and_then(|axis| axis.title.as_ref())
         .is_some();
+    let x_label_font_size = x_config.label_font_size.unwrap_or(14.0);
+    let y_label_font_size = y_config.label_font_size.unwrap_or(14.0);
+    let x_label_padding = x_config.label_padding.unwrap_or(5.0);
+    let y_label_padding = y_config.label_padding.unwrap_or(5.0);
+    let x_label_space = if x_config.show_label.unwrap_or(true) {
+        x_label_font_size + x_label_padding * 2.0
+    } else {
+        0.0
+    };
+    let y_label_space = if y_config.show_label.unwrap_or(true) {
+        Y_LBL_W + y_label_padding
+    } else {
+        0.0
+    };
+    let x_title_font_size = x_config.title_font_size.unwrap_or(16.0);
+    let y_title_font_size = y_config.title_font_size.unwrap_or(16.0);
+    let x_title_space = if has_x_title {
+        x_title_font_size + x_config.title_padding.unwrap_or(5.0) * 2.0
+    } else {
+        0.0
+    };
+    let y_title_space = if has_y_title {
+        y_title_font_size + y_config.title_padding.unwrap_or(5.0) * 2.0
+    } else {
+        0.0
+    };
     let lh = if has_series { LEGEND_H } else { 0.0 };
 
     // Plot area bounds
     let pt = MARGIN + title_height; // top
-    let pl = MARGIN + Y_LBL_W + if has_y_title { X_LBL_H } else { 0.0 }; // left
-    let pb = ch - MARGIN - X_LBL_H - lh - if has_x_title { X_LBL_H } else { 0.0 }; // bottom
+    let pl = MARGIN + y_label_space + y_title_space; // left
+    let pb = ch - MARGIN - x_label_space - x_title_space - lh; // bottom
     let pr = cw - MARGIN; // right
     let pw = (pr - pl).max(1.0);
     let ph = (pb - pt).max(1.0);
@@ -190,21 +219,31 @@ fn layout_xy_vertical(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChart
         });
     }
 
-    if let Some(axis_title) = diagram.x_axis.as_ref().and_then(|axis| axis.title.as_ref()) {
+    if has_x_title {
+        let axis_title = diagram
+            .x_axis
+            .as_ref()
+            .and_then(|axis| axis.title.as_ref())
+            .expect("visible XY x-axis title");
         items.push(LayoutedChartItem::DataLabel {
             x: (pl + pr) / 2.0,
-            y: pb + X_LBL_H + 8.0,
+            y: pb + x_label_space + x_title_space / 2.0,
             text: axis_title.clone(),
-            font_size: Some(14.0),
+            font_size: Some(x_title_font_size),
             color: None,
         });
     }
-    if let Some(axis_title) = diagram.y_axis.as_ref().and_then(|axis| axis.title.as_ref()) {
+    if has_y_title {
+        let axis_title = diagram
+            .y_axis
+            .as_ref()
+            .and_then(|axis| axis.title.as_ref())
+            .expect("visible XY y-axis title");
         items.push(LayoutedChartItem::DataLabel {
-            x: MARGIN + 8.0,
+            x: MARGIN + y_title_space / 2.0,
             y: (pt + pb) / 2.0,
             text: axis_title.clone(),
-            font_size: Some(14.0),
+            font_size: Some(y_title_font_size),
             color: None,
         });
     }
@@ -220,52 +259,67 @@ fn layout_xy_vertical(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChart
             x2: pr,
             y2: y,
         });
-        items.push(LayoutedChartItem::AxisTick {
-            x: pl - TICK_LEN - 4.0,
-            y,
-            label: format!("{val:.0}"),
-            orientation: Orientation::Horizontal,
-        });
+        if y_config.show_label.unwrap_or(true) {
+            items.push(LayoutedChartItem::AxisTick {
+                x: pl - TICK_LEN - y_label_padding,
+                y,
+                label: format!("{val:.0}"),
+                orientation: Orientation::Horizontal,
+                font_size: y_label_font_size,
+            });
+        }
     }
 
     if numeric_x_axis {
         let axis = diagram.x_axis.as_ref().expect("numeric x-axis");
         for index in 0..=GRID_COUNT {
             let fraction = index as f64 / GRID_COUNT as f64;
-            items.push(LayoutedChartItem::AxisTick {
-                x: pl + fraction * pw,
-                y: pb + TICK_LEN + 4.0,
-                label: format!("{:.0}", axis.min + fraction * (axis.max - axis.min)),
-                orientation: Orientation::Vertical,
-            });
+            if x_config.show_label.unwrap_or(true) {
+                items.push(LayoutedChartItem::AxisTick {
+                    x: pl + fraction * pw,
+                    y: pb + TICK_LEN + x_label_padding,
+                    label: format!("{:.0}", axis.min + fraction * (axis.max - axis.min)),
+                    orientation: Orientation::Vertical,
+                    font_size: x_label_font_size,
+                });
+            }
         }
     } else {
         for (i, cat) in cats.iter().enumerate() {
             let cx = indexed_axis_position(pl, pw, i, cats.len(), false);
-            items.push(LayoutedChartItem::AxisTick {
-                x: cx,
-                y: pb + TICK_LEN + 4.0,
-                label: cat.clone(),
-                orientation: Orientation::Vertical,
-            });
+            if x_config.show_label.unwrap_or(true) {
+                items.push(LayoutedChartItem::AxisTick {
+                    x: cx,
+                    y: pb + TICK_LEN + x_label_padding,
+                    label: cat.clone(),
+                    orientation: Orientation::Vertical,
+                    font_size: x_label_font_size,
+                });
+            }
         }
     }
 
     // Axis spines
-    items.push(LayoutedChartItem::AxisSpine {
-        x1: pl,
-        y1: pb,
-        x2: pr,
-        y2: pb,
-        orientation: Orientation::Horizontal,
-    });
-    items.push(LayoutedChartItem::AxisSpine {
-        x1: pl,
-        y1: pt,
-        x2: pl,
-        y2: pb,
-        orientation: Orientation::Vertical,
-    });
+    if x_config.show_axis_line.unwrap_or(true) {
+        items.push(LayoutedChartItem::AxisSpine {
+            x1: pl,
+            y1: pb,
+            x2: pr,
+            y2: pb,
+            orientation: Orientation::Horizontal,
+            stroke_width: x_config.axis_line_width.unwrap_or(2.0),
+        });
+    }
+    if y_config.show_axis_line.unwrap_or(true) {
+        items.push(LayoutedChartItem::AxisSpine {
+            x1: pl,
+            y1: pt,
+            x2: pl,
+            y2: pb,
+            orientation: Orientation::Vertical,
+            stroke_width: y_config.axis_line_width.unwrap_or(2.0),
+        });
+    }
 
     // Series (bars + lines)
     let mut bar_series_idx = 0usize;
@@ -414,6 +468,8 @@ fn layout_xy_vertical(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChart
 }
 
 fn layout_xy_horizontal(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagram {
+    let x_config = &diagram.xy_config.x_axis;
+    let y_config = &diagram.xy_config.y_axis;
     let show_title = diagram.xy_config.show_title.unwrap_or(true);
     let has_title = show_title && diagram.title.is_some();
     let title_font_size = diagram.xy_config.title_font_size.unwrap_or(20.0);
@@ -424,21 +480,49 @@ fn layout_xy_horizontal(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedCha
         0.0
     };
     let has_series = !diagram.series.is_empty();
-    let has_x_title = diagram
+    let has_x_title = x_config.show_title.unwrap_or(true)
+        && diagram
         .x_axis
         .as_ref()
         .and_then(|axis| axis.title.as_ref())
         .is_some();
-    let has_y_title = diagram
+    let has_y_title = y_config.show_title.unwrap_or(true)
+        && diagram
         .y_axis
         .as_ref()
         .and_then(|axis| axis.title.as_ref())
         .is_some();
+    let x_label_font_size = x_config.label_font_size.unwrap_or(14.0);
+    let y_label_font_size = y_config.label_font_size.unwrap_or(14.0);
+    let x_label_padding = x_config.label_padding.unwrap_or(5.0);
+    let y_label_padding = y_config.label_padding.unwrap_or(5.0);
+    let x_label_space = if x_config.show_label.unwrap_or(true) {
+        Y_LBL_W + x_label_padding
+    } else {
+        0.0
+    };
+    let y_label_space = if y_config.show_label.unwrap_or(true) {
+        y_label_font_size + y_label_padding * 2.0
+    } else {
+        0.0
+    };
+    let x_title_font_size = x_config.title_font_size.unwrap_or(16.0);
+    let y_title_font_size = y_config.title_font_size.unwrap_or(16.0);
+    let x_title_space = if has_x_title {
+        x_title_font_size + x_config.title_padding.unwrap_or(5.0) * 2.0
+    } else {
+        0.0
+    };
+    let y_title_space = if has_y_title {
+        y_title_font_size + y_config.title_padding.unwrap_or(5.0) * 2.0
+    } else {
+        0.0
+    };
     let legend_height = if has_series { LEGEND_H } else { 0.0 };
 
     let top = MARGIN + title_height;
-    let left = MARGIN + Y_LBL_W + if has_x_title { X_LBL_H } else { 0.0 };
-    let bottom = ch - MARGIN - X_LBL_H - legend_height - if has_y_title { X_LBL_H } else { 0.0 };
+    let left = MARGIN + x_label_space + x_title_space;
+    let bottom = ch - MARGIN - y_label_space - y_title_space - legend_height;
     let right = cw - MARGIN;
     let plot_width = (right - left).max(1.0);
     let plot_height = (bottom - top).max(1.0);
@@ -483,21 +567,31 @@ fn layout_xy_horizontal(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedCha
             color: None,
         });
     }
-    if let Some(axis_title) = diagram.x_axis.as_ref().and_then(|axis| axis.title.as_ref()) {
+    if has_x_title {
+        let axis_title = diagram
+            .x_axis
+            .as_ref()
+            .and_then(|axis| axis.title.as_ref())
+            .expect("visible horizontal XY x-axis title");
         items.push(LayoutedChartItem::DataLabel {
-            x: MARGIN + 8.0,
+            x: MARGIN + x_title_space / 2.0,
             y: (top + bottom) / 2.0,
             text: axis_title.clone(),
-            font_size: Some(14.0),
+            font_size: Some(x_title_font_size),
             color: None,
         });
     }
-    if let Some(axis_title) = diagram.y_axis.as_ref().and_then(|axis| axis.title.as_ref()) {
+    if has_y_title {
+        let axis_title = diagram
+            .y_axis
+            .as_ref()
+            .and_then(|axis| axis.title.as_ref())
+            .expect("visible horizontal XY y-axis title");
         items.push(LayoutedChartItem::DataLabel {
             x: (left + right) / 2.0,
-            y: bottom + X_LBL_H + 8.0,
+            y: bottom + y_label_space + y_title_space / 2.0,
             text: axis_title.clone(),
-            font_size: Some(14.0),
+            font_size: Some(y_title_font_size),
             color: None,
         });
     }
@@ -512,48 +606,63 @@ fn layout_xy_horizontal(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedCha
             x2: x,
             y2: bottom,
         });
-        items.push(LayoutedChartItem::AxisTick {
-            x,
-            y: bottom + TICK_LEN + 4.0,
-            label: format!("{value:.0}"),
-            orientation: Orientation::Vertical,
-        });
+        if y_config.show_label.unwrap_or(true) {
+            items.push(LayoutedChartItem::AxisTick {
+                x,
+                y: bottom + TICK_LEN + y_label_padding,
+                label: format!("{value:.0}"),
+                orientation: Orientation::Vertical,
+                font_size: y_label_font_size,
+            });
+        }
     }
     if numeric_x_axis {
         let axis = diagram.x_axis.as_ref().expect("numeric x-axis");
         for index in 0..=GRID_COUNT {
             let fraction = index as f64 / GRID_COUNT as f64;
-            items.push(LayoutedChartItem::AxisTick {
-                x: left - TICK_LEN - 4.0,
-                y: top + fraction * plot_height,
-                label: format!("{:.0}", axis.min + fraction * (axis.max - axis.min)),
-                orientation: Orientation::Horizontal,
-            });
+            if x_config.show_label.unwrap_or(true) {
+                items.push(LayoutedChartItem::AxisTick {
+                    x: left - TICK_LEN - x_label_padding,
+                    y: top + fraction * plot_height,
+                    label: format!("{:.0}", axis.min + fraction * (axis.max - axis.min)),
+                    orientation: Orientation::Horizontal,
+                    font_size: x_label_font_size,
+                });
+            }
         }
     } else {
         for (index, category) in categories.iter().enumerate() {
-            items.push(LayoutedChartItem::AxisTick {
-                x: left - TICK_LEN - 4.0,
-                y: indexed_axis_position(top, plot_height, index, categories.len(), false),
-                label: category.clone(),
-                orientation: Orientation::Horizontal,
-            });
+            if x_config.show_label.unwrap_or(true) {
+                items.push(LayoutedChartItem::AxisTick {
+                    x: left - TICK_LEN - x_label_padding,
+                    y: indexed_axis_position(top, plot_height, index, categories.len(), false),
+                    label: category.clone(),
+                    orientation: Orientation::Horizontal,
+                    font_size: x_label_font_size,
+                });
+            }
         }
     }
-    items.push(LayoutedChartItem::AxisSpine {
-        x1: left,
-        y1: bottom,
-        x2: right,
-        y2: bottom,
-        orientation: Orientation::Horizontal,
-    });
-    items.push(LayoutedChartItem::AxisSpine {
-        x1: left,
-        y1: top,
-        x2: left,
-        y2: bottom,
-        orientation: Orientation::Vertical,
-    });
+    if y_config.show_axis_line.unwrap_or(true) {
+        items.push(LayoutedChartItem::AxisSpine {
+            x1: left,
+            y1: bottom,
+            x2: right,
+            y2: bottom,
+            orientation: Orientation::Horizontal,
+            stroke_width: y_config.axis_line_width.unwrap_or(2.0),
+        });
+    }
+    if x_config.show_axis_line.unwrap_or(true) {
+        items.push(LayoutedChartItem::AxisSpine {
+            x1: left,
+            y1: top,
+            x2: left,
+            y2: bottom,
+            orientation: Orientation::Vertical,
+            stroke_width: x_config.axis_line_width.unwrap_or(2.0),
+        });
+    }
 
     let mut bar_series_index = 0usize;
     let mut legend_entries = Vec::new();
@@ -1128,7 +1237,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.15.0");
+        assert_eq!(crate::VERSION, "0.16.0");
     }
 
     #[test]
@@ -1243,6 +1352,8 @@ mod tests {
             show_data_label: Some(true),
             show_data_label_outside_bar: Some(true),
             data_label_color: Some("#123456".into()),
+            x_axis: XyAxisConfig::default(),
+            y_axis: XyAxisConfig::default(),
         };
 
         let layout = layout_chart_diagram(&diagram, 600.0, 400.0);
@@ -1260,6 +1371,64 @@ mod tests {
             item,
             LayoutedChartItem::BarLabel { text, color, .. }
                 if text == "40" && color == "#123456"
+        )));
+    }
+
+    #[test]
+    fn xy_axis_config_controls_text_and_spines() {
+        let mut diagram = xy_diagram();
+        diagram.x_axis.as_mut().unwrap().title = Some("Hidden x title".into());
+        diagram.y_axis.as_mut().unwrap().title = Some("Visible y title".into());
+        diagram.xy_config.x_axis = XyAxisConfig {
+            show_label: Some(false),
+            show_title: Some(false),
+            show_axis_line: Some(false),
+            ..XyAxisConfig::default()
+        };
+        diagram.xy_config.y_axis = XyAxisConfig {
+            label_font_size: Some(18.0),
+            label_padding: Some(8.0),
+            title_font_size: Some(19.0),
+            title_padding: Some(9.0),
+            axis_line_width: Some(5.0),
+            ..XyAxisConfig::default()
+        };
+
+        let layout = layout_chart_diagram(&diagram, 600.0, 400.0);
+        assert!(!layout.items.iter().any(|item| matches!(
+            item,
+            LayoutedChartItem::AxisTick {
+                orientation: Orientation::Vertical,
+                ..
+            }
+        )));
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
+            LayoutedChartItem::AxisTick {
+                orientation: Orientation::Horizontal,
+                font_size,
+                ..
+            } if *font_size == 18.0
+        )));
+        assert!(!layout.items.iter().any(
+            |item| matches!(item, LayoutedChartItem::DataLabel { text, .. } if text == "Hidden x title")
+        ));
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
+            LayoutedChartItem::DataLabel { text, font_size, .. }
+                if text == "Visible y title" && *font_size == Some(19.0)
+        )));
+        assert_eq!(
+            layout
+                .items
+                .iter()
+                .filter(|item| matches!(item, LayoutedChartItem::AxisSpine { .. }))
+                .count(),
+            1
+        );
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
+            LayoutedChartItem::AxisSpine { stroke_width, .. } if *stroke_width == 5.0
         )));
     }
 

@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.61.0";
+pub const VERSION: &str = "0.62.0";
 
 use std::collections::HashMap;
 
@@ -633,11 +633,18 @@ where
 
     for item in &diagram.items {
         match item {
-            LayoutedChartItem::AxisSpine { x1, y1, x2, y2, .. } => {
+            LayoutedChartItem::AxisSpine {
+                x1,
+                y1,
+                x2,
+                y2,
+                stroke_width,
+                ..
+            } => {
                 instructions.push(PaintInstruction::Path(line_path(
                     &[Point { x: *x1, y: *y1 }, Point { x: *x2, y: *y2 }],
                     "#374151",
-                    1.5,
+                    *stroke_width,
                 )));
             }
             LayoutedChartItem::GridLine { x1, y1, x2, y2 } => {
@@ -998,6 +1005,7 @@ where
                 y,
                 label,
                 orientation,
+                font_size,
             } => {
                 let (tx, ty, tw) = match orientation {
                     Orientation::Horizontal => (x - 30.0, y - ls / 2.0, 60.0),
@@ -1008,8 +1016,8 @@ where
                     tx,
                     ty,
                     tw,
-                    ls * 1.2,
-                    lf.clone(),
+                    font_size * 1.2,
+                    font_with_size(&lf, Some(*font_size)),
                     Color {
                         r: 107,
                         g: 114,
@@ -3601,7 +3609,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.61.0");
+        assert_eq!(crate::VERSION, "0.62.0");
     }
 
     #[test]
@@ -4339,6 +4347,48 @@ mod tests {
                 .count(),
             2
         );
+    }
+
+    #[test]
+    fn chart_axis_styles_lower_to_backend_neutral_paint() {
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let layout = LayoutedChartDiagram {
+            width: 400.0,
+            height: 300.0,
+            accessibility_title: None,
+            accessibility_description: None,
+            title_box: None,
+            items: vec![
+                LayoutedChartItem::AxisSpine {
+                    x1: 20.0,
+                    y1: 260.0,
+                    x2: 380.0,
+                    y2: 260.0,
+                    orientation: Orientation::Horizontal,
+                    stroke_width: 5.0,
+                },
+                LayoutedChartItem::AxisTick {
+                    x: 100.0,
+                    y: 264.0,
+                    label: "Q1".into(),
+                    orientation: Orientation::Vertical,
+                    font_size: 18.0,
+                },
+            ],
+        };
+
+        let scene = diagram_to_paint_chart(&layout, &opts);
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Path(path) if path.stroke_width == Some(5.0)
+        )));
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::GlyphRun(run) if run.font_size == 18.0
+        )));
     }
 
     #[test]
