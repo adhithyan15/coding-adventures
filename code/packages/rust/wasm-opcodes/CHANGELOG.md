@@ -2,6 +2,34 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.44] - 2026-08-25 - SIMD PR41: v128.loadN_zero family
+
+### Added
+
+- 2 new `SIMD_OPS` entries, opening the `v128.loadN_zero` family (the
+  second bite into the wider `load_extend`/`load_splat`/`load_zero`/
+  `load{8,16,32,64}_lane`/`store{8,16,32,64}_lane` memory-access family
+  PR39 deferred and PR40 started): 222 SIMD opcodes total, up from 220.
+  - `v128.load32_zero` (`0x5C`), `v128.load64_zero` (`0x5D`).
+  - Both sub-opcode values verified live against the SIMD proposal's own
+    `BinarySIMD.md` at the time of this PR; neither collided with any
+    pre-existing table entry -- this pair sits immediately after the
+    still-unimplemented `load{8,16,32,64}_lane`/`store{8,16,32,64}_lane`
+    family (`0x54`-`0x5B`) and immediately before `f32x4.demote_f64x2_
+    zero` (`0x5E`, already implemented).
+- 2 new `SimdOpKind` variants: `Load32Zero`, `Load64Zero`. Same "load
+  then fill a v128" shape PR40's `Load32Splat`/`Load64Splat` established,
+  but the non-loaded lanes are ZEROED instead of repeating the loaded
+  value -- reuses the existing pop-i32/push-v128 type signature, so no
+  new instruction SHAPE was needed (unlike the still-deferred
+  lane-load/store family, which needs a v128 operand input PLUS a
+  lane-index immediate PLUS a memarg all at once).
+- `simd_load_zero_family_has_the_real_verified_sub_opcode_values`: pins
+  both new sub-opcode values and confirms `f32x4.demote_f64x2_zero`
+  immediately follows `v128.load64_zero` with no overlap.
+- `simd_ops_table_has_the_expected_222_entries_and_no_duplicates`
+  (renamed from the 220-entry version): bumps the total-count assertion.
+
 ## [0.2.43] - 2026-08-25 - SIMD PR40: v128.loadN_splat family
 
 ### Added
