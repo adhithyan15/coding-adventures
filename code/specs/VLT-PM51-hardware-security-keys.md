@@ -23,23 +23,43 @@ verification are explicitly deferred — §6 and §7 say why — as is a
 hardware-backed *custody* provider (`YubikeyPrfCustodian`) — §8 says
 why that's a separate, larger PR rather than part of this one.
 
-**Slice 2 (this update, §11–§18) ships the real CTAP2 hardware
-transport §6 deferred.** `ctap-hid-fido2` — recommended but
-deliberately not added in slice 1 — is re-verified (§11) and added as
-this workspace's first native, hardware-touching dependency, isolated
-into its own new crate, `vault-webauthn-ctap2-hid` (§12), so
-`vault-auth` itself gains only a trait boundary (`Ctap2Transport`),
-never the native dependency. `WebAuthnPrfAuthenticator::verify()` now
-performs a real CTAP2 `GetAssertion` with the `hmac-secret` extension
-and checks everything about the response that doesn't need ECDSA
-P-256 (§13). ECDSA P-256 signature verification is still the one
-missing primitive (§7 is unchanged on this point), so `verify()`
-still always returns `AuthError::Unimplemented` as its final answer —
-now reached only *after* a real hardware round trip, not instead of
-one. §14 covers the touch-timeout and failure-mode design, §15 the
-CI/testability approach (including a real concurrency bug this
-slice's own tests found and fixed), §16 what's still deferred, and
-§17 slice 2's acceptance gates.
+**Slice 2 (§11–§18) shipped the real CTAP2 hardware transport §6
+deferred.** `ctap-hid-fido2` — recommended but deliberately not added
+in slice 1 — was re-verified (§11) and added as this workspace's first
+native, hardware-touching dependency, isolated into its own new crate,
+`vault-webauthn-ctap2-hid` (§12), so `vault-auth` itself gains only a
+trait boundary (`Ctap2Transport`), never the native dependency.
+`WebAuthnPrfAuthenticator::verify()` performed a real CTAP2
+`GetAssertion` with the `hmac-secret` extension and checked everything
+about the response that doesn't need ECDSA P-256 (§13). ECDSA P-256
+signature verification remained the one missing primitive after slice
+2 (§7 was unchanged on this point), so `verify()` still always
+returned `AuthError::Unimplemented` as its final answer — reached only
+*after* a real hardware round trip, not instead of one. §14 covers the
+touch-timeout and failure-mode design, §15 the CI/testability approach
+(including a real concurrency bug that slice's own tests found and
+fixed), §16 what was still deferred after slice 2, and §17 slice 2's
+acceptance gates.
+
+**Slice 3 (this update, §19–§24) ships the ECDSA P-256 verifier §6/§7
+and §16 both named as the one remaining missing primitive — making
+this feature actually work end-to-end for the first time.** `ring`
+(already resolved transitively via `vault-webauthn-ctap2-hid`'s own
+dependency on `ctap-hid-fido2`) is re-verified against `p256`
+(RustCrypto) and added as a **direct** dependency of `vault-auth` for
+the first time (§19). `parse_es256_cose_public_key` (§20) decodes the
+COSE_Key recorded at registration into the raw point `ring`'s verifier
+needs, and `verify_es256_signature` (§20) is the verifier itself.
+`WebAuthnPrfAuthenticator::verify()` now performs the real
+cryptographic check §13 could not — ECDSA P-256 over
+`authenticatorData || SHA-256(challenge)`, confirmed byte-for-byte
+against `ctap-hid-fido2`'s own source rather than assumed (§21) — and,
+for the first time in this three-slice arc, can return `Ok(...)` for a
+genuinely valid hardware assertion. §22 explains what's still
+deferred after this slice (signature-counter / cloned-authenticator
+detection, chiefly), §23 the testing approach (real `ring`-generated
+signatures, not hand-rolled or hard-coded test vectors), and §24
+slice 3's acceptance gates.
 
 ## 1. What "hardware security key support" means here
 
@@ -413,13 +433,14 @@ with one today, and the `vault-pm-application` integration point that
 makes `vault-key-custody` a real dependency of the product for the
 first time.
 
-## 9. Out of scope (slice 1 — see §17 for what slice 2 still defers)
+## 9. Out of scope (slice 1 — see §17 for what slice 2 still defers, §22 for what slice 3 still defers)
 
 - ~~Real CTAP2/WebAuthn hardware transport~~ — **shipped in slice 2**,
   §12–§16.
-- ECDSA P-256 signature verification (§6) — no elliptic-curve
-  primitive exists in this workspace yet. Still out of scope after
-  slice 2 — see §17.
+- ~~ECDSA P-256 signature verification~~ (§6) — **shipped in slice 3**,
+  §19–§21. No elliptic-curve primitive existed in this workspace before
+  slice 3; see §22 for what slice 3 itself still defers (chiefly
+  signature-counter / cloned-authenticator detection).
 - `YubikeyPrfCustodian` / any hardware-backed `KeyCustodian` (§8).
   Still out of scope.
 - YubiKey HMAC-SHA1 challenge-response (§3) — ruled out as a design
@@ -428,10 +449,10 @@ first time.
   slice 2** for the platform that needed an explicit step (§16); see
   that section for why macOS and Windows needed none.
 - VLT06 policy composition rules that would let an operator require
-  `webauthn_prf` as part of an unlock policy — the authenticator has
-  to exist and actually work before a policy can reference it. Still
-  out of scope: `verify()`'s final answer is still always
-  `Err`, so there is still nothing for a policy to require yet.
+  `webauthn_prf` as part of an unlock policy — the authenticator can
+  now actually succeed (§21), which is the precondition a policy needs,
+  but wiring the policy layer itself is still a separate, out-of-scope
+  PR — see §22.
 - A registration/enrollment ceremony (`vault-pm hardware-key add` or
   similar) — still ships the verification-side type only.
 
@@ -831,20 +852,23 @@ account of all three findings.
 
 ## 16. Explicitly still deferred (after slice 2)
 
-- **ECDSA P-256 assertion-signature verification.** Unchanged from §7:
+*(Kept for history — §22 is the current "what's deferred" section,
+after slice 3.)*
+
+- ~~**ECDSA P-256 assertion-signature verification.**~~ **Shipped in
+  slice 3**, §19–§21. Was, at the time of slice 2: unchanged from §7,
   no elliptic-curve signature primitive exists anywhere in this
-  workspace. This is the one remaining piece standing between
-  `verify()`'s current final `Err` and a real `Ok(...)`. Sized
-  comparably to this workspace's existing `argon2id`/
-  `chacha20-poly1305` primitive crates — its own PR, not a few lines
-  bolted onto the hardware transport.
+  workspace, the one remaining piece standing between `verify()`'s
+  current final `Err` and a real `Ok(...)`.
 - **`YubikeyPrfCustodian` / any hardware-backed `KeyCustodian`.** §8's
   reasoning is unchanged and, if anything, reinforced: it needs both
-  ECDSA (still missing) and the `hmac-secret` *wrap* direction, which
-  is a different question from the *verify* direction this slice
-  answers.
-- **VLT06 policy composition.** Still nothing for a policy to
-  reference, because `verify()` still cannot succeed.
+  ECDSA (shipped in slice 3, §19–§21) and the `hmac-secret` *wrap*
+  direction, which is a different question from the *verify* direction
+  slice 3 answers. Still fully out of scope.
+- **VLT06 policy composition.** `verify()` can succeed now (§21), which
+  removes the reason this was blocked, but the policy layer itself is
+  still unbuilt — still out of scope, for a different reason than
+  before.
 - **A registration/enrollment ceremony.** Still out of scope — this
   slice only makes the verification-side type's hardware I/O real.
 - **A software/virtual CTAP2 authenticator for CI.** Investigated
@@ -873,10 +897,15 @@ account of all three findings.
    `GetAssertion` with the `hmac-secret` extension through its
    `Ctap2Transport`, and checks rpId hash, credential id, user
    presence, and `hmac-secret` presence before reaching its final
-   `AuthError::Unimplemented` — §13, proven by
-   `webauthn_prf_verify_still_refuses_after_a_correct_hardware_round_
-   trip` and the wrong-rp/wrong-credential/no-presence/no-extension
-   tests alongside it.
+   `AuthError::Unimplemented` — §13, proven at the time by a test
+   named `webauthn_prf_verify_still_refuses_after_a_correct_hardware_
+   round_trip` and the wrong-rp/wrong-credential/no-presence/
+   no-extension tests alongside it. *(That test was renamed and
+   rewritten in slice 3 — §23 — once `verify()` could actually
+   succeed; the wrong-rp/wrong-credential/no-presence/no-extension
+   tests it names are unchanged and still pass, since those checks all
+   still run, and still fail closed, before the new signature check
+   slice 3 added.)*
 4. `verify()` never blocks past its configured `touch_timeout`
    (`MIN_TOUCH_TIMEOUT..=MAX_TOUCH_TIMEOUT`, default 30s), and returns
    fast when no hardware is present — §14, proven by a wall-clock
@@ -931,3 +960,432 @@ account of all three findings.
   `libudev`-only (not `libusb`) build requirement for the
   `linux-static-hidraw` feature, and the zero-`unsafe`-blocks claim
   about `ctap-hid-fido2`'s own protocol-layer code — §11, §14, §15.
+
+## 19. Slice 3 — re-verifying the ECDSA dependency choice
+
+Slices 1 and 2 both named ECDSA P-256 assertion-signature verification
+as the one primitive standing between `verify()`'s final `Err` and a
+real `Ok(...)`, and both surveyed the workspace and found nothing:
+`argon2id`, `chacha20-poly1305`, `aes`/`aes-modes`, `rsa`, `ed25519`,
+`x25519` all exist; nothing for the P-256 curve does (§6, §13). Before
+writing a byte of elliptic-curve code, this slice re-ran that survey
+one more time, and re-confirmed the standing instruction this whole
+campaign follows for exactly this situation: never hand-roll a
+security-critical primitive when an audited library exists.
+`ed25519`/`x25519` are worth naming here precisely *because* they are
+counterexamples that prove the point — this workspace already has
+homegrown Curve25519 code, so "we do EC math ourselves elsewhere" is
+not, by itself, a reason to do it again for a different curve with
+different, easier-to-get-wrong arithmetic (P-256's Weierstrass form has
+more edge cases in signature verification — point-at-infinity handling,
+non-constant-time comparison of untrusted signatures, scalar-range
+checks — than Curve25519's Montgomery/Edwards forms are designed to
+avoid by construction).
+
+**Two real candidates, compared on exactly the axes §5's dependency
+survey used for `ctap-hid-fido2`:**
+
+| Crate | Shape | Audit history / provenance | `no_std` / dependency weight | Fit for this exact job |
+|---|---|---|---|---|
+| `ring` (0.17.14) | BoringSSL-derived; `signature::UnparsedPublicKey` + `ECDSA_P256_SHA256_ASN1` for DER-signature verification against a raw uncompressed SEC1 public key | Derived from BoringSSL/Google's own audited C, with `ring`'s own long track record in the Rust ecosystem — `rustls`, among many others, is built on it. **Already present in this exact dependency tree**: `vault-webauthn-ctap2-hid`'s own `Cargo.toml` selects `ctap-hid-fido2`'s `"ring"` feature (§11) for the CTAP2 PIN protocol's ECDH — confirmed by resolving the tree with `cargo tree -p ctap-hid-fido2`, which shows `ring v0.17.14` already a transitive dependency of this workspace before this slice adds anything. | Not `no_std` by default here (uses `alloc` + `dev_urandom_fallback`, both already implied by every other dependency in this workspace's `std`-based crates); adding it as a *direct* `vault-auth` dependency changes **zero** unique crates in the resolved tree — `cargo tree` before and after this change shows the same `ring v0.17.14`, unified to one copy, because the version requirement (`"0.17"`) is compatible with what's already resolved | `ECDSA_P256_SHA256_ASN1` takes exactly what CTAP2 produces: a raw uncompressed SEC1 point and a DER-encoded signature, hashing the message internally with SHA-256 — matches this design's shape with no reformatting needed on either side (confirmed by reading `ring` 0.17.14's own source, not assumed from docs — §21) |
+| `p256` (RustCrypto) | Pure Rust, `no_std`-capable, part of the widely-used RustCrypto `elliptic-curves` family | Widely used (`webpki`, many `rustls`-adjacent crates use RustCrypto curves elsewhere in the ecosystem), but a **brand-new** crate in this workspace's tree — not resolved anywhere today | `no_std`-capable, which this workspace has never needed from a crypto primitive so far (every existing crypto crate here — `argon2id`, `chacha20-poly1305`, `sha256`, etc. — is homegrown `std` Rust, not RustCrypto); pulling it in adds a genuinely new subtree (`elliptic-curve`, `ecdsa`, `primeorder`, `generic-array`/`typenum`-family crates) that does not overlap with anything already resolved | Also fits the shape well (`p256::ecdsa::{VerifyingKey, Signature}` accepts the same DER-signature-over-SEC1-point shape), but at the cost of a strictly larger total dependency surface for the workspace to compile, review, and keep patched |
+
+**Recommendation: `ring`**, unchanged in kind from §11's reasoning for
+`ctap-hid-fido2`'s own choice of `ring` over `aws-lc-rs` — no
+additional system build toolchain beyond what Rust already requires,
+plus the concrete, checkable fact (not assumed, resolved with
+`cargo tree`) that `ring v0.17.14` is *already* compiled into this
+workspace's dependency graph via `vault-webauthn-ctap2-hid`. Adding it
+as a direct `vault-auth` dependency (`ring = "0.17"`, unifying to the
+same `0.17.14`) is not "one more crate to audit and maintain" in any
+meaningful sense — it is promoting an already-resolved, already-in-the-
+build-graph dependency from transitive to direct, matching this
+crate's existing minimal-dependency posture (§12's own reasoning for
+keeping `vault-auth` free of `ctap-hid-fido2` itself doesn't apply
+here: `ring` carries no native FFI, no HID/USB access, and no `unsafe`
+surface that `vault-auth`'s own `#![forbid(unsafe_code)]` would need to
+account for differently than it already does for its transitive
+dependency on `ring` via `vault-webauthn-ctap2-hid`).
+
+`p256` was not ruled out for any defect — it would have worked, and a
+future PR that wanted `no_std` support for `vault-auth` (not a
+requirement anywhere in this product today) would have a real reason to
+reconsider this choice. It loses this specific comparison because it
+would be the *only* reason this workspace's build graph grows by an
+entire new dependency subtree, when an audited, already-resolved
+alternative sitting one `Cargo.toml` edit away does the identical job.
+
+**What changed in `vault-auth/Cargo.toml`:** one new line, `ring =
+"0.17"`, plus the pre-existing `coding_adventures_sha256` path
+dependency (already present since slice 1) and a new
+`coding_adventures_canonical_cbor` path dependency (§20) for COSE_Key
+decoding — both workspace-internal, neither a change to this crate's
+external dependency footprint.
+
+## 20. COSE_Key parsing: `parse_es256_cose_public_key`
+
+`WebAuthnPrfAuthenticator` has stored `public_key_cose: Vec<u8>` since
+slice 1, described then as "COSE-encoded public key from registration"
+and explicitly "retained now; consumed once signature verification
+lands" (§6). This slice is the one that consumes it, and had to
+confirm — not assume — the exact shape before writing a verifier
+against it.
+
+**Confirming the format, against the actual stored type, not an
+assumption.** `canonical-cbor`'s own module doc already names
+"COSE-Key, used by FIDO2 / WebAuthn-PRF (VLT05 bind-mode)" as a design
+driver and states it targets exactly the canonical CBOR profile
+(RFC 8949 §4.2.3 length-first map-key ordering) that CTAP2/COSE/
+WebAuthn require — confirmed by reading that crate's source (§7 already
+surveyed this crate's existence; this slice is the first to actually
+call `decode` against real COSE bytes). A COSE_Key for an EC2 key (RFC
+9053 §7.1.1) is a CBOR map with (at minimum) four labels this design
+needs: `kty` (label `1`, must be `2` for "EC2"), `crv` (label `-1`,
+must be `1` for P-256 per the IANA COSE Elliptic Curves registry), `x`
+(label `-2`, the 32-byte x-coordinate), and `y` (label `-3`, the
+32-byte y-coordinate). `canonical-cbor`'s `CborValue::Negative(n)`
+represents `-1-n`, so labels `-1`/`-2`/`-3` decode to
+`Negative(0)`/`Negative(1)`/`Negative(2)` respectively — confirmed
+against that crate's own doc comment for `CborValue::Negative` before
+writing the match arms, not derived from memory of the CBOR spec.
+
+**Two failure kinds, kept distinguishable on purpose.** §6's original
+reasoning for `WebAuthnPrfAuthenticator::verify()` never doing partial
+validation — "a type that can only answer 'is this shaped like a valid
+credential' must say so by refusing outright" — extends here to a
+second axis this slice introduces: malformed input and unsupported
+capability are *different* failures, and this parser is the first
+place in the `WebAuthnPrfAuthenticator` path that can tell them apart.
+A COSE key that fails to decode as canonical CBOR at all, isn't a map,
+or is missing/misshapen coordinates is genuinely bad registration data
+(`AuthError::InvalidParameter`). A COSE key that decodes perfectly and
+names a real, valid key type this crate simply doesn't verify yet — an
+OKP/Ed25519 key, or an EC2 key on P-384/P-521 — is a capability gap
+(`AuthError::Unimplemented`), the identical variant (and identical
+reasoning) §6 introduced for "this backend doesn't exist yet," now
+reachable from a second call site. Collapsing these into one error
+would have hidden a real, fixable capability gap behind what looks
+like routine bad input.
+
+**What is deliberately not checked here.** Whether the decoded `(x,
+y)` is an actual point on the P-256 curve. §19's choice of `ring` pays
+for this directly: `ring`'s own ECDSA verification path calls
+`verify_jacobian_point_is_on_the_curve` as a mandatory, non-panicking
+step of every `verify()` invocation — confirmed by reading `ring`
+0.17.14's `src/ec/suite_b/ecdsa/verification.rs` before relying on it,
+the same "read the source, don't take the recommendation on faith"
+discipline §11 already applied to `ctap-hid-fido2`. Re-implementing
+curve-membership checking in `parse_es256_cose_public_key` would be
+exactly the hand-rolled elliptic-curve arithmetic §19 chose an audited
+library specifically to avoid, duplicated for no correctness benefit.
+
+**Construction-time, not verify-time.** `WebAuthnPrfAuthenticator::
+with_touch_timeout` now calls `parse_es256_cose_public_key` once,
+during construction, storing the resulting 65-byte uncompressed SEC1
+point (`0x04 || X || Y`) alongside the original `public_key_cose`
+bytes (kept verbatim so the existing `public_key_cose()` accessor is
+unaffected). This mirrors every other constructor validation in this
+type (empty relying-party id / credential id / public key, touch-
+timeout bounds) rather than deferring a check on registration-time data
+to the first `verify()` call — a registered key this authenticator
+cannot verify is a property of the *registration*, discoverable
+immediately, not of any particular unlock attempt.
+
+## 21. What `verify()` does now, and why it finally succeeds
+
+§13 listed seven checks before `verify()`'s (until this slice)
+unconditional final refusal. This slice adds the eighth and makes it
+the one that decides the outcome:
+
+1. Reject an empty `credential` immediately (unchanged from §13).
+2. Build a `Ctap2AssertionRequest` (unchanged from §13): `challenge =
+   SHA-256(credential)`; `hmac_secret_salt` derived from
+   registration-time data only.
+3. Call `self.transport.get_hmac_secret_assertion(&request)` (unchanged).
+4. Check the response's rpId hash (unchanged).
+5. Check the response's `credential_id` (unchanged).
+6. Check the response's user-presence flag (unchanged).
+7. Check the response carries an `hmac-secret` output (unchanged).
+8. **New in this slice.** Reconstruct the exact bytes the authenticator
+   signed and verify `response.signature` against them using
+   `verify_es256_signature` and the credential's registered P-256
+   public key (§20). Only if this check passes does `verify()` return
+   `Ok(AuthAssertion { kind: "webauthn-prf", mode: Mode::Bind,
+   key_contribution: Some(hmac_secret_output) })` — the first `Ok`
+   this authenticator has ever produced across all three slices.
+
+**Getting the signed bytes exactly right — confirmed against source,
+not assumed.** WebAuthn/CTAP2's assertion signature covers
+`authenticatorData || clientDataHash`, where `clientDataHash` is a
+32-byte hash the platform computes and hands to the authenticator as
+an opaque parameter — the authenticator never sees or re-derives it.
+This design's `Ctap2AssertionRequest::challenge` is *not* that hash
+directly; per its own doc (added in slice 2, unchanged since), "the
+transport hashes this itself to form the assertion's signed
+clientDataHash-equivalent." This slice re-confirmed exactly what that
+means by reading `vault-webauthn-ctap2-hid`'s `run_get_assertion`
+(passes `request.challenge` straight through as `ctap-hid-fido2`'s
+`challenge` parameter) and then `ctap-hid-fido2`'s own
+`get_assertion_command::Params::new`, which computes
+`client_data_hash = util::create_clientdata_hash(challenge)`, and
+`create_clientdata_hash`, which is exactly `SHA-256(challenge)` — all
+read directly from the vendored `ctap-hid-fido2` v3.5.13 source, not
+inferred from its public API docs. So the bytes a real device signs
+are `authData || SHA-256(request.challenge)`, and that is exactly what
+`verify()` reconstructs: `client_data_hash = sha256(&request.challenge)`
+(computed from the *request* this specific call built, never from
+anything the transport returns, so a malicious or buggy transport
+cannot substitute a different challenge into the check), concatenated
+with `response.auth_data`.
+
+**The signature's wire format — also confirmed, not assumed.**
+CTAP2's `GetAssertion` response's `signature` field (CBOR key `0x03`)
+is the ASN.1 DER-encoded ECDSA signature the authenticator itself
+produces; `ctap-hid-fido2`'s own response parser
+(`get_assertion_response.rs`) copies it through as opaque bytes
+(`ass.signature = util_ciborium::cbor_value_to_vec_u8(val)?`) with no
+reformatting — confirmed by reading that function, not assumed from
+the WebAuthn spec's prose description. This is exactly the shape
+`ring::signature::ECDSA_P256_SHA256_ASN1` expects, so no re-encoding is
+needed on either side of the `Ctap2Transport` boundary.
+
+**Failure collapses to one answer, as designed from slice 1.** A
+signature check that fails — wrong key, wrong message, corrupted
+bytes, a public key that isn't a valid curve point — returns
+`AuthError::InvalidCredential`, the same variant every other check in
+this sequence already returns on failure. §6's original reasoning
+("we never reveal *which* condition failed") extends unchanged to the
+one new check.
+
+## 22. Explicitly deferred (after slice 3)
+
+- **Signature-counter / cloned-authenticator detection.** WebAuthn's
+  `signCount` exists so a relying party can notice a cloned
+  authenticator: if a credential's counter is ever seen going
+  *backwards* (or repeating a previously-seen value) relative to the
+  last accepted assertion, that is evidence two physical devices are
+  answering for the same credential. This slice does not implement
+  that check, for reasons this section makes explicit rather than
+  leaving as a silent gap:
+  - **The raw counter is not even plumbed through today.**
+    `ctap-hid-fido2`'s `Assertion` struct carries `sign_count: u32`,
+    but `vault-webauthn-ctap2-hid`'s `map_assertion` — the function
+    that converts a real device response into `vault-auth`'s
+    transport-agnostic `Ctap2AssertionResponse` — does not copy it.
+    `Ctap2AssertionResponse` itself has no `sign_count` field. Adding
+    one is a small, mechanical change; it is listed here because the
+    *comparison* logic it would feed is not small.
+  - **This crate has no per-credential persistence story for any
+    authenticator, and clone-detection needs one.**
+    `PasswordAuthenticator` and `TotpAuthenticator` are both pure,
+    stateless, bytes-in-bytes-out types; `TotpAuthenticator`'s own
+    module doc is explicit that its own analogous replay concern
+    ("replay-rejection cache is the caller's responsibility") is
+    pushed to whichever application layer holds durable per-secret
+    state. `WebAuthnPrfAuthenticator` has followed the identical shape
+    across all three slices. Persisting "last-seen `sign_count` for
+    credential X" is real, new state this crate has never needed to
+    hold before, and deciding *where* that state lives (this crate?
+    `vault-pm-repository`? a new small crate?) is a genuine design
+    question, not an implementation detail.
+  - **A correct implementation is not simply "reject any decrease."**
+    Per WebAuthn L3 §6.1.1, an authenticator that does not implement a
+    signature counter reports `signCount == 0` on every single
+    assertion — including many resident-key/passkey-style
+    authenticators by design, not as a bug. A verifier that treated
+    "the counter is 0" as automatically suspicious would reject every
+    assertion from those authenticators forever; a correct
+    implementation has to learn, per credential, whether that
+    credential's counter is meaningfully monotonic at all, and only
+    apply the regression check when it is. That is real design work
+    — comparable in shape to this slice's own COSE-parsing design,
+    not a few added lines next to the signature check.
+
+  This is deferred with the same reasoning §8 already used for
+  `YubikeyPrfCustodian`: it is real, in-scope future work, named
+  explicitly rather than silently skipped, and sized for its own
+  design pass rather than folded into a PR whose job was making the
+  core cryptographic proof real for the first time.
+- **`YubikeyPrfCustodian` / any hardware-backed `KeyCustodian`.** §8's
+  reasoning, reaffirmed at §16: still needs the `hmac-secret` *wrap*
+  direction, a different question from the *verify* direction this
+  slice (and slice 2) answer.
+- **VLT06 policy composition.** `verify()` can now succeed, which is
+  the precondition a policy layer needs, but the policy layer itself
+  (`all_of { password, webauthn_prf }` and friends) is still unbuilt.
+- **A registration/enrollment ceremony.** Still out of scope — this
+  slice makes the verification-side type's cryptography real; nothing
+  yet produces a `(relying_party_id, credential_id, public_key_cose)`
+  triple from a live `make_credential` ceremony.
+- **A software/virtual CTAP2 authenticator for CI.** Unchanged from
+  §15/§16: not needed, because §23's fake-transport boundary plus real
+  `ring`-generated signatures already cover everything this slice's
+  logic does with a transport's response.
+- **A lower-level HID transport with a real read timeout.** Unchanged
+  from §14/§16 — orthogonal to this slice, which touches no transport
+  code.
+- **Windows admin-rights verification.** Unchanged from §11/§16 — this
+  slice adds no new native dependency and touches no HID code, so it
+  neither closes nor worsens this gap.
+
+## 23. Testing approach — real signatures, no hand-rolled or hard-coded vectors
+
+Before writing tests, it's worth being precise about what "test vectors"
+should mean for this slice, because the obvious-sounding options both
+have a problem. Publishing official cross-implementation WebAuthn/CTAP2
+ECDSA test vectors from FIDO Alliance or W3C was investigated and nothing
+suitable was found publicly bundled in a form worth hand-transcribing
+into this codebase (unlike RFC 6238's Appendix B, which `TotpAuthenticator`
+already tests against verbatim because the RFC itself publishes exact
+input/output pairs). Hand-picking a fixed private scalar and computing a
+signature by hand would work but would test this code against exactly
+one geometry of the curve, chosen by the author, which is a weaker
+property than what this slice actually needs proven.
+
+**What this slice does instead: real keys, real signatures, generated
+fresh by the same library being tested.** `ring::signature::
+EcdsaKeyPair::generate_pkcs8` with `ring::rand::SystemRandom` produces a
+genuine, freshly-generated P-256 key pair for every test that needs one
+(`TestKeypair::generate` in `vault-auth`'s test module); `ring::
+signature::EcdsaKeyPair::sign` under `ECDSA_P256_SHA256_ASN1_SIGNING`
+produces the DER-encoded signature under test. This is deliberately the
+*same* library on both sides of the equals sign — the property under
+test is "`vault-auth`'s wiring into `ring`'s verifier is correct" (right
+bytes signed, right bytes compared, right error on every failure mode),
+not "`ring`'s ECDSA implementation is correct," which is exactly the
+question choosing an audited, widely-used library was supposed to let
+this crate stop re-answering for itself. Every test runs against a
+*freshly generated* key pair rather than one fixed pair reused
+everywhere, so no single hard-coded scalar's arithmetic quirks could
+accidentally make every test pass.
+
+**The failure matrix, at both layers.** `parse_es256_cose_public_key`
+is tested directly: a valid EC2/P-256 key parses to the expected SEC1
+point; non-canonical CBOR, a non-map value, missing coordinates, and
+wrong-length coordinates are each `InvalidParameter`; an OKP key type
+and a P-384 curve are each `Unimplemented` (§20's two-failure-kinds
+design, pinned by name). `verify_es256_signature` is tested directly
+against real `TestKeypair` vectors: a genuine signature verifies; a
+tampered message, a tampered signature byte, a signature from a
+different key, a genuinely valid signature over *different* data (the
+"signature is real, just for the wrong thing" case — distinct from
+simple corruption, and the case most likely to slip through an
+implementation that only checks "did *a* signature verify" rather than
+"did *this* signature verify *this* message"), a corrupted (all-zero)
+public key, and garbage (non-DER) signature bytes are all rejected —
+the corrupted-key and garbage-signature cases specifically pinning that
+`ring` fails closed rather than panicking on adversarial input, the
+property choosing `ring` was supposed to buy.
+
+**End-to-end, through `WebAuthnPrfAuthenticator::verify` itself.** A
+new `SignedFakeTransport` (alongside the existing structural
+`FakeTransport` from slice 2, which slices 1/2's fixtures still use
+unmodified for checks that fail *before* reaching the signature step)
+computes a real `authData` and a real signature fresh on every call,
+from whatever request it actually receives — so the happy-path test
+stays correct regardless of what per-attempt challenge bytes a test
+passes to `verify()`, rather than baking in one fixed expected message.
+Its `Tamper` enum drives four scenarios: a clean signature (must
+succeed — the load-bearing test for this entire three-slice arc);
+signing with the wrong key (registered public key from one key pair,
+signature from a different one — the "hardware answered, but it isn't
+the registered credential" attack); corrupting signature bytes after
+signing correctly; and signing over a *different* per-attempt challenge
+than the one the specific `verify()` call actually issued (proving the
+check binds to *this* attempt, not merely to *some* challenge the
+credential once answered correctly). The happy-path test additionally
+asserts `key_contribution` equals exactly the `hmac-secret` bytes the
+fake hardware returned, closing the loop on §6's original "does this
+factor widen the KDF input set" definition of bind mode.
+
+**Construction-time coverage.** A registered COSE key naming P-384
+returns `Unimplemented` from `WebAuthnPrfAuthenticator::new` itself
+(not just from the underlying parser), and a non-CBOR `public_key_cose`
+returns `InvalidParameter` from the same constructor — proving §20's
+construction-time validation is actually wired into the public type,
+not only tested against the private parsing function directly.
+
+**What is still, honestly, not tested.** The same gap §15 already
+named and did not attempt to close: an actual physical touch, and
+therefore a signature from *real* hardware rather than `ring`-generated
+test keys. Nothing about this slice changes that boundary — the
+authenticator-side logic this slice adds is exhaustively covered
+against real cryptography; the physical device remains, as it has
+since slice 2, `code/scripts/miri-twig-vm.sh`-style manual verification
+territory outside CI's reach.
+
+## 24. Acceptance gates (slice 3)
+
+1. `ring` is re-verified as a candidate against `p256`, on version/
+   audit-provenance/dependency-weight/API-fit, before being added, and
+   the fact that it is already resolved transitively via
+   `vault-webauthn-ctap2-hid` is confirmed with `cargo tree`, not
+   assumed — §19.
+2. `ring` is added as a **direct** dependency of `vault-auth`
+   (`ring = "0.17"`); `coding_adventures_canonical_cbor` is added as a
+   path dependency for COSE_Key decoding. No other new dependency —
+   §19, §20.
+3. `parse_es256_cose_public_key` decodes a canonical-CBOR EC2/P-256
+   COSE_Key into the raw SEC1 point `ring` verifies against, rejecting
+   malformed input with `AuthError::InvalidParameter` and an
+   unsupported key type/curve with `AuthError::Unimplemented` — §20.
+4. `WebAuthnPrfAuthenticator::new`/`with_touch_timeout` parse and
+   validate the registered `public_key_cose` at construction time,
+   surfacing both failure kinds from the public constructor, not only
+   from the private parser — §20, §23.
+5. `WebAuthnPrfAuthenticator::verify()` cryptographically verifies the
+   CTAP2 assertion signature (ECDSA P-256, ASN.1 DER) over
+   `authData || SHA-256(request.challenge)` against the registered
+   credential's public key, and returns `Ok(AuthAssertion { ...,
+   key_contribution: Some(hmac_secret_output) })` for a genuinely valid
+   assertion — the first `Ok` this authenticator has ever returned —
+   proven by `webauthn_prf_verify_succeeds_with_a_genuine_signature_
+   and_yields_key_contribution` against a real `ring`-generated
+   signature — §21, §23.
+6. Every signature-verification failure mode (wrong signing key,
+   corrupted signature bytes, `authData` tampered after signing, a
+   signature valid for a different per-attempt challenge, a corrupted
+   public key, garbage signature bytes) is rejected with
+   `AuthError::InvalidCredential`, none of them panicking — §21, §23.
+7. Every check slices 1/2 already shipped (rpId hash, credential id,
+   user presence, `hmac-secret` presence, empty-credential
+   short-circuit, touch-timeout bounds) still passes unchanged — §17's
+   tests, minus the one renamed per that section's note.
+8. Signature-counter / cloned-authenticator detection is explicitly
+   named as deferred, with concrete reasoning (no plumbed counter, no
+   persistence layer, the "always-zero is not inherently suspicious"
+   correctness subtlety), not silently skipped — §22.
+9. `cargo build --workspace`, `cargo test`, `cargo fmt --check`, and
+   `cargo clippy --all-targets -- -D warnings` are green for
+   `coding_adventures_vault_auth` and every crate that depends on it
+   (`coding_adventures_vault_webauthn_ctap2_hid`,
+   `coding_adventures_vault_pm_application`).
+10. `README.md`/`CHANGELOG.md` for `vault-auth` are updated, and this
+    document reflects what shipped versus what's still deferred (§22)
+    — matching this document.
+
+## 25. Citations (slice 3 additions)
+
+- RFC 9053 (COSE), §7.1 "Elliptic Curve Keys" and §7.1.1's key-type/
+  curve label tables — the exact `kty`/`crv`/`x`/`y` labels
+  `parse_es256_cose_public_key` decodes.
+- W3C, *Web Authentication: An API for accessing Public Key
+  Credentials Level 3*, §6.1.1 "Signature Counter Considerations" —
+  the "an authenticator may always report 0" subtlety §22 names as
+  the reason signature-counter checking is real design work, not an
+  incidental addition.
+- `ring` v0.17.14 source (`github.com/briansmith/ring`) — read
+  directly, not taken from documentation, to confirm: the DER-signature
+  verification API (`ECDSA_P256_SHA256_ASN1`) hashes its message
+  argument with SHA-256 internally rather than expecting a pre-hashed
+  digest; the expected public-key encoding is the uncompressed SEC1
+  point; and `verify_jacobian_point_is_on_the_curve` is a mandatory,
+  non-panicking part of every verification call — §19, §20, §21.
+- `ctap-hid-fido2` v3.5.13 source, specifically
+  `src/fidokey/get_assertion/get_assertion_command.rs`'s
+  `Params::new` and `src/util.rs`'s `create_clientdata_hash`, and
+  `src/fidokey/get_assertion/get_assertion_response.rs`'s signature-
+  field parsing — read directly to confirm the exact
+  `clientDataHash = SHA-256(challenge)` derivation and the pass-through
+  (non-reformatted) DER signature encoding this slice's signed-message
+  reconstruction depends on — §21.

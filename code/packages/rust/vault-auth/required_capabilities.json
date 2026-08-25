@@ -3,5 +3,5 @@
   "version": 1,
   "package": "rust/vault-auth",
   "capabilities": ["clock"],
-  "justification": "Pure cryptography (Argon2id, HMAC-SHA-1, HKDF-SHA-256) plus access to the system wall clock for TOTP time-step computation. No filesystem, network, or process spawning."
+  "justification": "Pure cryptography (Argon2id, HMAC-SHA-1, HKDF-SHA-256, and, as of VLT-PM51 slice 3, ECDSA P-256 assertion-signature verification via `ring`) plus access to the system wall clock for TOTP time-step computation. `ring` is pure computation from this crate's perspective -- no FFI/hardware capability, unlike `vault-webauthn-ctap2-hid`'s native HID dependency, which is why it does not change this crate's capability list, only its justification text. No filesystem, network, or process spawning."
 }

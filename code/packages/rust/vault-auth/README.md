@@ -8,19 +8,23 @@ Kubernetes-SA, etc. — without the vault core caring which.
 This v0.1 ships **PasswordAuthenticator** and **TotpAuthenticator**,
 plus **`WebAuthnPrfAuthenticator`** — a FIDO2 hardware security key
 (YubiKey and other CTAP2-compliant authenticators) as a bind-mode
-unlock factor via the CTAP2 `hmac-secret` extension. As of VLT-PM51's
-second slice, `verify()` performs a real CTAP2 `GetAssertion` (with
-`hmac-secret`) through a `Ctap2Transport` — the trait boundary this
-crate defines so it stays free of any native/hardware dependency; the
-real, USB-HID-backed implementation lives in the sibling crate
-[`vault-webauthn-ctap2-hid`](../vault-webauthn-ctap2-hid) — and checks
-everything about the response that doesn't need an ECDSA P-256
-signature verifier. `verify()` still always returns
-`AuthError::Unimplemented` as its *final* answer, because that one
-primitive doesn't exist anywhere in this workspace yet — see
+unlock factor via the CTAP2 `hmac-secret` extension. `verify()` performs
+a real CTAP2 `GetAssertion` (with `hmac-secret`) through a
+`Ctap2Transport` — the trait boundary this crate defines so it stays
+free of any native/hardware dependency; the real, USB-HID-backed
+implementation lives in the sibling crate
+[`vault-webauthn-ctap2-hid`](../vault-webauthn-ctap2-hid) — checks the
+response's rpId hash, credential id, and user-presence flag, and, as of
+VLT-PM51's third slice, cryptographically verifies the assertion
+signature (ECDSA P-256, via `ring`) against the credential's registered
+public key before ever returning `Ok`. A registered public key of an
+unsupported COSE key type or curve is reported via
+`AuthError::Unimplemented` at construction time — the one remaining
+honest capability gap. See
 [`VLT-PM51-hardware-security-keys.md`](../../../specs/VLT-PM51-hardware-security-keys.md)
-for the full design, the protocol/dependency survey, and exactly
-what's real versus still deferred.
+for the full design, the dependency survey (why `ring` over `p256`),
+and exactly what's real versus still deferred (signature-counter /
+clone-detection replay state).
 Successful assertions can also be projected into credential-safe
 `AuthAssertionSummary` / `AuthAssertionSetSummary` read models so
 policy and audit layers can inspect factor coverage without touching
