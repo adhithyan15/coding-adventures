@@ -7805,6 +7805,52 @@ selection the graph contains 505 unique owners and 769 complete acyclic edges,
 with 142 merged owners, 362 pending owners, exactly one in-progress owner, no
 pr-open owner, and no active parity PR.
 
+### Haskell tracked-artifact implementation
+
+The Haskell build tool now exposes a pure in-memory tracked-artifact validator
+and consumes all five language-neutral fixtures. It preserves the closed
+portable-path precedence, lexical slash normalization, hostile-path redaction,
+Unicode-scalar length and ordering, NFKC plus full-fold `node_modules`
+identities, full-uppercase Windows reserved basenames, inert entry kinds, and
+canonical deterministic diagnostics without adding Git, filesystem, process,
+environment, or network authority to the adapter.
+
+Generated source-embedded Unicode 17.0.0 tables provide NFC, NFKC, full case
+folding, NFKC-fold, and full uppercase independently of host Unicode tables.
+The pinned generator checks exact upstream byte counts and SHA-256 identities,
+emits the complete Unicode License v3 notice, and verifies every official
+normalization, C/F folding, unconditional-uppercase, derived NFKC-fold, and
+Unicode 17 sentinel vector against the emitted Haskell source. The verifier
+requires exact reviewed GHC 9.4.8 `runghc` and compiler paths, disables user
+package databases and package environments, uses a minimal environment and
+isolated temporary directory, bounds retained output, and unconditionally
+cleans the isolated process tree.
+
+The full Haskell BUILD front passes graph's four examples, directed-graph's
+three examples, and the build tool's 44 examples. HPC reports 75% expression,
+69% alternative, and 59% top-level-definition coverage across the existing
+large `BuildTool` module. The complete shared resolver fixtures also exposed
+and this tranche repairs two existing Haskell-engine defects: ambiguous
+multi-Cabal roots and duplicate Dart manifest-name roots no longer enter the
+dependency graph, while a package identity still wins over a same-basename
+program identity.
+
+All 29 generator tests and the real emitted-Haskell official-vector check pass.
+The neutral corpus validates 111 cases and 269 files; conformance,
+package-parity, Haskell-capability, and OCaml-lock families pass 262 tests with
+25 expected platform skips. The Go oracle passes all packages with coverage,
+vet, and trimpath compilation; a fresh binary evaluates 45 Starlark BUILD files
+and validates a forced Haskell dry plan over all 207 discovered Haskell
+packages. Cabal metadata validation, Ruff check and formatting, zero-new-hint
+HLint comparison, workflow YAML, strict state JSON, the complete acyclic state
+graph, collision checks, Bandit medium/high, credential-pattern review, and
+diff checks pass. No dependency changed.
+
+A required read-only `ubuntu-24.04` job pins GHC 9.4.8 and Cabal 3.10.3.0,
+disables checkout credentials, executes the real full-vector verifier, and
+feeds its result into the stable CI gate. Generator subprocess authority stays
+under the separate selection-blocked host-authority owner.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
