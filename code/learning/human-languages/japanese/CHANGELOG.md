@@ -4,6 +4,17 @@ All notable changes to the Japanese curriculum track are recorded here.
 
 ## [Unreleased]
 
+### Changed — learner guide follows the authored runway (#12568)
+
+- Replaced the obsolete single-chapter/eight-lesson description with the current
+  twelve-chapter, 100-session pre-A1 sequence.
+- Reported vocabulary and script coverage from the canonical lesson ledger and
+  script-closure measurement: 28 word lessons, seven phrase lessons, and 47 of
+  47 shown glyphs taught with no closure violations.
+- Made the five-minute script-before-decoding and writing-stage policies
+  explicit, and connected the opening book honestly to the full pre-A1-to-C2
+  non-compensatory assessment contract.
+
 ### Added — one sound-first farewell (#12475)
 
 - Added six <=5-minute sessions for **さようなら**: sound and social job first,
