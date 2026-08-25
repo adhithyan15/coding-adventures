@@ -47,9 +47,18 @@ describe("the plan CLI", () => {
     expect(code).toBe(0);
     expect(out).toMatch(/exam-point — french/);
     expect(out).toMatch(/exam-point — german/);
-    // Spanish teaches 100% of the points currently enumerated, so it must not
-    // get an exam-point item. Its partial scope still gets an inventory item.
-    expect(out).not.toMatch(/exam-point — spanish/);
+    // Spanish USED to teach 100% of the points enumerated, so it got no
+    // exam-point item at all. Enumerating the functional, notional and
+    // orthographic dimensions took it to 223/273, so it now has 50 uncovered
+    // points and joins the queue. That is the planner behaving correctly: the
+    // work did not appear, it was always there and was invisible while the
+    // target list covered one of four content dimensions.
+    expect(out).toMatch(/exam-point — spanish/);
+    // Still PARTIAL, and therefore still "0 complete": the pronunciation half
+    // of phonology-orthography has no A1-only boundary in the source, so that
+    // single dimension keeps the whole inventory partial. This is the HL20 rule
+    // doing its job — three complete dimensions do not add up to a complete
+    // file, and the inventory item is not suppressed.
     expect(out).toMatch(/0 complete and 4 partial of 138/);
   }, 120_000);
 
@@ -98,7 +107,11 @@ describe("the plan CLI", () => {
     const { out } = run(root);
     // 103 -> 98: the French questions chapter covered five A1 points (HL-C229).
     // German A2 adds 51 source-bounded points; three already have exact atoms.
-    expect(out).toMatch(/146 uncovered point\(s\) across 4 written/);
+    // 146 -> 196: Spanish A1 contributed 0 uncovered points while it enumerated
+    // grammar only. Enumerating its functional, notional and orthographic
+    // dimensions added 50 points with no corresponding atom, and this total is
+    // the sum across all four written inventories.
+    expect(out).toMatch(/196 uncovered point\(s\) across 4 written/);
     expect(out).toMatch(/0 complete and 4 partial of 138/);
     expect(out).toMatch(/the other 20 track\(s\)/);
   }, 120_000);

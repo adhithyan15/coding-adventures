@@ -181,17 +181,42 @@ describe("the committed A1 inventory", () => {
     // means any NEW one fails here and has to be classified deliberately —
     // which is the whole job this test was meant to do.
     const unmapped = inventory.points.filter((point) => point.probe === null).map((point) => point.id);
-    // A1 is complete, so this is now the empty set -- and it stays an assertion
-    // rather than a vacuous loop: adding ANY new null probe fails here and has
-    // to be justified, which is exactly what this test is for.
-    expect(unmapped.sort()).toEqual([]);
+    // This list was EMPTY while the file enumerated grammar and nothing else.
+    // Enumerating the PCIC functional inventory, the general and specific
+    // notions, and the orthography inventory added 188 points, and 50 of them
+    // have no corresponding atom anywhere in the corpus. That is the finding,
+    // not a defect: an unmapped point is uncovered and reported by name, never
+    // skipped. Every entry below carries a `note` naming the source exponent
+    // that is missing, and the loop underneath proves the note is there.
+    //
+    // Read as a map of the real gaps: the F-* entries are speech acts the book
+    // never performs (the affirmative imperative, toasting, congratulating,
+    // saber for ability); the NE-* entries are whole A1 domains with no lesson
+    // at all (clothing, cinema and music, the internet and dictating an
+    // address, police and fire); and the O-* entries are nearly the entire
+    // orthography inventory -- the alphabet, capitalisation, and every
+    // punctuation mark except the question and exclamation pair.
+    expect(unmapped.sort()).toEqual([
+      "A1-F2-10", "A1-F2-16", "A1-F2-17", "A1-F3-03", "A1-F4-01", "A1-F5-09",
+      "A1-F5-10", "A1-F6-06", "A1-NE02-01", "A1-NE06-01", "A1-NE06-05",
+      "A1-NE07-04", "A1-NE07-06", "A1-NE08-02", "A1-NE09-06", "A1-NE11-04",
+      "A1-NE12-02", "A1-NE13-03", "A1-NE15-02", "A1-NE15-03", "A1-NE15-04",
+      "A1-NE16-02", "A1-NE17-02", "A1-NE18-01", "A1-NE18-02", "A1-NE18-05",
+      "A1-NE18-06", "A1-NE20-05", "A1-NG6-03", "A1-NG6-08", "A1-NG6-09",
+      "A1-NG6-10", "A1-O1-01", "A1-O1-02", "A1-O1-03", "A1-O1-04", "A1-O1-05",
+      "A1-O1-06", "A1-O1-07", "A1-O3-01", "A1-O3-02", "A1-O3-03", "A1-O3-05",
+      "A1-O3-06", "A1-O3-07", "A1-O3-08", "A1-O3-09", "A1-O4-01", "A1-O4-02",
+      "A1-O4-03",
+    ]);
 
-    // None of the four is partly true: each is absent outright, so none needs a
-    // note explaining which half exists. If a partly-true null is ever added,
-    // the assertion above fails first and forces that decision into the open.
+    // Every null must SAY why it is null. The note is what stops a null from
+    // reading as "nobody has looked yet": it names the exponent the source asks
+    // for and states that the corpus does not introduce it. Without this
+    // assertion the list above could grow by a bare null with no reasoning.
     for (const id of unmapped) {
       const point = inventory.points.find((candidate) => candidate.id === id)!;
       expect(point.probe, `${id} must stay null or gain a probe deliberately`).toBeNull();
+      expect(point.note?.trim(), `${id} is unmapped and must say why`).toBeTruthy();
     }
   });
 });
@@ -419,15 +444,50 @@ describe("what the corpus actually covers", () => {
     // remains that is PARTLY true. The four that are still null are absent
     // outright -- the ordinals, `uno...otro`, word-order flexibility, and the
     // infinitive as subject -- and need no note to say which half exists.
-    expect(coverage.enumerated).toBe(85);
-    expect(coverage.covered).toBe(85); // ...and 262-266 close the last four enumerated points. The inventory scope remains partial. // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245 // +3 ch246-250 // +6 ch251-256 // +4 ch257-261: the four rules the book had always demonstrated and never stated // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245 // +3 ch246-250 // +6 ch251-255: the half-taught sets finished, plus bastante which was already taught and merely unwired // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245 // +3 ch246-250: the stressed pronouns, the exclamative and the vocative // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245: the vosotros preterite and the imperfect plural, both promised in chapter 204 // +3: ch221-225 demonstratives // +4: ch226-229 degree words // +4: ch230-235 joining words // +2: ch236-240 the gerund and the personal a // +3: chapters 221-225 teach the demonstratives // +4: chapters 226-229 teach muy, bastante and mal // +4: chapters 230-235 teach al/del, quien, o and ni
-    expect(coverage.percent).toBe(100); // 53 -> 56 -> 60 -> 64 -> 66 -> 68 -> 71 -> 77 -> 81 -> 85/85 // 53/85 -> 56 -> 60 -> 64/85
+    // WHY THIS NUMBER JUST FELL FROM 100% TO 82%, AND WHY THAT IS THE FIX
+    // Everything above is the history of the GRAMMAR dimension, which reached
+    // 85/85. The comment ten lines up says this number must not move because a
+    // point was added or a probe loosened, and warns the next reader to read
+    // the inventory edit before re-pinning. This is that edit, so here is the
+    // reasoning it asks for.
+    //
+    // The file used to enumerate ONE of the four HL20 content dimensions. It
+    // now also enumerates the PCIC functional inventory (54 points), the
+    // general and specific notions (36 + 77), and the orthography inventory
+    // (21) -- 188 new points, each restated from the A1 column the source
+    // publishes separately from A2. 138 of them map to atoms the corpus really
+    // introduces; 50 have no corresponding atom and are null.
+    //
+    //     before: 85/85   = 100%, 0 unmapped
+    //     after: 223/273  =  82%, 50 unmapped
+    //
+    // The denominator grew because the target got honest, not because the book
+    // got worse -- no lesson was retired and no probe was loosened, and the
+    // grammar dimension is still 85/85 inside the new total. A 100% that
+    // measured a quarter of the construct was the flattering failure HL20 was
+    // written to close, and 82% of a four-dimension target is a larger true
+    // number than 100% of a one-dimension one.
+    //
+    // This is also why `percent` is pinned exactly rather than as a floor: it
+    // is allowed to fall, but only for a reason stated here in prose.
+    expect(coverage.enumerated).toBe(273); // 85 grammar + 54 functions + 113 notions + 21 orthography
+    expect(coverage.covered).toBe(223); // 85 grammar (unchanged) + 138 newly mapped // ...and 262-266 close the last four enumerated points. The inventory scope remains partial. // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245 // +3 ch246-250 // +6 ch251-256 // +4 ch257-261: the four rules the book had always demonstrated and never stated // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245 // +3 ch246-250 // +6 ch251-255: the half-taught sets finished, plus bastante which was already taught and merely unwired // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245 // +3 ch246-250: the stressed pronouns, the exclamative and the vocative // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245: the vosotros preterite and the imperfect plural, both promised in chapter 204 // +3: ch221-225 demonstratives // +4: ch226-229 degree words // +4: ch230-235 joining words // +2: ch236-240 the gerund and the personal a // +3: chapters 221-225 teach the demonstratives // +4: chapters 226-229 teach muy, bastante and mal // +4: chapters 230-235 teach al/del, quien, o and ni
+    expect(coverage.percent).toBe(82); // 53 -> 56 -> 60 -> 64 -> 66 -> 68 -> 71 -> 77 -> 81 -> 85/85 grammar-only, then 223/273 across four dimensions
+    expect(coverage.unmapped).toBe(50); // was 0 while only grammar was enumerated
 
     // Whole categories missing is a different failure from thin coverage, and
-    // the report has to keep them distinguishable.
+    // the report has to keep them distinguishable. These three are GRAMMAR
+    // categories and are deliberately unchanged: the new points all landed in
+    // new categories, so if one of these ever moves, a grammar point moved.
     expect(coverage.byCategory["Los demostrativos"]).toEqual({ enumerated: 3, covered: 3 }); // closed by chapters 221-225
     expect(coverage.byCategory["El sintagma adjetival"]).toEqual({ enumerated: 1, covered: 1 }); // closed by ch226-229: muy, poco and bastante are all taught now
     expect(coverage.byCategory["La oracion simple"]).toEqual({ enumerated: 6, covered: 6 });
+
+    // The two categories that are now entirely absent from the book. Naming
+    // them is the point of the per-category tally: "82%" is a mood, "the
+    // orthography inventory is 2/21 and clothing is 0/3" is a work queue.
+    expect(coverage.byCategory["Ortografia de letras y palabras"]).toEqual({ enumerated: 7, covered: 0 });
+    expect(coverage.byCategory["Puntuacion"]).toEqual({ enumerated: 9, covered: 1 });
   });
 
   it("reports the shortfall in a form somebody can act on", () => {
@@ -435,7 +495,8 @@ describe("what the corpus actually covers", () => {
     const report = formatExamCoverage(
       measureExamCoverage(loadExamInventory("spanish", "A1"), lessons),
     );
-    expect(report).toContain("spanish A1 (partial inventory): 85/85 points covered (100%)");
+    expect(report).toContain("spanish A1 (partial inventory): 223/273 points covered (82%)");
+    expect(report).toContain("50 with no corresponding atom");
     // Worst category first, not alphabetical. This USED to be checkable against
     // the real corpus, whose emptiest category kept changing as the campaign
     // closed points — `El sintagma adjetival` at 0/1, then `Los cuantificadores`

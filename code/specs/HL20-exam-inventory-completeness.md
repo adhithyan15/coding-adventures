@@ -71,11 +71,19 @@ as a completed inventory or remove its stable completion-plan item.
 
 This yields two simultaneous, non-contradictory statements:
 
-- “Spanish A1 covers 85/85 points currently enumerated”; and
+- “Spanish A1 covers 223/273 points currently enumerated”; and
 - “Spanish A1’s overall inventory is partial.”
 
 The first drives immediate lesson work. The second preserves the research work
-needed to know whether those 85 points cover the whole target.
+needed to know whether those 273 points cover the whole target.
+
+Spanish A1 is also the worked example of why the second statement matters. When
+this spec was written the file enumerated grammar alone and read 85/85, 100%.
+Enumerating three more dimensions from their own PCIC inventories took it to
+223/273, 82%, with 50 points that no atom in the corpus corresponds to. Nothing
+about the book changed between those two measurements. A 100% that covered one
+of four dimensions was precisely the flattering failure §1 describes, and the
+lower number is the more complete one.
 
 ## 5. Planner behavior and dependency order
 
@@ -105,6 +113,24 @@ presence claims were too broad. At migration:
 The honest corpus baseline is therefore **0 complete and 3 partial inventories
 out of 138 track × certifiable-level targets**. No measured exam point is lost.
 The backlog grows by three items because the old count hid unfinished research.
+
+## 6a. Progress against that baseline
+
+Spanish A1 has since closed `communicative-functions` and `lexicon` from the
+PCIC functional inventory and the general/specific notions respectively, and has
+enumerated the orthography half of `phonology-orthography`. It remains
+**partial**, on one specific and stated ground: the PCIC publishes its
+pronunciation-and-prosody inventory as a single undivided A1–A2 band with no
+per-item level marking, while its grammar, functions, notions and orthography
+inventories all split A1 from A2 by column. There is therefore no A1-only
+pronunciation boundary to restate, and drawing one by editorial judgement is
+what §3 forbids. Closing it needs a second source that separates A1 pronunciation
+from A2, or an explicit project-owned decision to treat the whole A1–A2
+pronunciation band as A1.
+
+This is the intended shape of progress under §4: a dimension flips only when its
+own source closes, the file stays partial while any dimension is open, and the
+measured point coverage moves independently of both.
 
 ## 7. Acceptance tests
 

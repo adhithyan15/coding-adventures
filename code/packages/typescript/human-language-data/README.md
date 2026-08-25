@@ -149,6 +149,16 @@ gaps. It also remains an `exam-inventory` backlog item. Thus 100% coverage means
 known." The initial baseline is deliberately honest: zero complete and three
 partial inventories across 138 track/level targets.
 
+Spanish A1 shows what that distinction buys. It read 85/85 and 100% while it
+enumerated grammar alone. Adding the PCIC functional inventory, the general and
+specific notions, and the orthography inventory took it to **223/273 and 82%**,
+with 50 points that no atom in the corpus corresponds to — clothing, the
+alphabet, most punctuation, the affirmative imperative. No lesson was removed
+between those two readings. The number fell because the target stopped
+flattering the book, which is the whole point of measuring against an external
+list. Spanish A1 is still a partial inventory: its pronunciation dimension has no
+A1-only boundary in the source (see HL20 §6a).
+
 ### Chapter capabilities (HL05)
 
 A chapter used to be nothing but an integer on each lesson, so nothing could check
