@@ -307,7 +307,12 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   explicitly unlike the bottom-to-top final form. Script-aware ductus identity
   prevents that Urdu source from colliding with Persian **ا** while both paths
   are checked against their canonical data files' Noto Naskh fallback. Urdu
-  **ج** follows from *Zer o Zabar*'s independent handwriting animation: place
+  **پ** comes from the same chapter's independent handwriting animation: draw
+  the be-series bowl in one right-to-left run, then place the lower-left and
+  lower-right dots nearer the main line before the lower-center dot. The
+  chapter's prose independently requires that triangular arrangement, and the
+  script-owned source remains separate from Persian **پ** while both paths fit
+  the same Noto Naskh fallback outline. Urdu **ج** follows from *Zer o Zabar*'s independent handwriting animation: place
   the dot below, lift once, then keep the pointed hooked head, descent, and bowl
   in one continuous run. The chapter's alternate flat head is purely aesthetic,
   so the learner path preserves the pointed form without inventing a different
