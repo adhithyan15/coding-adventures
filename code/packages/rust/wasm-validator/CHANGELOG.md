@@ -2,6 +2,30 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.55] - 2026-08-25 (SIMD PR44: v128.load8_lane/store8_lane)
+
+### Added
+
+- Type-check coverage for `v128.load8_lane`/`v128.store8_lane`
+  (`SimdOpKind::Load8Lane`/`Store8Lane`): a NEW match arm, distinct from
+  the existing `Load`/`Store`/etc. memarg-only arm -- decodes a memarg
+  (align, offset[, memidx], same multi-memory-memidx-rejection
+  discipline as every other SIMD load/store opcode) FOLLOWED BY a
+  lane-index byte, verified against BinarySIMD.md's own encoding order
+  (`m:memarg, i:ImmLaneIdx16`).
+- REAL lane-index bounds checking via the existing `read_lane_index`
+  helper (PR37's own precedent: reject an out-of-range VALUE at
+  validation time, not just check the immediate's presence) -- lane
+  index must be `0..=15`, matching `i8x16`'s 16-lane width.
+- Type rule: `Load8Lane` pops the existing `v128` (top of stack) then
+  the `i32` address, pushes an updated `v128`; `Store8Lane` pops the
+  same pair, pushes nothing -- mirrors `Store`'s own pop order and
+  no-result shape exactly.
+- 6 new dedicated integration tests in `tests/type_check.rs`: valid
+  (bare and with explicit `offset=`/`align=` attributes), invalid with
+  no declared memory, invalid wrong-operand-type (address/v128 swapped),
+  and invalid out-of-range lane index (`16`) for both directions.
+
 ## [0.2.54] - 2026-08-25 (SIMD PR42: v128.load_extend family)
 
 ### Added

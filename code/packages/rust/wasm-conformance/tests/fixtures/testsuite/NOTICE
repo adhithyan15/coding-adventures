@@ -139,7 +139,15 @@ Fetched:       2026-08-13 (initial slice, W05/PR3), extended 2026-08-14 (WASM08)
                extended 2026-08-25 (SIMD PR43 -- simd_align.wast, ZERO new
                opcodes, same pinned commit, no re-pin -- see below;
                alignment-hint coverage for opcodes already implemented by
-               PR15/PR39-42)
+               PR15/PR39-42),
+               extended 2026-08-25 (SIMD PR44 -- simd_load8_lane.wast/
+               simd_store8_lane.wast, 2 new opcodes (v128.load8_lane/
+               store8_lane), same pinned commit, no re-pin -- see below;
+               first bite of the load{8,16,32,64}_lane/
+               store{8,16,32,64}_lane family, the one piece of the
+               load_extend/load_splat/load_zero/lane-load-store epic
+               PR39-43 kept deferring since it needs a genuinely new
+               instruction shape)
 Fetch method:  code/packages/rust/wasm-conformance/tests/fixtures/fetch_testsuite.py
 
 The pinned commit was resolved via:
@@ -1559,6 +1567,78 @@ above); `assert_malformed` rose from 513/513 to 525/525 pass (+12) with
 `NotYetSupported` rising from 516 to 538 (+22, exactly this file's own
 gap above). No other already-vendored file's stats changed -- zero
 regressions.
+
+`simd_load8_lane.wast`/`simd_store8_lane.wast` (SIMD PR44) implement
+`v128.load8_lane` (sub-opcode `0x54`) / `v128.store8_lane` (`0x58`),
+both verified live against the SIMD proposal's own BinarySIMD.md
+(`m:memarg, i:ImmLaneIdx16` -- confirming the real binary encoding order
+is memarg FIRST, then the raw lane-index byte -- and the real text-form
+order the corpus itself uses, `(v128.load8_lane offset=N lane addr x)`,
+matches). This is the FIRST bite into the
+`load{8,16,32,64}_lane`/`store{8,16,32,64}_lane` family every PR since
+PR39 has deferred: unlike PR40/41/42's own `loadN_splat`/`loadN_zero`/
+`load_extend` families (all a plain "pop i32, push v128" type
+signature), this family combines an EXISTING `v128` operand (whose
+other 15 lanes are preserved on load, or which the stored lane is read
+out of), a lane-index immediate (`0..=15`, `ImmLaneIdx16`, same shape
+`i8x16.extract_lane_s`/`_u`/`replace_lane` use), AND a memarg
+(align/offset) all in ONE instruction -- a genuinely new instruction
+SHAPE, not just new arithmetic. `wasm-execution`'s existing
+`DecodedOperand::Simd{sub_opcode, aux}` (the packing scheme every other
+memarg-carrying SIMD op reuses) has only one spare `u32` slot, already
+fully spoken for by the memarg offset; rather than steal bits from it
+(silently truncating a legal-but-large offset), the new
+`DecodedOperand::SimdMemLane` variant reuses the existing `simd_consts`
+const-pool side-table `v128.const`/`i8x16.shuffle` already established
+for their own oversized immediates, packing `offset` (4 bytes,
+little-endian) + `lane` (1 byte) into one pool slot. Deliberately scoped
+to JUST the 8-bit width pair -- the smallest bite of this 8-file, 8-
+opcode family -- not all 8 files/opcodes at once; the remaining 6
+opcodes (16/32/64-bit widths) are later PRs' scope, same
+one-family-per-PR cadence PR40-42 established.
+
+Both files are self-contained: 1 module each (32 lane-index functions
+covering every constant-offset variant, plus 16 more offset/align
+variants -- `simd_load8_lane.wast`'s single module also declares the
+shared `$zero` global; `simd_store8_lane.wast`'s equivalent), 48
+`assert_return` directives each (byte-pattern verification at every
+lane index 0-15, both via a runtime address parameter and a
+constant-offset immediate, confirming EVERY OTHER lane of the base
+`v128` is preserved unchanged for `load8_lane` and that ONLY the
+selected lane's byte is written to memory for `store8_lane`), and 2 (for
+load) or 3 (for store) `assert_invalid` directives (wrong-operand-type
+type-mismatch, out-of-range lane index `16`, and -- for `store8_lane`
+only -- an invalid `align=2` memarg).
+
+Pass rate: 100% module (2/2) and assert_return (96/96 combined) -- every
+byte-pattern/lane-preservation case this corpus exercises passes.
+`assert_invalid`: `simd_load8_lane.wast` grades 2/2 pass (the
+type-mismatch and out-of-range-lane-index cases -- this PR's own
+`read_lane_index`-based REAL bounds check, per PR37's precedent, not
+just an immediate-presence check) with 1 `NotYetSupported` (the
+`align=2` invalid-alignment case: this repo's SIMD memarg decode path
+still never compares the decoded `align` byte against each opcode's
+natural alignment, the exact same PRE-EXISTING gap PR43's own
+`simd_align.wast` vendoring surfaced and documented above -- this PR
+does not close it, consistent with that file's own "vendor now, track
+the gap, close it in a dedicated follow-up" precedent).
+`simd_store8_lane.wast` grades 3/3 pass (ALL THREE, including its own
+`align=2` case) -- not because alignment IS validated here, but because
+that file's own invalid-alignment test module declares `(result v128)`
+on a function whose body is just `v128.store8_lane` (which pushes
+NOTHING), so the pre-existing "value stack doesn't match declared
+results at block end" check rejects it regardless of alignment,
+independent of the align-validation gap.
+
+Aggregate `module` rose from 1260/1261 to 1262/1263 (+2 pass, +2
+gradeable, `NotYetSupported` unchanged at 67); `assert_return` rose from
+44400/44417 to 44496/44513 (+96 pass, +96 gradeable, `NotYetSupported`
+unchanged at 545); `assert_invalid` rose from 2013/2013 to 2018/2018
+pass (+5) with `NotYetSupported` rising from 88 to 89 (+1, exactly
+`simd_load8_lane.wast`'s own `align=2` gap above); `assert_malformed`
+unchanged at 525/525 pass, `NotYetSupported` unchanged at 538 (neither
+file has any `assert_malformed` directives). No other already-vendored
+file's stats changed -- zero regressions.
 
 The vendored files are licensed under the Apache License, Version 2.0 --
 see the accompanying LICENSE file, itself vendored verbatim from the same

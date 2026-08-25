@@ -2182,6 +2182,76 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                             _ => unreachable!("only Load/Store/Load8Splat/Load16Splat/Load32Splat/Load64Splat/Load32Zero/Load64Zero/Load8x8S/Load8x8U/Load16x4S/Load16x4U/Load32x2S/Load32x2U reach this arm"),
                         }
                     }
+                    wasm_opcodes::SimdOpKind::Load8Lane | wasm_opcodes::SimdOpKind::Store8Lane => {
+                        // v128.load8_lane / v128.store8_lane (SIMD PR44)
+                        // -- the lane-load/store family's first bite, and
+                        // a GENUINELY NEW instruction shape: unlike the
+                        // arm just above (memarg only) and unlike
+                        // `ExtractLane`/`ReplaceLaneI8x16` above (lane
+                        // index only), this carries BOTH a memarg (align,
+                        // offset[, memidx]) AND a lane-index byte,
+                        // verified against BinarySIMD.md's own encoding
+                        // order: "m:memarg, i:ImmLaneIdx16" -- memarg
+                        // FIRST, lane index SECOND. Matches the pinned
+                        // `simd_load8_lane.wast`/`simd_store8_lane.wast`
+                        // corpus's own text-form immediate order
+                        // (`(v128.load8_lane offset=4 4 ...)` -- `offset=`
+                        // before the bare lane number).
+                        if !ctx.has_memory {
+                            err!("v128.load8_lane/v128.store8_lane used, but module declares no memory");
+                        }
+                        const MULTI_MEMORY_FLAG: u32 = 0x40;
+                        let (raw_align, sz1) = decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad v128 memarg align: {e}")))?;
+                        let (_mem_offset, sz2) = decode_unsigned(code, offset + sz1).map_err(|e| ValidationError::Other(format!("bad v128 memarg offset: {e}")))?;
+                        let raw_align = raw_align as u32;
+                        let has_memidx = raw_align & MULTI_MEMORY_FLAG != 0;
+                        offset += sz1 + sz2;
+                        if has_memidx {
+                            let (memidx, sz3) = decode_idx(code, offset)?;
+                            offset += sz3;
+                            if memidx != 0 {
+                                err!("v128.load8_lane/v128.store8_lane: multi-memory (memory index {memidx}) is not yet supported -- only memory 0");
+                            }
+                        }
+                        // Lane-index immediate: a single raw byte (not
+                        // LEB128), same `read_lane_index` helper
+                        // `ExtractLane`/`ReplaceLane` above use -- and,
+                        // per this PR's own lesson (PR37's retrofit: the
+                        // validator must reject an out-of-range VALUE,
+                        // not merely check the immediate's presence), a
+                        // REAL 0-15 bounds check here, matching `i8x16`'s
+                        // 16-lane width (both `load8_lane`/`store8_lane`
+                        // index into a single 16-byte v128, one byte per
+                        // lane, same as `i8x16.extract_lane_s/u` above).
+                        let lane_idx = read_lane_index(code, &mut offset, func_idx, "v128.load8_lane/v128.store8_lane")?;
+                        if lane_idx >= 16 {
+                            return Err(ValidationError::Other(format!(
+                                "function #{func_idx}: v128.load8_lane/v128.store8_lane lane index {lane_idx} out of range (must be 0-15)"
+                            )));
+                        }
+                        match simd_op.kind {
+                            wasm_opcodes::SimdOpKind::Load8Lane => {
+                                // pop the existing v128 (pushed LAST in
+                                // source order, so on top of stack,
+                                // popped FIRST -- its other 15 lanes are
+                                // preserved at runtime, invisible at the
+                                // type level), pop the i32 address, push
+                                // the updated v128.
+                                pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                                pop_expect(&mut stack, frame!(), ValueType::I32)?;
+                                push_val(&mut stack, ValueType::V128);
+                            }
+                            wasm_opcodes::SimdOpKind::Store8Lane => {
+                                // pop the v128 to read the lane from, pop
+                                // the i32 address, no result -- same
+                                // pop-order and no-push shape as `Store`
+                                // above.
+                                pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                                pop_expect(&mut stack, frame!(), ValueType::I32)?;
+                            }
+                            _ => unreachable!("only Load8Lane/Store8Lane reach this arm"),
+                        }
+                    }
                 }
             }
 

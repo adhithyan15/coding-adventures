@@ -2,6 +2,32 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.46] - 2026-08-25 - SIMD PR44: v128.load8_lane/store8_lane
+
+### Added
+
+- 2 new `SIMD_OPS` entries, opening the `v128.loadN_lane`/`storeN_lane`
+  family (the ONE piece of the wider `load_extend`/`load_splat`/
+  `load_zero`/`load{8,16,32,64}_lane`/`store{8,16,32,64}_lane`
+  memory-access family PR39 kept deferring, since it needs a genuinely
+  new instruction SHAPE): 230 SIMD opcodes total, up from 228.
+  - `v128.load8_lane` (`0x54`), `v128.store8_lane` (`0x58`).
+  - Both sub-opcode values verified live against the SIMD proposal's own
+    `BinarySIMD.md` at the time of this PR (`m:memarg, i:ImmLaneIdx16`);
+    neither collided with any pre-existing table entry -- they sit
+    strictly between `v128.any_true` (`0x53`) and `v128.load32_zero`
+    (`0x5C`), with a gap (`0x55`-`0x57`, `0x59`-`0x5B`) left for the
+    not-yet-implemented 16/32/64-bit lane widths.
+- 2 new `SimdOpKind` variants: `Load8Lane`, `Store8Lane`. Deliberately
+  scoped to JUST the 8-bit width pair -- the smallest bite of this
+  8-file, 8-opcode family -- not all 8 opcodes at once; the remaining 6
+  (16/32/64-bit widths) are later PRs' scope, same one-family-per-PR
+  cadence PR40-42 established.
+- Dedicated sub-opcode-value test
+  (`simd_load8_lane_and_store8_lane_have_the_real_verified_sub_opcode_values`)
+  confirming both values plus the surrounding gap (`0x55`-`0x5B`, still
+  unimplemented).
+
 ## [0.2.45] - 2026-08-25 - SIMD PR42: v128.load_extend family
 
 ### Added
