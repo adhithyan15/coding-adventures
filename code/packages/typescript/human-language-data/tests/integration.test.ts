@@ -39,7 +39,7 @@ describe("real curriculum", () => {
     expect(scripts.devanagari!.complete).toBe(true);
   });
 
-  it("keeps the cross-script closure queue measured after shared Persian and Urdu ف", () => {
+  it("keeps the cross-script closure queue measured after Tamil dependent ீ", () => {
     const candrakkala = scripts.malayalam!.marks!.find((mark) => mark.mark === "്")!;
     expect(candrakkala.role).toBe("virama");
     expect(candrakkala.compositionOrder).toEqual([
@@ -135,6 +135,23 @@ describe("real curriculum", () => {
     );
     expect(tamilU.compositionSource?.variation).toMatch(
       /encoded carrier-first composition.*normally ligates.*not a universal handwriting direction.*no standalone ductus claim/i,
+    );
+
+    const tamilIi = scripts.tamil!.marks!.find((mark) => mark.mark === "ீ")!;
+    expect(tamilIi.role).toBe("vowel-sign");
+    expect(tamilIi.compositionOrder).toEqual([
+      "write the Tamil consonant carrier first",
+      "add the ī vowel sign to replace its inherent vowel",
+    ]);
+    expect(tamilIi.example).toEqual({ base: "ட", combined: "டீ", sound: "ṭī" });
+    expect(tamilIi.compositionSource?.url).toBe(
+      "https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-12/",
+    );
+    expect(tamilIi.compositionSource?.citation).toMatch(
+      /Unicode Standard.*Version 17\.0.*12\.6\.3.*Figure 12-21.*U\+0BC0.*ட \+ ீ → டீ.*ல \+ ீ → லீ/i,
+    );
+    expect(tamilIi.compositionSource?.variation).toMatch(
+      /encoded carrier-first composition.*change shape or position.*join cursively.*not a universal handwriting direction.*no standalone ductus claim/i,
     );
 
     const teluguA = scripts.telugu!.independentVowels!.find((entry) => entry.glyph === "అ")!;
@@ -607,6 +624,8 @@ describe("real curriculum", () => {
     expect(affected.get("್") ?? 0).toBe(0);
     expect(missingByScript.get("tamil.json")?.has("ு")).toBe(false);
     expect(affected.get("ு") ?? 0).toBe(0);
+    expect(missingByScript.get("tamil.json")?.has("ீ")).toBe(false);
+    expect(affected.get("ீ") ?? 0).toBe(0);
     expect(missingByScript.get("telugu.json")?.has("ం")).toBe(false);
     expect(affected.get("ం") ?? 0).toBe(0);
     expect(missingByScript.get("tamil.json")?.has("ப")).toBe(false);
@@ -664,7 +683,7 @@ describe("real curriculum", () => {
     expect(affected.get("ಅ") ?? 0).toBe(0);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["ீ", 10]);
+    ).toEqual(["ఎ", 10]);
   });
 
   it("loaded every track (17+ and growing)", () => {
