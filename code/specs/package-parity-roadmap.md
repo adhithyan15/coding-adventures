@@ -7740,6 +7740,17 @@ actionable issue in the validator, generated substrate, generator, CI, tests,
 license, or metadata. Generator subprocess authority remains explicitly
 selection-blocked under its separate review owner.
 
+The branch rebased without conflict onto exact `origin/main`
+`26dc47061ef57cbeb2fd2ce900c9e5f4b4a6ab54`. The four intervening commits
+only advance the existing ADJ curriculum ledger, Gujarati doorway retrieval,
+Persian/Urdu feh ductus, and registered ALGOL IIR selector-identity owners.
+They add or remove no package identity or BUILD/build-tool marker and touch no
+Perl tranche path. Focused package, generator, emitted-vector, workflow,
+state-graph, and diff validation was rerun after the rebase. Independent split
+reviews of content-equivalent rebased head
+`7bf7926ba5280f54c71be16ce8ff22daed0520be` returned
+`SECURITY REVIEW PASSED` or `REVIEW PASSED` with no actionable issue.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
