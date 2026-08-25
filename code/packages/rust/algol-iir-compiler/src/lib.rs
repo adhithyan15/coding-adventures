@@ -5898,6 +5898,11 @@ impl Compiler {
         name: &str,
         negated: bool,
     ) -> bool {
+        if let Some(child) = single_parenthesized_child(node) {
+            return self.boolean_identity_expression_preserves_name_with_negation(
+                child, name, negated,
+            );
+        }
         if exact_bare_variable_expression_name(node).as_deref() == Some(name) {
             return !negated;
         }
@@ -5979,6 +5984,9 @@ impl Compiler {
         node: &GrammarASTNode,
         name: &str,
     ) -> bool {
+        if let Some(child) = single_parenthesized_child(node) {
+            return self.integer_identity_expression_preserves_name(child, name);
+        }
         if exact_bare_variable_expression_name(node).as_deref() == Some(name) {
             return true;
         }
@@ -6058,6 +6066,9 @@ impl Compiler {
         node: &GrammarASTNode,
         name: &str,
     ) -> bool {
+        if let Some(child) = single_parenthesized_child(node) {
+            return self.real_unit_identity_expression_preserves_name(child, name);
+        }
         if exact_bare_variable_expression_name(node).as_deref() == Some(name) {
             return true;
         }
@@ -10618,6 +10629,9 @@ mod tests {
             "(flag)",
             "flag and (true)",
             "(true) and flag",
+            "(flag and true)",
+            "((true and flag and true))",
+            "not not (flag and true)",
         ] {
             compile_source(
                 &format!(
@@ -10701,6 +10715,10 @@ mod tests {
             "choose * (+1)",
             "(+1) * choose",
             "choose div (+1)",
+            "(choose + 0)",
+            "((0 + choose + 0))",
+            "(choose * 1 div 1)",
+            "+(+choose)",
         ] {
             compile_source(
                 &format!(
@@ -10782,6 +10800,9 @@ mod tests {
             "choose * (+1.0)",
             "(+1.0) * choose",
             "choose / (+1)",
+            "(choose * 1.0)",
+            "((1.0 * choose / 1.0))",
+            "+(+choose)",
         ] {
             compile_source(
                 &format!(
