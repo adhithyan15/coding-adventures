@@ -2,6 +2,141 @@
 
 All notable changes to the `java-to-semantic-ir` crate will be documented in this file.
 
+## [0.5.0] - 2026-08-25
+
+### Added
+
+- JV02 milestone M3a: method declarations and calls.
+- Every `method_declaration` in the class body — static or instance (both
+  lower identically to a flat top-level `Function`; there is no real
+  object/receiver model until a later milestone) — lowers in a two-pass
+  scheme: pass 1 registers every method's *name* and call signature
+  (`compute_method_signature`) before any body is lowered, so forward
+  references and mutual recursion between methods resolve regardless of
+  textual order (mirrors `python-to-semantic-ir`'s/`javascript-to-
+  semantic-ir`'s own two-pass precedent); pass 2 lowers each body
+  (`lower_method_declaration`). `main` is folded into the same pass —
+  it's just the one method every program must have — rather than kept as
+  a special separate path, replacing M0's old single-purpose
+  `find_main_method` recursive search entirely.
+- `collect_class_methods` replaces `find_main_method`: it collects every
+  `method_declaration` directly inside `class_body` and *rejects* any
+  other class-member shape (field, constructor, static/instance
+  initializer, nested type) with a clear error rather than silently
+  skipping it — matches this crate's own "reject rather than mis-lower"
+  discipline. Needs no depth guard of its own (unlike the search it
+  replaces): `class_body`'s grammar production makes every relevant node
+  a *direct* child, and `class_body_declaration` is a flat, single-level
+  PEG alternation, so the walk is two levels deep by construction.
+- Typed `formal_parameter_list` → `Param { kind: Required, sir_type: None
+  }`, each parameter declared into the method's own top-level scope
+  (shared with the body — see `lower_method_declaration`'s own doc
+  comment for why: Java doesn't allow a body to redeclare a parameter
+  name, so there is no shadowing case a separate frame would need to
+  model). Varargs parameters and C-style array-bracket declarators (on a
+  parameter or a method's own return type) are rejected, matching the
+  existing array-type scope boundary.
+- Bare unqualified calls, `foo(a, b)` — confirmed via direct CST
+  inspection to parse as `primary_expression(primary=NAME,
+  primary_suffix=LPAREN [argument_list] RPAREN)`, i.e. a `primary` that
+  is a single bare `NAME` token followed by exactly *one* call-shaped
+  suffix — lower to `Expr::DirectCall` when the name matches a known
+  method. A *qualified* call (`x.foo(...)`, which chains two suffixes,
+  not one) remains out of scope; so does method overloading (only one
+  method per name is supported — this frontend has no type-based overload
+  resolution, matching the "reject rather than mis-lower" discipline used
+  for every other unsupported construct).
+- `return`, but only as the literal last top-level statement of a method
+  body: SIR has no `Stmt::Return` primitive at all (a function's value is
+  always its own body `Block`'s trailing `.value` — confirmed by an
+  exhaustive grep of the `Stmt` enum), so a `return` anywhere else (nested
+  inside an `if`/`while`/etc., or followed by more statements) falls
+  straight through to `lower_statement`'s existing "unsupported statement
+  kind" rejection — a clean, disclosed limitation, not a mis-lowering. A
+  new `Kind::Void` variant represents a `void` method's "no return value"
+  (used only as the `Kind` of a void call or a bare `return;`; using it as
+  a real operand falls through to whichever operator's own "wrong kind"
+  rejection fires, the same discipline `Kind::Null` already uses).
+- `Feature::MutualRecursion` detection (`has_mutual_recursion`/`reaches`,
+  ported verbatim from `python-to-semantic-ir`'s identically-shaped call-
+  graph reachability check) — a real cycle of length ≥ 2 between methods
+  sets the manifest feature; plain self-recursion does not.
+- 22 new tests in `tests/test_lower.rs` (every method/call shape, forward-
+  reference resolution, self- vs. mutual-recursion, void-call-as-
+  statement, tail-position-return validation in both directions,
+  duplicate-method-name/wrong-arity/wrong-kind/unknown-callee rejection,
+  varargs/array-parameter/qualified-call rejection, and field-declaration
+  rejection) plus 3 new execution-proof tests in `tests/e2e_python.rs` (a
+  method call, a call resolving a forward reference, and a void call
+  running harmlessly alongside a real trailing value). No execution-proof
+  test for recursion (plain or mutual): a genuinely *terminating*
+  recursive call needs a base case, which needs branching (an `if`-
+  guarded early `return`) — out of scope for M3a — so any recursive call
+  this milestone can express would recurse forever if actually run; the
+  structural lowering claim is covered instead, honestly reflecting
+  what's provable at this milestone.
+- **Caught by the crate's own `semantic_ir::validate()` check while
+  writing this milestone's tests, not `/security-review`**: every
+  `VarRef`/`Assign` this crate emits for a *parameter* reference used
+  `scope: Scope::Local` (M1/M2's own established convention for ordinary
+  `let`-bound locals) — but the SIR validator's `check_varref` deliberately
+  distinguishes `Scope::Local` (checked against `let`-bound names only)
+  from `Scope::Param` (checked against the function's own parameter
+  list); a parameter tagged `Scope::Local` fails `semantic_ir::validate()`
+  outright as "references unknown name". Confirmed by hand-building a
+  minimal `semantic_ir::Module` bypassing this crate's own lowering
+  entirely, proving the bug was in the scope tag, not the lowering logic
+  around it. Fixed by having `Lowerer.locals` carry each entry's `Scope`
+  alongside its `Kind` (`declare_param`, a new sibling of `declare_local`,
+  tags a parameter `Scope::Param`; `lookup_local` now returns both), and
+  threading the returned scope into every `VarRef`/`Assign` this crate
+  constructs from a looked-up name — a parameter used as a compound-
+  assignment or increment/decrement target now correctly carries
+  `Scope::Param` too, not just a bare read. Relatedly, every untyped
+  `Param` (`sir_type: None`) must observe `Feature::DynamicTyping` in the
+  module manifest — the validator observes it internally per parameter
+  and rejects a manifest that doesn't declare it — an M1-established
+  convention (already applied to local declarations) this milestone's new
+  `Param`-emitting code path had not yet picked up.
+- **Caught by `/security-review` before push (MEDIUM, algorithmic-
+  complexity DoS, CWE-407)**: `has_mutual_recursion`'s first version
+  probed every call-graph edge with its own independent reachability
+  search (`reaches`, ported from `python-to-semantic-ir`), giving the
+  whole check `O(E·(V+E))` time. Unlike this crate's other guarded
+  traversals, nothing bounds the number of *sibling* methods in one
+  class body, so a large, densely-interconnected call graph (many
+  methods each calling many others) was reachable from ordinary — if
+  very large — valid Java source, not just an adversarial hand-built
+  tree, making this a real (if higher-effort-to-trigger) DoS risk rather
+  than a purely theoretical one. Fixed by replacing the per-edge probe
+  with a single `O(V+E)` three-color DFS cycle detection (a back edge to
+  a still-`Gray` node — one still on the current DFS path — is exactly a
+  cycle; an edge from a node to itself is skipped so plain self-recursion
+  still doesn't count), implemented with an explicit work-stack rather
+  than real recursion, since the method count isn't otherwise bounded.
+  Three new regression tests cover a 3-method cycle (not just an
+  adjacent pair), two unrelated self-recursive methods with no edge
+  between them, and a non-cyclic call chain — proving the rewritten
+  algorithm still gets both the positive and negative cases right, not
+  just the original 2-cycle/self-recursion pair.
+- **Caught by a second round of `/security-review`, on the first
+  round's own fix (MEDIUM, algorithmic-complexity DoS, CWE-407)**: the
+  DFS rewrite above made *checking* the call graph `O(V+E)`, but
+  *building* it was still quadratic — every lowered call expression
+  recorded its edge with `call_graph.iter_mut().find(|(n, _)| *n ==
+  self.current_method)`, a linear scan over all `V` methods, making
+  graph construction `O(V·E)` across a whole class (up to `O(V³)` on a
+  densely-interconnected one, since `E` can approach `O(V²)`) —
+  reintroducing the same complexity class the DFS rewrite was written to
+  eliminate, just moved to a different call site. Fixed by changing
+  `call_graph` from `Vec<(String, HashSet<String>)>` to `HashMap<String,
+  HashSet<String>>`, turning the per-call-site edge insert into an
+  `O(1)`-average `get_mut` (every method's entry is already pushed
+  up front by `lower_method_declaration`, so no `entry()`/`or_default()`
+  is even needed). `has_mutual_recursion`'s own graph-building step
+  needed no change at all — it already iterated `call_graph` generically
+  enough to work unchanged against either container shape.
+
 ## [0.4.0] - 2026-08-25
 
 ### Added
