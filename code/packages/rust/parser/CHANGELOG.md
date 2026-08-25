@@ -74,6 +74,18 @@ logged as its own follow-up rather than bundled into this fix or
 silently hidden by shrinking the regression test's depth. The test works
 around it with `std::mem::forget` on the trees it builds.
 
+**Also found by `/security-review` (round 2), also not fixed here**:
+`walk_ast`/`walk_node` — a third public traversal over the same untrusted
+`GrammarASTNode` trust boundary, used by language packages for cover-
+grammar rewriting and desugaring — is still fully recursive, three ways
+over (direct self-recursion, the same recursive-`Clone` pattern this
+change fixed in `find_nodes`, and a recursive `PartialEq` comparison to
+detect whether a subtree changed). Reproduced empirically with a
+200,000-level tree. Not fixed here: it's untouched by this diff and its
+fix is architecturally larger — an iterative rewrite needs to preserve
+visitor `enter`/`leave` call ordering and node-replacement semantics, not
+just re-derive a `Vec<T>`. Logged as its own follow-up.
+
 ## [0.4.4] - 2026-08-25
 
 ### Added — contextual `>>`/`>>>` token-splitting for nested generic-argument-list closers
