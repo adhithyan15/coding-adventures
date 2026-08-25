@@ -5982,6 +5982,9 @@ pub fn parse_gantt(source: &str) -> Result<GanttDiagram, ParseError> {
                 });
                 sec.tasks.push(task);
             }
+            Some("CLICK_STATEMENT") => {
+                apply_gantt_interaction(&token, &mut sections, current_section.as_mut())?;
+            }
             _ => {}
         }
     }
@@ -6003,6 +6006,78 @@ fn gantt_metadata_value(token: &Token) -> Option<String> {
         .value
         .split_once(':')
         .map(|(_, value)| value.trim().to_string())
+}
+
+fn apply_gantt_interaction(
+    token: &Token,
+    sections: &mut [GanttSection],
+    current_section: Option<&mut GanttSection>,
+) -> Result<(), ParseError> {
+    let rest = token.value["click".len()..].trim();
+    let (task_id, commands) = rest
+        .split_once(char::is_whitespace)
+        .ok_or_else(|| token_error(token, "Gantt click requires href or call"))?;
+    let lowercase = commands.to_ascii_lowercase();
+
+    let link = find_gantt_command(&lowercase, "href")
+        .map(|index| {
+            let value = commands[index + "href".len()..].trim_start();
+            let quoted = value
+                .strip_prefix('"')
+                .ok_or_else(|| token_error(token, "Gantt href requires a quoted URL"))?;
+            let close = quoted
+                .find('"')
+                .ok_or_else(|| token_error(token, "unterminated Gantt href URL"))?;
+            Ok(quoted[..close].to_string())
+        })
+        .transpose()?;
+
+    let callback = find_gantt_command(&lowercase, "call")
+        .map(|index| {
+            let value = commands[index + "call".len()..].trim_start();
+            let open = value
+                .find('(')
+                .ok_or_else(|| token_error(token, "Gantt callback requires parentheses"))?;
+            let close = value[open + 1..]
+                .find(')')
+                .map(|index| open + 1 + index)
+                .ok_or_else(|| token_error(token, "unterminated Gantt callback arguments"))?;
+            let name = value[..open].trim();
+            if name.is_empty() {
+                return Err(token_error(token, "Gantt callback name cannot be empty"));
+            }
+            let args = value[open + 1..close].trim();
+            Ok((
+                name.to_string(),
+                (!args.is_empty()).then(|| args.to_string()),
+            ))
+        })
+        .transpose()?;
+
+    if link.is_none() && callback.is_none() {
+        return Err(token_error(token, "Gantt click requires href or call"));
+    }
+    let task = current_section
+        .into_iter()
+        .chain(sections.iter_mut())
+        .flat_map(|section| section.tasks.iter_mut())
+        .find(|task| task.id == task_id)
+        .ok_or_else(|| token_error(token, format!("unknown Gantt task id {task_id:?}")))?;
+    task.link = link;
+    if let Some((name, args)) = callback {
+        task.callback = Some(name);
+        task.callback_args = args;
+    }
+    Ok(())
+}
+
+fn find_gantt_command(source: &str, command: &str) -> Option<usize> {
+    source.match_indices(command).find_map(|(index, _)| {
+        let before = source[..index].chars().next_back();
+        let after = source[index + command.len()..].chars().next();
+        (before.is_none_or(char::is_whitespace) && after.is_some_and(char::is_whitespace))
+            .then_some(index)
+    })
 }
 
 /// Parse a single Gantt task line.
@@ -6065,6 +6140,9 @@ fn parse_gantt_task(token: &Token) -> Result<GanttTask, ParseError> {
         duration_days,
         status,
         dependencies: vec![],
+        link: None,
+        callback: None,
+        callback_args: None,
     })
 }
 
@@ -6608,6 +6686,21 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         assert!(parse_gantt("section Delivery\nRelease :r1, 2026-03-01, 1d").is_err());
         assert!(parse_gantt("gantt\nRelease :done,").is_err());
         assert!(parse_gantt("gantt\nRelease :r1, 2026-03-01, forever").is_err());
+    }
+
+    #[test]
+    fn gantt_preserves_task_links_and_callbacks() {
+        let diagram = parse_gantt(
+            "gantt\nTask :done, t1, 2026-03-01, 2d\nclick t1 call inspectTask(t1, release) href \"https://example.com/task/call\"\n",
+        )
+        .unwrap();
+        let task = &diagram.sections[0].tasks[0];
+        assert_eq!(task.link.as_deref(), Some("https://example.com/task/call"));
+        assert_eq!(task.callback.as_deref(), Some("inspectTask"));
+        assert_eq!(task.callback_args.as_deref(), Some("t1, release"));
+
+        assert!(parse_gantt("gantt\nclick missing href \"https://example.com\"\n").is_err());
+        assert!(parse_gantt("gantt\nTask :t1, 2026-03-01, 1d\nclick t1\n").is_err());
     }
 
     #[test]

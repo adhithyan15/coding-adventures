@@ -781,7 +781,7 @@ line "Target" [35, 50, 68, 82]"##,
     #[test]
     fn render_mermaid_gantt_to_png() {
         let gantt = parse_gantt(
-            "gantt\naccTitle: Native Gantt\naccDescr: Gantt rendered through Metal\ntitle Release timeline\ndateFormat YYYY-MM-DD\nsection Build\nParser :done, parser, 2026-01-01, 4d\nPaint :active, paint, after parser, 3d\nsection Ship\nRelease :milestone, release, after paint, 0d",
+            "gantt\naccTitle: Native Gantt\naccDescr: Gantt rendered through Metal\ntitle Release timeline\ndateFormat YYYY-MM-DD\nsection Build\nParser :done, parser, 2026-01-01, 4d\nclick parser href \"https://example.com/parser\" call inspectTask(parser)\nPaint :active, paint, after parser, 3d\nsection Ship\nRelease :milestone, release, after paint, 0d",
         )
         .expect("Mermaid Gantt parse failed");
         let temporal = TemporalDiagram {
@@ -823,6 +823,13 @@ line "Target" [35, 50, 68, 82]"##,
             metadata["accessibility.description"],
             "Gantt rendered through Metal"
         );
+        assert_eq!(
+            metadata["gantt.task.parser.link.url"],
+            "https://example.com/parser"
+        );
+        assert_eq!(metadata["gantt.task.parser.callback.name"], "inspectTask");
+        assert_eq!(metadata["gantt.task.parser.callback.args"], "parser");
+        assert!(metadata.contains_key("gantt.task.parser.bounds"));
     }
 
     #[test]

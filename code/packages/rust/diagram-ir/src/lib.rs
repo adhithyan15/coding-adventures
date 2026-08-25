@@ -1072,6 +1072,9 @@ pub struct GanttTask {
     pub duration_days: f64,
     pub status: TaskStatus,
     pub dependencies: Vec<String>,
+    pub link: Option<String>,
+    pub callback: Option<String>,
+    pub callback_args: Option<String>,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -1299,7 +1302,17 @@ pub struct LayoutedTemporalDiagram {
     pub height: f64,
     pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>,
+    pub interactions: Vec<LayoutedTemporalInteraction>,
     pub items: Vec<LayoutedTemporalItem>,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedTemporalInteraction {
+    pub task_id: String,
+    pub bounds: (f64, f64, f64, f64),
+    pub link: Option<String>,
+    pub callback: Option<String>,
+    pub callback_args: Option<String>,
 }
 
 // GEOMETRIC FAMILY
@@ -1528,6 +1541,9 @@ mod tests {
             duration_days: 5.0,
             status: TaskStatus::Done,
             dependencies: vec![],
+            link: None,
+            callback: None,
+            callback_args: None,
         };
         let d = TemporalDiagram {
             kind: TemporalKind::Gantt,

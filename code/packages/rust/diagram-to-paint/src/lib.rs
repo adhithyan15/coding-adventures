@@ -3168,6 +3168,28 @@ where
     if let Some(description) = &diagram.accessibility_description {
         metadata.insert("accessibility.description".to_string(), description.clone());
     }
+    for interaction in &diagram.interactions {
+        let prefix = format!("gantt.task.{}", interaction.task_id);
+        if let Some(link) = &interaction.link {
+            metadata.insert(format!("{prefix}.link.url"), link.clone());
+        }
+        if let Some(callback) = &interaction.callback {
+            metadata.insert(format!("{prefix}.callback.name"), callback.clone());
+        }
+        if let Some(args) = &interaction.callback_args {
+            metadata.insert(format!("{prefix}.callback.args"), args.clone());
+        }
+        metadata.insert(
+            format!("{prefix}.bounds"),
+            format!(
+                "{},{},{},{}",
+                interaction.bounds.0,
+                interaction.bounds.1,
+                interaction.bounds.2,
+                interaction.bounds.3
+            ),
+        );
+    }
     let bg = options.background;
     PaintScene {
         width: diagram.width,
@@ -3901,6 +3923,7 @@ mod tests {
             height: 96.0,
             accessibility_title: None,
             accessibility_description: None,
+            interactions: Vec::new(),
             items: vec![
                 LayoutedTemporalItem::JourneyTitle {
                     x: 0.0,
