@@ -341,6 +341,40 @@ class TestDiscovery < Minitest::Test
     FileUtils.rm_rf(dir)
   end
 
+  def test_discover_skips_exact_dist_newstyle_component
+    dir = create_temp_dir
+    write_file(dir / "packages" / "haskell" / "demo" / "BUILD", "echo source")
+    write_file(dir / "packages" / "haskell" / "dist-newstyle" / "BUILD", "echo cabal-output")
+
+    packages = BuildTool::Discovery.discover_packages(dir)
+
+    assert_equal ["haskell/demo"], packages.map(&:name)
+  ensure
+    FileUtils.rm_rf(dir)
+  end
+
+  def test_discover_preserves_case_variant_of_dist_newstyle
+    dir = create_temp_dir
+    write_file(dir / "packages" / "haskell" / "Dist-Newstyle" / "BUILD", "echo source")
+
+    packages = BuildTool::Discovery.discover_packages(dir)
+
+    assert_equal ["haskell/Dist-Newstyle"], packages.map(&:name)
+  ensure
+    FileUtils.rm_rf(dir)
+  end
+
+  def test_discover_preserves_near_name_of_dist_newstyle
+    dir = create_temp_dir
+    write_file(dir / "packages" / "haskell" / "dist-newstyle-example" / "BUILD", "echo source")
+
+    packages = BuildTool::Discovery.discover_packages(dir)
+
+    assert_equal ["haskell/dist-newstyle-example"], packages.map(&:name)
+  ensure
+    FileUtils.rm_rf(dir)
+  end
+
   def test_package_is_data_define
     # Verify that Package is an immutable Data object.
     pkg = BuildTool::Package.new(

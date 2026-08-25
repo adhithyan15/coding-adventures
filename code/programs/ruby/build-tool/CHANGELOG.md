@@ -6,6 +6,9 @@ All notable changes to the Ruby build tool are documented in this file.
 
 ### Changed
 
+- Discovery now excludes Cabal's exact, case-sensitive `dist-newstyle`
+  directory component while preserving case variants and near-name source
+  directories, matching the shared language-registry fixture.
 - Discovery now consumes the canonical language registry, excludes
   specification fixture trees, preserves `programs` package identities, and
   fails closed on duplicate qualified identities with root-redacted paths and

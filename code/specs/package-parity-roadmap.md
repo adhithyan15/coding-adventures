@@ -6666,6 +6666,74 @@ changes, credential paths, or secret-like diff hits. An independent security
 review found no production blocker after its requested explicit case and
 Hasher assertions were added.
 
+PR #12678 completed all 32 reported checks: 26 successes, five expected skips,
+and one neutral aggregate. GitHub reported the branch clean and mergeable, so
+the loop enabled squash auto-merge; GitHub merged it as
+`834b6a01530906f64f218d41edf233e5537a7c8d` at
+`2026-08-25T04:47:50Z` without a manual merge command. The post-merge
+collision report at that exact revision remains schema 3 with 15 established
+lanes, 1,372 implementation identities, 4,565 slots, 175 high-consensus
+packages with 276 gaps, 909 singleton packages with 12,726 gaps, 720 Rust
+singletons, zero collisions, and zero unknown buckets. OCaml remains correctly
+emerging at zero packages. Current `origin/main` then advanced by one
+package-neutral HTML-parser commit to
+`42ae3e50152fc5373451cd9eee257a789f279782`, then by package-neutral Spanish
+curriculum PR #12679, and finally by Rust HTML-parser PR #12680 to
+`59b34f88ca0e1b4882c966374bb4bd53a2b9defa`; regenerating the report at each
+revision changes no inventory count and exposes no eligible unowned gap.
+
+The reconciled graph contains 488 owners and 745 dependency edges with no
+duplicate IDs, missing prerequisites, or cycles. The Vault HID native-authority
+exception and TypeScript `nanoid` development advisory retain explicit pending
+owners. Completing Swift discovery unlocks its tracked-artifact, orphan-crate,
+and Windows absolute-file owners, but the ready Ruby discovery repair has the
+highest immediate build-tool leverage: it unlocks two direct consumers and
+four unfinished descendants. The next selected owner is therefore
+`build-tool-dist-newstyle-discovery-exclusion-remaining-engines`, now a bounded
+Ruby-only exact-component repair. Six live open PRs have no exact overlap with
+its Ruby build-tool, state, or roadmap surfaces. OCaml remains strategically
+important but collision-unsafe while PRs #12149 and #12162 own its exact Go
+validator and entry-point surfaces.
+
+The Ruby repair has direct red-to-green evidence on that selected base. The
+shared registry fixture and a focused exact-component regression first emitted
+the Cabal decoy, while case and near-name controls already passed. Adding the
+single frozen registry member closes both failures. Ruby 3.4.9 with Bundler
+2.6.9 now passes all 310 runs and 635 assertions with one expected skip, 89.43%
+line coverage, and 72.55% branch coverage; repeated canonical `BUILD` runs
+reproduce the result. The process-free corpus validates 111 cases and 269
+files, and 148 focused conformance, package-parity, capability, Haskell, and
+OCaml-lock tests pass with two expected Windows symlink skips.
+
+The Go oracle passes its full test, vet, and trimpath build gates. A real forced
+Ruby dry validation evaluates 45 Starlark BUILD files, discovers 305 packages,
+reports all 305 as `WOULD-BUILD`, and leaves the orphan-crate check clean with
+its five reviewed exemptions. Syntax and dependency-current checks pass; a
+fresh ruby-advisory-db at `eca0eccee391` reports no vulnerabilities. Direct
+StandardRB lint reproduces the clean-main file's pre-existing broad baseline
+and adds no offense on a changed production or test line. The collision report
+and complete acyclic 488-owner/745-edge graph remain clean, and the live
+open-PR audit has zero exact overlap with the six-path diff. An independent
+exact-head security review found no new filesystem, process, network,
+environment, credential, diagnostic, dependency, or execution-authority
+surface and no publication blocker. After a conflict-free rebase over Spanish
+curriculum PR #12679, the exact same 310-run Ruby suite, syntax checks, Go tests
+and vet, and collision report all pass again. A second conflict-free rebase over
+Rust HTML-parser PR #12680 again reproduces the complete Ruby suite and
+collision report. Independent final review found no implementation, test,
+graph, security, dependency, or scope defect and requested only this applied
+live-main metadata refresh. A final exact-head confirmation then verified the
+clean six-path diff, current merge base, complete acyclic graph, and count-free
+overlap wording and found no publication blocker.
+
+Ready-for-review PR #12683 opened from validated head
+`f07299a1c88655544c99aabbbddb5a309e241e24` after a normal first push. At
+publication, remote main, local `origin/main`, and the branch merge base all
+equal `59b34f88ca0e1b4882c966374bb4bd53a2b9defa`; the six-path diff has zero
+exact overlap with the live open-PR set. Auto-merge remains disabled until all
+required checks are terminal and acceptable and GitHub reports no merge
+conflict.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
