@@ -100,6 +100,35 @@ pub fn parse_i8(text: &str, pos: usize) -> Result<i8, WastParseError> {
     Ok(signed as u8 as i8)
 }
 
+/// Parse an `extract_lane`/`replace_lane` SIMD opcode's trailing
+/// lane-index immediate token (SIMD widen PR37): decimal or `0x`-hex,
+/// `_`-separated, same digit grammar as every other integer literal
+/// here -- but, UNLIKE [`parse_i32`]/[`parse_u32`] above, this position's
+/// own WAT grammar (`laneidx`, a plain unsigned token) does NOT allow a
+/// leading `+`/`-` sign at all, not even `+`. Verified against the real
+/// upstream `WebAssembly/testsuite` `simd_lane.wast` file, which vendors
+/// BOTH directions of this exact distinction in the same file: plain
+/// unsigned hex/underscore/leading-zero-decimal literals (`0x0f`,
+/// `0x0_7`, `03`) must be ACCEPTED (its "Lane index literal" `(module
+/// ...)` cases), while the SAME literals with an explicit `+` prefix
+/// (`+0x0f`, `+03`) must be REJECTED as malformed -- so `parse_int_
+/// magnitude`'s sign-stripping (correct for `i32`/`i64` contexts, which
+/// genuinely accept a signed OR unsigned spelling of the same bit
+/// pattern) would be the WRONG behavior to reuse here.
+pub fn parse_lane_index(text: &str, pos: usize) -> Result<u8, WastParseError> {
+    if text.starts_with('+') || text.starts_with('-') {
+        return Err(WastParseError::InvalidNumericLiteral { pos, text: text.to_string() });
+    }
+    let cleaned = strip_underscores(text);
+    let magnitude = if let Some(hex) = cleaned.strip_prefix("0x").or_else(|| cleaned.strip_prefix("0X")) {
+        u32::from_str_radix(hex, 16).map_err(|_| WastParseError::InvalidNumericLiteral { pos, text: text.to_string() })?
+    } else {
+        cleaned.parse::<u32>().map_err(|_| WastParseError::InvalidNumericLiteral { pos, text: text.to_string() })?
+    };
+    u8::try_from(magnitude)
+        .map_err(|_| WastParseError::InvalidNumericLiteralForType { pos, text: text.to_string(), ty: "lane index" })
+}
+
 /// As [`parse_i32`], for the 16-bit range `[-2^15, 2^16-1]` -- exists only
 /// for `v128.const`'s `i16x8` shape, same reason as [`parse_i8`].
 pub fn parse_i16(text: &str, pos: usize) -> Result<i16, WastParseError> {

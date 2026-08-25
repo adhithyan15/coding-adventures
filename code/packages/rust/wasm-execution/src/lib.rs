@@ -1478,17 +1478,27 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
                     opcode: 0xFD,
                     operand: DecodedOperand::V128Const(bytes),
                 });
-            } else if sub_opcode == 0x1B || sub_opcode == 0x15 || sub_opcode == 0x16 || sub_opcode == 0x17 {
-                // i32x4.extract_lane (0x1B), i8x16.extract_lane_s (0x15),
-                // i8x16.extract_lane_u (0x16), i8x16.replace_lane (0x17,
-                // SIMD widen PR18): all four carry a single raw byte
+            } else if (0x15..=0x22).contains(&sub_opcode) {
+                // The entire extract_lane/replace_lane family, across all
+                // six SIMD vector shapes, sits in one contiguous sub-
+                // opcode run: i8x16.extract_lane_s/_u/replace_lane
+                // (0x15-0x17, SIMD widen PR18), i16x8.extract_lane_s/_u/
+                // replace_lane (0x18-0x1A), i32x4.extract_lane/
+                // replace_lane (0x1B-0x1C), i64x2.extract_lane/
+                // replace_lane (0x1D-0x1E), f32x4.extract_lane/
+                // replace_lane (0x1F-0x20), f64x2.extract_lane/
+                // replace_lane (0x21-0x22, all six SIMD widen PR37) --
+                // every one of these 14 opcodes carries a single raw byte
                 // lane-index immediate, NOT LEB128 -- verified against
                 // the SIMD proposal's own BinarySIMD.md ("These immediate
-                // operands are encoded as individual bytes"). The i8x16
-                // trio's valid range is 0-15 (vs i32x4's 0-3), but that's
-                // an execution-time bounds check (see `register_simd`),
-                // not a decode-time concern -- the decoder just reads the
-                // one byte regardless of which op it belongs to.
+                // operands are encoded as individual bytes"). The valid
+                // lane-index RANGE varies per shape (0-15 for i8x16, 0-7
+                // for i16x8, 0-3 for i32x4/f32x4, 0-1 for i64x2/f64x2),
+                // but that's a validation-time bounds check (see
+                // `wasm-validator`'s `type_check.rs`) plus a defense-in-
+                // depth execution-time bounds check (see `register_simd`
+                // below), not a decode-time concern -- the decoder just
+                // reads the one byte regardless of which op it belongs to.
                 let lane_idx = if offset < code.len() { code[offset] } else { 0 };
                 offset += 1;
                 instructions.push(DecodedInstruction {
@@ -6266,6 +6276,213 @@ fn register_simd(vm: &mut GenericVM) {
                 }
                 let mut result = bytes;
                 result[lane_idx] = value as u8;
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::ExtractLaneI16x8S | SimdOpKind::ExtractLaneI16x8U => {
+                // i16x8.extract_lane_s/_u (SIMD widen PR37): direct
+                // 8-lane mirror of `ExtractLaneI8x16S/U` above, one lane
+                // width up -- pop a v128, read the `aux`-selected `i16`
+                // lane (2 bytes, little-endian) back out as a plain i32,
+                // sign-extended for `_s`, zero-extended for `_u`.
+                // Bounds-checked BEFORE indexing (0-7, not 0-15), same
+                // discipline as every other lane op in this table.
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let lane_idx = aux;
+                if lane_idx >= 8 {
+                    return Err(VMError::GenericError(format!(
+                        "i16x8.extract_lane_s/u: lane index {lane_idx} out of range (must be 0-7)"
+                    )));
+                }
+                let lane_bytes: [u8; 2] = bytes[lane_idx * 2..lane_idx * 2 + 2].try_into().unwrap();
+                let lane = i16::from_le_bytes(lane_bytes);
+                let value = match op.kind {
+                    SimdOpKind::ExtractLaneI16x8S => lane as i32,
+                    SimdOpKind::ExtractLaneI16x8U => (lane as u16) as i32,
+                    _ => unreachable!("only ExtractLaneI16x8S/U reach this arm"),
+                };
+                push_wasm(vm, WasmValue::I32(value));
+            }
+            SimdOpKind::ReplaceLaneI16x8 => {
+                // i16x8.replace_lane (SIMD widen PR37): direct 8-lane
+                // mirror of `ReplaceLaneI8x16` above -- pop the i32
+                // replacement value (only its low 16 bits are kept),
+                // then pop the v128 base operand, overwrite the
+                // `aux`-selected `i16` lane, push the resulting v128.
+                // Bounds-checked BEFORE indexing (0-7).
+                let value = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let lane_idx = aux;
+                if lane_idx >= 8 {
+                    return Err(VMError::GenericError(format!(
+                        "i16x8.replace_lane: lane index {lane_idx} out of range (must be 0-7)"
+                    )));
+                }
+                let mut result = bytes;
+                result[lane_idx * 2..lane_idx * 2 + 2].copy_from_slice(&(value as i16).to_le_bytes());
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::ReplaceLaneI32x4 => {
+                // i32x4.replace_lane (SIMD widen PR37): the `i32x4`
+                // counterpart to `ExtractLane` above -- pop an i32 and a
+                // v128, overwrite the `aux`-selected lane (0-3) with the
+                // FULL i32 (no narrowing truncation, unlike the i8x16/
+                // i16x8 replace variants), push the resulting v128.
+                let value = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let lane_idx = aux;
+                if lane_idx >= 4 {
+                    return Err(VMError::GenericError(format!(
+                        "i32x4.replace_lane: lane index {lane_idx} out of range (must be 0-3)"
+                    )));
+                }
+                let mut result = bytes;
+                result[lane_idx * 4..lane_idx * 4 + 4].copy_from_slice(&value.to_le_bytes());
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::ExtractLaneI64x2 => {
+                // i64x2.extract_lane (SIMD widen PR37): pop a v128, read
+                // the `aux`-selected `i64` lane (8 bytes, little-endian)
+                // back out. The first `extract_lane` family member whose
+                // result is NOT i32 -- a full 64-bit lane is already the
+                // native WASM i64 stack type, no widening or signed/
+                // unsigned split needed. Bounds-checked BEFORE indexing
+                // (0-1, this table's narrowest lane range).
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let lane_idx = aux;
+                if lane_idx >= 2 {
+                    return Err(VMError::GenericError(format!(
+                        "i64x2.extract_lane: lane index {lane_idx} out of range (must be 0-1)"
+                    )));
+                }
+                let lane_bytes: [u8; 8] = bytes[lane_idx * 8..lane_idx * 8 + 8].try_into().unwrap();
+                let value = i64::from_le_bytes(lane_bytes);
+                push_wasm(vm, WasmValue::I64(value));
+            }
+            SimdOpKind::ReplaceLaneI64x2 => {
+                // i64x2.replace_lane (SIMD widen PR37): pop an i64 and a
+                // v128, overwrite the `aux`-selected lane (0-1) with the
+                // i64, push the resulting v128. The first `replace_lane`
+                // member whose popped scalar is I64, not I32.
+                let value = pop_wasm(vm)?.as_i64().map_err(VMError::from)?;
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let lane_idx = aux;
+                if lane_idx >= 2 {
+                    return Err(VMError::GenericError(format!(
+                        "i64x2.replace_lane: lane index {lane_idx} out of range (must be 0-1)"
+                    )));
+                }
+                let mut result = bytes;
+                result[lane_idx * 8..lane_idx * 8 + 8].copy_from_slice(&value.to_le_bytes());
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::ExtractLaneF32x4 => {
+                // f32x4.extract_lane (SIMD widen PR37): pop a v128, read
+                // the `aux`-selected `f32` lane (4 bytes, little-endian)
+                // back out. The first `extract_lane` family member whose
+                // result is floating-point. Bounds-checked BEFORE
+                // indexing (0-3).
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let lane_idx = aux;
+                if lane_idx >= 4 {
+                    return Err(VMError::GenericError(format!(
+                        "f32x4.extract_lane: lane index {lane_idx} out of range (must be 0-3)"
+                    )));
+                }
+                let lane_bytes: [u8; 4] = bytes[lane_idx * 4..lane_idx * 4 + 4].try_into().unwrap();
+                let value = f32::from_le_bytes(lane_bytes);
+                push_wasm(vm, WasmValue::F32(value));
+            }
+            SimdOpKind::ReplaceLaneF32x4 => {
+                // f32x4.replace_lane (SIMD widen PR37): pop an f32 and a
+                // v128, overwrite the `aux`-selected lane (0-3) with the
+                // f32, push the resulting v128. The first `replace_lane`
+                // member whose popped scalar is a float.
+                let value = pop_wasm(vm)?.as_f32().map_err(VMError::from)?;
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let lane_idx = aux;
+                if lane_idx >= 4 {
+                    return Err(VMError::GenericError(format!(
+                        "f32x4.replace_lane: lane index {lane_idx} out of range (must be 0-3)"
+                    )));
+                }
+                let mut result = bytes;
+                result[lane_idx * 4..lane_idx * 4 + 4].copy_from_slice(&value.to_le_bytes());
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::ExtractLaneF64x2 => {
+                // f64x2.extract_lane (SIMD widen PR37): pop a v128, read
+                // the `aux`-selected `f64` lane (8 bytes, little-endian)
+                // back out. Bounds-checked BEFORE indexing (0-1, same
+                // narrow range as i64x2's extract/replace pair).
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let lane_idx = aux;
+                if lane_idx >= 2 {
+                    return Err(VMError::GenericError(format!(
+                        "f64x2.extract_lane: lane index {lane_idx} out of range (must be 0-1)"
+                    )));
+                }
+                let lane_bytes: [u8; 8] = bytes[lane_idx * 8..lane_idx * 8 + 8].try_into().unwrap();
+                let value = f64::from_le_bytes(lane_bytes);
+                push_wasm(vm, WasmValue::F64(value));
+            }
+            SimdOpKind::ReplaceLaneF64x2 => {
+                // f64x2.replace_lane (SIMD widen PR37): pop an f64 and a
+                // v128, overwrite the `aux`-selected lane (0-1) with the
+                // f64, push the resulting v128. The LAST member of the
+                // extract_lane/replace_lane family across all six SIMD
+                // vector shapes -- closes out the family this table
+                // opened with i32x4.extract_lane back in SIMD PR1b-2.
+                let value = pop_wasm(vm)?.as_f64().map_err(VMError::from)?;
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let lane_idx = aux;
+                if lane_idx >= 2 {
+                    return Err(VMError::GenericError(format!(
+                        "f64x2.replace_lane: lane index {lane_idx} out of range (must be 0-1)"
+                    )));
+                }
+                let mut result = bytes;
+                result[lane_idx * 8..lane_idx * 8 + 8].copy_from_slice(&value.to_le_bytes());
                 let handle = push_v128(ctx, result)?;
                 push_wasm(vm, WasmValue::V128(handle));
             }
@@ -17216,5 +17433,375 @@ mod tests {
         let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
         let out = f64x2_lanes(results[0].unwrap());
         assert_eq!(out, [7.0f64, 100.0f64], "convert_low_i32x4_u must convert the low 2 ordinary positive lanes normally");
+    }
+
+    // ── extract_lane/replace_lane family, remaining members (SIMD widen
+    // PR37, task #226-228): i16x8.extract_lane_s/_u/replace_lane,
+    // i32x4.replace_lane, i64x2.extract_lane/replace_lane,
+    // f32x4.extract_lane/replace_lane, f64x2.extract_lane/replace_lane.
+    // i8x16's trio and i32x4.extract_lane were already covered above (SIMD
+    // PR1b-2/PR18) -- these tests mirror that same coverage shape one lane
+    // width at a time: sign/zero-extension for the narrow integer
+    // extracts, round-trip (replace then extract) for every replace, and
+    // an out-of-range lane index rejection for every op. ─────────────────
+
+    /// `i16x8.extract_lane_s`: a lane value with the high bit of its 16
+    /// bits set must SIGN-extend to a NEGATIVE i32, not zero-pad --
+    /// direct 8-lane mirror of `i8x16_extract_lane_s_sign_extends_a_high_bit_lane`.
+    #[test]
+    fn i16x8_extract_lane_s_sign_extends_a_high_bit_lane() {
+        let mut lanes = [0i16; 8];
+        lanes[3] = -32768; // 0x8000
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_i16x8(lanes));
+        code.extend([0xFD, 0x18, 0x03]); // i16x8.extract_lane_s lane 3
+        code.push(0x0B);
+        let mut engine = simd_engine(code);
+        assert_eq!(
+            engine.call_function(0, &[]).unwrap(),
+            vec![WasmValue::I32(-32768)],
+            "0x8000 sign-extended to i32 must be -32768, not 32768"
+        );
+    }
+
+    /// `i16x8.extract_lane_u`: the SAME 0x8000 bit pattern must
+    /// ZERO-extend to a POSITIVE i32 (32768), proving `_u` genuinely
+    /// differs from `_s` on the exact same input.
+    #[test]
+    fn i16x8_extract_lane_u_zero_extends_the_same_high_bit_lane() {
+        let mut lanes = [0i16; 8];
+        lanes[3] = -32768; // 0x8000
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_i16x8(lanes));
+        code.extend([0xFD, 0x19, 0x03]); // i16x8.extract_lane_u lane 3
+        code.push(0x0B);
+        let mut engine = simd_engine(code);
+        assert_eq!(
+            engine.call_function(0, &[]).unwrap(),
+            vec![WasmValue::I32(32768)],
+            "0x8000 zero-extended to i32 must be 32768, not -32768"
+        );
+    }
+
+    /// `i16x8.extract_lane_s`/`_u`: a lane index out of the valid 0-7
+    /// range must trap cleanly, not panic.
+    #[test]
+    fn i16x8_extract_lane_out_of_range_index_is_a_clean_error_not_a_panic() {
+        for sub_opcode in [0x18u8, 0x19u8] {
+            let mut code = vec![0xFD, 0x0C];
+            code.extend(v128_const_bytes_i16x8([0; 8]));
+            code.extend([0xFD, sub_opcode, 0x08]); // lane index 8 -- out of the valid 0-7 range
+            code.push(0x0B);
+            let mut engine = simd_engine(code);
+            assert!(engine.call_function(0, &[]).is_err(), "sub_opcode {sub_opcode:#04x}: out-of-range lane must be a clean error");
+        }
+    }
+
+    /// `i16x8.replace_lane`: replace-then-extract round-trips back the
+    /// value that was written, and leaves every other lane untouched.
+    #[test]
+    fn i16x8_replace_lane_round_trips_and_overwrites_only_the_target_lane() {
+        let original: [i16; 8] = [1, 2, 3, 4, 5, 6, 7, 8];
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_i16x8(original));
+        code.push(0x41); // i32.const
+        code.extend(wasm_leb128::encode_signed(12345));
+        code.extend([0xFD, 0x1A, 0x04]); // i16x8.replace_lane lane 4
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let mut expected = original;
+        expected[4] = 12345;
+        assert_eq!(
+            results[0],
+            Some(V128Bytes(v128_const_bytes_i16x8(expected).try_into().unwrap())),
+            "replace_lane must overwrite lane 4 with 12345 and leave every other lane untouched"
+        );
+    }
+
+    /// `i16x8.replace_lane`: only the low 16 bits of the popped i32
+    /// operand are used -- an oversized i32 must truncate, not trap.
+    #[test]
+    fn i16x8_replace_lane_uses_only_the_low_16_bits_of_the_i32_operand() {
+        let original = [0i16; 8];
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_i16x8(original));
+        code.push(0x41); // i32.const
+        code.extend(wasm_leb128::encode_signed(0x1FFFF)); // low 16 bits: 0xFFFF
+        code.extend([0xFD, 0x1A, 0x00]); // i16x8.replace_lane lane 0
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let mut expected = original;
+        expected[0] = -1; // 0x1FFFF's low 16 bits, 0xFFFF, as an i16 is -1
+        assert_eq!(
+            results[0],
+            Some(V128Bytes(v128_const_bytes_i16x8(expected).try_into().unwrap())),
+            "0x1FFFF's low 16 bits (0xFFFF) must be written; the high bits must be silently dropped"
+        );
+    }
+
+    /// `i16x8.replace_lane`: a lane index out of the valid 0-7 range must
+    /// trap cleanly, not panic and not write out of bounds.
+    #[test]
+    fn i16x8_replace_lane_out_of_range_index_is_a_clean_error_not_a_panic() {
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_i16x8([0; 8]));
+        code.push(0x41); // i32.const
+        code.extend(wasm_leb128::encode_signed(1));
+        code.extend([0xFD, 0x1A, 0x08]); // lane index 8 -- out of the valid 0-7 range
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        assert!(engine.call_function_with_v128(0, &[]).is_err());
+    }
+
+    /// `i32x4.replace_lane`: replace-then-extract round-trips back the
+    /// FULL i32 value written (no narrowing truncation, unlike
+    /// `i16x8`/`i8x16`'s replace variants), and leaves every other lane
+    /// untouched.
+    #[test]
+    fn i32x4_replace_lane_round_trips_full_width_and_overwrites_only_the_target_lane() {
+        let original: [i32; 4] = [10, 20, 30, 40];
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes(original));
+        code.push(0x41); // i32.const
+        code.extend(wasm_leb128::encode_signed(-1)); // 0xFFFFFFFF -- proves no truncation
+        code.extend([0xFD, 0x1C, 0x02]); // i32x4.replace_lane lane 2
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let mut expected = original;
+        expected[2] = -1;
+        assert_eq!(
+            results[0],
+            Some(V128Bytes(v128_const_bytes(expected).try_into().unwrap())),
+            "replace_lane must overwrite lane 2 with the full -1 (0xFFFFFFFF), not a truncated low byte/half-word"
+        );
+    }
+
+    /// `i32x4.replace_lane`: a lane index out of the valid 0-3 range must
+    /// trap cleanly, not panic and not write out of bounds.
+    #[test]
+    fn i32x4_replace_lane_out_of_range_index_is_a_clean_error_not_a_panic() {
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes([0; 4]));
+        code.push(0x41); // i32.const
+        code.extend(wasm_leb128::encode_signed(1));
+        code.extend([0xFD, 0x1C, 0x04]); // lane index 4 -- out of the valid 0-3 range
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        assert!(engine.call_function_with_v128(0, &[]).is_err());
+    }
+
+    /// `i64x2.extract_lane`: reads back each of the 2 lanes as a plain
+    /// i64 -- the first `extract_lane` family member whose result is NOT
+    /// i32 (a full 64-bit lane needs no widening).
+    #[test]
+    fn i64x2_extract_lane_reads_each_lane_as_i64() {
+        for (lane_idx, expected) in [(0u8, 1_000_000_000_000i64), (1u8, -1_000_000_000_000i64)] {
+            let mut code = vec![0xFD, 0x0C];
+            code.extend(v128_const_bytes_i64x2([1_000_000_000_000, -1_000_000_000_000]));
+            code.extend([0xFD, 0x1D, lane_idx]); // i64x2.extract_lane <lane_idx>
+            code.push(0x0B);
+            let func_type = FuncType { params: vec![], results: vec![ValueType::I64] };
+            let body = FunctionBody { locals: vec![], code };
+            let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+                memories: Vec::new(),
+                tables: vec![],
+                globals: vec![],
+                global_types: vec![],
+                func_types: vec![func_type],
+                func_bodies: vec![Some(body)],
+                host_functions: vec![None],
+            });
+            assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I64(expected)], "lane {lane_idx}");
+        }
+    }
+
+    /// `i64x2.extract_lane`: a lane index out of the valid 0-1 range must
+    /// trap cleanly, not panic.
+    #[test]
+    fn i64x2_extract_lane_out_of_range_index_is_a_clean_error_not_a_panic() {
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_i64x2([0, 0]));
+        code.extend([0xFD, 0x1D, 0x02]); // lane index 2 -- out of the valid 0-1 range
+        code.push(0x0B);
+        let mut engine = simd_engine(code);
+        assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    /// `i64x2.replace_lane`: replace-then-extract round-trips back the
+    /// i64 value written, and leaves the other lane untouched.
+    #[test]
+    fn i64x2_replace_lane_round_trips_and_overwrites_only_the_target_lane() {
+        let original: [i64; 2] = [111, 222];
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_i64x2(original));
+        code.push(0x42); // i64.const
+        code.extend(wasm_leb128::encode_signed(-999_999_999_999i64));
+        code.extend([0xFD, 0x1E, 0x01]); // i64x2.replace_lane lane 1
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let mut expected = original;
+        expected[1] = -999_999_999_999;
+        assert_eq!(
+            results[0],
+            Some(V128Bytes(v128_const_bytes_i64x2(expected).try_into().unwrap())),
+            "replace_lane must overwrite lane 1 and leave lane 0 untouched"
+        );
+    }
+
+    /// `i64x2.replace_lane`: a lane index out of the valid 0-1 range must
+    /// trap cleanly, not panic and not write out of bounds.
+    #[test]
+    fn i64x2_replace_lane_out_of_range_index_is_a_clean_error_not_a_panic() {
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_i64x2([0, 0]));
+        code.push(0x42); // i64.const
+        code.extend(wasm_leb128::encode_signed(1i64));
+        code.extend([0xFD, 0x1E, 0x02]); // lane index 2 -- out of the valid 0-1 range
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        assert!(engine.call_function_with_v128(0, &[]).is_err());
+    }
+
+    /// `f32x4.extract_lane`: reads back each of the 4 lanes as a plain
+    /// f32 -- the first `extract_lane` family member whose result is
+    /// floating-point.
+    #[test]
+    fn f32x4_extract_lane_reads_each_lane_as_f32() {
+        let lanes = [1.5f32, -2.5f32, 3.5f32, -4.5f32];
+        for (lane_idx, expected) in lanes.into_iter().enumerate() {
+            let mut code = vec![0xFD, 0x0C];
+            code.extend(v128_const_bytes_f32x4(lanes));
+            code.extend([0xFD, 0x1F, lane_idx as u8]); // f32x4.extract_lane <lane_idx>
+            code.push(0x0B);
+            let func_type = FuncType { params: vec![], results: vec![ValueType::F32] };
+            let body = FunctionBody { locals: vec![], code };
+            let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+                memories: Vec::new(),
+                tables: vec![],
+                globals: vec![],
+                global_types: vec![],
+                func_types: vec![func_type],
+                func_bodies: vec![Some(body)],
+                host_functions: vec![None],
+            });
+            assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::F32(expected)], "lane {lane_idx}");
+        }
+    }
+
+    /// `f32x4.extract_lane`: a lane index out of the valid 0-3 range must
+    /// trap cleanly, not panic.
+    #[test]
+    fn f32x4_extract_lane_out_of_range_index_is_a_clean_error_not_a_panic() {
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_f32x4([0.0; 4]));
+        code.extend([0xFD, 0x1F, 0x04]); // lane index 4 -- out of the valid 0-3 range
+        code.push(0x0B);
+        let mut engine = simd_engine(code);
+        assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    /// `f32x4.replace_lane`: replace-then-extract round-trips back the
+    /// f32 value written, and leaves every other lane untouched.
+    #[test]
+    fn f32x4_replace_lane_round_trips_and_overwrites_only_the_target_lane() {
+        let original: [f32; 4] = [1.0, 2.0, 3.0, 4.0];
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_f32x4(original));
+        code.push(0x43); // f32.const
+        code.extend(9.5f32.to_le_bytes());
+        code.extend([0xFD, 0x20, 0x01]); // f32x4.replace_lane lane 1
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f32x4_lanes(results[0].unwrap());
+        assert_eq!(out, [1.0, 9.5, 3.0, 4.0], "replace_lane must overwrite lane 1 with 9.5 and leave every other lane untouched");
+    }
+
+    /// `f32x4.replace_lane`: a lane index out of the valid 0-3 range must
+    /// trap cleanly, not panic and not write out of bounds.
+    #[test]
+    fn f32x4_replace_lane_out_of_range_index_is_a_clean_error_not_a_panic() {
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_f32x4([0.0; 4]));
+        code.push(0x43); // f32.const
+        code.extend(1.0f32.to_le_bytes());
+        code.extend([0xFD, 0x20, 0x04]); // lane index 4 -- out of the valid 0-3 range
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        assert!(engine.call_function_with_v128(0, &[]).is_err());
+    }
+
+    /// `f64x2.extract_lane`: reads back each of the 2 lanes as a plain
+    /// f64.
+    #[test]
+    fn f64x2_extract_lane_reads_each_lane_as_f64() {
+        let lanes = [1.25f64, -2.25f64];
+        for (lane_idx, expected) in lanes.into_iter().enumerate() {
+            let mut code = vec![0xFD, 0x0C];
+            code.extend(v128_const_bytes_f64x2(lanes));
+            code.extend([0xFD, 0x21, lane_idx as u8]); // f64x2.extract_lane <lane_idx>
+            code.push(0x0B);
+            let func_type = FuncType { params: vec![], results: vec![ValueType::F64] };
+            let body = FunctionBody { locals: vec![], code };
+            let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+                memories: Vec::new(),
+                tables: vec![],
+                globals: vec![],
+                global_types: vec![],
+                func_types: vec![func_type],
+                func_bodies: vec![Some(body)],
+                host_functions: vec![None],
+            });
+            assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::F64(expected)], "lane {lane_idx}");
+        }
+    }
+
+    /// `f64x2.extract_lane`: a lane index out of the valid 0-1 range must
+    /// trap cleanly, not panic.
+    #[test]
+    fn f64x2_extract_lane_out_of_range_index_is_a_clean_error_not_a_panic() {
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_f64x2([0.0; 2]));
+        code.extend([0xFD, 0x21, 0x02]); // lane index 2 -- out of the valid 0-1 range
+        code.push(0x0B);
+        let mut engine = simd_engine(code);
+        assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    /// `f64x2.replace_lane`: replace-then-extract round-trips back the
+    /// f64 value written, and leaves the other lane untouched. The LAST
+    /// member of the extract_lane/replace_lane family across all six
+    /// SIMD vector shapes.
+    #[test]
+    fn f64x2_replace_lane_round_trips_and_overwrites_only_the_target_lane() {
+        let original: [f64; 2] = [1.0, 2.0];
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_f64x2(original));
+        code.push(0x44); // f64.const
+        code.extend((-8.5f64).to_le_bytes());
+        code.extend([0xFD, 0x22, 0x00]); // f64x2.replace_lane lane 0
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f64x2_lanes(results[0].unwrap());
+        assert_eq!(out, [-8.5, 2.0], "replace_lane must overwrite lane 0 with -8.5 and leave lane 1 untouched");
+    }
+
+    /// `f64x2.replace_lane`: a lane index out of the valid 0-1 range must
+    /// trap cleanly, not panic and not write out of bounds.
+    #[test]
+    fn f64x2_replace_lane_out_of_range_index_is_a_clean_error_not_a_panic() {
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_f64x2([0.0; 2]));
+        code.push(0x44); // f64.const
+        code.extend(1.0f64.to_le_bytes());
+        code.extend([0xFD, 0x22, 0x02]); // lane index 2 -- out of the valid 0-1 range
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        assert!(engine.call_function_with_v128(0, &[]).is_err());
     }
 }
