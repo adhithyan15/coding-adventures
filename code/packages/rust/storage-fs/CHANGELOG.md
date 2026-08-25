@@ -32,8 +32,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   smart-home state, i.e. one that grows with data an agent can influence.
   Measured at ~480 ms per call against a 473 ms baseline tick (#12139).
 
+- Made `initialize()`'s directory walk total. Every `read_dir` failure was
+  swallowed by `if let Ok(..)`, which was survivable only while the scan re-ran
+  on the next call: a transient `EACCES`/`EMFILE`/`EIO` produced `highest = 0`
+  and the following tick corrected it. Cached, a swallowed error would have
+  frozen the counter at a bogus floor for the life of the backend. Directory
+  read failures now propagate; an individual unparseable record is still
+  tolerated, because aborting the walk over one bad record is the failure mode
+  #12137 is about.
+
+- Made the counter seed monotone (`fetch_max`, not `store`). `put()` does not
+  require `initialize()`, so a first `initialize()` may legitimately run after
+  revisions have been issued, and a plain `store` dropped the counter back below
+  them. This alone would have prevented the original defect.
+
+- Stopped a poisoned `write_lock` failing reads. `ServiceRegistry::{load,list,
+  register}` all begin with `initialize()?`, so now that `initialize()` takes
+  the write lock, treating poisoning as an error would take pure reads down
+  along with writes. The guarded data is `()`, so the lock is recovered instead.
+
 - Made parallel filesystem-backend tests allocate distinct temporary roots even
   when the platform clock returns the same timestamp.
+
+### Known limitation
+
+- Revisions are still **not unique across backend instances**, including across
+  a restart. The high-water mark is derived from surviving records, so deleting
+  the record holding it lowers the mark, and a fresh `FsStorageBackend` over the
+  same root re-issues revisions the previous one handed out. The fix above
+  closes this within a single instance; it does not close it across instances.
+  Fixing it properly means not deriving the mark from live records — persisting
+  it, or folding a per-boot epoch into the revision — and is tracked separately.
+  Do not read `initialize()` as a guarantee of global revision uniqueness.
 
 ### Added
 

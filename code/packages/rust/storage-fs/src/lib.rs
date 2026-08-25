@@ -80,7 +80,7 @@ use std::fs::{self, File, OpenOptions};
 use std::io::{self, Read, Write};
 use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
-use std::sync::Mutex;
+use std::sync::{Mutex, PoisonError};
 use std::time::{SystemTime, UNIX_EPOCH};
 use storage_core::{
     LeaseToken, Revision, StorageBackend, StorageError, StorageLease, StorageListOptions,
@@ -162,7 +162,21 @@ pub struct FsStorageBackend {
     revision_counter: AtomicU64,
     /// Whether the one-time recovery scan in `initialize()` has completed.
     /// Per backend instance, so a genuine restart (a NEW `FsStorageBackend`
-    /// over the same root) still scans and still recovers its revision floor.
+    /// over the same root) scans again.
+    ///
+    /// That re-scan recovers a floor, but NOT necessarily the true one, and the
+    /// difference is a live defect rather than a subtlety. `highest` is derived
+    /// from surviving records, so deleting the record that holds the high-water
+    /// mark lowers it; a fresh instance over that root then re-issues revisions
+    /// the previous instance already handed out, and a stale `if_revision`
+    /// compare-and-swap guard passes where it must fail. Caching closes this
+    /// within one instance -- which is what #12139 asked for -- and closes it
+    /// not at all across instances, including two live backends over one root.
+    ///
+    /// The real fix is to stop deriving the high-water mark from live records:
+    /// persist it beside them, or fold a per-boot epoch into the revision. That
+    /// is tracked separately; do not read this flag as a guarantee of global
+    /// revision uniqueness, because it is not one.
     scanned: AtomicBool,
     /// In-memory leases. Same shape as `InMemoryStorageBackend`'s.
     leases: Mutex<HashMap<String, StorageLease>>,
@@ -447,6 +461,30 @@ fn io_to_storage(e: io::Error) -> StorageError {
     }
 }
 
+/// Read a directory, returning every entry's path, and treat any failure as a
+/// hard error rather than as an empty directory.
+///
+/// The distinction matters because the caller caches its result. `read_dir`
+/// failing with EACCES, EMFILE or EIO is "I could not tell what is here", and
+/// silently converting that into "nothing is here" is how a recovery scan
+/// concludes that the highest revision on disk is zero.
+///
+/// A missing directory IS genuinely empty, so `NotFound` alone maps to no
+/// entries: namespaces are created lazily, so a root with no namespace
+/// subdirectory yet is an ordinary cold start rather than a fault.
+fn read_dir_total(path: &Path) -> Result<Vec<PathBuf>, StorageError> {
+    let entries = match fs::read_dir(path) {
+        Ok(entries) => entries,
+        Err(e) if e.kind() == io::ErrorKind::NotFound => return Ok(Vec::new()),
+        Err(e) => return Err(io_to_storage(e)),
+    };
+    let mut paths = Vec::new();
+    for entry in entries {
+        paths.push(entry.map_err(io_to_storage)?.path());
+    }
+    Ok(paths)
+}
+
 // ─────────────────────────────────────────────────────────────────────
 // 5. StorageBackend impl
 // ─────────────────────────────────────────────────────────────────────
@@ -485,9 +523,15 @@ impl StorageBackend for FsStorageBackend {
         // re-scanning a root whose records have since been DELETED lowers
         // `highest`, so the counter walks backwards over revisions it has
         // already handed out. Scanning once can only ever move it forward.
-        let _guard = self.write_lock.lock().map_err(|_| StorageError::Backend {
-            message: "fs storage write lock poisoned".to_string(),
-        })?;
+        // The guarded data is `()` -- the mutex orders writers, it does not
+        // protect a value that a panic could leave half-updated. So recover from
+        // poisoning rather than failing: `ServiceRegistry::{load,list,register}`
+        // all begin with `initialize()?`, and turning a poisoned write lock into
+        // a hard error there would take pure READS down with the writes.
+        let _guard = self
+            .write_lock
+            .lock()
+            .unwrap_or_else(PoisonError::into_inner);
 
         // Re-check under the lock: another thread may have finished the scan
         // between our fast-path load and our acquiring the mutex.
@@ -498,38 +542,57 @@ impl StorageBackend for FsStorageBackend {
         // Walk and remove stranded .tmp files. Also: scan all
         // record files to find the highest revision number so a
         // restart picks up where the previous process left off.
+        //
+        // This walk must be TOTAL. Every failure here used to be swallowed by an
+        // `if let Ok(..)`, which was survivable only because the scan re-ran on
+        // the next call: a transient EACCES/EMFILE/EIO produced `highest = 0`
+        // and the following tick corrected it. Now that the result is cached for
+        // the life of the backend, a swallowed error would freeze the counter at
+        // a bogus floor permanently, and every subsequent revision would be one
+        // already issued. An unreadable directory is "I could not tell", which
+        // must never be recorded as "there was nothing there".
         let mut highest: u64 = 0;
-        if let Ok(entries) = fs::read_dir(&self.root) {
-            for e in entries.flatten() {
-                let ns_path = e.path();
-                if !ns_path.is_dir() {
+        for e in read_dir_total(&self.root)? {
+            let ns_path = e;
+            if !ns_path.is_dir() {
+                continue;
+            }
+            for p in read_dir_total(&ns_path)? {
+                if p.extension().and_then(|s| s.to_str()) == Some("tmp") {
+                    let _ = fs::remove_file(&p);
                     continue;
                 }
-                if let Ok(inner) = fs::read_dir(&ns_path) {
-                    for inner_e in inner.flatten() {
-                        let p = inner_e.path();
-                        if p.extension().and_then(|s| s.to_str()) == Some("tmp") {
-                            let _ = fs::remove_file(&p);
-                            continue;
-                        }
-                        // Try to parse the record to recover its revision.
-                        if let Ok(Some((meta, _))) = read_record_full(&p) {
-                            if let Some(n) = revision_to_u64(&meta.revision) {
-                                if n > highest {
-                                    highest = n;
-                                }
-                            }
+                // Note the asymmetry with the directory reads above, which is
+                // deliberate. A failed `read_dir` means we may have seen NONE of
+                // the records, so the floor we computed is worthless and the
+                // caller must be told. A single unparseable record means we saw
+                // all the others: it is bit rot, a torn write, or a foreign
+                // file, it contributes no revision, and aborting the walk over
+                // it would let one bad record stop the daemon -- the failure
+                // mode #12137 is about. So this one stays tolerant.
+                if let Ok(Some((meta, _))) = read_record_full(&p) {
+                    if let Some(n) = revision_to_u64(&meta.revision) {
+                        if n > highest {
+                            highest = n;
                         }
                     }
                 }
             }
         }
-        self.revision_counter.store(highest, Ordering::SeqCst);
+
+        // `fetch_max`, not `store`. The counter must be monotone by
+        // construction: `put()` does not require `initialize()` and does not set
+        // `scanned`, so a first `initialize()` can legitimately run AFTER
+        // revisions have been issued, and a plain `store` would drop the counter
+        // back below them. Taking the maximum makes lowering it impossible
+        // regardless of call order -- and would, on its own, have prevented the
+        // defect this change is about.
+        self.revision_counter.fetch_max(highest, Ordering::SeqCst);
 
         // `Release`, paired with the `Acquire` on the fast path, so the counter
-        // store above is visible to any thread that skips the scan. Set last,
-        // and only on success, so a failed `initialize` is retried rather than
-        // remembered as done.
+        // update above is visible to any thread that skips the scan. Set last,
+        // and only once the walk has completed without error, so a failed
+        // `initialize` is retried rather than remembered as done.
         self.scanned.store(true, Ordering::Release);
         Ok(())
     }
@@ -1103,6 +1166,92 @@ mod tests {
             "re-initialize reissued revision {}, already held by k2; a stale \
              if_revision compare-and-swap guard would now pass",
             n3
+        );
+        let _ = fs::remove_dir_all(&root);
+    }
+
+    #[test]
+    #[cfg(unix)]
+    fn initialize_reports_an_unreadable_root_instead_of_caching_a_bogus_floor() {
+        // Before the walk was made total, an unreadable directory was swallowed
+        // by `if let Ok(..)`, yielding `highest = 0`. That was survivable only
+        // while the scan re-ran every call; cached, it would freeze the counter
+        // at zero for the life of the backend and reissue every revision.
+        use std::os::unix::fs::PermissionsExt;
+
+        let root = temp_root();
+        let seed = FsStorageBackend::new(&root);
+        seed.initialize().unwrap();
+        let r1 = seed.put(put_input("ns", "k", b"v")).unwrap();
+        drop(seed);
+
+        // Make the namespace directory unreadable, then scan it fresh.
+        let ns_dir = root.join(hex_encode(b"ns"));
+        let original = fs::metadata(&ns_dir).unwrap().permissions();
+        fs::set_permissions(&ns_dir, fs::Permissions::from_mode(0o000)).unwrap();
+
+        // A root-owned runner ignores the mode bits entirely, so confirm the
+        // directory really did become unreadable before asserting on it.
+        // Otherwise this silently inverts into a false failure under a
+        // privileged CI container.
+        let permissions_bite = fs::read_dir(&ns_dir).is_err();
+
+        let be = FsStorageBackend::new(&root);
+        let outcome = be.initialize();
+
+        // Restore before asserting, so a failure cannot leave an
+        // undeletable directory behind.
+        fs::set_permissions(&ns_dir, original).unwrap();
+
+        if !permissions_bite {
+            // Running with privileges that bypass the mode bits (root in a
+            // container). There is no unreadable directory to observe, so
+            // there is nothing here to assert.
+            let _ = fs::remove_dir_all(&root);
+            return;
+        }
+
+        assert!(
+            outcome.is_err(),
+            "an unreadable namespace must be reported, not recorded as empty"
+        );
+
+        // And having failed, the backend must not consider itself scanned: a
+        // retry once permissions are back has to recover the real floor.
+        be.initialize().unwrap();
+        let r2 = be.put(put_input("ns", "k2", b"v2")).unwrap();
+        let n1 = revision_to_u64(&r1.revision).unwrap();
+        let n2 = revision_to_u64(&r2.revision).unwrap();
+        assert!(
+            n2 > n1,
+            "retry after a failed initialize must recover the floor: {} <= {}",
+            n2,
+            n1
+        );
+        let _ = fs::remove_dir_all(&root);
+    }
+
+    #[test]
+    fn initialize_never_lowers_a_counter_put_has_already_advanced() {
+        // `put()` does not require `initialize()`, so the first scan can run
+        // after revisions have been issued. `fetch_max` makes that harmless;
+        // a plain `store` would drop the counter back below them.
+        let root = temp_root();
+        let be = FsStorageBackend::new(&root);
+        let r1 = be.put(put_input("ns", "k1", b"v1")).unwrap();
+        be.delete("ns", "k1", None).unwrap();
+
+        // First initialize, now, with nothing on disk to recover from.
+        be.initialize().unwrap();
+        let r2 = be.put(put_input("ns", "k1", b"v2")).unwrap();
+
+        let n1 = revision_to_u64(&r1.revision).unwrap();
+        let n2 = revision_to_u64(&r2.revision).unwrap();
+        assert!(
+            n2 > n1,
+            "a late first initialize lowered the counter: {} <= {}",
+            n2,
+            n1
         );
         let _ = fs::remove_dir_all(&root);
     }
