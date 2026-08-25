@@ -1,0 +1,13 @@
+{
+  "id": "GU-EXT-023-WELLBEING-R3",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "consolidation",
+  "canDo": "I can independently retrieve the familiar wellbeing exchange after a durable interval.",
+  "prerequisites": [
+    "GU-EXT-022-R4-BRIDGE-B"
+  ],
+  "lessons": [
+    "GU-R16-wellbeing-r3"
+  ]
+}

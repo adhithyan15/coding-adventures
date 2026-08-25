@@ -1259,6 +1259,13 @@
       "scriptCommand": "gu"
     },
     {
+      "language": "gujarati",
+      "chapter": 16,
+      "output": "gujarati/book/chapters/ch16-r4-introduction.tex",
+      "unicodeScript": "Gujarati",
+      "scriptCommand": "gu"
+    },
+    {
       "language": "hindi",
       "chapter": 1,
       "output": "hindi/book/chapters/ch01-greetings.tex",

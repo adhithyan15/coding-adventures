@@ -1,0 +1,16 @@
+{
+  "id": "GU-PATH-018",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "GU-R16-naam-r4",
+    "GU-R16-maarun-r4",
+    "GU-R16-chhe-r4",
+    "GU-R16-my-name-is-r4",
+    "GU-R16-anand-r4"
+  ],
+  "before": [],
+  "inline": [
+    "GU-EXT-022-R4-BRIDGE-B"
+  ],
+  "after": []
+}

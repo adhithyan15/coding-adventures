@@ -4448,3 +4448,11 @@ there immediately even while checks are queued, moving the parent PR's head and
 combining the changes. Before arming auto-merge, confirm that the PR targets the
 protected default branch. Keep a stacked child open without auto-merge until its
 parent lands, then retarget the child to the default branch and arm auto-merge.
+
+## One inline curriculum extension cannot own lessons from two path segments
+
+An extension listed in a path segment's `inline` array may contain only lessons
+owned by that same segment. A chapter can still cross two spine nodes, but its
+lessons need separate path segments and separate inline extensions. Chain the
+second extension to the first when both are required; do not use one umbrella
+extension whose lesson list reaches across segment ownership.

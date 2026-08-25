@@ -7,29 +7,29 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:0cb2b6dc48096e58",
+  "sourceHash": "fnv1a64:b21ed00bacdd9bae",
   "summary": {
-    "totalLessons": 97,
+    "totalLessons": 103,
     "voice": 15,
     "sight": 43,
-    "pen": 39,
+    "pen": 45,
     "drivableLessons": 15,
     "drivablePercent": 15,
     "trackCount": 1,
-    "chapterCount": 15,
+    "chapterCount": 16,
     "drivablePrefixTotal": 9,
     "fullyDrivableChapters": 2,
-    "unstartableChapters": 12,
+    "unstartableChapters": 13,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
   "tracks": [
     {
       "language": "gujarati",
-      "lessonCount": 97,
+      "lessonCount": 103,
       "voice": 15,
       "sight": 43,
-      "pen": 39,
+      "pen": 45,
       "drivablePercent": 15,
       "drivablePrefixTotal": 9,
       "modalities": [
@@ -268,6 +268,21 @@
           ],
           "drivablePrefix": 0,
           "firstNonVoiceLesson": "GU-R15-u-matra-r4",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 16,
+          "lessonCount": 6,
+          "voice": 0,
+          "sight": 0,
+          "pen": 6,
+          "modalities": [
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "GU-R16-naam-r4",
           "drivable": false,
           "drivableLessonIds": []
         }
@@ -2427,6 +2442,132 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:70e94ee73b776554",
+      "detachableSegments": [
+        "Writing — from sound"
+      ]
+    },
+    {
+      "id": "GU-R16-naam-r4",
+      "language": "gujarati",
+      "chapter": 16,
+      "sequence": 680,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a882bacce3112341",
+      "detachableSegments": [
+        "Writing — from sound"
+      ]
+    },
+    {
+      "id": "GU-R16-maarun-r4",
+      "language": "gujarati",
+      "chapter": 16,
+      "sequence": 690,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:c2f79cd0ea05fb14",
+      "detachableSegments": [
+        "Writing — from sound"
+      ]
+    },
+    {
+      "id": "GU-R16-chhe-r4",
+      "language": "gujarati",
+      "chapter": 16,
+      "sequence": 700,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:bae9bf85e4a715f0",
+      "detachableSegments": [
+        "Writing — from sound"
+      ]
+    },
+    {
+      "id": "GU-R16-my-name-is-r4",
+      "language": "gujarati",
+      "chapter": 16,
+      "sequence": 710,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e6784bbde8fbe3ba",
+      "detachableSegments": [
+        "Writing — from sound"
+      ]
+    },
+    {
+      "id": "GU-R16-anand-r4",
+      "language": "gujarati",
+      "chapter": 16,
+      "sequence": 720,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:387abccf88718958",
+      "detachableSegments": [
+        "Writing — from sound"
+      ]
+    },
+    {
+      "id": "GU-R16-wellbeing-r3",
+      "language": "gujarati",
+      "chapter": 16,
+      "sequence": 730,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:464489d58319d4c6",
       "detachableSegments": [
         "Writing — from sound"
       ]
