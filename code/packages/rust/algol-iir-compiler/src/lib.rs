@@ -8339,6 +8339,15 @@ fn single_parenthesized_child(node: &GrammarASTNode) -> Option<&GrammarASTNode> 
         .then(|| child_nodes[0])
 }
 
+fn single_signed_child(node: &GrammarASTNode) -> Option<(&str, &GrammarASTNode)> {
+    let tokens = direct_tokens(node);
+    let child_nodes = direct_nodes(node);
+    (tokens.len() == 1
+        && matches!(tokens[0].value.as_str(), "+" | "-")
+        && child_nodes.len() == 1)
+        .then(|| (tokens[0].value.as_str(), child_nodes[0]))
+}
+
 fn exact_bare_variable_expression_name(node: &GrammarASTNode) -> Option<String> {
     if node.rule_name == "variable" {
         return bare_scalar_variable_name(node);
@@ -8377,6 +8386,14 @@ fn literal_integer_value(node: &GrammarASTNode) -> Option<i64> {
     if let Some(child) = single_parenthesized_child(node) {
         return literal_integer_value(child);
     }
+    if let Some((sign, child)) = single_signed_child(node) {
+        let value = literal_integer_value(child)?;
+        return match sign {
+            "+" => Some(value),
+            "-" => value.checked_neg(),
+            _ => None,
+        };
+    }
     let tokens = direct_tokens(node);
     if tokens.len() == 1 && tokens[0].effective_type_name() == "INTEGER_LIT" {
         return tokens[0].value.parse().ok();
@@ -8389,6 +8406,9 @@ fn literal_integer_value(node: &GrammarASTNode) -> Option<i64> {
 
 fn literal_numeric_one(node: &GrammarASTNode) -> bool {
     if let Some(child) = single_parenthesized_child(node) {
+        return literal_numeric_one(child);
+    }
+    if let Some(("+", child)) = single_signed_child(node) {
         return literal_numeric_one(child);
     }
     let tokens = direct_tokens(node);
@@ -10675,6 +10695,12 @@ mod tests {
             "choose + (0)",
             "(0) + choose",
             "choose * (1)",
+            "choose + (+0)",
+            "choose - (-0)",
+            "(+0) + choose",
+            "choose * (+1)",
+            "(+1) * choose",
+            "choose div (+1)",
         ] {
             compile_source(
                 &format!(
@@ -10688,7 +10714,13 @@ mod tests {
 
     #[test]
     fn al4_integer_non_identity_selector_write_remains_conservative() {
-        for write in ["choose * 0", "(choose * 0)", "-choose"] {
+        for write in [
+            "choose * 0",
+            "(choose * 0)",
+            "choose + (+1)",
+            "choose * (-1)",
+            "-choose",
+        ] {
             let err = compile_source(
                 &format!(
                     "begin integer i, n, limit, choose; boolean other; n := 3; limit := 3; choose := 1; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := other; choose := {write} end; print(i + 0.25) end"
@@ -10747,6 +10779,9 @@ mod tests {
             "(choose)",
             "choose * (1.0)",
             "(1.0) * choose",
+            "choose * (+1.0)",
+            "(+1.0) * choose",
+            "choose / (+1)",
         ] {
             compile_source(
                 &format!(
@@ -10787,6 +10822,7 @@ mod tests {
         for write in [
             "choose * 1.0 * 2.0",
             "(choose * 2.0)",
+            "choose * (-1.0)",
             "1.0 / choose * 1.0",
         ] {
             let err = compile_source(
