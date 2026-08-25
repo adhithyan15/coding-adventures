@@ -101,7 +101,7 @@ class UnicodeDownloadBoundaryTests(unittest.TestCase):
     ) -> None:
         self.assertEqual(
             generator._selected_runtime_self_checks(None),
-            ("typescript", "ruby", "elixir", "lua", "perl"),
+            ("typescript", "ruby", "elixir", "lua", "perl", "haskell"),
         )
 
     def test_runtime_self_check_selection_can_isolate_elixir_for_ci(self) -> None:
@@ -328,6 +328,35 @@ class UnicodeDownloadBoundaryTests(unittest.TestCase):
             generator.LICENSE_TARGETS,
         )
 
+    def test_haskell_renderer_exports_the_pinned_process_free_api(self) -> None:
+        rendered = generator._render_haskell(
+            (
+                [(0x0300, 230)],
+                [(0x00C0, False, (0x0041, 0x0300))],
+                [(0x0041, 0x0300, 0x00C0)],
+                [(0x0041, (0x0061,))],
+                [(0x0061, (0x0041,))],
+            )
+        )
+
+        self.assertIn("module TrackedArtifactUnicode17", rendered)
+        self.assertIn('unicodeVersion = "17.0.0"', rendered)
+        self.assertIn("nfc :: String -> String", rendered)
+        self.assertIn("nfkcCasefold :: String -> String", rendered)
+        self.assertIn("fullUppercase :: String -> String", rendered)
+        self.assertNotIn("Data.Text.Normalize", rendered)
+        self.assertNotIn("toUpper", rendered)
+
+    def test_haskell_output_and_license_are_declared_targets(self) -> None:
+        self.assertEqual(
+            generator.HASKELL_TARGET,
+            Path("code/programs/haskell/build-tool/src/TrackedArtifactUnicode17.hs"),
+        )
+        self.assertIn(
+            Path("code/programs/haskell/build-tool/UNICODE-LICENSE.txt"),
+            generator.LICENSE_TARGETS,
+        )
+
     def test_typescript_self_check_runs_every_official_vector_family(self) -> None:
         sources = {
             "NormalizationTest.txt": "0041;0041;0041;0041;0041; # LATIN A\n",
@@ -532,6 +561,63 @@ class UnicodeDownloadBoundaryTests(unittest.TestCase):
         self.assertNotIn("PATH", invocation["env"])
         self.assertNotIn("PERL5OPT", invocation["env"])
         self.assertNotIn("PERL5LIB", invocation["env"])
+
+    def test_haskell_self_check_runs_every_official_vector_family(self) -> None:
+        sources = {
+            "NormalizationTest.txt": "0041;0041;0041;0041;0041; # LATIN A\n",
+            "CaseFolding.txt": "0041; C; 0061; # LATIN A\n",
+            "UnicodeData.txt": ";".join(["0061"] + [""] * 11 + ["0041"] + [""] * 2),
+            "SpecialCasing.txt": "0061; 0061; 0041; 0041; ; # LATIN A\n",
+        }
+
+        class _Module:
+            @staticmethod
+            def nfkc_casefold(value: str) -> str:
+                return value.lower()
+
+        executable = Path(sys.executable).resolve()
+        runghc_version = subprocess.CompletedProcess([], 0, "runghc 9.4.8\n", "")
+        ghc_version = subprocess.CompletedProcess([], 0, "9.4.8\n", "")
+        completed = subprocess.CompletedProcess([], 0, "ok\r\n", "")
+        with mock.patch.object(
+            generator,
+            "_run_bounded_process",
+            side_effect=(runghc_version, ghc_version, completed),
+        ) as run:
+            generator._self_check_haskell(
+                Path("C:/repo"),
+                "module TrackedArtifactUnicode17 where\n",
+                sources,
+                _Module(),
+                executable,
+                executable,
+            )
+
+        self.assertEqual(run.call_args_list[0].args[0], [str(executable), "--version"])
+        self.assertEqual(
+            run.call_args_list[1].args[0], [str(executable), "--numeric-version"]
+        )
+        command = run.call_args_list[2].args[0]
+        self.assertEqual(command[:3], [str(executable), "-f", str(executable)])
+        self.assertIn("--ghc-arg=-ignore-dot-ghci", command)
+        self.assertIn("--ghc-arg=-clear-package-db", command)
+        self.assertIn("--ghc-arg=-global-package-db", command)
+        self.assertIn("--ghc-arg=-package-env=-", command)
+        self.assertIn("--ghc-arg=-hide-all-packages", command)
+        self.assertIn("--ghc-arg=-package=base", command)
+        self.assertIn("--ghc-arg=-package=containers", command)
+        self.assertTrue(
+            any(argument.startswith("--ghc-arg=-tmpdir=") for argument in command)
+        )
+        invocation = run.call_args_list[2].kwargs
+        self.assertEqual(
+            invocation["input_text"],
+            "V;17.0.0\nN;41;41;41;41;41\nF;41;61;61\nU;61;41\n",
+        )
+        self.assertEqual(invocation["timeout"], 180)
+        self.assertNotIn("PATH", invocation["env"])
+        self.assertNotIn("GHC_ENVIRONMENT", invocation["env"])
+        self.assertNotIn("CABAL_DIR", invocation["env"])
 
     def test_bounded_process_discards_output_past_the_limit(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

@@ -4,6 +4,9 @@ module BuildTool
     , MetadataEncodingError(..)
     , Package(..)
     , ParsedArgs(..)
+    , TrackedArtifactDiagnostic(..)
+    , TrackedArtifactDiagnosticDetails(..)
+    , TrackedArtifactEntry(..)
     , defaultConfig
     , discoverPackages
     , findRepoRoot
@@ -13,6 +16,8 @@ module BuildTool
     , renderMetadataEncodingError
     , resolveDependencies
     , runWithArgs
+    , trackedArtifactUnicodeVersion
+    , validateTrackedArtifactSnapshot
     ) where
 
 import Control.Exception (Exception, IOException, catch, evaluate, throwIO, try)
@@ -22,7 +27,7 @@ import qualified Data.Aeson.Key as Key
 import qualified Data.Aeson.KeyMap as KeyMap
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Char8 as BS8
-import Data.Char (isAlpha, isAlphaNum, isSpace, ord, toLower)
+import Data.Char (isAlpha, isAlphaNum, isAsciiLower, isAsciiUpper, isSpace, ord, toLower)
 import Data.List (intercalate, isInfixOf, isPrefixOf, nub, sort, sortOn)
 import qualified Data.Map.Strict as Map
 import Data.Map.Strict (Map)
@@ -69,6 +74,7 @@ import System.Process
     , waitForProcess
     )
 import Text.Read (readMaybe)
+import qualified TrackedArtifactUnicode17 as TrackedUnicode
 
 versionString :: String
 versionString = "0.2.0"
@@ -105,6 +111,145 @@ instance Show MetadataEncodingError where
     show = renderMetadataEncodingError
 
 instance Exception MetadataEncodingError
+
+data TrackedArtifactEntry = TrackedArtifactEntry
+    { trackedEntryOrdinal :: Int
+    , trackedEntryPath :: String
+    , trackedEntryKind :: String
+    }
+    deriving (Eq, Show)
+
+data TrackedArtifactDiagnosticDetails = TrackedArtifactDiagnosticDetails
+    { trackedDiagnosticOrdinal :: Int
+    , trackedDiagnosticEntryKind :: String
+    , trackedDiagnosticProblem :: Maybe String
+    }
+    deriving (Eq, Show)
+
+data TrackedArtifactDiagnostic = TrackedArtifactDiagnostic
+    { trackedDiagnosticCode :: String
+    , trackedDiagnosticSeverity :: String
+    , trackedDiagnosticPath :: String
+    , trackedDiagnosticDetails :: TrackedArtifactDiagnosticDetails
+    }
+    deriving (Eq, Show)
+
+trackedArtifactUnicodeVersion :: String
+trackedArtifactUnicodeVersion = TrackedUnicode.unicodeVersion
+
+trackedArtifactComponentIdentity :: String
+trackedArtifactComponentIdentity = "node_modules"
+
+trackedArtifactRedactedPath :: String
+trackedArtifactRedactedPath = "repository"
+
+windowsReservedBasenames :: Set String
+windowsReservedBasenames =
+    Set.fromList
+        ( ["CON", "PRN", "AUX", "NUL", "CONIN$", "CONOUT$", "CLOCK$"]
+            ++ [prefix ++ suffix | prefix <- ["COM", "LPT"], suffix <- map show [1 :: Int .. 9]]
+            ++ [prefix ++ suffix | prefix <- ["COM", "LPT"], suffix <- ["¹", "²", "³"]]
+        )
+
+validateTrackedArtifactSnapshot
+    :: String
+    -> [TrackedArtifactEntry]
+    -> Either String [TrackedArtifactDiagnostic]
+validateTrackedArtifactSnapshot unicodeVersion entries
+    | unicodeVersion /= trackedArtifactUnicodeVersion =
+        Left
+            ( "tracked artifact Unicode version must be "
+                ++ trackedArtifactUnicodeVersion
+            )
+    | otherwise = Right (sortOn trackedArtifactDiagnosticSortKey (mapMaybe validate entries))
+  where
+    validate entry =
+        case normalizeTrackedArtifactPath (trackedEntryPath entry) of
+            Left problem ->
+                Just
+                    TrackedArtifactDiagnostic
+                        { trackedDiagnosticCode = "TRACKED_ARTIFACT_PATH_INVALID"
+                        , trackedDiagnosticSeverity = "error"
+                        , trackedDiagnosticPath = trackedArtifactRedactedPath
+                        , trackedDiagnosticDetails = details entry (Just problem)
+                        }
+            Right normalizedPath
+                | any
+                    ((== trackedArtifactComponentIdentity) . TrackedUnicode.nfkcCasefold)
+                    (splitTrackedPath normalizedPath) ->
+                    Just
+                        TrackedArtifactDiagnostic
+                            { trackedDiagnosticCode = "TRACKED_ARTIFACT_FORBIDDEN"
+                            , trackedDiagnosticSeverity = "error"
+                            , trackedDiagnosticPath = normalizedPath
+                            , trackedDiagnosticDetails = details entry Nothing
+                            }
+                | otherwise -> Nothing
+    details entry problem =
+        TrackedArtifactDiagnosticDetails
+            { trackedDiagnosticOrdinal = trackedEntryOrdinal entry
+            , trackedDiagnosticEntryKind = trackedEntryKind entry
+            , trackedDiagnosticProblem = problem
+            }
+
+normalizeTrackedArtifactPath :: String -> Either String String
+normalizeTrackedArtifactPath path
+    | null path = Left "EMPTY"
+    | not (null (drop 512 path)) = Left "TOO_LONG"
+    | TrackedUnicode.nfc normalized /= normalized = Left "NON_NFC"
+    | head normalized == '/' = Left "ABSOLUTE"
+    | driveQualified normalized = Left "DRIVE_QUALIFIED"
+    | any null segments = Left "EMPTY_SEGMENT"
+    | any unsafeTrackedArtifactCharacter normalized = Left "UNSAFE_CHARACTER"
+    | otherwise =
+        case listToMaybe (mapMaybe trackedArtifactSegmentProblem segments) of
+            Just problem -> Left problem
+            Nothing -> Right normalized
+  where
+    normalized = map (\character -> if character == '\\' then '/' else character) path
+    segments = splitTrackedPath normalized
+
+driveQualified :: String -> Bool
+driveQualified (drive : ':' : _) = asciiAlpha drive
+driveQualified _ = False
+
+asciiAlpha :: Char -> Bool
+asciiAlpha character =
+    isAsciiUpper character || isAsciiLower character
+
+unsafeTrackedArtifactCharacter :: Char -> Bool
+unsafeTrackedArtifactCharacter character =
+    ord character < 0x20 || character `elem` ("<>:\"|?*" :: String)
+
+trackedArtifactSegmentProblem :: String -> Maybe String
+trackedArtifactSegmentProblem segment
+    | segment == "." || segment == ".." = Just "DOT_SEGMENT"
+    | last segment == '.' || last segment == ' ' = Just "TRAILING_DOT_OR_SPACE"
+    | Set.member (TrackedUnicode.fullUppercase (takeWhile (/= '.') segment)) windowsReservedBasenames =
+        Just "RESERVED_BASENAME"
+    | otherwise = Nothing
+
+splitTrackedPath :: String -> [String]
+splitTrackedPath value =
+    case break (== '/') value of
+        (segment, []) -> [segment]
+        (segment, _ : rest) -> segment : splitTrackedPath rest
+
+trackedArtifactDiagnosticSortKey
+    :: TrackedArtifactDiagnostic
+    -> (String, String, String)
+trackedArtifactDiagnosticSortKey diagnostic =
+    ( trackedDiagnosticCode diagnostic
+    , trackedDiagnosticPath diagnostic
+    , intercalate
+        "\0"
+        [ trackedDiagnosticEntryKind details
+        , show (trackedDiagnosticOrdinal details)
+        , fromMaybe "" (trackedDiagnosticProblem details)
+        ]
+    )
+  where
+    details = trackedDiagnosticDetails diagnostic
 
 renderMetadataEncodingError :: MetadataEncodingError -> String
 renderMetadataEncodingError metadataError =
@@ -527,10 +672,11 @@ filterByLanguage requested
 
 resolveDependencies :: [Package] -> IO DG.DirectedGraph
 resolveDependencies packages = do
-    aliasScopes <- buildAliasScopes packages
-    let knownPackageNames = Set.fromList (map packageName packages)
+    resolvable <- filterResolvablePackages packages
+    aliasScopes <- buildAliasScopes resolvable
+    let knownPackageNames = Set.fromList (map packageName resolvable)
     dependencyPairs <-
-        forM packages $ \pkg -> do
+        forM resolvable $ \pkg -> do
             manifestDeps <- resolvePackageDeps aliasScopes pkg
             buildDeps <- readBuildToolDeps knownPackageNames pkg
             pure (pkg, sort (nub (manifestDeps ++ buildDeps)))
@@ -545,9 +691,51 @@ resolveDependencies packages = do
             DG.empty
             dependencyPairs
 
+filterResolvablePackages :: [Package] -> IO [Package]
+filterResolvablePackages packages = do
+    haskellEligibility <-
+        forM packages $ \pkg ->
+            if packageLanguage pkg == "haskell"
+                then do
+                    entries <- listDirectory (packagePath pkg)
+                    let manifests =
+                            [ entry
+                            | entry <- entries
+                            , map toLower (takeExtension entry) == ".cabal"
+                            ]
+                    pure (packageName pkg, length manifests == 1)
+                else pure (packageName pkg, True)
+    dartNames <-
+        forM packages $ \pkg ->
+            if packageLanguage pkg == "dart"
+                then do
+                    names <- readPubspecNames (packagePath pkg)
+                    pure [(name, packageName pkg) | name <- names]
+                else pure []
+    let dartNameOwners =
+            Map.fromListWith (++)
+                [ (name, [identity])
+                | (name, identity) <- concat dartNames
+                ]
+    let ambiguousDartIdentities =
+            Set.fromList
+                [ identity
+                | owners <- Map.elems dartNameOwners
+                , length (nub owners) > 1
+                , identity <- owners
+                ]
+    let eligibleHaskell = Map.fromList haskellEligibility
+    pure
+        [ pkg
+        | pkg <- packages
+        , Map.findWithDefault True (packageName pkg) eligibleHaskell
+        , packageName pkg `Set.notMember` ambiguousDartIdentities
+        ]
+
 buildAliasScopes :: [Package] -> IO (Map String (Map String String))
-buildAliasScopes packages =
-    foldM registerAlias Map.empty packages
+buildAliasScopes packages = do
+    registrations <- foldM registerAlias Map.empty packages
+    pure (Map.map (Map.mapMaybe selectIdentity) registrations)
   where
     registerAlias scopes pkg = do
         aliases <- packageAliases pkg
@@ -556,15 +744,17 @@ buildAliasScopes packages =
         let updatedScope =
                 foldl
                     (\aliasMap alias ->
-                        Map.insertWith preferPackageIdentity alias (packageName pkg) aliasMap
+                        Map.insertWith (++) alias [packageName pkg] aliasMap
                     )
                     scopeMap
                     aliases
         pure (Map.insert scope updatedScope scopes)
 
-    preferPackageIdentity newIdentity existingIdentity
-        | isProgramIdentity existingIdentity && not (isProgramIdentity newIdentity) = newIdentity
-        | otherwise = existingIdentity
+    selectIdentity identities =
+        case (nub (filter (not . isProgramIdentity) identities), nub (filter isProgramIdentity identities)) of
+            ([packageIdentity], _) -> Just packageIdentity
+            ([], [programIdentity]) -> Just programIdentity
+            _ -> Nothing
 
     isProgramIdentity identity =
         case wordsBy (== '/') identity of
@@ -1112,10 +1302,11 @@ readCabalDependencyTokens pkg = do
                 | entry <- entries
                 , map toLower (takeExtension entry) == ".cabal"
                 ]
-    fmap (nub . concat) $
-        forM cabalPaths $ \path -> do
+    case cabalPaths of
+        [path] -> do
             contents <- readFileStrict path
             pure (cabalDependencyTokens contents)
+        _ -> pure []
 
 cabalDependencyTokens :: String -> [String]
 cabalDependencyTokens = collect False . lines

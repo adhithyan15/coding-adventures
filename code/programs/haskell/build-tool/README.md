@@ -9,6 +9,16 @@ dependencies from package manifests, hashes package inputs for incremental
 builds, uses git diff information to narrow the build set, and executes
 `BUILD` scripts in dependency order.
 
+Tracked-artifact validation is a pure adapter over caller-supplied snapshots.
+It rejects unsafe repository paths and every exact, case, or Unicode
+compatibility alias of a `node_modules` component. Invalid paths are redacted
+to `repository`; safe forbidden paths retain slash-normalized spelling, and
+diagnostics use Unicode-scalar ordering. The implementation embeds the exact
+Unicode 17.0.0 NFC, NFKC, full-fold, NFKC-fold, and full-uppercase tables, so
+results do not depend on GHC's host Unicode version. All five shared neutral
+fixtures and every official Unicode normalization and casing vector are
+exercised with an isolated, explicitly pinned GHC 9.4.8/runghc pair.
+
 Lua rockspec metadata is read as raw bytes and decoded as strict UTF-8 before
 dependency resolution. Malformed bytes fail closed with package and
 repository-relative manifest identity:

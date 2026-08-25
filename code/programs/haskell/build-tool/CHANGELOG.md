@@ -6,6 +6,13 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- A pure tracked-artifact snapshot validator consuming all five shared neutral
+  cases, with hostile-path redaction, scalar-bounded and scalar-ordered
+  diagnostics, exact problem precedence, inert entry metadata, and pinned
+  Unicode 17 alias and Windows-reserved-basename handling.
+- Generated, source-embedded Unicode 17.0.0 NFC, NFKC, full-fold, NFKC-fold,
+  and full-uppercase tables plus the Unicode License v3 notice and a required
+  isolated GHC 9.4.8 official-vector CI check.
 - Shared valid and invalid Lua rockspec fixture coverage, typed
   `METADATA_INVALID_UTF8` diagnostics, representative malformed-sequence
   checks, literal U+FFFD coverage, and front-door exit-code validation.
@@ -49,6 +56,9 @@ All notable changes to this package will be documented in this file.
 
 ### Changed
 
+- Keep ambiguous multi-Cabal roots and duplicate Dart manifest-name roots out
+  of the dependency graph, restoring the already-registered shared resolver
+  fixture guarantees exercised by the complete package test suite.
 - Read rockspecs as raw bytes and decode strict UTF-8 before dependency
   resolution, with repository-relative diagnostics and no checkout-root leak.
 - Force existing lazy text reads to EOF before parsing so Windows file handles
