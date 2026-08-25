@@ -6470,6 +6470,17 @@ credential, diff, production-authority, and state-DAG checks pass. Broader
 formatter, Ruff, MyPy, and `dotnet format` probes reproduce only pre-existing
 untouched baseline findings; `dotnet format` does not support F#.
 
+Ready-for-review PR #12644 opened from clean independently reviewed head
+`e317ff99b3e53f3d32325136a677da392242e50c` after a normal first push. The
+branch was based on exact `origin/main`
+`ee13dca795810c618dcbfce660dd707838a8e5ef`; later package-neutral main commits
+have zero changed-path overlap and leave GitHub mergeable, so no further rebase
+or force push is appropriate. Immediately before publication, six live PRs had
+zero exact overlap across all 19 changed paths, and the target branch and PR
+were absent. GitHub reports the PR non-draft and mergeable while required checks
+are queued or in progress. Auto-merge remains disabled until every required
+check is terminal and acceptable.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
