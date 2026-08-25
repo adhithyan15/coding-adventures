@@ -154,6 +154,23 @@ describe("real curriculum", () => {
       /Module 12.*retroflex lateral.*contrasts it with ல.*six movements.*three pen-down runs.*1.?3.*4.?5.*movement 6/i,
     );
 
+    const tamilDentalNa = scripts.tamil!.letters.find((entry) => entry.glyph === "ந")!;
+    expect(tamilDentalNa.sound).toBe("na");
+    expect(tamilDentalNa.penLifts).toBe(2);
+    expect(tamilDentalNa.strokeOrder).toHaveLength(6);
+    expect(tamilDentalNa.strokeOrder?.[1]).toMatch(/top bar to the right.*lift once/i);
+    expect(tamilDentalNa.strokeOrder?.[3]).toMatch(/middle upright straight down.*lift a second time/i);
+    expect(tamilDentalNa.strokeOrder?.[5]).toMatch(/sweep left.*below-baseline tail/i);
+    expect(tamilDentalNa.strokeOrderSource?.url).toBe(
+      "https://sites.la.utexas.edu/tamilscript/files/2009/08/hw_lettersinstructions.pdf",
+    );
+    expect(tamilDentalNa.strokeOrderSource?.citation).toMatch(
+      /Tamil Script Learners Manual.*Appendix I.*Frame 5.*ந.*University of Texas at Austin.*p\. 193/i,
+    );
+    expect(tamilDentalNa.strokeOrderSource?.variation).toMatch(
+      /Module 5.*voiced dental nasal.*extended final curve may be omitted.*six movements.*three pen-down runs.*1.?2.*3.?4.*5.?6/i,
+    );
+
     const tamilEe = scripts.tamil!.marks!.find((mark) => mark.mark === "ே")!;
     expect(tamilEe.compositionOrder).toEqual([
       "in handwriting, write the ē vowel sign to the left before the primary consonant",

@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Please",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:ea7959a569399c22",
+  "sourceHash": "fnv1a64:7c72931baba25ce5",
   "lessons": [
     {
       "id": "TA-C08-tayavuseytu",
@@ -706,7 +706,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:78499275c22a8e65",
+      "sourceHash": "fnv1a64:bedfe07a6787c3c1",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -766,19 +766,15 @@
             },
             {
               "kind": "speech",
-              "text": "a straight top bar."
+              "text": "a left upright joined to the top bar."
             },
             {
               "kind": "speech",
-              "text": "a vertical on the left."
+              "text": "a separately started middle upright."
             },
             {
               "kind": "speech",
-              "text": "a second vertical in the middle."
-            },
-            {
-              "kind": "speech",
-              "text": "a right stroke that curls below the baseline and sweeps left into a descender."
+              "text": "a separately started right bowl that curls below the baseline and sweeps left into a descender."
             },
             {
               "kind": "speech",
@@ -793,27 +789,27 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "1. start at the lower-left tail and sweep around the low bowl to its upper junction."
+              "text": "1. start at the lower left and draw the left upright upward."
             },
             {
               "kind": "speech",
-              "text": "2. without lifting, climb to the top and carry left along the bar to the first descent."
+              "text": "2. without lifting, carry the top bar to the right — then lift once."
             },
             {
               "kind": "speech",
-              "text": "3. without lifting, draw the first upright straight down — then lift once."
+              "text": "3. set the pen at the top-right junction and make the short return left to the middle upright."
             },
             {
               "kind": "speech",
-              "text": "4. set the pen at the bottom of the adjacent middle upright and rise to the top."
+              "text": "4. without lifting, draw the middle upright straight down — then lift a second time."
             },
             {
               "kind": "speech",
-              "text": "5. without lifting again, carry the top bar to the right edge — then lift a second time."
+              "text": "5. set the pen at the upper junction and descend around the outside of the right bowl."
             },
             {
               "kind": "speech",
-              "text": "6. set the pen at the upper right curve, descend around it and sweep left into the below-baseline tail — and only now lift."
+              "text": "6. without lifting, turn through the bottom and sweep left into the below-baseline tail — and only now lift."
             },
             {
               "kind": "speech",
@@ -821,7 +817,7 @@
             },
             {
               "kind": "speech",
-              "text": "Stroke order is one attested teaching order, not a national standard — Tamil handwriting is taught with school-to-school variation. Source: Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 12, ந (Univ. of Texas at Austin), p. 195."
+              "text": "Stroke order is one attested teaching order, not a national standard — Tamil handwriting is taught with school-to-school variation. Module 5 notes that the extended final curve may be omitted. Source: Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 5, ந (University of Texas at Austin), p. 193."
             }
           ]
         },

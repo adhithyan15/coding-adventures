@@ -3163,10 +3163,10 @@ describe("handwriting ductus", () => {
     expect(DUCTUS["ண"].strokes.map((stroke) => stroke.segments.length)).toEqual([6, 1]);
   });
 
-  it("ந lifts between its three pen-down runs", () => {
+  it("ந groups Frame 5's six movements into three pen-down runs", () => {
     expect(penLifts(DUCTUS["ந"])).toBe(2);
     expect(DUCTUS["ந"].strokes).toHaveLength(3);
-    expect(DUCTUS["ந"].strokes.map((stroke) => stroke.segments.length)).toEqual([3, 2, 1]);
+    expect(DUCTUS["ந"].strokes.map((stroke) => stroke.segments.length)).toEqual([2, 2, 2]);
   });
 
   it("Persian ا is one downward pen-down run", () => {
@@ -6153,11 +6153,12 @@ describe("handwriting ductus", () => {
     expect(src.variation, "must not present one order as the only order").toMatch(/variation|no single/i);
   });
 
-  it("ந's stroke order traces to Frame 12 and records the Noto adaptation", () => {
+  it("ந's three-run stroke order traces to Frame 5's first row", () => {
     const src = DUCTUS["ந"].source;
     expect(src.url).toContain("tamilscript");
-    expect(src.citation).toMatch(/Appendix I.*Frame 12.*ந/);
-    expect(src.variation).toMatch(/looped handwritten form.*Noto/i);
+    expect(src.citation).toMatch(/Appendix I.*Frame 5.*ந.*p\. 193/);
+    expect(src.variation).toMatch(/Module 5.*dental nasal.*six movements.*three pen-down runs.*1.?2.*3.?4.*5.?6/i);
+    expect(src.variation, "must not present one order as the only order").toMatch(/varies|one attested/i);
   });
 
   it("Persian ا traces to UT Austin's opening right-to-left freehand demonstration", () => {

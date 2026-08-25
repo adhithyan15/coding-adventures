@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+### Fixed - Tamil ந handwriting provenance
+
+- Correct dental **ந** from the unrelated Frame 12 **ள** row to Appendix I
+  Frame 5's first row on page 193.
+- Preserve the source's six numbered directions as three pen-down runs:
+  movements 1–2, 3–4, and 5–6, with two lifts between them.
+- Keep the measured queue at Telugu independent vowel **అ** with 20 affected
+  realizations because this provenance repair does not change record coverage.
+
 ### Added - source-verified Tamil ள
 
 - Add Tamil retroflex lateral **ள** with Appendix I Frame 12's six numbered
@@ -3798,13 +3807,6 @@ the direction of each mover is recorded at the assertion:
   runs: the left spiral, both inner arches, and top bar stay connected through
   six movements, then one lift precedes the separate right upright, matching
   Language Ladder's font-checked path.
-
-### Added - verified Tamil ந handwriting
-
-- Record Frame 12's cited six-movement order for Tamil ந as three pen-down
-  runs adapted to the vendored Noto form: three opening movements stay joined,
-  one lift precedes the middle rise and top bar, and a second precedes the
-  right-hand descent and tail.
 
 ### Added - generated lesson figures
 

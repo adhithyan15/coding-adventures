@@ -1169,8 +1169,8 @@ describe("ந — a real cited three-stroke six-movement filmstrip", () => {
   const strip = ductusFilmstrip(DENTAL_NA, dentalNaOutline);
 
   it("marks the two source-backed lift transitions", () => {
-    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false, true, false, true]);
-    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 1, 1, 2]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, true, false, true, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1, 1, 2, 2]);
   });
 
   it("reports six movements in three strokes with two lifts", () => {
@@ -1179,7 +1179,7 @@ describe("ந — a real cited three-stroke six-movement filmstrip", () => {
     expect(strip.summary).toBe("3 strokes · 2 pen lifts · 6 movements");
   });
 
-  it("keeps both completed strokes visible during the right-hand descent", () => {
+  it("keeps both completed strokes visible during the right-bowl tail", () => {
     const last = strip.frames[5];
     const done = byTag(last, "path").filter((path) => path.attrs.class === "ductus__done");
     const pen = byTag(last, "path").find((path) => path.attrs.class === "ductus__pen")!;

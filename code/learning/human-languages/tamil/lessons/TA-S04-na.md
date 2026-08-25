@@ -46,28 +46,29 @@ The third n, and the one that finally looks different: no spiral loop at all. �
 
 What it is made of:
 
-- a straight top bar
-- a vertical on the left
-- a second vertical in the middle
-- a right stroke that curls below the baseline and sweeps left into a descender
+- a left upright joined to the top bar
+- a separately started middle upright
+- a separately started right bowl that curls below the baseline and sweeps left into a descender
 
 நன்றி — *thank you* — opens with it, and so does நான்.
 
 ## Writing: ந
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-DRIZZLE-04] -->
 
-- **1.** start at the lower-left tail and sweep around the low bowl to its upper junction
-- **2.** without lifting, climb to the top and carry left along the bar to the first descent
-- **3.** without lifting, draw the first upright straight down — then lift once
-- **4.** set the pen at the bottom of the adjacent middle upright and rise to the top
-- **5.** without lifting again, carry the top bar to the right edge — then lift a second time
-- **6.** set the pen at the upper right curve, descend around it and sweep left into the below-baseline tail — and only now lift
+- **1.** start at the lower left and draw the left upright upward
+- **2.** without lifting, carry the top bar to the right — then lift once
+- **3.** set the pen at the top-right junction and make the short return left to the middle upright
+- **4.** without lifting, draw the middle upright straight down — then lift a second time
+- **5.** set the pen at the upper junction and descend around the outside of the right bowl
+- **6.** without lifting, turn through the bottom and sweep left into the below-baseline tail — and only now lift
 
 **Pen lifts: 2.** The pen comes up 2 times and no more.
 
 > Stroke order is one attested teaching order, not a national standard —
-> Tamil handwriting is taught with school-to-school variation. Source:
-> Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 12, ந (Univ. of Texas at Austin), p. 195.
+> Tamil handwriting is taught with school-to-school variation. Module 5 notes
+> that the extended final curve may be omitted. Source: Sankaran Radhakrishnan,
+> Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 5, ந
+> (University of Texas at Austin), p. 193.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-DRIZZLE-04] -->
