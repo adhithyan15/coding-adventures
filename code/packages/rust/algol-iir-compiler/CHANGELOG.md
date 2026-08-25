@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.189.0 — 2026-08-25 — integer identity selector chains
+
+Bounded static while analysis now recognizes left-associative integer identity
+chains composed from additive zero or multiplicative one. Mixed-precedence
+chains remain structural, unsupported terms fail closed, and the ten-level
+selector-dependency cap is unchanged.
+
 ## 0.188.0 — 2026-08-25 — even boolean negation selector writes
 
 Bounded static while analysis now recognizes even chains of unary `not` as

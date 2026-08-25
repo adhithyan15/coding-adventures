@@ -5959,26 +5959,59 @@ impl Compiler {
         {
             return self.integer_identity_expression_preserves_name(child, name);
         }
-        let [Piece::Node(lhs), Piece::Op(op), Piece::Node(rhs)] = sequence.as_slice() else {
+        if sequence.len() < 3 || sequence.len().is_multiple_of(2) {
+            return false;
+        }
+        let Piece::Node(first) = &sequence[0] else {
             return false;
         };
-        let lhs_preserves = self.integer_identity_expression_preserves_name(lhs, name);
-        let rhs_preserves = self.integer_identity_expression_preserves_name(rhs, name);
-        let lhs_literal = literal_integer_value(lhs);
-        let rhs_literal = literal_integer_value(rhs);
-        match op.as_str() {
-            "+" => {
-                (lhs_preserves && rhs_literal == Some(0))
-                    || (rhs_preserves && lhs_literal == Some(0))
-            }
-            "-" => lhs_preserves && rhs_literal == Some(0),
-            "*" => {
-                (lhs_preserves && rhs_literal == Some(1))
-                    || (rhs_preserves && lhs_literal == Some(1))
-            }
-            "div" => lhs_preserves && rhs_literal == Some(1),
-            _ => false,
+        let operators: Vec<&str> = sequence
+            .iter()
+            .skip(1)
+            .step_by(2)
+            .filter_map(|piece| match piece {
+                Piece::Op(op) => Some(op.as_str()),
+                Piece::Node(_) => None,
+            })
+            .collect();
+        if operators.len() * 2 + 1 != sequence.len() {
+            return false;
         }
+        let neutral = if operators.iter().all(|op| matches!(*op, "+" | "-")) {
+            0
+        } else if operators.iter().all(|op| matches!(*op, "*" | "div")) {
+            1
+        } else {
+            return false;
+        };
+        let mut preserves = self.integer_identity_expression_preserves_name(first, name);
+        let mut is_neutral = literal_integer_value(first) == Some(neutral);
+        for index in (1..sequence.len()).step_by(2) {
+            let (Piece::Op(op), Piece::Node(rhs)) = (&sequence[index], &sequence[index + 1]) else {
+                return false;
+            };
+            let rhs_preserves = self.integer_identity_expression_preserves_name(rhs, name);
+            let rhs_is_neutral = literal_integer_value(rhs) == Some(neutral);
+            if preserves {
+                if !rhs_is_neutral {
+                    return false;
+                }
+            } else if is_neutral {
+                if op == "+" || op == "*" {
+                    if rhs_preserves {
+                        preserves = true;
+                        is_neutral = false;
+                    } else if !rhs_is_neutral {
+                        return false;
+                    }
+                } else if !rhs_is_neutral {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+        preserves
     }
 
     fn real_unit_identity_expression_preserves_name(
@@ -10482,6 +10515,11 @@ mod tests {
             "choose * 1",
             "1 * choose",
             "choose div 1",
+            "choose + 0 - 0 + 0",
+            "0 + choose + 0 - 0",
+            "choose * 1 div 1 * 1",
+            "1 * choose * 1 div 1",
+            "0 + choose * 1 div 1 - 0",
         ] {
             compile_source(
                 &format!(
@@ -10501,6 +10539,20 @@ mod tests {
         )
         .expect_err("an integer non-identity write may change the selector dependency");
         assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_integer_non_identity_selector_chains_remain_conservative() {
+        for write in ["choose + 0 + 1", "1 div choose * 1"] {
+            let err = compile_source(
+                &format!(
+                    "begin integer i, n, limit, choose; boolean other; n := 3; limit := 3; choose := 1; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := other; choose := {write} end; print(i + 0.25) end"
+                ),
+                "test",
+            )
+            .expect_err("integer non-identity chains must fail closed");
+            assert!(format!("{err:?}").contains("cannot print a real value"));
+        }
     }
 
     #[test]
