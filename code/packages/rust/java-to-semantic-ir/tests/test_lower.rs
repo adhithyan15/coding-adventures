@@ -1167,6 +1167,69 @@ fn do_while_flag_name_does_not_collide_with_a_same_named_user_variable() {
     }
 }
 
+#[test]
+fn do_while_flag_name_does_not_collide_with_a_local_the_body_itself_declares() {
+    // Caught by a THIRD round of /security-review, on the fix for the
+    // second round's finding above: the collision check there only
+    // consulted `lookup_local` (the *ambient* scope active before the
+    // body is lowered), which can never see a name the do-while body
+    // itself declares -- by the time the check runs, `lower_body`'s own
+    // scope for the body has already been pushed *and popped* (the
+    // correct, real Java scope boundary). The flag-clear assignment this
+    // desugaring appends lives *inside* that body's own top level,
+    // though, so a same-named local declared there is exactly the case
+    // that reaches it. Under any backend with real block scoping (unlike
+    // this crate's own Python execution-proof harness, whose flat
+    // function-level scoping doesn't reproduce the bug), the appended
+    // flag-clear would resolve to the body's own shadowing local instead
+    // of the outer flag, so the outer flag would never actually clear --
+    // an infinite loop (`flag || C` staying `true` forever), not just a
+    // corrupted value. `do_while_counter` starts at 0 and this test's
+    // body declares exactly `__do_while_0`, so the fix must pick
+    // `__do_while_1` (or later) for the actual flag; `body_declares_name`
+    // is the check added to catch this specific case.
+    let m = compile_ok(&wrap(
+        "int y = 0; do { boolean __do_while_0 = true; y = y + 1; } while (y < 3); y;",
+    ));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::ExprStmt {
+            expr: Expr::Block(block),
+            ..
+        } => {
+            let flag_name = match &block.stmts[0] {
+                Stmt::LetStarBinding { name, .. } => name.clone(),
+                other => panic!("expected LetStarBinding flag declaration, got {other:?}"),
+            };
+            assert_ne!(
+                flag_name, "__do_while_0",
+                "flag must not reuse the name the body itself declares"
+            );
+            match &block.stmts[1] {
+                Stmt::While { body, .. } => {
+                    // The body's own `__do_while_0` declaration survives
+                    // completely unchanged -- untouched value, untouched
+                    // name -- and the appended flag-clear at the end
+                    // targets the *different* synthetic name instead.
+                    match &body.stmts[0] {
+                        Stmt::LetStarBinding { name, value: Expr::BoolLit { value: true, .. }, .. } => {
+                            assert_eq!(name, "__do_while_0");
+                        }
+                        other => panic!("expected the body's own LetStarBinding(BoolLit(true)) untouched, got {other:?}"),
+                    }
+                    match body.stmts.last() {
+                        Some(Stmt::Assign { name, value: Expr::BoolLit { value: false, .. }, .. }) => {
+                            assert_eq!(name, &flag_name);
+                        }
+                        other => panic!("expected the appended flag-clear Assign to target the flag name, got {other:?}"),
+                    }
+                }
+                other => panic!("expected While, got {other:?}"),
+            }
+        }
+        other => panic!("expected ExprStmt(Block), got {other:?}"),
+    }
+}
+
 // ── M2a: switch / break / continue have no SIR IR yet ───────────────────
 
 #[test]

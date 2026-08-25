@@ -56,7 +56,7 @@ All notable changes to the `java-to-semantic-ir` crate will be documented in thi
   Every occurrence is rejected with a clean error via the same
   unhandled-statement-kind catch-all every other unsupported statement
   hits — no special-casing was needed to guarantee this.
-- 24 new tests in `tests/test_lower.rs` (if/else shape, brace-less
+- 25 new tests in `tests/test_lower.rs` (if/else shape, brace-less
   bodies, boolean-condition requirements, block-scope leak prevention in
   both directions, while/do-while shape, every compound-assignment
   operator including the `/=` div_trunc/div_true selection and `+=` on
@@ -117,6 +117,30 @@ All notable changes to the `java-to-semantic-ir` crate will be documented in thi
   `lower_do_while_statement`-level doc comments still described the
   pre-fix "clone the body" shape after the code had moved on — both
   fixed in the same pass.
+- **Caught by a third round of `/security-review`, on the second round's
+  own fix (HIGH, infinite-loop DoS)**: the collision check added above
+  only consulted `lookup_local` — the *ambient* scope active before the
+  do-while's body is lowered — which can never see a name the body
+  *itself* declares: by the time the check runs, `lower_body`'s own
+  scope for the body has already been pushed and popped again (the
+  correct real Java scope boundary). The appended flag-clear assignment
+  lives *inside* that body's own top level, though, so a same-named
+  local the body declares directly (`do { boolean __do_while_0 = true;
+  … } while (…);`) is exactly the case that reaches it. Under any
+  backend with real block scoping, the appended flag-clear would resolve
+  to the body's own shadowing local instead of the outer flag, so the
+  outer flag would never actually clear — `flag || C` stays `true`
+  forever: an infinite loop, not just a corrupted value (this crate's
+  own Python execution-proof harness doesn't manifest it, since Python
+  has no real block scoping — a backend-specific accident, not a
+  property of the emitted IR, which genuinely violated its own
+  documented scoping invariant). Fixed with a second check,
+  `body_declares_name`, scanning the already-lowered body's own
+  top-level statements (deliberately shallow — a *nested* sub-block's
+  own declarations live in a distinct, already-popped scope of their
+  own, so they can't reach the append point this check protects).
+  `do_while_flag_name_does_not_collide_with_a_local_the_body_itself_declares`
+  is the regression test.
 - **Caught by the crate's own test suite while writing this milestone**
   (not `/security-review`): two tests from M1's own suite
   (`compound_assignment_is_unsupported`, `postfix_increment_is_unsupported`)

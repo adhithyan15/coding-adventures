@@ -686,17 +686,42 @@ impl Lowerer {
         // do-while statements in the same function must not share a
         // flag. It is never *declared* via `declare_local` (real Java
         // source can never look this name up), but it still must not
-        // *collide* with a real Java local already in scope at this
-        // point — `__do_while_0` is a legal Java identifier, so a
-        // program that happens to declare a variable by that exact name
-        // is a real, reachable case (caught by `/security-review`: an
-        // earlier version skipped this check entirely, silently
-        // shadowing and corrupting the user's own same-named variable
-        // instead of erroring or picking a different name). Keep
-        // incrementing past any name already visible in scope.
+        // *collide* with a real Java local visible at either of the two
+        // points it's referenced — `__do_while_0` is a legal Java
+        // identifier, so a program that happens to declare a variable by
+        // that exact name is a real, reachable case, checked against
+        // two different scopes for two different reasons (both caught
+        // by `/security-review`, in two separate rounds — an earlier
+        // version checked neither):
+        //  - `lookup_local` — the *ambient* scope active right here,
+        //    before `S` is lowered — covers a same-named local declared
+        //    in an *enclosing* scope (the flag declaration and its
+        //    `flag || C` reference both live in that ambient scope).
+        //  - `body_declares_name` — `S`'s own *top-level* statements
+        //    (already lowered into `body.stmts` above) — covers a
+        //    same-named local `S` declares directly (not nested inside
+        //    a further sub-block of `S`, which would be a distinct,
+        //    already-popped inner scope of its own): the appended
+        //    `__do_while_N = false;` flag-clear lives at exactly that
+        //    top level, so it's the one place body-local collisions can
+        //    actually reach it. `lookup_local` alone can't see this: by
+        //    the time this code runs, `lower_body`'s own scope for `S`
+        //    has already been pushed *and popped* (that's the correct,
+        //    real Java scope boundary — a `do`/`while` body's own locals
+        //    must not leak past it), so a name `S` declares is already
+        //    gone from `self.locals` again. Missing this check would
+        //    leave the flag-clear assignment resolving to `S`'s own
+        //    shadowing local under any backend with real block scoping
+        //    (unlike this crate's own Python execution-proof harness,
+        //    whose flat function-level scoping happens not to manifest
+        //    the bug for the cases tried) — silently leaving the outer
+        //    flag never cleared, so `flag || C` never goes false: an
+        //    infinite loop, the same DoS-by-nontermination class as the
+        //    exponential-blowup finding this desugaring already fixed
+        //    once, reached a different way.
         let mut flag_name = format!("__do_while_{}", self.do_while_counter);
         self.do_while_counter += 1;
-        while self.lookup_local(&flag_name).is_some() {
+        while self.lookup_local(&flag_name).is_some() || body_declares_name(&body, &flag_name) {
             flag_name = format!("__do_while_{}", self.do_while_counter);
             self.do_while_counter += 1;
         }
@@ -1910,6 +1935,19 @@ fn kinds_compatible_for_compare(a: Kind, b: Kind) -> bool {
         (a, b),
         (Kind::Bool, Kind::Bool) | (Kind::Int | Kind::Float, Kind::Int | Kind::Float)
     )
+}
+
+/// Does `block`'s own *top-level* statement list declare a local named
+/// `name`? Deliberately shallow — does not recurse into a nested
+/// sub-block's own statements, since those live in a distinct,
+/// already-scope-popped-by-the-time-this-runs frame of their own (see
+/// `lower_do_while_statement`'s own doc comment for why only the
+/// top level matters for its particular collision check).
+fn body_declares_name(block: &Block, name: &str) -> bool {
+    block.stmts.iter().any(|s| match s {
+        Stmt::LetBinding { name: n, .. } | Stmt::LetStarBinding { name: n, .. } => n == name,
+        _ => false,
+    })
 }
 
 /// The [`Kind`] of an `Expr` freshly produced by `lower_literal` — only
