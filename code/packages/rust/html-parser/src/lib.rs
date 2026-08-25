@@ -7350,7 +7350,13 @@ impl HtmlParser {
                     "end tag `</form>` did not match an open element",
                 )
             };
-            self.diagnostics.push(ParserDiagnostic::new(code, message));
+            let diagnostic = ParserDiagnostic::new(code, message);
+            self.diagnostics
+                .push(if code == "unexpected-form-end-tag-outside-scope" {
+                    diagnostic.at_emission(self.current_token_emission_position)
+                } else {
+                    diagnostic
+                });
             return;
         }
         if self.current_namespace().is_some()
@@ -8136,10 +8142,13 @@ impl HtmlParser {
         }
 
         let Some(index) = self.open_html_element_in_scope_index("form") else {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-form-end-tag-outside-scope",
-                "end tag `</form>` targeted a form outside ordinary scope",
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-form-end-tag-outside-scope",
+                    "end tag `</form>` targeted a form outside ordinary scope",
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             return;
         };
 
@@ -8178,10 +8187,13 @@ impl HtmlParser {
                 return;
             }
             if name == "form" && self.has_table_context_above(index) {
-                self.diagnostics.push(ParserDiagnostic::new(
-                    "unexpected-form-end-tag-outside-scope",
-                    "end tag `</form>` targeted a form outside ordinary scope",
-                ));
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-form-end-tag-outside-scope",
+                        "end tag `</form>` targeted a form outside ordinary scope",
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
                 self.form_element_pointer_set = false;
                 self.open_elements.remove(index);
                 return;
@@ -28110,6 +28122,17 @@ mod tests {
         .at_emission(Some(end_tag_position_at(source, "form", occurrence)))
     }
 
+    fn unexpected_form_end_tag_outside_scope(
+        source: &str,
+        occurrence: usize,
+    ) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-form-end-tag-outside-scope",
+            "end tag `</form>` targeted a form outside ordinary scope",
+        )
+        .at_emission(Some(end_tag_position_at(source, "form", occurrence)))
+    }
+
     fn nested_anchor_start_tag(source: &str, occurrence: usize) -> ParserDiagnostic {
         ParserDiagnostic::new(
             "nested-anchor-start-tag",
@@ -33975,10 +33998,7 @@ mod tests {
                     .collect::<Vec<_>>(),
                 vec![
                     generic_foreign_end_tag_mismatch(&source, "form"),
-                    ParserDiagnostic::new(
-                        "unexpected-form-end-tag-outside-scope",
-                        "end tag `</form>` targeted a form outside ordinary scope"
-                    ),
+                    unexpected_form_end_tag_outside_scope(&source, 0),
                 ],
                 "source {source:?}: {:?}",
                 output.parser_diagnostics
@@ -34104,7 +34124,10 @@ mod tests {
             output.parser_diagnostics[0],
             generic_foreign_end_tag_mismatch(source, "form")
         );
-        assert_eq!(output.parser_diagnostics[1].position, None);
+        assert_eq!(
+            output.parser_diagnostics[1],
+            unexpected_form_end_tag_outside_scope(source, 0)
+        );
         assert!(source.len() > source.chars().count());
 
         let eof_source = "<!doctype html><form><math><mi></form";
@@ -34148,6 +34171,12 @@ mod tests {
             .find(|diagnostic| diagnostic.code == "unexpected-end-tag-in-foreign-content")
             .unwrap();
         assert_eq!(diagnostic.position, None);
+        let form_scope_diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-form-end-tag-outside-scope")
+            .unwrap();
+        assert_eq!(form_scope_diagnostic.position, None);
     }
 
     #[test]
@@ -35393,12 +35422,32 @@ mod tests {
                     .filter(|diagnostic| {
                         diagnostic.code == "unexpected-form-end-tag-outside-scope"
                     })
-                    .count(),
-                1,
+                    .cloned()
+                    .collect::<Vec<_>>(),
+                vec![unexpected_form_end_tag_outside_scope(source, 0)],
                 "source {source:?}: {:?}",
                 output.parser_diagnostics
             );
         }
+
+        let repeated_source = "<!doctype html><form></form><form><table></form>";
+        let repeated = parse_html_with_diagnostics(repeated_source).unwrap();
+        assert!(repeated.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic == &unexpected_form_end_tag_outside_scope(repeated_source, 1)
+        }));
+
+        let unicode_source = "<!doctype html><!--é-->\r\n<form><object></form>";
+        let unicode = parse_html_with_diagnostics(unicode_source).unwrap();
+        assert!(unicode.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic == &unexpected_form_end_tag_outside_scope(unicode_source, 0)
+        }));
+        assert!(unicode_source.len() > unicode_source.chars().count());
+
+        let incomplete =
+            parse_html_with_diagnostics("<!doctype html><form><table></form").unwrap();
+        assert!(incomplete.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-form-end-tag-outside-scope"
+        }));
 
         let output = parse_html_with_diagnostics(
             "<!doctype html><form id=outer><table></form><form id=inner></table></form>",
@@ -35432,6 +35481,32 @@ mod tests {
         assert!(fragment.parser_diagnostics.iter().all(|diagnostic| {
             diagnostic.code != "unexpected-form-end-tag-outside-scope"
         }));
+
+        let mut unpositioned = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        for token in [
+            Token::StartTag {
+                name: "form".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "table".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::EndTag {
+                name: "form".to_string(),
+            },
+            Token::Eof,
+        ] {
+            unpositioned.process_token(token);
+        }
+        let diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-form-end-tag-outside-scope")
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
     }
 
     #[test]
