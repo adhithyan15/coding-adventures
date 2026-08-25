@@ -937,6 +937,39 @@ pub(crate) fn attach_attachment(
     Ok((next, attachment_id))
 }
 
+/// Delete the item `expected_revision` currently belongs to, whether it has
+/// one current candidate or several.
+///
+/// `expected_revision` only has to name *a* candidate that is current right
+/// now — proof the caller observed live state, the same freshness contract
+/// [`replace_item`] and [`restore_item`] use their own `expected_revision`
+/// for. It no longer has to be the item's *only* candidate: every
+/// currently-live candidate becomes eligible, and deleting one deletes the
+/// whole item, closed conflict included.
+///
+/// # Why this is safe to relax
+///
+/// A tombstone carries only `item_id` and `deleted_at_ms` — VLT-PM05 §13.2's
+/// escape hatch already rests entirely on that shape, because it means
+/// deletion never calls `encode_any_record` and therefore never touches a
+/// candidate's payload, however unreadable or oversized that payload is.
+/// That property does not care how many candidates are current. What
+/// changes here is only the tombstone's *causal parents*: instead of the
+/// one revision this function used to require alone, every current
+/// candidate — live or already-tombstoned — is named, which is exactly the
+/// multi-parent shape [`resolve_item_conflict`] already uses to fold a
+/// conflict into one resolution. A delete of a conflicted item is that same
+/// fold, just landing on a tombstone instead of a chosen candidate.
+///
+/// # What still fails closed
+///
+/// If no current candidate is live — the sole candidate is already a
+/// tombstone, or (reachable only via a concurrent double-delete) every
+/// candidate in a multi-way conflict is — there is nothing live to delete,
+/// and this returns `ConflictRequired` exactly as it always has for a lone
+/// tombstoned candidate. This is unrelated to VLT-PM05 §13.8's fix: that gap
+/// is about a *live* record this crate cannot fully handle, not about a
+/// record that is already gone.
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn delete_item(
     active: &ActiveStateV1,
@@ -962,14 +995,16 @@ pub(crate) fn delete_item(
                 .any(|candidate| candidate.revision_id() == expected_revision)
         })
         .ok_or(ApplicationError::NotFound)?;
-    let [candidate] = candidates.as_slice() else {
-        return Err(ApplicationError::ConflictRequired);
-    };
-    if candidate.revision_id() != expected_revision
-        || !matches!(candidate.state(), ItemState::Live(_))
+    if !candidates
+        .iter()
+        .any(|candidate| matches!(candidate.state(), ItemState::Live(_)))
     {
         return Err(ApplicationError::ConflictRequired);
     }
+    let causal_parents = candidates
+        .iter()
+        .map(ItemCandidate::revision_id)
+        .collect::<BTreeSet<_>>();
 
     let publication = prepare_item_publication(
         active,
@@ -981,7 +1016,7 @@ pub(crate) fn delete_item(
             item_id: *item_id,
             deleted_at_ms,
         }),
-        &BTreeSet::from([expected_revision]),
+        &causal_parents,
         AuditActionV1::ItemDelete,
         Some(expected_revision),
         wall_time_ms,
