@@ -1894,6 +1894,21 @@
       "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
     },
     {
+      "id": "adj.literacy.k2.silent_letter_sound",
+      "title": "Recall the single speech sound a silent-letter consonant-cluster spelling represents",
+      "band": "K-2",
+      "domain": "literacy",
+      "competency": "recall",
+      "coverage_roots": ["ccss.ela"],
+      "standards": [],
+      "prerequisites": [],
+      "libraries": ["code/specs/data/adj-facts-stdlib/language/silent-letter-sound.adj"],
+      "modalities": ["text"],
+      "source_cas_hashes": [],
+      "benchmark_paths": [],
+      "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
+    },
+    {
       "id": "adj.literacy.k2.dolch_sight_word_level",
       "title": "Recall which Dolch reading level a high-frequency sight word is first taught at",
       "band": "K-2",

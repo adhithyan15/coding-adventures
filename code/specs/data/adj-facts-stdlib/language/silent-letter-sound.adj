@@ -1,0 +1,103 @@
+% ============================================================================
+% silent-letter-sound — common silent-letter consonant-cluster spellings and
+% the single speech sound each one actually represents (adj-facts-stdlib,
+% LANGUAGE). A K-2 phonics library, grounding ADJ-STDLIB-COVERAGE.md §5.1's
+% "phonics, decoding" Major Gap with a FOURTH UFLI phonics unit, genuinely
+% distinct from `digraph-sound.adj` (a two-letter spelling where BOTH letters
+% contribute to one blended consonant sound), `diphthong-sound.adj` (a glided
+% vowel sound), and `long-vowel-team-sound.adj` (an un-glided long vowel
+% sound).
+% ============================================================================
+% A SILENT LETTER pattern is a consonant cluster where one letter is written
+% but not pronounced at all — "kn" in "know" is not a blend of /k/ and /n/,
+% it is pronounced as the single sound /n/, with the "k" contributing
+% nothing to the spoken word. This is categorically distinct from
+% `digraph-sound.adj`: a consonant digraph (e.g. "sh") spells one consonant
+% sound by BLENDING two letters' influence together; a silent-letter cluster
+% instead spells one consonant sound by DROPPING one letter's sound
+% entirely, the other letter alone carrying the whole pronunciation. It is
+% also distinct from every vowel-pattern table already shipped
+% (`diphthong-sound.adj`, `long-vowel-team-sound.adj`,
+% `r-controlled-vowel-word.adj`) — none of them tables a silent CONSONANT
+% spelling. Recall is a binding query:
+%
+%     ? silent_letter_sound(kn, $Sound)
+%       % n_sound
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `silent_letter_sound(spelling, sound)` carrying the source
+% citation, so the lookup above is the ordinary SLD binding query — the
+% engine returns the sound WITH its source, on the CPU, with zero model
+% calls, and abstains on any spelling not one of these three source-cited
+% patterns. The query also runs BACKWARD — bind a sound and recall which
+% spelling carries it:
+%
+%     ? silent_letter_sound($Sp, r_sound)
+%       % wr
+%
+% DESIGN NOTE — why this table ships as its own file rather than folding
+% into `diphthong-sound.adj`: both tables are sourced from the SAME UFLI
+% page, "Diphthongs and Silent Letters Units (Lessons 95-98)" — but
+% `diphthong-sound.adj`'s own header already explains, in its own design
+% note, why lesson 98 is deliberately NOT a row there: "the page's own
+% heading splits it out as a separate 'Silent Letters Unit', and its own
+% opening paragraph describes it as 'three common silent letter patterns'
+% -- a silent CONSONANT-cluster spelling convention, not a vowel
+% diphthong." This table is the natural completion of that already-flagged
+% exclusion: the page itself states, verbatim, "The Silent Letters Unit
+% only consists of one lesson" — a genuinely separate named UFLI unit
+% (confirmed against UFLI's own official Scope & Sequence PDF, which lists
+% "Silent Letters" as its own line between "Diphthongs" and "Suffixes &
+% Prefixes"), just co-hosted on the same toolbox page as the Diphthongs
+% unit. Reusing `diphthong_sound/2` for this content would misrepresent a
+% silent-consonant pattern as a vowel diphthong; a new predicate keeps each
+% table's own name an honest description of what it grounds.
+%
+% Provenance: quoted verbatim from the University of Florida Literacy
+% Institute (UFLI)'s Foundations Toolbox, "Diphthongs and Silent Letters
+% Units (Lessons 95-98)" page — the SAME page `diphthong-sound.adj` already
+% cites, a different lesson. curl-fetched directly (not just an
+% AI-summarized WebFetch) and confirmed byte-for-byte before writing this
+% file. The page's own prose reads, verbatim: "The Silent Letters Unit only
+% consists of one lesson, but this lesson instructs students on three
+% common silent letter patterns (e.g., kn-, wr-, and -mb). This lesson is
+% designed to build students' accuracy and automaticity in recognizing
+% silent letter patterns. The lesson also builds students' proficiency in
+% reading and spelling words that contain silent letter patterns." Its own
+% lesson table reads, verbatim: "98 kn /n/, wr /r/, mb /m/".
+%
+%     spelling (atom label)   sound (atom label)   lesson concept (verbatim)
+%     -----------------------  --------------------  --------------------------
+%     kn                       n_sound                "kn /n/" (lesson 98)
+%     wr                       r_sound                "wr /r/" (lesson 98)
+%     mb                       m_sound                "mb /m/" (lesson 98)
+%
+% `trust authoritative` — UFLI is a university literacy research center
+% (University of Florida, .edu), the same tier and same source family
+% `digraph-sound.adj`/`diphthong-sound.adj`/`long-vowel-team-sound.adj`
+% already established for this stdlib. A full-tree grep for
+% `row (kn,`/`row (wr,`/`row (mb,` and for `n_sound`/`r_sound`/`m_sound` as
+% atom labels across the whole shipped stdlib (the mandatory duplication
+% check before scoping) found zero hits — confirming this is the FIRST
+% silent-letter content in this stdlib, with no collision against any
+% already-shipped table (the two whole-word hits for "know"/"write" in
+% `dolch-sight-word-level.adj` are unrelated: that table names whole WORDS,
+% never the bare two-letter spellings `kn`/`wr` themselves). A silent-letter
+% pattern not one of these three — e.g. "gh" as in "night" or "b" as in
+% "comb" — is a real silent-letter pattern in English but not one UFLI's own
+% cited lesson names, so a recall on it ABSTAINS rather than inventing a
+% sound. (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table silent_letter_sound {
+    columns spelling, sound
+
+    row (kn, n_sound)
+    row (wr, r_sound)
+    row (mb, m_sound)
+
+    source "The Silent Letters Unit only consists of one lesson, but this lesson instructs students on three common silent letter patterns (e.g., kn-, wr-, and -mb). This lesson is designed to build students' accuracy and automaticity in recognizing silent letter patterns. The lesson also builds students' proficiency in reading and spelling words that contain silent letter patterns. Diphthongs and Silent Letters Units (Lessons 95-98): 98 kn /n/, wr /r/, mb /m/."
+    locator "https://ufli.education.ufl.edu/foundations/toolbox/95-98/"
+    trust authoritative
+}
