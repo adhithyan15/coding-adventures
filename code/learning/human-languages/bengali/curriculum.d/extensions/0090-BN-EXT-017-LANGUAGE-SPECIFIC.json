@@ -1,0 +1,15 @@
+{
+  "id": "BN-EXT-017-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can use the Bengali-specific vocabulary and grammar that support this shared ability.",
+  "prerequisites": [],
+  "lessons": [
+    "BN-C05-bola",
+    "BN-C05-ami-bangla-boli",
+    "BN-C05-kaj-kora",
+    "BN-C05-thaka",
+    "BN-C05-practice"
+  ]
+}

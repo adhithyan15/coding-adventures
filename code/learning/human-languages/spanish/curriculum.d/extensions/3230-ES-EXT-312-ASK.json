@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-312-ASK",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the five things I travel with in Spanish: the clock, the phone, the suitcase, the map and the letter.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C312-reloj",
+    "ES-C312-telefono",
+    "ES-C312-maleta",
+    "ES-C312-mapa",
+    "ES-C312-carta"
+  ]
+}

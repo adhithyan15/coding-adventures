@@ -18,7 +18,13 @@ import {
   type ExamInventory,
 } from "./exam-inventory.js";
 import { parseTaskShapeInventory, type TaskShapeInventory } from "./task-shapes.js";
-import { isSharded, mergeMetaAndList, readMaybeSharded } from "./shard.js";
+import {
+  CURRICULUM_SECTIONS,
+  isSharded,
+  mergeMetaAndList,
+  mergeSectionedShards,
+  readMaybeSharded,
+} from "./shard.js";
 import { CEFR_LEVELS, type CefrLevel } from "./levels.js";
 import {
   parseAssessmentContract,
@@ -235,8 +241,17 @@ export function loadLanguageCurricula(root = defaultCurriculumRoot()): LanguageC
   for (const track of sortedEntries(root)) {
     if (!track.isDirectory()) continue;
     const path = join(root, track.name, "curriculum.json");
-    if (!existsSync(path)) continue;
-    out.push(JSON.parse(readFileSync(path, "utf8")) as LanguageCurriculum);
+    // `|| isSharded`, for the same load-bearing reason as `loadTrackChapters`:
+    // a migrated track's monolith may not be here, and `continue` means "this
+    // track has no authored curriculum", which would drop it from every gate.
+    if (!existsSync(path) && !isSharded(path)) continue;
+    out.push(
+      readMaybeSharded<LanguageCurriculum>(
+        path,
+        (shards) =>
+          mergeSectionedShards(shards, CURRICULUM_SECTIONS) as unknown as LanguageCurriculum,
+      ),
+    );
   }
   return out.sort((left, right) => left.language.localeCompare(right.language));
 }

@@ -1,0 +1,13 @@
+{
+  "id": "GE-PATH-001",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "GE-C01-hallo",
+    "GE-W01-hallo-guided-copy"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "GE-EXT-001-WRITING-START"
+  ]
+}

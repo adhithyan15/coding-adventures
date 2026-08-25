@@ -1,0 +1,15 @@
+{
+  "id": "KA-EXT-50-LEAVE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can take my leave in Kannada and say when I will be back.",
+  "prerequisites": [],
+  "lessons": [
+    "KA-C50-now",
+    "KA-C50-day-after",
+    "KA-C50-journey",
+    "KA-C50-set-out",
+    "KA-C50-farewell"
+  ]
+}

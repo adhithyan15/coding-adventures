@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-037-SE-IMP",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "lessons": [
+    "ES-C52-se-habla"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-037-SE-IMP"
+  ],
+  "after": []
+}

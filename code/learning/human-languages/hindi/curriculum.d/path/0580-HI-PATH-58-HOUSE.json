@@ -1,0 +1,16 @@
+{
+  "id": "HI-PATH-58-HOUSE",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "HI-C58-wall",
+    "HI-C58-roof",
+    "HI-C58-window",
+    "HI-C58-stairs",
+    "HI-C58-sheet"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-58-HOUSE"
+  ],
+  "after": []
+}

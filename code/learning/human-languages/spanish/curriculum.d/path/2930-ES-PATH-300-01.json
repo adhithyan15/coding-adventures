@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-300-01",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "ES-C300-sed",
+    "ES-C300-sueno",
+    "ES-C300-piel",
+    "ES-C300-sangre",
+    "ES-C300-remedio"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-300-CUERPO"
+  ],
+  "after": []
+}

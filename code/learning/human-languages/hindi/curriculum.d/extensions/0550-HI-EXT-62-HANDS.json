@@ -1,0 +1,15 @@
+{
+  "id": "HI-EXT-62-HANDS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five materials and tools a Hindi household keeps.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C62-rope",
+    "HI-C62-needle",
+    "HI-C62-basket",
+    "HI-C62-clay",
+    "HI-C62-wood"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "id": "SA-PATH-26-ROLE",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "SA-C26-teacher",
+    "SA-C26-student",
+    "SA-C26-king",
+    "SA-C26-guest",
+    "SA-C26-physician"
+  ],
+  "before": [],
+  "inline": [
+    "SA-EXT-26-ROLE"
+  ],
+  "after": []
+}

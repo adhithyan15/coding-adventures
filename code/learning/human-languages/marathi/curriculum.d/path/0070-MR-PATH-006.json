@@ -1,0 +1,11 @@
+{
+  "id": "MR-PATH-006",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "MR-C03-kasa",
+    "MR-C03-tumhi-kase-aahat"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

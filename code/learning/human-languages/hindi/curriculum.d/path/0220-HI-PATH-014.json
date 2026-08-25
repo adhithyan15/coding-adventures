@@ -1,0 +1,13 @@
+{
+  "id": "HI-PATH-014",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "HI-C11-kaalaa-safed",
+    "HI-C11-laal-niila"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-014-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

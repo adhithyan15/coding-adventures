@@ -1,0 +1,13 @@
+{
+  "id": "ES-PATH-A1-ORDINALES",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ES-C67-primero",
+    "ES-C67-primer-libro"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-A1-ORDINALES"
+  ],
+  "after": []
+}

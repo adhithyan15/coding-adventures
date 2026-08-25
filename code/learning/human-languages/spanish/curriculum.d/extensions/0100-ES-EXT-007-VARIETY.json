@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-007-VARIETY",
+  "stage": "pre-A1",
+  "kind": "supporting",
+  "category": "language-specific",
+  "canDo": "I can recognize a regional form of this ability that I am not expected to produce.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C03-vos"
+  ]
+}

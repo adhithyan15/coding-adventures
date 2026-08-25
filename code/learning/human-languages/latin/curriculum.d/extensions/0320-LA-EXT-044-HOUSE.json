@@ -1,0 +1,15 @@
+{
+  "id": "LA-EXT-044-HOUSE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "lexicon",
+  "canDo": "I can name a house, its door, its wall, its garden and its hearth in Latin, and trace each one into English.",
+  "prerequisites": [],
+  "lessons": [
+    "LA-C44-domus",
+    "LA-C44-porta",
+    "LA-C44-murus",
+    "LA-C44-hortus",
+    "LA-C44-focus"
+  ]
+}

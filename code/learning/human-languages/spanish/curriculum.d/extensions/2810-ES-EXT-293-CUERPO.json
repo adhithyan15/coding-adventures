@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-293-CUERPO",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the neck, the shoulder, the back, the knee and the ankle in Spanish, and say which one hurts.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C293-cuello",
+    "ES-C293-hombro",
+    "ES-C293-espalda",
+    "ES-C293-rodilla",
+    "ES-C293-tobillo"
+  ]
+}

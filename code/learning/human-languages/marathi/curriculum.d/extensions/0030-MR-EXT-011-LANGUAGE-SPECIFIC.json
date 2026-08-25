@@ -1,0 +1,11 @@
+{
+  "id": "MR-EXT-011-LANGUAGE-SPECIFIC",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can use the additional Marathi material required at this point in the path.",
+  "prerequisites": [],
+  "lessons": [
+    "MR-C06-numbers-1-5"
+  ]
+}

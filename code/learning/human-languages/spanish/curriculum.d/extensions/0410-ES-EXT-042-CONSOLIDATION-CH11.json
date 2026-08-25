@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-042-CONSOLIDATION-CH11",
+  "stage": "A2",
+  "kind": "supporting",
+  "category": "consolidation",
+  "canDo": "I can retrieve singular wanting, ability, vowel-change comparison, and our with known nouns together.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C11-practice"
+  ]
+}

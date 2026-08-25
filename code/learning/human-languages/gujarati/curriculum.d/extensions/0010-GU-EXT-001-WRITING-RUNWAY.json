@@ -1,0 +1,13 @@
+{
+  "id": "GU-EXT-001-WRITING-RUNWAY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "After tracing the two pieces of હા on the script path, I can copy the whole word with support, recall it after a delay, and write it from a heard cue.",
+  "prerequisites": [],
+  "lessons": [
+    "GU-W01-haa-guided-copy",
+    "GU-W01-haa-delayed-copy",
+    "GU-W01-haa-dictation"
+  ]
+}

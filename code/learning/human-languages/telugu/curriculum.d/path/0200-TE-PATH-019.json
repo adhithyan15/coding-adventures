@@ -1,0 +1,12 @@
+{
+  "id": "TE-PATH-019",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "TE-C15-neellu-biyyam"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-019-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

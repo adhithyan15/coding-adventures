@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-305-01",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "ES-C305-nombre",
+    "ES-C305-apellido",
+    "ES-C305-senor",
+    "ES-C305-senora",
+    "ES-C305-encantado"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-305-PRESENTARSE"
+  ],
+  "after": []
+}

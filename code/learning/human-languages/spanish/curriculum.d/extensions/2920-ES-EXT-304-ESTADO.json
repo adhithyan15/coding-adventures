@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-304-ESTADO",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can give five true answers to the wellbeing question in Spanish, switching the four that take -o/-a and leaving the -e one unchanged.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C304-tranquilo",
+    "ES-C304-enfermo",
+    "ES-C304-contento",
+    "ES-C304-ocupado",
+    "ES-C304-triste"
+  ]
+}

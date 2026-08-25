@@ -1,0 +1,13 @@
+{
+  "id": "PA-PATH-001",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "PA-C01-sat-sri-akal",
+    "PA-C01-namaste"
+  ],
+  "before": [],
+  "inline": [
+    "PA-EXT-001-INLINE-SCRIPT"
+  ],
+  "after": []
+}

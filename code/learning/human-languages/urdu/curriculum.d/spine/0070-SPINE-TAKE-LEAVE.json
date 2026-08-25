@@ -1,0 +1,13 @@
+{
+  "segments": [
+    "UR-PATH-006"
+  ],
+  "omits": [
+    "FAREWELL-CASUAL",
+    "FAREWELL-LATER",
+    "FAREWELL-SOON",
+    "FAREWELL-TOMORROW",
+    "GREETING-GOODNIGHT"
+  ],
+  "relocates": {}
+}

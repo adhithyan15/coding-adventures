@@ -1,0 +1,11 @@
+{
+  "id": "RU-EXT-006-REGISTER",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "register",
+  "canDo": "I can choose the Russian form that fits this relationship and setting.",
+  "prerequisites": [],
+  "lessons": [
+    "RU-C02-vy-formality"
+  ]
+}

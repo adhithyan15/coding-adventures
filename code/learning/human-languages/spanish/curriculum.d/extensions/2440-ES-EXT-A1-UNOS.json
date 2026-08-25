@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-A1-UNOS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can use the additional Spanish material required at this point in the path.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C65-unos-unas"
+  ]
+}

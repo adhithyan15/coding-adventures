@@ -1,0 +1,15 @@
+{
+  "id": "TA-EXT-55-BODY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five more parts of the body in Tamil.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C55-neck",
+    "TA-C55-back",
+    "TA-C55-lip",
+    "TA-C55-nail",
+    "TA-C55-bone"
+  ]
+}

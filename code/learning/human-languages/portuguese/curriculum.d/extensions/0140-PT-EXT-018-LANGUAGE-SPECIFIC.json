@@ -1,0 +1,12 @@
+{
+  "id": "PT-EXT-018-LANGUAGE-SPECIFIC",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can use the additional Portuguese material required at this point in the path.",
+  "prerequisites": [],
+  "lessons": [
+    "PT-C13-preto-branco",
+    "PT-C13-vermelho-azul"
+  ]
+}

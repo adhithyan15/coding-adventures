@@ -1,0 +1,20 @@
+{
+  "id": "IT-PATH-008",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "IT-C02-come",
+    "IT-C02-stare",
+    "IT-C02-come-stai",
+    "IT-C02-come-sta",
+    "IT-C02-come-va",
+    "IT-C02-cosi-cosi",
+    "IT-C02-practice"
+  ],
+  "before": [],
+  "inline": [
+    "IT-EXT-008-LANGUAGE-SPECIFIC"
+  ],
+  "after": [
+    "IT-EXT-008-CONSOLIDATION"
+  ]
+}

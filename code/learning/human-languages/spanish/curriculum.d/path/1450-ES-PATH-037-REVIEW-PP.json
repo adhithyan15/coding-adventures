@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-037-REVIEW-PP",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "lessons": [
+    "ES-C51-repaso-flecha"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-037-REVIEW-PP"
+  ],
+  "after": []
+}

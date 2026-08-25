@@ -1,0 +1,15 @@
+{
+  "id": "TE-EXT-54-TREE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a tree and its parts in Telugu, from the seed it started as to the branch at the top.",
+  "prerequisites": [],
+  "lessons": [
+    "TE-C54-tree",
+    "TE-C54-branch",
+    "TE-C54-root",
+    "TE-C54-seed",
+    "TE-C54-seedling"
+  ]
+}

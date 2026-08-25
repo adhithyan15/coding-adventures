@@ -1,0 +1,13 @@
+{
+  "id": "LA-PATH-008",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "LA-C05-dies-lunae-veneris",
+    "LA-C05-saturni-solis"
+  ],
+  "before": [],
+  "inline": [
+    "LA-EXT-008-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

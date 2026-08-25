@@ -1,0 +1,16 @@
+{
+  "id": "TA-PATH-57-FIRE",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "TA-C57-wind",
+    "TA-C57-sand",
+    "TA-C57-mud",
+    "TA-C57-smoke",
+    "TA-C57-ember"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-57-FIRE"
+  ],
+  "after": []
+}

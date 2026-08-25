@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-011-SER-ESTAR",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can distinguish Spanish identity claims from current-state claims with ser and estar.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C09-ser-vs-estar"
+  ]
+}

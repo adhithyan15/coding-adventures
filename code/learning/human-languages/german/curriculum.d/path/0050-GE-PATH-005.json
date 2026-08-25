@@ -1,0 +1,10 @@
+{
+  "id": "GE-PATH-005",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "GE-C01-gute-nacht"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

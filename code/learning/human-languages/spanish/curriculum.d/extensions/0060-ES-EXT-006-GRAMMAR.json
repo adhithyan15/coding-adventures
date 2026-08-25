@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-006-GRAMMAR",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can explain why the greeting's ending changes with the time of day.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C02-concordancia"
+  ]
+}

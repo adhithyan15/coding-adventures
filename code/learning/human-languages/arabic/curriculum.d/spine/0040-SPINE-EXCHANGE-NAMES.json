@@ -1,0 +1,14 @@
+{
+  "segments": [
+    "AR-PATH-007",
+    "AR-PATH-014",
+    "AR-PATH-019",
+    "AR-PATH-032"
+  ],
+  "omits": [
+    "PRONOUN-I",
+    "PRONOUN-ME",
+    "WORD-IS"
+  ],
+  "relocates": {}
+}

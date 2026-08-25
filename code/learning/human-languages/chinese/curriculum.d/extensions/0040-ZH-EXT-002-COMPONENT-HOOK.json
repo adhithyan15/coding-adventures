@@ -1,0 +1,13 @@
+{
+  "id": "ZH-EXT-002-COMPONENT-HOOK",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "etymology",
+  "canDo": "I can use a character's components as its memory hook, and I know why this track has no English cousin web to offer instead.",
+  "prerequisites": [
+    "ZH-EXT-001-CHARACTER-DECOMPOSITION"
+  ],
+  "lessons": [
+    "ZH-C01-hao"
+  ]
+}

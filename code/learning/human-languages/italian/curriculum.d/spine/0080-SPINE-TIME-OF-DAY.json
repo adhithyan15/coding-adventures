@@ -1,0 +1,15 @@
+{
+  "segments": [
+    "IT-PATH-005",
+    "IT-PATH-014"
+  ],
+  "omits": [
+    "TIME-MORNING",
+    "TIME-AFTERNOON",
+    "TIME-EVENING",
+    "TIME-NIGHT",
+    "GREETING-MORNING",
+    "GREETING-AFTERNOON"
+  ],
+  "relocates": {}
+}

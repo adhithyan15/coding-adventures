@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-042-CMD-USTED",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "ES-C50-hable-usted"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-042-CMD-USTED"
+  ],
+  "after": []
+}

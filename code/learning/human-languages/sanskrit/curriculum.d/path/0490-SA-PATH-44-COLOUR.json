@@ -1,0 +1,16 @@
+{
+  "id": "SA-PATH-44-COLOUR",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "SA-C44-white",
+    "SA-C44-dark",
+    "SA-C44-yellow",
+    "SA-C44-green",
+    "SA-C44-blue"
+  ],
+  "before": [],
+  "inline": [
+    "SA-EXT-44-COLOUR"
+  ],
+  "after": []
+}

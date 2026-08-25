@@ -1,0 +1,13 @@
+{
+  "id": "GE-PATH-026",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "GE-C22-hund-katze",
+    "GE-C23-gruen-gelb"
+  ],
+  "before": [],
+  "inline": [
+    "GE-EXT-026-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

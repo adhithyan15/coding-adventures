@@ -1,0 +1,13 @@
+{
+  "id": "ZH-EXT-001-CHARACTER-DECOMPOSITION",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can read a Chinese character as a block built from named components.",
+  "prerequisites": [
+    "ZH-EXT-000-TONE-INVENTORY"
+  ],
+  "lessons": [
+    "ZH-C01-ni"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-040-SYNTH-PERF",
+  "spine_node": "SPINE-TALK-ABOUT-PAST",
+  "lessons": [
+    "ES-C49-sintesis-dos-orillas"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-040-SYNTH-PERF"
+  ],
+  "after": []
+}

@@ -1,0 +1,15 @@
+{
+  "id": "TE-EXT-59-WEATHER",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the weather and what is underfoot in Telugu, and use it as a reason to go home.",
+  "prerequisites": [],
+  "lessons": [
+    "TE-C59-wind",
+    "TE-C59-mist",
+    "TE-C59-sand",
+    "TE-C59-mud",
+    "TE-C59-fire"
+  ]
+}

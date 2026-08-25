@@ -1,0 +1,16 @@
+{
+  "id": "TE-PATH-73-TASTE",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "TE-C73-sweet",
+    "TE-C73-sour",
+    "TE-C73-bitter",
+    "TE-C73-pungent",
+    "TE-C73-astringent"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-73-TASTE"
+  ],
+  "after": []
+}

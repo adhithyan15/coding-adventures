@@ -1,0 +1,13 @@
+{
+  "id": "ES-PATH-277-04",
+  "spine_node": "SPINE-SUMMARIZE-FROM-SOURCES",
+  "lessons": [
+    "ES-C277-en-resumen",
+    "ES-C277-practice"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-277-SOURCES"
+  ],
+  "after": []
+}

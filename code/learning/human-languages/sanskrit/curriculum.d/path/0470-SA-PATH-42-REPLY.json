@@ -1,0 +1,16 @@
+{
+  "id": "SA-PATH-42-REPLY",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "SA-C42-sometimes",
+    "SA-C42-suddenly",
+    "SA-C42-mostly",
+    "SA-C42-a-little",
+    "SA-C42-much"
+  ],
+  "before": [],
+  "inline": [
+    "SA-EXT-42-REPLY"
+  ],
+  "after": []
+}

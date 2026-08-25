@@ -1,0 +1,12 @@
+{
+  "id": "TA-PATH-035",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "TA-C38-vidai"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-035-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

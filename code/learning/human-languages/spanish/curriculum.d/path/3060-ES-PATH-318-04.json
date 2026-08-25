@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-318-04",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "ES-C318-repaso-marcas"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-318-MARCAS"
+  ],
+  "after": []
+}

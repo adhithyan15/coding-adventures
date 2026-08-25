@@ -1,0 +1,15 @@
+{
+  "id": "PT-PATH-023",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "PT-C19-pensar",
+    "PT-C19-entender-compreender",
+    "PT-C19-ler",
+    "PT-C19-escrever"
+  ],
+  "before": [],
+  "inline": [
+    "PT-EXT-023-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

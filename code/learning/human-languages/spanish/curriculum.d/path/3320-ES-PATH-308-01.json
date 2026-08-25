@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-308-01",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "ES-C308-nino",
+    "ES-C308-nina",
+    "ES-C308-chico",
+    "ES-C308-chica",
+    "ES-C308-gente"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-308-KIN"
+  ],
+  "after": []
+}

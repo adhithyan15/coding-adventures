@@ -1,0 +1,15 @@
+{
+  "id": "TA-EXT-64-HARVEST",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can follow a Tamil field from the standing crop to the harvest.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C64-paddy",
+    "TA-C64-grass",
+    "TA-C64-crop",
+    "TA-C64-threshing-floor",
+    "TA-C64-harvest"
+  ]
+}

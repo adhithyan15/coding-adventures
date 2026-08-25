@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-296-ANIMALES",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the horse, the cow, the sheep, the hen and the donkey in Spanish.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C296-caballo",
+    "ES-C296-vaca",
+    "ES-C296-oveja",
+    "ES-C296-gallina",
+    "ES-C296-burro"
+  ]
+}

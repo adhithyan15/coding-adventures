@@ -1,0 +1,15 @@
+{
+  "id": "FA-EXT-021-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name the sky, sun, moon, star, and rain in Persian, and I can say which of those words has no established English cousin.",
+  "prerequisites": [],
+  "lessons": [
+    "FA-C13-aseman",
+    "FA-C13-khorshid",
+    "FA-C13-mah",
+    "FA-C13-setare",
+    "FA-C13-baran"
+  ]
+}

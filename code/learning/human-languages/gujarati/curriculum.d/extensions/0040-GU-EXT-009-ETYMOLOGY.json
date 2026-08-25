@@ -1,0 +1,11 @@
+{
+  "id": "GU-EXT-009-ETYMOLOGY",
+  "stage": "A1",
+  "kind": "supporting",
+  "category": "etymology",
+  "canDo": "I can use this Gujarati word history as a memory hook without confusing origin and current use.",
+  "prerequisites": [],
+  "lessons": [
+    "GU-C06-number-histories"
+  ]
+}

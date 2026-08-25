@@ -1,0 +1,15 @@
+{
+  "id": "KA-EXT-61-KITCHEN",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five everyday things in a Kannada kitchen, and swap names with the person cooking.",
+  "prerequisites": [],
+  "lessons": [
+    "KA-C61-curd",
+    "KA-C61-ghee",
+    "KA-C61-oil",
+    "KA-C61-jaggery",
+    "KA-C61-sugar"
+  ]
+}

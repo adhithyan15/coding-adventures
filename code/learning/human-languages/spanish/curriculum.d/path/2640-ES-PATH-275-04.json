@@ -1,0 +1,13 @@
+{
+  "id": "ES-PATH-275-04",
+  "spine_node": "SPINE-EXPRESS-FINE-SHADES",
+  "lessons": [
+    "ES-C275-delgado-flaco",
+    "ES-C275-practice"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-275-SHADES"
+  ],
+  "after": []
+}

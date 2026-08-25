@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-313-ASK",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can get through a ticket counter in Spanish: the ticket, the coin, the passport, the entrance and the change.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C313-boleto",
+    "ES-C313-moneda",
+    "ES-C313-pasaporte",
+    "ES-C313-entrada",
+    "ES-C313-cambio"
+  ]
+}

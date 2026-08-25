@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-327-STATE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say I am awake, asleep, strong, weak or well in Spanish.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C327-despierto",
+    "ES-C327-dormido",
+    "ES-C327-fuerte",
+    "ES-C327-debil",
+    "ES-C327-sano"
+  ]
+}

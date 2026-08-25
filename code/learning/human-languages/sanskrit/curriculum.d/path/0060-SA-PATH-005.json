@@ -1,0 +1,18 @@
+{
+  "id": "SA-PATH-005",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "SA-C02-nama",
+    "SA-C02-asti",
+    "SA-C02-bhavan-tvam",
+    "SA-C02-kim",
+    "SA-C02-mama",
+    "SA-C02-mama-nama-asti",
+    "SA-C02-anandah",
+    "SA-C02-tava-nama-kim",
+    "SA-C03-aham"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

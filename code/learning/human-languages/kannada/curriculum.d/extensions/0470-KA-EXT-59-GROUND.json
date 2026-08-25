@@ -1,0 +1,15 @@
+{
+  "id": "KA-EXT-59-GROUND",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the wind, the mist and the three things underfoot.",
+  "prerequisites": [],
+  "lessons": [
+    "KA-C59-wind",
+    "KA-C59-mist",
+    "KA-C59-sand",
+    "KA-C59-mud",
+    "KA-C59-fire"
+  ]
+}

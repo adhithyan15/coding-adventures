@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-329-01",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "ES-C329-tal",
+    "ES-C329-cual",
+    "ES-C329-pues",
+    "ES-C329-sino",
+    "ES-C329-salvo"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-329-LINK"
+  ],
+  "after": []
+}

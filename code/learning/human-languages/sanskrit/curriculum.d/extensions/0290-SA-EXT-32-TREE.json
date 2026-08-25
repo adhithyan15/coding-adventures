@@ -1,0 +1,15 @@
+{
+  "id": "SA-EXT-32-TREE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a tree and four things that grow in Sanskrit.",
+  "prerequisites": [],
+  "lessons": [
+    "SA-C32-tree",
+    "SA-C32-leaf",
+    "SA-C32-grass",
+    "SA-C32-vine",
+    "SA-C32-wood"
+  ]
+}

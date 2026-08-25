@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-003-POSSESSIVE",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can place mi, tu, or su before a known singular noun.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C10-mi-tu-su"
+  ]
+}

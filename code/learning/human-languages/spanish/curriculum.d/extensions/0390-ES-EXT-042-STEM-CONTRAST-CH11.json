@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-042-STEM-CONTRAST-CH11",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can compare the learned Spanish e-to-ie and o-to-ue singular verb forms without extending the person paradigm.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C11-stem-changes"
+  ]
+}

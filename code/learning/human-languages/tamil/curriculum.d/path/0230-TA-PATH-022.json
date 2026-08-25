@@ -1,0 +1,17 @@
+{
+  "id": "TA-PATH-022",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "TA-C16-thamizh-maadangal",
+    "TA-C17-nanpakal-nalliravu",
+    "TA-C17-transparent-middle-synonyms",
+    "TA-C18-mani",
+    "TA-C18-mani-homophone-time"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-022-LANGUAGE-SPECIFIC",
+    "TA-EXT-022-ETYMOLOGY"
+  ],
+  "after": []
+}

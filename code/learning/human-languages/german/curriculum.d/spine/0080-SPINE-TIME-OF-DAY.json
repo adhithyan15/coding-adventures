@@ -1,0 +1,16 @@
+{
+  "segments": [
+    "GE-PATH-004",
+    "GE-PATH-006",
+    "GE-PATH-015",
+    "GE-PATH-035",
+    "GE-PATH-017",
+    "GE-PATH-019",
+    "GE-PATH-025"
+  ],
+  "omits": [
+    "TIME-AFTERNOON",
+    "GREETING-AFTERNOON"
+  ],
+  "relocates": {}
+}

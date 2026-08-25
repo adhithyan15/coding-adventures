@@ -1,0 +1,12 @@
+{
+  "id": "TE-EXT-032-HEART",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name my heart in Telugu two ways, the everyday native word and the literary Sanskrit loan, and trace the Sanskrit one to the same root as the English word heart.",
+  "prerequisites": [],
+  "lessons": [
+    "TE-C38-gunde",
+    "TE-C38-hrudayam"
+  ]
+}

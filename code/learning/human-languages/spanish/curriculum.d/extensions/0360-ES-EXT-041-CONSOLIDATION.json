@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-041-CONSOLIDATION",
+  "stage": "A2",
+  "kind": "supporting",
+  "category": "consolidation",
+  "canDo": "I can retrieve singular ir, a near-future frame, and singular possessive determiners together.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C10-practice"
+  ]
+}

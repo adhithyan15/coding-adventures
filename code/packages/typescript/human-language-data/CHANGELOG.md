@@ -2,6 +2,95 @@
 
 ## Unreleased
 
+### Added - `<track>/curriculum.d/`, and the end of the worst conflict in the corpus (HL21 §5.2)
+
+- 22 of 23 tracks' `curriculum.json` are now stored as three sibling
+  directories under `curriculum.d/`, sharing one `_meta.json`:
+
+  ```text
+  curriculum.d/_meta.json                          version, language, conceptAliases
+  curriculum.d/path/0010-ES-PATH-001.json          the authored ladder
+  curriculum.d/extensions/0010-ES-EXT-001-….json   the track's own additions
+  curriculum.d/spine/0010-SPINE-MEET-GREET.json    ONE FILE PER SPINE NODE
+  ```
+
+- **`spine/` is the prize.** Every content tranche in every track appends to
+  `spine[<node>].segments`, and there are only 33 nodes for 23 tracks' worth of
+  authors to collide on. Two tranches touching two different nodes now write two
+  different files and never meet.
+- Round trip verified byte-exact against all 22 committed ledgers before the
+  data moved; the monoliths in this commit are unchanged, which is the proof.
+  `marwadi` is left on its monolith — its `lessons` arrays are written inline on
+  one line, so the bytes do not round-trip. Data identical, reported not
+  reformatted, per §8.9.
+
+### Fixed - HL21 §5.2 was wrong about `spine`, and every track proves it
+
+- The spec argued `spine` is keyed by node id and so "needs no ordinal: an
+  object has no meaningful order". True of JSON, false of this ledger:
+  `JSON.stringify` emits keys in **insertion** order; **no** track has its spine
+  keys sorted; and all 23 list them in exactly `core/spine.d/`'s ladder order,
+  pre-A1 → C2. `<NODE-ID>.json` shards merged in sorted order would have
+  scrambled the shared ladder in 23 files at once, silently, while still
+  "round-tripping successfully".
+- `spine/` therefore carries zero-padded ordinals like every other section, and
+  a test asserts both halves: sorted shard order reproduces the ladder, and
+  plain `<ID>.json` names would not have.
+- `path`/`extensions` ordinals confirmed needed. Spanish diverges at index 3 —
+  authored `ES-PATH-004` against sorted `ES-PATH-003-CASA`. That claim is now
+  pinned **corpus-wide** rather than per-track, because it is not true of every
+  track: `japanese` and `urdu` happen to have both lists already sorted and
+  would coincidentally survive losing their ordinals. 20 of 22 would not.
+
+### Changed - the shard machinery grew two projections
+
+- `ShardPlan.listKey`/`idOf`/`ordinalOf` become `ShardPlan.sections`, a list of
+  `ShardSection`. A section names one top-level key, an optional subdirectory,
+  and whether it holds an `"array"` or an `"object"`.
+- **`_keys`**: `_meta.json` now records the monolith's top-level key order, but
+  **only when it is needed** — when the sharded keys are not already a suffix of
+  the document. §2.5 deliberately did not invent this and left the decision to
+  "whoever migrates" a ledger whose array is not last; `curriculum.json` is that
+  ledger, with three sharded keys in the middle. In practice only `spanish`
+  needs it (its `conceptAliases` follows `extensions`); the other 21 tracks and
+  all 21 previously-committed shard sets are untouched.
+- The "array must be the last top-level key" refusal is gone, replaced by a
+  check that a ledger has no top-level `_keys` of its own to collide with.
+- `mergeSectionedShards` lives in `shard.ts` and is used by **both**
+  `--unshard` and `loadLanguageCurricula`. Two definitions of what these files
+  mean is precisely the drift `--check` exists to catch — and `--check` only
+  compares the monolith against `unshardContents`, so a divergent loader would
+  go unreported.
+- `listShardNames` descends exactly one level into subdirectories, refusing a
+  symlinked subdirectory as it already refused a symlinked shard. One level is a
+  constant, so it cannot be walked into a cycle by a committed symlink.
+
+### Added - the grouped projection for `core/book-generation.json`, not yet enabled
+
+- A second projection: several parallel arrays partitioned into **one file per
+  language** rather than one file per element. Element-wise, that ledger would
+  be 1,153 files nobody opens individually; what an author touches is "Spanish's
+  slice of everything".
+- Built, tested against the real ledger, and **deliberately absent from
+  `SHARD_PLANS`** — `BOOK_GENERATION_PLAN` is exported and is one line from
+  being enabled.
+- **The spec's recorded blocker resolved itself.** §5.3 measured `targets` at 27
+  runs for 23 languages and called for a one-time re-sort. At 1,007 entries it
+  is 23 runs for 23 languages — the split runs for hindi, kannada, spanish and
+  telugu closed as later tranches inserted into them. No re-sort needed, and a
+  test pins the contiguity so a future append to the end of `targets` reopens
+  the question loudly.
+- **A different blocker replaced it.** `core/book-generation.json` does not
+  round-trip at all: twelve `marwadi` entries in `targets` (lines 2911–2984) are
+  indented two spaces deeper than canonical. 74 lines, identical line count,
+  leading whitespace only, data deep-equal. The sharded rebuild is byte-identical
+  to the *canonical* reserialization and differs from the *committed* file by
+  exactly those 74 lines. Unlike the other two ledgers this cannot be worked
+  around by skipping a track — it is one file shared by all 23 — so the whole
+  ledger waits on a deliberate re-indent commit. A test states that blocker as an
+  executable fact and **fails the day someone re-indents the file**, which is
+  exactly when the plan should be enabled.
+
 ### Added - `<track>/chapters.d/`, one file per chapter (HL21 §5.1)
 
 - Twenty of the twenty-three chapter ledgers are now stored as

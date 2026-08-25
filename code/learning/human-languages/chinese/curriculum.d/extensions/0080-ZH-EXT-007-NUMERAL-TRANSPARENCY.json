@@ -1,0 +1,18 @@
+{
+  "id": "ZH-EXT-007-NUMERAL-TRANSPARENCY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can read 一, 二 and 三 by counting their strokes, and I know that the trick stops at three and why it has to.",
+  "prerequisites": [
+    "ZH-EXT-005-GREETING-CONSOLIDATION"
+  ],
+  "lessons": [
+    "ZH-W03-yi",
+    "ZH-C03-yi",
+    "ZH-W03-er",
+    "ZH-C03-er",
+    "ZH-W03-san",
+    "ZH-C03-san"
+  ]
+}

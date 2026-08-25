@@ -174,19 +174,67 @@ export function isSharded(monolithPath: string): boolean {
  */
 export function listShardNames(monolithPath: string): string[] {
   const dir = shardDirectoryFor(monolithPath);
+  const names: string[] = [];
+  collectShardNames(dir, "", names, true);
+  return names.sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
+}
+
+/**
+ * Gather `*.json` under `dir`, descending ONE level into subdirectories.
+ *
+ * The one level exists for `<track>/curriculum.d/`, which is not one list but
+ * three — `path/`, `extensions/` and `spine/` — sharing a `_meta.json`. A flat
+ * directory would work and was rejected: Spanish alone would put 716 files in
+ * one folder, and the people who open these directories are the authors this
+ * whole exercise is for. Three named subdirectories are the difference between
+ * a ledger somebody can navigate and a wall of filenames.
+ *
+ * Exactly one level, not arbitrary recursion. A depth limit that is a CONSTANT
+ * cannot be walked into a cycle by a committed symlink, and no ledger shape in
+ * HL21 needs more. Unbounded recursion here would be a directory-traversal
+ * primitive driven by repository contents, which is a bigger promise than this
+ * module wants to make.
+ *
+ * Subdirectory names are returned POSIX-joined (`path/0010-ES-PATH-001.json`)
+ * so that sorting the returned list sorts sections together and orders elements
+ * within each — the same single sort the flat case relies on, with no special
+ * casing anywhere downstream.
+ *
+ * A SYMLINKED SUBDIRECTORY is refused, exactly as a symlinked shard is. The
+ * per-file check would not catch it: entries reached THROUGH a symlinked parent
+ * report `isSymbolicLink() === false`, so a link named `spine` pointing at
+ * `~/.ssh` would have its contents merged into the curriculum and, once
+ * `--unshard` runs, committed.
+ */
+function collectShardNames(
+  dir: string,
+  prefix: string,
+  out: string[],
+  descend: boolean,
+): void {
   const entries = readdirSync(dir, { withFileTypes: true });
   for (const entry of entries) {
-    if (entry.name.endsWith(".json") && entry.isSymbolicLink()) {
-      throw new Error(
-        `shard '${entry.name}' in '${dir}': is a symbolic link — ` +
-          `a shard must be a real file inside its shard directory`,
-      );
+    const label = prefix === "" ? entry.name : `${prefix}/${entry.name}`;
+    if (entry.isSymbolicLink()) {
+      // Refused for `*.json` for the reason in `isSharded`, and for a
+      // DIRECTORY because following one would read outside the checkout.
+      // Anything else that is a link is ignored, as a non-shard would be.
+      if (entry.name.endsWith(".json") || descend) {
+        throw new Error(
+          `shard '${label}' in '${dir}': is a symbolic link — ` +
+            `a shard must be a real file inside its shard directory`,
+        );
+      }
+      continue;
+    }
+    if (entry.isFile() && entry.name.endsWith(".json")) {
+      out.push(label);
+      continue;
+    }
+    if (descend && entry.isDirectory()) {
+      collectShardNames(join(dir, entry.name), label, out, false);
     }
   }
-  return entries
-    .filter((entry) => entry.isFile() && entry.name.endsWith(".json"))
-    .map((entry) => entry.name)
-    .sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
 }
 
 /**
@@ -367,6 +415,331 @@ export function mergeMetaAndList<T = unknown>(
       .filter((shard) => shard.name !== META_SHARD)
       .map((shard) => shard.value as T),
   };
+}
+
+/**
+ * The `_meta.json` field recording the monolith's top-level key order.
+ *
+ * Lives here rather than in `shard-cli` because BOTH sides need it and they
+ * must not disagree: `shard-cli --unshard` writes the generated monolith from
+ * it, and `loader.ts` reads the same shards into the document the app and every
+ * gate actually use. Two definitions of "what these files mean" is precisely the
+ * drift `--check` exists to catch, and the cheapest way to never have it is to
+ * only ever write it down once.
+ */
+export const KEY_ORDER_FIELD = "_keys";
+
+/**
+ * The id a shard filename may carry. `shard-cli`'s `SAFE_ID`, on the READ side.
+ *
+ * It exists twice on purpose, and the reason is a bug this file shipped with for
+ * one revision. `shard-cli` validates ids on the WRITE path, where they come out
+ * of authored JSON. That is not the same trust boundary as the READ path, where
+ * the id comes out of a FILENAME ON DISK — which a pull request chooses, and
+ * which no amount of write-side validation constrains.
+ *
+ * Dropping the read-side check was a real regression while refactoring the
+ * object-section merge out of `shard-cli`: a shard committed as
+ * `0010-__proto__.json` produced `value["__proto__"] = …`, which invokes the
+ * setter rather than creating a key. The node's realization vanished, the
+ * object's prototype changed, and `Object.hasOwn` could not even see it to
+ * report the collision.
+ */
+export const SHARD_ID_PATTERN = /^[A-Z][A-Z0-9-]*$/;
+
+/**
+ * `obj[key] = value`, but as a data property, never through a setter.
+ *
+ * Every key in this module comes from somewhere a pull request controls — a
+ * filename for an object section, a `_keys` entry for the document order — so
+ * plain assignment is not safe here even when the key looks ordinary.
+ * `defineProperty` uses CreateDataProperty, which cannot reach
+ * `Object.prototype` and cannot be intercepted by an inherited setter.
+ *
+ * `metaOf` in `shard-cli` already made this choice, after a monolith carrying
+ * `"__proto__"` silently dropped a key from the emitted `_meta.json`. This is
+ * the same fix on the other side of the round trip.
+ */
+function defineKey(target: Record<string, unknown>, key: string, value: unknown): void {
+  Object.defineProperty(target, key, {
+    value,
+    enumerable: true,
+    writable: true,
+    configurable: true,
+  });
+}
+
+/**
+ * Refuse a key that would pollute a prototype, wherever it came from.
+ *
+ * `rejectDangerousKeys` checks parsed VALUES. These three keys arrive as
+ * NAMES — out of a filename, or out of a `_keys` array — so they need their own
+ * gate on the way in.
+ */
+function assertSafeKey(key: unknown, where: string): string {
+  if (typeof key !== "string" || key.length === 0) {
+    throw new Error(`${where}: key must be a non-empty string, got ${JSON.stringify(key)}`);
+  }
+  if (key === "__proto__" || key === "constructor" || key === "prototype") {
+    throw new Error(`${where}: must not name '${key}'`);
+  }
+  return key;
+}
+
+/** One top-level key of a sectioned ledger, and where its shards live. */
+export interface MergeSection {
+  readonly key: string;
+  /** Subdirectory under `X.d/`; omitted means the shards sit directly in it. */
+  readonly dir?: string;
+  /** `"object"` rebuilds `{id: value}` from the filenames. Default `"array"`. */
+  readonly kind?: "array" | "object";
+}
+
+/**
+ * `<track>/curriculum.d/`'s shape, in the one place both readers agree on.
+ *
+ * `spine` is the reason this ledger was sharded at all: every content tranche
+ * in every track appends to `spine[<node>].segments`, and there are only 33
+ * nodes for 23 tracks' worth of authors to collide on.
+ */
+export const CURRICULUM_SECTIONS: readonly MergeSection[] = [
+  { key: "path", dir: "path" },
+  { key: "spine", dir: "spine", kind: "object" },
+  { key: "extensions", dir: "extensions" },
+];
+
+/**
+ * `core/book-generation.d/`'s shape: one file per LANGUAGE, not per element.
+ *
+ * A different projection from every other ledger here, and the difference is
+ * the point. `book-generation.json` is six parallel arrays — `targets` alone is
+ * 1,007 entries — each of whose elements carries a `language`. Sharding them
+ * element-wise would produce 1,153 files that no author ever wants to open one
+ * at a time. What an author actually touches is "Spanish's slice of everything",
+ * so that is the file: `core/book-generation.d/spanish.json` holds Spanish's
+ * entries from all six arrays, and a Spanish tranche edits exactly one file.
+ *
+ * Per-language order is authored order because every one of the six arrays is
+ * already grouped by language, contiguously, in the SAME alphabetical order —
+ * which is also sorted-filename order for `<language>.json`. That was measured
+ * across all six, not assumed, and it is why no ordinal prefix is needed here
+ * while every other ledger in HL21 needs one.
+ *
+ * `scriptSets` stays in `_meta.json`: it is keyed by script set rather than by
+ * language and is genuinely shared.
+ */
+export const BOOK_GENERATION_GROUPED_KEYS: readonly string[] = [
+  "referenceAppendices",
+  "glossaries",
+  "answerKeys",
+  "indexes",
+  "targets",
+  "handwritten",
+];
+
+/**
+ * Fold `core/book-generation.d/<language>.json` back into the six arrays.
+ *
+ * Each array is rebuilt by walking the language shards in sorted filename order
+ * and concatenating each one's slice. That reproduces authored order only
+ * because the arrays are contiguous by language and alphabetically ordered;
+ * `--check` is what keeps that true, since a hand-edit that interleaved two
+ * languages would no longer round-trip and would say so.
+ *
+ * A language whose shard omits an array contributes nothing to it, which is how
+ * `referenceAppendices` (6 languages) and `handwritten` (14) coexist with
+ * `targets` (23) in one directory without empty-array noise in 17 files.
+ */
+export function mergeGroupedShards(
+  shards: Shard[],
+  groupedKeys: readonly string[],
+): Record<string, unknown> {
+  const metaShard = shards.find((shard) => shard.name === META_SHARD);
+  if (metaShard === undefined) {
+    throw new Error(
+      `shard: no '${META_SHARD}' among ${shards.length} shard(s) — ` +
+        `the ledger's document-level fields have no home`,
+    );
+  }
+  const meta = { ...(metaShard.value as Record<string, unknown>) };
+  const recorded = meta[KEY_ORDER_FIELD];
+  delete meta[KEY_ORDER_FIELD];
+
+  const assembled = new Map<string, unknown[]>();
+  for (const key of groupedKeys) assembled.set(key, []);
+  for (const shard of shards) {
+    if (shard.name === META_SHARD) continue;
+    const slice = shard.value as Record<string, unknown>;
+    if (typeof slice !== "object" || slice === null || Array.isArray(slice)) {
+      throw new Error(`shard '${shard.name}': a language shard must be a JSON object`);
+    }
+    for (const [key, value] of Object.entries(slice)) {
+      const into = assembled.get(key);
+      if (into === undefined) {
+        // An unknown key would be dropped in silence otherwise, and the rebuild
+        // would quietly lose whatever an author had added.
+        throw new Error(
+          `shard '${shard.name}': carries '${key}', which is not one of this ` +
+            `ledger's grouped arrays (${groupedKeys.join(", ")})`,
+        );
+      }
+      if (!Array.isArray(value)) {
+        throw new Error(`shard '${shard.name}': '${key}' must be an array`);
+      }
+      into.push(...value);
+    }
+  }
+
+  const order = Array.isArray(recorded)
+    ? (recorded as string[])
+    : [...Object.keys(meta), ...groupedKeys];
+  const document: Record<string, unknown> = {};
+  const emitted = new Set<string>();
+  for (const key of order) {
+    // `order` may come straight from `_keys` in an attacker-controlled
+    // `_meta.json`, so every entry is checked before it names a property.
+    assertSafeKey(key, `${KEY_ORDER_FIELD} in '${metaShard.path}'`);
+    if (emitted.has(key)) {
+      // A repeated key would emit the same property twice; the second write
+      // wins and the document silently loses whatever the first described.
+      throw new Error(
+        `shard '${META_SHARD}' in '${metaShard.path}': ${KEY_ORDER_FIELD} lists ` +
+          `'${key}' more than once`,
+      );
+    }
+    emitted.add(key);
+    if (assembled.has(key)) defineKey(document, key, assembled.get(key));
+    else if (Object.hasOwn(meta, key)) defineKey(document, key, meta[key]);
+    else {
+      throw new Error(
+        `shard '${META_SHARD}' in '${metaShard.path}': records key '${key}' in ` +
+          `${KEY_ORDER_FIELD}, but neither the meta shard nor any group supplies it`,
+      );
+    }
+  }
+  return document;
+}
+
+/** `0010-SPINE-MEET-GREET.json` -> `SPINE-MEET-GREET`; `0007.json` -> undefined. */
+function idFromShardName(name: string): string | undefined {
+  const base = name.slice(name.lastIndexOf("/") + 1).replace(/\.json$/, "");
+  return /^\d+-(.+)$/.exec(base)?.[1];
+}
+
+/**
+ * Fold `_meta.json` plus several sections' shards back into one document.
+ *
+ * The general form of `mergeMetaAndList`, for a ledger that is more than one
+ * list. `<track>/curriculum.json` is `{version, language, path, spine,
+ * extensions}` (Spanish adds `conceptAliases`), so three of its keys are
+ * sharded and they sit in the MIDDLE of the document — which is why the key
+ * order has to be recorded rather than inferred. See `KEY_ORDER_FIELD`.
+ *
+ * Shard names arrive already sorted by code unit, and slicing them by directory
+ * prefix preserves that order within each section. That is what makes sorted
+ * filename order reproduce authored order — and why every section's shards
+ * carry a zero-padded ordinal, INCLUDING the object-valued `spine`, whose keys
+ * follow the pre-A1 -> C2 ladder in all 23 tracks and are in sorted order in
+ * none of them.
+ */
+export function mergeSectionedShards(
+  shards: Shard[],
+  sections: readonly MergeSection[],
+): Record<string, unknown> {
+  const metaShard = shards.find((shard) => shard.name === META_SHARD);
+  if (metaShard === undefined) {
+    throw new Error(
+      `shard: no '${META_SHARD}' among ${shards.length} shard(s) — ` +
+        `the ledger's document-level fields have no home`,
+    );
+  }
+  if (
+    typeof metaShard.value !== "object" ||
+    metaShard.value === null ||
+    Array.isArray(metaShard.value)
+  ) {
+    throw new Error(`shard '${META_SHARD}' in '${metaShard.path}': must be a JSON object`);
+  }
+  const meta = { ...(metaShard.value as Record<string, unknown>) };
+  const recorded = meta[KEY_ORDER_FIELD];
+  delete meta[KEY_ORDER_FIELD];
+
+  const assembled = new Map<string, unknown>();
+  for (const section of sections) {
+    if (Object.hasOwn(meta, section.key)) {
+      // Otherwise the merge order silently decides whether the meta copy or the
+      // shards win, and one of those is always a stale duplicate of the other.
+      throw new Error(
+        `shard '${META_SHARD}' in '${metaShard.path}': must not carry '${section.key}' — ` +
+          `that section lives in the sibling shards`,
+      );
+    }
+    const prefix = section.dir === undefined ? "" : `${section.dir}/`;
+    const mine = shards.filter(
+      (shard) =>
+        shard.name !== META_SHARD &&
+        (section.dir === undefined ? !shard.name.includes("/") : shard.name.startsWith(prefix)),
+    );
+    if ((section.kind ?? "array") === "object") {
+      const value: Record<string, unknown> = {};
+      for (const shard of mine) {
+        const id = idFromShardName(shard.name);
+        // The filename IS the key for an object section, so it is validated
+        // here rather than trusted — this is the READ boundary, and the name
+        // came off disk where a pull request put it. `SHARD_ID_PATTERN` already
+        // excludes the three prototype-polluting names, but `assertSafeKey`
+        // states that intent so a future widening of the pattern cannot quietly
+        // reopen it.
+        if (id === undefined || !SHARD_ID_PATTERN.test(id)) {
+          // Refuse rather than invent a key: a guessed one silently relocates a
+          // spine node's realization.
+          throw new Error(
+            `shard '${shard.name}' in '${metaShard.path}': has no usable id in its ` +
+              `filename, but '${section.key}' is keyed by id — expected NNNN-<ID>.json ` +
+              `with ID matching ${SHARD_ID_PATTERN.source}`,
+          );
+        }
+        assertSafeKey(id, `shard '${shard.name}'`);
+        if (Object.hasOwn(value, id)) {
+          throw new Error(`shard '${shard.name}': two '${section.key}' shards claim id '${id}'`);
+        }
+        defineKey(value, id, shard.value);
+      }
+      assembled.set(section.key, value);
+    } else {
+      assembled.set(section.key, mine.map((shard) => shard.value));
+    }
+  }
+
+  const order = Array.isArray(recorded)
+    ? (recorded as string[])
+    : [...Object.keys(meta), ...sections.map((section) => section.key)];
+
+  const document: Record<string, unknown> = {};
+  const emitted = new Set<string>();
+  for (const key of order) {
+    // `order` may come straight from `_keys` in an attacker-controlled
+    // `_meta.json`, so every entry is checked before it names a property.
+    assertSafeKey(key, `${KEY_ORDER_FIELD} in '${metaShard.path}'`);
+    if (emitted.has(key)) {
+      // A repeated key would emit the same property twice; the second write
+      // wins and the document silently loses whatever the first described.
+      throw new Error(
+        `shard '${META_SHARD}' in '${metaShard.path}': ${KEY_ORDER_FIELD} lists ` +
+          `'${key}' more than once`,
+      );
+    }
+    emitted.add(key);
+    if (assembled.has(key)) defineKey(document, key, assembled.get(key));
+    else if (Object.hasOwn(meta, key)) defineKey(document, key, meta[key]);
+    else {
+      throw new Error(
+        `shard '${META_SHARD}' in '${metaShard.path}': records key '${key}' in ` +
+          `${KEY_ORDER_FIELD}, but neither the meta shard nor any section supplies it`,
+      );
+    }
+  }
+  return document;
 }
 
 /** `unknown` from a `catch` reduced to something printable. */

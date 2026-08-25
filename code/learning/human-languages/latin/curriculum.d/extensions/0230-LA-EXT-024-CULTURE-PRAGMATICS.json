@@ -1,0 +1,11 @@
+{
+  "id": "LA-EXT-024-CULTURE-PRAGMATICS",
+  "stage": "A1",
+  "kind": "supporting",
+  "category": "culture-pragmatics",
+  "canDo": "I can use this Latin expression with the cultural and pragmatic distinction it requires.",
+  "prerequisites": [],
+  "lessons": [
+    "LA-C36-timeless-salve"
+  ]
+}

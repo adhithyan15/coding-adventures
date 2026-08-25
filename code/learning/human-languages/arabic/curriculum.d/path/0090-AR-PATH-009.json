@@ -1,0 +1,22 @@
+{
+  "id": "AR-PATH-009",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "AR-W10-ayn",
+    "AR-W11-ha-and-ta-marbuta",
+    "AR-W12-maa-salama",
+    "AR-C04-maa-with",
+    "AR-C04-al-salama",
+    "AR-C04-maa-salama",
+    "AR-C04-ila-liqaa",
+    "AR-C04-practice"
+  ],
+  "before": [
+    "AR-EXT-009-SCRIPT",
+    "AR-EXT-009-LANGUAGE-SPECIFIC"
+  ],
+  "inline": [],
+  "after": [
+    "AR-EXT-009-CONSOLIDATION"
+  ]
+}

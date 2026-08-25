@@ -1,0 +1,15 @@
+{
+  "id": "PT-PATH-030",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "PT-C26-olho",
+    "PT-C26-orelha",
+    "PT-C26-boca",
+    "PT-C26-coracao"
+  ],
+  "before": [],
+  "inline": [
+    "PT-EXT-030-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

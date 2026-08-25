@@ -1,0 +1,16 @@
+{
+  "id": "SA-PATH-28-LEAVE",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "SA-C28-now",
+    "SA-C28-day-after",
+    "SA-C28-journey",
+    "SA-C28-auspicious",
+    "SA-C28-svasti"
+  ],
+  "before": [],
+  "inline": [
+    "SA-EXT-28-LEAVE"
+  ],
+  "after": []
+}

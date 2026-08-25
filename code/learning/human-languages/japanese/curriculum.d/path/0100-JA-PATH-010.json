@@ -1,0 +1,23 @@
+{
+  "id": "JA-PATH-010",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "JA-W10-se",
+    "JA-W10-o",
+    "JA-W10-ne",
+    "JA-C10-sukoshi",
+    "JA-W10-shi",
+    "JA-C10-yukkuri",
+    "JA-W10-yu",
+    "JA-C10-itte-kudasai",
+    "JA-C10-mou-sukoshi",
+    "JA-C10-wakarimashita",
+    "JA-C10-koko",
+    "JA-C10-slower-please"
+  ],
+  "before": [],
+  "inline": [
+    "JA-EXT-017-REPAIR-SLOWER"
+  ],
+  "after": []
+}

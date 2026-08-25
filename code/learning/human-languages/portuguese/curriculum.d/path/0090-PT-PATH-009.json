@@ -1,0 +1,21 @@
+{
+  "id": "PT-PATH-009",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "PT-C02-como",
+    "PT-C02-tudo",
+    "PT-C02-tudo-bem",
+    "PT-C02-como-vai-esta",
+    "PT-C02-mais-ou-menos",
+    "PT-C02-practice",
+    "PT-C02-formal-practice"
+  ],
+  "before": [],
+  "inline": [
+    "PT-EXT-009-LANGUAGE-SPECIFIC"
+  ],
+  "after": [
+    "PT-EXT-009-CONSOLIDATION",
+    "PT-EXT-009-REGISTER"
+  ]
+}

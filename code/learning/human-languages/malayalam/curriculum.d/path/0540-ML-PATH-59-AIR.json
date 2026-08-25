@@ -1,0 +1,16 @@
+{
+  "id": "ML-PATH-59-AIR",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "ML-C59-wind",
+    "ML-C59-sand",
+    "ML-C59-mud",
+    "ML-C59-smoke",
+    "ML-C59-ember"
+  ],
+  "before": [],
+  "inline": [
+    "ML-EXT-59-AIR"
+  ],
+  "after": []
+}

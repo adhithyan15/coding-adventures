@@ -1,0 +1,12 @@
+{
+  "id": "GE-PATH-014",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "GE-C05-wohnen",
+    "GE-C05-machen",
+    "GE-C05-lernen"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

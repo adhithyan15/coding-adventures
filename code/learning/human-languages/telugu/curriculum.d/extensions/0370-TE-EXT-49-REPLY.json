@@ -1,0 +1,15 @@
+{
+  "id": "TE-EXT-49-REPLY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can answer in Telugu with more than yes and no.",
+  "prerequisites": [],
+  "lessons": [
+    "TE-C49-true",
+    "TE-C49-enough",
+    "TE-C49-certainly",
+    "TE-C49-perhaps",
+    "TE-C49-alright"
+  ]
+}

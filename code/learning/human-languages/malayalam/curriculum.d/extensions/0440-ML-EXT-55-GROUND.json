@@ -1,0 +1,15 @@
+{
+  "id": "ML-EXT-55-GROUND",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five features of the Kerala landscape in Malayalam.",
+  "prerequisites": [],
+  "lessons": [
+    "ML-C55-river",
+    "ML-C55-rock",
+    "ML-C55-homeland",
+    "ML-C55-path",
+    "ML-C55-field"
+  ]
+}

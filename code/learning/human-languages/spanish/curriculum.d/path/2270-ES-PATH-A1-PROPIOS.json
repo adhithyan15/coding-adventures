@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-A1-PROPIOS",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ES-C66-nombres-propios"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-A1-PROPIOS"
+  ],
+  "after": []
+}

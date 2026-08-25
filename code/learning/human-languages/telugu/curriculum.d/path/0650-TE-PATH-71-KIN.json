@@ -1,0 +1,16 @@
+{
+  "id": "TE-PATH-71-KIN",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "TE-C71-uncle",
+    "TE-C71-aunt",
+    "TE-C71-brother-in-law",
+    "TE-C71-sister-in-law",
+    "TE-C71-son-in-law"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-71-KIN"
+  ],
+  "after": []
+}

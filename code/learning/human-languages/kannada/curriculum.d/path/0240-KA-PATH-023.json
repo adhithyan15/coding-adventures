@@ -1,0 +1,13 @@
+{
+  "id": "KA-PATH-023",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "KA-C21-naayi-bekku",
+    "KA-C22-hasiru-haladi"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-023-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

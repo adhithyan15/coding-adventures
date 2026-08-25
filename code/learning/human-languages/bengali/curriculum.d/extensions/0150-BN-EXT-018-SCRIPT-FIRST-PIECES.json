@@ -1,0 +1,20 @@
+{
+  "id": "BN-EXT-018-SCRIPT-FIRST-PIECES",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can write nine Bengali pieces from memory — six consonants, a vowel sign, its independent twin and the hasanta — and read the words for no and the greeting by assembling them, including the greeting's conjunct.",
+  "prerequisites": [],
+  "lessons": [
+    "BN-W01-na",
+    "BN-W01-aa-matra",
+    "BN-W01-aa",
+    "BN-W01-ha",
+    "BN-W01-ma",
+    "BN-W01-sa",
+    "BN-W01-ka",
+    "BN-W01-hasanta",
+    "BN-W01-ra",
+    "BN-W01-nomoshkar-read"
+  ]
+}

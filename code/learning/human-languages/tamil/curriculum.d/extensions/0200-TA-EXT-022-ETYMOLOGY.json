@@ -1,0 +1,12 @@
+{
+  "id": "TA-EXT-022-ETYMOLOGY",
+  "stage": "A1",
+  "kind": "supporting",
+  "category": "etymology",
+  "canDo": "I can use this Tamil word history as a memory hook without confusing origin and current use.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C17-transparent-middle-synonyms",
+    "TA-C18-mani-homophone-time"
+  ]
+}

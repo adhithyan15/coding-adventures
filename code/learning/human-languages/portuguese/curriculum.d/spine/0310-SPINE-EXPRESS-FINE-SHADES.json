@@ -1,0 +1,10 @@
+{
+  "segments": [],
+  "omits": [
+    "NUANCE-MODALITY",
+    "COLLOCATION-PRECISE",
+    "EMPHASIS-DEVICE",
+    "CONNOTATION-CHOICE"
+  ],
+  "relocates": {}
+}

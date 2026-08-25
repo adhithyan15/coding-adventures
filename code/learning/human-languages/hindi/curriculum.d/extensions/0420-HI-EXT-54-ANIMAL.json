@@ -1,0 +1,15 @@
+{
+  "id": "HI-EXT-54-ANIMAL",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five animals a Hindi speaker meets every day.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C54-cow",
+    "HI-C54-horse",
+    "HI-C54-fish",
+    "HI-C54-bird",
+    "HI-C54-goat"
+  ]
+}

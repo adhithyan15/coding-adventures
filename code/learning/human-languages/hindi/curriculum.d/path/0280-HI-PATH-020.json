@@ -1,0 +1,14 @@
+{
+  "id": "HI-PATH-020",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "HI-C19-umr",
+    "HI-C19-age-grammar"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-020-LANGUAGE-SPECIFIC",
+    "HI-EXT-020-GRAMMAR"
+  ],
+  "after": []
+}

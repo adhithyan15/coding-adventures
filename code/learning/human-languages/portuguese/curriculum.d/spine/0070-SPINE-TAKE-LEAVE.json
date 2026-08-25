@@ -1,0 +1,10 @@
+{
+  "segments": [
+    "PT-PATH-007",
+    "PT-PATH-011"
+  ],
+  "omits": [
+    "FAREWELL-CASUAL"
+  ],
+  "relocates": {}
+}

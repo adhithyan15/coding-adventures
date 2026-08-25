@@ -1,0 +1,16 @@
+{
+  "id": "HI-PATH-64-MEASURE",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "HI-C64-now",
+    "HI-C64-quickly",
+    "HI-C64-slowly",
+    "HI-C64-little",
+    "HI-C64-more"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-64-MEASURE"
+  ],
+  "after": []
+}

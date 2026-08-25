@@ -1,0 +1,13 @@
+{
+  "segments": [
+    "MR-PATH-006",
+    "MR-PATH-008",
+    "MR-PATH-017",
+    "MR-PATH-018"
+  ],
+  "omits": [
+    "WORD-GOOD",
+    "WORD-SOSO"
+  ],
+  "relocates": {}
+}

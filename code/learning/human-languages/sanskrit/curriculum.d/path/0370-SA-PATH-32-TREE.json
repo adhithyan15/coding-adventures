@@ -1,0 +1,16 @@
+{
+  "id": "SA-PATH-32-TREE",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "SA-C32-tree",
+    "SA-C32-leaf",
+    "SA-C32-grass",
+    "SA-C32-vine",
+    "SA-C32-wood"
+  ],
+  "before": [],
+  "inline": [
+    "SA-EXT-32-TREE"
+  ],
+  "after": []
+}

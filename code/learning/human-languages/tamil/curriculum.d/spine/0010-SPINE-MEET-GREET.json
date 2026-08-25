@@ -1,0 +1,17 @@
+{
+  "segments": [
+    "TA-PATH-001",
+    "TA-PATH-003",
+    "TA-PATH-100",
+    "TA-PATH-031",
+    "TA-PATH-50-WELCOME",
+    "TA-PATH-51-SKY",
+    "TA-PATH-58-ANIMAL"
+  ],
+  "omits": [
+    "GREETING-FORMAL",
+    "GREETING-PEACE",
+    "GREETING-WELCOME"
+  ],
+  "relocates": {}
+}

@@ -1,0 +1,15 @@
+{
+  "id": "KA-PATH-43-VERBS",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "KA-C43-come",
+    "KA-C43-sit",
+    "KA-C43-stand",
+    "KA-C43-give"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-43-VERBS"
+  ],
+  "after": []
+}

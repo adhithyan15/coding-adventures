@@ -1,0 +1,16 @@
+{
+  "id": "TA-PATH-45-BODY",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "TA-C45-eye",
+    "TA-C45-ear",
+    "TA-C45-nose",
+    "TA-C45-tooth",
+    "TA-C45-stomach"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-45-BODY"
+  ],
+  "after": []
+}

@@ -1,0 +1,12 @@
+{
+  "id": "KA-PATH-032",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "KA-C40-oota"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-033-MEAL"
+  ],
+  "after": []
+}

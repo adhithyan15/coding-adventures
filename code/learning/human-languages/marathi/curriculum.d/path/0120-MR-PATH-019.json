@@ -1,0 +1,16 @@
+{
+  "id": "MR-PATH-019",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "MR-C05-bolne",
+    "MR-C05-mi-marathi-bolto",
+    "MR-C05-rahne",
+    "MR-C05-kaam-karne",
+    "MR-C05-practice"
+  ],
+  "before": [],
+  "inline": [
+    "MR-EXT-019-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

@@ -1,0 +1,20 @@
+{
+  "id": "LA-PATH-020",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "LA-C20-quid-tibi-nomen",
+    "LA-C20-name-case-variation",
+    "LA-C21-volup-est-convenisse",
+    "LA-C21-meeting-phrase-context",
+    "LA-C21-practice",
+    "LA-C22-tu-vos"
+  ],
+  "before": [],
+  "inline": [
+    "LA-EXT-020-GRAMMAR",
+    "LA-EXT-020-CULTURE-PRAGMATICS"
+  ],
+  "after": [
+    "LA-EXT-020-CONSOLIDATION"
+  ]
+}

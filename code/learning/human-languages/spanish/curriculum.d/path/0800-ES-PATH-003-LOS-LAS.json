@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-003-LOS-LAS",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ES-C45-los-las"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-003-LOS-LAS"
+  ],
+  "after": []
+}

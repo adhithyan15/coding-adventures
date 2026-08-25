@@ -1,0 +1,15 @@
+{
+  "id": "TE-EXT-57-BODY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five more parts of the body in Telugu and say which one hurts.",
+  "prerequisites": [],
+  "lessons": [
+    "TE-C57-neck",
+    "TE-C57-back",
+    "TE-C57-lip",
+    "TE-C57-nail",
+    "TE-C57-bone"
+  ]
+}

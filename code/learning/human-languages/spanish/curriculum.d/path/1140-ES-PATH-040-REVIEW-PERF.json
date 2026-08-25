@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-040-REVIEW-PERF",
+  "spine_node": "SPINE-TALK-ABOUT-PAST",
+  "lessons": [
+    "ES-C49-repaso-perfecto"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-040-REVIEW-PERF"
+  ],
+  "after": []
+}

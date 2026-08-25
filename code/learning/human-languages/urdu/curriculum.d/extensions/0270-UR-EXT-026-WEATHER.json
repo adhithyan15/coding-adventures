@@ -1,0 +1,17 @@
+{
+  "id": "UR-EXT-026-WEATHER",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name rain, sunshine, wind, heat and cold in Urdu, and tell which of these words' roots reach back to a documented ancestor and which stop at an honest dead end.",
+  "prerequisites": [
+    "UR-EXT-025-CLOTHING"
+  ],
+  "lessons": [
+    "UR-C15-barish",
+    "UR-C15-dhoop",
+    "UR-C15-hawa",
+    "UR-C15-garmi",
+    "UR-C15-sardi"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "ES-PATH-040",
+  "spine_node": "SPINE-TALK-ABOUT-PAST",
+  "lessons": [
+    "ES-C16-imperfecto",
+    "ES-C16-comer-imperfecto",
+    "ES-C16-vivir-imperfecto",
+    "ES-C16-ver",
+    "ES-C16-ser-imperfecto",
+    "ES-C16-ir-imperfecto",
+    "ES-C16-ver-imperfecto",
+    "ES-C16-practice",
+    "ES-C16-sintesis-imperfecto"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-040-LANGUAGE-SPECIFIC",
+    "ES-EXT-040-CONSOLIDATION-IMPERFECT"
+  ],
+  "after": []
+}

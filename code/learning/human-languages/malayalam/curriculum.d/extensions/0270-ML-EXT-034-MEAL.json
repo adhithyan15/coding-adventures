@@ -1,0 +1,11 @@
+{
+  "id": "ML-EXT-034-MEAL",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can say I am having a meal in Malayalam, using a second eat-verb this book never taught until now.",
+  "prerequisites": [],
+  "lessons": [
+    "ML-C40-oon"
+  ]
+}

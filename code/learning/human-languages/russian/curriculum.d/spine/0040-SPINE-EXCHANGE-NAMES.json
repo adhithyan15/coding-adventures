@@ -1,0 +1,15 @@
+{
+  "segments": [
+    "RU-PATH-006",
+    "RU-PATH-011",
+    "RU-PATH-014"
+  ],
+  "omits": [
+    "QUESTION-WHAT",
+    "PRONOUN-ME",
+    "PRONOUN-MY",
+    "WORD-NAME",
+    "WORD-IS"
+  ],
+  "relocates": {}
+}

@@ -1,0 +1,24 @@
+{
+  "id": "SA-EXT-100-SCRIPT-RECOGNITION",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can pick out each of these Devanagari characters inside the words I already say, and copy its shape by tracing.",
+  "prerequisites": [],
+  "lessons": [
+    "SA-S01-letter-ma",
+    "SA-S02-letter-na",
+    "SA-S03-letter-a",
+    "SA-S04-letter-aa",
+    "SA-S05-sign-virama",
+    "SA-S06-vowel-sign-aa",
+    "SA-S107-letter-ta",
+    "SA-S108-letter-sa",
+    "SA-S109-vowel-sign-i",
+    "SA-S110-letter-ra",
+    "SA-S111-letter-ka",
+    "SA-S112-vowel-sign-e",
+    "SA-S113-letter-pa",
+    "SA-S114-letter-ha"
+  ]
+}

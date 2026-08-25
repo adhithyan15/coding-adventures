@@ -1,0 +1,12 @@
+{
+  "segments": [
+    "HI-PATH-012",
+    "HI-PATH-018",
+    "HI-PATH-031",
+    "HI-PATH-45-ASK",
+    "HI-PATH-52-KITCHEN",
+    "HI-PATH-61-FIRE"
+  ],
+  "omits": [],
+  "relocates": {}
+}

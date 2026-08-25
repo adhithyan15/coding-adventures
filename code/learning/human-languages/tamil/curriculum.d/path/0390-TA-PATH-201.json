@@ -1,0 +1,17 @@
+{
+  "id": "TA-PATH-201",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "TA-C41-big",
+    "TA-C41-small",
+    "TA-C41-good",
+    "TA-C41-new",
+    "TA-C41-old",
+    "TA-C41-adjective-system"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-201-ADJ"
+  ],
+  "after": []
+}

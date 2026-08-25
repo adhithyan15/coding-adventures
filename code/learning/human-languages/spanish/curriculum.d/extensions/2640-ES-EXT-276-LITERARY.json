@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-276-LITERARY",
+  "stage": "C2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what register, date and verse form a text signals before I have read it.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C276-practice"
+  ]
+}

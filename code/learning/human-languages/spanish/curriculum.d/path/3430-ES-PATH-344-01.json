@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-344-01",
+  "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+  "lessons": [
+    "ES-C344-cero",
+    "ES-C344-numero",
+    "ES-C344-mitad",
+    "ES-C344-docena",
+    "ES-C344-doble"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-344-COUNT"
+  ],
+  "after": []
+}

@@ -1,0 +1,15 @@
+{
+  "id": "RU-EXT-011-FRIEND-FAMILY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name a friend, brother, sister and family in Russian, build a feminine person-noun with по-...-а, and say which pronoun, ты or вы, goes with each.",
+  "prerequisites": [],
+  "lessons": [
+    "RU-C07-drug",
+    "RU-C07-podruga",
+    "RU-C07-brat",
+    "RU-C07-sestra",
+    "RU-C08-semya"
+  ]
+}

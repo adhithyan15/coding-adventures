@@ -1,0 +1,16 @@
+{
+  "id": "SA-PATH-50-SOUND",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "lessons": [
+    "SA-C50-sound",
+    "SA-C50-question",
+    "SA-C50-voice",
+    "SA-C50-song",
+    "SA-C50-verse"
+  ],
+  "before": [],
+  "inline": [
+    "SA-EXT-50-SOUND"
+  ],
+  "after": []
+}

@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-297-COCINA",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the pan, the oven, the fork, the garlic and the soup in Spanish, and thank somebody for the meal.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C297-sarten",
+    "ES-C297-horno",
+    "ES-C297-tenedor",
+    "ES-C297-ajo",
+    "ES-C297-sopa"
+  ]
+}

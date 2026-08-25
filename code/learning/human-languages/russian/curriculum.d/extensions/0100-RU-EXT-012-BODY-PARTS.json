@@ -1,0 +1,15 @@
+{
+  "id": "RU-EXT-012-BODY-PARTS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name the ear, nose, mouth, eye and heart in Russian with their genders, and say which trace to a secure ancient root and which do not.",
+  "prerequisites": [],
+  "lessons": [
+    "RU-C09-ukho",
+    "RU-C09-nos",
+    "RU-C09-rot",
+    "RU-C09-glaz",
+    "RU-C10-serdtse"
+  ]
+}

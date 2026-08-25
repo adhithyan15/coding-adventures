@@ -1,0 +1,15 @@
+{
+  "id": "FA-EXT-022-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name my sister, son, and friend in Persian, tell man and woman apart, and open and close a short interaction with all of them.",
+  "prerequisites": [],
+  "lessons": [
+    "FA-C14-khahar",
+    "FA-C14-pesar",
+    "FA-C14-mard",
+    "FA-C14-zan",
+    "FA-C14-dust"
+  ]
+}

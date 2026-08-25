@@ -1,0 +1,14 @@
+{
+  "id": "FR-EXT-025-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can ask for coffee, tea, milk or sugar, name the article each one takes, and trace each word to the road it travelled into French.",
+  "prerequisites": [],
+  "lessons": [
+    "FR-C28-cafe",
+    "FR-C28-the",
+    "FR-C28-lait",
+    "FR-C28-sucre"
+  ]
+}

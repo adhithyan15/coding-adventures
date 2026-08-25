@@ -1,0 +1,17 @@
+{
+  "id": "ES-PATH-035",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "ES-C39-traer",
+    "ES-C39-conseguir",
+    "ES-C39-jugar",
+    "ES-C39-conocer",
+    "ES-C39-repaso-cambios",
+    "ES-C39-sintesis-elegir"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-035-CONSOLIDATION-SPLITS"
+  ],
+  "after": []
+}

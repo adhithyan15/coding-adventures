@@ -1,0 +1,15 @@
+{
+  "id": "TE-EXT-55-ROAD",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the water, the ground and the road around a Telugu village, and ask my way with them.",
+  "prerequisites": [],
+  "lessons": [
+    "TE-C55-river",
+    "TE-C55-tank",
+    "TE-C55-hill",
+    "TE-C55-village",
+    "TE-C55-path"
+  ]
+}

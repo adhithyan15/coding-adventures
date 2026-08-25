@@ -1,0 +1,14 @@
+{
+  "id": "ZH-EXT-025-YAN-RADICAL",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can write the speech radical 讠 and the twelve-stroke 谢 that carries it, and I can name 亻 for a person and 讠 for speech, two components that carry meaning rather than sound.",
+  "prerequisites": [
+    "ZH-EXT-024-QUESTION-WHAT"
+  ],
+  "lessons": [
+    "ZH-W10-yan",
+    "ZH-W10-xie"
+  ]
+}

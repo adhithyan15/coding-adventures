@@ -1,0 +1,16 @@
+{
+  "segments": [],
+  "omits": [
+    "QUESTION-WHAT",
+    "PRONOUN-I",
+    "PRONOUN-ME",
+    "PRONOUN-YOU",
+    "PRONOUN-MY",
+    "WORD-NAME",
+    "WORD-IS",
+    "INTRO-MY-NAME-IS",
+    "INTRO-WHATS-YOUR-NAME",
+    "INTRO-NICE-TO-MEET-YOU"
+  ],
+  "relocates": {}
+}

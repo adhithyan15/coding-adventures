@@ -1,0 +1,23 @@
+{
+  "id": "ES-PATH-012",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "ES-C05-adios",
+    "ES-C05-hasta",
+    "ES-C05-hasta-limits",
+    "ES-C05-hasta-luego",
+    "ES-C05-hasta-manana",
+    "ES-C05-hasta-pronto",
+    "ES-C05-practice",
+    "ES-C05-repaso-adios"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-012-LANGUAGE-SPECIFIC",
+    "ES-EXT-012-GRAMMAR"
+  ],
+  "after": [
+    "ES-EXT-012-CONSOLIDATION",
+    "ES-EXT-012-CONSOLIDATION-ADIOS"
+  ]
+}

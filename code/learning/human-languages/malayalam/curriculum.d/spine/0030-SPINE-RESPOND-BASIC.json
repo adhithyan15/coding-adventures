@@ -1,0 +1,13 @@
+{
+  "segments": [
+    "ML-PATH-002",
+    "ML-PATH-004",
+    "ML-PATH-49-REPLY",
+    "ML-PATH-58-ANSWER",
+    "ML-PATH-64-SMALL"
+  ],
+  "omits": [
+    "RESPONSE-YESNO"
+  ],
+  "relocates": {}
+}

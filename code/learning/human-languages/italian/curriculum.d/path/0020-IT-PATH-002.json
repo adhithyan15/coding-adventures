@@ -1,0 +1,10 @@
+{
+  "id": "IT-PATH-002",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "IT-C01-buono"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

@@ -1,0 +1,16 @@
+{
+  "segments": [
+    "ES-PATH-015",
+    "ES-PATH-015-LOCATION",
+    "ES-PATH-015-IR",
+    "ES-PATH-015-HAY",
+    "ES-PATH-015-HAY-ETYM",
+    "ES-PATH-015-HAY-QUE",
+    "ES-PATH-015-REVIEW-HAY",
+    "ES-PATH-015-SYNTH-HAY",
+    "ES-PATH-340-01",
+    "ES-PATH-341-01"
+  ],
+  "omits": [],
+  "relocates": {}
+}

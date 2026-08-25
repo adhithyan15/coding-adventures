@@ -1,0 +1,16 @@
+{
+  "segments": [
+    "TA-PATH-008",
+    "TA-PATH-010",
+    "TA-PATH-019",
+    "TA-PATH-034",
+    "TA-PATH-45-BODY",
+    "TA-PATH-55-BODY",
+    "TA-PATH-61-FEEL"
+  ],
+  "omits": [
+    "WORD-GOOD",
+    "WORD-SOSO"
+  ],
+  "relocates": {}
+}

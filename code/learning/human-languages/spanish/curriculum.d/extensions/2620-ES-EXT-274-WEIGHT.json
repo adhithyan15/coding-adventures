@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-274-WEIGHT",
+  "stage": "C2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the weight each culturally loaded phrase borrows, and say which can be used without knowing its source.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C274-practice"
+  ]
+}

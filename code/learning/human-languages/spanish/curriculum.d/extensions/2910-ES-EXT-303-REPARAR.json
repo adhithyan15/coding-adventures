@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-303-REPARAR",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can repair a conversation five ways in Spanish: ask for help, for time, for a repeat, admit I do not know, and ask what a word means.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C303-ayuda",
+    "ES-C303-momento",
+    "ES-C303-otra-vez",
+    "ES-C303-no-se",
+    "ES-C303-que-significa"
+  ]
+}

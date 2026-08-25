@@ -1,0 +1,15 @@
+{
+  "id": "IT-PATH-027",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "IT-C23-amico-amica",
+    "IT-C23-famiglia",
+    "IT-C23-nome",
+    "IT-C23-persona"
+  ],
+  "before": [],
+  "inline": [
+    "IT-EXT-027-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

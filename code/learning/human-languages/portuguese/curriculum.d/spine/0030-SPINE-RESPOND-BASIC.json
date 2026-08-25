@@ -1,0 +1,10 @@
+{
+  "segments": [],
+  "omits": [
+    "RESPONSE-YES",
+    "RESPONSE-NO",
+    "RESPONSE-YESNO",
+    "RESPONSE-OKAY"
+  ],
+  "relocates": {}
+}

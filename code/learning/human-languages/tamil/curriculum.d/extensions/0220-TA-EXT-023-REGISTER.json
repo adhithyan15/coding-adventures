@@ -1,0 +1,11 @@
+{
+  "id": "TA-EXT-023-REGISTER",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "register",
+  "canDo": "I can choose the Tamil form that fits this relationship and setting.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C19-age-register-grammar"
+  ]
+}

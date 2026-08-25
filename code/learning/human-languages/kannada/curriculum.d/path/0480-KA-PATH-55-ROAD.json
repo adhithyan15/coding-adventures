@@ -1,0 +1,16 @@
+{
+  "id": "KA-PATH-55-ROAD",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "KA-C55-river",
+    "KA-C55-tank",
+    "KA-C55-hill",
+    "KA-C55-village",
+    "KA-C55-path"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-55-ROAD"
+  ],
+  "after": []
+}

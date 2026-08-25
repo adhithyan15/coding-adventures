@@ -1,0 +1,16 @@
+{
+  "id": "HI-PATH-023",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "HI-C23-kutta-billi",
+    "HI-C23-billi-history",
+    "HI-C24-hara-pila",
+    "HI-C24-pila-history"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-023-LANGUAGE-SPECIFIC",
+    "HI-EXT-023-ETYMOLOGY"
+  ],
+  "after": []
+}

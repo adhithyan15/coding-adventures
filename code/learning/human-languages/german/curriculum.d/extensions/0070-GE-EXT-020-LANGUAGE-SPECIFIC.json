@@ -1,0 +1,12 @@
+{
+  "id": "GE-EXT-020-LANGUAGE-SPECIFIC",
+  "stage": "A2",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can form the German Perfekt that speech actually uses, and recognize the Präteritum the written language keeps — the two pasts sein draws its war/waren forms from.",
+  "prerequisites": [],
+  "lessons": [
+    "GE-C15-perfekt",
+    "GE-C15-praeteritum"
+  ]
+}

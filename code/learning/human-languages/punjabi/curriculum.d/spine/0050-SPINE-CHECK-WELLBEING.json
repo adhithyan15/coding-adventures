@@ -1,0 +1,13 @@
+{
+  "segments": [
+    "PA-PATH-005",
+    "PA-PATH-008",
+    "PA-PATH-016",
+    "PA-PATH-017"
+  ],
+  "omits": [
+    "WORD-GOOD",
+    "WORD-SOSO"
+  ],
+  "relocates": {}
+}

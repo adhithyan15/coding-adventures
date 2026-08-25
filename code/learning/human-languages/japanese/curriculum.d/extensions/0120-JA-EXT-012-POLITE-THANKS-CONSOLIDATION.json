@@ -1,0 +1,15 @@
+{
+  "id": "JA-EXT-012-POLITE-THANKS-CONSOLIDATION",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "consolidation",
+  "canDo": "I can read and write ありがとうございます in full, and I know when the polite form is the one to use.",
+  "prerequisites": [
+    "JA-EXT-011-DAKUTEN-WRITING"
+  ],
+  "lessons": [
+    "JA-W03-ma",
+    "JA-W03-su",
+    "JA-C03-practice"
+  ]
+}

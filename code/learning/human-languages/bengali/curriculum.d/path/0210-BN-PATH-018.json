@@ -1,0 +1,14 @@
+{
+  "id": "BN-PATH-018",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "BN-C13-doya-kore",
+    "BN-C13-dukkhito",
+    "BN-C13-maf-korben"
+  ],
+  "before": [],
+  "inline": [
+    "BN-EXT-018-COURTESY-AND-WELCOME"
+  ],
+  "after": []
+}

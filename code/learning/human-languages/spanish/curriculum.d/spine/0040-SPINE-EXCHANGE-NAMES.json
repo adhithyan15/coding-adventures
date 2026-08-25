@@ -1,0 +1,26 @@
+{
+  "segments": [
+    "ES-PATH-007",
+    "ES-PATH-009",
+    "ES-PATH-014",
+    "ES-PATH-007-ORIGIN",
+    "ES-PATH-021",
+    "ES-PATH-285-01",
+    "ES-PATH-292-01",
+    "ES-PATH-299-01",
+    "ES-PATH-305-01",
+    "ES-PATH-319-03",
+    "ES-PATH-306-01",
+    "ES-PATH-307-01",
+    "ES-PATH-308-01",
+    "ES-PATH-309-01",
+    "ES-PATH-335-01"
+  ],
+  "omits": [
+    "PRONOUN-I",
+    "PRONOUN-MY",
+    "WORD-NAME",
+    "WORD-IS"
+  ],
+  "relocates": {}
+}

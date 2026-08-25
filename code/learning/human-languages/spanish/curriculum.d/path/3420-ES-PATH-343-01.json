@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-343-01",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "ES-C343-fecha",
+    "ES-C343-calendario",
+    "ES-C343-proximo",
+    "ES-C343-epoca",
+    "ES-C343-siglo"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-343-CLOCK"
+  ],
+  "after": []
+}

@@ -1,0 +1,15 @@
+{
+  "id": "HI-EXT-56-ROAD",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five places between a house and the next village.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C56-road",
+    "HI-C56-village",
+    "HI-C56-market",
+    "HI-C56-shop",
+    "HI-C56-field"
+  ]
+}

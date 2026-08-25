@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-275-SHADES",
+  "stage": "C2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what English does with each of the four distinctions, and which needs exposure rather than a rule.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C275-practice"
+  ]
+}

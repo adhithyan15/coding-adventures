@@ -1,0 +1,16 @@
+{
+  "id": "ML-PATH-46-ASK",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "ML-C46-fruit",
+    "ML-C46-cloth",
+    "ML-C46-lamp",
+    "ML-C46-salt",
+    "ML-C46-book"
+  ],
+  "before": [],
+  "inline": [
+    "ML-EXT-46-ASK"
+  ],
+  "after": []
+}

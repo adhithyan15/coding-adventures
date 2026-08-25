@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-318-03",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "ES-C318-repaso-genero"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-318-GENERO"
+  ],
+  "after": []
+}

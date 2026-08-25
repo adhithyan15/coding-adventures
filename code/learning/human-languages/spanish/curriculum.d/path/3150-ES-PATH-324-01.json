@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-324-01",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "ES-C324-verdad",
+    "ES-C324-falso",
+    "ES-C324-acaso",
+    "ES-C324-menos",
+    "ES-C324-siquiera"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-324-TRUE"
+  ],
+  "after": []
+}

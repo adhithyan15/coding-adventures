@@ -1,0 +1,11 @@
+{
+  "id": "GE-PATH-023",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "GE-C18-ja",
+    "GE-C18-nein"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

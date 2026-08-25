@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-298-01",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "ES-C298-tal-vez",
+    "ES-C298-puede-ser",
+    "ES-C298-en-efecto",
+    "ES-C298-sin-duda",
+    "ES-C298-ni-hablar"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-298-RESPUESTAS"
+  ],
+  "after": []
+}

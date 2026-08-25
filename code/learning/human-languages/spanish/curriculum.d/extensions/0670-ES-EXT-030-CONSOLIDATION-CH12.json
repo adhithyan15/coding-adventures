@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-030-CONSOLIDATION-CH12",
+  "stage": "A1",
+  "kind": "supporting",
+  "category": "consolidation",
+  "canDo": "I can retrieve singular doing, making, saying, and the learned yo-go comparison together.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C12-practice"
+  ]
+}

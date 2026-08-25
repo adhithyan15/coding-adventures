@@ -1,0 +1,15 @@
+{
+  "segments": [
+    "ES-PATH-B1-SI",
+    "ES-PATH-B1-SI-FUTURO",
+    "ES-PATH-B1-SYNTH-CONDICION",
+    "ES-PATH-B1-HABLARA",
+    "ES-PATH-B1-TUVIERA",
+    "ES-PATH-B1-SI-TUVIERA",
+    "ES-PATH-B1-REVIEW-COND",
+    "ES-PATH-B1-SYNTH-COND",
+    "ES-PATH-210-DEPENDS"
+  ],
+  "omits": [],
+  "relocates": {}
+}

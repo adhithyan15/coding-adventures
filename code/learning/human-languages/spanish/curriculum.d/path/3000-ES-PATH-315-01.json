@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-315-01",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "ES-C315-pecho",
+    "ES-C315-fuerza",
+    "ES-C315-descanso",
+    "ES-C315-miedo",
+    "ES-C315-risa"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-315-BODY"
+  ],
+  "after": []
+}

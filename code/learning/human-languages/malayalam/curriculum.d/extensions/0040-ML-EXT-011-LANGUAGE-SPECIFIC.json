@@ -1,0 +1,16 @@
+{
+  "id": "ML-EXT-011-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can use the additional Malayalam material required at this point in the path.",
+  "prerequisites": [],
+  "lessons": [
+    "ML-C05-samsaarikkuka",
+    "ML-C05-joli-ceyyuka",
+    "ML-C05-njaan-malayalam-samsaarikkunnu",
+    "ML-C05-taamasikkuka",
+    "ML-C06-dative-ikku",
+    "ML-C06-dative-subject"
+  ]
+}

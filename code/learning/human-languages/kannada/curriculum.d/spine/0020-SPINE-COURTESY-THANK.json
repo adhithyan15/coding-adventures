@@ -1,0 +1,13 @@
+{
+  "segments": [
+    "KA-PATH-002",
+    "KA-PATH-008",
+    "KA-PATH-51-COURTESY",
+    "KA-PATH-56-HOUSE",
+    "KA-PATH-65-MANNERS"
+  ],
+  "omits": [
+    "COURTESY-THANKS-CASUAL"
+  ],
+  "relocates": {}
+}

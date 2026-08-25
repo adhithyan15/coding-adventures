@@ -1,0 +1,16 @@
+{
+  "id": "ML-PATH-53-SKY",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "ML-C53-sky",
+    "ML-C53-sun",
+    "ML-C53-moon",
+    "ML-C53-star",
+    "ML-C53-sunshine"
+  ],
+  "before": [],
+  "inline": [
+    "ML-EXT-53-SKY"
+  ],
+  "after": []
+}

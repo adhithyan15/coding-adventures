@@ -1,0 +1,14 @@
+{
+  "id": "TA-EXT-43-KIN",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name four of the people in a household and say them in order.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C43-child",
+    "TA-C43-son",
+    "TA-C43-daughter",
+    "TA-C43-family"
+  ]
+}

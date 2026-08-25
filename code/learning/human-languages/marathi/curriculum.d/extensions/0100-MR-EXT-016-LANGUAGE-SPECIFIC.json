@@ -1,0 +1,16 @@
+{
+  "id": "MR-EXT-016-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name a friend, a family, a brother, and a sister in Marathi.",
+  "prerequisites": [],
+  "lessons": [
+    "MR-C11-mitra",
+    "MR-R11-mitra-r1",
+    "MR-C11-kutumb",
+    "MR-R11-kutumb-r1",
+    "MR-C11-bhau",
+    "MR-C11-bahin"
+  ]
+}

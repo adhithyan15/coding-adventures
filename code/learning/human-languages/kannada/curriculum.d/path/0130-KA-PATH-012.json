@@ -1,0 +1,11 @@
+{
+  "id": "KA-PATH-012",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "KA-C08-dayavittu",
+    "KA-C09-kshamisi"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

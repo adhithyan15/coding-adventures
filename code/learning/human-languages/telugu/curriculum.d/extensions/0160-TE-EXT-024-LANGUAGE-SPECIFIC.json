@@ -1,0 +1,12 @@
+{
+  "id": "TE-EXT-024-LANGUAGE-SPECIFIC",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can use the additional Telugu material required at this point in the path.",
+  "prerequisites": [],
+  "lessons": [
+    "TE-C21-kukka-pilli",
+    "TE-C22-pacha-pasupu"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "id": "AR-EXT-006-SCRIPT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can recognize and use the Arabic script features introduced inside these words.",
+  "prerequisites": [],
+  "lessons": [
+    "AR-W01-direction-and-alif",
+    "AR-W01-abjad-short-vowels",
+    "AR-W02-joining-sin-lam",
+    "AR-W02-lam-alif-joins",
+    "AR-W03-dots-mim-ba-salam",
+    "AR-W03-write-salam"
+  ]
+}

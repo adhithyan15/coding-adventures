@@ -1,0 +1,15 @@
+{
+  "id": "KA-EXT-65-MANNERS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the five Kannada courtesy words that sit behind please and thank you.",
+  "prerequisites": [],
+  "lessons": [
+    "KA-C65-request",
+    "KA-C65-permission",
+    "KA-C65-hesitancy",
+    "KA-C65-trust",
+    "KA-C65-manners"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "id": "HI-EXT-030-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name the house, the door, the room and the chair I am shown to, and give each one the possessive its gender demands.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C36-ghar",
+    "HI-C36-darvaaza",
+    "HI-C36-kamra",
+    "HI-C36-kursi"
+  ]
+}

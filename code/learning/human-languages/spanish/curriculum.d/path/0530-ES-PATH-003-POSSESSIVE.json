@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-003-POSSESSIVE",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ES-C10-mi-tu-su"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-003-POSSESSIVE"
+  ],
+  "after": []
+}

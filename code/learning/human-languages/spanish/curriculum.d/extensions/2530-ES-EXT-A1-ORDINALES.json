@@ -1,0 +1,12 @@
+{
+  "id": "ES-EXT-A1-ORDINALES",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can use the additional Spanish material required at this point in the path.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C67-primero",
+    "ES-C67-primer-libro"
+  ]
+}

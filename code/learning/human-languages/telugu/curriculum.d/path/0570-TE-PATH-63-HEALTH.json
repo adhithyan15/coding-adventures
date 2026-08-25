@@ -1,0 +1,16 @@
+{
+  "id": "TE-PATH-63-HEALTH",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "TE-C63-hunger",
+    "TE-C63-sleep",
+    "TE-C63-cough",
+    "TE-C63-disease",
+    "TE-C63-health"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-63-HEALTH"
+  ],
+  "after": []
+}

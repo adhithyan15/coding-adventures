@@ -1,0 +1,13 @@
+{
+  "id": "TA-PATH-034",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "TA-C38-udambu",
+    "TA-C38-sugam"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-034-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

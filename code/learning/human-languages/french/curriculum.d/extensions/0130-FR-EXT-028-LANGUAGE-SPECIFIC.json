@@ -1,0 +1,14 @@
+{
+  "id": "FR-EXT-028-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name the eye and its irregular plural yeux, the nose, the mouth and the stomach, extending Chapter 17's head and hand.",
+  "prerequisites": [],
+  "lessons": [
+    "FR-C31-oeil",
+    "FR-C31-nez",
+    "FR-C31-bouche",
+    "FR-C31-ventre"
+  ]
+}

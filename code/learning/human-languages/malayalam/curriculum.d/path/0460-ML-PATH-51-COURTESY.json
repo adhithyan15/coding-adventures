@@ -1,0 +1,16 @@
+{
+  "id": "ML-PATH-51-COURTESY",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "lessons": [
+    "ML-C51-gratitude",
+    "ML-C51-favour",
+    "ML-C51-respect",
+    "ML-C51-blessing",
+    "ML-C51-salutation"
+  ],
+  "before": [],
+  "inline": [
+    "ML-EXT-51-COURTESY"
+  ],
+  "after": []
+}

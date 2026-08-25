@@ -1,0 +1,12 @@
+{
+  "id": "KA-PATH-013",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "KA-C10-vaara"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-013-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

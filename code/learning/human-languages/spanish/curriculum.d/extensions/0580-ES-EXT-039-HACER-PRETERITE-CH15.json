@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-039-HACER-PRETERITE-CH15",
+  "stage": "A2",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can form the three strong singular completed-past forms of hacer.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C15-hacer-preterite"
+  ]
+}

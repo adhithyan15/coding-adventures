@@ -1,0 +1,14 @@
+{
+  "id": "ES-EXT-278-AFUERA",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the wind, the snow, a tree and a flower in Spanish, and say for each whether its English relative is an inherited cousin or a later borrowing.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C278-viento",
+    "ES-C278-nieve",
+    "ES-C278-arbol",
+    "ES-C278-flor"
+  ]
+}

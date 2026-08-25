@@ -1,0 +1,13 @@
+{
+  "segments": [
+    "KA-PATH-012",
+    "KA-PATH-018",
+    "KA-PATH-031",
+    "KA-PATH-032",
+    "KA-PATH-46-ASK",
+    "KA-PATH-55-ROAD",
+    "KA-PATH-62-MADE"
+  ],
+  "omits": [],
+  "relocates": {}
+}

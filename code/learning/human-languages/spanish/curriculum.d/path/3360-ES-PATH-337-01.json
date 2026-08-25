@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-337-01",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "ES-W01-frase-propia"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-337-WRITING"
+  ],
+  "after": []
+}

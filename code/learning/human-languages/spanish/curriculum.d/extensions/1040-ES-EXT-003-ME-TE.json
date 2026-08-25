@@ -1,0 +1,13 @@
+{
+  "id": "ES-EXT-003-ME-TE",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can use the additional Spanish material required at this point in the path.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C42-me-objeto",
+    "ES-C42-te",
+    "ES-C42-te-thee"
+  ]
+}

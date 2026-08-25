@@ -1,0 +1,16 @@
+{
+  "id": "PA-PATH-010",
+  "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+  "lessons": [
+    "PA-C05-bolna",
+    "PA-C05-main-punjabi-bolda-han",
+    "PA-C06-numbers-1-5",
+    "PA-C06-panj-convergence"
+  ],
+  "before": [],
+  "inline": [
+    "PA-EXT-010-LANGUAGE-SPECIFIC",
+    "PA-EXT-010-ETYMOLOGY"
+  ],
+  "after": []
+}

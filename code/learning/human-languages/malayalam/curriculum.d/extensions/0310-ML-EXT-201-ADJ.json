@@ -1,0 +1,16 @@
+{
+  "id": "ML-EXT-201-ADJ",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can describe things in Malayalam — big, small, good, new, old — and I can see the one pattern the six words are built from.",
+  "prerequisites": [],
+  "lessons": [
+    "ML-C42-big",
+    "ML-C42-small",
+    "ML-C42-good",
+    "ML-C42-new",
+    "ML-C42-old",
+    "ML-C42-adjective-system"
+  ]
+}

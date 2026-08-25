@@ -1,0 +1,13 @@
+{
+  "id": "ES-PATH-274-04",
+  "spine_node": "SPINE-READ-CULTURAL-WEIGHT",
+  "lessons": [
+    "ES-C274-tener-gracia",
+    "ES-C274-practice"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-274-WEIGHT"
+  ],
+  "after": []
+}

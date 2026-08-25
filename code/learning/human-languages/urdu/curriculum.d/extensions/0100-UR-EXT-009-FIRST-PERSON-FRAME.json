@@ -1,0 +1,13 @@
+{
+  "id": "UR-EXT-009-FIRST-PERSON-FRAME",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can open an Urdu answer with maiṅ and close it with hūṅ without learning the full copula table.",
+  "prerequisites": [
+    "UR-EXT-008-HONORIFIC-COPULA"
+  ],
+  "lessons": [
+    "UR-C04-main-hun"
+  ]
+}

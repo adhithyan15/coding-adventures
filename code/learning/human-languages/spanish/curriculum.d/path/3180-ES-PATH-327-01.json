@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-327-01",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "ES-C327-despierto",
+    "ES-C327-dormido",
+    "ES-C327-fuerte",
+    "ES-C327-debil",
+    "ES-C327-sano"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-327-STATE"
+  ],
+  "after": []
+}

@@ -1,0 +1,16 @@
+{
+  "id": "ZH-PATH-005",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "ZH-W06-zai",
+    "ZH-W06-jian",
+    "ZH-C06-zaijian",
+    "ZH-C06-practice"
+  ],
+  "before": [],
+  "inline": [
+    "ZH-EXT-015-ZAIJIAN-LITERAL",
+    "ZH-EXT-016-CONVERSATION-CLOSE"
+  ],
+  "after": []
+}

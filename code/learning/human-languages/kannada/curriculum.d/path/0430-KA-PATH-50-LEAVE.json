@@ -1,0 +1,16 @@
+{
+  "id": "KA-PATH-50-LEAVE",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "KA-C50-now",
+    "KA-C50-day-after",
+    "KA-C50-journey",
+    "KA-C50-set-out",
+    "KA-C50-farewell"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-50-LEAVE"
+  ],
+  "after": []
+}

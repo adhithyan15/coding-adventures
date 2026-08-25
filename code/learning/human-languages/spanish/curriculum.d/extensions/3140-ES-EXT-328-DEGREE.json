@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-328-DEGREE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say how much of something there is, from none at all to more than expected.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C328-asi",
+    "ES-C328-jamas",
+    "ES-C328-apenas",
+    "ES-C328-casi",
+    "ES-C328-incluso"
+  ]
+}

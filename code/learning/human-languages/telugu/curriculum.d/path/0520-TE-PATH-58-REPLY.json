@@ -1,0 +1,16 @@
+{
+  "id": "TE-PATH-58-REPLY",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "TE-C58-a-little",
+    "TE-C58-more",
+    "TE-C58-less",
+    "TE-C58-no-thanks",
+    "TE-C58-thats-all"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-58-REPLY"
+  ],
+  "after": []
+}

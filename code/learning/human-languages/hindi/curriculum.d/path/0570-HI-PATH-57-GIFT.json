@@ -1,0 +1,16 @@
+{
+  "id": "HI-PATH-57-GIFT",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "lessons": [
+    "HI-C57-present",
+    "HI-C57-feast",
+    "HI-C57-platter",
+    "HI-C57-fragrance",
+    "HI-C57-sweetness"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-57-GIFT"
+  ],
+  "after": []
+}

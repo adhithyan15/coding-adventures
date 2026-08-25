@@ -1,0 +1,14 @@
+{
+  "id": "TA-EXT-031-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name the house, its door, a room and a chair in Tamil, so a greeting has somewhere to happen.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C35-veedu",
+    "TA-C35-kadavu",
+    "TA-C35-arai",
+    "TA-C35-naarkaali"
+  ]
+}

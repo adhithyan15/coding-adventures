@@ -1,0 +1,13 @@
+{
+  "id": "IT-PATH-015",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "IT-C10-genitori",
+    "IT-C10-fratello-sorella"
+  ],
+  "before": [],
+  "inline": [
+    "IT-EXT-015-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

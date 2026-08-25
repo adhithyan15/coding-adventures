@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-A1-REVIEW-PARAD",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ES-C63-repaso-paradigmas"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-A1-REVIEW-PARAD"
+  ],
+  "after": []
+}

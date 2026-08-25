@@ -1,0 +1,16 @@
+{
+  "id": "HI-PATH-52-KITCHEN",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "HI-C52-rice",
+    "HI-C52-lentils",
+    "HI-C52-oil",
+    "HI-C52-sugar",
+    "HI-C52-vegetable"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-52-KITCHEN"
+  ],
+  "after": []
+}

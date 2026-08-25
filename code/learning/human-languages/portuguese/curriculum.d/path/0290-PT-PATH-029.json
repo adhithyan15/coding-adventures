@@ -1,0 +1,15 @@
+{
+  "id": "PT-PATH-029",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "PT-C25-amigo",
+    "PT-C25-familia",
+    "PT-C25-homem",
+    "PT-C25-mulher"
+  ],
+  "before": [],
+  "inline": [
+    "PT-EXT-029-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "id": "ES-EXT-013-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can use the additional Spanish material required at this point in the path.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C06-cafe",
+    "ES-C06-hablar",
+    "ES-C06-hablo",
+    "ES-C06-pro-drop",
+    "ES-C06-hablas",
+    "ES-C06-habla",
+    "ES-C06-ar-presente",
+    "ES-C06-trabajar",
+    "ES-C06-estudiar",
+    "ES-C06-espanol",
+    "ES-C06-hablo-espanol"
+  ]
+}

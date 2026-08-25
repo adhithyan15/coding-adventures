@@ -1,0 +1,15 @@
+{
+  "id": "ML-EXT-48-ROLE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what someone's work is in Malayalam.",
+  "prerequisites": [],
+  "lessons": [
+    "ML-C48-teacher",
+    "ML-C48-student",
+    "ML-C48-doctor",
+    "ML-C48-farmer",
+    "ML-C48-guest"
+  ]
+}

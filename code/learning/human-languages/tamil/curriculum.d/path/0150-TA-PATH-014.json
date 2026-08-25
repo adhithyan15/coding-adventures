@@ -1,0 +1,29 @@
+{
+  "id": "TA-PATH-014",
+  "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+  "lessons": [
+    "TA-C07-numbers-1-5",
+    "TA-W07-digits-1-3",
+    "TA-W07-digits-4-5",
+    "TA-W07-number-words-1-5",
+    "TA-W07-numbers-1-5-guided-copy",
+    "TA-W07-numbers-1-5-delayed-copy",
+    "TA-W07-numbers-1-5-dictation",
+    "TA-C07-numbers-1-5-family",
+    "TA-C07-numbers-6-10",
+    "TA-W07-digits-6-8",
+    "TA-W07-digits-9-10",
+    "TA-W07-number-words-6-10",
+    "TA-W07-numbers-6-10-guided-copy",
+    "TA-W07-numbers-6-10-delayed-copy",
+    "TA-W07-numbers-6-10-dictation",
+    "TA-C07-numbers-6-10-family",
+    "TA-C07-numbers-practice"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-014-LANGUAGE-SPECIFIC",
+    "TA-EXT-014-ETYMOLOGY"
+  ],
+  "after": []
+}

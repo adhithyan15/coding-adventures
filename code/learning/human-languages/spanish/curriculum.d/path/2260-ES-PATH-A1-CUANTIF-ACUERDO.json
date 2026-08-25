@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-A1-CUANTIF-ACUERDO",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ES-C66-mucha-agua"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-A1-CUANTIF-ACUERDO"
+  ],
+  "after": []
+}

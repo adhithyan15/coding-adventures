@@ -1,0 +1,16 @@
+{
+  "id": "KA-PATH-64-JOIN",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "KA-C64-after",
+    "KA-C64-also",
+    "KA-C64-still",
+    "KA-C64-soon",
+    "KA-C64-in-that-case"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-64-JOIN"
+  ],
+  "after": []
+}

@@ -1,0 +1,28 @@
+{
+  "id": "LA-PATH-024",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "LA-C28-dies",
+    "LA-C29-nox",
+    "LA-C30-bonam-noctem",
+    "LA-C31-mane",
+    "LA-C32-bonum-mane",
+    "LA-C33-vesper",
+    "LA-C33-vesper-afterlives",
+    "LA-C33-practice",
+    "LA-C34-bonum-vesperum",
+    "LA-C35-meridies",
+    "LA-C36-salve-post-meridiem",
+    "LA-C36-timeless-salve",
+    "LA-C36-practice"
+  ],
+  "before": [],
+  "inline": [
+    "LA-EXT-024-LANGUAGE-SPECIFIC",
+    "LA-EXT-024-ETYMOLOGY"
+  ],
+  "after": [
+    "LA-EXT-024-CULTURE-PRAGMATICS",
+    "LA-EXT-024-CONSOLIDATION"
+  ]
+}

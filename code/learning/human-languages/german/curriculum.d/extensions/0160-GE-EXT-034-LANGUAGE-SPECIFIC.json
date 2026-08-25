@@ -1,0 +1,14 @@
+{
+  "id": "GE-EXT-034-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name the arm, finger, foot, and heart in German, completing the body set Chapter 17 named but did not finish teaching.",
+  "prerequisites": [],
+  "lessons": [
+    "GE-C31-arm",
+    "GE-C31-finger",
+    "GE-C31-fuss",
+    "GE-C31-herz"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "id": "KA-EXT-43-VERBS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name four more everyday actions and say them in order.",
+  "prerequisites": [],
+  "lessons": [
+    "KA-C43-come",
+    "KA-C43-sit",
+    "KA-C43-stand",
+    "KA-C43-give"
+  ]
+}

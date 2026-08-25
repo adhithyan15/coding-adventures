@@ -1,0 +1,15 @@
+{
+  "id": "IT-PATH-019",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "IT-C14-avere",
+    "IT-C14-eta",
+    "IT-C15-passato-prossimo",
+    "IT-C15-passato-remoto"
+  ],
+  "before": [],
+  "inline": [
+    "IT-EXT-019-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

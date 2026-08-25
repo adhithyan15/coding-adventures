@@ -1,0 +1,13 @@
+{
+  "id": "UR-EXT-010-SCRIPT-BRIDGE",
+  "stage": "pre-A1",
+  "kind": "supporting",
+  "category": "script",
+  "canDo": "I can read Urdu ṭhīk and connect it to Hindi only after recognizing the Urdu retroflex and aspiration sequence.",
+  "prerequisites": [
+    "UR-EXT-009-FIRST-PERSON-FRAME"
+  ],
+  "lessons": [
+    "UR-C04-thik"
+  ]
+}

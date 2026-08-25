@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-318-DISCULPA",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "review",
+  "canDo": "I can choose between lo siento and perdon and say why they are not interchangeable.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C318-repaso-disculparse"
+  ]
+}

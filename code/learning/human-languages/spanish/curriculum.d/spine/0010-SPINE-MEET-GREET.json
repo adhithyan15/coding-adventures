@@ -1,0 +1,18 @@
+{
+  "segments": [
+    "ES-PATH-001",
+    "ES-PATH-005",
+    "ES-PATH-282-01",
+    "ES-PATH-289-01",
+    "ES-PATH-296-01",
+    "ES-PATH-325-01",
+    "ES-PATH-330-01",
+    "ES-PATH-331-01"
+  ],
+  "omits": [
+    "GREETING-FORMAL",
+    "GREETING-PEACE",
+    "GREETING-WELCOME"
+  ],
+  "relocates": {}
+}

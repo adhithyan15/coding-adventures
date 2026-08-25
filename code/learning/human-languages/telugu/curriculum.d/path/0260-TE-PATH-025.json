@@ -1,0 +1,23 @@
+{
+  "id": "TE-PATH-025",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "TE-C23-roju",
+    "TE-C24-ratri",
+    "TE-C25-shubha-ratri",
+    "TE-C26-udayam",
+    "TE-C27-sayantram",
+    "TE-C28-madhyahnam-widened",
+    "TE-C29-subhodayam",
+    "TE-C30-subha-sayantram",
+    "TE-C31-subha-madhyahnam",
+    "TE-C31-subha-madhyahnam-register"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-025-LANGUAGE-SPECIFIC"
+  ],
+  "after": [
+    "TE-EXT-025-REGISTER"
+  ]
+}

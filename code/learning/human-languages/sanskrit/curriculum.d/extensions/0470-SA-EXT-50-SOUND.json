@@ -1,0 +1,15 @@
+{
+  "id": "SA-EXT-50-SOUND",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five kinds of sound in Sanskrit.",
+  "prerequisites": [],
+  "lessons": [
+    "SA-C50-sound",
+    "SA-C50-question",
+    "SA-C50-voice",
+    "SA-C50-song",
+    "SA-C50-verse"
+  ]
+}

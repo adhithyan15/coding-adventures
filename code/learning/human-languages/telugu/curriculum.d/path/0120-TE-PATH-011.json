@@ -1,0 +1,19 @@
+{
+  "id": "TE-PATH-011",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "TE-C05-maatlaadu",
+    "TE-C05-nenu-telugu-maatlaadataanu",
+    "TE-C05-pani-ceyu",
+    "TE-C05-undu",
+    "TE-C05-practice",
+    "TE-C06-dative-ku",
+    "TE-C06-dative-subject"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-011-LANGUAGE-SPECIFIC",
+    "TE-EXT-011-CONSOLIDATION"
+  ],
+  "after": []
+}

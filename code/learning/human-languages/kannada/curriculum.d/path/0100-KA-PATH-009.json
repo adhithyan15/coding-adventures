@@ -1,0 +1,15 @@
+{
+  "id": "KA-PATH-009",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "KA-C04-hoogu",
+    "KA-C04-hoogi-baruttene",
+    "KA-C04-naale-sigona",
+    "KA-C04-matte-sigona"
+  ],
+  "before": [
+    "KA-EXT-009-LANGUAGE-SPECIFIC"
+  ],
+  "inline": [],
+  "after": []
+}

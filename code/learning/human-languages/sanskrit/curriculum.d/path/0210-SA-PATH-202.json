@@ -1,0 +1,17 @@
+{
+  "id": "SA-PATH-202",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "SA-C16-house",
+    "SA-C16-village",
+    "SA-C16-road",
+    "SA-C16-forest",
+    "SA-C16-city",
+    "SA-C16-noun-families"
+  ],
+  "before": [],
+  "inline": [
+    "SA-EXT-202-PLACE"
+  ],
+  "after": []
+}

@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-294-01",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "ES-C294-cuchillo",
+    "ES-C294-taza",
+    "ES-C294-olla",
+    "ES-C294-manta",
+    "ES-C294-escoba"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-294-CASA"
+  ],
+  "after": []
+}

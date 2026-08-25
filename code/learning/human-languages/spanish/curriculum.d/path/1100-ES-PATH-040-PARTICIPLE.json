@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-040-PARTICIPLE",
+  "spine_node": "SPINE-TALK-ABOUT-PAST",
+  "lessons": [
+    "ES-C49-participio"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-040-PARTICIPLE"
+  ],
+  "after": []
+}

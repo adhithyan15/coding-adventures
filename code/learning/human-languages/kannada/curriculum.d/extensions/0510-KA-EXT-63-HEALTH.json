@@ -1,0 +1,15 @@
+{
+  "id": "KA-EXT-63-HEALTH",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say in Kannada that I am hungry, sleepy or unwell, and ask after somebody else's health.",
+  "prerequisites": [],
+  "lessons": [
+    "KA-C63-hunger",
+    "KA-C63-sleep",
+    "KA-C63-fever",
+    "KA-C63-pain",
+    "KA-C63-health"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "id": "SA-PATH-39-ANIMAL",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "SA-C39-cow",
+    "SA-C39-bird",
+    "SA-C39-fish",
+    "SA-C39-dog",
+    "SA-C39-snake"
+  ],
+  "before": [],
+  "inline": [
+    "SA-EXT-39-ANIMAL"
+  ],
+  "after": []
+}

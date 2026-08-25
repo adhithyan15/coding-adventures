@@ -1,0 +1,15 @@
+{
+  "id": "ML-EXT-58-ANSWER",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can accept, refuse and ask for more or less in Malayalam.",
+  "prerequisites": [],
+  "lessons": [
+    "ML-C58-more",
+    "ML-C58-less",
+    "ML-C58-a-little",
+    "ML-C58-no-need",
+    "ML-C58-that-will-do"
+  ]
+}

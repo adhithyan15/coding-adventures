@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-037-POR",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "lessons": [
+    "ES-C51-por"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-037-POR"
+  ],
+  "after": []
+}

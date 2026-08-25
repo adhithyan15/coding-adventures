@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-040-ASPECT",
+  "spine_node": "SPINE-TALK-ABOUT-PAST",
+  "lessons": [
+    "ES-C48-dos-miradas"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-040-ASPECT"
+  ],
+  "after": []
+}

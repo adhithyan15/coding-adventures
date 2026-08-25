@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-B1-TUVIERA",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "lessons": [
+    "ES-C56-tuviera"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-B1-TUVIERA"
+  ],
+  "after": []
+}

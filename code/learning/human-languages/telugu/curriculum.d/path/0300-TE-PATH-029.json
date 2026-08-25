@@ -1,0 +1,13 @@
+{
+  "id": "TE-PATH-029",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "TE-C36-koduku",
+    "TE-C36-kuuturu"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-030-SON-DAUGHTER"
+  ],
+  "after": []
+}

@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-292-TIERRA",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the village, a hill, a valley, a lake and a mountain in Spanish, and say where I am from.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C292-pueblo",
+    "ES-C292-colina",
+    "ES-C292-valle",
+    "ES-C292-lago",
+    "ES-C292-montana"
+  ]
+}

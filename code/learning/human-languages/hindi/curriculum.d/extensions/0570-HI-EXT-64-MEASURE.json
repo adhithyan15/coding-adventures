@@ -1,0 +1,15 @@
+{
+  "id": "HI-EXT-64-MEASURE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can answer with how much and how fast, not only with yes and no.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C64-now",
+    "HI-C64-quickly",
+    "HI-C64-slowly",
+    "HI-C64-little",
+    "HI-C64-more"
+  ]
+}

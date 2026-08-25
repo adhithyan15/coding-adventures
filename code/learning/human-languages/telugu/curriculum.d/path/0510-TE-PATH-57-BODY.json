@@ -1,0 +1,16 @@
+{
+  "id": "TE-PATH-57-BODY",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "TE-C57-neck",
+    "TE-C57-back",
+    "TE-C57-lip",
+    "TE-C57-nail",
+    "TE-C57-bone"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-57-BODY"
+  ],
+  "after": []
+}

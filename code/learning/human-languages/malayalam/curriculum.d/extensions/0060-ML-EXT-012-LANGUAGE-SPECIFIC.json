@@ -1,0 +1,25 @@
+{
+  "id": "ML-EXT-012-LANGUAGE-SPECIFIC",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can use the additional Malayalam material required at this point in the path.",
+  "prerequisites": [],
+  "lessons": [
+    "ML-C07-numbers-1-5",
+    "ML-W07-digits-1-3",
+    "ML-W07-digits-4-5",
+    "ML-W07-number-words-1-5",
+    "ML-W07-numbers-1-5-guided-copy",
+    "ML-W07-numbers-1-5-delayed-copy",
+    "ML-W07-numbers-1-5-dictation",
+    "ML-C07-numbers-6-10",
+    "ML-W07-digits-6-8",
+    "ML-W07-digits-9-10",
+    "ML-W07-number-words-6-10",
+    "ML-W07-numbers-6-10-guided-copy",
+    "ML-W07-numbers-6-10-delayed-copy",
+    "ML-W07-numbers-6-10-dictation",
+    "ML-C07-numbers-practice"
+  ]
+}

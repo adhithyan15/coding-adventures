@@ -1,0 +1,15 @@
+{
+  "segments": [
+    "KA-PATH-009",
+    "KA-PATH-50-LEAVE",
+    "KA-PATH-59-GROUND",
+    "KA-PATH-66-FIELD"
+  ],
+  "omits": [
+    "FAREWELL-CASUAL",
+    "FAREWELL-SOON"
+  ],
+  "relocates": {
+    "GREETING-GOODNIGHT": "SPINE-TIME-OF-DAY"
+  }
+}

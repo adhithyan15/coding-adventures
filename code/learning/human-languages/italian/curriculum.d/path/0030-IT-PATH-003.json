@@ -1,0 +1,10 @@
+{
+  "id": "IT-PATH-003",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "lessons": [
+    "IT-C01-grazie"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

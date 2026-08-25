@@ -1,0 +1,16 @@
+{
+  "segments": [
+    "ES-PATH-010",
+    "ES-PATH-283-01",
+    "ES-PATH-290-01",
+    "ES-PATH-297-01",
+    "ES-PATH-320-01",
+    "ES-PATH-321-01",
+    "ES-PATH-332-01",
+    "ES-PATH-333-01"
+  ],
+  "omits": [
+    "COURTESY-THANKS-CASUAL"
+  ],
+  "relocates": {}
+}

@@ -1,0 +1,15 @@
+{
+  "id": "ZH-PATH-010",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "ZH-W11-qing",
+    "ZH-C11-qing",
+    "ZH-C11-practice"
+  ],
+  "before": [],
+  "inline": [
+    "ZH-EXT-028-PHONETIC-COMPONENT",
+    "ZH-EXT-029-QING-INVITES"
+  ],
+  "after": []
+}

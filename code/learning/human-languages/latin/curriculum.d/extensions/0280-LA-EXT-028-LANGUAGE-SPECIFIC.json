@@ -1,0 +1,14 @@
+{
+  "id": "LA-EXT-028-LANGUAGE-SPECIFIC",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can produce the present-tense forms of the four Latin verbs of hearing, sleeping, sitting and standing, and tell an English word inherited from the shared ancestor apart from one borrowed out of Latin.",
+  "prerequisites": [],
+  "lessons": [
+    "LA-C40-audio",
+    "LA-C40-dormio",
+    "LA-C40-sedeo",
+    "LA-C40-sto"
+  ]
+}
