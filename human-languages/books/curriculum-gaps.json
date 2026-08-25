@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 4043,
+    "totalLessons": 4064,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -32,17 +32,17 @@
     "headwordsWithoutRomanization": 287,
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
-    "atomsNeverRevisited": 608,
+    "atomsNeverRevisited": 604,
     "forwardReferences": 646,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 80,
     "chapterGateCleanTracks": 9,
-    "tracksWithoutWritingStageEvidence": 6,
-    "missingWritingStagePairs": 638,
+    "tracksWithoutWritingStageEvidence": 5,
+    "missingWritingStagePairs": 610,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 3401,
+    "drivableLessons": 3417,
     "drivablePercent": 84,
-    "chaptersWithoutDrivablePrefix": 108,
+    "chaptersWithoutDrivablePrefix": 109,
     "unexplainedModalityOverrides": 0
   },
   "duration": {
@@ -3335,7 +3335,8 @@
           9,
           10,
           11,
-          12
+          12,
+          13
         ],
         "bookChapters": [
           1,
@@ -3349,7 +3350,8 @@
           9,
           10,
           11,
-          12
+          12,
+          13
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -3509,9 +3511,9 @@
       {
         "language": "russian",
         "status": "version-2",
-        "lessonCount": 84,
+        "lessonCount": 88,
         "versions": {
-          "2": 84
+          "2": 88
         }
       },
       {
@@ -3552,9 +3554,9 @@
       {
         "language": "japanese",
         "status": "version-2",
-        "lessonCount": 100,
+        "lessonCount": 117,
         "versions": {
-          "2": 100
+          "2": 117
         }
       }
     ]
@@ -4189,8 +4191,8 @@
       },
       {
         "language": "japanese",
-        "bookChapters": 12,
-        "declaredChapters": 12,
+        "bookChapters": 13,
+        "declaredChapters": 13,
         "missingCapability": 0,
         "findings": 0,
         "clean": true
@@ -4309,8 +4311,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 1095,
-      "declaredChapters": 1095,
+      "bookChapters": 1096,
+      "declaredChapters": 1096,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 80,
@@ -4322,9 +4324,9 @@
     }
   },
   "levels": {
-    "totalLessons": 4043,
+    "totalLessons": 4064,
     "byLevel": {
-      "pre-A1": 2641,
+      "pre-A1": 2662,
       "A1": 708,
       "A2": 549,
       "B1": 40,
@@ -4457,9 +4459,9 @@
       },
       {
         "language": "japanese",
-        "lessonCount": 100,
+        "lessonCount": 117,
         "byLevel": {
-          "pre-A1": 100,
+          "pre-A1": 117,
           "A1": 0,
           "A2": 0,
           "B1": 0,
@@ -4592,9 +4594,9 @@
       },
       {
         "language": "russian",
-        "lessonCount": 84,
+        "lessonCount": 88,
         "byLevel": {
-          "pre-A1": 70,
+          "pre-A1": 74,
           "A1": 0,
           "A2": 14,
           "B1": 0,
@@ -5010,7 +5012,7 @@
         "chapter": 1,
         "atoms": 18,
         "budget": 12,
-        "lessonCount": 12
+        "lessonCount": 16
       },
       {
         "language": "arabic",
@@ -5199,8 +5201,8 @@
       },
       {
         "language": "japanese",
-        "lessonCount": 100,
-        "measurable": 100,
+        "lessonCount": 117,
+        "measurable": 117,
         "unmeasurable": 0,
         "lessonViolations": 0,
         "chapterViolations": 0
@@ -5271,8 +5273,8 @@
       },
       {
         "language": "russian",
-        "lessonCount": 84,
-        "measurable": 84,
+        "lessonCount": 88,
+        "measurable": 88,
         "unmeasurable": 0,
         "lessonViolations": 1,
         "chapterViolations": 4
@@ -5840,7 +5842,7 @@
           "language": "japanese",
           "script": "japanese",
           "latinScript": false,
-          "lessonCount": 100,
+          "lessonCount": 117,
           "totalGlyphs": 47,
           "lessonViolations": 0,
           "systemViolations": 0,
@@ -5930,7 +5932,7 @@
           "language": "russian",
           "script": "cyrillic",
           "latinScript": false,
-          "lessonCount": 84,
+          "lessonCount": 88,
           "totalGlyphs": 55,
           "lessonViolations": 4,
           "systemViolations": 0,
@@ -10213,6 +10215,19 @@
         "language": "malayalam",
         "introducedBy": "ML-S124-letter-sa",
         "introducedAt": 97,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "RU-DIALOGUE-COURTESY-01",
+        "language": "russian",
+        "introducedBy": "RU-C01-practice",
+        "introducedAt": 6,
         "missed": [
           "R1",
           "R2",
@@ -27764,22 +27779,10 @@
         "revisits": 2
       },
       {
-        "atom": "RU-DIALOGUE-COURTESY-01",
-        "language": "russian",
-        "introducedBy": "RU-C01-practice",
-        "introducedAt": 6,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "RU-DRILL-PERSON-SHAPES-01",
         "language": "russian",
         "introducedBy": "RU-C02-practice-cases",
-        "introducedAt": 20,
+        "introducedAt": 24,
         "missed": [
           "R1",
           "R2",
@@ -27791,7 +27794,7 @@
         "atom": "RU-ETYMON-NOCH-NIGHT",
         "language": "russian",
         "introducedBy": "RU-C11-spokoynoy-nochi",
-        "introducedAt": 55,
+        "introducedAt": 59,
         "missed": [
           "R1",
           "R2",
@@ -27803,7 +27806,7 @@
         "atom": "RU-ETYMON-OTETS-ATTA",
         "language": "russian",
         "introducedBy": "RU-C12-otets",
-        "introducedAt": 59,
+        "introducedAt": 63,
         "missed": [
           "R1",
           "R2",
@@ -27815,7 +27818,7 @@
         "atom": "RU-ETYMON-PISAT-PAINT",
         "language": "russian",
         "introducedBy": "RU-C04-pisat",
-        "introducedAt": 31,
+        "introducedAt": 35,
         "missed": [
           "R1",
           "R2",
@@ -27827,7 +27830,7 @@
         "atom": "RU-ETYMON-POKOY-QUIET",
         "language": "russian",
         "introducedBy": "RU-C11-spokoynoy-nochi",
-        "introducedAt": 55,
+        "introducedAt": 59,
         "missed": [
           "R1",
           "R2",
@@ -27839,7 +27842,7 @@
         "atom": "RU-ETYMON-PRIYATNO-FRIEND",
         "language": "russian",
         "introducedBy": "RU-C02-ochen-priyatno",
-        "introducedAt": 18,
+        "introducedAt": 22,
         "missed": [
           "R1",
           "R2",
@@ -27851,7 +27854,7 @@
         "atom": "RU-ETYMON-SUP-FRENCH-LOAN",
         "language": "russian",
         "introducedBy": "RU-C13-sup",
-        "introducedAt": 63,
+        "introducedAt": 67,
         "missed": [
           "R1",
           "R2",
@@ -27863,7 +27866,7 @@
         "atom": "RU-ETYMON-SVIDANIYA-VIDET",
         "language": "russian",
         "introducedBy": "RU-C11-do-svidaniya",
-        "introducedAt": 50,
+        "introducedAt": 54,
         "missed": [
           "R1",
           "R2",
@@ -27875,7 +27878,7 @@
         "atom": "RU-ETYMON-VSTRECHA-NO-COUSIN",
         "language": "russian",
         "introducedBy": "RU-C11-do-vstrechi",
-        "introducedAt": 54,
+        "introducedAt": 58,
         "missed": [
           "R1",
           "R2",
@@ -27887,7 +27890,7 @@
         "atom": "RU-ETYMON-YA-EGO",
         "language": "russian",
         "introducedBy": "RU-C02-ya",
-        "introducedAt": 12,
+        "introducedAt": 16,
         "missed": [
           "R1",
           "R2",
@@ -27899,7 +27902,7 @@
         "atom": "RU-ETYMON-ZAVTRA-DAWN",
         "language": "russian",
         "introducedBy": "RU-C11-do-zavtra",
-        "introducedAt": 53,
+        "introducedAt": 57,
         "missed": [
           "R1",
           "R2",
@@ -27911,7 +27914,7 @@
         "atom": "RU-GRAMMAR-L-EPENTHESIS",
         "language": "russian",
         "introducedBy": "RU-C05-lyubit",
-        "introducedAt": 35,
+        "introducedAt": 39,
         "missed": [
           "R1",
           "R2",
@@ -27923,7 +27926,7 @@
         "atom": "RU-GRAMMAR-ZERO-COPULA-01",
         "language": "russian",
         "introducedBy": "RU-C02-practice-zero-copula",
-        "introducedAt": 21,
+        "introducedAt": 25,
         "missed": [
           "R1",
           "R2",
@@ -27956,10 +27959,34 @@
         "revisits": 1
       },
       {
+        "atom": "RU-LEX-POZHALUYSTA",
+        "language": "russian",
+        "introducedBy": "RU-C01-pozhaluysta",
+        "introducedAt": 5,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "RU-LEX-SPASIBO",
+        "language": "russian",
+        "introducedBy": "RU-C01-spasibo",
+        "introducedAt": 4,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "RU-LEX-SUP",
         "language": "russian",
         "introducedBy": "RU-C13-sup",
-        "introducedAt": 63,
+        "introducedAt": 67,
         "missed": [
           "R1",
           "R2",
@@ -27992,30 +28019,6 @@
         "revisits": 0
       },
       {
-        "atom": "RU-SCRIPT-E-01",
-        "language": "russian",
-        "introducedBy": "RU-W05-privet-letters-e-t",
-        "introducedAt": 11,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "RU-SCRIPT-I-01",
-        "language": "russian",
-        "introducedBy": "RU-W04-privet-letters-p-i",
-        "introducedAt": 10,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "RU-SCRIPT-N-01",
         "language": "russian",
         "introducedBy": "RU-W02-false-friends-s-n",
@@ -28034,28 +28037,16 @@
         "introducedAt": 7,
         "missed": [
           "R1",
-          "R2",
-          "R3"
+          "R3",
+          "R4"
         ],
-        "revisits": 0
+        "revisits": 4
       },
       {
         "atom": "RU-SCRIPT-S-01",
         "language": "russian",
         "introducedBy": "RU-W02-false-friends-s-n",
         "introducedAt": 8,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "RU-SCRIPT-T-01",
-        "language": "russian",
-        "introducedBy": "RU-W05-privet-letters-e-t",
-        "introducedAt": 11,
         "missed": [
           "R1",
           "R2",
@@ -45970,7 +45961,7 @@
         "atom": "RU-COMPARISON-NAMING-QUESTION-FRAMES",
         "language": "russian",
         "introducedBy": "RU-C02-kak-cross-language",
-        "introducedAt": 17,
+        "introducedAt": 21,
         "missed": [
           "R1",
           "R2"
@@ -45981,7 +45972,7 @@
         "atom": "RU-COMPARISON-POLITE-PRONOUNS",
         "language": "russian",
         "introducedBy": "RU-C02-vy-formality",
-        "introducedAt": 14,
+        "introducedAt": 18,
         "missed": [
           "R1",
           "R2"
@@ -45992,7 +45983,7 @@
         "atom": "RU-ETYMON-BRAT-BROTHER",
         "language": "russian",
         "introducedBy": "RU-C07-brat",
-        "introducedAt": 42,
+        "introducedAt": 46,
         "missed": [
           "R2",
           "R3"
@@ -46003,7 +45994,7 @@
         "atom": "RU-ETYMON-BYT-BE",
         "language": "russian",
         "introducedBy": "RU-C03-byt",
-        "introducedAt": 22,
+        "introducedAt": 26,
         "missed": [
           "R1",
           "R3"
@@ -46014,7 +46005,7 @@
         "atom": "RU-ETYMON-CHAI-ROUTE",
         "language": "russian",
         "introducedBy": "RU-C06-chai",
-        "introducedAt": 38,
+        "introducedAt": 42,
         "missed": [
           "R2",
           "R3"
@@ -46025,7 +46016,7 @@
         "atom": "RU-ETYMON-CHITAT-COUNT-HONOUR",
         "language": "russian",
         "introducedBy": "RU-C04-chitat",
-        "introducedAt": 30,
+        "introducedAt": 34,
         "missed": [
           "R2",
           "R3"
@@ -46036,7 +46027,7 @@
         "atom": "RU-ETYMON-DRUG-ACCOMPANY",
         "language": "russian",
         "introducedBy": "RU-C07-drug",
-        "introducedAt": 40,
+        "introducedAt": 44,
         "missed": [
           "R2",
           "R3"
@@ -46047,7 +46038,7 @@
         "atom": "RU-ETYMON-DUMAT-DUMA",
         "language": "russian",
         "introducedBy": "RU-C04-dumat",
-        "introducedAt": 28,
+        "introducedAt": 32,
         "missed": [
           "R2",
           "R3"
@@ -46058,7 +46049,7 @@
         "atom": "RU-ETYMON-GLAZ-BALL",
         "language": "russian",
         "introducedBy": "RU-C09-glaz",
-        "introducedAt": 48,
+        "introducedAt": 52,
         "missed": [
           "R2",
           "R3"
@@ -46069,7 +46060,7 @@
         "atom": "RU-ETYMON-GOVORIT-NOT-GOVERN",
         "language": "russian",
         "introducedBy": "RU-C03-govorit",
-        "introducedAt": 25,
+        "introducedAt": 29,
         "missed": [
           "R1",
           "R3"
@@ -46080,7 +46071,7 @@
         "atom": "RU-ETYMON-IDTI-GO-WENT",
         "language": "russian",
         "introducedBy": "RU-C03-idti",
-        "introducedAt": 27,
+        "introducedAt": 31,
         "missed": [
           "R1",
           "R3"
@@ -46091,7 +46082,7 @@
         "atom": "RU-ETYMON-KHLEB-LOAF",
         "language": "russian",
         "introducedBy": "RU-C06-khleb",
-        "introducedAt": 39,
+        "introducedAt": 43,
         "missed": [
           "R2",
           "R3"
@@ -46102,7 +46093,7 @@
         "atom": "RU-ETYMON-KOFE-ROUTE",
         "language": "russian",
         "introducedBy": "RU-C06-kofe",
-        "introducedAt": 37,
+        "introducedAt": 41,
         "missed": [
           "R2",
           "R3"
@@ -46113,7 +46104,7 @@
         "atom": "RU-ETYMON-MAMA-BABBLING",
         "language": "russian",
         "introducedBy": "RU-C12-mama",
-        "introducedAt": 56,
+        "introducedAt": 60,
         "missed": [
           "R2",
           "R3"
@@ -46124,7 +46115,7 @@
         "atom": "RU-ETYMON-MAT-MOTHER",
         "language": "russian",
         "introducedBy": "RU-C12-mat",
-        "introducedAt": 58,
+        "introducedAt": 62,
         "missed": [
           "R2",
           "R3"
@@ -46135,7 +46126,7 @@
         "atom": "RU-ETYMON-MOLOKO-MILK",
         "language": "russian",
         "introducedBy": "RU-C13-moloko",
-        "introducedAt": 60,
+        "introducedAt": 64,
         "missed": [
           "R2",
           "R3"
@@ -46146,7 +46137,7 @@
         "atom": "RU-ETYMON-NOS-NOSE",
         "language": "russian",
         "introducedBy": "RU-C09-nos",
-        "introducedAt": 46,
+        "introducedAt": 50,
         "missed": [
           "R2",
           "R3"
@@ -46157,7 +46148,7 @@
         "atom": "RU-ETYMON-POKA-KAKOI",
         "language": "russian",
         "introducedBy": "RU-C11-poka",
-        "introducedAt": 51,
+        "introducedAt": 55,
         "missed": [
           "R2",
           "R3"
@@ -46168,7 +46159,7 @@
         "atom": "RU-ETYMON-POMOGAT-MIGHT",
         "language": "russian",
         "introducedBy": "RU-C05-pomogat",
-        "introducedAt": 34,
+        "introducedAt": 38,
         "missed": [
           "R2",
           "R3"
@@ -46179,7 +46170,7 @@
         "atom": "RU-ETYMON-PONIMAT-TAKE-HOLD",
         "language": "russian",
         "introducedBy": "RU-C04-ponimat",
-        "introducedAt": 29,
+        "introducedAt": 33,
         "missed": [
           "R2",
           "R3"
@@ -46190,7 +46181,7 @@
         "atom": "RU-ETYMON-ROT-DIG",
         "language": "russian",
         "introducedBy": "RU-C09-rot",
-        "introducedAt": 47,
+        "introducedAt": 51,
         "missed": [
           "R2",
           "R3"
@@ -46201,7 +46192,7 @@
         "atom": "RU-ETYMON-SERDTSE-HEART",
         "language": "russian",
         "introducedBy": "RU-C10-serdtse",
-        "introducedAt": 49,
+        "introducedAt": 53,
         "missed": [
           "R2",
           "R3"
@@ -46212,7 +46203,7 @@
         "atom": "RU-ETYMON-SESTRA-SISTER",
         "language": "russian",
         "introducedBy": "RU-C07-sestra",
-        "introducedAt": 43,
+        "introducedAt": 47,
         "missed": [
           "R2",
           "R3"
@@ -46223,7 +46214,7 @@
         "atom": "RU-ETYMON-SKORYI-HURRY",
         "language": "russian",
         "introducedBy": "RU-C11-do-skorogo",
-        "introducedAt": 52,
+        "introducedAt": 56,
         "missed": [
           "R2",
           "R3"
@@ -46234,7 +46225,7 @@
         "atom": "RU-ETYMON-SOK-NO-COUSIN",
         "language": "russian",
         "introducedBy": "RU-C13-sok",
-        "introducedAt": 62,
+        "introducedAt": 66,
         "missed": [
           "R2",
           "R3"
@@ -46245,7 +46236,7 @@
         "atom": "RU-ETYMON-SPRASHIVAT-PRAY",
         "language": "russian",
         "introducedBy": "RU-C05-sprashivat",
-        "introducedAt": 33,
+        "introducedAt": 37,
         "missed": [
           "R2",
           "R3"
@@ -46256,7 +46247,7 @@
         "atom": "RU-ETYMON-SYR-SOUR",
         "language": "russian",
         "introducedBy": "RU-C13-syr",
-        "introducedAt": 61,
+        "introducedAt": 65,
         "missed": [
           "R2",
           "R3"
@@ -46267,7 +46258,7 @@
         "atom": "RU-ETYMON-TY-THOU",
         "language": "russian",
         "introducedBy": "RU-C02-ty-vy",
-        "introducedAt": 13,
+        "introducedAt": 17,
         "missed": [
           "R1",
           "R2"
@@ -46278,7 +46269,7 @@
         "atom": "RU-ETYMON-UKHO-EAR",
         "language": "russian",
         "introducedBy": "RU-C09-ukho",
-        "introducedAt": 45,
+        "introducedAt": 49,
         "missed": [
           "R2",
           "R3"
@@ -46289,7 +46280,7 @@
         "atom": "RU-ETYMON-ZNAT-KNOW",
         "language": "russian",
         "introducedBy": "RU-C03-znat",
-        "introducedAt": 24,
+        "introducedAt": 28,
         "missed": [
           "R1",
           "R3"
@@ -46300,7 +46291,7 @@
         "atom": "RU-GRAMMAR-DO-GENITIVE",
         "language": "russian",
         "introducedBy": "RU-C11-do-svidaniya",
-        "introducedAt": 50,
+        "introducedAt": 54,
         "missed": [
           "R2",
           "R3"
@@ -46311,7 +46302,7 @@
         "atom": "RU-GRAMMAR-FEMININE-SUFFIX-A",
         "language": "russian",
         "introducedBy": "RU-C07-podruga",
-        "introducedAt": 41,
+        "introducedAt": 45,
         "missed": [
           "R2",
           "R3"
@@ -46322,7 +46313,7 @@
         "atom": "RU-GRAMMAR-INDEFINITE-PERSONAL-PLURAL",
         "language": "russian",
         "introducedBy": "RU-C02-menya-zovut",
-        "introducedAt": 15,
+        "introducedAt": 19,
         "missed": [
           "R1",
           "R2"
@@ -46333,7 +46324,7 @@
         "atom": "RU-GRAMMAR-MENYA-OBJECT-CASE",
         "language": "russian",
         "introducedBy": "RU-C02-menya-zovut",
-        "introducedAt": 15,
+        "introducedAt": 19,
         "missed": [
           "R2",
           "R3"
@@ -46344,7 +46335,7 @@
         "atom": "RU-GRAMMAR-MOTION-ONE-WAY-VS-HABITUAL",
         "language": "russian",
         "introducedBy": "RU-C03-idti",
-        "introducedAt": 27,
+        "introducedAt": 31,
         "missed": [
           "R2",
           "R3"
@@ -46355,7 +46346,7 @@
         "atom": "RU-GRAMMAR-NAMING-HOW-FRAME",
         "language": "russian",
         "introducedBy": "RU-C02-kak-vas-zovut",
-        "introducedAt": 16,
+        "introducedAt": 20,
         "missed": [
           "R2",
           "R3"
@@ -46366,7 +46357,7 @@
         "atom": "RU-GRAMMAR-NATURAL-GENDER-OVERRIDE",
         "language": "russian",
         "introducedBy": "RU-C12-papa",
-        "introducedAt": 57,
+        "introducedAt": 61,
         "missed": [
           "R2",
           "R3"
@@ -46377,7 +46368,7 @@
         "atom": "RU-GRAMMAR-NE-NEGATION",
         "language": "russian",
         "introducedBy": "RU-C03-znat",
-        "introducedAt": 24,
+        "introducedAt": 28,
         "missed": [
           "R1",
           "R3"
@@ -46388,7 +46379,7 @@
         "atom": "RU-GRAMMAR-NO-PROGRESSIVE",
         "language": "russian",
         "introducedBy": "RU-C04-chitat",
-        "introducedAt": 30,
+        "introducedAt": 34,
         "missed": [
           "R2",
           "R3"
@@ -46399,7 +46390,7 @@
         "atom": "RU-GRAMMAR-ZERO-COPULA",
         "language": "russian",
         "introducedBy": "RU-C03-byt",
-        "introducedAt": 22,
+        "introducedAt": 26,
         "missed": [
           "R1",
           "R3"
@@ -46410,7 +46401,7 @@
         "atom": "RU-LEX-BRAT-NOUN",
         "language": "russian",
         "introducedBy": "RU-C07-brat",
-        "introducedAt": 42,
+        "introducedAt": 46,
         "missed": [
           "R2",
           "R3"
@@ -46421,7 +46412,7 @@
         "atom": "RU-LEX-BYT",
         "language": "russian",
         "introducedBy": "RU-C03-byt",
-        "introducedAt": 22,
+        "introducedAt": 26,
         "missed": [
           "R1",
           "R3"
@@ -46432,7 +46423,7 @@
         "atom": "RU-LEX-CHAI",
         "language": "russian",
         "introducedBy": "RU-C06-chai",
-        "introducedAt": 38,
+        "introducedAt": 42,
         "missed": [
           "R2",
           "R3"
@@ -46443,7 +46434,7 @@
         "atom": "RU-LEX-DO-SKOROGO",
         "language": "russian",
         "introducedBy": "RU-C11-do-skorogo",
-        "introducedAt": 52,
+        "introducedAt": 56,
         "missed": [
           "R2",
           "R3"
@@ -46454,7 +46445,7 @@
         "atom": "RU-LEX-DO-VSTRECHI",
         "language": "russian",
         "introducedBy": "RU-C11-do-vstrechi",
-        "introducedAt": 54,
+        "introducedAt": 58,
         "missed": [
           "R2",
           "R3"
@@ -46465,7 +46456,7 @@
         "atom": "RU-LEX-DO-ZAVTRA",
         "language": "russian",
         "introducedBy": "RU-C11-do-zavtra",
-        "introducedAt": 53,
+        "introducedAt": 57,
         "missed": [
           "R2",
           "R3"
@@ -46476,7 +46467,7 @@
         "atom": "RU-LEX-DRUG",
         "language": "russian",
         "introducedBy": "RU-C07-drug",
-        "introducedAt": 40,
+        "introducedAt": 44,
         "missed": [
           "R2",
           "R3"
@@ -46487,7 +46478,7 @@
         "atom": "RU-LEX-KOFE",
         "language": "russian",
         "introducedBy": "RU-C06-kofe",
-        "introducedAt": 37,
+        "introducedAt": 41,
         "missed": [
           "R2",
           "R3"
@@ -46498,7 +46489,7 @@
         "atom": "RU-LEX-MAMA",
         "language": "russian",
         "introducedBy": "RU-C12-mama",
-        "introducedAt": 56,
+        "introducedAt": 60,
         "missed": [
           "R2",
           "R3"
@@ -46509,7 +46500,7 @@
         "atom": "RU-LEX-MAT",
         "language": "russian",
         "introducedBy": "RU-C12-mat",
-        "introducedAt": 58,
+        "introducedAt": 62,
         "missed": [
           "R2",
           "R3"
@@ -46520,7 +46511,7 @@
         "atom": "RU-LEX-MOLOKO",
         "language": "russian",
         "introducedBy": "RU-C13-moloko",
-        "introducedAt": 60,
+        "introducedAt": 64,
         "missed": [
           "R2",
           "R3"
@@ -46531,7 +46522,7 @@
         "atom": "RU-LEX-NOS",
         "language": "russian",
         "introducedBy": "RU-C09-nos",
-        "introducedAt": 46,
+        "introducedAt": 50,
         "missed": [
           "R2",
           "R3"
@@ -46542,7 +46533,7 @@
         "atom": "RU-LEX-OCHEN-PRIYATNO",
         "language": "russian",
         "introducedBy": "RU-C02-ochen-priyatno",
-        "introducedAt": 18,
+        "introducedAt": 22,
         "missed": [
           "R2",
           "R3"
@@ -46553,7 +46544,7 @@
         "atom": "RU-LEX-OTETS",
         "language": "russian",
         "introducedBy": "RU-C12-otets",
-        "introducedAt": 59,
+        "introducedAt": 63,
         "missed": [
           "R2",
           "R3"
@@ -46564,7 +46555,7 @@
         "atom": "RU-LEX-PAPA",
         "language": "russian",
         "introducedBy": "RU-C12-papa",
-        "introducedAt": 57,
+        "introducedAt": 61,
         "missed": [
           "R2",
           "R3"
@@ -46575,7 +46566,7 @@
         "atom": "RU-LEX-PISAT",
         "language": "russian",
         "introducedBy": "RU-C04-pisat",
-        "introducedAt": 31,
+        "introducedAt": 35,
         "missed": [
           "R2",
           "R3"
@@ -46586,7 +46577,7 @@
         "atom": "RU-LEX-PODRUGA",
         "language": "russian",
         "introducedBy": "RU-C07-podruga",
-        "introducedAt": 41,
+        "introducedAt": 45,
         "missed": [
           "R2",
           "R3"
@@ -46597,7 +46588,7 @@
         "atom": "RU-LEX-POKA",
         "language": "russian",
         "introducedBy": "RU-C11-poka",
-        "introducedAt": 51,
+        "introducedAt": 55,
         "missed": [
           "R2",
           "R3"
@@ -46608,7 +46599,7 @@
         "atom": "RU-LEX-POMOGAT",
         "language": "russian",
         "introducedBy": "RU-C05-pomogat",
-        "introducedAt": 34,
+        "introducedAt": 38,
         "missed": [
           "R2",
           "R3"
@@ -46619,23 +46610,12 @@
         "atom": "RU-LEX-PONIMAT",
         "language": "russian",
         "introducedBy": "RU-C04-ponimat",
-        "introducedAt": 29,
+        "introducedAt": 33,
         "missed": [
           "R2",
           "R3"
         ],
         "revisits": 3
-      },
-      {
-        "atom": "RU-LEX-POZHALUYSTA",
-        "language": "russian",
-        "introducedBy": "RU-C01-pozhaluysta",
-        "introducedAt": 5,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
       },
       {
         "atom": "RU-LEX-PRIVET",
@@ -46646,13 +46626,13 @@
           "R3",
           "R4"
         ],
-        "revisits": 4
+        "revisits": 8
       },
       {
         "atom": "RU-LEX-ROT",
         "language": "russian",
         "introducedBy": "RU-C09-rot",
-        "introducedAt": 47,
+        "introducedAt": 51,
         "missed": [
           "R2",
           "R3"
@@ -46663,7 +46643,7 @@
         "atom": "RU-LEX-SERDTSE",
         "language": "russian",
         "introducedBy": "RU-C10-serdtse",
-        "introducedAt": 49,
+        "introducedAt": 53,
         "missed": [
           "R2",
           "R3"
@@ -46674,7 +46654,7 @@
         "atom": "RU-LEX-SESTRA",
         "language": "russian",
         "introducedBy": "RU-C07-sestra",
-        "introducedAt": 43,
+        "introducedAt": 47,
         "missed": [
           "R2",
           "R3"
@@ -46685,7 +46665,7 @@
         "atom": "RU-LEX-SOK",
         "language": "russian",
         "introducedBy": "RU-C13-sok",
-        "introducedAt": 62,
+        "introducedAt": 66,
         "missed": [
           "R2",
           "R3"
@@ -46693,21 +46673,10 @@
         "revisits": 1
       },
       {
-        "atom": "RU-LEX-SPASIBO",
-        "language": "russian",
-        "introducedBy": "RU-C01-spasibo",
-        "introducedAt": 4,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
         "atom": "RU-LEX-SPOKOYNOY-NOCHI",
         "language": "russian",
         "introducedBy": "RU-C11-spokoynoy-nochi",
-        "introducedAt": 55,
+        "introducedAt": 59,
         "missed": [
           "R2",
           "R3"
@@ -46718,7 +46687,7 @@
         "atom": "RU-LEX-SPRASHIVAT",
         "language": "russian",
         "introducedBy": "RU-C05-sprashivat",
-        "introducedAt": 33,
+        "introducedAt": 37,
         "missed": [
           "R2",
           "R3"
@@ -46729,7 +46698,7 @@
         "atom": "RU-LEX-SYR",
         "language": "russian",
         "introducedBy": "RU-C13-syr",
-        "introducedAt": 61,
+        "introducedAt": 65,
         "missed": [
           "R2",
           "R3"
@@ -46740,7 +46709,7 @@
         "atom": "RU-LEX-UKHO",
         "language": "russian",
         "introducedBy": "RU-C09-ukho",
-        "introducedAt": 45,
+        "introducedAt": 49,
         "missed": [
           "R2",
           "R3"
@@ -46759,10 +46728,21 @@
         "revisits": 2
       },
       {
+        "atom": "RU-SCRIPT-E-01",
+        "language": "russian",
+        "introducedBy": "RU-W05-privet-letters-e-t",
+        "introducedAt": 11,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
         "atom": "RU-SCRIPT-FE",
         "language": "russian",
         "introducedBy": "RU-C06-kofe",
-        "introducedAt": 37,
+        "introducedAt": 41,
         "missed": [
           "R2",
           "R3"
@@ -46773,7 +46753,7 @@
         "atom": "RU-SCRIPT-KHA",
         "language": "russian",
         "introducedBy": "RU-C06-khleb",
-        "introducedAt": 39,
+        "introducedAt": 43,
         "missed": [
           "R2",
           "R3"
@@ -46781,10 +46761,10 @@
         "revisits": 2
       },
       {
-        "atom": "RU-SCRIPT-P-01",
+        "atom": "RU-SCRIPT-SHA",
         "language": "russian",
-        "introducedBy": "RU-W04-privet-letters-p-i",
-        "introducedAt": 10,
+        "introducedBy": "RU-C04-pisat",
+        "introducedAt": 35,
         "missed": [
           "R2",
           "R3"
@@ -46792,21 +46772,21 @@
         "revisits": 1
       },
       {
-        "atom": "RU-SCRIPT-SHA",
+        "atom": "RU-SCRIPT-T-01",
         "language": "russian",
-        "introducedBy": "RU-C04-pisat",
-        "introducedAt": 31,
+        "introducedBy": "RU-W05-privet-letters-e-t",
+        "introducedAt": 11,
         "missed": [
           "R2",
           "R3"
         ],
-        "revisits": 1
+        "revisits": 4
       },
       {
         "atom": "RU-SCRIPT-TSE",
         "language": "russian",
         "introducedBy": "RU-C10-serdtse",
-        "introducedAt": 49,
+        "introducedAt": 53,
         "missed": [
           "R2",
           "R3"
@@ -46819,16 +46799,16 @@
         "introducedBy": "RU-W01-false-friends-v-r",
         "introducedAt": 7,
         "missed": [
-          "R2",
-          "R3"
+          "R3",
+          "R4"
         ],
-        "revisits": 3
+        "revisits": 7
       },
       {
         "atom": "RU-SCRIPT-YA-NOT-R",
         "language": "russian",
         "introducedBy": "RU-C02-ya",
-        "introducedAt": 12,
+        "introducedAt": 16,
         "missed": [
           "R1",
           "R2"
@@ -57774,7 +57754,7 @@
         "atom": "RU-ETYMON-BRAT-BEAR",
         "language": "russian",
         "introducedBy": "RU-C05-brat",
-        "introducedAt": 32,
+        "introducedAt": 36,
         "missed": [
           "R3"
         ],
@@ -57784,7 +57764,7 @@
         "atom": "RU-ETYMON-LYUBIT-LOVE",
         "language": "russian",
         "introducedBy": "RU-C05-lyubit",
-        "introducedAt": 35,
+        "introducedAt": 39,
         "missed": [
           "R3"
         ],
@@ -57794,7 +57774,7 @@
         "atom": "RU-ETYMON-SEMYA-HOME",
         "language": "russian",
         "introducedBy": "RU-C08-semya",
-        "introducedAt": 44,
+        "introducedAt": 48,
         "missed": [
           "R3"
         ],
@@ -57804,7 +57784,7 @@
         "atom": "RU-ETYMON-VIDET-WIT",
         "language": "russian",
         "introducedBy": "RU-C03-videt",
-        "introducedAt": 26,
+        "introducedAt": 30,
         "missed": [
           "R2"
         ],
@@ -57814,7 +57794,7 @@
         "atom": "RU-ETYMON-VODA-WATER",
         "language": "russian",
         "introducedBy": "RU-C06-voda",
-        "introducedAt": 36,
+        "introducedAt": 40,
         "missed": [
           "R2"
         ],
@@ -57824,7 +57804,7 @@
         "atom": "RU-ETYMON-ZHIT-QUICK",
         "language": "russian",
         "introducedBy": "RU-C03-zhit",
-        "introducedAt": 23,
+        "introducedAt": 27,
         "missed": [
           "R1"
         ],
@@ -57834,7 +57814,7 @@
         "atom": "RU-GRAMMAR-ASPECT-PARTNER",
         "language": "russian",
         "introducedBy": "RU-C04-dumat",
-        "introducedAt": 28,
+        "introducedAt": 32,
         "missed": [
           "R3"
         ],
@@ -57844,7 +57824,7 @@
         "atom": "RU-GRAMMAR-CONSONANT-SWAP-I-FORM",
         "language": "russian",
         "introducedBy": "RU-C03-videt",
-        "introducedAt": 26,
+        "introducedAt": 30,
         "missed": [
           "R1"
         ],
@@ -57854,7 +57834,7 @@
         "atom": "RU-GRAMMAR-OBJECT-PRONOUNS",
         "language": "russian",
         "introducedBy": "RU-C02-kak-vas-zovut",
-        "introducedAt": 16,
+        "introducedAt": 20,
         "missed": [
           "R2"
         ],
@@ -57864,7 +57844,7 @@
         "atom": "RU-GRAMMAR-PRESENT-FIRST-PERSON-U",
         "language": "russian",
         "introducedBy": "RU-C03-zhit",
-        "introducedAt": 23,
+        "introducedAt": 27,
         "missed": [
           "R3"
         ],
@@ -57874,7 +57854,7 @@
         "atom": "RU-GRAMMAR-REQUEST-PATTERN",
         "language": "russian",
         "introducedBy": "RU-C06-chai",
-        "introducedAt": 38,
+        "introducedAt": 42,
         "missed": [
           "R2"
         ],
@@ -57884,7 +57864,7 @@
         "atom": "RU-GRAMMAR-SUPPLETIVE-ASPECT-PAIR",
         "language": "russian",
         "introducedBy": "RU-C05-brat",
-        "introducedAt": 32,
+        "introducedAt": 36,
         "missed": [
           "R3"
         ],
@@ -57894,7 +57874,7 @@
         "atom": "RU-GRAMMAR-TWO-VERB-FAMILIES",
         "language": "russian",
         "introducedBy": "RU-C03-govorit",
-        "introducedAt": 25,
+        "introducedAt": 29,
         "missed": [
           "R3"
         ],
@@ -57904,7 +57884,7 @@
         "atom": "RU-LEX-BRAT",
         "language": "russian",
         "introducedBy": "RU-C05-brat",
-        "introducedAt": 32,
+        "introducedAt": 36,
         "missed": [
           "R3"
         ],
@@ -57914,7 +57894,7 @@
         "atom": "RU-LEX-CHITAT",
         "language": "russian",
         "introducedBy": "RU-C04-chitat",
-        "introducedAt": 30,
+        "introducedAt": 34,
         "missed": [
           "R3"
         ],
@@ -57924,7 +57904,7 @@
         "atom": "RU-LEX-DO-SVIDANIYA",
         "language": "russian",
         "introducedBy": "RU-C11-do-svidaniya",
-        "introducedAt": 50,
+        "introducedAt": 54,
         "missed": [
           "R3"
         ],
@@ -57934,7 +57914,7 @@
         "atom": "RU-LEX-DUMAT",
         "language": "russian",
         "introducedBy": "RU-C04-dumat",
-        "introducedAt": 28,
+        "introducedAt": 32,
         "missed": [
           "R3"
         ],
@@ -57944,7 +57924,7 @@
         "atom": "RU-LEX-GLAZ",
         "language": "russian",
         "introducedBy": "RU-C09-glaz",
-        "introducedAt": 48,
+        "introducedAt": 52,
         "missed": [
           "R3"
         ],
@@ -57954,7 +57934,7 @@
         "atom": "RU-LEX-GOVORIT",
         "language": "russian",
         "introducedBy": "RU-C03-govorit",
-        "introducedAt": 25,
+        "introducedAt": 29,
         "missed": [
           "R1"
         ],
@@ -57964,7 +57944,7 @@
         "atom": "RU-LEX-IDTI",
         "language": "russian",
         "introducedBy": "RU-C03-idti",
-        "introducedAt": 27,
+        "introducedAt": 31,
         "missed": [
           "R3"
         ],
@@ -57974,7 +57954,7 @@
         "atom": "RU-LEX-KHLEB",
         "language": "russian",
         "introducedBy": "RU-C06-khleb",
-        "introducedAt": 39,
+        "introducedAt": 43,
         "missed": [
           "R2"
         ],
@@ -57984,7 +57964,7 @@
         "atom": "RU-LEX-LYUBIT",
         "language": "russian",
         "introducedBy": "RU-C05-lyubit",
-        "introducedAt": 35,
+        "introducedAt": 39,
         "missed": [
           "R3"
         ],
@@ -57994,7 +57974,7 @@
         "atom": "RU-LEX-MENYA-ZOVUT",
         "language": "russian",
         "introducedBy": "RU-C02-menya-zovut",
-        "introducedAt": 15,
+        "introducedAt": 19,
         "missed": [
           "R3"
         ],
@@ -58004,7 +57984,7 @@
         "atom": "RU-LEX-SEMYA",
         "language": "russian",
         "introducedBy": "RU-C08-semya",
-        "introducedAt": 44,
+        "introducedAt": 48,
         "missed": [
           "R3"
         ],
@@ -58014,7 +57994,7 @@
         "atom": "RU-LEX-VODA",
         "language": "russian",
         "introducedBy": "RU-C06-voda",
-        "introducedAt": 36,
+        "introducedAt": 40,
         "missed": [
           "R2"
         ],
@@ -58024,7 +58004,7 @@
         "atom": "RU-LEX-ZHIT",
         "language": "russian",
         "introducedBy": "RU-C03-zhit",
-        "introducedAt": 23,
+        "introducedAt": 27,
         "missed": [
           "R1"
         ],
@@ -58034,7 +58014,7 @@
         "atom": "RU-LEX-ZNAT",
         "language": "russian",
         "introducedBy": "RU-C03-znat",
-        "introducedAt": 24,
+        "introducedAt": 28,
         "missed": [
           "R3"
         ],
@@ -58044,7 +58024,7 @@
         "atom": "RU-PRAGMATICS-VY-POLITENESS",
         "language": "russian",
         "introducedBy": "RU-C02-vy-formality",
-        "introducedAt": 14,
+        "introducedAt": 18,
         "missed": [
           "R1"
         ],
@@ -58054,7 +58034,7 @@
         "atom": "RU-SCRIPT-CH-01",
         "language": "russian",
         "introducedBy": "RU-W06-ch",
-        "introducedAt": 71,
+        "introducedAt": 75,
         "missed": [
           "R2"
         ],
@@ -58064,17 +58044,37 @@
         "atom": "RU-SCRIPT-GE-GAMMA",
         "language": "russian",
         "introducedBy": "RU-C03-govorit",
-        "introducedAt": 25,
+        "introducedAt": 29,
         "missed": [
           "R1"
         ],
         "revisits": 2
       },
       {
+        "atom": "RU-SCRIPT-I-01",
+        "language": "russian",
+        "introducedBy": "RU-W04-privet-letters-p-i",
+        "introducedAt": 10,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "RU-SCRIPT-P-01",
+        "language": "russian",
+        "introducedBy": "RU-W04-privet-letters-p-i",
+        "introducedAt": 10,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 5
+      },
+      {
         "atom": "RU-SCRIPT-SOFT-SIGN-01",
         "language": "russian",
         "introducedBy": "RU-W06-soft-sign",
-        "introducedAt": 73,
+        "introducedAt": 77,
         "missed": [
           "R2"
         ],
@@ -58084,7 +58084,7 @@
         "atom": "RU-SCRIPT-ZH-01",
         "language": "russian",
         "introducedBy": "RU-W06-zh",
-        "introducedAt": 70,
+        "introducedAt": 74,
         "missed": [
           "R2"
         ],
@@ -62279,6 +62279,14 @@
         "lessonsEarly": 16
       },
       {
+        "lessonId": "RU-C01-zdravstvuyte",
+        "language": "russian",
+        "position": 1,
+        "word": "вы",
+        "taughtBy": "RU-C02-ty-vy",
+        "lessonsEarly": 16
+      },
+      {
         "lessonId": "AR-C09-ahmar-azraq",
         "language": "arabic",
         "position": 58,
@@ -62527,14 +62535,6 @@
         "lessonsEarly": 12
       },
       {
-        "lessonId": "RU-C01-zdravstvuyte",
-        "language": "russian",
-        "position": 1,
-        "word": "вы",
-        "taughtBy": "RU-C02-ty-vy",
-        "lessonsEarly": 12
-      },
-      {
         "lessonId": "TE-C03-miiru-elaa-unnaaru",
         "language": "telugu",
         "position": 15,
@@ -62617,7 +62617,7 @@
       {
         "lessonId": "RU-C05-brat",
         "language": "russian",
-        "position": 32,
+        "position": 36,
         "word": "брат",
         "taughtBy": "RU-C07-brat",
         "lessonsEarly": 10
@@ -64561,7 +64561,7 @@
       {
         "lessonId": "RU-C03-byt",
         "language": "russian",
-        "position": 22,
+        "position": 26,
         "word": "жить",
         "taughtBy": "RU-C03-zhit",
         "lessonsEarly": 1
@@ -64569,7 +64569,7 @@
       {
         "lessonId": "RU-C03-govorit",
         "language": "russian",
-        "position": 25,
+        "position": 29,
         "word": "видеть",
         "taughtBy": "RU-C03-videt",
         "lessonsEarly": 1
@@ -64577,7 +64577,7 @@
       {
         "lessonId": "RU-C03-videt",
         "language": "russian",
-        "position": 26,
+        "position": 30,
         "word": "идти",
         "taughtBy": "RU-C03-idti",
         "lessonsEarly": 1
@@ -64585,7 +64585,7 @@
       {
         "lessonId": "RU-C03-zhit",
         "language": "russian",
-        "position": 23,
+        "position": 27,
         "word": "знать",
         "taughtBy": "RU-C03-znat",
         "lessonsEarly": 1
@@ -64593,7 +64593,7 @@
       {
         "lessonId": "RU-C03-znat",
         "language": "russian",
-        "position": 24,
+        "position": 28,
         "word": "говорить",
         "taughtBy": "RU-C03-govorit",
         "lessonsEarly": 1
@@ -64754,11 +64754,11 @@
       },
       {
         "language": "japanese",
-        "lessonCount": 100,
+        "lessonCount": 117,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 99,
+        "atomsTaught": 111,
         "atomsNeverRevisited": 1,
         "forwardReferences": 0
       },
@@ -64844,12 +64844,12 @@
       },
       {
         "language": "russian",
-        "lessonCount": 84,
+        "lessonCount": 88,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "atomsTaught": 160,
-        "atomsNeverRevisited": 22,
+        "atomsNeverRevisited": 18,
         "forwardReferences": 8
       },
       {
@@ -64908,14 +64908,14 @@
       "tracksWithUnorderedLessons": 0,
       "forwardPrerequisites": 0,
       "forwardReviews": 0,
-      "atomsTaught": 5252,
-      "atomsNeverRevisited": 608,
-      "neverRevisitedPercent": 12,
+      "atomsTaught": 5264,
+      "atomsNeverRevisited": 604,
+      "neverRevisitedPercent": 11,
       "missedByWindow": {
-        "R1": 1181,
-        "R2": 3898,
+        "R1": 1178,
+        "R2": 3894,
         "R3": 3820,
-        "R4": 2370
+        "R4": 2375
       },
       "forwardReferences": 646
     }
@@ -64990,8 +64990,8 @@
       {
         "language": "japanese",
         "script": "japanese",
-        "lessonCount": 100,
-        "scriptLessons": 47,
+        "lessonCount": 117,
+        "scriptLessons": 48,
         "taughtGlyphs": 47,
         "shownGlyphs": 47,
         "neverTaughtGlyphs": 0,
@@ -65081,8 +65081,8 @@
       {
         "language": "russian",
         "script": "cyrillic",
-        "lessonCount": 84,
-        "scriptLessons": 24,
+        "lessonCount": 88,
+        "scriptLessons": 27,
         "taughtGlyphs": 32,
         "shownGlyphs": 55,
         "neverTaughtGlyphs": 23,
@@ -76743,8 +76743,82 @@
       },
       {
         "language": "russian",
-        "evidence": [],
-        "validEvidence": [],
+        "evidence": [
+          {
+            "language": "russian",
+            "lessonId": "RU-W05-privet-observe",
+            "blockIndex": 1,
+            "blockTitle": "Writing — observe and trace",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 61
+          },
+          {
+            "language": "russian",
+            "lessonId": "RU-W05-privet-guided-copy",
+            "blockIndex": 1,
+            "blockTitle": "Writing — guided copy",
+            "stage": "guided-copy",
+            "level": "pre-A1",
+            "sequence": 62
+          },
+          {
+            "language": "russian",
+            "lessonId": "RU-W05-privet-delayed-copy",
+            "blockIndex": 1,
+            "blockTitle": "Writing — delayed copy",
+            "stage": "delayed-copy",
+            "level": "pre-A1",
+            "sequence": 63
+          },
+          {
+            "language": "russian",
+            "lessonId": "RU-W05-privet-dictation",
+            "blockIndex": 1,
+            "blockTitle": "Writing — short dictation",
+            "stage": "dictation-transcription",
+            "level": "pre-A1",
+            "sequence": 64
+          }
+        ],
+        "validEvidence": [
+          {
+            "language": "russian",
+            "lessonId": "RU-W05-privet-observe",
+            "blockIndex": 1,
+            "blockTitle": "Writing — observe and trace",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 61
+          },
+          {
+            "language": "russian",
+            "lessonId": "RU-W05-privet-guided-copy",
+            "blockIndex": 1,
+            "blockTitle": "Writing — guided copy",
+            "stage": "guided-copy",
+            "level": "pre-A1",
+            "sequence": 62
+          },
+          {
+            "language": "russian",
+            "lessonId": "RU-W05-privet-delayed-copy",
+            "blockIndex": 1,
+            "blockTitle": "Writing — delayed copy",
+            "stage": "delayed-copy",
+            "level": "pre-A1",
+            "sequence": 63
+          },
+          {
+            "language": "russian",
+            "lessonId": "RU-W05-privet-dictation",
+            "blockIndex": 1,
+            "blockTitle": "Writing — short dictation",
+            "stage": "dictation-transcription",
+            "level": "pre-A1",
+            "sequence": 64
+          }
+        ],
         "defects": [],
         "levels": [
           {
@@ -76755,14 +76829,14 @@
               "delayed-copy",
               "dictation-transcription"
             ],
-            "evidencedStages": [],
-            "missingStages": [
+            "evidencedStages": [
               "observe-trace",
               "guided-copy",
               "delayed-copy",
               "dictation-transcription"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           },
           {
             "level": "A1",
@@ -76774,12 +76848,13 @@
               "controlled-composition",
               "timed-assessment-production"
             ],
-            "evidencedStages": [],
-            "missingStages": [
+            "evidencedStages": [
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription",
+              "dictation-transcription"
+            ],
+            "missingStages": [
               "controlled-composition",
               "timed-assessment-production"
             ],
@@ -76796,12 +76871,13 @@
               "connected-composition",
               "timed-assessment-production"
             ],
-            "evidencedStages": [],
-            "missingStages": [
+            "evidencedStages": [
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription",
+              "dictation-transcription"
+            ],
+            "missingStages": [
               "controlled-composition",
               "connected-composition",
               "timed-assessment-production"
@@ -76819,12 +76895,13 @@
               "connected-composition",
               "timed-assessment-production"
             ],
-            "evidencedStages": [],
-            "missingStages": [
+            "evidencedStages": [
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription",
+              "dictation-transcription"
+            ],
+            "missingStages": [
               "controlled-composition",
               "connected-composition",
               "timed-assessment-production"
@@ -76842,12 +76919,13 @@
               "connected-composition",
               "timed-assessment-production"
             ],
-            "evidencedStages": [],
-            "missingStages": [
+            "evidencedStages": [
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription",
+              "dictation-transcription"
+            ],
+            "missingStages": [
               "controlled-composition",
               "connected-composition",
               "timed-assessment-production"
@@ -76865,12 +76943,13 @@
               "connected-composition",
               "timed-assessment-production"
             ],
-            "evidencedStages": [],
-            "missingStages": [
+            "evidencedStages": [
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription",
+              "dictation-transcription"
+            ],
+            "missingStages": [
               "controlled-composition",
               "connected-composition",
               "timed-assessment-production"
@@ -76888,12 +76967,13 @@
               "connected-composition",
               "timed-assessment-production"
             ],
-            "evidencedStages": [],
-            "missingStages": [
+            "evidencedStages": [
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription",
+              "dictation-transcription"
+            ],
+            "missingStages": [
               "controlled-composition",
               "connected-composition",
               "timed-assessment-production"
@@ -78220,11 +78300,11 @@
     ],
     "summary": {
       "tracks": 23,
-      "tracksWithAnyEvidence": 17,
-      "tracksCompleteAtPreA1": 11,
-      "evidenceBlocks": 235,
+      "tracksWithAnyEvidence": 18,
+      "tracksCompleteAtPreA1": 12,
+      "evidenceBlocks": 239,
       "invalidEvidenceBlocks": 0,
-      "missingTrackLevelStages": 638
+      "missingTrackLevelStages": 610
     }
   },
   "gentleRamp": {
@@ -78839,8 +78919,8 @@
       },
       {
         "language": "japanese",
-        "lessonCount": 100,
-        "atomMeasurableLessons": 100,
+        "lessonCount": 117,
+        "atomMeasurableLessons": 117,
         "atomMeasurementBlindLessons": 0,
         "durationViolations": 0,
         "atomLessonSpikes": 0,
@@ -78855,7 +78935,7 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "forwardReferences": 0,
-        "atomsTaught": 99,
+        "atomsTaught": 111,
         "atomsNeverRevisited": 1,
         "reinforcementWindowMisses": 0,
         "reinforcementMissesByWindow": {
@@ -78865,7 +78945,7 @@
           "R4": 0
         },
         "payoffSurprises": 0,
-        "writingPracticeLessons": 55,
+        "writingPracticeLessons": 57,
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
         "findings": [],
@@ -79481,8 +79561,8 @@
       },
       {
         "language": "russian",
-        "lessonCount": 84,
-        "atomMeasurableLessons": 84,
+        "lessonCount": 88,
+        "atomMeasurableLessons": 88,
         "atomMeasurementBlindLessons": 0,
         "durationViolations": 0,
         "atomLessonSpikes": 1,
@@ -79498,16 +79578,16 @@
         "forwardReviews": 0,
         "forwardReferences": 8,
         "atomsTaught": 160,
-        "atomsNeverRevisited": 22,
-        "reinforcementWindowMisses": 269,
+        "atomsNeverRevisited": 18,
+        "reinforcementWindowMisses": 267,
         "reinforcementMissesByWindow": {
-          "R1": 42,
-          "R2": 105,
+          "R1": 39,
+          "R2": 101,
           "R3": 117,
-          "R4": 5
+          "R4": 10
         },
         "payoffSurprises": 2,
-        "writingPracticeLessons": 36,
+        "writingPracticeLessons": 40,
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
         "findings": [
@@ -79542,7 +79622,7 @@
           {
             "language": "russian",
             "kind": "reinforcement",
-            "count": 269,
+            "count": 267,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -80556,7 +80636,7 @@
       {
         "language": "russian",
         "kind": "reinforcement",
-        "count": 269,
+        "count": 267,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -81058,17 +81138,12 @@
         "inProgressAt": "pre-A1",
         "blockers": [
           {
-            "criterion": "spine-nodes",
-            "detail": "1 of 7 pre-A1 spine node(s) unrealized: SPINE-EXCHANGE-NAMES",
-            "shortfall": 1
-          },
-          {
             "criterion": "vocabulary",
-            "detail": "teaches 35 distinct headwords at or below pre-A1, against 300",
-            "shortfall": 265
+            "detail": "teaches 44 distinct headwords at or below pre-A1, against 300",
+            "shortfall": 256
           }
         ],
-        "vocabulary": 35
+        "vocabulary": 44
       },
       {
         "language": "kannada",
@@ -81264,19 +81339,14 @@
         "inProgressAt": "pre-A1",
         "blockers": [
           {
-            "criterion": "writing-stage",
-            "detail": "4 cumulative writing stage(s) unproved at pre-A1: observe-trace, guided-copy, delayed-copy, dictation-transcription",
-            "shortfall": 4
-          },
-          {
             "criterion": "vocabulary",
             "detail": "teaches 39 distinct headwords at or below pre-A1, against 300",
             "shortfall": 261
           },
           {
             "criterion": "reinforcement",
-            "detail": "20 atom(s) at or below pre-A1 are revisited fewer than twice (30 etymology hook(s) waived)",
-            "shortfall": 20
+            "detail": "15 atom(s) at or below pre-A1 are revisited fewer than twice (30 etymology hook(s) waived)",
+            "shortfall": 15
           }
         ],
         "vocabulary": 53
@@ -81423,12 +81493,12 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 4043,
-    "voice": 2941,
+    "totalLessons": 4064,
+    "voice": 2956,
     "sight": 595,
-    "pen": 507,
-    "coreVoice": 3401,
-    "lessonsWithWritingSegments": 248,
+    "pen": 513,
+    "coreVoice": 3417,
+    "lessonsWithWritingSegments": 254,
     "drivablePercent": 84,
     "tracks": [
       {
@@ -84923,12 +84993,12 @@
       },
       {
         "language": "japanese",
-        "lessonCount": 100,
-        "voice": 45,
+        "lessonCount": 117,
+        "voice": 60,
         "sight": 8,
-        "pen": 47,
-        "coreVoice": 53,
-        "drivablePercent": 53,
+        "pen": 49,
+        "coreVoice": 69,
+        "drivablePercent": 59,
         "drivablePrefixTotal": 23,
         "chapters": [
           {
@@ -85112,6 +85182,22 @@
             ],
             "drivablePrefix": 20,
             "firstNonVoiceLesson": null
+          },
+          {
+            "language": "japanese",
+            "chapter": 13,
+            "lessonCount": 17,
+            "voice": 15,
+            "sight": 0,
+            "pen": 2,
+            "coreVoice": 16,
+            "modalities": [
+              "voice",
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "JA-W13-tsu"
           }
         ]
       },
@@ -89149,21 +89235,21 @@
       },
       {
         "language": "russian",
-        "lessonCount": 84,
+        "lessonCount": 88,
         "voice": 45,
         "sight": 15,
-        "pen": 24,
+        "pen": 28,
         "coreVoice": 57,
-        "drivablePercent": 68,
+        "drivablePercent": 65,
         "drivablePrefixTotal": 48,
         "chapters": [
           {
             "language": "russian",
             "chapter": 1,
-            "lessonCount": 12,
+            "lessonCount": 16,
             "voice": 0,
             "sight": 7,
-            "pen": 5,
+            "pen": 9,
             "coreVoice": 7,
             "modalities": [
               "sight",
@@ -97957,8 +98043,8 @@
       "0": 2209,
       "1": 700,
       "2": 299,
-      "3": 71,
-      "4": 22,
+      "3": 70,
+      "4": 23,
       "5": 12,
       "6": 11,
       "7": 6,
@@ -97970,7 +98056,7 @@
     "underspentPercent": 96
   },
   "infoDump": {
-    "lessons": 4043,
+    "lessons": 4064,
     "lessonsWithFindings": 121,
     "ruleStatements": 30,
     "paradigmTables": 95,
@@ -97980,10 +98066,10 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 53,
-    "lessonsUsingTerms": 3844,
-    "usesBeforeIntroduction": 13402,
-    "technicalUsesBeforeIntroduction": 3389,
-    "technicalLessons": 1804,
+    "lessonsUsingTerms": 3863,
+    "usesBeforeIntroduction": 13428,
+    "technicalUsesBeforeIntroduction": 3390,
+    "technicalLessons": 1805,
     "worstTerms": [
       {
         "term": "verb",
@@ -98012,12 +98098,12 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 4043,
+    "lessonsScanned": 4064,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
   "glyphCoverage": {
-    "filesScanned": 1279,
+    "filesScanned": 1280,
     "mainCharacters": 126,
     "scriptCharacters": 708,
     "gaps": 0
