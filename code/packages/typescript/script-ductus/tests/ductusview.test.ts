@@ -95,6 +95,8 @@ const AA = DUCTUS["ஆ"];
 const aaOutline = tamilOutline("ஆ");
 const I = DUCTUS["இ"];
 const iOutline = tamilOutline("இ");
+const TAMIL_E = DUCTUS["எ"];
+const tamilEOutline = tamilOutline("எ");
 const TELUGU_A = DUCTUS[ductusKey("telugu", "అ")];
 const teluguAOutline = teluguOutline("అ");
 const MALAYALAM_E = DUCTUS[ductusKey("malayalam", "എ")];
@@ -964,6 +966,33 @@ describe("Malayalam എ — joined body, then a separate broad outer arch", () =
     expect(done).toHaveLength(1);
     expect(done[0].attrs.d).toBe(penPathD(MALAYALAM_E.strokes[0], 1));
     expect(pen.attrs.d).toBe(penPathD(MALAYALAM_E.strokes[1], 1));
+  });
+});
+
+describe("Tamil எ — six joined body movements, then the right upright", () => {
+  const steps = ductusSteps(TAMIL_E);
+  const strip = ductusFilmstrip(TAMIL_E, tamilEOutline);
+
+  it("places the only lift before movement 7", () => {
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([
+      false, false, false, false, false, false, true,
+    ]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 0, 0, 0, 1]);
+  });
+
+  it("reports seven movements in two strokes", () => {
+    expect(strip.frames).toHaveLength(7);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 7 movements");
+  });
+
+  it("keeps the joined body visible while the upright rises", () => {
+    const last = strip.frames[6];
+    const done = byTag(last, "path").filter((path) => path.attrs.class === "ductus__done");
+    const pen = byTag(last, "path").find((path) => path.attrs.class === "ductus__pen")!;
+    expect(done).toHaveLength(1);
+    expect(done[0].attrs.d).toBe(penPathD(TAMIL_E.strokes[0], 1));
+    expect(pen.attrs.d).toBe(penPathD(TAMIL_E.strokes[1], 1));
   });
 });
 

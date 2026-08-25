@@ -627,6 +627,22 @@ describe("handwriting ductus", () => {
     ]);
   });
 
+  it("Tamil எ keeps its six-movement body separate from the right upright", () => {
+    expect(penLifts(DUCTUS["எ"])).toBe(1);
+    expect(DUCTUS["எ"].strokes).toHaveLength(2);
+    expect(DUCTUS["எ"].strokes.map((stroke) => stroke.segments.map((segment) => segment.label))).toEqual([
+      [
+        "climb the outer left side",
+        "carry the top bar to the right",
+        "retrace left and drop the inner upright",
+        "turn left into the inner spiral",
+        "sweep around the broad outer curve",
+        "carry the lower foot right",
+      ],
+      ["draw the separate right upright up"],
+    ]);
+  });
+
   it("ய joins its hook, retraced center, base, and right upright without lifting", () => {
     expect(penLifts(DUCTUS["ய"])).toBe(0);
     expect(DUCTUS["ய"].strokes).toHaveLength(1);
@@ -3972,6 +3988,9 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("എ", MALAYALAM_E.source.url)).toBe(
       "_fonts/NotoSansMalayalam-Static.ttf",
     );
+    expect(verifiedLetterFont("எ", DUCTUS["எ"].source.url)).toBe(
+      "_fonts/NotoSansTamil-Static.ttf",
+    );
     expect(verifiedLetterFont("人", CHINESE_REN.source.url)).toBe(
       "_fonts/NotoSansSC-Subset.ttf",
     );
@@ -6222,6 +6241,13 @@ describe("handwriting ductus", () => {
     expect(src.citation).toMatch(/Appendix I.*Frame 5.*ந.*p\. 193/);
     expect(src.variation).toMatch(/Module 5.*dental nasal.*six movements.*three pen-down runs.*1.?2.*3.?4.*5.?6/i);
     expect(src.variation, "must not present one order as the only order").toMatch(/varies|one attested/i);
+  });
+
+  it("எ's two-run stroke order traces to Frame 5's second row", () => {
+    const src = DUCTUS["எ"].source;
+    expect(src.url).toContain("tamilscript/files/2009/08/hw_lettersinstructions.pdf");
+    expect(src.citation).toMatch(/Appendix I.*Frame 5.*எ.*p\. 193/);
+    expect(src.variation).toMatch(/first six movements.*connected body.*upward right upright.*movement 7.*one lift.*varies by school.*two-run order.*Noto Sans Tamil/i);
   });
 
   it("Persian ا traces to UT Austin's opening right-to-left freehand demonstration", () => {
