@@ -527,6 +527,7 @@ pub struct XyAxisConfig {
     pub show_label: Option<bool>,
     pub label_font_size: Option<f64>,
     pub label_padding: Option<f64>,
+    pub label_rotation: Option<f64>,
     pub show_title: Option<bool>,
     pub title_font_size: Option<f64>,
     pub title_padding: Option<f64>,
@@ -672,6 +673,7 @@ pub enum LayoutedChartItem {
         label: String,
         orientation: Orientation,
         font_size: f64,
+        rotation_degrees: f64,
     },
     AxisTickMark {
         x1: f64,

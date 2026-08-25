@@ -1964,6 +1964,9 @@ fn parse_xychart_axis_config(source: &str, key: &str) -> XyAxisConfig {
         show_label: boolean("showLabel"),
         label_font_size: number("labelFontSize").filter(|value| *value > 0.0),
         label_padding: number("labelPadding"),
+        label_rotation: quadrant_directive_value(axis_source, "labelRotation")
+            .and_then(|value| value.parse::<f64>().ok())
+            .filter(|value| (-90.0..=90.0).contains(value)),
         show_title: boolean("showTitle"),
         title_font_size: number("titleFontSize").filter(|value| *value > 0.0),
         title_padding: number("titlePadding"),
@@ -2122,7 +2125,10 @@ fn parse_xychart_data_point(token: &Token, source: &str) -> Result<ChartDataPoin
             .find('"')
             .ok_or_else(|| token_error(token, "unterminated XY-chart point label"))?;
         if !quoted_label[close + 1..].trim().is_empty() {
-            return Err(token_error(token, "unexpected content after XY-chart point label"));
+            return Err(token_error(
+                token,
+                "unexpected content after XY-chart point label",
+            ));
         }
         Some(quoted_label[..close].to_string())
     } else {
@@ -6147,8 +6153,7 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         assert_eq!(axis.title.as_deref(), Some("Samples"));
 
         let categorical =
-            parse_xychart("xychart\nx-axis [A, B]\nbar [1, 2, 99]\nline [3, 4, 88]\n")
-                .unwrap();
+            parse_xychart("xychart\nx-axis [A, B]\nbar [1, 2, 99]\nline [3, 4, 88]\n").unwrap();
         assert!(categorical
             .series
             .iter()
@@ -6158,7 +6163,7 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     #[test]
     fn xychart_preserves_core_init_configuration() {
         let diagram = parse_xychart(
-            "%%{init: {\"xyChart\": {\"width\": 720, \"height\": 440, \"chartOrientation\": \"horizontal\", \"plotReservedSpacePercent\": 65, \"titleFontSize\": 24, \"titlePadding\": 14, \"showTitle\": false, \"showLegend\": false, \"legendFontSize\": 18, \"legendPadding\": 16, \"showDataLabel\": true, \"showDataLabelOutsideBar\": true, \"xAxis\": {\"showLabel\": false, \"labelFontSize\": 13, \"labelPadding\": 7, \"showTitle\": false, \"titleFontSize\": 18, \"titlePadding\": 9, \"showTick\": false, \"tickLength\": 11, \"tickWidth\": 3, \"showAxisLine\": false, \"axisLineWidth\": 4}, \"yAxis\": {\"showLabel\": true, \"labelFontSize\": 15, \"labelPadding\": 8, \"showTitle\": true, \"titleFontSize\": 19, \"titlePadding\": 10, \"showTick\": true, \"tickLength\": 12, \"tickWidth\": 4, \"showAxisLine\": true, \"axisLineWidth\": 5}}, \"themeVariables\": {\"xyChart\": {\"dataLabelColor\": \"#123456\"}}}}%%\nxychart\ntitle Hidden\nbar [10, 20]\n",
+            "%%{init: {\"xyChart\": {\"width\": 720, \"height\": 440, \"chartOrientation\": \"horizontal\", \"plotReservedSpacePercent\": 65, \"titleFontSize\": 24, \"titlePadding\": 14, \"showTitle\": false, \"showLegend\": false, \"legendFontSize\": 18, \"legendPadding\": 16, \"showDataLabel\": true, \"showDataLabelOutsideBar\": true, \"xAxis\": {\"showLabel\": false, \"labelFontSize\": 13, \"labelPadding\": 7, \"labelRotation\": -45, \"showTitle\": false, \"titleFontSize\": 18, \"titlePadding\": 9, \"showTick\": false, \"tickLength\": 11, \"tickWidth\": 3, \"showAxisLine\": false, \"axisLineWidth\": 4}, \"yAxis\": {\"showLabel\": true, \"labelFontSize\": 15, \"labelPadding\": 8, \"labelRotation\": 30, \"showTitle\": true, \"titleFontSize\": 19, \"titlePadding\": 10, \"showTick\": true, \"tickLength\": 12, \"tickWidth\": 4, \"showAxisLine\": true, \"axisLineWidth\": 5}}, \"themeVariables\": {\"xyChart\": {\"dataLabelColor\": \"#123456\"}}}}%%\nxychart\ntitle Hidden\nbar [10, 20]\n",
         )
         .unwrap();
 
@@ -6185,6 +6190,7 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         assert_eq!(diagram.xy_config.x_axis.show_label, Some(false));
         assert_eq!(diagram.xy_config.x_axis.label_font_size, Some(13.0));
         assert_eq!(diagram.xy_config.x_axis.label_padding, Some(7.0));
+        assert_eq!(diagram.xy_config.x_axis.label_rotation, Some(-45.0));
         assert_eq!(diagram.xy_config.x_axis.show_title, Some(false));
         assert_eq!(diagram.xy_config.x_axis.title_font_size, Some(18.0));
         assert_eq!(diagram.xy_config.x_axis.title_padding, Some(9.0));
@@ -6195,6 +6201,7 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         assert_eq!(diagram.xy_config.x_axis.axis_line_width, Some(4.0));
         assert_eq!(diagram.xy_config.y_axis.show_label, Some(true));
         assert_eq!(diagram.xy_config.y_axis.label_font_size, Some(15.0));
+        assert_eq!(diagram.xy_config.y_axis.label_rotation, Some(30.0));
         assert_eq!(diagram.xy_config.y_axis.show_tick, Some(true));
         assert_eq!(diagram.xy_config.y_axis.tick_length, Some(12.0));
         assert_eq!(diagram.xy_config.y_axis.tick_width, Some(4.0));
@@ -6205,6 +6212,12 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         )
         .unwrap();
         assert_eq!(explicit.orientation, ChartOrientation::Vertical);
+
+        let out_of_range = parse_xychart(
+            "%%{init: {\"xyChart\": {\"xAxis\": {\"labelRotation\": 91}}}}%%\nxychart\nline [1, 2]\n",
+        )
+        .unwrap();
+        assert_eq!(out_of_range.xy_config.x_axis.label_rotation, None);
     }
 
     #[test]

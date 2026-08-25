@@ -42,6 +42,27 @@ fn chart_value_label(value: f64) -> String {
     }
 }
 
+fn approximate_text_width(text: &str, font_size: f64) -> f64 {
+    text.chars().count() as f64 * font_size * 0.6
+}
+
+fn maximum_x_axis_label_width(diagram: &ChartDiagram, font_size: f64) -> f64 {
+    let Some(axis) = diagram.x_axis.as_ref() else {
+        return 0.0;
+    };
+    if axis.kind == AxisKind::Categorical {
+        axis.categories
+            .iter()
+            .map(|label| approximate_text_width(label, font_size))
+            .fold(0.0, f64::max)
+    } else {
+        [axis.min, axis.max]
+            .iter()
+            .map(|value| approximate_text_width(&format!("{value:.0}"), font_size))
+            .fold(0.0, f64::max)
+    }
+}
+
 fn maximum_series_len(diagram: &ChartDiagram) -> usize {
     diagram
         .series
@@ -156,8 +177,14 @@ fn layout_xy_vertical(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChart
     } else {
         0.0
     };
+    let x_label_rotation = x_config.label_rotation.unwrap_or(0.0);
+    let x_label_rotation_rad = x_label_rotation.to_radians();
     let x_label_space = if x_config.show_label.unwrap_or(true) {
-        x_label_font_size + x_label_padding * 2.0
+        let label_width = maximum_x_axis_label_width(diagram, x_label_font_size);
+        (x_label_rotation_rad.sin().abs() * label_width
+            + x_label_rotation_rad.cos().abs() * x_label_font_size)
+            .max(x_label_font_size)
+            + x_label_padding * 2.0
     } else {
         0.0
     };
@@ -299,6 +326,7 @@ fn layout_xy_vertical(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChart
                 label: format!("{val:.0}"),
                 orientation: Orientation::Horizontal,
                 font_size: y_label_font_size,
+                rotation_degrees: 0.0,
             });
         }
     }
@@ -319,11 +347,18 @@ fn layout_xy_vertical(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChart
             }
             if x_config.show_label.unwrap_or(true) {
                 items.push(LayoutedChartItem::AxisTick {
-                    x,
-                    y: pb + x_tick_length + x_label_padding,
+                    x: x + x_label_rotation_rad.sin() * x_label_font_size / 2.0,
+                    y: pb
+                        + x_tick_length
+                        + x_label_padding
+                        + (x_label_rotation_rad.sin()
+                            * maximum_x_axis_label_width(diagram, x_label_font_size)
+                            / 2.0)
+                            .abs(),
                     label: format!("{:.0}", axis.min + fraction * (axis.max - axis.min)),
                     orientation: Orientation::Vertical,
                     font_size: x_label_font_size,
+                    rotation_degrees: x_label_rotation,
                 });
             }
         }
@@ -341,11 +376,18 @@ fn layout_xy_vertical(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChart
             }
             if x_config.show_label.unwrap_or(true) {
                 items.push(LayoutedChartItem::AxisTick {
-                    x: cx,
-                    y: pb + x_tick_length + x_label_padding,
+                    x: cx + x_label_rotation_rad.sin() * x_label_font_size / 2.0,
+                    y: pb
+                        + x_tick_length
+                        + x_label_padding
+                        + (x_label_rotation_rad.sin()
+                            * maximum_x_axis_label_width(diagram, x_label_font_size)
+                            / 2.0)
+                            .abs(),
                     label: cat.clone(),
                     orientation: Orientation::Vertical,
                     font_size: x_label_font_size,
+                    rotation_degrees: x_label_rotation,
                 });
             }
         }
@@ -703,6 +745,7 @@ fn layout_xy_horizontal(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedCha
                 label: format!("{value:.0}"),
                 orientation: Orientation::Vertical,
                 font_size: y_label_font_size,
+                rotation_degrees: 0.0,
             });
         }
     }
@@ -727,6 +770,7 @@ fn layout_xy_horizontal(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedCha
                     label: format!("{:.0}", axis.min + fraction * (axis.max - axis.min)),
                     orientation: Orientation::Horizontal,
                     font_size: x_label_font_size,
+                    rotation_degrees: 0.0,
                 });
             }
         }
@@ -749,6 +793,7 @@ fn layout_xy_horizontal(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedCha
                     label: category.clone(),
                     orientation: Orientation::Horizontal,
                     font_size: x_label_font_size,
+                    rotation_degrees: 0.0,
                 });
             }
         }
@@ -1605,6 +1650,54 @@ mod tests {
             item,
             LayoutedChartItem::AxisTickMark { y1, y2, stroke_width, .. }
                 if (*y2 - *y1 - 12.0).abs() < f64::EPSILON && *stroke_width == 4.0
+        )));
+    }
+
+    #[test]
+    fn xy_bottom_axis_rotation_reserves_space_and_reaches_layout_ir() {
+        let mut diagram = xy_diagram();
+        diagram.x_axis.as_mut().unwrap().categories = vec![
+            "A long category".into(),
+            "Another category".into(),
+            "Final category".into(),
+        ];
+        let unrotated = layout_chart_diagram(&diagram, 600.0, 400.0);
+        let unrotated_plot_bottom = unrotated
+            .items
+            .iter()
+            .find_map(|item| match item {
+                LayoutedChartItem::AxisSpine {
+                    y1,
+                    orientation: Orientation::Horizontal,
+                    ..
+                } => Some(*y1),
+                _ => None,
+            })
+            .unwrap();
+
+        diagram.xy_config.x_axis.label_rotation = Some(-45.0);
+        let rotated = layout_chart_diagram(&diagram, 600.0, 400.0);
+        let rotated_plot_bottom = rotated
+            .items
+            .iter()
+            .find_map(|item| match item {
+                LayoutedChartItem::AxisSpine {
+                    y1,
+                    orientation: Orientation::Horizontal,
+                    ..
+                } => Some(*y1),
+                _ => None,
+            })
+            .unwrap();
+
+        assert!(rotated_plot_bottom < unrotated_plot_bottom);
+        assert!(rotated.items.iter().any(|item| matches!(
+            item,
+            LayoutedChartItem::AxisTick {
+                orientation: Orientation::Vertical,
+                rotation_degrees,
+                ..
+            } if *rotation_degrees == -45.0
         )));
     }
 
