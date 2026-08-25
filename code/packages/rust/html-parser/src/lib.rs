@@ -8090,12 +8090,15 @@ impl HtmlParser {
                     .iter()
                     .any(|(candidate, _)| candidate == name)
                 {
-                    self.diagnostics.push(ParserDiagnostic::new(
-                        "unexpected-formatting-end-tag-without-open-element",
-                        format!(
-                            "end tag `</{name}>` triggered adoption-agency recovery after its formatting element left the open stack"
-                        ),
-                    ));
+                    self.diagnostics.push(
+                        ParserDiagnostic::new(
+                            "unexpected-formatting-end-tag-without-open-element",
+                            format!(
+                                "end tag `</{name}>` triggered adoption-agency recovery after its formatting element left the open stack"
+                            ),
+                        )
+                        .at_emission(self.current_token_emission_position),
+                    );
                 }
                 self.remove_pending_formatting_reconstruction(name);
             }
@@ -8231,12 +8234,15 @@ impl HtmlParser {
                 && self.is_stack_displaced_formatting_element(&self.open_elements[index]);
             if stack_displaced_formatting {
                 let path = self.open_elements[index].clone();
-                self.diagnostics.push(ParserDiagnostic::new(
-                    "unexpected-formatting-end-tag-without-open-element",
-                    format!(
-                        "end tag `</{name}>` triggered adoption-agency recovery after its formatting element left the open stack"
-                    ),
-                ));
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-formatting-end-tag-without-open-element",
+                        format!(
+                            "end tag `</{name}>` triggered adoption-agency recovery after its formatting element left the open stack"
+                        ),
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
                 self.stack_displaced_formatting_paths
                     .retain(|candidate| candidate != &path);
             }
@@ -27927,6 +27933,20 @@ mod tests {
         .at_emission(Some(end_tag_position_at(source, name, occurrence)))
     }
 
+    fn unexpected_formatting_end_tag_without_open_element(
+        source: &str,
+        name: &str,
+        occurrence: usize,
+    ) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-formatting-end-tag-without-open-element",
+            format!(
+                "end tag `</{name}>` triggered adoption-agency recovery after its formatting element left the open stack"
+            ),
+        )
+        .at_emission(Some(end_tag_position_at(source, name, occurrence)))
+    }
+
     fn unexpected_formatting_end_tag_in_table(
         source: &str,
         name: &str,
@@ -42605,13 +42625,12 @@ mod tests {
 
     #[test]
     fn reports_adoption_agency_recovery_when_formatting_is_no_longer_open() {
-        let output =
-            parse_html_with_diagnostics("<!doctype html><a><p></a>tail</p>").unwrap();
+        let source = "<!doctype html><a><p></a>tail</p>";
+        let output = parse_html_with_diagnostics(source).unwrap();
         assert_eq!(
             output.parser_diagnostics,
-            vec![ParserDiagnostic::new(
-                "unexpected-formatting-end-tag-without-open-element",
-                "end tag `</a>` triggered adoption-agency recovery after its formatting element left the open stack"
+            vec![unexpected_formatting_end_tag_without_open_element(
+                source, "a", 0
             )]
         );
 
@@ -42626,11 +42645,61 @@ mod tests {
         assert!(reconstructed_anchor.children.is_empty());
         assert_eq!(paragraph.children[1], Node::text("tail"));
 
+        let fragment_source = "<a><p></a>";
         let fragment =
-            parse_html_fragment_for_context_with_diagnostics("<a><p></a>", "div").unwrap();
+            parse_html_fragment_for_context_with_diagnostics(fragment_source, "div").unwrap();
         assert!(fragment.parser_diagnostics.iter().any(|diagnostic| {
-            diagnostic.code == "unexpected-formatting-end-tag-without-open-element"
+            diagnostic
+                == &unexpected_formatting_end_tag_without_open_element(fragment_source, "a", 0)
         }));
+
+        let repeated_source = "<!doctype html><a>current</a><a><p></a>";
+        let repeated = parse_html_with_diagnostics(repeated_source).unwrap();
+        assert!(repeated.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic
+                == &unexpected_formatting_end_tag_without_open_element(repeated_source, "a", 1)
+        }));
+
+        let unicode_source = "<!doctype html><!--é-->\r\n<a><p></a>";
+        let unicode = parse_html_with_diagnostics(unicode_source).unwrap();
+        assert!(unicode.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic
+                == &unexpected_formatting_end_tag_without_open_element(unicode_source, "a", 0)
+        }));
+        assert!(unicode_source.len() > unicode_source.chars().count());
+
+        let incomplete = parse_html_with_diagnostics("<!doctype html><a><p></a").unwrap();
+        assert!(incomplete.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-formatting-end-tag-without-open-element"
+        }));
+
+        let mut unpositioned = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        for token in [
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "p".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::EndTag {
+                name: "a".to_string(),
+            },
+            Token::Eof,
+        ] {
+            unpositioned.process_token(token);
+        }
+        let diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| {
+                diagnostic.code == "unexpected-formatting-end-tag-without-open-element"
+            })
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
 
         for source in [
             "<!doctype html><a>current</a>",
@@ -42660,10 +42729,7 @@ mod tests {
             output.parser_diagnostics,
             vec![
                 unexpected_non_current_end_tag(source, "p", 0),
-                ParserDiagnostic::new(
-                    "unexpected-formatting-end-tag-without-open-element",
-                    "end tag `</b>` triggered adoption-agency recovery after its formatting element left the open stack",
-                ),
+                unexpected_formatting_end_tag_without_open_element(source, "b", 0),
                 eof_with_unclosed_elements(source),
             ]
         );
