@@ -2,6 +2,38 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.54] - 2026-08-25 - Relaxed SIMD epic PR5: f32x4/f64x2.relaxed_madd/relaxed_nmadd
+
+### Added
+
+- 4 new `SIMD_OPS` entries, the ELEVENTH/TWELFTH/THIRTEENTH/FOURTEENTH
+  relaxed-simd opcodes (see `code/specs/
+  W19-wasm-relaxed-simd-first-slice.md`): `f32x4.relaxed_madd`
+  (`0x105`), `f32x4.relaxed_nmadd` (`0x106`), `f64x2.relaxed_madd`
+  (`0x107`), `f64x2.relaxed_nmadd` (`0x108`) -- 250 SIMD opcodes total,
+  up from 246.
+- Sub-opcode values re-verified LIVE against the relaxed-simd
+  Overview.md encoding table -- NOT the `0x104`-`0x107` range
+  `SimdOpKind::RelaxedLaneselectI8x16`'s own doc comment already
+  flagged as a wrong guess from an earlier scoping pass; the real
+  madd/nmadd range is one higher, `0x105`-`0x108`. All 4 LEB128-encode
+  as 2-byte sequences (`[0x85, 0x02]`, `[0x86, 0x02]`, `[0x87, 0x02]`,
+  `[0x88, 0x02]`).
+- `SimdOpKind::RelaxedMaddF32x4`/`RelaxedNmaddF32x4`/`RelaxedMaddF64x2`/
+  `RelaxedNmaddF64x2` variants, each with a doc comment hand-deriving
+  the fused-multiply-add semantics (`madd(a,b,c) = a*b+c`,
+  `nmadd(a,b,c) = -(a*b)+c`) and the deterministic FUSED rounding
+  choice (Rust's `f32::mul_add`/`f64::mul_add`, single-rounding
+  regardless of hardware FMA availability) against the real vendored
+  `relaxed_madd_nmadd.wast` corpus's `either` alternatives -- the FIRST
+  relaxed-simd family whose ternary body is genuine per-lane
+  floating-point arithmetic rather than a bitwise blend
+  (`RelaxedLaneselectI8x16` etc. are ternary but bitwise).
+- New tests: `simd_relaxed_madd_nmadd_have_the_real_verified_sub_opcode_values`,
+  covering all 4 new sub-opcode values by both lookup direction
+  (`get_simd_op`/`get_simd_op_by_name`). `SIMD_OPS.len()` assertion
+  bumped from 246 to 250.
+
 ## [0.2.53] - 2026-08-25 - Relaxed SIMD epic PR4: i8x16/i16x8/i32x4/i64x2.relaxed_laneselect
 
 ### Added

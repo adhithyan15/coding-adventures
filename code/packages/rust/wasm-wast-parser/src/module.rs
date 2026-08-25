@@ -2076,7 +2076,22 @@ fn encode_stream_instr(
             | wasm_opcodes::SimdOpKind::RelaxedLaneselectI8x16
             | wasm_opcodes::SimdOpKind::RelaxedLaneselectI16x8
             | wasm_opcodes::SimdOpKind::RelaxedLaneselectI32x4
-            | wasm_opcodes::SimdOpKind::RelaxedLaneselectI64x2 => {
+            | wasm_opcodes::SimdOpKind::RelaxedLaneselectI64x2
+            | wasm_opcodes::SimdOpKind::RelaxedMaddF32x4
+            | wasm_opcodes::SimdOpKind::RelaxedNmaddF32x4
+            | wasm_opcodes::SimdOpKind::RelaxedMaddF64x2
+            | wasm_opcodes::SimdOpKind::RelaxedNmaddF64x2 => {
+                // `f32x4.relaxed_madd`/`relaxed_nmadd`,
+                // `f64x2.relaxed_madd`/`relaxed_nmadd` (relaxed SIMD epic
+                // PR5 -- see code/specs/
+                // W19-wasm-relaxed-simd-first-slice.md) join too: same
+                // TERNARY `(v128, v128, v128) -> v128` shape as
+                // `RelaxedLaneselectI8x16`/`Bitselect` above -- still just
+                // a bare opcode encoding (`0xFD` + 2-byte LEB128
+                // sub-opcode), no immediate; the fact that this family's
+                // runtime body is fused-multiply-add floating-point
+                // arithmetic rather than a bitwise blend is entirely
+                // invisible at this encoding level.
                 // `i8x16/i16x8/i32x4/i64x2.relaxed_laneselect` (relaxed
                 // SIMD epic PR4 -- see code/specs/
                 // W19-wasm-relaxed-simd-first-slice.md) join too: same
@@ -3080,7 +3095,22 @@ fn encode_flat_instr(
             | wasm_opcodes::SimdOpKind::RelaxedLaneselectI8x16
             | wasm_opcodes::SimdOpKind::RelaxedLaneselectI16x8
             | wasm_opcodes::SimdOpKind::RelaxedLaneselectI32x4
-            | wasm_opcodes::SimdOpKind::RelaxedLaneselectI64x2 => {
+            | wasm_opcodes::SimdOpKind::RelaxedLaneselectI64x2
+            | wasm_opcodes::SimdOpKind::RelaxedMaddF32x4
+            | wasm_opcodes::SimdOpKind::RelaxedNmaddF32x4
+            | wasm_opcodes::SimdOpKind::RelaxedMaddF64x2
+            | wasm_opcodes::SimdOpKind::RelaxedNmaddF64x2 => {
+                // `f32x4.relaxed_madd`/`relaxed_nmadd`,
+                // `f64x2.relaxed_madd`/`relaxed_nmadd` (relaxed SIMD epic
+                // PR5 -- see code/specs/
+                // W19-wasm-relaxed-simd-first-slice.md) join too: same
+                // TERNARY `(v128, v128, v128) -> v128` shape as
+                // `RelaxedLaneselectI8x16`/`Bitselect` above -- still just
+                // a bare opcode encoding (`0xFD` + 2-byte LEB128
+                // sub-opcode), no immediate; the fact that this family's
+                // runtime body is fused-multiply-add floating-point
+                // arithmetic rather than a bitwise blend is entirely
+                // invisible at this encoding level.
                 // `i8x16/i16x8/i32x4/i64x2.relaxed_laneselect` (relaxed
                 // SIMD epic PR4 -- see code/specs/
                 // W19-wasm-relaxed-simd-first-slice.md) join too: same
@@ -5809,6 +5839,30 @@ mod tests {
         assert!(code_of(&m, 3).windows(2).any(|w| w == [0xFD, 0x50]), "v128.or: {:?}", code_of(&m, 3));
         assert!(code_of(&m, 4).windows(2).any(|w| w == [0xFD, 0x51]), "v128.xor: {:?}", code_of(&m, 4));
         assert!(code_of(&m, 5).windows(2).any(|w| w == [0xFD, 0x52]), "v128.bitselect: {:?}", code_of(&m, 5));
+    }
+
+    #[test]
+    fn simd_relaxed_madd_nmadd_family_encodes_the_real_sub_opcodes() {
+        // Relaxed SIMD epic PR5 (see code/specs/
+        // W19-wasm-relaxed-simd-first-slice.md): f32x4/f64x2.relaxed_madd/
+        // relaxed_nmadd (sub-opcodes 0x105-0x108, all >= 0x100 so 2-byte
+        // LEB128, same shape as every other relaxed-simd opcode). TERNARY,
+        // same "no immediate beyond the opcode byte itself" encoder bucket
+        // `v128.bitselect`/`i8x16.relaxed_laneselect` above use -- operand
+        // count is driven by the S-expression recursion, not the encoder,
+        // so no special-casing was needed to add this family.
+        let m = parse_module(
+            r#"(module
+                 (func (param v128 v128 v128) (result v128) (f32x4.relaxed_madd (local.get 0) (local.get 1) (local.get 2)))
+                 (func (param v128 v128 v128) (result v128) (f32x4.relaxed_nmadd (local.get 0) (local.get 1) (local.get 2)))
+                 (func (param v128 v128 v128) (result v128) (f64x2.relaxed_madd (local.get 0) (local.get 1) (local.get 2)))
+                 (func (param v128 v128 v128) (result v128) (f64x2.relaxed_nmadd (local.get 0) (local.get 1) (local.get 2))))"#,
+        )
+        .unwrap();
+        assert!(code_of(&m, 0).windows(3).any(|w| w == [0xFD, 0x85, 0x02]), "f32x4.relaxed_madd: {:?}", code_of(&m, 0));
+        assert!(code_of(&m, 1).windows(3).any(|w| w == [0xFD, 0x86, 0x02]), "f32x4.relaxed_nmadd: {:?}", code_of(&m, 1));
+        assert!(code_of(&m, 2).windows(3).any(|w| w == [0xFD, 0x87, 0x02]), "f64x2.relaxed_madd: {:?}", code_of(&m, 2));
+        assert!(code_of(&m, 3).windows(3).any(|w| w == [0xFD, 0x88, 0x02]), "f64x2.relaxed_nmadd: {:?}", code_of(&m, 3));
     }
 
     #[test]

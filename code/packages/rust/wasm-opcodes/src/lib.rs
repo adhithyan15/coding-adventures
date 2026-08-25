@@ -2498,6 +2498,73 @@ pub enum SimdOpKind {
     /// `[0x1234123456785678,0x5678567812341234]`, matching the corpus's
     /// first `either` alternative bit-for-bit.
     RelaxedLaneselectI64x2,
+    /// `f32x4.relaxed_madd` (relaxed-SIMD epic, PR5 -- see
+    /// `code/specs/W19-wasm-relaxed-simd-first-slice.md`) -- sub-opcode
+    /// `0x105`, the ELEVENTH relaxed-simd opcode implemented after
+    /// [`Self::RelaxedSwizzle`]/[`Self::RelaxedQ15mulrI16x8S`]/
+    /// [`Self::RelaxedMinF32x4`]/[`Self::RelaxedMaxF32x4`]/
+    /// [`Self::RelaxedMinF64x2`]/[`Self::RelaxedMaxF64x2`]/
+    /// [`Self::RelaxedLaneselectI8x16`]/[`Self::RelaxedLaneselectI16x8`]/
+    /// [`Self::RelaxedLaneselectI32x4`]/[`Self::RelaxedLaneselectI64x2`].
+    /// Confirmed live against the same relaxed-simd Overview.md encoding
+    /// table every other relaxed-simd row above cites: `0x105` (261
+    /// decimal), LEB128-encoded as the 2-byte sequence `[0x85, 0x02]`.
+    /// This is NOT the `0x104`-`0x107` range [`Self::RelaxedLaneselectI8x16`]'s
+    /// own doc comment already flagged as a WRONG guess from an earlier
+    /// scoping pass -- the real madd/nmadd range, re-verified here again
+    /// via the same live fetch, is `0x105`-`0x108`.
+    ///
+    /// The FIRST ternary SIMD op in this table whose body is genuine
+    /// per-lane FLOATING-POINT arithmetic rather than a bitwise blend
+    /// ([`Self::Bitselect`]/[`Self::RelaxedLaneselectI8x16`] etc. are also
+    /// ternary but bitwise, lane-width-agnostic) -- `madd(a, b, c)`
+    /// computes `a*b+c` per lane. Per the relaxed-simd spec's own prose,
+    /// the multiply-add MAY be fused (a single rounding, as a real FMA
+    /// instruction would produce) OR unfused (multiply then add, two
+    /// roundings) -- both are spec-valid, and the real vendored
+    /// `relaxed_madd_nmadd.wast` corpus (pinned `WebAssembly/testsuite`
+    /// SHA `28864811cf03bdbf880733786148feaba339582d`) encodes this with
+    /// `either` alternatives whose two values are the fused and unfused
+    /// results respectively (hand-derived from the file's own comments,
+    /// e.g. `x=0x1.000004p+0, y=0x1.0002p+0, z=-0x1.000204p+0`: fused
+    /// gives `0x1p-37`, unfused (double-rounded) gives `0`). This
+    /// implementation picks the FUSED behavior, via Rust's
+    /// `f32::mul_add`/`f64::mul_add`, which the language guarantees
+    /// computes `(self * a) + b` with only ONE rounding step regardless
+    /// of whether the target has hardware FMA (a software fallback is
+    /// used otherwise, but it is still single-rounding) -- so this
+    /// choice is deterministic and platform-independent, unlike a naive
+    /// `a * b + c` in source, which would be double-rounded on some
+    /// targets and single-rounded (fused by LLVM's optimizer) on others.
+    /// Hand-verified this lands on the corpus's FIRST `either`
+    /// alternative in every fused-vs-unfused test case in the file. See
+    /// `wasm-execution`'s `SimdOpKind::RelaxedMaddF32x4` match arm.
+    RelaxedMaddF32x4,
+    /// `f32x4.relaxed_nmadd` (relaxed-SIMD epic, PR5) -- sub-opcode
+    /// `0x106`, the 2-byte LEB128 sequence `[0x86, 0x02]`. Per the
+    /// corpus's own "nmadd tests with negated x/y, same answers are
+    /// expected [as madd]" comments, hand-verified that
+    /// `nmadd(a, b, c) = -(a*b) + c` (equivalently `nmadd(a,b,c) ==
+    /// madd(-a,b,c) == madd(a,-b,c)` for every case in the file) --
+    /// computed here as `(-a).mul_add(b, c)` per lane, same
+    /// single-rounding guarantee and same fused-vs-unfused `either`
+    /// alternative match as [`Self::RelaxedMaddF32x4`].
+    RelaxedNmaddF32x4,
+    /// `f64x2.relaxed_madd` (relaxed-SIMD epic, PR5) -- sub-opcode
+    /// `0x107`, the 2-byte LEB128 sequence `[0x87, 0x02]`. The 2-lane
+    /// `f64` mirror of [`Self::RelaxedMaddF32x4`] -- same `a.mul_add(b,
+    /// c)` fused body, same single-rounding guarantee, hand-verified
+    /// against the corpus's `f64x2.relaxed_madd` cases (e.g.
+    /// `x=0x1.00000004p+0, y=0x1.000002p+0, z=-0x1.00000204p+0`: fused
+    /// gives `0x1p-53`, matching the corpus's first `either`
+    /// alternative).
+    RelaxedMaddF64x2,
+    /// `f64x2.relaxed_nmadd` (relaxed-SIMD epic, PR5) -- sub-opcode
+    /// `0x108`, the 2-byte LEB128 sequence `[0x88, 0x02]`. The 2-lane
+    /// `f64` mirror of [`Self::RelaxedNmaddF32x4`] -- `(-a).mul_add(b,
+    /// c)` per lane, hand-verified against the corpus's
+    /// `f64x2.relaxed_nmadd` cases the same way.
+    RelaxedNmaddF64x2,
 }
 
 /// One entry in the SIMD opcode table: everything a consumer needs to
@@ -3380,6 +3447,30 @@ pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "i16x8.relaxed_laneselect", sub_opcode: 0x10a, kind: SimdOpKind::RelaxedLaneselectI16x8 },
     SimdOpInfo { name: "i32x4.relaxed_laneselect", sub_opcode: 0x10b, kind: SimdOpKind::RelaxedLaneselectI32x4 },
     SimdOpInfo { name: "i64x2.relaxed_laneselect", sub_opcode: 0x10c, kind: SimdOpKind::RelaxedLaneselectI64x2 },
+
+    // ── Relaxed SIMD epic, PR5 -- see code/specs/
+    // W19-wasm-relaxed-simd-first-slice.md ──────────────────────────────
+    //
+    // `f32x4.relaxed_madd`/`relaxed_nmadd`, `f64x2.relaxed_madd`/
+    // `relaxed_nmadd` -- sub-opcodes `0x105`-`0x108`, re-verified live
+    // against the same relaxed-simd Overview.md encoding table the other
+    // relaxed-simd rows above cite (NOT the `0x104`-`0x107` range
+    // `SimdOpKind::RelaxedLaneselectI8x16`'s own doc comment already
+    // flagged as a wrong guess from an earlier scoping pass -- the real
+    // madd/nmadd range is one higher, `0x105`-`0x108`). LEB128 encodings:
+    // `0x105` (261) -> `[0x85, 0x02]`, `0x106` (262) -> `[0x86, 0x02]`,
+    // `0x107` (263) -> `[0x87, 0x02]`, `0x108` (264) -> `[0x88, 0x02]` --
+    // same 2-byte-continuation shape every relaxed-simd row uses. See
+    // `SimdOpKind::RelaxedMaddF32x4`/`RelaxedNmaddF32x4`/
+    // `RelaxedMaddF64x2`/`RelaxedNmaddF64x2`'s own doc comments for the
+    // hand-verified fused-vs-unfused `either`-pair semantics (against the
+    // real `relaxed_madd_nmadd.wast` corpus) -- the first relaxed-simd
+    // family whose ternary body is per-lane floating-point arithmetic
+    // rather than a bitwise blend.
+    SimdOpInfo { name: "f32x4.relaxed_madd", sub_opcode: 0x105, kind: SimdOpKind::RelaxedMaddF32x4 },
+    SimdOpInfo { name: "f32x4.relaxed_nmadd", sub_opcode: 0x106, kind: SimdOpKind::RelaxedNmaddF32x4 },
+    SimdOpInfo { name: "f64x2.relaxed_madd", sub_opcode: 0x107, kind: SimdOpKind::RelaxedMaddF64x2 },
+    SimdOpInfo { name: "f64x2.relaxed_nmadd", sub_opcode: 0x108, kind: SimdOpKind::RelaxedNmaddF64x2 },
 ];
 
 /// Look up a SIMD opcode by its LEB128-decoded sub-opcode value (the
@@ -3798,8 +3889,8 @@ mod tests {
     // ── SIMD (0xFD prefix, v128 first slice) ─────────────────────────────────
 
     #[test]
-    fn simd_ops_table_has_the_expected_246_entries_and_no_duplicates() {
-        assert_eq!(SIMD_OPS.len(), 246);
+    fn simd_ops_table_has_the_expected_250_entries_and_no_duplicates() {
+        assert_eq!(SIMD_OPS.len(), 250);
 
         let mut seen_sub_opcodes = std::collections::HashSet::new();
         let mut seen_names = std::collections::HashSet::new();
@@ -5176,5 +5267,41 @@ mod tests {
         assert_eq!(i64.name, "i64x2.relaxed_laneselect");
         assert_eq!(i64.kind, SimdOpKind::RelaxedLaneselectI64x2);
         assert_eq!(get_simd_op_by_name("i64x2.relaxed_laneselect").map(|o| o.sub_opcode), Some(0x10c));
+    }
+
+    // ── Relaxed SIMD epic, PR5 -- see code/specs/
+    // W19-wasm-relaxed-simd-first-slice.md ──────────────────────────────
+
+    #[test]
+    fn simd_relaxed_madd_nmadd_have_the_real_verified_sub_opcode_values() {
+        // Relaxed SIMD epic PR5: `f32x4.relaxed_madd`/`relaxed_nmadd`,
+        // `f64x2.relaxed_madd`/`relaxed_nmadd` -- eleventh/twelfth/
+        // thirteenth/fourteenth relaxed-simd opcodes, same Overview.md
+        // encoding table as every other relaxed-simd row above cites.
+        // Re-verified LIVE against the relaxed-simd Overview.md table --
+        // NOT the `0x104`-`0x107` range `RelaxedLaneselectI8x16`'s own
+        // doc comment already flagged as a wrong guess from an earlier
+        // scoping pass. `0x105` (261), `0x106` (262), `0x107` (263),
+        // `0x108` (264) all LEB128-encode as 2-byte sequences
+        // (`[0x85, 0x02]`, `[0x86, 0x02]`, `[0x87, 0x02]`, `[0x88, 0x02]`).
+        let madd32 = get_simd_op(0x105).expect("0x105 should be f32x4.relaxed_madd");
+        assert_eq!(madd32.name, "f32x4.relaxed_madd");
+        assert_eq!(madd32.kind, SimdOpKind::RelaxedMaddF32x4);
+        assert_eq!(get_simd_op_by_name("f32x4.relaxed_madd").map(|o| o.sub_opcode), Some(0x105));
+
+        let nmadd32 = get_simd_op(0x106).expect("0x106 should be f32x4.relaxed_nmadd");
+        assert_eq!(nmadd32.name, "f32x4.relaxed_nmadd");
+        assert_eq!(nmadd32.kind, SimdOpKind::RelaxedNmaddF32x4);
+        assert_eq!(get_simd_op_by_name("f32x4.relaxed_nmadd").map(|o| o.sub_opcode), Some(0x106));
+
+        let madd64 = get_simd_op(0x107).expect("0x107 should be f64x2.relaxed_madd");
+        assert_eq!(madd64.name, "f64x2.relaxed_madd");
+        assert_eq!(madd64.kind, SimdOpKind::RelaxedMaddF64x2);
+        assert_eq!(get_simd_op_by_name("f64x2.relaxed_madd").map(|o| o.sub_opcode), Some(0x107));
+
+        let nmadd64 = get_simd_op(0x108).expect("0x108 should be f64x2.relaxed_nmadd");
+        assert_eq!(nmadd64.name, "f64x2.relaxed_nmadd");
+        assert_eq!(nmadd64.kind, SimdOpKind::RelaxedNmaddF64x2);
+        assert_eq!(get_simd_op_by_name("f64x2.relaxed_nmadd").map(|o| o.sub_opcode), Some(0x108));
     }
 }
