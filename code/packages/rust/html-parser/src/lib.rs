@@ -6143,10 +6143,13 @@ impl HtmlParser {
             && self.current_has_child_element("tr")
             && !is_html_whitespace_text(&text)
         {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-character-in-template-table-mode",
-                "non-whitespace character data forced recovery from template table mode",
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-character-in-template-table-mode",
+                    "non-whitespace character data forced recovery from template table mode",
+                )
+                .at_emission(self.current_token_emission_position),
+            );
         }
 
         if self.open_elements.is_empty()
@@ -27712,6 +27715,32 @@ mod tests {
         }))
     }
 
+    fn character_in_template_table_mode_recovery(
+        source: &str,
+        emission_boundary: &str,
+    ) -> ParserDiagnostic {
+        let byte_offset = source
+            .find(emission_boundary)
+            .expect("source should contain the text emission boundary");
+        let line_start = source[..byte_offset]
+            .rfind('\n')
+            .map_or(0, |index| index + 1);
+        ParserDiagnostic::new(
+            "unexpected-character-in-template-table-mode",
+            "non-whitespace character data forced recovery from template table mode",
+        )
+        .at_emission(Some(SourcePosition {
+            byte_offset,
+            char_offset: source[..byte_offset].chars().count(),
+            line: source[..byte_offset]
+                .chars()
+                .filter(|character| *character == '\n')
+                .count()
+                + 1,
+            column: source[line_start..byte_offset].chars().count() + 1,
+        }))
+    }
+
     fn character_in_colgroup_fragment_recovery(
         source: &str,
         byte_offset: usize,
@@ -45173,28 +45202,79 @@ mod tests {
     }
 
     #[test]
-    fn reports_non_whitespace_text_that_leaves_template_table_mode() {
-        let output = parse_html_with_diagnostics(
-            "<!DOCTYPE HTML><template><tr><td>cell</td></tr>a</template>",
-        )
-        .unwrap();
+    fn positions_non_whitespace_text_that_leaves_template_table_mode() {
+        let source =
+            "<!doctype html><!--é-->\r\n<template><tr><td>cell</td></tr>a<!--split-->β</template>";
+        let output = parse_html_with_diagnostics(source).unwrap();
         assert_eq!(
             output.parser_diagnostics,
-            vec![ParserDiagnostic::new(
-                "unexpected-character-in-template-table-mode",
-                "non-whitespace character data forced recovery from template table mode"
-            )]
+            vec![
+                character_in_template_table_mode_recovery(source, "<!--split-->"),
+                character_in_template_table_mode_recovery(source, "</template>"),
+            ]
         );
+        assert!(source.len() > source.chars().count());
+
+        let fragment_source = "<template><tr><td>x</td></tr>y";
+        let fragment =
+            parse_html_fragment_for_context_with_diagnostics(fragment_source, "div").unwrap();
+        assert!(fragment
+            .parser_diagnostics
+            .contains(
+                &ParserDiagnostic::new(
+                    "unexpected-character-in-template-table-mode",
+                    "non-whitespace character data forced recovery from template table mode",
+                )
+                .at_emission(Some(eof_position(fragment_source))),
+            ));
 
         for source in [
             "<!doctype html><template>text</template>",
             "<!doctype html><template><tr><td>cell</td></tr> </template>",
+            "<!doctype html><template><table><tr><td>cell</td></tr>x</table></template>",
+            "<!doctype html><template><tr><td>cell</td></tr><template>x</template></template>",
+            "<!doctype html><template><tr",
         ] {
             let output = parse_html_with_diagnostics(source).unwrap();
             assert!(output.parser_diagnostics.iter().all(|diagnostic| {
                 diagnostic.code != "unexpected-character-in-template-table-mode"
             }));
         }
+
+        let mut unpositioned = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        for token in [
+            Token::StartTag {
+                name: "template".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "tr".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "td".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("cell".to_string()),
+            Token::EndTag {
+                name: "td".to_string(),
+            },
+            Token::EndTag {
+                name: "tr".to_string(),
+            },
+            Token::Text("x".to_string()),
+        ] {
+            unpositioned.process_token(token);
+        }
+        let diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-character-in-template-table-mode")
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
     }
 
     #[test]
