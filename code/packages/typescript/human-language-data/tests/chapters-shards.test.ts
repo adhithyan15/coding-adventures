@@ -22,7 +22,8 @@
 // the moment somebody breaks the naming scheme — which is the failure mode
 // worth having a test for, because it is silent.
 
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { SHARD_PLANS, runShardCli, shardContents, unshardContents, unshardLedger } from "../src/shard-cli.js";
@@ -164,6 +165,54 @@ describe("the loader sees the sharded tracks", () => {
     // this number fall.
     const total = loaded.reduce((sum, track) => sum + track.chapters.length, 0);
     expect(total).toBeGreaterThanOrEqual(1_000);
+  });
+});
+
+describe("the drift message does not walk an author into destroying their work", () => {
+  it("names BOTH recovery directions, not just unshard", () => {
+    // The message used to say only "run 'npm run unshard'". That was correct
+    // while core/spine.json was the only sharded ledger, because its monolith
+    // is purely derived. It is not correct for an AUTHORED ledger:
+    // <track>/chapters.json is rewritten wholesale by the Python authoring
+    // scripts in learning/human-languages/data/scripts/, and an author who
+    // appends a chapter that way and then follows a bare "unshard" overwrites
+    // the monolith from shards that never saw their chapter.
+    const root = mkdtempSync(join(tmpdir(), "hl-drift-msg-"));
+    try {
+      mkdirSync(join(root, "spanish", "chapters.d"), { recursive: true });
+      writeFileSync(
+        join(root, "spanish", "chapters.d", "_meta.json"),
+        `${JSON.stringify({ version: 1, language: "spanish" }, null, 2)}\n`,
+        "utf8",
+      );
+      writeFileSync(
+        join(root, "spanish", "chapters.d", "0001.json"),
+        `${JSON.stringify({ chapter: 1 }, null, 2)}\n`,
+        "utf8",
+      );
+      // A monolith that disagrees — the shape an author's direct edit leaves.
+      writeFileSync(join(root, "spanish", "chapters.json"), "{}\n", "utf8");
+
+      const errors: string[] = [];
+      const write = process.stderr.write.bind(process.stderr);
+      process.stderr.write = ((chunk: string) => {
+        errors.push(String(chunk));
+        return true;
+      }) as typeof process.stderr.write;
+      try {
+        expect(runShardCli(["--check", "spanish/chapters.json"], root)).toBe(1);
+      } finally {
+        process.stderr.write = write;
+      }
+
+      const message = errors.join("");
+      expect(message).toMatch(/npm run unshard spanish\/chapters\.json/);
+      expect(message).toMatch(/npm run shard spanish\/chapters\.json/);
+      expect(message).toMatch(/If you edited the monolith/);
+      expect(message).toMatch(/Do not hand-merge/);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
   });
 });
 
