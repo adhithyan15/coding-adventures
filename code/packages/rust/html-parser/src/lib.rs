@@ -8737,12 +8737,15 @@ impl HtmlParser {
 
         self.generate_implied_end_tags_above(index);
         if !self.current_element_is(name) {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-non-current-description-item-end-tag",
-                format!(
-                    "end tag `</{name}>` closed a description item while a non-matching node remained current"
-                ),
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-non-current-description-item-end-tag",
+                    format!(
+                        "end tag `</{name}>` closed a description item while a non-matching node remained current"
+                    ),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
         }
         self.capture_formatting_above(index);
         self.open_elements.truncate(index);
@@ -27706,6 +27709,20 @@ mod tests {
         .at_emission(Some(end_tag_position(source, name)))
     }
 
+    fn unexpected_non_current_description_item_end_tag(
+        source: &str,
+        name: &str,
+        occurrence: usize,
+    ) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-non-current-description-item-end-tag",
+            format!(
+                "end tag `</{name}>` closed a description item while a non-matching node remained current"
+            ),
+        )
+        .at_emission(Some(end_tag_position_at(source, name, occurrence)))
+    }
+
     fn unexpected_description_list_item_start_tag(
         source: &str,
         name: &str,
@@ -35395,10 +35412,15 @@ mod tests {
         assert!(find_element_by_id(&item.children, "boundary").is_some());
         assert_eq!(item.children.last(), Some(&Node::text("Y")));
 
-        let non_current =
-            parse_html_with_diagnostics("<!doctype html><dl><dd><span></dd>Y</dl>").unwrap();
+        let non_current_source = "<!doctype html><dl><dd><span></dd>Y</dl>";
+        let non_current = parse_html_with_diagnostics(non_current_source).unwrap();
         assert!(non_current.parser_diagnostics.iter().any(|diagnostic| {
-            diagnostic.code == "unexpected-non-current-description-item-end-tag"
+            diagnostic
+                == &unexpected_non_current_description_item_end_tag(
+                    non_current_source,
+                    "dd",
+                    0,
+                )
         }));
 
         let cross_name_source = "<!doctype html><dl><dd id=item></dt>X</dd></dl>";
@@ -35431,6 +35453,63 @@ mod tests {
             .parser_diagnostics
             .iter()
             .all(|diagnostic| diagnostic.code != "unexpected-description-item-end-tag"));
+    }
+
+    #[test]
+    fn positions_non_current_description_item_end_tags_at_token_emission() {
+        let source =
+            "<!doctype html><!--é-->\r\n<dl><dd><span></dd><dt><span></dt><dd><span></dd></dl>";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        let diagnostics = output
+            .parser_diagnostics
+            .iter()
+            .filter(|diagnostic| {
+                diagnostic.code == "unexpected-non-current-description-item-end-tag"
+            })
+            .collect::<Vec<_>>();
+        assert_eq!(
+            diagnostics,
+            vec![
+                &unexpected_non_current_description_item_end_tag(source, "dd", 0),
+                &unexpected_non_current_description_item_end_tag(source, "dt", 0),
+                &unexpected_non_current_description_item_end_tag(source, "dd", 1),
+            ]
+        );
+        assert!(source.len() > source.chars().count());
+
+        let incomplete =
+            parse_html_with_diagnostics("<!doctype html><dl><dd><span></dd").unwrap();
+        assert!(incomplete.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-non-current-description-item-end-tag"
+        }));
+
+        let mut unpositioned = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        for token in [
+            Token::StartTag {
+                name: "dd".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "span".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::EndTag {
+                name: "dd".to_string(),
+            },
+            Token::Eof,
+        ] {
+            unpositioned.process_token(token);
+        }
+        let diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| {
+                diagnostic.code == "unexpected-non-current-description-item-end-tag"
+            })
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
     }
 
     #[test]
