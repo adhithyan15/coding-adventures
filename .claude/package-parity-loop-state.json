@@ -12,22 +12,22 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 12669,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/12669",
-    "branch": "codex/build-tool-typescript-dist-newstyle-discovery-exclusion",
+    "number": 12678,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/12678",
+    "branch": "codex/build-tool-swift-dist-newstyle-discovery-exclusion",
     "status": "open"
   },
   "last_inventory": {
-    "revision": "9cfe95f38364e3bc1609548c7b85b57c6b0fc72d",
+    "revision": "69bf8c4a87f8a0de0a14e3adcc5be77b8ceffeb6",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1371,
-    "implementation_package_slots": 4564,
+    "implementation_identities": 1372,
+    "implementation_package_slots": 4565,
     "high_consensus_packages": 175,
     "high_consensus_missing_slots": 276,
-    "singleton_packages": 908,
-    "singleton_missing_slots": 12712,
-    "rust_singletons": 719,
+    "singleton_packages": 909,
+    "singleton_missing_slots": 12726,
+    "rust_singletons": 720,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -142,7 +142,7 @@
     {
       "id": "build-tool-typescript-dist-newstyle-discovery-exclusion",
       "title": "Make TypeScript build-tool discovery honor the dist-newstyle exclusion",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-typescript-language-identity-registry"],
       "branch": "codex/build-tool-typescript-dist-newstyle-discovery-exclusion",
       "pr_number": 12669,
@@ -154,9 +154,32 @@
       "implementation_revision": "2f675d1626a030cf9496f61b5481d821eb3d8f8b",
       "final_review_revision": "d69d788ce9fc5674f57d53842f136338e1ff4d2e",
       "final_revision": "5281234a8c50c160dc9bae0e03b5626401f62160",
+      "merged_head_revision": "767cdc93f795ca29e189ca45476c1a791bef8da0",
+      "merge_revision": "67391c12334b0193f67fba16864dbcaf8190d647",
+      "merged_at": "2026-08-25T03:36:51Z",
+      "merge_notes": "All 30 reported checks reached terminal acceptable conclusions: 24 successes, five expected skips, and one neutral CodeQL aggregate, with no failures or pending work. GitHub reported the branch clean and mergeable; the loop enabled squash auto-merge, and GitHub merged PR #12669 without a manual merge command.",
       "validation_notes": "The neutral discovery contract now explicitly excludes only the exact case-sensitive dist-newstyle component before BUILD membership while preserving dist-newstyle-example. The focused regression first failed in all three expected places, then the complete TypeScript build-tool suite passed 284 tests across 12 files with 89.43% statement, 82.06% branch, 92.75% function, and 89.36% line coverage; discovery.ts reached 93.68% statement, 89.23% branch, 100% function, and 93.4% line coverage. The process-free neutral corpus validates 111 cases and 269 files. Package-parity, capability, Haskell, and OCaml checks pass 66 tests plus 806 subtests with two expected Windows symlink skips. The Go build-tool passes its complete test, vet, and trimpath build gates, and an exact-main forced TypeScript dry validation evaluates 45 Starlark BUILD files and reports 476 of 476 packages WOULD-BUILD with the orphan-crate check clean. The exact-main schema-3 inventory remains 15 established lanes, 1,371 implementation identities, 4,564 slots, 175 high-consensus packages with 276 gaps, 908 singletons with 12,712 gaps, 719 Rust singletons, zero collisions, and zero unknown buckets. The 486-owner, 739-edge state graph remains complete and acyclic. npm audit --omit=dev reports zero vulnerabilities; the full audit reports one pre-existing development-only nanoid advisory under Vitest, while this branch changes no dependency manifest or lockfile and ships no runtime dependencies. Two read-only security reviews passed, confirming the exact-component boundary, byte-equivalent rebased implementation, unchanged authority and dependency scope, and absence of credential exposure. The branch rebased twice without conflict over four non-overlapping WASM, HTML-parser, Spanish, and human-language debt-ceiling commits; the final exact-main focused suite passes all 38 discovery tests.",
       "publication_notes": "Opened ready-for-review PR #12669 from clean validated head 5281234a8c50c160dc9bae0e03b5626401f62160 after a normal first push. Immediately before publication, the branch was based on exact origin/main a6b3c9d3b95e4d310b57a3b194c4b035b58b8bfc, the target remote branch was absent, and all seven changed paths had zero exact overlap across seven other live open PRs. GitHub reports the PR non-draft and mergeable, blocked only by queued required checks; auto-merge remains disabled until every required check is terminal and acceptable.",
       "notes": "Discovered before the post-#12584 selection by running the exact shared discovery-language-registry fixture on Windows. The TypeScript engine passes 36 of 37 focused discovery tests but emits the generated code/packages/haskell/dist-newstyle decoy. Add the neutral exclusion in its own engine-scoped tranche and rerun the complete Vitest and coverage gates; do not widen the Ruby/Rust repair."
+    },
+    {
+      "id": "build-tool-typescript-nanoid-dev-security-floor",
+      "title": "Raise the TypeScript build-tool nanoid development security floor",
+      "status": "pending",
+      "depends_on": ["build-tool-typescript-dist-newstyle-discovery-exclusion"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the complete dependency audit for PR #12669 and reproduced again at exact post-merge main. npm audit reports HIGH GHSA-2v37-7h3g-55p8 because development-only nanoid 3.3.16 is below 3.3.18 through Vitest, Vite, and PostCSS; npm audit --omit=dev is clean, the build tool has zero runtime dependencies, and npm reports a focused fix available. Raise only the pinned transitive development floor, prove the complete package and coverage suites plus npm audit are clean, and do not mix this dependency-maintenance item into portable validator or discovery behavior."
+    },
+    {
+      "id": "vault-webauthn-ctap2-hid-native-authority-exception-review",
+      "title": "Review the Vault CTAP2 HID adapter's native-authority exception",
+      "status": "pending",
+      "depends_on": ["capability-schema-category-action-constraints"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered in the collision-clean 69bf8c4a inventory after merged PR #12668 added the Rust-only vault-webauthn-ctap2-hid package. This is a concrete native-runtime adapter, not a portable all-language target: it enumerates and communicates with physical FIDO2 authenticators through ctap-hid-fido2 and hidapi, invokes platform HID libraries through ffi:call, spawns a bounded worker thread, and owns hardware-touch timeout behavior. Review the existing nonempty capability profile, native dependency provenance, device-selection and serialization policy, timeout thread retention, static error taxonomy, secret zeroization, and platform/hardware evidence; preserve vault-auth's injected Ctap2Transport as the portable boundary and do not manufacture all-language USB-HID adapters. This host-authority exception is excluded from autonomous parity selection."
     },
     {
       "id": "build-tool-rust-windows-isolated-target-artifact-hygiene",
@@ -170,10 +193,19 @@
     {
       "id": "build-tool-swift-dist-newstyle-discovery-exclusion",
       "title": "Make Swift build-tool discovery honor the dist-newstyle exclusion",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["build-tool-swift-language-identity-registry"],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/build-tool-swift-dist-newstyle-discovery-exclusion",
+      "pr_number": 12678,
+      "selection_revision": "69bf8c4a87f8a0de0a14e3adcc5be77b8ceffeb6",
+      "implementation_revision": "8d7131e591741de235c4dc864488a1cd82c1307c",
+      "validation_revision": "27a18d814e947f60214b9aff3922f4cf927d7bda",
+      "final_review_revision": "f5c48b3d94183d29c6e5f2e8eb143f79d0b42591",
+      "final_revision": "b1161a77641283bf4bcdfb58c314d2981a617df3",
+      "selection_notes": "Selected after PR #12669 completed 30 terminal acceptable checks and merged through squash auto-merge at exact origin/main 67391c12334b0193f67fba16864dbcaf8190d647, then rebased twice without conflict over five non-overlapping Rust WASM, ADJ, Tamil, Vault, and HTML-parser commits to 69bf8c4a87f8a0de0a14e3adcc5be77b8ceffeb6. The mandatory schema-3 inventory is now 15 established lanes, 1,372 implementation identities, 4,565 slots, 175 high-consensus packages with 276 gaps, 909 singletons with 12,726 gaps, 720 Rust singletons, zero collisions, and zero unknown buckets. The sole inventory delta is the new native Vault CTAP2 HID adapter, which is registered as a selection-blocked exception review rather than a portable gap. Dependency reconciliation adds the same registered discovery prerequisite to the TypeScript, Ruby, and Swift orphan consumers plus Swift absolute-file handling, and separately registers the fixable development-only nanoid advisory. The resulting 488-owner, 745-edge graph is complete and acyclic. This bounded exact-component Swift repair has the highest immediate leverage: it unlocks three direct children and five unfinished descendants, versus Ruby's two direct children and TypeScript tracked-artifact conformance's one umbrella descendant. Seven live open PRs have zero exact overlap on the six Swift build-tool, state, and roadmap surfaces, and the target remote branch remains absent. OCaml remains collision-unsafe while PRs #12149 and #12162 own exact Go validator and main surfaces.",
+      "validation_notes": "The focused regression first failed with both the missing registry member and emitted Cabal decoy, then the exact-main Swift 6.3.3 suite passed all 27 tests. Discovery coverage remains 91.33% line coverage; Hasher reaches 51.49%, and overall production line coverage is 47.24%. Focused tests prove exact lower-case dist-newstyle exclusion, preservation of Dist-Newstyle and dist-newstyle-example, and reuse of the same registry by source hashing. The process-free neutral corpus validates 111 cases and 269 files; 148 focused package-parity, capability, Haskell, OCaml, and conformance tests pass with two expected Windows symlink skips. The Go build tool passes its full test, vet, and trimpath build gates, and a real forced Swift dry validation evaluates 45 Starlark BUILD files and reports all 165 Swift packages WOULD-BUILD with the orphan-crate check clean. BUILD and BUILD_windows each pass repeated clean-status runs; swift package dump-package and the normal release build pass. The warnings-as-errors release variant reproduces only three pre-existing warnings in untouched BuildTool.swift and Executor.swift, while package-local swift-format lint likewise reports the repository's pre-existing unconfigured style baseline. The refreshed schema-3 inventory is 15 established lanes, 1,372 implementation identities, 4,565 slots, 175 high-consensus packages with 276 gaps, 909 singletons with 12,726 gaps, 720 Rust singletons, zero collisions, and zero unknown buckets; the new Rust Vault HID singleton has a selection-blocked native-authority owner. The 488-owner, 745-edge state graph remains dependency-complete and acyclic. Package.swift has no external dependencies, the diff introduces no new runtime authority or credential path, git diff --check and secret scanning pass, and an independent security review found no production blocker after requesting and receiving explicit case and Hasher assertions.",
+      "final_review_notes": "Independent exact-head review at f5c48b3d94183d29c6e5f2e8eb143f79d0b42591 reproduced the six-path diff, all 27 Swift tests, 91.33% Discovery, 51.49% Hasher, and 47.24% production line coverage, the collision-clean 1,372-identity inventory, and the complete acyclic 488-owner/745-edge graph. It confirmed the new Vault HID owner is honestly selection-blocked native authority, all seven current open PRs have zero exact overlap, the remote target branch is absent, and no security, scope, dependency, capability, or test-claim blocker remains.",
+      "publication_notes": "Opened ready-for-review PR #12678 from clean validated head b1161a77641283bf4bcdfb58c314d2981a617df3 after a normal first push. Immediately before publication, the branch was based on exact origin/main 69bf8c4a87f8a0de0a14e3adcc5be77b8ceffeb6, the target remote branch was absent, and all six changed paths had zero exact overlap across seven other live open PRs. GitHub reports the PR non-draft and mergeable, blocked only by queued required checks; auto-merge remains disabled until every required check is terminal and acceptable.",
       "notes": "Discovered before the post-#12584 selection by running the exact shared discovery-language-registry fixture with Swift 6.3.3 on Windows. The fixture emits the generated code/packages/haskell/dist-newstyle decoy while the other expected identities match. Add the neutral exclusion in its own engine-scoped tranche and rerun the complete Swift test and coverage gates; do not widen the Ruby/Rust repair."
     },
     {
@@ -1018,7 +1050,10 @@
       "id": "build-tool-swift-windows-absolute-file-options",
       "title": "Recognize Windows absolute paths in Swift build-tool file options",
       "status": "pending",
-      "depends_on": ["build-tool-fixtures"],
+      "depends_on": [
+        "build-tool-fixtures",
+        "build-tool-swift-dist-newstyle-discovery-exclusion"
+      ],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered while validating the Swift UTF-8 slice on Windows. --emit-plan with an absolute drive-letter path reaches package discovery and resolution but absolutePath treats the value as repository-relative because it only recognizes a leading slash, producing an invalid filename. Add Windows and POSIX path fixtures, then use platform-correct absolute-path detection consistently for emit-plan, plan-file, and cache-file without widening the current metadata-only slice."
@@ -4804,7 +4839,10 @@
       "id": "build-tool-ruby-orphan-crate-validation-conformance",
       "title": "Make the Ruby build tool consume orphan-crate validation",
       "status": "pending",
-      "depends_on": ["build-tool-orphan-crate-validation-corpus"],
+      "depends_on": [
+        "build-tool-orphan-crate-validation-corpus",
+        "build-tool-dist-newstyle-discovery-exclusion-remaining-engines"
+      ],
       "branch": null,
       "pr_number": null,
       "notes": "Consume the closed process-free orphan-crate snapshot and diagnostics in the Ruby engine without adding filesystem enumeration or process authority."
@@ -4822,7 +4860,10 @@
       "id": "build-tool-swift-orphan-crate-validation-conformance",
       "title": "Make the Swift build tool consume orphan-crate validation",
       "status": "pending",
-      "depends_on": ["build-tool-orphan-crate-validation-corpus"],
+      "depends_on": [
+        "build-tool-orphan-crate-validation-corpus",
+        "build-tool-swift-dist-newstyle-discovery-exclusion"
+      ],
       "branch": null,
       "pr_number": null,
       "notes": "Consume the closed process-free orphan-crate snapshot and diagnostics in the Swift engine without adding filesystem enumeration or process authority."
@@ -4831,7 +4872,10 @@
       "id": "build-tool-typescript-orphan-crate-validation-conformance",
       "title": "Make the TypeScript build tool consume orphan-crate validation",
       "status": "pending",
-      "depends_on": ["build-tool-orphan-crate-validation-corpus"],
+      "depends_on": [
+        "build-tool-orphan-crate-validation-corpus",
+        "build-tool-typescript-dist-newstyle-discovery-exclusion"
+      ],
       "branch": null,
       "pr_number": null,
       "notes": "Consume the closed process-free orphan-crate snapshot and diagnostics in the TypeScript engine without adding filesystem enumeration or process authority."
