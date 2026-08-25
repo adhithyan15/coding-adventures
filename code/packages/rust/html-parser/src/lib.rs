@@ -7865,10 +7865,13 @@ impl HtmlParser {
             "menuitem" => self.close_non_paragraph_children_above_menuitem(),
             "template" => self.handle_html_template_end_tag(),
             name if is_void_element(name) => {
-                self.diagnostics.push(ParserDiagnostic::new(
-                    "unexpected-void-end-tag",
-                    format!("end tag `</{name}>` for a void element was ignored"),
-                ));
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-void-end-tag",
+                        format!("end tag `</{name}>` for a void element was ignored"),
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
             }
             "p" if self.has_open_element("head") && !self.has_open_element("body") => {
                 self.diagnostics.push(
@@ -27705,6 +27708,18 @@ mod tests {
         .at_emission(Some(end_tag_position_at(source, "br", occurrence)))
     }
 
+    fn unexpected_void_end_tag(
+        source: &str,
+        name: &str,
+        occurrence: usize,
+    ) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-void-end-tag",
+            format!("end tag `</{name}>` for a void element was ignored"),
+        )
+        .at_emission(Some(end_tag_position_at(source, name, occurrence)))
+    }
+
     fn unexpected_li_end_tag(source: &str) -> ParserDiagnostic {
         ParserDiagnostic::new(
             "unexpected-li-end-tag",
@@ -37442,10 +37457,9 @@ mod tests {
 
     #[test]
     fn acknowledges_self_closing_void_starts_and_ignores_void_end_tags() {
-        let output = parse_html_with_diagnostics(
-            "<!doctype html><p>Before<br/><img src=hero.png /></img><input></input><hr></hr>After",
-        )
-        .unwrap();
+        let source =
+            "<!doctype html><p>Before<br/><img src=hero.png /></img><input></input><hr></hr>After";
+        let output = parse_html_with_diagnostics(source).unwrap();
 
         let paragraph = element(&body(&output.document).children[0]);
         assert_eq!(paragraph.name, "p");
@@ -37462,20 +37476,55 @@ mod tests {
         assert_eq!(
             output.parser_diagnostics,
             vec![
-                ParserDiagnostic::new(
-                    "unexpected-void-end-tag",
-                    "end tag `</img>` for a void element was ignored"
-                ),
-                ParserDiagnostic::new(
-                    "unexpected-void-end-tag",
-                    "end tag `</input>` for a void element was ignored"
-                ),
-                ParserDiagnostic::new(
-                    "unexpected-void-end-tag",
-                    "end tag `</hr>` for a void element was ignored"
-                ),
+                unexpected_void_end_tag(source, "img", 0),
+                unexpected_void_end_tag(source, "input", 0),
+                unexpected_void_end_tag(source, "hr", 0),
             ]
         );
+    }
+
+    #[test]
+    fn positions_void_end_tag_diagnostics_at_token_emission() {
+        let source = "<!doctype html></img><!--é-->\r\n</img><table><tr></input></table>";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        assert_eq!(
+            output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-void-end-tag")
+                .collect::<Vec<_>>(),
+            vec![
+                &unexpected_void_end_tag(source, "img", 0),
+                &unexpected_void_end_tag(source, "img", 1),
+                &unexpected_void_end_tag(source, "input", 0),
+            ]
+        );
+
+        let fragment_source = "</hr>";
+        let fragment = parse_html_fragment_with_diagnostics(fragment_source).unwrap();
+        assert!(fragment
+            .parser_diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic
+                == &unexpected_void_end_tag(fragment_source, "hr", 0)));
+
+        let incomplete = parse_html_with_diagnostics("<!doctype html></img").unwrap();
+        assert!(incomplete
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-void-end-tag"));
+
+        let mut unpositioned = HtmlParser::new();
+        unpositioned.process_token(Token::EndTag {
+            name: "img".to_string(),
+        });
+        unpositioned.process_token(Token::Eof);
+        let diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-void-end-tag")
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
     }
 
     #[test]
