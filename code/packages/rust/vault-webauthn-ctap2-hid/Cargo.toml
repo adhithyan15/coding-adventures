@@ -1,0 +1,16 @@
+[package]
+name = "coding_adventures_vault_webauthn_ctap2_hid"
+version = "0.1.0"
+edition = "2021"
+description = "VLT-PM51 slice 2 -- real CTAP2-over-USB-HID transport for coding_adventures_vault_auth's WebAuthnPrfAuthenticator. Implements the Ctap2Transport trait using ctap-hid-fido2 (+ hidapi): device enumeration, a GetAssertion request with the hmac-secret extension, and a caller-controlled touch timeout. This is the first package anywhere in the Vault stack with a native, hardware-touching, non-workspace dependency -- see code/specs/VLT-PM51-hardware-security-keys.md for the survey that picked ctap-hid-fido2 and the reasoning for keeping this crate separate from vault-auth."
+
+[dependencies]
+coding_adventures_vault_auth = { path = "../vault-auth" }
+coding_adventures_zeroize = { path = "../zeroize" }
+ctap-hid-fido2 = { version = "3.5.13", default-features = false, features = ["ring"] }
+# Already ctap-hid-fido2's own error type (anyhow::Error is its
+# `Result` alias's error half) -- declared directly here too so
+# `classify_ctap_error`'s signature and this crate's tests can name
+# `anyhow::Error`/`anyhow::anyhow!` without relying on a transitive
+# dependency that isn't ours to depend on implicitly.
+anyhow = "1"

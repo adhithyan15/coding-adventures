@@ -774,6 +774,7 @@ members = [
     "vault-recipients",
     "vault-secure-channel",
     "vault-auth",
+    "vault-webauthn-ctap2-hid",
     "vault-policy",
     "vault-leases",
     "chief-of-staff-vault-runtime",

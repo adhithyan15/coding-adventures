@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/vault-webauthn-ctap2-hid",
+  "capabilities": [
+    {
+      "category": "ffi",
+      "action": "call",
+      "target": "hidapi (libusb/hidraw on Linux, IOKit on macOS, hid.dll on Windows)",
+      "justification": "This crate's entire purpose is real USB HID I/O with a physical FIDO2 security key, via ctap-hid-fido2 -> hidapi's native bindings to the OS's HID stack. This is the first package anywhere in the Vault stack (vault-auth, vault-key-custody, vault-pm-*) with a native, hardware-touching, non-workspace dependency -- see code/specs/VLT-PM51-hardware-security-keys.md for the survey and reasoning. hidapi itself contains the unsafe FFI; ctap-hid-fido2's own protocol-layer source has zero unsafe blocks (verified by inspecting its published source), and this crate carries #![deny(missing_docs)] with no unsafe code of its own."
+    }
+  ],
+  "justification": "Real CTAP2-over-USB-HID transport for coding_adventures_vault_auth's WebAuthnPrfAuthenticator. No filesystem, network, or process access -- only native HID device enumeration and read/write via ctap-hid-fido2/hidapi, gated behind the fast 'no device attached' fail path so a vault with no hardware key configured never touches this capability at all in practice. See required_capabilities entry above for the underlying native library chain."
+}
