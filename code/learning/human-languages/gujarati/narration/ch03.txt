@@ -78,7 +78,7 @@ The letters in this word.
 છ (chha, a breathy ch) + ે (the e-sign) becomes છે (chhe). One syllable.
 
 The word, taken apart.
-છે (chhe, "is") is Gujarati's copula — and, unusually, it is not the hai of Hindi or the asti of Sanskrit. It grew from an Old Gujarati form (achhaï) along its own path, so it is one of the words that most quickly marks a sentence as Gujarati rather than Hindi. Its forms run: હું છું (hũ chhũ, "I am"), તું છે (tũ chhe, "you are"), તે છે (te chhe, "he/she/it is"), તમે છો (tame chho, "you are," respectful).
+છે (chhe, "is") is Gujarati's copula — and, unusually, it is not the hai of Hindi or the asti of Sanskrit. It grew from an Old Gujarati form (achhaï) along its own path, so it is one of the words that most quickly marks a sentence as Gujarati rather than Hindi. Hear its forms first: hũ chhũ ("I am"), tũ chhe ("you are," familiar), તે છે (te chhe, "he/she/it is"), and tame chho ("you are," respectful). The later pronoun lessons will put the first, familiar-you, and respectful-you forms into Gujarati script gently.
 
 Grammar Lens: the verb goes last.
 Gujarati is subject–object–verb, like all its Indo-Aryan sisters: "my name Arun is." Chhe sits at the end of the sentence, where English puts "is" in the middle.
@@ -193,7 +193,7 @@ The letters in this word.
 શ (sha) + the u-sign + nasal becomes શું (shũ).
 
 The word, taken apart.
-શું (shũ, "what") descends, by a winding road, from the Sanskrit interrogative stem ક- (ka-, PIE kʷo-) — the root behind English what, Latin quis, and Hindi kyā. Most of Gujarati's questions still show that k- plainly — કેમ (kem, how), કોણ (kōṇ, who), ક્યાં (kyā̃, where), ક્યારે (kyāre, when) — but "what" wore down into this sh- form. So shũ is the odd cousin in a k- family.
+શું (shũ, "what") descends, by a winding road, from the Sanskrit interrogative stem ક- (ka-, PIE kʷo-) — the root behind English what, Latin quis, and Hindi kyā. Most of Gujarati's questions still show that k- plainly — kem (how), કોણ (kōṇ, who), ક્યાં (kyā̃, where), ક્યારે (kyāre, when) — but "what" wore down into this sh- form. So shũ is the odd cousin in a k- family.
 
 Guided Practice.
 [pause 1 second]

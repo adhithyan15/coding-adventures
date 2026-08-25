@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d6ec24575b6947f5",
+  "sourceHash": "fnv1a64:04abedd8a0974b05",
   "lessons": [
     {
       "id": "GU-C02-naam",
@@ -283,7 +283,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4f941baeef9ff5f4",
+      "sourceHash": "fnv1a64:ad76186776e5587a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -330,7 +330,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "છે (chhe, \"is\") is Gujarati's copula — and, unusually, it is not the hai of Hindi or the asti of Sanskrit. It grew from an Old Gujarati form (achhaï) along its own path, so it is one of the words that most quickly marks a sentence as Gujarati rather than Hindi. Its forms run: હું છું (hũ chhũ, \"I am\"), તું છે (tũ chhe, \"you are\"), તે છે (te chhe, \"he/she/it is\"), તમે છો (tame chho, \"you are,\" respectful)."
+              "text": "છે (chhe, \"is\") is Gujarati's copula — and, unusually, it is not the hai of Hindi or the asti of Sanskrit. It grew from an Old Gujarati form (achhaï) along its own path, so it is one of the words that most quickly marks a sentence as Gujarati rather than Hindi. Hear its forms first: hũ chhũ (\"I am\"), tũ chhe (\"you are,\" familiar), તે છે (te chhe, \"he/she/it is\"), and tame chho (\"you are,\" respectful). The later pronoun lessons will put the first, familiar-you, and respectful-you forms into Gujarati script gently."
             }
           ]
         },
@@ -768,7 +768,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ba0eb5e58c15daea",
+      "sourceHash": "fnv1a64:23ec2d8891fc1e7e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -815,7 +815,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "શું (shũ, \"what\") descends, by a winding road, from the Sanskrit interrogative stem ક- (ka-, PIE kʷo-) — the root behind English what, Latin quis, and Hindi kyā. Most of Gujarati's questions still show that k- plainly — કેમ (kem, how), કોણ (kōṇ, who), ક્યાં (kyā̃, where), ક્યારે (kyāre, when) — but \"what\" wore down into this sh- form. So shũ is the odd cousin in a k- family."
+              "text": "શું (shũ, \"what\") descends, by a winding road, from the Sanskrit interrogative stem ક- (ka-, PIE kʷo-) — the root behind English what, Latin quis, and Hindi kyā. Most of Gujarati's questions still show that k- plainly — kem (how), કોણ (kōṇ, who), ક્યાં (kyā̃, where), ક્યારે (kyāre, when) — but \"what\" wore down into this sh- form. So shũ is the odd cousin in a k- family."
             }
           ]
         },

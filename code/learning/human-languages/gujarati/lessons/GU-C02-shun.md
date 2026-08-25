@@ -46,7 +46,7 @@ with k-.
 **શું** (*shũ*, "what") descends, by a winding road, from the Sanskrit
 interrogative stem **ક-** (*ka-*, PIE **\*kʷo-**) — the root behind English
 **what**, Latin *quis*, and Hindi *kyā*. Most of Gujarati's questions still show
-that **k-** plainly — **કેમ** (*kem*, how), **કોણ** (*kōṇ*, who), **ક્યાં**
+that **k-** plainly — *kem* (how), **કોણ** (*kōṇ*, who), **ક્યાં**
 (*kyā̃*, where), **ક્યારે** (*kyāre*, when) — but "what" wore down into this
 *sh-* form. So *shũ* is the odd cousin in a *k-* family.
 
