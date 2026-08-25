@@ -5947,10 +5947,13 @@ impl HtmlParser {
         let html_void_element = namespace.is_none() && is_void_element(&name);
         let acknowledges_self_closing = self_closing && (html_void_element || namespace.is_some());
         if self_closing && !acknowledges_self_closing {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "non-void-html-element-self-closing",
-                format!("self-closing flag on non-void HTML element `<{name}>` was ignored"),
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "non-void-html-element-self-closing",
+                    format!("self-closing flag on non-void HTML element `<{name}>` was ignored"),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
         }
 
         if namespace.is_none() && name == "form" && !self.has_open_html_template_element() {
@@ -27328,6 +27331,18 @@ mod tests {
         .at_emission(Some(start_tag_position_at(source, "body", occurrence)))
     }
 
+    fn non_void_self_closing_start_tag(
+        source: &str,
+        name: &str,
+        occurrence: usize,
+    ) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "non-void-html-element-self-closing",
+            format!("self-closing flag on non-void HTML element `<{name}>` was ignored"),
+        )
+        .at_emission(Some(start_tag_position_at(source, name, occurrence)))
+    }
+
     fn foreign_start_tag_in_table_recovery(source: &str, name: &str) -> ParserDiagnostic {
         ParserDiagnostic::new(
             "unexpected-foreign-start-tag-in-table",
@@ -37389,12 +37404,70 @@ mod tests {
         assert_eq!(
             output.parser_diagnostics,
             vec![
-                ParserDiagnostic::new(
-                    "non-void-html-element-self-closing",
-                    "self-closing flag on non-void HTML element `<plaintext>` was ignored"
-                ),
+                non_void_self_closing_start_tag(source, "plaintext", 0),
                 eof_with_unclosed_elements(source)
             ]
+        );
+    }
+
+    #[test]
+    fn positions_non_void_self_closing_diagnostics_at_token_emission() {
+        let repeated_source = "<!doctype html><div/><div/><!--é-->\r\n<span/>";
+        let repeated = parse_html_with_diagnostics(repeated_source).unwrap();
+        assert_eq!(
+            repeated
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "non-void-html-element-self-closing")
+                .collect::<Vec<_>>(),
+            vec![
+                &non_void_self_closing_start_tag(repeated_source, "div", 0),
+                &non_void_self_closing_start_tag(repeated_source, "div", 1),
+                &non_void_self_closing_start_tag(repeated_source, "span", 0),
+            ]
+        );
+
+        let fragment_source = "<!--é-->\r\n<section/>";
+        let fragment = parse_html_fragment_with_diagnostics(fragment_source).unwrap();
+        assert!(fragment.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic == &non_void_self_closing_start_tag(fragment_source, "section", 0)
+        }));
+
+        let template_source = "<!doctype html><template><p/></template>";
+        let template = parse_html_with_diagnostics(template_source).unwrap();
+        assert!(template.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic == &non_void_self_closing_start_tag(template_source, "p", 0)
+        }));
+
+        for excluded in [
+            "<!doctype html><br/>",
+            "<!doctype html><svg><g/></svg>",
+            "<!doctype html><div/",
+        ] {
+            let output = parse_html_with_diagnostics(excluded).unwrap();
+            assert!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .all(|diagnostic| diagnostic.code != "non-void-html-element-self-closing"),
+                "source {excluded:?}"
+            );
+        }
+
+        let mut unpositioned = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        unpositioned.process_token(Token::StartTag {
+            name: "div".to_string(),
+            attributes: Vec::new(),
+            self_closing: true,
+        });
+        assert_eq!(
+            unpositioned
+                .diagnostics()
+                .iter()
+                .find(|diagnostic| diagnostic.code == "non-void-html-element-self-closing")
+                .unwrap()
+                .position,
+            None
         );
     }
 
@@ -37475,10 +37548,8 @@ mod tests {
 
     #[test]
     fn self_closing_noscript_uses_scripting_sensitive_handoff() {
-        let enabled = parse_html_with_diagnostics(
-            "<!doctype html><noscript/><p>&amp;</p></noscript><p>x</p>",
-        )
-        .unwrap();
+        let source = "<!doctype html><noscript/><p>&amp;</p></noscript><p>x</p>";
+        let enabled = parse_html_with_diagnostics(source).unwrap();
 
         let enabled_noscript = element(&head(&enabled.document).children[0]);
         assert_eq!(enabled_noscript.name, "noscript");
@@ -37489,7 +37560,7 @@ mod tests {
         );
 
         let disabled = parse_html_with_diagnostics_and_options(
-            "<!doctype html><noscript/><p>&amp;</p></noscript><p>x</p>",
+            source,
             HtmlParseOptions {
                 scripting: HtmlScriptingMode::Disabled,
                 ..HtmlParseOptions::default()
@@ -37509,18 +37580,12 @@ mod tests {
 
         assert_eq!(
             enabled.parser_diagnostics,
-            vec![ParserDiagnostic::new(
-                "non-void-html-element-self-closing",
-                "self-closing flag on non-void HTML element `<noscript>` was ignored"
-            )]
+            vec![non_void_self_closing_start_tag(source, "noscript", 0)]
         );
         assert_eq!(
             disabled.parser_diagnostics,
             vec![
-                ParserDiagnostic::new(
-                    "non-void-html-element-self-closing",
-                    "self-closing flag on non-void HTML element `<noscript>` was ignored"
-                ),
+                non_void_self_closing_start_tag(source, "noscript", 0),
                 ParserDiagnostic::new(
                     "unexpected-end-tag",
                     "end tag `</noscript>` did not match an open element"
