@@ -7614,8 +7614,8 @@ closed executable/environment, bounded-output, timeout-tree,
 early-root-descendant, Job Object ownership, and suspended setup-failure risks.
 The final reviews of validated code revision
 `422fdaa06cd23ff64fd745ab626f1bcbe242da14` returned `SECURITY REVIEW PASSED`:
-CI is read-only with checkout credentials disabled, all external inputs remain
-hash-pinned, and no actionable security issue remains.
+CI is read-only with checkout credentials disabled, the Unicode and Lua source
+inputs remain hash-pinned, and no actionable security issue remains.
 
 ## Autonomous Loop Protocol
 
