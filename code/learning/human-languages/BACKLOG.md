@@ -5,6 +5,20 @@ Findings from the pre-A1 tranche work were recorded in commit messages and PR
 bodies, which are durable and searchable, but a reader opening this file found
 nothing. The entries below are the ones that change how the work is done.
 
+## HL-C10F — Malayalam എ opens the next independent-vowel row
+
+After Urdu **و** landed, the measured queue put Malayalam independent short
+**എ** first at **15 affected realizations**. UT Austin's *The Malayalam Script*
+identifies initial vowels as word-initial forms, supplies a click-to-play
+handwriting clip for **എ**, and notes that the lower elements of initial **e**
+extend below the line.
+
+The clip shows the compact left hook, middle bar, upright, and inner loop in one
+joined run. After one lift, a second run sweeps over the broad outer arch and
+ends below the line. The new canonical record and font-fitted ductus remove all
+15 affected realizations. The reranked queue moves to Tamil independent short
+**எ** at 15.
+
 ## HL-C10E — Urdu و closes the next shared-glyph gap
 
 After Tamil short-e landed, the measured queue displayed shared **و** first at

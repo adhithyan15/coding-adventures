@@ -13,6 +13,7 @@ import cyrillic from "../../../../learning/human-languages/data/scripts/cyrillic
 import devanagari from "../../../../learning/human-languages/data/scripts/devanagari.json";
 import gujarati from "../../../../learning/human-languages/data/scripts/gujarati.json";
 import hebrew from "../../../../learning/human-languages/data/scripts/hebrew.json";
+import malayalam from "../../../../learning/human-languages/data/scripts/malayalam.json";
 import persoArabic from "../../../../learning/human-languages/data/scripts/perso-arabic.json";
 import telugu from "../../../../learning/human-languages/data/scripts/telugu.json";
 import urduNastaliq from "../../../../learning/human-languages/data/scripts/urdu-nastaliq.json";
@@ -258,6 +259,14 @@ const persianAlphabetSource = (glyph: string): StrokeSource => {
   const letter = persoArabic.letters.find((candidate) => candidate.glyph === glyph);
   if (!letter || !("strokeOrderSource" in letter) || !letter.strokeOrderSource) {
     throw new Error(`Persian ${glyph} has no verified source`);
+  }
+  return letter.strokeOrderSource;
+};
+
+const malayalamIndependentVowelSource = (glyph: string): StrokeSource => {
+  const letter = malayalam.independentVowels.find((candidate) => candidate.glyph === glyph);
+  if (!letter || !("strokeOrderSource" in letter) || !letter.strokeOrderSource) {
+    throw new Error(`Malayalam independent vowel ${glyph} has no verified source`);
   }
   return letter.strokeOrderSource;
 };
@@ -12895,5 +12904,70 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: teluguIndependentVowelSource("అ"),
+  },
+  [ductusKey("malayalam", "എ")]: {
+    script: "malayalam",
+    glyph: "എ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "turn around the compact left hook and carry the middle bar right",
+            path: [
+              { x: 75, y: 145 },
+              { x: 75, y: 205 },
+              { x: 115, y: 270 },
+              { x: 175, y: 310 },
+              { x: 230, y: 310 },
+              { x: 300, y: 300 },
+              { x: 360, y: 260 },
+              { x: 390, y: 200 },
+              { x: 390, y: 130 },
+              { x: 370, y: 55 },
+              { x: 500, y: 35 },
+              { x: 690, y: 35 },
+              { x: 890, y: 35 },
+            ],
+          },
+          {
+            label: "climb the upright, retrace it downward, and loop below the line",
+            path: [
+              { x: 890, y: 35 },
+              { x: 890, y: 180 },
+              { x: 890, y: 390 },
+              { x: 890, y: 200 },
+              { x: 890, y: 0 },
+              { x: 885, y: -95 },
+              { x: 835, y: -180 },
+              { x: 775, y: -190 },
+              { x: 700, y: -140 },
+              { x: 650, y: -45 },
+              { x: 625, y: 35 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "sweep up and over through the broad outer arch, ending below the line",
+            path: [
+              { x: 615, y: 35 },
+              { x: 625, y: 165 },
+              { x: 675, y: 345 },
+              { x: 760, y: 490 },
+              { x: 900, y: 530 },
+              { x: 1030, y: 485 },
+              { x: 1125, y: 365 },
+              { x: 1180, y: 215 },
+              { x: 1185, y: 90 },
+              { x: 1160, y: -45 },
+              { x: 1095, y: -175 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: malayalamIndependentVowelSource("എ"),
   },
 };

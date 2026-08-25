@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.187.0 — 2026-08-25 — real unit selector writes
+
+Bounded static while analysis now recognizes real multiplication and division
+by exact positive one as structural identity writes. These operations preserve
+finite binary64 selector values without widening the ten-level recursion cap;
+real additive zero remains conservative because it can change negative zero's
+sign bit, and other computed writes still fail closed.
+
 ## 0.186.0 — 2026-08-25 — integer identity selector writes
 
 Bounded static while analysis now recognizes exact structural integer identity

@@ -67,6 +67,15 @@
   the package index, so a consumer outside it has somewhere to go other than a
   bare parse.
 
+### Added - source-verified Malayalam എ
+
+- Add independent Malayalam short **എ** from UT Austin's click-to-play
+  handwriting clip as a joined body followed by a separate broad outer arch.
+- Pin the one lift, below-line inner loop and outer ending, and the bundled Noto
+  Sans Malayalam fit.
+- Remove 15 affected Malayalam realizations and rerank Tamil independent short
+  **எ** first at 15.
+
 ### Added - Spanish A1 exam inventory: three more PCIC dimensions
 
 - Enumerate the PCIC **functional inventory** (54 A1 points), the **general and
@@ -385,7 +394,6 @@ them.
 - Those scripts are otherwise unchanged and still work: `check:shards` catches
   the desync loudly rather than letting the loader — which prefers `.d/` —
   silently ignore the new chapter.
-
 ### Added - source-verified Urdu و
 
 - Add independent Urdu **و** from *Zer o Zabar* as one continuous looped-head

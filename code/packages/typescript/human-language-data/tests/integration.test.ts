@@ -39,7 +39,7 @@ describe("real curriculum", () => {
     expect(scripts.devanagari!.complete).toBe(true);
   });
 
-  it("keeps the cross-script closure queue measured after Persian ر", () => {
+  it("keeps the cross-script closure queue measured after Malayalam എ", () => {
     const candrakkala = scripts.malayalam!.marks!.find((mark) => mark.mark === "്")!;
     expect(candrakkala.role).toBe("virama");
     expect(candrakkala.compositionOrder).toEqual([
@@ -155,6 +155,25 @@ describe("real curriculum", () => {
     );
     expect(teluguA.strokeOrderSource?.variation).toMatch(
       /four directional movements.*two pen-down starts.*1.?2.*3.?4.*not uniform.*Noto Sans Telugu/i,
+    );
+
+    const malayalamE = scripts.malayalam!.independentVowels!.find((entry) => entry.glyph === "എ")!;
+    expect(malayalamE.sound).toBe("e");
+    expect(malayalamE.penLifts).toBe(1);
+    expect(malayalamE.strokeOrder).toEqual([
+      "turn around the compact left hook and carry the middle bar right",
+      "without lifting, climb the upright, retrace it downward, and loop below the line",
+      "after one lift, sweep up and over through the broad outer arch, ending below the line",
+    ]);
+    expect(malayalamE.strokeOrderNote).toMatch(/three visible movements.*two pen-down runs.*after one lift/i);
+    expect(malayalamE.strokeOrderSource?.url).toBe(
+      "https://malayalam.la.utexas.edu/resources/the-malayalam-script/",
+    );
+    expect(malayalamE.strokeOrderSource?.citation).toMatch(
+      /Donald R\. Davis Jr\..*The Malayalam Script.*Initial Vowels.*എ.*00:01.?00:04.*University of Texas at Austin/i,
+    );
+    expect(malayalamE.strokeOrderSource?.variation).toMatch(
+      /word-initial forms.*click-to-play handwriting clip.*two pen-down runs.*inner loop and outer arch below the line.*Noto Sans Malayalam/i,
     );
 
     const tamilRetroflexLa = scripts.tamil!.letters.find((entry) => entry.glyph === "ள")!;
@@ -452,7 +471,7 @@ describe("real curriculum", () => {
     expect(affected.get("అ") ?? 0).toBe(0);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["എ", 15]);
+    ).toEqual(["எ", 15]);
   });
 
   it("loaded every track (17+ and growing)", () => {
