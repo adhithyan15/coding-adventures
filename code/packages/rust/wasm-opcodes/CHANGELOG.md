@@ -2,6 +2,43 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.49] - 2026-08-25 - SIMD PR47: v128.load64_lane/store64_lane
+
+### Added
+
+- 2 new `SIMD_OPS` entries, the FOURTH and FINAL bite of the
+  `v128.loadN_lane`/`storeN_lane` family PR44 opened, one width up from
+  the 32-bit pair: 236 SIMD opcodes total, up from 234.
+  - `v128.load64_lane` (`0x57`), `v128.store64_lane` (`0x5B`).
+  - Both sub-opcode values re-verified live against the SIMD proposal's
+    own `BinarySIMD.md` at the time of this PR (`m:memarg,
+    i:ImmLaneIdx2`); neither collided with any pre-existing table
+    entry -- they sit strictly between `v128.load32_lane`/`v128.store8_
+    lane` and `v128.store32_lane`/`v128.load32_zero` respectively, in
+    the exact `0x57`/`0x5B` gap PR44/PR45/PR46's own table comments and
+    sub-opcode-value tests already flagged as "not yet implemented".
+- 2 new `SimdOpKind` variants: `Load64Lane`, `Store64Lane`. Closes the
+  ENTIRE lane-load/store family (all 8 opcodes, 8/16/32/64-bit widths,
+  PR44-47) and, with it, the larger load-extend/splat/zero/lane epic
+  started in PR40.
+- Dedicated sub-opcode-value test
+  (`simd_load64_lane_and_store64_lane_have_the_real_verified_sub_opcode_values`)
+  confirming both values plus their surrounding neighbors (`v128.load32_
+  lane`/`v128.store32_lane`/`v128.load32_zero`).
+
+### Changed
+
+- `simd_ops_table_has_the_expected_234_entries_and_no_duplicates`
+  renamed to `simd_ops_table_has_the_expected_236_entries_and_no_
+  duplicates` and its assertion bumped to 236.
+- `simd_load8_lane_and_store8_lane_have_the_real_verified_sub_opcode_
+  values`'s, `simd_load16_lane_and_store16_lane_have_the_real_verified_
+  sub_opcode_values`'s, and `simd_load32_lane_and_store32_lane_have_the_
+  real_verified_sub_opcode_values`'s own gap assertions updated: `0x57`/
+  `0x5B` are no longer part of the "not yet implemented" gap (now
+  covered by this PR's own dedicated test above) -- the gap is fully
+  closed.
+
 ## [0.2.48] - 2026-08-25 - SIMD PR46: v128.load32_lane/store32_lane
 
 ### Added
