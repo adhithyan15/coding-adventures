@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 4081,
+    "totalLessons": 4083,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -38,7 +38,7 @@
     "chapterPayoffsNotRepresentative": 80,
     "chapterGateCleanTracks": 9,
     "tracksWithoutWritingStageEvidence": 5,
-    "missingWritingStagePairs": 610,
+    "missingWritingStagePairs": 596,
     "invalidWritingStageEvidence": 0,
     "drivableLessons": 3430,
     "drivablePercent": 84,
@@ -3374,9 +3374,9 @@
       {
         "language": "latin",
         "status": "version-2",
-        "lessonCount": 109,
+        "lessonCount": 111,
         "versions": {
-          "2": 109
+          "2": 111
         }
       },
       {
@@ -4326,9 +4326,9 @@
     }
   },
   "levels": {
-    "totalLessons": 4081,
+    "totalLessons": 4083,
     "byLevel": {
-      "pre-A1": 2679,
+      "pre-A1": 2681,
       "A1": 708,
       "A2": 549,
       "B1": 40,
@@ -4491,9 +4491,9 @@
       },
       {
         "language": "latin",
-        "lessonCount": 109,
+        "lessonCount": 111,
         "byLevel": {
-          "pre-A1": 50,
+          "pre-A1": 52,
           "A1": 28,
           "A2": 31,
           "B1": 0,
@@ -5035,7 +5035,7 @@
         "chapter": 1,
         "atoms": 16,
         "budget": 12,
-        "lessonCount": 7
+        "lessonCount": 9
       },
       {
         "language": "latin",
@@ -5219,8 +5219,8 @@
       },
       {
         "language": "latin",
-        "lessonCount": 109,
-        "measurable": 109,
+        "lessonCount": 111,
+        "measurable": 111,
         "unmeasurable": 0,
         "lessonViolations": 1,
         "chapterViolations": 2
@@ -5864,7 +5864,7 @@
           "language": "latin",
           "script": "latin",
           "latinScript": true,
-          "lessonCount": 109,
+          "lessonCount": 111,
           "totalGlyphs": 0,
           "lessonViolations": 0,
           "systemViolations": 0,
@@ -9488,7 +9488,7 @@
         "atom": "LA-ETYMON-IGNOSCE-MIHI-01",
         "language": "latin",
         "introducedBy": "LA-C04-ignosce-mihi",
-        "introducedAt": 10,
+        "introducedAt": 12,
         "missed": [
           "R1",
           "R2",
@@ -9501,7 +9501,7 @@
         "atom": "LA-ETYMON-PRACTICE-01",
         "language": "latin",
         "introducedBy": "LA-C01-practice",
-        "introducedAt": 6,
+        "introducedAt": 8,
         "missed": [
           "R1",
           "R2",
@@ -9514,7 +9514,7 @@
         "atom": "LA-PRAGMATICS-IGNOSCE-MIHI-02",
         "language": "latin",
         "introducedBy": "LA-C04-ignosce-mihi",
-        "introducedAt": 10,
+        "introducedAt": 12,
         "missed": [
           "R1",
           "R2",
@@ -25184,7 +25184,7 @@
         "atom": "LA-DIALOGUE-DAY-CYCLE-01",
         "language": "latin",
         "introducedBy": "LA-C36-practice",
-        "introducedAt": 57,
+        "introducedAt": 59,
         "missed": [
           "R1",
           "R2",
@@ -25196,7 +25196,7 @@
         "atom": "LA-ETYMON-AQUA-VINUM-01",
         "language": "latin",
         "introducedBy": "LA-C10-aqua-vinum",
-        "introducedAt": 20,
+        "introducedAt": 22,
         "missed": [
           "R2",
           "R3",
@@ -25208,7 +25208,7 @@
         "atom": "LA-ETYMON-AVE-02",
         "language": "latin",
         "introducedBy": "LA-C01-ave",
-        "introducedAt": 2,
+        "introducedAt": 4,
         "missed": [
           "R2",
           "R3",
@@ -25220,7 +25220,7 @@
         "atom": "LA-ETYMON-BENE-02",
         "language": "latin",
         "introducedBy": "LA-C27-bene",
-        "introducedAt": 44,
+        "introducedAt": 46,
         "missed": [
           "R1",
           "R2",
@@ -25232,7 +25232,7 @@
         "atom": "LA-ETYMON-CAPUT-01",
         "language": "latin",
         "introducedBy": "LA-C08-caput",
-        "introducedAt": 17,
+        "introducedAt": 19,
         "missed": [
           "R2",
           "R3",
@@ -25244,7 +25244,7 @@
         "atom": "LA-ETYMON-EMO-02",
         "language": "latin",
         "introducedBy": "LA-C43-emo",
-        "introducedAt": 88,
+        "introducedAt": 90,
         "missed": [
           "R1",
           "R2",
@@ -25256,7 +25256,7 @@
         "atom": "LA-ETYMON-EO-02",
         "language": "latin",
         "introducedBy": "LA-C37-eo",
-        "introducedAt": 60,
+        "introducedAt": 62,
         "missed": [
           "R1",
           "R2",
@@ -25268,7 +25268,7 @@
         "atom": "LA-ETYMON-FRATER-SOROR-01",
         "language": "latin",
         "introducedBy": "LA-C07-frater-soror",
-        "introducedAt": 16,
+        "introducedAt": 18,
         "missed": [
           "R2",
           "R3",
@@ -25280,7 +25280,7 @@
         "atom": "LA-ETYMON-FRATER-SOROR-02",
         "language": "latin",
         "introducedBy": "LA-C07-frater-soror",
-        "introducedAt": 16,
+        "introducedAt": 18,
         "missed": [
           "R2",
           "R3",
@@ -25292,7 +25292,7 @@
         "atom": "LA-ETYMON-MANUS-01",
         "language": "latin",
         "introducedBy": "LA-C08-manus",
-        "introducedAt": 18,
+        "introducedAt": 20,
         "missed": [
           "R2",
           "R3",
@@ -25304,7 +25304,7 @@
         "atom": "LA-ETYMON-MANUS-02",
         "language": "latin",
         "introducedBy": "LA-C08-manus",
-        "introducedAt": 18,
+        "introducedAt": 20,
         "missed": [
           "R2",
           "R3",
@@ -25316,7 +25316,7 @@
         "atom": "LA-ETYMON-MENSES-01",
         "language": "latin",
         "introducedBy": "LA-C11-menses",
-        "introducedAt": 22,
+        "introducedAt": 24,
         "missed": [
           "R2",
           "R3",
@@ -25328,7 +25328,7 @@
         "atom": "LA-ETYMON-NIHIL-EST-02",
         "language": "latin",
         "introducedBy": "LA-C23-nihil-est",
-        "introducedAt": 40,
+        "introducedAt": 42,
         "missed": [
           "R1",
           "R2",
@@ -25340,7 +25340,7 @@
         "atom": "LA-ETYMON-NUMBERS-1-5-02",
         "language": "latin",
         "introducedBy": "LA-C02-numbers-1-5",
-        "introducedAt": 7,
+        "introducedAt": 9,
         "missed": [
           "R2",
           "R3",
@@ -25352,7 +25352,7 @@
         "atom": "LA-ETYMON-NUMBERS-6-10-03",
         "language": "latin",
         "introducedBy": "LA-C02-numbers-6-10",
-        "introducedAt": 8,
+        "introducedAt": 10,
         "missed": [
           "R2",
           "R3",
@@ -25364,7 +25364,7 @@
         "atom": "LA-ETYMON-PANIS-01",
         "language": "latin",
         "introducedBy": "LA-C10-panis",
-        "introducedAt": 21,
+        "introducedAt": 23,
         "missed": [
           "R2",
           "R3",
@@ -25376,7 +25376,7 @@
         "atom": "LA-ETYMON-PATER-MATER-01",
         "language": "latin",
         "introducedBy": "LA-C07-pater-mater",
-        "introducedAt": 15,
+        "introducedAt": 17,
         "missed": [
           "R2",
           "R3",
@@ -25388,7 +25388,7 @@
         "atom": "LA-ETYMON-PATER-MATER-02",
         "language": "latin",
         "introducedBy": "LA-C07-pater-mater",
-        "introducedAt": 15,
+        "introducedAt": 17,
         "missed": [
           "R2",
           "R3",
@@ -25400,7 +25400,7 @@
         "atom": "LA-ETYMON-QUAESO-01",
         "language": "latin",
         "introducedBy": "LA-C03-quaeso",
-        "introducedAt": 9,
+        "introducedAt": 11,
         "missed": [
           "R2",
           "R3",
@@ -25412,7 +25412,7 @@
         "atom": "LA-ETYMON-QUOMODO-02",
         "language": "latin",
         "introducedBy": "LA-C26-quomodo",
-        "introducedAt": 43,
+        "introducedAt": 45,
         "missed": [
           "R1",
           "R2",
@@ -25424,7 +25424,7 @@
         "atom": "LA-ETYMON-QUOMODO-03",
         "language": "latin",
         "introducedBy": "LA-C26-quomodo",
-        "introducedAt": 43,
+        "introducedAt": 45,
         "missed": [
           "R1",
           "R2",
@@ -25436,7 +25436,7 @@
         "atom": "LA-ETYMON-RUBER-CAERULEUS-01",
         "language": "latin",
         "introducedBy": "LA-C06-ruber-caeruleus",
-        "introducedAt": 14,
+        "introducedAt": 16,
         "missed": [
           "R2",
           "R3",
@@ -25448,7 +25448,7 @@
         "atom": "LA-ETYMON-RUBER-CAERULEUS-02",
         "language": "latin",
         "introducedBy": "LA-C06-ruber-caeruleus",
-        "introducedAt": 14,
+        "introducedAt": 16,
         "missed": [
           "R2",
           "R3",
@@ -25460,7 +25460,7 @@
         "atom": "LA-ETYMON-VIRIDIS-FLAVUS-01",
         "language": "latin",
         "introducedBy": "LA-C18-viridis-flavus",
-        "introducedAt": 30,
+        "introducedAt": 32,
         "missed": [
           "R1",
           "R2",
@@ -25472,7 +25472,7 @@
         "atom": "LA-ETYMON-VIRIDIS-FLAVUS-02",
         "language": "latin",
         "introducedBy": "LA-C18-viridis-flavus",
-        "introducedAt": 30,
+        "introducedAt": 32,
         "missed": [
           "R1",
           "R2",
@@ -25484,7 +25484,7 @@
         "atom": "LA-GRAMMAR-BONUM-VESPERUM-01",
         "language": "latin",
         "introducedBy": "LA-C34-bonum-vesperum",
-        "introducedAt": 53,
+        "introducedAt": 55,
         "missed": [
           "R1",
           "R2",
@@ -25496,7 +25496,7 @@
         "atom": "LA-GRAMMAR-BONUM-VESPERUM-02",
         "language": "latin",
         "introducedBy": "LA-C34-bonum-vesperum",
-        "introducedAt": 53,
+        "introducedAt": 55,
         "missed": [
           "R1",
           "R2",
@@ -25508,7 +25508,7 @@
         "atom": "LA-GRAMMAR-NUMBERS-1-5-03",
         "language": "latin",
         "introducedBy": "LA-C02-numbers-1-5",
-        "introducedAt": 7,
+        "introducedAt": 9,
         "missed": [
           "R2",
           "R3",
@@ -25520,7 +25520,7 @@
         "atom": "LA-GRAMMAR-WEATHER-VERBS-01",
         "language": "latin",
         "introducedBy": "LA-C15-weather-verbs",
-        "introducedAt": 27,
+        "introducedAt": 29,
         "missed": [
           "R2",
           "R3",
@@ -25532,7 +25532,7 @@
         "atom": "LA-LEX-ANNI-TEMPORA-01",
         "language": "latin",
         "introducedBy": "LA-C09-anni-tempora",
-        "introducedAt": 19,
+        "introducedAt": 21,
         "missed": [
           "R2",
           "R3",
@@ -25544,7 +25544,7 @@
         "atom": "LA-LEX-ANNOS-NATUS-01",
         "language": "latin",
         "introducedBy": "LA-C14-annos-natus",
-        "introducedAt": 25,
+        "introducedAt": 27,
         "missed": [
           "R2",
           "R3",
@@ -25556,7 +25556,7 @@
         "atom": "LA-LEX-AQUA-VINUM-02",
         "language": "latin",
         "introducedBy": "LA-C10-aqua-vinum",
-        "introducedAt": 20,
+        "introducedAt": 22,
         "missed": [
           "R2",
           "R3",
@@ -25568,7 +25568,7 @@
         "atom": "LA-LEX-AVE-03",
         "language": "latin",
         "introducedBy": "LA-C01-ave",
-        "introducedAt": 2,
+        "introducedAt": 4,
         "missed": [
           "R2",
           "R3",
@@ -25580,7 +25580,7 @@
         "atom": "LA-LEX-BENE-01",
         "language": "latin",
         "introducedBy": "LA-C27-bene",
-        "introducedAt": 44,
+        "introducedAt": 46,
         "missed": [
           "R1",
           "R2",
@@ -25592,7 +25592,7 @@
         "atom": "LA-LEX-EMO-01",
         "language": "latin",
         "introducedBy": "LA-C43-emo",
-        "introducedAt": 88,
+        "introducedAt": 90,
         "missed": [
           "R1",
           "R2",
@@ -25604,7 +25604,7 @@
         "atom": "LA-LEX-NIGER-ALBUS-01",
         "language": "latin",
         "introducedBy": "LA-C06-niger-albus",
-        "introducedAt": 13,
+        "introducedAt": 15,
         "missed": [
           "R2",
           "R3",
@@ -25616,7 +25616,7 @@
         "atom": "LA-LEX-NIHIL-EST-01",
         "language": "latin",
         "introducedBy": "LA-C23-nihil-est",
-        "introducedAt": 40,
+        "introducedAt": 42,
         "missed": [
           "R1",
           "R2",
@@ -25628,7 +25628,7 @@
         "atom": "LA-LEX-NUMBERS-1-5-01",
         "language": "latin",
         "introducedBy": "LA-C02-numbers-1-5",
-        "introducedAt": 7,
+        "introducedAt": 9,
         "missed": [
           "R2",
           "R3",
@@ -25640,7 +25640,7 @@
         "atom": "LA-LEX-NUMBERS-6-10-01",
         "language": "latin",
         "introducedBy": "LA-C02-numbers-6-10",
-        "introducedAt": 8,
+        "introducedAt": 10,
         "missed": [
           "R2",
           "R3",
@@ -25652,7 +25652,7 @@
         "atom": "LA-LEX-NUMBERS-6-10-02",
         "language": "latin",
         "introducedBy": "LA-C02-numbers-6-10",
-        "introducedAt": 8,
+        "introducedAt": 10,
         "missed": [
           "R2",
           "R3",
@@ -25664,7 +25664,7 @@
         "atom": "LA-LEX-PANIS-02",
         "language": "latin",
         "introducedBy": "LA-C10-panis",
-        "introducedAt": 21,
+        "introducedAt": 23,
         "missed": [
           "R2",
           "R3",
@@ -25676,7 +25676,7 @@
         "atom": "LA-LEX-QUOMODO-01",
         "language": "latin",
         "introducedBy": "LA-C26-quomodo",
-        "introducedAt": 43,
+        "introducedAt": 45,
         "missed": [
           "R1",
           "R2",
@@ -25688,7 +25688,7 @@
         "atom": "LA-LEX-SATURNI-SOLIS-01",
         "language": "latin",
         "introducedBy": "LA-C05-saturni-solis",
-        "introducedAt": 12,
+        "introducedAt": 14,
         "missed": [
           "R2",
           "R3",
@@ -25700,7 +25700,7 @@
         "atom": "LA-LEX-TEMPESTAS-PLUIT-01",
         "language": "latin",
         "introducedBy": "LA-C15-tempestas-pluit",
-        "introducedAt": 26,
+        "introducedAt": 28,
         "missed": [
           "R2",
           "R3",
@@ -25712,7 +25712,7 @@
         "atom": "LA-LEX-TU-VOS-01",
         "language": "latin",
         "introducedBy": "LA-C22-tu-vos",
-        "introducedAt": 39,
+        "introducedAt": 41,
         "missed": [
           "R1",
           "R2",
@@ -25724,7 +25724,7 @@
         "atom": "LA-LEX-TU-VOS-02",
         "language": "latin",
         "introducedBy": "LA-C22-tu-vos",
-        "introducedAt": 39,
+        "introducedAt": 41,
         "missed": [
           "R1",
           "R2",
@@ -25736,7 +25736,7 @@
         "atom": "LA-LEX-UNDECIM-VIGINTI-01",
         "language": "latin",
         "introducedBy": "LA-C16-undecim-viginti",
-        "introducedAt": 28,
+        "introducedAt": 30,
         "missed": [
           "R2",
           "R3",
@@ -25748,7 +25748,7 @@
         "atom": "LA-LEX-UNDECIM-VIGINTI-02",
         "language": "latin",
         "introducedBy": "LA-C16-undecim-viginti",
-        "introducedAt": 28,
+        "introducedAt": 30,
         "missed": [
           "R2",
           "R3",
@@ -25760,7 +25760,7 @@
         "atom": "LA-LEX-UNDECIM-VIGINTI-04",
         "language": "latin",
         "introducedBy": "LA-C16-undecim-viginti",
-        "introducedAt": 28,
+        "introducedAt": 30,
         "missed": [
           "R2",
           "R3",
@@ -25772,7 +25772,7 @@
         "atom": "LA-LEX-WEATHER-VERBS-02",
         "language": "latin",
         "introducedBy": "LA-C15-weather-verbs",
-        "introducedAt": 27,
+        "introducedAt": 29,
         "missed": [
           "R2",
           "R3",
@@ -25784,7 +25784,7 @@
         "atom": "LA-PHONO-AVE-01",
         "language": "latin",
         "introducedBy": "LA-C01-ave",
-        "introducedAt": 2,
+        "introducedAt": 4,
         "missed": [
           "R2",
           "R3",
@@ -25796,7 +25796,7 @@
         "atom": "LA-PRAGMATICS-ANNI-TEMPORA-02",
         "language": "latin",
         "introducedBy": "LA-C09-anni-tempora",
-        "introducedAt": 19,
+        "introducedAt": 21,
         "missed": [
           "R2",
           "R3",
@@ -25808,7 +25808,7 @@
         "atom": "LA-PRAGMATICS-ANNOS-NATUS-02",
         "language": "latin",
         "introducedBy": "LA-C14-annos-natus",
-        "introducedAt": 25,
+        "introducedAt": 27,
         "missed": [
           "R2",
           "R3",
@@ -25820,7 +25820,7 @@
         "atom": "LA-PRAGMATICS-BENE-03",
         "language": "latin",
         "introducedBy": "LA-C27-bene",
-        "introducedAt": 44,
+        "introducedAt": 46,
         "missed": [
           "R1",
           "R2",
@@ -25832,7 +25832,7 @@
         "atom": "LA-PRAGMATICS-CAPUT-02",
         "language": "latin",
         "introducedBy": "LA-C08-caput",
-        "introducedAt": 17,
+        "introducedAt": 19,
         "missed": [
           "R2",
           "R3",
@@ -25844,7 +25844,7 @@
         "atom": "LA-PRAGMATICS-FRATER-SOROR-03",
         "language": "latin",
         "introducedBy": "LA-C07-frater-soror",
-        "introducedAt": 16,
+        "introducedAt": 18,
         "missed": [
           "R2",
           "R3",
@@ -25856,7 +25856,7 @@
         "atom": "LA-PRAGMATICS-MENSES-02",
         "language": "latin",
         "introducedBy": "LA-C11-menses",
-        "introducedAt": 22,
+        "introducedAt": 24,
         "missed": [
           "R2",
           "R3",
@@ -25868,7 +25868,7 @@
         "atom": "LA-PRAGMATICS-NIGER-ALBUS-02",
         "language": "latin",
         "introducedBy": "LA-C06-niger-albus",
-        "introducedAt": 13,
+        "introducedAt": 15,
         "missed": [
           "R2",
           "R3",
@@ -25880,7 +25880,7 @@
         "atom": "LA-PRAGMATICS-NIHIL-EST-03",
         "language": "latin",
         "introducedBy": "LA-C23-nihil-est",
-        "introducedAt": 40,
+        "introducedAt": 42,
         "missed": [
           "R1",
           "R2",
@@ -25892,7 +25892,7 @@
         "atom": "LA-PRAGMATICS-PANIS-03",
         "language": "latin",
         "introducedBy": "LA-C10-panis",
-        "introducedAt": 21,
+        "introducedAt": 23,
         "missed": [
           "R2",
           "R3",
@@ -25904,7 +25904,7 @@
         "atom": "LA-PRAGMATICS-QUAESO-02",
         "language": "latin",
         "introducedBy": "LA-C03-quaeso",
-        "introducedAt": 9,
+        "introducedAt": 11,
         "missed": [
           "R2",
           "R3",
@@ -25916,7 +25916,7 @@
         "atom": "LA-PRAGMATICS-SATURNI-SOLIS-02",
         "language": "latin",
         "introducedBy": "LA-C05-saturni-solis",
-        "introducedAt": 12,
+        "introducedAt": 14,
         "missed": [
           "R2",
           "R3",
@@ -25928,7 +25928,7 @@
         "atom": "LA-PRAGMATICS-TU-VOS-03",
         "language": "latin",
         "introducedBy": "LA-C22-tu-vos",
-        "introducedAt": 39,
+        "introducedAt": 41,
         "missed": [
           "R1",
           "R2",
@@ -25940,7 +25940,7 @@
         "atom": "LA-PRAGMATICS-UNDECIM-VIGINTI-03",
         "language": "latin",
         "introducedBy": "LA-C16-undecim-viginti",
-        "introducedAt": 28,
+        "introducedAt": 30,
         "missed": [
           "R2",
           "R3",
@@ -25952,7 +25952,7 @@
         "atom": "LA-TASK-VESPER-TRIAGE-01",
         "language": "latin",
         "introducedBy": "LA-C33-practice",
-        "introducedAt": 52,
+        "introducedAt": 54,
         "missed": [
           "R1",
           "R2",
@@ -42135,7 +42135,7 @@
         "atom": "LA-DIALOGUE-MEETING-01",
         "language": "latin",
         "introducedBy": "LA-C21-practice",
-        "introducedAt": 38,
+        "introducedAt": 40,
         "missed": [
           "R1",
           "R2"
@@ -42146,7 +42146,7 @@
         "atom": "LA-ETYMON-ADIUVO-02",
         "language": "latin",
         "introducedBy": "LA-C39-adiuvo",
-        "introducedAt": 72,
+        "introducedAt": 74,
         "missed": [
           "R1",
           "R3"
@@ -42157,7 +42157,7 @@
         "atom": "LA-ETYMON-AMBULO-02",
         "language": "latin",
         "introducedBy": "LA-C41-ambulo",
-        "introducedAt": 78,
+        "introducedAt": 80,
         "missed": [
           "R2",
           "R3"
@@ -42168,7 +42168,7 @@
         "atom": "LA-ETYMON-AMO-02",
         "language": "latin",
         "introducedBy": "LA-C39-amo",
-        "introducedAt": 73,
+        "introducedAt": 75,
         "missed": [
           "R2",
           "R3"
@@ -42179,7 +42179,7 @@
         "atom": "LA-ETYMON-APERIO-02",
         "language": "latin",
         "introducedBy": "LA-C41-aperio",
-        "introducedAt": 80,
+        "introducedAt": 82,
         "missed": [
           "R2",
           "R3"
@@ -42190,7 +42190,7 @@
         "atom": "LA-ETYMON-APERIO-OPERIO-03",
         "language": "latin",
         "introducedBy": "LA-C41-aperio",
-        "introducedAt": 80,
+        "introducedAt": 82,
         "missed": [
           "R2",
           "R3"
@@ -42201,7 +42201,7 @@
         "atom": "LA-ETYMON-CANIS-FELES-CATTUS-01",
         "language": "latin",
         "introducedBy": "LA-C17-canis-feles-cattus",
-        "introducedAt": 29,
+        "introducedAt": 31,
         "missed": [
           "R2",
           "R3"
@@ -42212,7 +42212,7 @@
         "atom": "LA-ETYMON-CAPIO-02",
         "language": "latin",
         "introducedBy": "LA-C39-capio",
-        "introducedAt": 70,
+        "introducedAt": 72,
         "missed": [
           "R1",
           "R3"
@@ -42223,7 +42223,7 @@
         "atom": "LA-ETYMON-COGITO-02",
         "language": "latin",
         "introducedBy": "LA-C38-cogito",
-        "introducedAt": 66,
+        "introducedAt": 68,
         "missed": [
           "R1",
           "R2"
@@ -42234,7 +42234,7 @@
         "atom": "LA-ETYMON-CONVENIO-OCCURRO-03",
         "language": "latin",
         "introducedBy": "LA-C43-convenio",
-        "introducedAt": 87,
+        "introducedAt": 89,
         "missed": [
           "R2",
           "R3"
@@ -42245,7 +42245,7 @@
         "atom": "LA-ETYMON-CRAS-TE-VIDEBO-02",
         "language": "latin",
         "introducedBy": "LA-C25-cras-te-videbo",
-        "introducedAt": 42,
+        "introducedAt": 44,
         "missed": [
           "R1",
           "R3"
@@ -42256,7 +42256,7 @@
         "atom": "LA-ETYMON-DICO-02",
         "language": "latin",
         "introducedBy": "LA-C37-dico",
-        "introducedAt": 62,
+        "introducedAt": 64,
         "missed": [
           "R1",
           "R2"
@@ -42267,7 +42267,7 @@
         "atom": "LA-ETYMON-DIES-02",
         "language": "latin",
         "introducedBy": "LA-C28-dies",
-        "introducedAt": 45,
+        "introducedAt": 47,
         "missed": [
           "R2",
           "R3"
@@ -42278,7 +42278,7 @@
         "atom": "LA-ETYMON-DO-02",
         "language": "latin",
         "introducedBy": "LA-C37-do",
-        "introducedAt": 65,
+        "introducedAt": 67,
         "missed": [
           "R1",
           "R2"
@@ -42289,7 +42289,7 @@
         "atom": "LA-ETYMON-DORMIO-02",
         "language": "latin",
         "introducedBy": "LA-C40-dormio",
-        "introducedAt": 75,
+        "introducedAt": 77,
         "missed": [
           "R2",
           "R3"
@@ -42300,7 +42300,7 @@
         "atom": "LA-ETYMON-EXSPECTO-02",
         "language": "latin",
         "introducedBy": "LA-C42-exspecto",
-        "introducedAt": 85,
+        "introducedAt": 87,
         "missed": [
           "R2",
           "R3"
@@ -42311,7 +42311,7 @@
         "atom": "LA-ETYMON-GRATIAS-02",
         "language": "latin",
         "introducedBy": "LA-C01-gratias",
-        "introducedAt": 4,
+        "introducedAt": 6,
         "missed": [
           "R2",
           "R4"
@@ -42322,7 +42322,7 @@
         "atom": "LA-ETYMON-HABEO-02",
         "language": "latin",
         "introducedBy": "LA-C37-habeo",
-        "introducedAt": 59,
+        "introducedAt": 61,
         "missed": [
           "R1",
           "R3"
@@ -42333,7 +42333,7 @@
         "atom": "LA-ETYMON-HORA-03",
         "language": "latin",
         "introducedBy": "LA-C13-hora",
-        "introducedAt": 24,
+        "introducedAt": 26,
         "missed": [
           "R2",
           "R4"
@@ -42344,7 +42344,7 @@
         "atom": "LA-ETYMON-INTELLEGO-02",
         "language": "latin",
         "introducedBy": "LA-C38-intellego",
-        "introducedAt": 68,
+        "introducedAt": 70,
         "missed": [
           "R1",
           "R3"
@@ -42355,7 +42355,7 @@
         "atom": "LA-ETYMON-ITA-NON-02",
         "language": "latin",
         "introducedBy": "LA-C01-ita-non",
-        "introducedAt": 5,
+        "introducedAt": 7,
         "missed": [
           "R2",
           "R4"
@@ -42366,7 +42366,7 @@
         "atom": "LA-ETYMON-LEGO-02",
         "language": "latin",
         "introducedBy": "LA-C38-lego",
-        "introducedAt": 67,
+        "introducedAt": 69,
         "missed": [
           "R2",
           "R3"
@@ -42377,7 +42377,7 @@
         "atom": "LA-ETYMON-LUDO-02",
         "language": "latin",
         "introducedBy": "LA-C42-ludo",
-        "introducedAt": 84,
+        "introducedAt": 86,
         "missed": [
           "R2",
           "R3"
@@ -42388,7 +42388,7 @@
         "atom": "LA-ETYMON-MANE-02",
         "language": "latin",
         "introducedBy": "LA-C31-mane",
-        "introducedAt": 48,
+        "introducedAt": 50,
         "missed": [
           "R2",
           "R3"
@@ -42399,7 +42399,7 @@
         "atom": "LA-ETYMON-MERIDIES-03",
         "language": "latin",
         "introducedBy": "LA-C35-meridies",
-        "introducedAt": 54,
+        "introducedAt": 56,
         "missed": [
           "R2",
           "R3"
@@ -42410,7 +42410,7 @@
         "atom": "LA-ETYMON-NOX-02",
         "language": "latin",
         "introducedBy": "LA-C29-nox",
-        "introducedAt": 46,
+        "introducedAt": 48,
         "missed": [
           "R2",
           "R3"
@@ -42421,7 +42421,7 @@
         "atom": "LA-ETYMON-PROPEDIEM-TE-VIDEBO-02",
         "language": "latin",
         "introducedBy": "LA-C24-propediem-te-videbo",
-        "introducedAt": 41,
+        "introducedAt": 43,
         "missed": [
           "R2",
           "R3"
@@ -42432,7 +42432,7 @@
         "atom": "LA-ETYMON-RESPONDEO-02",
         "language": "latin",
         "introducedBy": "LA-C43-respondeo",
-        "introducedAt": 86,
+        "introducedAt": 88,
         "missed": [
           "R2",
           "R3"
@@ -42443,7 +42443,7 @@
         "atom": "LA-ETYMON-ROGO-02",
         "language": "latin",
         "introducedBy": "LA-C39-rogo",
-        "introducedAt": 71,
+        "introducedAt": 73,
         "missed": [
           "R1",
           "R3"
@@ -42454,7 +42454,7 @@
         "atom": "LA-ETYMON-SCIO-02",
         "language": "latin",
         "introducedBy": "LA-C37-scio",
-        "introducedAt": 64,
+        "introducedAt": 66,
         "missed": [
           "R1",
           "R2"
@@ -42465,7 +42465,7 @@
         "atom": "LA-ETYMON-SCRIBO-02",
         "language": "latin",
         "introducedBy": "LA-C38-scribo",
-        "introducedAt": 69,
+        "introducedAt": 71,
         "missed": [
           "R1",
           "R3"
@@ -42476,7 +42476,7 @@
         "atom": "LA-ETYMON-STO-02",
         "language": "latin",
         "introducedBy": "LA-C40-sto",
-        "introducedAt": 77,
+        "introducedAt": 79,
         "missed": [
           "R2",
           "R3"
@@ -42487,7 +42487,7 @@
         "atom": "LA-ETYMON-SUM-02",
         "language": "latin",
         "introducedBy": "LA-C37-sum",
-        "introducedAt": 58,
+        "introducedAt": 60,
         "missed": [
           "R1",
           "R2"
@@ -42498,7 +42498,7 @@
         "atom": "LA-ETYMON-VALE-02",
         "language": "latin",
         "introducedBy": "LA-C01-vale",
-        "introducedAt": 3,
+        "introducedAt": 5,
         "missed": [
           "R2",
           "R4"
@@ -42509,7 +42509,7 @@
         "atom": "LA-ETYMON-VENIO-02",
         "language": "latin",
         "introducedBy": "LA-C37-venio",
-        "introducedAt": 61,
+        "introducedAt": 63,
         "missed": [
           "R1",
           "R2"
@@ -42520,7 +42520,7 @@
         "atom": "LA-ETYMON-VESPER-01",
         "language": "latin",
         "introducedBy": "LA-C33-vesper",
-        "introducedAt": 50,
+        "introducedAt": 52,
         "missed": [
           "R2",
           "R3"
@@ -42531,7 +42531,7 @@
         "atom": "LA-ETYMON-VESPER-AFTERLIVES-02",
         "language": "latin",
         "introducedBy": "LA-C33-vesper-afterlives",
-        "introducedAt": 51,
+        "introducedAt": 53,
         "missed": [
           "R2",
           "R3"
@@ -42542,7 +42542,7 @@
         "atom": "LA-ETYMON-VIDEO-02",
         "language": "latin",
         "introducedBy": "LA-C37-video",
-        "introducedAt": 63,
+        "introducedAt": 65,
         "missed": [
           "R1",
           "R2"
@@ -42553,7 +42553,7 @@
         "atom": "LA-GRAMMAR-BONAM-NOCTEM-01",
         "language": "latin",
         "introducedBy": "LA-C30-bonam-noctem",
-        "introducedAt": 47,
+        "introducedAt": 49,
         "missed": [
           "R1",
           "R3"
@@ -42564,7 +42564,7 @@
         "atom": "LA-GRAMMAR-BONAM-NOCTEM-02",
         "language": "latin",
         "introducedBy": "LA-C30-bonam-noctem",
-        "introducedAt": 47,
+        "introducedAt": 49,
         "missed": [
           "R1",
           "R3"
@@ -42575,7 +42575,7 @@
         "atom": "LA-GRAMMAR-GRATIAS-03",
         "language": "latin",
         "introducedBy": "LA-C01-gratias",
-        "introducedAt": 4,
+        "introducedAt": 6,
         "missed": [
           "R2",
           "R4"
@@ -42586,7 +42586,7 @@
         "atom": "LA-GRAMMAR-MANE-01",
         "language": "latin",
         "introducedBy": "LA-C31-mane",
-        "introducedAt": 48,
+        "introducedAt": 50,
         "missed": [
           "R2",
           "R3"
@@ -42597,7 +42597,7 @@
         "atom": "LA-GRAMMAR-NAME-CASE-VARIATION-01",
         "language": "latin",
         "introducedBy": "LA-C20-name-case-variation",
-        "introducedAt": 35,
+        "introducedAt": 37,
         "missed": [
           "R2",
           "R3"
@@ -42608,7 +42608,7 @@
         "atom": "LA-GRAMMAR-NAME-CASE-VARIATION-02",
         "language": "latin",
         "introducedBy": "LA-C20-name-case-variation",
-        "introducedAt": 35,
+        "introducedAt": 37,
         "missed": [
           "R2",
           "R3"
@@ -42619,7 +42619,7 @@
         "atom": "LA-GRAMMAR-NOX-03",
         "language": "latin",
         "introducedBy": "LA-C29-nox",
-        "introducedAt": 46,
+        "introducedAt": 48,
         "missed": [
           "R2",
           "R3"
@@ -42630,7 +42630,7 @@
         "atom": "LA-GRAMMAR-PROPEDIEM-TE-VIDEBO-03",
         "language": "latin",
         "introducedBy": "LA-C24-propediem-te-videbo",
-        "introducedAt": 41,
+        "introducedAt": 43,
         "missed": [
           "R2",
           "R3"
@@ -42641,7 +42641,7 @@
         "atom": "LA-GRAMMAR-VALE-03",
         "language": "latin",
         "introducedBy": "LA-C01-vale",
-        "introducedAt": 3,
+        "introducedAt": 5,
         "missed": [
           "R2",
           "R4"
@@ -42652,7 +42652,7 @@
         "atom": "LA-LEX-AMBULO-01",
         "language": "latin",
         "introducedBy": "LA-C41-ambulo",
-        "introducedAt": 78,
+        "introducedAt": 80,
         "missed": [
           "R2",
           "R3"
@@ -42663,7 +42663,7 @@
         "atom": "LA-LEX-AMO-01",
         "language": "latin",
         "introducedBy": "LA-C39-amo",
-        "introducedAt": 73,
+        "introducedAt": 75,
         "missed": [
           "R2",
           "R3"
@@ -42674,7 +42674,7 @@
         "atom": "LA-LEX-APERIO-01",
         "language": "latin",
         "introducedBy": "LA-C41-aperio",
-        "introducedAt": 80,
+        "introducedAt": 82,
         "missed": [
           "R2",
           "R3"
@@ -42685,7 +42685,7 @@
         "atom": "LA-LEX-C44-HOUSE-05",
         "language": "latin",
         "introducedBy": "LA-C44-focus",
-        "introducedAt": 93,
+        "introducedAt": 95,
         "missed": [
           "R1",
           "R2"
@@ -42696,7 +42696,7 @@
         "atom": "LA-LEX-C45-WORLD-05",
         "language": "latin",
         "introducedBy": "LA-C45-mare",
-        "introducedAt": 98,
+        "introducedAt": 100,
         "missed": [
           "R1",
           "R2"
@@ -42707,7 +42707,7 @@
         "atom": "LA-LEX-C46-NIGHT-05",
         "language": "latin",
         "introducedBy": "LA-C46-somnus",
-        "introducedAt": 103,
+        "introducedAt": 105,
         "missed": [
           "R1",
           "R2"
@@ -42718,7 +42718,7 @@
         "atom": "LA-LEX-CANIS-FELES-CATTUS-02",
         "language": "latin",
         "introducedBy": "LA-C17-canis-feles-cattus",
-        "introducedAt": 29,
+        "introducedAt": 31,
         "missed": [
           "R2",
           "R3"
@@ -42729,7 +42729,7 @@
         "atom": "LA-LEX-CONVENIO-01",
         "language": "latin",
         "introducedBy": "LA-C43-convenio",
-        "introducedAt": 87,
+        "introducedAt": 89,
         "missed": [
           "R2",
           "R3"
@@ -42740,7 +42740,7 @@
         "atom": "LA-LEX-DIES-01",
         "language": "latin",
         "introducedBy": "LA-C28-dies",
-        "introducedAt": 45,
+        "introducedAt": 47,
         "missed": [
           "R2",
           "R3"
@@ -42751,7 +42751,7 @@
         "atom": "LA-LEX-DIES-LUNAE-VENERIS-01",
         "language": "latin",
         "introducedBy": "LA-C05-dies-lunae-veneris",
-        "introducedAt": 11,
+        "introducedAt": 13,
         "missed": [
           "R2",
           "R4"
@@ -42762,7 +42762,7 @@
         "atom": "LA-LEX-DO-01",
         "language": "latin",
         "introducedBy": "LA-C37-do",
-        "introducedAt": 65,
+        "introducedAt": 67,
         "missed": [
           "R1",
           "R2"
@@ -42773,7 +42773,7 @@
         "atom": "LA-LEX-DORMIO-01",
         "language": "latin",
         "introducedBy": "LA-C40-dormio",
-        "introducedAt": 75,
+        "introducedAt": 77,
         "missed": [
           "R2",
           "R3"
@@ -42784,7 +42784,7 @@
         "atom": "LA-LEX-EXSPECTO-01",
         "language": "latin",
         "introducedBy": "LA-C42-exspecto",
-        "introducedAt": 85,
+        "introducedAt": 87,
         "missed": [
           "R2",
           "R3"
@@ -42795,7 +42795,7 @@
         "atom": "LA-LEX-HORA-01",
         "language": "latin",
         "introducedBy": "LA-C13-hora",
-        "introducedAt": 24,
+        "introducedAt": 26,
         "missed": [
           "R2",
           "R4"
@@ -42806,7 +42806,7 @@
         "atom": "LA-LEX-ITA-NON-03",
         "language": "latin",
         "introducedBy": "LA-C01-ita-non",
-        "introducedAt": 5,
+        "introducedAt": 7,
         "missed": [
           "R2",
           "R4"
@@ -42817,7 +42817,7 @@
         "atom": "LA-LEX-LEGO-01",
         "language": "latin",
         "introducedBy": "LA-C38-lego",
-        "introducedAt": 67,
+        "introducedAt": 69,
         "missed": [
           "R2",
           "R3"
@@ -42828,7 +42828,7 @@
         "atom": "LA-LEX-LUDO-01",
         "language": "latin",
         "introducedBy": "LA-C42-ludo",
-        "introducedAt": 84,
+        "introducedAt": 86,
         "missed": [
           "R2",
           "R3"
@@ -42839,7 +42839,7 @@
         "atom": "LA-LEX-MEDIUS-DIES-NOX-01",
         "language": "latin",
         "introducedBy": "LA-C12-medius-dies-nox",
-        "introducedAt": 23,
+        "introducedAt": 25,
         "missed": [
           "R2",
           "R4"
@@ -42850,7 +42850,7 @@
         "atom": "LA-LEX-NOX-01",
         "language": "latin",
         "introducedBy": "LA-C29-nox",
-        "introducedAt": 46,
+        "introducedAt": 48,
         "missed": [
           "R2",
           "R3"
@@ -42861,7 +42861,7 @@
         "atom": "LA-LEX-OCCURRO-02",
         "language": "latin",
         "introducedBy": "LA-C43-convenio",
-        "introducedAt": 87,
+        "introducedAt": 89,
         "missed": [
           "R2",
           "R3"
@@ -42872,7 +42872,7 @@
         "atom": "LA-LEX-PROPEDIEM-TE-VIDEBO-01",
         "language": "latin",
         "introducedBy": "LA-C24-propediem-te-videbo",
-        "introducedAt": 41,
+        "introducedAt": 43,
         "missed": [
           "R2",
           "R3"
@@ -42883,7 +42883,7 @@
         "atom": "LA-LEX-QUID-TIBI-NOMEN-01",
         "language": "latin",
         "introducedBy": "LA-C20-quid-tibi-nomen",
-        "introducedAt": 34,
+        "introducedAt": 36,
         "missed": [
           "R2",
           "R3"
@@ -42894,7 +42894,7 @@
         "atom": "LA-LEX-QUID-TIBI-NOMEN-02",
         "language": "latin",
         "introducedBy": "LA-C20-quid-tibi-nomen",
-        "introducedAt": 34,
+        "introducedAt": 36,
         "missed": [
           "R2",
           "R3"
@@ -42905,7 +42905,7 @@
         "atom": "LA-LEX-RESPONDEO-01",
         "language": "latin",
         "introducedBy": "LA-C43-respondeo",
-        "introducedAt": 86,
+        "introducedAt": 88,
         "missed": [
           "R2",
           "R3"
@@ -42916,7 +42916,7 @@
         "atom": "LA-LEX-SEDEO-01",
         "language": "latin",
         "introducedBy": "LA-C40-sedeo",
-        "introducedAt": 76,
+        "introducedAt": 78,
         "missed": [
           "R2",
           "R3"
@@ -42927,7 +42927,7 @@
         "atom": "LA-LEX-STO-01",
         "language": "latin",
         "introducedBy": "LA-C40-sto",
-        "introducedAt": 77,
+        "introducedAt": 79,
         "missed": [
           "R2",
           "R3"
@@ -42938,7 +42938,7 @@
         "atom": "LA-LEX-VESPER-AFTERLIVES-01",
         "language": "latin",
         "introducedBy": "LA-C33-vesper-afterlives",
-        "introducedAt": 51,
+        "introducedAt": 53,
         "missed": [
           "R2",
           "R3"
@@ -42949,7 +42949,7 @@
         "atom": "LA-PHONO-GRATIAS-01",
         "language": "latin",
         "introducedBy": "LA-C01-gratias",
-        "introducedAt": 4,
+        "introducedAt": 6,
         "missed": [
           "R2",
           "R4"
@@ -42960,7 +42960,7 @@
         "atom": "LA-PHONO-ITA-NON-01",
         "language": "latin",
         "introducedBy": "LA-C01-ita-non",
-        "introducedAt": 5,
+        "introducedAt": 7,
         "missed": [
           "R2",
           "R4"
@@ -42971,7 +42971,7 @@
         "atom": "LA-PHONO-MERIDIES-01",
         "language": "latin",
         "introducedBy": "LA-C35-meridies",
-        "introducedAt": 54,
+        "introducedAt": 56,
         "missed": [
           "R2",
           "R3"
@@ -42982,7 +42982,7 @@
         "atom": "LA-PHONO-VALE-01",
         "language": "latin",
         "introducedBy": "LA-C01-vale",
-        "introducedAt": 3,
+        "introducedAt": 5,
         "missed": [
           "R2",
           "R4"
@@ -42993,7 +42993,7 @@
         "atom": "LA-PRAGMATICS-BONUM-MANE-01",
         "language": "latin",
         "introducedBy": "LA-C32-bonum-mane",
-        "introducedAt": 49,
+        "introducedAt": 51,
         "missed": [
           "R1",
           "R3"
@@ -43004,7 +43004,7 @@
         "atom": "LA-PRAGMATICS-BONUM-MANE-02",
         "language": "latin",
         "introducedBy": "LA-C32-bonum-mane",
-        "introducedAt": 49,
+        "introducedAt": 51,
         "missed": [
           "R1",
           "R3"
@@ -43015,7 +43015,7 @@
         "atom": "LA-PRAGMATICS-CANIS-FELES-CATTUS-03",
         "language": "latin",
         "introducedBy": "LA-C17-canis-feles-cattus",
-        "introducedAt": 29,
+        "introducedAt": 31,
         "missed": [
           "R2",
           "R3"
@@ -43026,7 +43026,7 @@
         "atom": "LA-PRAGMATICS-CRAS-TE-VIDEBO-03",
         "language": "latin",
         "introducedBy": "LA-C25-cras-te-videbo",
-        "introducedAt": 42,
+        "introducedAt": 44,
         "missed": [
           "R1",
           "R3"
@@ -43037,7 +43037,7 @@
         "atom": "LA-PRAGMATICS-DIES-LUNAE-VENERIS-02",
         "language": "latin",
         "introducedBy": "LA-C05-dies-lunae-veneris",
-        "introducedAt": 11,
+        "introducedAt": 13,
         "missed": [
           "R2",
           "R4"
@@ -43048,7 +43048,7 @@
         "atom": "LA-PRAGMATICS-HORA-02",
         "language": "latin",
         "introducedBy": "LA-C13-hora",
-        "introducedAt": 24,
+        "introducedAt": 26,
         "missed": [
           "R2",
           "R4"
@@ -43059,7 +43059,7 @@
         "atom": "LA-PRAGMATICS-MEDIUS-DIES-NOX-02",
         "language": "latin",
         "introducedBy": "LA-C12-medius-dies-nox",
-        "introducedAt": 23,
+        "introducedAt": 25,
         "missed": [
           "R2",
           "R4"
@@ -43070,7 +43070,7 @@
         "atom": "LA-PRAGMATICS-MEETING-PHRASE-CONTEXT-01",
         "language": "latin",
         "introducedBy": "LA-C21-meeting-phrase-context",
-        "introducedAt": 37,
+        "introducedAt": 39,
         "missed": [
           "R2",
           "R3"
@@ -43081,7 +43081,7 @@
         "atom": "LA-PRAGMATICS-MEETING-PHRASE-CONTEXT-02",
         "language": "latin",
         "introducedBy": "LA-C21-meeting-phrase-context",
-        "introducedAt": 37,
+        "introducedAt": 39,
         "missed": [
           "R2",
           "R3"
@@ -43092,7 +43092,7 @@
         "atom": "LA-PRAGMATICS-MERIDIES-02",
         "language": "latin",
         "introducedBy": "LA-C35-meridies",
-        "introducedAt": 54,
+        "introducedAt": 56,
         "missed": [
           "R2",
           "R3"
@@ -43103,7 +43103,7 @@
         "atom": "LA-PRAGMATICS-SALVE-POST-MERIDIEM-01",
         "language": "latin",
         "introducedBy": "LA-C36-salve-post-meridiem",
-        "introducedAt": 55,
+        "introducedAt": 57,
         "missed": [
           "R2",
           "R3"
@@ -43114,7 +43114,7 @@
         "atom": "LA-PRAGMATICS-TIMELESS-SALVE-01",
         "language": "latin",
         "introducedBy": "LA-C36-timeless-salve",
-        "introducedAt": 56,
+        "introducedAt": 58,
         "missed": [
           "R2",
           "R3"
@@ -55923,7 +55923,7 @@
         "atom": "LA-DIALOGUE-WELLBEING-01",
         "language": "latin",
         "introducedBy": "LA-C19-practice",
-        "introducedAt": 33,
+        "introducedAt": 35,
         "missed": [
           "R1"
         ],
@@ -55933,7 +55933,7 @@
         "atom": "LA-ETYMON-ACCIPIO-OBTINEO-03",
         "language": "latin",
         "introducedBy": "LA-C42-accipio",
-        "introducedAt": 83,
+        "introducedAt": 85,
         "missed": [
           "R3"
         ],
@@ -55943,7 +55943,7 @@
         "atom": "LA-ETYMON-AUDIO-02",
         "language": "latin",
         "introducedBy": "LA-C40-audio",
-        "introducedAt": 74,
+        "introducedAt": 76,
         "missed": [
           "R3"
         ],
@@ -55953,7 +55953,7 @@
         "atom": "LA-ETYMON-CLAUDO-02",
         "language": "latin",
         "introducedBy": "LA-C41-claudo",
-        "introducedAt": 81,
+        "introducedAt": 83,
         "missed": [
           "R3"
         ],
@@ -55963,7 +55963,7 @@
         "atom": "LA-ETYMON-CURRO-02",
         "language": "latin",
         "introducedBy": "LA-C41-curro",
-        "introducedAt": 79,
+        "introducedAt": 81,
         "missed": [
           "R3"
         ],
@@ -55973,7 +55973,7 @@
         "atom": "LA-ETYMON-FERO-03",
         "language": "latin",
         "introducedBy": "LA-C42-fero",
-        "introducedAt": 82,
+        "introducedAt": 84,
         "missed": [
           "R3"
         ],
@@ -55983,7 +55983,7 @@
         "atom": "LA-ETYMON-INHERITED-VS-BORROWED-03",
         "language": "latin",
         "introducedBy": "LA-C40-sedeo",
-        "introducedAt": 76,
+        "introducedAt": 78,
         "missed": [
           "R3"
         ],
@@ -55997,13 +55997,13 @@
         "missed": [
           "R4"
         ],
-        "revisits": 9
+        "revisits": 11
       },
       {
         "atom": "LA-ETYMON-SEDEO-02",
         "language": "latin",
         "introducedBy": "LA-C40-sedeo",
-        "introducedAt": 76,
+        "introducedAt": 78,
         "missed": [
           "R3"
         ],
@@ -56013,7 +56013,7 @@
         "atom": "LA-GRAMMAR-FERO-SUPPLETION-02",
         "language": "latin",
         "introducedBy": "LA-C42-fero",
-        "introducedAt": 82,
+        "introducedAt": 84,
         "missed": [
           "R3"
         ],
@@ -56027,13 +56027,13 @@
         "missed": [
           "R4"
         ],
-        "revisits": 11
+        "revisits": 13
       },
       {
         "atom": "LA-LEX-ACCIPIO-01",
         "language": "latin",
         "introducedBy": "LA-C42-accipio",
-        "introducedAt": 83,
+        "introducedAt": 85,
         "missed": [
           "R3"
         ],
@@ -56043,7 +56043,7 @@
         "atom": "LA-LEX-ADIUVO-01",
         "language": "latin",
         "introducedBy": "LA-C39-adiuvo",
-        "introducedAt": 72,
+        "introducedAt": 74,
         "missed": [
           "R3"
         ],
@@ -56053,7 +56053,7 @@
         "atom": "LA-LEX-AUDIO-01",
         "language": "latin",
         "introducedBy": "LA-C40-audio",
-        "introducedAt": 74,
+        "introducedAt": 76,
         "missed": [
           "R3"
         ],
@@ -56063,7 +56063,7 @@
         "atom": "LA-LEX-C44-HOUSE-01",
         "language": "latin",
         "introducedBy": "LA-C44-domus",
-        "introducedAt": 89,
+        "introducedAt": 91,
         "missed": [
           "R2"
         ],
@@ -56073,7 +56073,7 @@
         "atom": "LA-LEX-C44-HOUSE-02",
         "language": "latin",
         "introducedBy": "LA-C44-porta",
-        "introducedAt": 90,
+        "introducedAt": 92,
         "missed": [
           "R2"
         ],
@@ -56083,7 +56083,7 @@
         "atom": "LA-LEX-C44-HOUSE-03",
         "language": "latin",
         "introducedBy": "LA-C44-murus",
-        "introducedAt": 91,
+        "introducedAt": 93,
         "missed": [
           "R2"
         ],
@@ -56093,7 +56093,7 @@
         "atom": "LA-LEX-C44-HOUSE-04",
         "language": "latin",
         "introducedBy": "LA-C44-hortus",
-        "introducedAt": 92,
+        "introducedAt": 94,
         "missed": [
           "R2"
         ],
@@ -56103,7 +56103,7 @@
         "atom": "LA-LEX-C45-WORLD-01",
         "language": "latin",
         "introducedBy": "LA-C45-terra",
-        "introducedAt": 94,
+        "introducedAt": 96,
         "missed": [
           "R2"
         ],
@@ -56113,7 +56113,7 @@
         "atom": "LA-LEX-C45-WORLD-02",
         "language": "latin",
         "introducedBy": "LA-C45-ignis",
-        "introducedAt": 95,
+        "introducedAt": 97,
         "missed": [
           "R2"
         ],
@@ -56123,7 +56123,7 @@
         "atom": "LA-LEX-C45-WORLD-03",
         "language": "latin",
         "introducedBy": "LA-C45-ventus",
-        "introducedAt": 96,
+        "introducedAt": 98,
         "missed": [
           "R2"
         ],
@@ -56133,7 +56133,7 @@
         "atom": "LA-LEX-C45-WORLD-04",
         "language": "latin",
         "introducedBy": "LA-C45-caelum",
-        "introducedAt": 97,
+        "introducedAt": 99,
         "missed": [
           "R2"
         ],
@@ -56143,7 +56143,7 @@
         "atom": "LA-LEX-C46-NIGHT-01",
         "language": "latin",
         "introducedBy": "LA-C46-lux",
-        "introducedAt": 99,
+        "introducedAt": 101,
         "missed": [
           "R2"
         ],
@@ -56153,7 +56153,7 @@
         "atom": "LA-LEX-C46-NIGHT-02",
         "language": "latin",
         "introducedBy": "LA-C46-umbra",
-        "introducedAt": 100,
+        "introducedAt": 102,
         "missed": [
           "R2"
         ],
@@ -56163,7 +56163,7 @@
         "atom": "LA-LEX-C46-NIGHT-03",
         "language": "latin",
         "introducedBy": "LA-C46-stella",
-        "introducedAt": 101,
+        "introducedAt": 103,
         "missed": [
           "R2"
         ],
@@ -56173,7 +56173,7 @@
         "atom": "LA-LEX-C46-NIGHT-04",
         "language": "latin",
         "introducedBy": "LA-C46-luna",
-        "introducedAt": 102,
+        "introducedAt": 104,
         "missed": [
           "R2"
         ],
@@ -56183,7 +56183,7 @@
         "atom": "LA-LEX-CAPIO-01",
         "language": "latin",
         "introducedBy": "LA-C39-capio",
-        "introducedAt": 70,
+        "introducedAt": 72,
         "missed": [
           "R3"
         ],
@@ -56193,7 +56193,7 @@
         "atom": "LA-LEX-CLAUDO-01",
         "language": "latin",
         "introducedBy": "LA-C41-claudo",
-        "introducedAt": 81,
+        "introducedAt": 83,
         "missed": [
           "R3"
         ],
@@ -56203,7 +56203,7 @@
         "atom": "LA-LEX-COGITO-01",
         "language": "latin",
         "introducedBy": "LA-C38-cogito",
-        "introducedAt": 66,
+        "introducedAt": 68,
         "missed": [
           "R2"
         ],
@@ -56213,7 +56213,7 @@
         "atom": "LA-LEX-CRAS-TE-VIDEBO-01",
         "language": "latin",
         "introducedBy": "LA-C25-cras-te-videbo",
-        "introducedAt": 42,
+        "introducedAt": 44,
         "missed": [
           "R1"
         ],
@@ -56223,7 +56223,7 @@
         "atom": "LA-LEX-CURRO-01",
         "language": "latin",
         "introducedBy": "LA-C41-curro",
-        "introducedAt": 79,
+        "introducedAt": 81,
         "missed": [
           "R3"
         ],
@@ -56233,7 +56233,7 @@
         "atom": "LA-LEX-EO-01",
         "language": "latin",
         "introducedBy": "LA-C37-eo",
-        "introducedAt": 60,
+        "introducedAt": 62,
         "missed": [
           "R3"
         ],
@@ -56243,7 +56243,7 @@
         "atom": "LA-LEX-FERO-01",
         "language": "latin",
         "introducedBy": "LA-C42-fero",
-        "introducedAt": 82,
+        "introducedAt": 84,
         "missed": [
           "R3"
         ],
@@ -56253,7 +56253,7 @@
         "atom": "LA-LEX-HABEO-01",
         "language": "latin",
         "introducedBy": "LA-C37-habeo",
-        "introducedAt": 59,
+        "introducedAt": 61,
         "missed": [
           "R3"
         ],
@@ -56263,7 +56263,7 @@
         "atom": "LA-LEX-INTELLEGO-01",
         "language": "latin",
         "introducedBy": "LA-C38-intellego",
-        "introducedAt": 68,
+        "introducedAt": 70,
         "missed": [
           "R3"
         ],
@@ -56273,7 +56273,7 @@
         "atom": "LA-LEX-OBTINEO-02",
         "language": "latin",
         "introducedBy": "LA-C42-accipio",
-        "introducedAt": 83,
+        "introducedAt": 85,
         "missed": [
           "R3"
         ],
@@ -56283,7 +56283,7 @@
         "atom": "LA-LEX-ROGO-01",
         "language": "latin",
         "introducedBy": "LA-C39-rogo",
-        "introducedAt": 71,
+        "introducedAt": 73,
         "missed": [
           "R3"
         ],
@@ -56293,7 +56293,7 @@
         "atom": "LA-LEX-SCIO-01",
         "language": "latin",
         "introducedBy": "LA-C37-scio",
-        "introducedAt": 64,
+        "introducedAt": 66,
         "missed": [
           "R2"
         ],
@@ -56303,7 +56303,7 @@
         "atom": "LA-LEX-SCRIBO-01",
         "language": "latin",
         "introducedBy": "LA-C38-scribo",
-        "introducedAt": 69,
+        "introducedAt": 71,
         "missed": [
           "R3"
         ],
@@ -56313,7 +56313,7 @@
         "atom": "LA-LEX-SUM-01",
         "language": "latin",
         "introducedBy": "LA-C37-sum",
-        "introducedAt": 58,
+        "introducedAt": 60,
         "missed": [
           "R3"
         ],
@@ -56323,7 +56323,7 @@
         "atom": "LA-LEX-VENIO-01",
         "language": "latin",
         "introducedBy": "LA-C37-venio",
-        "introducedAt": 61,
+        "introducedAt": 63,
         "missed": [
           "R2"
         ],
@@ -56337,13 +56337,13 @@
         "missed": [
           "R4"
         ],
-        "revisits": 11
+        "revisits": 13
       },
       {
         "atom": "LA-PRAGMATICS-VOLUP-EST-CONVENISSE-01",
         "language": "latin",
         "introducedBy": "LA-C21-volup-est-convenisse",
-        "introducedAt": 36,
+        "introducedAt": 38,
         "missed": [
           "R2"
         ],
@@ -61206,7 +61206,7 @@
       {
         "lessonId": "LA-C06-ruber-caeruleus",
         "language": "latin",
-        "position": 14,
+        "position": 16,
         "word": "mare",
         "taughtBy": "LA-C45-mare",
         "lessonsEarly": 84
@@ -61374,7 +61374,7 @@
       {
         "lessonId": "LA-C08-manus",
         "language": "latin",
-        "position": 18,
+        "position": 20,
         "word": "domus",
         "taughtBy": "LA-C44-domus",
         "lessonsEarly": 71
@@ -61510,7 +61510,7 @@
       {
         "lessonId": "LA-C24-propediem-te-videbo",
         "language": "latin",
-        "position": 41,
+        "position": 43,
         "word": "lūnae",
         "taughtBy": "LA-C46-luna",
         "lessonsEarly": 61
@@ -61518,7 +61518,7 @@
       {
         "lessonId": "LA-C27-bene",
         "language": "latin",
-        "position": 44,
+        "position": 46,
         "word": "mel",
         "taughtBy": "LA-C47-mel",
         "lessonsEarly": 61
@@ -61534,7 +61534,7 @@
       {
         "lessonId": "LA-C11-menses",
         "language": "latin",
-        "position": 22,
+        "position": 24,
         "word": "aperīre",
         "taughtBy": "LA-C41-aperio",
         "lessonsEarly": 58
@@ -61550,7 +61550,7 @@
       {
         "lessonId": "LA-C28-dies",
         "language": "latin",
-        "position": 45,
+        "position": 47,
         "word": "lūnae",
         "taughtBy": "LA-C46-luna",
         "lessonsEarly": 57
@@ -61614,7 +61614,7 @@
       {
         "lessonId": "LA-C08-manus",
         "language": "latin",
-        "position": 18,
+        "position": 20,
         "word": "scrībere",
         "taughtBy": "LA-C38-scribo",
         "lessonsEarly": 51
@@ -61654,7 +61654,7 @@
       {
         "lessonId": "LA-C27-bene",
         "language": "latin",
-        "position": 44,
+        "position": 46,
         "word": "terra",
         "taughtBy": "LA-C45-terra",
         "lessonsEarly": 50
@@ -61982,7 +61982,7 @@
       {
         "lessonId": "LA-C14-annos-natus",
         "language": "latin",
-        "position": 25,
+        "position": 27,
         "word": "habēre",
         "taughtBy": "LA-C37-habeo",
         "lessonsEarly": 34
@@ -62062,7 +62062,7 @@
       {
         "lessonId": "LA-C40-dormio",
         "language": "latin",
-        "position": 75,
+        "position": 77,
         "word": "somnus",
         "taughtBy": "LA-C46-somnus",
         "lessonsEarly": 28
@@ -62094,7 +62094,7 @@
       {
         "lessonId": "LA-C19-valeo-family",
         "language": "latin",
-        "position": 32,
+        "position": 34,
         "word": "sum",
         "taughtBy": "LA-C37-sum",
         "lessonsEarly": 26
@@ -62134,7 +62134,7 @@
       {
         "lessonId": "LA-C41-ambulo",
         "language": "latin",
-        "position": 78,
+        "position": 80,
         "word": "somnus",
         "taughtBy": "LA-C46-somnus",
         "lessonsEarly": 25
@@ -62222,7 +62222,7 @@
       {
         "lessonId": "LA-C24-propediem-te-videbo",
         "language": "latin",
-        "position": 41,
+        "position": 43,
         "word": "vidēre",
         "taughtBy": "LA-C37-video",
         "lessonsEarly": 22
@@ -62286,7 +62286,7 @@
       {
         "lessonId": "LA-C39-capio",
         "language": "latin",
-        "position": 70,
+        "position": 72,
         "word": "emere",
         "taughtBy": "LA-C43-emo",
         "lessonsEarly": 18
@@ -62422,7 +62422,7 @@
       {
         "lessonId": "LA-C02-numbers-6-10",
         "language": "latin",
-        "position": 8,
+        "position": 10,
         "word": "september",
         "taughtBy": "LA-C11-menses",
         "lessonsEarly": 14
@@ -62430,7 +62430,7 @@
       {
         "lessonId": "LA-C02-numbers-6-10",
         "language": "latin",
-        "position": 8,
+        "position": 10,
         "word": "november",
         "taughtBy": "LA-C11-menses",
         "lessonsEarly": 14
@@ -62438,7 +62438,7 @@
       {
         "lessonId": "LA-C02-numbers-6-10",
         "language": "latin",
-        "position": 8,
+        "position": 10,
         "word": "december",
         "taughtBy": "LA-C11-menses",
         "lessonsEarly": 14
@@ -62582,7 +62582,7 @@
       {
         "lessonId": "LA-C19-quid-agis",
         "language": "latin",
-        "position": 31,
+        "position": 33,
         "word": "quōmodo",
         "taughtBy": "LA-C26-quomodo",
         "lessonsEarly": 12
@@ -62614,7 +62614,7 @@
       {
         "lessonId": "LA-C37-habeo",
         "language": "latin",
-        "position": 59,
+        "position": 61,
         "word": "capere",
         "taughtBy": "LA-C39-capio",
         "lessonsEarly": 11
@@ -62654,7 +62654,7 @@
       {
         "lessonId": "LA-C19-practice",
         "language": "latin",
-        "position": 33,
+        "position": 35,
         "word": "quōmodo",
         "taughtBy": "LA-C26-quomodo",
         "lessonsEarly": 10
@@ -62894,7 +62894,7 @@
       {
         "lessonId": "LA-C25-cras-te-videbo",
         "language": "latin",
-        "position": 42,
+        "position": 44,
         "word": "māne",
         "taughtBy": "LA-C31-mane",
         "lessonsEarly": 6
@@ -63110,7 +63110,7 @@
       {
         "lessonId": "LA-C24-propediem-te-videbo",
         "language": "latin",
-        "position": 41,
+        "position": 43,
         "word": "diēs",
         "taughtBy": "LA-C28-dies",
         "lessonsEarly": 4
@@ -63286,7 +63286,7 @@
       {
         "lessonId": "LA-C23-nihil-est",
         "language": "latin",
-        "position": 40,
+        "position": 42,
         "word": "quōmodo",
         "taughtBy": "LA-C26-quomodo",
         "lessonsEarly": 3
@@ -64374,7 +64374,7 @@
       {
         "lessonId": "LA-C01-ave",
         "language": "latin",
-        "position": 2,
+        "position": 4,
         "word": "valē",
         "taughtBy": "LA-C01-vale",
         "lessonsEarly": 1
@@ -64382,7 +64382,7 @@
       {
         "lessonId": "LA-C12-medius-dies-nox",
         "language": "latin",
-        "position": 23,
+        "position": 25,
         "word": "hōra",
         "taughtBy": "LA-C13-hora",
         "lessonsEarly": 1
@@ -64843,7 +64843,7 @@
       },
       {
         "language": "latin",
-        "lessonCount": 109,
+        "lessonCount": 111,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
@@ -73574,6 +73574,24 @@
             "stage": "guided-copy",
             "level": "pre-A1",
             "sequence": 105
+          },
+          {
+            "language": "latin",
+            "lessonId": "LA-W01-salve-delayed-copy",
+            "blockIndex": 1,
+            "blockTitle": "Writing — delayed copy",
+            "stage": "delayed-copy",
+            "level": "pre-A1",
+            "sequence": 106
+          },
+          {
+            "language": "latin",
+            "lessonId": "LA-W01-salve-dictation",
+            "blockIndex": 1,
+            "blockTitle": "Writing — dictation and transcription",
+            "stage": "dictation-transcription",
+            "level": "pre-A1",
+            "sequence": 107
           }
         ],
         "validEvidence": [
@@ -73594,6 +73612,24 @@
             "stage": "guided-copy",
             "level": "pre-A1",
             "sequence": 105
+          },
+          {
+            "language": "latin",
+            "lessonId": "LA-W01-salve-delayed-copy",
+            "blockIndex": 1,
+            "blockTitle": "Writing — delayed copy",
+            "stage": "delayed-copy",
+            "level": "pre-A1",
+            "sequence": 106
+          },
+          {
+            "language": "latin",
+            "lessonId": "LA-W01-salve-dictation",
+            "blockIndex": 1,
+            "blockTitle": "Writing — dictation and transcription",
+            "stage": "dictation-transcription",
+            "level": "pre-A1",
+            "sequence": 107
           }
         ],
         "defects": [],
@@ -73608,13 +73644,12 @@
             ],
             "evidencedStages": [
               "observe-trace",
-              "guided-copy"
-            ],
-            "missingStages": [
+              "guided-copy",
               "delayed-copy",
               "dictation-transcription"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           },
           {
             "level": "A1",
@@ -73628,11 +73663,11 @@
             ],
             "evidencedStages": [
               "observe-trace",
-              "guided-copy"
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
             ],
             "missingStages": [
-              "delayed-copy",
-              "dictation-transcription",
               "controlled-composition",
               "timed-assessment-production"
             ],
@@ -73651,11 +73686,11 @@
             ],
             "evidencedStages": [
               "observe-trace",
-              "guided-copy"
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
             ],
             "missingStages": [
-              "delayed-copy",
-              "dictation-transcription",
               "controlled-composition",
               "connected-composition",
               "timed-assessment-production"
@@ -73675,11 +73710,11 @@
             ],
             "evidencedStages": [
               "observe-trace",
-              "guided-copy"
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
             ],
             "missingStages": [
-              "delayed-copy",
-              "dictation-transcription",
               "controlled-composition",
               "connected-composition",
               "timed-assessment-production"
@@ -73699,11 +73734,11 @@
             ],
             "evidencedStages": [
               "observe-trace",
-              "guided-copy"
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
             ],
             "missingStages": [
-              "delayed-copy",
-              "dictation-transcription",
               "controlled-composition",
               "connected-composition",
               "timed-assessment-production"
@@ -73723,11 +73758,11 @@
             ],
             "evidencedStages": [
               "observe-trace",
-              "guided-copy"
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
             ],
             "missingStages": [
-              "delayed-copy",
-              "dictation-transcription",
               "controlled-composition",
               "connected-composition",
               "timed-assessment-production"
@@ -73747,11 +73782,11 @@
             ],
             "evidencedStages": [
               "observe-trace",
-              "guided-copy"
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
             ],
             "missingStages": [
-              "delayed-copy",
-              "dictation-transcription",
               "controlled-composition",
               "connected-composition",
               "timed-assessment-production"
@@ -78532,10 +78567,10 @@
     "summary": {
       "tracks": 23,
       "tracksWithAnyEvidence": 18,
-      "tracksCompleteAtPreA1": 12,
-      "evidenceBlocks": 248,
+      "tracksCompleteAtPreA1": 13,
+      "evidenceBlocks": 250,
       "invalidEvidenceBlocks": 0,
-      "missingTrackLevelStages": 610
+      "missingTrackLevelStages": 596
     }
   },
   "gentleRamp": {
@@ -79274,8 +79309,8 @@
       },
       {
         "language": "latin",
-        "lessonCount": 109,
-        "atomMeasurableLessons": 109,
+        "lessonCount": 111,
+        "atomMeasurableLessons": 111,
         "atomMeasurementBlindLessons": 0,
         "durationViolations": 0,
         "atomLessonSpikes": 1,
@@ -79300,7 +79335,7 @@
           "R4": 66
         },
         "payoffSurprises": 0,
-        "writingPracticeLessons": 2,
+        "writingPracticeLessons": 4,
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
         "findings": [
@@ -81412,11 +81447,6 @@
         "inProgressAt": "pre-A1",
         "blockers": [
           {
-            "criterion": "writing-stage",
-            "detail": "2 cumulative writing stage(s) unproved at pre-A1: delayed-copy, dictation-transcription",
-            "shortfall": 2
-          },
-          {
             "criterion": "vocabulary",
             "detail": "teaches 43 distinct headwords at or below pre-A1, against 300",
             "shortfall": 257
@@ -81724,12 +81754,12 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 4081,
+    "totalLessons": 4083,
     "voice": 2969,
     "sight": 597,
-    "pen": 515,
+    "pen": 517,
     "coreVoice": 3430,
-    "lessonsWithWritingSegments": 254,
+    "lessonsWithWritingSegments": 256,
     "drivablePercent": 84,
     "tracks": [
       {
@@ -86423,21 +86453,21 @@
       },
       {
         "language": "latin",
-        "lessonCount": 109,
+        "lessonCount": 111,
         "voice": 102,
         "sight": 5,
-        "pen": 2,
+        "pen": 4,
         "coreVoice": 103,
-        "drivablePercent": 94,
+        "drivablePercent": 93,
         "drivablePrefixTotal": 95,
         "chapters": [
           {
             "language": "latin",
             "chapter": 1,
-            "lessonCount": 7,
+            "lessonCount": 9,
             "voice": 5,
             "sight": 0,
-            "pen": 2,
+            "pen": 4,
             "coreVoice": 6,
             "modalities": [
               "voice",
@@ -98284,26 +98314,26 @@
   },
   "rootLedger": {
     "roots": 3334,
-    "underspent": 3208,
+    "underspent": 3207,
     "neverSpent": 2209,
     "payoffDistribution": {
       "0": 2209,
       "1": 700,
-      "2": 299,
-      "3": 70,
-      "4": 23,
-      "5": 12,
+      "2": 298,
+      "3": 69,
+      "4": 24,
+      "5": 13,
       "6": 11,
       "7": 6,
       "8": 1,
-      "9": 1,
       "10": 1,
+      "11": 1,
       "12": 1
     },
     "underspentPercent": 96
   },
   "infoDump": {
-    "lessons": 4081,
+    "lessons": 4083,
     "lessonsWithFindings": 121,
     "ruleStatements": 30,
     "paradigmTables": 95,
@@ -98313,8 +98343,8 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 53,
-    "lessonsUsingTerms": 3876,
-    "usesBeforeIntroduction": 13441,
+    "lessonsUsingTerms": 3878,
+    "usesBeforeIntroduction": 13447,
     "technicalUsesBeforeIntroduction": 3390,
     "technicalLessons": 1805,
     "worstTerms": [
@@ -98345,7 +98375,7 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 4081,
+    "lessonsScanned": 4083,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
