@@ -2,13 +2,13 @@
   "version": 1,
   "language": "spanish",
   "level": "A1",
-  "about": "An enumeration of the grammar an A1 candidate is expected to hold, restated in our own words from the structure of the Plan Curricular del Instituto Cervantes, whose grammar inventory is published as a finite checklist in 15 categories with separate A1 and A2 columns. This file is an independent restatement for gating purposes, not a copy: the source is a reference, and the labels here are ours. Where the source lists several closely related items we have merged them into one point, so this file's total is not the source's total.",
+  "about": "An enumeration of what an A1 candidate is expected to hold, restated in our own words from the structure of the Plan Curricular del Instituto Cervantes, whose inventories are published as finite checklists with separate A1 and A2 columns. This file is an independent restatement for gating purposes, not a copy: the source is a reference, and the labels here are ours. Where the source lists several closely related items we have merged them into one point, so this file's total is not the source's total. Four PCIC inventories are enumerated here at the granularity of their numbered subsections: grammar (15 categories), functions, general and specific notions, and orthography. The pronunciation-and-prosody inventory is deliberately absent -- see scope['phonology-orthography'].",
   "source": "https://cvc.cervantes.es/ensenanza/biblioteca_ele/plan_curricular/niveles/02_gramatica_inventario_a1-a2.htm",
   "scope": {
     "communicative-functions": {
-      "status": "partial",
-      "source": "https://cvc.cervantes.es/ensenanza/biblioteca_ele/plan_curricular/indice.htm",
-      "note": "The PCIC publishes separate functional inventories, but this file currently enumerates grammar points only."
+      "status": "complete",
+      "source": "https://cvc.cervantes.es/ensenanza/biblioteca_ele/plan_curricular/niveles/05_funciones_inventario_a1-a2.htm",
+      "note": "The PCIC functional inventory splits every subsection into an A1 column and an A2 column. Each of the 54 subsections carrying A1 content is restated here as one point, across the source's six macro-functions. Subsections whose A1 column is empty are A2-only and are correctly outside an A1 inventory, so the boundary is closed by the source rather than by our judgement."
     },
     "grammar": {
       "status": "complete",
@@ -17,13 +17,13 @@
     },
     "phonology-orthography": {
       "status": "partial",
-      "source": "https://cvc.cervantes.es/ensenanza/biblioteca_ele/plan_curricular/indice.htm",
-      "note": "The separate PCIC pronunciation and prosody inventory has not yet been enumerated here."
+      "source": "https://cvc.cervantes.es/ensenanza/biblioteca_ele/plan_curricular/niveles/04_ortografia_inventario_a1-a2.htm and https://cvc.cervantes.es/ensenanza/biblioteca_ele/plan_curricular/niveles/03_pronunciacion_inventario_a1-a2.htm",
+      "note": "HALF ENUMERATED, AND THE MISSING HALF IS THE REASON THIS IS STILL PARTIAL. The orthography inventory does split A1 from A2 by column, and all 21 of its A1-bearing subsections are enumerated here. The pronunciation-and-prosody inventory does NOT: it presents its five sections as a single undivided A1-A2 band with no per-item level marking, so the source gives no A1-only boundary for sound contrasts, syllable and stress, rhythm and pause, or intonation. Drawing that line ourselves would be exactly the editorial promotion HL20 forbids. Closing this dimension needs a second source that separates A1 pronunciation from A2, or an explicit project-owned decision to treat the whole A1-A2 pronunciation band as A1."
     },
     "lexicon": {
-      "status": "partial",
-      "source": "https://cvc.cervantes.es/ensenanza/biblioteca_ele/plan_curricular/indice.htm",
-      "note": "The separate PCIC general and specific notions have not yet been enumerated here."
+      "status": "complete",
+      "source": "https://cvc.cervantes.es/ensenanza/biblioteca_ele/plan_curricular/niveles/08_nociones_generales_inventario_a1-a2.htm and https://cvc.cervantes.es/ensenanza/biblioteca_ele/plan_curricular/niveles/09_nociones_especificas_inventario_a1-a2.htm",
+      "note": "The PCIC splits the lexicon into general notions (7 macro-classes) and specific notions (20 thematic areas), and marks every entry A1 or A2 in separate columns. The 36 general-notion and 77 specific-notion subsections carrying A1 content are each restated here as one point. This bounds the DOMAINS and notions an A1 candidate must hold, which is what the source closes; the PCIC publishes no single ranked A1 headword list, so a per-word count is not what is being claimed complete."
     }
   },
   "probeSemantics": "A point counts as COVERED when every atom in `probe` is introduced by some lesson in the track. `probe: null` means no atom in the corpus corresponds to this point, which is itself the finding — an unmapped point is uncovered, never skipped.",
@@ -782,6 +782,1664 @@
       "probe": [
         "ES-LEX-CUANDO"
       ]
+    },
+    {
+      "id": "A1-F1-01",
+      "category": "Dar y pedir informacion",
+      "label": "identify oneself or another by name",
+      "probe": [
+        "ES-GRAMMAR-SER-IDENTITY",
+        "ES-GRAMMAR-SER-PRESENT-SINGULAR"
+      ]
+    },
+    {
+      "id": "A1-F1-02",
+      "category": "Dar y pedir informacion",
+      "label": "ask for information about a person, a thing or a place",
+      "probe": [
+        "ES-LEX-QUIEN",
+        "ES-LEX-QUE",
+        "ES-LEX-DONDE",
+        "ES-LEX-COMO-SE-LLAMA"
+      ]
+    },
+    {
+      "id": "A1-F1-03",
+      "category": "Dar y pedir informacion",
+      "label": "give personal information: name, age, origin",
+      "probe": [
+        "ES-LEX-ME-LLAMO",
+        "ES-LEX-CUANTOS-ANOS",
+        "ES-GRAMMAR-ORIGIN-WITH-SER"
+      ]
+    },
+    {
+      "id": "A1-F1-04",
+      "category": "Dar y pedir informacion",
+      "label": "ask for confirmation with a tag question",
+      "probe": [
+        "ES-GRAMMAR-C267-VERDADNO-01"
+      ]
+    },
+    {
+      "id": "A1-F1-05",
+      "category": "Dar y pedir informacion",
+      "label": "confirm or deny the previous statement",
+      "probe": [
+        "ES-LEX-SI-01",
+        "ES-LEX-NO-01"
+      ]
+    },
+    {
+      "id": "A1-F2-01",
+      "category": "Expresar opiniones, actitudes y conocimientos",
+      "label": "ask for an opinion by handing the turn back",
+      "probe": [
+        "ES-LEX-Y",
+        "ES-PRAGMATICS-AND-YOU"
+      ]
+    },
+    {
+      "id": "A1-F2-02",
+      "category": "Expresar opiniones, actitudes y conocimientos",
+      "label": "give an opinion with creo que",
+      "probe": [
+        "ES-LEX-CREER-01",
+        "ES-LEX-EN-MI-OPINION"
+      ]
+    },
+    {
+      "id": "A1-F2-03",
+      "category": "Expresar opiniones, actitudes y conocimientos",
+      "label": "ask for an evaluation",
+      "probe": [
+        "ES-LEX-BIEN",
+        "ES-GRAMMAR-ESTAR-ESTA-ESTAS"
+      ]
+    },
+    {
+      "id": "A1-F2-04",
+      "category": "Expresar opiniones, actitudes y conocimientos",
+      "label": "evaluate with bien, mal, regular and a degree word",
+      "probe": [
+        "ES-LEX-BIEN",
+        "ES-LEX-MAL",
+        "ES-LEX-REGULAR",
+        "ES-LEX-MUY",
+        "ES-LEX-BASTANTE"
+      ]
+    },
+    {
+      "id": "A1-F2-05",
+      "category": "Expresar opiniones, actitudes y conocimientos",
+      "label": "express approval and disapproval",
+      "probe": [
+        "ES-LEX-BIEN",
+        "ES-LEX-MAL",
+        "ES-LEX-MUY"
+      ]
+    },
+    {
+      "id": "A1-F2-06",
+      "category": "Expresar opiniones, actitudes y conocimientos",
+      "label": "express agreement",
+      "probe": [
+        "ES-LEX-SI-01",
+        "ES-LEX-C284-REPLY-01"
+      ]
+    },
+    {
+      "id": "A1-F2-07",
+      "category": "Expresar opiniones, actitudes y conocimientos",
+      "label": "express disagreement",
+      "probe": [
+        "ES-LEX-NO-01",
+        "ES-GRAMMAR-C267-NOVERBO-01"
+      ]
+    },
+    {
+      "id": "A1-F2-08",
+      "category": "Expresar opiniones, actitudes y conocimientos",
+      "label": "show scepticism with no se",
+      "probe": [
+        "ES-LEX-C303-REPAIR-04"
+      ]
+    },
+    {
+      "id": "A1-F2-09",
+      "category": "Expresar opiniones, actitudes y conocimientos",
+      "label": "offer a counter-argument with pero",
+      "probe": [
+        "ES-LEX-PERO",
+        "ES-LEX-SI-01"
+      ]
+    },
+    {
+      "id": "A1-F2-10",
+      "category": "Expresar opiniones, actitudes y conocimientos",
+      "label": "express certainty by plain assertion",
+      "probe": null,
+      "note": "The source's only A1 exponent is the bare declarative sentence. No corpus atom isolates asserting-with-certainty as an act, so nothing here can be probed without stretching an unrelated atom."
+    },
+    {
+      "id": "A1-F2-11",
+      "category": "Expresar opiniones, actitudes y conocimientos",
+      "label": "express lack of certainty with creo que",
+      "probe": [
+        "ES-LEX-CREER-01"
+      ]
+    },
+    {
+      "id": "A1-F2-12",
+      "category": "Expresar opiniones, actitudes y conocimientos",
+      "label": "express possibility",
+      "probe": [
+        "ES-LEX-QUIZAS",
+        "ES-LEX-C298-ANSWER-02"
+      ]
+    },
+    {
+      "id": "A1-F2-13",
+      "category": "Expresar opiniones, actitudes y conocimientos",
+      "label": "ask whether somebody knows something",
+      "probe": [
+        "ES-LEX-CONOCER-10"
+      ]
+    },
+    {
+      "id": "A1-F2-14",
+      "category": "Expresar opiniones, actitudes y conocimientos",
+      "label": "express knowledge of something",
+      "probe": [
+        "ES-LEX-CONOCER-10"
+      ]
+    },
+    {
+      "id": "A1-F2-15",
+      "category": "Expresar opiniones, actitudes y conocimientos",
+      "label": "express ignorance of something",
+      "probe": [
+        "ES-LEX-C303-REPAIR-04"
+      ]
+    },
+    {
+      "id": "A1-F2-16",
+      "category": "Expresar opiniones, actitudes y conocimientos",
+      "label": "ask about ability to do something",
+      "probe": null,
+      "note": "The source's A1 exponent is saber plus a noun or infinitive. The corpus teaches no se only as a fixed repair phrase and never introduces saber as a verb, so the ability question is unbuilt."
+    },
+    {
+      "id": "A1-F2-17",
+      "category": "Expresar opiniones, actitudes y conocimientos",
+      "label": "express ability to do something",
+      "probe": null,
+      "note": "As above: the source asks for saber plus an infinitive. The corpus teaches poder for capability but never saber as a verb, and substituting it would be a different structure."
+    },
+    {
+      "id": "A1-F3-01",
+      "category": "Expresar gustos, deseos y sentimientos",
+      "label": "express likes and interests with gustar",
+      "probe": [
+        "ES-LEX-GUSTAR-07",
+        "ES-GRAMMAR-GUSTAR-INVERSION-09"
+      ]
+    },
+    {
+      "id": "A1-F3-02",
+      "category": "Expresar gustos, deseos y sentimientos",
+      "label": "ask about a preference by offering alternatives",
+      "probe": [
+        "ES-LEX-O",
+        "ES-LEX-CAFE"
+      ]
+    },
+    {
+      "id": "A1-F3-03",
+      "category": "Expresar gustos, deseos y sentimientos",
+      "label": "express a preference with prefiero",
+      "probe": null,
+      "note": "The source's A1 exponent is preferir. The corpus never introduces the verb, and querer expresses wanting rather than choosing between offered alternatives."
+    },
+    {
+      "id": "A1-F3-04",
+      "category": "Expresar gustos, deseos y sentimientos",
+      "label": "express wishes with querer",
+      "probe": [
+        "ES-LEX-QUERER"
+      ]
+    },
+    {
+      "id": "A1-F3-05",
+      "category": "Expresar gustos, deseos y sentimientos",
+      "label": "ask about plans and intentions",
+      "probe": [
+        "ES-LEX-TRABAJAR",
+        "ES-LEX-MANANA"
+      ]
+    },
+    {
+      "id": "A1-F3-06",
+      "category": "Expresar gustos, deseos y sentimientos",
+      "label": "express plans and intentions",
+      "probe": [
+        "ES-LEX-A",
+        "ES-LEX-MANANA"
+      ]
+    },
+    {
+      "id": "A1-F4-01",
+      "category": "Influir en el interlocutor",
+      "label": "give an order or instruction",
+      "probe": null,
+      "note": "The source's A1 exponents are a direct order and a softened order with an attenuator. The corpus teaches the NEGATIVE command and the register that surrounds commands, but never introduces the affirmative imperative."
+    },
+    {
+      "id": "A1-F4-02",
+      "category": "Influir en el interlocutor",
+      "label": "ask for an object, softened",
+      "probe": [
+        "ES-LEX-POR-FAVOR",
+        "ES-LEX-CAFE"
+      ]
+    },
+    {
+      "id": "A1-F4-03",
+      "category": "Influir en el interlocutor",
+      "label": "ask for help",
+      "probe": [
+        "ES-LEX-POR-FAVOR",
+        "ES-LEX-C303-REPAIR-01"
+      ]
+    },
+    {
+      "id": "A1-F4-04",
+      "category": "Influir en el interlocutor",
+      "label": "respond to an order, request or plea",
+      "probe": [
+        "ES-LEX-SI-01"
+      ]
+    },
+    {
+      "id": "A1-F4-05",
+      "category": "Influir en el interlocutor",
+      "label": "grant permission",
+      "probe": [
+        "ES-LEX-SI-01"
+      ]
+    },
+    {
+      "id": "A1-F4-06",
+      "category": "Influir en el interlocutor",
+      "label": "refuse permission",
+      "probe": [
+        "ES-LEX-NO-01",
+        "ES-LEX-LO-SIENTO-01"
+      ]
+    },
+    {
+      "id": "A1-F4-07",
+      "category": "Influir en el interlocutor",
+      "label": "offer and invite",
+      "probe": [
+        "ES-LEX-QUERER",
+        "ES-LEX-CAFE"
+      ]
+    },
+    {
+      "id": "A1-F4-08",
+      "category": "Influir en el interlocutor",
+      "label": "accept a proposal, offer or invitation",
+      "probe": [
+        "ES-LEX-SI-01",
+        "ES-LEX-GRACIAS"
+      ]
+    },
+    {
+      "id": "A1-F4-09",
+      "category": "Influir en el interlocutor",
+      "label": "decline a proposal, offer or invitation",
+      "probe": [
+        "ES-LEX-NO-01",
+        "ES-LEX-GRACIAS"
+      ]
+    },
+    {
+      "id": "A1-F5-01",
+      "category": "Relacionarse socialmente",
+      "label": "greet",
+      "probe": [
+        "ES-LEX-HOLA",
+        "ES-LEX-BUENOS-DIAS",
+        "ES-LEX-BUENAS-TARDES",
+        "ES-LEX-BUENAS-NOCHES"
+      ]
+    },
+    {
+      "id": "A1-F5-02",
+      "category": "Relacionarse socialmente",
+      "label": "respond to a greeting",
+      "probe": [
+        "ES-LEX-HOLA",
+        "ES-LEX-COMO-ESTAS"
+      ]
+    },
+    {
+      "id": "A1-F5-03",
+      "category": "Relacionarse socialmente",
+      "label": "address somebody by name or title",
+      "probe": [
+        "ES-LEX-HOLA",
+        "ES-LEX-C305-NAME-02",
+        "ES-LEX-C305-NAME-03",
+        "ES-LEX-C305-NAME-04"
+      ]
+    },
+    {
+      "id": "A1-F5-04",
+      "category": "Relacionarse socialmente",
+      "label": "introduce somebody, and introduce oneself",
+      "probe": [
+        "ES-LEX-ME-LLAMO",
+        "ES-LEX-SE-LLAMA"
+      ]
+    },
+    {
+      "id": "A1-F5-05",
+      "category": "Relacionarse socialmente",
+      "label": "respond to an introduction",
+      "probe": [
+        "ES-LEX-C305-NAME-05",
+        "ES-LEX-MUCHO-GUSTO"
+      ]
+    },
+    {
+      "id": "A1-F5-06",
+      "category": "Relacionarse socialmente",
+      "label": "apologise",
+      "probe": [
+        "ES-LEX-C283-COURTESY-01",
+        "ES-LEX-LO-SIENTO-01"
+      ]
+    },
+    {
+      "id": "A1-F5-07",
+      "category": "Relacionarse socialmente",
+      "label": "thank",
+      "probe": [
+        "ES-LEX-GRACIAS",
+        "ES-LEX-C283-COURTESY-04"
+      ]
+    },
+    {
+      "id": "A1-F5-08",
+      "category": "Relacionarse socialmente",
+      "label": "offer condolences",
+      "probe": [
+        "ES-LEX-LO-SIENTO-01"
+      ]
+    },
+    {
+      "id": "A1-F5-09",
+      "category": "Relacionarse socialmente",
+      "label": "propose a toast",
+      "probe": null,
+      "note": "The source's A1 exponent is the toast salud. The corpus teaches la salud as the noun health and saludo as a wish for it, but never the interjection, and the noun does not demonstrate the act."
+    },
+    {
+      "id": "A1-F5-10",
+      "category": "Relacionarse socialmente",
+      "label": "congratulate",
+      "probe": null,
+      "note": "The source's A1 exponent is felicidades. The corpus teaches feliz as an adjective and never the congratulation formula."
+    },
+    {
+      "id": "A1-F5-11",
+      "category": "Relacionarse socialmente",
+      "label": "take leave",
+      "probe": [
+        "ES-LEX-ADIOS",
+        "ES-LEX-HASTA-MANANA",
+        "ES-LEX-HASTA-LUEGO",
+        "ES-LEX-HASTA-PRONTO",
+        "ES-PRAGMATICS-FINAL-FAREWELL"
+      ]
+    },
+    {
+      "id": "A1-F6-01",
+      "category": "Estructurar el discurso",
+      "label": "open a conversation and react",
+      "probe": [
+        "ES-LEX-POR-FAVOR",
+        "ES-LEX-HOLA"
+      ]
+    },
+    {
+      "id": "A1-F6-02",
+      "category": "Estructurar el discurso",
+      "label": "greet and respond within a conversation",
+      "probe": [
+        "ES-LEX-HOLA",
+        "ES-LEX-BUENOS-DIAS"
+      ]
+    },
+    {
+      "id": "A1-F6-03",
+      "category": "Estructurar el discurso",
+      "label": "ask for a person and respond",
+      "probe": [
+        "ES-LEX-C305-NAME-03",
+        "ES-LEX-POR-FAVOR"
+      ]
+    },
+    {
+      "id": "A1-F6-04",
+      "category": "Estructurar el discurso",
+      "label": "show that one is following what is said",
+      "probe": [
+        "ES-LEX-SI-01"
+      ]
+    },
+    {
+      "id": "A1-F6-05",
+      "category": "Estructurar el discurso",
+      "label": "ask somebody to be quiet",
+      "probe": [
+        "ES-LEX-C333-QUIET-27",
+        "ES-LEX-POR-FAVOR"
+      ]
+    },
+    {
+      "id": "A1-F6-06",
+      "category": "Estructurar el discurso",
+      "label": "propose closing the conversation",
+      "probe": null,
+      "note": "The source lists only non-verbal behaviour at A1 -- looking at a watch, gathering one's things. There is no linguistic exponent to probe, so no atom can correspond."
+    },
+    {
+      "id": "A1-NG1-01",
+      "category": "Nociones existenciales",
+      "label": "existence and non-existence with hay and tener",
+      "probe": [
+        "ES-LEX-HAY",
+        "ES-LEX-TENER",
+        "ES-LEX-VIVIR"
+      ]
+    },
+    {
+      "id": "A1-NG1-02",
+      "category": "Nociones existenciales",
+      "label": "presence and absence with hay, estar, con and sin",
+      "probe": [
+        "ES-LEX-HAY",
+        "ES-LEX-ESTAR",
+        "ES-LEX-CON"
+      ]
+    },
+    {
+      "id": "A1-NG1-03",
+      "category": "Nociones existenciales",
+      "label": "general quality with ser",
+      "probe": [
+        "ES-LEX-SER",
+        "ES-GRAMMAR-SER-IDENTITY"
+      ]
+    },
+    {
+      "id": "A1-NG1-04",
+      "category": "Nociones existenciales",
+      "label": "locating an event in time with ser",
+      "probe": [
+        "ES-LEX-SER",
+        "ES-LEX-WEEKDAYS-01"
+      ]
+    },
+    {
+      "id": "A1-NG1-05",
+      "category": "Nociones existenciales",
+      "label": "certainty and uncertainty",
+      "probe": [
+        "ES-LEX-QUIZAS"
+      ]
+    },
+    {
+      "id": "A1-NG2-01",
+      "category": "Nociones cuantitativas",
+      "label": "numerical quantity: cardinals, and ordinals to tenth",
+      "probe": [
+        "ES-LEX-NUMBERS-1-5",
+        "ES-LEX-NUMBERS-6-10",
+        "ES-LEX-NUMBERS-11-15-01",
+        "ES-LEX-NUMBERS-16-19-03",
+        "ES-LEX-VEINTE-06",
+        "ES-LEX-ORDINALS"
+      ]
+    },
+    {
+      "id": "A1-NG2-02",
+      "category": "Nociones cuantitativas",
+      "label": "relative quantity: mas, menos, mucho, bastante, poco",
+      "probe": [
+        "ES-LEX-MAS-O-MENOS",
+        "ES-LEX-MUCHO",
+        "ES-LEX-BASTANTE",
+        "ES-LEX-POCO",
+        "ES-LEX-C308-KIN-15"
+      ]
+    },
+    {
+      "id": "A1-NG2-03",
+      "category": "Nociones cuantitativas",
+      "label": "degree with muy, mucho, bastante and un poco",
+      "probe": [
+        "ES-LEX-MUY",
+        "ES-LEX-MUCHO",
+        "ES-LEX-BASTANTE",
+        "ES-LEX-POCO"
+      ]
+    },
+    {
+      "id": "A1-NG2-04",
+      "category": "Nociones cuantitativas",
+      "label": "measures: size, distance and weight",
+      "probe": [
+        "ES-LEX-GRANDE"
+      ]
+    },
+    {
+      "id": "A1-NG3-01",
+      "category": "Nociones espaciales",
+      "label": "location with estar, aqui and alli",
+      "probe": [
+        "ES-LEX-AQUI",
+        "ES-LEX-ALLI",
+        "ES-LEX-ESTAR",
+        "ES-LEX-C325-PLACE-10"
+      ]
+    },
+    {
+      "id": "A1-NG3-02",
+      "category": "Nociones espaciales",
+      "label": "relative position: cerca, lejos, derecha, izquierda, centro",
+      "probe": [
+        "ES-LEX-C340-WHERE-01",
+        "ES-LEX-C340-WHERE-02",
+        "ES-LEX-C340-WHERE-03",
+        "ES-LEX-C340-WHERE-04",
+        "ES-LEX-C347-WHERE-19"
+      ]
+    },
+    {
+      "id": "A1-NG3-03",
+      "category": "Nociones espaciales",
+      "label": "distance",
+      "probe": [
+        "ES-LEX-AQUI",
+        "ES-LEX-ALLI",
+        "ES-LEX-C340-WHERE-01",
+        "ES-LEX-C340-WHERE-02"
+      ]
+    },
+    {
+      "id": "A1-NG3-04",
+      "category": "Nociones espaciales",
+      "label": "movement and stability",
+      "probe": [
+        "ES-LEX-IR",
+        "ES-LEX-VENIR",
+        "ES-LEX-SALIR"
+      ]
+    },
+    {
+      "id": "A1-NG3-05",
+      "category": "Nociones espaciales",
+      "label": "orientation and direction",
+      "probe": [
+        "ES-LEX-C302-AWAY-01",
+        "ES-LEX-C340-WHERE-03",
+        "ES-LEX-C340-WHERE-04",
+        "ES-LEX-VENIR"
+      ]
+    },
+    {
+      "id": "A1-NG3-06",
+      "category": "Nociones espaciales",
+      "label": "order: ordinals, antes and despues",
+      "probe": [
+        "ES-LEX-ORDINALS",
+        "ES-LEX-C323-WHEN-18",
+        "ES-LEX-C323-WHEN-19"
+      ]
+    },
+    {
+      "id": "A1-NG3-07",
+      "category": "Nociones espaciales",
+      "label": "origin with ser de and a nationality",
+      "probe": [
+        "ES-GRAMMAR-ORIGIN-WITH-SER",
+        "ES-LEX-DE",
+        "ES-LEX-ESPANOL"
+      ]
+    },
+    {
+      "id": "A1-NG4-01",
+      "category": "Nociones temporales",
+      "label": "general time reference: the clock and parts of the day",
+      "probe": [
+        "ES-LEX-HORA-01",
+        "ES-GRAMMAR-TELLING-TIME-03",
+        "ES-LEX-C303-REPAIR-02"
+      ]
+    },
+    {
+      "id": "A1-NG4-02",
+      "category": "Nociones temporales",
+      "label": "locating in time: today, yesterday, tomorrow, weekdays, months, seasons",
+      "probe": [
+        "ES-LEX-HOY",
+        "ES-LEX-AHORA",
+        "ES-LEX-AYER",
+        "ES-LEX-MANANA",
+        "ES-LEX-WEEKDAYS-01",
+        "ES-LEX-MONTHS-01",
+        "ES-LEX-SEASONS-01"
+      ]
+    },
+    {
+      "id": "A1-NG4-03",
+      "category": "Nociones temporales",
+      "label": "aspects of development: anteriority and posteriority",
+      "probe": [
+        "ES-LEX-C323-WHEN-18",
+        "ES-LEX-C323-WHEN-19"
+      ]
+    },
+    {
+      "id": "A1-NG5-01",
+      "category": "Nociones cualitativas",
+      "label": "visibility and sight",
+      "probe": [
+        "ES-LEX-VER"
+      ]
+    },
+    {
+      "id": "A1-NG5-02",
+      "category": "Nociones cualitativas",
+      "label": "audibility and hearing",
+      "probe": [
+        "ES-LEX-OIR-01"
+      ]
+    },
+    {
+      "id": "A1-NG5-03",
+      "category": "Nociones cualitativas",
+      "label": "colour",
+      "probe": [
+        "ES-LEX-ROJO-01",
+        "ES-LEX-AMARILLO-03",
+        "ES-LEX-AZUL-03",
+        "ES-LEX-VERDE-01",
+        "ES-LEX-BLANCO-03",
+        "ES-LEX-NEGRO-01"
+      ]
+    },
+    {
+      "id": "A1-NG5-04",
+      "category": "Nociones cualitativas",
+      "label": "age and old age",
+      "probe": [
+        "ES-LEX-C308-KIN-11",
+        "ES-LEX-C308-KIN-13",
+        "ES-LEX-NUEVO",
+        "ES-LEX-VIEJO",
+        "ES-LEX-CUANTOS-ANOS"
+      ]
+    },
+    {
+      "id": "A1-NG5-05",
+      "category": "Nociones cualitativas",
+      "label": "accessibility: open and closed, way in and way out",
+      "probe": [
+        "ES-LEX-ABRIR-01",
+        "ES-LEX-CERRAR-04",
+        "ES-LEX-C288-LEAVE-01",
+        "ES-LEX-C313-ASK-19"
+      ]
+    },
+    {
+      "id": "A1-NG6-01",
+      "category": "Nociones evaluativas",
+      "label": "general evaluation: bueno, malo, bien, mal, regular",
+      "probe": [
+        "ES-LEX-BIEN",
+        "ES-LEX-MAL",
+        "ES-LEX-MALO",
+        "ES-LEX-REGULAR"
+      ]
+    },
+    {
+      "id": "A1-NG6-02",
+      "category": "Nociones evaluativas",
+      "label": "value and price",
+      "probe": [
+        "ES-LEX-C311-ASK-08",
+        "ES-LEX-C311-ASK-07"
+      ]
+    },
+    {
+      "id": "A1-NG6-03",
+      "category": "Nociones evaluativas",
+      "label": "attractiveness: guapo, feo, bonito",
+      "probe": null,
+      "note": "The source's A1 exponents are guapo, feo and bonito. The corpus introduces none of them; the physical-description vocabulary it does teach is about build rather than attractiveness."
+    },
+    {
+      "id": "A1-NG6-04",
+      "category": "Nociones evaluativas",
+      "label": "quality with ser bueno and ser malo",
+      "probe": [
+        "ES-MORPH-BUENO-BUENA",
+        "ES-LEX-MALO"
+      ]
+    },
+    {
+      "id": "A1-NG6-05",
+      "category": "Nociones evaluativas",
+      "label": "acceptability",
+      "probe": [
+        "ES-LEX-BIEN"
+      ]
+    },
+    {
+      "id": "A1-NG6-06",
+      "category": "Nociones evaluativas",
+      "label": "conformity: de acuerdo, si, no, bien",
+      "probe": [
+        "ES-LEX-BIEN",
+        "ES-LEX-SI-01",
+        "ES-LEX-NO-01",
+        "ES-LEX-C284-REPLY-01"
+      ]
+    },
+    {
+      "id": "A1-NG6-07",
+      "category": "Nociones evaluativas",
+      "label": "correctness with bien and mal",
+      "probe": [
+        "ES-LEX-BIEN",
+        "ES-LEX-MAL"
+      ]
+    },
+    {
+      "id": "A1-NG6-08",
+      "category": "Nociones evaluativas",
+      "label": "interest",
+      "probe": null,
+      "note": "The source's single A1 exponent is interesante, which the corpus never introduces as an atom."
+    },
+    {
+      "id": "A1-NG6-09",
+      "category": "Nociones evaluativas",
+      "label": "capacity and competence with saber",
+      "probe": null,
+      "note": "The source's A1 exponent is saber plus a noun or an infinitive. The corpus never introduces saber as a verb, only the fixed phrase no se."
+    },
+    {
+      "id": "A1-NG6-10",
+      "category": "Nociones evaluativas",
+      "label": "ease and difficulty",
+      "probe": null,
+      "note": "The source's A1 exponents are facil and dificil. Neither is introduced anywhere in the corpus."
+    },
+    {
+      "id": "A1-NG7-01",
+      "category": "Nociones mentales",
+      "label": "reflection and knowledge",
+      "probe": [
+        "ES-LEX-CREER-01",
+        "ES-LEX-PENSAR-01"
+      ]
+    },
+    {
+      "id": "A1-NG7-02",
+      "category": "Nociones mentales",
+      "label": "verbal expression: hablar and escribir",
+      "probe": [
+        "ES-LEX-HABLAR",
+        "ES-LEX-ESCRIBIR-07"
+      ]
+    },
+    {
+      "id": "A1-NE01-01",
+      "category": "Individuo: dimension fisica",
+      "label": "parts of the body",
+      "probe": [
+        "ES-LEX-C286-BODY-01",
+        "ES-LEX-CABEZA-01",
+        "ES-LEX-MANO-01",
+        "ES-LEX-C314-BODY-01",
+        "ES-LEX-C314-BODY-03"
+      ]
+    },
+    {
+      "id": "A1-NE01-02",
+      "category": "Individuo: dimension fisica",
+      "label": "physical characteristics",
+      "probe": [
+        "ES-LEX-DELGADO-FLACO"
+      ]
+    },
+    {
+      "id": "A1-NE01-03",
+      "category": "Individuo: dimension fisica",
+      "label": "actions and positions of the body",
+      "probe": [
+        "ES-LEX-LEVANTARSE-09",
+        "ES-LEX-SENTARSE-07"
+      ]
+    },
+    {
+      "id": "A1-NE02-01",
+      "category": "Individuo: dimension perceptiva y animica",
+      "label": "character and personality adjectives",
+      "probe": null,
+      "note": "The source lists simpatico, antipatico, inteligente, trabajador, alegre, serio, timido and sociable. The corpus introduces none of them; the state adjectives it teaches are moods, not settled character."
+    },
+    {
+      "id": "A1-NE03-01",
+      "category": "Identidad personal",
+      "label": "personal data: name, surname, address, telephone, age",
+      "probe": [
+        "ES-LEX-C305-NAME-01",
+        "ES-LEX-C305-NAME-02",
+        "ES-LEX-ME-LLAMO",
+        "ES-LEX-C302-AWAY-01",
+        "ES-LEX-C312-ASK-12",
+        "ES-LEX-C334-BODY-35"
+      ]
+    },
+    {
+      "id": "A1-NE03-02",
+      "category": "Identidad personal",
+      "label": "documents: passport and identity card",
+      "probe": [
+        "ES-LEX-C313-ASK-18"
+      ]
+    },
+    {
+      "id": "A1-NE03-03",
+      "category": "Identidad personal",
+      "label": "personal objects",
+      "probe": [
+        "ES-LEX-C310-ASK-01",
+        "ES-LEX-C311-ASK-09",
+        "ES-LEX-C312-ASK-13",
+        "ES-LEX-C312-ASK-11"
+      ]
+    },
+    {
+      "id": "A1-NE04-01",
+      "category": "Relaciones personales",
+      "label": "family relationships",
+      "probe": [
+        "ES-LEX-PARENTS-01",
+        "ES-LEX-SIBLINGS-01",
+        "ES-LEX-C306-KIN-01",
+        "ES-LEX-C306-KIN-03",
+        "ES-LEX-C307-KIN-07",
+        "ES-LEX-C309-KIN-16"
+      ]
+    },
+    {
+      "id": "A1-NE04-02",
+      "category": "Relaciones personales",
+      "label": "social relationships: friend, boss, colleague",
+      "probe": [
+        "ES-LEX-C285-ROLE-02"
+      ]
+    },
+    {
+      "id": "A1-NE04-03",
+      "category": "Relaciones personales",
+      "label": "celebrations and family, social and religious occasions",
+      "probe": [
+        "ES-LEX-C349-CLOCK-18"
+      ]
+    },
+    {
+      "id": "A1-NE05-01",
+      "category": "Alimentacion",
+      "label": "diet and nutrition: the meals of the day",
+      "probe": [
+        "ES-LEX-COMIDA",
+        "ES-LEX-COMER"
+      ]
+    },
+    {
+      "id": "A1-NE05-02",
+      "category": "Alimentacion",
+      "label": "drink",
+      "probe": [
+        "ES-LEX-AGUA-01",
+        "ES-LEX-CAFE",
+        "ES-LEX-VINO-04",
+        "ES-LEX-BEBER"
+      ]
+    },
+    {
+      "id": "A1-NE05-03",
+      "category": "Alimentacion",
+      "label": "foodstuffs",
+      "probe": [
+        "ES-LEX-HUEVO",
+        "ES-LEX-PAN-01",
+        "ES-LEX-QUESO",
+        "ES-LEX-MANZANA"
+      ]
+    },
+    {
+      "id": "A1-NE05-04",
+      "category": "Alimentacion",
+      "label": "dishes and courses",
+      "probe": [
+        "ES-LEX-C297-COOK-05"
+      ]
+    },
+    {
+      "id": "A1-NE05-05",
+      "category": "Alimentacion",
+      "label": "the restaurant",
+      "probe": [
+        "ES-LEX-C310-ASK-03",
+        "ES-LEX-C311-ASK-07"
+      ]
+    },
+    {
+      "id": "A1-NE06-01",
+      "category": "Educacion",
+      "label": "educational institutions",
+      "probe": null,
+      "note": "The source's A1 exponents are instituto, universidad, clase and biblioteca. The corpus teaches escuela, which is a different institution, and none of the four listed words."
+    },
+    {
+      "id": "A1-NE06-02",
+      "category": "Educacion",
+      "label": "teaching staff and students",
+      "probe": [
+        "ES-LEX-PROFESOR",
+        "ES-LEX-ESTUDIANTE"
+      ]
+    },
+    {
+      "id": "A1-NE06-03",
+      "category": "Educacion",
+      "label": "the education system: timetable and examination",
+      "probe": [
+        "ES-LEX-C342-CLOCK-04"
+      ]
+    },
+    {
+      "id": "A1-NE06-04",
+      "category": "Educacion",
+      "label": "learning and teaching",
+      "probe": [
+        "ES-LEX-ESTUDIAR"
+      ]
+    },
+    {
+      "id": "A1-NE06-05",
+      "category": "Educacion",
+      "label": "examinations and marks",
+      "probe": null,
+      "note": "The source's A1 exponent is hacer or tener un examen. The corpus never introduces examen."
+    },
+    {
+      "id": "A1-NE06-06",
+      "category": "Educacion",
+      "label": "classroom language",
+      "probe": [
+        "ES-LEX-HABLAR",
+        "ES-LEX-LEER-05",
+        "ES-LEX-ESCRIBIR-07",
+        "ES-LEX-ENTENDER-03",
+        "ES-LEX-NO-ENTIENDO-01",
+        "ES-LEX-COMO-SE-DICE"
+      ]
+    },
+    {
+      "id": "A1-NE06-07",
+      "category": "Educacion",
+      "label": "teaching materials and classroom furniture",
+      "probe": [
+        "ES-LEX-LIBRO",
+        "ES-LEX-C301-ASK-05",
+        "ES-LEX-C310-ASK-03",
+        "ES-LEX-SILLA",
+        "ES-LEX-C312-ASK-14"
+      ]
+    },
+    {
+      "id": "A1-NE07-01",
+      "category": "Trabajo",
+      "label": "professions and posts",
+      "probe": [
+        "ES-LEX-PROFESOR",
+        "ES-LEX-TRABAJAR"
+      ]
+    },
+    {
+      "id": "A1-NE07-02",
+      "category": "Trabajo",
+      "label": "workplaces, tools and work clothing",
+      "probe": [
+        "ES-LEX-C346-WHERE-14",
+        "ES-LEX-C311-ASK-06",
+        "ES-LEX-C312-ASK-12"
+      ]
+    },
+    {
+      "id": "A1-NE07-03",
+      "category": "Trabajo",
+      "label": "working activity",
+      "probe": [
+        "ES-LEX-TRABAJAR",
+        "ES-LEX-COMPRAR-07"
+      ]
+    },
+    {
+      "id": "A1-NE07-04",
+      "category": "Trabajo",
+      "label": "unemployment and job-seeking",
+      "probe": null,
+      "note": "The source's A1 exponents are estar en paro and tener trabajo. The corpus introduces neither paro nor trabajo as a noun."
+    },
+    {
+      "id": "A1-NE07-05",
+      "category": "Trabajo",
+      "label": "rights and obligations at work",
+      "probe": [
+        "ES-LEX-TRABAJAR"
+      ]
+    },
+    {
+      "id": "A1-NE07-06",
+      "category": "Trabajo",
+      "label": "characteristics of a worker",
+      "probe": null,
+      "note": "The source's A1 exponent is ser trabajador, the adjective. The corpus teaches only the verb trabajar, and the adjective is never derived."
+    },
+    {
+      "id": "A1-NE08-01",
+      "category": "Ocio",
+      "label": "free time and entertainment",
+      "probe": [
+        "ES-LEX-LEER-05",
+        "ES-LEX-VER"
+      ]
+    },
+    {
+      "id": "A1-NE08-02",
+      "category": "Ocio",
+      "label": "shows and exhibitions",
+      "probe": null,
+      "note": "The source's A1 exponents are pelicula, concierto and going to the theatre, cinema or circus. None is introduced in the corpus."
+    },
+    {
+      "id": "A1-NE08-03",
+      "category": "Ocio",
+      "label": "sport",
+      "probe": [
+        "ES-LEX-CORRER-10",
+        "ES-LEX-JUGAR-07"
+      ]
+    },
+    {
+      "id": "A1-NE08-04",
+      "category": "Ocio",
+      "label": "games",
+      "probe": [
+        "ES-LEX-JUGAR-07"
+      ]
+    },
+    {
+      "id": "A1-NE09-01",
+      "category": "Informacion y medios de comunicacion",
+      "label": "information and communication media",
+      "probe": [
+        "ES-LEX-C312-ASK-12"
+      ]
+    },
+    {
+      "id": "A1-NE09-02",
+      "category": "Informacion y medios de comunicacion",
+      "label": "written correspondence",
+      "probe": [
+        "ES-LEX-C301-ASK-05",
+        "ES-LEX-C312-ASK-15",
+        "ES-LEX-ESCRIBIR-07"
+      ]
+    },
+    {
+      "id": "A1-NE09-03",
+      "category": "Informacion y medios de comunicacion",
+      "label": "the telephone",
+      "probe": [
+        "ES-LEX-C312-ASK-12"
+      ]
+    },
+    {
+      "id": "A1-NE09-04",
+      "category": "Informacion y medios de comunicacion",
+      "label": "the printed press",
+      "probe": [
+        "ES-LEX-LEER-05"
+      ]
+    },
+    {
+      "id": "A1-NE09-05",
+      "category": "Informacion y medios de comunicacion",
+      "label": "television and radio",
+      "probe": [
+        "ES-LEX-VER"
+      ]
+    },
+    {
+      "id": "A1-NE09-06",
+      "category": "Informacion y medios de comunicacion",
+      "label": "the internet, and dictating an e-mail address",
+      "probe": null,
+      "note": "The source's A1 exponents are Internet, arroba, guion, guion bajo, punto, pagina web and correo electronico. The corpus introduces none of them, so the very common task of spelling out an address aloud is unbuilt."
+    },
+    {
+      "id": "A1-NE10-01",
+      "category": "Vivienda",
+      "label": "actions to do with housing: buying, selling, renting",
+      "probe": [
+        "ES-LEX-COMPRAR-07"
+      ]
+    },
+    {
+      "id": "A1-NE10-02",
+      "category": "Vivienda",
+      "label": "types and parts of a dwelling",
+      "probe": [
+        "ES-LEX-CASA",
+        "ES-LEX-HABITACION",
+        "ES-LEX-VENTANA",
+        "ES-LEX-PUERTA"
+      ]
+    },
+    {
+      "id": "A1-NE10-03",
+      "category": "Vivienda",
+      "label": "domestic activities",
+      "probe": [
+        "ES-LEX-LIMPIO"
+      ]
+    },
+    {
+      "id": "A1-NE10-04",
+      "category": "Vivienda",
+      "label": "household objects and furniture",
+      "probe": [
+        "ES-LEX-C310-ASK-03",
+        "ES-LEX-SILLA",
+        "ES-LEX-CAMA",
+        "ES-LEX-C310-ASK-02"
+      ]
+    },
+    {
+      "id": "A1-NE11-01",
+      "category": "Servicios",
+      "label": "the postal service",
+      "probe": [
+        "ES-LEX-C312-ASK-15"
+      ]
+    },
+    {
+      "id": "A1-NE11-02",
+      "category": "Servicios",
+      "label": "financial services",
+      "probe": [
+        "ES-LEX-DINERO",
+        "ES-LEX-C313-ASK-20",
+        "ES-LEX-C313-ASK-17"
+      ]
+    },
+    {
+      "id": "A1-NE11-03",
+      "category": "Servicios",
+      "label": "health services",
+      "probe": [
+        "ES-LEX-C285-ROLE-04"
+      ]
+    },
+    {
+      "id": "A1-NE11-04",
+      "category": "Servicios",
+      "label": "protection and security services",
+      "probe": null,
+      "note": "The source's A1 exponents are policia and bombero. Neither is introduced in the corpus."
+    },
+    {
+      "id": "A1-NE12-01",
+      "category": "Compras, tiendas y establecimientos",
+      "label": "places, people and activities of shopping",
+      "probe": [
+        "ES-LEX-C346-WHERE-13",
+        "ES-LEX-C311-ASK-06",
+        "ES-LEX-COMPRAR-07"
+      ]
+    },
+    {
+      "id": "A1-NE12-02",
+      "category": "Compras, tiendas y establecimientos",
+      "label": "clothing, footwear and accessories",
+      "probe": null,
+      "note": "The source's A1 exponents are pantalones, vaqueros, falda, camisa, jersey, zapatos and bolso. The corpus introduces none of them -- clothing is an entire A1 domain with no lesson anywhere."
+    },
+    {
+      "id": "A1-NE12-03",
+      "category": "Compras, tiendas y establecimientos",
+      "label": "payment",
+      "probe": [
+        "ES-LEX-C311-ASK-08",
+        "ES-LEX-DINERO",
+        "ES-LEX-BILLETE"
+      ]
+    },
+    {
+      "id": "A1-NE13-01",
+      "category": "Salud e higiene",
+      "label": "health and illness",
+      "probe": [
+        "ES-LEX-C304-WELL-02",
+        "ES-LEX-MALO"
+      ]
+    },
+    {
+      "id": "A1-NE13-02",
+      "category": "Salud e higiene",
+      "label": "centres of health care",
+      "probe": [
+        "ES-LEX-C285-ROLE-04"
+      ]
+    },
+    {
+      "id": "A1-NE13-03",
+      "category": "Salud e higiene",
+      "label": "medicine and medicines",
+      "probe": null,
+      "note": "The source's single A1 exponent is farmacia, which the corpus never introduces."
+    },
+    {
+      "id": "A1-NE13-04",
+      "category": "Salud e higiene",
+      "label": "hygiene",
+      "probe": [
+        "ES-LEX-AGUA-01",
+        "ES-LEX-C287-ASK-01",
+        "ES-LEX-C310-ASK-02"
+      ]
+    },
+    {
+      "id": "A1-NE14-01",
+      "category": "Viajes, alojamiento y transporte",
+      "label": "travel objects and documents",
+      "probe": [
+        "ES-LEX-C313-ASK-18",
+        "ES-LEX-C312-ASK-13",
+        "ES-LEX-C312-ASK-14",
+        "ES-LEX-BILLETE"
+      ]
+    },
+    {
+      "id": "A1-NE14-02",
+      "category": "Viajes, alojamiento y transporte",
+      "label": "accommodation",
+      "probe": [
+        "ES-LEX-HABITACION",
+        "ES-SEMANTIC-LODGING"
+      ]
+    },
+    {
+      "id": "A1-NE14-03",
+      "category": "Viajes, alojamiento y transporte",
+      "label": "the transport system",
+      "probe": [
+        "ES-LEX-C302-AWAY-01",
+        "ES-LEX-C302-AWAY-04",
+        "ES-LEX-C346-WHERE-15"
+      ]
+    },
+    {
+      "id": "A1-NE15-01",
+      "category": "Economia e industria",
+      "label": "finance and money",
+      "probe": [
+        "ES-LEX-DINERO"
+      ]
+    },
+    {
+      "id": "A1-NE15-02",
+      "category": "Economia e industria",
+      "label": "commerce: buyer and seller",
+      "probe": null,
+      "note": "The source's A1 exponents are the nouns vendedor and comprador. The corpus teaches the verb comprar but never derives either agent noun."
+    },
+    {
+      "id": "A1-NE15-03",
+      "category": "Economia e industria",
+      "label": "businesses and organisations",
+      "probe": null,
+      "note": "The source's A1 exponent is empresa, which the corpus never introduces."
+    },
+    {
+      "id": "A1-NE15-04",
+      "category": "Economia e industria",
+      "label": "industry and energy",
+      "probe": null,
+      "note": "The source's only A1 exponent is pescado, under fishing. The corpus never introduces it."
+    },
+    {
+      "id": "A1-NE16-01",
+      "category": "Ciencia y tecnologia",
+      "label": "mathematics: the notion of number",
+      "probe": [
+        "ES-LEX-C344-COUNT-02"
+      ]
+    },
+    {
+      "id": "A1-NE16-02",
+      "category": "Ciencia y tecnologia",
+      "label": "computing and new technology",
+      "probe": null,
+      "note": "The source's A1 exponents are ordenador, Internet, correo electronico and pagina web. The corpus introduces none of them."
+    },
+    {
+      "id": "A1-NE17-01",
+      "category": "Gobierno, politica y sociedad",
+      "label": "political institutions and government",
+      "probe": [
+        "ES-LEX-C325-PLACE-06"
+      ]
+    },
+    {
+      "id": "A1-NE17-02",
+      "category": "Gobierno, politica y sociedad",
+      "label": "law and justice",
+      "probe": null,
+      "note": "The source's single A1 exponent is abogado, which the corpus never introduces."
+    },
+    {
+      "id": "A1-NE18-01",
+      "category": "Actividades artisticas",
+      "label": "artistic disciplines",
+      "probe": null,
+      "note": "The source's A1 exponents are cine, teatro, musica, pelicula, concierto, foto, museo and exposicion. The corpus introduces none of them."
+    },
+    {
+      "id": "A1-NE18-02",
+      "category": "Actividades artisticas",
+      "label": "music and dance",
+      "probe": null,
+      "note": "The source's A1 exponents are musica, cantante, cantar and bailar. None is introduced in the corpus."
+    },
+    {
+      "id": "A1-NE18-03",
+      "category": "Actividades artisticas",
+      "label": "architecture, sculpture and painting",
+      "probe": [
+        "ES-LEX-C346-WHERE-12"
+      ]
+    },
+    {
+      "id": "A1-NE18-04",
+      "category": "Actividades artisticas",
+      "label": "literature",
+      "probe": [
+        "ES-LEX-LIBRO",
+        "ES-LEX-ESCRIBIR-07",
+        "ES-LEX-LEER-05"
+      ]
+    },
+    {
+      "id": "A1-NE18-05",
+      "category": "Actividades artisticas",
+      "label": "photography",
+      "probe": null,
+      "note": "The source's single A1 exponent is foto, which the corpus never introduces."
+    },
+    {
+      "id": "A1-NE18-06",
+      "category": "Actividades artisticas",
+      "label": "cinema and theatre",
+      "probe": null,
+      "note": "The source's A1 exponents are cine, teatro, pelicula, actor and actriz. None is introduced in the corpus."
+    },
+    {
+      "id": "A1-NE19-01",
+      "category": "Religion y filosofia",
+      "label": "religion",
+      "probe": [
+        "ES-LEX-C346-WHERE-12"
+      ]
+    },
+    {
+      "id": "A1-NE20-01",
+      "category": "Geografia y naturaleza",
+      "label": "the universe and space",
+      "probe": [
+        "ES-LEX-WEATHER-03"
+      ]
+    },
+    {
+      "id": "A1-NE20-02",
+      "category": "Geografia y naturaleza",
+      "label": "geography: country, town, city, capital",
+      "probe": [
+        "ES-LEX-C312-ASK-14",
+        "ES-LEX-C325-PLACE-10",
+        "ES-LEX-C325-PLACE-06",
+        "ES-LEX-C292-LAND-01",
+        "ES-LEX-C325-PLACE-07"
+      ]
+    },
+    {
+      "id": "A1-NE20-03",
+      "category": "Geografia y naturaleza",
+      "label": "urban and rural spaces",
+      "probe": [
+        "ES-LEX-C347-WHERE-19",
+        "ES-LEX-CASA",
+        "ES-LEX-C302-AWAY-01",
+        "ES-LEX-C325-PLACE-09"
+      ]
+    },
+    {
+      "id": "A1-NE20-04",
+      "category": "Geografia y naturaleza",
+      "label": "climate and weather",
+      "probe": [
+        "ES-LEX-SEASONS-01",
+        "ES-LEX-WEATHER-03",
+        "ES-LEX-VIENTO",
+        "ES-LEX-NIEVE",
+        "ES-LEX-TIEMPO-01"
+      ]
+    },
+    {
+      "id": "A1-NE20-05",
+      "category": "Geografia y naturaleza",
+      "label": "fauna",
+      "probe": null,
+      "note": "The source's single A1 exponent is the generic noun animal. The corpus teaches individual creatures but never the superordinate word the source asks for."
+    },
+    {
+      "id": "A1-NE20-06",
+      "category": "Geografia y naturaleza",
+      "label": "flora",
+      "probe": [
+        "ES-LEX-FLOR",
+        "ES-LEX-ARBOL"
+      ]
+    },
+    {
+      "id": "A1-O1-01",
+      "category": "Ortografia de letras y palabras",
+      "label": "the alphabet and the names of the letters",
+      "probe": null,
+      "note": "The source enumerates the names of every letter, including the letters with more than one name. The corpus never teaches the alphabet as a recited or named sequence, which is what spelling a name aloud requires."
+    },
+    {
+      "id": "A1-O1-02",
+      "category": "Ortografia de letras y palabras",
+      "label": "the vowel letters and their graphic representation",
+      "probe": null,
+      "note": "The source treats the five vowel letters as graphemes that may carry a tilde. The corpus teaches the written accent as a stress rule but never the vowel inventory as an orthographic set."
+    },
+    {
+      "id": "A1-O1-03",
+      "category": "Ortografia de letras y palabras",
+      "label": "the consonant letters and digraphs",
+      "probe": null,
+      "note": "The source enumerates b/v/w, c/k/q/z and ch, g/j, h, y and ll, m/n/enye, p, r and rr, s/x, and t/d. The corpus teaches only the silent h and enye, so probing those two would report the whole consonant system as held."
+    },
+    {
+      "id": "A1-O1-04",
+      "category": "Ortografia de letras y palabras",
+      "label": "capital letters",
+      "probe": null,
+      "note": "The source enumerates general uses, whole-word capitals and initial capitals. The corpus never states a capitalisation rule."
+    },
+    {
+      "id": "A1-O1-05",
+      "category": "Ortografia de letras y palabras",
+      "label": "initial lower-case letters",
+      "probe": null,
+      "note": "The source covers surnames beginning with an article or a preposition. The corpus never states the rule."
+    },
+    {
+      "id": "A1-O1-06",
+      "category": "Ortografia de letras y palabras",
+      "label": "superscript letters in frequent abbreviations",
+      "probe": null,
+      "note": "The source lists forms such as the abbreviated title and the ordinal indicator. The corpus never introduces them."
+    },
+    {
+      "id": "A1-O1-07",
+      "category": "Ortografia de letras y palabras",
+      "label": "spelling of words: syllable division and double spellings",
+      "probe": null,
+      "note": "The source covers inseparable consonant groups, words with two accepted spellings, and how figures and numbers are written. The corpus never addresses any of the three."
+    },
+    {
+      "id": "A1-O2-01",
+      "category": "Acentuacion grafica",
+      "label": "the general rules of written accentuation",
+      "probe": [
+        "ES-GRAMMAR-QUESTION-ACCENT",
+        "ES-ORTHOGRAPHY-ONE-SYLLABLE-NO-ACCENT",
+        "ES-SOUND-WRITTEN-ACCENT"
+      ]
+    },
+    {
+      "id": "A1-O2-02",
+      "category": "Acentuacion grafica",
+      "label": "the diacritic tilde",
+      "probe": [
+        "ES-GRAMMAR-DIACRITIC-ACCENT",
+        "ES-ORTHOGRAPHY-MI-ACCENT",
+        "ES-LEX-EL-PRONOUN"
+      ]
+    },
+    {
+      "id": "A1-O3-01",
+      "category": "Puntuacion",
+      "label": "the full stop",
+      "probe": null,
+      "note": "The source distinguishes the three kinds of full stop and their role in laying out a text. The corpus never states them."
+    },
+    {
+      "id": "A1-O3-02",
+      "category": "Puntuacion",
+      "label": "the comma",
+      "probe": null,
+      "note": "The source covers enumerations with y and o, and with e and u. The corpus teaches the connectors themselves but never the punctuation rule that governs a list."
+    },
+    {
+      "id": "A1-O3-03",
+      "category": "Puntuacion",
+      "label": "the colon",
+      "probe": null,
+      "note": "The source covers announced enumerations and layout in examples. The corpus never states them."
+    },
+    {
+      "id": "A1-O3-04",
+      "category": "Puntuacion",
+      "label": "question and exclamation marks, opened and closed",
+      "probe": [
+        "ES-SCRIPT-INVERTED-QUESTION",
+        "ES-SCRIPT-INVERTED-EXCLAMATION",
+        "ES-ORTHOGRAPHY-OPENING-PUNCTUATION",
+        "ES-ORTHOGRAPHY-PUNCTUATION-SPAN"
+      ]
+    },
+    {
+      "id": "A1-O3-05",
+      "category": "Puntuacion",
+      "label": "parentheses",
+      "probe": null,
+      "note": "The source covers parenthetical additions. The corpus never introduces the mark."
+    },
+    {
+      "id": "A1-O3-06",
+      "category": "Puntuacion",
+      "label": "quotation marks",
+      "probe": null,
+      "note": "The source covers marking a foreign word inside a sentence. The corpus never introduces the Spanish angle quotation marks."
+    },
+    {
+      "id": "A1-O3-07",
+      "category": "Puntuacion",
+      "label": "the hyphen",
+      "probe": null,
+      "note": "The source covers compound forenames and surnames. The corpus never introduces the mark."
+    },
+    {
+      "id": "A1-O3-08",
+      "category": "Puntuacion",
+      "label": "the dash in dialogue",
+      "probe": null,
+      "note": "The source covers turns in written dialogue marked with a dash and no speaker named. The corpus never introduces the convention, which is how printed Spanish dialogue is set."
+    },
+    {
+      "id": "A1-O3-09",
+      "category": "Puntuacion",
+      "label": "the slash",
+      "probe": null,
+      "note": "The source covers abbreviations and the marking of alternatives. The corpus never introduces the mark."
+    },
+    {
+      "id": "A1-O4-01",
+      "category": "Abreviaturas y siglas",
+      "label": "abbreviations",
+      "probe": null,
+      "note": "The source lists the frequent forms of address in abbreviated form and the use of the point and the slash in them. The corpus teaches senor and senora in full but never their abbreviations."
+    },
+    {
+      "id": "A1-O4-02",
+      "category": "Abreviaturas y siglas",
+      "label": "initialisms and acronyms",
+      "probe": null,
+      "note": "The source covers capitalisation in initialisms. The corpus never introduces any."
+    },
+    {
+      "id": "A1-O4-03",
+      "category": "Abreviaturas y siglas",
+      "label": "symbols",
+      "probe": null,
+      "note": "The source covers currency symbols, the points of the compass and non-alphabetisable symbols. The corpus teaches the compass words but never their symbols."
     }
   ]
 }
