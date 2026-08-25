@@ -213,6 +213,8 @@ const ARABIC_ZAH = DUCTUS[ductusKey("arabic", "ظ")];
 const ARABIC_AYN = DUCTUS[ductusKey("arabic", "ع")];
 const ARABIC_GHAYN = DUCTUS[ductusKey("arabic", "غ")];
 const ARABIC_FAA = DUCTUS[ductusKey("arabic", "ف")];
+const PERSIAN_FEH = DUCTUS[ductusKey("perso-arabic", "ف")];
+const URDU_FE = DUCTUS[ductusKey("urdu-nastaliq", "ف")];
 const ARABIC_QAF = DUCTUS[ductusKey("arabic", "ق")];
 const ARABIC_KAF = DUCTUS[ductusKey("arabic", "ك")];
 const ARABIC_LAM = DUCTUS[ductusKey("arabic", "ل")];
@@ -3769,6 +3771,31 @@ describe("handwriting ductus", () => {
     expect(Math.min(...dot.map((point) => point.y))).toBeGreaterThan(
       Math.max(...head.map((point) => point.y)),
     );
+  });
+
+  it("Persian and Urdu ف keep the joined head-and-bowl run with script-owned sources", () => {
+    for (const ductus of [PERSIAN_FEH, URDU_FE]) {
+      expect(penLifts(ductus)).toBe(1);
+      expect(ductus.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1]);
+      expect(ductus.strokes[0].segments[0].path[0]).toEqual(
+        ductus.strokes[0].segments[0].path.at(-1),
+      );
+      expect(ductus.strokes[0].segments[0].path.at(-1)).toEqual(
+        ductus.strokes[0].segments[1].path[0],
+      );
+    }
+    expect(PERSIAN_FEH.source.citation).toMatch(/Persian Online.*ف.*02:09–02:13/i);
+    expect(PERSIAN_FEH.source.variation).toMatch(
+      /body-first.*clockwise.*closed head.*broad bowl.*lift once.*dot.*Persian-scoped/i,
+    );
+    expect(URDU_FE.source.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/fe-qaf-te-dal-re/",
+    );
+    expect(URDU_FE.source.citation).toMatch(/Zer o Zabar.*independent ف.*Fe instructions.*Northwestern/i);
+    expect(URDU_FE.source.variation).toMatch(
+      /clockwise.*above the main line.*shallow curved tail.*lift.*dot.*looped head.*Noto Naskh.*Nastaliq.*Urdu-specific/i,
+    );
+    expect(new Set([ARABIC_FAA.source.url, PERSIAN_FEH.source.url, URDU_FE.source.url]).size).toBe(3);
   });
 
   it("Arabic independent ق joins its closed head to the deep bowl before its two dots", () => {

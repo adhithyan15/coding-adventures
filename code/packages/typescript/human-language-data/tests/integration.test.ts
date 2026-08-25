@@ -39,7 +39,7 @@ describe("real curriculum", () => {
     expect(scripts.devanagari!.complete).toBe(true);
   });
 
-  it("keeps the cross-script closure queue measured after Tamil உ", () => {
+  it("keeps the cross-script closure queue measured after shared Persian and Urdu ف", () => {
     const candrakkala = scripts.malayalam!.marks!.find((mark) => mark.mark === "്")!;
     expect(candrakkala.role).toBe("virama");
     expect(candrakkala.compositionOrder).toEqual([
@@ -511,6 +511,18 @@ describe("real curriculum", () => {
       /right-to-left.*three separate dots below.*left, right, then lower-center.*Noto Naskh/i,
     );
 
+    const persianFeh = scripts["perso-arabic"]!.letters.find((letter) => letter.glyph === "ف")!;
+    expect(persianFeh.strokeOrder).toEqual([
+      "loop clockwise around the small closed head",
+      "continue left through the broad bowl without lifting",
+      "lift once, then place the upper dot",
+    ]);
+    expect(persianFeh.penLifts).toBe(1);
+    expect(persianFeh.strokeOrderSource?.citation).toMatch(/Persian Online.*ف.*02:09–02:13/i);
+    expect(persianFeh.strokeOrderSource?.variation).toMatch(
+      /body-first.*clockwise.*closed head.*broad bowl.*lift once.*dot.*Persian-scoped/i,
+    );
+
     const persianRa = scripts["perso-arabic"]!.letters.find((letter) => letter.glyph === "ر")!;
     expect(persianRa.strokeOrder).toEqual([
       "begin at the upper tip and descend through the short stroke",
@@ -553,6 +565,20 @@ describe("real curriculum", () => {
     );
     expect(urduWaw.strokeOrderSource?.variation).toMatch(
       /one uninterrupted stroke.*head as a loop.*tail without lifting.*nonconnector.*v\/w.*o, au, and ū.*Noto Naskh fallback.*Nastaliq.*Urdu-specific/i,
+    );
+
+    const urduFe = scripts["urdu-nastaliq"]!.letters.find((letter) => letter.glyph === "ف")!;
+    expect(urduFe.strokeOrder).toEqual([
+      "loop clockwise around the rounded head above the main line",
+      "continue left through the shallow curved tail without lifting",
+      "after one lift, place the single dot above",
+    ]);
+    expect(urduFe.penLifts).toBe(1);
+    expect(urduFe.strokeOrderSource?.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/fe-qaf-te-dal-re/",
+    );
+    expect(urduFe.strokeOrderSource?.variation).toMatch(
+      /clockwise.*above the main line.*shallow curved tail.*lift.*dot.*looped head.*Noto Naskh fallback.*Nastaliq.*Urdu-specific/i,
     );
 
     const gaps = validate({ taxonomy, lessons, scripts }).filter(
@@ -631,11 +657,14 @@ describe("real curriculum", () => {
     expect(affected.get("ഴ") ?? 0).toBe(0);
     expect(missingByScript.get("tamil.json")?.has("உ")).toBe(false);
     expect(affected.get("உ") ?? 0).toBe(0);
+    expect(missingByScript.get("perso-arabic.json")?.has("ف")).toBe(false);
+    expect(missingByScript.get("urdu-nastaliq.json")?.has("ف")).toBe(false);
+    expect(affected.get("ف") ?? 0).toBe(0);
     expect(missingByScript.get("kannada.json")?.has("ಅ")).toBe(false);
     expect(affected.get("ಅ") ?? 0).toBe(0);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["ف", 10]);
+    ).toEqual(["ீ", 10]);
   });
 
   it("loaded every track (17+ and growing)", () => {
