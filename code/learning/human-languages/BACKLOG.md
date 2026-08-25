@@ -5,6 +5,35 @@ Findings from the pre-A1 tranche work were recorded in commit messages and PR
 bodies, which are durable and searchable, but a reader opening this file found
 nothing. The entries below are the ones that change how the work is done.
 
+## HL-C10M — Restore the Latin writing-activity directive gate
+
+Refreshing from `origin/main` after Malayalam chillu **ൽ** exposed two new
+validation errors from the merged Latin pre-A1 writing tranche: the delayed-copy
+and dictation `hl-activity` directives appeared after learner-facing prose even
+though the parser contract requires them immediately after the block's
+first-line knowledge metadata and before learner copy. Once reachable, both
+contracts also duplicated their canonical `answer` in `accepted`, which the
+activity compiler correctly rejects as an ambiguous normalized response.
+
+Move only those two directives above the displayed instructions and remove the
+redundant accepted-answer copies. This preserves their intended responses and
+lesson order while restoring the shared-curriculum validation gate; no learner
+prose changes.
+
+## HL-C10N — Kannada ಅ opens the script's handwriting inventory
+
+After Malayalam chillu **ൽ** landed, the measured queue put Kannada independent
+short **ಅ** first at **11 affected realizations**. Kannada's canonical vowel row
+already identified the glyph and sound, but it had no source-backed formation
+order and the script still had no authored letter path at all.
+
+Gopala Krishna A's 35-frame Wikimedia Commons animation keeps the pencil down
+for one uninterrupted run: clockwise left loop, broad lower bowl,
+counterclockwise right loop, then the horizontal bar returning left. The new
+font-fitted path preserves those four movements on Noto Sans Kannada, removes
+all 11 gaps, and leaves Malayalam chillu **ൻ** next at 11 affected
+realizations.
+
 ## HL-C10L — Malayalam chillu ൽ closes the leading final-consonant gap
 
 After Tamil **ழ** landed, the measured queue put Malayalam chillu **ൽ** first

@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+### Fixed - Latin writing activity contracts
+
+- Restore validation for the newly merged delayed-copy and dictation lessons by
+  placing both directives before learner prose.
+- Remove duplicate normalized `salvē` variants while retaining the required
+  empty `accepted` arrays.
+
+### Added - source-verified Kannada independent a
+
+- Add Kannada independent **ಅ** from Gopala Krishna A's 35-frame animation as
+  four movements in one uninterrupted pen-down run.
+- Pin its zero lifts and Noto Sans Kannada geometry.
+- Remove all 11 affected realizations and rerank Malayalam chillu **ൻ** first
+  at 11.
+
 ### Added - source-verified Malayalam chillu L
 
 - Add Malayalam chillu **ൽ** from Sriveenkat's 97-frame animation as five

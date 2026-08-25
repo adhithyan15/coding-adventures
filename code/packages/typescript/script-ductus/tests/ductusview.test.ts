@@ -82,6 +82,11 @@ const teluguOutline = (character: string): GlyphOutline => {
   return { path: g.path, bounds: boundsOf(g.contours) };
 };
 
+const kannadaOutline = (character: string): GlyphOutline => {
+  const g = parseFont(load("NotoSansKannada-Static.ttf")).glyphFor(character)!;
+  return { path: g.path, bounds: boundsOf(g.contours) };
+};
+
 const malayalamOutline = (character: string): GlyphOutline => {
   const g = parseFont(load("NotoSansMalayalam-Static.ttf")).glyphFor(character)!;
   return { path: g.path, bounds: boundsOf(g.contours) };
@@ -101,6 +106,8 @@ const TAMIL_ZHA = DUCTUS["ழ"];
 const tamilZhaOutline = tamilOutline("ழ");
 const TELUGU_A = DUCTUS[ductusKey("telugu", "అ")];
 const teluguAOutline = teluguOutline("అ");
+const KANNADA_A = DUCTUS[ductusKey("kannada", "ಅ")];
+const kannadaAOutline = kannadaOutline("ಅ");
 const MALAYALAM_E = DUCTUS[ductusKey("malayalam", "എ")];
 const malayalamEOutline = malayalamOutline("എ");
 const MALAYALAM_A = DUCTUS[ductusKey("malayalam", "അ")];
@@ -964,6 +971,22 @@ describe("Telugu అ — two joined movement pairs", () => {
     expect(done).toHaveLength(1);
     expect(done[0].attrs.d).toBe(penPathD(TELUGU_A.strokes[0], 1));
     expect(pen.attrs.d).toBe(penPathD(TELUGU_A.strokes[1], 1));
+  });
+});
+
+describe("Kannada ಅ — four movements in one unbroken run", () => {
+  const steps = ductusSteps(KANNADA_A);
+  const strip = ductusFilmstrip(KANNADA_A, kannadaAOutline);
+
+  it("never inserts a pen lift between the four movements", () => {
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 0]);
+  });
+
+  it("reports one stroke, zero lifts, and four movements", () => {
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 4 movements");
   });
 });
 

@@ -39,7 +39,7 @@ describe("real curriculum", () => {
     expect(scripts.devanagari!.complete).toBe(true);
   });
 
-  it("keeps the cross-script closure queue measured after Malayalam ൽ", () => {
+  it("keeps the cross-script closure queue measured after Kannada ಅ", () => {
     const candrakkala = scripts.malayalam!.marks!.find((mark) => mark.mark === "്")!;
     expect(candrakkala.role).toBe("virama");
     expect(candrakkala.compositionOrder).toEqual([
@@ -155,6 +155,26 @@ describe("real curriculum", () => {
     );
     expect(teluguA.strokeOrderSource?.variation).toMatch(
       /four directional movements.*two pen-down starts.*1.?2.*3.?4.*not uniform.*Noto Sans Telugu/i,
+    );
+
+    const kannadaA = scripts.kannada!.independentVowels!.find((entry) => entry.glyph === "ಅ")!;
+    expect(kannadaA.sound).toBe("a");
+    expect(kannadaA.penLifts).toBe(0);
+    expect(kannadaA.strokeOrder).toEqual([
+      "turn clockwise around the compact left loop",
+      "without lifting, descend into the broad lower bowl and sweep up its right side",
+      "without lifting, turn counterclockwise around the rounded right loop",
+      "without lifting, return left along the inward horizontal bar",
+    ]);
+    expect(kannadaA.strokeOrderNote).toMatch(/four visible movements.*one continuous pen-down run/i);
+    expect(kannadaA.strokeOrderSource?.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-a.gif",
+    );
+    expect(kannadaA.strokeOrderSource?.citation).toMatch(
+      /Gopala Krishna A.*Kannada-alphabet-a\.gif.*independent vowel ಅ.*00:00\.0.?00:03\.4.*Wikimedia Commons.*25 May 2016/i,
+    );
+    expect(kannadaA.strokeOrderSource?.variation).toMatch(
+      /35-frame animation.*one uninterrupted run.*left loop.*lower bowl.*right loop.*horizontal bar returning left.*Noto Sans Kannada/i,
     );
 
     const malayalamE = scripts.malayalam!.independentVowels!.find((entry) => entry.glyph === "എ")!;
@@ -551,9 +571,11 @@ describe("real curriculum", () => {
     expect(affected.get("ழ") ?? 0).toBe(0);
     expect(missingByScript.get("malayalam.json")?.has("ൽ")).toBe(false);
     expect(affected.get("ൽ") ?? 0).toBe(0);
+    expect(missingByScript.get("kannada.json")?.has("ಅ")).toBe(false);
+    expect(affected.get("ಅ") ?? 0).toBe(0);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["ಅ", 11]);
+    ).toEqual(["ൻ", 11]);
   });
 
   it("loaded every track (17+ and growing)", () => {
