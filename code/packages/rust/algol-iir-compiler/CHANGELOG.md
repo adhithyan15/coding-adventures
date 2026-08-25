@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.196.0 — 2026-08-25 — grouped selector identities
+
+Bounded static while analysis now follows complete boolean, integer, and real
+identity expressions through parentheses, including nested grouping. Grouped
+changing expressions remain conservative.
+
 ## 0.195.0 — 2026-08-25 — signed neutral selector literals
 
 Bounded static while analysis now recognizes exact unary-plus neutral literals
