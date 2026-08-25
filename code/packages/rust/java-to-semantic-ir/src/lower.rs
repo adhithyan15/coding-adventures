@@ -201,6 +201,11 @@ struct Lowerer {
     /// comment — so a real lookup, not just presence-tracking, is what
     /// this needs).
     locals: Vec<HashMap<String, Kind>>,
+    /// Counter for the synthetic flag variable each `do`-`while` lowers
+    /// (`__do_while_0`, `__do_while_1`, …) — see `lower_do_while_statement`'s
+    /// own doc comment. Guarantees uniqueness across sibling do-while
+    /// statements in the same function; never consulted by name lookup.
+    do_while_counter: usize,
 }
 
 impl Lowerer {
@@ -209,6 +214,7 @@ impl Lowerer {
             module_name: module_name.to_string(),
             observed: FeatureManifest::new(),
             locals: Vec::new(),
+            do_while_counter: 0,
         }
     }
 
@@ -619,7 +625,7 @@ impl Lowerer {
         let body_stmt = self.first_child_named(node, "statement").ok_or_else(|| {
             self.err_at(node, "malformed `do`/`while` (missing body)".to_string())
         })?;
-        let body = self.lower_body(body_stmt, depth + 1)?;
+        let mut body = self.lower_body(body_stmt, depth + 1)?;
         let cond_node = self.first_child_named(node, "expression").ok_or_else(|| {
             self.err_at(
                 node,
@@ -634,16 +640,79 @@ impl Lowerer {
             ));
         }
         self.observed.add(Feature::Loops);
+        self.observed.add(Feature::ShortCircuit);
+        self.observed.add(Feature::MutableBindings);
 
-        let mut outer_stmts = body.stmts.clone();
-        outer_stmts.push(Stmt::While {
-            cond,
-            body,
+        // Desugar `do S while (C);` to a flag-guarded pretest loop, NOT a
+        // literal "run S once, then while (C) S" duplication of S's own
+        // already-lowered IR. An earlier version of this desugaring did
+        // clone the lowered body for the once-executed copy — caught by
+        // `/security-review` as a real resource-exhaustion DoS: cloning
+        // duplicates whatever nested do-while structure S *itself*
+        // already contains, so N levels of nested do-while (valid,
+        // ordinary, brace-less Java source — no adversarial tree needed)
+        // produce O(2^N) emitted IR nodes from O(N) source bytes, the
+        // same amplification-attack shape as XML "billion laughs". The
+        // `MAX_STMT_DEPTH` guard does not catch this: the blowup happens
+        // on each stack frame's *return* (the clone), not from the call-
+        // stack depth itself, which stays correctly bounded throughout.
+        //
+        // This rewrite lowers S exactly once — no cloning — so emitted
+        // IR size is always linear in source size, regardless of
+        // nesting depth:
+        //
+        //   boolean __do_while_N = true;
+        //   while (__do_while_N || C) { S; __do_while_N = false; }
+        //
+        // `__do_while_N`'s uniqueness comes from a per-`Lowerer` counter
+        // (`do_while_counter`), not just its `__`-prefix: two sibling
+        // do-while statements in the same function must not share a
+        // flag. It never goes through `declare_local`/`lookup_local` —
+        // it's synthetic IR the frontend constructs directly, never a
+        // name real Java source can look up — so it needs no entry in
+        // this crate's own scope-tracking `locals` stack.
+        let flag_name = format!("__do_while_{}", self.do_while_counter);
+        self.do_while_counter += 1;
+
+        let flag_decl = Stmt::LetStarBinding {
+            name: flag_name.clone(),
+            sir_type: None,
+            value: Expr::BoolLit {
+                value: true,
+                span: span.clone(),
+            },
+            span: span.clone(),
+        };
+        let flag_ref = Expr::VarRef {
+            name: flag_name.clone(),
+            scope: Scope::Local,
+            span: span.clone(),
+        };
+        let loop_cond = Expr::LogicalOr {
+            lhs: Box::new(flag_ref),
+            rhs: Box::new(cond),
+            span: span.clone(),
+        };
+        body.stmts.push(Stmt::Assign {
+            name: flag_name,
+            scope: Scope::Local,
+            value: Expr::BoolLit {
+                value: false,
+                span: span.clone(),
+            },
             span: span.clone(),
         });
+
         Ok(Stmt::ExprStmt {
             expr: Expr::Block(Box::new(Block {
-                stmts: outer_stmts,
+                stmts: vec![
+                    flag_decl,
+                    Stmt::While {
+                        cond: loop_cond,
+                        body,
+                        span: span.clone(),
+                    },
+                ],
                 value: Expr::NilLit { span: span.clone() },
                 span: span.clone(),
             })),

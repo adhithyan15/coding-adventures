@@ -13,12 +13,13 @@ All notable changes to the `java-to-semantic-ir` crate will be documented in thi
   doc comment); an absent `else` becomes a synthetic empty, `NilLit`-
   valued block, matching the established `javascript-to-semantic-ir`/
   `ruby-to-semantic-ir` precedent for the same shape.
-- `do`/`while` desugars to "run the body once, then `while`" — the
-  already-lowered body `Block` is cloned once (`Stmt`/`Block` both
-  derive `Clone`) rather than re-walking the CST, wrapped in a synthetic
-  `Expr::Block` so the once-executed copy's own locals go out of scope
-  at exactly the point Java's own do-while body scope ends, not the
-  surrounding function.
+- `do`/`while` desugars to a synthetic flag-guarded pretest loop —
+  `boolean __do_while_N = true; while (__do_while_N || C) { S;
+  __do_while_N = false; }` — lowering the body `S` exactly once (see the
+  security finding below for why this shape, not a literal "run once,
+  then `while`" duplication), wrapped in a synthetic `Expr::Block` so
+  the flag's own scope ends at exactly the point Java's own do-while
+  statement does, not the surrounding function.
 - Compound assignment (`+= -= *= /= %=`) and increment/decrement (`++`/
   `--`, prefix and postfix) — but only as a bare statement (`i++;`,
   `x += 1;`), desugaring to `Stmt::Assign` by reusing M1's own
@@ -55,7 +56,7 @@ All notable changes to the `java-to-semantic-ir` crate will be documented in thi
   Every occurrence is rejected with a clean error via the same
   unhandled-statement-kind catch-all every other unsupported statement
   hits — no special-casing was needed to guarantee this.
-- 24 new tests in `tests/test_lower.rs` (if/else shape, brace-less
+- 23 new tests in `tests/test_lower.rs` (if/else shape, brace-less
   bodies, boolean-condition requirements, block-scope leak prevention in
   both directions, while/do-while shape, every compound-assignment
   operator including the `/=` div_trunc/div_true selection and `+=` on
@@ -66,6 +67,30 @@ All notable changes to the `java-to-semantic-ir` crate will be documented in thi
   entry, but the body still runs once" case a plain pretest `while`
   would get wrong — compound-assignment chaining, and increment inside
   a while loop), all running real computed output through `python3`.
+- **Caught by `/security-review` before push (HIGH, resource-exhaustion
+  DoS)**: the first version of `do`/`while`'s desugaring built the
+  "run the body once, then `while`" shape by literally cloning the
+  already-lowered body `Block` (`body.stmts.clone()`) for the once-
+  executed copy. Cloning duplicates whatever nested `do`/`while`
+  structure the body *itself* already contains, so `N` levels of nested
+  `do`/`while` — valid, ordinary, brace-less Java source, no adversarial
+  hand-built tree required — produced `O(2^N)` emitted IR nodes from
+  `O(N)` source bytes: the same amplification shape as XML "billion
+  laughs". Critically, this was invisible to the `MAX_STMT_DEPTH` guard
+  added in the same PR — that guard bounds native call-stack *depth*,
+  but the blowup happens on each stack frame's *return* (the clone), not
+  from recursion depth, so a correctly-bounded-depth compile could still
+  emit an unbounded amount of IR. Fixed by eliminating the duplication
+  entirely: the body now lowers exactly once, wrapped in a synthetic
+  flag-guarded pretest loop instead of a literal copy (see the "Added"
+  section above for the exact desugared shape) — the fix that closes the
+  bug class, not merely a size cap that would still pay the `O(2^N)` cost
+  before rejecting. `nested_do_while_lowers_without_cloning_the_inner_body`
+  (5 levels deep) is a direct regression test; the existing
+  `do_while_loop_runs_in_python` execution-proof test (asserting the
+  "condition already false on entry, body still runs once" semantic)
+  also re-passed against the new desugaring, confirming the fix didn't
+  just close the DoS but preserved correctness.
 - **Caught by the crate's own test suite while writing this milestone**
   (not `/security-review`): two tests from M1's own suite
   (`compound_assignment_is_unsupported`, `postfix_increment_is_unsupported`)

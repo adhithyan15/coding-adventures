@@ -1030,7 +1030,16 @@ fn while_condition_must_be_boolean() {
 }
 
 #[test]
-fn do_while_desugars_to_body_once_then_while() {
+fn do_while_desugars_to_a_flag_guarded_while_not_a_body_clone() {
+    // See lower.rs's own `lower_do_while_statement` doc comment: an
+    // earlier version cloned the already-lowered body for a literal
+    // "run once, then while" duplication, which /security-review caught
+    // as an exponential-blowup DoS on nested do-while (O(2^N) emitted
+    // nodes for O(N) source bytes). The fix lowers the body exactly
+    // once, wrapping it in a synthetic flag-guarded pretest loop
+    // instead: `boolean __do_while_N = true; while (__do_while_N || C)
+    // { S; __do_while_N = false; }` -- this test locks in that shape so
+    // a future change can't silently reintroduce the clone.
     let m = compile_ok(&wrap("int x = 0; do { x = x + 1; } while (x < 10);"));
     match &main_fn(&m).body.stmts[1] {
         Stmt::ExprStmt {
@@ -1040,16 +1049,60 @@ fn do_while_desugars_to_body_once_then_while() {
             assert_eq!(
                 block.stmts.len(),
                 2,
-                "expected [once-executed copy, Stmt::While]"
+                "expected [flag declaration, Stmt::While]"
             );
-            assert!(matches!(&block.stmts[0], Stmt::Assign { .. }));
+            match &block.stmts[0] {
+                Stmt::LetStarBinding {
+                    name,
+                    value: Expr::BoolLit { value: true, .. },
+                    ..
+                } => {
+                    assert!(name.starts_with("__do_while_"));
+                }
+                other => {
+                    panic!("expected LetStarBinding(BoolLit(true)) flag declaration, got {other:?}")
+                }
+            }
             match &block.stmts[1] {
-                Stmt::While { body, .. } => assert_eq!(body.stmts.len(), 1),
-                other => panic!("expected the second spliced statement to be While, got {other:?}"),
+                Stmt::While {
+                    cond: Expr::LogicalOr { .. },
+                    body,
+                    ..
+                } => {
+                    // original body statement (`x = x + 1;`) plus the
+                    // appended `__do_while_N = false;` -- exactly one
+                    // lowered copy of the source body, never two.
+                    assert_eq!(body.stmts.len(), 2);
+                    assert!(matches!(
+                        &body.stmts[1],
+                        Stmt::Assign {
+                            value: Expr::BoolLit { value: false, .. },
+                            ..
+                        }
+                    ));
+                }
+                other => panic!("expected While(LogicalOr(...)), got {other:?}"),
             }
         }
         other => panic!("expected ExprStmt(Block), got {other:?}"),
     }
+}
+
+#[test]
+fn nested_do_while_lowers_without_cloning_the_inner_body() {
+    // A direct regression test for the exponential-blowup bug itself:
+    // each nesting level must contribute its body's statements exactly
+    // ONCE to the final IR, not twice. 5 levels deep, each with 2 body
+    // statements (an outer marker assignment plus the next nested
+    // do-while), should never come close to `2^5` duplicated statements
+    // -- if the clone bug ever came back, this assertion would fail on
+    // a total-statement-count explosion, not just time out.
+    let mut body = "y = y + 1;".to_string();
+    for _ in 0..5 {
+        body = format!("do {{ {body} }} while (y < 100);");
+    }
+    let m = compile_ok(&wrap(&format!("int y = 0; {body}")));
+    assert_eq!(main_fn(&m).body.stmts.len(), 2);
 }
 
 #[test]
