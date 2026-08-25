@@ -528,14 +528,18 @@ pub struct XyAxisConfig {
     pub label_font_size: Option<f64>,
     pub label_padding: Option<f64>,
     pub label_rotation: Option<f64>,
+    pub label_color: Option<String>,
     pub show_title: Option<bool>,
     pub title_font_size: Option<f64>,
     pub title_padding: Option<f64>,
+    pub title_color: Option<String>,
     pub show_tick: Option<bool>,
     pub tick_length: Option<f64>,
     pub tick_width: Option<f64>,
+    pub tick_color: Option<String>,
     pub show_axis_line: Option<bool>,
     pub axis_line_width: Option<f64>,
+    pub axis_line_color: Option<String>,
 }
 
 #[derive(Clone, Debug, Default, PartialEq)]
@@ -666,6 +670,7 @@ pub enum LayoutedChartItem {
         y2: f64,
         orientation: Orientation,
         stroke_width: f64,
+        color: String,
     },
     AxisTick {
         x: f64,
@@ -674,6 +679,7 @@ pub enum LayoutedChartItem {
         orientation: Orientation,
         font_size: f64,
         rotation_degrees: f64,
+        color: String,
     },
     AxisTickMark {
         x1: f64,
@@ -681,6 +687,7 @@ pub enum LayoutedChartItem {
         x2: f64,
         y2: f64,
         stroke_width: f64,
+        color: String,
     },
     GridLine {
         x1: f64,

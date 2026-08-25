@@ -640,11 +640,12 @@ where
                 x2,
                 y2,
                 stroke_width,
+                color,
                 ..
             } => {
                 instructions.push(PaintInstruction::Path(line_path(
                     &[Point { x: *x1, y: *y1 }, Point { x: *x2, y: *y2 }],
-                    "#374151",
+                    color,
                     *stroke_width,
                 )));
             }
@@ -654,10 +655,11 @@ where
                 x2,
                 y2,
                 stroke_width,
+                color,
             } => {
                 instructions.push(PaintInstruction::Path(line_path(
                     &[Point { x: *x1, y: *y1 }, Point { x: *x2, y: *y2 }],
-                    "#6b7280",
+                    color,
                     *stroke_width,
                 )));
             }
@@ -1021,6 +1023,7 @@ where
                 orientation,
                 font_size,
                 rotation_degrees,
+                color,
             } => {
                 let (tx, ty, tw) = match orientation {
                     Orientation::Horizontal => (x - 30.0, y - ls / 2.0, 60.0),
@@ -1033,12 +1036,7 @@ where
                     tw,
                     font_size * 1.2,
                     font_with_size(&lf, Some(*font_size)),
-                    Color {
-                        r: 107,
-                        g: 114,
-                        b: 128,
-                        a: 255,
-                    },
+                    css_to_color(color),
                 );
                 if rotation_degrees.abs() > f64::EPSILON {
                     rotated_text_children.push((node, *rotation_degrees, *x, *y));
@@ -4424,6 +4422,7 @@ mod tests {
                     y2: 260.0,
                     orientation: Orientation::Horizontal,
                     stroke_width: 5.0,
+                    color: "#123456".into(),
                 },
                 LayoutedChartItem::AxisTick {
                     x: 100.0,
@@ -4432,6 +4431,7 @@ mod tests {
                     orientation: Orientation::Vertical,
                     font_size: 18.0,
                     rotation_degrees: 0.0,
+                    color: "#234567".into(),
                 },
                 LayoutedChartItem::AxisTick {
                     x: 180.0,
@@ -4440,6 +4440,7 @@ mod tests {
                     orientation: Orientation::Vertical,
                     font_size: 16.0,
                     rotation_degrees: -45.0,
+                    color: "#345678".into(),
                 },
             ],
         };
@@ -4447,11 +4448,14 @@ mod tests {
         let scene = diagram_to_paint_chart(&layout, &opts);
         assert!(scene.instructions.iter().any(|instruction| matches!(
             instruction,
-            PaintInstruction::Path(path) if path.stroke_width == Some(5.0)
+            PaintInstruction::Path(path)
+                if path.stroke_width == Some(5.0) && path.stroke.as_deref() == Some("#123456")
         )));
         assert!(scene.instructions.iter().any(|instruction| matches!(
             instruction,
-            PaintInstruction::GlyphRun(run) if run.font_size == 18.0
+            PaintInstruction::GlyphRun(run)
+                if run.font_size == 18.0
+                    && run.fill.as_deref() == Some("rgb(35, 69, 103)")
         )));
         assert!(scene.instructions.iter().any(|instruction| matches!(
             instruction,
@@ -4459,7 +4463,9 @@ mod tests {
                 if group.transform.is_some()
                     && group.children.iter().any(|child| matches!(
                         child,
-                        PaintInstruction::GlyphRun(run) if run.font_size == 16.0
+                        PaintInstruction::GlyphRun(run)
+                            if run.font_size == 16.0
+                                && run.fill.as_deref() == Some("rgb(52, 86, 120)")
                     ))
         )));
     }

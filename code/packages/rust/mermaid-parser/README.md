@@ -35,10 +35,11 @@ and padding, minimum plot-space reservation, and optional inside/outside
 bar-value labels. Configured data-label colors also reach backend-neutral Paint
 glyphs.
 Nested x/y-axis configuration independently controls label and title visibility,
-font sizes and padding, along with axis-line visibility and stroke width. Tick
-visibility, length, and stroke width lower independently for each axis into
-backend-neutral Paint paths. Bottom-axis label rotation reserves its rotated
-bounds during layout and lowers through transformed backend-neutral Paint glyphs.
+font sizes, padding, and theme colors, along with axis-line visibility, stroke
+width, and color. Tick visibility, length, stroke width, and color lower
+independently for each axis into backend-neutral Paint paths. Bottom-axis label
+rotation reserves its rotated bounds during layout and lowers through transformed
+backend-neutral Paint glyphs.
 
 Each supported family lowers into the shared Diagram IR and can continue
 through its family layout package:

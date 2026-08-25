@@ -167,6 +167,14 @@ fn layout_xy_vertical(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChart
     let y_label_font_size = y_config.label_font_size.unwrap_or(14.0);
     let x_label_padding = x_config.label_padding.unwrap_or(5.0);
     let y_label_padding = y_config.label_padding.unwrap_or(5.0);
+    let x_label_color = x_config.label_color.as_deref().unwrap_or("#6b7280");
+    let y_label_color = y_config.label_color.as_deref().unwrap_or("#6b7280");
+    let x_title_color = x_config.title_color.as_deref().unwrap_or("#374151");
+    let y_title_color = y_config.title_color.as_deref().unwrap_or("#374151");
+    let x_tick_color = x_config.tick_color.as_deref().unwrap_or("#6b7280");
+    let y_tick_color = y_config.tick_color.as_deref().unwrap_or("#6b7280");
+    let x_line_color = x_config.axis_line_color.as_deref().unwrap_or("#6b7280");
+    let y_line_color = y_config.axis_line_color.as_deref().unwrap_or("#6b7280");
     let x_tick_length = if x_config.show_tick.unwrap_or(true) {
         x_config.tick_length.unwrap_or(TICK_LEN)
     } else {
@@ -281,7 +289,7 @@ fn layout_xy_vertical(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChart
             y: pb + x_label_space + x_title_space / 2.0,
             text: axis_title.clone(),
             font_size: Some(x_title_font_size),
-            color: None,
+            color: Some(x_title_color.into()),
         });
     }
     if has_y_title {
@@ -295,7 +303,7 @@ fn layout_xy_vertical(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChart
             y: (pt + pb) / 2.0,
             text: axis_title.clone(),
             font_size: Some(y_title_font_size),
-            color: None,
+            color: Some(y_title_color.into()),
         });
     }
 
@@ -317,6 +325,7 @@ fn layout_xy_vertical(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChart
                 x2: pl,
                 y2: y,
                 stroke_width: y_config.tick_width.unwrap_or(2.0),
+                color: y_tick_color.into(),
             });
         }
         if y_config.show_label.unwrap_or(true) {
@@ -327,6 +336,7 @@ fn layout_xy_vertical(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChart
                 orientation: Orientation::Horizontal,
                 font_size: y_label_font_size,
                 rotation_degrees: 0.0,
+                color: y_label_color.into(),
             });
         }
     }
@@ -343,6 +353,7 @@ fn layout_xy_vertical(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChart
                     x2: x,
                     y2: pb + x_tick_length,
                     stroke_width: x_config.tick_width.unwrap_or(2.0),
+                    color: x_tick_color.into(),
                 });
             }
             if x_config.show_label.unwrap_or(true) {
@@ -359,6 +370,7 @@ fn layout_xy_vertical(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChart
                     orientation: Orientation::Vertical,
                     font_size: x_label_font_size,
                     rotation_degrees: x_label_rotation,
+                    color: x_label_color.into(),
                 });
             }
         }
@@ -372,6 +384,7 @@ fn layout_xy_vertical(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChart
                     x2: cx,
                     y2: pb + x_tick_length,
                     stroke_width: x_config.tick_width.unwrap_or(2.0),
+                    color: x_tick_color.into(),
                 });
             }
             if x_config.show_label.unwrap_or(true) {
@@ -388,6 +401,7 @@ fn layout_xy_vertical(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChart
                     orientation: Orientation::Vertical,
                     font_size: x_label_font_size,
                     rotation_degrees: x_label_rotation,
+                    color: x_label_color.into(),
                 });
             }
         }
@@ -402,6 +416,7 @@ fn layout_xy_vertical(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChart
             y2: pb,
             orientation: Orientation::Horizontal,
             stroke_width: x_config.axis_line_width.unwrap_or(2.0),
+            color: x_line_color.into(),
         });
     }
     if y_config.show_axis_line.unwrap_or(true) {
@@ -412,6 +427,7 @@ fn layout_xy_vertical(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChart
             y2: pb,
             orientation: Orientation::Vertical,
             stroke_width: y_config.axis_line_width.unwrap_or(2.0),
+            color: y_line_color.into(),
         });
     }
 
@@ -594,6 +610,14 @@ fn layout_xy_horizontal(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedCha
     let y_label_font_size = y_config.label_font_size.unwrap_or(14.0);
     let x_label_padding = x_config.label_padding.unwrap_or(5.0);
     let y_label_padding = y_config.label_padding.unwrap_or(5.0);
+    let x_label_color = x_config.label_color.as_deref().unwrap_or("#6b7280");
+    let y_label_color = y_config.label_color.as_deref().unwrap_or("#6b7280");
+    let x_title_color = x_config.title_color.as_deref().unwrap_or("#374151");
+    let y_title_color = y_config.title_color.as_deref().unwrap_or("#374151");
+    let x_tick_color = x_config.tick_color.as_deref().unwrap_or("#6b7280");
+    let y_tick_color = y_config.tick_color.as_deref().unwrap_or("#6b7280");
+    let x_line_color = x_config.axis_line_color.as_deref().unwrap_or("#6b7280");
+    let y_line_color = y_config.axis_line_color.as_deref().unwrap_or("#6b7280");
     let x_tick_length = if x_config.show_tick.unwrap_or(true) {
         x_config.tick_length.unwrap_or(TICK_LEN)
     } else {
@@ -701,7 +725,7 @@ fn layout_xy_horizontal(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedCha
             y: (top + bottom) / 2.0,
             text: axis_title.clone(),
             font_size: Some(x_title_font_size),
-            color: None,
+            color: Some(x_title_color.into()),
         });
     }
     if has_y_title {
@@ -715,7 +739,7 @@ fn layout_xy_horizontal(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedCha
             y: bottom + y_label_space + y_title_space / 2.0,
             text: axis_title.clone(),
             font_size: Some(y_title_font_size),
-            color: None,
+            color: Some(y_title_color.into()),
         });
     }
 
@@ -736,6 +760,7 @@ fn layout_xy_horizontal(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedCha
                 x2: x,
                 y2: bottom + y_tick_length,
                 stroke_width: y_config.tick_width.unwrap_or(2.0),
+                color: y_tick_color.into(),
             });
         }
         if y_config.show_label.unwrap_or(true) {
@@ -746,6 +771,7 @@ fn layout_xy_horizontal(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedCha
                 orientation: Orientation::Vertical,
                 font_size: y_label_font_size,
                 rotation_degrees: 0.0,
+                color: y_label_color.into(),
             });
         }
     }
@@ -761,6 +787,7 @@ fn layout_xy_horizontal(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedCha
                     x2: left,
                     y2: y,
                     stroke_width: x_config.tick_width.unwrap_or(2.0),
+                    color: x_tick_color.into(),
                 });
             }
             if x_config.show_label.unwrap_or(true) {
@@ -771,6 +798,7 @@ fn layout_xy_horizontal(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedCha
                     orientation: Orientation::Horizontal,
                     font_size: x_label_font_size,
                     rotation_degrees: 0.0,
+                    color: x_label_color.into(),
                 });
             }
         }
@@ -784,6 +812,7 @@ fn layout_xy_horizontal(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedCha
                     x2: left,
                     y2: y,
                     stroke_width: x_config.tick_width.unwrap_or(2.0),
+                    color: x_tick_color.into(),
                 });
             }
             if x_config.show_label.unwrap_or(true) {
@@ -794,6 +823,7 @@ fn layout_xy_horizontal(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedCha
                     orientation: Orientation::Horizontal,
                     font_size: x_label_font_size,
                     rotation_degrees: 0.0,
+                    color: x_label_color.into(),
                 });
             }
         }
@@ -806,6 +836,7 @@ fn layout_xy_horizontal(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedCha
             y2: bottom,
             orientation: Orientation::Horizontal,
             stroke_width: y_config.axis_line_width.unwrap_or(2.0),
+            color: y_line_color.into(),
         });
     }
     if x_config.show_axis_line.unwrap_or(true) {
@@ -816,6 +847,7 @@ fn layout_xy_horizontal(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedCha
             y2: bottom,
             orientation: Orientation::Vertical,
             stroke_width: x_config.axis_line_width.unwrap_or(2.0),
+            color: x_line_color.into(),
         });
     }
 
@@ -1574,11 +1606,15 @@ mod tests {
         diagram.xy_config.y_axis = XyAxisConfig {
             label_font_size: Some(18.0),
             label_padding: Some(8.0),
+            label_color: Some("#550005".into()),
             title_font_size: Some(19.0),
             title_padding: Some(9.0),
+            title_color: Some("#660006".into()),
             axis_line_width: Some(5.0),
+            axis_line_color: Some("#880008".into()),
             tick_length: Some(12.0),
             tick_width: Some(4.0),
+            tick_color: Some("#770007".into()),
             ..XyAxisConfig::default()
         };
 
@@ -1595,16 +1631,19 @@ mod tests {
             LayoutedChartItem::AxisTick {
                 orientation: Orientation::Horizontal,
                 font_size,
+                color,
                 ..
-            } if *font_size == 18.0
+            } if *font_size == 18.0 && color == "#550005"
         )));
         assert!(!layout.items.iter().any(
             |item| matches!(item, LayoutedChartItem::DataLabel { text, .. } if text == "Hidden x title")
         ));
         assert!(layout.items.iter().any(|item| matches!(
             item,
-            LayoutedChartItem::DataLabel { text, font_size, .. }
-                if text == "Visible y title" && *font_size == Some(19.0)
+            LayoutedChartItem::DataLabel { text, font_size, color, .. }
+                if text == "Visible y title"
+                    && *font_size == Some(19.0)
+                    && color.as_deref() == Some("#660006")
         )));
         assert_eq!(
             layout
@@ -1616,7 +1655,8 @@ mod tests {
         );
         assert!(layout.items.iter().any(|item| matches!(
             item,
-            LayoutedChartItem::AxisSpine { stroke_width, .. } if *stroke_width == 5.0
+            LayoutedChartItem::AxisSpine { stroke_width, color, .. }
+                if *stroke_width == 5.0 && color == "#880008"
         )));
         assert_eq!(
             layout
@@ -1632,8 +1672,10 @@ mod tests {
         )));
         assert!(layout.items.iter().any(|item| matches!(
             item,
-            LayoutedChartItem::AxisTickMark { x1, x2, stroke_width, .. }
-                if (*x2 - *x1 - 12.0).abs() < f64::EPSILON && *stroke_width == 4.0
+            LayoutedChartItem::AxisTickMark { x1, x2, stroke_width, color, .. }
+                if (*x2 - *x1 - 12.0).abs() < f64::EPSILON
+                    && *stroke_width == 4.0
+                    && color == "#770007"
         )));
 
         diagram.orientation = ChartOrientation::Horizontal;
@@ -1648,8 +1690,10 @@ mod tests {
         );
         assert!(horizontal.items.iter().any(|item| matches!(
             item,
-            LayoutedChartItem::AxisTickMark { y1, y2, stroke_width, .. }
-                if (*y2 - *y1 - 12.0).abs() < f64::EPSILON && *stroke_width == 4.0
+            LayoutedChartItem::AxisTickMark { y1, y2, stroke_width, color, .. }
+                if (*y2 - *y1 - 12.0).abs() < f64::EPSILON
+                    && *stroke_width == 4.0
+                    && color == "#770007"
         )));
     }
 
