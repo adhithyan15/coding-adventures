@@ -1,0 +1,17 @@
+% ============================================================================
+% long-vowel-team-sound.query.adj — worked recall over the
+% long-vowel-team-sound library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what sound does this
+% long-vowel-team spelling make?" (direct) or "which spellings make this
+% sound?" (reverse, many-answer) — it states no fact of its own — it only
+% `import`s the grounded table and asks binding queries.
+% ============================================================================
+
+import "long-vowel-team-sound.adj"
+
+? long_vowel_team_sound(ai, $Sound)                  % expect long_a_sound (direct)
+? long_vowel_team_sound($Sp, long_o_sound)           % expect ALL THREE: oa, ow_long_o, oe (many spellings, one sound)
+? long_vowel_team_sound(ow_long_o, $Sound)           % expect long_o_sound (the disambiguated "ow" row, direct)
+? long_vowel_team_sound(ow, $Sound)                  % expect abstain -- THIS table asserts nothing about the bare atom `ow` (see header design note); diphthong_sound(ow, $S) in the sibling library still answers ow_sound
+? long_vowel_team_sound(au, $Sound)                  % expect abstain -- UFLI tables au/aw under its separate "Other Vowel Teams" unit (lesson 93), not this Long Vowel Teams page
