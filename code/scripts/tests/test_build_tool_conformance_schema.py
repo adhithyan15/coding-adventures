@@ -421,7 +421,11 @@ class BuildToolConformanceSchemaTests(unittest.TestCase):
 
         snapshot = self.pure_schema["$defs"]["tracked_artifact_snapshot"]
         self.assertFalse(snapshot["additionalProperties"])
-        self.assertEqual(snapshot["required"], ["entries"])
+        self.assertEqual(snapshot["required"], ["unicode_version", "entries"])
+        self.assertEqual(
+            snapshot["properties"]["unicode_version"],
+            {"const": "17.0.0"},
+        )
         self.assertEqual(snapshot["properties"]["entries"]["maxItems"], 16384)
         entry = self.pure_schema["$defs"]["tracked_artifact_entry"]
         self.assertFalse(entry["additionalProperties"])
@@ -471,10 +475,20 @@ class BuildToolConformanceSchemaTests(unittest.TestCase):
             "result": copy.deepcopy(example["expected"]["result"]),
         }
         validator = jsonschema.Draft202012Validator(self.pure_schema)
-        record["input"]["options"]["tracked_artifact_snapshot"] = {"entries": []}
+        record["input"]["options"]["tracked_artifact_snapshot"] = {
+            "unicode_version": "17.0.0",
+            "entries": [],
+        }
         self.assertTrue(list(validator.iter_errors(record)))
         record["input"]["options"]["checks"].append("tracked_artifact_absence")
         self.assertEqual(list(validator.iter_errors(record)), [])
+        record["input"]["options"]["tracked_artifact_snapshot"][
+            "unicode_version"
+        ] = "15.1.0"
+        self.assertTrue(list(validator.iter_errors(record)))
+        record["input"]["options"]["tracked_artifact_snapshot"][
+            "unicode_version"
+        ] = "17.0.0"
         del record["input"]["options"]["tracked_artifact_snapshot"]
         self.assertTrue(list(validator.iter_errors(record)))
 

@@ -29,8 +29,8 @@ dotnet run -- --emit-plan --plan-file build-plan.json
 
 - Uses only the .NET base class library: `System.Text.Json`, `System.Xml`,
   `System.Security.Cryptography`, and `System.Diagnostics`.
-- Keeps the implementation in a single literate source file so the control
-  flow is easy to trace while reading.
+- Keeps the handwritten engine in one literate source file and the
+  hash-verified generated Unicode data in one clearly marked generated source.
 - Mirrors the current practical feature set of the TypeScript and Rust ports:
   shell `BUILD` files, manifest-based dependency resolution, git diff, cache,
   reporting, and plan emission.
@@ -41,4 +41,9 @@ dotnet run -- --emit-plan --plan-file build-plan.json
   entries alike. Length limits and path ordering use Unicode scalar values,
   while Windows reserved basenames use full Unicode uppercase mapping before
   comparison. Trailing slash and backslash separators are rejected as empty
-  path components.
+  path components. The snapshot pins Unicode 17.0.0, and all four Unicode
+  operations use source-embedded tables rather than host or operating-system
+  globalization data.
+- Declares the mixed MIT and Unicode-3.0 licensing of the engine and derived
+  tables and copies the full `UNICODE-LICENSE.txt` notice beside build,
+  publish, and package outputs.

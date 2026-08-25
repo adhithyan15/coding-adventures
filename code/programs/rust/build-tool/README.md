@@ -69,6 +69,10 @@ The tool is organized into focused modules, each responsible for one aspect of t
 8. **reporter** — Terminal-friendly build report formatting
 9. **validator** — Pure build-contract and inert tracked-artifact validation
 
+Tracked-artifact snapshots explicitly require Unicode 17.0.0. The validator's
+exactly pinned `oxixml-unicode` tables cover NFC, NFKC, full default folding,
+and root full uppercase without inheriting host-runtime Unicode data.
+
 ## Rayon parallelism
 
 The Rust implementation uses Rayon's work-stealing thread pool instead of Go's goroutine model. Rayon automatically distributes work across OS threads. For each dependency level, we use `par_iter()` to execute builds in parallel:

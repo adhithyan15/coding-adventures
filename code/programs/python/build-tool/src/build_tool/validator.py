@@ -4,11 +4,11 @@ from __future__ import annotations
 
 import json
 import re
-import unicodedata
 from collections.abc import Iterable
 from pathlib import Path
 from typing import Literal, TypedDict
 
+from build_tool import tracked_artifact_unicode17 as tracked_unicode
 from build_tool.discovery import Package
 
 CI_MANAGED_TOOLCHAIN_LANGUAGES = frozenset(
@@ -27,6 +27,7 @@ CI_MANAGED_TOOLCHAIN_LANGUAGES = frozenset(
 )
 TRACKED_ARTIFACT_COMPONENT_IDENTITY = "node_modules"
 TRACKED_ARTIFACT_REDACTED_PATH = "repository"
+TRACKED_ARTIFACT_UNICODE_VERSION = tracked_unicode.UNICODE_VERSION
 WINDOWS_RESERVED_BASENAMES = frozenset(
     {
         "CON",
@@ -222,8 +223,15 @@ def validate_perl_build_files(packages: Iterable[Package]) -> list[str]:
 
 def validate_tracked_artifact_snapshot(
     entries: Iterable[TrackedArtifactEntry],
+    *,
+    unicode_version: str = TRACKED_ARTIFACT_UNICODE_VERSION,
 ) -> list[ValidationDiagnostic]:
     """Derive tracked-artifact diagnostics from inert path records only."""
+    if unicode_version != TRACKED_ARTIFACT_UNICODE_VERSION:
+        raise ValueError(
+            "tracked artifact Unicode version must be "
+            f"{TRACKED_ARTIFACT_UNICODE_VERSION}"
+        )
     diagnostics: list[ValidationDiagnostic] = []
 
     for entry in entries:
@@ -247,7 +255,7 @@ def validate_tracked_artifact_snapshot(
         if normalized_path is None:
             raise AssertionError("valid tracked artifact path did not normalize")
         if any(
-            unicodedata.normalize("NFKC", component).casefold()
+            tracked_unicode.nfkc_casefold(component)
             == TRACKED_ARTIFACT_COMPONENT_IDENTITY
             for component in normalized_path.split("/")
         ):
@@ -286,7 +294,7 @@ def _normalize_tracked_artifact_path(path: str) -> tuple[str | None, str | None]
         return None, "EMPTY"
     if len(normalized) > 512:
         return None, "TOO_LONG"
-    if normalized != unicodedata.normalize("NFC", normalized):
+    if normalized != tracked_unicode.nfc(normalized):
         return None, "NON_NFC"
     if normalized.startswith("/"):
         return None, "ABSOLUTE"
@@ -301,7 +309,7 @@ def _normalize_tracked_artifact_path(path: str) -> tuple[str | None, str | None]
             return None, "DOT_SEGMENT"
         if segment.endswith((" ", ".")):
             return None, "TRAILING_DOT_OR_SPACE"
-        basename = segment.split(".", 1)[0].upper()
+        basename = tracked_unicode.full_uppercase(segment.split(".", 1)[0])
         if basename in WINDOWS_RESERVED_BASENAMES:
             return None, "RESERVED_BASENAME"
     return normalized, None

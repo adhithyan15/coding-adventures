@@ -6481,6 +6481,67 @@ were absent. GitHub reports the PR non-draft and mergeable while required checks
 are queued or in progress. Auto-merge remains disabled until every required
 check is terminal and acceptable.
 
+PR #12644 completed all 30 reported checks: 24 successes, five expected skips,
+and one neutral aggregate. GitHub reported the branch clean and mergeable, so
+the loop enabled squash auto-merge; GitHub merged it as
+`6d9882fbff004af242851589d34dc78bee59b654` at
+`2026-08-25T01:04:14Z` without a manual merge command. Main then advanced by
+one non-overlapping WASM SIMD change to exact revision
+`530938671414502ae74e3506527cc5081a19ddac`. The mandatory post-merge report is
+unchanged at schema 3, 15 established lanes, 1,371 implementation identities,
+4,564 slots, 908 singletons with 12,712 missing slots, 719 Rust singletons,
+zero collisions, and zero unknown buckets. OCaml remains correctly emerging at
+zero packages, and no new identity, slot, or eligible unowned portable gap was
+discovered.
+
+The state dependency audit found that both shared tracked-artifact hardening
+owners name and validate the independently reviewed F# facade but depended
+only on the shared C# engine. Their dependency lists now explicitly include
+`build-tool-fsharp-tracked-artifact-validation-conformance`; the complete
+486-owner graph remains acyclic and its edge count rises from 734 to 736.
+
+The next selected owner is
+`build-tool-tracked-artifact-unicode-version-contract`. All five explicit
+prerequisites are merged, it directly gates 11 owners and 20 unfinished
+descendants, and it closes the remaining cross-runtime semantic risk before
+the Go, JVM, Dart, and seven unfinished native consumers proceed. Seven live
+open PRs have zero exact overlap on the neutral, Python, C#, F#, state, or
+roadmap surfaces, and the target remote branch was absent. Rust already pins
+one Unicode 17.0.0 snapshot; the selected process-free tranche must replace
+Python and .NET host-table drift with one reviewed generated Unicode 17 data
+substrate for NFC, NFKC, full default folding, and full uppercase while
+preserving the no-filesystem, no-process, no-environment, and no-network
+authority boundary. The strategic OCaml substrate remains collision-unsafe
+while live PRs #12149 and #12162 touch its Go validator and main surfaces.
+
+The selected Unicode tranche now pins five official Unicode 17.0.0 data files
+by exact byte count and SHA-256 and generates one source-embedded policy for
+the neutral oracle, Python, C#, and the F# facade; Rust continues to use its
+reviewed Unicode 17 tables. The generator refuses redirects, exact-origin or
+final-URL drift, oversized and truncated bodies, hash drift, stale generated
+sources, and stale distributable license notices. Full official normalization,
+case-fold, and uppercase checks pass, as do the Todhri and outlined-letter
+version sentinels. Python, C#, F#, and Rust package suites, coverage, lint,
+static analysis, package audits, neutral conformance, Go downstream validation,
+build-file validation, package-parity, capability, Haskell, and OCaml gates all
+pass. Python wheel/sdist and C#/F# publish/NuGet artifacts declare mixed MIT and
+Unicode-3.0 licensing and contain the exact full notice. Two independent
+security reviews found redirect/body-cap and license-distribution defects; both
+were repaired, and the final re-review passed. After conflict-free rebases over
+eight non-overlapping commits, the collision-checked report at exact main
+`88ff366eb5bacc5ad112beb760ec6f6801bd905b` remains 15 lanes, 1,371 identities,
+4,564 slots, 908 singletons with 12,712 gaps, 719 Rust singletons, zero
+collisions, and zero unknown buckets.
+
+Ready-for-review PR #12659 now carries the bounded Unicode-version contract
+from validated head `711c6ffe91d76e62be029fa0fdf2fd3cd0ec781b`. Immediately before
+publication the branch was based on exact main
+`88ff366eb5bacc5ad112beb760ec6f6801bd905b`; the target remote branch was absent,
+and its 42 changed paths had zero exact overlap across seven other live open
+PRs. GitHub reports the PR non-draft and mergeable while required checks are
+queued. Auto-merge remains disabled until every required check is terminal and
+acceptable.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

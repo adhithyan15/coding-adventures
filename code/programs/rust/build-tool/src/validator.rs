@@ -54,6 +54,18 @@ pub struct TrackedArtifactDiagnostic {
 pub fn validate_tracked_artifact_snapshot(
     entries: &[TrackedArtifactEntry],
 ) -> Vec<TrackedArtifactDiagnostic> {
+    validate_tracked_artifact_snapshot_with_version(TRACKED_ARTIFACT_UNICODE_VERSION, entries)
+        .expect("the compiled tracked-artifact Unicode version is valid")
+}
+
+/// Derive diagnostics while requiring the caller's closed snapshot version.
+pub fn validate_tracked_artifact_snapshot_with_version(
+    unicode_version: &str,
+    entries: &[TrackedArtifactEntry],
+) -> Result<Vec<TrackedArtifactDiagnostic>, &'static str> {
+    if unicode_version != TRACKED_ARTIFACT_UNICODE_VERSION {
+        return Err("tracked artifact Unicode version must be 17.0.0");
+    }
     let mut diagnostics = Vec::new();
 
     for entry in entries {
@@ -99,7 +111,7 @@ pub fn validate_tracked_artifact_snapshot(
                 canonical_details_key(&left.details).cmp(&canonical_details_key(&right.details))
             })
     });
-    diagnostics
+    Ok(diagnostics)
 }
 
 fn normalize_tracked_artifact_path(path: &str) -> Result<String, &'static str> {
@@ -480,8 +492,8 @@ fn lua_sibling_install_dirs(lines: &[String]) -> Vec<String> {
 mod tests {
     use super::{
         validate_build_contracts, validate_ci_full_build_toolchains,
-        validate_tracked_artifact_snapshot, TrackedArtifactDiagnostic, TrackedArtifactEntry,
-        TRACKED_ARTIFACT_UNICODE_VERSION,
+        validate_tracked_artifact_snapshot, validate_tracked_artifact_snapshot_with_version,
+        TrackedArtifactDiagnostic, TrackedArtifactEntry, TRACKED_ARTIFACT_UNICODE_VERSION,
     };
     use crate::discovery::Package;
     use std::fs;
@@ -516,15 +528,28 @@ mod tests {
                 fixture["input"]["options"]["tracked_artifact_snapshot"]["entries"].clone(),
             )
             .unwrap();
+            let unicode_version = fixture["input"]["options"]["tracked_artifact_snapshot"]
+                ["unicode_version"]
+                .as_str()
+                .unwrap();
             let expected: Vec<TrackedArtifactDiagnostic> =
                 serde_json::from_value(fixture["expected"]["diagnostics"].clone()).unwrap();
 
             assert_eq!(
-                validate_tracked_artifact_snapshot(&entries),
+                validate_tracked_artifact_snapshot_with_version(unicode_version, &entries).unwrap(),
                 expected,
                 "fixture {fixture_name}"
             );
         }
+    }
+
+    #[test]
+    fn tracked_artifact_validation_rejects_unicode_version_drift() {
+        assert_eq!(TRACKED_ARTIFACT_UNICODE_VERSION, "17.0.0");
+        assert_eq!(
+            validate_tracked_artifact_snapshot_with_version("15.1.0", &[]),
+            Err("tracked artifact Unicode version must be 17.0.0")
+        );
     }
 
     #[test]

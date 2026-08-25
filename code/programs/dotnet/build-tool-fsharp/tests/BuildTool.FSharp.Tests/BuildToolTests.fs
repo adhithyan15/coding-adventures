@@ -87,11 +87,16 @@ let ``tracked artifact validation matches shared conformance fixtures`` (fixture
 
     use fixture = JsonDocument.Parse(File.ReadAllText(fixturePath))
 
-    let entries =
+    let snapshot =
         fixture.RootElement
             .GetProperty("input")
             .GetProperty("options")
             .GetProperty("tracked_artifact_snapshot")
+
+    let unicodeVersion = snapshot.GetProperty("unicode_version").GetString()
+
+    let entries =
+        snapshot
             .GetProperty("entries")
             .EnumerateArray()
         |> Seq.map (fun entry ->
@@ -104,7 +109,7 @@ let ``tracked artifact validation matches shared conformance fixtures`` (fixture
 
     let actual =
         entries :> IReadOnlyList<TrackedArtifactEntry>
-        |> validateTrackedArtifactSnapshot
+        |> validateTrackedArtifactSnapshot unicodeVersion
         |> JsonSerializer.SerializeToElement
 
     let expected =

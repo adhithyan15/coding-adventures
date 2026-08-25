@@ -23,6 +23,7 @@
       "packages": [],
       "dependency_edges": [],
       "tracked_artifact_snapshot": {
+        "unicode_version": "17.0.0",
         "entries": [
           {
             "ordinal": 1,
@@ -53,6 +54,16 @@
             "ordinal": 6,
             "path": "code/conın$.txt/file.cs",
             "entry_kind": "reparse"
+          },
+          {
+            "ordinal": 7,
+            "path": "code/\ud801\uddd2\u0307/file.rs",
+            "entry_kind": "regular"
+          },
+          {
+            "ordinal": 8,
+            "path": "\ud833\udce3\ud833\udce4\ud833\udcd9\ud833\udcda_\ud833\udce2\ud833\udce4\ud833\udcd9\ud833\udcea\ud833\udce1\ud833\udcda\ud833\udce8/version.txt",
+            "entry_kind": "regular"
           }
         ]
       }
@@ -90,6 +101,15 @@
         }
       },
       {
+        "code": "TRACKED_ARTIFACT_FORBIDDEN",
+        "severity": "error",
+        "path": "\ud833\udce3\ud833\udce4\ud833\udcd9\ud833\udcda_\ud833\udce2\ud833\udce4\ud833\udcd9\ud833\udcea\ud833\udce1\ud833\udcda\ud833\udce8/version.txt",
+        "details": {
+          "ordinal": 8,
+          "entry_kind": "regular"
+        }
+      },
+      {
         "code": "TRACKED_ARTIFACT_PATH_INVALID",
         "severity": "error",
         "path": "repository",
@@ -107,6 +127,16 @@
           "ordinal": 3,
           "entry_kind": "regular",
           "problem": "TOO_LONG"
+        }
+      },
+      {
+        "code": "TRACKED_ARTIFACT_PATH_INVALID",
+        "severity": "error",
+        "path": "repository",
+        "details": {
+          "ordinal": 7,
+          "entry_kind": "regular",
+          "problem": "NON_NFC"
         }
       },
       {

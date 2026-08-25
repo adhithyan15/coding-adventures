@@ -12,8 +12,10 @@ open CodingAdventures.BuildTool.CSharp
 // the language-paired programs stay behaviorally identical instead of drifting.
 
 [<MethodImpl(MethodImplOptions.NoInlining)>]
-let validateTrackedArtifactSnapshot (entries: IReadOnlyList<TrackedArtifactEntry>) =
-    Validator.ValidateTrackedArtifactSnapshot(entries)
+let validateTrackedArtifactSnapshot
+    (unicodeVersion: string)
+    (entries: IReadOnlyList<TrackedArtifactEntry>) =
+    Validator.ValidateTrackedArtifactSnapshot(unicodeVersion, entries)
 
 [<EntryPoint>]
 let main argv =

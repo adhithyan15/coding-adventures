@@ -197,10 +197,12 @@ public sealed class BuildToolTests : IDisposable
             "cases",
             fixtureName);
         using var fixture = JsonDocument.Parse(File.ReadAllText(fixturePath));
-        var entries = fixture.RootElement
+        var snapshot = fixture.RootElement
             .GetProperty("input")
             .GetProperty("options")
-            .GetProperty("tracked_artifact_snapshot")
+            .GetProperty("tracked_artifact_snapshot");
+        var unicodeVersion = snapshot.GetProperty("unicode_version").GetString()!;
+        var entries = snapshot
             .GetProperty("entries")
             .EnumerateArray()
             .Select(entry => new TrackedArtifactEntry(
@@ -209,12 +211,22 @@ public sealed class BuildToolTests : IDisposable
                 entry.GetProperty("entry_kind").GetString()!))
             .ToArray();
 
-        var actual = JsonSerializer.SerializeToElement(Validator.ValidateTrackedArtifactSnapshot(entries));
+        var actual = JsonSerializer.SerializeToElement(
+            Validator.ValidateTrackedArtifactSnapshot(unicodeVersion, entries));
         var expected = fixture.RootElement.GetProperty("expected").GetProperty("diagnostics");
 
         Assert.True(
             JsonElement.DeepEquals(expected, actual),
             $"Expected {expected.GetRawText()}, but received {actual.GetRawText()}.");
+    }
+
+    [Fact]
+    public void TrackedArtifactValidationRejectsUnicodeVersionDrift()
+    {
+        Assert.Equal("17.0.0", Validator.TrackedArtifactUnicodeVersion);
+        var error = Assert.Throws<ArgumentException>(() =>
+            Validator.ValidateTrackedArtifactSnapshot("15.1.0", []));
+        Assert.Contains("Unicode version must be 17.0.0", error.Message, StringComparison.Ordinal);
     }
 
     public static TheoryData<string, string> InvalidTrackedArtifactPaths => new()

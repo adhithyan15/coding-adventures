@@ -4,6 +4,14 @@ All notable changes to the Rust build tool will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.2.6] - 2026-08-25
+
+### Added
+
+- Require the shared tracked-artifact snapshot's explicit Unicode 17.0.0
+  version and prove the pinned Rust tables against the Todhri NFC and outlined
+  compatibility-letter version sentinels.
+
 ## [0.2.5] - 2026-08-24
 
 ### Added

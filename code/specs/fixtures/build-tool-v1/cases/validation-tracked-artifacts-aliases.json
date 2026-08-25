@@ -14,6 +14,7 @@
       "packages": [],
       "dependency_edges": [],
       "tracked_artifact_snapshot": {
+        "unicode_version": "17.0.0",
         "entries": [
           {"ordinal": 1, "path": "code/Node_Modules/pkg/index.js", "entry_kind": "regular"},
           {"ordinal": 2, "path": "code/packages/typescript/demo/ｎｏｄｅ＿ｍｏｄｕｌｅｓ/a.js", "entry_kind": "symlink"},
