@@ -521,6 +521,55 @@ line "Target" [35, 50, 68, 82]"##,
     }
 
     #[test]
+    fn render_rotated_mermaid_xy_labels_to_png() {
+        let diagram = parse_xychart(
+            "%%{init: {\"xyChart\": {\"xAxis\": {\"labelRotation\": -45}}}}%%\n\
+             xychart vertical\n\
+             x-axis [January forecast, February forecast, March forecast]\n\
+             y-axis 0 --> 100\n\
+             bar [35, 62, 88]\n",
+        )
+        .expect("rotated XY chart should parse");
+        let layout = layout_chart_diagram(&diagram, 700.0, 500.0);
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
+            diagram_ir::LayoutedChartItem::AxisTick {
+                rotation_degrees,
+                ..
+            } if *rotation_degrees == -45.0
+        )));
+
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_chart(
+            &layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color {
+                    r: 255,
+                    g: 255,
+                    b: 255,
+                    a: 255,
+                },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 12.0),
+                title_font: font_spec("Helvetica", 16.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Group(group) if group.transform.is_some()
+        )));
+
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_xy_rotation_e2e.png").expect("PNG write failed");
+        assert_eq!((pixels.width, pixels.height), (700, 500));
+    }
+
+    #[test]
     fn render_mermaid_quadrant_to_png() {
         let diagram = parse_quadrant_chart(
             "%%{init: {\"quadrantChart\": {\"chartWidth\": 680, \"chartHeight\": 560, \"xAxisPosition\": \"top\", \"yAxisPosition\": \"right\", \"pointRadius\": 7, \"quadrantPadding\": 18, \"quadrantInternalBorderStrokeWidth\": 3, \"quadrantExternalBorderStrokeWidth\": 5, \"titleFontSize\": 22, \"titlePadding\": 12, \"xAxisLabelFontSize\": 15, \"xAxisLabelPadding\": 21, \"yAxisLabelFontSize\": 16, \"yAxisLabelPadding\": 23, \"quadrantLabelFontSize\": 17, \"quadrantTextTopPadding\": 19, \"pointLabelFontSize\": 14, \"pointTextPadding\": 9}, \"themeVariables\": {\"quadrant1Fill\": \"#b4dcff\", \"quadrant2Fill\": \"#fef0ff\", \"quadrant3Fill\": \"#fffaf0\", \"quadrant4Fill\": \"#f0fff2\", \"quadrantPointFill\": \"#0149ff\", \"quadrantPointTextFill\": \"#dc00ff\", \"quadrantInternalBorderStrokeFill\": \"#3636f2\", \"quadrantExternalBorderStrokeFill\": \"#ff1010\"}}}%%\n\

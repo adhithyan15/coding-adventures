@@ -41,8 +41,8 @@ use diagram_ir::{
 use layout_ir::{Color, Content, FontSpec, PositionedNode, TextAlign, TextContent};
 use layout_to_paint::{layout_to_paint, LayoutToPaintOptions};
 use paint_instructions::{
-    PaintBase, PaintEllipse, PaintInstruction, PaintPath, PaintRect, PaintScene, PathCommand,
-    StrokeCap, StrokeJoin,
+    PaintBase, PaintEllipse, PaintGroup, PaintInstruction, PaintPath, PaintRect, PaintScene,
+    PathCommand, StrokeCap, StrokeJoin,
 };
 use text_interfaces::{FontMetrics, FontResolver, TextShaper};
 
@@ -611,6 +611,7 @@ where
 {
     let mut instructions: Vec<PaintInstruction> = Vec::new();
     let mut text_children: Vec<PositionedNode> = Vec::new();
+    let mut rotated_text_children: Vec<(PositionedNode, f64, f64, f64)> = Vec::new();
     let lf = options.label_font.clone();
     let ls = lf.size;
 
@@ -1019,12 +1020,13 @@ where
                 label,
                 orientation,
                 font_size,
+                rotation_degrees,
             } => {
                 let (tx, ty, tw) = match orientation {
                     Orientation::Horizontal => (x - 30.0, y - ls / 2.0, 60.0),
                     Orientation::Vertical => (x - 30.0, y + 2.0, 60.0),
                 };
-                text_children.push(text_node(
+                let node = text_node_no_wrap(
                     label,
                     tx,
                     ty,
@@ -1037,7 +1039,12 @@ where
                         b: 128,
                         a: 255,
                     },
-                ));
+                );
+                if rotation_degrees.abs() > f64::EPSILON {
+                    rotated_text_children.push((node, *rotation_degrees, *x, *y));
+                } else {
+                    text_children.push(node);
+                }
             }
             LayoutedChartItem::Legend {
                 x,
@@ -1107,6 +1114,35 @@ where
     };
     let text_scene = layout_to_paint(&text_root, &text_opts);
     instructions.extend(text_scene.instructions);
+    for (node, rotation_degrees, pivot_x, pivot_y) in rotated_text_children {
+        let root = PositionedNode {
+            x: 0.0,
+            y: 0.0,
+            width: diagram.width,
+            height: diagram.height,
+            id: None,
+            content: None,
+            children: vec![node],
+            ext: HashMap::new(),
+        };
+        let scene = layout_to_paint(&root, &text_opts);
+        let radians = rotation_degrees.to_radians();
+        let cosine = radians.cos();
+        let sine = radians.sin();
+        instructions.push(PaintInstruction::Group(PaintGroup {
+            base: PaintBase::default(),
+            children: scene.instructions,
+            transform: Some([
+                cosine,
+                sine,
+                -sine,
+                cosine,
+                pivot_x - cosine * pivot_x + sine * pivot_y,
+                pivot_y - sine * pivot_x - cosine * pivot_y,
+            ]),
+            opacity: None,
+        }));
+    }
 
     let bg = options.background;
     let mut metadata = HashMap::new();
@@ -4395,6 +4431,15 @@ mod tests {
                     label: "Q1".into(),
                     orientation: Orientation::Vertical,
                     font_size: 18.0,
+                    rotation_degrees: 0.0,
+                },
+                LayoutedChartItem::AxisTick {
+                    x: 180.0,
+                    y: 264.0,
+                    label: "Rotated".into(),
+                    orientation: Orientation::Vertical,
+                    font_size: 16.0,
+                    rotation_degrees: -45.0,
                 },
             ],
         };
@@ -4407,6 +4452,15 @@ mod tests {
         assert!(scene.instructions.iter().any(|instruction| matches!(
             instruction,
             PaintInstruction::GlyphRun(run) if run.font_size == 18.0
+        )));
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Group(group)
+                if group.transform.is_some()
+                    && group.children.iter().any(|child| matches!(
+                        child,
+                        PaintInstruction::GlyphRun(run) if run.font_size == 16.0
+                    ))
         )));
     }
 
