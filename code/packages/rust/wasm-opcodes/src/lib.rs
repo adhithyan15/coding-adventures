@@ -1846,6 +1846,59 @@ pub enum SimdOpKind {
     /// [`Self::MaxF32x4`]'s NaN-canonicalizing behavior. Deliberately NOT
     /// implemented by reusing `MaxF32x4`'s NaN logic.
     PmaxF32x4,
+    /// `f64x2.abs` (SIMD widen PR35) -- pop one `v128`, clear the sign bit
+    /// of each of the 2 `f64` lanes, push one `v128`. A pure bit operation
+    /// with no NaN/signed-zero subtlety -- `f64::abs()` is correct here,
+    /// exactly like [`Self::AbsF32x4`]. Same UNARY "pop v128, push v128"
+    /// shape as [`Self::NegF64x2`]/[`Self::SqrtF64x2`], just clearing the
+    /// sign bit instead of flipping it or taking a square root. `f64x2`
+    /// never got an `abs` handler in the earlier `f64x2` arithmetic-family
+    /// PR (PR31 added `neg`/`sqrt`/`add`/`sub`/`mul`/`div` but not `abs`),
+    /// so this PR fills that gap alongside `min`/`max`/`pmin`/`pmax`.
+    AbsF64x2,
+    /// `f64x2.min` (SIMD widen PR35) -- pop two `v128`s, take the
+    /// WASM-spec `fmin` (NOT Rust's `f64::min()`/IEEE `minNum`) of each of
+    /// the 2 `f64` lane pairs. Direct 2-lane mirror of [`Self::MinF32x4`]
+    /// -- same BINARY shape, same NaN-propagating (either operand NaN ->
+    /// result NaN), signed-zero-aware (-0.0 wins a -0.0/+0.0 tie) `fmin`
+    /// discipline, just at `f64x2`'s lane width. This is the exact
+    /// per-lane transplant of this crate's own scalar `f64.min` opcode
+    /// handler, same "NOT a plain native `.min()`" caveat as `MinF32x4`.
+    MinF64x2,
+    /// `f64x2.max` (SIMD widen PR35) -- pop two `v128`s, take the
+    /// WASM-spec `fmax` (NOT Rust's `f64::max()`/IEEE `maxNum`) of each of
+    /// the 2 `f64` lane pairs. Direct 2-lane mirror of [`Self::MaxF32x4`]
+    /// -- same BINARY shape, same NaN-propagating, signed-zero-aware
+    /// (+0.0 wins a -0.0/+0.0 tie, the mirror-image tie-break from
+    /// [`Self::MinF64x2`]'s -0.0) `fmax` discipline, just at `f64x2`'s
+    /// lane width.
+    MaxF64x2,
+    /// `f64x2.pmin` (SIMD widen PR35) -- pop two `v128`s (`a` then `b`, in
+    /// that push order so `a` was pushed first), compute each of the 2
+    /// lanes as `b < a ? b : a` using the IEEE-754 `<` operator DIRECTLY,
+    /// push one `v128`. Direct 2-lane mirror of [`Self::PminF32x4`] --
+    /// DELIBERATELY SIMPLER than [`Self::MinF64x2`] above and NOT the
+    /// same code path: no NaN canonicalization, no signed-zero tie-break
+    /// special case, just a plain conditional select. Since IEEE-754 `<`
+    /// is always `false` when either operand is NaN, `pmin` returns `a`
+    /// (the FIRST operand) unchanged whenever either operand is NaN, NOT
+    /// a canonicalized NaN result the way `MinF64x2` would produce --
+    /// same first-operand-wins-on-NaN discipline as `f32x4.pmin`, the
+    /// highest-risk correctness area in the `f32x4` PR this mirrors:
+    /// copying `MinF64x2`'s NaN-canonicalization logic here would be
+    /// WRONG.
+    PminF64x2,
+    /// `f64x2.pmax` (SIMD widen PR35) -- same "pseudo-max" shape as
+    /// [`Self::PminF64x2`] above, symmetric formula: pop two `v128`s
+    /// (`a` then `b`), compute each of the 2 lanes as `a < b ? b : a`
+    /// using IEEE-754 `<` DIRECTLY, push one `v128`. Direct 2-lane
+    /// mirror of [`Self::PmaxF32x4`]. Since `a < b` is always `false`
+    /// when either operand is NaN, `pmax` also returns `a` (the FIRST
+    /// operand) unchanged whenever either operand is NaN -- same
+    /// first-operand-wins-on-NaN discipline as `pmin`, NOT
+    /// [`Self::MaxF64x2`]'s NaN-canonicalizing behavior. Deliberately NOT
+    /// implemented by reusing `MaxF64x2`'s NaN logic.
+    PmaxF64x2,
 }
 
 /// One entry in the SIMD opcode table: everything a consumer needs to
@@ -2387,6 +2440,39 @@ pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "f32x4.max", sub_opcode: 0xE9, kind: SimdOpKind::MaxF32x4 },
     SimdOpInfo { name: "f32x4.pmin", sub_opcode: 0xEA, kind: SimdOpKind::PminF32x4 },
     SimdOpInfo { name: "f32x4.pmax", sub_opcode: 0xEB, kind: SimdOpKind::PmaxF32x4 },
+    // SIMD widen PR35 (task #220-222): f64x2.abs (0xEC), f64x2.min
+    // (0xF4), f64x2.max (0xF5), f64x2.pmin (0xF6), f64x2.pmax (0xF7) --
+    // closes the f64x2 arithmetic family, a direct structural mirror of
+    // PR34's f32x4.max/pmin/pmax, plus `abs` (f32x4.abs already existed
+    // since PR19; f64x2.abs did not exist yet, so it rides along here).
+    // Each sub-opcode byte fetched live from `BinarySIMD.md` and
+    // cross-checked against every existing `SIMD_OPS` entry: `0xEC` is
+    // the slot immediately BEFORE the already-implemented `f64x2.neg`'s
+    // `0xED` (PR31), previously called out as "still unimplemented" in
+    // that PR's own comment above; `0xF4`/`0xF5` sit immediately past
+    // `f64x2.div`'s `0xF3` (PR31) with no gap, likewise previously called
+    // out as "still unimplemented"; `0xF6`/`0xF7` continue the run
+    // immediately past `0xF5` with no gap, confirmed free of collision
+    // with every existing `SIMD_OPS` entry (the next occupied slot above
+    // this run is `i32x4.trunc_sat_f32x4_s` at `0xF8`, well clear, same
+    // as PR34's own f32x4.max/pmin/pmax run). `f64x2.min`/`f64x2.max`
+    // mirror `f32x4.min`/`f32x4.max`'s WASM-spec `fmin`/`fmax`
+    // NaN-propagating, signed-zero-aware semantics exactly (see
+    // `SimdOpKind::MinF64x2`/`MaxF64x2`'s own doc comments);
+    // `f64x2.pmin`/`f64x2.pmax` are the same DIFFERENT, deliberately
+    // SIMPLER "pseudo-min"/"pseudo-max" shape as their `f32x4` mirrors --
+    // a plain IEEE-754 `<`-based conditional select with no NaN
+    // canonicalization, NOT the same code path as `min`/`max` (see
+    // `SimdOpKind::PminF64x2`/`PmaxF64x2`'s own doc comments for the
+    // exact first-operand-wins-on-NaN behavior this implies). This PR
+    // also vendors `simd_f64x2.wast` and `simd_f64x2_pmin_pmax.wast` --
+    // see `code/packages/rust/wasm-conformance/tests/fixtures/
+    // fetch_testsuite.py`.
+    SimdOpInfo { name: "f64x2.abs", sub_opcode: 0xEC, kind: SimdOpKind::AbsF64x2 },
+    SimdOpInfo { name: "f64x2.min", sub_opcode: 0xF4, kind: SimdOpKind::MinF64x2 },
+    SimdOpInfo { name: "f64x2.max", sub_opcode: 0xF5, kind: SimdOpKind::MaxF64x2 },
+    SimdOpInfo { name: "f64x2.pmin", sub_opcode: 0xF6, kind: SimdOpKind::PminF64x2 },
+    SimdOpInfo { name: "f64x2.pmax", sub_opcode: 0xF7, kind: SimdOpKind::PmaxF64x2 },
 ];
 
 /// Look up a SIMD opcode by its LEB128-decoded sub-opcode value (the
@@ -2805,8 +2891,8 @@ mod tests {
     // ── SIMD (0xFD prefix, v128 first slice) ─────────────────────────────────
 
     #[test]
-    fn simd_ops_table_has_the_expected_188_entries_and_no_duplicates() {
-        assert_eq!(SIMD_OPS.len(), 188);
+    fn simd_ops_table_has_the_expected_193_entries_and_no_duplicates() {
+        assert_eq!(SIMD_OPS.len(), 193);
 
         let mut seen_sub_opcodes = std::collections::HashSet::new();
         let mut seen_names = std::collections::HashSet::new();
@@ -3664,5 +3750,32 @@ mod tests {
         }
         // f32x4.min (0xE8) immediately precedes this run with no overlap.
         assert_eq!(get_simd_op(0xE8).map(|o| o.name), Some("f32x4.min"));
+    }
+
+    #[test]
+    fn simd_f64x2_abs_min_max_pmin_pmax_have_the_real_verified_sub_opcode_values() {
+        // SIMD widen PR35 (task #220-222): f64x2.abs (0xEC), f64x2.min
+        // (0xF4), f64x2.max (0xF5), f64x2.pmin (0xF6), f64x2.pmax (0xF7)
+        // -- fetched live from BinarySIMD.md and cross-checked against
+        // the already-implemented f64x2.neg (0xED) and f64x2.div (0xF3)
+        // entries: 0xEC sits immediately before f64x2.neg's 0xED, and
+        // 0xF4-0xF7 sit immediately past f64x2.div's 0xF3 with no gap.
+        for (name, sub_opcode, kind) in [
+            ("f64x2.abs", 0xEC, SimdOpKind::AbsF64x2),
+            ("f64x2.min", 0xF4, SimdOpKind::MinF64x2),
+            ("f64x2.max", 0xF5, SimdOpKind::MaxF64x2),
+            ("f64x2.pmin", 0xF6, SimdOpKind::PminF64x2),
+            ("f64x2.pmax", 0xF7, SimdOpKind::PmaxF64x2),
+        ] {
+            let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
+            assert_eq!(op.name, name);
+            assert_eq!(op.kind, kind);
+            assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
+        }
+        // f64x2.neg (0xED) immediately follows f64x2.abs (0xEC) with no
+        // overlap; f64x2.div (0xF3) immediately precedes f64x2.min (0xF4)
+        // with no overlap.
+        assert_eq!(get_simd_op(0xED).map(|o| o.name), Some("f64x2.neg"));
+        assert_eq!(get_simd_op(0xF3).map(|o| o.name), Some("f64x2.div"));
     }
 }

@@ -528,6 +528,26 @@ TESTSUITE_FILES = [
     # far. See the NOTICE file for the real vendored/pass counts.
     "simd_f32x4.wast",
     "simd_f32x4_pmin_pmax.wast",
+    # SIMD widen PR35 (task #220-222): simd_f64x2.wast and
+    # simd_f64x2_pmin_pmax.wast -- vendors the dedicated upstream files
+    # for f64x2.abs (0xEC), f64x2.min (0xF4), f64x2.max (0xF5),
+    # f64x2.pmin (0xF6), f64x2.pmax (0xF7), this PR's 5 new opcodes,
+    # closing the f64x2 arithmetic family (neg/sqrt/add/sub/mul/div in
+    # PR31, this PR's abs/min/max/pmin/pmax) -- a direct structural
+    # mirror of PR34's f32x4 closure, at f64x2's 2-lane width, plus
+    # `abs` (f32x4.abs already existed since PR19; f64x2.abs did not).
+    # `simd_f64x2.wast` is the upstream corpus's general f64x2
+    # smoke-test file (covers all of neg/sqrt/add/sub/mul/div/min/max,
+    # already-implemented ops included, plus this PR's abs/min/max); the
+    # deliberately DIFFERENT, deliberately SIMPLER "pseudo-min"/
+    # "pseudo-max" semantics (a plain IEEE-754 `<`-based conditional
+    # select, NOT the same code path as `min`/`max`'s NaN
+    # canonicalization -- see wasm-opcodes' `SimdOpKind::PminF64x2`/
+    # `PmaxF64x2` doc comments) get their own dedicated, much larger
+    # corpus file, `simd_f64x2_pmin_pmax.wast` -- same split as PR34's
+    # f32x4 pair. See the NOTICE file for the real vendored/pass counts.
+    "simd_f64x2.wast",
+    "simd_f64x2_pmin_pmax.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under

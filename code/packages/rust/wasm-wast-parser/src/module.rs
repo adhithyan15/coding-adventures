@@ -1933,7 +1933,12 @@ fn encode_stream_instr(
             | wasm_opcodes::SimdOpKind::AddSatI16x8S
             | wasm_opcodes::SimdOpKind::AddSatI16x8U
             | wasm_opcodes::SimdOpKind::SubSatI16x8S
-            | wasm_opcodes::SimdOpKind::SubSatI16x8U => {
+            | wasm_opcodes::SimdOpKind::SubSatI16x8U
+            | wasm_opcodes::SimdOpKind::AbsF64x2
+            | wasm_opcodes::SimdOpKind::MinF64x2
+            | wasm_opcodes::SimdOpKind::MaxF64x2
+            | wasm_opcodes::SimdOpKind::PminF64x2
+            | wasm_opcodes::SimdOpKind::PmaxF64x2 => {
                 // `i8x16.add_sat_s`/`_u`/`.sub_sat_s`/`_u`/
                 // `i16x8.add_sat_s`/`_u`/`.sub_sat_s`/`_u` (SIMD widen
                 // PR33) join too: same BINARY (pop two v128s, push one),
@@ -2011,6 +2016,14 @@ fn encode_stream_instr(
                 // deliberately simpler `<`-based select (see
                 // `SimdOpKind::PminF32x4`/`PmaxF32x4`'s own doc comments)
                 // are both entirely invisible at this encoding level.
+                // `AbsF64x2`/`MinF64x2`/`MaxF64x2`/`PminF64x2`/`PmaxF64x2`
+                // (SIMD widen PR35) join too, closing the f64x2
+                // arithmetic family the same way PR34 closed f32x4's --
+                // 1 UNARY (`abs`) and 4 BINARY (`min`/`max`/`pmin`/
+                // `pmax`), same no-immediate encoding shape; the same
+                // NaN-canonicalizing vs. `<`-based-select runtime
+                // distinction (see `SimdOpKind::MinF64x2`/`PminF64x2`'s
+                // own doc comments) is likewise entirely invisible here.
                 out.push(0xFD);
                 out.extend(wasm_leb128::encode_unsigned(simd_op.sub_opcode as u64));
                 return Ok(0);
@@ -2785,7 +2798,12 @@ fn encode_flat_instr(
             | wasm_opcodes::SimdOpKind::AddSatI16x8S
             | wasm_opcodes::SimdOpKind::AddSatI16x8U
             | wasm_opcodes::SimdOpKind::SubSatI16x8S
-            | wasm_opcodes::SimdOpKind::SubSatI16x8U => {
+            | wasm_opcodes::SimdOpKind::SubSatI16x8U
+            | wasm_opcodes::SimdOpKind::AbsF64x2
+            | wasm_opcodes::SimdOpKind::MinF64x2
+            | wasm_opcodes::SimdOpKind::MaxF64x2
+            | wasm_opcodes::SimdOpKind::PminF64x2
+            | wasm_opcodes::SimdOpKind::PmaxF64x2 => {
                 // `i8x16.add_sat_s`/`_u`/`.sub_sat_s`/`_u`/
                 // `i16x8.add_sat_s`/`_u`/`.sub_sat_s`/`_u` (SIMD widen
                 // PR33) join too, same reasoning as `NarrowI16x8S/_U`
@@ -2827,6 +2845,9 @@ fn encode_flat_instr(
                 // `MaxF32x4`/`PminF32x4`/`PmaxF32x4` (SIMD widen PR34) join
                 // too, same reasoning -- see the matching comment in
                 // `encode_stream_instr` above.
+                // `AbsF64x2`/`MinF64x2`/`MaxF64x2`/`PminF64x2`/`PmaxF64x2`
+                // (SIMD widen PR35) join too, same reasoning -- see the
+                // matching comment in `encode_stream_instr` above.
                 encode_instr_list(args, icx, out)?;
                 out.push(0xFD);
                 out.extend(wasm_leb128::encode_unsigned(simd_op.sub_opcode as u64));
@@ -5825,6 +5846,37 @@ mod tests {
             assert!(code.windows(3).any(|w| w == [0xFD, 0xE9, 0x01]), "missing f32x4.max: {code:?}");
             assert!(code.windows(3).any(|w| w == [0xFD, 0xEA, 0x01]), "missing f32x4.pmin: {code:?}");
             assert!(code.windows(3).any(|w| w == [0xFD, 0xEB, 0x01]), "missing f32x4.pmax: {code:?}");
+        }
+    }
+
+    #[test]
+    fn f64x2_abs_min_max_pmin_pmax_family_encodes_the_real_two_byte_leb128_sub_opcodes() {
+        // SIMD widen PR35 (task #220-222): f64x2.abs (0xEC), f64x2.min
+        // (0xF4), f64x2.max (0xF5), f64x2.pmin (0xF6), f64x2.pmax (0xF7)
+        // -- closes the f64x2 arithmetic family, a direct structural
+        // mirror of PR34's f32x4.max/pmin/pmax test above, plus `abs`.
+        // Same "real 2-byte LEB128" shape (all five sub-opcode values are
+        // >= 128), and same "no immediate beyond the opcode bytes
+        // themselves" shape -- `abs` is UNARY, `min`/`max`/`pmin`/`pmax`
+        // are BINARY; `min`/`max`'s NaN-canonicalizing runtime semantics
+        // and `pmin`/`pmax`'s deliberately simpler `<`-based select are
+        // both entirely invisible at this encoding level.
+        let folded = parse_module(
+            r#"(module (func (param v128 v128) (result v128)
+                 (f64x2.pmax (f64x2.pmin (f64x2.max (f64x2.min (f64x2.abs (local.get 0)) (local.get 1)) (local.get 1)) (local.get 1)) (local.get 1))))"#,
+        )
+        .unwrap();
+        let flat = parse_module(
+            r#"(module (func (param v128 v128) (result v128)
+                 local.get 0 f64x2.abs local.get 1 f64x2.min local.get 1 f64x2.max local.get 1 f64x2.pmin local.get 1 f64x2.pmax))"#,
+        )
+        .unwrap();
+        for code in [code_of(&folded, 0), code_of(&flat, 0)] {
+            assert!(code.windows(3).any(|w| w == [0xFD, 0xEC, 0x01]), "missing f64x2.abs: {code:?}");
+            assert!(code.windows(3).any(|w| w == [0xFD, 0xF4, 0x01]), "missing f64x2.min: {code:?}");
+            assert!(code.windows(3).any(|w| w == [0xFD, 0xF5, 0x01]), "missing f64x2.max: {code:?}");
+            assert!(code.windows(3).any(|w| w == [0xFD, 0xF6, 0x01]), "missing f64x2.pmin: {code:?}");
+            assert!(code.windows(3).any(|w| w == [0xFD, 0xF7, 0x01]), "missing f64x2.pmax: {code:?}");
         }
     }
 
