@@ -1424,7 +1424,18 @@ pub fn find_nodes(node: &GrammarASTNode, rule_name: &str) -> Vec<GrammarASTNode>
     let mut stack: Vec<&GrammarASTNode> = vec![node];
     while let Some(current) = stack.pop() {
         if current.rule_name == rule_name {
-            results.push(current.clone());
+            // `clone_node_iterative`, not `current.clone()` -- see its own
+            // doc comment. A plain `.clone()` here would use
+            // `GrammarASTNode`'s derived `Clone`, which is itself a
+            // recursive walk of the same nested structure this function
+            // was rewritten to stop recursing over. Matching a rule near
+            // the *root* of a deep hand-built tree (an ordinary usage
+            // pattern -- e.g. searching for an ancestor/wrapper rule
+            // rather than a deeply-buried leaf) would silently reopen the
+            // exact native-stack-overflow this whole rewrite exists to
+            // close, just moved from the traversal into the clone.
+            // Caught by `/security-review`.
+            results.push(clone_node_iterative(current));
         }
         // Push in reverse so the leftmost child ends up on top of the
         // stack and is therefore popped (and thus visited) first --
@@ -1437,6 +1448,69 @@ pub fn find_nodes(node: &GrammarASTNode, rule_name: &str) -> Vec<GrammarASTNode>
         }
     }
     results
+}
+
+/// Deep-clone a `GrammarASTNode` without native recursion.
+///
+/// `GrammarASTNode`'s derived `Clone` walks `children: Vec<ASTNodeOrToken>`
+/// the same way its `Drop` glue does — recursively, one native call frame
+/// per nesting level. Plain `node.clone()` on a pathologically deep,
+/// caller-constructed tree is exactly as CWE-674-vulnerable as the
+/// recursive traversal [`find_nodes`] was rewritten to stop using, and
+/// reaching it is not exotic: it fires on any match near the root of a
+/// deep tree. This performs the equivalent deep clone iteratively —
+/// post-order, using an explicit heap-allocated stack of "still assembling
+/// this node's cloned children" frames instead of the native call stack,
+/// so depth is bounded only by available memory.
+fn clone_node_iterative(node: &GrammarASTNode) -> GrammarASTNode {
+    struct Frame<'a> {
+        source: &'a GrammarASTNode,
+        remaining: std::slice::Iter<'a, ASTNodeOrToken>,
+        cloned_children: Vec<ASTNodeOrToken>,
+    }
+
+    fn finish(frame: Frame) -> GrammarASTNode {
+        GrammarASTNode {
+            rule_name: frame.source.rule_name.clone(),
+            children: frame.cloned_children,
+            start_line: frame.source.start_line,
+            start_column: frame.source.start_column,
+            end_line: frame.source.end_line,
+            end_column: frame.source.end_column,
+        }
+    }
+
+    let mut stack = vec![Frame {
+        source: node,
+        remaining: node.children.iter(),
+        cloned_children: Vec::new(),
+    }];
+
+    loop {
+        let top = stack.last_mut().expect("stack is never empty inside this loop");
+        match top.remaining.next() {
+            // A token is a flat struct with no nested GrammarASTNode --
+            // its own derived Clone is already O(1), no rewrite needed.
+            Some(ASTNodeOrToken::Token(tok)) => {
+                top.cloned_children.push(ASTNodeOrToken::Token(tok.clone()));
+            }
+            Some(ASTNodeOrToken::Node(child)) => {
+                stack.push(Frame {
+                    source: child,
+                    remaining: child.children.iter(),
+                    cloned_children: Vec::new(),
+                });
+            }
+            None => {
+                let frame = stack.pop().expect("just matched via stack.last_mut()");
+                let cloned = finish(frame);
+                match stack.last_mut() {
+                    Some(parent) => parent.cloned_children.push(ASTNodeOrToken::Node(cloned)),
+                    None => return cloned,
+                }
+            }
+        }
+    }
 }
 
 /// Collect all tokens in depth-first order, optionally filtered by type.
@@ -1909,16 +1983,48 @@ mod tests {
             for _ in 0..50_000 {
                 inner = wrap_node("wrapper", vec![ASTNodeOrToken::Node(inner)]);
             }
+            // Rename the outermost level so it's uniquely findable and
+            // distinct from the 50,000 "wrapper" levels beneath it --
+            // this is what lets the assertion below match *once*, at the
+            // root, rather than at every level (matching "wrapper" itself
+            // would clone an ever-shrinking suffix of the chain 50,000
+            // times over, an O(n^2) blowup that has nothing to do with
+            // what this test is actually checking).
+            let GrammarASTNode { children, start_line, start_column, end_line, end_column, .. } = inner;
+            let root = GrammarASTNode {
+                rule_name: "root_of_deep_tree".to_string(),
+                children, start_line, start_column, end_line, end_column,
+            };
 
-            let matches = find_nodes(&inner, "target");
+            let matches = find_nodes(&root, "target");
             assert_eq!(matches.len(), 1, "the one deeply-buried target node must still be found");
 
-            let tokens = collect_tokens(&inner, None);
+            let tokens = collect_tokens(&root, None);
             assert_eq!(tokens.len(), 1);
             assert_eq!(tokens[0].value, "42");
 
-            // Deliberately leak `inner` rather than let it drop normally.
-            // This is testing `find_nodes`/`collect_tokens` specifically,
+            // The regression this specifically guards: `/security-review`
+            // found that the traversal-only fix above still overflowed
+            // the native stack via `GrammarASTNode`'s recursive derived
+            // `Clone`, reached through `find_nodes`'s own `results.push`
+            // whenever a match sits near the *root* of a deep tree (an
+            // ordinary usage pattern, not a contrived edge case) --
+            // matching a single leaf near the bottom, as the assertion
+            // above does, never exercised that path. This one does: it
+            // matches the root itself, forcing a clone of the entire
+            // 50,000-level subtree beneath it.
+            let root_matches = find_nodes(&root, "root_of_deep_tree");
+            assert_eq!(root_matches.len(), 1);
+            // The clone must be a faithful, fully-structured deep copy,
+            // not just "didn't crash" -- re-run find_nodes/collect_tokens
+            // on the CLONED copy and confirm they see the same buried
+            // leaf the original did.
+            assert_eq!(find_nodes(&root_matches[0], "target").len(), 1);
+            assert_eq!(collect_tokens(&root_matches[0], None)[0].value, "42");
+
+            // Deliberately leak both trees rather than let them drop
+            // normally. This is testing `find_nodes`/`collect_tokens`
+            // (and the `Clone`-avoiding helper they now use) specifically,
             // not `GrammarASTNode`'s ordinary compiler-generated `Drop`
             // glue -- which, being itself a plain recursive walk of the
             // same nested `Vec<ASTNodeOrToken>` structure, independently
@@ -1927,7 +2033,8 @@ mod tests {
             // this test), logged as its own follow-up rather than fixed
             // here or silently worked around by shrinking this test's
             // depth to hide it.
-            std::mem::forget(inner);
+            std::mem::forget(root);
+            std::mem::forget(root_matches);
         });
         handle
             .join()

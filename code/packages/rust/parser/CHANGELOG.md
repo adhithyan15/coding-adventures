@@ -38,11 +38,31 @@ no breaking change for any of this shared engine's ~100 downstream
 consumers. This was the deciding factor over an arbitrary depth-cap
 approach (which would need a signature change to report "gave up").
 
+**Caught by `/security-review`, fixed before this landed**: the first
+version of this fix made the *traversal* iterative but left
+`find_nodes`'s own `results.push(current.clone())` calling
+`GrammarASTNode`'s derived `Clone` — which is itself exactly as
+recursive as the traversal just fixed, walking the same nested
+`Vec<ASTNodeOrToken>` structure. Matching a rule name near the *root* of
+a deep tree (an ordinary usage pattern — searching for an ancestor or
+wrapper rule, not only a deeply-buried leaf) silently reopened the same
+native-stack-overflow the rewrite exists to close, just moved from the
+traversal into the clone. Fixed with a new `clone_node_iterative` helper:
+a post-order deep clone using an explicit stack of "still assembling
+this node's cloned children" frames instead of the native call stack, so
+depth is bounded only by available memory here too. `collect_tokens`
+needed no equivalent fix — it only ever clones `Token`, a flat struct
+with no nested `GrammarASTNode`, so its clones are already O(1)
+regardless of tree depth.
+
 New tests: traversal-order correctness (pre-order for `find_nodes`,
 source-order-preserving-across-nested-nodes for `collect_tokens`), type
 filtering, and a regression guard building a 50,000-level-deep hand-built
-tree on a default-stack thread, proving both functions complete
-correctly without overflowing.
+tree on a default-stack thread that specifically matches the *root* (not
+just a shallow leaf, which the first version of this test did and which
+would have silently passed despite the clone-recursion gap above) —
+proving both functions, and the clone they now produce, are correct and
+complete without overflowing.
 
 **Found while writing that regression test, not fixed here**: merely
 *dropping* a tree this deep also overflows the native stack, via
@@ -52,7 +72,7 @@ separate CWE-674-shaped gap (any public entry point that ends up holding
 a caller-constructed deep tree is exposed, not just these two functions),
 logged as its own follow-up rather than bundled into this fix or
 silently hidden by shrinking the regression test's depth. The test works
-around it with `std::mem::forget` on the tree it builds.
+around it with `std::mem::forget` on the trees it builds.
 
 ## [0.4.4] - 2026-08-25
 
