@@ -11105,6 +11105,74 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: persianAlphabetSource("ب"),
   },
+  "پ": {
+    script: "perso-arabic",
+    glyph: "پ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "sweep the shallow bowl from right to left",
+            path: [
+              { x: 678, y: 382 },
+              { x: 663, y: 345 },
+              { x: 650, y: 305 },
+              { x: 654, y: 260 },
+              { x: 672, y: 215 },
+              { x: 688, y: 170 },
+              { x: 686, y: 126 },
+              { x: 620, y: 94 },
+              { x: 530, y: 65 },
+              { x: 430, y: 42 },
+              { x: 335, y: 38 },
+              { x: 245, y: 51 },
+              { x: 170, y: 83 },
+              { x: 120, y: 135 },
+              { x: 96, y: 205 },
+              { x: 100, y: 255 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then place the left dot below",
+            path: [
+              { x: 350, y: -130 },
+              { x: 317, y: -94 },
+              { x: 282, y: -130 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift again and place the right dot below",
+            path: [
+              { x: 493, y: -117 },
+              { x: 460, y: -81 },
+              { x: 425, y: -117 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift again and place the lower-center dot",
+            path: [
+              { x: 420, y: -208 },
+              { x: 390, y: -172 },
+              { x: 356, y: -208 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: persianAlphabetSource("پ"),
+  },
   "ت": {
     script: "perso-arabic",
     glyph: "ت",

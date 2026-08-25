@@ -501,6 +501,8 @@ const URDU_BARI_YE = ductusFor("ے", "urdu-nastaliq")!;
 const urduBariYeOutline = naskhOutline("ے");
 const PERSIAN_BEH = DUCTUS["ب"];
 const persianBehOutline = naskhOutline("ب");
+const PERSIAN_PEH = DUCTUS["پ"];
+const persianPehOutline = naskhOutline("پ");
 const PERSIAN_TEH = DUCTUS["ت"];
 const persianTehOutline = naskhOutline("ت");
 const PERSIAN_DAL = DUCTUS["د"];
@@ -691,9 +693,9 @@ describe("ductusFor — only cited letters have a ductus", () => {
   });
 
   it("returns undefined for a letter nobody has authored a stroke order for", () => {
-    // Persian پ is deferred inventory work, not a starter entry or authored
-    // pen path. It must come back empty rather than borrow ب's or Tamil ம's.
-    expect(ductusFor("پ")).toBeUndefined();
+    // Persian پ is now authored, but Urdu پ remains separate inventory debt.
+    expect(ductusFor("پ", "perso-arabic")?.script).toBe("perso-arabic");
+    expect(ductusFor("پ", "urdu-nastaliq")).toBeUndefined();
     expect(ductusFor("A")).toBeUndefined();
     expect(ductusFor("")).toBeUndefined();
   });
@@ -6677,6 +6679,45 @@ describe("Persian ب — a right-to-left bowl followed by its dot", () => {
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(PERSIAN_BEH.strokes[1], 1),
+    );
+  });
+});
+
+describe("Persian پ — the shared bowl followed by three separate dots", () => {
+  const steps = ductusSteps(PERSIAN_PEH);
+  const strip = ductusFilmstrip(PERSIAN_PEH, persianPehOutline);
+
+  it("keeps the bowl in one run, then preserves all three sourced dot lifts", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "sweep the shallow bowl from right to left",
+      "lift, then place the left dot below",
+      "lift again and place the right dot below",
+      "lift again and place the lower-center dot",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, true, true, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 2, 3]);
+    expect(PERSIAN_PEH.strokes[1].segments[0].path[0].x).toBeLessThan(
+      PERSIAN_PEH.strokes[2].segments[0].path[0].x,
+    );
+    expect(PERSIAN_PEH.strokes[3].segments[0].path[0].y).toBeLessThan(
+      PERSIAN_PEH.strokes[1].segments[0].path[0].y,
+    );
+  });
+
+  it("reports four movements separated by three pen lifts", () => {
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(3);
+    expect(strip.summary).toBe("4 strokes · 3 pen lifts · 4 movements");
+  });
+
+  it("draws the Noto Naskh outline and preserves prior dots in the final frame", () => {
+    const paths = byTag(strip.frames[3], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      persianPehOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(3);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(PERSIAN_PEH.strokes[3], 1),
     );
   });
 });

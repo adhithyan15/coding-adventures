@@ -6831,6 +6831,15 @@ describe("handwriting ductus", () => {
     expect(src.variation).toMatch(/right-to-left.*pen lift.*dot below.*Noto Naskh/i);
   });
 
+  it("Persian پ traces to the intervening sourced bowl-and-three-dots demonstration", () => {
+    const src = DUCTUS["پ"].source;
+    expect(src.url).toContain("laits.utexas.edu/persian_grammar/video");
+    expect(src.citation).toMatch(/Persian Online.*پ.*00:16–00:21/i);
+    expect(src.variation).toMatch(
+      /right-to-left.*three separate dots below.*left, right, then lower-center.*Noto Naskh/i,
+    );
+  });
+
   it("Persian ت traces to the later sourced bowl-and-two-dots demonstration", () => {
     const src = DUCTUS["ت"].source;
     expect(src.url).toContain("laits.utexas.edu/persian_grammar/video");
