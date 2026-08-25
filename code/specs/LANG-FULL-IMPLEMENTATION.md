@@ -943,7 +943,11 @@ backend immediately) come before the enabler-dependent items.
   Structural integer
   identity writes using `+ 0`, `- 0`, `* 1`, and `div 1` (including valid
   commutative forms and left-associative chains of those operations) receive
-  the same bounded treatment. For finite real
+  the same bounded treatment. Integer and real exponentiation whose complete
+  literal exponent chain evaluates to one is also preserving because the
+  existing power lowerer returns the base directly without a multiply or
+  runtime power call. Dynamic and otherwise non-unit exponents remain
+  conservative. For finite real
   selectors, multiplication and division by exact positive one are likewise
   preserving, including left-associative chains of those operations; additive
   zero remains conservative because it can change the sign bit of negative

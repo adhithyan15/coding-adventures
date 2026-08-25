@@ -5982,6 +5982,9 @@ impl Compiler {
         if exact_bare_variable_expression_name(node).as_deref() == Some(name) {
             return true;
         }
+        if let Some(base) = literal_power_identity_base(node) {
+            return self.integer_identity_expression_preserves_name(base, name);
+        }
         let sequence = pieces(node);
         if let (true, [Piece::Node(child)]) =
             (direct_tokens(node).is_empty(), sequence.as_slice())
@@ -6050,6 +6053,9 @@ impl Compiler {
     ) -> bool {
         if exact_bare_variable_expression_name(node).as_deref() == Some(name) {
             return true;
+        }
+        if let Some(base) = literal_power_identity_base(node) {
+            return self.real_unit_identity_expression_preserves_name(base, name);
         }
         let sequence = pieces(node);
         if let (true, [Piece::Node(child)]) =
@@ -8018,6 +8024,30 @@ fn literal_nonneg_integer_power_chain(nodes: &[&GrammarASTNode]) -> Option<u32> 
     }
 
     Some(value as u32)
+}
+
+/// Return the base of an exponentiation expression whose complete literal
+/// exponent chain evaluates to one. The power lowerer returns that base
+/// directly, so this is an exact structural identity for integer and real
+/// values rather than an algebraic approximation of runtime `f64_pow`.
+fn literal_power_identity_base(node: &GrammarASTNode) -> Option<&GrammarASTNode> {
+    let sequence = pieces(node);
+    if sequence.len() < 3 || sequence.len().is_multiple_of(2) {
+        return None;
+    }
+    let mut operands = Vec::new();
+    for (index, piece) in sequence.iter().enumerate() {
+        if index.is_multiple_of(2) {
+            let Piece::Node(operand) = piece else {
+                return None;
+            };
+            operands.push(*operand);
+        } else if !matches!(piece, Piece::Op(op) if matches!(op.as_str(), "^" | "**")) {
+            return None;
+        }
+    }
+    let (base, exponents) = operands.split_first()?;
+    (literal_nonneg_integer_power_chain(exponents) == Some(1)).then_some(*base)
 }
 
 fn literal_signed_integer_exponent(node: &GrammarASTNode) -> Option<i32> {
@@ -10593,6 +10623,9 @@ mod tests {
             "choose * 1 div 1 * 1",
             "1 * choose * 1 div 1",
             "0 + choose * 1 div 1 - 0",
+            "choose ^ 1",
+            "choose ** 1",
+            "choose ^ 1 ^ 1",
         ] {
             compile_source(
                 &format!(
@@ -10616,7 +10649,12 @@ mod tests {
 
     #[test]
     fn al4_integer_non_identity_selector_chains_remain_conservative() {
-        for write in ["choose + 0 + 1", "1 div choose * 1"] {
+        for write in [
+            "choose + 0 + 1",
+            "1 div choose * 1",
+            "choose ^ 0",
+            "2 ^ 1",
+        ] {
             let err = compile_source(
                 &format!(
                     "begin integer i, n, limit, choose; boolean other; n := 3; limit := 3; choose := 1; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := other; choose := {write} end; print(i + 0.25) end"
@@ -10624,7 +10662,10 @@ mod tests {
                 "test",
             )
             .expect_err("integer non-identity chains must fail closed");
-            assert!(format!("{err:?}").contains("cannot print a real value"));
+            assert!(
+                format!("{err:?}").contains("cannot print a real value"),
+                "unexpected error for {write:?}: {err:?}"
+            );
         }
     }
 
@@ -10646,6 +10687,9 @@ mod tests {
             "choose / 1.0",
             "choose * 1.0 / 1.0 * 1.0",
             "1.0 * choose * 1.0 / 1.0",
+            "choose ^ 1",
+            "choose ** 1",
+            "choose ^ 1 ^ 1",
         ] {
             compile_source(
                 &format!(
@@ -10654,6 +10698,20 @@ mod tests {
                 "test",
             )
             .unwrap_or_else(|_| panic!("real unit write {write:?} must stay stable"));
+        }
+    }
+
+    #[test]
+    fn al4_real_non_identity_power_selector_writes_remain_conservative() {
+        for write in ["choose ^ 0", "1.0 ^ choose", "choose ^ 1.0"] {
+            let err = compile_source(
+                &format!(
+                    "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := {write} end; print(i + 0.25) end"
+                ),
+                "test",
+            )
+            .expect_err("non-identity real powers must fail closed");
+            assert!(format!("{err:?}").contains("cannot print a real value"));
         }
     }
 
