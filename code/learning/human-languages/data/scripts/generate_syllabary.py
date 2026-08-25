@@ -19,10 +19,9 @@
 # So the Unicode Character Database is the single source of truth, and the file
 # is regenerable: `python3 generate_syllabary.py`.
 #
-# NOT INCLUDED: stroke order / how to hand-write ("ductus"). That is a separate,
-# source-gated effort and stays paused — these entries carry `strokeOrder: []`.
-# This file is for READING (recognition), which the glyph + romanization + the
-# consonant⊕vowel-sign decomposition fully support.
+# DUCTUS IS SOURCE-GATED. Generated rows begin recognition-only with
+# `strokeOrder: []`; a small explicit override table below promotes a shape only
+# after a cited order has also passed the shipped-font geometry gates.
 #
 # ---------------------------------------------------------------------------
 # PARTS, NOT THE GRID — the rule that governs any future stroke data here
@@ -32,12 +31,12 @@
 # is an ASSEMBLY of two shapes it already knows — a base consonant and a vowel
 # sign. So when stroke data does arrive:
 #
-#   • only the BASE CONSONANTS (the `components`-of-length-1 entries below) and
-#     the VOWEL SIGNS are ever authored. They are the parts;
+#   • only INDEPENDENT VOWELS, BASE CONSONANTS (the `components`-of-length-1
+#     entries below), and VOWEL SIGNS are ever authored. They are the parts;
 #   • a syllable's figure is composed from its parts' figures. Never authored.
 #
-# `penLifts` — how many times the hand leaves the paper — is ABSENT from every
-# entry in these files, and absent means **NOT VERIFIED**. It never means "none",
+# `penLifts` — how many times the hand leaves the paper — is absent from every
+# recognition-only entry, and absent means **NOT VERIFIED**. It never means "none",
 # and it must never be inferred from `len(strokeOrder)`: a prose step list records
 # the parts a reader can see, while a lift is a fact about the unbroken path the
 # hand travels, and the two are different measurements. A letter gets `penLifts`
@@ -94,6 +93,47 @@ SCRIPTS = [
     ("malayalam", "Malayalam", 0x0D00, "_fonts/NotoSansMalayalam-Static.ttf",
      "Highly rounded and loopy — full circles, hooks and curls, with almost no straight lines."),
 ]
+
+# Hand-authored exceptions are deliberately tiny and exact. Keeping them beside
+# the Unicode generator means regeneration cannot erase a source-verified row or
+# silently promote the other recognition-only placeholders.
+VERIFIED_INDEPENDENT_VOWELS = {
+    ("telugu", "A"): {
+        "components": [
+            "the rounded left lobe flowing into the broad lower bowl",
+            "the rounded right lobe returning along the inner bar",
+        ],
+        "strokeOrder": [
+            "turn around the left lobe",
+            "sweep around the broad lower bowl",
+            "turn around the right lobe",
+            "return left along the inner bar",
+        ],
+        "strokeOrderNote": (
+            "Four numbered movements in two pen-down runs: movements 1–2 stay joined "
+            "around the left lobe and lower bowl; after one lift, movements 3–4 stay "
+            "joined around the right lobe and back along the inner bar."
+        ),
+        "penLifts": 1,
+        "strokeOrderSource": {
+            "citation": (
+                "Sathish Shanmugam, Write Telugu Alphabets, independent vowel అ "
+                "tracing screen, movements 1–4 (version 2.6)"
+            ),
+            "url": "https://write-telugu-alphabets.en.aptoide.com/app",
+            "variation": (
+                "The tracing screen numbers four directional movements and marks two "
+                "pen-down starts; the visible joins group movements 1–2 and 3–4. "
+                "Telugu letter direction is not uniform across the script, so this is "
+                "one attested pedagogical order fitted to the bundled Noto Sans Telugu outline."
+            ),
+        },
+        "notes": (
+            "Independent short a used when a word or syllable begins with a vowel; "
+            "it is distinct from the inherent a carried by an unmarked consonant."
+        ),
+    },
+}
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
@@ -160,14 +200,16 @@ def build_script(script_id: str, name: str, base: int, font: str, signature: str
         if cp is None:
             continue  # this script lacks this independent vowel — skip, never invent
         ch = chr(cp)
-        independent.append({
+        row = {
             "glyph": ch,
             "sound": vow_rom,
             "role": "vowel",
             "components": [f"{ch}  {vow_rom} — independent vowel (word-initial)"],
             "strokeOrder": [],
             "strokeOrderNote": "",
-        })
+        }
+        row.update(VERIFIED_INDEPENDENT_VOWELS.get((script_id, letter_tok), {}))
+        independent.append(row)
 
     # The script's own digits (౦౧౨…). Reading a language means reading its
     # numbers too, and these are written with distinct glyphs, not Western 0-9.
@@ -203,14 +245,25 @@ def build_script(script_id: str, name: str, base: int, font: str, signature: str
         "notes": (
             "Syllabary generated from Unicode by generate_syllabary.py: each syllable is a base "
             "consonant (varga order) composed with a core vowel sign. Romanization is ISO-15919. "
-            "The independent (word-initial) vowels are in `independentVowels`; the "
-            "script's own digits are in `digits`. "
-            "Recognition only — stroke order is a separate, source-gated effort and is omitted. "
-            "Parts, not the grid: when stroke data does arrive it is authored only for the base "
-            "consonants (the entries with a single `components` line) and for the vowel signs; a "
-            "syllable's figure is assembled from its parts and is never authored separately. "
-            "`penLifts` is absent from every entry here, and absent means NOT VERIFIED — never "
-            "none — and must never be inferred from the length of `strokeOrder`."
+            "The independent (word-initial) vowels are in `independentVowels`; the script's own "
+            "digits are in `digits`. Stroke order is a separate, source-gated effort: only "
+            "source-verified entries carry it, beginning with independent vowel అ. Parts, not "
+            "the grid: handwriting is authored only for independent vowels, base consonants "
+            "(the entries with a single `components` line), and vowel signs; a syllable's figure "
+            "is assembled from its parts and is never authored separately. When `penLifts` is "
+            "absent it means NOT VERIFIED — never none — and must never be inferred from the "
+            "length of `strokeOrder`."
+            if script_id == "telugu" else
+            "Syllabary generated from Unicode by generate_syllabary.py: each syllable is a base "
+            "consonant (varga order) composed with a core vowel sign. Romanization is ISO-15919. "
+            "The independent (word-initial) vowels are in `independentVowels`; the script's own "
+            "digits are in `digits`. Recognition only — stroke order is a separate, source-gated "
+            "effort and is omitted. Parts, not the grid: when stroke data does arrive it is "
+            "authored only for the base consonants (the entries with a single `components` line) "
+            "and for the vowel signs; a syllable's figure is assembled from its parts and is "
+            "never authored separately. `penLifts` is absent from every entry here, and absent "
+            "means NOT VERIFIED — never none — and must never be inferred from the length of "
+            "`strokeOrder`."
         ),
         "letters": letters,
         "independentVowels": independent,

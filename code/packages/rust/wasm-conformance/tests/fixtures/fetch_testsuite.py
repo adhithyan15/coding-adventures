@@ -560,6 +560,23 @@ TESTSUITE_FILES = [
     # not just this PR's new i64x2 ones. See the NOTICE file for the
     # real vendored/pass counts.
     "simd_int_to_int_extend.wast",
+    # SIMD widen PR37 (task #226-228): simd_lane.wast -- vendors the
+    # dedicated upstream file for the remaining extract_lane/replace_lane
+    # family members across i16x8/i32x4/i64x2/f32x4/f64x2 (i8x16's own
+    # trio and i32x4.extract_lane already existed from SIMD PR1b-2/PR18),
+    # this PR's 10 new opcodes, CLOSING the extract_lane/replace_lane
+    # family across all six SIMD vector shapes. This single upstream file
+    # bundles ALL SIX shapes' extract_lane/replace_lane opcodes together
+    # in one `(module ...)` set, so it exercises the pre-existing i8x16/
+    # i32x4 lane ops too, not just this PR's new ones -- and it has
+    # significant `assert_invalid` coverage for out-of-range lane
+    # indices, which this PR also promotes from a runtime-only bounds
+    # check to a genuine validation-time rejection (see
+    # `wasm-validator/src/type_check.rs`'s `read_lane_index` helper) so
+    # those directives are graded as real passes, not
+    # `not_yet_supported`. See the NOTICE file for the real vendored/pass
+    # counts.
+    "simd_lane.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under

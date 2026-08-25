@@ -1709,13 +1709,21 @@ fn encode_stream_instr(
             }
             wasm_opcodes::SimdOpKind::ExtractLane
             | wasm_opcodes::SimdOpKind::ExtractLaneI8x16S
-            | wasm_opcodes::SimdOpKind::ExtractLaneI8x16U => {
-                // i32x4.extract_lane / i8x16.extract_lane_s / _u (the
-                // latter two SIMD widen PR18): same "immediate trails in
-                // flat/stream form" shape -- the trailing lane-index
-                // literal is the only thing to read here, since the one
-                // v128 operand was already emitted by whatever preceding
-                // stream instruction produced it.
+            | wasm_opcodes::SimdOpKind::ExtractLaneI8x16U
+            | wasm_opcodes::SimdOpKind::ExtractLaneI16x8S
+            | wasm_opcodes::SimdOpKind::ExtractLaneI16x8U
+            | wasm_opcodes::SimdOpKind::ExtractLaneI64x2
+            | wasm_opcodes::SimdOpKind::ExtractLaneF32x4
+            | wasm_opcodes::SimdOpKind::ExtractLaneF64x2 => {
+                // i32x4.extract_lane / i8x16.extract_lane_s / _u (SIMD
+                // widen PR18) / i16x8.extract_lane_s / _u / i64x2.
+                // extract_lane / f32x4.extract_lane / f64x2.extract_lane
+                // (all five SIMD widen PR37, the remaining lane widths in
+                // this family): same "immediate trails in flat/stream
+                // form" shape -- the trailing lane-index literal is the
+                // only thing to read here, since the one v128 operand
+                // was already emitted by whatever preceding stream
+                // instruction produced it.
                 let (text, lpos) = literal_text(following.first(), pos)?;
                 let lane = parse_lane_index(&text, lpos)?;
                 out.push(0xFD);
@@ -1723,15 +1731,24 @@ fn encode_stream_instr(
                 out.push(lane);
                 return Ok(1);
             }
-            wasm_opcodes::SimdOpKind::ReplaceLaneI8x16 => {
-                // i8x16.replace_lane (SIMD widen PR18): a NEW shape (see
-                // its own `SimdOpKind` doc comment) at the runtime/type
-                // level -- it pops an i32 in addition to the v128 -- but
-                // in FLAT/stream form the ENCODING mechanics are
-                // identical to `ExtractLane*` just above: both operands
-                // (v128, then i32) are already emitted onto `out` by
-                // whatever preceding instructions produced them, so only
-                // the trailing lane-index literal needs reading here.
+            wasm_opcodes::SimdOpKind::ReplaceLaneI8x16
+            | wasm_opcodes::SimdOpKind::ReplaceLaneI16x8
+            | wasm_opcodes::SimdOpKind::ReplaceLaneI32x4
+            | wasm_opcodes::SimdOpKind::ReplaceLaneI64x2
+            | wasm_opcodes::SimdOpKind::ReplaceLaneF32x4
+            | wasm_opcodes::SimdOpKind::ReplaceLaneF64x2 => {
+                // i8x16.replace_lane (SIMD widen PR18) / i16x8.
+                // replace_lane / i32x4.replace_lane / i64x2.replace_lane
+                // / f32x4.replace_lane / f64x2.replace_lane (the
+                // remaining five SIMD widen PR37): a NEW shape (see
+                // `ReplaceLaneI8x16`'s own `SimdOpKind` doc comment) at
+                // the runtime/type level -- each pops a scalar in
+                // addition to the v128 -- but in FLAT/stream form the
+                // ENCODING mechanics are identical to `ExtractLane*` just
+                // above: both operands (v128, then the scalar) are
+                // already emitted onto `out` by whatever preceding
+                // instructions produced them, so only the trailing
+                // lane-index literal needs reading here.
                 let (text, lpos) = literal_text(following.first(), pos)?;
                 let lane = parse_lane_index(&text, lpos)?;
                 out.push(0xFD);
@@ -2575,10 +2592,17 @@ fn encode_flat_instr(
             }
             wasm_opcodes::SimdOpKind::ExtractLane
             | wasm_opcodes::SimdOpKind::ExtractLaneI8x16S
-            | wasm_opcodes::SimdOpKind::ExtractLaneI8x16U => {
-                // i32x4.extract_lane / i8x16.extract_lane_s / _u (the
-                // latter two SIMD widen PR18): lane index leads (`args[0]`),
-                // the one v128 operand trails (`args[1..]`).
+            | wasm_opcodes::SimdOpKind::ExtractLaneI8x16U
+            | wasm_opcodes::SimdOpKind::ExtractLaneI16x8S
+            | wasm_opcodes::SimdOpKind::ExtractLaneI16x8U
+            | wasm_opcodes::SimdOpKind::ExtractLaneI64x2
+            | wasm_opcodes::SimdOpKind::ExtractLaneF32x4
+            | wasm_opcodes::SimdOpKind::ExtractLaneF64x2 => {
+                // i32x4.extract_lane / i8x16.extract_lane_s / _u (SIMD
+                // widen PR18) / i16x8.extract_lane_s / _u / i64x2.
+                // extract_lane / f32x4.extract_lane / f64x2.extract_lane
+                // (all five SIMD widen PR37): lane index leads
+                // (`args[0]`), the one v128 operand trails (`args[1..]`).
                 let lane_expr = args.first().ok_or(WastParseError::UnexpectedEof)?;
                 encode_instr_list(&args[1..], icx, out)?;
                 let (text, lpos) = literal_text(Some(lane_expr), pos)?;
@@ -2588,17 +2612,26 @@ fn encode_flat_instr(
                 out.push(lane);
                 return Ok(());
             }
-            wasm_opcodes::SimdOpKind::ReplaceLaneI8x16 => {
-                // i8x16.replace_lane (SIMD widen PR18): a NEW shape at
-                // the runtime/type level (see its own `SimdOpKind` doc
-                // comment), but its ENCODING here is mechanically the
-                // SAME call `ExtractLane*` makes just above -- lane index
-                // leads (`args[0]`), operands trail (`args[1..]`) --
-                // `encode_instr_list` already handles an arbitrary number
-                // of trailing operand expressions in source order, and
-                // this op has TWO (`(i8x16.replace_lane <lane> <v128-expr>
-                // <i32-expr>)`, the v128 base then the i32 replacement
-                // value) where `ExtractLane*` has only one.
+            wasm_opcodes::SimdOpKind::ReplaceLaneI8x16
+            | wasm_opcodes::SimdOpKind::ReplaceLaneI16x8
+            | wasm_opcodes::SimdOpKind::ReplaceLaneI32x4
+            | wasm_opcodes::SimdOpKind::ReplaceLaneI64x2
+            | wasm_opcodes::SimdOpKind::ReplaceLaneF32x4
+            | wasm_opcodes::SimdOpKind::ReplaceLaneF64x2 => {
+                // i8x16.replace_lane (SIMD widen PR18) / i16x8.
+                // replace_lane / i32x4.replace_lane / i64x2.replace_lane
+                // / f32x4.replace_lane / f64x2.replace_lane (the
+                // remaining five SIMD widen PR37): a NEW shape at the
+                // runtime/type level (see `ReplaceLaneI8x16`'s own
+                // `SimdOpKind` doc comment), but its ENCODING here is
+                // mechanically the SAME call `ExtractLane*` makes just
+                // above -- lane index leads (`args[0]`), operands trail
+                // (`args[1..]`) -- `encode_instr_list` already handles an
+                // arbitrary number of trailing operand expressions in
+                // source order, and each of these ops has TWO
+                // (`(i16x8.replace_lane <lane> <v128-expr> <scalar-expr>)`,
+                // the v128 base then the replacement scalar) where
+                // `ExtractLane*` has only one.
                 let lane_expr = args.first().ok_or(WastParseError::UnexpectedEof)?;
                 encode_instr_list(&args[1..], icx, out)?;
                 let (text, lpos) = literal_text(Some(lane_expr), pos)?;
@@ -3169,16 +3202,26 @@ fn literal_text(expr: Option<&SExpr>, pos: usize) -> Result<(String, usize), Was
     }
 }
 
-/// `i32x4.extract_lane`'s lane-index immediate: a single raw (non-LEB128)
-/// byte, 0-3 for this slice's only lane-typed shape. Real corpus files
-/// only ever write a small plain-decimal literal here (`(i32x4.extract_lane
-/// 0 ...)`), so a plain `u8` parse (not the full `parse_i32`-style
-/// signed/hex/underscore grammar numeric literals elsewhere in this crate
-/// support) is enough; out-of-range lane indices (>3) are rejected at
-/// execution time by `wasm-execution`'s own bounds check, not here.
+/// Every `extract_lane`/`replace_lane` SIMD opcode's lane-index
+/// immediate: a single raw (non-LEB128) byte, whose valid range depends
+/// on the shape it belongs to (0-15 for `i8x16`, 0-7 for `i16x8`, 0-3 for
+/// `i32x4`/`f32x4`, 0-1 for `i64x2`/`f64x2`). SIMD widen PR37: delegates
+/// to [`numeric::parse_lane_index`] for the real digit grammar (decimal
+/// or `0x`-hex, `_`-separated, no leading `+`/`-` sign) -- the real
+/// upstream `simd_lane.wast` corpus exercises hex (`0x0f`), underscore-
+/// separated hex (`0x0_7`), and leading-zero-decimal (`03`) lane-index
+/// literals, none of which a plain `str::parse::<u8>()` (this function's
+/// pre-PR37 body) could accept. A literal that doesn't even fit in a
+/// `u8` (> 255) is rejected right here as a parse error, but an
+/// in-range-`u8`, out-of-range-FOR-ITS-SHAPE lane index (e.g.
+/// `i32x4.extract_lane 4`) is NOT rejected here -- that shape-specific
+/// bounds check lives in `wasm-validator`'s `type_check.rs` (also SIMD
+/// widen PR37: promoted from a runtime-only check in `wasm-execution` to
+/// a genuine validation-time rejection, matching the WASM spec's own
+/// requirement that an out-of-range `laneidx` makes a module invalid,
+/// not just trapping).
 fn parse_lane_index(text: &str, pos: usize) -> Result<u8, WastParseError> {
-    text.parse::<u8>()
-        .map_err(|_| WastParseError::InvalidNumericLiteral { pos, text: text.to_string() })
+    numeric::parse_lane_index(text, pos)
 }
 
 /// `v128.const <shape> <lane0> ... <laneN-1>` -- the SIMD proposal's
@@ -5799,6 +5842,118 @@ mod tests {
             );
             assert!(code.windows(3).any(|w| w == [0xFD, 0x17, 0x07]), "missing i8x16.replace_lane lane=7: {code:?}");
         }
+    }
+
+    #[test]
+    fn pr37_extract_lane_family_folded_and_flat_lane_index_leads_covers_valid_extremes() {
+        // SIMD widen PR37: the remaining extract_lane opcodes --
+        // i16x8.extract_lane_s/_u (0-7 range), i64x2.extract_lane (0-1),
+        // f32x4.extract_lane (0-3), f64x2.extract_lane (0-1). Same
+        // "lane index leads (folded) / trails (flat)" shape as
+        // i32x4.extract_lane/i8x16.extract_lane_s/_u -- covers both ends
+        // of each shape's own valid lane range.
+        for (name, sub_opcode, result_ty, max_lane) in [
+            ("i16x8.extract_lane_s", 0x18u8, "i32", 7u8),
+            ("i16x8.extract_lane_u", 0x19u8, "i32", 7u8),
+            ("i64x2.extract_lane", 0x1Du8, "i64", 1u8),
+            ("f32x4.extract_lane", 0x1Fu8, "f32", 3u8),
+            ("f64x2.extract_lane", 0x21u8, "f64", 1u8),
+        ] {
+            for lane in [0u8, max_lane] {
+                let folded = parse_module(&format!(
+                    r#"(module (func (param v128) (result {result_ty}) ({name} {lane} (local.get 0))))"#
+                ))
+                .unwrap();
+                let flat = parse_module(&format!(
+                    r#"(module (func (param v128) (result {result_ty}) local.get 0 {name} {lane}))"#
+                ))
+                .unwrap();
+                for code in [code_of(&folded, 0), code_of(&flat, 0)] {
+                    assert!(
+                        code.windows(3).any(|w| w == [0xFD, sub_opcode, lane]),
+                        "{name} lane={lane}: missing [0xFD, {sub_opcode:#04x}, {lane:#04x}] in {code:?}"
+                    );
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn pr37_replace_lane_family_folded_and_flat_lane_index_leads_two_operands_encode_in_order() {
+        // SIMD widen PR37: the remaining replace_lane opcodes --
+        // i16x8.replace_lane, i32x4.replace_lane, i64x2.replace_lane,
+        // f32x4.replace_lane, f64x2.replace_lane. Same shape as
+        // i8x16.replace_lane -- lane index leads/trails, TWO operands
+        // (v128, then the scalar) encode around it in source order.
+        for (name, sub_opcode, scalar_ty, max_lane) in [
+            ("i16x8.replace_lane", 0x1Au8, "i32", 7u8),
+            ("i32x4.replace_lane", 0x1Cu8, "i32", 3u8),
+            ("i64x2.replace_lane", 0x1Eu8, "i64", 1u8),
+            ("f32x4.replace_lane", 0x20u8, "f32", 3u8),
+            ("f64x2.replace_lane", 0x22u8, "f64", 1u8),
+        ] {
+            let folded = parse_module(&format!(
+                r#"(module (func (param v128 {scalar_ty}) (result v128) ({name} {max_lane} (local.get 0) (local.get 1))))"#
+            ))
+            .unwrap();
+            let flat = parse_module(&format!(
+                r#"(module (func (param v128 {scalar_ty}) (result v128) local.get 0 local.get 1 {name} {max_lane}))"#
+            ))
+            .unwrap();
+            for code in [code_of(&folded, 0), code_of(&flat, 0)] {
+                assert!(
+                    code.windows(2).any(|w| w == [0x20, 0x00]),
+                    "{name}: missing local.get 0 (the v128 operand): {code:?}"
+                );
+                assert!(
+                    code.windows(2).any(|w| w == [0x20, 0x01]),
+                    "{name}: missing local.get 1 (the scalar operand): {code:?}"
+                );
+                assert!(
+                    code.windows(3).any(|w| w == [0xFD, sub_opcode, max_lane]),
+                    "{name} lane={max_lane}: missing [0xFD, {sub_opcode:#04x}, {max_lane:#04x}] in {code:?}"
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn lane_index_accepts_hex_underscore_and_leading_zero_decimal_literals() {
+        // SIMD widen PR37: parse_lane_index now supports the real WAT
+        // integer literal grammar, not just plain decimal -- verified
+        // against the real upstream simd_lane.wast corpus's own "Lane
+        // index literal" module directives (hex `0x0f`, underscore-
+        // separated hex `0x0_7`, leading-zero decimal `03`/`01`).
+        for (name, lane_text, sub_opcode, lane_byte) in [
+            ("i8x16.extract_lane_s", "0x0f", 0x15u8, 15u8),
+            ("i16x8.extract_lane_s", "0x07", 0x18u8, 7u8),
+            ("i16x8.extract_lane_u", "0x0_7", 0x19u8, 7u8),
+            ("i32x4.extract_lane", "03", 0x1Bu8, 3u8),
+        ] {
+            let module = parse_module(&format!(
+                r#"(module (func (result i32) ({name} {lane_text} (v128.const i32x4 0 0 0 0))))"#
+            ))
+            .unwrap();
+            let code = code_of(&module, 0);
+            assert!(
+                code.windows(3).any(|w| w == [0xFD, sub_opcode, lane_byte]),
+                "{name} {lane_text}: expected lane byte {lane_byte:#04x}, got {code:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn lane_index_rejects_a_leading_sign_even_though_i32_literals_allow_one() {
+        // SIMD widen PR37: unlike i32.const/i32x4.replace_lane's OWN
+        // scalar operand (which genuinely accepts a signed OR unsigned
+        // spelling), the lane-index IMMEDIATE's own WAT grammar
+        // (`laneidx`) is a plain unsigned token -- no `+`/`-` allowed at
+        // all, confirmed against simd_lane.wast's own assert_malformed
+        // cases for `+0x0f`/`+03`/etc.
+        assert!(numeric::parse_lane_index("+3", 0).is_err(), "+3 must be rejected");
+        assert!(numeric::parse_lane_index("+0x0f", 0).is_err(), "+0x0f must be rejected");
+        assert!(numeric::parse_lane_index("-1", 0).is_err(), "-1 must be rejected");
+        assert!(numeric::parse_lane_index("3", 0).is_ok(), "plain 3 must still be accepted");
     }
 
     #[test]

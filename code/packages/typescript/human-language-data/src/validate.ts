@@ -127,7 +127,7 @@ export function validate(input: ValidateInput): Issue[] {
   // therefore travel as an inseparable pair: the count plus its cited source.
   // Anything else remains an explicitly unverified part order in the app.
   for (const [scriptId, script] of Object.entries(scripts)) {
-    for (const letter of script.letters) {
+    for (const letter of [...script.letters, ...(script.independentVowels ?? [])]) {
       if (letter.strokeOrder.length === 0) continue;
       const hasPenLifts = letter.penLifts !== undefined;
       const hasSource = letter.strokeOrderSource !== undefined;
@@ -170,6 +170,12 @@ function uncoveredGlyphs(headword: string, sd: ScriptData): string[] {
     add(l.forms?.initial);
     add(l.forms?.medial);
     add(l.forms?.final);
+  }
+  // Independent-vowel rows begin as recognition-only placeholders in the
+  // generated Dravidian inventories. They enter closure one at a time only
+  // after their handwriting claim is source-backed and font-checked.
+  for (const vowel of sd.independentVowels ?? []) {
+    if (vowel.strokeOrderSource) add(vowel.glyph);
   }
   for (const m of sd.marks ?? []) add(m.mark);
   const targetSystems = hasOwn(SCRIPT_SYSTEMS, sd.script)

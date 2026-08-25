@@ -986,9 +986,11 @@ fn valid_i8x16_swizzle_pops_two_v128_pushes_v128() {
 #[test]
 fn valid_i8x16_extract_lane_s_and_u_pop_v128_push_i32() {
     // SIMD widen PR18: i8x16.extract_lane_s/_u -- same "pop v128 + lane
-    // immediate, push i32" shape as i32x4.extract_lane, just at i8x16's
-    // width (0-15 lane range, not enforced at the type level -- see
-    // wasm-execution's own runtime bounds check).
+    // immediate, push i32" shape as i32x4.extract_lane, at i8x16's own
+    // 0-15 lane range. (SIMD widen PR37 retrofit: the lane index's VALUE
+    // is now genuinely enforced at validation time too -- see the
+    // `out_of_range` tests below -- not just left to wasm-execution's
+    // runtime bounds check.)
     assert_valid(
         r#"(module
              (func (param v128) (result i32) (i8x16.extract_lane_s 0 (local.get 0)))
@@ -1010,6 +1012,176 @@ fn invalid_i8x16_replace_lane_given_a_v128_in_the_i32_slot() {
     // slot, not just accepting whatever's on the stack -- both operands
     // here are v128, so the second pop (expecting I32) must reject it.
     assert_invalid("(module (func (param v128 v128) (result v128) (i8x16.replace_lane 7 (local.get 0) (local.get 1))))");
+}
+
+// ── Lane-index bounds validation (SIMD widen PR37 retrofit) ─────────────
+//
+// Before this PR, the type checker only checked that the lane-index
+// immediate BYTE was present (not truncated) -- never its VALUE, so an
+// out-of-range lane index (e.g. `i32x4.extract_lane 4`) would pass
+// validation and only be caught by `wasm-execution`'s runtime bounds
+// check, contrary to the WASM spec's own requirement that an
+// out-of-range `laneidx` makes the module INVALID, not merely trapping.
+// These tests cover every `extract_lane`/`replace_lane` opcode across
+// all six SIMD vector shapes (the pre-existing i8x16 trio and
+// i32x4.extract_lane, retrofitted here, plus all 10 new SIMD widen PR37
+// opcodes), confirming each one is genuinely rejected at validation
+// time, one past its own valid range.
+
+#[test]
+fn invalid_i32x4_extract_lane_index_out_of_range() {
+    assert_invalid("(module (func (param v128) (result i32) (i32x4.extract_lane 4 (local.get 0))))");
+}
+
+#[test]
+fn invalid_i8x16_extract_lane_s_index_out_of_range() {
+    assert_invalid("(module (func (param v128) (result i32) (i8x16.extract_lane_s 16 (local.get 0))))");
+}
+
+#[test]
+fn invalid_i8x16_extract_lane_u_index_out_of_range() {
+    assert_invalid("(module (func (param v128) (result i32) (i8x16.extract_lane_u 16 (local.get 0))))");
+}
+
+#[test]
+fn invalid_i8x16_replace_lane_index_out_of_range() {
+    assert_invalid("(module (func (param v128 i32) (result v128) (i8x16.replace_lane 16 (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn valid_i16x8_extract_lane_s_and_u_pop_v128_push_i32() {
+    // SIMD widen PR37: i16x8.extract_lane_s/_u -- direct 8-lane mirror
+    // of i8x16.extract_lane_s/_u, 0-7 lane range.
+    assert_valid(
+        r#"(module
+             (func (param v128) (result i32) (i16x8.extract_lane_s 0 (local.get 0)))
+             (func (param v128) (result i32) (i16x8.extract_lane_u 7 (local.get 0))))"#,
+    );
+}
+
+#[test]
+fn invalid_i16x8_extract_lane_s_index_out_of_range() {
+    assert_invalid("(module (func (param v128) (result i32) (i16x8.extract_lane_s 8 (local.get 0))))");
+}
+
+#[test]
+fn invalid_i16x8_extract_lane_u_index_out_of_range() {
+    assert_invalid("(module (func (param v128) (result i32) (i16x8.extract_lane_u 8 (local.get 0))))");
+}
+
+#[test]
+fn valid_i16x8_replace_lane_pops_v128_and_i32_pushes_v128() {
+    assert_valid("(module (func (param v128 i32) (result v128) (i16x8.replace_lane 7 (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn invalid_i16x8_replace_lane_index_out_of_range() {
+    assert_invalid("(module (func (param v128 i32) (result v128) (i16x8.replace_lane 8 (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn invalid_i16x8_replace_lane_given_a_v128_in_the_i32_slot() {
+    assert_invalid("(module (func (param v128 v128) (result v128) (i16x8.replace_lane 0 (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn valid_i32x4_replace_lane_pops_v128_and_i32_pushes_v128() {
+    // SIMD widen PR37: i32x4.replace_lane -- the i32x4 counterpart to
+    // i32x4.extract_lane, 0-3 lane range.
+    assert_valid("(module (func (param v128 i32) (result v128) (i32x4.replace_lane 3 (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn invalid_i32x4_replace_lane_index_out_of_range() {
+    assert_invalid("(module (func (param v128 i32) (result v128) (i32x4.replace_lane 4 (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn invalid_i32x4_replace_lane_given_a_v128_in_the_i32_slot() {
+    assert_invalid("(module (func (param v128 v128) (result v128) (i32x4.replace_lane 0 (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn valid_i64x2_extract_lane_pops_v128_pushes_i64() {
+    // SIMD widen PR37: i64x2.extract_lane -- the first extract_lane
+    // family member whose result is I64, not I32. 0-1 lane range.
+    assert_valid("(module (func (param v128) (result i64) (i64x2.extract_lane 1 (local.get 0))))");
+}
+
+#[test]
+fn invalid_i64x2_extract_lane_index_out_of_range() {
+    assert_invalid("(module (func (param v128) (result i64) (i64x2.extract_lane 2 (local.get 0))))");
+}
+
+#[test]
+fn valid_i64x2_replace_lane_pops_v128_and_i64_pushes_v128() {
+    assert_valid("(module (func (param v128 i64) (result v128) (i64x2.replace_lane 1 (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn invalid_i64x2_replace_lane_index_out_of_range() {
+    assert_invalid("(module (func (param v128 i64) (result v128) (i64x2.replace_lane 2 (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn invalid_i64x2_replace_lane_given_an_i32_in_the_i64_slot() {
+    // Confirms the type checker enforces I64 (not just any scalar) in
+    // the replacement-value slot.
+    assert_invalid("(module (func (param v128 i32) (result v128) (i64x2.replace_lane 0 (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn valid_f32x4_extract_lane_pops_v128_pushes_f32() {
+    // SIMD widen PR37: f32x4.extract_lane -- the first extract_lane
+    // family member whose result is floating-point. 0-3 lane range.
+    assert_valid("(module (func (param v128) (result f32) (f32x4.extract_lane 3 (local.get 0))))");
+}
+
+#[test]
+fn invalid_f32x4_extract_lane_index_out_of_range() {
+    assert_invalid("(module (func (param v128) (result f32) (f32x4.extract_lane 4 (local.get 0))))");
+}
+
+#[test]
+fn valid_f32x4_replace_lane_pops_v128_and_f32_pushes_v128() {
+    assert_valid("(module (func (param v128 f32) (result v128) (f32x4.replace_lane 3 (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn invalid_f32x4_replace_lane_index_out_of_range() {
+    assert_invalid("(module (func (param v128 f32) (result v128) (f32x4.replace_lane 4 (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn invalid_f32x4_replace_lane_given_an_i32_in_the_f32_slot() {
+    assert_invalid("(module (func (param v128 i32) (result v128) (f32x4.replace_lane 0 (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn valid_f64x2_extract_lane_pops_v128_pushes_f64() {
+    assert_valid("(module (func (param v128) (result f64) (f64x2.extract_lane 1 (local.get 0))))");
+}
+
+#[test]
+fn invalid_f64x2_extract_lane_index_out_of_range() {
+    assert_invalid("(module (func (param v128) (result f64) (f64x2.extract_lane 2 (local.get 0))))");
+}
+
+#[test]
+fn valid_f64x2_replace_lane_pops_v128_and_f64_pushes_v128() {
+    // The LAST member of the extract_lane/replace_lane family across all
+    // six SIMD vector shapes.
+    assert_valid("(module (func (param v128 f64) (result v128) (f64x2.replace_lane 1 (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn invalid_f64x2_replace_lane_index_out_of_range() {
+    assert_invalid("(module (func (param v128 f64) (result v128) (f64x2.replace_lane 2 (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn invalid_f64x2_replace_lane_given_an_i32_in_the_f64_slot() {
+    assert_invalid("(module (func (param v128 i32) (result v128) (f64x2.replace_lane 0 (local.get 0) (local.get 1))))");
 }
 
 #[test]

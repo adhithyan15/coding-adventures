@@ -1169,6 +1169,96 @@ present before this PR and tracked separately, none touching
 byte-for-byte unchanged by this PR, confirming zero regressions. No other
 already-vendored file's stats changed.
 
+`simd_lane.wast` is the upstream corpus's dedicated file for the
+extract_lane/replace_lane/swizzle/shuffle instruction group -- vendored
+for SIMD widen PR37 (task #226-228), which lands the remaining
+extract_lane/replace_lane family members: `i16x8.extract_lane_s`/`_u`/
+`replace_lane` (0x18/0x19/0x1A), `i32x4.replace_lane` (0x1C),
+`i64x2.extract_lane`/`replace_lane` (0x1D/0x1E), `f32x4.extract_lane`/
+`replace_lane` (0x1F/0x20), `f64x2.extract_lane`/`replace_lane`
+(0x21/0x22) -- CLOSING the extract_lane/replace_lane family across all
+six SIMD vector shapes (`i8x16`'s own trio and `i32x4.extract_lane`
+already existed from SIMD PR1b-2/PR18). This PR ALSO retrofits
+validation-time lane-index BOUNDS checking (0-15/0-7/0-3/0-1 depending on
+shape) onto all 14 lane-immediate opcodes, old and new alike -- before
+this PR, `wasm-validator`'s type checker only confirmed the lane-index
+immediate byte was PRESENT, never that its VALUE was in range, leaving
+out-of-range lane indices to be caught only by `wasm-execution`'s runtime
+bounds check, contrary to the WASM spec's own requirement that an
+out-of-range `laneidx` makes a module INVALID at validation time, not
+merely trapping. This PR also promotes `wasm-wast-parser`'s lane-index
+literal grammar from a plain `str::parse::<u8>()` to the real WAT integer
+grammar (decimal or `0x`-hex, `_`-separated, no leading `+`/`-` sign
+allowed at all -- confirmed against this very file's own `assert_
+malformed` cases for `+0x0f`/`+03`/etc.).
+
+475 real directives: 12 module, 274 assert_return, 83 assert_invalid, 106
+assert_malformed (no assert_trap in this file). The 12 `module`
+directives split into 5 multi-function modules and 7 single-line "lane
+index literal" modules (the hex/underscore/leading-zero-decimal
+literal-grammar smoke tests this PR's `parse_lane_index` fix above makes
+buildable). Of the 5 multi-function modules, 4 ALSO embed `i8x16.shuffle`
+exports (a genuinely different, unimplemented opcode -- NOT one of this
+PR's 10, and out of scope for it: shuffle takes SIXTEEN lane-index
+immediates selecting across TWO source `v128`s, a materially larger
+encoding/execution/validation surface than extract_lane/replace_lane's
+single index, and belongs to its own future PR in this campaign) --
+because a WASM text module must build as one atomic unit, each of those 4
+modules fails to build as a whole, cascading `not_yet_supported` to every
+`assert_return` that invokes one of their exports, even the ones invoking
+an already-correct extract_lane/replace_lane export sitting right next to
+the unsupported shuffle one in the SAME module. The 5th multi-function
+module (memory load/store, "as-v128_store-operand-*") has no shuffle and
+builds cleanly. The 83 `assert_invalid` directives are ALL lane-index-
+out-of-range cases (one past each shape's valid range, for every one of
+the 14 lane-immediate opcodes, old and new) plus a handful of operand-
+type-mismatch cases, none touching shuffle. The 106 `assert_malformed`
+directives cover: sign-prefixed lane-index literals (`+0x0f` etc., 7
+cases), a float literal in lane-index position (`1.0`, 1 case), an empty
+lane-index argument (per opcode), and shuffle's own malformed-immediate
+cases (out of this PR's scope but still real text-level parse
+rejections, not validation-level ones, so unaffected by shuffle being
+unimplemented).
+
+Pass rate: 100% on every GRADEABLE directive in this file -- 8/8 module,
+6/6 assert_return, 83/83 assert_invalid, 106/106 assert_malformed. The 4
+shuffle-poisoned modules and their 268 cascading assert_return directives
+grade `not_yet_supported` (a real, honestly-reported capability gap --
+shuffle is unimplemented -- not a `Fail`; see `wasm-conformance`'s own
+`grade_assert_invalid`/module-build precedent for why a capability gap is
+never conflated with a wrong answer). Every directive this PR's own 10
+new opcodes (and the 4 retrofitted old ones) can actually be graded on --
+every `assert_invalid` out-of-range-lane case, every `assert_malformed`
+literal-grammar case, and the clean memory-op module's `assert_return`
+cases -- passes at 100%, confirming the lane-bounds validation-time
+rejection and the hex/underscore literal grammar fix are both correct,
+not just unit-test-correct in isolation.
+
+Vendoring this file had an unplanned SECOND effect: the `parse_lane_index`
+hex/underscore-literal fix above also retroactively fixes a LATENT gap in
+`simd_splat.wast`, already vendored since an earlier PR -- that file also
+exercises a lane-index literal in a form the old plain-decimal-only
+parser couldn't accept, so one of its modules previously failed to build.
+`simd_splat.wast`'s own stats rose from `module` 3/3 (1 not yet
+supported) to 4/4 (0 not yet supported), and `assert_return` 115/115 (43
+not yet supported) to 158/158 (0 not yet supported) -- a real, positive,
+unplanned fix, not a regression, confirmed by inspecting `simd_splat.wast`
+directly rather than assumed from the aggregate delta alone.
+
+Aggregate `assert_return` rose from 43548/43565 to 43597/43614 (+49
+pass, +49 gradeable -- `simd_lane.wast`'s own 6 plus `simd_splat.wast`'s
+newly-unlocked 43 -- `fail` unchanged at 17); `assert_invalid` rose from
+1890/1890 to 1973/1973 (+83, exactly this file's own count, still 100.0%
+of gradeable directives); `assert_malformed` rose from 359/359 to
+465/465 (+106, exactly this file's own count, still 100.0%); `module`
+pass count rose from 1193/1194 to 1202/1203 (+9 -- this file's own 8 plus
+`simd_splat.wast`'s newly-unlocked 1). The pre-existing, unrelated
+baseline failures (17 `assert_return`, 1 `module`, 1 `assert_unlinkable`,
+2 `register` -- present before this PR and tracked separately, none
+touching lane ops or this campaign) are byte-for-byte unchanged by this
+PR, confirming zero regressions. No other already-vendored file's stats
+changed besides the `simd_splat.wast` fix documented above.
+
 The vendored files are licensed under the Apache License, Version 2.0 --
 see the accompanying LICENSE file, itself vendored verbatim from the same
 pinned commit.
