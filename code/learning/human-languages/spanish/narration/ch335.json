@@ -1,0 +1,213 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 335,
+  "title": "Review --- Six Words That Arrived Last",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:2b5e2d27736de6a7",
+  "lessons": [
+    {
+      "id": "ES-C335-repaso-seis-palabras",
+      "sequence": 5870,
+      "title": "Review --- six words that arrived last",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "a second outing for six nouns that each closed a run --- a partner, a baby, a way in, the change, the heat and an age",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:94bc532eaeb2dac0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two people to begin. Who is la pareja? (A couple, or one half of one.) And who is el bebé? (A baby.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Six nouns, sharing something that has nothing to do with meaning: each one arrived at the end of its run. A word met in the middle of a run gets picked up by everything that comes after it. A word met last has nothing after it, so it was said once and then left alone. These six are here for a second hearing."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two people. La pareja --- a couple, from Latin par, equal. El bebé --- a baby, and the accent pulls the weight onto the last beat."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two things a stranger holds out to you. La entrada --- the way in, and the ticket that buys the way in. El cambio --- the exchange, and the coins pressed back into your hand."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two reports from your own body. El calor --- heat. La edad --- age."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "English first, then the Spanish with its article."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the partner --- la pareja",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *the partner* --- *la pareja*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the baby --- el bebé",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *the baby* --- *el bebé*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the way in --- la entrada",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *the way in* --- *la entrada*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the change --- el cambio",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *the change* --- *el cambio*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the heat --- el calor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *the heat* --- *el calor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the age --- la edad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *the age* --- *la edad*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C335-repaso-seis-palabras-entrada",
+              "prompt": "One Spanish noun names both a doorway and the ticket that gets you through it. Which?",
+              "assesses": [
+                "ES-LEX-C313-ASK-19"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "la entrada",
+                "entrada",
+                "la entrada, the way in and the ticket"
+              ],
+              "feedback": {
+                "correct": "La entrada --- the door and the right to use it, in one word.",
+                "incorrect": "La entrada. It is the entrance and the admission ticket at once."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C335-repaso-seis-palabras-cambio",
+              "prompt": "You have paid, and you are owed coins back. Name what you are owed.",
+              "assesses": [
+                "ES-LEX-C313-ASK-20"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "el cambio",
+                "cambio",
+                "el cambio, the change"
+              ],
+              "feedback": {
+                "correct": "El cambio --- the act of exchanging and the coins themselves.",
+                "incorrect": "El cambio. Spanish uses the one noun for the exchange and for the coins."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which two of the six name a person? (La pareja, el bebé.) Which two would a stranger hand you? (La entrada, el cambio.) Which two report on your own body? (El calor, la edad.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

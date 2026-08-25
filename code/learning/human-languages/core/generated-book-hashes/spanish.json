@@ -3423,6 +3423,24 @@
         "ES-C334-edad"
       ],
       "tex": "spanish/book/chapters/ch334-salud-y-edad.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 335,
+      "sourceHash": "fnv1a64:fc75b96c272aab5c",
+      "lessonIds": [
+        "ES-C335-repaso-seis-palabras"
+      ],
+      "tex": "spanish/book/chapters/ch335-repaso-seis-palabras.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 336,
+      "sourceHash": "fnv1a64:78fca0b1985d76ad",
+      "lessonIds": [
+        "ES-C336-repaso-seis-en-uso"
+      ],
+      "tex": "spanish/book/chapters/ch336-repaso-seis-en-uso.tex"
     }
   ]
 }

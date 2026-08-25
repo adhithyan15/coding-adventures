@@ -3,9 +3,10 @@
 import { describe, expect, it } from "vitest";
 import { loadEverything, loadChapterPolicy, loadTrackChapters } from "../src/loader.js";
 import { parseLesson } from "../src/parse.js";
-import { buildCurriculumGapReport } from "../src/report.js";
+import { buildCurriculumGapReport, renderCurriculumGapReport } from "../src/report.js";
 import { LEVEL_VOCABULARY, runLevelGate, isEtymologyAtom } from "../src/level-gate.js";
-import { summarizeLevels } from "../src/levels.js";
+import { summarizeLevels, levelRank, lessonSpineNodes, CEFR_LEVELS } from "../src/levels.js";
+import type { CefrLevel } from "../src/levels.js";
 import { measureRamp } from "../src/ramp.js";
 import { measureContinuity } from "../src/continuity.js";
 import type { ContinuityReport } from "../src/continuity.js";
@@ -53,38 +54,71 @@ describe("the gate that would have caught the A2 claim", () => {
     // widest this gap has ever been, and it is the clearest statement of what
     // this module is for: a track can touch C2 and have attained nothing.
     expect(spanish.touches).toBe("C2");
-    // The number that does not: Spanish has not met even pre-A1's criteria.
-    expect(spanish.attained).toBeNull();
-    expect(spanish.inProgressAt).toBe("pre-A1");
+    // The number that does not, and the first time it has ever moved. Spanish has
+    // now met all five pre-A1 criteria — 304 headwords at or below the level, every
+    // pre-A1 spine node realized, no lesson over the atom budget, every pre-A1 atom
+    // revisited twice, and the writing stages proved — so `attained` reads pre-A1
+    // and the work in progress is A1.
+    //
+    // The distinction this test is named for is UNCHANGED by that, and the gap is
+    // still six rungs wide: `touches` says C2 because three lessons point at a C2
+    // node; `attained` says pre-A1 because that is the highest rung whose criteria
+    // actually hold. Asserting `attained === null` was only ever a proxy for "the
+    // two numbers disagree" — it happened to be the value at the time. What is
+    // asserted now is the disagreement itself, which is the claim, plus the floor
+    // the track has genuinely reached.
+    expect(spanish.attained).toBe("pre-A1");
+    expect(spanish.inProgressAt).toBe("A1");
+    expect(levelRank(spanish.touches!)).toBeGreaterThan(levelRank(spanish.attained!));
   });
 
   it("reports every track as overstating, which is the finding", () => {
-    // All 23 tracks touch a level none of them has attained. That is not 23 bugs —
-    // it is one measurement having been read as another for the whole project.
+    // All 23 tracks touch a level ABOVE the one they have attained. That is not 23
+    // bugs — it is one measurement having been read as another for the whole project.
     const gate = realReport().levelGate!;
     expect(gate.summary.tracksOverstating).toBe(23);
-    expect(gate.summary.tracksWithAnyLevel).toBe(0);
-    for (const level of Object.values(gate.summary.attainedByLevel)) {
-      expect(level).toBe(0);
+    // `tracksWithAnyLevel` was pinned at 0, and it stayed 0 for every track from the
+    // day this gate was written. It is 1 now: Spanish closed the last of its pre-A1
+    // criteria. The finding this test names is unaffected — overstating is a track
+    // touching HIGHER than it has attained, not a track having attained nothing —
+    // so the 23 stands and the zero does not.
+    expect(gate.summary.tracksWithAnyLevel).toBe(1);
+    // Which rung, and only that rung. Pinning "pre-A1 is 1" alone would pass on a
+    // gate that had also handed out a spurious C2, so every level is still checked;
+    // the exception is named rather than the assertion dropped.
+    for (const [level, count] of Object.entries(gate.summary.attainedByLevel)) {
+      expect(count).toBe(level === "pre-A1" ? 1 : 0);
     }
+    // And the count agrees with the tracks it is a count OF — the summary is derived
+    // from `tracks`, so a summary that drifts from it is the bug this would catch.
+    expect(gate.tracks.filter((t) => t.attained !== null).map((t) => t.language)).toEqual([
+      "spanish",
+    ]);
   });
 
   it("names which criterion failed and by how much, not just that one did", () => {
     const gate = realReport().levelGate!;
     const spanish = gate.tracks.find((t) => t.language === "spanish")!;
 
-    // This used to reach for Spanish's `vocabulary` blocker and assert its
-    // shortfall. Spanish no longer HAS one. Chapters 328-334 carried the track
-    // from 269 to 304 distinct headwords taught at or below pre-A1, past the
-    // 300-word floor, and closed the criterion outright — so the assertions that
-    // read `vocab.detail` and `vocab.shortfall` now describe a blocker that is
-    // not there, and have been replaced by the closure itself.
-    expect(spanish.blockers.map((b) => b.criterion)).not.toContain("vocabulary");
-    // Something must still be open, or the loop below asserts over nothing and
-    // the test passes vacuously. Criterion 4 re-opened when this tranche landed:
-    // 35 new pre-A1 atoms arrived and the last few have not been revisited twice
-    // yet, which is the reinforcement tail that follows every vocabulary wave.
+    // This asserted, in turn, Spanish's `vocabulary` blocker and its shortfall, and
+    // then — once chapters 328-334 carried the track past the 300-word floor — the
+    // ABSENCE of that blocker from `spanish.blockers`. Both readings were of a list
+    // scoped to whatever rung Spanish happened to be working on, and that rung has
+    // now moved: `blockers` describes A1, where a 600-word target is open again and
+    // `vocabulary` is legitimately back in the list. Asserting its absence would now
+    // be asserting something false about a different level.
+    //
+    // The closure is stated where it cannot drift: `attained` is the gate's own
+    // verdict that EVERY pre-A1 criterion holds, which is strictly more than the
+    // one criterion the old line reached for.
+    expect(levelRank(spanish.attained!)).toBeGreaterThanOrEqual(levelRank("pre-A1"));
+    // Anti-vacuity. The loop below asserts over `spanish.blockers`, and a `for` over
+    // an empty array passes without checking anything — so a Spanish that had gone
+    // clean at every level, or a gate that had stopped populating blockers at all,
+    // would turn this test green while measuring nothing. Something must be open for
+    // the loop to have a subject.
     expect(spanish.blockers.length).toBeGreaterThan(0);
+    expect(spanish.inProgressAt).not.toBeNull();
     // This once asserted a `reinforcement` blocker, then asserted its absence
     // after the reinforcement tranche closed all 24 under-reinforced atoms, and
     // now it would have to assert its presence again — criterion 4 re-opens
@@ -139,7 +173,19 @@ describe("the gate that would have caught the A2 claim", () => {
     const authored = e.spine.nodes.filter((n) => n.stage === "B1");
     expect(authored.length).toBeGreaterThan(0);
     // Authoring a rung does not climb it. No track may attain B1 on an empty ledger.
-    expect(gate.tracks.every((t) => t.attained === null)).toBe(true);
+    //
+    // This read `every(t => t.attained === null)`, which was a stronger claim than the
+    // sentence above it and stopped being true when Spanish attained pre-A1. pre-A1 is
+    // not the rung under test — B1 is, and the reason B1 is refused is that all 17 of
+    // its nodes are unrealized, which has nothing to do with what the bottom of the
+    // ladder has closed. Scoping the assertion to B1-and-above says exactly the thing
+    // the test is named for, and still fails the day a track is handed a rung whose
+    // ledger is empty.
+    for (const track of gate.tracks) {
+      if (track.attained !== null) {
+        expect(levelRank(track.attained)).toBeLessThan(levelRank("B1"));
+      }
+    }
     // And the whole ladder is now reachable in principle: every CEFR level has nodes.
     const stages = new Set(e.spine.nodes.map((n) => n.stage));
     for (const level of ["B1", "B2", "C1", "C2"]) expect(stages.has(level)).toBe(true);
@@ -153,6 +199,68 @@ describe("the gate that would have caught the A2 claim", () => {
       if (track.inProgressAt !== null) expect(track.blockers.length).toBeGreaterThan(0);
       if (track.attained === null) expect(track.inProgressAt).toBe("pre-A1");
     }
+  });
+});
+
+describe("the first rung anybody actually climbed", () => {
+  // Everything below is about ONE track reaching ONE level. It is worth its own
+  // describe because for the whole life of this module the answer was "none", and a
+  // regression to "none" is the kind of thing a corpus-wide suite reports as a
+  // changed integer somewhere rather than as the thing it is.
+
+  it("closes criterion 4 for Spanish at the atom, not just at the summary", () => {
+    // `attained === "pre-A1"` is the gate's own verdict, and asserting only the
+    // verdict would pass on a gate that had quietly stopped measuring. So this
+    // re-derives criterion 4 from the same two inputs the gate reads — the continuity
+    // report and the lesson→level map — and names any atom that fails it.
+    const e = loadEverything();
+    const continuity = measureContinuity(e.lessons);
+    const spineNodes = lessonSpineNodes(e.curricula);
+    const stageOf = new Map<string, CefrLevel>();
+    for (const node of e.spine.nodes) {
+      if ((CEFR_LEVELS as readonly string[]).includes(node.stage)) {
+        stageOf.set(node.id, node.stage as CefrLevel);
+      }
+    }
+    const levelOf = new Map<string, CefrLevel>();
+    for (const l of e.lessons) {
+      const node = spineNodes.get(l.realization.lessonId);
+      const stage = node ? stageOf.get(node) : undefined;
+      if (stage) levelOf.set(l.realization.lessonId, stage);
+    }
+
+    const thin = continuity.reinforcement.filter((defect) => {
+      if (defect.language !== "spanish") return false;
+      const level = levelOf.get(defect.introducedBy);
+      if (level === undefined || levelRank(level) > levelRank("pre-A1")) return false;
+      return defect.revisits < 2 && !isEtymologyAtom(defect.atom);
+    });
+    // Named, not counted: if this ever regresses, the failure should say which atoms
+    // went thin rather than making the next reader re-run the query by hand.
+    expect(thin.map((d) => `${d.atom} (${d.introducedBy})`)).toEqual([]);
+
+    // Anti-vacuity for the filter above. If `levelOf` were empty — a plausible
+    // refactoring accident, since it is rebuilt here rather than exported — every
+    // defect would be skipped and the assertion would pass having checked nothing.
+    const scoped = continuity.reinforcement.filter(
+      (d) => d.language === "spanish" && levelRank(levelOf.get(d.introducedBy) ?? "C2") <= levelRank("pre-A1"),
+    );
+    expect(scoped.length).toBeGreaterThan(0);
+  });
+
+  it("says WHICH track reached it, because a bare count cannot be checked", () => {
+    // The one line this whole apparatus was built to print. It read
+    // "levels ATTAINED (HL09 §3.1): none" from the day it was written; now it names a
+    // track. Pinning the sentence rather than the count is deliberate: a count is
+    // satisfied by any track at all, and the claim being made is about Spanish.
+    const rendered = renderCurriculumGapReport(realReport());
+    const line = rendered.split(/\r?\n/).find((l) => l.startsWith("levels ATTAINED"))!;
+    expect(line).toBeDefined();
+    expect(line).not.toContain("none");
+    expect(line).toContain("1 track at pre-A1 (spanish)");
+    // And the plural agrees with the count, which nothing could have caught while the
+    // populated branch of this line had never once run.
+    expect(line).not.toContain("1 tracks");
   });
 });
 
@@ -210,20 +318,48 @@ describe("etymology is a hook, not a skill", () => {
           : defect,
       ),
     };
-    const shortfalls = (report: ContinuityReport) =>
+    // Each track's WHOLE verdict, not just a shortfall integer. The previous version
+    // kept only the number, and the number alone is not comparable between the two
+    // runs: a blocker is scoped to the level the track is IN PROGRESS at, so if the
+    // waiver lets a track climb a rung, the two runs report shortfalls for two
+    // different levels and "unwaived >= waived" stops meaning anything. That is not
+    // hypothetical — it is Spanish today. With the waiver it stands at pre-A1 and is
+    // working on A1, carrying 88 under-reinforced A1 atoms; with the etymons renamed
+    // it never leaves pre-A1 and carries 27 there. 27 < 88 with no waiver bug in
+    // sight, and the old assertion failed on it.
+    const verdicts = (report: ContinuityReport) =>
       new Map(
         runLevelGate({ ...gateInputs, continuity: report }).tracks.map((track) => [
           track.language,
-          track.blockers.find((b) => b.criterion === "reinforcement")?.shortfall ?? 0,
+          {
+            attained: track.attained,
+            inProgressAt: track.inProgressAt,
+            shortfall: track.blockers.find((b) => b.criterion === "reinforcement")?.shortfall ?? 0,
+          },
         ]),
       );
-    const waived = shortfalls(base);
-    const unwaived = shortfalls(renamed);
+    const waived = verdicts(base);
+    const unwaived = verdicts(renamed);
+    // `attained` is a level or null; null is "below every rung", hence -1.
+    const rank = (level: string | null) => (level === null ? -1 : levelRank(level as CefrLevel));
     let bit = false;
-    for (const [language, shortfall] of waived) {
-      // The waiver can only ever REMOVE failures, never add them.
-      expect(unwaived.get(language)!).toBeGreaterThanOrEqual(shortfall);
-      if (unwaived.get(language)! > shortfall) bit = true;
+    for (const [language, withWaiver] of waived) {
+      const without = unwaived.get(language)!;
+      // The general invariant, true at every level: the waiver can only ever REMOVE
+      // failures, so a track can stand at the same rung with it as without, or higher
+      // — never lower.
+      expect(rank(without.attained)).toBeLessThanOrEqual(rank(withWaiver.attained));
+      if (without.inProgressAt === withWaiver.inProgressAt) {
+        // Same rung in both runs, so the two shortfalls are commensurable and the
+        // original comparison is exactly right.
+        expect(without.shortfall).toBeGreaterThanOrEqual(withWaiver.shortfall);
+        if (without.shortfall > withWaiver.shortfall) bit = true;
+      } else {
+        // Different rungs, which can only have happened because the waiver carried
+        // this track over one. That is the strongest bite available: the rename did
+        // not merely raise a count, it cost the track a level.
+        bit = true;
+      }
     }
     expect(bit).toBe(true);
   });

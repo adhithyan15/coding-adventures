@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:1f3287efc736e1a5",
+  "sourceHash": "fnv1a64:d3fc988c82463286",
   "summary": {
-    "totalLessons": 750,
-    "voice": 688,
+    "totalLessons": 752,
+    "voice": 690,
     "sight": 51,
     "pen": 11,
-    "drivableLessons": 688,
+    "drivableLessons": 690,
     "drivablePercent": 92,
     "trackCount": 1,
-    "chapterCount": 334,
-    "drivablePrefixTotal": 660,
-    "fullyDrivableChapters": 284,
+    "chapterCount": 336,
+    "drivablePrefixTotal": 662,
+    "fullyDrivableChapters": 286,
     "unstartableChapters": 39,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -26,12 +26,12 @@
   "tracks": [
     {
       "language": "spanish",
-      "lessonCount": 750,
-      "voice": 688,
+      "lessonCount": 752,
+      "voice": 690,
       "sight": 51,
       "pen": 11,
       "drivablePercent": 92,
-      "drivablePrefixTotal": 660,
+      "drivablePrefixTotal": 662,
       "modalities": [
         "voice",
         "sight",
@@ -5688,6 +5688,38 @@
             "ES-C334-frio",
             "ES-C334-calor",
             "ES-C334-edad"
+          ]
+        },
+        {
+          "chapter": 335,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C335-repaso-seis-palabras"
+          ]
+        },
+        {
+          "chapter": 336,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C336-repaso-seis-en-uso"
           ]
         }
       ]
@@ -19241,6 +19273,42 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:b128d93ff109052b"
+    },
+    {
+      "id": "ES-C335-repaso-seis-palabras",
+      "language": "spanish",
+      "chapter": 335,
+      "sequence": 5870,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:94bc532eaeb2dac0"
+    },
+    {
+      "id": "ES-C336-repaso-seis-en-uso",
+      "language": "spanish",
+      "chapter": 336,
+      "sequence": 5880,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:34e6caf544be748a"
     }
   ],
   "findings": []

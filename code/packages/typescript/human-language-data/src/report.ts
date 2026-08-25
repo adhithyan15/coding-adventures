@@ -777,8 +777,23 @@ export function renderCurriculumGapReport(report: CurriculumGapReport): string {
               const next = t.inProgressAt ?? "C2";
               return t.vocabulary < report.levelGate!.vocabularyTargets[next];
             }).length} of ${report.levelGate.tracks.length} tracks short of the level they are working on`,
+          // NAMES, not just a count. This line printed the literal string "none" from
+          // the day it was written until Spanish closed pre-A1, so its populated form
+          // had never once been read — and it showed: "1 tracks at pre-A1" is a count
+          // with a broken plural and no way to tell WHICH track. A reader who sees a
+          // track arrive on the ladder wants to know which one, and the gate already
+          // holds the answer in `tracks`. `attainedByLevel[l]` and the length of this
+          // filter are the same number by construction (a track STOPS at exactly one
+          // level), so naming them costs nothing in truthfulness and the count is
+          // still printed beside the names.
           `levels ATTAINED (HL09 §3.1): ${CEFR_LEVELS.filter((l) => report.levelGate!.summary.attainedByLevel[l] > 0)
-            .map((l) => `${report.levelGate!.summary.attainedByLevel[l]} tracks at ${l}`)
+            .map((l) => {
+              const names = report
+                .levelGate!.tracks.filter((t) => t.attained === l)
+                .map((t) => t.language)
+                .sort();
+              return `${names.length} track${names.length === 1 ? "" : "s"} at ${l} (${names.join(", ")})`;
+            })
             .join(", ") || "none"}; ` +
             `${report.levelGate!.summary.tracksOverstating} track(s) touch a level they have not attained`,
         ]

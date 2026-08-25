@@ -5375,6 +5375,16 @@
       "output": "spanish/book/chapters/ch334-salud-y-edad.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 335,
+      "output": "spanish/book/chapters/ch335-repaso-seis-palabras.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 336,
+      "output": "spanish/book/chapters/ch336-repaso-seis-en-uso.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "output": "tamil/book/chapters/ch06-dative-case.tex",

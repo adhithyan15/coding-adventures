@@ -4374,6 +4374,30 @@
         "ES-EXT-309-KIN"
       ],
       "after": []
+    },
+    {
+      "id": "ES-PATH-335-01",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "ES-C335-repaso-seis-palabras"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-335-REPASO"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-336-01",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "ES-C336-repaso-seis-en-uso"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-336-REPASO"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -4445,7 +4469,8 @@
         "ES-PATH-306-01",
         "ES-PATH-307-01",
         "ES-PATH-308-01",
-        "ES-PATH-309-01"
+        "ES-PATH-309-01",
+        "ES-PATH-335-01"
       ],
       "omits": [
         "PRONOUN-I",
@@ -4472,7 +4497,8 @@
         "ES-PATH-318-04",
         "ES-PATH-326-01",
         "ES-PATH-327-01",
-        "ES-PATH-334-01"
+        "ES-PATH-334-01",
+        "ES-PATH-336-01"
       ],
       "omits": [
         "WORD-GOOD"
@@ -8880,6 +8906,28 @@
         "ES-C309-pariente",
         "ES-C309-pareja",
         "ES-C309-bebe"
+      ]
+    },
+    {
+      "id": "ES-EXT-335-REPASO",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "review",
+      "canDo": "I can give six nouns that arrived at the end of their runs back from the English, each with its article.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C335-repaso-seis-palabras"
+      ]
+    },
+    {
+      "id": "ES-EXT-336-REPASO",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "review",
+      "canDo": "I can put those same six nouns inside a whole conversational turn of four words or fewer.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C336-repaso-seis-en-uso"
       ]
     }
   ],
