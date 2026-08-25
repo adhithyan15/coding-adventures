@@ -1,0 +1,805 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 14,
+  "title": "One small step into school",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:f2b53fef3e4412ee",
+  "lessons": [
+    {
+      "id": "ZH-C14-hear-xiao",
+      "sequence": 1010,
+      "title": "Hear xiǎo — small",
+      "headword": "xiǎo",
+      "romanization": "xiǎo",
+      "gloss": "small; little",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f8dcb78501231c42",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 10,
+              "perItem": false,
+              "source": "[PAUSE 10s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say big and university."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "xiǎo — small; little."
+            },
+            {
+              "kind": "speech",
+              "text": "Keep the voice low through the third tone: xiǎo. Work only with sound and meaning. Its three-stroke character comes next."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C14-hear-xiao-meaning",
+              "prompt": "What does xiǎo mean?",
+              "assesses": [
+                "ZH-LEX-XIAO-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "small",
+                "little",
+                "small or little"
+              ],
+              "feedback": {
+                "correct": "Right: xiǎo means small or little.",
+                "incorrect": "Hear the low third tone: xiǎo — small."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W14-xiao",
+      "sequence": 1020,
+      "title": "小 (xiǎo) — centre, left, right",
+      "headword": "小",
+      "romanization": "xiǎo",
+      "gloss": "small, written in three strokes",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:d496940f120aa7d3",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 8,
+              "perItem": false,
+              "source": "[PAUSE 8s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say small in Mandarin."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Draw the centre vertical first and finish its hook without lifting. Add the short left-falling mark. Finish with the right dot, leaving air around the centre. Three strokes; two lifts."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace 小 (xiǎo) once. Copy it once while saying centre, left, right."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 小 (xiǎo), pinned stroke paths and medians."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-W14-xiao-order",
+              "prompt": "Which stroke comes first in 小 (xiǎo)?",
+              "assesses": [
+                "ZH-SCRIPT-XIAO-01"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "the centre vertical hook",
+                "centre vertical",
+                "vertical hook",
+                "middle stroke"
+              ],
+              "feedback": {
+                "correct": "Right: begin with the centre vertical hook.",
+                "incorrect": "Start in the centre and hook before adding the side marks."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C14-xiao",
+      "sequence": 1030,
+      "title": "小 (xiǎo) — small on the page",
+      "headword": "小",
+      "romanization": "xiǎo",
+      "gloss": "small; little, now read and written",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b10fc10a9567cde0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 10,
+              "perItem": false,
+              "source": "[PAUSE 10s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say small, then point to the first stroke of 小 (xiǎo)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "小 — xiǎo — small; little."
+            },
+            {
+              "kind": "speech",
+              "text": "Read the character without pinyin, then say it with a low third tone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy 小 (xiǎo) once. Keep the side marks shorter than the centre stroke."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C14-xiao-write",
+              "prompt": "Write xiǎo, small, in Chinese.",
+              "assesses": [
+                "ZH-LEX-XIAO-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "小",
+                "小 xiǎo"
+              ],
+              "feedback": {
+                "correct": "Right: 小.",
+                "incorrect": "Write the centre hook, left mark, then right dot."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C14-hear-xiaoxue",
+      "sequence": 1040,
+      "title": "Hear xiǎoxué — primary school",
+      "headword": "xiǎoxué",
+      "romanization": "xiǎoxué",
+      "gloss": "primary school; elementary school",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:55a823b46b97d7b2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 10,
+              "perItem": false,
+              "source": "[PAUSE 10s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say small, then study."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "xiǎoxué — primary school; elementary school."
+            },
+            {
+              "kind": "speech",
+              "text": "Keep xiǎo low, then let xué rise. No new character is hiding in this word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C14-hear-xiaoxue-meaning",
+              "prompt": "What does xiǎoxué mean?",
+              "assesses": [
+                "ZH-LEX-XIAOXUE-01"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "primary school",
+                "elementary school",
+                "primary or elementary school"
+              ],
+              "feedback": {
+                "correct": "Right: xiǎoxué means primary school.",
+                "incorrect": "Join small and study: xiǎoxué — primary school."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C14-xiaoxue",
+      "sequence": 1050,
+      "title": "小学 (xiǎoxué) — primary school on the page",
+      "headword": "小学",
+      "romanization": "xiǎoxué",
+      "gloss": "primary school, built from known characters",
+      "script": "chinese",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:5577901e994bbb7c",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read 小 (xiǎo), then 学."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "小学 — xiǎoxué — primary school."
+            },
+            {
+              "kind": "speech",
+              "text": "Read the pair as one word without pinyin: low, then rising."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at 小学 (xiǎoxué), cover it, and write it once from memory."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C14-xiaoxue-write",
+              "prompt": "Write primary school in Chinese characters.",
+              "assesses": [
+                "ZH-LEX-XIAOXUE-01"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "小学",
+                "小学 xiǎoxué"
+              ],
+              "feedback": {
+                "correct": "Right: 小学.",
+                "incorrect": "Write small 小, then study 学."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C14-hear-xiaoxuesheng",
+      "sequence": 1060,
+      "title": "Hear xiǎoxuésheng — primary-school student",
+      "headword": "xiǎoxuésheng",
+      "romanization": "xiǎoxuésheng",
+      "gloss": "primary-school student",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5aff74ae374bf3e7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say primary school, then student."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "xiǎoxuésheng — primary-school student."
+            },
+            {
+              "kind": "speech",
+              "text": "Say three beats: low xiǎo, rising xué, light sheng. 学 appears only once where the two familiar words overlap."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C14-hear-xiaoxuesheng-meaning",
+              "prompt": "What does xiǎoxuésheng mean?",
+              "assesses": [
+                "ZH-LEX-XIAOXUESHENG-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "primary-school student",
+                "elementary-school student",
+                "a primary school student",
+                "an elementary school student"
+              ],
+              "feedback": {
+                "correct": "Right: xiǎoxuésheng means primary-school student.",
+                "incorrect": "Hear primary school plus student, sharing xué."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C14-xiaoxuesheng",
+      "sequence": 1070,
+      "title": "小学生 (xiǎoxuésheng) — primary-school student on the page",
+      "headword": "小学生",
+      "romanization": "xiǎoxuésheng",
+      "gloss": "primary-school student, built from known characters",
+      "script": "chinese",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:ed5dfa619025fd19",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 14,
+              "perItem": false,
+              "source": "[PAUSE 14s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read 小学 (xiǎoxué), then point to 生."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "小学生 — xiǎoxuésheng — primary-school student."
+            },
+            {
+              "kind": "speech",
+              "text": "Track three characters and three beats. Read it once without pinyin."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at 小学生 (xiǎoxuésheng), cover it, and write it once. Check one character at a time."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C14-xiaoxuesheng-write",
+              "prompt": "Write primary-school student in Chinese characters.",
+              "assesses": [
+                "ZH-LEX-XIAOXUESHENG-01"
+              ],
+              "responseSeconds": 16,
+              "acceptedResponses": [
+                "小学生",
+                "小学生 xiǎoxuésheng"
+              ],
+              "feedback": {
+                "correct": "Right: 小学生.",
+                "incorrect": "Write 小, then 学, then 生."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R14-primary-three",
+      "sequence": 1080,
+      "title": "Retrieve three primary-school words",
+      "headword": "小 — 小学 — 小学生",
+      "romanization": "xiǎo — xiǎoxué — xiǎoxuésheng",
+      "gloss": "three Level 1 small and primary-school words",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3c33a9c7f5e2d420",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 16,
+              "perItem": false,
+              "source": "[PAUSE 16s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write 小 (xiǎo), 学, and 生 once each from memory."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear small, primary school, and primary-school student in mixed order. Say, read, and write each. Then contrast 大学 with 小学 and 大学生 with 小学生 (xiǎoxuésheng). Repair only the missed item."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-R14-primary-three-recall",
+              "prompt": "Write small, primary school, and primary-school student in that order.",
+              "assesses": [
+                "ZH-LEX-XIAO-01",
+                "ZH-LEX-XIAOXUE-01",
+                "ZH-LEX-XIAOXUESHENG-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "小 — 小学 — 小学生",
+                "小 小学 小学生",
+                "小, 小学, 小学生"
+              ],
+              "feedback": {
+                "correct": "The three forms stay distinct.",
+                "incorrect": "Repair only the missed form, then retry the row."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C14-practice",
+      "sequence": 1090,
+      "title": "Payoff — three primary-school words in four skills",
+      "headword": "小 — 小学 — 小学生",
+      "romanization": "xiǎo — xiǎoxué — xiǎoxuésheng",
+      "gloss": "separately scored listening, speaking, reading, and writing primary-school map",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c9c025506f7546c4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 16,
+              "perItem": false,
+              "source": "[PAUSE 16s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write 小 (xiǎo), 学, and 生 without a model."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Listening: hear the three forms in mixed order and choose each meaning."
+            },
+            {
+              "kind": "speech",
+              "text": "Speaking: produce all three from meaning cards, with tones audible."
+            },
+            {
+              "kind": "speech",
+              "text": "Reading: read all three character cards without pinyin."
+            },
+            {
+              "kind": "speech",
+              "text": "Writing: hear all three and write them without a model."
+            },
+            {
+              "kind": "speech",
+              "text": "Pass each skill separately. Repair and retry only the failed skill."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 task outline and vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C14-practice-primary-payoff",
+              "prompt": "After all four checks pass, write primary school and primary-school student.",
+              "assesses": [
+                "ZH-PERFORMANCE-PRIMARY-THREE-FOUR-SKILL-01"
+              ],
+              "responseSeconds": 28,
+              "acceptedResponses": [
+                "小学 — 小学生",
+                "小学 小学生",
+                "小学, 小学生"
+              ],
+              "feedback": {
+                "correct": "The primary-school map passes in all four skills.",
+                "incorrect": "Repair only the failed skill or word, then retry it."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

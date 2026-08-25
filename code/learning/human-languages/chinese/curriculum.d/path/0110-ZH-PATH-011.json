@@ -1,0 +1,27 @@
+{
+  "id": "ZH-PATH-011",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "ZH-C12-ren",
+    "ZH-C12-nu",
+    "ZH-C12-hear-erzi",
+    "ZH-W12-er",
+    "ZH-C12-erzi",
+    "ZH-C12-hear-nuer",
+    "ZH-C12-nuer",
+    "ZH-C12-hear-jia",
+    "ZH-W12-jia",
+    "ZH-C12-jia",
+    "ZH-C12-hear-jiaren",
+    "ZH-C12-jiaren",
+    "ZH-R12-family-six",
+    "ZH-C12-practice"
+  ],
+  "before": [],
+  "inline": [
+    "ZH-EXT-030-FAMILY-MEANING-FIRST",
+    "ZH-EXT-031-FAMILY-SCRIPT",
+    "ZH-EXT-032-FAMILY-FOUR-SKILL"
+  ],
+  "after": []
+}

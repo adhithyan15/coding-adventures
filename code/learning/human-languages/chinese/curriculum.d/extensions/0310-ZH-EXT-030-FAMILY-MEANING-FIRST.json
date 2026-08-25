@@ -1,0 +1,18 @@
+{
+  "id": "ZH-EXT-030-FAMILY-MEANING-FIRST",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "lexis",
+  "canDo": "I can understand and say six HSK Level 1 people-and-family words, with every unfamiliar spoken meaning arriving before its new character form.",
+  "prerequisites": [
+    "ZH-EXT-029-QING-INVITES"
+  ],
+  "lessons": [
+    "ZH-C12-ren",
+    "ZH-C12-nu",
+    "ZH-C12-hear-erzi",
+    "ZH-C12-hear-nuer",
+    "ZH-C12-hear-jia",
+    "ZH-C12-hear-jiaren"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "id": "ZH-EXT-038-PRIMARY-FOUR-SKILL",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "assessment",
+  "canDo": "I can pass separate listening, speaking, reading and writing checks for 小, 小学 and 小学生; no strong skill compensates for a weak one.",
+  "prerequisites": [
+    "ZH-EXT-037-PRIMARY-SCRIPT"
+  ],
+  "lessons": [
+    "ZH-R14-primary-three",
+    "ZH-C14-practice"
+  ]
+}

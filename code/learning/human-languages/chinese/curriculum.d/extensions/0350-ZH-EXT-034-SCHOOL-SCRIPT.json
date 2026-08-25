@@ -1,0 +1,21 @@
+{
+  "id": "ZH-EXT-034-SCHOOL-SCRIPT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can write 大, 学 and 生 from ordered strokes, then read and write 大家, 学生, 大学 and 大学生 without pinyin.",
+  "prerequisites": [
+    "ZH-EXT-033-SCHOOL-MEANING-FIRST"
+  ],
+  "lessons": [
+    "ZH-W13-da",
+    "ZH-C13-da",
+    "ZH-C13-dajia",
+    "ZH-W13-xue",
+    "ZH-C13-xue",
+    "ZH-W13-sheng",
+    "ZH-C13-xuesheng",
+    "ZH-C13-daxue",
+    "ZH-C13-daxuesheng"
+  ]
+}

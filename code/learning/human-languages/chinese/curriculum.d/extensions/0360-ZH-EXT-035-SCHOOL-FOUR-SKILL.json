@@ -1,0 +1,14 @@
+{
+  "id": "ZH-EXT-035-SCHOOL-FOUR-SKILL",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "assessment",
+  "canDo": "I can pass separate listening, speaking, reading and writing checks for 大, 大家, 学, 学生, 大学 and 大学生; no strong skill compensates for a weak one.",
+  "prerequisites": [
+    "ZH-EXT-034-SCHOOL-SCRIPT"
+  ],
+  "lessons": [
+    "ZH-R13-school-six",
+    "ZH-C13-practice"
+  ]
+}

@@ -1,0 +1,1527 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 13,
+  "title": "From study to university student",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:bb34b2852c9ae5aa",
+  "lessons": [
+    {
+      "id": "ZH-C13-hear-da",
+      "sequence": 840,
+      "title": "Hear dà — big",
+      "headword": "dà",
+      "romanization": "dà",
+      "gloss": "big; large",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d56ee99d4aeeab23",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 10,
+              "perItem": false,
+              "source": "[PAUSE 10s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say home and family members."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dà — big; large."
+            },
+            {
+              "kind": "speech",
+              "text": "Let the voice fall firmly on the single syllable: dà. Keep the character covered for now. The next lesson gives its three strokes one at a time."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C13-hear-da-meaning",
+              "prompt": "What does dà mean?",
+              "assesses": [
+                "ZH-LEX-DA-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "big",
+                "large",
+                "big or large"
+              ],
+              "feedback": {
+                "correct": "Right: dà means big or large.",
+                "incorrect": "Hear the firm fall: dà — big."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W13-da",
+      "sequence": 850,
+      "title": "大 (dà) — one bar, two falls",
+      "headword": "大",
+      "romanization": "dà",
+      "gloss": "big, written in three strokes",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:daf6f23f0abcb000",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 8,
+              "perItem": false,
+              "source": "[PAUSE 8s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say big in Mandarin."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "一 + 丿 + ㇏ becomes 大 (dà)."
+            },
+            {
+              "kind": "speech",
+              "text": "Write the horizontal first. Start the left-falling stroke above it and cross through it. Lift once more, return to the crossing, and fall long to the right."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace 大 (dà) once. Copy it once while saying bar, left, right."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 大 (dà), pinned stroke paths and medians."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-W13-da-order",
+              "prompt": "Which stroke comes first in 大 (dà)?",
+              "assesses": [
+                "ZH-SCRIPT-DA-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "the horizontal stroke",
+                "horizontal",
+                "一",
+                "the bar"
+              ],
+              "feedback": {
+                "correct": "Right: the horizontal comes first.",
+                "incorrect": "Begin with the horizontal bar."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C13-da",
+      "sequence": 860,
+      "title": "大 (dà) — big on the page",
+      "headword": "大",
+      "romanization": "dà",
+      "gloss": "big; large, now read and written",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c41cebf0ae1709ee",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 10,
+              "perItem": false,
+              "source": "[PAUSE 10s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say big, then point to the first stroke of 大 (dà)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "大 — dà — big; large."
+            },
+            {
+              "kind": "speech",
+              "text": "Read the character without pinyin. Then say it once with a clear fourth-tone fall."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy 大 (dà) once from the model. Keep the crossing near the centre."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C13-da-write",
+              "prompt": "Write dà, big, in Chinese.",
+              "assesses": [
+                "ZH-LEX-DA-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "大",
+                "大 dà"
+              ],
+              "feedback": {
+                "correct": "Right: 大.",
+                "incorrect": "Write the horizontal, then the two falling strokes."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C13-hear-dajia",
+      "sequence": 870,
+      "title": "Hear dàjiā — everyone",
+      "headword": "dàjiā",
+      "romanization": "dàjiā",
+      "gloss": "everyone",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:940ff167494369c5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 10,
+              "perItem": false,
+              "source": "[PAUSE 10s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say dà, then jiā."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dàjiā — everyone; everybody."
+            },
+            {
+              "kind": "speech",
+              "text": "Hear two beats: falling dà, then level jiā. The whole word means everyone. Its written form will contain only characters you already know."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C13-hear-dajia-meaning",
+              "prompt": "What does dàjiā mean?",
+              "assesses": [
+                "ZH-LEX-DAJIA-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "everyone",
+                "everybody"
+              ],
+              "feedback": {
+                "correct": "Right: dàjiā means everyone.",
+                "incorrect": "Join dà and jiā: dàjiā — everyone."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C13-dajia",
+      "sequence": 880,
+      "title": "大家 (dàjiā) — everyone on the page",
+      "headword": "大家",
+      "romanization": "dàjiā",
+      "gloss": "everyone, built from known characters",
+      "script": "chinese",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:5cea47fa960fe801",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write 大 (dà), then 家 with a small gap."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "大家 — dàjiā — everyone."
+            },
+            {
+              "kind": "speech",
+              "text": "Close the gap. Read the two characters as one word and keep both tone shapes."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at 大家 (dàjiā), cover it, then write it once from memory."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C13-dajia-write",
+              "prompt": "Write everyone in Chinese characters.",
+              "assesses": [
+                "ZH-LEX-DAJIA-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "大家",
+                "大家 dàjiā"
+              ],
+              "feedback": {
+                "correct": "Right: 大家.",
+                "incorrect": "Write big 大, then home 家."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C13-hear-xue",
+      "sequence": 890,
+      "title": "Hear xué — study, learn",
+      "headword": "xué",
+      "romanization": "xué",
+      "gloss": "study; learn",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e8d71054dd0266b2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 8,
+              "perItem": false,
+              "source": "[PAUSE 8s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say everyone."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "xué — study; learn."
+            },
+            {
+              "kind": "speech",
+              "text": "Begin low enough to rise clearly through xué. Stay with sound and meaning; the eight-stroke character comes next in small groups."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C13-hear-xue-meaning",
+              "prompt": "What does xué mean?",
+              "assesses": [
+                "ZH-LEX-XUE-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "study",
+                "learn",
+                "study or learn",
+                "to study",
+                "to learn"
+              ],
+              "feedback": {
+                "correct": "Right: xué means study or learn.",
+                "incorrect": "Hear the rise: xué — study, learn."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W13-xue",
+      "sequence": 900,
+      "title": "学 (xué) — top, cover, child",
+      "headword": "学",
+      "romanization": "xué",
+      "gloss": "study or learn, written in eight strokes",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:79792913a39edafe",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say study, then write 子."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "⺍ + 冖 + 子 becomes 学 (xué)."
+            },
+            {
+              "kind": "speech",
+              "text": "Place the three short marks across the top. Add the covering dot and hooked line. Finish with the familiar three strokes of 子 below. Eight strokes total; do not let the top marks crowd the child."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace 学 (xué) once. Copy it once while saying top, cover, child."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 学 (xué), pinned stroke paths and medians."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-W13-xue-build",
+              "prompt": "Which familiar character closes 学 (xué) at the bottom?",
+              "assesses": [
+                "ZH-SCRIPT-XUE-01"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "子",
+                "子 zi",
+                "child 子"
+              ],
+              "feedback": {
+                "correct": "Right: 子 closes the character.",
+                "incorrect": "The lower three strokes are 子."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C13-xue",
+      "sequence": 910,
+      "title": "学 (xué) — study on the page",
+      "headword": "学",
+      "romanization": "xué",
+      "gloss": "study; learn, now read and written",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0dacc2c7501ade1e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 10,
+              "perItem": false,
+              "source": "[PAUSE 10s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say study, then point to 子 inside 学 (xué)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "学 — xué — study; learn."
+            },
+            {
+              "kind": "speech",
+              "text": "Read it without pinyin, then give the syllable a clear rise."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy 学 (xué) once. Pause mentally after the top, after the cover, and after 子."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C13-xue-write",
+              "prompt": "Write xué, study or learn, in Chinese.",
+              "assesses": [
+                "ZH-LEX-XUE-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "学",
+                "学 xué"
+              ],
+              "feedback": {
+                "correct": "Right: 学.",
+                "incorrect": "Build top, cover, then 子."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C13-hear-xuesheng",
+      "sequence": 920,
+      "title": "Hear xuésheng — student",
+      "headword": "xuésheng",
+      "romanization": "xuésheng",
+      "gloss": "student",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:08d06b82449f54af",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 8,
+              "perItem": false,
+              "source": "[PAUSE 8s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say study."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "xuésheng — student."
+            },
+            {
+              "kind": "speech",
+              "text": "Rise on xué. Keep sheng short and light. Hold the second character back; the next lesson gives its five strokes."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C13-hear-xuesheng-meaning",
+              "prompt": "What does xuésheng mean?",
+              "assesses": [
+                "ZH-LEX-XUESHENG-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "student",
+                "a student"
+              ],
+              "feedback": {
+                "correct": "Right: xuésheng means student.",
+                "incorrect": "Keep two beats: xuésheng — student."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W13-sheng",
+      "sequence": 930,
+      "title": "生 (sheng) — five measured strokes",
+      "headword": "生",
+      "romanization": "sheng",
+      "gloss": "the second character in student",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:9e31bbf5375bcd40",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 8,
+              "perItem": false,
+              "source": "[PAUSE 8s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say student."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Begin with the short left-fall. Add the upper horizontal and the shorter middle horizontal. Draw the vertical through their centres, then anchor everything with the long bottom horizontal. Five strokes; four lifts."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace 生 (sheng) once. Copy it once while saying fall, two bars, through, base."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 生 (sheng), pinned stroke paths and medians."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-W13-sheng-order",
+              "prompt": "Which stroke closes 生 (sheng)?",
+              "assesses": [
+                "ZH-SCRIPT-SHENG-01"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "the long bottom horizontal",
+                "bottom horizontal",
+                "the bottom bar",
+                "horizontal"
+              ],
+              "feedback": {
+                "correct": "Right: the long bottom bar closes 生.",
+                "incorrect": "Anchor the character with the long bottom horizontal."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C13-xuesheng",
+      "sequence": 940,
+      "title": "学生 (xuésheng) — student on the page",
+      "headword": "学生",
+      "romanization": "xuésheng",
+      "gloss": "student, now read and written",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ba024f08cbd9354f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Point to 学 (xué), then 生 (sheng). Say study, then student."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "学生 — xuésheng — student."
+            },
+            {
+              "kind": "speech",
+              "text": "Read the two-character word without pinyin. Keep the second syllable light."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy 学生 (xuésheng) once. Finish all of 学 before beginning 生."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C13-xuesheng-write",
+              "prompt": "Write student in Chinese characters.",
+              "assesses": [
+                "ZH-LEX-XUESHENG-01"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "学生",
+                "学生 xuésheng"
+              ],
+              "feedback": {
+                "correct": "Right: 学生.",
+                "incorrect": "Write study 学, then 生."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C13-hear-daxue",
+      "sequence": 950,
+      "title": "Hear dàxué — university",
+      "headword": "dàxué",
+      "romanization": "dàxué",
+      "gloss": "university; college",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:80be82c2020d545e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 10,
+              "perItem": false,
+              "source": "[PAUSE 10s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say big, then study."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dàxué — university; college."
+            },
+            {
+              "kind": "speech",
+              "text": "Let dà fall, then let xué rise. Together they name a university or college."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C13-hear-daxue-meaning",
+              "prompt": "What does dàxué mean?",
+              "assesses": [
+                "ZH-LEX-DAXUE-01"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "university",
+                "college",
+                "university or college"
+              ],
+              "feedback": {
+                "correct": "Right: dàxué means university or college.",
+                "incorrect": "Join big and study: dàxué — university."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C13-daxue",
+      "sequence": 960,
+      "title": "大学 (dàxué) — university on the page",
+      "headword": "大学",
+      "romanization": "dàxué",
+      "gloss": "university; college, built from known characters",
+      "script": "chinese",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:5f961651fe2a2f65",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read 大 (dà) and 学 (xué) separately."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "大学 — dàxué — university; college."
+            },
+            {
+              "kind": "speech",
+              "text": "Now read the pair as one word: fall, then rise."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at 大学 (dàxué), cover it, and write it once from memory."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C13-daxue-write",
+              "prompt": "Write university in Chinese characters.",
+              "assesses": [
+                "ZH-LEX-DAXUE-01"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "大学",
+                "大学 dàxué"
+              ],
+              "feedback": {
+                "correct": "Right: 大学.",
+                "incorrect": "Write big 大, then study 学."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C13-hear-daxuesheng",
+      "sequence": 970,
+      "title": "Hear dàxuésheng — university student",
+      "headword": "dàxuésheng",
+      "romanization": "dàxuésheng",
+      "gloss": "university student",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6113d8d01c7492fa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say university, then student."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dàxuésheng — university student."
+            },
+            {
+              "kind": "speech",
+              "text": "Say three beats: falling dà, rising xué, light sheng. Do not repeat xué; the two familiar words overlap there."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C13-hear-daxuesheng-meaning",
+              "prompt": "What does dàxuésheng mean?",
+              "assesses": [
+                "ZH-LEX-DAXUESHENG-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "university student",
+                "college student",
+                "a university student",
+                "a college student"
+              ],
+              "feedback": {
+                "correct": "Right: dàxuésheng means university student.",
+                "incorrect": "Hear university plus student, sharing xué."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C13-daxuesheng",
+      "sequence": 980,
+      "title": "大学生 (dàxuésheng) — university student on the page",
+      "headword": "大学生",
+      "romanization": "dàxuésheng",
+      "gloss": "university student, built from known characters",
+      "script": "chinese",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:4093985f75f50fb8",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read 大学 (dàxué), then 学生 (xuésheng)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "大学生 — dàxuésheng — university student."
+            },
+            {
+              "kind": "speech",
+              "text": "Track three characters and three beats. The middle 学 (xué) belongs to the whole word only once."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at 大学生 (dàxuésheng), cover it, and write it once. Check one character at a time."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C13-daxuesheng-write",
+              "prompt": "Write university student in Chinese characters.",
+              "assesses": [
+                "ZH-LEX-DAXUESHENG-01"
+              ],
+              "responseSeconds": 16,
+              "acceptedResponses": [
+                "大学生",
+                "大学生 dàxuésheng"
+              ],
+              "feedback": {
+                "correct": "Right: 大学生.",
+                "incorrect": "Write 大, then 学, then 生."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R13-school-six",
+      "sequence": 990,
+      "title": "Retrieve six size and school words",
+      "headword": "大 — 大家 — 学 — 学生 — 大学 — 大学生",
+      "romanization": "dà — dàjiā — xué — xuésheng — dàxué — dàxuésheng",
+      "gloss": "six Level 1 size and school words",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:66bcd3842aae9462",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 18,
+              "perItem": false,
+              "source": "[PAUSE 18s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write 大 (dà), 学 (xué), and 生 (sheng) once each from memory."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear the six words in shuffled order and point to meanings. Then say each word from a meaning card, read each character card, and write only the missed items. Repair one word at a time."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-R13-school-six-recall",
+              "prompt": "Write student, university, and university student in that order.",
+              "assesses": [
+                "ZH-LEX-XUESHENG-01",
+                "ZH-LEX-DAXUE-01",
+                "ZH-LEX-DAXUESHENG-01"
+              ],
+              "responseSeconds": 26,
+              "acceptedResponses": [
+                "学生 — 大学 — 大学生",
+                "学生 大学 大学生",
+                "学生, 大学, 大学生"
+              ],
+              "feedback": {
+                "correct": "All three school words remain distinct.",
+                "incorrect": "Repair only the missed word, then retry the row."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C13-practice",
+      "sequence": 1000,
+      "title": "Payoff — six school words in four skills",
+      "headword": "大 — 大家 — 学 — 学生 — 大学 — 大学生",
+      "romanization": "dà — dàjiā — xué — xuésheng — dàxué — dàxuésheng",
+      "gloss": "separately scored listening, speaking, reading, and writing school map",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a386465eb5af235b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 18,
+              "perItem": false,
+              "source": "[PAUSE 18s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write 大 (dà), 学 (xué), and 生 (sheng) without a model."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Listening: hear six words in mixed order and choose every meaning."
+            },
+            {
+              "kind": "speech",
+              "text": "Speaking: produce all six from meaning cards, with tones audible."
+            },
+            {
+              "kind": "speech",
+              "text": "Reading: read all six character cards without pinyin."
+            },
+            {
+              "kind": "speech",
+              "text": "Writing: hear all six and write them without a model."
+            },
+            {
+              "kind": "speech",
+              "text": "Pass each skill separately. Repair and retry only the failed skill. This is a school vocabulary checkpoint, not yet a full conversation about education."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 task outline and vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C13-practice-school-payoff",
+              "prompt": "After all four checks pass, write everyone, university, and university student.",
+              "assesses": [
+                "ZH-PERFORMANCE-SCHOOL-SIX-FOUR-SKILL-01"
+              ],
+              "responseSeconds": 32,
+              "acceptedResponses": [
+                "大家 — 大学 — 大学生",
+                "大家 大学 大学生",
+                "大家, 大学, 大学生"
+              ],
+              "feedback": {
+                "correct": "The six-word school map passes in all four skills.",
+                "incorrect": "Repair only the failed skill or word, then retry it."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
