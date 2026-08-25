@@ -11,6 +11,15 @@
 - Remove all 13 affected realizations and rerank Malayalam chillu **ൽ** first
   at 12.
 
+### Added - conflict-resistant level snapshots
+
+- Replace the shared authored level-total hotspot with one exact generated snapshot
+  per language under `core/level-snapshots/`.
+- Reconstruct and verify the corpus-wide level histogram, unmapped count and mapped
+  percentage from those shards, preserving exact regression coverage.
+- Prove with two synthetic language tranches that independent tracks change disjoint
+  files, so parallel curriculum work no longer conflicts on `levels.test.ts`.
+
 ### Added - source-verified Persian and Urdu kheh
 
 - Add separate Persian and Urdu **خ** rows from UT Austin Persian Online and

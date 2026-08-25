@@ -315,6 +315,19 @@ snapshots. A Tamil-only change therefore updates `tamil.json`; it cannot collide
 with a simultaneous Punjabi-only change, while a hidden debt increase still changes
 the responsible shard and fails the byte-for-byte drift gate.
 
+Level coverage uses the same conflict-resistant shape. Each shard pins that track's
+exact lesson count, complete pre-A1-to-C2 histogram, unmapped count and highest
+reached level. The global totals and mapped percentage are derived from those exact
+shards, never maintained as a shared authored number:
+
+```bash
+npm run generate:level-snapshots  # write core/level-snapshots/*.json
+npm run check:level-snapshots     # fail if any language shard is stale or orphaned
+```
+
+This keeps the level summary derived from the canonical curricula and shared spine
+while allowing independent language tranches to merge independently.
+
 ### Continuity — does the course have a memory of itself? (HL09)
 
 The ramp budgets measure how big each **step** is. This measures whether the steps
