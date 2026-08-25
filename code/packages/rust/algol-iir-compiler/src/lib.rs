@@ -5794,7 +5794,10 @@ impl Compiler {
             match binding.ty {
                 ScalarType::Integer => self.integer_identity_expression_preserves_name(node, name),
                 ScalarType::Boolean => self.boolean_identity_expression_preserves_name(node, name),
-                ScalarType::Real | ScalarType::String => {
+                ScalarType::Real => {
+                    self.real_unit_identity_expression_preserves_name(node, name)
+                }
+                ScalarType::String => {
                     exact_bare_variable_expression_name(node).as_deref() == Some(name)
                 }
             }
@@ -5952,6 +5955,34 @@ impl Compiler {
                     || (rhs_preserves && lhs_literal == Some(1))
             }
             "div" => lhs_preserves && rhs_literal == Some(1),
+            _ => false,
+        }
+    }
+
+    fn real_unit_identity_expression_preserves_name(
+        &self,
+        node: &GrammarASTNode,
+        name: &str,
+    ) -> bool {
+        if exact_bare_variable_expression_name(node).as_deref() == Some(name) {
+            return true;
+        }
+        let sequence = pieces(node);
+        if let (true, [Piece::Node(child)]) =
+            (direct_tokens(node).is_empty(), sequence.as_slice())
+        {
+            return self.real_unit_identity_expression_preserves_name(child, name);
+        }
+        let [Piece::Node(lhs), Piece::Op(op), Piece::Node(rhs)] = sequence.as_slice() else {
+            return false;
+        };
+        let lhs_preserves = self.real_unit_identity_expression_preserves_name(lhs, name);
+        let rhs_preserves = self.real_unit_identity_expression_preserves_name(rhs, name);
+        let lhs_is_one = literal_numeric_one(lhs);
+        let rhs_is_one = literal_numeric_one(rhs);
+        match op.as_str() {
+            "*" => (lhs_preserves && rhs_is_one) || (rhs_preserves && lhs_is_one),
+            "/" => lhs_preserves && rhs_is_one,
             _ => false,
         }
     }
@@ -8180,6 +8211,22 @@ fn literal_integer_value(node: &GrammarASTNode) -> Option<i64> {
     (tokens.is_empty() && child_nodes.len() == 1)
         .then(|| literal_integer_value(child_nodes[0]))
         .flatten()
+}
+
+fn literal_numeric_one(node: &GrammarASTNode) -> bool {
+    let tokens = direct_tokens(node);
+    if tokens.len() == 1 {
+        return match tokens[0].effective_type_name() {
+            "INTEGER_LIT" => tokens[0].value.parse::<i64>() == Ok(1),
+            "REAL_LIT" => tokens[0]
+                .value
+                .parse::<f64>()
+                .is_ok_and(|value| value.to_bits() == 1.0f64.to_bits()),
+            _ => false,
+        };
+    }
+    let child_nodes = direct_nodes(node);
+    tokens.is_empty() && child_nodes.len() == 1 && literal_numeric_one(child_nodes[0])
 }
 
 fn expression_is_bare_self_or_equal_leaf_conditional(
@@ -10420,13 +10467,26 @@ mod tests {
     }
 
     #[test]
-    fn al4_real_selector_identity_remains_conservative() {
+    fn al4_real_additive_selector_identity_remains_conservative() {
         let err = compile_source(
             "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := choose + 0.0 end; print(i + 0.25) end",
             "test",
         )
-        .expect_err("real arithmetic identities require a separate floating-point proof");
+        .expect_err("real additive zero may change the sign bit of negative zero");
         assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_real_unit_selector_writes_stay_stable() {
+        for write in ["choose * 1.0", "1.0 * choose", "choose / 1.0"] {
+            compile_source(
+                &format!(
+                    "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := {write} end; print(i + 0.25) end"
+                ),
+                "test",
+            )
+            .unwrap_or_else(|_| panic!("real unit write {write:?} must stay stable"));
+        }
     }
 
     #[test]
