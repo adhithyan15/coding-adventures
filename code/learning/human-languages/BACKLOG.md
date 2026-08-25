@@ -5,6 +5,26 @@ Findings from the pre-A1 tranche work were recorded in commit messages and PR
 bodies, which are durable and searchable, but a reader opening this file found
 nothing. The entries below are the ones that change how the work is done.
 
+## HL-C09W — audit and repair Tamil த before extending the queue
+
+The source cross-check for ட exposed that the existing dental **த** record
+points to Frame 1, but UT Austin's Module 1 explicitly teaches retroflex ட,
+not dental த. Appendix I places த in the final Frame 3 row continued onto page
+192, with seven numbered directions whose pen-run grouping must be re-audited
+before the citation, path, or lift count is changed. This is provenance
+correctness debt and therefore outranks the numerically next uncovered glyph.
+
+## HL-C09V — Tamil ட closes the Frame 1 gap
+
+After Tamil **ச** landed, the measured queue put Tamil retroflex **ட** first at
+**30 affected realizations**. UT Austin's Module 1 explicitly identifies ட,
+and Appendix I Frame 1 numbers its left descent and rightward foot as two
+joined movements.
+
+The new inventory and ductus entry remove all **30 affected realizations** for
+**ட**. The measured uncovered-glyph queue moves to Tamil vowel sign **ே** at
+29, behind the newly recorded த provenance audit.
+
 ## HL-C09U — Tamil ச closes the next Frame 3 consonant gap
 
 After the Persian and Urdu dāl records landed, the measured queue put Tamil

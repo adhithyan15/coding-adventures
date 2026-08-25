@@ -579,6 +579,15 @@ describe("handwriting ductus", () => {
     ]);
   });
 
+  it("ட descends and turns along its foot without lifting", () => {
+    expect(penLifts(DUCTUS["ட"])).toBe(0);
+    expect(DUCTUS["ட"].strokes).toHaveLength(1);
+    expect(DUCTUS["ட"].strokes[0].segments.map((segment) => segment.label)).toEqual([
+      "down the left upright",
+      "along the long rightward foot",
+    ]);
+  });
+
   it("த joins its left loop, cap, broad bowl, and tail without lifting", () => {
     expect(penLifts(DUCTUS["த"])).toBe(0);
     expect(DUCTUS["த"].strokes).toHaveLength(1);
@@ -6037,6 +6046,13 @@ describe("handwriting ductus", () => {
     expect(src.url).toContain("tamilscript/category/3-moduals/module-01");
     expect(src.citation).toMatch(/Tamil Script Learners Manual.*Frame 1.*த/i);
     expect(src.variation).toMatch(/left-to-right.*top-to-bottom.*varies by school.*continuous order.*Noto Sans Tamil/i);
+  });
+
+  it("ட's continuous order traces to Frame 1 of the UT Austin primer", () => {
+    const src = DUCTUS["ட"].source;
+    expect(src.url).toContain("tamilscript/files/2009/08/hw_lettersinstructions.pdf");
+    expect(src.citation).toMatch(/Appendix I.*Frame 1.*ட.*p\. 190/i);
+    expect(src.variation).toMatch(/left descent.*rightward foot.*two joined movements.*Module 1 identifies.*top-to-bottom.*left-to-right.*varies by school.*continuous order.*Noto Sans Tamil/i);
   });
 
   it("ய's six-movement continuous order traces to Appendix I Frame 1", () => {
