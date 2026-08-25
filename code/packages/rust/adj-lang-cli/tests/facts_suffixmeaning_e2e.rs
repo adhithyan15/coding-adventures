@@ -1,6 +1,6 @@
 //! End-to-end test for the language FACTS library
 //! (`adj-facts-stdlib/language/suffix-meaning.adj`) driven through the
-//! built CLI: a native `table` naming seven common derivational suffixes
+//! built CLI: a native `table` naming nine common derivational suffixes
 //! and what each actually means, quoted verbatim from Reading Rockets'
 //! "Common Suffixes" chart. 0 answer-time model calls.
 
@@ -135,6 +135,51 @@ fn suffix_meaning_abstains_honestly_on_an_untabled_suffix() {
     assert!(ok, "cli should succeed: {out}");
     assert!(
         out.contains("\"abstained\":true"),
-        "_ic is a real suffix the same source chart also covers, but not one of the seven tabled here -- honest abstention, never invented: {out}"
+        "_ic is a real suffix the same source chart also covers, but not one of the nine tabled here -- honest abstention, never invented: {out}"
+    );
+}
+
+#[test]
+fn suffix_meaning_recall_binds_the_disambiguated_agentive_er_sense() {
+    let dir = scratch("direct_agentive_er");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"suffix-meaning.adj\"\n\
+         ? suffix_meaning(_er_agentive, $M)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert!(
+        out.contains("\"M\":\"one_who_or_person_connected_with\""),
+        "the disambiguated agentive -er sense (\"one who; person connected with\", as in \
+         \"teacher\") must resolve, kept genuinely distinct in spelling from the excluded \
+         comparative -er (\"more\", as in \"taller\") this table never tables under a bare \
+         `_er` atom: {out}"
+    );
+}
+
+#[test]
+fn suffix_meaning_reverse_binds_both_agentive_spellings_sharing_one_meaning() {
+    let dir = scratch("reverse_agentive");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"suffix-meaning.adj\"\n\
+         ? suffix_meaning($S, one_who_or_person_connected_with)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert!(
+        out.contains("\"S\":\"_er_agentive\""),
+        "the source's own bundled -er, -or row must bind _er_agentive: {out}"
+    );
+    assert!(
+        out.contains("\"S\":\"_or\""),
+        "the source's own bundled -er, -or row must ALSO bind _or: {out}"
     );
 }
