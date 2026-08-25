@@ -7751,6 +7751,60 @@ reviews of content-equivalent rebased head
 `7bf7926ba5280f54c71be16ce8ff22daed0520be` returned
 `SECURITY REVIEW PASSED` or `REVIEW PASSED` with no actionable issue.
 
+Ready-for-review PR #12862 opened from clean published head
+`e5ba227fc3a58a6ebac8ce08e0b32169ac141079`. All 35 reported checks reached
+terminal acceptable conclusions: 29 succeeded and six were expected skips,
+with no failure or pending job. GitHub reported the branch clean and
+mergeable, so the loop enabled squash auto-merge. GitHub merged it as
+`0ed3d402a2bf61424032ad34f88223348b915a3c` at
+`2026-08-25T20:44:39Z` without a manual merge command.
+
+### Post-#12862 refresh and Haskell tracked-artifact selection
+
+The exact-main schema-3 collision report at
+`0ed3d402a2bf61424032ad34f88223348b915a3c` remains structurally unchanged:
+15 established lanes, 1,373 implementation identities, 4,566 package slots,
+175 high-consensus packages with 276 missing slots, 910 singletons with 12,740
+gaps, and 721 Rust singletons. Canonical collisions and unknown language
+buckets remain zero; OCaml remains correctly emerging at zero packages.
+
+Every intervening commit is classified before selection. Gujarati R3 closure
+and R4 bridge work remains curriculum and generated TypeScript data. Nested
+anchor diagnostics extend the HTML frontend owner. Java method declarations,
+calls, overload choice, rejection, and backend proofs extend the JV02 neutral
+and lane owners while the existing extra-CI owner retains the Python proof
+requirement. The long-vowel ADJ fact stays in the shared fact corpus and its
+scratch-filesystem/process E2E extends the adj-lang-cli capability owner.
+Signed-neutral ALGOL writes, the pinned Mermaid 11.16.1 XY compatibility
+corpus, and `i16x8.relaxed_q15mulr_s` semantics extend their existing ALGOL,
+Mermaid, relaxed-SIMD, WAST, and corpus-provenance owners. No intervening
+commit adds or removes a package identity or BUILD/build-tool marker, and no
+new owner is required.
+
+The dependency/leverage pass selects
+`build-tool-haskell-tracked-artifact-validation-conformance` on branch
+`codex/build-tool-haskell-tracked-artifact-validation-conformance`. All four
+declared prerequisites are merged. Haskell is the widest remaining
+tracked-artifact lane at 204 reported packages, ahead of Swift at 161. It
+directly unlocks the Haskell orphan consumer and advances both tracked-artifact
+and orphan completion umbrellas, giving it more unfinished descendants than
+any ready orphan-only child. Full emitted-Haskell Unicode verification is
+recorded under the excluded generator-host owner and must reuse the hardened
+bounded process-tree runner without granting process authority to the pure
+validator.
+
+All ten live open PRs have zero exact overlap with the expected Haskell
+validator, generated Unicode module, Cabal/package metadata, generator and
+test, fixture README, Unicode license, package tests/docs, CI, state, and
+roadmap surfaces. The target branch and prior PR were absent locally and
+remotely before the fresh worktree and branch were created. Perl, Lua, Elixir,
+and Ruby orphan validation are ready but narrower. The broader extra-CI corpus
+and OCaml process-free substrate remain collision-unsafe while PRs #12149 and
+#12162 own required Go entry-point, validator, CI, or Swift surfaces. After
+selection the graph contains 505 unique owners and 769 complete acyclic edges,
+with 142 merged owners, 362 pending owners, exactly one in-progress owner, no
+pr-open owner, and no active parity PR.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
