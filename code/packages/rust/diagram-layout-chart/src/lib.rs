@@ -187,10 +187,17 @@ fn layout_xy_vertical(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChart
     // Plot area bounds
     let pt = MARGIN + title_height; // top
     let pl = MARGIN + y_label_space + y_title_space; // left
-    let pb = ch - MARGIN - x_label_space - x_title_space - lh; // bottom
-    let pr = cw - MARGIN; // right
-    let pw = (pr - pl).max(1.0);
-    let ph = (pb - pt).max(1.0);
+    let available_bottom = ch - MARGIN - x_label_space - x_title_space - lh;
+    let available_right = cw - MARGIN;
+    let reserved_fraction = diagram
+        .xy_config
+        .plot_reserved_space_percent
+        .unwrap_or(50.0)
+        / 100.0;
+    let pw = (available_right - pl).max(cw * reserved_fraction).max(1.0);
+    let ph = (available_bottom - pt).max(ch * reserved_fraction).max(1.0);
+    let pb = pt + ph; // bottom
+    let pr = pl + pw; // right
 
     let (ym, yx) = resolve_y_range(diagram);
     let yr = (yx - ym).max(1.0);
@@ -585,10 +592,21 @@ fn layout_xy_horizontal(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedCha
 
     let top = MARGIN + title_height;
     let left = MARGIN + x_label_space + x_title_space;
-    let bottom = ch - MARGIN - y_label_space - y_title_space - legend_height;
-    let right = cw - MARGIN;
-    let plot_width = (right - left).max(1.0);
-    let plot_height = (bottom - top).max(1.0);
+    let available_bottom = ch - MARGIN - y_label_space - y_title_space - legend_height;
+    let available_right = cw - MARGIN;
+    let reserved_fraction = diagram
+        .xy_config
+        .plot_reserved_space_percent
+        .unwrap_or(50.0)
+        / 100.0;
+    let plot_width = (available_right - left)
+        .max(cw * reserved_fraction)
+        .max(1.0);
+    let plot_height = (available_bottom - top)
+        .max(ch * reserved_fraction)
+        .max(1.0);
+    let bottom = top + plot_height;
+    let right = left + plot_width;
 
     let (minimum, maximum) = resolve_y_range(diagram);
     let range = (maximum - minimum).max(1.0);
@@ -1441,6 +1459,7 @@ mod tests {
             width: Some(720.0),
             height: Some(440.0),
             chart_orientation: None,
+            plot_reserved_space_percent: Some(90.0),
             title_font_size: Some(24.0),
             title_padding: Some(14.0),
             show_title: Some(false),
@@ -1472,6 +1491,10 @@ mod tests {
         )));
         assert!(layout.items.iter().any(|item| matches!(
             item,
+            LayoutedChartItem::AxisSpine { x1, x2, .. } if (*x2 - *x1) >= 648.0
+        )));
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
             LayoutedChartItem::Legend { y, font_size, entries, .. }
                 if *y == 415.0 && *font_size == Some(18.0) && entries.len() == 2
         )));
@@ -1482,6 +1505,13 @@ mod tests {
             .items
             .iter()
             .any(|item| matches!(item, LayoutedChartItem::Legend { .. })));
+
+        diagram.orientation = ChartOrientation::Horizontal;
+        let horizontal = layout_chart_diagram(&diagram, 600.0, 400.0);
+        assert!(horizontal.items.iter().any(|item| matches!(
+            item,
+            LayoutedChartItem::AxisSpine { y1, y2, .. } if (*y2 - *y1) >= 396.0
+        )));
     }
 
     #[test]
