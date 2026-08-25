@@ -216,6 +216,31 @@
         "ZH-C14-practice"
       ],
       "tex": "chinese/book/chapters/ch14-primary-three.tex"
+    },
+    {
+      "language": "chinese",
+      "chapter": 15,
+      "sourceHash": "fnv1a64:90c919ddb710269f",
+      "lessonIds": [
+        "ZH-C15-hear-zhong",
+        "ZH-W15-zhong",
+        "ZH-C15-zhong",
+        "ZH-C15-hear-zhongxue",
+        "ZH-C15-zhongxue",
+        "ZH-R15-school-map-1",
+        "ZH-C15-hear-zhongxuesheng",
+        "ZH-C15-zhongxuesheng",
+        "ZH-C15-hear-tongxue",
+        "ZH-W15-tong",
+        "ZH-C15-tongxue",
+        "ZH-R15-school-map-2",
+        "ZH-C15-hear-shangxue",
+        "ZH-C15-shangxue",
+        "ZH-R15-school-map-3",
+        "ZH-R15-school-map-4",
+        "ZH-C15-practice"
+      ],
+      "tex": "chinese/book/chapters/ch15-school-compounds.tex"
     }
   ]
 }

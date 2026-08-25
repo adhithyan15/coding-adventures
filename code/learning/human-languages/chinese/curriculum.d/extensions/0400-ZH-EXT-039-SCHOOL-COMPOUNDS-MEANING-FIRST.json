@@ -1,0 +1,17 @@
+{
+  "id": "ZH-EXT-039-SCHOOL-COMPOUNDS-MEANING-FIRST",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "lexis",
+  "canDo": "I can understand and say 中学, 中学生, 同学 and 上学, with every unfamiliar spoken meaning arriving before its new character.",
+  "prerequisites": [
+    "ZH-EXT-038-PRIMARY-FOUR-SKILL"
+  ],
+  "lessons": [
+    "ZH-C15-hear-zhong",
+    "ZH-C15-hear-zhongxue",
+    "ZH-C15-hear-zhongxuesheng",
+    "ZH-C15-hear-tongxue",
+    "ZH-C15-hear-shangxue"
+  ]
+}

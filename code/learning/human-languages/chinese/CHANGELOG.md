@@ -5,6 +5,17 @@ tracks: one entry per authored tranche, describing what was added and why.
 
 ## [Unreleased]
 
+### Added — four school compounds with four-stage retrieval (#12789)
+
+- Added 17 super-gentle lessons for **中学**, **中学生**, **同学**, and
+  **上学**, each capped below five minutes and introduced sound-before-shape.
+- Added source-pinned stroke order and real-font ductus for only the two new
+  characters, **中** and **同**, reusing already secure **上**, **学**, and
+  **生** instead of front-loading another script cluster.
+- Added four spaced mixed-retrieval passes and a separately scored four-skill
+  payoff, including no-model writing and contrast with the already learned
+  primary-school and university ladders.
+
 ### Added — first official HSK 3.0 vocabulary clusters (#12654, #12729)
 
 - Added three super-gentle chapters that secure 15 official Level 1 family,
