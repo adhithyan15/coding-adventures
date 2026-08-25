@@ -1039,15 +1039,21 @@ where
                     },
                 ));
             }
-            LayoutedChartItem::Legend { x, y, entries } => {
+            LayoutedChartItem::Legend {
+                x,
+                y,
+                entries,
+                font_size,
+            } => {
+                let legend_font_size = font_size.unwrap_or(ls);
                 let mut ex = *x;
                 for e in entries {
                     instructions.push(PaintInstruction::Rect(PaintRect {
                         base: PaintBase::default(),
                         x: ex,
-                        y: y - ls / 2.0,
-                        width: ls,
-                        height: ls,
+                        y: y - legend_font_size / 2.0,
+                        width: legend_font_size,
+                        height: legend_font_size,
                         fill: Some(e.color.clone()),
                         stroke: None,
                         stroke_width: None,
@@ -1057,11 +1063,11 @@ where
                     }));
                     text_children.push(text_node(
                         &e.label,
-                        ex + ls + 4.0,
-                        y - ls / 2.0,
+                        ex + legend_font_size + 4.0,
+                        y - legend_font_size / 2.0,
                         80.0,
-                        ls * 1.2,
-                        lf.clone(),
+                        legend_font_size * 1.2,
+                        font_with_size(&lf, Some(legend_font_size)),
                         Color {
                             r: 55,
                             g: 65,
@@ -1069,7 +1075,7 @@ where
                             a: 255,
                         },
                     ));
-                    ex += ls + 4.0 + 88.0;
+                    ex += legend_font_size + 4.0 + 88.0;
                 }
             }
         }
