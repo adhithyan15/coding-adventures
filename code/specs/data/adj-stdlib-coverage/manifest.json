@@ -2884,6 +2884,21 @@
       "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
     },
     {
+      "id": "adj.science.9to12.abo_genotype_antigen",
+      "title": "Derive which ABO red-cell antigen(s) a named genotype produces, by composing the genotype-to-phenotype table with the already-shipped phenotype-to-antigen table",
+      "band": "9-12",
+      "domain": "science",
+      "competency": "infer",
+      "coverage_roots": ["ngss"],
+      "standards": [],
+      "prerequisites": [],
+      "libraries": ["code/specs/data/adj-facts-stdlib/biology/abo-genotype-antigen.adj"],
+      "modalities": ["text"],
+      "source_cas_hashes": [],
+      "benchmark_paths": [],
+      "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
+    },
+    {
       "id": "adj.science.3to5.energy_conversion_example",
       "title": "Recall which form of energy goes in and which form comes out of a named everyday process, grounding the law of conservation of energy",
       "band": "3-5",

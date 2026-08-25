@@ -934,7 +934,10 @@ backend immediately) come before the enabler-dependent items.
   dependency assignment. A second bounded level may follow another stable
   known selector in the same way, and third through tenth bounded levels
   follow the same finite rule; cyclic and deeper proofs fail closed. Computed
-  selector assignments, differing,
+  boolean identity writes (`x and true`, `x or false`, `x eqv true`, and
+  `true impl x`, including valid symmetric forms) also preserve a selector
+  dependency without consuming another depth level. Other computed selector
+  assignments, differing,
   computed, or otherwise
   unsupported selector-dependency writes, dynamically selected differing selector leaves,
   dynamically selected differing dependency leaves, loop controls, and

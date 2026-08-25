@@ -1,9 +1,12 @@
-# Mandarin Session Map — Authored Chapter 1
+# Mandarin Session Map — Opening Chapter Review Ledger
 
-This is the authoritative order for the seven authored Mandarin lessons. Every
-lesson is an independent, prerequisite-safe step of three or four minutes. A study
-session may combine the new step with the reviews shown here, but it never turns
-the combined session into one indivisible lesson.
+This is the fixed review ledger for Chapter 1's seven-lesson spoken greeting
+slice. It is **not** the authoritative inventory or schedule for the whole
+Mandarin track; [`curriculum.json`](./curriculum.json) and
+[`chapters.json`](./chapters.json) carry that growing machine-readable order.
+Every lesson here is an independent, prerequisite-safe step of three or four
+minutes. A study session may combine the new step with the reviews shown here,
+but it never turns the combined session into one indivisible lesson.
 
 Reviews use the session-count intervals in
 [`HL00`](../../../specs/HL00-human-language-curriculum-framework.md): a lesson
@@ -28,9 +31,11 @@ lexical, then the exchange. The final practice uses only those six lessons.
 
 ## Carry-forward review ledger
 
-Chapter 2 supplies the new lesson in these sessions when it is authored. Until
-then, use the due item as a short retrieval session and fill the optional bonus
-queue only with already learned material.
+Later authored chapters supply their own new lessons through the curriculum
+order; they are intentionally not duplicated in this opening ledger. When using
+this table as a no-tracking fallback, pair each due item with the next
+prerequisite-safe curriculum lesson, or use the due item as a short retrieval
+session on its own.
 
 | Session | Fixed review due |
 |---|---|
@@ -72,11 +77,11 @@ Every Chapter 1 lesson has all four fixed resurfacing sessions through S22.
 | `ZH-C01-hao-fond` | 🚗 voice | one known character, contrasted by tone alone |
 | `ZH-C01-practice` | 🚗 voice | two spoken lines |
 
-Five of seven lessons are learnable by ear, but HL08's **drivable prefix is 1**,
-because the two that need eyes come second and third. That is honest rather than
-a defect to be reordered away: in an alphabetic track a word can be handed over
-by ear and spelled later, but in a logographic one the character *is* the word's
-written identity and there is nothing smaller to hand over first. The right
-remedy is a figure and a spoken "you'll want to see this one" notice in the
-narration export, not a resequencing that would teach 你好 before either of its
-characters.
+Five of these seven lessons are learnable by ear, but Chapter 1's HL08
+**drivable prefix is 1**, because its two sight-dependent character lessons come
+second and third. That describes this opening slice, not a permanent Mandarin
+policy. Later vocabulary chapters deliberately hand over an unfamiliar meaning
+by ear before revealing a dense new character, then add staged handwriting and
+active retrieval. The opening greeting still keeps its component-first order
+because its job is to teach what a character is before the learner meets a wider
+spoken vocabulary.

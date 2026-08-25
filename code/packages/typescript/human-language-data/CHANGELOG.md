@@ -290,6 +290,15 @@ them.
   the desync loudly rather than letting the loader — which prefers `.d/` —
   silently ignore the new chapter.
 
+### Added - source-verified Urdu و
+
+- Add independent Urdu **و** from *Zer o Zabar* as one continuous looped-head
+  and down-left tail path.
+- Keep Urdu provenance separate from the already-authored Arabic and Persian
+  records for the shared Unicode glyph.
+- Remove 16 affected Urdu realizations and rerank Malayalam independent short
+  **എ** first at 15.
+
 ### Added - source-verified Tamil ெ
 
 - Add Tamil short-e sign **ெ** with Module 6's verified handwritten

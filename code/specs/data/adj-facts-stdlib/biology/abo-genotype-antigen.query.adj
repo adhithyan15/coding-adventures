@@ -1,0 +1,26 @@
+% ============================================================================
+% abo-genotype-antigen.query.adj — worked recall over the biology
+% ABO-genotype/antigen causal-composition library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "which antigen(s) does
+% an ia_ib genotype's blood carry?" — it states no biology fact of its own —
+% it only `import`s the grounded rule and asks binding queries. The answer is
+% DERIVED, composing abo-genotype-phenotype's specific genotype->phenotype
+% assignment with blood-groups' general phenotype->antigen mapping, so every
+% answer carries BOTH citations in its `steps` trail. The last query
+% demonstrates honest abstention: `ia_i` (a heterozygote with the null
+% allele) is a real ABO genotype, but `abo-genotype-phenotype.adj` itself
+% never states its phenotype in continuous prose, so this derived rule
+% inherits that same abstention rather than guessing.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli abo-genotype-antigen.query.adj
+% ============================================================================
+
+import "abo-genotype-antigen.adj"
+
+? abo_genotype_antigen(ia_ia, $Antigen)          % expect a_antigen (direct)
+? abo_genotype_antigen(ib_ib, $Antigen)          % expect b_antigen (direct)
+? abo_genotype_antigen(ia_ib, $Antigen)          % expect a_and_b_antigens (direct)
+? abo_genotype_antigen($G, a_and_b_antigens)     % expect ia_ib (reverse)
+? abo_genotype_antigen(ia_i, $Antigen)           % expect abstain -- abo_genotype_phenotype itself abstains on ia_i

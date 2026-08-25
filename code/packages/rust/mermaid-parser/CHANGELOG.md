@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.125.0
+
+- Preserve Mermaid XY-chart core init configuration for dimensions, title rendering, bar data labels, and data-label color.
+
 ## 0.124.0
 
 - Infer Mermaid's one-based numeric x-axis for category-free XY series and truncate categorical plots to visible bands.
