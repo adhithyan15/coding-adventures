@@ -544,6 +544,9 @@ pub struct XyChartConfig {
     pub title_font_size: Option<f64>,
     pub title_padding: Option<f64>,
     pub show_title: Option<bool>,
+    pub show_legend: Option<bool>,
+    pub legend_font_size: Option<f64>,
+    pub legend_padding: Option<f64>,
     pub show_data_label: Option<bool>,
     pub show_data_label_outside_bar: Option<bool>,
     pub data_label_color: Option<String>,
@@ -779,6 +782,7 @@ pub enum LayoutedChartItem {
         x: f64,
         y: f64,
         entries: Vec<LegendEntry>,
+        font_size: Option<f64>,
     },
 }
 

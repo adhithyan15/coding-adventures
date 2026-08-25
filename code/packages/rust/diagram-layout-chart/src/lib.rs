@@ -126,7 +126,10 @@ fn layout_xy_vertical(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChart
     } else {
         0.0
     };
-    let has_series = !diagram.series.is_empty();
+    let show_legend = diagram.xy_config.show_legend.unwrap_or(true);
+    let has_legend = show_legend && diagram.series.iter().any(|series| series.label.is_some());
+    let legend_font_size = diagram.xy_config.legend_font_size.unwrap_or(14.0);
+    let legend_padding = diagram.xy_config.legend_padding.unwrap_or(10.0);
     let has_x_title = x_config.show_title.unwrap_or(true)
         && diagram
         .x_axis
@@ -175,7 +178,11 @@ fn layout_xy_vertical(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChart
     } else {
         0.0
     };
-    let lh = if has_series { LEGEND_H } else { 0.0 };
+    let lh = if has_legend {
+        legend_font_size + legend_padding * 2.0
+    } else {
+        0.0
+    };
 
     // Plot area bounds
     let pt = MARGIN + title_height; // top
@@ -365,7 +372,7 @@ fn layout_xy_vertical(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChart
 
     for (si, series) in diagram.series.iter().enumerate() {
         let color = SERIES_COLORS[si % SERIES_COLORS.len()].to_string();
-        if let Some(ref lbl) = series.label {
+        if let Some(lbl) = series.label.as_ref().filter(|_| show_legend) {
             legend_entries.push(LegendEntry {
                 color: color.clone(),
                 label: lbl.clone(),
@@ -492,6 +499,7 @@ fn layout_xy_vertical(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChart
             x: pl,
             y: ch - lh / 2.0,
             entries: legend_entries,
+            font_size: Some(legend_font_size),
         });
     }
 
@@ -517,7 +525,10 @@ fn layout_xy_horizontal(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedCha
     } else {
         0.0
     };
-    let has_series = !diagram.series.is_empty();
+    let show_legend = diagram.xy_config.show_legend.unwrap_or(true);
+    let has_legend = show_legend && diagram.series.iter().any(|series| series.label.is_some());
+    let legend_font_size = diagram.xy_config.legend_font_size.unwrap_or(14.0);
+    let legend_padding = diagram.xy_config.legend_padding.unwrap_or(10.0);
     let has_x_title = x_config.show_title.unwrap_or(true)
         && diagram
         .x_axis
@@ -566,7 +577,11 @@ fn layout_xy_horizontal(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedCha
     } else {
         0.0
     };
-    let legend_height = if has_series { LEGEND_H } else { 0.0 };
+    let legend_height = if has_legend {
+        legend_font_size + legend_padding * 2.0
+    } else {
+        0.0
+    };
 
     let top = MARGIN + title_height;
     let left = MARGIN + x_label_space + x_title_space;
@@ -745,7 +760,7 @@ fn layout_xy_horizontal(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedCha
     let mut legend_entries = Vec::new();
     for (series_index, series) in diagram.series.iter().enumerate() {
         let color = SERIES_COLORS[series_index % SERIES_COLORS.len()].to_string();
-        if let Some(label) = &series.label {
+        if let Some(label) = series.label.as_ref().filter(|_| show_legend) {
             legend_entries.push(LegendEntry {
                 color: color.clone(),
                 label: label.clone(),
@@ -869,6 +884,7 @@ fn layout_xy_horizontal(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedCha
             x: left,
             y: ch - legend_height / 2.0,
             entries: legend_entries,
+            font_size: Some(legend_font_size),
         });
     }
 
@@ -940,6 +956,7 @@ fn layout_pie(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagram 
         x: MARGIN,
         y: ch - MARGIN,
         entries: legend_entries,
+        font_size: None,
     });
 
     LayoutedChartDiagram {
@@ -1426,6 +1443,9 @@ mod tests {
             title_font_size: Some(24.0),
             title_padding: Some(14.0),
             show_title: Some(false),
+            show_legend: Some(true),
+            legend_font_size: Some(18.0),
+            legend_padding: Some(16.0),
             show_data_label: Some(true),
             show_data_label_outside_bar: Some(true),
             data_label_color: Some("#123456".into()),
@@ -1449,6 +1469,18 @@ mod tests {
             LayoutedChartItem::BarLabel { text, color, .. }
                 if text == "40" && color == "#123456"
         )));
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
+            LayoutedChartItem::Legend { y, font_size, entries, .. }
+                if *y == 415.0 && *font_size == Some(18.0) && entries.len() == 2
+        )));
+
+        diagram.xy_config.show_legend = Some(false);
+        let hidden = layout_chart_diagram(&diagram, 600.0, 400.0);
+        assert!(!hidden
+            .items
+            .iter()
+            .any(|item| matches!(item, LayoutedChartItem::Legend { .. })));
     }
 
     #[test]

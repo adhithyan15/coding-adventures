@@ -425,7 +425,7 @@ mod apple {
     #[test]
     fn render_configured_mermaid_xy_to_png() {
         let diagram = parse_xychart(
-            r##"%%{init: {"xyChart": {"width": 720, "height": 440, "titleFontSize": 24, "titlePadding": 14, "showDataLabel": true, "showDataLabelOutsideBar": true, "xAxis": {"labelFontSize": 13, "labelPadding": 7, "titleFontSize": 17, "titlePadding": 8, "showTick": false, "axisLineWidth": 4}, "yAxis": {"labelFontSize": 15, "labelPadding": 8, "titleFontSize": 18, "titlePadding": 9, "tickLength": 12, "tickWidth": 4, "axisLineWidth": 5}}, "themeVariables": {"xyChart": {"dataLabelColor": "#0b5d4b"}}}}%%
+            r##"%%{init: {"xyChart": {"width": 720, "height": 440, "titleFontSize": 24, "titlePadding": 14, "showLegend": true, "legendFontSize": 21, "legendPadding": 16, "showDataLabel": true, "showDataLabelOutsideBar": true, "xAxis": {"labelFontSize": 13, "labelPadding": 7, "titleFontSize": 17, "titlePadding": 8, "showTick": false, "axisLineWidth": 4}, "yAxis": {"labelFontSize": 15, "labelPadding": 8, "titleFontSize": 18, "titlePadding": 9, "tickLength": 12, "tickWidth": 4, "axisLineWidth": 5}}, "themeVariables": {"xyChart": {"dataLabelColor": "#0b5d4b"}}}}%%
 xychart
 title "Quarterly Throughput"
 x-axis "Quarter" [Q1, Q2, Q3, Q4]
@@ -467,6 +467,11 @@ line "Target" [35, 50, 68, 82]"##,
             diagram_ir::LayoutedChartItem::AxisTickMark { x1, x2, stroke_width, .. }
                 if (*x2 - *x1 - 12.0).abs() < f64::EPSILON && *stroke_width == 4.0
         )));
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
+            diagram_ir::LayoutedChartItem::Legend { font_size, entries, .. }
+                if *font_size == Some(21.0) && entries.len() == 2
+        )));
 
         let shaper = CoreTextShaper;
         let metrics = CoreTextMetrics;
@@ -498,6 +503,10 @@ line "Target" [35, 50, 68, 82]"##,
             PaintInstruction::Path(path)
                 if path.stroke.as_deref() == Some("#6b7280")
                     && path.stroke_width == Some(4.0)
+        )));
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::GlyphRun(run) if run.font_size == 21.0
         )));
     }
 

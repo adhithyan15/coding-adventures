@@ -29,8 +29,9 @@ backend-neutral text for both vertical and horizontal charts. When categories
 are omitted, series receive Mermaid's inferred one-based numeric x-axis;
 explicit numeric x-axis ranges distribute data points evenly across that range.
 Core `xyChart` init configuration preserves authored chart dimensions, title
-visibility, title size and padding, and optional inside/outside bar-value
-labels. Configured data-label colors also reach backend-neutral Paint glyphs.
+visibility, title size and padding, named-series legend visibility, typography,
+and padding, and optional inside/outside bar-value labels. Configured data-label
+colors also reach backend-neutral Paint glyphs.
 Nested x/y-axis configuration independently controls label and title visibility,
 font sizes and padding, along with axis-line visibility and stroke width. Tick
 visibility, length, and stroke width lower independently for each axis into
