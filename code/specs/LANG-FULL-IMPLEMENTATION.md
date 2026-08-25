@@ -940,7 +940,8 @@ backend immediately) come before the enabler-dependent items.
   `not` receive the same treatment, while odd chains remain changing.
   Structural integer
   identity writes using `+ 0`, `- 0`, `* 1`, and `div 1` (including valid
-  commutative forms) receive the same bounded treatment. For finite real
+  commutative forms and left-associative chains of those operations) receive
+  the same bounded treatment. For finite real
   selectors, multiplication and division by exact positive one are likewise
   preserving; additive zero remains conservative because it can change the
   sign bit of negative zero. Other real arithmetic and computed selector
