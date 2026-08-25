@@ -2,6 +2,29 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.50] - 2026-08-25 (PR39 CI fix: f32x4/f64x2 rounding family cross-platform NaN quieting)
+
+### Fixed
+
+- `f32x4.ceil`/`floor`/`trunc`/`nearest` and `f64x2.ceil`/`floor`/
+  `trunc`/`nearest` (SIMD widen PR39, added in 0.9.49) now canonicalize
+  a NaN lane to the platform-independent quiet NaN (`f32::NAN`/
+  `f64::NAN`) instead of falling through to `f32::ceil()`/`floor()`/
+  `trunc()`/`round_ties_even()` (or the `f64` equivalents) on a NaN
+  input. This is the exact same cross-platform gap the scalar
+  `f32.ceil`/`floor`/`trunc` opcodes (`0x8D`/`0x8E`/`0x8F`) already hit
+  and fixed -- a SIGNALING NaN input's quiet bit through these
+  functions is platform-dependent (macOS passed, Linux CI failed with
+  8 real `assert_return` mismatches in `simd_f32x4_rounding.wast`,
+  confirmed by reproducing under a Linux/x86_64 container), but WASM's
+  `nan:arithmetic` result class always requires the quiet bit SET
+  regardless of the input NaN's own bit pattern. New tests
+  `f32x4_rounding_family_quiets_a_signaling_nan_lane` and
+  `f64x2_rounding_family_quiets_a_signaling_nan_lane` pin this down
+  the same way `test_f32_ceil_floor_trunc_quiets_signaling_nan`/
+  `test_f64_ceil_floor_trunc_quiets_signaling_nan` do for the scalar
+  opcodes.
+
 ## [0.9.49] - 2026-08-25 (SIMD widen PR39: f32x4/f64x2 ceil/floor/trunc/nearest rounding family)
 
 ### Added
