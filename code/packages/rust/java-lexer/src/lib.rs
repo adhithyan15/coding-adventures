@@ -123,8 +123,9 @@ mod tests {
         // it is the reason the *parser* needs its own contextual
         // token-splitting logic to re-derive two separate `>` closers.
         // Pinned here so a future lexer change that silently "fixes"
-        // this by *not* merging doesn't go unnoticed -- the parser-side
-        // fix (tracked separately) depends on this exact merged shape.
+        // this by *not* merging doesn't go unnoticed -- the parser's own
+        // contextual token-splitting (`parser::grammar_parser::
+        // split_angle_bracket_run`) depends on this exact merged shape.
         let tokens = tokenize_java("List<List<Integer>> x;", "21").unwrap();
         let values: Vec<&str> = tokens.iter().map(|t| t.value.as_str()).collect();
         assert!(

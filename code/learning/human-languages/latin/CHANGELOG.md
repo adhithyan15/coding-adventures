@@ -2,6 +2,22 @@
 
 ## [Unreleased]
 
+### Fixed — compile the new writing activities
+
+- Move the delayed-copy and dictation activity directives before learner-facing
+  prose, as required by the canonical block parser.
+- Keep `salvē` as the sole normalized answer instead of duplicating it in the
+  accepted-variant list.
+
+### Added — complete the gentle pre-A1 writing runway (#12804)
+
+- Follow the visible-model `salvē` copy with one delayed-copy microstep and one
+  sound-to-writing dictation microstep, each under three minutes.
+- Keep both lessons atom-free: sound, meaning, macron, and classical `v` were
+  already taught before memory or transcription is requested.
+- Score writing independently, so correct listening or pronunciation cannot
+  compensate for a missing letter or final macron.
+
 ### Added — project-defined pre-A1 four-skill task shapes
 
 - Made the Latin pre-A1 bridge executable as independently scored reading,

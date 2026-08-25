@@ -1,0 +1,18 @@
+{
+  "id": "ZH-EXT-031-FAMILY-SCRIPT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can write 儿 and 家 from their ordered strokes, then read and write 儿子, 女儿, 家 and 家人 without pinyin.",
+  "prerequisites": [
+    "ZH-EXT-030-FAMILY-MEANING-FIRST"
+  ],
+  "lessons": [
+    "ZH-W12-er",
+    "ZH-C12-erzi",
+    "ZH-C12-nuer",
+    "ZH-W12-jia",
+    "ZH-C12-jia",
+    "ZH-C12-jiaren"
+  ]
+}

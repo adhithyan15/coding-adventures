@@ -3,12 +3,12 @@ schema_version: 2
 id: GU-C02-shun
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 130
-chapter: 3
+chapter: 4
 type: word
 headword: શું
 gloss: what
 concept_tag: QUESTION-WHAT
-prerequisites: [GU-C02-naam]
+prerequisites: [GU-C02-naam, GU-W02-da]
 sounds: [sha, u-nasal]
 roots: [ka-interrogative]
 duration:
@@ -18,8 +18,8 @@ requires:
 introduces:
   knowledge: [GU-CONCEPT-C02-SHUN-01]
 practises:
-  knowledge: [GU-CONCEPT-C02-NAAM-01, GU-CONCEPT-C02-SHUN-01]
-skills: [listening, speaking, reading]
+  knowledge: [GU-CONCEPT-C02-NAAM-01, GU-CONCEPT-C02-SHUN-01, GU-SCRIPT-DA-01]
+skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
@@ -57,6 +57,13 @@ that **k-** plainly — *kem* (how), **કોણ** (*kōṇ*, who), **ક્ય�
 - [YOU SAY: "shũ"]
 - [YOU SAY: the k- question family it belongs to (*kem, kōṇ, kyā̃, kyāre*)]
 - [YOU SAY: its distant English cousin (*what*)]
+
+## Script retrieval
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-DA-01] -->
+<!-- hl-activity: {"id":"GU-C02-shun-da-retrieval","kind":"text","assesses":["GU-SCRIPT-DA-01"],"prompt":"Without looking back, write દ once.","answer":"દ","accepted":[],"feedback":{"correct":"Good: one careful retrieval is enough.","incorrect":"Look at દ once, hide it, and write it one time."},"response_seconds":12} -->
+
+Hide the earlier model for **દ**. Write it once, compare, make at most one
+repair, and stop.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C02-NAAM-01, GU-CONCEPT-C02-SHUN-01] -->

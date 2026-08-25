@@ -77,11 +77,12 @@ The 111-case bootstrap corpus covers every process-free v1 domain:
   backslash trailing empty segments, exact 512/513 Unicode scalar boundaries,
   scalar-ordered diagnostics, full-uppercase Windows reserved basenames, and
   one exact Unicode 17.0.0 snapshot with Todhri NFC and outlined-letter NFKC
-  case-fold version sentinels. The source-embedded Python and .NET tables are
+  case-fold version sentinels. The source-embedded Python, .NET, TypeScript,
+  Ruby, Elixir, and Lua tables are
   regenerated from hash-pinned Unicode Consortium inputs by
   `code/scripts/generate_tracked_artifact_unicode17.py`; the derived tables
   retain the Unicode License v3 notice in `UNICODE-LICENSE.txt`, and the
-  generator byte-checks distributable Python, C#, and F# notice copies;
+  generator byte-checks every distributable runtime module and notice copy;
   and
 - bounded process-free CLI parsing with deterministic typed defaults, modeled
   post-parse outcomes, exact multibyte and astral-scalar limits, and adversarial

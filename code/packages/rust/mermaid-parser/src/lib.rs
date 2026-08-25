@@ -1759,6 +1759,7 @@ fn parse_class_relationship(line: &str) -> Option<StructuralRelationship> {
 /// ```
 pub fn parse_xychart(source: &str) -> Result<ChartDiagram, ParseError> {
     parse_mermaid_xychart_ast(source)?;
+    let xy_config = parse_xychart_config(source);
     let tokens = try_tokenize_mermaid_xychart(source).map_err(|message| ParseError {
         message,
         line: 1,
@@ -1773,7 +1774,10 @@ pub fn parse_xychart(source: &str) -> Result<ChartDiagram, ParseError> {
     let mut title: Option<String> = None;
     let mut accessibility_title = None;
     let mut accessibility_description = None;
-    let mut orientation = ChartOrientation::Vertical;
+    let mut orientation = xy_config
+        .chart_orientation
+        .clone()
+        .unwrap_or(ChartOrientation::Vertical);
     if let Some(token) = cursor.consume_if("ORIENTATION") {
         orientation = if token.value.eq_ignore_ascii_case("horizontal") {
             ChartOrientation::Horizontal
@@ -1875,7 +1879,7 @@ pub fn parse_xychart(source: &str) -> Result<ChartDiagram, ParseError> {
         quadrant_labels: [None, None, None, None],
         quadrant_points: vec![],
         quadrant_config: QuadrantConfig::default(),
-        xy_config: parse_xychart_config(source),
+        xy_config,
         orientation,
     })
 }
@@ -1892,6 +1896,9 @@ fn xychart_metadata_value(token: &Token) -> String {
 
 fn parse_xychart_config(source: &str) -> XyChartConfig {
     let chart_source = mermaid_directive_object(source, "xyChart").unwrap_or(source);
+    let theme_source = mermaid_directive_object(source, "themeVariables")
+        .and_then(|theme| mermaid_directive_object(theme, "xyChart"))
+        .unwrap_or(source);
     let positive_number = |key| {
         quadrant_directive_value(chart_source, key)
             .and_then(|value| value.parse::<f64>().ok())
@@ -1912,18 +1919,52 @@ fn parse_xychart_config(source: &str) -> XyChartConfig {
         })
     };
 
-    XyChartConfig {
+    let mut config = XyChartConfig {
+        background_color: quadrant_directive_value(theme_source, "backgroundColor"),
+        title_color: quadrant_directive_value(theme_source, "titleColor"),
+        plot_color_palette: quadrant_directive_value(theme_source, "plotColorPalette").and_then(
+            |palette| {
+                let colors: Vec<String> = palette
+                    .split(',')
+                    .map(str::trim)
+                    .filter(|color| !color.is_empty())
+                    .map(str::to_string)
+                    .collect();
+                (!colors.is_empty()).then_some(colors)
+            },
+        ),
         width: positive_number("width"),
         height: positive_number("height"),
+        chart_orientation: quadrant_directive_value(chart_source, "chartOrientation").and_then(
+            |value| match value.to_ascii_lowercase().as_str() {
+                "horizontal" => Some(ChartOrientation::Horizontal),
+                "vertical" => Some(ChartOrientation::Vertical),
+                _ => None,
+            },
+        ),
+        plot_reserved_space_percent: positive_number("plotReservedSpacePercent")
+            .filter(|value| *value >= 30.0),
         title_font_size: positive_number("titleFontSize"),
         title_padding: non_negative_number("titlePadding"),
         show_title: boolean("showTitle"),
+        show_legend: boolean("showLegend"),
+        legend_font_size: positive_number("legendFontSize"),
+        legend_padding: non_negative_number("legendPadding"),
         show_data_label: boolean("showDataLabel"),
         show_data_label_outside_bar: boolean("showDataLabelOutsideBar"),
-        data_label_color: quadrant_directive_value(source, "dataLabelColor"),
+        data_label_color: quadrant_directive_value(theme_source, "dataLabelColor"),
         x_axis: parse_xychart_axis_config(chart_source, "xAxis"),
         y_axis: parse_xychart_axis_config(chart_source, "yAxis"),
-    }
+    };
+    config.x_axis.label_color = quadrant_directive_value(theme_source, "xAxisLabelColor");
+    config.x_axis.title_color = quadrant_directive_value(theme_source, "xAxisTitleColor");
+    config.x_axis.tick_color = quadrant_directive_value(theme_source, "xAxisTickColor");
+    config.x_axis.axis_line_color = quadrant_directive_value(theme_source, "xAxisLineColor");
+    config.y_axis.label_color = quadrant_directive_value(theme_source, "yAxisLabelColor");
+    config.y_axis.title_color = quadrant_directive_value(theme_source, "yAxisTitleColor");
+    config.y_axis.tick_color = quadrant_directive_value(theme_source, "yAxisTickColor");
+    config.y_axis.axis_line_color = quadrant_directive_value(theme_source, "yAxisLineColor");
+    config
 }
 
 fn parse_xychart_axis_config(source: &str, key: &str) -> XyAxisConfig {
@@ -1948,14 +1989,21 @@ fn parse_xychart_axis_config(source: &str, key: &str) -> XyAxisConfig {
         show_label: boolean("showLabel"),
         label_font_size: number("labelFontSize").filter(|value| *value > 0.0),
         label_padding: number("labelPadding"),
+        label_rotation: quadrant_directive_value(axis_source, "labelRotation")
+            .and_then(|value| value.parse::<f64>().ok())
+            .filter(|value| (-90.0..=90.0).contains(value)),
+        label_color: None,
         show_title: boolean("showTitle"),
         title_font_size: number("titleFontSize").filter(|value| *value > 0.0),
         title_padding: number("titlePadding"),
+        title_color: None,
         show_tick: boolean("showTick"),
         tick_length: number("tickLength"),
         tick_width: number("tickWidth").filter(|value| *value > 0.0),
+        tick_color: None,
         show_axis_line: boolean("showAxisLine"),
         axis_line_width: number("axisLineWidth").filter(|value| *value > 0.0),
+        axis_line_color: None,
     }
 }
 
@@ -2106,7 +2154,10 @@ fn parse_xychart_data_point(token: &Token, source: &str) -> Result<ChartDataPoin
             .find('"')
             .ok_or_else(|| token_error(token, "unterminated XY-chart point label"))?;
         if !quoted_label[close + 1..].trim().is_empty() {
-            return Err(token_error(token, "unexpected content after XY-chart point label"));
+            return Err(token_error(
+                token,
+                "unexpected content after XY-chart point label",
+            ));
         }
         Some(quoted_label[..close].to_string())
     } else {
@@ -6131,8 +6182,7 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         assert_eq!(axis.title.as_deref(), Some("Samples"));
 
         let categorical =
-            parse_xychart("xychart\nx-axis [A, B]\nbar [1, 2, 99]\nline [3, 4, 88]\n")
-                .unwrap();
+            parse_xychart("xychart\nx-axis [A, B]\nbar [1, 2, 99]\nline [3, 4, 88]\n").unwrap();
         assert!(categorical
             .series
             .iter()
@@ -6142,15 +6192,24 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     #[test]
     fn xychart_preserves_core_init_configuration() {
         let diagram = parse_xychart(
-            "%%{init: {\"xyChart\": {\"width\": 720, \"height\": 440, \"titleFontSize\": 24, \"titlePadding\": 14, \"showTitle\": false, \"showDataLabel\": true, \"showDataLabelOutsideBar\": true, \"xAxis\": {\"showLabel\": false, \"labelFontSize\": 13, \"labelPadding\": 7, \"showTitle\": false, \"titleFontSize\": 18, \"titlePadding\": 9, \"showTick\": false, \"tickLength\": 11, \"tickWidth\": 3, \"showAxisLine\": false, \"axisLineWidth\": 4}, \"yAxis\": {\"showLabel\": true, \"labelFontSize\": 15, \"labelPadding\": 8, \"showTitle\": true, \"titleFontSize\": 19, \"titlePadding\": 10, \"showTick\": true, \"tickLength\": 12, \"tickWidth\": 4, \"showAxisLine\": true, \"axisLineWidth\": 5}}, \"themeVariables\": {\"xyChart\": {\"dataLabelColor\": \"#123456\"}}}}%%\nxychart\ntitle Hidden\nbar [10, 20]\n",
+            "%%{init: {\"xyChart\": {\"width\": 720, \"height\": 440, \"chartOrientation\": \"horizontal\", \"plotReservedSpacePercent\": 65, \"titleFontSize\": 24, \"titlePadding\": 14, \"showTitle\": false, \"showLegend\": false, \"legendFontSize\": 18, \"legendPadding\": 16, \"showDataLabel\": true, \"showDataLabelOutsideBar\": true, \"xAxis\": {\"showLabel\": false, \"labelFontSize\": 13, \"labelPadding\": 7, \"labelRotation\": -45, \"showTitle\": false, \"titleFontSize\": 18, \"titlePadding\": 9, \"showTick\": false, \"tickLength\": 11, \"tickWidth\": 3, \"showAxisLine\": false, \"axisLineWidth\": 4}, \"yAxis\": {\"showLabel\": true, \"labelFontSize\": 15, \"labelPadding\": 8, \"labelRotation\": 30, \"showTitle\": true, \"titleFontSize\": 19, \"titlePadding\": 10, \"showTick\": true, \"tickLength\": 12, \"tickWidth\": 4, \"showAxisLine\": true, \"axisLineWidth\": 5}}, \"themeVariables\": {\"xyChart\": {\"dataLabelColor\": \"#123456\"}}}}%%\nxychart\ntitle Hidden\nbar [10, 20]\n",
         )
         .unwrap();
 
         assert_eq!(diagram.xy_config.width, Some(720.0));
         assert_eq!(diagram.xy_config.height, Some(440.0));
+        assert_eq!(
+            diagram.xy_config.chart_orientation,
+            Some(ChartOrientation::Horizontal)
+        );
+        assert_eq!(diagram.orientation, ChartOrientation::Horizontal);
+        assert_eq!(diagram.xy_config.plot_reserved_space_percent, Some(65.0));
         assert_eq!(diagram.xy_config.title_font_size, Some(24.0));
         assert_eq!(diagram.xy_config.title_padding, Some(14.0));
         assert_eq!(diagram.xy_config.show_title, Some(false));
+        assert_eq!(diagram.xy_config.show_legend, Some(false));
+        assert_eq!(diagram.xy_config.legend_font_size, Some(18.0));
+        assert_eq!(diagram.xy_config.legend_padding, Some(16.0));
         assert_eq!(diagram.xy_config.show_data_label, Some(true));
         assert_eq!(diagram.xy_config.show_data_label_outside_bar, Some(true));
         assert_eq!(
@@ -6160,6 +6219,7 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         assert_eq!(diagram.xy_config.x_axis.show_label, Some(false));
         assert_eq!(diagram.xy_config.x_axis.label_font_size, Some(13.0));
         assert_eq!(diagram.xy_config.x_axis.label_padding, Some(7.0));
+        assert_eq!(diagram.xy_config.x_axis.label_rotation, Some(-45.0));
         assert_eq!(diagram.xy_config.x_axis.show_title, Some(false));
         assert_eq!(diagram.xy_config.x_axis.title_font_size, Some(18.0));
         assert_eq!(diagram.xy_config.x_axis.title_padding, Some(9.0));
@@ -6170,10 +6230,73 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         assert_eq!(diagram.xy_config.x_axis.axis_line_width, Some(4.0));
         assert_eq!(diagram.xy_config.y_axis.show_label, Some(true));
         assert_eq!(diagram.xy_config.y_axis.label_font_size, Some(15.0));
+        assert_eq!(diagram.xy_config.y_axis.label_rotation, Some(30.0));
         assert_eq!(diagram.xy_config.y_axis.show_tick, Some(true));
         assert_eq!(diagram.xy_config.y_axis.tick_length, Some(12.0));
         assert_eq!(diagram.xy_config.y_axis.tick_width, Some(4.0));
         assert_eq!(diagram.xy_config.y_axis.axis_line_width, Some(5.0));
+
+        let explicit = parse_xychart(
+            "%%{init: {\"xyChart\": {\"chartOrientation\": \"horizontal\"}}}%%\nxychart vertical\nline [1, 2]\n",
+        )
+        .unwrap();
+        assert_eq!(explicit.orientation, ChartOrientation::Vertical);
+
+        let out_of_range = parse_xychart(
+            "%%{init: {\"xyChart\": {\"xAxis\": {\"labelRotation\": 91}}}}%%\nxychart\nline [1, 2]\n",
+        )
+        .unwrap();
+        assert_eq!(out_of_range.xy_config.x_axis.label_rotation, None);
+    }
+
+    #[test]
+    fn xychart_preserves_axis_theme_colors() {
+        let diagram = parse_xychart(
+            "%%{init: {\"themeVariables\": {\"xyChart\": {\"backgroundColor\": \"#010203\", \"titleColor\": \"#040506\", \"plotColorPalette\": \"#070809, #0a0b0c\", \"xAxisLabelColor\": \"#110001\", \"xAxisTitleColor\": \"#220002\", \"xAxisTickColor\": \"#330003\", \"xAxisLineColor\": \"#440004\", \"yAxisLabelColor\": \"#550005\", \"yAxisTitleColor\": \"#660006\", \"yAxisTickColor\": \"#770007\", \"yAxisLineColor\": \"#880008\"}}}}%%\nxychart\nx-axis Quarter [Q1, Q2]\ny-axis Revenue 0 --> 20\nbar [10, 20]\n",
+        )
+        .unwrap();
+
+        assert_eq!(
+            diagram.xy_config.background_color.as_deref(),
+            Some("#010203")
+        );
+        assert_eq!(diagram.xy_config.title_color.as_deref(), Some("#040506"));
+        assert_eq!(
+            diagram.xy_config.plot_color_palette,
+            Some(vec!["#070809".into(), "#0a0b0c".into()])
+        );
+        assert_eq!(
+            diagram.xy_config.x_axis.label_color.as_deref(),
+            Some("#110001")
+        );
+        assert_eq!(
+            diagram.xy_config.x_axis.title_color.as_deref(),
+            Some("#220002")
+        );
+        assert_eq!(
+            diagram.xy_config.x_axis.tick_color.as_deref(),
+            Some("#330003")
+        );
+        assert_eq!(
+            diagram.xy_config.x_axis.axis_line_color.as_deref(),
+            Some("#440004")
+        );
+        assert_eq!(
+            diagram.xy_config.y_axis.label_color.as_deref(),
+            Some("#550005")
+        );
+        assert_eq!(
+            diagram.xy_config.y_axis.title_color.as_deref(),
+            Some("#660006")
+        );
+        assert_eq!(
+            diagram.xy_config.y_axis.tick_color.as_deref(),
+            Some("#770007")
+        );
+        assert_eq!(
+            diagram.xy_config.y_axis.axis_line_color.as_deref(),
+            Some("#880008")
+        );
     }
 
     #[test]

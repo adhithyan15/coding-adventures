@@ -6,7 +6,7 @@
   "system": "abugida",
   "signature": "Highly rounded and loopy — full circles, hooks and curls, with almost no straight lines.",
   "complete": false,
-  "notes": "Syllabary generated from Unicode by generate_syllabary.py: each syllable is a base consonant (varga order) composed with a core vowel sign. Romanization is ISO-15919. The independent (word-initial) vowels are in `independentVowels`; the script's own digits are in `digits`. Stroke order is a separate, source-gated effort: only source-verified entries carry it, beginning with independent short e എ. Parts, not the grid: handwriting is authored only for independent vowels, base consonants (the entries with a single `components` line), and vowel signs; a syllable's figure is assembled from its parts and is never authored separately. When `penLifts` is absent it means NOT VERIFIED — never none — and must never be inferred from the length of `strokeOrder`.",
+  "notes": "Syllabary generated from Unicode by generate_syllabary.py: each syllable is a base consonant (varga order) composed with a core vowel sign. Romanization is ISO-15919. The independent (word-initial) vowels are in `independentVowels`; the script's own digits are in `digits`. Stroke order is a separate, source-gated effort: only source-verified entries carry it, beginning with independent short e എ. Parts, not the grid: handwriting is authored only for independent vowels, base consonants (the generated entries with a single `components` line), standalone chillu consonants, and vowel signs; a syllable's figure is assembled from its parts and is never authored separately. When `penLifts` is absent it means NOT VERIFIED — never none — and must never be inferred from the length of `strokeOrder`.",
   "letters": [
     {
       "glyph": "ക",
@@ -5587,6 +5587,172 @@
       ],
       "strokeOrder": [],
       "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഴ",
+      "sound": "ḻa",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഴ  ḻa — base consonant (inherent “a”)"
+      ],
+      "strokeOrder": [
+        "descend around the left entry arch and sweep right into the lower junction",
+        "without lifting, turn clockwise around the right loop and return through its inner side",
+        "without lifting, descend through the inner return and curl left around the lower hook"
+      ],
+      "strokeOrderNote": "Three visible movements in one continuous pen-down run: the left arch flows directly into the right loop, whose inner return descends and finishes in the lower hook.",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "Sriveenkat, Ml ഴ order.gif, Malayalam letter LLLA stroke-order animation, 00:03.0–00:07.4 (Wikimedia Commons, 1 July 2023)",
+        "url": "https://commons.wikimedia.org/wiki/File:Ml_%E0%B4%B4_order.gif",
+        "variation": "The 47-frame Gayathri-font animation writes ഴ in one uninterrupted run: left entry arch, clockwise right loop, then the descending inner return and lower hook. This is one attested pedagogical order fitted to the bundled Noto Sans Malayalam outline."
+      },
+      "notes": "Malayalam letter LLLA (U+0D34), romanized ḻa in ISO 15919; a base consonant carrying inherent a."
+    },
+    {
+      "glyph": "ഴാ",
+      "sound": "ḻā",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഴ  ḻa — base consonant",
+        "ാ  “ā” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഴി",
+      "sound": "ḻi",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഴ  ḻa — base consonant",
+        "ി  “i” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഴീ",
+      "sound": "ḻī",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഴ  ḻa — base consonant",
+        "ീ  “ī” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഴു",
+      "sound": "ḻu",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഴ  ḻa — base consonant",
+        "ു  “u” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഴൂ",
+      "sound": "ḻū",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഴ  ḻa — base consonant",
+        "ൂ  “ū” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഴെ",
+      "sound": "ḻe",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഴ  ḻa — base consonant",
+        "െ  “e” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഴേ",
+      "sound": "ḻē",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഴ  ḻa — base consonant",
+        "േ  “ē” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഴൊ",
+      "sound": "ḻo",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഴ  ḻa — base consonant",
+        "ൊ  “o” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഴോ",
+      "sound": "ḻō",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഴ  ḻa — base consonant",
+        "ോ  “ō” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഴൈ",
+      "sound": "ḻai",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഴ  ḻa — base consonant",
+        "ൈ  “ai” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഴൌ",
+      "sound": "ḻau",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഴ  ḻa — base consonant",
+        "ൌ  “au” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
+    },
+    {
+      "glyph": "ഴൃ",
+      "sound": "ḻr̥",
+      "role": "syllable",
+      "inherentVowel": "a",
+      "components": [
+        "ഴ  ḻa — base consonant",
+        "ൃ  “r̥” vowel sign"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
     }
   ],
   "independentVowels": [
@@ -5595,10 +5761,23 @@
       "sound": "a",
       "role": "vowel",
       "components": [
-        "അ  a — independent vowel (word-initial)"
+        "the joined left arch, upper turn, lower loop, and central crown",
+        "the right outer arch curling into its lower inner loop"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "climb the left outer arch, curve through the upper turn, and arrive at the central junction",
+        "without lifting, circle the broad lower loop and return to the junction",
+        "without lifting, sweep up through the central crown and descend the upright",
+        "after one lift, sweep up and over through the right outer arch and descend its far side",
+        "without lifting, curl left around the lower inner loop"
+      ],
+      "strokeOrderNote": "Five visible movements in two pen-down runs: the complete left-and-central body stays joined; after one lift, the right outer arch flows directly into its lower inner loop.",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "Donald R. Davis Jr., The Malayalam Script, Initial Vowels, അ handwriting clip, 00:00–00:04 (University of Texas at Austin)",
+        "url": "https://malayalam.la.utexas.edu/resources/the-malayalam-script/",
+        "variation": "The page identifies initial vowels as word-initial forms and supplies a click-to-play handwriting clip for each. The അ clip visibly completes the joined left-and-central body before one lifted right-side run; that second run draws the outer arch before curling into the lower inner loop. This is one attested pedagogical order fitted to the bundled Noto Sans Malayalam outline."
+      }
     },
     {
       "glyph": "ആ",
@@ -5732,6 +5911,56 @@
       ],
       "strokeOrder": [],
       "strokeOrderNote": ""
+    }
+  ],
+  "finalConsonants": [
+    {
+      "glyph": "ൽ",
+      "sound": "l",
+      "role": "consonant",
+      "components": [
+        "the left entry arch",
+        "the joined central loop and upper shoulder",
+        "the right loop rising into the above-line chillu hook"
+      ],
+      "strokeOrder": [
+        "climb the left entry arch and turn inward at the top",
+        "without lifting, descend clockwise around the central loop and return to its upper junction",
+        "without lifting, carry the upper shoulder right",
+        "without lifting, sweep clockwise around the right loop and return to the upper crossing",
+        "without lifting, rise into the chillu hook and curl left above the line"
+      ],
+      "strokeOrderNote": "Five visible movements in one continuous pen-down run: the entry arch flows through both loops and finishes with the chillu hook above the line.",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "Sriveenkat, Ml ൽ order.gif, Malayalam chillu L stroke-order animation, 00:00.1–00:09.6 (Wikimedia Commons, 2 July 2023)",
+        "url": "https://commons.wikimedia.org/wiki/File:Ml_%E0%B5%BD_order.gif",
+        "variation": "The 97-frame Gayathri-font animation draws ൽ in one uninterrupted run: left entry arch, clockwise central loop, rightward upper shoulder, clockwise right loop, then the finishing hook above the line. The University of Texas Malayalam Script guide independently identifies ൽ as the chillu shared by ത/ല and says a chillu marker extends above the line. This is one attested pedagogical order fitted to the bundled Noto Sans Malayalam outline."
+      },
+      "notes": "Atomic Malayalam chillu L (U+0D7D): a vowel-free final consonant, not the base ല with its inherent a."
+    },
+    {
+      "glyph": "ൻ",
+      "sound": "n",
+      "role": "consonant",
+      "components": [
+        "the left arch and descending central stem",
+        "the right outer loop, inner return, and above-line chillu hook"
+      ],
+      "strokeOrder": [
+        "climb clockwise around the left arch and turn inward at the upper junction",
+        "without lifting, descend the central stem to the line",
+        "after one lift, carry the upper shoulder right, sweep clockwise around the right outer loop, and return through its inner curve",
+        "without lifting, rise into the chillu hook and curl left above the line"
+      ],
+      "strokeOrderNote": "Four visible movements in two pen-down runs: the left arch descends into its central stem, then one lifted right-side run carries the upper shoulder through the outer loop, inner return, and chillu hook above the line.",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "Sriveenkat, Ml ൻ order.gif, Malayalam chillu N stroke-order animation, 00:03.0–00:09.5 (Wikimedia Commons, 2 July 2023)",
+        "url": "https://commons.wikimedia.org/wiki/File:Ml_%E0%B5%BB_order.gif",
+        "variation": "The 67-frame Gayathri-font animation completes the left arch and central stem in one run, then lifts once before carrying the upper shoulder through the right outer loop, inner return, and finishing hook above the line as a second joined run. This is one attested pedagogical order fitted to the bundled Noto Sans Malayalam outline."
+      },
+      "notes": "Atomic Malayalam chillu N (U+0D7B): a vowel-free final consonant, not the base ന with its inherent a."
     }
   ],
   "marks": [

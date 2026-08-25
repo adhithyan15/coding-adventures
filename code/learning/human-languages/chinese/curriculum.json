@@ -195,6 +195,115 @@
         "ZH-EXT-029-QING-INVITES"
       ],
       "after": []
+    },
+    {
+      "id": "ZH-PATH-011",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "ZH-C12-ren",
+        "ZH-C12-nu",
+        "ZH-C12-hear-erzi",
+        "ZH-W12-er",
+        "ZH-C12-erzi",
+        "ZH-C12-hear-nuer",
+        "ZH-C12-nuer",
+        "ZH-C12-hear-jia",
+        "ZH-W12-jia",
+        "ZH-C12-jia",
+        "ZH-C12-hear-jiaren",
+        "ZH-C12-jiaren",
+        "ZH-R12-family-six",
+        "ZH-C12-practice"
+      ],
+      "before": [],
+      "inline": [
+        "ZH-EXT-030-FAMILY-MEANING-FIRST",
+        "ZH-EXT-031-FAMILY-SCRIPT",
+        "ZH-EXT-032-FAMILY-FOUR-SKILL"
+      ],
+      "after": []
+    },
+    {
+      "id": "ZH-PATH-012",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "ZH-C13-hear-da",
+        "ZH-W13-da",
+        "ZH-C13-da",
+        "ZH-C13-hear-dajia",
+        "ZH-C13-dajia",
+        "ZH-C13-hear-xue",
+        "ZH-W13-xue",
+        "ZH-C13-xue",
+        "ZH-C13-hear-xuesheng",
+        "ZH-W13-sheng",
+        "ZH-C13-xuesheng",
+        "ZH-C13-hear-daxue",
+        "ZH-C13-daxue",
+        "ZH-C13-hear-daxuesheng",
+        "ZH-C13-daxuesheng",
+        "ZH-R13-school-six",
+        "ZH-C13-practice"
+      ],
+      "before": [],
+      "inline": [
+        "ZH-EXT-033-SCHOOL-MEANING-FIRST",
+        "ZH-EXT-034-SCHOOL-SCRIPT",
+        "ZH-EXT-035-SCHOOL-FOUR-SKILL"
+      ],
+      "after": []
+    },
+    {
+      "id": "ZH-PATH-013",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "ZH-C14-hear-xiao",
+        "ZH-W14-xiao",
+        "ZH-C14-xiao",
+        "ZH-C14-hear-xiaoxue",
+        "ZH-C14-xiaoxue",
+        "ZH-C14-hear-xiaoxuesheng",
+        "ZH-C14-xiaoxuesheng",
+        "ZH-R14-primary-three",
+        "ZH-C14-practice"
+      ],
+      "before": [],
+      "inline": [
+        "ZH-EXT-036-PRIMARY-MEANING-FIRST",
+        "ZH-EXT-037-PRIMARY-SCRIPT",
+        "ZH-EXT-038-PRIMARY-FOUR-SKILL"
+      ],
+      "after": []
+    },
+    {
+      "id": "ZH-PATH-014",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "ZH-C15-hear-zhong",
+        "ZH-W15-zhong",
+        "ZH-C15-zhong",
+        "ZH-C15-hear-zhongxue",
+        "ZH-C15-zhongxue",
+        "ZH-R15-school-map-1",
+        "ZH-C15-hear-zhongxuesheng",
+        "ZH-C15-zhongxuesheng",
+        "ZH-C15-hear-tongxue",
+        "ZH-W15-tong",
+        "ZH-C15-tongxue",
+        "ZH-R15-school-map-2",
+        "ZH-C15-hear-shangxue",
+        "ZH-C15-shangxue",
+        "ZH-R15-school-map-3",
+        "ZH-R15-school-map-4",
+        "ZH-C15-practice"
+      ],
+      "before": [],
+      "inline": [
+        "ZH-EXT-039-SCHOOL-COMPOUNDS-MEANING-FIRST",
+        "ZH-EXT-040-SCHOOL-COMPOUNDS-SCRIPT",
+        "ZH-EXT-041-SCHOOL-COMPOUNDS-FOUR-SKILL"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -232,7 +341,11 @@
     "SPINE-EXCHANGE-NAMES": {
       "segments": [
         "ZH-PATH-007",
-        "ZH-PATH-008"
+        "ZH-PATH-008",
+        "ZH-PATH-011",
+        "ZH-PATH-012",
+        "ZH-PATH-013",
+        "ZH-PATH-014"
       ],
       "omits": [
         "PRONOUN-ME",
@@ -982,6 +1095,207 @@
       ],
       "lessons": [
         "ZH-C11-qing"
+      ]
+    },
+    {
+      "id": "ZH-EXT-030-FAMILY-MEANING-FIRST",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "lexis",
+      "canDo": "I can understand and say six HSK Level 1 people-and-family words, with every unfamiliar spoken meaning arriving before its new character form.",
+      "prerequisites": [
+        "ZH-EXT-029-QING-INVITES"
+      ],
+      "lessons": [
+        "ZH-C12-ren",
+        "ZH-C12-nu",
+        "ZH-C12-hear-erzi",
+        "ZH-C12-hear-nuer",
+        "ZH-C12-hear-jia",
+        "ZH-C12-hear-jiaren"
+      ]
+    },
+    {
+      "id": "ZH-EXT-031-FAMILY-SCRIPT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can write 儿 and 家 from their ordered strokes, then read and write 儿子, 女儿, 家 and 家人 without pinyin.",
+      "prerequisites": [
+        "ZH-EXT-030-FAMILY-MEANING-FIRST"
+      ],
+      "lessons": [
+        "ZH-W12-er",
+        "ZH-C12-erzi",
+        "ZH-C12-nuer",
+        "ZH-W12-jia",
+        "ZH-C12-jia",
+        "ZH-C12-jiaren"
+      ]
+    },
+    {
+      "id": "ZH-EXT-032-FAMILY-FOUR-SKILL",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "assessment",
+      "canDo": "I can pass separate listening, speaking, reading and writing checks for 人, 女, 儿子, 女儿, 家 and 家人; no strong skill compensates for a weak one.",
+      "prerequisites": [
+        "ZH-EXT-031-FAMILY-SCRIPT"
+      ],
+      "lessons": [
+        "ZH-R12-family-six",
+        "ZH-C12-practice"
+      ]
+    },
+    {
+      "id": "ZH-EXT-033-SCHOOL-MEANING-FIRST",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "lexis",
+      "canDo": "I can understand and say 大, 大家, 学, 学生, 大学 and 大学生, with each unfamiliar spoken meaning arriving before any unfamiliar character form.",
+      "prerequisites": [
+        "ZH-EXT-032-FAMILY-FOUR-SKILL"
+      ],
+      "lessons": [
+        "ZH-C13-hear-da",
+        "ZH-C13-hear-dajia",
+        "ZH-C13-hear-xue",
+        "ZH-C13-hear-xuesheng",
+        "ZH-C13-hear-daxue",
+        "ZH-C13-hear-daxuesheng"
+      ]
+    },
+    {
+      "id": "ZH-EXT-034-SCHOOL-SCRIPT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can write 大, 学 and 生 from ordered strokes, then read and write 大家, 学生, 大学 and 大学生 without pinyin.",
+      "prerequisites": [
+        "ZH-EXT-033-SCHOOL-MEANING-FIRST"
+      ],
+      "lessons": [
+        "ZH-W13-da",
+        "ZH-C13-da",
+        "ZH-C13-dajia",
+        "ZH-W13-xue",
+        "ZH-C13-xue",
+        "ZH-W13-sheng",
+        "ZH-C13-xuesheng",
+        "ZH-C13-daxue",
+        "ZH-C13-daxuesheng"
+      ]
+    },
+    {
+      "id": "ZH-EXT-035-SCHOOL-FOUR-SKILL",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "assessment",
+      "canDo": "I can pass separate listening, speaking, reading and writing checks for 大, 大家, 学, 学生, 大学 and 大学生; no strong skill compensates for a weak one.",
+      "prerequisites": [
+        "ZH-EXT-034-SCHOOL-SCRIPT"
+      ],
+      "lessons": [
+        "ZH-R13-school-six",
+        "ZH-C13-practice"
+      ]
+    },
+    {
+      "id": "ZH-EXT-036-PRIMARY-MEANING-FIRST",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "lexis",
+      "canDo": "I can understand and say 小, 小学 and 小学生, with the unfamiliar spoken meaning of 小 arriving before its character.",
+      "prerequisites": [
+        "ZH-EXT-035-SCHOOL-FOUR-SKILL"
+      ],
+      "lessons": [
+        "ZH-C14-hear-xiao",
+        "ZH-C14-hear-xiaoxue",
+        "ZH-C14-hear-xiaoxuesheng"
+      ]
+    },
+    {
+      "id": "ZH-EXT-037-PRIMARY-SCRIPT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can write 小 from ordered strokes, then read and write 小学 and 小学生 without pinyin.",
+      "prerequisites": [
+        "ZH-EXT-036-PRIMARY-MEANING-FIRST"
+      ],
+      "lessons": [
+        "ZH-W14-xiao",
+        "ZH-C14-xiao",
+        "ZH-C14-xiaoxue",
+        "ZH-C14-xiaoxuesheng"
+      ]
+    },
+    {
+      "id": "ZH-EXT-038-PRIMARY-FOUR-SKILL",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "assessment",
+      "canDo": "I can pass separate listening, speaking, reading and writing checks for 小, 小学 and 小学生; no strong skill compensates for a weak one.",
+      "prerequisites": [
+        "ZH-EXT-037-PRIMARY-SCRIPT"
+      ],
+      "lessons": [
+        "ZH-R14-primary-three",
+        "ZH-C14-practice"
+      ]
+    },
+    {
+      "id": "ZH-EXT-039-SCHOOL-COMPOUNDS-MEANING-FIRST",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "lexis",
+      "canDo": "I can understand and say 中学, 中学生, 同学 and 上学, with every unfamiliar spoken meaning arriving before its new character.",
+      "prerequisites": [
+        "ZH-EXT-038-PRIMARY-FOUR-SKILL"
+      ],
+      "lessons": [
+        "ZH-C15-hear-zhong",
+        "ZH-C15-hear-zhongxue",
+        "ZH-C15-hear-zhongxuesheng",
+        "ZH-C15-hear-tongxue",
+        "ZH-C15-hear-shangxue"
+      ]
+    },
+    {
+      "id": "ZH-EXT-040-SCHOOL-COMPOUNDS-SCRIPT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can write source-verified 中 and 同 from ordered strokes, then read and write four school compounds without pinyin.",
+      "prerequisites": [
+        "ZH-EXT-039-SCHOOL-COMPOUNDS-MEANING-FIRST"
+      ],
+      "lessons": [
+        "ZH-W15-zhong",
+        "ZH-C15-zhong",
+        "ZH-C15-zhongxue",
+        "ZH-C15-zhongxuesheng",
+        "ZH-W15-tong",
+        "ZH-C15-tongxue",
+        "ZH-C15-shangxue"
+      ]
+    },
+    {
+      "id": "ZH-EXT-041-SCHOOL-COMPOUNDS-FOUR-SKILL",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "assessment",
+      "canDo": "I can retrieve the school map across four spaced passes and pass separate listening, speaking, reading and writing checks for 中学, 中学生, 同学 and 上学.",
+      "prerequisites": [
+        "ZH-EXT-040-SCHOOL-COMPOUNDS-SCRIPT"
+      ],
+      "lessons": [
+        "ZH-R15-school-map-1",
+        "ZH-R15-school-map-2",
+        "ZH-R15-school-map-3",
+        "ZH-R15-school-map-4",
+        "ZH-C15-practice"
       ]
     }
   ]

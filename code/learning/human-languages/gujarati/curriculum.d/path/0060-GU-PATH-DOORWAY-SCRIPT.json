@@ -1,0 +1,21 @@
+{
+  "id": "GU-PATH-DOORWAY-SCRIPT",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "GU-W03-ja",
+    "GU-W03-o-matra",
+    "GU-W03-anusvara",
+    "GU-W03-ii-matra",
+    "GU-W03-u-matra",
+    "GU-W03-chha",
+    "GU-W03-ka",
+    "GU-W03-nna",
+    "GU-W03-sha",
+    "GU-R03-doorway-three-r1"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "GU-EXT-018-DOORWAY-SCRIPT"
+  ]
+}

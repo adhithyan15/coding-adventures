@@ -1,23 +1,22 @@
 {
   "chapter": 7,
-  "title": "Numbers One to Five",
-  "label": "ch:numbers-one-to-five",
-  "canDo": "I can count from one to five in headless Gujarati script and explain why બે starts with b where its neighbours start with d, and why ત્રણ has an r that Hindi tīn does not.",
+  "title": "The First Verbs",
+  "label": "ch:first-verbs",
+  "canDo": "I can build short present-tense Gujarati sentences with the chapter's first verbs.",
   "spineNodes": [
-    "SPINE-COUNT-ONE-TO-FIVE"
+    "SPINE-SAY-WHAT-I-DO"
   ],
   "payoff": {
-    "lesson": "GU-C06-number-histories",
+    "lesson": "GU-C05-practice",
     "kind": "task",
-    "summary": "Take the two odd numerals apart: બે descends from the feminine/neuter dvé by dv → bb → b, while ત્રણ's r is a learned restoration from Sanskrit, put back after Prakrit tiṇṇi had already dropped it.",
+    "summary": "Complete GU-C05-practice, the canonical closing checkpoint, and demonstrate the chapter promise: build short present-tense Gujarati sentences with the chapter's first verbs.",
     "assesses": [
-      "GU-LEX-NUMBERS-ONE-TO-FIVE",
-      "GU-FORM-BE-INITIAL-B",
-      "GU-FORM-TRAN-R",
-      "GU-ETYMON-BE-DVE-SELECTION",
-      "GU-SOUND-DV-BB-B",
-      "GU-ETYMON-TRAN-R-RESTORATION",
-      "GU-HISTORY-LEARNED-RESTORATION"
+      "GU-CONCEPT-C03-HUN-01",
+      "GU-CONCEPT-C05-BOLVUN-01",
+      "GU-CONCEPT-C05-HUNGUJARATIBOLUNCHHUN-01",
+      "GU-CONCEPT-C05-KAAMKARVUN-01",
+      "GU-CONCEPT-C05-PRACTICE-01",
+      "GU-CONCEPT-C05-RAHEVUN-01"
     ]
   }
 }

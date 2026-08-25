@@ -35,6 +35,18 @@ describe("independent (word-initial) vowels", () => {
     });
   });
 
+  it("keeps Kannada independent ಅ sourced while its sibling vowels remain unverified", () => {
+    const kannada = SCRIPTS.find((s) => s.script === "kannada")!;
+    const iv = kannada.independentVowels!;
+    expect(iv[0]!.glyph).toBe("ಅ");
+    expect(iv[0]!.strokeOrder).toHaveLength(4);
+    expect(iv[0]!.penLifts).toBe(0);
+    expect(iv[0]!.strokeOrderSource?.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-a.gif",
+    );
+    expect(iv.slice(1).every((v) => v.strokeOrder.length === 0)).toBe(true);
+  });
+
   it("CONTROL: they are SEPARATE from the syllabary — letters, isSyllabary and the matrix are untouched", () => {
     const telugu = SCRIPTS.find((s) => s.script === "telugu")!;
     // None of the independent-vowel glyphs leak into the consonant syllable list…
@@ -51,5 +63,68 @@ describe("independent (word-initial) vowels", () => {
   it("an alphabet (Cyrillic) has no independent-vowel list", () => {
     const cyr = SCRIPTS.find((s) => s.script === "cyrillic")!;
     expect(cyr.independentVowels).toBeUndefined();
+  });
+});
+
+describe("atomic final consonants", () => {
+  it("keeps Malayalam chillus sourced and outside the all-syllable grid", () => {
+    const malayalam = SCRIPTS.find((s) => s.script === "malayalam")!;
+    expect(malayalam.finalConsonants?.map((entry) => entry.glyph)).toEqual(["ൽ", "ൻ"]);
+    const chilluL = malayalam.finalConsonants![0]!;
+    expect(chilluL.role).toBe("consonant");
+    expect(chilluL.penLifts).toBe(0);
+    expect(chilluL.strokeOrder).toHaveLength(5);
+    expect(chilluL.strokeOrderSource?.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Ml_%E0%B5%BD_order.gif",
+    );
+    expect(malayalam.letters.some((entry) => entry.glyph === "ൽ")).toBe(false);
+    const chilluN = malayalam.finalConsonants![1]!;
+    expect(chilluN.role).toBe("consonant");
+    expect(chilluN.penLifts).toBe(1);
+    expect(chilluN.strokeOrder).toHaveLength(4);
+    expect(chilluN.strokeOrderSource?.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Ml_%E0%B5%BB_order.gif",
+    );
+    expect(malayalam.letters.some((entry) => entry.glyph === "ൻ")).toBe(false);
+    expect(isSyllabary(malayalam.letters)).toBe(true);
+    expect(buildSyllableMatrix(malayalam.letters as never)).not.toBeNull();
+  });
+
+  it("does not invent final-consonant inventories for the sibling scripts", () => {
+    for (const id of ["telugu", "kannada"] as const) {
+      expect(SCRIPTS.find((script) => script.script === id)!.finalConsonants).toBeUndefined();
+    }
+  });
+});
+
+describe("source-verified base consonants", () => {
+  it("keeps Malayalam ഴ as a complete sourced row in the syllable matrix", () => {
+    const malayalam = SCRIPTS.find((script) => script.script === "malayalam")!;
+    const zha = malayalam.letters.find((entry) => entry.glyph === "ഴ")!;
+    expect(zha.sound).toBe("ḻa");
+    expect(zha.penLifts).toBe(0);
+    expect(zha.strokeOrder).toHaveLength(3);
+    expect(zha.strokeOrderSource?.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Ml_%E0%B4%B4_order.gif",
+    );
+    const matrix = buildSyllableMatrix(malayalam.letters as never)!;
+    const zhaRow = matrix.rows.find((row) => row.cells[0]?.glyph === "ഴ")!;
+    expect(zhaRow.cells.map((cell) => cell.glyph)).toEqual([
+      "ഴ", "ഴാ", "ഴി", "ഴീ", "ഴു", "ഴൂ", "ഴെ", "ഴേ", "ഴൊ", "ഴോ", "ഴൈ", "ഴൌ", "ഴൃ",
+    ]);
+  });
+});
+
+describe("Tamil independent vowels in the starter inventory", () => {
+  it("keeps short உ sourced as one joined Frame 16 run", () => {
+    const tamil = SCRIPTS.find((script) => script.script === "tamil")!;
+    const shortU = tamil.letters.find((entry) => entry.glyph === "உ")!;
+    expect(shortU.role).toBe("independent-vowel");
+    expect(shortU.sound).toBe("u");
+    expect(shortU.penLifts).toBe(0);
+    expect(shortU.strokeOrder).toHaveLength(3);
+    expect(shortU.strokeOrderSource?.url).toBe(
+      "https://sites.la.utexas.edu/tamilscript/files/2009/08/hw_lettersinstructions.pdf",
+    );
   });
 });

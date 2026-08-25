@@ -1228,6 +1228,21 @@ pub enum DecodedOperand {
     /// opcode, plus `aux`: the single-byte lane-index immediate for
     /// `extract_lane` (0-3), unused (`0`) for every other op here.
     Simd { sub_opcode: u32, aux: u32 },
+    /// `v128.load8_lane` / `v128.store8_lane` (SIMD PR44) -- the lane-
+    /// load/store family's first bite, and a GENUINELY NEW instruction
+    /// shape: no existing `DecodedOperand` variant can carry everything
+    /// these two ops need. `MemArg` has no lane-index field at all.
+    /// `Simd{sub_opcode,aux}` -- the shape every OTHER memarg-carrying
+    /// SIMD op (`Load`/`Store`/`Load8Splat`/etc.) uses, packing its one
+    /// `u32` memarg offset straight into `aux` -- has only ONE spare
+    /// `u32` slot, already fully spoken for by the offset; there's no
+    /// room left for a second value (the lane index) without silently
+    /// truncating a legal-but-large offset. So this is its own variant,
+    /// carrying the sub-opcode, the memarg offset, AND the lane-index
+    /// byte together -- mirrors how `Shuffle` above needed its own
+    /// variant rather than reusing `V128Const` when ITS immediate
+    /// didn't fit the existing shapes either.
+    SimdMemLane { sub_opcode: u32, offset: u32, lane: u8 },
     /// A `0xFC`-prefixed bulk-memory/bulk-table/non-trapping-conversion
     /// instruction's decoded immediates: the sub-opcode, plus `data_idx`
     /// -- a generic index slot reused across sub-opcodes for whichever
@@ -1537,23 +1552,108 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
                     opcode: 0xFD,
                     operand: DecodedOperand::Simd { sub_opcode, aux: lane_idx as u32 },
                 });
-            } else if sub_opcode == 0x00 || sub_opcode == 0x0B || (0x07..=0x0A).contains(&sub_opcode) {
+            } else if sub_opcode == 0x54
+                || sub_opcode == 0x58
+                || sub_opcode == 0x55
+                || sub_opcode == 0x59
+                || sub_opcode == 0x56
+                || sub_opcode == 0x5A
+                || sub_opcode == 0x57
+                || sub_opcode == 0x5B
+            {
+                // v128.load8_lane (0x54) / v128.store8_lane (0x58) --
+                // SIMD PR44, the lane-load/store family's first bite --
+                // plus v128.load16_lane (0x55) / v128.store16_lane (0x59)
+                // -- SIMD PR45, the second bite, one width up -- plus
+                // v128.load32_lane (0x56) / v128.store32_lane (0x5A) --
+                // SIMD PR46, the third bite, one width up again -- plus
+                // v128.load64_lane (0x57) / v128.store64_lane (0x5B) --
+                // SIMD PR47, the fourth and FINAL bite, one width up yet
+                // again, closing the entire lane-load/store family. MUST
+                // be checked before the generic memarg-detection gate
+                // just below (widened for every load/store-shaped SIMD
+                // opcode since PR40's own decoder-desync lesson -- see
+                // that gate's own comment): all eight of these
+                // sub-opcodes carry a memarg AND a trailing lane-index
+                // byte, one MORE immediate than that gate knows to
+                // consume, so routing them through it would silently
+                // drop the lane-index byte and desync every instruction
+                // decoded after this one -- exactly the class of bug
+                // PR40's own lesson warns about, just for a different
+                // missing immediate. Per that same lesson, re-verified
+                // for THIS PR rather than assuming the 32-bit pair's gate
+                // "just covers" the 64-bit pair too: 0x57/0x5B were NOT
+                // already inside this branch before this PR (PR46 scoped
+                // it to literal `0x54`/`0x58`/`0x55`/`0x59`/`0x56`/`0x5A`
+                // only) -- widening it here is the actual fix, not a
+                // formality.
+                //
+                // Verified against BinarySIMD.md: "m:memarg,
+                // i:ImmLaneIdx16" for the 8-bit pair, "m:memarg,
+                // i:ImmLaneIdx8" for the 16-bit pair, "m:memarg,
+                // i:ImmLaneIdx4" for the 32-bit pair, "m:memarg,
+                // i:ImmLaneIdx2" for the 64-bit pair -- memarg FIRST,
+                // lane-index immediate SECOND in all four cases
+                // (confirmed against the pinned `simd_load8_lane.wast`/
+                // `simd_store8_lane.wast`/`simd_load16_lane.wast`/
+                // `simd_store16_lane.wast`/`simd_load32_lane.wast`/
+                // `simd_store32_lane.wast`/`simd_load64_lane.wast`/
+                // `simd_store64_lane.wast` corpus's own text-form order
+                // too: `(v128.loadN_lane offset=4 4 ...)`, `offset=`
+                // before the bare lane number). `ImmLaneIdx16`,
+                // `ImmLaneIdx8`, `ImmLaneIdx4`, and `ImmLaneIdx2` are all
+                // single RAW bytes per BinarySIMD.md ("These immediate
+                // operands are encoded as individual bytes") -- only the
+                // VALID range differs (0-15 vs 0-7 vs 0-3 vs 0-1, a
+                // validation-time concern, not a decode-time one), so the
+                // one-byte read below is unchanged from PR44/PR45/PR46.
+                let (mem_operand, mem_consumed) = decode_immediates(code, offset, &["memarg"]);
+                offset += mem_consumed;
+                let mem_offset = match mem_operand {
+                    DecodedOperand::MemArg { offset, .. } => offset,
+                    _ => 0,
+                };
+                let lane = if offset < code.len() { code[offset] } else { 0 };
+                offset += 1;
+                instructions.push(DecodedInstruction {
+                    opcode: 0xFD,
+                    operand: DecodedOperand::SimdMemLane { sub_opcode, offset: mem_offset, lane },
+                });
+            } else if sub_opcode == 0x00 || sub_opcode == 0x0B || (0x01..=0x0A).contains(&sub_opcode) || sub_opcode == 0x5C || sub_opcode == 0x5D {
                 // v128.load / v128.store (SIMD widen PR15), plus the
-                // v128.loadN_splat family (SIMD PR40, sub-opcodes
-                // 0x07-0x0A -- `v128.load8_splat`/`load16_splat`/
-                // `load32_splat`/`load64_splat`): all carry a standard
-                // `memarg` immediate (align, offset[, memidx]) -- reuses
-                // the SAME decoder every scalar `iNN.load`/`iNN.store`
-                // uses, so the multi-memory proposal's flags-bit `0x40`
-                // (if a producer ever combines it with SIMD) still
-                // consumes the right number of bytes and doesn't desync
-                // the rest of the function body. This first v128.load/
-                // store slice (and the load_splat family added in PR40)
-                // always executes against memory 0 (see the executor in
-                // `register_simd`) -- the smallest real slice per this
-                // PR's scope, not a decode bug; a later PR can widen it
-                // to real multi-memory support the same way WASM92 did
-                // for the scalar family.
+                // v128.load_extend family (SIMD PR42, sub-opcodes
+                // 0x01-0x06 -- `v128.load8x8_s`/`_u`/`load16x4_s`/`_u`/
+                // `load32x2_s`/`_u`), plus the v128.loadN_splat family
+                // (SIMD PR40, sub-opcodes 0x07-0x0A -- `v128.load8_splat`/
+                // `load16_splat`/`load32_splat`/`load64_splat`), plus the
+                // v128.loadN_zero family (SIMD PR41, sub-opcodes 0x5C/
+                // 0x5D -- `v128.load32_zero`/`load64_zero`): all carry a
+                // standard `memarg` immediate (align, offset[, memidx]) --
+                // reuses the SAME decoder every scalar `iNN.load`/
+                // `iNN.store` uses, so the multi-memory proposal's
+                // flags-bit `0x40` (if a producer ever combines it with
+                // SIMD) still consumes the right number of bytes and
+                // doesn't desync the rest of the function body. Per
+                // PR40's own lesson (task #229-231's decoder bug: a
+                // `load_splat` opcode with a non-zero `offset=` immediate
+                // would have silently mis-decoded if this gate hadn't
+                // been widened to include its sub-opcode range) -- every
+                // new memarg-carrying SIMD opcode MUST be added to this
+                // same gate, not just to the executor's `match` below, or
+                // its offset immediate gets silently dropped. This PR
+                // widens the gate's `0x07..=0x0A` range down to
+                // `0x01..=0x0A` to also cover the load_extend family's
+                // 0x01-0x06 run -- re-verified per PR41's own precedent
+                // of explicitly re-checking this gate for every new
+                // load-shaped SIMD opcode, not just widening it once and
+                // assuming it stays correct. This first v128.load/store
+                // slice (and the load_extend/load_splat/load_zero
+                // families added in PR40/PR41/PR42) always execute
+                // against memory 0 (see the executor in `register_simd`)
+                // -- the smallest real slice per this PR's scope, not a
+                // decode bug; a later PR can widen it to real
+                // multi-memory support the same way WASM92 did for the
+                // scalar family.
                 let (operand, consumed) = decode_immediates(code, offset, &["memarg"]);
                 offset += consumed;
                 let mem_offset = match operand {
@@ -2370,6 +2470,30 @@ fn convert_operand(
             Some(Operand::Index((0x0Dusize << 32) | idx))
         }
         DecodedOperand::Simd { sub_opcode, aux } => Some(Operand::Index(((*sub_opcode as usize) << 32) | (*aux as usize))),
+        // `v128.load8_lane`/`v128.store8_lane` (SIMD PR44): the offset
+        // (`u32`) and lane index (`u8`) together don't fit alongside the
+        // sub-opcode in one packed `usize` the way `Simd{sub_opcode,aux}`
+        // does for every OTHER memarg-carrying SIMD op -- widening THAT
+        // scheme would mean stealing bits from `aux`'s already-full
+        // 32-bit offset range, silently truncating a legal-but-large
+        // memarg offset. So, same precedent as `Shuffle`/`V128Const`
+        // just above (whose own 16-byte immediates don't fit either):
+        // reuse the untyped `simd_consts` const-pool (`Vec<[u8; 16]>`,
+        // no notion of which instruction owns a given slot) as a
+        // generic out-of-band side-table, packing `offset` (4 bytes,
+        // little-endian) into slot bytes 0-3 and `lane` into byte 4
+        // (bytes 5-15 unused) -- sound for the exact reason `Shuffle`'s
+        // own doc comment gives: no new field to thread through every
+        // call-frame save/restore site `simd_consts` is already wired
+        // through.
+        DecodedOperand::SimdMemLane { sub_opcode, offset, lane } => {
+            let idx = simd_consts.len();
+            let mut slot = [0u8; 16];
+            slot[0..4].copy_from_slice(&offset.to_le_bytes());
+            slot[4] = *lane;
+            simd_consts.push(slot);
+            Some(Operand::Index(((*sub_opcode as usize) << 32) | idx))
+        }
         DecodedOperand::BulkMemory { sub, data_idx, aux } => {
             Some(Operand::Index(((*sub as usize) << 32) | ((*aux as usize) << 40) | (*data_idx as usize)))
         }
@@ -4848,6 +4972,299 @@ fn register_simd(vm: &mut GenericVM) {
             return Ok(None);
         }
 
+        if sub_opcode == 0x54 || sub_opcode == 0x58 {
+            // v128.load8_lane (0x54) / v128.store8_lane (0x58) -- SIMD
+            // PR44, intercepted here (before the generic `SimdOpKind`
+            // lookup below) for the same reason `v128.const`/
+            // `i8x16.shuffle` are: their operand was packed via the
+            // `simd_consts` side-table trick (see `DecodedOperand::
+            // SimdMemLane`'s own doc comment in this crate), not the
+            // generic `Simd{sub_opcode,aux}` scheme every OTHER
+            // memarg-carrying SIMD op uses, so `aux` here is a
+            // `simd_consts` POOL INDEX, not a raw memarg offset --
+            // reading it back out needs this dedicated unpack, not the
+            // generic dispatch below.
+            let slot = *ctx
+                .simd_consts
+                .get(aux)
+                .ok_or_else(|| VMError::GenericError("v128.load8_lane/v128.store8_lane: const-pool index out of range".into()))?;
+            let mem_offset = u32::from_le_bytes(slot[0..4].try_into().unwrap());
+            let lane = slot[4] as usize;
+            // Defense in depth, same discipline as `i8x16.shuffle`
+            // above: `wasm-validator`'s `type_check.rs` (`SimdOpKind::
+            // Load8Lane | Store8Lane` arm) already rejects any lane
+            // index outside `0..=15` at validation time via
+            // `read_lane_index` -- a REAL bounds check, not just an
+            // immediate-presence check (the exact gap PR37's own
+            // `read_lane_index` retrofit closed for `extract_lane`/
+            // `replace_lane`). This runtime check exists only for a
+            // hand-built `DecodedInstruction` that skipped validation
+            // (this crate's own unit tests do exactly that), never for
+            // a module that actually passed `wasm-validator::validate`.
+            if lane >= 16 {
+                return Err(VMError::GenericError(format!(
+                    "v128.load8_lane/v128.store8_lane: lane index {lane} out of range (must be 0-15) -- this should have been rejected at validation time"
+                )));
+            }
+            if sub_opcode == 0x54 {
+                // v128.load8_lane: pop the existing v128 (pushed LAST in
+                // source order -- `(v128.load8_lane lane (addr) (x))` --
+                // so on TOP of the stack, popped FIRST, same convention
+                // `v128.store` uses for its own v128 operand), pop the
+                // i32 base address, bounds-checked 1-byte read from
+                // memory 0 at `base + memarg offset`, overwrite ONLY the
+                // selected lane of the popped v128 with that byte
+                // (every other lane passes through unchanged), push the
+                // result.
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let mut bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+                let addr = (base as u32 as usize).wrapping_add(mem_offset as usize);
+                let byte = get_memory_at(ctx, 0)?.load_i32_8u(addr).map_err(VMError::from)? as u8;
+                bytes[lane] = byte;
+                let new_handle = push_v128(ctx, bytes)?;
+                push_wasm(vm, WasmValue::V128(new_handle));
+            } else {
+                // v128.store8_lane: pop the v128 to read a lane FROM
+                // (same top-of-stack pop order as `Load8Lane`/`Store`
+                // above), pop the i32 base address, bounds-checked
+                // 1-byte write of the selected lane's byte to memory 0
+                // at `base + memarg offset`.
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+                let addr = (base as u32 as usize).wrapping_add(mem_offset as usize);
+                get_memory_at(ctx, 0)?.write_bytes(addr, &bytes[lane..lane + 1]).map_err(VMError::from)?;
+            }
+            vm.advance_pc();
+            return Ok(None);
+        }
+
+        if sub_opcode == 0x55 || sub_opcode == 0x59 {
+            // v128.load16_lane (0x55) / v128.store16_lane (0x59) -- SIMD
+            // PR45, one width up from `v128.load8_lane`/`v128.store8_lane`
+            // just above -- intercepted here for the identical reason:
+            // their operand was packed via the same `simd_consts`
+            // side-table trick (see `DecodedOperand::SimdMemLane`'s own
+            // doc comment in this crate), so `aux` here is a
+            // `simd_consts` POOL INDEX, not a raw memarg offset.
+            let slot = *ctx
+                .simd_consts
+                .get(aux)
+                .ok_or_else(|| VMError::GenericError("v128.load16_lane/v128.store16_lane: const-pool index out of range".into()))?;
+            let mem_offset = u32::from_le_bytes(slot[0..4].try_into().unwrap());
+            let lane = slot[4] as usize;
+            // Defense in depth, same discipline as `Load8Lane`/
+            // `Store8Lane` above: `wasm-validator`'s `type_check.rs`
+            // (`SimdOpKind::Load16Lane | Store16Lane` arm) already
+            // rejects any lane index outside `0..=7` at validation time
+            // via `read_lane_index` -- a REAL bounds check, not just an
+            // immediate-presence check. This runtime check exists only
+            // for a hand-built `DecodedInstruction` that skipped
+            // validation (this crate's own unit tests do exactly that),
+            // never for a module that actually passed `wasm-validator::
+            // validate`. NOTE the bound here is `>= 8`, NOT `>= 16` --
+            // an `i16x8` v128 holds 8 lanes, not `i8x16`'s 16; reusing
+            // `Load8Lane`'s `>= 16` check here would silently accept
+            // lane indices 8-15, which are out of range for this
+            // instruction's actual lane count.
+            if lane >= 8 {
+                return Err(VMError::GenericError(format!(
+                    "v128.load16_lane/v128.store16_lane: lane index {lane} out of range (must be 0-7) -- this should have been rejected at validation time"
+                )));
+            }
+            if sub_opcode == 0x55 {
+                // v128.load16_lane: pop the existing v128 (pushed LAST in
+                // source order -- `(v128.load16_lane lane (addr) (x))` --
+                // so on TOP of the stack, popped FIRST, same convention
+                // `Load8Lane` uses for its own v128 operand), pop the
+                // i32 base address, bounds-checked 2-byte (LE) read from
+                // memory 0 at `base + memarg offset`, overwrite ONLY the
+                // selected lane's 2 bytes of the popped v128 (every other
+                // lane passes through unchanged), push the result.
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let mut bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+                let addr = (base as u32 as usize).wrapping_add(mem_offset as usize);
+                let value = get_memory_at(ctx, 0)?.load_i32_16u(addr).map_err(VMError::from)? as u16;
+                bytes[lane * 2..lane * 2 + 2].copy_from_slice(&value.to_le_bytes());
+                let new_handle = push_v128(ctx, bytes)?;
+                push_wasm(vm, WasmValue::V128(new_handle));
+            } else {
+                // v128.store16_lane: pop the v128 to read a lane FROM
+                // (same top-of-stack pop order as `Load16Lane`/`Store`
+                // above), pop the i32 base address, bounds-checked
+                // 2-byte (LE) write of the selected lane's 2 bytes to
+                // memory 0 at `base + memarg offset`.
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+                let addr = (base as u32 as usize).wrapping_add(mem_offset as usize);
+                get_memory_at(ctx, 0)?.write_bytes(addr, &bytes[lane * 2..lane * 2 + 2]).map_err(VMError::from)?;
+            }
+            vm.advance_pc();
+            return Ok(None);
+        }
+
+        if sub_opcode == 0x56 || sub_opcode == 0x5A {
+            // v128.load32_lane (0x56) / v128.store32_lane (0x5A) -- SIMD
+            // PR46, one width up from `v128.load16_lane`/
+            // `v128.store16_lane` just above -- intercepted here for the
+            // identical reason: their operand was packed via the same
+            // `simd_consts` side-table trick (see `DecodedOperand::
+            // SimdMemLane`'s own doc comment in this crate), so `aux`
+            // here is a `simd_consts` POOL INDEX, not a raw memarg
+            // offset.
+            let slot = *ctx
+                .simd_consts
+                .get(aux)
+                .ok_or_else(|| VMError::GenericError("v128.load32_lane/v128.store32_lane: const-pool index out of range".into()))?;
+            let mem_offset = u32::from_le_bytes(slot[0..4].try_into().unwrap());
+            let lane = slot[4] as usize;
+            // Defense in depth, same discipline as `Load16Lane`/
+            // `Store16Lane` above: `wasm-validator`'s `type_check.rs`
+            // (`SimdOpKind::Load32Lane | Store32Lane` arm) already
+            // rejects any lane index outside `0..=3` at validation time
+            // via `read_lane_index` -- a REAL bounds check, not just an
+            // immediate-presence check. This runtime check exists only
+            // for a hand-built `DecodedInstruction` that skipped
+            // validation (this crate's own unit tests do exactly that),
+            // never for a module that actually passed `wasm-validator::
+            // validate`. NOTE the bound here is `>= 4`, NOT `>= 8` --
+            // an `i32x4` v128 holds 4 lanes, not `i16x8`'s 8; reusing
+            // `Load16Lane`'s `>= 8` check here would silently accept
+            // lane indices 4-7, which are out of range for this
+            // instruction's actual lane count.
+            if lane >= 4 {
+                return Err(VMError::GenericError(format!(
+                    "v128.load32_lane/v128.store32_lane: lane index {lane} out of range (must be 0-3) -- this should have been rejected at validation time"
+                )));
+            }
+            if sub_opcode == 0x56 {
+                // v128.load32_lane: pop the existing v128 (pushed LAST in
+                // source order -- `(v128.load32_lane lane (addr) (x))` --
+                // so on TOP of the stack, popped FIRST, same convention
+                // `Load16Lane` uses for its own v128 operand), pop the
+                // i32 base address, bounds-checked 4-byte (LE) read from
+                // memory 0 at `base + memarg offset`, overwrite ONLY the
+                // selected lane's 4 bytes of the popped v128 (every other
+                // lane passes through unchanged), push the result.
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let mut bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+                let addr = (base as u32 as usize).wrapping_add(mem_offset as usize);
+                let value = get_memory_at(ctx, 0)?.load_i32(addr).map_err(VMError::from)? as u32;
+                bytes[lane * 4..lane * 4 + 4].copy_from_slice(&value.to_le_bytes());
+                let new_handle = push_v128(ctx, bytes)?;
+                push_wasm(vm, WasmValue::V128(new_handle));
+            } else {
+                // v128.store32_lane: pop the v128 to read a lane FROM
+                // (same top-of-stack pop order as `Load32Lane`/`Store`
+                // above), pop the i32 base address, bounds-checked
+                // 4-byte (LE) write of the selected lane's 4 bytes to
+                // memory 0 at `base + memarg offset`.
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+                let addr = (base as u32 as usize).wrapping_add(mem_offset as usize);
+                get_memory_at(ctx, 0)?.write_bytes(addr, &bytes[lane * 4..lane * 4 + 4]).map_err(VMError::from)?;
+            }
+            vm.advance_pc();
+            return Ok(None);
+        }
+
+        if sub_opcode == 0x57 || sub_opcode == 0x5B {
+            // v128.load64_lane (0x57) / v128.store64_lane (0x5B) -- SIMD
+            // PR47, one width up from `v128.load32_lane`/
+            // `v128.store32_lane` just above, and the fourth and FINAL
+            // bite of the lane-load/store family -- intercepted here for
+            // the identical reason: their operand was packed via the
+            // same `simd_consts` side-table trick (see `DecodedOperand::
+            // SimdMemLane`'s own doc comment in this crate), so `aux`
+            // here is a `simd_consts` POOL INDEX, not a raw memarg
+            // offset.
+            let slot = *ctx
+                .simd_consts
+                .get(aux)
+                .ok_or_else(|| VMError::GenericError("v128.load64_lane/v128.store64_lane: const-pool index out of range".into()))?;
+            let mem_offset = u32::from_le_bytes(slot[0..4].try_into().unwrap());
+            let lane = slot[4] as usize;
+            // Defense in depth, same discipline as `Load32Lane`/
+            // `Store32Lane` above: `wasm-validator`'s `type_check.rs`
+            // (`SimdOpKind::Load64Lane | Store64Lane` arm) already
+            // rejects any lane index outside `0..=1` at validation time
+            // via `read_lane_index` -- a REAL bounds check, not just an
+            // immediate-presence check. This runtime check exists only
+            // for a hand-built `DecodedInstruction` that skipped
+            // validation (this crate's own unit tests do exactly that),
+            // never for a module that actually passed `wasm-validator::
+            // validate`. NOTE the bound here is `>= 2`, NOT `>= 4` --
+            // an `i64x2` v128 holds only 2 lanes, not `i32x4`'s 4;
+            // reusing `Load32Lane`'s `>= 4` check here would silently
+            // accept lane indices 2-3, which are out of range for this
+            // instruction's actual lane count.
+            if lane >= 2 {
+                return Err(VMError::GenericError(format!(
+                    "v128.load64_lane/v128.store64_lane: lane index {lane} out of range (must be 0-1) -- this should have been rejected at validation time"
+                )));
+            }
+            if sub_opcode == 0x57 {
+                // v128.load64_lane: pop the existing v128 (pushed LAST in
+                // source order -- `(v128.load64_lane lane (addr) (x))` --
+                // so on TOP of the stack, popped FIRST, same convention
+                // `Load32Lane` uses for its own v128 operand), pop the
+                // i32 base address, bounds-checked 8-byte (LE) read from
+                // memory 0 at `base + memarg offset`, overwrite ONLY the
+                // selected lane's 8 bytes of the popped v128 (the other
+                // lane passes through unchanged), push the result.
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let mut bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+                let addr = (base as u32 as usize).wrapping_add(mem_offset as usize);
+                let value = get_memory_at(ctx, 0)?.load_i64(addr).map_err(VMError::from)? as u64;
+                bytes[lane * 8..lane * 8 + 8].copy_from_slice(&value.to_le_bytes());
+                let new_handle = push_v128(ctx, bytes)?;
+                push_wasm(vm, WasmValue::V128(new_handle));
+            } else {
+                // v128.store64_lane: pop the v128 to read a lane FROM
+                // (same top-of-stack pop order as `Load64Lane`/`Store`
+                // above), pop the i32 base address, bounds-checked
+                // 8-byte (LE) write of the selected lane's 8 bytes to
+                // memory 0 at `base + memarg offset`.
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+                let addr = (base as u32 as usize).wrapping_add(mem_offset as usize);
+                get_memory_at(ctx, 0)?.write_bytes(addr, &bytes[lane * 8..lane * 8 + 8]).map_err(VMError::from)?;
+            }
+            vm.advance_pc();
+            return Ok(None);
+        }
+
         let op = wasm_opcodes::get_simd_op(sub_opcode)
             .ok_or_else(|| VMError::GenericError(format!("unknown SIMD sub-opcode {sub_opcode:#x}")))?;
 
@@ -4855,6 +5272,18 @@ fn register_simd(vm: &mut GenericVM) {
         match op.kind {
             SimdOpKind::Const => unreachable!("v128.const handled above, before this lookup"),
             SimdOpKind::Shuffle => unreachable!("i8x16.shuffle handled above, before this lookup"),
+            SimdOpKind::Load8Lane | SimdOpKind::Store8Lane => {
+                unreachable!("v128.load8_lane/v128.store8_lane handled above, before this lookup")
+            }
+            SimdOpKind::Load16Lane | SimdOpKind::Store16Lane => {
+                unreachable!("v128.load16_lane/v128.store16_lane handled above, before this lookup")
+            }
+            SimdOpKind::Load32Lane | SimdOpKind::Store32Lane => {
+                unreachable!("v128.load32_lane/v128.store32_lane handled above, before this lookup")
+            }
+            SimdOpKind::Load64Lane | SimdOpKind::Store64Lane => {
+                unreachable!("v128.load64_lane/v128.store64_lane handled above, before this lookup")
+            }
             SimdOpKind::ExtractLane => {
                 // i32x4.extract_lane: pop a v128, read the `aux`-selected
                 // lane back out as a plain i32 -- the only opcode in this
@@ -6326,6 +6755,146 @@ fn register_simd(vm: &mut GenericVM) {
                 let handle = push_v128(ctx, bytes)?;
                 push_wasm(vm, WasmValue::V128(handle));
             }
+            SimdOpKind::Load32Zero => {
+                // v128.load32_zero (SIMD PR41): pop the i32 base address,
+                // add this instruction's own memarg offset (packed into
+                // `aux`, same convention as `Load`/`Load8Splat` above),
+                // bounds-checked 4-byte read from memory 0 via the
+                // existing full-width `load_i32` loader, place those 4
+                // bytes (little-endian) in the LOW 32 bits of a new v128
+                // and zero-fill the remaining 12 bytes -- same "load then
+                // fill a v128" shape as `Load32Splat`, but zeroed instead
+                // of repeated.
+                let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+                let addr = (base as u32 as usize).wrapping_add(aux);
+                let value = get_memory_at(ctx, 0)?.load_i32(addr).map_err(VMError::from)?;
+                let mut bytes = [0u8; 16];
+                bytes[0..4].copy_from_slice(&value.to_le_bytes());
+                let handle = push_v128(ctx, bytes)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::Load64Zero => {
+                // v128.load64_zero (SIMD PR41): same "load then zero-fill"
+                // shape as `Load32Zero`, but reads 8 raw bytes
+                // (little-endian) via the existing full-width `load_i64`
+                // loader and places them in the LOW 64 bits of the
+                // result, zeroing the remaining 8 bytes (the upper lane).
+                let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+                let addr = (base as u32 as usize).wrapping_add(aux);
+                let value = get_memory_at(ctx, 0)?.load_i64(addr).map_err(VMError::from)?;
+                let mut bytes = [0u8; 16];
+                bytes[0..8].copy_from_slice(&value.to_le_bytes());
+                let handle = push_v128(ctx, bytes)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::Load8x8S => {
+                // v128.load8x8_s (SIMD PR42): pop the i32 base address,
+                // add this instruction's own memarg offset (packed into
+                // `aux`, same convention as `Load`/`Load8Splat` above),
+                // then read 8 raw bytes starting at that address -- each
+                // byte individually bounds-checked via the scalar
+                // `load_i32_8s` narrow loader (which already SIGN-extends
+                // to i32; only the low 16 bits are kept, identical to a
+                // direct i16 sign-extension) and packed little-endian
+                // into its own lane of a new v128 (`i16x8`). The FIRST
+                // opcode that widens EACH loaded byte independently
+                // rather than broadcasting one value (`Load8Splat`) or
+                // zero-filling the unused lanes (`Load32Zero`).
+                let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+                let addr = (base as u32 as usize).wrapping_add(aux);
+                let mut bytes = [0u8; 16];
+                for i in 0..8usize {
+                    let lane_addr = addr.wrapping_add(i);
+                    let value = get_memory_at(ctx, 0)?.load_i32_8s(lane_addr).map_err(VMError::from)? as i16;
+                    bytes[i * 2..i * 2 + 2].copy_from_slice(&value.to_le_bytes());
+                }
+                let handle = push_v128(ctx, bytes)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::Load8x8U => {
+                // v128.load8x8_u (SIMD PR42): same "load 8 bytes, widen
+                // each lane independently" shape as `Load8x8S`, but
+                // ZERO-extends each byte to i16 via `load_i32_8u` instead
+                // of sign-extending -- a byte with its high bit set (e.g.
+                // 0x80) becomes lane value 0x0080 (128), not 0xFF80
+                // (-128).
+                let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+                let addr = (base as u32 as usize).wrapping_add(aux);
+                let mut bytes = [0u8; 16];
+                for i in 0..8usize {
+                    let lane_addr = addr.wrapping_add(i);
+                    let value = get_memory_at(ctx, 0)?.load_i32_8u(lane_addr).map_err(VMError::from)? as u16;
+                    bytes[i * 2..i * 2 + 2].copy_from_slice(&value.to_le_bytes());
+                }
+                let handle = push_v128(ctx, bytes)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::Load16x4S => {
+                // v128.load16x4_s (SIMD PR42): same "load then widen each
+                // lane" shape as `Load8x8S`, but reads 4 raw 16-bit
+                // little-endian values (8 bytes total, 2 bytes per lane)
+                // via the scalar `load_i32_16s` narrow loader and
+                // SIGN-extends each to i32, producing an `i32x4` result.
+                let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+                let addr = (base as u32 as usize).wrapping_add(aux);
+                let mut bytes = [0u8; 16];
+                for i in 0..4usize {
+                    let lane_addr = addr.wrapping_add(i * 2);
+                    let value = get_memory_at(ctx, 0)?.load_i32_16s(lane_addr).map_err(VMError::from)?;
+                    bytes[i * 4..i * 4 + 4].copy_from_slice(&value.to_le_bytes());
+                }
+                let handle = push_v128(ctx, bytes)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::Load16x4U => {
+                // v128.load16x4_u (SIMD PR42): same shape as
+                // `Load16x4S`, but ZERO-extends each 16-bit lane to i32
+                // via `load_i32_16u` instead of sign-extending.
+                let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+                let addr = (base as u32 as usize).wrapping_add(aux);
+                let mut bytes = [0u8; 16];
+                for i in 0..4usize {
+                    let lane_addr = addr.wrapping_add(i * 2);
+                    let value = get_memory_at(ctx, 0)?.load_i32_16u(lane_addr).map_err(VMError::from)?;
+                    bytes[i * 4..i * 4 + 4].copy_from_slice(&value.to_le_bytes());
+                }
+                let handle = push_v128(ctx, bytes)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::Load32x2S => {
+                // v128.load32x2_s (SIMD PR42): same "load then widen each
+                // lane" shape as `Load8x8S`, but reads 2 raw 32-bit
+                // little-endian values (8 bytes total, 4 bytes per lane)
+                // via the scalar `load_i64_32s` narrow loader and
+                // SIGN-extends each to i64, producing an `i64x2` result.
+                let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+                let addr = (base as u32 as usize).wrapping_add(aux);
+                let mut bytes = [0u8; 16];
+                for i in 0..2usize {
+                    let lane_addr = addr.wrapping_add(i * 4);
+                    let value = get_memory_at(ctx, 0)?.load_i64_32s(lane_addr).map_err(VMError::from)?;
+                    bytes[i * 8..i * 8 + 8].copy_from_slice(&value.to_le_bytes());
+                }
+                let handle = push_v128(ctx, bytes)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::Load32x2U => {
+                // v128.load32x2_u (SIMD PR42): same shape as
+                // `Load32x2S`, but ZERO-extends each 32-bit lane to i64
+                // via `load_i64_32u` instead of sign-extending. Closes
+                // the `v128.load_extend` family opened by `Load8x8S`
+                // above.
+                let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+                let addr = (base as u32 as usize).wrapping_add(aux);
+                let mut bytes = [0u8; 16];
+                for i in 0..2usize {
+                    let lane_addr = addr.wrapping_add(i * 4);
+                    let value = get_memory_at(ctx, 0)?.load_i64_32u(lane_addr).map_err(VMError::from)?;
+                    bytes[i * 8..i * 8 + 8].copy_from_slice(&value.to_le_bytes());
+                }
+                let handle = push_v128(ctx, bytes)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
             SimdOpKind::SplatI8x16 => {
                 // i8x16.splat (SIMD widen PR16): pop one i32, broadcast
                 // its LOW byte into all 16 lanes -- same shape as the
@@ -6402,6 +6971,44 @@ fn register_simd(vm: &mut GenericVM) {
                 // below is what keeps the `a[idx]` index into `a` (also a
                 // fixed 16-byte array) from ever panicking on an
                 // adversarial/malformed index >= 16.
+                let s_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let a_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let s = *ctx
+                    .v128_heap
+                    .get(s_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let a = *ctx
+                    .v128_heap
+                    .get(a_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let mut result = [0u8; 16];
+                for i in 0..16 {
+                    let idx = s[i];
+                    result[i] = if idx < 16 { a[idx as usize] } else { 0 };
+                }
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::RelaxedSwizzle => {
+                // i8x16.relaxed_swizzle (relaxed SIMD epic PR1 -- see
+                // `code/specs/W19-wasm-relaxed-simd-first-slice.md`): the
+                // relaxed-simd spec deliberately leaves out-of-range
+                // index behavior implementation-defined -- an engine MAY
+                // clamp to `0` (this repo's plain `Swizzle` behavior,
+                // above) OR wrap the index modulo 16 for `s[i] < 128`.
+                // Verified BY HAND against the real upstream
+                // `i8x16_relaxed_swizzle.wast` corpus's own `either`
+                // expected-value pairs (not assumed from spec prose
+                // alone): this repo's existing clamp-to-zero behavior is
+                // a literal member of every one of that file's `either`
+                // pairs, so this arm is intentionally a byte-for-byte
+                // copy of `Swizzle`'s body just above -- same shape, same
+                // deterministic choice, no new numeric logic needed for
+                // this specific opcode. Own arm rather than folding into
+                // `Swizzle`'s `|`-pattern above, matching this match's
+                // existing convention of one arm per `SimdOpKind` even
+                // when two kinds share identical bodies (e.g.
+                // `ExtractLaneI8x16S`/`_U` below don't merge either).
                 let s_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
                 let a_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
                 let s = *ctx
@@ -12918,6 +13525,133 @@ mod tests {
         );
     }
 
+    /// `v128.load32_zero` (SIMD PR41): stores a 4-byte pattern via a
+    /// scalar `i32.store`, then reads it back into the LOW 32 bits of the
+    /// result with the remaining 12 bytes ZEROED (not repeated, unlike
+    /// `v128.load32_splat`).
+    #[test]
+    fn v128_load32_zero_places_four_bytes_in_the_low_lane_and_zeroes_the_rest() {
+        let addr: i32 = 0;
+        let mut code = vec![0x41]; // i32.const (addr, for the scalar store)
+        code.extend(wasm_leb128::encode_signed(addr as i64));
+        code.push(0x41); // i32.const (value)
+        code.extend(wasm_leb128::encode_signed(0x0403_0201_i64)); // LE bytes: 01 02 03 04
+        code.push(0x36); // i32.store
+        code.extend(wasm_leb128::encode_unsigned(0)); // align
+        code.extend(wasm_leb128::encode_unsigned(0)); // offset
+        code.push(0x41); // i32.const (addr, for the zero load)
+        code.extend(wasm_leb128::encode_signed(addr as i64));
+        code.push(0xFD);
+        code.push(0x5C); // v128.load32_zero
+        code.extend(wasm_leb128::encode_unsigned(0)); // align
+        code.extend(wasm_leb128::encode_unsigned(0)); // offset
+        code.push(0x0B); // end
+
+        let mut engine = simd_engine_returning_v128_with_memory(code);
+        let (_, v128_results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let mut expected = [0u8; 16];
+        expected[0..4].copy_from_slice(&[1, 2, 3, 4]);
+        assert_eq!(
+            v128_results[0],
+            Some(V128Bytes(expected)),
+            "v128.load32_zero must place the 4 bytes (LE) at the address in the low lane and zero the rest"
+        );
+    }
+
+    /// `v128.load64_zero` (SIMD PR41): stores a full 8-byte pattern via a
+    /// scalar `i64.store`, then reads it back into the LOW 64 bits of the
+    /// result with the remaining 8 bytes (the upper lane) ZEROED.
+    #[test]
+    fn v128_load64_zero_places_eight_bytes_in_the_low_lane_and_zeroes_the_rest() {
+        let addr: i32 = 0;
+        let mut code = vec![0x41]; // i32.const (addr, for the scalar store)
+        code.extend(wasm_leb128::encode_signed(addr as i64));
+        code.push(0x42); // i64.const (value)
+        code.extend(wasm_leb128::encode_signed(0x0807_0605_0403_0201_i64)); // LE bytes: 01..08
+        code.push(0x37); // i64.store
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.push(0x41);
+        code.extend(wasm_leb128::encode_signed(addr as i64));
+        code.push(0xFD);
+        code.push(0x5D); // v128.load64_zero
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.push(0x0B);
+
+        let mut engine = simd_engine_returning_v128_with_memory(code);
+        let (_, v128_results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let mut expected = [0u8; 16];
+        expected[0..8].copy_from_slice(&[1, 2, 3, 4, 5, 6, 7, 8]);
+        assert_eq!(
+            v128_results[0],
+            Some(V128Bytes(expected)),
+            "v128.load64_zero must place the 8 bytes (LE) at the address in the low lane and zero the upper lane"
+        );
+    }
+
+    /// The `v128.loadN_zero` family's memarg OFFSET immediate must be
+    /// honored, not just the base address on the stack -- same decoder-
+    /// gate regression discipline PR40 established for `load_splat`: the
+    /// SIMD decoder's memarg-detection gate had to be widened to also
+    /// cover `0x5C`/`0x5D`, or every `load_zero` with a non-zero
+    /// `offset=` immediate would silently read from the WRONG address
+    /// (falling through to the "no immediate" decode arm, which leaves
+    /// `aux` at 0).
+    #[test]
+    fn v128_load32_zero_honors_a_nonzero_memarg_offset() {
+        let addr: i32 = 0;
+        let mut code = vec![0x41]; // i32.const (addr, for the scalar store)
+        code.extend(wasm_leb128::encode_signed(addr as i64));
+        code.push(0x41);
+        code.extend(wasm_leb128::encode_signed(0x0403_0201_i64)); // LE bytes: 01 02 03 04
+        code.push(0x36); // i32.store
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.push(0x41); // i32.const 0 (base address for the zero load)
+        code.extend(wasm_leb128::encode_signed(0i64));
+        code.push(0xFD);
+        code.push(0x5C); // v128.load32_zero
+        code.extend(wasm_leb128::encode_unsigned(0)); // align
+        code.extend(wasm_leb128::encode_unsigned(1)); // offset=1 -> reads bytes 1..5 (02 03 04 00)
+        code.push(0x0B);
+
+        let mut engine = simd_engine_returning_v128_with_memory(code);
+        let (_, v128_results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let mut expected = [0u8; 16];
+        expected[0..4].copy_from_slice(&[2, 3, 4, 0]);
+        assert_eq!(
+            v128_results[0],
+            Some(V128Bytes(expected)),
+            "v128.load32_zero must add the memarg offset to the base address before reading"
+        );
+    }
+
+    /// `v128.loadN_zero` at an address where `address + width` overruns
+    /// the end of memory must trap cleanly, not panic -- same "verify
+    /// bounds guards adversarially" discipline as the `load_splat` family
+    /// above, checked for both widths.
+    #[test]
+    fn v128_load_zero_family_past_the_end_of_memory_traps_cleanly_not_panic() {
+        // 1-page (65536-byte) memory. For each width, pick an address such
+        // that `address + width` overruns it by exactly 1 byte.
+        for (sub_opcode, width) in [(0x5Cu8, 4i32), (0x5D, 8)] {
+            let addr: i32 = 65536 - width + 1;
+            let mut code = vec![0x41];
+            code.extend(wasm_leb128::encode_signed(addr as i64));
+            code.push(0xFD);
+            code.push(sub_opcode);
+            code.extend(wasm_leb128::encode_unsigned(0));
+            code.extend(wasm_leb128::encode_unsigned(0));
+            code.push(0x0B);
+            let mut engine = simd_engine_returning_v128_with_memory(code);
+            assert!(
+                engine.call_function(0, &[]).is_err(),
+                "sub-opcode {sub_opcode:#04x} (width {width}) must trap when address+width overruns memory, not panic"
+            );
+        }
+    }
+
     /// The `v128.loadN_splat` family's memarg OFFSET immediate must be
     /// honored, not just the base address on the stack -- this is the
     /// decoder-level regression this PR's own fix targets: the SIMD
@@ -12976,6 +13710,1159 @@ mod tests {
                 engine.call_function(0, &[]).is_err(),
                 "sub-opcode {sub_opcode:#04x} (width {width}) must trap when address+width overruns memory, not panic"
             );
+        }
+    }
+
+    /// Shared setup for the `v128.load_extend` family's tests below: write
+    /// 8 raw bytes to memory via two `i32.store`s (LE), where the LAST
+    /// byte of each narrow lane-width group has its high bit set (0x80)
+    /// -- this is the correctness-critical case per this PR's own scope
+    /// note: a byte/halfword/word with the high bit set must SIGN-extend
+    /// to a NEGATIVE lane for the `_s` variants but a small POSITIVE lane
+    /// for the `_u` variants, so every test below exercises that bit
+    /// directly rather than only using "safe" all-positive bytes.
+    fn write_load_extend_test_bytes(addr: i32) -> Vec<u8> {
+        let mut code = vec![0x41]; // i32.const (addr)
+        code.extend(wasm_leb128::encode_signed(addr as i64));
+        code.push(0x41); // i32.const (low 4 bytes: 01 02 03 04 LE)
+        code.extend(wasm_leb128::encode_signed(0x0403_0201_i64));
+        code.push(0x36); // i32.store
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.push(0x41); // i32.const (addr + 4)
+        code.extend(wasm_leb128::encode_signed((addr + 4) as i64));
+        code.push(0x41); // i32.const (high 4 bytes: 05 06 07 80 LE)
+        code.extend(wasm_leb128::encode_signed(0x8007_0605_u32 as i32 as i64));
+        code.push(0x36); // i32.store
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code
+    }
+
+    /// `v128.load8x8_s` (SIMD PR42): the 8 raw bytes `01 02 03 04 05 06 07
+    /// 80` must become 8 INDIVIDUALLY sign-extended `i16` lanes -- the
+    /// last lane (`0x80`) has its high bit set, so it must sign-extend to
+    /// `0xFF80` (-128), not zero-extend to `0x0080` (128). This is the
+    /// correctness-critical distinction this whole family exists to test.
+    #[test]
+    fn v128_load8x8_s_sign_extends_each_byte_into_its_own_i16_lane() {
+        let addr: i32 = 0;
+        let mut code = write_load_extend_test_bytes(addr);
+        code.push(0x41); // i32.const (addr, for the load_extend)
+        code.extend(wasm_leb128::encode_signed(addr as i64));
+        code.push(0xFD);
+        code.push(0x01); // v128.load8x8_s
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.push(0x0B);
+
+        let mut engine = simd_engine_returning_v128_with_memory(code);
+        let (_, v128_results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let raw: [u8; 8] = [1, 2, 3, 4, 5, 6, 7, 0x80];
+        let mut expected = [0u8; 16];
+        for (i, &byte) in raw.iter().enumerate() {
+            let lane = byte as i8 as i16;
+            expected[i * 2..i * 2 + 2].copy_from_slice(&lane.to_le_bytes());
+        }
+        assert_eq!(
+            v128_results[0],
+            Some(V128Bytes(expected)),
+            "v128.load8x8_s must SIGN-extend each of the 8 loaded bytes into its own i16 lane"
+        );
+        // The last lane specifically must be negative (0xFF80), not the
+        // zero-extended 0x0080 -- the exact bug a sign/zero mixup would
+        // produce.
+        assert_eq!(&expected[14..16], &(-128i16).to_le_bytes(), "high-bit byte 0x80 must sign-extend to -128, not 128");
+    }
+
+    /// `v128.load8x8_u` (SIMD PR42): same shape as `Load8x8S`, but the
+    /// last lane (`0x80`) must ZERO-extend to `0x0080` (128), not
+    /// `0xFF80` (-128) -- the exact opposite of the `_s` variant's
+    /// expectation, verified explicitly here.
+    #[test]
+    fn v128_load8x8_u_zero_extends_each_byte_into_its_own_i16_lane() {
+        let addr: i32 = 0;
+        let mut code = write_load_extend_test_bytes(addr);
+        code.push(0x41);
+        code.extend(wasm_leb128::encode_signed(addr as i64));
+        code.push(0xFD);
+        code.push(0x02); // v128.load8x8_u
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.push(0x0B);
+
+        let mut engine = simd_engine_returning_v128_with_memory(code);
+        let (_, v128_results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let raw: [u8; 8] = [1, 2, 3, 4, 5, 6, 7, 0x80];
+        let mut expected = [0u8; 16];
+        for (i, &byte) in raw.iter().enumerate() {
+            let lane = byte as u16;
+            expected[i * 2..i * 2 + 2].copy_from_slice(&lane.to_le_bytes());
+        }
+        assert_eq!(
+            v128_results[0],
+            Some(V128Bytes(expected)),
+            "v128.load8x8_u must ZERO-extend each of the 8 loaded bytes into its own i16 lane"
+        );
+        assert_eq!(&expected[14..16], &128u16.to_le_bytes(), "high-bit byte 0x80 must zero-extend to 128, not -128");
+    }
+
+    /// `v128.load16x4_s` (SIMD PR42): reads 4 little-endian 16-bit
+    /// halfwords from the same 8 raw bytes and SIGN-extends each to
+    /// `i32` -- the last halfword (`0x8007`, bytes `07 80` LE) has its
+    /// high bit set, so it must sign-extend to a negative `i32` lane.
+    #[test]
+    fn v128_load16x4_s_sign_extends_each_halfword_into_its_own_i32_lane() {
+        let addr: i32 = 0;
+        let mut code = write_load_extend_test_bytes(addr);
+        code.push(0x41);
+        code.extend(wasm_leb128::encode_signed(addr as i64));
+        code.push(0xFD);
+        code.push(0x03); // v128.load16x4_s
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.push(0x0B);
+
+        let mut engine = simd_engine_returning_v128_with_memory(code);
+        let (_, v128_results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let raw: [u8; 8] = [1, 2, 3, 4, 5, 6, 7, 0x80];
+        let mut expected = [0u8; 16];
+        for i in 0..4usize {
+            let halfword = i16::from_le_bytes([raw[i * 2], raw[i * 2 + 1]]);
+            let lane = halfword as i32;
+            expected[i * 4..i * 4 + 4].copy_from_slice(&lane.to_le_bytes());
+        }
+        assert_eq!(
+            v128_results[0],
+            Some(V128Bytes(expected)),
+            "v128.load16x4_s must SIGN-extend each of the 4 loaded halfwords into its own i32 lane"
+        );
+        assert!(i32::from_le_bytes(expected[12..16].try_into().unwrap()) < 0, "halfword 0x8007 must sign-extend to a negative i32 lane");
+    }
+
+    /// `v128.load16x4_u` (SIMD PR42): same shape as `Load16x4S`, but the
+    /// last halfword (`0x8007`) must ZERO-extend to a positive `i32`
+    /// lane.
+    #[test]
+    fn v128_load16x4_u_zero_extends_each_halfword_into_its_own_i32_lane() {
+        let addr: i32 = 0;
+        let mut code = write_load_extend_test_bytes(addr);
+        code.push(0x41);
+        code.extend(wasm_leb128::encode_signed(addr as i64));
+        code.push(0xFD);
+        code.push(0x04); // v128.load16x4_u
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.push(0x0B);
+
+        let mut engine = simd_engine_returning_v128_with_memory(code);
+        let (_, v128_results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let raw: [u8; 8] = [1, 2, 3, 4, 5, 6, 7, 0x80];
+        let mut expected = [0u8; 16];
+        for i in 0..4usize {
+            let halfword = u16::from_le_bytes([raw[i * 2], raw[i * 2 + 1]]);
+            let lane = halfword as u32;
+            expected[i * 4..i * 4 + 4].copy_from_slice(&lane.to_le_bytes());
+        }
+        assert_eq!(
+            v128_results[0],
+            Some(V128Bytes(expected)),
+            "v128.load16x4_u must ZERO-extend each of the 4 loaded halfwords into its own i32 lane"
+        );
+        assert!(i32::from_le_bytes(expected[12..16].try_into().unwrap()) > 0, "halfword 0x8007 must zero-extend to a positive i32 lane");
+    }
+
+    /// `v128.load32x2_s` (SIMD PR42): reads 2 little-endian 32-bit words
+    /// from the same 8 raw bytes and SIGN-extends each to `i64` -- the
+    /// last word (`0x80070605`, bytes `05 06 07 80` LE) has its high bit
+    /// set, so it must sign-extend to a negative `i64` lane.
+    #[test]
+    fn v128_load32x2_s_sign_extends_each_word_into_its_own_i64_lane() {
+        let addr: i32 = 0;
+        let mut code = write_load_extend_test_bytes(addr);
+        code.push(0x41);
+        code.extend(wasm_leb128::encode_signed(addr as i64));
+        code.push(0xFD);
+        code.push(0x05); // v128.load32x2_s
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.push(0x0B);
+
+        let mut engine = simd_engine_returning_v128_with_memory(code);
+        let (_, v128_results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let raw: [u8; 8] = [1, 2, 3, 4, 5, 6, 7, 0x80];
+        let mut expected = [0u8; 16];
+        for i in 0..2usize {
+            let word = i32::from_le_bytes([raw[i * 4], raw[i * 4 + 1], raw[i * 4 + 2], raw[i * 4 + 3]]);
+            let lane = word as i64;
+            expected[i * 8..i * 8 + 8].copy_from_slice(&lane.to_le_bytes());
+        }
+        assert_eq!(
+            v128_results[0],
+            Some(V128Bytes(expected)),
+            "v128.load32x2_s must SIGN-extend each of the 2 loaded words into its own i64 lane"
+        );
+        assert!(i64::from_le_bytes(expected[8..16].try_into().unwrap()) < 0, "word 0x80070605 must sign-extend to a negative i64 lane");
+    }
+
+    /// `v128.load32x2_u` (SIMD PR42): same shape as `Load32x2S`, but the
+    /// last word (`0x80070605`) must ZERO-extend to a positive `i64`
+    /// lane.
+    #[test]
+    fn v128_load32x2_u_zero_extends_each_word_into_its_own_i64_lane() {
+        let addr: i32 = 0;
+        let mut code = write_load_extend_test_bytes(addr);
+        code.push(0x41);
+        code.extend(wasm_leb128::encode_signed(addr as i64));
+        code.push(0xFD);
+        code.push(0x06); // v128.load32x2_u
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.push(0x0B);
+
+        let mut engine = simd_engine_returning_v128_with_memory(code);
+        let (_, v128_results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let raw: [u8; 8] = [1, 2, 3, 4, 5, 6, 7, 0x80];
+        let mut expected = [0u8; 16];
+        for i in 0..2usize {
+            let word = u32::from_le_bytes([raw[i * 4], raw[i * 4 + 1], raw[i * 4 + 2], raw[i * 4 + 3]]);
+            let lane = word as u64;
+            expected[i * 8..i * 8 + 8].copy_from_slice(&lane.to_le_bytes());
+        }
+        assert_eq!(
+            v128_results[0],
+            Some(V128Bytes(expected)),
+            "v128.load32x2_u must ZERO-extend each of the 2 loaded words into its own i64 lane"
+        );
+        assert!(i64::from_le_bytes(expected[8..16].try_into().unwrap()) > 0, "word 0x80070605 must zero-extend to a positive i64 lane");
+    }
+
+    /// The `v128.load_extend` family's memarg OFFSET immediate must be
+    /// honored, not just the base address on the stack -- same decoder-
+    /// gate regression discipline PR40/PR41 established: the SIMD
+    /// decoder's memarg-detection gate had to be widened to also cover
+    /// `0x01..=0x06`, or every `load_extend` op with a non-zero `offset=`
+    /// immediate would silently read from the WRONG address (falling
+    /// through to the "no immediate" decode arm, which leaves `aux` at
+    /// 0).
+    #[test]
+    fn v128_load8x8_s_honors_a_nonzero_memarg_offset() {
+        let addr: i32 = 0;
+        let mut code = write_load_extend_test_bytes(addr);
+        code.push(0x41); // i32.const 0 (base address for the load_extend)
+        code.extend(wasm_leb128::encode_signed(0i64));
+        code.push(0xFD);
+        code.push(0x01); // v128.load8x8_s
+        code.extend(wasm_leb128::encode_unsigned(0)); // align
+        code.extend(wasm_leb128::encode_unsigned(1)); // offset=1 -> reads bytes 1..9
+        code.push(0x0B);
+
+        let mut engine = simd_engine_returning_v128_with_memory(code);
+        let (_, v128_results) = engine.call_function_with_v128(0, &[]).unwrap();
+        // Bytes at addr+1..addr+9 are 02 03 04 05 06 07 80 00 (the 9th
+        // byte, addr+8, was never written by `write_load_extend_test_bytes`
+        // and defaults to 0 in fresh WASM linear memory).
+        let raw: [u8; 8] = [2, 3, 4, 5, 6, 7, 0x80, 0];
+        let mut expected = [0u8; 16];
+        for (i, &byte) in raw.iter().enumerate() {
+            let lane = byte as i8 as i16;
+            expected[i * 2..i * 2 + 2].copy_from_slice(&lane.to_le_bytes());
+        }
+        assert_eq!(
+            v128_results[0],
+            Some(V128Bytes(expected)),
+            "v128.load8x8_s must add the memarg offset to the base address before reading"
+        );
+    }
+
+    /// `v128.load_extend` at an address where `address + 8` overruns the
+    /// end of memory must trap cleanly, not panic -- same "verify bounds
+    /// guards adversarially" discipline as the `load_splat`/`load_zero`
+    /// families above, checked for all 6 opcodes. Every variant in this
+    /// family reads exactly 8 bytes total regardless of lane width (8x1,
+    /// 4x2, or 2x4 bytes), so the same width applies to all of them.
+    #[test]
+    fn v128_load_extend_family_past_the_end_of_memory_traps_cleanly_not_panic() {
+        for sub_opcode in [0x01u8, 0x02, 0x03, 0x04, 0x05, 0x06] {
+            let addr: i32 = 65536 - 8 + 1;
+            let mut code = vec![0x41];
+            code.extend(wasm_leb128::encode_signed(addr as i64));
+            code.push(0xFD);
+            code.push(sub_opcode);
+            code.extend(wasm_leb128::encode_unsigned(0));
+            code.extend(wasm_leb128::encode_unsigned(0));
+            code.push(0x0B);
+            let mut engine = simd_engine_returning_v128_with_memory(code);
+            assert!(
+                engine.call_function(0, &[]).is_err(),
+                "sub-opcode {sub_opcode:#04x} must trap when address+8 overruns memory, not panic"
+            );
+        }
+    }
+
+    /// `v128.load8_lane` (SIMD PR44): the KEY correctness property this
+    /// whole opcode exists for -- writing ONE lane must leave every
+    /// OTHER lane of the existing `v128` operand byte-for-byte
+    /// unchanged, unlike `v128.load8_splat` (which overwrites ALL 16
+    /// lanes) or `v128.load32_zero` (which zeroes the other 12 bytes).
+    /// Stores `0xAA` at address 0 via a plain scalar `i32.store8`, then
+    /// `v128.load8_lane`s it into lane 5 of a `v128.const` base whose 16
+    /// lanes are all distinct (`0..15`) -- if any lane other than 5
+    /// changed, or the wrong byte landed in lane 5, this test would
+    /// catch it.
+    #[test]
+    fn v128_load8_lane_overwrites_only_the_selected_lane_preserving_the_rest() {
+        let addr: i32 = 0;
+        let mut code = vec![0x41]; // i32.const (addr, for the scalar store)
+        code.extend(wasm_leb128::encode_signed(addr as i64));
+        code.push(0x41); // i32.const (value)
+        code.extend(wasm_leb128::encode_signed(0xAA_i64));
+        code.push(0x3A); // i32.store8
+        code.extend(wasm_leb128::encode_unsigned(0)); // align
+        code.extend(wasm_leb128::encode_unsigned(0)); // offset
+        code.push(0x41); // i32.const (addr, for load8_lane)
+        code.extend(wasm_leb128::encode_signed(addr as i64));
+        code.push(0xFD);
+        code.push(0x0C); // v128.const (the existing "base" v128)
+        let base: [i8; 16] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+        code.extend(v128_const_bytes_i8x16(base));
+        code.push(0xFD);
+        code.push(0x54); // v128.load8_lane
+        code.extend(wasm_leb128::encode_unsigned(0)); // align
+        code.extend(wasm_leb128::encode_unsigned(0)); // offset
+        code.push(5); // lane index
+        code.push(0x0B);
+
+        let mut engine = simd_engine_returning_v128_with_memory(code);
+        let (_, v128_results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let mut expected: [u8; 16] = base.iter().map(|&l| l as u8).collect::<Vec<u8>>().try_into().unwrap();
+        expected[5] = 0xAA;
+        assert_eq!(
+            v128_results[0],
+            Some(V128Bytes(expected)),
+            "v128.load8_lane must overwrite ONLY lane 5 with the loaded byte, leaving every other lane of the base v128 unchanged"
+        );
+    }
+
+    /// `v128.load8_lane` must add this instruction's own `memarg` offset
+    /// to the popped base address before reading -- same discipline as
+    /// `v128_load8_splat_honors_a_nonzero_memarg_offset` above, applied
+    /// to the new combined memarg+lane-index shape.
+    #[test]
+    fn v128_load8_lane_honors_a_nonzero_memarg_offset() {
+        let mut code = vec![0x41, 0x01]; // i32.const 1 (addr, for the scalar store)
+        code.push(0x41); // i32.const (value)
+        code.extend(wasm_leb128::encode_signed(0xBB_i64));
+        code.push(0x3A); // i32.store8
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.push(0x41); // i32.const 0 (base address for the load8_lane -- offset makes up the +1)
+        code.extend(wasm_leb128::encode_signed(0i64));
+        code.push(0xFD);
+        code.push(0x0C);
+        code.extend(v128_const_bytes_i8x16([0; 16]));
+        code.push(0xFD);
+        code.push(0x54); // v128.load8_lane
+        code.extend(wasm_leb128::encode_unsigned(0)); // align
+        code.extend(wasm_leb128::encode_unsigned(1)); // offset=1
+        code.push(0); // lane index
+        code.push(0x0B);
+
+        let mut engine = simd_engine_returning_v128_with_memory(code);
+        let (_, v128_results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let mut expected = [0u8; 16];
+        expected[0] = 0xBB;
+        assert_eq!(
+            v128_results[0],
+            Some(V128Bytes(expected)),
+            "v128.load8_lane must add the memarg offset to the base address before reading"
+        );
+    }
+
+    /// `v128.store8_lane`: reads ONLY the selected lane out of the
+    /// popped `v128` and writes it to memory -- must not touch any
+    /// neighboring byte. Builds a `v128.const` with 16 distinct lane
+    /// values, stores lane 9 at address 10, then reads back address
+    /// 9/10/11 via plain scalar `i32.load8_u` to confirm only address 10
+    /// changed.
+    #[test]
+    fn v128_store8_lane_writes_only_the_selected_lane_and_no_neighboring_byte() {
+        let store_addr: i32 = 10;
+        let mut code = vec![0x41]; // i32.const (addr, for store8_lane)
+        code.extend(wasm_leb128::encode_signed(store_addr as i64));
+        code.push(0xFD);
+        code.push(0x0C); // v128.const
+        let base: [i8; 16] = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, -1, -2, -3, -4];
+        code.extend(v128_const_bytes_i8x16(base));
+        code.push(0xFD);
+        code.push(0x58); // v128.store8_lane
+        code.extend(wasm_leb128::encode_unsigned(0)); // align
+        code.extend(wasm_leb128::encode_unsigned(0)); // offset
+        code.push(9); // lane index -- base[9] as u8 is 100
+        // Read back addr-1, addr, addr+1 (each zero-extended, so we can
+        // tell 0x00 apart from any of the written pattern).
+        code.push(0x41);
+        code.extend(wasm_leb128::encode_signed((store_addr - 1) as i64));
+        code.push(0x2D); // i32.load8_u
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.push(0x41);
+        code.extend(wasm_leb128::encode_signed(store_addr as i64));
+        code.push(0x2D); // i32.load8_u
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.push(0x41);
+        code.extend(wasm_leb128::encode_signed((store_addr + 1) as i64));
+        code.push(0x2D); // i32.load8_u
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.push(0x0B);
+
+        let func_type = FuncType { params: vec![], results: vec![ValueType::I32, ValueType::I32, ValueType::I32] };
+        let body = FunctionBody { locals: vec![], code };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: vec![LinearMemory::new(1, None)],
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        let results = engine.call_function(0, &[]).unwrap();
+        assert_eq!(results, vec![WasmValue::I32(0), WasmValue::I32(100), WasmValue::I32(0)], "v128.store8_lane must write ONLY the selected lane's byte at the target address, leaving both neighboring bytes untouched");
+    }
+
+    /// `v128.load8_lane`/`v128.store8_lane` at an address where
+    /// `address + 1 + memarg_offset` overruns the end of memory must
+    /// trap cleanly, not panic -- same "verify bounds guards
+    /// adversarially" discipline as
+    /// `v128_load_extend_family_past_the_end_of_memory_traps_cleanly_not_panic`
+    /// above.
+    #[test]
+    fn v128_load8_lane_and_store8_lane_past_the_end_of_memory_trap_cleanly_not_panic() {
+        let addr: i32 = 65536; // one byte past the end of a 1-page memory
+        // v128.load8_lane
+        let mut load_code = vec![0x41];
+        load_code.extend(wasm_leb128::encode_signed(addr as i64));
+        load_code.push(0xFD);
+        load_code.push(0x0C);
+        load_code.extend(v128_const_bytes_i8x16([0; 16]));
+        load_code.push(0xFD);
+        load_code.push(0x54);
+        load_code.extend(wasm_leb128::encode_unsigned(0));
+        load_code.extend(wasm_leb128::encode_unsigned(0));
+        load_code.push(0);
+        load_code.push(0x0B);
+        let mut load_engine = simd_engine_returning_v128_with_memory(load_code);
+        assert!(load_engine.call_function(0, &[]).is_err(), "v128.load8_lane must trap when address+1 overruns memory, not panic");
+
+        // v128.store8_lane
+        let func_type = FuncType { params: vec![], results: vec![] };
+        let mut store_code = vec![0x41];
+        store_code.extend(wasm_leb128::encode_signed(addr as i64));
+        store_code.push(0xFD);
+        store_code.push(0x0C);
+        store_code.extend(v128_const_bytes_i8x16([0; 16]));
+        store_code.push(0xFD);
+        store_code.push(0x58);
+        store_code.extend(wasm_leb128::encode_unsigned(0));
+        store_code.extend(wasm_leb128::encode_unsigned(0));
+        store_code.push(0);
+        store_code.push(0x0B);
+        let body = FunctionBody { locals: vec![], code: store_code };
+        let mut store_engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: vec![LinearMemory::new(1, None)],
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        assert!(store_engine.call_function(0, &[]).is_err(), "v128.store8_lane must trap when address+1 overruns memory, not panic");
+    }
+
+    /// Defense in depth (same discipline as
+    /// `i8x16_shuffle_out_of_range_immediate_byte_errors_cleanly_not_panics`
+    /// above): `wasm-validator` rejects a module with an out-of-range
+    /// `v128.load8_lane`/`v128.store8_lane` lane index (`>= 16`) before
+    /// it can ever reach this crate's executor -- but this crate's own
+    /// executor has no validation pass of its own, so a hand-built raw
+    /// instruction stream like this test's CAN still present one.
+    /// Confirm the executor's own bounds check returns a clean `Err`,
+    /// never a panic or an out-of-bounds lane write/read.
+    #[test]
+    fn v128_load8_lane_and_store8_lane_out_of_range_lane_index_errors_cleanly_not_panics() {
+        for sub_opcode in [0x54u8, 0x58] {
+            let mut code = vec![0x41, 0x00]; // i32.const 0
+            code.push(0xFD);
+            code.push(0x0C);
+            code.extend(v128_const_bytes_i8x16([0; 16]));
+            code.push(0xFD);
+            code.push(sub_opcode);
+            code.extend(wasm_leb128::encode_unsigned(0)); // align
+            code.extend(wasm_leb128::encode_unsigned(0)); // offset
+            code.push(16); // one past the valid 0-15 range
+            code.push(0x0B);
+            let mut engine = simd_engine_returning_v128_with_memory(code);
+            let result = engine.call_function_with_v128(0, &[]);
+            assert!(result.is_err(), "sub-opcode {sub_opcode:#04x}: an out-of-range lane index must error cleanly, not panic: {result:?}");
+        }
+    }
+
+    /// `v128.load16_lane` (SIMD PR45): the same KEY correctness property
+    /// as `v128_load8_lane_overwrites_only_the_selected_lane_preserving_
+    /// the_rest` above, one width up -- writing ONE 16-bit lane must
+    /// leave every OTHER lane of the existing `v128` operand (7 of them,
+    /// not `Load8Lane`'s 15) byte-for-byte unchanged. Stores `0xBEEF` at
+    /// address 0 via a plain scalar `i32.store16`, then `v128.load16_
+    /// lane`s it into lane 3 of a `v128.const` base whose 8 `i16x8`
+    /// lanes are all distinct -- if any lane other than 3 changed, or
+    /// the wrong 2 bytes landed in lane 3, this test would catch it.
+    #[test]
+    fn v128_load16_lane_overwrites_only_the_selected_lane_preserving_the_rest() {
+        let addr: i32 = 0;
+        let mut code = vec![0x41]; // i32.const (addr, for the scalar store)
+        code.extend(wasm_leb128::encode_signed(addr as i64));
+        code.push(0x41); // i32.const (value)
+        code.extend(wasm_leb128::encode_signed(0xBEEF_i64));
+        code.push(0x3B); // i32.store16
+        code.extend(wasm_leb128::encode_unsigned(0)); // align
+        code.extend(wasm_leb128::encode_unsigned(0)); // offset
+        code.push(0x41); // i32.const (addr, for load16_lane)
+        code.extend(wasm_leb128::encode_signed(addr as i64));
+        code.push(0xFD);
+        code.push(0x0C); // v128.const (the existing "base" v128)
+        let base: [i16; 8] = [100, 200, 300, 400, 500, 600, 700, 800];
+        code.extend(v128_const_bytes_i16x8(base));
+        code.push(0xFD);
+        code.push(0x55); // v128.load16_lane
+        code.extend(wasm_leb128::encode_unsigned(0)); // align
+        code.extend(wasm_leb128::encode_unsigned(0)); // offset
+        code.push(3); // lane index
+        code.push(0x0B);
+
+        let mut engine = simd_engine_returning_v128_with_memory(code);
+        let (_, v128_results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let mut expected: [u8; 16] = v128_const_bytes_i16x8(base).try_into().unwrap();
+        expected[6..8].copy_from_slice(&0xBEEFu16.to_le_bytes());
+        assert_eq!(
+            v128_results[0],
+            Some(V128Bytes(expected)),
+            "v128.load16_lane must overwrite ONLY lane 3's 2 bytes with the loaded value, leaving every other lane of the base v128 unchanged"
+        );
+    }
+
+    /// `v128.load16_lane` must add this instruction's own `memarg` offset
+    /// to the popped base address before reading -- same discipline as
+    /// `v128_load8_lane_honors_a_nonzero_memarg_offset` above, applied to
+    /// the 16-bit width.
+    #[test]
+    fn v128_load16_lane_honors_a_nonzero_memarg_offset() {
+        let mut code = vec![0x41, 0x02]; // i32.const 2 (addr, for the scalar store)
+        code.push(0x41); // i32.const (value)
+        code.extend(wasm_leb128::encode_signed(0xCAFE_i64));
+        code.push(0x3B); // i32.store16
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.push(0x41); // i32.const 0 (base address for load16_lane -- offset makes up the +2)
+        code.extend(wasm_leb128::encode_signed(0i64));
+        code.push(0xFD);
+        code.push(0x0C);
+        code.extend(v128_const_bytes_i16x8([0; 8]));
+        code.push(0xFD);
+        code.push(0x55); // v128.load16_lane
+        code.extend(wasm_leb128::encode_unsigned(0)); // align
+        code.extend(wasm_leb128::encode_unsigned(2)); // offset=2
+        code.push(0); // lane index
+        code.push(0x0B);
+
+        let mut engine = simd_engine_returning_v128_with_memory(code);
+        let (_, v128_results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let mut expected = [0u8; 16];
+        expected[0..2].copy_from_slice(&0xCAFEu16.to_le_bytes());
+        assert_eq!(
+            v128_results[0],
+            Some(V128Bytes(expected)),
+            "v128.load16_lane must add the memarg offset to the base address before reading"
+        );
+    }
+
+    /// `v128.store16_lane`: reads ONLY the selected 2-byte lane out of
+    /// the popped `v128` and writes it to memory -- must not touch any
+    /// neighboring byte. Builds a `v128.const` with 8 distinct lane
+    /// values, stores lane 4 at address 10, then reads back address
+    /// 8-9 (byte before), 10-11 (the written lane), 12-13 (byte after)
+    /// via plain scalar `i32.load16_u` to confirm only address 10-11
+    /// changed.
+    #[test]
+    fn v128_store16_lane_writes_only_the_selected_lane_and_no_neighboring_bytes() {
+        let store_addr: i32 = 10;
+        let mut code = vec![0x41]; // i32.const (addr, for store16_lane)
+        code.extend(wasm_leb128::encode_signed(store_addr as i64));
+        code.push(0xFD);
+        code.push(0x0C); // v128.const
+        let base: [i16; 8] = [10, 20, 30, 40, 12345, 60, 70, 80];
+        code.extend(v128_const_bytes_i16x8(base));
+        code.push(0xFD);
+        code.push(0x59); // v128.store16_lane
+        code.extend(wasm_leb128::encode_unsigned(0)); // align
+        code.extend(wasm_leb128::encode_unsigned(0)); // offset
+        code.push(4); // lane index -- base[4] is 12345
+        // Read back addr-2, addr, addr+2 (each zero-extended 16-bit
+        // load) to confirm only [addr, addr+1] changed.
+        code.push(0x41);
+        code.extend(wasm_leb128::encode_signed((store_addr - 2) as i64));
+        code.push(0x2F); // i32.load16_u
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.push(0x41);
+        code.extend(wasm_leb128::encode_signed(store_addr as i64));
+        code.push(0x2F); // i32.load16_u
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.push(0x41);
+        code.extend(wasm_leb128::encode_signed((store_addr + 2) as i64));
+        code.push(0x2F); // i32.load16_u
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.push(0x0B);
+
+        let func_type = FuncType { params: vec![], results: vec![ValueType::I32, ValueType::I32, ValueType::I32] };
+        let body = FunctionBody { locals: vec![], code };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: vec![LinearMemory::new(1, None)],
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        let results = engine.call_function(0, &[]).unwrap();
+        assert_eq!(results, vec![WasmValue::I32(0), WasmValue::I32(12345), WasmValue::I32(0)], "v128.store16_lane must write ONLY the selected lane's 2 bytes at the target address, leaving both neighboring 2-byte regions untouched");
+    }
+
+    /// `v128.load16_lane`/`v128.store16_lane` at an address where
+    /// `address + 2 + memarg_offset` overruns the end of memory must
+    /// trap cleanly, not panic -- same "verify bounds guards
+    /// adversarially" discipline as
+    /// `v128_load8_lane_and_store8_lane_past_the_end_of_memory_trap_cleanly_not_panic`
+    /// above.
+    #[test]
+    fn v128_load16_lane_and_store16_lane_past_the_end_of_memory_trap_cleanly_not_panic() {
+        let addr: i32 = 65536; // one byte past the end of a 1-page memory
+        // v128.load16_lane
+        let mut load_code = vec![0x41];
+        load_code.extend(wasm_leb128::encode_signed(addr as i64));
+        load_code.push(0xFD);
+        load_code.push(0x0C);
+        load_code.extend(v128_const_bytes_i16x8([0; 8]));
+        load_code.push(0xFD);
+        load_code.push(0x55);
+        load_code.extend(wasm_leb128::encode_unsigned(0));
+        load_code.extend(wasm_leb128::encode_unsigned(0));
+        load_code.push(0);
+        load_code.push(0x0B);
+        let mut load_engine = simd_engine_returning_v128_with_memory(load_code);
+        assert!(load_engine.call_function(0, &[]).is_err(), "v128.load16_lane must trap when address+2 overruns memory, not panic");
+
+        // v128.store16_lane
+        let func_type = FuncType { params: vec![], results: vec![] };
+        let mut store_code = vec![0x41];
+        store_code.extend(wasm_leb128::encode_signed(addr as i64));
+        store_code.push(0xFD);
+        store_code.push(0x0C);
+        store_code.extend(v128_const_bytes_i16x8([0; 8]));
+        store_code.push(0xFD);
+        store_code.push(0x59);
+        store_code.extend(wasm_leb128::encode_unsigned(0));
+        store_code.extend(wasm_leb128::encode_unsigned(0));
+        store_code.push(0);
+        store_code.push(0x0B);
+        let body = FunctionBody { locals: vec![], code: store_code };
+        let mut store_engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: vec![LinearMemory::new(1, None)],
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        assert!(store_engine.call_function(0, &[]).is_err(), "v128.store16_lane must trap when address+2 overruns memory, not panic");
+    }
+
+    /// Defense in depth (same discipline as
+    /// `v128_load8_lane_and_store8_lane_out_of_range_lane_index_errors_cleanly_not_panics`
+    /// above): `wasm-validator` rejects a module with an out-of-range
+    /// `v128.load16_lane`/`v128.store16_lane` lane index (`>= 8`) before
+    /// it can ever reach this crate's executor -- but this crate's own
+    /// executor has no validation pass of its own, so a hand-built raw
+    /// instruction stream like this test's CAN still present one. Confirm
+    /// the executor's own bounds check returns a clean `Err`, never a
+    /// panic or an out-of-bounds lane write/read. NOTE the boundary
+    /// value here is `8` (one past the valid `0-7` range for an `i16x8`
+    /// v128), NOT `16` -- reusing `Load8Lane`'s boundary would miss the
+    /// actual out-of-range value this narrower-lane-count opcode needs
+    /// to reject.
+    #[test]
+    fn v128_load16_lane_and_store16_lane_out_of_range_lane_index_errors_cleanly_not_panics() {
+        for sub_opcode in [0x55u8, 0x59] {
+            let mut code = vec![0x41, 0x00]; // i32.const 0
+            code.push(0xFD);
+            code.push(0x0C);
+            code.extend(v128_const_bytes_i16x8([0; 8]));
+            code.push(0xFD);
+            code.push(sub_opcode);
+            code.extend(wasm_leb128::encode_unsigned(0)); // align
+            code.extend(wasm_leb128::encode_unsigned(0)); // offset
+            code.push(8); // one past the valid 0-7 range
+            code.push(0x0B);
+            let mut engine = simd_engine_returning_v128_with_memory(code);
+            let result = engine.call_function_with_v128(0, &[]);
+            assert!(result.is_err(), "sub-opcode {sub_opcode:#04x}: an out-of-range lane index must error cleanly, not panic: {result:?}");
+        }
+    }
+
+    /// `v128.load32_lane` (SIMD PR46): the same KEY correctness property
+    /// as `v128_load16_lane_overwrites_only_the_selected_lane_preserving_
+    /// the_rest` above, one width up -- writing ONE 32-bit lane must
+    /// leave every OTHER lane of the existing `v128` operand (3 of them,
+    /// not `Load16Lane`'s 7) byte-for-byte unchanged. Stores
+    /// `0xDEADBEEFu32` at address 0 via a plain scalar `i32.store`, then
+    /// `v128.load32_lane`s it into lane 2 of a `v128.const` base whose 4
+    /// `i32x4` lanes are all distinct -- if any lane other than 2
+    /// changed, or the wrong 4 bytes landed in lane 2, this test would
+    /// catch it.
+    #[test]
+    fn v128_load32_lane_overwrites_only_the_selected_lane_preserving_the_rest() {
+        let addr: i32 = 0;
+        let value: u32 = 0xDEAD_BEEF;
+        let mut code = vec![0x41]; // i32.const (addr, for the scalar store)
+        code.extend(wasm_leb128::encode_signed(addr as i64));
+        code.push(0x41); // i32.const (value)
+        code.extend(wasm_leb128::encode_signed(value as i32 as i64));
+        code.push(0x36); // i32.store
+        code.extend(wasm_leb128::encode_unsigned(0)); // align
+        code.extend(wasm_leb128::encode_unsigned(0)); // offset
+        code.push(0x41); // i32.const (addr, for load32_lane)
+        code.extend(wasm_leb128::encode_signed(addr as i64));
+        code.push(0xFD);
+        code.push(0x0C); // v128.const (the existing "base" v128)
+        let base: [i32; 4] = [100, 200, 300, 400];
+        code.extend(v128_const_bytes(base));
+        code.push(0xFD);
+        code.push(0x56); // v128.load32_lane
+        code.extend(wasm_leb128::encode_unsigned(0)); // align
+        code.extend(wasm_leb128::encode_unsigned(0)); // offset
+        code.push(2); // lane index
+        code.push(0x0B);
+
+        let mut engine = simd_engine_returning_v128_with_memory(code);
+        let (_, v128_results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let mut expected: [u8; 16] = v128_const_bytes(base).try_into().unwrap();
+        expected[8..12].copy_from_slice(&value.to_le_bytes());
+        assert_eq!(
+            v128_results[0],
+            Some(V128Bytes(expected)),
+            "v128.load32_lane must overwrite ONLY lane 2's 4 bytes with the loaded value, leaving every other lane of the base v128 unchanged"
+        );
+    }
+
+    /// `v128.load32_lane` must add this instruction's own `memarg` offset
+    /// to the popped base address before reading -- same discipline as
+    /// `v128_load16_lane_honors_a_nonzero_memarg_offset` above, applied
+    /// to the 32-bit width.
+    #[test]
+    fn v128_load32_lane_honors_a_nonzero_memarg_offset() {
+        let value: u32 = 0xCAFEF00D;
+        let mut code = vec![0x41, 0x04]; // i32.const 4 (addr, for the scalar store)
+        code.push(0x41); // i32.const (value)
+        code.extend(wasm_leb128::encode_signed(value as i32 as i64));
+        code.push(0x36); // i32.store
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.push(0x41); // i32.const 0 (base address for load32_lane -- offset makes up the +4)
+        code.extend(wasm_leb128::encode_signed(0i64));
+        code.push(0xFD);
+        code.push(0x0C);
+        code.extend(v128_const_bytes([0; 4]));
+        code.push(0xFD);
+        code.push(0x56); // v128.load32_lane
+        code.extend(wasm_leb128::encode_unsigned(0)); // align
+        code.extend(wasm_leb128::encode_unsigned(4)); // offset=4
+        code.push(0); // lane index
+        code.push(0x0B);
+
+        let mut engine = simd_engine_returning_v128_with_memory(code);
+        let (_, v128_results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let mut expected = [0u8; 16];
+        expected[0..4].copy_from_slice(&value.to_le_bytes());
+        assert_eq!(
+            v128_results[0],
+            Some(V128Bytes(expected)),
+            "v128.load32_lane must add the memarg offset to the base address before reading"
+        );
+    }
+
+    /// `v128.store32_lane`: reads ONLY the selected 4-byte lane out of
+    /// the popped `v128` and writes it to memory -- must not touch any
+    /// neighboring byte. Builds a `v128.const` with 4 distinct lane
+    /// values, stores lane 2 at address 20, then reads back address
+    /// 16-19 (4 bytes before), 20-23 (the written lane), 24-27 (4 bytes
+    /// after) via plain scalar `i32.load` to confirm only address 20-23
+    /// changed.
+    #[test]
+    fn v128_store32_lane_writes_only_the_selected_lane_and_no_neighboring_bytes() {
+        let store_addr: i32 = 20;
+        let mut code = vec![0x41]; // i32.const (addr, for store32_lane)
+        code.extend(wasm_leb128::encode_signed(store_addr as i64));
+        code.push(0xFD);
+        code.push(0x0C); // v128.const
+        let base: [i32; 4] = [10, 20, 1234567, 40];
+        code.extend(v128_const_bytes(base));
+        code.push(0xFD);
+        code.push(0x5A); // v128.store32_lane
+        code.extend(wasm_leb128::encode_unsigned(0)); // align
+        code.extend(wasm_leb128::encode_unsigned(0)); // offset
+        code.push(2); // lane index -- base[2] is 1234567
+        // Read back addr-4, addr, addr+4 (each full-width i32 load) to
+        // confirm only [addr, addr+3] changed.
+        code.push(0x41);
+        code.extend(wasm_leb128::encode_signed((store_addr - 4) as i64));
+        code.push(0x28); // i32.load
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.push(0x41);
+        code.extend(wasm_leb128::encode_signed(store_addr as i64));
+        code.push(0x28); // i32.load
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.push(0x41);
+        code.extend(wasm_leb128::encode_signed((store_addr + 4) as i64));
+        code.push(0x28); // i32.load
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.push(0x0B);
+
+        let func_type = FuncType { params: vec![], results: vec![ValueType::I32, ValueType::I32, ValueType::I32] };
+        let body = FunctionBody { locals: vec![], code };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: vec![LinearMemory::new(1, None)],
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        let results = engine.call_function(0, &[]).unwrap();
+        assert_eq!(results, vec![WasmValue::I32(0), WasmValue::I32(1234567), WasmValue::I32(0)], "v128.store32_lane must write ONLY the selected lane's 4 bytes at the target address, leaving both neighboring 4-byte regions untouched");
+    }
+
+    /// `v128.load32_lane`/`v128.store32_lane` at an address where
+    /// `address + 4 + memarg_offset` overruns the end of memory must
+    /// trap cleanly, not panic -- same "verify bounds guards
+    /// adversarially" discipline as
+    /// `v128_load16_lane_and_store16_lane_past_the_end_of_memory_trap_cleanly_not_panic`
+    /// above.
+    #[test]
+    fn v128_load32_lane_and_store32_lane_past_the_end_of_memory_trap_cleanly_not_panic() {
+        let addr: i32 = 65536; // one byte past the end of a 1-page memory
+        // v128.load32_lane
+        let mut load_code = vec![0x41];
+        load_code.extend(wasm_leb128::encode_signed(addr as i64));
+        load_code.push(0xFD);
+        load_code.push(0x0C);
+        load_code.extend(v128_const_bytes([0; 4]));
+        load_code.push(0xFD);
+        load_code.push(0x56);
+        load_code.extend(wasm_leb128::encode_unsigned(0));
+        load_code.extend(wasm_leb128::encode_unsigned(0));
+        load_code.push(0);
+        load_code.push(0x0B);
+        let mut load_engine = simd_engine_returning_v128_with_memory(load_code);
+        assert!(load_engine.call_function(0, &[]).is_err(), "v128.load32_lane must trap when address+4 overruns memory, not panic");
+
+        // v128.store32_lane
+        let func_type = FuncType { params: vec![], results: vec![] };
+        let mut store_code = vec![0x41];
+        store_code.extend(wasm_leb128::encode_signed(addr as i64));
+        store_code.push(0xFD);
+        store_code.push(0x0C);
+        store_code.extend(v128_const_bytes([0; 4]));
+        store_code.push(0xFD);
+        store_code.push(0x5A);
+        store_code.extend(wasm_leb128::encode_unsigned(0));
+        store_code.extend(wasm_leb128::encode_unsigned(0));
+        store_code.push(0);
+        store_code.push(0x0B);
+        let body = FunctionBody { locals: vec![], code: store_code };
+        let mut store_engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: vec![LinearMemory::new(1, None)],
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        assert!(store_engine.call_function(0, &[]).is_err(), "v128.store32_lane must trap when address+4 overruns memory, not panic");
+    }
+
+    /// Defense in depth (same discipline as
+    /// `v128_load16_lane_and_store16_lane_out_of_range_lane_index_errors_cleanly_not_panics`
+    /// above): `wasm-validator` rejects a module with an out-of-range
+    /// `v128.load32_lane`/`v128.store32_lane` lane index (`>= 4`) before
+    /// it can ever reach this crate's executor -- but this crate's own
+    /// executor has no validation pass of its own, so a hand-built raw
+    /// instruction stream like this test's CAN still present one. Confirm
+    /// the executor's own bounds check returns a clean `Err`, never a
+    /// panic or an out-of-bounds lane write/read. NOTE the boundary
+    /// value here is `4` (one past the valid `0-3` range for an `i32x4`
+    /// v128), NOT `8` -- reusing `Load16Lane`'s boundary would miss the
+    /// actual out-of-range value this narrower-lane-count opcode needs
+    /// to reject.
+    #[test]
+    fn v128_load32_lane_and_store32_lane_out_of_range_lane_index_errors_cleanly_not_panics() {
+        for sub_opcode in [0x56u8, 0x5A] {
+            let mut code = vec![0x41, 0x00]; // i32.const 0
+            code.push(0xFD);
+            code.push(0x0C);
+            code.extend(v128_const_bytes([0; 4]));
+            code.push(0xFD);
+            code.push(sub_opcode);
+            code.extend(wasm_leb128::encode_unsigned(0)); // align
+            code.extend(wasm_leb128::encode_unsigned(0)); // offset
+            code.push(4); // one past the valid 0-3 range
+            code.push(0x0B);
+            let mut engine = simd_engine_returning_v128_with_memory(code);
+            let result = engine.call_function_with_v128(0, &[]);
+            assert!(result.is_err(), "sub-opcode {sub_opcode:#04x}: an out-of-range lane index must error cleanly, not panic: {result:?}");
+        }
+    }
+
+    /// `v128.load64_lane` (SIMD PR47): the same KEY correctness property
+    /// as `v128_load32_lane_overwrites_only_the_selected_lane_preserving_
+    /// the_rest` above, one width up -- writing ONE 64-bit lane must
+    /// leave the OTHER lane of the existing `v128` operand (only 1 of
+    /// them, not `Load32Lane`'s 3) byte-for-byte unchanged. Stores
+    /// `0xDEADBEEFCAFEF00Du64` at address 0 via a plain scalar
+    /// `i64.store`, then `v128.load64_lane`s it into lane 1 of a
+    /// `v128.const` base whose 2 `i64x2` lanes are distinct -- if lane 0
+    /// changed, or the wrong 8 bytes landed in lane 1, this test would
+    /// catch it.
+    #[test]
+    fn v128_load64_lane_overwrites_only_the_selected_lane_preserving_the_rest() {
+        let addr: i32 = 0;
+        let value: u64 = 0xDEAD_BEEF_CAFE_F00D;
+        let mut code = vec![0x41]; // i32.const (addr, for the scalar store)
+        code.extend(wasm_leb128::encode_signed(addr as i64));
+        code.push(0x42); // i64.const (value)
+        code.extend(wasm_leb128::encode_signed(value as i64));
+        code.push(0x37); // i64.store
+        code.extend(wasm_leb128::encode_unsigned(0)); // align
+        code.extend(wasm_leb128::encode_unsigned(0)); // offset
+        code.push(0x41); // i32.const (addr, for load64_lane)
+        code.extend(wasm_leb128::encode_signed(addr as i64));
+        code.push(0xFD);
+        code.push(0x0C); // v128.const (the existing "base" v128)
+        let base: [i64; 2] = [111_111_111, 222_222_222];
+        code.extend(v128_const_bytes_i64x2(base));
+        code.push(0xFD);
+        code.push(0x57); // v128.load64_lane
+        code.extend(wasm_leb128::encode_unsigned(0)); // align
+        code.extend(wasm_leb128::encode_unsigned(0)); // offset
+        code.push(1); // lane index
+        code.push(0x0B);
+
+        let mut engine = simd_engine_returning_v128_with_memory(code);
+        let (_, v128_results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let mut expected: [u8; 16] = v128_const_bytes_i64x2(base).try_into().unwrap();
+        expected[8..16].copy_from_slice(&value.to_le_bytes());
+        assert_eq!(
+            v128_results[0],
+            Some(V128Bytes(expected)),
+            "v128.load64_lane must overwrite ONLY lane 1's 8 bytes with the loaded value, leaving lane 0 of the base v128 unchanged"
+        );
+    }
+
+    /// `v128.load64_lane` must add this instruction's own `memarg` offset
+    /// to the popped base address before reading -- same discipline as
+    /// `v128_load32_lane_honors_a_nonzero_memarg_offset` above, applied
+    /// to the 64-bit width.
+    #[test]
+    fn v128_load64_lane_honors_a_nonzero_memarg_offset() {
+        let value: u64 = 0x0123_4567_89AB_CDEF;
+        let mut code = vec![0x41, 0x04]; // i32.const 4 (addr, for the scalar store)
+        code.push(0x42); // i64.const (value)
+        code.extend(wasm_leb128::encode_signed(value as i64));
+        code.push(0x37); // i64.store
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.push(0x41); // i32.const 0 (base address for load64_lane -- offset makes up the +4)
+        code.extend(wasm_leb128::encode_signed(0i64));
+        code.push(0xFD);
+        code.push(0x0C);
+        code.extend(v128_const_bytes_i64x2([0; 2]));
+        code.push(0xFD);
+        code.push(0x57); // v128.load64_lane
+        code.extend(wasm_leb128::encode_unsigned(0)); // align
+        code.extend(wasm_leb128::encode_unsigned(4)); // offset=4
+        code.push(0); // lane index
+        code.push(0x0B);
+
+        let mut engine = simd_engine_returning_v128_with_memory(code);
+        let (_, v128_results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let mut expected = [0u8; 16];
+        expected[0..8].copy_from_slice(&value.to_le_bytes());
+        assert_eq!(
+            v128_results[0],
+            Some(V128Bytes(expected)),
+            "v128.load64_lane must add the memarg offset to the base address before reading"
+        );
+    }
+
+    /// `v128.store64_lane`: reads ONLY the selected 8-byte lane out of
+    /// the popped `v128` and writes it to memory -- must not touch any
+    /// neighboring byte. Builds a `v128.const` with 2 distinct lane
+    /// values, stores lane 1 at address 24, then reads back address
+    /// 16-23 (8 bytes before), 24-31 (the written lane), 32-39 (8 bytes
+    /// after) via plain scalar `i64.load` to confirm only address 24-31
+    /// changed.
+    #[test]
+    fn v128_store64_lane_writes_only_the_selected_lane_and_no_neighboring_bytes() {
+        let store_addr: i32 = 24;
+        let mut code = vec![0x41]; // i32.const (addr, for store64_lane)
+        code.extend(wasm_leb128::encode_signed(store_addr as i64));
+        code.push(0xFD);
+        code.push(0x0C); // v128.const
+        let base: [i64; 2] = [10, 987_654_321];
+        code.extend(v128_const_bytes_i64x2(base));
+        code.push(0xFD);
+        code.push(0x5B); // v128.store64_lane
+        code.extend(wasm_leb128::encode_unsigned(0)); // align
+        code.extend(wasm_leb128::encode_unsigned(0)); // offset
+        code.push(1); // lane index -- base[1] is 987_654_321
+        // Read back addr-8, addr, addr+8 (each full-width i64 load) to
+        // confirm only [addr, addr+7] changed.
+        code.push(0x41);
+        code.extend(wasm_leb128::encode_signed((store_addr - 8) as i64));
+        code.push(0x29); // i64.load
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.push(0x41);
+        code.extend(wasm_leb128::encode_signed(store_addr as i64));
+        code.push(0x29); // i64.load
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.push(0x41);
+        code.extend(wasm_leb128::encode_signed((store_addr + 8) as i64));
+        code.push(0x29); // i64.load
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.extend(wasm_leb128::encode_unsigned(0));
+        code.push(0x0B);
+
+        let func_type = FuncType { params: vec![], results: vec![ValueType::I64, ValueType::I64, ValueType::I64] };
+        let body = FunctionBody { locals: vec![], code };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: vec![LinearMemory::new(1, None)],
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        let results = engine.call_function(0, &[]).unwrap();
+        assert_eq!(
+            results,
+            vec![WasmValue::I64(0), WasmValue::I64(987_654_321), WasmValue::I64(0)],
+            "v128.store64_lane must write ONLY the selected lane's 8 bytes at the target address, leaving both neighboring 8-byte regions untouched"
+        );
+    }
+
+    /// `v128.load64_lane`/`v128.store64_lane` at an address where
+    /// `address + 8 + memarg_offset` overruns the end of memory must
+    /// trap cleanly, not panic -- same "verify bounds guards
+    /// adversarially" discipline as
+    /// `v128_load32_lane_and_store32_lane_past_the_end_of_memory_trap_cleanly_not_panic`
+    /// above.
+    #[test]
+    fn v128_load64_lane_and_store64_lane_past_the_end_of_memory_trap_cleanly_not_panic() {
+        let addr: i32 = 65536; // one byte past the end of a 1-page memory
+        // v128.load64_lane
+        let mut load_code = vec![0x41];
+        load_code.extend(wasm_leb128::encode_signed(addr as i64));
+        load_code.push(0xFD);
+        load_code.push(0x0C);
+        load_code.extend(v128_const_bytes_i64x2([0; 2]));
+        load_code.push(0xFD);
+        load_code.push(0x57);
+        load_code.extend(wasm_leb128::encode_unsigned(0));
+        load_code.extend(wasm_leb128::encode_unsigned(0));
+        load_code.push(0);
+        load_code.push(0x0B);
+        let mut load_engine = simd_engine_returning_v128_with_memory(load_code);
+        assert!(load_engine.call_function(0, &[]).is_err(), "v128.load64_lane must trap when address+8 overruns memory, not panic");
+
+        // v128.store64_lane
+        let func_type = FuncType { params: vec![], results: vec![] };
+        let mut store_code = vec![0x41];
+        store_code.extend(wasm_leb128::encode_signed(addr as i64));
+        store_code.push(0xFD);
+        store_code.push(0x0C);
+        store_code.extend(v128_const_bytes_i64x2([0; 2]));
+        store_code.push(0xFD);
+        store_code.push(0x5B);
+        store_code.extend(wasm_leb128::encode_unsigned(0));
+        store_code.extend(wasm_leb128::encode_unsigned(0));
+        store_code.push(0);
+        store_code.push(0x0B);
+        let body = FunctionBody { locals: vec![], code: store_code };
+        let mut store_engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: vec![LinearMemory::new(1, None)],
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        assert!(store_engine.call_function(0, &[]).is_err(), "v128.store64_lane must trap when address+8 overruns memory, not panic");
+    }
+
+    /// Defense in depth (same discipline as
+    /// `v128_load32_lane_and_store32_lane_out_of_range_lane_index_errors_cleanly_not_panics`
+    /// above): `wasm-validator` rejects a module with an out-of-range
+    /// `v128.load64_lane`/`v128.store64_lane` lane index (`>= 2`) before
+    /// it can ever reach this crate's executor -- but this crate's own
+    /// executor has no validation pass of its own, so a hand-built raw
+    /// instruction stream like this test's CAN still present one. Confirm
+    /// the executor's own bounds check returns a clean `Err`, never a
+    /// panic or an out-of-bounds lane write/read. NOTE the boundary
+    /// value here is `2` (one past the valid `0-1` range for an `i64x2`
+    /// v128), NOT `4` -- reusing `Load32Lane`'s boundary would miss the
+    /// actual out-of-range value this narrower-lane-count opcode needs
+    /// to reject.
+    #[test]
+    fn v128_load64_lane_and_store64_lane_out_of_range_lane_index_errors_cleanly_not_panics() {
+        for sub_opcode in [0x57u8, 0x5B] {
+            let mut code = vec![0x41, 0x00]; // i32.const 0
+            code.push(0xFD);
+            code.push(0x0C);
+            code.extend(v128_const_bytes_i64x2([0; 2]));
+            code.push(0xFD);
+            code.push(sub_opcode);
+            code.extend(wasm_leb128::encode_unsigned(0)); // align
+            code.extend(wasm_leb128::encode_unsigned(0)); // offset
+            code.push(2); // one past the valid 0-1 range
+            code.push(0x0B);
+            let mut engine = simd_engine_returning_v128_with_memory(code);
+            let result = engine.call_function_with_v128(0, &[]);
+            assert!(result.is_err(), "sub-opcode {sub_opcode:#04x}: an out-of-range lane index must error cleanly, not panic: {result:?}");
         }
     }
 
@@ -15983,6 +17870,67 @@ mod tests {
             results[0],
             Some(V128Bytes([0u8; 16])),
             "every index lane here is >= 16 (as an unsigned byte), so every result lane must be 0"
+        );
+    }
+
+    // ── Relaxed SIMD epic PR1: i8x16.relaxed_swizzle -- see code/specs/
+    // W19-wasm-relaxed-simd-first-slice.md ──────────────────────────────
+
+    /// `i8x16.relaxed_swizzle`'s sub-opcode is `0x100`, the FIRST value in
+    /// this whole table `>= 0x100` -- LEB128-encodes as the 2-byte
+    /// sequence `[0x80, 0x02]` (confirmed by hand: `0x100` = `0b1_0000000`,
+    /// low 7 bits `0000000` with the continuation bit set = `0x80`,
+    /// remaining `0x100 >> 7 = 2` fits the final byte unchanged). This
+    /// test exists specifically to confirm that 2-byte encoding decodes
+    /// correctly (not just that the opcode dispatches once decoded) --
+    /// same in-range permutation case as `i8x16_swizzle_permutes_lanes_
+    /// by_the_index_vector` above, reusing the reversing index vector so
+    /// the two tests are directly comparable.
+    #[test]
+    fn i8x16_relaxed_swizzle_permutes_lanes_by_the_index_vector() {
+        let a: [i8; 16] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+        let s: [i8; 16] = [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0]; // reverse
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_i8x16(a));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes_i8x16(s));
+        code.extend([0xFD, 0x80, 0x02]); // i8x16.relaxed_swizzle (sub-opcode 0x100, 2-byte LEB128)
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let expected: [i8; 16] = [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0];
+        assert_eq!(
+            results[0],
+            Some(V128Bytes(v128_const_bytes_i8x16(expected).try_into().unwrap())),
+            "relaxed_swizzle with a reversing index vector must reverse the 16 lanes, same as plain swizzle"
+        );
+    }
+
+    /// `i8x16.relaxed_swizzle`'s out-of-range behavior is spec-sanctioned
+    /// as implementation-defined; this repo picks the same deterministic
+    /// clamp-to-zero behavior plain `Swizzle` uses (verified by hand
+    /// against the real upstream `i8x16_relaxed_swizzle.wast` corpus's
+    /// own `either` pairs -- see `SimdOpKind::RelaxedSwizzle`'s doc
+    /// comment) -- so this repo's own result for an out-of-range index is
+    /// unconditionally `0`, exactly mirroring `i8x16_swizzle_out_of_
+    /// range_index_lane_produces_zero` above.
+    #[test]
+    fn i8x16_relaxed_swizzle_out_of_range_index_lane_produces_zero() {
+        let a: [i8; 16] = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, -1, -2, -3, -4];
+        // Every index lane here is >= 16 (as an unsigned byte 0-255).
+        let s: [i8; 16] = [16, 17, 18, 19, 20, 100, -1, -128, 127, -56, 16, 16, 16, 16, 16, 16];
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_i8x16(a));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes_i8x16(s));
+        code.extend([0xFD, 0x80, 0x02]); // i8x16.relaxed_swizzle
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            results[0],
+            Some(V128Bytes([0u8; 16])),
+            "every index lane here is >= 16 (as an unsigned byte), so every result lane must be 0, same as plain swizzle"
         );
     }
 

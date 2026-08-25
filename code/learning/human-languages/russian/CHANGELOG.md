@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+### Added — pre-A1 writing runway for привет
+
+- Added four separate, two-minute-or-shorter writing lessons for the already known
+  greeting **привет**: observe and trace, visible-model guided copy, delayed
+  copy, and heard-word dictation.
+- Each lesson introduces no new Cyrillic shape, carries one explicit cumulative
+  writing-stage claim, and makes repair part of the exercise instead of a
+  failure.
+- Linked the four lessons as a strict prerequisite chain before Chapter 2, so
+  Russian now proves the complete pre-A1 writing runway without pretending the
+  older two-letter lessons already supplied independent stage evidence.
+
 ### Added — pre-A1 bridge and A1-to-C2 TORFL contract (HL16)
 
 - Added a non-accredited project-defined pre-A1 checkpoint followed by the real

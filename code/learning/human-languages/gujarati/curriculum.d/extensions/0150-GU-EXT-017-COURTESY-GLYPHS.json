@@ -1,0 +1,19 @@
+{
+  "id": "GU-EXT-017-COURTESY-GLYPHS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can trace, copy and recall the seven Gujarati pieces needed to read the courtesy word આભાર without an untaught shape.",
+  "prerequisites": [
+    "GU-EXT-016-SCRIPT-FIRST-PIECES"
+  ],
+  "lessons": [
+    "GU-W02-ra",
+    "GU-W02-da",
+    "GU-W02-va",
+    "GU-W02-ya",
+    "GU-W02-bha",
+    "GU-W02-dha",
+    "GU-W02-vocalic-r"
+  ]
+}

@@ -5,6 +5,217 @@ Findings from the pre-A1 tranche work were recorded in commit messages and PR
 bodies, which are durable and searchable, but a reader opening this file found
 nothing. The entries below are the ones that change how the work is done.
 
+## HL-C10Q — Tamil உ closes the leading initial-vowel gap
+
+After Malayalam **ഴ** landed, Tamil independent short **உ** led the measured
+queue at **11 affected realizations**. The curriculum used it in vowel-initial
+words, but the starter inventory still jumped from independent **இ** to **எ**.
+
+Sankaran Radhakrishnan's UT Austin *Tamil Script Learners Manual*, Appendix I,
+Frame 16, numbers **உ** as three joined movements: sweep outward through the
+compact spiral, descend around the broad outer curve, then carry the long
+baseline right. The new zero-lift Noto-fitted record removes all 11 gaps while
+keeping independent **உ** distinct from dependent short-u sign **ு**. Shared
+Persian/Urdu **ف** now leads at **10 affected realizations**.
+
+## HL-C10P — Malayalam ഴ closes the leading base-consonant gap
+
+After Malayalam chillu **ൻ** landed, Malayalam **ഴ** led the measured queue at
+**11 affected realizations**. Unicode identifies U+0D34 as MALAYALAM LETTER
+LLLA, but the generated consonant table omitted that script-specific extension,
+so the curriculum had neither its ISO-15919 **ḻa** row nor verified formation.
+
+Sriveenkat's 47-frame Wikimedia Commons animation writes **ഴ** in one
+uninterrupted run: the left entry arch reaches the lower junction, turns
+clockwise around the right loop, and descends through its inner return into the
+lower hook. The new Noto-fitted path and complete 13-syllable vowel row remove
+all 11 gaps while preserving the syllable matrix. Tamil independent **உ** now
+leads at **11 affected realizations**.
+
+## HL-C10Q — the last two merge-conflict surfaces are sharded
+
+HL21 removed the conflict points in the curriculum's **data** and left the two
+files every author touches regardless of what they are working on. Measured over
+the last 200 human-languages commits on main: this `BACKLOG.md` was touched by
+**100** of them and `human-language-data/CHANGELOG.md` by **75**, while the 23
+per-language `<track>/CHANGELOG.md` files were touched **4–11 times each**. The
+per-language changelogs are already partitioned by track and were left alone;
+sharding a file that does not conflict buys nothing.
+
+The corroborating experiment was PR #12690 itself. It went `DIRTY` three separate
+times while two concurrent Spanish tranches were in flight, and every time the
+conflicting file was **only** `CHANGELOG.md` — not one of its ~4,000 shard files
+ever conflicted. A PR whose entire purpose was to remove a conflict point was
+blocked three times by a conflict point it did not remove.
+
+**Two things this migration had to get right that HL21's did not.**
+
+First, these documents are **newest-first**. HL21's ledgers append, so a new
+element takes the next ordinal and nobody renames anything. A backlog prepends,
+so under ascending filename order the newest entry needs the *smallest* ordinal
+and every author reaches into a shrinking gap that two of them would both grab.
+The fix is that the ordinal is a **recency rank** — topmost section, highest
+number — and the join walks it downward. Prepending is an append again.
+
+Second, prose has no ids. HL21 derives a shard filename from an authored `id`
+field; 106 of this file's 107 sections start `## HL-…` and one does not (*Three
+rules this work keeps re-deriving*), so an id-based scheme would have had to
+special-case it. The filename is derived from the heading text and the *result*
+is validated instead — and the identity is an 8-hex digest of the heading, not
+the ASCII-folded slug, because `source-verified Tamil ர` and `source-verified
+Tamil த` fold to the same slug.
+
+**The migration introduces no normalization.** The sharder partitions bytes at
+heading boundaries and rebuilds by concatenation, so both regenerated monoliths
+are byte-identical to the pre-migration files.
+
+**Found while measuring, not fixed here:** `human-language-data/CHANGELOG.md`
+carries **three** separate "Unreleased" sections — `## Unreleased` at line 3, a
+second `## Unreleased` at line 952, and `## [Unreleased]` at line 1021. Two of
+the three are almost certainly the residue of exactly the bad merges this work
+exists to prevent: someone resolved a conflict by keeping both sides, heading
+included. They survive untouched because byte-exactness outranks tidiness;
+consolidating them is a separate deliberate commit for a quiet moment, and it has
+to decide what those sections were meant to be released *as*.
+
+**Also worth knowing:** sharding does not reduce CI cost for either file. Both
+sit inside directories CI treats as opaque path prefixes, so a changelog-only
+edit still triggers the 23-book XeLaTeX compile and a full `npm ci` +
+`vitest --coverage`. The cost sharding removes is human serialization, not CI
+minutes. Narrowing those path triggers is separate work.
+
+## HL-C10O — Malayalam chillu ൻ closes the leading final-n gap
+
+After Kannada independent **ಅ** landed, Malayalam chillu **ൻ** led the measured
+queue at **11 affected realizations**. The curriculum uses this atomic final
+consonant throughout first-person and masculine forms, but the canonical script
+inventory still had no independently sourced row for it.
+
+Sriveenkat's 67-frame Wikimedia Commons animation writes **ൻ** in two pen-down
+runs: the left arch descends into its central stem, then one lifted right-side
+run carries the upper shoulder through the outer loop, inner return, and
+finishing hook above the line. The new Noto-fitted record removes all 11 gaps
+without treating chillu N as base **ന** plus an unwritten vowel killer.
+Malayalam **ഴ** now leads at **11 affected realizations**.
+
+## HL-C10M — Restore the Latin writing-activity directive gate
+
+Refreshing from `origin/main` after Malayalam chillu **ൽ** exposed two new
+validation errors from the merged Latin pre-A1 writing tranche: the delayed-copy
+and dictation `hl-activity` directives appeared after learner-facing prose even
+though the parser contract requires them immediately after the block's
+first-line knowledge metadata and before learner copy. Once reachable, both
+contracts also duplicated their canonical `answer` in `accepted`, which the
+activity compiler correctly rejects as an ambiguous normalized response.
+
+Move only those two directives above the displayed instructions and remove the
+redundant accepted-answer copies. This preserves their intended responses and
+lesson order while restoring the shared-curriculum validation gate; no learner
+prose changes.
+
+## HL-C10N — Kannada ಅ opens the script's handwriting inventory
+
+After Malayalam chillu **ൽ** landed, the measured queue put Kannada independent
+short **ಅ** first at **11 affected realizations**. Kannada's canonical vowel row
+already identified the glyph and sound, but it had no source-backed formation
+order and the script still had no authored letter path at all.
+
+Gopala Krishna A's 35-frame Wikimedia Commons animation keeps the pencil down
+for one uninterrupted run: clockwise left loop, broad lower bowl,
+counterclockwise right loop, then the horizontal bar returning left. The new
+font-fitted path preserves those four movements on Noto Sans Kannada, removes
+all 11 gaps, and leaves Malayalam chillu **ൻ** next at 11 affected
+realizations.
+
+## HL-C10L — Malayalam chillu ൽ closes the leading final-consonant gap
+
+After Tamil **ழ** landed, the measured queue put Malayalam chillu **ൽ** first
+at **12 affected realizations**. The curriculum already teaches it in words
+such as **കാൽ**, **വിരൽ**, **വാതിൽ**, and **ജനൽ**, but the canonical Malayalam
+inventory had no independently sourced row for that vowel-free consonant.
+
+Sriveenkat's 97-frame Wikimedia Commons animation writes **ൽ** in one
+uninterrupted run: left entry arch, clockwise central loop, upper shoulder,
+clockwise right loop, and the finishing chillu hook above the line. UT Austin's
+*The Malayalam Script* independently identifies **ൽ** as the chillu shared by
+**ത/ല** and says the chillu marker extends above the line. The new canonical
+row removes all 12 gaps without treating the final hook as a detached mark.
+Kannada independent **ಅ** now leads at **11 affected realizations**.
+
+## HL-C10K — Tamil ழ closes the highest remaining realization gap
+
+After Persian and Urdu **خ** landed, the measured queue put Tamil **ழ** first
+at **13 affected realizations**. The canonical Tamil inventory did not yet own
+the letter even though the curriculum ledger and lessons already used it.
+
+Sankaran Radhakrishnan's UT Austin *Tamil Script Learners Manual*, Appendix I,
+Frame 7, numbers **ழ** as six movements in three pen-down runs: joined
+movements 1–3 form the left body and bar, joined movements 4–5 form the inner
+upright and broad right bowl, and movement 6 is the detached lower hook. The
+bundled Noto Sans Tamil face simplifies the source's looped left body and high
+bar into a retraced upright with a low crossbar, so the authored geometry fits
+that printed outline while preserving the source's three-run grouping. The new
+canonical row removes all 13 gaps. Malayalam chillu **ൽ** now leads at **12**.
+
+## HL-C10J — Persian and Urdu خ close shared glyph debt separately
+
+After Malayalam **അ** landed, the measured queue displayed shared glyph **خ**
+first at **13 affected realizations**: nine in Persian and four in Urdu. The
+existing Arabic row could not supply either language's provenance.
+
+UT Austin's Persian Online alphabet demonstrates isolated **خ** at
+00:49–00:54 as a body-first head and deep bowl followed by one lifted dot
+above. Northwestern's *Zer o Zabar* independently identifies Urdu **خ** as the
+**ج** shape with its dot above; its independent handwriting animation likewise
+completes the pointed head and bowl before placing that dot. Separate canonical
+rows and script-scoped ductus keys remove all 13 gaps without collapsing the
+three languages' sources. The reranked queue now moves to Tamil **ழ** at 13.
+
+## HL-C10H — Persian پ separates its sourced row from Urdu debt
+
+After Tamil independent short **எ** landed, the measured queue displayed shared
+glyph **پ** first at **14 affected realizations**. The Persian
+`perso-arabic` inventory owned four of them; the other ten belong to Urdu and
+must not borrow Persian provenance.
+
+UT Austin's Persian Online freehand alphabet demonstrates isolated **پ** at
+00:16–00:21: the same shallow bowl as **ب** is swept right-to-left, then three
+separate dots are placed below in left, right, and lower-center order. The new
+Persian-scoped record and font-fitted ductus remove those four Persian
+realizations. Urdu still owns ten **پ** gaps, but the reranked queue moves first
+to Malayalam independent **അ** at **13**.
+
+## HL-C10I — Malayalam അ closes the next initial-vowel gap
+
+After Persian **پ** landed, the measured queue put Malayalam independent short
+**അ** first at **13 affected realizations**. UT Austin's *The Malayalam Script*
+identifies the initial-vowel inventory as the word-initial forms and supplies a
+separate click-to-play handwriting clip for **അ**.
+
+The clip completes the left-and-central body in one joined run: outer arch,
+upper turn, lower loop, central crown, and upright. After one lift, the right
+outer arch descends and curls directly into its lower inner loop. The new
+canonical record and font-fitted ductus remove all 13 affected realizations.
+The data README's old claim that Malayalam and Telugu had zero authored letters
+was also stale; it now names their verified independent-vowel rows. The
+reranked queue displays shared glyph **خ** first at **13**: nine Persian
+realizations and four Urdu realizations. Audit and source those script-owned
+rows separately rather than borrowing Arabic provenance.
+
+## HL-C10G — Tamil எ closes the next independent-vowel gap
+
+After Malayalam **എ** landed, the measured queue put Tamil independent short
+**எ** first at **15 affected realizations**. The UT Austin *Tamil Script
+Learners Manual* Appendix I shows **எ** on the second row of Frame 5, distinct
+from the first row's dental **ந** and from dependent short-e sign **ெ** in
+Frame 6.
+
+Frame 5 numbers six connected body movements from the left climb through the
+top bar, inner descent, spiral, and lower foot. After one lift, movement 7 draws
+the separate right upright upward. The new canonical record and font-fitted
+ductus remove all 15 affected realizations. The reranked queue moves to Persian
+**پ** at 14.
+
 ## HL-C10F — Malayalam എ opens the next independent-vowel row
 
 After Urdu **و** landed, the measured queue put Malayalam independent short

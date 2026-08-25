@@ -2,6 +2,317 @@
 
 All notable changes to the `java-to-semantic-ir` crate will be documented in this file.
 
+## [0.4.0] - 2026-08-25
+
+### Added
+
+- JV02 milestone M2b: classic and enhanced `for`-loops.
+- Classic `for (init; cond; update) body` desugars to `{ init; while
+  (cond) { body; update } }`, wrapped in one synthetic `Expr::Block`
+  (mirroring `do`/`while`'s own established wrapping pattern) so `init`'s
+  own scope spans the whole construct but ends exactly where Java's own
+  `for` scope does. SIR's `Stmt::ForRange` — a canonical `for var in
+  range(start, stop, step)` counting loop — is too narrow to represent
+  Java's fully general three-clause `for`; this desugaring instead
+  mirrors `c-to-semantic-ir`'s own identically-reasoned precedent for
+  C's equally general `for` (chosen over `javascript-to-semantic-ir`'s
+  stricter canonical-`ForRange`-only-else-reject approach, since Java's
+  classic `for` is highly variable in shape). Each clause independently
+  supports the shapes that actually occur in practice: `init` may be a
+  declaration (`for (int i = 0; ...)`), a single expression reusing an
+  already-declared variable (`for (i = 0; ...)`), or entirely absent;
+  `cond` absent defaults to `true` (`for (;;)`); `update` may be absent
+  or a single expression (assignment, compound assignment, or
+  increment/decrement — reuses the same statement-level desugaring M2a
+  built for bare `i++;`/`x += 1;` statements, since `for_update`'s items
+  are ordinary `expression` nodes, structurally identical to what an
+  `expression_statement` already handles). Multiple comma-separated
+  expressions in one init/update clause (`for (int i = 0, j = 0; ...)`)
+  are deferred, mirroring the single-declarator restriction M1 already
+  established for plain declaration statements.
+- Enhanced `for (T x : xs) body` lowers directly to `Stmt::ForEach` — SIR
+  already has exactly this shape, no desugaring needed. `var` as the
+  element type is rejected: M1/M2 have no array/collection `Kind` or
+  construction syntax at all yet (that's JV02 M4), so there's no way to
+  infer the element type from the iterable the way real Java type
+  inference would.
+- A shared `lower_variable_declarator` helper now backs both
+  `lower_local_var_decl` (a standalone declaration statement) and the
+  classic `for`'s own declaration-form init clause — the two shapes are
+  structurally identical (`local_var_type` + `variable_declarators`)
+  minus the wrapping node, so this is a refactor of M1's existing code,
+  not new logic duplicated a second time.
+- 14 new tests in `tests/test_lower.rs` (classic `for` desugaring shape,
+  init-variable scope leak prevention in both directions, the no-
+  declaration init form, empty-clauses defaulting to an unconditional
+  loop, boolean-condition requirement, multiple-declarator/multiple-
+  update rejection, the update/body-local collision rejection below (and
+  its negative case — a body-declared variable with a *different* name
+  must not trip it), enhanced `for`'s `Stmt::ForEach` shape, its own
+  scope leak prevention, and `var`-as-element-type rejection) plus 2 new
+  execution-proof tests in `tests/e2e_python.rs` (a classic `for` summing
+  0..4, and the same with the loop variable reusing an already-declared
+  local rather than a fresh declaration). No execution-proof test exists
+  for enhanced `for` (nothing in M1/M2's own scope can construct a real
+  iterable value to iterate) or `for (;;)` with empty clauses (it
+  genuinely cannot terminate without `break`, which has no SIR IR
+  primitive — an execution proof would just hang forever); both are
+  covered structurally instead, honestly reflecting what's provable at
+  this milestone rather than fabricating a misleading green check.
+- **Caught by `/security-review` before push (HIGH, silent miscompilation
+  / non-termination DoS)**: classic `for`'s `update` clause is spliced
+  onto the *end* of the loop body's own `body.stmts`, sharing one flat
+  scope with whatever the body itself already declared at its own top
+  level — but by the time that splice runs, `lower_body` has already
+  pushed *and popped* the body's own scope (the correct real Java scope
+  boundary), so there was no check that would notice the body
+  redeclaring the exact name `update` assigns to. Confirmed with a live
+  repro: `int sum = 0; for (int i = 0; i < 3; i++) { int i = 999; sum =
+  sum + 1; }` lowered cleanly and passed `semantic_ir::validate()`, but
+  under any backend with real block scoping the appended `i++` would
+  resolve to the body's own shadowing `i` instead of the real loop
+  control variable — silently leaving the real loop variable permanently
+  unincremented, an infinite loop (the exact non-termination DoS class
+  `lower_do_while_statement` already needed two rounds of fixes for
+  elsewhere in this same file, discovered here via yet another
+  manifestation of "collision checked only after the colliding scope
+  already existed"). Fixed by checking the update's assignment target
+  against the already-lowered body's own top-level declarations
+  (`body_declares_name`, shared with the do-while fix) and rejecting
+  with a clear error rather than silently mis-lowering — real `javac`
+  rejects this exact source outright (`variable i is already defined`),
+  so rejecting it here loses no real program's ability to compile.
+
+## [0.3.0] - 2026-08-25
+
+### Added
+
+- JV02 milestone M2a: `if`/`else`, `while`, `do`/`while`, and compound
+  assignment/increment/decrement as bare statements.
+- `if`/`else` lowers to `Stmt::ExprStmt` wrapping `Expr::If` (the IR's
+  conditional is an expression, not a statement — see that node's own
+  doc comment); an absent `else` becomes a synthetic empty, `NilLit`-
+  valued block, matching the established `javascript-to-semantic-ir`/
+  `ruby-to-semantic-ir` precedent for the same shape.
+- `do`/`while` desugars to a synthetic flag-guarded pretest loop —
+  `boolean __do_while_N = true; while (__do_while_N || C) { S;
+  __do_while_N = false; }` — lowering the body `S` exactly once (see the
+  security finding below for why this shape, not a literal "run once,
+  then `while`" duplication), wrapped in a synthetic `Expr::Block` so
+  the flag's own scope ends at exactly the point Java's own do-while
+  statement does, not the surrounding function.
+- Compound assignment (`+= -= *= /= %=`) and increment/decrement (`++`/
+  `--`, prefix and postfix) — but only as a bare statement (`i++;`,
+  `x += 1;`), desugaring to `Stmt::Assign` by reusing M1's own
+  `combine_additive`/`combine_multiplicative` op-selection (so `s += "b"`
+  on a `String` correctly concatenates, for free). Using either as a
+  *value* (`y = i++;`) remains out of scope.
+- **Real lexical scoping**: `Lowerer.locals` becomes a stack of scope
+  frames (`push_scope`/`pop_scope`/`declare_local`/`lookup_local`),
+  mirroring the SIR validator's own `Block`-scoped `LocalEnv` mark/
+  rewind discipline exactly — a local declared inside an `if`/`while`/
+  `do`-`while` body is not visible after it, in both Java and the
+  validator's own contract. M1's flat `HashMap` was correct only because
+  M1 had no nested blocks yet; M2a is where that stopped being true.
+- A third depth guard, `MAX_STMT_DEPTH`, bounds the new statement/block-
+  lowering mutual recursion (`lower_statement` → `lower_if_statement`/
+  `lower_while_statement`/`lower_do_while_statement` → `lower_body` →
+  `lower_block_node` → `lower_block_statement` → …) — a CWE-674 guard
+  for the same reason `MAX_EXPR_DEPTH`/`MAX_TREE_DEPTH` exist. In
+  practice, real *parsed* deeply-nested `if` source already trips the
+  pre-existing `collect_bounded`'s blanket per-raw-node `MAX_TREE_DEPTH`
+  cap first (it walks every grammar node, not just statement boundaries,
+  so it grows much faster per source-level nesting) — a new hand-built-
+  tree regression test
+  (`deeply_nested_if_statements_report_depth_error_not_stack_overflow`)
+  specifically engineers a tree with minimal raw-node depth per level so
+  `MAX_STMT_DEPTH` is the guard that actually fires, proving it is not
+  dead code.
+- `switch`, `break`, and `continue` are explicitly out of scope: a
+  repo-wide grep confirms `semantic-ir` has **no** `Switch`/`Match`/
+  `Case`/`Break`/`Continue` IR node at all — these need their own
+  spec-level design decision (Java's `switch` fall-through semantics in
+  particular), not a mechanical translation, so each is tracked as a
+  separate backlog item rather than silently dropped or half-implemented.
+  Every occurrence is rejected with a clean error via the same
+  unhandled-statement-kind catch-all every other unsupported statement
+  hits — no special-casing was needed to guarantee this.
+- 25 new tests in `tests/test_lower.rs` (if/else shape, brace-less
+  bodies, boolean-condition requirements, block-scope leak prevention in
+  both directions, while/do-while shape, every compound-assignment
+  operator including the `/=` div_trunc/div_true selection and `+=` on
+  `String`, every increment/decrement shape, switch/break/continue
+  rejection, and the new depth-guard regression) plus 7 new execution-
+  proof tests in `tests/e2e_python.rs` (if/else both branches, while,
+  do-while — specifically covering the "condition already false on
+  entry, but the body still runs once" case a plain pretest `while`
+  would get wrong — compound-assignment chaining, and increment inside
+  a while loop), all running real computed output through `python3`.
+- **Caught by `/security-review` before push (HIGH, resource-exhaustion
+  DoS)**: the first version of `do`/`while`'s desugaring built the
+  "run the body once, then `while`" shape by literally cloning the
+  already-lowered body `Block` (`body.stmts.clone()`) for the once-
+  executed copy. Cloning duplicates whatever nested `do`/`while`
+  structure the body *itself* already contains, so `N` levels of nested
+  `do`/`while` — valid, ordinary, brace-less Java source, no adversarial
+  hand-built tree required — produced `O(2^N)` emitted IR nodes from
+  `O(N)` source bytes: the same amplification shape as XML "billion
+  laughs". Critically, this was invisible to the `MAX_STMT_DEPTH` guard
+  added in the same PR — that guard bounds native call-stack *depth*,
+  but the blowup happens on each stack frame's *return* (the clone), not
+  from recursion depth, so a correctly-bounded-depth compile could still
+  emit an unbounded amount of IR. Fixed by eliminating the duplication
+  entirely: the body now lowers exactly once, wrapped in a synthetic
+  flag-guarded pretest loop instead of a literal copy (see the "Added"
+  section above for the exact desugared shape) — the fix that closes the
+  bug class, not merely a size cap that would still pay the `O(2^N)` cost
+  before rejecting. `nested_do_while_lowers_without_cloning_the_inner_body`
+  compares the module's own serialized size at two nesting depths and
+  asserts linear (not exponential) growth — deliberately not a shallow
+  top-level statement count, which a round of `/security-review` pointed
+  out would stay constant regardless of nesting and so would not actually
+  catch a reintroduced clone; the existing `do_while_loop_runs_in_python`
+  execution-proof test (asserting the "condition already false on entry,
+  body still runs once" semantic) also re-passed against the new
+  desugaring, confirming the fix didn't just close the DoS but preserved
+  correctness.
+- **Caught by a second round of `/security-review` on the fix itself
+  (HIGH, silent variable corruption)**: the flag-guarded rewrite above
+  generated its synthetic flag name (`__do_while_N`) from a monotonic
+  counter alone, with no check against names already in scope.
+  `__do_while_0` is a legal Java identifier, so a program that happens
+  to declare a variable by that exact name is a real, reachable case,
+  not a hypothetical one — confirmed with a live repro: `int
+  __do_while_0 = 1; do { __do_while_0 = __do_while_0 + 1; } while
+  (false); __do_while_0;` returned `1` (the assignment silently applied
+  to the synthetic flag instead) rather than the correct `2`. Fixed by
+  checking the candidate name against `lookup_local` and incrementing
+  past any collision before use.
+  `do_while_flag_name_does_not_collide_with_a_same_named_user_variable`
+  (structural) and `do_while_flag_name_collision_does_not_corrupt_a_real_variable`
+  (a `tests/e2e_python.rs` execution proof reproducing the exact live
+  repro above through the real Python backend) are regression tests for
+  this specifically. The same review round also found the regression
+  test for the exponential-blowup finding didn't actually exercise
+  nested-doubling (see above) and that this crate's own module-level and
+  `lower_do_while_statement`-level doc comments still described the
+  pre-fix "clone the body" shape after the code had moved on — both
+  fixed in the same pass.
+- **Caught by a third round of `/security-review`, on the second round's
+  own fix (HIGH, infinite-loop DoS)**: the collision check added above
+  only consulted `lookup_local` — the *ambient* scope active before the
+  do-while's body is lowered — which can never see a name the body
+  *itself* declares: by the time the check runs, `lower_body`'s own
+  scope for the body has already been pushed and popped again (the
+  correct real Java scope boundary). The appended flag-clear assignment
+  lives *inside* that body's own top level, though, so a same-named
+  local the body declares directly (`do { boolean __do_while_0 = true;
+  … } while (…);`) is exactly the case that reaches it. Under any
+  backend with real block scoping, the appended flag-clear would resolve
+  to the body's own shadowing local instead of the outer flag, so the
+  outer flag would never actually clear — `flag || C` stays `true`
+  forever: an infinite loop, not just a corrupted value (this crate's
+  own Python execution-proof harness doesn't manifest it, since Python
+  has no real block scoping — a backend-specific accident, not a
+  property of the emitted IR, which genuinely violated its own
+  documented scoping invariant). Fixed with a second check,
+  `body_declares_name`, scanning the already-lowered body's own
+  top-level statements (deliberately shallow — a *nested* sub-block's
+  own declarations live in a distinct, already-popped scope of their
+  own, so they can't reach the append point this check protects).
+  `do_while_flag_name_does_not_collide_with_a_local_the_body_itself_declares`
+  is the regression test.
+- **Caught by the crate's own test suite while writing this milestone**
+  (not `/security-review`): two tests from M1's own suite
+  (`compound_assignment_is_unsupported`, `postfix_increment_is_unsupported`)
+  asserted M1's now-superseded scope boundary; repurposed into positive
+  tests of the new desugaring instead of being silently deleted.
+
+## [0.2.0] - 2026-08-25
+
+### Added
+
+- JV02 milestone M1: local variable declarations, re-assignment, and
+  operators. `int x = 1;` and Java 10+ `var x = 1;` type inference (see
+  `lower.rs`'s own module doc, "The `var` ambiguity", for why `var` is
+  detected by its resolved shape rather than by grammar alternative —
+  confirmed by direct inspection of the parser's own output, not assumed
+  from reading the grammar); `String x = "s";`; re-assignment (`x = 2;`,
+  plain `=` only); arithmetic (`+ - * / %`), relational (`< > <= >=`),
+  equality (`== !=`), and logical (`&& || !`) operators; unary `+`/`-`
+  (constant-folded on a literal operand, `neg` builtin otherwise); and
+  `+`-based string concatenation via `Expr::StrConcat`, which
+  auto-stringifies non-string operands exactly like Java's own `+`
+  (`"n=" + 5` → `Expr::StrConcat(["n=", IntLit(5)])`).
+- A lightweight, lowering-time-only `Kind` classification (`Int`/`Float`/
+  `Bool`/`Str`/`Null`) tracks every local's declared type, just enough to
+  select the correct SIR operator — `div_trunc` when both operands of `/`
+  are integral (Java truncates toward zero, matching Rust/C; Java's
+  primitive types are all signed, so `udiv_trunc` never applies), `div_true`
+  when either is `float`/`double`, per SIR21 T3b-2's op-name convention —
+  and to reject nonsensical operand combinations (`"a" - "b"`, `1 && 2`)
+  with a clear error instead of mis-lowering them.
+- Java's `==`/`!=` on `String` (*reference* equality, not `.equals()`
+  value equality — a well-known Java gotcha) is deliberately rejected
+  rather than lowered as SIR's value-equality builtin, which would be a
+  silent correctness bug.
+- Local variable declarations lower to `Stmt::LetStarBinding` (sequential
+  semantics — `int x = 1; int y = x + 1;` needs `y`'s initializer to see
+  `x`), not `Stmt::LetBinding` (parallel-let semantics, where consecutive
+  bindings evaluate outside each other's scope). Assignment declares
+  `Feature::MutableBindings` in the module manifest.
+- Every construct still out of scope (control flow, method calls, field/
+  array access, lambdas, casts, `instanceof`, the ternary conditional,
+  bitwise/shift operators, compound assignment, increment/decrement,
+  uninitialized declarations, multiple declarators per statement, C-style
+  array-bracket declarators, array initializers, and reference types other
+  than `String`) returns a clean, explicit `JavaLowerError`.
+- 64 tests in `tests/test_lower.rs` covering every new construct
+  (positive) and every still-deferred construct (a clean rejection, not a
+  panic or mis-lowering).
+- `tests/e2e_python.rs`: this crate's first real execution-proof test
+  (JV02's own "Verification" section requirement, and — per the JV02
+  spec's "CI toolchain-detection gap" section — the first thing in this
+  initiative that actually needs a cross-language toolchain on `PATH` in
+  CI). Real Java source lowers through this crate, then through the
+  Python backend (`semantic-ir-to-python`, a new dev-dependency — not
+  JavaScript, whose backend does not accept `Feature::StringInterpolation`
+  yet), then runs under `python3`, asserting on real computed output for
+  arithmetic composition, integer-truncating vs. float division, string
+  concatenation with auto-stringification, comparison/logical combination,
+  re-assignment, unary `!`, and `var` inference. Since M1 has no way to
+  produce observable output on its own terms yet (`System.out.println` is
+  a method call, deferred to M3), the harness redirects `main`'s trailing
+  block value to its last statement's expression after lowering (a
+  test-harness convenience, not a frontend behavior change) so the
+  backend's own unconditional `return <block.value>` epilogue gives it
+  something to observe; gracefully skips when `python3` is absent.
+- **Caught by two rounds of fold-validation review while writing this
+  milestone's own tests** (not `/security-review` — a correctness bug
+  found by the crate's own M0 regression suite immediately failing after
+  the new lowering code landed): `lower_logical_chain`, `lower_equality`,
+  and `lower_relational` each validated operand `Kind` unconditionally on
+  every node visited during their fold, including the *pure passthrough*
+  case (no real operator at that precedence level — every expression
+  flows through `logical_and_expression`/`equality_expression`/
+  `relational_expression` regardless of type, since the Java grammar
+  builds the whole precedence chain of single-child wrapper nodes even
+  when no operator is present at a given level). This made even `42;`
+  fail to lower, since it passes through `logical_and_expression` on its
+  way down to `literal` and got rejected there as "not boolean". Fixed by
+  moving each check to fire only inside the actual-combine branch (when a
+  real second operand is present), matching the pattern
+  `lower_additive`/`lower_multiplicative` already used correctly.
+- **Caught by the crate's own `semantic_ir::validate()` check in
+  `compile_ok`, not `/security-review`**: an initial implementation used
+  `Stmt::LetBinding` (parallel-let semantics) for every local variable
+  declaration, which the validator correctly rejected as an "unknown
+  name" the moment one declaration's initializer referenced an earlier
+  one (`int x = 1; int y = x + 1;`) — Java's own local declarations are
+  strictly sequential. Fixed by switching to `Stmt::LetStarBinding`.
+  Relatedly, an initial `Stmt::Assign` emission didn't declare
+  `Feature::MutableBindings`, which the validator also rejects.
+
 ## [0.1.0] - 2026-08-25
 
 ### Added

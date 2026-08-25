@@ -3,9 +3,41 @@ import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
 import {
+  type OrphanCrateSnapshot,
+  type OrphanCrateValidationResult,
+  TRACKED_ARTIFACT_UNICODE_VERSION,
+  type TrackedArtifactDiagnostic,
+  type TrackedArtifactEntry,
   validateBuildContracts,
   validateCIFullBuildToolchains,
+  validateOrphanCrateSnapshot,
+  validateTrackedArtifactSnapshot,
 } from "../src/validator.js";
+import {
+  fullUppercase,
+  nfc,
+  nfkcCasefold,
+} from "../src/tracked-artifact-unicode17.js";
+
+const conformanceCases = new URL(
+  "../../../../specs/fixtures/build-tool-v1/cases/",
+  import.meta.url,
+);
+
+const trackedArtifactCases = [
+  "validation-tracked-artifacts-clean.json",
+  "validation-tracked-artifacts-forbidden.json",
+  "validation-tracked-artifacts-aliases.json",
+  "validation-tracked-artifacts-invalid.json",
+  "validation-tracked-artifacts-unicode-boundaries.json",
+] as const;
+
+const orphanCrateCases = [
+  "validation-orphan-crates-clean.json",
+  "validation-orphan-crates-unlisted.json",
+  "validation-orphan-exemptions-invalid.json",
+  "validation-orphan-exemptions-stale.json",
+] as const;
 
 function makeTempDir(): string {
   return fs.mkdtempSync(path.join(os.tmpdir(), "build-tool-validator-"));
@@ -268,5 +300,393 @@ luarocks make --local --deps-mode=none coding-adventures-safe-pkg-0.1.0-1.rocksp
         { language: "lua", path: safePath },
       ]),
     ).toBeNull();
+  });
+});
+
+describe("validateOrphanCrateSnapshot", () => {
+  for (const fixtureName of orphanCrateCases) {
+    it(`matches the shared ${fixtureName} fixture`, () => {
+      const fixture = JSON.parse(
+        fs.readFileSync(new URL(fixtureName, conformanceCases), "utf-8"),
+      ) as {
+        input: { options: { orphan_snapshot: OrphanCrateSnapshot } };
+        expected: {
+          result: Omit<OrphanCrateValidationResult, "diagnostics">;
+          diagnostics: OrphanCrateValidationResult["diagnostics"];
+        };
+      };
+
+      expect(
+        validateOrphanCrateSnapshot(fixture.input.options.orphan_snapshot),
+      ).toEqual({
+        ...fixture.expected.result,
+        diagnostics: fixture.expected.diagnostics,
+      });
+    });
+  }
+
+  const unsafeExemptionPaths = [
+    "",
+    "a".repeat(513),
+    "😀".repeat(513),
+    "/absolute/secret-project",
+    "C:/host/secret-project",
+    "code/packages/rust/bad<name>",
+    "code/packages/rust/trailing.",
+    "code/packages/rust/CON",
+  ] as const;
+
+  for (const unsafePath of unsafeExemptionPaths) {
+    it(`redacts unsafe exemption path ${JSON.stringify(unsafePath.slice(0, 20))}`, () => {
+      const result = validateOrphanCrateSnapshot({
+        directories: ["code/packages/rust/demo"],
+        manifests: [{ path: "code/packages/rust/demo", kind: "package" }],
+        build_files: [],
+        exemptions: [
+          {
+            line: 7,
+            kind: "PENDING",
+            path: unsafePath,
+            reason: "not allowed",
+          },
+        ],
+      });
+
+      expect(
+        result.diagnostics.find(
+          (diagnostic) => diagnostic.code === "ORPHAN_EXEMPTION_INVALID",
+        ),
+      ).toEqual({
+        code: "ORPHAN_EXEMPTION_INVALID",
+        severity: "error",
+        path: "code/BUILD-EXEMPTIONS",
+        details: { line: 7, problem: "PATH_UNSAFE" },
+      });
+      if (unsafePath.length > 0) {
+        expect(JSON.stringify(result)).not.toContain(unsafePath);
+      }
+    });
+  }
+
+  it("uses Python whitespace semantics for exemption reasons", () => {
+    const result = validateOrphanCrateSnapshot({
+      directories: ["code/packages/rust/demo"],
+      manifests: [{ path: "code/packages/rust/demo", kind: "package" }],
+      build_files: [],
+      exemptions: [
+        {
+          line: 7,
+          kind: "PENDING",
+          path: "code/packages/rust/demo",
+          reason: "\u001c",
+        },
+      ],
+    });
+
+    expect(result.pending_exemption_count).toBe(0);
+    expect(result.diagnostic_codes).toEqual([
+      "ORPHAN_CRATE_UNLISTED",
+      "ORPHAN_EXEMPTION_INVALID",
+    ]);
+    expect(result.diagnostics[1]?.details.problem).toBe("REASON_MISSING");
+
+    const nextLine = (reason: string) =>
+      validateOrphanCrateSnapshot({
+        directories: ["code/packages/rust/demo"],
+        manifests: [{ path: "code/packages/rust/demo", kind: "package" }],
+        build_files: [],
+        exemptions: [
+          {
+            line: 8,
+            kind: "PENDING",
+            path: "code/packages/rust/demo",
+            reason,
+          },
+        ],
+      });
+    expect(nextLine("\u0085").diagnostics[1]?.details.problem).toBe(
+      "REASON_MISSING",
+    );
+    expect(nextLine("\ufeff")).toEqual({
+      valid: true,
+      diagnostic_codes: [],
+      pending_exemption_count: 1,
+      diagnostics: [],
+    });
+  });
+
+  it("chooses the closest empty BUILD and fixed filename order", () => {
+    const result = validateOrphanCrateSnapshot({
+      directories: ["code/packages/rust/demo/child"],
+      manifests: [
+        { path: "code/packages/rust/demo/child", kind: "package" },
+      ],
+      build_files: [
+        { path: "code/packages/rust/BUILD", state: "empty" },
+        { path: "code/packages/rust/demo/BUILD_linux", state: "empty" },
+        { path: "code/packages/rust/demo/BUILD", state: "empty" },
+      ],
+      exemptions: [],
+    });
+
+    expect(result.diagnostics).toEqual([
+      {
+        code: "ORPHAN_CRATE_EMPTY_BUILD",
+        severity: "error",
+        path: "code/packages/rust/demo/child",
+        details: {
+          build_path: "code/packages/rust/demo/BUILD",
+          manifest_kind: "package",
+        },
+      },
+    ]);
+  });
+
+  it("ignores BUILD records outside the recognized rooted filename set", () => {
+    const result = validateOrphanCrateSnapshot({
+      directories: ["code/packages/rust/demo"],
+      manifests: [{ path: "code/packages/rust/demo", kind: "package" }],
+      build_files: [
+        { path: "BUILD", state: "runnable" },
+        { path: "code/packages/rust/demo/NOT_BUILD", state: "runnable" },
+      ],
+      exemptions: [],
+    });
+
+    expect(result.diagnostics[0]?.code).toBe("ORPHAN_CRATE_UNLISTED");
+  });
+
+  it("uses NFC plus full case folding for duplicate exemption identity", () => {
+    const result = validateOrphanCrateSnapshot({
+      directories: ["code/packages/rust/Straße"],
+      manifests: [{ path: "code/packages/rust/Straße", kind: "package" }],
+      build_files: [],
+      exemptions: [
+        {
+          line: 7,
+          kind: "EXCLUDED",
+          path: "code/packages/rust/Straße",
+          reason: "first",
+        },
+        {
+          line: 8,
+          kind: "PENDING",
+          path: "CODE/PACKAGES/RUST/STRASSE",
+          reason: "duplicate",
+        },
+      ],
+    });
+
+    expect(result.diagnostics).toEqual([
+      {
+        code: "ORPHAN_EXEMPTION_INVALID",
+        severity: "error",
+        path: "code/BUILD-EXEMPTIONS",
+        details: { line: 8, problem: "DUPLICATE_PATH" },
+      },
+    ]);
+  });
+
+  it("uses Python-compatible ASCII JSON ordering for Unicode details", () => {
+    const result = validateOrphanCrateSnapshot({
+      directories: [],
+      manifests: [],
+      build_files: [],
+      exemptions: [
+        {
+          line: 9,
+          kind: "EXCLUDED",
+          path: "code/packages/rust/z",
+          reason: "removed",
+        },
+        {
+          line: 8,
+          kind: "EXCLUDED",
+          path: "code/packages/rust/😀",
+          reason: "removed",
+        },
+        {
+          line: 7,
+          kind: "EXCLUDED",
+          path: "code/packages/rust/é",
+          reason: "removed",
+        },
+      ],
+    });
+
+    expect(
+      result.diagnostics.map((diagnostic) => diagnostic.details.entry_path),
+    ).toEqual([
+      "code/packages/rust/é",
+      "code/packages/rust/😀",
+      "code/packages/rust/z",
+    ]);
+  });
+});
+
+describe("validateTrackedArtifactSnapshot", () => {
+  for (const fixtureName of trackedArtifactCases) {
+    it(`matches the shared ${fixtureName} fixture`, () => {
+      const fixture = JSON.parse(
+        fs.readFileSync(new URL(fixtureName, conformanceCases), "utf-8"),
+      ) as {
+        input: {
+          options: {
+            tracked_artifact_snapshot: {
+              unicode_version: string;
+              entries: TrackedArtifactEntry[];
+            };
+          };
+        };
+        expected: { diagnostics: TrackedArtifactDiagnostic[] };
+      };
+      const snapshot = fixture.input.options.tracked_artifact_snapshot;
+
+      expect(
+        validateTrackedArtifactSnapshot(
+          snapshot.entries,
+          snapshot.unicode_version,
+        ),
+      ).toEqual(fixture.expected.diagnostics);
+    });
+  }
+
+  it("rejects Unicode-version drift before examining entries", () => {
+    expect(TRACKED_ARTIFACT_UNICODE_VERSION).toBe("17.0.0");
+    expect(() =>
+      validateTrackedArtifactSnapshot(
+        [{ ordinal: 1, path: "/hostile", entry_kind: "regular" }],
+        "15.1.0",
+      ),
+    ).toThrow("tracked artifact Unicode version must be 17.0.0");
+  });
+
+  const unsafePaths = [
+    ["", "EMPTY"],
+    ["a".repeat(513), "TOO_LONG"],
+    ["code/packages/e\u0301/file.ts", "NON_NFC"],
+    ["/absolute/file.ts", "ABSOLUTE"],
+    ["C:\\repo\\file.ts", "DRIVE_QUALIFIED"],
+    ["code//file.ts", "EMPTY_SEGMENT"],
+    ["code/trailing/", "EMPTY_SEGMENT"],
+    ["code\\trailing\\", "EMPTY_SEGMENT"],
+    ["code/<unsafe>/file.ts", "UNSAFE_CHARACTER"],
+    ["code/../file.ts", "DOT_SEGMENT"],
+    ["code/trailing./file.ts", "TRAILING_DOT_OR_SPACE"],
+    ["code/CON.txt/file.ts", "RESERVED_BASENAME"],
+  ] as const;
+
+  for (const [unsafePath, expectedProblem] of unsafePaths) {
+    it(`redacts the ${expectedProblem} path class`, () => {
+      const diagnostic = validateTrackedArtifactSnapshot([
+        { ordinal: 7, path: unsafePath, entry_kind: "regular" },
+      ]);
+
+      expect(diagnostic).toEqual([
+        {
+          code: "TRACKED_ARTIFACT_PATH_INVALID",
+          severity: "error",
+          path: "repository",
+          details: {
+            ordinal: 7,
+            entry_kind: "regular",
+            problem: expectedProblem,
+          },
+        },
+      ]);
+      if (unsafePath.length > 0) {
+        expect(JSON.stringify(diagnostic)).not.toContain(unsafePath);
+      }
+    });
+  }
+
+  it("normalizes separators without using host path APIs", () => {
+    expect(
+      validateTrackedArtifactSnapshot([
+        { ordinal: 1, path: "code\\src\\file.ts", entry_kind: "regular" },
+      ]),
+    ).toEqual([]);
+  });
+
+  it("counts Unicode scalars rather than UTF-16 code units", () => {
+    expect(
+      validateTrackedArtifactSnapshot([
+        { ordinal: 1, path: "😀".repeat(512), entry_kind: "regular" },
+      ]),
+    ).toEqual([]);
+    expect(
+      validateTrackedArtifactSnapshot([
+        { ordinal: 1, path: "😀".repeat(513), entry_kind: "regular" },
+      ])[0]?.details.problem,
+    ).toBe("TOO_LONG");
+  });
+
+  it("uses only the pinned Unicode 17 normalization and casing substrate", () => {
+    const todhriSource = String.fromCodePoint(0x105d2) + "\u0307";
+    const todhriComposed = String.fromCodePoint(0x105c9);
+    expect(nfc(todhriSource)).toBe(todhriComposed);
+    expect(
+      validateTrackedArtifactSnapshot([
+        { ordinal: 1, path: todhriSource, entry_kind: "regular" },
+      ])[0]?.details.problem,
+    ).toBe("NON_NFC");
+
+    const outlined = [..."NODE_MODULES"]
+      .map((character) =>
+        character === "_"
+          ? character
+          : String.fromCodePoint(0x1ccd6 + character.codePointAt(0)! - 0x41),
+      )
+      .join("");
+    expect(nfkcCasefold(outlined)).toBe("node_modules");
+    expect(
+      validateTrackedArtifactSnapshot([
+        { ordinal: 2, path: `code/${outlined}/file.ts`, entry_kind: "regular" },
+      ])[0]?.code,
+    ).toBe("TRACKED_ARTIFACT_FORBIDDEN");
+
+    expect(fullUppercase("conın$")).toBe("CONIN$");
+    expect(
+      validateTrackedArtifactSnapshot([
+        { ordinal: 3, path: "code/conın$.txt/file.ts", entry_kind: "regular" },
+      ])[0]?.details.problem,
+    ).toBe("RESERVED_BASENAME");
+
+    expect(nfc("q\u0300")).toBe("q\u0300");
+    expect(
+      validateTrackedArtifactSnapshot([
+        { ordinal: 4, path: "q\u0300/file.ts", entry_kind: "regular" },
+      ]),
+    ).toEqual([]);
+  });
+
+  it("sorts diagnostic paths by Unicode scalar value", () => {
+    const diagnostics = validateTrackedArtifactSnapshot([
+      {
+        ordinal: 1,
+        path: `${String.fromCodePoint(0x10000)}/node_modules/a`,
+        entry_kind: "regular",
+      },
+      {
+        ordinal: 2,
+        path: `${String.fromCodePoint(0xe000)}/node_modules/b`,
+        entry_kind: "regular",
+      },
+    ]);
+
+    expect(diagnostics.map((diagnostic) => diagnostic.path)).toEqual([
+      `${String.fromCodePoint(0xe000)}/node_modules/b`,
+      `${String.fromCodePoint(0x10000)}/node_modules/a`,
+    ]);
+  });
+
+  it("treats entry kind as inert metadata", () => {
+    expect(
+      validateTrackedArtifactSnapshot([
+        { ordinal: 1, path: "node_modules/a", entry_kind: "regular" },
+        { ordinal: 2, path: "node_modules/b", entry_kind: "symlink" },
+        { ordinal: 3, path: "node_modules/c", entry_kind: "reparse" },
+      ]).map((diagnostic) => diagnostic.details.entry_kind),
+    ).toEqual(["regular", "symlink", "reparse"]);
   });
 });

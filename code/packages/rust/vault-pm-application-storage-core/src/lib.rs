@@ -10,11 +10,15 @@ use coding_adventures_json_value::JsonValue;
 use coding_adventures_sha256::sha256;
 use coding_adventures_vault_pm_application::{
     BootstrapLocator, BootstrapStore, BootstrapStoreError, LocalStateStore, LocalStateStoreError,
+    LocalVaultStateV1,
 };
 use coding_adventures_vault_pm_format::{BootstrapId, BootstrapV1};
 use core::fmt::{self, Debug, Formatter};
+use std::collections::BTreeSet;
 use std::sync::Mutex;
-use storage_core::{StorageBackend, StorageError, StoragePutInput, StorageRecord};
+use storage_core::{
+    StorageBackend, StorageError, StorageListOptions, StoragePutInput, StorageRecord,
+};
 
 const BOOTSTRAP_LATEST_NAMESPACE_DOMAIN: &[u8] =
     b"vault-pm/application-storage-core/bootstrap-latest/v1";
@@ -215,6 +219,116 @@ impl<B: StorageBackend> StorageCoreApplicationStore<B> {
                 Ok(record)
             })
             .transpose()
+    }
+
+    /// Reclaim `PreparedInit` journals stranded by a generation zero that
+    /// crashed before its locator ever became discoverable in configuration.
+    ///
+    /// # The leak this closes
+    ///
+    /// `init` and `vault create` both draw a fresh random [`BootstrapLocator`]
+    /// and durably install its `PreparedInit` journal — via
+    /// [`LocalStateStore::compare_exchange`] — strictly *before* writing the
+    /// configuration record that makes the locator discoverable again. That
+    /// ordering is deliberate: VLT-PM41 §4.2 and §8 require that once
+    /// configuration names a locator, a crash-resumable journal is already
+    /// there to be found. The cost of choosing that ordering is the mirror
+    /// case — a crash strictly between the two writes leaves the journal
+    /// durable under a locator nothing will ever name again, since the value
+    /// that would have named it lived only in the crashed process's memory.
+    /// VLT-PM41 §8 records the finding; this closes it for the local,
+    /// single-device case documented there.
+    ///
+    /// # Why `PreparedInit` is the only state ever touched
+    ///
+    /// A locator's owner-state record can only ever be found in a state other
+    /// than `PreparedInit` — `Active`, `PendingPublication`, or
+    /// `PendingRotation` — after the configuration write that names it has
+    /// already durably succeeded, because every caller performs that
+    /// configuration write before ever driving the journal past `PreparedInit`
+    /// (see `complete_generation_zero`, called only after the configuration
+    /// write returns). So a record found in one of those later states is
+    /// never an orphan of *this* leak, no matter what `live_locators` says,
+    /// and this method leaves it untouched unconditionally. That is the
+    /// entire safety argument: the state check alone is sufficient, without
+    /// needing `live_locators` to be perfectly complete.
+    ///
+    /// `live_locators` is nonetheless required and consulted first, as
+    /// defense in depth and to make the call idempotent-safe against a
+    /// `PreparedInit` a caller is *itself* still in the middle of installing
+    /// via a locator it already generated but has not yet reached
+    /// `compare_exchange` for — the caller's own resume/probe paths always
+    /// pass the locator's owner-state or its containing configuration exactly
+    /// as they are already reading it for other reasons, so they always name
+    /// a locator whose `PreparedInit` is legitimately live before the check
+    /// on state above would matter.
+    ///
+    /// # Concurrency
+    ///
+    /// Holds the same write lock every mutating method on this store holds.
+    /// Every deletion is a compare-and-delete against the exact revision this
+    /// call observed, so a record that changes between the list and the
+    /// delete — which the write lock already forbids from this store, but
+    /// costs nothing to guard against structurally — is left alone rather
+    /// than torn out from under a concurrent write.
+    ///
+    /// Returns the number of reclaimed journals.
+    pub fn reclaim_orphaned_preparations(
+        &self,
+        live_locators: &BTreeSet<BootstrapLocator>,
+    ) -> Result<usize, LocalStateStoreError> {
+        let _write = self
+            .write_lock
+            .lock()
+            .map_err(|_| LocalStateStoreError::Unavailable)?;
+        self.initialize_local()?;
+        let namespace = local_namespace();
+        let mut reclaimed = 0usize;
+        let mut cursor = None;
+        loop {
+            let page = self
+                .backend
+                .list(
+                    &namespace,
+                    StorageListOptions {
+                        prefix: None,
+                        recursive: false,
+                        page_size: None,
+                        cursor: cursor.clone(),
+                    },
+                )
+                .map_err(map_local_read)?;
+            for record in &page.records {
+                let Some(locator) = parse_locator_key(&record.key) else {
+                    continue;
+                };
+                if live_locators.contains(&locator) {
+                    continue;
+                }
+                if validate_record(record, &namespace, &record.key, MAX_LOCAL_STATE_BYTES).is_err()
+                {
+                    continue;
+                }
+                let Ok(LocalVaultStateV1::PreparedInit(_)) =
+                    LocalVaultStateV1::decode(&record.body)
+                else {
+                    continue;
+                };
+                match self
+                    .backend
+                    .delete(&namespace, &record.key, Some(&record.revision))
+                {
+                    Ok(()) => reclaimed += 1,
+                    Err(StorageError::Conflict { .. }) => {}
+                    Err(error) => return Err(map_local_write(error)),
+                }
+            }
+            cursor = page.next_cursor;
+            if cursor.is_none() {
+                break;
+            }
+        }
+        Ok(reclaimed)
     }
 }
 
@@ -490,6 +604,34 @@ fn locator_key(locator: BootstrapLocator) -> String {
     hex_bytes(locator.as_bytes())
 }
 
+/// Recover the exact locator a `local_namespace()` key was written under.
+///
+/// Returns `None` for anything that is not a lower-case hex encoding of
+/// exactly 32 bytes, which cannot be a key this store ever wrote — a
+/// `list()` result should never contain one, but a foreign or corrupted
+/// entry is skipped rather than trusted.
+fn parse_locator_key(key: &str) -> Option<BootstrapLocator> {
+    let key = key.as_bytes();
+    if key.len() != 64 {
+        return None;
+    }
+    let mut bytes = [0_u8; 32];
+    for (index, byte) in bytes.iter_mut().enumerate() {
+        let high = hex_nibble(key[index * 2])?;
+        let low = hex_nibble(key[index * 2 + 1])?;
+        *byte = (high << 4) | low;
+    }
+    Some(BootstrapLocator::new(bytes))
+}
+
+fn hex_nibble(byte: u8) -> Option<u8> {
+    match byte {
+        b'0'..=b'9' => Some(byte - b'0'),
+        b'a'..=b'f' => Some(byte - b'a' + 10),
+        _ => None,
+    }
+}
+
 fn hex_bytes(bytes: &[u8]) -> String {
     const HEX: &[u8; 16] = b"0123456789abcdef";
     let mut encoded = String::with_capacity(bytes.len() * 2);
@@ -552,9 +694,14 @@ fn map_local_write(error: StorageError) -> LocalStateStoreError {
 mod tests {
     use super::*;
     use coding_adventures_storage_fs::FsStorageBackend;
+    use coding_adventures_vault_pm_application::{
+        prepare_audited_generation_zero, ActiveStateV1, AuditedGenerationZeroRandomness,
+        GenerationZeroPolicyV1, PreparedGenerationZero, AUDITED_GENERATION_ZERO_RANDOM_BYTES,
+    };
     use coding_adventures_vault_pm_format::{
         AeadEnvelopeV1, Argon2idParametersV1, PublicKey, Signature, VaultId, CRYPTO_SUITE_V1,
     };
+    use coding_adventures_zeroize::Zeroizing;
     use std::fs;
     use std::path::PathBuf;
     use std::sync::{Arc, Barrier};
@@ -1253,6 +1400,189 @@ mod tests {
             validate_record(&malformed, "expected", "expected", 1),
             Err(())
         );
+    }
+
+    // --- VLT-PM41 §8: reclaiming a generation zero stranded before its
+    // locator ever reached configuration ------------------------------------
+
+    fn generation_zero_policy() -> GenerationZeroPolicyV1 {
+        GenerationZeroPolicyV1::new(8 * 1024, 1, 1, 1_700_000_000_000).unwrap()
+    }
+
+    /// A distinct, deterministic `AUDITED_GENERATION_ZERO_RANDOM_BYTES` block
+    /// per `seed`, so repeated calls draw distinct locators the same way
+    /// distinct real `init` attempts would.
+    fn fixture_audited_randomness(seed: u8) -> AuditedGenerationZeroRandomness {
+        let mut bytes = [0_u8; AUDITED_GENERATION_ZERO_RANDOM_BYTES];
+        for (index, byte) in bytes.iter_mut().enumerate() {
+            *byte = (index as u8).wrapping_mul(17).wrapping_add(seed);
+        }
+        AuditedGenerationZeroRandomness::new(bytes)
+    }
+
+    /// Exactly what `vault-pm-cli::begin_init` has in hand right before its
+    /// `compare_exchange(locator, None, &exact_prepared)` call.
+    fn crashed_preparation(seed: u8) -> PreparedGenerationZero {
+        prepare_audited_generation_zero(
+            Zeroizing::new(b"correct horse battery staple".to_vec()),
+            generation_zero_policy(),
+            fixture_audited_randomness(seed),
+        )
+        .unwrap()
+    }
+
+    fn intended_active(prepared: &PreparedGenerationZero) -> ActiveStateV1 {
+        let LocalVaultStateV1::PreparedInit(journal) = prepared.owner_state() else {
+            panic!("generation zero must be prepared")
+        };
+        journal.intended_active().clone()
+    }
+
+    /// This is the leak VLT-PM41 §8 names, reproduced exactly: install a
+    /// `PreparedInit` journal under a random locator the way `begin_init`
+    /// does, then stop — as a crash strictly before the configuration write
+    /// would. Nothing durable anywhere records that this locator was ever
+    /// drawn, so without a sweep the bytes are gone from every code path that
+    /// could reach them, yet still occupy the backend forever. `reclaim_...`
+    /// is the only thing that ever revisits them.
+    #[test]
+    fn a_generation_zero_crashed_before_configuration_leaks_until_reclaimed() {
+        let store = StorageCoreApplicationStore::new(InMemoryStorageBackend::new());
+        let prepared = crashed_preparation(40);
+        let locator = prepared.bootstrap_locator();
+        let exact_prepared = prepared.owner_state().encode().unwrap();
+
+        // The crashed process's one durable write.
+        store
+            .compare_exchange(locator, None, &exact_prepared)
+            .unwrap();
+
+        // The leak: the bytes are durable, and no configuration anywhere
+        // names this locator, yet ordinary use of the store — a second,
+        // unrelated `load` — does not make them disappear on its own.
+        assert_eq!(store.load(locator).unwrap(), Some(exact_prepared.clone()));
+        assert_eq!(store.load(locator).unwrap(), Some(exact_prepared.clone()));
+
+        // The fix: nothing currently configured names any locator, so the
+        // whole namespace is fair game, and the orphan is gone.
+        let reclaimed = store
+            .reclaim_orphaned_preparations(&BTreeSet::new())
+            .unwrap();
+        assert_eq!(reclaimed, 1);
+        assert_eq!(store.load(locator).unwrap(), None);
+
+        // Idempotent: nothing left to reclaim a second time.
+        assert_eq!(
+            store
+                .reclaim_orphaned_preparations(&BTreeSet::new())
+                .unwrap(),
+            0
+        );
+    }
+
+    /// A `PreparedInit` a caller still considers live — its locator is in
+    /// `live_locators` — is exactly the ordinary crash-resumable case
+    /// (VLT-PM42): configuration already names it, so `init`'s resume path
+    /// will find and finish it. Reclaiming it would turn a recoverable crash
+    /// into the exact unrecoverable leak this method exists to prevent.
+    #[test]
+    fn reclaim_never_touches_a_locator_the_caller_still_considers_live() {
+        let store = StorageCoreApplicationStore::new(InMemoryStorageBackend::new());
+        let prepared = crashed_preparation(41);
+        let locator = prepared.bootstrap_locator();
+        let exact_prepared = prepared.owner_state().encode().unwrap();
+        store
+            .compare_exchange(locator, None, &exact_prepared)
+            .unwrap();
+
+        let mut live = BTreeSet::new();
+        live.insert(locator);
+        assert_eq!(store.reclaim_orphaned_preparations(&live).unwrap(), 0);
+        assert_eq!(store.load(locator).unwrap(), Some(exact_prepared));
+    }
+
+    /// `Active` can only exist because the configuration write that names its
+    /// locator already succeeded (`complete_generation_zero` is only ever
+    /// invoked after it), so it is never this leak's orphan no matter what
+    /// `live_locators` says. This is the load-bearing safety property: the
+    /// state check alone protects a real vault from ever being swept.
+    #[test]
+    fn reclaim_never_touches_an_active_record_even_if_unlisted() {
+        let store = StorageCoreApplicationStore::new(InMemoryStorageBackend::new());
+        let prepared = crashed_preparation(42);
+        let locator = prepared.bootstrap_locator();
+        let active = intended_active(&prepared);
+        let exact_active = LocalVaultStateV1::Active(active).encode().unwrap();
+        store
+            .compare_exchange(locator, None, &exact_active)
+            .unwrap();
+
+        assert_eq!(
+            store
+                .reclaim_orphaned_preparations(&BTreeSet::new())
+                .unwrap(),
+            0
+        );
+        assert_eq!(store.load(locator).unwrap(), Some(exact_active));
+    }
+
+    /// A record this store did not write — wrong content type, foreign
+    /// namespace shape, or bytes that do not decode as `LocalVaultStateV1` at
+    /// all — is left alone rather than trusted. Reclaiming is opt-in per
+    /// record, never a default.
+    #[test]
+    fn reclaim_skips_records_it_cannot_positively_identify_as_a_stranded_preparation() {
+        let store = StorageCoreApplicationStore::new(InMemoryStorageBackend::new());
+        let namespace = local_namespace();
+        let key = locator_key(locator(44));
+        store
+            .backend()
+            .put(
+                put_input(&namespace, &key, b"not a canonical owner state".to_vec())
+                    .unwrap()
+                    .with_if_absent(),
+            )
+            .unwrap();
+
+        assert_eq!(
+            store
+                .reclaim_orphaned_preparations(&BTreeSet::new())
+                .unwrap(),
+            0
+        );
+        assert!(store.backend().get(&namespace, &key).unwrap().is_some());
+    }
+
+    /// Reproduces the leak over a real filesystem backend, matching how
+    /// `vault-pm-cli` actually reaches this store, and proves reclaim sees
+    /// past a process restart exactly as `init`'s own resume path does for
+    /// the locators it keeps.
+    #[test]
+    fn reclaim_over_a_real_filesystem_backend_survives_reopening_the_store() {
+        let root = temporary_root("reclaim");
+        let prepared = crashed_preparation(45);
+        let locator = prepared.bootstrap_locator();
+        let exact_prepared = prepared.owner_state().encode().unwrap();
+        {
+            let store = StorageCoreApplicationStore::new(FsStorageBackend::new(&root));
+            store
+                .compare_exchange(locator, None, &exact_prepared)
+                .unwrap();
+        }
+        {
+            // A fresh process, exactly as a restarted `vault-pm init` would
+            // open it, finds the orphan still durable on disk.
+            let reopened = StorageCoreApplicationStore::new(FsStorageBackend::new(&root));
+            assert_eq!(reopened.load(locator).unwrap(), Some(exact_prepared));
+            assert_eq!(
+                reopened
+                    .reclaim_orphaned_preparations(&BTreeSet::new())
+                    .unwrap(),
+                1
+            );
+            assert_eq!(reopened.load(locator).unwrap(), None);
+        }
+        fs::remove_dir_all(root).unwrap();
     }
 
     fn temporary_root(label: &str) -> PathBuf {

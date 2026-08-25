@@ -39,7 +39,7 @@ describe("real curriculum", () => {
     expect(scripts.devanagari!.complete).toBe(true);
   });
 
-  it("keeps the cross-script closure queue measured after Malayalam എ", () => {
+  it("keeps the cross-script closure queue measured after Tamil உ", () => {
     const candrakkala = scripts.malayalam!.marks!.find((mark) => mark.mark === "്")!;
     expect(candrakkala.role).toBe("virama");
     expect(candrakkala.compositionOrder).toEqual([
@@ -157,6 +157,26 @@ describe("real curriculum", () => {
       /four directional movements.*two pen-down starts.*1.?2.*3.?4.*not uniform.*Noto Sans Telugu/i,
     );
 
+    const kannadaA = scripts.kannada!.independentVowels!.find((entry) => entry.glyph === "ಅ")!;
+    expect(kannadaA.sound).toBe("a");
+    expect(kannadaA.penLifts).toBe(0);
+    expect(kannadaA.strokeOrder).toEqual([
+      "turn clockwise around the compact left loop",
+      "without lifting, descend into the broad lower bowl and sweep up its right side",
+      "without lifting, turn counterclockwise around the rounded right loop",
+      "without lifting, return left along the inward horizontal bar",
+    ]);
+    expect(kannadaA.strokeOrderNote).toMatch(/four visible movements.*one continuous pen-down run/i);
+    expect(kannadaA.strokeOrderSource?.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Kannada-alphabet-a.gif",
+    );
+    expect(kannadaA.strokeOrderSource?.citation).toMatch(
+      /Gopala Krishna A.*Kannada-alphabet-a\.gif.*independent vowel ಅ.*00:00\.0.?00:03\.4.*Wikimedia Commons.*25 May 2016/i,
+    );
+    expect(kannadaA.strokeOrderSource?.variation).toMatch(
+      /35-frame animation.*one uninterrupted run.*left loop.*lower bowl.*right loop.*horizontal bar returning left.*Noto Sans Kannada/i,
+    );
+
     const malayalamE = scripts.malayalam!.independentVowels!.find((entry) => entry.glyph === "എ")!;
     expect(malayalamE.sound).toBe("e");
     expect(malayalamE.penLifts).toBe(1);
@@ -174,6 +194,114 @@ describe("real curriculum", () => {
     );
     expect(malayalamE.strokeOrderSource?.variation).toMatch(
       /word-initial forms.*click-to-play handwriting clip.*two pen-down runs.*inner loop and outer arch below the line.*Noto Sans Malayalam/i,
+    );
+
+    const malayalamA = scripts.malayalam!.independentVowels!.find((entry) => entry.glyph === "അ")!;
+    expect(malayalamA.sound).toBe("a");
+    expect(malayalamA.penLifts).toBe(1);
+    expect(malayalamA.strokeOrder).toEqual([
+      "climb the left outer arch, curve through the upper turn, and arrive at the central junction",
+      "without lifting, circle the broad lower loop and return to the junction",
+      "without lifting, sweep up through the central crown and descend the upright",
+      "after one lift, sweep up and over through the right outer arch and descend its far side",
+      "without lifting, curl left around the lower inner loop",
+    ]);
+    expect(malayalamA.strokeOrderNote).toMatch(/five visible movements.*two pen-down runs.*after one lift/i);
+    expect(malayalamA.strokeOrderSource?.url).toBe(
+      "https://malayalam.la.utexas.edu/resources/the-malayalam-script/",
+    );
+    expect(malayalamA.strokeOrderSource?.citation).toMatch(
+      /Donald R\. Davis Jr\..*The Malayalam Script.*Initial Vowels.*അ.*00:00.?00:04.*University of Texas at Austin/i,
+    );
+    expect(malayalamA.strokeOrderSource?.variation).toMatch(
+      /word-initial forms.*click-to-play handwriting clip.*left-and-central body.*one lifted right-side run.*outer arch.*lower inner loop.*Noto Sans Malayalam/i,
+    );
+
+    const malayalamChilluL = scripts.malayalam!.finalConsonants!.find((entry) => entry.glyph === "ൽ")!;
+    expect(malayalamChilluL.sound).toBe("l");
+    expect(malayalamChilluL.role).toBe("consonant");
+    expect(malayalamChilluL.penLifts).toBe(0);
+    expect(malayalamChilluL.strokeOrder).toHaveLength(5);
+    expect(malayalamChilluL.strokeOrderNote).toMatch(/five visible movements.*one continuous pen-down run/i);
+    expect(malayalamChilluL.strokeOrderSource?.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Ml_%E0%B5%BD_order.gif",
+    );
+    expect(malayalamChilluL.strokeOrderSource?.citation).toMatch(
+      /Sriveenkat.*Ml ൽ order\.gif.*chillu L.*00:00\.1.?00:09\.6.*Wikimedia Commons.*2 July 2023/i,
+    );
+    expect(malayalamChilluL.strokeOrderSource?.variation).toMatch(
+      /97-frame Gayathri-font animation.*one uninterrupted run.*left entry arch.*central loop.*rightward upper shoulder.*right loop.*hook above the line.*University of Texas.*Noto Sans Malayalam/i,
+    );
+    expect(malayalamChilluL.notes).toMatch(/U\+0D7D.*vowel-free final consonant.*not the base ല/i);
+
+    const malayalamChilluN = scripts.malayalam!.finalConsonants!.find((entry) => entry.glyph === "ൻ")!;
+    expect(malayalamChilluN.sound).toBe("n");
+    expect(malayalamChilluN.role).toBe("consonant");
+    expect(malayalamChilluN.penLifts).toBe(1);
+    expect(malayalamChilluN.strokeOrder).toHaveLength(4);
+    expect(malayalamChilluN.strokeOrderNote).toMatch(/four visible movements.*two pen-down runs.*one lifted right-side run/i);
+    expect(malayalamChilluN.strokeOrderSource?.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Ml_%E0%B5%BB_order.gif",
+    );
+    expect(malayalamChilluN.strokeOrderSource?.citation).toMatch(
+      /Sriveenkat.*Ml ൻ order\.gif.*chillu N.*00:03\.0.?00:09\.5.*Wikimedia Commons.*2 July 2023/i,
+    );
+    expect(malayalamChilluN.strokeOrderSource?.variation).toMatch(
+      /67-frame Gayathri-font animation.*left arch.*central stem.*lifts once.*right outer loop.*inner return.*hook above the line.*Noto Sans Malayalam/i,
+    );
+    expect(malayalamChilluN.notes).toMatch(/U\+0D7B.*vowel-free final consonant.*not the base ന/i);
+
+    const malayalamZha = scripts.malayalam!.letters.find((entry) => entry.glyph === "ഴ")!;
+    expect(malayalamZha.sound).toBe("ḻa");
+    expect(malayalamZha.role).toBe("syllable");
+    expect(malayalamZha.penLifts).toBe(0);
+    expect(malayalamZha.strokeOrder).toHaveLength(3);
+    expect(malayalamZha.strokeOrderNote).toMatch(/three visible movements.*one continuous pen-down run/i);
+    expect(malayalamZha.strokeOrderSource?.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Ml_%E0%B4%B4_order.gif",
+    );
+    expect(malayalamZha.strokeOrderSource?.citation).toMatch(
+      /Sriveenkat.*Ml ഴ order\.gif.*letter LLLA.*00:03\.0.?00:07\.4.*Wikimedia Commons.*1 July 2023/i,
+    );
+    expect(malayalamZha.strokeOrderSource?.variation).toMatch(
+      /47-frame Gayathri-font animation.*one uninterrupted run.*left entry arch.*clockwise right loop.*inner return.*lower hook.*Noto Sans Malayalam/i,
+    );
+    expect(malayalamZha.notes).toMatch(/U\+0D34.*ISO 15919.*base consonant.*inherent a/i);
+
+    const tamilIndependentE = scripts.tamil!.letters.find((entry) => entry.glyph === "எ")!;
+    expect(tamilIndependentE.sound).toBe("e");
+    expect(tamilIndependentE.penLifts).toBe(1);
+    expect(tamilIndependentE.strokeOrder).toHaveLength(7);
+    expect(tamilIndependentE.strokeOrder?.[5]).toMatch(/lower foot right.*lift once/i);
+    expect(tamilIndependentE.strokeOrder?.[6]).toMatch(/separate right upright.*straight up/i);
+    expect(tamilIndependentE.strokeOrderSource?.url).toBe(
+      "https://sites.la.utexas.edu/tamilscript/files/2009/08/hw_lettersinstructions.pdf",
+    );
+    expect(tamilIndependentE.strokeOrderSource?.citation).toMatch(
+      /Tamil Script Learners Manual.*Appendix I.*Frame 5.*எ.*University of Texas at Austin.*p\. 193/i,
+    );
+    expect(tamilIndependentE.strokeOrderSource?.variation).toMatch(
+      /first six movements.*connected body.*upward right upright.*movement 7.*one lift.*varies by school.*two-run order.*Noto Sans Tamil/i,
+    );
+
+    const tamilIndependentU = scripts.tamil!.letters.find((entry) => entry.glyph === "உ")!;
+    expect(tamilIndependentU.sound).toBe("u");
+    expect(tamilIndependentU.role).toBe("independent-vowel");
+    expect(tamilIndependentU.penLifts).toBe(0);
+    expect(tamilIndependentU.strokeOrder).toEqual([
+      "start inside the upper spiral and sweep outward around it",
+      "without lifting, descend through the broad outer curve and turn left onto the baseline",
+      "without lifting, carry the long baseline straight to the right",
+    ]);
+    expect(tamilIndependentU.strokeOrderNote).toMatch(/one unbroken stroke.*three joined movements.*no pen lift/i);
+    expect(tamilIndependentU.strokeOrderSource?.url).toBe(
+      "https://sites.la.utexas.edu/tamilscript/files/2009/08/hw_lettersinstructions.pdf",
+    );
+    expect(tamilIndependentU.strokeOrderSource?.citation).toMatch(
+      /Tamil Script Learners Manual.*Appendix I.*Frame 16.*உ.*University of Texas at Austin.*p\. 196/i,
+    );
+    expect(tamilIndependentU.strokeOrderSource?.variation).toMatch(
+      /Frame 16.*upper spiral.*descending outer curve.*rightward baseline.*three joined movements.*varies by school.*continuous order.*Noto Sans Tamil/i,
     );
 
     const tamilRetroflexLa = scripts.tamil!.letters.find((entry) => entry.glyph === "ள")!;
@@ -367,6 +495,22 @@ describe("real curriculum", () => {
       /continuous Naskh.*upper tip.*shoulder.*baseline.*without lifting.*non-connector.*Persian-scoped/i,
     );
 
+    const persianPeh = scripts["perso-arabic"]!.letters.find((letter) => letter.glyph === "پ")!;
+    expect(persianPeh.strokeOrder).toEqual([
+      "sweep the shallow bowl from right to left",
+      "lift, then place the left dot below",
+      "lift again and place the right dot below",
+      "lift again and place the lower-center dot",
+    ]);
+    expect(persianPeh.penLifts).toBe(3);
+    expect(persianPeh.strokeOrderSource?.url).toBe(
+      "https://laits.utexas.edu/persian_grammar/video/gr/kooroshalphabet",
+    );
+    expect(persianPeh.strokeOrderSource?.citation).toMatch(/Persian Online.*پ.*00:16–00:21/i);
+    expect(persianPeh.strokeOrderSource?.variation).toMatch(
+      /right-to-left.*three separate dots below.*left, right, then lower-center.*Noto Naskh/i,
+    );
+
     const persianRa = scripts["perso-arabic"]!.letters.find((letter) => letter.glyph === "ر")!;
     expect(persianRa.strokeOrder).toEqual([
       "begin at the upper tip and descend through the short stroke",
@@ -455,6 +599,8 @@ describe("real curriculum", () => {
     expect(affected.get("و") ?? 0).toBe(0);
     expect(affected.get("د") ?? 0).toBe(0);
     expect(missingByScript.get("perso-arabic.json")?.has("ر")).toBe(false);
+    expect(missingByScript.get("perso-arabic.json")?.has("پ")).toBe(false);
+    expect(missingByScript.get("urdu-nastaliq.json")?.has("پ")).toBe(true);
     expect(missingByScript.get("tamil.json")?.has("ச")).toBe(false);
     expect(affected.get("ச") ?? 0).toBe(0);
     expect(missingByScript.get("tamil.json")?.has("ட")).toBe(false);
@@ -469,9 +615,27 @@ describe("real curriculum", () => {
     expect(affected.get("ள") ?? 0).toBe(0);
     expect(missingByScript.get("telugu.json")?.has("అ")).toBe(false);
     expect(affected.get("అ") ?? 0).toBe(0);
+    expect(missingByScript.get("malayalam.json")?.has("അ")).toBe(false);
+    expect(affected.get("അ") ?? 0).toBe(0);
+    expect(missingByScript.get("perso-arabic.json")?.has("خ")).toBe(false);
+    expect(missingByScript.get("urdu-nastaliq.json")?.has("خ")).toBe(false);
+    expect(missingByScript.get("tamil.json")?.has("எ")).toBe(false);
+    expect(affected.get("எ") ?? 0).toBe(0);
+    expect(missingByScript.get("tamil.json")?.has("ழ")).toBe(false);
+    expect(affected.get("ழ") ?? 0).toBe(0);
+    expect(missingByScript.get("malayalam.json")?.has("ൽ")).toBe(false);
+    expect(affected.get("ൽ") ?? 0).toBe(0);
+    expect(missingByScript.get("malayalam.json")?.has("ൻ")).toBe(false);
+    expect(affected.get("ൻ") ?? 0).toBe(0);
+    expect(missingByScript.get("malayalam.json")?.has("ഴ")).toBe(false);
+    expect(affected.get("ഴ") ?? 0).toBe(0);
+    expect(missingByScript.get("tamil.json")?.has("உ")).toBe(false);
+    expect(affected.get("உ") ?? 0).toBe(0);
+    expect(missingByScript.get("kannada.json")?.has("ಅ")).toBe(false);
+    expect(affected.get("ಅ") ?? 0).toBe(0);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["எ", 15]);
+    ).toEqual(["ف", 10]);
   });
 
   it("loaded every track (17+ and growing)", () => {
@@ -760,16 +924,37 @@ describe("real curriculum", () => {
   it("keeps the Japanese script-before-decoding chain closed and under five minutes", () => {
     // Japanese needs three writing systems, but putting all three in Chapter 1 made
     // the learner decode before the sign lessons. Pin the repaired structure: twelve
-    // small chapters, one objective activity per lesson, and spoken repair that
-    // demands decoding only for signs the learner has earned.
+    // small chapters and spoken repair that demands decoding only for signs the
+    // learner has earned. Chapter 13 deliberately gives its reception and
+    // production checkpoints two activities each so the four skills remain
+    // separately scored; every other lesson keeps one objective activity.
     const report = buildCurriculumGapReport({ registry, lessons, books });
     const japanese = lessons.filter((lesson) => lesson.language === "japanese");
-    expect(japanese).toHaveLength(100);
+    expect(japanese).toHaveLength(117);
     expect(new Set(japanese.map((lesson) => lesson.realization.chapter))).toEqual(
-      new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]),
+      new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
     );
     expect(japanese.every((lesson) => lesson.frontmatter.schema_version === "2")).toBe(true);
-    expect(japanese.every((lesson) => compileLessonActivities(lesson.blocks).length === 1)).toBe(true);
+    expect(
+      japanese.map((lesson) => [
+        lesson.realization.lessonId,
+        compileLessonActivities(lesson.blocks).length,
+      ]),
+    ).toEqual(
+      expect.arrayContaining([
+        ["JA-C13-family-reception", 2],
+        ["JA-C13-family-check", 2],
+      ]),
+    );
+    expect(
+      japanese
+        .filter(
+          (lesson) =>
+            lesson.realization.lessonId !== "JA-C13-family-reception" &&
+            lesson.realization.lessonId !== "JA-C13-family-check",
+        )
+        .every((lesson) => compileLessonActivities(lesson.blocks).length === 1),
+    ).toBe(true);
     expect(
       report.duration.violations.filter((lesson) => lesson.language === "japanese"),
     ).toEqual([]);

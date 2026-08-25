@@ -4,8 +4,914 @@
   "chapter": 2,
   "title": "Courtesy and Responses",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:9aa5417f46ee5710",
+  "sourceHash": "fnv1a64:b3f71b37f2f57af6",
   "lessons": [
+    {
+      "id": "GU-W02-ra",
+      "sequence": 12,
+      "title": "ર — one new shape, ra",
+      "headword": "ર",
+      "romanization": "ra",
+      "gloss": "the Gujarati consonant ra",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:c6ba2258329a86e8",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — meet the shape"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet the shape until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the inherent-vowel rule once: a bare Gujarati consonant carries short a. Keep that rule; add only one shape."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — meet the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep ર visible. It is ra: r plus the inherent a. Begin at the upper left, circle clockwise around the rounded upper body, continue through the small middle loop, and descend into the lower-right tail without lifting."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — notice and trace",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Finger-trace ર once. Then trace it once in the air. Say ra only after the motion stops."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "writing",
+          "title": "Writing — copy with the model",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep ર (ra) visible and copy it once. Compare only three landmarks: rounded top, small middle loop, descending tail. If one differs, repair that part."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "writing",
+          "title": "Writing — recall after hiding",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover the model. Write ra once from memory, then uncover ર and check the three landmarks. Stop after one honest repair."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-W02-ra-recall",
+              "prompt": "Hide the model. Write the Gujarati consonant ra from memory.",
+              "assesses": [
+                "GU-SCRIPT-RA-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "ર"
+              ],
+              "feedback": {
+                "correct": "ર — rounded top, small loop, descending tail.",
+                "incorrect": "Look once at ર, hide it again, and repair only the differing landmark."
+              }
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What vowel comes free with ર (ra)? (Short a.) Name the three landmarks without writing again. (Rounded top, small loop, descending tail.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-W02-da",
+      "sequence": 13,
+      "title": "દ — one continuous shape, da",
+      "headword": "દ",
+      "romanization": "da",
+      "gloss": "the Gujarati consonant da",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:a65836abacf49487",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — meet the shape"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet the shape until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Without looking back, write ર (ra) once. Check it, then set it aside."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — meet the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep દ visible. It is da. Begin at the upper right, circle the rounded upper body into the narrow middle turn, then continue without lifting around the broad lower body and rise into the compact right terminal."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — notice and trace",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Finger-trace દ (da) once, then air-trace it once. One continuous run; no lift."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "writing",
+          "title": "Writing — copy with the model",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy visible દ (da) once. Check upper round, narrow turn, broad lower round. Repair only the landmark that differs."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "writing",
+          "title": "Writing — recall after hiding",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hide the model and write da once. Uncover દ, compare, and stop after one repair."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-W02-da-recall",
+              "prompt": "Hide the model. Write the Gujarati consonant da from memory.",
+              "assesses": [
+                "GU-SCRIPT-DA-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "દ"
+              ],
+              "feedback": {
+                "correct": "દ — one continuous upper-turn-lower path.",
+                "incorrect": "Look once at દ, hide it, and repair only the differing turn."
+              }
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many pen lifts? (None.) What vowel is already present? (a.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-W02-va",
+      "sequence": 14,
+      "title": "વ — rounded body, separate spine, va",
+      "headword": "વ",
+      "romanization": "va",
+      "gloss": "the Gujarati consonant va",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:25bdb09f880398ee",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Script — meet the shape"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script — meet the shape until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write દ (da) once from memory. Then look at the new model only."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — meet the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep વ visible. It is va. Begin at the upper right, circle counterclockwise around the broad rounded left body, and return into the right shoulder. Lift once. Descend the tall right spine and turn through its lower foot."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — notice and trace",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Finger-trace the rounded body, lift, then trace the spine. Air-trace the same two runs."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "writing",
+          "title": "Writing — copy with the model",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy visible વ (va) once. Check body, shoulder, spine; do not add a third run."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "writing",
+          "title": "Writing — recall after hiding",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hide વ. Write va once, uncover the model, and make at most one repair."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-W02-va-recall",
+              "prompt": "Hide the model. Write the Gujarati consonant va from memory.",
+              "assesses": [
+                "GU-SCRIPT-VA-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "વ"
+              ],
+              "feedback": {
+                "correct": "વ — rounded body, then the separate right spine.",
+                "incorrect": "Look once at વ, hide it, and rebuild body then spine."
+              }
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where is the lift? (Between the rounded body and right spine.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-W02-ya",
+      "sequence": 15,
+      "title": "ય — upper turn, lower body, separate spine, ya",
+      "headword": "ય",
+      "romanization": "ya",
+      "gloss": "the Gujarati consonant ya",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:3627d3db156fbefa",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — meet the shape"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet the shape until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write વ (va) once from memory. Name its two runs, then move on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — meet the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep ય visible. It is ya. Begin at the upper left, circle through the rounded upper turn, and sweep around the broad lower body into the long right shoulder. Lift once; descend the tall right spine and turn through its lower foot."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — notice and trace",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace the body once with a finger, lift, then trace the spine. Repeat once in the air."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "writing",
+          "title": "Writing — copy with the model",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy visible ય (ya) once. Check upper turn, lower body, shoulder, spine."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "writing",
+          "title": "Writing — recall after hiding",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hide the model. Write ya once, compare with ય, and make one repair at most."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-W02-ya-recall",
+              "prompt": "Hide the model. Write the Gujarati consonant ya from memory.",
+              "assesses": [
+                "GU-SCRIPT-YA-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "ય"
+              ],
+              "feedback": {
+                "correct": "ય — joined upper and lower body, then the separate spine.",
+                "incorrect": "Look once at ય, hide it, and repair only the missing landmark."
+              }
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which part is separate? (The tall right spine.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-W02-bha",
+      "sequence": 16,
+      "title": "ભ — broad loop, inner turn, separate spine, bha",
+      "headword": "ભ",
+      "romanization": "bha",
+      "gloss": "the Gujarati consonant bha",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:44c623977f1affa2",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — meet the shape"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet the shape until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write ય (ya) once from memory. Check only its separate right spine."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — meet the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep ભ visible. It is bha, one consonant sound with the inherent a. Begin at the lower left, circle clockwise around the broad loop, wind through the compact inner turn, and exit across the long right shoulder. Lift once; descend the tall right spine and turn through its lower foot."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — notice and trace",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Finger-trace the loop-and-shoulder run once, lift, then trace the spine. Air-trace once."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "writing",
+          "title": "Writing — copy with the model",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy visible ભ (bha) once. Check broad loop, compact inner turn, shoulder, spine."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "writing",
+          "title": "Writing — recall after hiding",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hide ભ. Write bha once, uncover it, and repair one landmark if needed."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-W02-bha-recall",
+              "prompt": "Hide the model. Write the Gujarati consonant bha from memory.",
+              "assesses": [
+                "GU-SCRIPT-BHA-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "ભ"
+              ],
+              "feedback": {
+                "correct": "ભ — broad loop and inner turn, then the separate spine.",
+                "incorrect": "Look once at ભ, hide it, and rebuild the four landmarks slowly."
+              }
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the sound slowly. (bha.) How many pen-down runs? (Two.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-W02-dha",
+      "sequence": 17,
+      "title": "ધ — high entry, broad lower body, separate spine, dha",
+      "headword": "ધ",
+      "romanization": "dha",
+      "gloss": "the Gujarati consonant dha",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:194c43bbf0a2f0c9",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — meet the shape"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet the shape until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write ભ (bha) once. Point to its compact inner turn, then stop reviewing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — meet the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep ધ visible. It is dha. Begin at the high left entry, descend through the upper turn and narrow middle, then sweep around the broad lower body into the right shoulder. Lift once; descend the tall right spine and turn through its foot."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — notice and trace",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Finger-trace those two runs once. Air-trace them once, keeping the lift in place."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "writing",
+          "title": "Writing — copy with the model",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy visible ધ (dha) once. Check high entry, narrow middle, broad lower body, spine."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "writing",
+          "title": "Writing — recall after hiding",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hide the model. Write dha once, uncover ધ, and make one repair at most."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-W02-dha-recall",
+              "prompt": "Hide the model. Write the Gujarati consonant dha from memory.",
+              "assesses": [
+                "GU-SCRIPT-DHA-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "ધ"
+              ],
+              "feedback": {
+                "correct": "ધ — high entry through the broad body, then the separate spine.",
+                "incorrect": "Look once at ધ, hide it, and repair only the differing landmark."
+              }
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What narrows between the upper and lower bodies? (The middle turn.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-W02-vocalic-r",
+      "sequence": 18,
+      "title": "ૃ — a small below-consonant sign, -ṛ",
+      "headword": "ૃ",
+      "romanization": "-ṛ",
+      "gloss": "the below-consonant vocalic-r sign used in Sanskrit loans",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:8e8c5ecd82f5d392",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — meet the shape"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet the shape until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Point to ભ, then ધ. Say bha, then dha. Do not copy either."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — meet the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep ૃ (-ṛ) visible. This is not a free-standing letter. It is a small vowel sign placed below a consonant, mainly in Sanskrit loans, and it gives vocalic ṛ. Keep ભૃ visible: the new information is only the small sign below ભ (bha)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — notice and trace",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Finger-trace the visible ૃ (-ṛ) once. No stroke-order claim is being added here; copy the printed model's small below-consonant shape."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "writing",
+          "title": "Writing — copy with the model",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep ભ (bha) visible. Copy only ૃ (-ṛ) beneath it once, making ભૃ. Point to the base, then the sign, and say bhṛ."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "writing",
+          "title": "Writing — recall after hiding",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hide only the sign while ભ (bha) remains visible. Add it once, then compare with ભૃ."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-W02-vocalic-r-recall",
+              "prompt": "Keep ભ (bha) visible but hide the sign. Add the Gujarati vocalic-r sign to make bhṛ.",
+              "assesses": [
+                "GU-SCRIPT-VOCALIC-R-MATRA-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "ભૃ",
+                "ૃ"
+              ],
+              "feedback": {
+                "correct": "ભૃ — the small vocalic-r sign sits below the consonant.",
+                "incorrect": "Look once at ભૃ, hide only the sign, and add the small below-consonant mark."
+              }
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Is ૃ (-ṛ) independent? (No; it attaches below a consonant.) Where will it appear next? (Only in the old root bhṛ.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Gujarati chart."
+            }
+          ]
+        }
+      ]
+    },
     {
       "id": "GU-C01-aabhaar",
       "sequence": 20,
@@ -19,16 +925,17 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:76a7c83bd3c315be",
+      "sourceHash": "fnv1a64:2ba2e65aa826735f",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Script retrieval"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Script retrieval until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -55,7 +962,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "આ (the independent long ā, for a word-initial vowel) + ભા (bhā) + ર (r) becomes આભાર (ābhār). Note again: no top line."
+              "text": "આ (the independent long ā, for a word-initial vowel) + ભા (bhā) + ર (ra) (r) becomes આભાર (ābhār). Note again: no top line."
             }
           ]
         },
@@ -112,6 +1019,35 @@
         },
         {
           "index": 4,
+          "type": "script",
+          "title": "Script retrieval",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hide the earlier models. Write ર once, then write the unattached practice model ૃ (-ṛ) once. Compare, repair only one mark if needed, and stop."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C01-aabhaar-script-retrieval",
+              "prompt": "Without looking back, write ર (ra) and the vowel sign ૃ (-ṛ) once each.",
+              "assesses": [
+                "GU-SCRIPT-RA-01",
+                "GU-SCRIPT-VOCALIC-R-MATRA-01"
+              ],
+              "responseSeconds": 18,
+              "acceptedResponses": [
+                "ર, ૃ"
+              ],
+              "feedback": {
+                "correct": "Good: ર is the consonant; ૃ is the small vowel sign written below a consonant.",
+                "incorrect": "Look back once, notice that ૃ hangs below its consonant, then hide the models and try each once."
+              }
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,16 +1078,17 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:584e28dd4cdac7c4",
+      "sourceHash": "fnv1a64:de23d8ab32db0010",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Script retrieval"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Script retrieval until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -235,6 +1172,35 @@
         },
         {
           "index": 4,
+          "type": "script",
+          "title": "Script retrieval",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Without looking back, write દ (da), then ય (ya), one time each. Compare them with the earlier models. Repair one shape if needed; do not start a row."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C01-aavjo-script-retrieval",
+              "prompt": "Without looking back, write દ (da) and ય (ya) once each.",
+              "assesses": [
+                "GU-SCRIPT-DA-01",
+                "GU-SCRIPT-YA-01"
+              ],
+              "responseSeconds": 18,
+              "acceptedResponses": [
+                "દ, ય"
+              ],
+              "feedback": {
+                "correct": "Good: you retrieved both consonants from memory.",
+                "incorrect": "Look back once, hide the models, and try દ and ય one time each."
+              }
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,16 +1231,17 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0b4d73f6d54b7363",
+      "sourceHash": "fnv1a64:c790e4994d265f59",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Script retrieval"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Script retrieval until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -349,6 +1316,35 @@
         },
         {
           "index": 4,
+          "type": "script",
+          "title": "Script retrieval",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hide the earlier models. Write ભ (bha), then વ (va), one time each. Compare the two shapes and repair only the one that needs it."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C01-haa-naa-script-retrieval",
+              "prompt": "Without looking back, write ભ (bha) and વ (va) once each.",
+              "assesses": [
+                "GU-SCRIPT-BHA-01",
+                "GU-SCRIPT-VA-01"
+              ],
+              "responseSeconds": 18,
+              "acceptedResponses": [
+                "ભ, વ"
+              ],
+              "feedback": {
+                "correct": "Good: you retrieved both consonants from memory.",
+                "incorrect": "Look back once, hide the models, and try ભ and વ one time each."
+              }
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -378,16 +1374,20 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "writing-block"
+        "writing-block",
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:5494bdfab7dbc9d8",
+      "sourceHash": "fnv1a64:93656ffc1f2617bf",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Script retrieval — one older consonant"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script retrieval — one older consonant until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -414,6 +1414,34 @@
         },
         {
           "index": 2,
+          "type": "script",
+          "title": "Script retrieval — one older consonant",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Now hide the earlier model for ધ (dha) and write it once. Compare and make at most one repair."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-W01-haa-guided-copy-dha-retrieval",
+              "prompt": "Hide the earlier model and write ધ (dha) once.",
+              "assesses": [
+                "GU-SCRIPT-DHA-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "ધ"
+              ],
+              "feedback": {
+                "correct": "Good: one careful retrieval is enough.",
+                "incorrect": "Look at ધ once, hide it, then write it one time."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up recall",
           "segments": [
@@ -460,17 +1488,21 @@
       "modalityReasons": [
         "writing-type",
         "writing-block",
+        "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:297506659a7c2240",
+      "sourceHash": "fnv1a64:8308ea6113bd3e0d",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
           "your eyes, because the lesson points at something written down"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Script retrieval — one older vowel sign"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script retrieval — one older vowel sign until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -513,6 +1545,34 @@
         },
         {
           "index": 2,
+          "type": "script",
+          "title": "Script retrieval — one older vowel sign",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hide the earlier model for ૃ (-ṛ). Write the small below-consonant sign once, compare it, and stop after one repair."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-W01-haa-delayed-copy-vocalic-r-retrieval",
+              "prompt": "Hide the earlier model and write the vowel sign ૃ (-ṛ) once.",
+              "assesses": [
+                "GU-SCRIPT-VOCALIC-R-MATRA-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "ૃ"
+              ],
+              "feedback": {
+                "correct": "Good: ૃ sits below the consonant it modifies.",
+                "incorrect": "Look once at the small below-consonant sign ૃ, hide it, and try once."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up recall",
           "segments": [
@@ -796,7 +1856,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9af4a2dd90b8b6a6",
+      "sourceHash": "fnv1a64:4800ef74eac7514b",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -917,11 +1977,27 @@
         {
           "index": 3,
           "type": "writing",
-          "title": "Writing — retrieve the tiny word once",
+          "title": "Writing — three gentle retrievals",
           "segments": [
             {
               "kind": "speech",
               "text": "Cover every written answer. Hear hā, \"yes,\" once in your mind and write it from memory. Then uncover હા and check the two pieces: હ, then attached ા. One repair is allowed."
+            },
+            {
+              "kind": "speech",
+              "text": "Four consonants."
+            },
+            {
+              "kind": "speech",
+              "text": "Hide the models. Write ર (ra) દ (da) વ (va) ય (ya), once each and in that order. Uncover the models and compare one shape at a time. Make no more than one repair per shape."
+            },
+            {
+              "kind": "speech",
+              "text": "Two consonants and one sign."
+            },
+            {
+              "kind": "speech",
+              "text": "Keep the models hidden. Write ભ (bha), then ધ (dha). Finally write ભ (bha) again and attach ૃ (-ṛ) below it to make ભૃ. Compare, repair, and stop."
             },
             {
               "kind": "activity",
@@ -939,7 +2015,46 @@
               ],
               "feedback": {
                 "correct": "હા — the chapter now closes with independent writing as well as speech.",
-                "incorrect": "Repair just the differing piece: હ first, then attached ા."
+                "incorrect": "Repair the differing piece: હ first, then attached ા."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C01-practice-four-consonants",
+              "prompt": "With the models hidden, write ર (ra), દ (da), વ (va) and ય (ya) once each in that order.",
+              "assesses": [
+                "GU-SCRIPT-RA-01",
+                "GU-SCRIPT-DA-01",
+                "GU-SCRIPT-VA-01",
+                "GU-SCRIPT-YA-01"
+              ],
+              "responseSeconds": 35,
+              "acceptedResponses": [
+                "ર દ વ ય"
+              ],
+              "feedback": {
+                "correct": "Good: four known consonants, each retrieved once.",
+                "incorrect": "Compare one shape at a time, repair only that shape, and keep the order ર દ વ ય."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C01-practice-two-consonants-one-sign",
+              "prompt": "With the models hidden, write ભ (bha) and ધ (dha), then attach ૃ (-ṛ) below ભ (bha) to make ભૃ.",
+              "assesses": [
+                "GU-SCRIPT-BHA-01",
+                "GU-SCRIPT-DHA-01",
+                "GU-SCRIPT-VOCALIC-R-MATRA-01"
+              ],
+              "responseSeconds": 35,
+              "acceptedResponses": [
+                "ભ ધ ભૃ"
+              ],
+              "feedback": {
+                "correct": "Good: two consonants and the below-consonant sign, all retrieved once.",
+                "incorrect": "Repair ભ and ધ separately, then place the small sign ૃ below ભ."
               }
             }
           ]

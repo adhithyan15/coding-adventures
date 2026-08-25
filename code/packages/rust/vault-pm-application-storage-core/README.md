@@ -70,13 +70,40 @@ record's body is first replaced with nothing through the same
 write-`fsync`-`rename` path every other step uses, and only then unlinked. After
 that write returns, the wrap is gone whether or not the unlink survives.
 
+## Reclaiming a generation zero orphaned before configuration
+
+`init` and `vault create` both install a `PreparedInit` journal under a
+freshly drawn random locator *before* the caller writes the configuration
+record that makes that locator discoverable again — required, so a crash
+after that configuration write always leaves an exact resumable journal
+behind it. The cost is the mirror case: a crash strictly *between* the two
+writes leaves the journal durable under a locator nothing durable anywhere
+will ever name again. It is not lost data — nothing the user created ever
+existed there — but it is a permanent storage leak absent a sweep
+(`VLT-PM41-cli-crash-fault-matrix.md` §8, backlog item #16).
+
+`reclaim_orphaned_preparations(live_locators)` closes it. Every later state a
+locator's record can be found in — `Active`, `PendingPublication`,
+`PendingRotation` — requires that configuration write to have already
+succeeded, so the decoded state alone proves whether a record is this leak's
+orphan: a `PreparedInit` record whose locator `live_locators` does not name is
+reclaimed; every other state is left alone unconditionally, regardless of
+`live_locators`. Deletion is compare-and-delete against the exact revision
+observed while listing, so a record that changes in between is left for
+whatever legitimate write is racing it rather than torn out. See
+`VLT-PM05-application.md` §7.3 for the full argument and `vault-pm-cli`'s
+`begin_init`/`vault_create` for the two call sites.
+
 ## Verification
 
-Thirteen tests cover generation-zero installation, rotation, idempotent retry,
+Eighteen tests cover generation-zero installation, rotation, idempotent retry,
 stale and competing predecessors, malformed generation/pointer data,
 supersession of a retired generation and refusal of the live one, exact
-local-state CAS, concurrent writers, closed errors, and filesystem
-reconstruction.
+local-state CAS, concurrent writers, closed errors, filesystem reconstruction,
+and reclaiming a generation zero orphaned before configuration — including a
+record still live in the caller's configuration, an `Active` record left
+untouched regardless of `live_locators`, a record this store never wrote, and
+survival across reopening a real filesystem-backed store.
 
 ```bash
 bash BUILD

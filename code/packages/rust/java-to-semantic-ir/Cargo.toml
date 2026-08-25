@@ -1,8 +1,8 @@
 [package]
 name = "java-to-semantic-ir"
-version = "0.1.0"
+version = "0.4.0"
 edition = "2021"
-description = "Java (GrammarASTNode CST) → narrow-waist Semantic IR. JV02 frontend, milestone M0: literals + a synthesized `main` function."
+description = "Java (GrammarASTNode CST) → narrow-waist Semantic IR. JV02 frontend, milestone M2b: classic and enhanced for-loops."
 
 [dependencies]
 coding-adventures-java-lexer = { path = "../java-lexer" }
@@ -12,3 +12,13 @@ coding-adventures-java-parser = { path = "../java-parser" }
 parser = { path = "../parser" }
 lexer = { path = "../lexer" }
 semantic-ir = { path = "../semantic-ir" }
+
+[dev-dependencies]
+# Execution-proof harness only (tests/e2e_python.rs) -- lowers real Java
+# source through this crate, then through the Python backend, then runs it
+# with `python3`. Python (not JavaScript) because M1 uses `Expr::StrConcat`
+# for Java's `+`-based string concatenation, and the JavaScript backend
+# does not accept `Feature::StringInterpolation` yet (see that backend's
+# own `emit_expr` — `StrConcat` is in its "deferred, rejected at capability
+# check" list), while the Python backend already does.
+semantic-ir-to-python = { path = "../semantic-ir-to-python" }

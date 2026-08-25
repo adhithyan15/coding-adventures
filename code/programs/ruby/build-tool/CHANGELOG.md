@@ -6,6 +6,11 @@ All notable changes to the Ruby build tool are documented in this file.
 
 ### Changed
 
+- Tracked-artifact snapshots now use the shared build-tool v1 portable-path
+  policy with deterministic, root-redacted diagnostics. The pure in-memory
+  validator consumes all five language-neutral fixtures and uses generated,
+  source-embedded Unicode 17 tables for NFC, NFKC, full default case folding,
+  and uppercase behavior; the Unicode License v3 notice ships with the source.
 - Discovery now excludes Cabal's exact, case-sensitive `dist-newstyle`
   directory component while preserving case variants and near-name source
   directories, matching the shared language-registry fixture.

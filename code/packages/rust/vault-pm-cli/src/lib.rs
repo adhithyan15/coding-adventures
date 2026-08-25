@@ -111,7 +111,7 @@ const MAX_EXTERNAL_IMPORT_SOURCE_BYTES: usize = 16 * 1024 * 1024;
 /// everything sensitive travels on the child's standard input, because argv is
 /// readable by every account on the machine through `ps` (VLT-PM46 §2.2).
 const CLIPBOARD_CLEAR_ARGUMENTS: &[&str] = &["clipboard", "clear"];
-const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] shell\n  vault-pm agent start\n  vault-pm agent stop\n  vault-pm agent status [--json]\n  vault-pm [--vault NAME] agent unlock\n  vault-pm [--vault NAME] agent lock\n  vault-pm agent run-foreground\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] passphrase rotate\n  vault-pm password generate [--length N] [--no-lowercase] [--no-uppercase] [--no-digits] [--no-symbols] [--exclude-ambiguous] (--reveal|--copy)\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import portable FILE\n  vault-pm [--vault NAME] import bitwarden FILE\n  vault-pm [--vault NAME] import csv FILE\n  vault-pm [--vault NAME] import kdbx FILE\n  vault-pm [--vault NAME] import otpauth-uri FILE\n  vault-pm [--vault NAME] import otpauth-qr FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item add card\n  vault-pm [--vault NAME] item add api-key\n  vault-pm [--vault NAME] item add database-credential\n  vault-pm [--vault NAME] item add totp\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] item reveal ITEM FIELD\n  vault-pm [--vault NAME] totp code ITEM (--reveal|--copy)\n  vault-pm clipboard clear\n  vault-pm [--vault NAME] attachment add ITEM FILE\n  vault-pm [--vault NAME] attachment list ITEM\n  vault-pm [--vault NAME] attachment export ITEM ATTACHMENT FILE\n  vault-pm [--vault NAME] search QUERY\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n  vault-pm [--vault NAME] conflict list ITEM\n  vault-pm [--vault NAME] conflict reveal ITEM REVISION FIELD\n  vault-pm [--vault NAME] conflict choose ITEM REVISION\n  vault-pm [--vault NAME] conflict merge login ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge secure-note ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge card ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge api-key ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge database-credential ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge totp ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge opaque ITEM BASE_REVISION\n  vault-pm storage add filesystem NAME PATH\n  vault-pm storage add removable NAME PATH\n  vault-pm storage list\n  vault-pm storage check NAME\n  vault-pm [--vault NAME] storage migrate SOURCE TARGET [--mirror]\n";
+const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] shell\n  vault-pm agent start\n  vault-pm agent stop\n  vault-pm agent status [--json]\n  vault-pm [--vault NAME] agent unlock\n  vault-pm [--vault NAME] agent lock\n  vault-pm agent run-foreground\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] passphrase rotate\n  vault-pm password generate [--length N] [--no-lowercase] [--no-uppercase] [--no-digits] [--no-symbols] [--exclude-ambiguous] (--reveal|--copy)\n  vault-pm [--vault NAME] export FILE [--best-effort]\n  vault-pm [--vault NAME] import portable FILE\n  vault-pm [--vault NAME] import bitwarden FILE\n  vault-pm [--vault NAME] import csv FILE\n  vault-pm [--vault NAME] import kdbx FILE\n  vault-pm [--vault NAME] import otpauth-uri FILE\n  vault-pm [--vault NAME] import otpauth-qr FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item add card\n  vault-pm [--vault NAME] item add api-key\n  vault-pm [--vault NAME] item add database-credential\n  vault-pm [--vault NAME] item add totp\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] item reveal ITEM FIELD\n  vault-pm [--vault NAME] totp code ITEM (--reveal|--copy)\n  vault-pm clipboard clear\n  vault-pm [--vault NAME] attachment add ITEM FILE\n  vault-pm [--vault NAME] attachment list ITEM\n  vault-pm [--vault NAME] attachment export ITEM ATTACHMENT FILE\n  vault-pm [--vault NAME] search QUERY\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n  vault-pm [--vault NAME] conflict list ITEM\n  vault-pm [--vault NAME] conflict reveal ITEM REVISION FIELD\n  vault-pm [--vault NAME] conflict choose ITEM REVISION\n  vault-pm [--vault NAME] conflict merge login ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge secure-note ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge card ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge api-key ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge database-credential ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge totp ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge opaque ITEM BASE_REVISION\n  vault-pm storage add filesystem NAME PATH\n  vault-pm storage add removable NAME PATH\n  vault-pm storage list\n  vault-pm storage check NAME\n  vault-pm [--vault NAME] storage migrate SOURCE TARGET [--mirror]\n";
 
 /// Stable process exit classes defined by VLT-PM00.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -196,6 +196,33 @@ impl CliOutput {
     /// the exit class and output of the command.
     fn with_attachment_notice(mut self) -> Self {
         self.stderr.insert_str(0, ATTACHMENT_EXPORT_NOTICE);
+        self
+    }
+
+    /// Append the VLT-PM05 §13.9 best-effort export exclusion report to
+    /// standard output.
+    ///
+    /// Unlike [`Self::with_attachment_notice`]/[`Self::with_recovery_notice`],
+    /// this is dynamic, operator-actionable content, not a fixed sentence —
+    /// the same "aggregate counts belong on stdout" shape VLT-PM49 §6's
+    /// `created=/skipped=/failed=` import report already uses, extended one
+    /// step further here because a count alone ("2 items excluded") gives
+    /// the operator nothing to act on. Every id is already visible through
+    /// this vault's own `item list`; printing it here is what lets an
+    /// operator run `item delete ITEM` (or, once its schema is known, repair
+    /// it) and re-export for a complete backup, rather than having to first
+    /// go rediscover which items are poisoned. Only called when
+    /// `excluded_item_ids` is non-empty, so an ordinary export's output
+    /// never grows this line.
+    fn with_excluded_items(mut self, excluded_item_ids: &[ItemId]) -> Self {
+        self.stdout.push_str(&format!(
+            "Excluded (too large to include): {}\n",
+            excluded_item_ids.len()
+        ));
+        for item_id in excluded_item_ids {
+            self.stdout.push_str(&item_id.to_user_string());
+            self.stdout.push('\n');
+        }
         self
     }
 }
@@ -914,6 +941,11 @@ enum Command {
     ClipboardClear,
     PortableExport {
         destination: PathBuf,
+        /// VLT-PM05 §13.9 / VLT-PM17 §2 amendment. `false` is every existing
+        /// invocation's unmodified behavior: one unencodable item still
+        /// fails the whole export. `true` is the explicit `--best-effort`
+        /// ceremony that excludes such an item instead of failing outright.
+        best_effort: bool,
     },
     PortableImport {
         source: PathBuf,
@@ -1389,11 +1421,30 @@ fn parse_import(arguments: &[String]) -> Result<Command, CliFailure> {
     }
 }
 
+/// Parse the `export` noun.
+///
+/// | Input | Result |
+/// |---|---|
+/// | `export backup.vpm` | `PortableExport { best_effort: false }` |
+/// | `export backup.vpm --best-effort` | `PortableExport { best_effort: true }` |
+/// | `export` | invalid; no destination |
+/// | `export backup.vpm extra` | invalid; one positional, one optional flag |
+/// | `export --best-effort backup.vpm` | invalid; the flag is closed to this
+///   one fixed position, matching `item show ITEM [--field FIELD]`'s own
+///   flags-after-positional order elsewhere in this grammar |
+/// | `export backup.vpm --jumble` | matches no arm |
 fn parse_export(arguments: &[String]) -> Result<Command, CliFailure> {
     match arguments {
         [destination] if !destination.is_empty() => Ok(Command::PortableExport {
             destination: PathBuf::from(destination),
+            best_effort: false,
         }),
+        [destination, flag] if !destination.is_empty() && flag == "--best-effort" => {
+            Ok(Command::PortableExport {
+                destination: PathBuf::from(destination),
+                best_effort: true,
+            })
+        }
         _ => Err(CliFailure::InvalidCommand),
     }
 }
@@ -2030,9 +2081,17 @@ fn dispatch(
         Command::Doctor { unlock } => doctor(host, paths, writer, selected_vault, unlock),
         Command::PassphraseRotate => passphrase_rotate(host, paths, writer, selected_vault),
         Command::AgentUnlock => agent::agent_unlock(host, paths, writer, selected_vault),
-        Command::PortableExport { destination } => {
-            portable_export(host, paths, writer, selected_vault, &destination)
-        }
+        Command::PortableExport {
+            destination,
+            best_effort,
+        } => portable_export(
+            host,
+            paths,
+            writer,
+            selected_vault,
+            &destination,
+            best_effort,
+        ),
         Command::PortableImport { source } => {
             portable_import(host, paths, writer, selected_vault, &source)
         }
@@ -2321,6 +2380,7 @@ fn portable_export(
     writer: &LocalWriterGuard,
     selected_vault: Option<&ConfigName>,
     destination: &Path,
+    best_effort: bool,
 ) -> Result<CliOutput, CliFailure> {
     let exact_config = writer
         .load_config()
@@ -2383,38 +2443,85 @@ fn portable_export(
         }
     };
     let export_randomness = PortableExportRandomnessV1::new(export_random);
-    let artifact = if audit_enabled {
-        access
-            .into_unlocked()
-            .map_err(map_application)?
-            .audited_export_portable_with_passphrase(
-                &exact_bootstrap,
-                export_passphrase,
-                policy,
-                export_randomness,
-                wall_time_ms,
-                audit_randomness,
-                &application_store,
-            )
-            .map_err(map_application)?
-            .into_operation()
-            .map_err(map_application)?
+    // `best_effort` picks the completeness policy before anything is built,
+    // matching the rest of this command's "decide, then act once" shape —
+    // VLT-PM05 §13.9. `false` reaches exactly the two calls this function
+    // has always made; `true` is the new, explicit ceremony, threaded
+    // through both the audited and pre-audit-epoch branches the same way
+    // every other choice in this function already is.
+    let (artifact, excluded_item_ids) = if best_effort {
+        let outcome = if audit_enabled {
+            access
+                .into_unlocked()
+                .map_err(map_application)?
+                .audited_export_portable_with_passphrase_best_effort(
+                    &exact_bootstrap,
+                    export_passphrase,
+                    policy,
+                    export_randomness,
+                    wall_time_ms,
+                    audit_randomness,
+                    &application_store,
+                )
+                .map_err(map_application)?
+                .into_operation()
+                .map_err(map_application)?
+        } else {
+            let operation = access
+                .as_unlocked()
+                .map_err(map_application)?
+                .export_portable_with_passphrase_best_effort(
+                    &exact_bootstrap,
+                    export_passphrase,
+                    policy,
+                    export_randomness,
+                );
+            access.lock();
+            operation.map_err(map_application)?
+        };
+        let excluded_item_ids = outcome.excluded_item_ids().to_vec();
+        (outcome.into_artifact(), excluded_item_ids)
     } else {
-        let operation = access
-            .as_unlocked()
-            .map_err(map_application)?
-            .export_portable_with_passphrase(
-                &exact_bootstrap,
-                export_passphrase,
-                policy,
-                export_randomness,
-            );
-        access.lock();
-        operation.map_err(map_application)?
+        let artifact = if audit_enabled {
+            access
+                .into_unlocked()
+                .map_err(map_application)?
+                .audited_export_portable_with_passphrase(
+                    &exact_bootstrap,
+                    export_passphrase,
+                    policy,
+                    export_randomness,
+                    wall_time_ms,
+                    audit_randomness,
+                    &application_store,
+                )
+                .map_err(map_application)?
+                .into_operation()
+                .map_err(map_application)?
+        } else {
+            let operation = access
+                .as_unlocked()
+                .map_err(map_application)?
+                .export_portable_with_passphrase(
+                    &exact_bootstrap,
+                    export_passphrase,
+                    policy,
+                    export_randomness,
+                );
+            access.lock();
+            operation.map_err(map_application)?
+        };
+        (artifact, Vec::new())
     };
     crash::around_export_artifact(|| host.write_portable_export(destination, artifact.as_bytes()))
         .map_err(map_host)?;
-    let output = CliOutput::success("Portable export written.\n");
+    let mut output = CliOutput::success("Portable export written.\n");
+    // VLT-PM05 §13.9. Only ever non-empty when `best_effort` was requested
+    // and this export actually excluded something, so an ordinary export's
+    // stdout is unchanged.
+    if !excluded_item_ids.is_empty() {
+        output = output.with_excluded_items(&excluded_item_ids);
+    }
     // Told, rather than discovered later. An operator who believes an export
     // is a backup and finds out at restore time that their recovery codes did
     // not travel has been misled by silence, and this product's whole posture
@@ -5134,6 +5241,16 @@ fn begin_init(
     let exact_prepared = prepared.owner_state().encode().map_err(map_application)?;
     let application_store = application_store(paths);
 
+    // There is no configuration yet, so nothing on this platform home can
+    // legitimately reference any locator: any `PreparedInit` journal already
+    // sitting in the local-state namespace is provably the unreachable
+    // remainder of an earlier generation zero that crashed before its own
+    // configuration write ever landed (VLT-PM41 §8). Reclaim it before this
+    // attempt installs its own journal under a different random locator.
+    application_store
+        .reclaim_orphaned_preparations(&BTreeSet::new())
+        .map_err(map_local_state)?;
+
     // Install the retry journal before making its random locator discoverable.
     // A crash before config publication therefore leaves only unreachable
     // opaque data; a crash after publication always has exact recovery bytes.
@@ -5277,6 +5394,21 @@ fn vault_create(
     let locator = prepared.bootstrap_locator();
     let exact_prepared = prepared.owner_state().encode().map_err(map_application)?;
     let application_store = application_store(paths);
+
+    // Every locator this configuration currently names is live and must be
+    // left untouched; anything else already sitting in the local-state
+    // namespace in `PreparedInit` is the unreachable remainder of an earlier
+    // `vault create` that crashed before its own configuration write landed
+    // (the same VLT-PM41 §8 gap `init` closes above). Reclaim it before this
+    // attempt installs its own journal under a different random locator.
+    let live_locators: BTreeSet<BootstrapLocator> = config
+        .vaults()
+        .values()
+        .map(|vault| application_locator(vault.locator()))
+        .collect();
+    application_store
+        .reclaim_orphaned_preparations(&live_locators)
+        .map_err(map_local_state)?;
 
     // The exact encrypted creation trace and retry journal become durable
     // before the new random locator is made discoverable in configuration.
@@ -7994,13 +8126,86 @@ mod tests {
         assert_eq!(
             parse(["export", "backup.vpm"]),
             default_invocation(Command::PortableExport {
-                destination: PathBuf::from("backup.vpm")
+                destination: PathBuf::from("backup.vpm"),
+                best_effort: false,
             })
         );
         assert_eq!(parse(["export"]), Err(CliFailure::InvalidCommand));
         assert_eq!(
             parse(["export", "backup.vpm", "extra"]),
             Err(CliFailure::InvalidCommand)
+        );
+    }
+
+    #[test]
+    fn portable_export_parser_accepts_the_best_effort_flag_after_the_destination() {
+        assert_eq!(
+            parse(["export", "backup.vpm", "--best-effort"]),
+            default_invocation(Command::PortableExport {
+                destination: PathBuf::from("backup.vpm"),
+                best_effort: true,
+            })
+        );
+        // Closed to this one fixed position, matching every other
+        // flags-after-positional grammar in this parser.
+        assert_eq!(
+            parse(["export", "--best-effort", "backup.vpm"]),
+            Err(CliFailure::InvalidCommand)
+        );
+        assert_eq!(
+            parse(["export", "backup.vpm", "--best-effort", "extra"]),
+            Err(CliFailure::InvalidCommand)
+        );
+        assert_eq!(
+            parse(["export", "backup.vpm", "--jumble"]),
+            Err(CliFailure::InvalidCommand)
+        );
+        // The sole positional token, so it is a destination named
+        // `--best-effort`, not the flag -- VLT-PM17 §2's existing rule that
+        // a path beginning with `-` is a path value whenever it is the only
+        // positional argument present.
+        assert_eq!(
+            parse(["export", "--best-effort"]),
+            default_invocation(Command::PortableExport {
+                destination: PathBuf::from("--best-effort"),
+                best_effort: false,
+            })
+        );
+        // `Strict`'s own failure carries no hint that this flag exists
+        // (VLT-PM05 §13.9's error taxonomy stays static and context-free,
+        // like every other command's), so `--help` is one of this flag's
+        // few real discovery paths and must actually document it.
+        assert!(USAGE.contains("vault-pm [--vault NAME] export FILE [--best-effort]\n"));
+    }
+
+    #[test]
+    fn excluded_items_report_lists_the_count_then_every_id_on_its_own_line() {
+        // The mechanism that actually produces an exclusion (a real
+        // peer-synced poisoned record, VLT-PM05 §13.9) is proven end to
+        // end in `vault-pm-application`'s own test suite, which has the
+        // low-level signing/sealing fixtures this crate does not; this
+        // pins the CLI's own rendering of that outcome directly.
+        let ids = [ItemId::new([0x11; 16]), ItemId::new([0x22; 16])];
+        let output = CliOutput::success("Portable export written.\n").with_excluded_items(&ids);
+        assert_eq!(
+            output.stdout(),
+            format!(
+                "Portable export written.\nExcluded (too large to include): 2\n{}\n{}\n",
+                ids[0].to_user_string(),
+                ids[1].to_user_string(),
+            )
+        );
+        assert_eq!(output.stderr(), "");
+        assert_eq!(output.exit_code(), ExitCode::Success);
+
+        // Zero excluded items never reaches this method in production
+        // (`portable_export` only calls it when the list is non-empty),
+        // but the method itself still degrades to just the count line
+        // rather than an empty, confusing header with nothing under it.
+        let none = CliOutput::success("Portable export written.\n").with_excluded_items(&[]);
+        assert_eq!(
+            none.stdout(),
+            "Portable export written.\nExcluded (too large to include): 0\n"
         );
     }
 
@@ -11445,6 +11650,121 @@ mod tests {
         let verified = run(["--vault", "work", "audit", "verify"], &verify_host);
         assert_eq!(verified.exit_code(), ExitCode::Success, "{verified:?}");
         assert!(verified.stdout().contains("audit_events=1"));
+    }
+
+    // -----------------------------------------------------------------------
+    // VLT-PM41 §8 / backlog item #16 — reclaiming a generation zero stranded
+    // before its locator ever reached configuration
+    //
+    // `begin_init` and `vault_create` both install a `PreparedInit` journal
+    // under a freshly drawn random locator before writing the configuration
+    // record that makes that locator discoverable again (VLT-PM41 §4.2, §8).
+    // A crash strictly between those two writes leaves the journal durable
+    // forever under a locator nothing will ever name again: not a
+    // correctness or availability defect — no configured vault is ever
+    // affected — but a permanent storage leak absent a sweep.
+    // `StorageCoreApplicationStore::reclaim_orphaned_preparations` closes it;
+    // these tests drive it through the CLI surface that calls it.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn init_reclaims_a_generation_zero_orphaned_before_any_configuration_existed() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+
+        // Simulate a crash strictly between `begin_init`'s `PreparedInit`
+        // write and its configuration write: install the journal and never
+        // touch configuration at all, exactly as a `SIGKILL` in that window
+        // would leave things.
+        let mut random_bytes = [0_u8; AUDITED_GENERATION_ZERO_RANDOM_BYTES];
+        for (index, byte) in random_bytes.iter_mut().enumerate() {
+            *byte = u8::try_from(index % 251).unwrap().wrapping_add(61);
+        }
+        let orphaned = prepare_audited_generation_zero(
+            Zeroizing::new(b"never reaches configuration".to_vec()),
+            GenerationZeroPolicyV1::new(8 * 1024, 1, 1, 1_700_000_000_000).unwrap(),
+            AuditedGenerationZeroRandomness::new(random_bytes),
+        )
+        .unwrap();
+        let orphaned_locator = orphaned.bootstrap_locator();
+        let exact_orphaned = orphaned.owner_state().encode().unwrap();
+        let layout = paths.prepare().unwrap();
+        let writer = layout.try_acquire_writer().unwrap();
+        let store = application_store(&paths);
+        store
+            .compare_exchange(orphaned_locator, None, &exact_orphaned)
+            .unwrap();
+        drop(writer);
+        drop(layout);
+        drop(orphaned);
+        assert_eq!(
+            store.load(orphaned_locator).unwrap(),
+            Some(exact_orphaned),
+            "the leak: durable bytes under a locator no configuration names"
+        );
+
+        // A person retrying after a crash they may not even know happened
+        // runs an entirely ordinary `init`.
+        let host = TestHost::new(paths.clone(), [b"real vault passphrase".to_vec()]);
+        let output = run(["init"], &host);
+        assert_eq!(output.exit_code(), ExitCode::Success, "{output:?}");
+        assert_eq!(run(["status"], &host).stdout(), "Status: locked\n");
+
+        // The stranded journal from before the real vault ever existed is
+        // gone; the real vault `init` just created is unaffected by it.
+        assert_eq!(store.load(orphaned_locator).unwrap(), None);
+    }
+
+    #[test]
+    fn vault_create_reclaims_an_orphaned_target_attempt_left_by_an_earlier_crash() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let personal_passphrase = b"personal passphrase for reclaim test".to_vec();
+        let init_host =
+            TestHost::with_entropy_seed(paths.clone(), [personal_passphrase.clone()], 5);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+
+        // Simulate an earlier `vault create abandoned` that crashed strictly
+        // between its `PreparedInit` write and its configuration
+        // compare-exchange: install the journal, never touch configuration.
+        let mut random_bytes = [0_u8; AUDITED_GENERATION_ZERO_RANDOM_BYTES];
+        for (index, byte) in random_bytes.iter_mut().enumerate() {
+            *byte = u8::try_from(index % 251).unwrap().wrapping_add(97);
+        }
+        let orphaned = prepare_audited_generation_zero(
+            Zeroizing::new(b"abandoned target passphrase".to_vec()),
+            GenerationZeroPolicyV1::new(8 * 1024, 1, 1, 1_700_000_000_000).unwrap(),
+            AuditedGenerationZeroRandomness::new(random_bytes),
+        )
+        .unwrap();
+        let orphaned_locator = orphaned.bootstrap_locator();
+        let exact_orphaned = orphaned.owner_state().encode().unwrap();
+        let layout = paths.prepare().unwrap();
+        let writer = layout.try_acquire_writer().unwrap();
+        let store = application_store(&paths);
+        store
+            .compare_exchange(orphaned_locator, None, &exact_orphaned)
+            .unwrap();
+        drop(writer);
+        drop(layout);
+        drop(orphaned);
+        assert_eq!(store.load(orphaned_locator).unwrap(), Some(exact_orphaned));
+
+        // A completely unrelated new target, exactly as a person would
+        // create one, with no idea the earlier attempt ever existed.
+        let create_host =
+            TestHost::with_entropy_seed(paths.clone(), [b"work passphrase".to_vec()], 23);
+        let created = run(["vault", "create", "work"], &create_host);
+        assert_eq!(created.exit_code(), ExitCode::Success, "{created:?}");
+        assert_eq!(created.stdout(), "Vault target created.\n");
+
+        // The orphan from the earlier crash is gone...
+        assert_eq!(store.load(orphaned_locator).unwrap(), None);
+        // ...and the personal vault `init` created is completely unaffected.
+        assert_eq!(
+            run(["status"], &TestHost::new(paths, [])).stdout(),
+            "Status: locked\n"
+        );
     }
 
     #[test]

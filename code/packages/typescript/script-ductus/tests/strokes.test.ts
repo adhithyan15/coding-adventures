@@ -197,6 +197,8 @@ const ARABIC_THAA = DUCTUS[ductusKey("arabic", "ث")];
 const ARABIC_JEEM = DUCTUS[ductusKey("arabic", "ج")];
 const ARABIC_HAA = DUCTUS[ductusKey("arabic", "ح")];
 const ARABIC_KHAA = DUCTUS[ductusKey("arabic", "خ")];
+const PERSIAN_KHEH = DUCTUS[ductusKey("perso-arabic", "خ")];
+const URDU_KHE = DUCTUS[ductusKey("urdu-nastaliq", "خ")];
 const ARABIC_DAAL = DUCTUS[ductusKey("arabic", "د")];
 const ARABIC_DHAAL = DUCTUS[ductusKey("arabic", "ذ")];
 const ARABIC_RAA = DUCTUS[ductusKey("arabic", "ر")];
@@ -236,13 +238,23 @@ const URDU_GHUNNA = DUCTUS[ductusKey("urdu-nastaliq", "ں")];
 const URDU_HE = DUCTUS[ductusKey("urdu-nastaliq", "ہ")];
 const URDU_YE = DUCTUS[ductusKey("urdu-nastaliq", "ی")];
 const URDU_BARI_YE = DUCTUS[ductusKey("urdu-nastaliq", "ے")];
+const KANNADA_A = DUCTUS[ductusKey("kannada", "ಅ")];
 const TELUGU_A = DUCTUS[ductusKey("telugu", "అ")];
+const MALAYALAM_A = DUCTUS[ductusKey("malayalam", "അ")];
 const MALAYALAM_E = DUCTUS[ductusKey("malayalam", "എ")];
+const MALAYALAM_CHILLU_L = DUCTUS[ductusKey("malayalam", "ൽ")];
+const MALAYALAM_CHILLU_N = DUCTUS[ductusKey("malayalam", "ൻ")];
+const MALAYALAM_ZHA = DUCTUS[ductusKey("malayalam", "ഴ")];
+const TAMIL_U = DUCTUS["உ"];
 
 const fontForDuctus = (letter: LetterDuctus) => {
   const script = SCRIPTS.find((candidate) => candidate.script === letter.script);
   if (!script) throw new Error(`no verified script/font owns ${letter.glyph}`);
-  const letterClaim = [...script.letters, ...(script.independentVowels ?? [])].find(
+  const letterClaim = [
+    ...script.letters,
+    ...(script.independentVowels ?? []),
+    ...(script.finalConsonants ?? []),
+  ].find(
     (entry) => entry.glyph === letter.glyph && entry.strokeOrderSource?.url === letter.source.url,
   );
   const ligatureClaim = script.ligatures?.find(
@@ -406,8 +418,8 @@ describe("handwriting ductus", () => {
   it("marks Chinese complete with every current-corpus row source-verified", () => {
     const chinese = SCRIPTS.find((script) => script.script === "chinese")!;
     expect(chinese.complete).toBe(true);
-    expect(chinese.letters).toHaveLength(29);
-    expect(new Set(chinese.letters.map((letter) => letter.glyph)).size).toBe(29);
+    expect(chinese.letters).toHaveLength(37);
+    expect(new Set(chinese.letters.map((letter) => letter.glyph)).size).toBe(37);
     expect(chinese.letters.every((letter) => letter.strokeOrderSource !== undefined)).toBe(true);
   });
 
@@ -529,10 +541,10 @@ describe("handwriting ductus", () => {
         const inInk = makeInInk(glyph().contours);
         for (let s = 0; s < letter.strokes.length; s++) {
           const frac = fractionOnInk(penPath(letter.strokes[s]), inInk);
-          // Three cited handwriting animations keep a run continuous across a
+          // Four cited handwriting animations keep a run continuous across a
           // gap in Noto's printed contours: Gujarati હ and Devanagari ख's
-          // upper-right loop, plus Telugu అ's right-lobe return. Permit only
-          // those documented bridges; every
+          // upper-right loop, Telugu అ's right-lobe return, and Malayalam അ's
+          // lower-loop return. Permit only those documented bridges; every
           // other authored path retains the stricter general-purpose floor.
           const minimumInkFit = letter.script === "gujarati" && letter.glyph === "હ"
             ? 0.92
@@ -540,6 +552,8 @@ describe("handwriting ductus", () => {
               ? 0.95
             : letter.script === "telugu" && letter.glyph === "అ"
               ? 0.96
+              : letter.script === "malayalam" && letter.glyph === "അ"
+                ? 0.96
               : 0.97;
           expect(frac, `stroke ${s} strays off the glyph`).toBeGreaterThan(minimumInkFit);
         }
@@ -574,6 +588,16 @@ describe("handwriting ductus", () => {
   it("ம is written without lifting the pen (one stroke)", () => {
     expect(penLifts(DUCTUS["ம"])).toBe(0);
     expect(DUCTUS["ம"].strokes).toHaveLength(1);
+  });
+
+  it("Tamil உ keeps all three Frame 16 movements in one run", () => {
+    expect(penLifts(TAMIL_U)).toBe(0);
+    expect(TAMIL_U.strokes).toHaveLength(1);
+    expect(TAMIL_U.strokes[0].segments.map((segment) => segment.label)).toEqual([
+      "sweep outward around the compact upper spiral",
+      "descend through the broad outer curve and turn left onto the baseline",
+      "carry the long baseline straight to the right",
+    ]);
   });
 
   it("ப descends, crosses the bottom, and rises without lifting", () => {
@@ -615,6 +639,17 @@ describe("handwriting ductus", () => {
     ]);
   });
 
+  it("Kannada ಅ keeps all four animated movements in one pen-down run", () => {
+    expect(penLifts(KANNADA_A)).toBe(0);
+    expect(KANNADA_A.strokes).toHaveLength(1);
+    expect(KANNADA_A.strokes[0].segments.map((segment) => segment.label)).toEqual([
+      "turn clockwise around the compact left loop",
+      "sweep around the broad lower bowl",
+      "turn counterclockwise around the rounded right loop",
+      "return left along the inward horizontal bar",
+    ]);
+  });
+
   it("Malayalam എ keeps its joined body separate from the broad outer arch", () => {
     expect(penLifts(MALAYALAM_E)).toBe(1);
     expect(MALAYALAM_E.strokes).toHaveLength(2);
@@ -624,6 +659,85 @@ describe("handwriting ductus", () => {
         "climb the upright, retrace it downward, and loop below the line",
       ],
       ["sweep up and over through the broad outer arch, ending below the line"],
+    ]);
+  });
+
+  it("Malayalam അ keeps both animated runs internally joined", () => {
+    expect(penLifts(MALAYALAM_A)).toBe(1);
+    expect(MALAYALAM_A.strokes).toHaveLength(2);
+    expect(MALAYALAM_A.strokes.map((stroke) => stroke.segments.map((segment) => segment.label))).toEqual([
+      [
+        "climb the left outer arch and curve through the upper turn",
+        "circle the broad lower loop and return to the junction",
+        "sweep up through the central crown and descend the upright",
+      ],
+      [
+        "sweep up and over through the right outer arch and descend its far side",
+        "curl left around the lower inner loop",
+      ],
+    ]);
+  });
+
+  it("Malayalam chillu ൽ keeps all five animated movements in one run", () => {
+    expect(penLifts(MALAYALAM_CHILLU_L)).toBe(0);
+    expect(MALAYALAM_CHILLU_L.strokes).toHaveLength(1);
+    expect(MALAYALAM_CHILLU_L.strokes[0].segments.map((segment) => segment.label)).toEqual([
+      "climb the left entry arch and turn inward at the top",
+      "descend clockwise around the central loop and return to its upper junction",
+      "carry the upper shoulder right",
+      "sweep clockwise around the right loop and return to the upper crossing",
+      "rise into the chillu hook and curl left above the line",
+    ]);
+  });
+
+  it("Malayalam chillu ൻ keeps each animated run internally joined", () => {
+    expect(penLifts(MALAYALAM_CHILLU_N)).toBe(1);
+    expect(MALAYALAM_CHILLU_N.strokes).toHaveLength(2);
+    expect(MALAYALAM_CHILLU_N.strokes.map((stroke) => stroke.segments.map((segment) => segment.label))).toEqual([
+      [
+        "climb clockwise around the left arch and turn inward at the upper junction",
+        "descend the central stem to the line",
+      ],
+      [
+        "carry the upper shoulder right, sweep clockwise around the outer loop, and return through its inner curve",
+        "rise into the chillu hook and curl left above the line",
+      ],
+    ]);
+  });
+
+  it("Malayalam ഴ keeps all three animated movements in one run", () => {
+    expect(penLifts(MALAYALAM_ZHA)).toBe(0);
+    expect(MALAYALAM_ZHA.strokes).toHaveLength(1);
+    expect(MALAYALAM_ZHA.strokes[0].segments.map((segment) => segment.label)).toEqual([
+      "descend around the left entry arch and sweep right into the lower junction",
+      "turn clockwise around the right loop and return through its inner side",
+      "descend through the inner return and curl left around the lower hook",
+    ]);
+  });
+
+  it("Tamil எ keeps its six-movement body separate from the right upright", () => {
+    expect(penLifts(DUCTUS["எ"])).toBe(1);
+    expect(DUCTUS["எ"].strokes).toHaveLength(2);
+    expect(DUCTUS["எ"].strokes.map((stroke) => stroke.segments.map((segment) => segment.label))).toEqual([
+      [
+        "climb the outer left side",
+        "carry the top bar to the right",
+        "retrace left and drop the inner upright",
+        "turn left into the inner spiral",
+        "sweep around the broad outer curve",
+        "carry the lower foot right",
+      ],
+      ["draw the separate right upright up"],
+    ]);
+  });
+
+  it("Tamil ழ groups six movements into three source-verified pen-down runs", () => {
+    expect(penLifts(DUCTUS["ழ"])).toBe(2);
+    expect(DUCTUS["ழ"].strokes).toHaveLength(3);
+    expect(DUCTUS["ழ"].strokes.map((stroke) => stroke.segments.map((segment) => segment.label))).toEqual([
+      ["climb the outer left upright", "retrace down the left upright", "carry the low crossbar right"],
+      ["retrace left into the inner upright", "descend and sweep around the broad right bowl"],
+      ["turn through the detached lower hook"],
     ]);
   });
 
@@ -3939,6 +4053,12 @@ describe("handwriting ductus", () => {
           script: script.script, identity: letter.glyph, glyph: letter.glyph,
           penLifts: letter.penLifts, source: letter.strokeOrderSource,
         })),
+      ...(script.finalConsonants ?? [])
+        .filter((letter) => letter.penLifts !== undefined || letter.strokeOrderSource !== undefined)
+        .map((letter) => ({
+          script: script.script, identity: letter.glyph, glyph: letter.glyph,
+          penLifts: letter.penLifts, source: letter.strokeOrderSource,
+        })),
       ...(script.ligatures ?? [])
         .filter((ligature) => ligature.penLifts !== undefined || ligature.strokeOrderSource !== undefined)
         .map((ligature) => ({
@@ -3969,8 +4089,26 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("అ", TELUGU_A.source.url)).toBe(
       "_fonts/NotoSansTelugu-Static.ttf",
     );
+    expect(verifiedLetterFont("ಅ", KANNADA_A.source.url)).toBe(
+      "_fonts/NotoSansKannada-Static.ttf",
+    );
     expect(verifiedLetterFont("എ", MALAYALAM_E.source.url)).toBe(
       "_fonts/NotoSansMalayalam-Static.ttf",
+    );
+    expect(verifiedLetterFont("അ", MALAYALAM_A.source.url)).toBe(
+      "_fonts/NotoSansMalayalam-Static.ttf",
+    );
+    expect(verifiedLetterFont("ൽ", MALAYALAM_CHILLU_L.source.url)).toBe(
+      "_fonts/NotoSansMalayalam-Static.ttf",
+    );
+    expect(verifiedLetterFont("ൻ", MALAYALAM_CHILLU_N.source.url)).toBe(
+      "_fonts/NotoSansMalayalam-Static.ttf",
+    );
+    expect(verifiedLetterFont("ഴ", MALAYALAM_ZHA.source.url)).toBe(
+      "_fonts/NotoSansMalayalam-Static.ttf",
+    );
+    expect(verifiedLetterFont("எ", DUCTUS["எ"].source.url)).toBe(
+      "_fonts/NotoSansTamil-Static.ttf",
     );
     expect(verifiedLetterFont("人", CHINESE_REN.source.url)).toBe(
       "_fonts/NotoSansSC-Subset.ttf",
@@ -6224,6 +6362,20 @@ describe("handwriting ductus", () => {
     expect(src.variation, "must not present one order as the only order").toMatch(/varies|one attested/i);
   });
 
+  it("எ's two-run stroke order traces to Frame 5's second row", () => {
+    const src = DUCTUS["எ"].source;
+    expect(src.url).toContain("tamilscript/files/2009/08/hw_lettersinstructions.pdf");
+    expect(src.citation).toMatch(/Appendix I.*Frame 5.*எ.*p\. 193/);
+    expect(src.variation).toMatch(/first six movements.*connected body.*upward right upright.*movement 7.*one lift.*varies by school.*two-run order.*Noto Sans Tamil/i);
+  });
+
+  it("ழ's three-run stroke order traces to Appendix I Frame 7", () => {
+    const src = DUCTUS["ழ"].source;
+    expect(src.url).toContain("tamilscript/files/2009/08/hw_lettersinstructions.pdf");
+    expect(src.citation).toMatch(/Appendix I.*Frame 7.*ழ.*p\. 193/i);
+    expect(src.variation).toMatch(/six movements.*three pen-down runs.*1–3.*left body and bar.*4–5.*inner upright and broad right bowl.*movement 6.*detached lower hook.*Noto Sans Tamil.*low crossbar.*varies by school.*three-run order/i);
+  });
+
   it("Persian ا traces to UT Austin's opening right-to-left freehand demonstration", () => {
     const src = DUCTUS["ا"].source;
     expect(src.url).toContain("laits.utexas.edu/persian_grammar/video");
@@ -6257,6 +6409,21 @@ describe("handwriting ductus", () => {
     expect(persian.url).not.toBe(urdu.url);
     expect(persian.url).not.toBe(ARABIC_DAAL.source.url);
     expect(urdu.url).not.toBe(ARABIC_DAAL.source.url);
+  });
+
+  it("Persian and Urdu خ keep body-first, dot-last script-owned sources", () => {
+    expect(PERSIAN_KHEH.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1]);
+    expect(URDU_KHE.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1]);
+    expect(penLifts(PERSIAN_KHEH)).toBe(1);
+    expect(penLifts(URDU_KHE)).toBe(1);
+    expect(PERSIAN_KHEH.source.citation).toMatch(/Persian Online.*خ.*00:49–00:54/i);
+    expect(PERSIAN_KHEH.source.variation).toMatch(/body-first.*head.*left to right.*deep bowl.*lifts once.*dot above.*Persian-scoped/i);
+    expect(URDU_KHE.source.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/khe-ze-zal-swad-and-zwad/",
+    );
+    expect(URDU_KHE.source.citation).toMatch(/Zer o Zabar.*independent خ.*Ḳhe instructions.*Northwestern/i);
+    expect(URDU_KHE.source.variation).toMatch(/deep bowl.*body-first.*lifts once.*dot above.*jīm shape.*Noto Naskh.*Nastaliq.*Urdu-specific/i);
+    expect(new Set([ARABIC_KHAA.source.url, PERSIAN_KHEH.source.url, URDU_KHE.source.url]).size).toBe(3);
   });
 
   it("Arabic independent ا traces to the University of Oregon's top-to-bottom video", () => {
@@ -6803,6 +6970,15 @@ describe("handwriting ductus", () => {
     expect(src.url).toContain("laits.utexas.edu/persian_grammar/video");
     expect(src.citation).toMatch(/Persian Online.*ب.*00:11–00:15/i);
     expect(src.variation).toMatch(/right-to-left.*pen lift.*dot below.*Noto Naskh/i);
+  });
+
+  it("Persian پ traces to the intervening sourced bowl-and-three-dots demonstration", () => {
+    const src = DUCTUS["پ"].source;
+    expect(src.url).toContain("laits.utexas.edu/persian_grammar/video");
+    expect(src.citation).toMatch(/Persian Online.*پ.*00:16–00:21/i);
+    expect(src.variation).toMatch(
+      /right-to-left.*three separate dots below.*left, right, then lower-center.*Noto Naskh/i,
+    );
   });
 
   it("Persian ت traces to the later sourced bowl-and-two-dots demonstration", () => {

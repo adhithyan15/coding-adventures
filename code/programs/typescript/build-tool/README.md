@@ -31,6 +31,8 @@ This is one of several build tool implementations in the monorepo (Python, Ruby,
 | `cache.ts` | JSON cache file for fallback change detection |
 | `executor.ts` | Parallel build execution respecting dependency order |
 | `reporter.ts` | Human-readable build report formatting |
+| `validator.ts` | Build-contract checks plus pure orphan-crate and tracked-artifact snapshot validation |
+| `tracked-artifact-unicode17.ts` | Generated, source-pinned Unicode 17 normalization and casing substrate |
 | `index.ts` | CLI entry point tying everything together |
 
 ## Supported languages
@@ -61,6 +63,48 @@ Git-diff package matching uses the same repository-relative forward-slash
 paths on every platform. Its integration tests create native temporary Git
 repositories and invoke Git with direct argument vectors, so the package suite
 runs without a POSIX shell on Windows.
+
+## Process-free orphan-crate validation
+
+`validateOrphanCrateSnapshot()` consumes a closed, caller-supplied snapshot of
+Cargo-manifest directories, recognized BUILD records, and exemption-ledger
+entries. It derives direct and ancestor BUILD coverage, ignores only exact
+generated-artifact components, reports empty or unlisted crates, rejects
+malformed exemptions with a fixed redacted ledger path, detects stale
+exemptions, and returns the active `PENDING` count.
+
+The adapter uses the shared fixed BUILD filename order, Unicode-scalar path
+limits and ordering, Python-compatible reason whitespace and diagnostic-detail
+ordering, and the source-pinned Unicode 17 NFC plus full-casefold tables for
+duplicate exemption identities. It does not enumerate the checkout, inspect
+the filesystem, consult Git, launch a process, read the environment, or access
+the network. All four language-neutral orphan-crate fixtures enter through this
+TypeScript-native API.
+
+## Process-free tracked-artifact validation
+
+`validateTrackedArtifactSnapshot()` consumes bounded path records supplied by a
+reviewed caller. It rejects unsafe portable paths with redacted diagnostics and
+detects exact, nested, case, and Unicode compatibility aliases of
+`node_modules`. Backslashes are normalized lexically; diagnostic ordering uses
+Unicode scalar values rather than UTF-16 code units or the host locale.
+
+The adapter is deliberately not a repository scanner. It does not enumerate a
+checkout, invoke Git, open paths, follow symlinks or reparse points, inspect the
+environment, start a process, or use the network. NFC, NFKC, full default case
+folding, and full uppercase come from the generated Unicode 17.0.0 module, not
+Node's ambient ICU tables. Regenerate and verify that module from the repository
+root with:
+
+```bash
+(cd code/programs/typescript/build-tool && npm ci)
+python code/scripts/generate_tracked_artifact_unicode17.py
+python code/scripts/generate_tracked_artifact_unicode17.py --check
+```
+
+Generation executes both the Python and TypeScript outputs against the pinned
+official normalization, case-folding, and uppercase vectors before accepting
+either artifact.
 
 ## Platform-specific BUILD files
 
@@ -110,6 +154,10 @@ npx vitest run --coverage
 ## Design decisions
 
 - **Zero runtime dependencies**: Only uses Node.js built-in modules (`node:fs`, `node:path`, `node:crypto`, `node:child_process`, `node:os`, `node:util`).
+- **Pinned Unicode policy**: The tracked-artifact validator embeds reviewed
+  Unicode 17.0.0 data under Unicode License v3; distributions include
+  `UNICODE-LICENSE.txt`, and package metadata declares
+  `MIT AND Unicode-3.0`.
 - **Portable metadata diagnostics**: Strict-decoding failures use repository-relative paths and never expose checkout-specific host paths.
 - **Collision-safe discovery**: Canonical package/program identities are unique;
   duplicate diagnostics contain sorted repository-relative paths and never

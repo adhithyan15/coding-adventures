@@ -8,6 +8,8 @@
       "lessons": [
         "LA-C01-salve",
         "LA-W01-salve-guided-copy",
+        "LA-W01-salve-delayed-copy",
+        "LA-W01-salve-dictation",
         "LA-C01-ave"
       ],
       "before": [],
@@ -810,10 +812,12 @@
       "stage": "pre-A1",
       "kind": "required",
       "category": "script",
-      "canDo": "I can copy my first Latin greeting with the model still visible and preserve its macron.",
+      "canDo": "I can trace and copy my first Latin greeting, then write it independently from its sound while preserving its macron.",
       "prerequisites": [],
       "lessons": [
-        "LA-W01-salve-guided-copy"
+        "LA-W01-salve-guided-copy",
+        "LA-W01-salve-delayed-copy",
+        "LA-W01-salve-dictation"
       ]
     },
     {

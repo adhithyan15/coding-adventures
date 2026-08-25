@@ -6964,6 +6964,663 @@ overlap. The generated 459.6 MiB `target_isolated/` directory from the exact
 Windows front was verified inside the dedicated worktree and removed with
 `cargo clean`, while its separately owned hygiene item remains pending.
 
+### Post-#12738 refresh and Python orphan-validator selection
+
+PR #12738 completed every reported check without a failure or pending job.
+GitHub reported the branch clean and mergeable, so the loop enabled squash
+auto-merge; GitHub merged it as
+`847c3f2fcd27f2491fcd3ae53948786e6d24e118` at
+`2026-08-25T10:06:09Z` without a manual merge command. The exact merged head is
+`8a969ecb9482145f86e8857ae8bbf741f2e98612`.
+
+The mandatory post-merge refresh followed current `origin/main` through
+`2445ef2bd42ddefd6b47ab3d9fc6aec5ac5c1e39`. The collision-checked schema-3
+inventory is structurally unchanged: 15 established lanes, 1,373
+implementation identities, 4,566 package slots, 175 high-consensus packages
+with 276 missing slots, 122 five-to-nine-lane packages with 926 gaps, 166
+two-to-four-lane packages with 2,087 gaps, 910 singletons with 12,740 gaps, and
+721 Rust singletons. Canonical collisions and unknown language buckets remain
+zero; OCaml remains correctly emerging at zero packages.
+
+The source audit assigned every intervening change before selection. Merged PR
+#12722 adds sourced Malayalam authored strokes to the existing neutral
+script-ductus data owner; #12735 extends the HTML frontend's exact recovery
+diagnostics; #12740 adds ADJ curriculum and E2E-harness authority evidence; and
+#12741 extends the existing portable WAST parser, WebAssembly conformance, and
+selection-blocked corpus-host owners. The ALGOL unit-selector repair remains
+identity-neutral compiler semantics. After #12738, Spanish #12743 and Gujarati
+#12747 are curriculum-only changes. Mermaid XY tick controls from #12744 extend
+the existing chart conformance owner. Storage-fs #12728 closes the narrower
+Unix directory-fsync error-propagation subrequirement but leaves its durable
+monotone floor, cross-process coordination, crash/rollback, containment,
+two-instance, documentation-truthfulness, and native-authority review pending.
+No commit adds a package marker or requires a new owner.
+
+The selected next owner is
+`build-tool-python-orphan-crate-validation-conformance` on exact base
+`2445ef2bd42ddefd6b47ab3d9fc6aec5ac5c1e39`. Its sole neutral-corpus
+prerequisite is merged. Python is the widest remaining supported lane at 502
+packages, already carries the pinned source-embedded Unicode 17 normalization,
+full-folding, and uppercase substrate required by exemption validation, and can
+add a bounded native adapter without filesystem, Git, process, environment, or
+network authority. Eleven live PRs and every non-main remote head have zero
+exact overlap with the six expected Python build-tool, state, and roadmap
+paths; the target remote branch was absent. The higher-descendant extra-CI
+corpus and OCaml process-free substrate remain collision-unsafe while live PRs
+#12149 and #12162 own their required Go main and validator surfaces.
+
+### Python orphan-validator implementation and exact-main refresh
+
+The Python engine now consumes the four language-neutral orphan-crate cases
+through a pure in-memory adapter. It matches the reviewed Rust oracle for
+component-wise BUILD ancestry, runnable-over-empty precedence, the fixed BUILD
+filename rank, exemption error and stale-entry precedence, Unicode 17 NFC plus
+full-fold identities, portable-path rejection and hostile-path redaction, and
+Python-ASCII-JSON diagnostic ordering. The adapter does not enumerate the
+checkout, invoke Git or another process, read the environment, open a path, or
+access the network.
+
+Both literal `BUILD_windows` and `BUILD` fronts pass from independently cleared
+uv 0.11.28 / Python 3.13.14 environments with 442 tests and 90.58% total
+coverage in each run; the focused validator passes 40 tests at 97% coverage.
+The neutral schema and runner suites pass 80 tests plus 121 subtests, and the
+complete 111-case, 269-file corpus validates. The Go oracle passes tests, vet,
+and trimpath compilation; its forced Python plan validates metadata and reports
+all 494 discovered packages would build. Ruff, strict MyPy, compileall, focused
+Bandit, uv dependency compatibility, pip-audit, wheel/sdist construction, the
+package-parity collision gate, capability suites, state graph, credential, and
+diff checks are clean. A source-wide Bandit probe retains only already-present
+process-execution findings in unchanged CI, executor, and Git-diff modules.
+
+Two conflict-free rebases brought the branch to exact `origin/main`
+`d4e91eb24f1ed9f24e834fbff264b08dcaf60511`. PR #12755's guarded curriculum
+ledger routing stays inside the existing TypeScript human-language-data owner;
+PR #12751 is ADJ loop bookkeeping only; and PR #12750's positioned void-end-tag
+diagnostics remain inside the existing Rust HTML-parser owner. None adds a
+package marker, requires a new parity owner, or overlaps the six Python
+build-tool, state, and roadmap paths. The refreshed collision report is
+unchanged at 15 established lanes, 1,373 identities, 4,566 slots, 175
+high-consensus packages with 276 gaps, 910 singletons with 12,740 gaps, 721
+Rust singletons, zero collisions, and zero unknown buckets.
+
+### Post-#12762 refresh and TypeScript tracked-artifact selection
+
+PR #12762 reached 30 terminal acceptable checks: 24 succeeded, five skipped,
+and one completed neutrally, with no failure or pending job. GitHub reported the
+branch clean and mergeable, so the loop enabled squash auto-merge. GitHub merged
+the exact reviewed head `430a99f8d48597ecb027abf4467a29f84f75bb29` as
+`8149e2fe933ce4047ab417b8aa61d5af7ed49c6c` at
+`2026-08-25T11:16:19Z` without a manual merge command.
+
+The mandatory exact-main collision report remains structurally unchanged: 15
+established lanes, 1,373 implementation identities, 4,566 package slots, 175
+high-consensus packages with 276 missing slots, 122 five-to-nine-lane packages
+with 926 gaps, 166 two-to-four-lane packages with 2,087 gaps, 910 singletons
+with 12,740 gaps, and 721 Rust singletons. Canonical collisions and unknown
+language buckets remain zero; OCaml remains correctly emerging at zero
+packages.
+
+Every intervening main commit is assigned before selection. PR #12746 extends
+the shared script-ductus Tamil data and provenance owner; #12759 extends the
+existing WAST parser, portable WebAssembly conformance, and selection-blocked
+corpus-host owners with `v128.loadN_zero`; #12757 remains Rust-only ALGOL
+compiler semantics under singleton classification; #12760 adds source-position
+evidence to the existing portable HTML frontend; and #12761 adds shared ADJ
+facts plus scratch/process E2E authority evidence to the existing ADJ CLI
+capability review. No commit changes a package identity, BUILD marker, or
+build-tool contract, and no new unowned gap appears.
+
+The selected next owner is
+`build-tool-typescript-tracked-artifact-validation-conformance` on exact base
+`8149e2fe933ce4047ab417b8aa61d5af7ed49c6c`. All five declared prerequisites
+are merged, and all 11 live open PRs plus 34 non-main remote heads have zero
+exact overlap with its expected TypeScript build-tool, generator, state, or
+roadmap surfaces. The dependency audit also found that the TypeScript orphan
+consumer was falsely ready: ECMAScript host normalization and casing do not
+supply the reviewed, source-pinned Unicode 17 NFC, NFKC, full-fold, and full
+uppercase contract. The tracked-artifact consumer is therefore now an explicit
+prerequisite of the TypeScript orphan owner. This bounded process-free slice
+advances the widest remaining tracked-artifact lane at 446 packages and
+establishes one reusable deterministic Unicode substrate without adding Git,
+filesystem, process, environment, or network authority. The higher-descendant
+extra-CI and OCaml owners remain collision-unsafe while live PRs #12149 and
+#12162 own their required Go entry-point and validator surfaces. The reconciled
+state now has 496 unique owners and 752 complete acyclic dependency edges, with
+one in-progress owner and no missing prerequisite.
+
+### TypeScript tracked-artifact implementation
+
+The TypeScript build tool now consumes the five language-neutral
+tracked-artifact fixtures through a pure in-memory snapshot adapter. It follows
+the closed error precedence, redacts hostile input, normalizes separators only
+lexically, counts and orders Unicode scalar values, detects exact, nested,
+case, and compatibility aliases of `node_modules`, and evaluates reserved
+Windows basenames with full uppercase. It adds no Git, filesystem, process,
+environment, network, or credential authority.
+
+The engine uses newly generated source-embedded Unicode 17.0.0 NFC, NFKC,
+full-fold, NFKC-plus-fold, and full-uppercase tables. The exact Unicode notice
+ships in the npm package and both manifest and lock metadata declare
+`MIT AND Unicode-3.0`. The generator verifies pinned upstream sizes and SHA-256
+identities, then executes both the generated Python and TypeScript runtimes over
+all 20,034 official normalization vectors, 1,585 C/F folding rows, 1,581
+unconditional uppercase mappings, derived NFKC-fold expectations, and Unicode
+17 sentinels before accepting either artifact.
+
+Seven generator tests, 34 focused validator tests, and the full 307-test Vitest
+suite pass. V8 coverage is 89.61% statements, 82.16% branches, 94.18%
+functions, and 89.51% lines overall; the validator reaches 100% statements,
+lines, and functions plus 95.04% branches. A pinned temporary TypeScript 5.9.2
+toolchain passes `tsc --noEmit`. Both literal npm BUILD steps, the complete
+111-case and 269-file neutral corpus, 201 conformance tests with 23 expected
+skips, the package-parity and capability suites, and Go test, vet, trimpath,
+and BUILD validation pass. The npm package has an explicit 18-file allowlist,
+includes the Unicode notice and generated source, and excludes local coverage
+and dependency trees. Production dependency audit is clean; the sole full
+audit finding is the already registered development-only `nanoid` owner.
+
+Independent differential review compared 1,183,049 Unicode inputs with the
+Python runtime without a mismatch. Independent security review found no
+authority, dependency, license, credential, or packaging blocker. Its initial
+package-allowlist finding and a separate persistent TypeScript full-vector
+self-check finding were both corrected and revalidated. The implementation is
+committed as `1fc9ee695cfceab184b0013b125802df398d6424`.
+
+Before publication the branch rebased without conflict over Rust HTML
+frame-position diagnostics, native Vault generation-zero journal recovery, and
+ADJ curriculum-loop bookkeeping to exact `origin/main`
+`ad36477baa5ada117c52ccb682b5b26fe4ee0510`. Those changes remain inside the
+existing HTML frontend, Vault native storage/CLI, and ADJ fact/capability
+owners, add no package identity or build-tool contract, and have zero exact
+surface overlap. The generator, complete TypeScript suite, coverage, typecheck,
+diff gate, state graph, and collision report pass again after the rebase; the
+exact-main inventory remains 15 established lanes, 1,373 identities, 4,566
+slots, zero collisions, and zero unknown buckets.
+
+Ready-for-review PR #12773 opened from clean validated head
+`eeb0f448217aa96bd170b2e719ddf64f8946aab8` after a normal first push. The
+target remote branch and prior PR were absent before publication, and all 12
+changed paths had zero exact overlap across 13 other live open PRs. GitHub
+reports the branch mergeable with required checks queued; auto-merge remains
+disabled until every check is terminal and acceptable.
+
+### Post-#12773 refresh and TypeScript orphan-crate selection
+
+PR #12773 reached 30 terminal acceptable checks: 24 succeeded, five skipped,
+and one completed neutrally, with no failure or pending job. GitHub reported the
+branch clean and mergeable, so the loop enabled squash auto-merge. GitHub merged
+the exact reviewed head `fbe53cb7aba011d1295ecd7bc7b2bda50a7b2546` as
+`3e114a1d37e919505671cad222cc8cea4f964801` at
+`2026-08-25T12:17:10Z` without a manual merge command. A late fetch advanced
+exact `origin/main` to `65729fcf2acae0df975a6e8c2b7db50bcad4e21f` through
+PR #12772; its rejected-frameset diagnostic positions remain in the existing
+portable HTML-frontend owner and do not overlap this build-tool slice.
+
+The regenerated collision report remains structurally unchanged: 15
+established lanes, 1,373 implementation identities, 4,566 package slots, 175
+high-consensus packages with 276 missing slots, 122 five-to-nine-lane packages
+with 926 gaps, 166 two-to-four-lane packages with 2,087 gaps, 910 singletons
+with 12,740 gaps, and 721 Rust singletons. Canonical collisions and unknown
+language buckets remain zero; OCaml remains correctly emerging at zero
+packages.
+
+Every intervening commit is classified before selection. PR #12767 extends the
+existing Mermaid XY chart owner with legend configuration; #12733 and #12770
+extend shared Chinese and Persian script-ductus data; and #12771 extends the
+existing WAST parser, portable WebAssembly conformance, and corpus-host owners
+with the six `v128.loadNxM_s/u` instructions. None changes a package identity
+or BUILD marker. PR #12745 does expose one genuinely unowned portable contract:
+contextual `>>` and `>>>` splitting with transactional rollback and memo
+coherence in nested generic parsing. The state now records a neutral contract
+root and a dependent established-lane umbrella. PR #12773 also exposes a
+separate selection-blocked host-authority review for the Unicode generator's
+PATH-resolved Node execution and temporary TypeScript runner. The Ruby
+tracked-artifact consumer extends that same owner to PATH-resolved Ruby,
+inherited Ruby environment state, temporary Ruby sources and runner, buffered
+child output, diagnostics, and process-tree cleanup. Six orphan consumers now
+explicitly depend on their same-language tracked-artifact consumer so no lane
+is falsely ready without its reviewed Unicode substrate.
+
+The selected next owner is
+`build-tool-typescript-orphan-crate-validation-conformance` on exact base
+`65729fcf2acae0df975a6e8c2b7db50bcad4e21f`. Its corpus, TypeScript discovery,
+and TypeScript tracked-artifact prerequisites are all merged. This bounded,
+process-free consumer advances the widest remaining orphan lane at 446
+packages and reuses the source-pinned Unicode 17 tables without adding
+filesystem enumeration, Git, process, environment, or network authority. Its
+six expected paths have zero exact overlap across all 10 live open PRs and 33
+non-main remote heads; the target branch was absent before the fresh worktree
+was created. Extra-CI and OCaml work remain collision-unsafe while PRs #12149
+and #12162 own their required Go entry-point and validator surfaces. The
+reconciled graph has 499 unique owners and 762 complete acyclic dependency
+edges, with exactly one in-progress owner and no active PR.
+
+### TypeScript orphan-crate implementation
+
+The TypeScript engine now exposes a pure `validateOrphanCrateSnapshot` adapter
+over inert manifest, BUILD, and exemption records. It matches the closed
+language-neutral contract for exact generated-artifact components, nearest
+rooted BUILD membership, fixed missing-evidence rank, invalid and stale
+precedence, hostile-path redaction, Unicode-scalar limits and ordering,
+Python-equivalent whitespace and canonical detail ordering, NFC plus full
+default casefold duplicate detection, and full-uppercase reserved basenames.
+All four shared
+fixtures plus adversarial astral, whitespace, BUILD-recognition, duplicate,
+precedence, and Unicode-detail cases are consumed without adding Git,
+filesystem, process, environment, clock, random, or network authority.
+
+Red-to-green evidence first produced 16 expected missing-export failures. The
+complete TypeScript suite then passed 324 tests across 12 files, with 90.5%
+statement, 83.93% branch, 94.84% function, and 90.43% line coverage overall;
+`validator.ts` reaches 100% statements, lines, and functions plus 97.01%
+branches. TypeScript 5.9.2 typechecking, the literal BUILD recipe, the pinned
+Unicode 17 generator check, the 111-case/269-file neutral corpus, conformance,
+package-parity, capability, Haskell, OCaml-lock, strict-JSON, state-DAG, diff,
+and collision gates pass. The Go build tool passes tests, vet, and trimpath
+compilation; a real forced TypeScript dry plan evaluates 45 Starlark files,
+discovers 476 packages, keeps the five-entry orphan ledger clean, and reports
+all 476 WOULD-BUILD. The package tarball contains exactly 18 allowlisted files,
+including the Unicode notice and no bundled dependencies. The runtime audit is
+clean; the full audit retains only the separately registered development-only
+`nanoid` advisory.
+
+Independent differential review matched the Python oracle over 2,500
+deterministic randomized and 139 systematic snapshots. Independent security
+review found no new authority, path-disclosure, dependency, credential,
+license, or packaging blocker. The implementation and defensive BUILD-filter
+tests are committed as `dbcc0ece8d90507b0a3844451fd214088aa759e1`
+and `ed74330505e209a36022933a7b2c7129a664691c`.
+
+Before publication the branch rebased without conflict onto exact
+`origin/main` `8ca94c2ef717427004c8a1c073fde078f0aa92f9`. PR #12774
+extends the existing ADJ fact, test, and capability owner; PR #12768 extends
+existing Gujarati curriculum and generated-data owners; and PR #12779 extends
+the existing Rust `algol-iir-compiler`, `lang-aot`, and full-language-spec
+owners; PR #12778 extends the existing Rust HTML-frontend diagnostics owner.
+None changes a package identity or BUILD marker or overlaps the selected six
+paths. The
+refreshed collision report remains 15 established lanes, 1,373 identities,
+4,566 slots, zero collisions, and zero unknown buckets. At the live audit, all
+14 open PRs and 37 non-main remote heads had zero overlap with this slice;
+PR #12780 temporarily owns Rust parser surfaces needed by the separate pending
+contextual generic-closer owner.
+
+Ready-for-review PR #12786 opened from clean validated head
+`fe1f7adc7d20e44ef7ab753abf0c99a702330d99` after a normal first push. The
+target remote branch and prior PR were absent immediately before publication.
+Current main then advanced only through PR #12781's ADJ curriculum-loop state
+bookkeeping at `207cd2bd13422b5047631ac0062c4f1954f5db41`; that commit is
+covered by the existing ADJ owner and has no package marker or selected-path
+overlap. GitHub reports PR #12786 mergeable with required checks queued, so
+auto-merge remains disabled until every check is terminal and acceptable.
+
+### Post-#12786 refresh and Ruby tracked-artifact selection
+
+PR #12786 reached 30 terminal acceptable checks: 24 succeeded, five skipped,
+and one CodeQL aggregate completed neutrally, with no failure or pending job.
+GitHub reported the branch clean and mergeable, so the loop enabled squash
+auto-merge. GitHub merged reviewed head
+`2235050c40295ad636a2ea1727af9f023809a207` as
+`655997ff5081d74dd16281d3e2c34a940695df7d` at
+`2026-08-25T13:36:11Z` without a manual merge command.
+
+The exact-main schema-3 collision report at
+`143aa30a07bb5f90b84d202e7710e50e3d099fe2` remains structurally unchanged:
+15 established lanes, 1,373 implementation identities, 4,566 package slots,
+175 high-consensus packages with 276 missing slots, 122 five-to-nine-lane
+packages with 926 gaps, 166 two-to-four-lane packages with 2,087 gaps, 910
+singletons with 12,740 gaps, and 721 Rust singletons. Canonical collisions and
+unknown language buckets remain zero; OCaml remains correctly emerging at zero
+packages.
+
+Every intervening commit is classified before selection. PR #12781 is ADJ
+lifecycle bookkeeping; #12775 and #12787 are Japanese and Russian curriculum
+content. PR #12782 extends the existing script-ductus neutral and lane owners;
+#12783 extends the existing WAST parser, portable WebAssembly core, and host
+authority owners; #12785 extends the existing Mermaid XY neutral and lane
+owners; and #12788 extends the existing HTML-frontend diagnostics owner. None
+adds or removes a package identity, BUILD marker, build-tool marker, or newly
+unowned portable contract.
+
+The later exact-main advance remains ownership-complete and non-overlapping:
+#12777 changes only a test-only Vault socket retry under the existing Vault
+native-authority review; #12791 adds Persian and Urdu kheh data under the
+existing script-ductus owners; and #12790 extends the Dolch fact table and its
+Rust CLI evidence under the existing ADJ capability owner. None adds a package,
+BUILD, or build-tool marker, and none touches the selected Ruby surfaces.
+
+The selected next owner is
+`build-tool-ruby-tracked-artifact-validation-conformance`. All five declared
+dependencies are merged. Ruby is the widest remaining tracked-artifact lane at
+298 packages, and this consumer has two direct children plus three unfinished
+descendants through the Ruby orphan validator and both completion umbrellas.
+Its Ruby validator, generated Unicode, generator, license, tests, README,
+CHANGELOG, state, and roadmap surfaces have zero overlap across all seven live
+open PRs and current non-main remote heads; the target branch and prior PR were
+absent before the fresh worktree was created. Extra-CI and OCaml remain
+collision-unsafe while PRs #12149 and #12162 own required Go entry-point and
+validator surfaces, and PR #12780 owns the Rust parser surfaces required by
+contextual generic-closer work. The reconciled graph remains 499 unique owners
+and 762 complete acyclic dependency edges, with exactly one in-progress owner
+and no active PR.
+
+### Ruby tracked-artifact implementation
+
+The Ruby engine now exposes a pure in-memory tracked-artifact snapshot
+validator and independently consumes all five language-neutral fixtures. It
+implements the closed portable-path precedence, lexical slash normalization,
+Unicode-scalar limits and ordering, invalid-path redaction, normalized safe
+forbidden paths, NFKC plus full default folding for exact `node_modules`
+components, full-uppercase reserved basenames, inert entry kinds, and canonical
+diagnostic ordering. The runtime adapter adds no Git, filesystem, process,
+environment, or network authority.
+
+Generated source-embedded Unicode 17.0.0 tables provide NFC, NFKC, full
+folding, NFKC-fold, and full-uppercase behavior without inheriting the host
+Ruby tables. The generator pins every upstream size and SHA-256 identity,
+ships the complete Unicode License v3 notice, and runs Python, emitted
+TypeScript, and emitted Ruby over every official normalization, folding,
+uppercase, derived NFKC-fold, and Unicode 17 sentinel family. Its 10-test suite
+is now an explicit CI gate. The separate selection-blocked generator authority
+owner now depends on this Ruby consumer and truthfully covers PATH-resolved
+Ruby, inherited environment state, temporary sources and runners, buffered
+output, diagnostics, and process-tree cleanup.
+
+The canonical Ruby BUILD front passes 321 tests and 717 assertions with one
+expected macOS-only skip, 89.57% line coverage, and 73.36% branch coverage;
+Bundle check, StandardRB's substantive rules, and Ruby syntax checks pass. The
+neutral corpus validates all 111 cases across 269 files, and the full build-tool
+conformance family passes 201 tests with 23 expected platform skips. The
+package-parity, capability, Haskell, and OCaml gates pass. The Go build tool
+passes all packages, vet, trimpath compilation, BUILD validation, and a forced
+Ruby dry plan over 305 packages while preserving the five-entry orphan ledger.
+Ruby advisory audit and production npm audit report no vulnerability; the
+unchanged development-only `nanoid` advisory remains registered separately.
+Bandit reports no medium or high issue, and its low child-process notices are
+owned by the generator authority review. Strict JSON and the 499-owner,
+762-edge complete acyclic state graph pass.
+
+Three independent read-only audits found no remaining correctness,
+supply-chain, metadata, ownership, or integration defect. The required split
+security review passed in one round, and its exact-head documentation recheck
+also passed. A conflict-free rebase advanced the branch to exact `origin/main`
+`3e29b2fee9572cf6a244c0bc8a889b655c2a3c22`; the intervening ADJ tracking-only
+finalization and rejected-body HTML parser diagnostics remain under existing
+owners and do not add identities or overlap. The refreshed schema-3 inventory
+remains 15 established lanes, 1,373 identities, 4,566 slots, zero collisions,
+and zero unknown buckets. All 12 live open PRs have zero exact overlap across
+this branch's 11 changed paths.
+
+Ready-for-review PR #12802 opened from clean validated head
+`8593e7fce3160c2fa25d87844f7c632d929c6733` after a normal first push. Exact
+`origin/main` remained at the reviewed base, and the target branch and prior PR
+were absent immediately before publication. GitHub reports the PR mergeable
+with required checks queued, so auto-merge remains disabled until every check
+is terminal and acceptable and no merge conflict exists.
+
+### Post-#12802 refresh and Elixir tracked-artifact selection
+
+PR #12802 reached 30 terminal acceptable checks: 24 succeeded, five skipped,
+and one CodeQL aggregate completed neutrally, with no failure or pending job.
+GitHub reported reviewed head
+`463d4a883535356809d16838bd426da901db4c0f` clean and mergeable, so the loop
+enabled squash auto-merge. GitHub merged it as
+`7a43168ec941da34b418ddefa34eff5056ac1d79` at
+`2026-08-25T15:08:06Z` without a manual merge command.
+
+The exact-main schema-3 collision report at
+`e9f7e8e8c5957a90f5dc775c30ca3f5793d74f8f` remains structurally unchanged:
+15 established lanes, 1,373 implementation identities, 4,566 package slots,
+175 high-consensus packages with 276 missing slots, 910 singletons with 12,740
+missing slots, and 721 Rust singletons. Canonical collisions and unknown
+language buckets remain zero; OCaml remains correctly emerging at zero
+packages.
+
+Every intervening commit is classified before selection. Tamil zha, Malayalam
+chillu l, and Latin writing stages remain under the existing script-ductus and
+curriculum owners; the Chinese school cluster, exact level-snapshot shards, and
+Dolch Primer completion are curriculum and ADJ data. The WebAssembly
+lane-memory syntax remains inside the WAST-parser and portable WebAssembly
+owners, Mermaid plot reservation remains inside the XY chart owner, ALGOL
+selector preservation remains inside the existing frontend owner, HTML
+self-closing diagnostics remain inside the HTML-frontend owner, and the shared
+parser depth guard remains inside the contextual generic-closer/parser-hardening
+owner. None adds or removes a package identity, BUILD marker, build-tool
+marker, or newly unowned portable contract.
+
+The dependency/leverage pass selects
+`build-tool-elixir-tracked-artifact-validation-conformance` on branch
+`codex/build-tool-elixir-tracked-artifact-validation-conformance`. All four
+declared dependencies are merged. Elixir is the widest remaining
+tracked-artifact lane at 279 packages and this consumer has three direct
+children plus four unfinished descendants through the Elixir orphan validator,
+both completion umbrellas, and the separately selection-blocked generator
+authority review. Ruby orphan validation is newly ready after #12802, but
+has only one unfinished descendant; Lua, Perl, Haskell, and Swift tracked
+consumers cover 252, 251, 204, and 161 packages respectively. The expected
+Elixir validator, generated Unicode, generator and generator-test, fixture
+README, license, tests, package docs, CI, state, and roadmap surfaces have zero
+exact overlap across all 13 live open PRs; the target branch and prior PR were
+absent before the fresh worktree was created.
+
+The audit found no newly unowned behavior or package gap. Stale fixture and
+generator wording still names only earlier runtime consumers; full emitted
+Elixir verification owns that documentation repair. Because that verification
+adds a PATH-resolved Elixir process boundary, the selection-blocked Unicode
+generator authority review now depends explicitly on this consumer and covers
+the Elixir executable, inherited BEAM/Elixir environment, temporary modules and
+runners, output, diagnostics, failure, and cleanup risks. The reconciled state
+graph contains 499 unique owners and 763 complete acyclic dependency edges,
+with exactly one in-progress owner and no active PR. The strategically broader
+OCaml process-free substrate and extra-CI corpus remain collision-unsafe while
+live PRs #12149 and #12162 own their required Go validator and main surfaces.
+
+### Elixir tracked-artifact implementation
+
+The Elixir engine now exposes pure
+`validate_tracked_artifact_snapshot/1,2` entry points and independently consumes
+all five language-neutral fixtures. The adapter implements the closed
+portable-path precedence, lexical slash normalization, Unicode-scalar limits
+and ordering, root-redacted invalid paths, normalized safe forbidden paths,
+NFKC plus full default folding for exact `node_modules` components,
+full-uppercase reserved basenames, inert entry kinds, and canonical diagnostic
+ordering. It adds no Git, filesystem, process, environment, or network
+authority.
+
+Generated, source-embedded Unicode 17.0.0 tables provide NFC, NFKC, full
+folding, NFKC-fold, and full uppercase without inheriting the host BEAM tables.
+The generator pins exact upstream byte counts and SHA-256 identities, carries
+the complete Unicode License v3 notice, and runs Python plus emitted
+TypeScript, Ruby, and Elixir over all 20,034 official normalization vectors,
+1,585 C/F folding rows, 1,581 unconditional uppercase mappings, derived
+NFKC-fold expectations, and the two Unicode 17 sentinels. Both real generation
+and byte-check mode pass, as do all 15 generator tests.
+
+Elixir 1.18.4 passes warnings-as-errors compilation, changed-file formatting,
+20 focused validator tests, and the complete 230-test suite with two expected
+skips. Coverage measures `BuildTool.Validator` at 96.30% and the generated
+Unicode module at 80.85%; the package-wide 52.77% result remains below Mix's
+default 90% threshold because the unchanged CLI, resolver, and Git-diff modules
+have no coverage instrumentation, and is recorded rather than hidden or folded
+into this bounded consumer. The neutral corpus validates all 111 cases and 269
+files; 201 conformance tests pass with 23 expected platform skips. The focused
+package-parity, capability, Haskell-capability, and OCaml-lock families pass 68
+tests with two expected Windows skips.
+
+The Go build tool passes all packages, vet, trimpath compilation, BUILD
+validation, and a forced Elixir dry plan over 285 packages. The refreshed
+schema-3 inventory remains 15 established lanes, 1,373 implementation
+identities, 4,566 slots, zero collisions, and zero unknown buckets. Hex reports
+no retired or advisory dependency; production npm audit reports no
+vulnerability, while the unchanged development-only `nanoid` advisory remains
+under its registered owner. Ruff, Bandit medium/high, diff, strict JSON, and
+state-graph checks pass. Two independent split security reviews passed in one
+round. An independent correctness review found that mocks covered the generator
+subprocess boundary without making the real Elixir vector check durable in CI;
+the branch now adds a required read-only job on pinned Elixir 1.18.4 and OTP
+27.3.4.11, and the stable CI gate explicitly requires its real full-vector
+result. A focused post-fix review found no remaining correctness, workflow, or
+security defect. Generator host authority remains separately selection-blocked
+and truthfully owns PATH, environment, temporary-file, output, failure, and
+process cleanup risks.
+
+The branch rebased without conflict onto exact `origin/main`
+`07a09f4ccc93eb74fa12072d493238d93a027b6b` after classifying intervening HTML
+frontend diagnostics, vault-pm export handling, and Java-to-semantic-IR
+lowering under their existing owners. All ten live open PRs have zero exact
+overlap across this branch's 12 changed paths, and the target remote branch
+remains absent.
+
+Ready-for-review PR #12819 opened from validated head
+`5771510efc0083c8186ab632bb368618c21e52ff` after a normal first push. GitHub
+reports the branch mergeable, with required checks queued or in progress,
+including the new Unicode 17 generated Elixir conformance job. Auto-merge
+remains disabled until every required check is terminal and acceptable and the
+branch remains conflict-free.
+
+### Post-#12819 refresh and Lua tracked-artifact selection
+
+PR #12819 reached 31 terminal acceptable checks: 25 succeeded and six were
+expected skips, with no failure or pending job. GitHub reported reviewed head
+`33df983e3f6eba67e05aa2f6f71bc5de1c3f33b0` clean and mergeable, so the loop
+enabled squash auto-merge. GitHub merged it as
+`a939778e7f7ce375bc5b4deefdb3467ca487ab54` at
+`2026-08-25T16:50:05Z` without a manual merge command.
+
+The mandatory exact-main schema-3 collision report remains structurally
+unchanged: 15 established lanes, 1,373 implementation identities, 4,566
+package slots, 175 high-consensus packages with 276 missing slots, 910
+singletons with 12,740 gaps, and 721 Rust singletons. Canonical collisions and
+unknown language buckets remain zero; OCaml remains correctly emerging at zero
+packages. The state graph before newly discovered owners contained 499 unique
+owners and 763 complete acyclic edges. A pre-existing historical inversion in
+which merged `build-file-standalone-integrity-lua` names the still-pending
+`build-file-standalone-integrity` umbrella remains unchanged; dependency
+readiness is therefore evaluated for the candidate tranche rather than claimed
+as a global lifecycle invariant.
+
+Every intervening commit is classified before selection. ADJ Dolch Primer and
+First/Second Grade tracking, HTML colgroup and template-table diagnostics,
+vault-pm best-effort export, Kannada and Gujarati script work, and
+Java-to-semantic-IR lowering remain inside existing owners. The Java execution
+proof now silently skips without `python3` while its BUILD files declare no
+Python requirement, so that concrete consumer is added to the existing
+extra-CI toolchain corpus and remaining-engine adoption owner.
+
+The audit also found two genuinely unowned behavior families before selecting
+the next implementation. Rust alone added the complete SIMD lane-memory
+load/store family across `wasm-opcodes`, `wasm-validator`, and
+`wasm-execution`, even though those identities report package presence in all
+15 established lanes. New neutral and established-lane owners now cover binary
+sub-opcodes, memarg/lane ordering, width-specific bounds, little-endian lane
+updates, stack typing, traps, and multi-memory behavior while leaving WAST
+syntax and official-corpus consumption with their existing owners. Rust's
+`algol-iir-compiler` also added bounded chained-Boolean selector identity and
+seven-backend results without an exact delivery contract; new neutral and
+selection-blocked applicable-lane owners now pin that behavior and require an
+explicit interpreter-IR lane decomposition. These four owners are registered
+as pending before the next item moves to in-progress.
+
+The dependency/leverage pass selects
+`build-tool-lua-tracked-artifact-validation-conformance` on branch
+`codex/build-tool-lua-tracked-artifact-validation-conformance`. All four
+declared prerequisites are merged. Lua is the widest remaining tracked lane at
+252 packages, ahead of Perl at 251, Haskell at 204, and Swift at 161. It has
+two existing direct children and three unfinished descendants through the Lua
+orphan validator and both completion umbrellas. Registering its real emitted
+Lua subprocess verification under the excluded Unicode-generator authority
+review raises that leverage to three direct children and four unfinished
+descendants without granting process authority to the pure runtime adapter.
+Elixir orphan validation is newly ready but unlocks only the orphan completion
+umbrella.
+
+All nine live open PRs and all non-main remote heads have zero exact overlap
+with the expected Lua validator, generated Unicode module, generator and test,
+fixture README, Unicode license, package tests and docs, CI, state, and roadmap
+surfaces. The target branch and prior PR were absent before the clean worktree
+and branch were created. The broader extra-CI corpus and OCaml process-free
+substrate remain collision-unsafe while PRs #12149 and #12162 own their
+required Go validator and main surfaces; PR #12824 likewise owns the
+otherwise-ready Mermaid XY surfaces. After registering the four new owners and
+the Lua generator-authority edge, the graph contains 503 unique owners and 766
+complete acyclic dependency edges, with exactly one in-progress owner and no
+active parity PR.
+
+### Lua tracked-artifact implementation
+
+The Lua build tool now exposes a pure
+`validate_tracked_artifact_snapshot` adapter and independently consumes all
+five language-neutral fixtures. It implements the closed portable-path error
+precedence, lexical slash normalization, Unicode-scalar length limits and
+ordering, hostile-path redaction, normalized safe forbidden paths, NFKC plus
+full default folding for exact `node_modules` components, full-uppercase
+Windows reserved basenames, inert entry kinds, and deterministic canonical
+diagnostic ordering. The adapter adds no Git, filesystem, process,
+environment, or network authority.
+
+Generated source-embedded Unicode 17.0.0 tables provide NFC, NFKC, full
+folding, NFKC-fold, and full uppercase without inheriting host Unicode data.
+The generator pins the upstream byte counts and SHA-256 identities, carries
+the complete Unicode License v3 notice, and checks the emitted Lua module over
+every official normalization, C/F folding, unconditional uppercase, derived
+NFKC-fold, and Unicode 17 sentinel vector. A required read-only CI job builds
+the repository-pinned Lua 5.4.7 toolchain and runs that real emitted-runtime
+check through an explicit executable path; the stable CI gate explicitly
+requires its result. The generator invokes Lua with `-E` under a minimal
+environment, retains at most 8 KiB from each output stream, and terminates the
+isolated process tree after every verifier exit. Windows starts the verifier
+suspended, assigns it to a kill-on-close Job Object before resuming it, and
+waits for job accounting to reach zero; POSIX always kills the isolated process
+group. Real timeout and early-root-exit descendant probes plus a cleanup-error
+ownership regression cover the boundary.
+
+The repository-pinned Lua 5.4.7 toolchain passes syntax compilation, 19
+focused validator tests, and the complete 72-test Lua build-tool suite. LuaCov
+measures the validator at 98.23% and the generated Unicode module at 84.06%; the
+package-wide total is 51.24% because unchanged CLI, resolver, and bundled test
+framework code remains outside this bounded consumer. All 23 generator tests
+and six pinned-Lua setup tests pass on Windows; the two Job Object failure-path
+tests are expected platform skips on POSIX. Ruff, changed-source Luacheck, workflow
+YAML parsing, generated-byte verification, and the full emitted Lua Unicode
+self-check pass.
+
+The neutral corpus validates 111 cases and 269 files. The schema and runner
+conformance families pass 22 and 58 tests respectively; package-parity,
+capability, Haskell-capability, and OCaml-lock suites pass another 66 tests
+with two expected platform skips and 928 subtests. The Go build tool passes all
+packages with coverage, vet, and trimpath compilation, then a fresh binary
+evaluates 45 Starlark BUILD files and validates a forced dry plan over all 259
+Lua packages.
+The refreshed schema-3 inventory remains 15 established lanes, 1,373
+implementation identities, 4,566 slots, 175 high-consensus packages with 276
+gaps, 910 singletons with 12,740 gaps, 721 Rust singletons, zero collisions,
+and zero unknown buckets. Bandit medium/high, strict JSON, state-graph, and diff
+checks pass; no package dependency changed. Generator subprocess authority
+remains explicitly selection-blocked under its separate review owner.
+
+The branch rebased without conflict onto exact `origin/main`
+`4faca735e6851d24bb78f96817292dbb354c0748` after classifying intervening HTML
+parser diagnostics and Malayalam script data under their existing owners. The
+merged SIMD lane-memory completion, ALGOL power-one selector writes, and
+Mermaid XY axis theme colors remain inside the neutral/parity owners registered
+before selection and the existing WAST/conformance, ALGOL, and Mermaid XY
+owners. Later implied-row HTML diagnostics and JV02 classic/enhanced for-loop
+lowering likewise remain inside the HTML frontend and Java-to-Semantic-IR
+owners; its two Python execution proofs retain the already registered extra-CI
+toolchain declaration gap. None adds or removes a package identity,
+BUILD/build-tool marker, or Lua tranche path. The focused package, generator,
+full-vector, Go oracle,
+build-plan, lint, and syntax gates were rerun successfully after the rebase.
+
+Independent split security review passed the pure Lua adapter and generated
+Unicode substrate without a finding. Generator and CI review found and then
+closed executable/environment, bounded-output, timeout-tree,
+early-root-descendant, Job Object ownership, and suspended setup-failure risks.
+The final reviews of validated code revision
+`f459a4cf54cbddac899a1172a22180d91a4acadd` returned `SECURITY REVIEW PASSED`:
+CI is read-only with checkout credentials disabled, the Unicode and Lua source
+inputs remain hash-pinned, and no actionable security issue remains.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

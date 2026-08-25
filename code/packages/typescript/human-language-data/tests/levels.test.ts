@@ -9,6 +9,10 @@ import { describe, expect, it } from "vitest";
 import { defaultCurriculumRoot, loadEverything } from "../src/loader.js";
 import { parseLesson } from "../src/parse.js";
 import {
+  generatedLevelSnapshotOutputsFromSummary,
+  summarizeLevelTracks,
+} from "../src/level-snapshot-cli.js";
+import {
   CEFR_LEVELS,
   deriveLessonLevel,
   lessonSpineNodes,
@@ -213,56 +217,22 @@ describe("corpus snapshot", () => {
   // in parallel and each measured this number alone — 8, 6 and 6 — so each was correct
   // and all three were wrong about the total. It is re-measured here against the merged
   // corpus, which is the only place the real number exists.
-  it("pins where the corpus actually stands on the ladder", () => {
+  it("pins the exact corpus through independently mergeable language shards", () => {
     const { lessons, curricula: paths, spine } = loadEverything();
     const summary = summarizeLevels(lessons, paths, spine);
+    const snapshots = generatedLevelSnapshotOutputsFromSummary(summary);
+    const snappedTracks = [...snapshots.entries()].map(([relative, expected]) => {
+      expect(readFileSync(join(defaultCurriculumRoot(), relative), "utf8"), relative).toBe(expected);
+      return JSON.parse(expected);
+    });
 
-    // +2: Spanish Chapter 9 maps its identity and ser/estar contrast lessons onto
-    // the existing pre-A1 social spine.
-    // +4: TA-W10..TA-W13, the Tamil writing strand's extension, all sit at pre-A1.
-    // +3 more: TA-W14/15/16, closing chapters 4-5, sit there too.
-    // +2: TA-W17-read-unavu and TA-W18-read-uur.
-    // +1: TA-W19-read-muunru, the strand's last available slot, likewise pre-A1.
-    // +1, and only ONE of chapter 39's four lessons: TA-W20-read-onru, which sits on
-    // SPINE-MEET-GREET like every other writing lesson. The chapter's three speaking
-    // lessons land at A2, because SPINE-SAY-WHAT-I-WANT is an A2 node — see below.
-    expect(summary.byLevel["pre-A1"]).toBeGreaterThanOrEqual(1038) // FLOOR — content only grows; see the note at the top of this file; // +3: HL-C97 adds the repair kit (no entiendo, mas despacio) at chapter 14 // +4: HL-C98 // +40: vocabulary wave 5 (persian 12, telugu 13, malayalam 15) // +54: vocabulary wave 6 (russian 14, persian 14, urdu 13, bengali 13) // HL12: +30 recognition segments (telugu/kannada/malayalam 8 each, sanskrit 6) -- all pre-A1, since every one sits on SPINE-MEET-GREET // HL12 payment two: +8 Hindi segments, all pre-A1
-    // Chapter 10 adds singular ir and possessives at A1. Chapter 11 adds one more
-    // definite-reference lesson there; its other work is A2. Chapter 12 adds its
-    // newly mapped terminal checkpoints at A2 on SPINE-SAY-WHAT-I-DO.
-    expect(summary.byLevel.A1).toBeGreaterThanOrEqual(599); // FLOOR — content only grows; exact pins serialize parallel tranches // Spanish A1 writing runway + six atom-budget splits: +9, all on A1 spine nodes // #12529: +13 Tamil numeral micro-lessons on the existing A1 SPINE-COUNT-ONE-TO-FIVE node // #12509: +13 Malayalam numeral micro-lessons, all derived from the existing A1 SPINE-COUNT-ONE-TO-FIVE node // HL-C230: +11. All eleven Chinese numeral lessons land at A1 because SPINE-COUNT-ONE-TO-FIVE is an A1 node in the shared spine -- DERIVED, not chosen. Note what this does NOT mean: chinese has 20 lessons total and can greet and count. `reach` is the highest level any lesson touches, which is a weak measure of a track, and it is about to say 'A1' for a track that is plainly pre-A1 in every other sense // +1: ES-C02-concordancia sits on SPINE-TIME-OF-DAY // +42: HL-C136 wave I. The whole wave lands at A1, not pre-A1, and that is DERIVED rather than chosen: all six chapters realize asking-and-pointing nodes the shared spine declares at A1, so `pre-A1` (1038) does not move at all. The wave is a *pre-A1 lexicon* drive by selection order, which is a statement about which words are worth teaching first, not a claim about which spine node they realize. // HL-C137 wave II: +36 adjective lessons, +6 chapters, all six Indic tracks // HL-C163: +6 -- Sanskrit chapter 16 // HL-C165: +11 -- Sanskrit chapters 17 and 18 // HL-C166: +11 -- Sanskrit chapters 19 and 20 // HL-C192: +24 family words // HL-C194: +16 Spanish words // french questions chapter: +9 lessons, +1 chapter (ch32) -- the interrogation category, 0/5 -> 5/5 -- the chapter realizes SPINE-ASK-LOCATION, an A1 node french had DECLARED omitted, so all nine land at A1 // Spanish A1 vocabulary tranche 1: +30, chapters 340-345, all on A1 spine nodes // Spanish A1 vocabulary tranche 2: +35, chapters 346-352, all on A1 spine nodes (ASK-LOCATION, TIME-OF-DAY, DEFINITE-REFERENCE, COUNT-ONE-TO-FIVE) // Spanish A1 vocabulary tranche 3: +35, chapters 353-359, the same four A1 spine nodes. This pin is a LESSON count and stays a FLOOR; the number that moved is the HL09 3.1 VOCABULARY criterion, where Spanish goes 444 -> 479 distinct headwords at or below A1 against the 600 it asks for. Measured through level-gate's own vocabularyOf, at the branch point and again after rebasing, so the +35 is proved to be 35 NEW headwords rather than near-duplicates the whole-string comparison would have silently absorbed
-    // Chapter 15's split adds three more mapped A2 lessons without changing its node.
-    // Chapter 16's split adds five more mapped A2 lessons on the same node.
-    // Chapter 17's split adds four more mapped A2 lessons on the same node.
-    // Chapter 18 replaces ten mapped A2 lessons with nine prerequisite-safe steps.
-    // +3: TA-C39-vendum, TA-C39-evvalavu and TA-C39-oru. Tamil's curriculum.json had
-    // already declared SPINE-SAY-WHAT-I-WANT with an empty segment list and VERB-WANT
-    // in `omits`; chapter 39 realizes the node, so the omission is removed with it.
-    expect(summary.byLevel.A2).toBe(549); // HL-C255: +2 -- HI-C05 lessons sit on SPINE-SAY-WHAT-I-DO, an A2 node, and only became level-visible on migration // HL-C247: +4 -- French chapter 33, four A2 lessons // +39: Spanish chapters 11-18 plus prerequisite closure // +3: HL-C88 slice 8 // +1: HL-C88 slice 9 (falsos amigos) // +3 — the plural rung sits on SPINE-TALK-ABOUT-PAST, which is A2: HL-C113 preterite plural // HL-C113 preterite close // HL-C152: +5 lessons, +1 chapter — Spanish realizes SPINE-NEGATE-AND-ASK, completing A2 at 5/5 // HL-C157: ayer + hablare close A2 // HL-C165: +11 -- Sanskrit chapters 17 and 18 // HL-C187: +20 -- verb tranche across the five behind tracks // HL-C189: +8 -- Tamil and Sanskrit verb tranche // HL-C190: see/say verbs across four tracks
-    // 8, not 0: Spanish chapters 38 and 41 realize SPINE-NARRATE-EVENTS and
-    // SPINE-GIVE-REASONS, four lessons each.
-    // HL-C113 makes SPINE-EXPRESS-CONDITION the THIRD realized B1 node -- the
-    // sentence that used to stand here, "the only B1 nodes any track has
-    // touched", stopped being true the moment chapters 196-198 landed.
-    // B2 opened with HL-C113 step 6: three lessons on SPINE-REPORT-WHAT-OTHERS-SAID.
-    // Neither C1 nor C2 is authored-but-unrealized any longer: HL-C174/175/177
-    // closed C1, and HL-C178 opens C2 with the cultural-weight chapter.
-    expect(summary.byLevel.B1).toBe(40); // +3: HL-C113 realizes SPINE-EXPRESS-CONDITION, the third B1 node // +2: HL-C113 imperfect subjunctive (2 lessons) // HL-C158: +4 -- the B1 travel rung (chapter 268) // HL-C159: +4 -- the B1 describe-experience rung (chapter 269) // HL-C160: +1 -- depende closes SPINE-EXPRESS-CONDITION, and B1
-    expect(summary.byLevel.B2).toBe(17); // +3: HL-C113 step 6 opens B2 with reported speech // +4: step 7 adds the reported questions, the review and the synthesis, closing the node // HL-C172: +4 -- the B2 argue rung (chapter 270) // HL-C173: +2 -- B2 closes (chapter 271) // HL-C173: +3 -- B2 closes (chapter 271)
-    expect(summary.byLevel.C1).toBe(10); // HL-C175: chapter 272, the first C1 lessons in the corpus // HL-C177: +5 -- chapter 273, C1 closes
-    expect(summary.byLevel.C2).toBe(18); // HL-C178: chapter 274, the first C2 lessons in the corpus // HL-C179: +5 -- chapter 275, fine shades // HL-C180: +4 -- chapter 276; ARCHAIC-FORM was already taught at chapter 3 // HL-C181: +5 -- chapter 277, the spine closes at 33/33
-
-    // HL-C63 places 47 orphan chapter lessons and two Spanish prerequisites. Chapters
-    // Chapters 7-9 then map their terminal practices and Chapter 9's remaining
-    // teaching lessons. Chapter 10 closes two more gaps; Chapter 11 closes its
-    // possessive and terminal-practice gaps; Chapters 12-13 close their payoff gaps.
-    expect(summary.unmapped).toBe(60); // Malayalam joins Punjabi and Marathi: its migrated Chapter 1 checkpoint now names SPINE-RESPOND-BASIC.
-    /* Historical cumulative context:
-    expect(summary.unmapped).toBe(64); // HL-C259: -4 -- IMPROVEMENT, the four gujarati chapter practices gain a spine_node // HL-C258: -3 -- IMPROVEMENT, the three bengali chapter practices gain a spine_node // HL-C256: -1 -- IMPROVEMENT, BN-C01-practice gains a spine_node // HL-C255: -3 -- IMPROVEMENT, three hindi ch4/ch5 lessons gain a spine_node. unmapped has fallen 84 -> 72 across six migrations // HL-C254: -1 -- IMPROVEMENT, HI-C03-practice gains a spine_node // HL-C253: -1 -- IMPROVEMENT, HI-C02-practice gains a spine_node // HL-C252: -1 -- IMPROVEMENT, HI-C01-practice gains a spine_node and stops counting as unmapped // HL-C251: -6 -- IMPROVEMENT. Six of the twelve migrated russian ch1 lessons gained a spine_node and stop counting as unmapped // HL-C250: -2 -- IMPROVEMENT. Migrating RU-C02-practice-cases and RU-C02-practice-zero-copula to v2 gave them a spine_node, so they stop counting as unmapped. This number should keep falling as #12072 proceeds
-    */
-    expect(summary.mappedPercent).toBe(98); // HL-C251: +1 -- IMPROVEMENT, mapped percent rises as the russian ch1 lessons gain a spine_node // +1: vocabulary wave 6 grows the mapped corpus faster than the unmapped 86 // kannada pre-A1 tranche: +35 lessons, +7 chapters (chapters 46-52)
+    expect(summarizeLevelTracks(snappedTracks)).toEqual({
+      totalLessons: summary.totalLessons,
+      byLevel: summary.byLevel,
+      unmapped: summary.unmapped,
+      mappedPercent: summary.mappedPercent,
+    });
   });
-
   it("shows twenty tracks have reached A2, and only two have not reached A1", () => {
     const { lessons, curricula: paths, spine } = loadEverything();
     const summary = summarizeLevels(lessons, paths, spine);

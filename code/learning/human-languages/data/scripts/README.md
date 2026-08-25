@@ -48,6 +48,10 @@ holds the structured tone (`"1"`–`"4"` | `"neutral"`). No `forms`, no `marks`.
       }
     }
   ],
+  "finalConsonants": [                       // atomic vowel-free letters outside a generated syllable grid
+    { "glyph": "ൽ", "sound": "l", "role": "consonant", "components": ["…"],
+      "strokeOrder": ["…"], "strokeOrderNote": "…" }
+  ],
   "marks": [                                   // vowel signs / harakat / niqqud
     { "mark": "ी", "sound": "ī", "role": "vowel-sign",
       "attachesAs": "a vertical to the right",
@@ -148,9 +152,9 @@ is క with the *i* sign on it.
 
 So handwriting data follows one rule:
 
-> Only **independent vowels**, **base consonants**, and **vowel signs** are ever
-> authored. A syllable's figure is composed from its parts' figures, never
-> authored separately.
+> Only **independent vowels**, **atomic consonants** (base consonants and
+> standalone chillus), and **vowel signs** are ever authored. A syllable's
+> figure is composed from its parts' figures, never authored separately.
 
 In a generated syllabary file independent vowels have their own small inventory;
 the base consonants are the entries whose
@@ -227,16 +231,34 @@ next row keeps the analogous ண path joined through an extra inner arch and the
 top bar for six movements before the same one lift and separate upright. Frame
 12 gives ந three joined opening movements, one lift before its joined rising
 middle stem and top bar, then a second lift before the right-hand descent. The
-Tamil starter inventory is now fully verified. Persian **ا** adds the first
+second row of Frame 5 gives independent **எ** six connected movements through
+its left climb, top bar, inner spiral, and lower foot, then one lift before the
+separate right upright rises. This row is distinct from dependent **ெ** in
+Frame 6, whose placement metadata makes no standalone ductus claim. The
+independent Tamil **உ** follows Appendix I Frame 16's three joined movements:
+the compact spiral opens into a broad descending curve, then continues along
+the long baseline to the right without lifting. The Noto Sans Tamil fit keeps
+all three movements in that single source-attested run. The
+Tamil **ழ** adds Appendix I Frame 7's six numbered movements as three
+pen-down runs: a joined left body and bar, a joined inner upright and broad
+right bowl, and the detached lower hook. Noto Sans Tamil simplifies the
+manual's looped left body and high bar to a retraced upright with a low
+crossbar, so the font-fitted path preserves the source's run boundaries rather
+than copying its display geometry literally. The Tamil starter inventory is
+now fully verified. Persian **ا** adds the first
 right-to-left-script ductus: UT Austin's freehand lesson shows one top-to-bottom
 Naskh stem at 00:08–00:11, with no lift. The adjacent **ب** demonstration at
 00:11–00:15 sweeps its shallow bowl right-to-left, then lifts once for the dot
 below. The full-alphabet source then demonstrates Persian-added **پ** at
-00:16–00:21; that letter remains deferred inventory work and does not change
+00:16–00:21: the same bowl comes first, followed by three separate dots below
+in left, right, then lower-center order. This added corpus row does not change
 HL-C09's fixed 228 prose entries. The next starter entry, **ت**, repeats the
 right-to-left bowl at 00:22–00:27, lifts to place the left dot above, then lifts
-again for the right dot. All three authored paths are checked against their
-vendored isolated Noto Naskh outlines. The **د** row at 01:04–01:06 folds from
+  again for the right dot. The **خ** demonstration at 00:49–00:54 completes its
+  short head and deep bowl before lifting once for the dot above; this row stays
+  Persian-scoped rather than borrowing Arabic or Urdu provenance. All four
+  authored paths are checked against their vendored isolated Noto Naskh outlines.
+  The **د** row at 01:04–01:06 folds from
 its upper tip through the shoulder and left along the baseline without lifting.
 The following **ر** row at 01:10–01:12 likewise keeps one pen-down run: descend
 through the short stroke, then sweep left through the lower curve. Its source
@@ -270,7 +292,11 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   the dot below, lift once, then keep the pointed hooked head, descent, and bowl
   in one continuous run. The chapter's alternate flat head is purely aesthetic,
   so the learner path preserves the pointed form without inventing a different
-  lift count. Urdu **ر** follows from the next source-backed chapter as one
+  lift count. Urdu **خ** follows from Chapter 7: its independent handwriting
+  animation completes the pointed head and deep bowl in one body-first run, then
+  lifts once for the dot above. The prose identifies it as the **ج** shape with
+  its dot moved above, while the script-scoped row remains independent of Arabic
+  and Persian. Urdu **ر** follows from the next source-backed chapter as one
   uninterrupted downward line that curves left. Its zero-lift learner path
   preserves the chapter's separate final-form motion and its Naskh/Nastaliq
   distinction without conflating them with the independent form. Urdu **و**
@@ -932,9 +958,11 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   verified claim has the same cited, font-checked path. That closes `HL-C19`;
   future entries join one side of this enforced boundary automatically.
 
-**Telugu, Kannada and Malayalam currently have zero authored letters** and
-therefore no `penLifts` anywhere. See [`BACKLOG.md`](../../BACKLOG.md) HL-C41 for
-the source-availability finding that keeps it that way.
+The initial source-availability gap recorded by HL-C41 is now being closed one
+verified shape at a time. Telugu has a cited independent **అ** row; Kannada has
+a cited independent **ಅ** row; Malayalam has cited independent **അ** and **എ**
+rows, base consonant **ഴ**, and standalone chillus **ൽ** and **ൻ**. An absent
+`penLifts` remains unverified, never an implied zero.
 
 ## Adding a script (e.g. Gujarati, Bengali, Hebrew)
 

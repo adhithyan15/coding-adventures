@@ -5,6 +5,166 @@ landed and why, not a semver-tracked API.
 
 ## Unreleased
 
+- `language/dolch-sight-word-level.adj` (extended, round 5 — COMPLETE) — completes BOTH
+  remaining Dolch levels, First Grade (to its FULL 41 words) and Second Grade (to its FULL 46
+  words), in one round rather than the one-level-per-round pace rounds 2-4 used, because this
+  round's empirical testing resolved both open questions rounds 3-4 had flagged but never
+  actually tested against the real built CLI: First Grade's `from`/`when` (two real Dolch
+  words that are also `adj-lang` reserved grammar keywords) empirically parse FINE as plain
+  atoms in `row(...)` position and in query position, exactly like `to`/`and`/`for`/`if`
+  before them (`adj-lang`'s reserved-word list only blocks a bare word where the grammar
+  actually expects a keyword token in that syntactic position; `row(...)`'s argument position
+  expects a plain atom, not a keyword, so a reserved word parses there without conflict).
+  Second Grade's apostrophe-bearing `don't` genuinely DOES fail to lex as a raw atom
+  (`LexerError` confirmed empirically) — resolved by reusing this stdlib's OWN
+  already-established house convention rather than inventing a new one:
+  `language/contraction.adj` already tables `dont` (no apostrophe) as the atom standing for
+  "don't" (its own header states this explicitly), so this file reuses that exact convention.
+  Re-downloaded and re-unzipped the SAME cited UFLI "Dolch High Frequency Word List Slides"
+  deck, re-resolving the true slide DISPLAY order via `ppt/presentation.xml`'s `<p:sldId>`
+  list (the same method rounds 2-4 introduced) and independently re-confirming the per-level
+  counts (40/52/41/46/41 = 220) match all four prior sourcing passes. Every one of the 41
+  First Grade and 46 Second Grade atoms (not just the newly-added ones) was empirically parsed
+  as a plain atom in `row(...)` position and reverse-recalled via `dolch_sight_word_level($W,
+  first_grade)` / `($W, second_grade)` against the real built CLI binary in a scratch table
+  before being written here — 41/41 and 46/46 answers bound, exit code 0. ALL FIVE Dolch
+  levels are now COMPLETE: this table ships the full, faithful 220-word Dolch list (up from
+  148/220). The earlier scope-abstention case (`some`/`they`/`you` — a real Dolch word at a
+  not-yet-completed level) no longer applies to any real Dolch word; the only remaining
+  abstention case is a word outside the cited source entirely (e.g. `elephant`). Extended the
+  query file and e2e test `facts_dolchsightwordlevel_e2e.rs` from 10 to 16 tests (forward
+  recall on `thank`/`from`/`when` (First Grade) and `many`/`dont` (Second Grade), plus reverse
+  recalls binding all 41 First Grade and all 46 Second Grade words) and removed the now-invalid
+  scope-abstention test (retargeted to the `elephant`-only case, since no scope boundary
+  remains). Also backfilled a pre-existing README.md staleness gap: the `language/` row still
+  described Primer as its original 5-word subset even though round 4 had already completed it
+  to 52/52 — now describes the full, completed state. No new manifest objective (same library,
+  same objective `adj.literacy.k2.dolch_sight_word_level`, unchanged `recall` shape).
+
+- `language/dolch-sight-word-level.adj` (extended, round 4) — completed the Primer level of
+  the already-shipped `dolch_sight_word_level(word, level)` table to its FULL 52 words (from
+  the first 5), re-fetching and re-parsing the SAME cited UFLI "Dolch High Frequency Word List
+  Slides" PowerPoint deck rounds 2 and 3 already used, rather than a new source — the exact
+  angle round 3's own backlog note flagged as the one remaining collision-free candidate
+  (First Grade and Second Grade both still carry unresolved issues: First Grade's full word
+  list collides with two `adj-lang` reserved grammar keywords, `from` and `when`; Second
+  Grade's includes `don't`, a word with an internal apostrophe this table's house style has
+  never exercised as an atom). Re-resolved the deck's true slide DISPLAY order from
+  `ppt/presentation.xml`'s `<p:sldId>` list and `ppt/_rels/presentation.xml.rels` relationship
+  map (the same method rounds 2 and 3 used) and confirmed the resulting per-level counts
+  (40/52/41/46/41 = 220) exactly match all three prior sourcing passes' own already-documented
+  counts, an independent cross-check that this round's re-parse is consistent. Independently
+  re-verified Primer's FULL 52-word list against `adj-lang`'s reserved-keyword list (`prior`,
+  `for`, `contributes`, `from`, `to`, `interacts`, `when`, `and`, `observe`, `uncertain`,
+  `source`, `trust`, `locator`, `cites`, `consensus`, `authoritative`, `empirical`, `inferred`,
+  `unattributed`) before shipping — zero collisions, and zero words with an internal apostrophe
+  or other unusual atom shape. Empirically verified all 52 Primer atoms (not just the 47 new
+  ones) against the real built CLI binary in a scratch table before writing the shipped file:
+  all parse fine as plain atoms in `row(...)` position, and a reverse `dolch_sight_word_level
+  ($W, primer)` query in that same scratch table correctly binds all 52. `they` (a real Dolch
+  Primer word) is no longer an abstention case — it is now a genuine row, since Primer is
+  complete — so the query/e2e abstention-on-scope case moved to `some` (a real Dolch First
+  Grade word, First Grade's sixth, still outside that level's unchanged first-five subset).
+  Primer is now the THIRD complete level (after Pre-Primer and Third Grade); First Grade and
+  Second Grade are unchanged, still shipping only their first five words each — the table now
+  carries 148 of the full 220 Dolch words (three COMPLETE levels plus two still-partial ones),
+  continuing the same incremental-growth shape `wave2-k8-science-foundations` already uses for
+  its own gaps. Extended the query file and e2e test `facts_dolchsightwordlevel_e2e.rs` to 10
+  tests (all 8 prior tests, plus two new tests: forward recall on `please`, the 52nd/last
+  Primer word, and a reverse recall now checking all 52 Primer words are bound answers) and
+  retargeted the abstention-on-scope test from `they` to `some`. No new manifest objective
+  (same library, same objective `adj.literacy.k2.dolch_sight_word_level`, unchanged `recall`
+  competency).
+
+- `language/dolch-sight-word-level.adj` (extended, round 3) — completed the Third Grade level
+  of the already-shipped `dolch_sight_word_level(word, level)` table to its FULL 41 words (from
+  the first 5), re-fetching and re-parsing the SAME cited UFLI "Dolch High Frequency Word List
+  Slides" PowerPoint deck the round-2 Pre-Primer extension already used, rather than a new
+  source — the exact untried angle this loop's own tracking issue (#12117) backlog flagged
+  ("the remaining four levels ... are each still open for the same completion treatment").
+  Re-resolved the deck's true slide DISPLAY order from `ppt/presentation.xml`'s `<p:sldId>`
+  list and `ppt/_rels/presentation.xml.rels` relationship map (the same method round 2
+  introduced) and confirmed the resulting per-level counts (40/52/41/46/41 = 220) exactly match
+  both prior sourcing passes' own already-documented counts, an independent cross-check that
+  this round's re-parse is consistent. Picked Third Grade over the other three still-partial
+  levels (Primer, First Grade, Second Grade) after cross-checking each level's FULL word list
+  against `adj-lang`'s reserved-keyword list: First Grade's full list collides on two real
+  Dolch words (`from`, `when`, both reserved grammar keywords) and Second Grade's includes a
+  word with an internal apostrophe (`don't`) needing atom-quoting care this table's house style
+  has not exercised — Third Grade and Primer were the only two collision-free candidates, and
+  Third Grade was chosen to keep the added-row count modest (36 new rows vs. Primer's 47).
+  Empirically verified all 36 newly-added Third Grade atoms against the real built CLI binary
+  in a scratch table BEFORE writing the shipped file — none are reserved-keyword-shaped, all
+  parse fine as plain atoms in `row(...)` position. Primer/First Grade/Second Grade are
+  unchanged, still shipping only their first five words each — the table now carries 96 of the
+  full 220 Dolch words (two COMPLETE levels, Pre-Primer and Third Grade, plus three still-partial
+  ones), continuing the same incremental-growth shape `wave2-k8-science-foundations` already
+  uses for its own gaps. Extended the query file and e2e test
+  `facts_dolchsightwordlevel_e2e.rs` to 8 tests (all 6 prior tests, plus two new tests: forward
+  recall on `laugh`, the 41st/last Third Grade word, and a reverse recall now checking all 41
+  Third Grade words are bound answers). No new manifest objective (same library, same objective
+  `adj.literacy.k2.dolch_sight_word_level`, unchanged `recall` competency).
+
+- `language/dolch-sight-word-level.adj` (extended) — completed the Pre-Primer level of the
+  already-shipped `dolch_sight_word_level(word, level)` table to its FULL 40 words (from the
+  original 5), re-fetching and re-parsing the SAME cited UFLI "Dolch High Frequency Word List
+  Slides" PowerPoint deck rather than a new source — exactly the untried angle this loop's own
+  tracking issue (#12117) backlog flagged after the file first shipped ("a future round can
+  extend any one level with its remaining words as a further instance of this same gap"; the raw
+  220-word extraction had already been done once during the original sourcing pass, per that
+  backlog note, but this round re-derived it directly from the deck rather than relying on
+  unwritten prior-session state). The other four levels (Primer/First Grade/Second Grade/Third
+  Grade) are unchanged, still shipping only their first five words each — the table now carries
+  60 of the full 220 Dolch words (one COMPLETE level plus four still-partial ones), the same
+  incremental-growth shape `wave2-k8-science-foundations` already uses for its own gaps. This
+  round re-derived the deck's true slide DISPLAY order from `ppt/presentation.xml`'s `<p:sldId>`
+  list and `ppt/_rels/presentation.xml.rels` relationship map (not the zip's raw filename order,
+  which is NOT display order for a 226-slide deck — `slide10.xml` sorts before `slide2.xml`
+  lexically) and confirmed the resulting per-level counts (40/52/41/46/41 = 220) exactly match
+  the original sourcing pass's own already-documented counts, an independent cross-check that
+  this round's re-parse is consistent. Empirically verified the newly-added reserved-keyword-shaped
+  atom `for` (`adj-lang` reserves `to`/`and`/`for` as grammar keywords) against the real built CLI
+  binary in a scratch table BEFORE writing the shipped file, alongside the rest of the 35 new
+  Pre-Primer atoms; all parse fine as plain atoms in `row(...)` position. `you` (a real Dolch
+  Pre-Primer word) is no longer an abstention case — it is now a genuine row, since Pre-Primer is
+  complete — so the query/e2e abstention-on-scope case moved to `they` (a real Dolch Primer word,
+  Primer's sixth, still outside that level's unchanged first-five subset). Extended the query file
+  and e2e test `facts_dolchsightwordlevel_e2e.rs` to 6 tests (original citation/forward/abstain
+  tests, retargeted abstention test, plus two new tests: forward recall on `funny`, the 40th/last
+  Pre-Primer word, and a reverse recall now checking all 40 Pre-Primer words are bound answers).
+  No new manifest objective (same library, same objective `adj.literacy.k2.dolch_sight_word_level`,
+  unchanged `recall` competency).
+
+- `language/dolch-sight-word-level.adj` (new) — a `table` naming which of Edward W. Dolch's five
+  grade-banded reading levels (Pre-Primer, Primer, First Grade, Second Grade, Third Grade) a
+  common high-frequency "sight word" is first taught at: `dolch_sight_word_level(word, level)`,
+  25 rows (the first five words of each level, in the source deck's own listed order). This is
+  the THIRD fresh-WebFetch-sourced literacy instance shipped under `wave2-k8-literacy-foundations`,
+  and genuinely distinct in KIND from `digraph-sound.adj`/`diphthong-sound.adj` (both phonics:
+  a SPELLING → the SOUND it makes) — this is whole-word-recognition vocabulary instead (a WORD →
+  the reading-level BAND it is first taught in), the opposite reading strategy from phonics
+  decoding. Confirmed via full-tree grep that no shipped table anywhere already names `dolch` or
+  `sight word`/`sight_word`. Sourced from the University of Florida Literacy Institute (UFLI)'s
+  Virtual Teaching Resource Hub "Irregular and High Frequency Words" page (curl-fetched and
+  confirmed byte-for-byte), which links UFLI's own "Dolch High Frequency Word List Slides"
+  PowerPoint deck — downloaded directly from the same ufli.education.ufl.edu `trust authoritative`
+  source family `digraph-sound.adj`/`diphthong-sound.adj` already established, and unzipped as raw
+  OOXML to read each level-divider and word slide's own text run verbatim. Counting the word slides
+  between each pair of level dividers gives exactly 40/52/41/46/41 (Pre-Primer/Primer/First
+  Grade/Second Grade/Third Grade), summing to exactly 220 — an independent cross-check that this
+  deck faithfully reproduces Dolch's own well-documented 220-word count. Ships 25 of the 220 words
+  (the first five per level in the deck's own order), the same "representative subset" convention
+  `food-groups.adj` already established (4-5 "example" items per category rather than the full
+  source list). Two UFLI Foundations Toolbox blends-unit and Long-Vowel-Teams angles were also
+  scoped this round before landing here — see below. Empirically verified reserved-keyword-shaped
+  atoms (`to`, `and`, `if`) against the real built CLI binary in a scratch table BEFORE writing the
+  shipped file, since the `adj-lang` lexer reserves `to`/`and`/`for` as grammar keywords elsewhere
+  in the language; confirmed they parse fine as plain atoms in `row(...)` position (this stdlib's
+  `homophones.adj` already had one precedent, `row (to, too)`). Honest abstention on `you` (a REAL
+  Dolch Pre-Primer word, but outside this table's shipped first-five-per-level subset) and on
+  `elephant` (not a Dolch word at all). New e2e test `facts_dolchsightwordlevel_e2e.rs` (5 tests);
+  new manifest objective `adj.literacy.k2.dolch_sight_word_level` (`recall` competency).
+
 - `language/diphthong-sound.adj` (new) — a `table` naming the two diphthong lessons of the
   University of Florida Literacy Institute (UFLI) Foundations Toolbox's "Diphthongs and Silent
   Letters Units (Lessons 95-98)" page and the single glided vowel sound each spelling represents:

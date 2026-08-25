@@ -30,9 +30,18 @@
       "id": "GU-PATH-002",
       "spine_node": "SPINE-COURTESY-THANK",
       "lessons": [
+        "GU-W02-ra",
+        "GU-W02-da",
+        "GU-W02-va",
+        "GU-W02-ya",
+        "GU-W02-bha",
+        "GU-W02-dha",
+        "GU-W02-vocalic-r",
         "GU-C01-aabhaar"
       ],
-      "before": [],
+      "before": [
+        "GU-EXT-017-COURTESY-GLYPHS"
+      ],
       "inline": [],
       "after": []
     },
@@ -75,6 +84,27 @@
       "after": []
     },
     {
+      "id": "GU-PATH-DOORWAY-SCRIPT",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "GU-W03-ja",
+        "GU-W03-o-matra",
+        "GU-W03-anusvara",
+        "GU-W03-ii-matra",
+        "GU-W03-u-matra",
+        "GU-W03-chha",
+        "GU-W03-ka",
+        "GU-W03-nna",
+        "GU-W03-sha",
+        "GU-R03-doorway-three-r1"
+      ],
+      "before": [],
+      "inline": [],
+      "after": [
+        "GU-EXT-018-DOORWAY-SCRIPT"
+      ]
+    },
+    {
       "id": "GU-PATH-005",
       "spine_node": "SPINE-EXCHANGE-NAMES",
       "lessons": [
@@ -83,13 +113,16 @@
         "GU-C02-maarun",
         "GU-C02-maarun-naam-chhe",
         "GU-C02-anand",
+        "GU-R04-doorway-nine-r2",
         "GU-C02-shun",
         "GU-C02-tu-tame",
         "GU-C02-tamarun-naam-shun-chhe",
         "GU-C03-hun"
       ],
       "before": [],
-      "inline": [],
+      "inline": [
+        "GU-EXT-019-DOORWAY-RETRIEVAL"
+      ],
       "after": []
     },
     {
@@ -285,7 +318,8 @@
   "spine": {
     "SPINE-MEET-GREET": {
       "segments": [
-        "GU-PATH-001"
+        "GU-PATH-001",
+        "GU-PATH-DOORWAY-SCRIPT"
       ],
       "omits": [
         "GREETING-FORMAL",
@@ -824,6 +858,60 @@
       ],
       "lessons": [
         "GU-C04-practice"
+      ]
+    },
+    {
+      "id": "GU-EXT-017-COURTESY-GLYPHS",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can trace, copy and recall the seven Gujarati pieces needed to read the courtesy word આભાર without an untaught shape.",
+      "prerequisites": [
+        "GU-EXT-016-SCRIPT-FIRST-PIECES"
+      ],
+      "lessons": [
+        "GU-W02-ra",
+        "GU-W02-da",
+        "GU-W02-va",
+        "GU-W02-ya",
+        "GU-W02-bha",
+        "GU-W02-dha",
+        "GU-W02-vocalic-r"
+      ]
+    },
+    {
+      "id": "GU-EXT-018-DOORWAY-SCRIPT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can trace, copy, recall and distinguish nine Gujarati forms needed by the first name exchange and later everyday words.",
+      "prerequisites": [
+        "GU-EXT-017-COURTESY-GLYPHS"
+      ],
+      "lessons": [
+        "GU-W03-ja",
+        "GU-W03-o-matra",
+        "GU-W03-anusvara",
+        "GU-W03-ii-matra",
+        "GU-W03-u-matra",
+        "GU-W03-chha",
+        "GU-W03-ka",
+        "GU-W03-nna",
+        "GU-W03-sha",
+        "GU-R03-doorway-three-r1"
+      ]
+    },
+    {
+      "id": "GU-EXT-019-DOORWAY-RETRIEVAL",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can retrieve the nine Gujarati doorway forms after meaning lessons, first by reading and then by writing from sound.",
+      "prerequisites": [
+        "GU-EXT-018-DOORWAY-SCRIPT"
+      ],
+      "lessons": [
+        "GU-R04-doorway-nine-r2"
       ]
     }
   ]

@@ -425,7 +425,7 @@ mod apple {
     #[test]
     fn render_configured_mermaid_xy_to_png() {
         let diagram = parse_xychart(
-            r##"%%{init: {"xyChart": {"width": 720, "height": 440, "titleFontSize": 24, "titlePadding": 14, "showDataLabel": true, "showDataLabelOutsideBar": true, "xAxis": {"labelFontSize": 13, "labelPadding": 7, "titleFontSize": 17, "titlePadding": 8, "showTick": false, "axisLineWidth": 4}, "yAxis": {"labelFontSize": 15, "labelPadding": 8, "titleFontSize": 18, "titlePadding": 9, "tickLength": 12, "tickWidth": 4, "axisLineWidth": 5}}, "themeVariables": {"xyChart": {"dataLabelColor": "#0b5d4b"}}}}%%
+        r##"%%{init: {"xyChart": {"width": 720, "height": 440, "chartOrientation": "horizontal", "plotReservedSpacePercent": 55, "titleFontSize": 24, "titlePadding": 14, "showLegend": true, "legendFontSize": 21, "legendPadding": 16, "showDataLabel": true, "showDataLabelOutsideBar": true, "xAxis": {"labelFontSize": 13, "labelPadding": 7, "titleFontSize": 17, "titlePadding": 8, "showTick": false, "axisLineWidth": 4}, "yAxis": {"labelFontSize": 15, "labelPadding": 8, "titleFontSize": 18, "titlePadding": 9, "tickLength": 12, "tickWidth": 4, "axisLineWidth": 5}}, "themeVariables": {"xyChart": {"backgroundColor": "#fff8e7", "titleColor": "#264653", "plotColorPalette": "#2a9d8f, #e76f51", "dataLabelColor": "#0b5d4b", "xAxisLabelColor": "#005f73", "xAxisTitleColor": "#0a9396", "xAxisTickColor": "#94d2bd", "xAxisLineColor": "#001219", "yAxisLabelColor": "#9b2226", "yAxisTitleColor": "#ae2012", "yAxisTickColor": "#ee9b00", "yAxisLineColor": "#ca6702"}}}}%%
 xychart
 title "Quarterly Throughput"
 x-axis "Quarter" [Q1, Q2, Q3, Q4]
@@ -436,6 +436,13 @@ line "Target" [35, 50, 68, 82]"##,
         .expect("configured XY chart should parse");
         let layout = layout_chart_diagram(&diagram, 600.0, 400.0);
         assert_eq!((layout.width, layout.height), (720.0, 440.0));
+        assert_eq!(layout.background_color.as_deref(), Some("#fff8e7"));
+        assert_eq!(diagram.orientation, diagram_ir::ChartOrientation::Horizontal);
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
+            diagram_ir::LayoutedChartItem::AxisSpine { y1, y2, .. }
+                if (*y2 - *y1) >= 242.0
+        )));
         assert_eq!(
             layout
                 .items
@@ -446,13 +453,13 @@ line "Target" [35, 50, 68, 82]"##,
         );
         assert!(layout.items.iter().any(|item| matches!(
             item,
-            diagram_ir::LayoutedChartItem::AxisSpine { stroke_width, .. }
-                if *stroke_width == 5.0
+            diagram_ir::LayoutedChartItem::AxisSpine { stroke_width, color, .. }
+                if *stroke_width == 5.0 && color == "#ca6702"
         )));
         assert!(layout.items.iter().any(|item| matches!(
             item,
-            diagram_ir::LayoutedChartItem::AxisTick { font_size, .. }
-                if *font_size == 13.0
+            diagram_ir::LayoutedChartItem::AxisTick { font_size, color, .. }
+                if *font_size == 13.0 && color == "#005f73"
         )));
         assert_eq!(
             layout
@@ -464,8 +471,30 @@ line "Target" [35, 50, 68, 82]"##,
         );
         assert!(layout.items.iter().any(|item| matches!(
             item,
-            diagram_ir::LayoutedChartItem::AxisTickMark { x1, x2, stroke_width, .. }
-                if (*x2 - *x1 - 12.0).abs() < f64::EPSILON && *stroke_width == 4.0
+            diagram_ir::LayoutedChartItem::AxisTickMark { y1, y2, stroke_width, .. }
+                if (*y2 - *y1 - 12.0).abs() < f64::EPSILON && *stroke_width == 4.0
+        )));
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
+            diagram_ir::LayoutedChartItem::Bar { width, height, .. } if width > height
+        )));
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
+            diagram_ir::LayoutedChartItem::Bar { color, .. } if color == "#2a9d8f"
+        )));
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
+            diagram_ir::LayoutedChartItem::LinePath { color, .. } if color == "#e76f51"
+        )));
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
+            diagram_ir::LayoutedChartItem::DataLabel { text, color, .. }
+                if text == "Quarterly Throughput" && color.as_deref() == Some("#264653")
+        )));
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
+            diagram_ir::LayoutedChartItem::Legend { font_size, entries, .. }
+                if *font_size == Some(21.0) && entries.len() == 2
         )));
 
         let shaper = CoreTextShaper;
@@ -492,13 +521,67 @@ line "Target" [35, 50, 68, 82]"##,
         write_png(&pixels, "/tmp/mermaid_xy_config_e2e.png").expect("PNG write failed");
 
         assert_eq!((pixels.width, pixels.height), (720, 440));
+        assert_eq!(scene.background, "#fff8e7");
         assert!(!scene.instructions.is_empty());
         assert!(scene.instructions.iter().any(|instruction| matches!(
             instruction,
             PaintInstruction::Path(path)
-                if path.stroke.as_deref() == Some("#6b7280")
-                    && path.stroke_width == Some(4.0)
+                if path.stroke.as_deref() == Some("#ca6702")
+                    && path.stroke_width == Some(5.0)
         )));
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::GlyphRun(run) if run.font_size == 21.0
+        )));
+    }
+
+    #[test]
+    fn render_rotated_mermaid_xy_labels_to_png() {
+        let diagram = parse_xychart(
+            "%%{init: {\"xyChart\": {\"xAxis\": {\"labelRotation\": -45}}}}%%\n\
+             xychart vertical\n\
+             x-axis [January forecast, February forecast, March forecast]\n\
+             y-axis 0 --> 100\n\
+             bar [35, 62, 88]\n",
+        )
+        .expect("rotated XY chart should parse");
+        let layout = layout_chart_diagram(&diagram, 700.0, 500.0);
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
+            diagram_ir::LayoutedChartItem::AxisTick {
+                rotation_degrees,
+                ..
+            } if *rotation_degrees == -45.0
+        )));
+
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_chart(
+            &layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color {
+                    r: 255,
+                    g: 255,
+                    b: 255,
+                    a: 255,
+                },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 12.0),
+                title_font: font_spec("Helvetica", 16.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Group(group) if group.transform.is_some()
+        )));
+
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_xy_rotation_e2e.png").expect("PNG write failed");
+        assert_eq!((pixels.width, pixels.height), (700, 500));
     }
 
     #[test]

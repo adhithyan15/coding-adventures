@@ -13,6 +13,7 @@ import cyrillic from "../../../../learning/human-languages/data/scripts/cyrillic
 import devanagari from "../../../../learning/human-languages/data/scripts/devanagari.json";
 import gujarati from "../../../../learning/human-languages/data/scripts/gujarati.json";
 import hebrew from "../../../../learning/human-languages/data/scripts/hebrew.json";
+import kannada from "../../../../learning/human-languages/data/scripts/kannada.json";
 import malayalam from "../../../../learning/human-languages/data/scripts/malayalam.json";
 import persoArabic from "../../../../learning/human-languages/data/scripts/perso-arabic.json";
 import telugu from "../../../../learning/human-languages/data/scripts/telugu.json";
@@ -223,6 +224,10 @@ const chineseCharacterSource = (glyph: string): StrokeSource => {
   return letter.strokeOrderSource;
 };
 
+const simpleStroke = (label: string, path: Point[]): Stroke => ({
+  segments: [{ label, path }],
+});
+
 const cyrillicAlphabetSource = (glyph: string): StrokeSource => {
   const letter = cyrillic.letters.find((candidate) => candidate.glyph === glyph);
   if (!letter || !("strokeOrderSource" in letter) || !letter.strokeOrderSource) {
@@ -267,6 +272,24 @@ const malayalamIndependentVowelSource = (glyph: string): StrokeSource => {
   const letter = malayalam.independentVowels.find((candidate) => candidate.glyph === glyph);
   if (!letter || !("strokeOrderSource" in letter) || !letter.strokeOrderSource) {
     throw new Error(`Malayalam independent vowel ${glyph} has no verified source`);
+  }
+  return letter.strokeOrderSource;
+};
+
+const kannadaIndependentVowelSource = (glyph: string): StrokeSource => {
+  const letter = kannada.independentVowels.find((candidate) => candidate.glyph === glyph);
+  if (!letter || !("strokeOrderSource" in letter) || !letter.strokeOrderSource) {
+    throw new Error(`Kannada ${glyph} has no verified source`);
+  }
+  return letter.strokeOrderSource;
+};
+
+const malayalamAlphabetSource = (glyph: string): StrokeSource => {
+  const letter = [...malayalam.letters, ...malayalam.finalConsonants].find(
+    (candidate) => candidate.glyph === glyph,
+  );
+  if (!letter || !("strokeOrderSource" in letter) || !letter.strokeOrderSource) {
+    throw new Error(`Malayalam ${glyph} has no verified source`);
   }
   return letter.strokeOrderSource;
 };
@@ -478,6 +501,73 @@ export const ductusKey = (script: string, glyph: string): string => `${script}:$
 // த continues Frame 3 onto page 192: movements 1-2, 3-4, and 5-6 form three
 // paired runs, then movement 7 restarts for the low leftward tail.
 // ---------------------------------------------------------------------------
+
+const independentKhehStrokes = (): Stroke[] => [
+  {
+    segments: [
+      {
+        label: "draw the short upper head from left to right",
+        path: [
+          { x: 110, y: 315 },
+          { x: 150, y: 335 },
+          { x: 210, y: 340 },
+          { x: 280, y: 325 },
+          { x: 350, y: 305 },
+          { x: 420, y: 285 },
+          { x: 490, y: 270 },
+          { x: 540, y: 270 },
+        ],
+      },
+      {
+        label: "continue down and around the deep bowl",
+        path: [
+          { x: 540, y: 270 },
+          { x: 490, y: 270 },
+          { x: 420, y: 285 },
+          { x: 350, y: 305 },
+          { x: 280, y: 325 },
+          { x: 210, y: 340 },
+          { x: 150, y: 335 },
+          { x: 110, y: 315 },
+          { x: 100, y: 290 },
+          { x: 130, y: 305 },
+          { x: 170, y: 310 },
+          { x: 220, y: 305 },
+          { x: 270, y: 285 },
+          { x: 320, y: 265 },
+          { x: 300, y: 245 },
+          { x: 260, y: 220 },
+          { x: 216, y: 190 },
+          { x: 180, y: 130 },
+          { x: 145, y: 65 },
+          { x: 118, y: -42 },
+          { x: 130, y: -110 },
+          { x: 180, y: -175 },
+          { x: 225, y: -200 },
+          { x: 300, y: -245 },
+          { x: 400, y: -245 },
+          { x: 500, y: -230 },
+          { x: 575, y: -210 },
+          { x: 608, y: -195 },
+        ],
+      },
+    ],
+  },
+  {
+    segments: [
+      {
+        label: "lift once, then place the dot above",
+        path: [
+          { x: 340, y: 460 },
+          { x: 285, y: 510 },
+          { x: 338, y: 565 },
+          { x: 390, y: 515 },
+          { x: 340, y: 460 },
+        ],
+      },
+    ],
+  },
+];
 
 export const DUCTUS: Record<string, LetterDuctus> = {
   // Hanzi Writer Data's ordered medians draw 人 with the left-falling stroke
@@ -2046,6 +2136,284 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       ] }] },
     ],
     source: chineseCharacterSource("上"),
+  },
+  // These six entries close the font-checked ductus for the family and school
+  // vocabulary tranche. Their paths preserve Hanzi Writer Data's pinned PRC
+  // stroke order while fitting the bundled Noto Sans SC outlines.
+  [ductusKey("chinese", "儿")]: {
+    script: "chinese",
+    glyph: "儿",
+    strokes: [
+      simpleStroke("draw the short left-falling piě stroke from the upper centre down-left", [
+        { x: 296, y: 752 }, { x: 296, y: 376 }, { x: 288, y: 368 },
+        { x: 288, y: 312 }, { x: 280, y: 304 }, { x: 272, y: 232 },
+        { x: 264, y: 224 }, { x: 248, y: 160 }, { x: 208, y: 88 },
+        { x: 160, y: 32 },
+      ]),
+      simpleStroke("lift, then draw the vertical shù stroke down from the upper right, bend it right along the baseline, and hook upward without lifting", [
+        { x: 664, y: 736 }, { x: 664, y: 64 }, { x: 672, y: 56 },
+        { x: 672, y: 0 }, { x: 680, y: -16 }, { x: 704, y: -32 },
+        { x: 872, y: -32 }, { x: 888, y: -24 }, { x: 912, y: 8 },
+        { x: 912, y: 40 }, { x: 920, y: 48 }, { x: 920, y: 160 },
+        { x: 904, y: 176 }, { x: 904, y: 192 },
+      ]),
+    ],
+    source: chineseCharacterSource("儿"),
+  },
+  [ductusKey("chinese", "家")]: {
+    script: "chinese",
+    glyph: "家",
+    strokes: [
+      simpleStroke("draw the top dot down and right", [
+        { x: 432, y: 824 }, { x: 456, y: 808 }, { x: 480, y: 808 },
+        { x: 488, y: 792 }, { x: 488, y: 768 }, { x: 496, y: 760 },
+      ]),
+      simpleStroke("lift, then draw the left-side roof dot down and left", [
+        { x: 224, y: 712 }, { x: 128, y: 712 }, { x: 120, y: 704 },
+        { x: 120, y: 576 },
+      ]),
+      simpleStroke("lift, then draw the horizontal roof left-to-right and hook down-left without lifting", [
+        { x: 264, y: 712 }, { x: 488, y: 712 }, { x: 496, y: 720 },
+        { x: 512, y: 720 }, { x: 520, y: 712 }, { x: 872, y: 712 },
+        { x: 880, y: 704 }, { x: 880, y: 616 },
+      ]),
+      simpleStroke("lift, then draw the upper horizontal of the lower body from left to right", [
+        { x: 248, y: 552 }, { x: 456, y: 552 }, { x: 464, y: 544 },
+        { x: 488, y: 544 }, { x: 496, y: 552 }, { x: 640, y: 552 },
+      ]),
+      simpleStroke("lift, then draw its left-falling stroke", [
+        { x: 456, y: 504 }, { x: 448, y: 496 }, { x: 448, y: 480 },
+        { x: 424, y: 456 }, { x: 376, y: 448 }, { x: 304, y: 408 },
+        { x: 288, y: 408 }, { x: 264, y: 392 }, { x: 248, y: 392 },
+        { x: 240, y: 384 }, { x: 224, y: 384 }, { x: 192, y: 368 },
+        { x: 168, y: 368 }, { x: 160, y: 360 }, { x: 112, y: 360 },
+      ]),
+      simpleStroke("lift, then descend the centre and curve to a hook at the base without lifting", [
+        { x: 416, y: 456 }, { x: 432, y: 464 }, { x: 448, y: 448 },
+        { x: 448, y: 440 }, { x: 472, y: 416 }, { x: 488, y: 384 },
+        { x: 488, y: 368 }, { x: 504, y: 352 }, { x: 512, y: 352 },
+        { x: 528, y: 328 }, { x: 536, y: 296 }, { x: 552, y: 280 },
+        { x: 552, y: 224 }, { x: 560, y: 216 }, { x: 560, y: 184 },
+        { x: 568, y: 176 }, { x: 568, y: 96 }, { x: 560, y: 88 },
+        { x: 552, y: 32 }, { x: 512, y: -24 }, { x: 480, y: -40 },
+        { x: 456, y: -48 }, { x: 392, y: -48 }, { x: 360, y: -24 },
+      ]),
+      simpleStroke("lift, then add the short left-falling stroke beside the centre", [
+        { x: 456, y: 432 }, { x: 472, y: 416 }, { x: 488, y: 384 },
+        { x: 488, y: 368 }, { x: 496, y: 360 }, { x: 480, y: 344 },
+        { x: 448, y: 336 }, { x: 392, y: 296 }, { x: 264, y: 232 },
+        { x: 248, y: 232 }, { x: 232, y: 216 }, { x: 216, y: 216 },
+        { x: 208, y: 208 }, { x: 192, y: 208 }, { x: 160, y: 192 },
+        { x: 136, y: 192 },
+      ]),
+      simpleStroke("lift, then add the longer left-falling stroke below it", [
+        { x: 512, y: 344 }, { x: 528, y: 328 }, { x: 528, y: 312 },
+        { x: 552, y: 272 }, { x: 552, y: 224 }, { x: 536, y: 208 },
+        { x: 520, y: 208 }, { x: 488, y: 192 }, { x: 472, y: 176 },
+        { x: 464, y: 176 }, { x: 424, y: 144 }, { x: 400, y: 136 },
+        { x: 384, y: 120 }, { x: 288, y: 72 }, { x: 272, y: 72 },
+        { x: 216, y: 40 }, { x: 200, y: 40 }, { x: 192, y: 32 },
+        { x: 176, y: 32 }, { x: 144, y: 16 }, { x: 96, y: 16 },
+      ]),
+      simpleStroke("lift, then add the lower left-falling stroke", [
+        { x: 832, y: 432 }, { x: 792, y: 432 }, { x: 776, y: 416 },
+        { x: 768, y: 416 }, { x: 736, y: 384 }, { x: 680, y: 352 },
+        { x: 664, y: 320 }, { x: 648, y: 304 }, { x: 624, y: 304 },
+        { x: 616, y: 296 }, { x: 552, y: 280 }, { x: 536, y: 296 },
+        { x: 528, y: 328 },
+      ]),
+      simpleStroke("lift, then finish with the long right-falling nà stroke", [
+        { x: 528, y: 328 }, { x: 528, y: 312 }, { x: 552, y: 280 },
+        { x: 568, y: 288 }, { x: 592, y: 288 }, { x: 624, y: 304 },
+        { x: 648, y: 304 }, { x: 656, y: 312 }, { x: 672, y: 296 },
+        { x: 672, y: 280 }, { x: 720, y: 184 }, { x: 760, y: 136 },
+        { x: 760, y: 128 }, { x: 832, y: 56 }, { x: 840, y: 56 },
+        { x: 888, y: 16 }, { x: 928, y: 16 }, { x: 936, y: 24 },
+      ]),
+    ],
+    source: chineseCharacterSource("家"),
+  },
+  [ductusKey("chinese", "大")]: {
+    script: "chinese",
+    glyph: "大",
+    strokes: [
+      simpleStroke("draw the horizontal héng stroke from left to right", [
+        { x: 104, y: 512 }, { x: 472, y: 512 }, { x: 488, y: 496 },
+        { x: 504, y: 496 }, { x: 520, y: 512 }, { x: 896, y: 512 },
+      ]),
+      simpleStroke("lift, then start above the bar and draw the left-falling piě stroke through it", [
+        { x: 496, y: 792 }, { x: 496, y: 624 }, { x: 488, y: 616 },
+        { x: 488, y: 536 }, { x: 472, y: 512 }, { x: 496, y: 488 },
+        { x: 496, y: 472 }, { x: 464, y: 440 }, { x: 456, y: 424 },
+        { x: 448, y: 376 }, { x: 440, y: 368 }, { x: 432, y: 328 },
+        { x: 416, y: 304 }, { x: 416, y: 288 }, { x: 352, y: 176 },
+        { x: 320, y: 144 }, { x: 320, y: 136 }, { x: 232, y: 48 },
+        { x: 224, y: 48 }, { x: 200, y: 24 }, { x: 168, y: 8 },
+      ]),
+      simpleStroke("lift, return near the crossing, and draw the long right-falling nà stroke", [
+        { x: 464, y: 432 }, { x: 464, y: 440 }, { x: 496, y: 472 },
+        { x: 536, y: 432 }, { x: 552, y: 400 }, { x: 552, y: 384 },
+        { x: 576, y: 344 }, { x: 576, y: 328 }, { x: 616, y: 248 },
+        { x: 632, y: 232 }, { x: 640, y: 208 }, { x: 696, y: 144 },
+        { x: 696, y: 136 }, { x: 800, y: 32 }, { x: 808, y: 32 },
+        { x: 832, y: 8 }, { x: 856, y: 0 }, { x: 880, y: -24 },
+        { x: 896, y: -16 }, { x: 920, y: -16 }, { x: 928, y: -8 },
+      ]),
+    ],
+    source: chineseCharacterSource("大"),
+  },
+  [ductusKey("chinese", "小")]: {
+    script: "chinese",
+    glyph: "小",
+    strokes: [
+      simpleStroke("draw the centre vertical shù stroke downward and hook left without lifting", [
+        { x: 504, y: 776 }, { x: 504, y: 48 }, { x: 496, y: 40 },
+        { x: 496, y: -8 }, { x: 488, y: -24 }, { x: 464, y: -40 },
+        { x: 384, y: -40 },
+      ]),
+      simpleStroke("lift, then draw the short left-falling piě stroke", [
+        { x: 224, y: 496 }, { x: 216, y: 488 }, { x: 216, y: 472 },
+        { x: 200, y: 440 }, { x: 200, y: 416 }, { x: 192, y: 408 },
+        { x: 184, y: 368 }, { x: 96, y: 192 },
+      ]),
+      simpleStroke("lift, then draw the right dot downward", [
+        { x: 776, y: 520 }, { x: 792, y: 488 }, { x: 808, y: 472 },
+        { x: 824, y: 440 }, { x: 824, y: 424 }, { x: 864, y: 352 },
+        { x: 864, y: 336 }, { x: 880, y: 312 }, { x: 888, y: 272 },
+        { x: 904, y: 248 }, { x: 920, y: 184 },
+      ]),
+    ],
+    source: chineseCharacterSource("小"),
+  },
+  [ductusKey("chinese", "中")]: {
+    script: "chinese",
+    glyph: "中",
+    strokes: [
+      simpleStroke("draw the left vertical shù stroke from top to bottom", [
+        { x: 152, y: 616 }, { x: 152, y: 520 }, { x: 152, y: 424 },
+        { x: 152, y: 328 }, { x: 152, y: 232 },
+      ]),
+      simpleStroke("lift, then draw the top horizontal left-to-right and turn down the right side without lifting", [
+        { x: 132, y: 624 }, { x: 320, y: 624 }, { x: 504, y: 624 },
+        { x: 688, y: 624 }, { x: 864, y: 624 }, { x: 864, y: 520 },
+        { x: 864, y: 416 }, { x: 864, y: 312 }, { x: 864, y: 220 },
+      ]),
+      simpleStroke("lift, then close the box with the bottom horizontal héng stroke left-to-right", [
+        { x: 152, y: 284 }, { x: 320, y: 284 }, { x: 488, y: 284 },
+        { x: 656, y: 284 }, { x: 824, y: 284 },
+      ]),
+      simpleStroke("lift, then draw the central vertical shù stroke from top through the box to the base", [
+        { x: 496, y: 824 }, { x: 496, y: 640 }, { x: 496, y: 456 },
+        { x: 496, y: 272 }, { x: 496, y: 88 }, { x: 496, y: -48 },
+      ]),
+    ],
+    source: chineseCharacterSource("中"),
+  },
+  [ductusKey("chinese", "同")]: {
+    script: "chinese",
+    glyph: "同",
+    strokes: [
+      simpleStroke("draw the outer left vertical shù stroke from top to bottom", [
+        { x: 152, y: 744 }, { x: 152, y: 584 }, { x: 152, y: 424 },
+        { x: 152, y: 264 }, { x: 152, y: 104 }, { x: 152, y: -32 },
+      ]),
+      simpleStroke("lift, then draw the outer top horizontal and turn down the right side without lifting", [
+        { x: 124, y: 752 }, { x: 312, y: 752 }, { x: 500, y: 752 },
+        { x: 688, y: 752 }, { x: 877, y: 752 }, { x: 877, y: 584 },
+        { x: 877, y: 416 }, { x: 877, y: 248 }, { x: 877, y: 48 },
+        { x: 870, y: -16 }, { x: 840, y: -38 }, { x: 780, y: -45 },
+        { x: 720, y: -42 },
+      ]),
+      simpleStroke("lift, then draw the short inner horizontal héng stroke left-to-right", [
+        { x: 280, y: 580 }, { x: 392, y: 580 }, { x: 504, y: 580 },
+        { x: 616, y: 580 }, { x: 720, y: 580 },
+      ]),
+      simpleStroke("lift, then draw 口's left vertical", [
+        { x: 336, y: 408 }, { x: 336, y: 312 }, { x: 336, y: 216 },
+        { x: 336, y: 120 },
+      ]),
+      simpleStroke("lift, then draw 口's top horizontal and turn down its right side without lifting", [
+        { x: 352, y: 408 }, { x: 432, y: 408 }, { x: 512, y: 408 },
+        { x: 592, y: 408 }, { x: 672, y: 408 }, { x: 672, y: 312 },
+        { x: 672, y: 216 }, { x: 672, y: 136 },
+      ]),
+      simpleStroke("lift, then close 口 with its bottom horizontal left-to-right", [
+        { x: 336, y: 152 }, { x: 420, y: 152 }, { x: 504, y: 152 },
+        { x: 588, y: 152 }, { x: 672, y: 152 },
+      ]),
+    ],
+    source: chineseCharacterSource("同"),
+  },
+  [ductusKey("chinese", "学")]: {
+    script: "chinese",
+    glyph: "学",
+    strokes: [
+      simpleStroke("draw the centre top dot downward", [
+        { x: 232, y: 768 }, { x: 232, y: 760 }, { x: 272, y: 704 },
+        { x: 272, y: 648 }, { x: 280, y: 640 }, { x: 384, y: 640 },
+      ]),
+      simpleStroke("lift, then draw the left top dot downward", [
+        { x: 448, y: 816 }, { x: 464, y: 816 }, { x: 496, y: 776 },
+        { x: 520, y: 728 }, { x: 520, y: 688 },
+      ]),
+      simpleStroke("lift, then draw the right top stroke down-left", [
+        { x: 768, y: 744 }, { x: 768, y: 736 }, { x: 744, y: 712 },
+        { x: 736, y: 656 }, { x: 720, y: 640 }, { x: 592, y: 640 },
+      ]),
+      simpleStroke("lift, then draw the left dot of the cover", [
+        { x: 236, y: 466 }, { x: 264, y: 464 },
+      ]),
+      simpleStroke("lift, then draw the horizontal cover and hook downward without lifting", [
+        { x: 112, y: 568 }, { x: 112, y: 632 }, { x: 120, y: 640 },
+        { x: 872, y: 640 }, { x: 888, y: 624 }, { x: 888, y: 512 },
+      ]),
+      simpleStroke("lift, then draw 子's top horizontal and turn down-left without lifting", [
+        { x: 336, y: 464 }, { x: 656, y: 464 }, { x: 664, y: 456 },
+        { x: 664, y: 440 }, { x: 656, y: 432 }, { x: 656, y: 416 },
+        { x: 640, y: 400 }, { x: 504, y: 328 },
+      ]),
+      simpleStroke("lift, then draw 子's vertical and hook left without lifting", [
+        { x: 504, y: 328 }, { x: 496, y: 312 }, { x: 496, y: 248 },
+        { x: 504, y: 240 }, { x: 496, y: 232 }, { x: 496, y: 0 },
+        { x: 488, y: -8 }, { x: 488, y: -24 }, { x: 456, y: -40 },
+        { x: 352, y: -40 },
+      ]),
+      simpleStroke("lift, then draw 子's bottom horizontal from left to right", [
+        { x: 96, y: 240 }, { x: 488, y: 240 }, { x: 496, y: 248 },
+        { x: 504, y: 240 }, { x: 896, y: 240 },
+      ]),
+    ],
+    source: chineseCharacterSource("学"),
+  },
+  [ductusKey("chinese", "生")]: {
+    script: "chinese",
+    glyph: "生",
+    strokes: [
+      simpleStroke("draw the short upper left-falling piě stroke", [
+        { x: 288, y: 792 }, { x: 256, y: 760 }, { x: 240, y: 696 }, { x: 224, y: 672 },
+        { x: 224, y: 632 }, { x: 216, y: 624 }, { x: 208, y: 600 },
+        { x: 192, y: 568 }, { x: 176, y: 536 }, { x: 152, y: 504 },
+        { x: 134, y: 480 },
+      ]),
+      simpleStroke("lift, then draw the upper horizontal héng stroke", [
+        { x: 320, y: 608 }, { x: 488, y: 608 }, { x: 496, y: 600 },
+        { x: 504, y: 608 }, { x: 856, y: 608 },
+      ]),
+      simpleStroke("lift, then draw the shorter middle horizontal héng stroke", [
+        { x: 168, y: 312 }, { x: 488, y: 312 }, { x: 496, y: 304 },
+        { x: 504, y: 312 }, { x: 824, y: 312 },
+      ]),
+      simpleStroke("lift, then draw the vertical shù stroke through the two bars", [
+        { x: 496, y: 792 }, { x: 496, y: 616 }, { x: 504, y: 608 },
+        { x: 496, y: 600 }, { x: 496, y: 320 }, { x: 504, y: 312 },
+        { x: 496, y: 304 }, { x: 496, y: 96 },
+      ]),
+      simpleStroke("lift, then draw the long bottom horizontal héng stroke", [
+        { x: 144, y: -16 }, { x: 488, y: -16 }, { x: 496, y: -8 },
+        { x: 504, y: -16 }, { x: 904, y: -16 },
+      ]),
+    ],
+    source: chineseCharacterSource("生"),
   },
   // Hanzi Writer Data draws 一 with a single left-to-right héng. There is nothing
   // to lift between, so the ductus is one stroke of one segment -- the shortest
@@ -8836,6 +9204,18 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: arabicAlphabetSource("خ"),
   },
+  [ductusKey("perso-arabic", "خ")]: {
+    script: "perso-arabic",
+    glyph: "خ",
+    strokes: independentKhehStrokes(),
+    source: persianAlphabetSource("خ"),
+  },
+  [ductusKey("urdu-nastaliq", "خ")]: {
+    script: "urdu-nastaliq",
+    glyph: "خ",
+    strokes: independentKhehStrokes(),
+    source: urduAlphabetSource("خ"),
+  },
   [ductusKey("arabic", "د")]: {
     script: "arabic",
     glyph: "د",
@@ -10882,6 +11262,74 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: persianAlphabetSource("ب"),
   },
+  "پ": {
+    script: "perso-arabic",
+    glyph: "پ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "sweep the shallow bowl from right to left",
+            path: [
+              { x: 678, y: 382 },
+              { x: 663, y: 345 },
+              { x: 650, y: 305 },
+              { x: 654, y: 260 },
+              { x: 672, y: 215 },
+              { x: 688, y: 170 },
+              { x: 686, y: 126 },
+              { x: 620, y: 94 },
+              { x: 530, y: 65 },
+              { x: 430, y: 42 },
+              { x: 335, y: 38 },
+              { x: 245, y: 51 },
+              { x: 170, y: 83 },
+              { x: 120, y: 135 },
+              { x: 96, y: 205 },
+              { x: 100, y: 255 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then place the left dot below",
+            path: [
+              { x: 350, y: -130 },
+              { x: 317, y: -94 },
+              { x: 282, y: -130 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift again and place the right dot below",
+            path: [
+              { x: 493, y: -117 },
+              { x: 460, y: -81 },
+              { x: 425, y: -117 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift again and place the lower-center dot",
+            path: [
+              { x: 420, y: -208 },
+              { x: 390, y: -172 },
+              { x: 356, y: -208 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: persianAlphabetSource("پ"),
+  },
   "ت": {
     script: "perso-arabic",
     glyph: "ت",
@@ -11612,6 +12060,71 @@ export const DUCTUS: Record<string, LetterDuctus> = {
         "Tamil handwriting is taught with school-to-school variation; there is no single national stroke-order standard. This is one attested order.",
     },
   },
+  உ: {
+    script: "tamil",
+    glyph: "உ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "sweep outward around the compact upper spiral",
+            path: [
+              { x: 250, y: 400 },
+              { x: 285, y: 430 },
+              { x: 320, y: 415 },
+              { x: 340, y: 375 },
+              { x: 325, y: 330 },
+              { x: 285, y: 295 },
+              { x: 230, y: 275 },
+              { x: 165, y: 290 },
+              { x: 115, y: 335 },
+              { x: 95, y: 400 },
+              { x: 120, y: 465 },
+              { x: 180, y: 520 },
+              { x: 250, y: 535 },
+              { x: 320, y: 520 },
+            ],
+          },
+          {
+            label: "descend through the broad outer curve and turn left onto the baseline",
+            path: [
+              { x: 320, y: 520 },
+              { x: 405, y: 495 },
+              { x: 485, y: 445 },
+              { x: 550, y: 375 },
+              { x: 560, y: 315 },
+              { x: 530, y: 255 },
+              { x: 455, y: 205 },
+              { x: 365, y: 175 },
+              { x: 275, y: 160 },
+              { x: 190, y: 150 },
+              { x: 115, y: 120 },
+              { x: 105, y: 80 },
+              { x: 145, y: 40 },
+            ],
+          },
+          {
+            label: "carry the long baseline straight to the right",
+            path: [
+              { x: 145, y: 40 },
+              { x: 300, y: 36 },
+              { x: 500, y: 36 },
+              { x: 700, y: 36 },
+              { x: 875, y: 36 },
+              { x: 1015, y: 36 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: {
+      citation:
+        "Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 16, உ (University of Texas at Austin), p. 196",
+      url: "https://sites.la.utexas.edu/tamilscript/files/2009/08/hw_lettersinstructions.pdf",
+      variation:
+        "Appendix I Frame 16 numbers the upper spiral, descending outer curve, and rightward baseline as three joined movements. Tamil handwriting varies by school; this is one attested continuous order fitted to the bundled Noto Sans Tamil outline.",
+    },
+  },
   க: {
     script: "tamil",
     glyph: "க",
@@ -12035,6 +12548,100 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       url: "https://sites.la.utexas.edu/tamilscript/files/2009/08/hw_lettersinstructions.pdf",
       variation:
         "Module 12 identifies ள as the retroflex lateral, contrasts it with ல, and directs learners to Appendix I. Frame 12 numbers six movements in three pen-down runs: joined movements 1–3, joined movements 4–5, and separate movement 6. Tamil handwriting varies by school; this is one attested order fitted to the bundled Noto Sans Tamil outline.",
+    },
+  },
+  ழ: {
+    script: "tamil",
+    glyph: "ழ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "climb the outer left upright",
+            path: [
+              { x: 130, y: 36 },
+              { x: 130, y: 180 },
+              { x: 130, y: 360 },
+              { x: 130, y: 525 },
+            ],
+          },
+          {
+            label: "retrace down the left upright",
+            path: [
+              { x: 130, y: 525 },
+              { x: 130, y: 360 },
+              { x: 130, y: 180 },
+              { x: 130, y: 36 },
+            ],
+          },
+          {
+            label: "carry the low crossbar right",
+            path: [
+              { x: 130, y: 36 },
+              { x: 260, y: 36 },
+              { x: 400, y: 36 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "retrace left into the inner upright",
+            path: [
+              { x: 620, y: 525 },
+              { x: 550, y: 525 },
+              { x: 485, y: 500 },
+              { x: 445, y: 450 },
+            ],
+          },
+          {
+            label: "descend and sweep around the broad right bowl",
+            path: [
+              { x: 445, y: 450 },
+              { x: 445, y: 300 },
+              { x: 445, y: 150 },
+              { x: 445, y: 36 },
+              { x: 540, y: 36 },
+              { x: 640, y: 55 },
+              { x: 715, y: 115 },
+              { x: 750, y: 220 },
+              { x: 750, y: 340 },
+              { x: 715, y: 440 },
+              { x: 650, y: 510 },
+              { x: 600, y: 525 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "turn through the detached lower hook",
+            path: [
+              { x: 250, y: -95 },
+              { x: 175, y: -120 },
+              { x: 110, y: -175 },
+              { x: 105, y: -215 },
+              { x: 145, y: -260 },
+              { x: 235, y: -285 },
+              { x: 330, y: -285 },
+              { x: 420, y: -255 },
+              { x: 490, y: -205 },
+              { x: 535, y: -150 },
+              { x: 590, y: -130 },
+              { x: 680, y: -130 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: {
+      citation:
+        "Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 7, ழ (University of Texas at Austin), p. 193",
+      url: "https://sites.la.utexas.edu/tamilscript/files/2009/08/hw_lettersinstructions.pdf",
+      variation:
+        "Appendix I Frame 7 numbers six movements in three pen-down runs: joined movements 1–3 form the left body and bar, joined movements 4–5 retrace into the inner upright and broad right bowl, and separate movement 6 forms the detached lower hook. The bundled Noto Sans Tamil print face simplifies the source's looped left body and high bar into a retraced upright with a low crossbar; the authored path preserves the source's run grouping while fitting that printed outline. Tamil handwriting varies by school; this is one attested three-run order.",
     },
   },
   ர: {
@@ -12826,6 +13433,76 @@ export const DUCTUS: Record<string, LetterDuctus> = {
         "Tamil handwriting is taught with school-to-school variation; there is no single national stroke-order standard. This is one attested order.",
     },
   },
+  // Gopala Krishna A's 35-frame animation keeps the pencil down throughout:
+  // the compact left loop flows into the broad bowl, rises through the right
+  // loop, and returns left along the inner bar. These four movements preserve
+  // that one-run order on the bundled Noto Sans Kannada outline.
+  [ductusKey("kannada", "ಅ")]: {
+    script: "kannada",
+    glyph: "ಅ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "turn clockwise around the compact left loop",
+            path: [
+              { x: 110, y: 400 },
+              { x: 125, y: 460 },
+              { x: 180, y: 525 },
+              { x: 242, y: 528 },
+              { x: 310, y: 490 },
+              { x: 345, y: 430 },
+              { x: 335, y: 380 },
+              { x: 285, y: 330 },
+              { x: 220, y: 312 },
+              { x: 160, y: 330 },
+              { x: 115, y: 370 },
+            ],
+          },
+          {
+            label: "sweep around the broad lower bowl",
+            path: [
+              { x: 115, y: 370 },
+              { x: 75, y: 300 },
+              { x: 90, y: 210 },
+              { x: 150, y: 115 },
+              { x: 270, y: 55 },
+              { x: 420, y: 28 },
+              { x: 550, y: 45 },
+              { x: 670, y: 100 },
+              { x: 750, y: 200 },
+              { x: 785, y: 320 },
+            ],
+          },
+          {
+            label: "turn counterclockwise around the rounded right loop",
+            path: [
+              { x: 785, y: 320 },
+              { x: 770, y: 410 },
+              { x: 720, y: 500 },
+              { x: 640, y: 525 },
+              { x: 570, y: 480 },
+              { x: 535, y: 420 },
+              { x: 555, y: 365 },
+              { x: 610, y: 325 },
+              { x: 680, y: 280 },
+            ],
+          },
+          {
+            label: "return left along the inward horizontal bar",
+            path: [
+              { x: 680, y: 280 },
+              { x: 600, y: 280 },
+              { x: 500, y: 280 },
+              { x: 420, y: 280 },
+              { x: 375, y: 280 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: kannadaIndependentVowelSource("ಅ"),
+  },
   [ductusKey("telugu", "అ")]: {
     script: "telugu",
     glyph: "అ",
@@ -12969,5 +13646,451 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: malayalamIndependentVowelSource("എ"),
+  },
+  [ductusKey("malayalam", "അ")]: {
+    script: "malayalam",
+    glyph: "അ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "climb the left outer arch and curve through the upper turn",
+            path: [
+              { x: 235, y: 45 },
+              { x: 175, y: 75 },
+              { x: 90, y: 205 },
+              { x: 85, y: 335 },
+              { x: 160, y: 470 },
+              { x: 285, y: 530 },
+              { x: 400, y: 530 },
+              { x: 410, y: 400 },
+              { x: 520, y: 510 },
+              { x: 600, y: 480 },
+              { x: 660, y: 410 },
+              { x: 665, y: 340 },
+              { x: 625, y: 285 },
+              { x: 550, y: 255 },
+              { x: 500, y: 250 },
+            ],
+          },
+          {
+            label: "circle the broad lower loop and return to the junction",
+            path: [
+              { x: 500, y: 250 },
+              { x: 610, y: 250 },
+              { x: 680, y: 190 },
+              { x: 680, y: 115 },
+              { x: 615, y: 30 },
+              { x: 535, y: 22 },
+              { x: 430, y: 35 },
+              { x: 350, y: 145 },
+              { x: 350, y: 235 },
+              { x: 390, y: 250 },
+              { x: 500, y: 250 },
+            ],
+          },
+          {
+            label: "sweep up through the central crown and descend the upright",
+            path: [
+              { x: 500, y: 250 },
+              { x: 610, y: 250 },
+              { x: 665, y: 340 },
+              { x: 640, y: 420 },
+              { x: 640, y: 470 },
+              { x: 650, y: 510 },
+              { x: 700, y: 530 },
+              { x: 760, y: 530 },
+              { x: 855, y: 465 },
+              { x: 890, y: 355 },
+              { x: 890, y: 210 },
+              { x: 890, y: 20 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "sweep up and over through the right outer arch and descend its far side",
+            path: [
+              { x: 900, y: 205 },
+              { x: 900, y: 350 },
+              { x: 950, y: 450 },
+              { x: 1025, y: 500 },
+              { x: 1125, y: 530 },
+              { x: 1240, y: 530 },
+              { x: 1360, y: 455 },
+              { x: 1415, y: 330 },
+              { x: 1415, y: 220 },
+              { x: 1395, y: 125 },
+            ],
+          },
+          {
+            label: "curl left around the lower inner loop",
+            path: [
+              { x: 1395, y: 125 },
+              { x: 1345, y: 55 },
+              { x: 1245, y: 22 },
+              { x: 1155, y: 65 },
+              { x: 1095, y: 155 },
+              { x: 1095, y: 235 },
+              { x: 1155, y: 330 },
+              { x: 1250, y: 370 },
+              { x: 1345, y: 325 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: malayalamIndependentVowelSource("അ"),
+  },
+  // Sriveenkat's 97-frame animation draws chillu ൽ as one uninterrupted run:
+  // the left entry arch flows clockwise around the central loop, crosses the
+  // upper shoulder into the right loop, then rises into the above-line hook.
+  // These five movements preserve that zero-lift order on Noto Sans Malayalam.
+  [ductusKey("malayalam", "ൽ")]: {
+    script: "malayalam",
+    glyph: "ൽ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "climb the left entry arch and turn inward at the top",
+            path: [
+              { x: 220, y: 28 },
+              { x: 155, y: 65 },
+              { x: 100, y: 145 },
+              { x: 80, y: 245 },
+              { x: 92, y: 350 },
+              { x: 140, y: 445 },
+              { x: 225, y: 510 },
+              { x: 330, y: 532 },
+              { x: 430, y: 510 },
+              { x: 488, y: 492 },
+            ],
+          },
+          {
+            label: "descend clockwise around the central loop and return to its upper junction",
+            path: [
+              { x: 488, y: 492 },
+              { x: 555, y: 455 },
+              { x: 615, y: 375 },
+              { x: 660, y: 280 },
+              { x: 665, y: 190 },
+              { x: 630, y: 105 },
+              { x: 570, y: 45 },
+              { x: 505, y: 24 },
+              { x: 435, y: 45 },
+              { x: 375, y: 105 },
+              { x: 345, y: 190 },
+              { x: 350, y: 285 },
+              { x: 385, y: 385 },
+              { x: 435, y: 460 },
+              { x: 488, y: 492 },
+            ],
+          },
+          {
+            label: "carry the upper shoulder right",
+            path: [
+              { x: 488, y: 492 },
+              { x: 570, y: 525 },
+              { x: 660, y: 540 },
+              { x: 750, y: 535 },
+              { x: 835, y: 520 },
+              { x: 915, y: 492 },
+            ],
+          },
+          {
+            label: "sweep clockwise around the right loop and return to the upper crossing",
+            path: [
+              { x: 915, y: 492 },
+              { x: 1000, y: 455 },
+              { x: 1060, y: 385 },
+              { x: 1100, y: 300 },
+              { x: 1115, y: 215 },
+              { x: 1095, y: 125 },
+              { x: 1040, y: 60 },
+              { x: 970, y: 25 },
+              { x: 900, y: 45 },
+              { x: 840, y: 105 },
+              { x: 808, y: 190 },
+              { x: 815, y: 280 },
+              { x: 850, y: 375 },
+              { x: 900, y: 455 },
+              { x: 915, y: 492 },
+            ],
+          },
+          {
+            label: "rise into the chillu hook and curl left above the line",
+            path: [
+              { x: 915, y: 492 },
+              { x: 970, y: 535 },
+              { x: 1020, y: 595 },
+              { x: 1045, y: 655 },
+              { x: 1035, y: 705 },
+              { x: 995, y: 742 },
+              { x: 935, y: 755 },
+              { x: 875, y: 748 },
+              { x: 845, y: 738 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: malayalamAlphabetSource("ൽ"),
+  },
+  // Sriveenkat's 67-frame animation draws chillu ൻ in two pen-down runs:
+  // the left arch descends into the central stem, then a lifted right-side run
+  // completes the outer loop, inner return, and above-line chillu hook.
+  [ductusKey("malayalam", "ൻ")]: {
+    script: "malayalam",
+    glyph: "ൻ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "climb clockwise around the left arch and turn inward at the upper junction",
+            path: [
+              { x: 225, y: 35 },
+              { x: 170, y: 75 },
+              { x: 120, y: 145 },
+              { x: 88, y: 225 },
+              { x: 84, y: 305 },
+              { x: 112, y: 395 },
+              { x: 175, y: 475 },
+              { x: 245, y: 520 },
+              { x: 315, y: 530 },
+              { x: 380, y: 505 },
+              { x: 430, y: 455 },
+            ],
+          },
+          {
+            label: "descend the central stem to the line",
+            path: [
+              { x: 430, y: 455 },
+              { x: 450, y: 370 },
+              { x: 455, y: 280 },
+              { x: 455, y: 190 },
+              { x: 455, y: 100 },
+              { x: 455, y: 35 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "carry the upper shoulder right, sweep clockwise around the outer loop, and return through its inner curve",
+            path: [
+              { x: 540, y: 455 },
+              { x: 600, y: 500 },
+              { x: 675, y: 530 },
+              { x: 740, y: 515 },
+              { x: 790, y: 480 },
+              { x: 860, y: 450 },
+              { x: 925, y: 390 },
+              { x: 965, y: 305 },
+              { x: 978, y: 220 },
+              { x: 955, y: 135 },
+              { x: 900, y: 65 },
+              { x: 825, y: 24 },
+              { x: 755, y: 45 },
+              { x: 695, y: 110 },
+              { x: 665, y: 195 },
+              { x: 670, y: 275 },
+              { x: 705, y: 355 },
+              { x: 750, y: 420 },
+              { x: 790, y: 480 },
+            ],
+          },
+          {
+            label: "rise into the chillu hook and curl left above the line",
+            path: [
+              { x: 790, y: 480 },
+              { x: 830, y: 515 },
+              { x: 875, y: 565 },
+              { x: 905, y: 620 },
+              { x: 910, y: 675 },
+              { x: 875, y: 725 },
+              { x: 815, y: 752 },
+              { x: 755, y: 750 },
+              { x: 720, y: 740 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: malayalamAlphabetSource("ൻ"),
+  },
+  // Sriveenkat's 47-frame animation draws ഴ as one uninterrupted run: the
+  // left entry arch reaches the lower junction, turns clockwise around the
+  // right loop, and descends through its inner return into the lower hook.
+  [ductusKey("malayalam", "ഴ")]: {
+    script: "malayalam",
+    glyph: "ഴ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "descend around the left entry arch and sweep right into the lower junction",
+            path: [
+              { x: 92, y: 525 },
+              { x: 65, y: 480 },
+              { x: 58, y: 420 },
+              { x: 68, y: 360 },
+              { x: 105, y: 300 },
+              { x: 165, y: 245 },
+              { x: 235, y: 210 },
+              { x: 300, y: 190 },
+              { x: 350, y: 185 },
+            ],
+          },
+          {
+            label: "turn clockwise around the right loop and return through its inner side",
+            path: [
+              { x: 350, y: 185 },
+              { x: 430, y: 190 },
+              { x: 500, y: 245 },
+              { x: 555, y: 330 },
+              { x: 572, y: 410 },
+              { x: 550, y: 475 },
+              { x: 500, y: 525 },
+              { x: 440, y: 535 },
+              { x: 385, y: 515 },
+              { x: 335, y: 470 },
+              { x: 305, y: 410 },
+              { x: 310, y: 350 },
+              { x: 340, y: 290 },
+              { x: 385, y: 225 },
+            ],
+          },
+          {
+            label: "descend through the inner return and curl left around the lower hook",
+            path: [
+              { x: 385, y: 225 },
+              { x: 395, y: 165 },
+              { x: 390, y: 110 },
+              { x: 355, y: 60 },
+              { x: 300, y: 30 },
+              { x: 235, y: 25 },
+              { x: 175, y: 38 },
+              { x: 125, y: 60 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: malayalamAlphabetSource("ഴ"),
+  },
+  எ: {
+    script: "tamil",
+    glyph: "எ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "climb the outer left side",
+            path: [
+              { x: 100, y: 220 },
+              { x: 100, y: 310 },
+              { x: 130, y: 410 },
+              { x: 200, y: 480 },
+            ],
+          },
+          {
+            label: "carry the top bar to the right",
+            path: [
+              { x: 200, y: 480 },
+              { x: 320, y: 520 },
+              { x: 480, y: 520 },
+              { x: 620, y: 520 },
+              { x: 760, y: 520 },
+            ],
+          },
+          {
+            label: "retrace left and drop the inner upright",
+            path: [
+              { x: 760, y: 520 },
+              { x: 650, y: 520 },
+              { x: 520, y: 520 },
+              { x: 380, y: 515 },
+              { x: 250, y: 500 },
+              { x: 190, y: 455 },
+              { x: 150, y: 405 },
+              { x: 125, y: 350 },
+              { x: 105, y: 300 },
+              { x: 100, y: 250 },
+            ],
+          },
+          {
+            label: "turn left into the inner spiral",
+            path: [
+              { x: 100, y: 250 },
+              { x: 135, y: 275 },
+              { x: 210, y: 285 },
+              { x: 300, y: 280 },
+              { x: 360, y: 260 },
+              { x: 385, y: 220 },
+              { x: 385, y: 170 },
+              { x: 375, y: 120 },
+              { x: 355, y: 80 },
+            ],
+          },
+          {
+            label: "sweep around the broad outer curve",
+            path: [
+              { x: 355, y: 80 },
+              { x: 320, y: 55 },
+              { x: 275, y: 35 },
+              { x: 225, y: 25 },
+              { x: 175, y: 30 },
+              { x: 130, y: 55 },
+              { x: 100, y: 90 },
+              { x: 80, y: 135 },
+              { x: 75, y: 180 },
+              { x: 85, y: 220 },
+              { x: 105, y: 250 },
+              { x: 135, y: 270 },
+              { x: 120, y: 225 },
+              { x: 95, y: 175 },
+              { x: 90, y: 125 },
+              { x: 110, y: 80 },
+              { x: 145, y: 45 },
+              { x: 190, y: 15 },
+            ],
+          },
+          {
+            label: "carry the lower foot right",
+            path: [
+              { x: 190, y: 15 },
+              { x: 230, y: 10 },
+              { x: 275, y: 10 },
+              { x: 315, y: 10 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "draw the separate right upright up",
+            path: [
+              { x: 570, y: 10 },
+              { x: 570, y: 150 },
+              { x: 570, y: 300 },
+              { x: 570, y: 450 },
+              { x: 570, y: 520 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: {
+      citation:
+        "Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 5, எ (University of Texas at Austin), p. 193",
+      url: "https://sites.la.utexas.edu/tamilscript/files/2009/08/hw_lettersinstructions.pdf",
+      variation:
+        "Appendix I Frame 5 numbers எ's first six movements as one connected body and its upward right upright as movement 7 after one lift. Tamil handwriting varies by school; this is one attested two-run order fitted to the bundled Noto Sans Tamil outline.",
+    },
   },
 };

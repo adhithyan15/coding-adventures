@@ -52,9 +52,10 @@ pub use disclosure::{
 pub use doctor::{VaultDoctorReportV1, VaultDoctorStateV1};
 pub use export::{
     open_portable_with_passphrase, OpenedPortableSnapshotV1, PortableExportArtifactV1,
-    PortableExportPolicyV1, PortableExportRandomnessV1, PortableOpenPolicyV1,
-    MAX_PORTABLE_EXPORT_ARTIFACT_BYTES, MAX_PORTABLE_EXPORT_PASSPHRASE_BYTES,
-    MAX_PORTABLE_EXPORT_PLAINTEXT_BYTES, PORTABLE_EXPORT_RANDOM_BYTES,
+    PortableExportCompletenessV1, PortableExportOutcomeV1, PortableExportPolicyV1,
+    PortableExportRandomnessV1, PortableOpenPolicyV1, MAX_PORTABLE_EXPORT_ARTIFACT_BYTES,
+    MAX_PORTABLE_EXPORT_PASSPHRASE_BYTES, MAX_PORTABLE_EXPORT_PLAINTEXT_BYTES,
+    PORTABLE_EXPORT_RANDOM_BYTES,
 };
 pub use initialize::{
     complete_generation_zero, prepare_audited_generation_zero, prepare_generation_zero,

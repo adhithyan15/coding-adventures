@@ -7,14 +7,14 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:639695242b6b8190",
+  "sourceHash": "fnv1a64:f7fe039ae68bd820",
   "summary": {
-    "totalLessons": 84,
+    "totalLessons": 88,
     "voice": 45,
     "sight": 15,
-    "pen": 24,
+    "pen": 28,
     "drivableLessons": 45,
-    "drivablePercent": 54,
+    "drivablePercent": 51,
     "trackCount": 1,
     "chapterCount": 15,
     "drivablePrefixTotal": 36,
@@ -26,11 +26,11 @@
   "tracks": [
     {
       "language": "russian",
-      "lessonCount": 84,
+      "lessonCount": 88,
       "voice": 45,
       "sight": 15,
-      "pen": 24,
-      "drivablePercent": 54,
+      "pen": 28,
+      "drivablePercent": 51,
       "drivablePrefixTotal": 36,
       "modalities": [
         "voice",
@@ -40,10 +40,10 @@
       "chapters": [
         {
           "chapter": 1,
-          "lessonCount": 12,
+          "lessonCount": 16,
           "voice": 0,
           "sight": 7,
-          "pen": 5,
+          "pen": 9,
           "modalities": [
             "sight",
             "pen"
@@ -574,6 +574,99 @@
         "Script — е (\"ye\") — the honest vowel",
         "Script — т (\"t\") — Greek tau, honest too",
         "Writing — now write the whole word"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "RU-W05-privet-observe",
+      "language": "russian",
+      "chapter": 1,
+      "sequence": 61,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-block",
+        "sight-cue"
+      ],
+      "coreModality": "sight",
+      "coreReasons": [
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:cad52a8b87306e8b",
+      "detachableSegments": [
+        "Writing — observe and trace"
+      ]
+    },
+    {
+      "id": "RU-W05-privet-guided-copy",
+      "language": "russian",
+      "chapter": 1,
+      "sequence": 62,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:02ab18f9f9e902d7",
+      "detachableSegments": [
+        "Writing — guided copy"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "RU-W05-privet-delayed-copy",
+      "language": "russian",
+      "chapter": 1,
+      "sequence": 63,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "sight-cue"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type",
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:64ba8f34ba6c2c3e",
+      "detachableSegments": [
+        "Writing — delayed copy"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "RU-W05-privet-dictation",
+      "language": "russian",
+      "chapter": 1,
+      "sequence": 64,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:639f850ac75f4931",
+      "detachableSegments": [
+        "Writing — short dictation"
       ],
       "delivery": "script"
     },

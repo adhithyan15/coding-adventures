@@ -1,0 +1,22 @@
+{
+  "id": "ZH-PATH-013",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "ZH-C14-hear-xiao",
+    "ZH-W14-xiao",
+    "ZH-C14-xiao",
+    "ZH-C14-hear-xiaoxue",
+    "ZH-C14-xiaoxue",
+    "ZH-C14-hear-xiaoxuesheng",
+    "ZH-C14-xiaoxuesheng",
+    "ZH-R14-primary-three",
+    "ZH-C14-practice"
+  ],
+  "before": [],
+  "inline": [
+    "ZH-EXT-036-PRIMARY-MEANING-FIRST",
+    "ZH-EXT-037-PRIMARY-SCRIPT",
+    "ZH-EXT-038-PRIMARY-FOUR-SKILL"
+  ],
+  "after": []
+}

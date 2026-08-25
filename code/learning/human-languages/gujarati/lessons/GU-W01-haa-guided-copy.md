@@ -9,7 +9,7 @@ type: writing
 headword: હા
 romanization: "hā"
 gloss: "copy yes once after learning both pieces"
-prerequisites: [GU-C01-haa-naa, GU-W01-aa-matra]
+prerequisites: [GU-C01-haa-naa, GU-W01-aa-matra, GU-W02-dha]
 sounds: [long-aa, no-top-line]
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [GU-CONCEPT-C01-HAANAA-01, GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01]
+  knowledge: [GU-CONCEPT-C01-HAANAA-01, GU-SCRIPT-DHA-01, GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -42,6 +42,14 @@ known word: **હા**, *hā*, "yes." Keep the model visible.
 
 Copy **હા** once. You may look back after each piece: first **હ**, then **ા**.
 Touch both pieces in your copy and read *hā*.
+
+## Script retrieval — one older consonant
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-DHA-01] -->
+<!-- hl-writing-stage: delayed-copy -->
+<!-- hl-activity: {"id":"GU-W01-haa-guided-copy-dha-retrieval","kind":"text","assesses":["GU-SCRIPT-DHA-01"],"prompt":"Hide the earlier model and write ધ once.","answer":"ધ","accepted":[],"feedback":{"correct":"Good: one careful retrieval is enough.","incorrect":"Look at ધ once, hide it, then write it one time."},"response_seconds":12} -->
+
+Now hide the earlier model for **ધ** and write it once. Compare and make at
+most one repair.
 
 ## Wrap-up recall
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C01-HAANAA-01, GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01] -->

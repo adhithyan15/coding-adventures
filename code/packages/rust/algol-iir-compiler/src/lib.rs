@@ -5889,38 +5889,89 @@ impl Compiler {
         node: &GrammarASTNode,
         name: &str,
     ) -> bool {
+        self.boolean_identity_expression_preserves_name_with_negation(node, name, false)
+    }
+
+    fn boolean_identity_expression_preserves_name_with_negation(
+        &self,
+        node: &GrammarASTNode,
+        name: &str,
+        negated: bool,
+    ) -> bool {
         if exact_bare_variable_expression_name(node).as_deref() == Some(name) {
-            return true;
+            return !negated;
         }
         let sequence = pieces(node);
-        if let (true, [Piece::Node(child)]) =
-            (direct_tokens(node).is_empty(), sequence.as_slice())
-        {
-            return self.boolean_identity_expression_preserves_name(child, name);
+        let tokens = direct_tokens(node);
+        if let ([token], [Piece::Node(child)]) = (tokens.as_slice(), sequence.as_slice()) {
+            if token.value == "not" {
+                return self.boolean_identity_expression_preserves_name_with_negation(
+                    child, name, !negated,
+                );
+            }
         }
-        let [Piece::Node(lhs), Piece::Op(op), Piece::Node(rhs)] = sequence.as_slice() else {
+        if let (true, [Piece::Node(child)]) =
+            (tokens.is_empty(), sequence.as_slice())
+        {
+            return self.boolean_identity_expression_preserves_name_with_negation(
+                child, name, negated,
+            );
+        }
+        if negated {
+            return false;
+        }
+        if let [Piece::Node(lhs), Piece::Op(op), Piece::Node(rhs)] = sequence.as_slice() {
+            if op == "impl" {
+                return literal_boolean_value(lhs) == Some(true)
+                    && self.boolean_identity_expression_preserves_name(rhs, name);
+            }
+        }
+        if sequence.len() < 3 || sequence.len().is_multiple_of(2) {
+            return false;
+        }
+        let Piece::Node(first) = &sequence[0] else {
             return false;
         };
-        let lhs_preserves = self.boolean_identity_expression_preserves_name(lhs, name);
-        let rhs_preserves = self.boolean_identity_expression_preserves_name(rhs, name);
-        let lhs_literal = literal_boolean_value(lhs);
-        let rhs_literal = literal_boolean_value(rhs);
-        match op.as_str() {
-            "and" => {
-                (lhs_preserves && rhs_literal == Some(true))
-                    || (rhs_preserves && lhs_literal == Some(true))
-            }
-            "or" => {
-                (lhs_preserves && rhs_literal == Some(false))
-                    || (rhs_preserves && lhs_literal == Some(false))
-            }
-            "eqv" => {
-                (lhs_preserves && rhs_literal == Some(true))
-                    || (rhs_preserves && lhs_literal == Some(true))
-            }
-            "impl" => lhs_literal == Some(true) && rhs_preserves,
-            _ => false,
+        let Piece::Op(first_op) = &sequence[1] else {
+            return false;
+        };
+        let neutral = match first_op.as_str() {
+            "and" | "eqv" => true,
+            "or" => false,
+            _ => return false,
+        };
+        if sequence
+            .iter()
+            .skip(1)
+            .step_by(2)
+            .any(|piece| !matches!(piece, Piece::Op(op) if op == first_op))
+        {
+            return false;
         }
+        let mut preserves = self.boolean_identity_expression_preserves_name(first, name);
+        let mut is_neutral = literal_boolean_value(first) == Some(neutral);
+        for index in (1..sequence.len()).step_by(2) {
+            let Piece::Node(rhs) = &sequence[index + 1] else {
+                return false;
+            };
+            let rhs_preserves = self.boolean_identity_expression_preserves_name(rhs, name);
+            let rhs_is_neutral = literal_boolean_value(rhs) == Some(neutral);
+            if preserves {
+                if !rhs_is_neutral {
+                    return false;
+                }
+            } else if is_neutral {
+                if rhs_preserves {
+                    preserves = true;
+                    is_neutral = false;
+                } else if !rhs_is_neutral {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+        preserves
     }
 
     fn integer_identity_expression_preserves_name(
@@ -5931,32 +5982,75 @@ impl Compiler {
         if exact_bare_variable_expression_name(node).as_deref() == Some(name) {
             return true;
         }
+        if let Some(base) = literal_power_identity_base(node) {
+            return self.integer_identity_expression_preserves_name(base, name);
+        }
         let sequence = pieces(node);
+        let (sequence, leading_plus) = match sequence.as_slice() {
+            [Piece::Op(op), rest @ ..] if op == "+" => (rest, true),
+            sequence => (sequence, false),
+        };
+        if let (true, [Piece::Node(child)]) = (leading_plus, sequence) {
+            return self.integer_identity_expression_preserves_name(child, name);
+        }
         if let (true, [Piece::Node(child)]) =
-            (direct_tokens(node).is_empty(), sequence.as_slice())
+            (direct_tokens(node).is_empty(), sequence)
         {
             return self.integer_identity_expression_preserves_name(child, name);
         }
-        let [Piece::Node(lhs), Piece::Op(op), Piece::Node(rhs)] = sequence.as_slice() else {
+        if sequence.len() < 3 || sequence.len().is_multiple_of(2) {
+            return false;
+        }
+        let Piece::Node(first) = &sequence[0] else {
             return false;
         };
-        let lhs_preserves = self.integer_identity_expression_preserves_name(lhs, name);
-        let rhs_preserves = self.integer_identity_expression_preserves_name(rhs, name);
-        let lhs_literal = literal_integer_value(lhs);
-        let rhs_literal = literal_integer_value(rhs);
-        match op.as_str() {
-            "+" => {
-                (lhs_preserves && rhs_literal == Some(0))
-                    || (rhs_preserves && lhs_literal == Some(0))
-            }
-            "-" => lhs_preserves && rhs_literal == Some(0),
-            "*" => {
-                (lhs_preserves && rhs_literal == Some(1))
-                    || (rhs_preserves && lhs_literal == Some(1))
-            }
-            "div" => lhs_preserves && rhs_literal == Some(1),
-            _ => false,
+        let operators: Vec<&str> = sequence
+            .iter()
+            .skip(1)
+            .step_by(2)
+            .filter_map(|piece| match piece {
+                Piece::Op(op) => Some(op.as_str()),
+                Piece::Node(_) => None,
+            })
+            .collect();
+        if operators.len() * 2 + 1 != sequence.len() {
+            return false;
         }
+        let neutral = if operators.iter().all(|op| matches!(*op, "+" | "-")) {
+            0
+        } else if operators.iter().all(|op| matches!(*op, "*" | "div")) {
+            1
+        } else {
+            return false;
+        };
+        let mut preserves = self.integer_identity_expression_preserves_name(first, name);
+        let mut is_neutral = literal_integer_value(first) == Some(neutral);
+        for index in (1..sequence.len()).step_by(2) {
+            let (Piece::Op(op), Piece::Node(rhs)) = (&sequence[index], &sequence[index + 1]) else {
+                return false;
+            };
+            let rhs_preserves = self.integer_identity_expression_preserves_name(rhs, name);
+            let rhs_is_neutral = literal_integer_value(rhs) == Some(neutral);
+            if preserves {
+                if !rhs_is_neutral {
+                    return false;
+                }
+            } else if is_neutral {
+                if op == "+" || op == "*" {
+                    if rhs_preserves {
+                        preserves = true;
+                        is_neutral = false;
+                    } else if !rhs_is_neutral {
+                        return false;
+                    }
+                } else if !rhs_is_neutral {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+        preserves
     }
 
     fn real_unit_identity_expression_preserves_name(
@@ -5967,24 +6061,61 @@ impl Compiler {
         if exact_bare_variable_expression_name(node).as_deref() == Some(name) {
             return true;
         }
+        if let Some(base) = literal_power_identity_base(node) {
+            return self.real_unit_identity_expression_preserves_name(base, name);
+        }
         let sequence = pieces(node);
+        let (sequence, leading_plus) = match sequence.as_slice() {
+            [Piece::Op(op), rest @ ..] if op == "+" => (rest, true),
+            sequence => (sequence, false),
+        };
+        if let (true, [Piece::Node(child)]) = (leading_plus, sequence) {
+            return self.real_unit_identity_expression_preserves_name(child, name);
+        }
         if let (true, [Piece::Node(child)]) =
-            (direct_tokens(node).is_empty(), sequence.as_slice())
+            (direct_tokens(node).is_empty(), sequence)
         {
             return self.real_unit_identity_expression_preserves_name(child, name);
         }
-        let [Piece::Node(lhs), Piece::Op(op), Piece::Node(rhs)] = sequence.as_slice() else {
+        if sequence.len() < 3 || sequence.len().is_multiple_of(2) {
+            return false;
+        }
+        let Piece::Node(first) = &sequence[0] else {
             return false;
         };
-        let lhs_preserves = self.real_unit_identity_expression_preserves_name(lhs, name);
-        let rhs_preserves = self.real_unit_identity_expression_preserves_name(rhs, name);
-        let lhs_is_one = literal_numeric_one(lhs);
-        let rhs_is_one = literal_numeric_one(rhs);
-        match op.as_str() {
-            "*" => (lhs_preserves && rhs_is_one) || (rhs_preserves && lhs_is_one),
-            "/" => lhs_preserves && rhs_is_one,
-            _ => false,
+        if sequence.iter().skip(1).step_by(2).any(|piece| {
+            !matches!(piece, Piece::Op(op) if matches!(op.as_str(), "*" | "/"))
+        }) {
+            return false;
         }
+        let mut preserves = self.real_unit_identity_expression_preserves_name(first, name);
+        let mut is_one = literal_numeric_one(first);
+        for index in (1..sequence.len()).step_by(2) {
+            let (Piece::Op(op), Piece::Node(rhs)) = (&sequence[index], &sequence[index + 1]) else {
+                return false;
+            };
+            let rhs_preserves = self.real_unit_identity_expression_preserves_name(rhs, name);
+            let rhs_is_one = literal_numeric_one(rhs);
+            if preserves {
+                if !rhs_is_one {
+                    return false;
+                }
+            } else if is_one {
+                if op == "*" {
+                    if rhs_preserves {
+                        preserves = true;
+                        is_one = false;
+                    } else if !rhs_is_one {
+                        return false;
+                    }
+                } else if !rhs_is_one {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+        preserves
     }
 
     fn collect_static_predicate_dependencies(
@@ -7909,6 +8040,30 @@ fn literal_nonneg_integer_power_chain(nodes: &[&GrammarASTNode]) -> Option<u32> 
     Some(value as u32)
 }
 
+/// Return the base of an exponentiation expression whose complete literal
+/// exponent chain evaluates to one. The power lowerer returns that base
+/// directly, so this is an exact structural identity for integer and real
+/// values rather than an algebraic approximation of runtime `f64_pow`.
+fn literal_power_identity_base(node: &GrammarASTNode) -> Option<&GrammarASTNode> {
+    let sequence = pieces(node);
+    if sequence.len() < 3 || sequence.len().is_multiple_of(2) {
+        return None;
+    }
+    let mut operands = Vec::new();
+    for (index, piece) in sequence.iter().enumerate() {
+        if index.is_multiple_of(2) {
+            let Piece::Node(operand) = piece else {
+                return None;
+            };
+            operands.push(*operand);
+        } else if !matches!(piece, Piece::Op(op) if matches!(op.as_str(), "^" | "**")) {
+            return None;
+        }
+    }
+    let (base, exponents) = operands.split_first()?;
+    (literal_nonneg_integer_power_chain(exponents) == Some(1)).then_some(*base)
+}
+
 fn literal_signed_integer_exponent(node: &GrammarASTNode) -> Option<i32> {
     if let Some(value) = literal_nonneg_integer_exponent(node) {
         return Some(value as i32);
@@ -8174,9 +8329,22 @@ fn expr_variable_name(node: &GrammarASTNode) -> Option<String> {
     None
 }
 
+fn single_parenthesized_child(node: &GrammarASTNode) -> Option<&GrammarASTNode> {
+    let tokens = direct_tokens(node);
+    let child_nodes = direct_nodes(node);
+    (tokens.len() == 2
+        && tokens[0].effective_type_name() == "LPAREN"
+        && tokens[1].effective_type_name() == "RPAREN"
+        && child_nodes.len() == 1)
+        .then(|| child_nodes[0])
+}
+
 fn exact_bare_variable_expression_name(node: &GrammarASTNode) -> Option<String> {
     if node.rule_name == "variable" {
         return bare_scalar_variable_name(node);
+    }
+    if let Some(child) = single_parenthesized_child(node) {
+        return exact_bare_variable_expression_name(child);
     }
     if !direct_tokens(node).is_empty() {
         return None;
@@ -8188,6 +8356,9 @@ fn exact_bare_variable_expression_name(node: &GrammarASTNode) -> Option<String> 
 }
 
 fn literal_boolean_value(node: &GrammarASTNode) -> Option<bool> {
+    if let Some(child) = single_parenthesized_child(node) {
+        return literal_boolean_value(child);
+    }
     let tokens = direct_tokens(node);
     if tokens.len() == 1 && tokens[0].effective_type_name() == "KEYWORD" {
         return match tokens[0].value.as_str() {
@@ -8203,6 +8374,9 @@ fn literal_boolean_value(node: &GrammarASTNode) -> Option<bool> {
 }
 
 fn literal_integer_value(node: &GrammarASTNode) -> Option<i64> {
+    if let Some(child) = single_parenthesized_child(node) {
+        return literal_integer_value(child);
+    }
     let tokens = direct_tokens(node);
     if tokens.len() == 1 && tokens[0].effective_type_name() == "INTEGER_LIT" {
         return tokens[0].value.parse().ok();
@@ -8214,6 +8388,9 @@ fn literal_integer_value(node: &GrammarASTNode) -> Option<i64> {
 }
 
 fn literal_numeric_one(node: &GrammarASTNode) -> bool {
+    if let Some(child) = single_parenthesized_child(node) {
+        return literal_numeric_one(child);
+    }
     let tokens = direct_tokens(node);
     if tokens.len() == 1 {
         return match tokens[0].effective_type_name() {
@@ -10415,6 +10592,12 @@ mod tests {
             "false or flag",
             "flag eqv true",
             "true impl flag",
+            "true and flag and true",
+            "false or flag or false",
+            "true eqv flag eqv true",
+            "(flag)",
+            "flag and (true)",
+            "(true) and flag",
         ] {
             compile_source(
                 &format!(
@@ -10428,12 +10611,45 @@ mod tests {
 
     #[test]
     fn al4_non_identity_selector_write_remains_conservative() {
-        let err = compile_source(
-            "begin integer i, n, limit, choose; boolean other, flag; n := 3; limit := 3; choose := 1; other := true; flag := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := if flag then other else false; flag := flag and false end; print(i + 0.25) end",
-            "test",
-        )
-        .expect_err("a boolean non-identity write may change the selector dependency");
-        assert!(format!("{err:?}").contains("cannot print a real value"));
+        for write in ["flag and false", "(flag and false)"] {
+            let err = compile_source(
+                &format!(
+                    "begin integer i, n, limit, choose; boolean other, flag; n := 3; limit := 3; choose := 1; other := true; flag := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := if flag then other else false; flag := {write} end; print(i + 0.25) end"
+                ),
+                "test",
+            )
+            .expect_err("a boolean non-identity write may change the selector dependency");
+            assert!(format!("{err:?}").contains("cannot print a real value"));
+        }
+    }
+
+    #[test]
+    fn al4_boolean_non_identity_selector_chains_remain_conservative() {
+        for write in ["flag and true and false", "true impl flag impl true"] {
+            let err = compile_source(
+                &format!(
+                    "begin integer i, n, limit, choose; boolean other, flag; n := 3; limit := 3; choose := 1; other := true; flag := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := if flag then other else false; flag := {write} end; print(i + 0.25) end"
+                ),
+                "test",
+            )
+            .expect_err("boolean non-identity chains must fail closed");
+            assert!(format!("{err:?}").contains("cannot print a real value"));
+        }
+    }
+
+    #[test]
+    fn al4_even_boolean_negation_selector_writes_stay_stable() {
+        for write in ["not not flag", "not not not not flag"] {
+            compile_source(
+                &format!(
+                    "begin integer i, n, limit, choose; boolean other, flag; n := 3; limit := 3; choose := 1; other := true; flag := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := if flag then other else false; flag := {write} end; print(i + 0.25) end"
+                ),
+                "test",
+            )
+            .unwrap_or_else(|err| {
+                panic!("even boolean negation {write:?} must stay stable: {err:?}")
+            });
+        }
     }
 
     #[test]
@@ -10445,6 +10661,20 @@ mod tests {
             "choose * 1",
             "1 * choose",
             "choose div 1",
+            "choose + 0 - 0 + 0",
+            "0 + choose + 0 - 0",
+            "choose * 1 div 1 * 1",
+            "1 * choose * 1 div 1",
+            "0 + choose * 1 div 1 - 0",
+            "choose ^ 1",
+            "choose ** 1",
+            "choose ^ 1 ^ 1",
+            "+choose",
+            "+choose + 0 - 0",
+            "(choose)",
+            "choose + (0)",
+            "(0) + choose",
+            "choose * (1)",
         ] {
             compile_source(
                 &format!(
@@ -10458,12 +10688,38 @@ mod tests {
 
     #[test]
     fn al4_integer_non_identity_selector_write_remains_conservative() {
-        let err = compile_source(
-            "begin integer i, n, limit, choose; boolean other; n := 3; limit := 3; choose := 1; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := other; choose := choose * 0 end; print(i + 0.25) end",
-            "test",
-        )
-        .expect_err("an integer non-identity write may change the selector dependency");
-        assert!(format!("{err:?}").contains("cannot print a real value"));
+        for write in ["choose * 0", "(choose * 0)", "-choose"] {
+            let err = compile_source(
+                &format!(
+                    "begin integer i, n, limit, choose; boolean other; n := 3; limit := 3; choose := 1; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := other; choose := {write} end; print(i + 0.25) end"
+                ),
+                "test",
+            )
+            .expect_err("an integer non-identity write may change the selector dependency");
+            assert!(format!("{err:?}").contains("cannot print a real value"));
+        }
+    }
+
+    #[test]
+    fn al4_integer_non_identity_selector_chains_remain_conservative() {
+        for write in [
+            "choose + 0 + 1",
+            "1 div choose * 1",
+            "choose ^ 0",
+            "2 ^ 1",
+        ] {
+            let err = compile_source(
+                &format!(
+                    "begin integer i, n, limit, choose; boolean other; n := 3; limit := 3; choose := 1; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := other; choose := {write} end; print(i + 0.25) end"
+                ),
+                "test",
+            )
+            .expect_err("integer non-identity chains must fail closed");
+            assert!(
+                format!("{err:?}").contains("cannot print a real value"),
+                "unexpected error for {write:?}: {err:?}"
+            );
+        }
     }
 
     #[test]
@@ -10478,7 +10734,20 @@ mod tests {
 
     #[test]
     fn al4_real_unit_selector_writes_stay_stable() {
-        for write in ["choose * 1.0", "1.0 * choose", "choose / 1.0"] {
+        for write in [
+            "choose * 1.0",
+            "1.0 * choose",
+            "choose / 1.0",
+            "choose * 1.0 / 1.0 * 1.0",
+            "1.0 * choose * 1.0 / 1.0",
+            "choose ^ 1",
+            "choose ** 1",
+            "choose ^ 1 ^ 1",
+            "+choose",
+            "(choose)",
+            "choose * (1.0)",
+            "(1.0) * choose",
+        ] {
             compile_source(
                 &format!(
                     "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := {write} end; print(i + 0.25) end"
@@ -10486,6 +10755,48 @@ mod tests {
                 "test",
             )
             .unwrap_or_else(|_| panic!("real unit write {write:?} must stay stable"));
+        }
+    }
+
+    #[test]
+    fn al4_real_non_identity_power_selector_writes_remain_conservative() {
+        for write in ["choose ^ 0", "1.0 ^ choose", "choose ^ 1.0"] {
+            let err = compile_source(
+                &format!(
+                    "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := {write} end; print(i + 0.25) end"
+                ),
+                "test",
+            )
+            .expect_err("non-identity real powers must fail closed");
+            assert!(format!("{err:?}").contains("cannot print a real value"));
+        }
+    }
+
+    #[test]
+    fn al4_real_unary_minus_selector_write_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := -choose end; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("real unary minus changes the selector");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_real_non_unit_selector_chains_remain_conservative() {
+        for write in [
+            "choose * 1.0 * 2.0",
+            "(choose * 2.0)",
+            "1.0 / choose * 1.0",
+        ] {
+            let err = compile_source(
+                &format!(
+                    "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := {write} end; print(i + 0.25) end"
+                ),
+                "test",
+            )
+            .expect_err("real non-unit chains must fail closed");
+            assert!(format!("{err:?}").contains("cannot print a real value"));
         }
     }
 

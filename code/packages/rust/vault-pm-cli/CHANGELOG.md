@@ -2,6 +2,37 @@
 
 ## Unreleased
 
+- Fixed backlog item #8 (VLT-PM05 §13.9 / `VLT-PM17-cli-portable-export.md`
+  amendment): `vault-pm export FILE` gained an optional `--best-effort` flag.
+  Without it, one item this build cannot re-encode still denies the whole
+  export exactly as before — no behavior change for any existing caller or
+  script. With it, such an item is excluded instead, and success reports the
+  exact count and every excluded item's canonical id on standard output:
+  ```text
+  Portable export written.
+  Excluded (too large to include): 2
+  <item id>
+  <item id>
+  ```
+  `--best-effort` is recognized only in the fixed `export FILE --best-effort`
+  position — `export --best-effort FILE` is invalid, and a bare
+  `export --best-effort` parses `--best-effort` as the destination, matching
+  this command's pre-existing "a path beginning with `-` is a path value
+  whenever it is the sole positional argument" rule. Reuses the existing
+  `PortableExport` audit action; no new audit event kind. See VLT-PM05 §13.9
+  for the complete design rationale, including the two alternatives
+  (unconditional silent skip, and a persistent catalog-level quarantine
+  state) that were weighed and rejected before this one.
+- Fixed backlog item #16 (VLT-PM41 §8): `begin_init` and the fresh-target
+  branch of `vault_create` now call
+  `StorageCoreApplicationStore::reclaim_orphaned_preparations` immediately
+  before installing their own new locator's `PreparedInit` journal, closing a
+  storage leak where a crash strictly between that journal's write and the
+  configuration write that would have named its locator left the journal
+  durable forever under a locator nothing could ever discover again.
+  `begin_init` passes an empty live-locator set, since no configuration exists
+  yet; `vault_create` passes every locator the current configuration already
+  names. See `VLT-PM05-application.md` §7.3 for the full argument.
 - **`import otpauth-uri FILE`**, extending `VLT-PM49-cli-external-import.md`
   §5.5, at the user's explicit request for TOTP setup via `otpauth://` URI
   instead of only manual Base32 entry. Decodes a file containing exactly one

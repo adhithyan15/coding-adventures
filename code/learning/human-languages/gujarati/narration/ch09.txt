@@ -1,174 +1,235 @@
-Gujarati, chapter 9: The Mind and the Page.
-4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Gujarati, chapter 9: Six Verbs at the Core.
+6 lessons. All 6 can be done entirely by ear.
 
 
-Lesson 1 of 4.
-વિચારવું (vichārvũ) — "to think," which began as wandering.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it.
+Lesson 1 of 6.
+હોવું (hovũ) — "to be," and the neuter that names every Gujarati verb.
 
 Warm-up.
 [pause 2 seconds]
-Jāṇvũ — take the ending off it, and name the plain English verb that is the same word. Knowing is where you arrive. Here is what you do on the way.
+You already end a Gujarati sentence with છે chhe, "is." Here is the whole verb behind English "to be" — and the ending that names every other Gujarati verb.
 
 You'll want to know first — one word.
-વિચારવું — vichārvũ — to think.
-The stem is વિચાર- vichār-: hũ vichārũ chhũ, "I think."
+હોવું — hovũ — to be.
+Left to right: હ is ha, and the sign ો on it makes ho; then વ va, with the small ુ under it for vu; and the dot ં on top sends that last vowel through the nose.
+Take the final piece -વું -vũ off, and the stem is left: હો- ho-.
 
-The letters in this word.
-વિ is વ va wearing િ, the short-i sign — and that sign stands to the left of its letter although the sound comes after it. Then chā: the letter ચ cha, already yours from chār, "four," under the long-ā sign. Then ર ra, and the ending વું.
+Grammar Lens: the ending is a neuter.
+Gujarati sorts words into three genders where Hindi next door keeps two: masculine -o, feminine -ī, and the third one, neuter, -ũ — sāro, sārī, sārũ, three shapes of "good."
+That third gender is where -વું comes from. -વું -vũ is a neuter ending, so every Gujarati verb is named in the neuter. English names a verb by putting a word in front, "to be"; Gujarati names it by putting its third gender on the end — and hands you the stem for free every time.
 
-The word, taken apart — a thought is a wandering.
-વિચાર vichār is a word before it is a verb: it means a thought. It is Sanskrit vicāra — vi- "apart, thoroughly" on the root car-, "to move, to range about." A thought is named as a ranging over, the mind walking round a thing.
-The root is Indo-European, kwel- "to turn." Germanic wore it into wheel, whose whole business is turning. Greek made kúklos, "a circle," which English borrowed as cycle and encyclopedia. Latin made colere, "to till, to dwell in," behind cultivate, culture and colony.
-
-What you've built: a verb Gujarati made rather than inherited.
-Hovũ, javũ, āvvũ, khāvũ, jovũ and jāṇvũ came down the ordinary road, worn thinner at every step. Vichārvũ did not: Gujarati took the noun vichār and put a verb ending on it, on the model of Sanskrit vicarati.
-You have watched Sanskrit reach forward like this before. Count to three: ek, be, traṇ. Prakrit had lost the r of trīṇi, and traṇ carries it because Sanskrit put it back. A language that never stops reading its ancestor never stops borrowing from it. Traṇ got a sound that way; vichārvũ got a whole verb.
+The word, taken apart — one job, two different verbs.
+hovũ comes from Sanskrit bhavati, "becomes," on the root bhū-. Middle Indo-Aryan thinned that bh- to h-, so bhavati wore down to hoi and then to hovũ. The root is Indo-European, bheu- "grow, become," and English is full of it: be, been, and — through "the place where one dwells" — build, booth, bower. Latin held it as futūrus, English's future; Greek as phúsis, English's physics.
+But છે chhe is not from that root at all. It comes through Old Gujarati achhaï from a Sanskrit verb of dwelling, abiding — staying put rather than becoming — and its cousins are Bengali āche and Marathi āhe. Hindi's hai continues Sanskrit asti "is," the same ancient verb as English is.
+So English is and Hindi hai are relatives; Gujarati chhe is not one of them. English plays the same trick, running be, am, is, was off several old verbs at once.
 
 Guided Practice.
-[your turn — say: vichārvũ — to think]
+[your turn — say: hovũ — to be]
 [pause 8 seconds for the answer]
-[your turn — strip: minus -vũ leaves vichār-, which is also the noun "a thought"]
+[your turn — strip: hovũ minus -vũ leaves the stem ho-]
 [pause 8 seconds for the answer]
-[your turn — build: hũ vichārũ chhũ — I think]
+[your turn — name: the gender of -vũ — neuter, the third one]
 [pause 8 seconds for the answer]
-[once you have stopped driving — trace: vi- plus car- "range about" becomes wheel, cycle, colony]
-[your turn — contrast: jāṇvũ handed down, and English know; vichārvũ built — as traṇ had its r handed back]
+[your turn — split: chhe from a verb of dwelling; hai and English is from another]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What did the root behind vichār mean first, and which everyday English word turns on it? ("To range about"; wheel.) Was vichārvũ handed down or built, and which count of yours was patched the same way? (Built on the noun vichār; traṇ had its r restored.) Say "I think." (Hũ vichārũ chhũ.)
-Source: Wiktionary: વિચારવું (vichārvũ).
+Which ending names a Gujarati verb, and which of the three genders is it? (-vũ, neuter.) What is left of hovũ once it comes off? (Ho-.) Does chhe share an ancestor with Hindi hai? (No — hai goes with English is; chhe comes from a verb of dwelling.)
+Sources: Wiktionary: હોવું (hovũ); Wiktionary: છે.
 
 
-Lesson 2 of 4.
-સમજવું (samajvũ) — "to understand," which is waking up.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it.
+Lesson 2 of 6.
+જવું (javũ) — "to go," and a y that turned into a j.
 
 Warm-up.
 [pause 2 seconds]
-Two verbs and one root meaning: jāṇvũ, and vichārvũ on a root that meant to range about. The third sits between them, with a third kind of picture again.
+Name the ending that titles every Gujarati verb, and take it off hovũ. Here is the second verb wearing it.
 
 You'll want to know first — one word.
-સમજવું — samajvũ — to understand.
-The stem is સમજ- samaj-: hũ samajũ chhũ, "I understand." Samaj on its own, said alone, means "understood."
+જવું — javũ — to go.
+Left to right: જ is ja — it carries a built-in a, because a Gujarati consonant with no vowel sign on it always does. Then the familiar વું -vũ. Two pieces, and you have met the second one already: જ + વું.
+Strip the ending and the stem is જ- ja-, which stretches to જા- jā- the moment a person-ending follows it.
 
-The letters in this word.
-Not one new letter. સ sa stood in namaste, મ ma in every mārũ, જ ja opened javũ. Three bare consonants carrying their built-in a, then the ending: sa-ma-ja-vũ.
+The word, taken apart — the y that became a j.
+javũ continues Sanskrit yāti, "goes," on the root yā-. The consonant changed on the way: Prakrit turned word-initial Sanskrit y- into j-, right across the middle period. That is a decoding tool worth keeping, because it runs through the whole vocabulary:
+Sanskrit yoga becomes Gujarati jog.
+Sanskrit yamunā (the river) becomes Jamnā.
+Sanskrit yava "barley" becomes jav.
+Sanskrit yuvan "young" becomes jovān "a young man".
+So a Gujarati word starting in j- often has a Sanskrit y- standing behind it.
+This particular root left little in English — honest news, and better said than faked. Its clearest survival outside India is Sanskrit yāna "vehicle, journey," the word inside Mahayana, "the great vehicle."
 
-The word, taken apart — understanding is waking up.
-samajvũ comes from Sanskrit sambudhyate: sam- "together, fully," on the root budh-, "to wake, to become aware." To understand is to come awake to a thing.
-That root named a person too. One who has fully woken is a buddha — the title is this root with a participle ending, and it means exactly "the awakened one."
-It is Indo-European as well, bheudh-, and English keeps it in quieter clothes. Old English bēodan, "to announce, to offer," left bode and forebode — to bode ill is to give warning, which is what a waking mind does — and forbid, an announcement pointed the other way.
-
-What you've built: a cluster that assimilated, then simplified.
-Sambudhyate has a dhy in the middle; Gujarati has a plain j. Two steps did that, in this order. Assimilate: the dh was remade in the shape of the y after it, both landing on the palate, and the pair came out doubled as jjh — Prakrit saṃbujjhadi. Simplify: the double then fell to a single j, giving samaj-.
-You have watched this pair once already. Count to two: be. Its dv- went to bb because the d was remade in the shape of the v beside it, and the double then simplified to b. Different letters, same two moves.
+Grammar Lens: stem, then person, then the copula.
+Gujarati builds its plain present out of three pieces in a fixed order — stem, an ending that says who, and the copula you already own:
+hũ jāũ chhũ — I go.
+tame jāo chho — you go, respectfully.
+te jāy chhe — he goes, she goes.
+The copula is the piece that shifts: chhũ, chho, chhe. It is chhe doing that work, not Hindi's hai — the tell you traced last time. And a man and a woman say these identically: the plain present carries no gender at all.
 
 Guided Practice.
-[your turn — say: samajvũ, then hũ samajũ chhũ — I understand]
+[your turn — say: javũ — to go]
 [pause 8 seconds for the answer]
-[once you have stopped driving — trace: sambudhyate becomes saṃbujjhadi becomes samaj-: assimilate, then simplify]
-[your turn — match: the same two moves in dv becomes bb becomes b, which gave you be]
+[your turn — strip: javũ minus -vũ leaves ja-]
 [pause 8 seconds for the answer]
-[your turn — connect: budh- "to wake" becomes buddha, and English bode, forbid]
+[your turn — build: hũ jāũ chhũ — I go]
 [pause 8 seconds for the answer]
-[your turn — run: jāṇvũ, vichārvũ, samajvũ — know, think, understand]
+[once you have stopped driving — trace: Sanskrit yāti becomes javũ, the y- becoming j-]
+[your turn — apply: yoga becomes jog, yava becomes jav]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What did the root behind samajvũ mean, and which famous title is the same root? ("To wake, to become aware"; Buddha.) Name the two steps from dhy to j, and the number that took the same two. (Assimilate, then simplify; be, from dv to bb to b.) Say "I understand." (Hũ samajũ chhũ.)
-Source: Wiktionary: સમજવું (samajvũ).
+What happened to Sanskrit y- at the front of a word? (Prakrit made it j-.) Which three pieces make the Gujarati present? (Stem, person-ending, copula.) Say "I go." (Hũ jāũ chhũ.) Which of those three words is the copula, and which language does it not match? (Chhũ; Hindi.)
+Source: Wiktionary: જવું (javũ).
 
 
-Lesson 3 of 4.
-વાંચવું (vā̃chvũ) — "to read," which is making a page speak.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it.
+Lesson 3 of 6.
+આવવું (āvvũ) — "to come," which began as "to reach".
 
 Warm-up.
 [pause 2 seconds]
-Hũ samajũ chhũ — and what did that root mean first? Then vichārvũ. The next verb puts the words in front of you.
+Say "I go" in Gujarati, then strip javũ to its stem. Here is the verb that points the other way.
 
 You'll want to know first — one word.
-વાંચવું — vā̃chvũ — to read.
-The stem is વાંચ- vā̃ch-, and nothing new happens after it: hũ vā̃chũ chhũ, "I read."
+આવવું — āvvũ — to come.
+It opens with આ, the standalone letter for long ā — Gujarati uses a full letter, not a sign, when a word begins with its vowel. Then વ va, a second વ, the ુ, and the nasal dot.
+Two વ in a row, each belonging to a different piece: the first closes the stem આવ- āv-, the second opens the ending -વું -vũ you now know by heart.
+The present runs as before: hũ āvũ chhũ, "I come."
 
-The letters in this word.
-વા is વ va with the long-ā sign, and the dot ં sits on top of it. Then ચ cha, the letter you counted chār with and thought with in vichār. Then વું. Vā̃-cha-vũ — and the dot in the middle is the piece to be careful about.
+The word, taken apart — "come" was once "reach".
+āvvũ comes through Old Gujarati āvivaũ and Prakrit āvei from Sanskrit āpayati, on the root āp-, "to reach, to attain." Gujarati's "come" is not built from "go" at all. It is built from arriving — reaching the place where the speaker already is.
+That root is Indo-European, and Latin holds it as apere, "to fasten, to reach for." English took the family whole: apt ("fitted"), aptitude, adapt, adept, inept. Put co- "together" in front and Latin makes cōpula, "the thing that fastens two things into one" — which English borrowed in two shapes: worn down into couple, and kept whole as the grammarian's copula.
+So the Gujarati verb for coming and the technical name for what chhe does at the end of your sentences are, far enough back, one root.
 
-What you've built: a nasal that is not at the end.
-Every nasal dot so far has been at the end of a word: hũ, chhũ, and the -વું on every verb. This one is in the middle, doing the same job in a new place — the ā before ચ goes through the nose, and it must be heard as well as written. Count to five and stop on પાંચ pā̃ch: same dot, same position, same nasal ā running into a ચ.
-And you know how much one small mark can carry. જવું javũ is "to go" and જોવું jovũ is "to see," and the whole difference is the sign on the જ. This dot is the same kind of hinge: small enough to skip, and not skippable.
-
-The word, taken apart — reading is making something speak.
-vā̃chvũ comes through Old Gujarati from Sanskrit vācayati, a causative: the root vac- means "to speak," so vācayati is "to make speak." Reading was named as making a silent page talk — which is what reading was, aloud, for most of the time people have done it.
-The root is Indo-European, wekw-, and Latin holds it as vōx, "voice." English took the family whole: voice, vocal, vowel, vocation (a calling), advocate (one called to your side), provoke, revoke.
+What you've built: the p that softened to a v.
+One regular change did most of the work between āpayati and āvei: a single Sanskrit p standing between two vowels softened to v. It happened right across the vocabulary, so it decodes far more than this verb:
+Sanskrit dīpa "lamp" becomes dīva becomes Gujarati divo.
+Sanskrit kūpa "well" becomes Gujarati kūvo.
+And dīpa is half of દિવાળી divāḷī — dīpa plus āvalī, "a row of lamps." The festival carries the sound change in its own name.
 
 Guided Practice.
-[your turn — say: vā̃chvũ, then hũ vā̃chũ chhũ — I read]
+[your turn — say: āvvũ — to come]
 [pause 8 seconds for the answer]
-[your turn — match: the same middle nasal in pā̃ch, "five"]
+[your turn — split: āv- plus -vũ, the two વ belonging to different pieces]
 [pause 8 seconds for the answer]
-[your turn — contrast: javũ and jovũ — one mark decides which word it is]
+[your turn — build: hũ āvũ chhũ — I come]
 [pause 8 seconds for the answer]
-[once you have stopped driving — trace: vac- "speak" becomes vācayati "make speak" becomes vā̃chvũ, and becomes voice, vowel, advocate]
-[your turn — run: vichārvũ, samajvũ, vā̃chvũ]
+[once you have stopped driving — trace: Sanskrit āp- "reach" becomes āvvũ, and becomes English apt, couple]
+[your turn — apply: dīpa becomes divo, kūpa becomes kūvo]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Where does the nasal dot sit in vā̃chvũ, and which number of yours carries it in the same place? (In the middle, on the ā; pā̃ch.) What did vācayati mean literally, and which English word for the thing you speak with is its cousin? ("To make speak"; voice.) Say "I read." (Hũ vā̃chũ chhũ.)
-Source: Wiktionary: વાંચવું (vā̃chvũ).
+What did the root behind āvvũ originally mean? ("Reach, attain.") What happens to a single Sanskrit p between vowels? (It softens to v.) Which English word for a joining verb is a cousin of āvvũ? (Copula.) Say "I come." (Hũ āvũ chhũ.)
+Source: Wiktionary: આવવું (āvvũ).
 
 
-Lesson 4 of 4.
-લખવું (lakhvũ) — "to write," which began as scratching.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+Lesson 4 of 6.
+ખાવું (khāvũ) — "to eat," and a family that stops before English.
 
 Warm-up.
 [pause 2 seconds]
-Three verbs, three pictures: vichārvũ on a root meaning to range about, samajvũ on one meaning to wake, vā̃chvũ on one meaning to speak. The fourth root is the most physical of them.
+Say "to come," then name the ending it shares with every other Gujarati verb. The fourth verb takes a new letter with it.
 
 You'll want to know first — one word.
-લખવું — lakhvũ — to write.
-The stem is લખ- lakh-, and now you can say something worth saying:
-હું મારું નામ લખું છું — hũ mārũ nām lakhũ chhũ — "I write my name."
+ખાવું — khāvũ — to eat.
+The new letter is ખ, kha: a k with a puff of breath straight after it. English makes that puff without noticing — hold a hand in front of your mouth and say kite. Gujarati notices, and gives the puffed and unpuffed sounds separate letters, ખ and ક.
+Then the long-ā sign ા, and the ending you know: ખા- khā- plus -વું -vũ. The present is hũ khāũ chhũ, "I eat."
 
-The letters in this word.
-Both letters are already yours. લ la stood in bolvũ, "to speak." ખ kha is the puffed k of khāvũ, "to eat." La-kha-vũ.
-
-The word, taken apart — writing was scratching.
-lakhvũ comes through Prakrit from Sanskrit likhati, and likh- meant "to scratch, to score" long before it meant to write. Its plainest Sanskrit relative says so out loud: રેખા rekhā, "a line, a streak."
-Beyond Indo-Aryan the cousins are disputed, and this lesson claims none — the same answer khāvũ gave. What is not disputed is that three families reached for one picture: Latin scrībere also meant to scratch, behind scribe and script, and English write began as Germanic "to score."
-
-What you've built: four verbs, and what each root did first.
-[a table of 4 rows, read aloud]
-verb: vichārvũ — think. what its root did first: ranged about, turned.
-verb: samajvũ — understand. what its root did first: woke up.
-verb: vā̃chvũ — read. what its root did first: spoke.
-verb: lakhvũ — write. what its root did first: scratched.
-Not one of the four began as a mental act. The mind gets its vocabulary from the body, every time.
-Three habits ran through the chapter. A cluster assimilates and then simplifies — dhy to jjh to j in samajvũ, whose root budh- also gave buddha. A dot in the middle is a nasal you must hear — vā̃ch-, whose root vac- also gave voice. And when the trail stops you say so: lakh- and khāvũ have no secure English cousin, jovũ's origin is probable rather than proven, and jāṇvũ is the one that paid out, being English know.
+The word, taken apart — where the family stops.
+khāvũ comes from Sanskrit khādati, "chews, eats." Prakrit kept it as khādi, and then the single d between vowels wore away — the same erosion that has been thinning these verbs all along — leaving the bare stem khā-.
+Its sisters are all alive: Hindi khānā, Punjabi khāṇā, Marathi khāṇe, Bengali khāoyā. One verb, five modern shapes.
+And there the family stops. Scholars reconstruct an Indo-European root behind khādati, but it left nothing in English — no cousin, no borrowing, not even a worn-down one. That is worth saying out loud rather than reaching for a lookalike, because this whole method rests on hanging a new word on a word you already own, and a cousin that is not really a cousin is worse than none at all. Some words you take on their own terms. Khāvũ is one of them, and its five sisters are anchor enough.
 
 Guided Practice.
-[your turn — produce: hũ mārũ nām lakhũ chhũ — I write my name]
+[your turn — say: khāvũ — to eat, with the breath after the k]
 [pause 8 seconds for the answer]
-[your turn — run: vichārvũ, samajvũ, vā̃chvũ, lakhvũ — stripping -vũ off each]
+[your turn — contrast: ખ puffed, ક unpuffed]
 [pause 8 seconds for the answer]
-[your turn — name: what each root did first — ranged, woke, spoke, scratched]
+[your turn — build: hũ khāũ chhũ — I eat]
 [pause 8 seconds for the answer]
-[your turn — say: the two steps behind samaj-, and where the dot sits in vā̃chvũ]
-[pause 8 seconds for the answer]
-[your turn — connect: rekhā, still meaning the scratch]
+[once you have stopped driving — trace: Sanskrit khādati becomes khādi becomes khāvũ, the d worn away]
+[your turn — admit: no honest English cousin — and that is the right answer]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "I write my name." (Hũ mārũ nām lakhũ chhũ.) Name the four verbs and what each root did before it meant a mental act. (Ranged, woke, spoke, scratched.) Which Sanskrit word is lakh-'s plainest relative? (Rekhā, "a line.") Which of your verbs has a certain English cousin, and which have none? (Jāṇvũ is know; lakh- and khāvũ have none.)
-Source: Wiktionary: લખવું (lakhvũ).
+What separates ખ from ક? (A puff of breath.) Which Sanskrit verb is behind khāvũ, and what happened to its d? (Khādati; it wore away between the vowels.) Which English word is its cousin? (None — and pretending otherwise would be worse than admitting it.) Say "I eat." (Hũ khāũ chhũ.)
+Source: Wiktionary: ખાવું (khāvũ).
+
+
+Lesson 5 of 6.
+જોવું (jovũ) — "to see," one mark away from "to go".
+
+Warm-up.
+[pause 2 seconds]
+Two verbs back: how do you say "to go," and how do you say "to eat"? The fifth verb is the nearest neighbour javũ has.
+
+You'll want to know first — one word.
+જોવું — jovũ — to see.
+જ ja, wearing the sign ો that turns it into jo; then the ending વું -vũ. The stem is જો- jo-, and the present runs as it always has: hũ joũ chhũ, "I see."
+
+What you've built: one mark apart.
+Set the two words side by side and the whole difference is one small mark:
+જવું javũ — to go. Bare જ, carrying its built-in a.
+જોવું jovũ — to see. The same જ, with ો on it.
+Add that one sign and going becomes seeing. In the mouth the contrast is just as small and just as total — ja against jo — so this is a pair worth saying aloud until the vowels separate cleanly. Gujarati will keep doing this: the consonants carry the word, and a single vowel mark decides which word it is.
+
+The word, taken apart — an origin still argued over.
+jovũ continues a Prakrit verb joaï, "looks." Where joaï itself came from is genuinely unsettled, and it is more useful to say so than to pick a winner.
+The usual account takes it from Sanskrit dyotate, "shines" — sight arriving by way of light. That is a well-worn path: Greek phaínō "shine" produced phainómenon, "a thing that shows itself," which English borrowed as phenomenon, and from the same family phantom and fantasy. A second account brings in an older verb of watching and waiting for, the one behind Hindi johnā, "to watch out for." The two may simply have run together; forms do that.
+So: probable, not proven. Etymology has error bars like any other science, and a lesson that hides them is teaching you to trust the wrong things.
+
+Guided Practice.
+[your turn — say: jovũ — to see]
+[pause 8 seconds for the answer]
+[your turn — contrast: javũ go, jovũ see — one mark, one vowel]
+[pause 8 seconds for the answer]
+[your turn — build: hũ joũ chhũ — I see]
+[pause 8 seconds for the answer]
+[your turn — hedge: jovũ probably from "shines" — probable, not proven]
+[pause 8 seconds for the answer]
+[your turn — run: hovũ, javũ, āvvũ, khāvũ, jovũ]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What single mark separates javũ from jovũ? (The ો sign: ja becomes jo.) Say "I see." (Hũ joũ chhũ.) How settled is the origin of jovũ? (Not settled — probably from a verb meaning "shines," possibly merged with one meaning "watch out for.")
+Source: Wiktionary: જોવું (jovũ).
+
+
+Lesson 6 of 6.
+જાણવું (jāṇvũ) — "to know," a word English has been carrying all along.
+
+Warm-up.
+[pause 2 seconds]
+Run the five you have — hovũ, javũ, āvvũ, khāvũ, jovũ — and pull the ending off each one. The sixth is the closest of them all to English.
+
+You'll want to know first — one word.
+જાણવું — jāṇvũ — to know.
+જ ja with the long-ā sign ા on it gives jā. Then a new letter: ણ, an n made with the tongue tip curled back onto the roof of the mouth — a retroflex, written ṇ. Gujarati inherited a whole set of these curled sounds from Sanskrit, and you have met one before in ળ ḷ.
+Then the ending. જાણ- jāṇ- plus -વું -vũ, and the present is hũ jāṇũ chhũ, "I know."
+
+The word, taken apart — the widest family in the chapter.
+jāṇvũ comes from Sanskrit jānāti, "knows," on the root jñā-. The retroflex is Prakrit's work: a single n between vowels was pulled back onto the roof of the mouth, so jānāti became jāṇadi and then jāṇvũ.
+The root is Indo-European, gnō- "to know," and English is stuffed with it.
+Straight down the Germanic line: know, knowledge, can — which once meant "to know how" — cunning, ken, and uncouth, literally "un-known." Borrowed from Latin (g)nōscere: notice, note, notion, cognition, recognize, acquaint, noble ("well-known"), and ignore, which is "not to know." Borrowed from Greek gnōsis: diagnosis, prognosis, agnostic.
+Two verbs ago the family stopped before English entirely. This one runs three dozen words deep. Jāṇvũ is not a stranger: it is a first cousin of the plainest word English owns for the same idea, and every one of those borrowings is another peg to hang it on.
+
+Guided Practice.
+[your turn — say: jāṇvũ — to know, with the tongue curled back on the ṇ]
+[pause 8 seconds for the answer]
+[your turn — build: hũ jāṇũ chhũ — I know]
+[pause 8 seconds for the answer]
+[your turn — run: all six — hovũ, javũ, āvvũ, khāvũ, jovũ, jāṇvũ — stripping each stem]
+[pause 8 seconds for the answer]
+[your turn — build: hũ jāũ chhũ, hũ āvũ chhũ, hũ khāũ chhũ, hũ joũ chhũ]
+[pause 8 seconds for the answer]
+[your turn — connect: jāṇvũ from jñā- becomes English know, notice, diagnosis]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Name all six verbs and take the ending off each. (Ho-, ja-, āv-, khā-, jo-, jāṇ-; the ending is the neuter -vũ.) Which English verb is the same word as jāṇvũ? (Know.) What makes the ણ different from a plain n? (The tongue curls back.) Say "I know." (Hũ jāṇũ chhũ.)
+Source: Wiktionary: જાણવું (jāṇvũ).

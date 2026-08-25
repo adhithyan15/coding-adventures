@@ -41,8 +41,8 @@ use diagram_ir::{
 use layout_ir::{Color, Content, FontSpec, PositionedNode, TextAlign, TextContent};
 use layout_to_paint::{layout_to_paint, LayoutToPaintOptions};
 use paint_instructions::{
-    PaintBase, PaintEllipse, PaintInstruction, PaintPath, PaintRect, PaintScene, PathCommand,
-    StrokeCap, StrokeJoin,
+    PaintBase, PaintEllipse, PaintGroup, PaintInstruction, PaintPath, PaintRect, PaintScene,
+    PathCommand, StrokeCap, StrokeJoin,
 };
 use text_interfaces::{FontMetrics, FontResolver, TextShaper};
 
@@ -611,6 +611,7 @@ where
 {
     let mut instructions: Vec<PaintInstruction> = Vec::new();
     let mut text_children: Vec<PositionedNode> = Vec::new();
+    let mut rotated_text_children: Vec<(PositionedNode, f64, f64, f64)> = Vec::new();
     let lf = options.label_font.clone();
     let ls = lf.size;
 
@@ -639,11 +640,12 @@ where
                 x2,
                 y2,
                 stroke_width,
+                color,
                 ..
             } => {
                 instructions.push(PaintInstruction::Path(line_path(
                     &[Point { x: *x1, y: *y1 }, Point { x: *x2, y: *y2 }],
-                    "#374151",
+                    color,
                     *stroke_width,
                 )));
             }
@@ -653,10 +655,11 @@ where
                 x2,
                 y2,
                 stroke_width,
+                color,
             } => {
                 instructions.push(PaintInstruction::Path(line_path(
                     &[Point { x: *x1, y: *y1 }, Point { x: *x2, y: *y2 }],
-                    "#6b7280",
+                    color,
                     *stroke_width,
                 )));
             }
@@ -1019,35 +1022,43 @@ where
                 label,
                 orientation,
                 font_size,
+                rotation_degrees,
+                color,
             } => {
                 let (tx, ty, tw) = match orientation {
                     Orientation::Horizontal => (x - 30.0, y - ls / 2.0, 60.0),
                     Orientation::Vertical => (x - 30.0, y + 2.0, 60.0),
                 };
-                text_children.push(text_node(
+                let node = text_node_no_wrap(
                     label,
                     tx,
                     ty,
                     tw,
                     font_size * 1.2,
                     font_with_size(&lf, Some(*font_size)),
-                    Color {
-                        r: 107,
-                        g: 114,
-                        b: 128,
-                        a: 255,
-                    },
-                ));
+                    css_to_color(color),
+                );
+                if rotation_degrees.abs() > f64::EPSILON {
+                    rotated_text_children.push((node, *rotation_degrees, *x, *y));
+                } else {
+                    text_children.push(node);
+                }
             }
-            LayoutedChartItem::Legend { x, y, entries } => {
+            LayoutedChartItem::Legend {
+                x,
+                y,
+                entries,
+                font_size,
+            } => {
+                let legend_font_size = font_size.unwrap_or(ls);
                 let mut ex = *x;
                 for e in entries {
                     instructions.push(PaintInstruction::Rect(PaintRect {
                         base: PaintBase::default(),
                         x: ex,
-                        y: y - ls / 2.0,
-                        width: ls,
-                        height: ls,
+                        y: y - legend_font_size / 2.0,
+                        width: legend_font_size,
+                        height: legend_font_size,
                         fill: Some(e.color.clone()),
                         stroke: None,
                         stroke_width: None,
@@ -1057,11 +1068,11 @@ where
                     }));
                     text_children.push(text_node(
                         &e.label,
-                        ex + ls + 4.0,
-                        y - ls / 2.0,
+                        ex + legend_font_size + 4.0,
+                        y - legend_font_size / 2.0,
                         80.0,
-                        ls * 1.2,
-                        lf.clone(),
+                        legend_font_size * 1.2,
+                        font_with_size(&lf, Some(legend_font_size)),
                         Color {
                             r: 55,
                             g: 65,
@@ -1069,7 +1080,7 @@ where
                             a: 255,
                         },
                     ));
-                    ex += ls + 4.0 + 88.0;
+                    ex += legend_font_size + 4.0 + 88.0;
                 }
             }
         }
@@ -1101,6 +1112,35 @@ where
     };
     let text_scene = layout_to_paint(&text_root, &text_opts);
     instructions.extend(text_scene.instructions);
+    for (node, rotation_degrees, pivot_x, pivot_y) in rotated_text_children {
+        let root = PositionedNode {
+            x: 0.0,
+            y: 0.0,
+            width: diagram.width,
+            height: diagram.height,
+            id: None,
+            content: None,
+            children: vec![node],
+            ext: HashMap::new(),
+        };
+        let scene = layout_to_paint(&root, &text_opts);
+        let radians = rotation_degrees.to_radians();
+        let cosine = radians.cos();
+        let sine = radians.sin();
+        instructions.push(PaintInstruction::Group(PaintGroup {
+            base: PaintBase::default(),
+            children: scene.instructions,
+            transform: Some([
+                cosine,
+                sine,
+                -sine,
+                cosine,
+                pivot_x - cosine * pivot_x + sine * pivot_y,
+                pivot_y - sine * pivot_x - cosine * pivot_y,
+            ]),
+            opacity: None,
+        }));
+    }
 
     let bg = options.background;
     let mut metadata = HashMap::new();
@@ -1113,7 +1153,10 @@ where
     PaintScene {
         width: diagram.width,
         height: diagram.height,
-        background: format!("rgb({},{},{})", bg.r, bg.g, bg.b),
+        background: diagram
+            .background_color
+            .clone()
+            .unwrap_or_else(|| format!("rgb({},{},{})", bg.r, bg.g, bg.b)),
         instructions,
         id: None,
         metadata: (!metadata.is_empty()).then_some(metadata),
@@ -4302,6 +4345,7 @@ mod tests {
         let layout = LayoutedChartDiagram {
             width: 400.0,
             height: 300.0,
+            background_color: Some("#123456".into()),
             accessibility_title: Some("Portfolio matrix".into()),
             accessibility_description: Some("Native renderer priorities".into()),
             title_box: None,
@@ -4309,6 +4353,7 @@ mod tests {
         };
 
         let scene = diagram_to_paint_chart(&layout, &opts);
+        assert_eq!(scene.background, "#123456");
         let metadata = scene.metadata.expect("chart accessibility metadata");
         assert_eq!(metadata["accessibility.title"], "Portfolio matrix");
         assert_eq!(
@@ -4326,6 +4371,7 @@ mod tests {
         let layout = LayoutedChartDiagram {
             width: 400.0,
             height: 300.0,
+            background_color: None,
             accessibility_title: None,
             accessibility_description: None,
             title_box: None,
@@ -4371,6 +4417,7 @@ mod tests {
         let layout = LayoutedChartDiagram {
             width: 400.0,
             height: 300.0,
+            background_color: None,
             accessibility_title: None,
             accessibility_description: None,
             title_box: None,
@@ -4382,6 +4429,7 @@ mod tests {
                     y2: 260.0,
                     orientation: Orientation::Horizontal,
                     stroke_width: 5.0,
+                    color: "#123456".into(),
                 },
                 LayoutedChartItem::AxisTick {
                     x: 100.0,
@@ -4389,6 +4437,17 @@ mod tests {
                     label: "Q1".into(),
                     orientation: Orientation::Vertical,
                     font_size: 18.0,
+                    rotation_degrees: 0.0,
+                    color: "#234567".into(),
+                },
+                LayoutedChartItem::AxisTick {
+                    x: 180.0,
+                    y: 264.0,
+                    label: "Rotated".into(),
+                    orientation: Orientation::Vertical,
+                    font_size: 16.0,
+                    rotation_degrees: -45.0,
+                    color: "#345678".into(),
                 },
             ],
         };
@@ -4396,11 +4455,25 @@ mod tests {
         let scene = diagram_to_paint_chart(&layout, &opts);
         assert!(scene.instructions.iter().any(|instruction| matches!(
             instruction,
-            PaintInstruction::Path(path) if path.stroke_width == Some(5.0)
+            PaintInstruction::Path(path)
+                if path.stroke_width == Some(5.0) && path.stroke.as_deref() == Some("#123456")
         )));
         assert!(scene.instructions.iter().any(|instruction| matches!(
             instruction,
-            PaintInstruction::GlyphRun(run) if run.font_size == 18.0
+            PaintInstruction::GlyphRun(run)
+                if run.font_size == 18.0
+                    && run.fill.as_deref() == Some("rgb(35, 69, 103)")
+        )));
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Group(group)
+                if group.transform.is_some()
+                    && group.children.iter().any(|child| matches!(
+                        child,
+                        PaintInstruction::GlyphRun(run)
+                            if run.font_size == 16.0
+                                && run.fill.as_deref() == Some("rgb(52, 86, 120)")
+                    ))
         )));
     }
 
@@ -4413,6 +4486,7 @@ mod tests {
         let layout = LayoutedChartDiagram {
             width: 400.0,
             height: 300.0,
+            background_color: None,
             accessibility_title: None,
             accessibility_description: None,
             title_box: None,

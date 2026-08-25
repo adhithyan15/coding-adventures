@@ -1,0 +1,14 @@
+{
+  "id": "ZH-EXT-032-FAMILY-FOUR-SKILL",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "assessment",
+  "canDo": "I can pass separate listening, speaking, reading and writing checks for 人, 女, 儿子, 女儿, 家 and 家人; no strong skill compensates for a weak one.",
+  "prerequisites": [
+    "ZH-EXT-031-FAMILY-SCRIPT"
+  ],
+  "lessons": [
+    "ZH-R12-family-six",
+    "ZH-C12-practice"
+  ]
+}

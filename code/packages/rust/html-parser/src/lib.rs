@@ -5339,10 +5339,13 @@ impl HtmlParser {
             && !self.has_open_element("table")
             && !self.has_open_element("template")
         {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-table-start-tag",
-                format!("start tag `<{name}>` outside a table was ignored"),
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-table-start-tag",
+                    format!("start tag `<{name}>` outside a table was ignored"),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             return;
         }
 
@@ -5495,10 +5498,13 @@ impl HtmlParser {
         }
 
         if !in_foreign_content && name == "frame" && !self.current_element_is("frameset") {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-frame-start-tag",
-                "start tag `<frame>` outside a frameset was ignored",
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-frame-start-tag",
+                    "start tag `<frame>` outside a frameset was ignored",
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             return;
         }
 
@@ -5514,10 +5520,13 @@ impl HtmlParser {
                 || self.document_has_non_frameset_compatible_body_content())
             && self.has_open_element("body")
         {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-frameset-start-tag",
-                "start tag `<frameset>` was ignored after body content",
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-frameset-start-tag",
+                    "start tag `<frameset>` was ignored after body content",
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             return;
         }
 
@@ -5828,10 +5837,13 @@ impl HtmlParser {
         }
 
         if !in_foreign_content && name == "html" && self.has_document_element() {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-html-start-tag",
-                "html start tag was recovered against the existing document element",
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-html-start-tag",
+                    "html start tag was recovered against the existing document element",
+                )
+                .at_emission(self.current_token_emission_position),
+            );
         }
 
         if !in_foreign_content
@@ -5852,18 +5864,24 @@ impl HtmlParser {
         }
 
         if !in_foreign_content && name == "head" && self.has_open_element("head") {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-head-start-tag",
-                "duplicate head start tag was ignored",
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-head-start-tag",
+                    "duplicate head start tag was ignored",
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             return;
         }
 
         if !in_foreign_content && name == "head" && self.has_open_element("body") {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-head-start-tag",
-                "head start tag was ignored after body content had already started",
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-head-start-tag",
+                    "head start tag was ignored after body content had already started",
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             return;
         }
 
@@ -5894,10 +5912,13 @@ impl HtmlParser {
             && body_element_existed_before_start_tag
             && self.has_open_element("body")
         {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-body-start-tag",
-                "body start tag was recovered against the existing body element",
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-body-start-tag",
+                    "body start tag was recovered against the existing body element",
+                )
+                .at_emission(self.current_token_emission_position),
+            );
         }
 
         if !in_foreign_content
@@ -5926,10 +5947,13 @@ impl HtmlParser {
         let html_void_element = namespace.is_none() && is_void_element(&name);
         let acknowledges_self_closing = self_closing && (html_void_element || namespace.is_some());
         if self_closing && !acknowledges_self_closing {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "non-void-html-element-self-closing",
-                format!("self-closing flag on non-void HTML element `<{name}>` was ignored"),
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "non-void-html-element-self-closing",
+                    format!("self-closing flag on non-void HTML element `<{name}>` was ignored"),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
         }
 
         if namespace.is_none() && name == "form" && !self.has_open_html_template_element() {
@@ -6046,10 +6070,13 @@ impl HtmlParser {
         let text = if self.current_element_is_marked_fragment_context("colgroup")
             && !is_html_whitespace_text(&text)
         {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-character-in-colgroup",
-                "non-whitespace character data was ignored by the seeded colgroup fragment context",
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-character-in-colgroup",
+                    "non-whitespace character data was ignored by the seeded colgroup fragment context",
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             text.chars()
                 .filter(|character| is_html_whitespace(*character))
                 .collect::<String>()
@@ -6116,10 +6143,13 @@ impl HtmlParser {
             && self.current_has_child_element("tr")
             && !is_html_whitespace_text(&text)
         {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-character-in-template-table-mode",
-                "non-whitespace character data forced recovery from template table mode",
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-character-in-template-table-mode",
+                    "non-whitespace character data forced recovery from template table mode",
+                )
+                .at_emission(self.current_token_emission_position),
+            );
         }
 
         if self.open_elements.is_empty()
@@ -6270,10 +6300,13 @@ impl HtmlParser {
                 return;
             }
             let pending = std::mem::take(&mut self.pending_table_text);
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-character-in-table",
-                "non-whitespace character data in a table context was foster parented",
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-character-in-table",
+                    "non-whitespace character data in a table context was foster parented",
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             if self.foster_text_before_open_table(pending) {
                 return;
             }
@@ -7225,10 +7258,13 @@ impl HtmlParser {
         if (name != "html" && self.current_element_is_marked_fragment_context(name))
             || self.open_marked_fragment_shell_element_matches(name)
         {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-fragment-context-end-tag",
-                format!("end tag `</{name}>` targeted a seeded fragment context element"),
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-fragment-context-end-tag",
+                    format!("end tag `</{name}>` targeted a seeded fragment context element"),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             return;
         }
         let in_foreign_content = self.current_namespace().is_some()
@@ -7865,10 +7901,13 @@ impl HtmlParser {
             "menuitem" => self.close_non_paragraph_children_above_menuitem(),
             "template" => self.handle_html_template_end_tag(),
             name if is_void_element(name) => {
-                self.diagnostics.push(ParserDiagnostic::new(
-                    "unexpected-void-end-tag",
-                    format!("end tag `</{name}>` for a void element was ignored"),
-                ));
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-void-end-tag",
+                        format!("end tag `</{name}>` for a void element was ignored"),
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
             }
             "p" if self.has_open_element("head") && !self.has_open_element("body") => {
                 self.diagnostics.push(
@@ -8388,12 +8427,15 @@ impl HtmlParser {
                 if self.current_element_is("table")
                     || self.current_element_name().is_some_and(is_table_section)
                 {
-                    self.diagnostics.push(ParserDiagnostic::new(
-                        "unexpected-cell-start-tag-in-table-body",
-                        format!(
-                            "start tag `<{incoming_name}>` in a table body context implied a missing row"
-                        ),
-                    ));
+                    self.diagnostics.push(
+                        ParserDiagnostic::new(
+                            "unexpected-cell-start-tag-in-table-body",
+                            format!(
+                                "start tag `<{incoming_name}>` in a table body context implied a missing row"
+                            ),
+                        )
+                        .at_emission(self.current_token_emission_position),
+                    );
                 }
                 if self.current_element_is("table") {
                     self.append_implied_element("tbody");
@@ -8430,12 +8472,15 @@ impl HtmlParser {
                 element_at_path(&self.document, path).is_some_and(is_implied_end_tag_element)
             });
         if !current_after_implied_end_tags_is_caption {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-token-in-caption",
-                format!(
-                    "{token} closed a caption while a non-caption node remained current after implied-end-tag generation"
-                ),
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-token-in-caption",
+                    format!(
+                        "{token} closed a caption while a non-caption node remained current after implied-end-tag generation"
+                    ),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
         }
     }
 
@@ -27197,6 +27242,18 @@ mod tests {
         end_tag_position_at(source, name, 0)
     }
 
+    fn fragment_context_end_tag(
+        source: &str,
+        name: &str,
+        occurrence: usize,
+    ) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-fragment-context-end-tag",
+            format!("end tag `</{name}>` targeted a seeded fragment context element"),
+        )
+        .at_emission(Some(end_tag_position_at(source, name, occurrence)))
+    }
+
     fn shell_end_tag_outside_scope(source: &str, name: &str) -> ParserDiagnostic {
         ParserDiagnostic::new(
             "unexpected-shell-end-tag-outside-scope",
@@ -27277,6 +27334,43 @@ mod tests {
             format!("HTML start tag `<{name}>` forced recovery from foreign content"),
         )
         .at_emission(Some(start_tag_position(source, name)))
+    }
+
+    fn unexpected_html_start_tag(source: &str, occurrence: usize) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-html-start-tag",
+            "html start tag was recovered against the existing document element",
+        )
+        .at_emission(Some(start_tag_position_at(source, "html", occurrence)))
+    }
+
+    fn unexpected_head_start_tag(
+        source: &str,
+        occurrence: usize,
+        message: &str,
+    ) -> ParserDiagnostic {
+        ParserDiagnostic::new("unexpected-head-start-tag", message)
+            .at_emission(Some(start_tag_position_at(source, "head", occurrence)))
+    }
+
+    fn unexpected_body_start_tag(source: &str, occurrence: usize) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-body-start-tag",
+            "body start tag was recovered against the existing body element",
+        )
+        .at_emission(Some(start_tag_position_at(source, "body", occurrence)))
+    }
+
+    fn non_void_self_closing_start_tag(
+        source: &str,
+        name: &str,
+        occurrence: usize,
+    ) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "non-void-html-element-self-closing",
+            format!("self-closing flag on non-void HTML element `<{name}>` was ignored"),
+        )
+        .at_emission(Some(start_tag_position_at(source, name, occurrence)))
     }
 
     fn foreign_start_tag_in_table_recovery(source: &str, name: &str) -> ParserDiagnostic {
@@ -27463,6 +27557,34 @@ mod tests {
         .at_emission(Some(start_tag_position_at(source, name, occurrence)))
     }
 
+    fn unexpected_table_start_tag(
+        source: &str,
+        name: &str,
+        occurrence: usize,
+    ) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-table-start-tag",
+            format!("start tag `<{name}>` outside a table was ignored"),
+        )
+        .at_emission(Some(start_tag_position_at(source, name, occurrence)))
+    }
+
+    fn unexpected_frame_start_tag(source: &str, occurrence: usize) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-frame-start-tag",
+            "start tag `<frame>` outside a frameset was ignored",
+        )
+        .at_emission(Some(start_tag_position_at(source, "frame", occurrence)))
+    }
+
+    fn unexpected_frameset_start_tag(source: &str, occurrence: usize) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-frameset-start-tag",
+            "start tag `<frameset>` was ignored after body content",
+        )
+        .at_emission(Some(start_tag_position_at(source, "frameset", occurrence)))
+    }
+
     fn start_tag_in_template_column_group_recovery(
         source: &str,
         name: &str,
@@ -27498,6 +27620,28 @@ mod tests {
             format!("start tag `<{name}>` in a template table body implied a missing row"),
         )
         .at_emission(Some(start_tag_position_at(source, name, occurrence)))
+    }
+
+    fn cell_start_tag_in_table_body_recovery(
+        source: &str,
+        name: &str,
+        occurrence: usize,
+    ) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-cell-start-tag-in-table-body",
+            format!("start tag `<{name}>` in a table body context implied a missing row"),
+        )
+        .at_emission(Some(start_tag_position_at(source, name, occurrence)))
+    }
+
+    fn token_in_caption_recovery(token: &str, position: SourcePosition) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-token-in-caption",
+            format!(
+                "{token} closed a caption while a non-caption node remained current after implied-end-tag generation"
+            ),
+        )
+        .at_emission(Some(position))
     }
 
     fn row_start_tag_in_template_body_recovery(
@@ -27617,6 +27761,78 @@ mod tests {
         }))
     }
 
+    fn character_in_template_table_mode_recovery(
+        source: &str,
+        emission_boundary: &str,
+    ) -> ParserDiagnostic {
+        let byte_offset = source
+            .find(emission_boundary)
+            .expect("source should contain the text emission boundary");
+        let line_start = source[..byte_offset]
+            .rfind('\n')
+            .map_or(0, |index| index + 1);
+        ParserDiagnostic::new(
+            "unexpected-character-in-template-table-mode",
+            "non-whitespace character data forced recovery from template table mode",
+        )
+        .at_emission(Some(SourcePosition {
+            byte_offset,
+            char_offset: source[..byte_offset].chars().count(),
+            line: source[..byte_offset]
+                .chars()
+                .filter(|character| *character == '\n')
+                .count()
+                + 1,
+            column: source[line_start..byte_offset].chars().count() + 1,
+        }))
+    }
+
+    fn character_in_table_recovery(source: &str, emission_boundary: &str) -> ParserDiagnostic {
+        let byte_offset = source
+            .find(emission_boundary)
+            .expect("source should contain the text emission boundary");
+        let line_start = source[..byte_offset]
+            .rfind('\n')
+            .map_or(0, |index| index + 1);
+        ParserDiagnostic::new(
+            "unexpected-character-in-table",
+            "non-whitespace character data in a table context was foster parented",
+        )
+        .at_emission(Some(SourcePosition {
+            byte_offset,
+            char_offset: source[..byte_offset].chars().count(),
+            line: source[..byte_offset]
+                .chars()
+                .filter(|character| *character == '\n')
+                .count()
+                + 1,
+            column: source[line_start..byte_offset].chars().count() + 1,
+        }))
+    }
+
+    fn character_in_colgroup_fragment_recovery(
+        source: &str,
+        byte_offset: usize,
+    ) -> ParserDiagnostic {
+        let line_start = source[..byte_offset]
+            .rfind('\n')
+            .map_or(0, |index| index + 1);
+        ParserDiagnostic::new(
+            "unexpected-character-in-colgroup",
+            "non-whitespace character data was ignored by the seeded colgroup fragment context",
+        )
+        .at_emission(Some(SourcePosition {
+            byte_offset,
+            char_offset: source[..byte_offset].chars().count(),
+            line: source[..byte_offset]
+                .chars()
+                .filter(|character| *character == '\n')
+                .count()
+                + 1,
+            column: source[line_start..byte_offset].chars().count() + 1,
+        }))
+    }
+
     fn li_start_tag_in_table_recovery(source: &str, occurrence: usize) -> ParserDiagnostic {
         let prefix = "<li";
         let start = source
@@ -27703,6 +27919,18 @@ mod tests {
             "end tag `</br>` was recovered as a `br` start tag",
         )
         .at_emission(Some(end_tag_position_at(source, "br", occurrence)))
+    }
+
+    fn unexpected_void_end_tag(
+        source: &str,
+        name: &str,
+        occurrence: usize,
+    ) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-void-end-tag",
+            format!("end tag `</{name}>` for a void element was ignored"),
+        )
+        .at_emission(Some(end_tag_position_at(source, name, occurrence)))
     }
 
     fn unexpected_li_end_tag(source: &str) -> ParserDiagnostic {
@@ -33315,10 +33543,7 @@ mod tests {
         assert_eq!(fragment.nodes, vec![Node::text("X")]);
         assert_eq!(
             fragment.parser_diagnostics,
-            vec![ParserDiagnostic::new(
-                "unexpected-fragment-context-end-tag",
-                "end tag `</p>` targeted a seeded fragment context element"
-            )]
+            vec![fragment_context_end_tag("</p>X", "p", 0)]
         );
     }
 
@@ -33397,10 +33622,7 @@ mod tests {
         assert_eq!(matching_foreign.nodes, vec![Node::text("X")]);
         assert_eq!(
             matching_foreign.parser_diagnostics,
-            vec![ParserDiagnostic::new(
-                "unexpected-fragment-context-end-tag",
-                "end tag `</p>` targeted a seeded fragment context element"
-            )]
+            vec![fragment_context_end_tag("</p>X", "p", 0)]
         );
 
         let fragment =
@@ -34074,10 +34296,7 @@ mod tests {
             assert_eq!(fragment.nodes, vec![Node::text("X")]);
             assert_eq!(
                 fragment.parser_diagnostics,
-                vec![ParserDiagnostic::new(
-                    "unexpected-fragment-context-end-tag",
-                    format!("end tag `</{name}>` targeted a seeded fragment context element")
-                )]
+                vec![fragment_context_end_tag(&source, name, 0)]
             );
         }
     }
@@ -36367,7 +36586,7 @@ mod tests {
     }
 
     #[test]
-    fn reports_cells_that_require_an_implied_table_row() {
+    fn positions_cells_that_require_an_implied_table_row() {
         for (source, name) in [
             ("<!doctype html><table><td>A</td></table>", "td"),
             (
@@ -36378,10 +36597,7 @@ mod tests {
             let output = parse_html_with_diagnostics(source).unwrap();
             assert_eq!(
                 output.parser_diagnostics,
-                vec![ParserDiagnostic::new(
-                    "unexpected-cell-start-tag-in-table-body",
-                    format!("start tag `<{name}>` in a table body context implied a missing row"),
-                )],
+                vec![cell_start_tag_in_table_body_recovery(source, name, 0)],
                 "source {source:?}"
             );
 
@@ -36400,6 +36616,54 @@ mod tests {
                 diagnostic.code != "unexpected-cell-start-tag-in-table-body"
             }));
         }
+
+        let repeated_source =
+            "<!doctype html><!--é-->\r\n<table><td></td></tr><td>";
+        let repeated = parse_html_with_diagnostics(repeated_source).unwrap();
+        assert_eq!(
+            repeated
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| {
+                    diagnostic.code == "unexpected-cell-start-tag-in-table-body"
+                })
+                .collect::<Vec<_>>(),
+            vec![
+                &cell_start_tag_in_table_body_recovery(repeated_source, "td", 0),
+                &cell_start_tag_in_table_body_recovery(repeated_source, "td", 1),
+            ]
+        );
+        assert!(repeated_source.len() > repeated_source.chars().count());
+
+        let incomplete = parse_html_with_diagnostics("<!doctype html><table><td").unwrap();
+        assert!(incomplete.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-cell-start-tag-in-table-body"
+        }));
+
+        let mut unpositioned = HtmlParser::new();
+        for token in [
+            Token::StartTag {
+                name: "table".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "td".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+        ] {
+            unpositioned.process_token(token);
+        }
+        let diagnostics = unpositioned
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| {
+                diagnostic.code == "unexpected-cell-start-tag-in-table-body"
+            })
+            .collect::<Vec<_>>();
+        assert_eq!(diagnostics.len(), 1);
+        assert_eq!(diagnostics[0].position, None);
     }
 
     #[test]
@@ -36914,25 +37178,28 @@ mod tests {
 
     #[test]
     fn reports_caption_recovery_with_a_non_caption_current_node() {
-        for (source, token) in [
+        for (source, token, position) in [
             (
                 "<!doctype html><table><caption><b>Cap<col><tr><td>A</table>",
                 "start tag `<col>`",
+                start_tag_position(
+                    "<!doctype html><table><caption><b>Cap<col><tr><td>A</table>",
+                    "col",
+                ),
             ),
             (
                 "<!doctype html><table><caption><i>Cap</table>",
                 "end tag `</table>`",
+                end_tag_position(
+                    "<!doctype html><table><caption><i>Cap</table>",
+                    "table",
+                ),
             ),
         ] {
             let output = parse_html_with_diagnostics(source).unwrap();
             assert_eq!(
                 output.parser_diagnostics,
-                vec![ParserDiagnostic::new(
-                    "unexpected-token-in-caption",
-                    format!(
-                        "{token} closed a caption while a non-caption node remained current after implied-end-tag generation"
-                    ),
-                )],
+                vec![token_in_caption_recovery(token, position)],
                 "source {source:?}"
             );
         }
@@ -36955,6 +37222,83 @@ mod tests {
             element(&body.children[1]).children,
             vec![Node::text("After")]
         );
+
+        let repeated_source =
+            "<!doctype html><table><caption><b>one<col><caption><i>two<col>";
+        let repeated = parse_html_with_diagnostics(repeated_source).unwrap();
+        let repeated_diagnostics = repeated
+            .parser_diagnostics
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-token-in-caption")
+            .collect::<Vec<_>>();
+        assert_eq!(
+            repeated_diagnostics,
+            vec![
+                &token_in_caption_recovery(
+                    "start tag `<col>`",
+                    start_tag_position_at(repeated_source, "col", 0),
+                ),
+                &token_in_caption_recovery(
+                    "start tag `<col>`",
+                    start_tag_position_at(repeated_source, "col", 1),
+                ),
+            ]
+        );
+
+        let unicode_source =
+            "<!doctype html><!--é-->\r\n<table><caption><i>Cap</table>";
+        let unicode = parse_html_with_diagnostics(unicode_source).unwrap();
+        assert!(unicode_source.len() > unicode_source.chars().count());
+        assert!(unicode.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic
+                == &token_in_caption_recovery(
+                    "end tag `</table>`",
+                    end_tag_position(unicode_source, "table"),
+                )
+        }));
+
+        for source in [
+            "<!doctype html><table><caption><b>Cap<col",
+            "<!doctype html><table><caption><i>Cap</table",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output.parser_diagnostics.iter().all(|diagnostic| {
+                diagnostic.code != "unexpected-token-in-caption"
+            }));
+        }
+
+        let mut unpositioned = HtmlParser::new();
+        for token in [
+            Token::StartTag {
+                name: "table".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "caption".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "b".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "col".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+        ] {
+            unpositioned.process_token(token);
+        }
+        let diagnostics = unpositioned
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-token-in-caption")
+            .collect::<Vec<_>>();
+        assert_eq!(diagnostics.len(), 1);
+        assert_eq!(diagnostics[0].position, None);
     }
 
     #[test]
@@ -37300,12 +37644,70 @@ mod tests {
         assert_eq!(
             output.parser_diagnostics,
             vec![
-                ParserDiagnostic::new(
-                    "non-void-html-element-self-closing",
-                    "self-closing flag on non-void HTML element `<plaintext>` was ignored"
-                ),
+                non_void_self_closing_start_tag(source, "plaintext", 0),
                 eof_with_unclosed_elements(source)
             ]
+        );
+    }
+
+    #[test]
+    fn positions_non_void_self_closing_diagnostics_at_token_emission() {
+        let repeated_source = "<!doctype html><div/><div/><!--é-->\r\n<span/>";
+        let repeated = parse_html_with_diagnostics(repeated_source).unwrap();
+        assert_eq!(
+            repeated
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "non-void-html-element-self-closing")
+                .collect::<Vec<_>>(),
+            vec![
+                &non_void_self_closing_start_tag(repeated_source, "div", 0),
+                &non_void_self_closing_start_tag(repeated_source, "div", 1),
+                &non_void_self_closing_start_tag(repeated_source, "span", 0),
+            ]
+        );
+
+        let fragment_source = "<!--é-->\r\n<section/>";
+        let fragment = parse_html_fragment_with_diagnostics(fragment_source).unwrap();
+        assert!(fragment.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic == &non_void_self_closing_start_tag(fragment_source, "section", 0)
+        }));
+
+        let template_source = "<!doctype html><template><p/></template>";
+        let template = parse_html_with_diagnostics(template_source).unwrap();
+        assert!(template.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic == &non_void_self_closing_start_tag(template_source, "p", 0)
+        }));
+
+        for excluded in [
+            "<!doctype html><br/>",
+            "<!doctype html><svg><g/></svg>",
+            "<!doctype html><div/",
+        ] {
+            let output = parse_html_with_diagnostics(excluded).unwrap();
+            assert!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .all(|diagnostic| diagnostic.code != "non-void-html-element-self-closing"),
+                "source {excluded:?}"
+            );
+        }
+
+        let mut unpositioned = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        unpositioned.process_token(Token::StartTag {
+            name: "div".to_string(),
+            attributes: Vec::new(),
+            self_closing: true,
+        });
+        assert_eq!(
+            unpositioned
+                .diagnostics()
+                .iter()
+                .find(|diagnostic| diagnostic.code == "non-void-html-element-self-closing")
+                .unwrap()
+                .position,
+            None
         );
     }
 
@@ -37386,10 +37788,8 @@ mod tests {
 
     #[test]
     fn self_closing_noscript_uses_scripting_sensitive_handoff() {
-        let enabled = parse_html_with_diagnostics(
-            "<!doctype html><noscript/><p>&amp;</p></noscript><p>x</p>",
-        )
-        .unwrap();
+        let source = "<!doctype html><noscript/><p>&amp;</p></noscript><p>x</p>";
+        let enabled = parse_html_with_diagnostics(source).unwrap();
 
         let enabled_noscript = element(&head(&enabled.document).children[0]);
         assert_eq!(enabled_noscript.name, "noscript");
@@ -37400,7 +37800,7 @@ mod tests {
         );
 
         let disabled = parse_html_with_diagnostics_and_options(
-            "<!doctype html><noscript/><p>&amp;</p></noscript><p>x</p>",
+            source,
             HtmlParseOptions {
                 scripting: HtmlScriptingMode::Disabled,
                 ..HtmlParseOptions::default()
@@ -37420,18 +37820,12 @@ mod tests {
 
         assert_eq!(
             enabled.parser_diagnostics,
-            vec![ParserDiagnostic::new(
-                "non-void-html-element-self-closing",
-                "self-closing flag on non-void HTML element `<noscript>` was ignored"
-            )]
+            vec![non_void_self_closing_start_tag(source, "noscript", 0)]
         );
         assert_eq!(
             disabled.parser_diagnostics,
             vec![
-                ParserDiagnostic::new(
-                    "non-void-html-element-self-closing",
-                    "self-closing flag on non-void HTML element `<noscript>` was ignored"
-                ),
+                non_void_self_closing_start_tag(source, "noscript", 0),
                 ParserDiagnostic::new(
                     "unexpected-end-tag",
                     "end tag `</noscript>` did not match an open element"
@@ -37442,10 +37836,9 @@ mod tests {
 
     #[test]
     fn acknowledges_self_closing_void_starts_and_ignores_void_end_tags() {
-        let output = parse_html_with_diagnostics(
-            "<!doctype html><p>Before<br/><img src=hero.png /></img><input></input><hr></hr>After",
-        )
-        .unwrap();
+        let source =
+            "<!doctype html><p>Before<br/><img src=hero.png /></img><input></input><hr></hr>After";
+        let output = parse_html_with_diagnostics(source).unwrap();
 
         let paragraph = element(&body(&output.document).children[0]);
         assert_eq!(paragraph.name, "p");
@@ -37462,20 +37855,55 @@ mod tests {
         assert_eq!(
             output.parser_diagnostics,
             vec![
-                ParserDiagnostic::new(
-                    "unexpected-void-end-tag",
-                    "end tag `</img>` for a void element was ignored"
-                ),
-                ParserDiagnostic::new(
-                    "unexpected-void-end-tag",
-                    "end tag `</input>` for a void element was ignored"
-                ),
-                ParserDiagnostic::new(
-                    "unexpected-void-end-tag",
-                    "end tag `</hr>` for a void element was ignored"
-                ),
+                unexpected_void_end_tag(source, "img", 0),
+                unexpected_void_end_tag(source, "input", 0),
+                unexpected_void_end_tag(source, "hr", 0),
             ]
         );
+    }
+
+    #[test]
+    fn positions_void_end_tag_diagnostics_at_token_emission() {
+        let source = "<!doctype html></img><!--é-->\r\n</img><table><tr></input></table>";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        assert_eq!(
+            output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-void-end-tag")
+                .collect::<Vec<_>>(),
+            vec![
+                &unexpected_void_end_tag(source, "img", 0),
+                &unexpected_void_end_tag(source, "img", 1),
+                &unexpected_void_end_tag(source, "input", 0),
+            ]
+        );
+
+        let fragment_source = "</hr>";
+        let fragment = parse_html_fragment_with_diagnostics(fragment_source).unwrap();
+        assert!(fragment
+            .parser_diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic
+                == &unexpected_void_end_tag(fragment_source, "hr", 0)));
+
+        let incomplete = parse_html_with_diagnostics("<!doctype html></img").unwrap();
+        assert!(incomplete
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-void-end-tag"));
+
+        let mut unpositioned = HtmlParser::new();
+        unpositioned.process_token(Token::EndTag {
+            name: "img".to_string(),
+        });
+        unpositioned.process_token(Token::Eof);
+        let diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-void-end-tag")
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
     }
 
     #[test]
@@ -37828,10 +38256,7 @@ mod tests {
             let output = parse_html_with_diagnostics(source).unwrap();
             assert_eq!(
                 output.parser_diagnostics,
-                vec![ParserDiagnostic::new(
-                    "unexpected-frameset-start-tag",
-                    "start tag `<frameset>` was ignored after body content"
-                )],
+                vec![unexpected_frameset_start_tag(source, 0)],
                 "source {source:?}"
             );
             assert!(body(&output.document)
@@ -37842,10 +38267,131 @@ mod tests {
     }
 
     #[test]
-    fn ignores_frame_start_tags_outside_framesets() {
-        let document = parse_html("<frame>test").unwrap();
+    fn positions_frameset_start_tags_rejected_after_body_content() {
+        let source = "<!doctype html><body><frameset><!--é-->\r\n<frameset>";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        let diagnostics = output
+            .parser_diagnostics
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-frameset-start-tag")
+            .collect::<Vec<_>>();
+        assert_eq!(
+            diagnostics,
+            vec![
+                &unexpected_frameset_start_tag(source, 0),
+                &unexpected_frameset_start_tag(source, 1),
+            ]
+        );
 
-        assert_eq!(body(&document).children, vec![Node::text("test")]);
+        for source in ["X<frameset>", "<table><frameset>"] {
+            let output = parse_html_fragment_with_diagnostics(source).unwrap();
+            let diagnostic = output
+                .parser_diagnostics
+                .iter()
+                .find(|diagnostic| diagnostic.code == "unexpected-frameset-start-tag")
+                .unwrap();
+            assert_eq!(
+                diagnostic.position,
+                Some(start_tag_position(source, "frameset")),
+                "source {source:?}"
+            );
+        }
+
+        for source in [
+            "<!doctype html><frameset>",
+            "<!doctype html><template><frameset>",
+            "<!doctype html><svg><frameset>",
+            "<!doctype html><body><frameset",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .all(|diagnostic| diagnostic.code != "unexpected-frameset-start-tag"),
+                "source {source:?}"
+            );
+        }
+
+        let mut unpositioned = HtmlParser::new();
+        for name in ["html", "body", "frameset"] {
+            unpositioned.process_token(Token::StartTag {
+                name: name.to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            });
+        }
+        let diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-frameset-start-tag")
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
+    }
+
+    #[test]
+    fn ignores_frame_start_tags_outside_framesets() {
+        let source = "<!doctype html><frame>test";
+        let output = parse_html_with_diagnostics(source).unwrap();
+
+        assert_eq!(body(&output.document).children, vec![Node::text("test")]);
+        assert_eq!(
+            output.parser_diagnostics,
+            vec![unexpected_frame_start_tag(source, 0)]
+        );
+    }
+
+    #[test]
+    fn positions_frame_start_tags_ignored_outside_framesets() {
+        let source = "<!doctype html><frame><!--é-->\r\n<frame><table><frame></table>";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        assert_eq!(
+            output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-frame-start-tag")
+                .collect::<Vec<_>>(),
+            vec![
+                &unexpected_frame_start_tag(source, 0),
+                &unexpected_frame_start_tag(source, 1),
+                &unexpected_frame_start_tag(source, 2),
+            ]
+        );
+
+        let fragment_source = "<frame>";
+        let fragment = parse_html_fragment_with_diagnostics(fragment_source).unwrap();
+        assert!(fragment
+            .parser_diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic == &unexpected_frame_start_tag(fragment_source, 0)));
+
+        for excluded in [
+            "<!doctype html><frameset><frame>",
+            "<!doctype html><svg><frame>",
+            "<!doctype html><frame",
+        ] {
+            let output = parse_html_with_diagnostics(excluded).unwrap();
+            assert!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .all(|diagnostic| diagnostic.code != "unexpected-frame-start-tag"),
+                "source {excluded:?}"
+            );
+        }
+
+        let mut unpositioned = HtmlParser::new();
+        unpositioned.process_token(Token::StartTag {
+            name: "frame".to_string(),
+            attributes: Vec::new(),
+            self_closing: false,
+        });
+        let diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-frame-start-tag")
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
     }
 
     #[test]
@@ -39838,10 +40384,8 @@ mod tests {
 
     #[test]
     fn reports_and_recovers_duplicate_html_and_head_start_tags() {
-        let output = parse_html_with_diagnostics(
-            "<!doctype html><html lang=en><html data-app=venture lang=ignored><head id=main><head data-h=yes><title>T</title><body><p>x</p>",
-        )
-        .unwrap();
+        let source = "<!doctype html><html lang=en><html data-app=venture lang=ignored><head id=main><head data-h=yes><title>T</title><body><p>x</p>";
+        let output = parse_html_with_diagnostics(source).unwrap();
         let document = output.document;
 
         assert_eq!(html(&document).attribute("lang"), Some("en"));
@@ -39855,16 +40399,216 @@ mod tests {
         assert_eq!(
             output.parser_diagnostics,
             vec![
-                ParserDiagnostic::new(
-                    "unexpected-html-start-tag",
-                    "html start tag was recovered against the existing document element"
-                ),
-                ParserDiagnostic::new(
-                    "unexpected-head-start-tag",
+                unexpected_html_start_tag(source, 1),
+                unexpected_head_start_tag(
+                    source,
+                    1,
                     "duplicate head start tag was ignored"
                 )
             ]
         );
+    }
+
+    #[test]
+    fn positions_rejected_head_start_tags_at_token_emission() {
+        let duplicate_source = "<!doctype html><head><head><!--é-->\r\n<head>";
+        let duplicate = parse_html_with_diagnostics(duplicate_source).unwrap();
+        let duplicate_diagnostics = duplicate
+            .parser_diagnostics
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-head-start-tag")
+            .collect::<Vec<_>>();
+        assert_eq!(
+            duplicate_diagnostics,
+            vec![
+                &unexpected_head_start_tag(
+                    duplicate_source,
+                    1,
+                    "duplicate head start tag was ignored"
+                ),
+                &unexpected_head_start_tag(
+                    duplicate_source,
+                    2,
+                    "duplicate head start tag was ignored"
+                ),
+            ]
+        );
+
+        let late_source = "<!doctype html><body><head><!--é-->\r\n<head>";
+        let late = parse_html_with_diagnostics(late_source).unwrap();
+        let late_diagnostics = late
+            .parser_diagnostics
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-head-start-tag")
+            .collect::<Vec<_>>();
+        assert_eq!(
+            late_diagnostics,
+            vec![
+                &unexpected_head_start_tag(
+                    late_source,
+                    0,
+                    "head start tag was ignored after body content had already started"
+                ),
+                &unexpected_head_start_tag(
+                    late_source,
+                    1,
+                    "head start tag was ignored after body content had already started"
+                ),
+            ]
+        );
+
+        let fragment_source = "<head>";
+        let fragment = parse_html_fragment_with_diagnostics(fragment_source).unwrap();
+        assert!(fragment.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic
+                == &unexpected_head_start_tag(
+                    fragment_source,
+                    0,
+                    "head start tag was ignored after body content had already started",
+                )
+        }));
+
+        let template_source = "<!doctype html><template><head>";
+        let template = parse_html_with_diagnostics(template_source).unwrap();
+        assert!(template.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic
+                == &unexpected_head_start_tag(
+                    template_source,
+                    0,
+                    "duplicate head start tag was ignored",
+                )
+        }));
+
+        let foreign_source = "<!doctype html><svg><head>";
+        let foreign = parse_html_with_diagnostics(foreign_source).unwrap();
+        assert!(foreign.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic
+                == &unexpected_head_start_tag(
+                    foreign_source,
+                    0,
+                    "head start tag was ignored after body content had already started",
+                )
+        }));
+
+        for source in [
+            "<!doctype html><head>",
+            "<!doctype html><head><head",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .all(|diagnostic| diagnostic.code != "unexpected-head-start-tag"),
+                "source {source:?}"
+            );
+        }
+
+        let mut duplicate_unpositioned = HtmlParser::new();
+        for name in ["html", "head", "head"] {
+            duplicate_unpositioned.process_token(Token::StartTag {
+                name: name.to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            });
+        }
+        assert_eq!(
+            duplicate_unpositioned
+                .diagnostics()
+                .iter()
+                .find(|diagnostic| diagnostic.code == "unexpected-head-start-tag")
+                .unwrap()
+                .position,
+            None
+        );
+
+        let mut late_unpositioned = HtmlParser::new();
+        for name in ["html", "body", "head"] {
+            late_unpositioned.process_token(Token::StartTag {
+                name: name.to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            });
+        }
+        assert_eq!(
+            late_unpositioned
+                .diagnostics()
+                .iter()
+                .find(|diagnostic| diagnostic.code == "unexpected-head-start-tag")
+                .unwrap()
+                .position,
+            None
+        );
+    }
+
+    #[test]
+    fn positions_duplicate_html_start_tags_at_token_emission() {
+        let source = "<!doctype html><html><html><!--é-->\r\n<html>";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        let diagnostics = output
+            .parser_diagnostics
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-html-start-tag")
+            .collect::<Vec<_>>();
+        assert_eq!(
+            diagnostics,
+            vec![
+                &unexpected_html_start_tag(source, 1),
+                &unexpected_html_start_tag(source, 2),
+            ]
+        );
+
+        for (source, occurrences) in [
+            ("<html><html>", vec![0, 1]),
+            ("<table><html>", vec![0]),
+        ] {
+            let output = parse_html_fragment_with_diagnostics(source).unwrap();
+            let positions = output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-html-start-tag")
+                .map(|diagnostic| diagnostic.position)
+                .collect::<Vec<_>>();
+            assert_eq!(
+                positions,
+                occurrences
+                    .into_iter()
+                    .map(|occurrence| Some(start_tag_position_at(source, "html", occurrence)))
+                    .collect::<Vec<_>>(),
+                "source {source:?}"
+            );
+        }
+
+        for source in [
+            "<!doctype html><html>",
+            "<!doctype html><template><html>",
+            "<!doctype html><svg><html>",
+            "<!doctype html><html><html",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .all(|diagnostic| diagnostic.code != "unexpected-html-start-tag"),
+                "source {source:?}"
+            );
+        }
+
+        let mut unpositioned = HtmlParser::new();
+        for _ in 0..2 {
+            unpositioned.process_token(Token::StartTag {
+                name: "html".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            });
+        }
+        let diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-html-start-tag")
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
     }
 
     #[test]
@@ -39997,10 +40741,9 @@ mod tests {
 
     #[test]
     fn reports_and_recovers_duplicate_body_start_tags() {
-        let output = parse_html_with_diagnostics(
-            "<!doctype html><body class=first><body data-app=venture class=ignored><p>x",
-        )
-        .unwrap();
+        let source =
+            "<!doctype html><body class=first><body data-app=venture class=ignored><p>x";
+        let output = parse_html_with_diagnostics(source).unwrap();
 
         assert_eq!(body(&output.document).attribute("class"), Some("first"));
         assert_eq!(
@@ -40009,10 +40752,74 @@ mod tests {
         );
         assert_eq!(
             output.parser_diagnostics,
-            vec![ParserDiagnostic::new(
-                "unexpected-body-start-tag",
-                "body start tag was recovered against the existing body element"
-            )]
+            vec![unexpected_body_start_tag(source, 1)]
+        );
+    }
+
+    #[test]
+    fn positions_rejected_body_start_tags_at_token_emission() {
+        let repeated_source = "<!doctype html><body><body><!--é-->\r\n<body>";
+        let repeated = parse_html_with_diagnostics(repeated_source).unwrap();
+        assert_eq!(
+            repeated
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-body-start-tag")
+                .collect::<Vec<_>>(),
+            vec![
+                &unexpected_body_start_tag(repeated_source, 1),
+                &unexpected_body_start_tag(repeated_source, 2),
+            ]
+        );
+
+        for excluded in [
+            "<!doctype html><body>",
+            "<!doctype html><body><body",
+            "<!doctype html><template><body></template>",
+        ] {
+            let output = parse_html_with_diagnostics(excluded).unwrap();
+            assert!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .all(|diagnostic| diagnostic.code != "unexpected-body-start-tag"),
+                "source {excluded:?}"
+            );
+        }
+
+        let fragment_source = "<body>";
+        let fragment = parse_html_fragment_with_diagnostics(fragment_source).unwrap();
+        assert_eq!(
+            fragment
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-body-start-tag")
+                .collect::<Vec<_>>(),
+            vec![&unexpected_body_start_tag(fragment_source, 0)]
+        );
+
+        let foreign_source = "<!doctype html><body><svg><body>";
+        let foreign = parse_html_with_diagnostics(foreign_source).unwrap();
+        assert!(foreign.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic == &unexpected_body_start_tag(foreign_source, 1)
+        }));
+
+        let mut unpositioned = HtmlParser::new();
+        for _ in 0..2 {
+            unpositioned.process_token(Token::StartTag {
+                name: "body".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            });
+        }
+        assert_eq!(
+            unpositioned
+                .diagnostics()
+                .iter()
+                .find(|diagnostic| diagnostic.code == "unexpected-body-start-tag")
+                .unwrap()
+                .position,
+            None
         );
     }
 
@@ -40571,10 +41378,7 @@ mod tests {
         assert_eq!(fragment.nodes, vec![Node::text("X")]);
         assert_eq!(
             fragment.parser_diagnostics,
-            vec![ParserDiagnostic::new(
-                "unexpected-fragment-context-end-tag",
-                "end tag `</h1>` targeted a seeded fragment context element"
-            )]
+            vec![fragment_context_end_tag("</h1>X", "h1", 0)]
         );
     }
 
@@ -42189,6 +42993,68 @@ mod tests {
     }
 
     #[test]
+    fn positions_table_only_start_tags_ignored_outside_tables() {
+        let source =
+            "<!doctype html><caption><colgroup><tbody><thead><tfoot><tr><td><th><!--é-->\r\n<tr>";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        assert_eq!(
+            output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-table-start-tag")
+                .collect::<Vec<_>>(),
+            vec![
+                &unexpected_table_start_tag(source, "caption", 0),
+                &unexpected_table_start_tag(source, "colgroup", 0),
+                &unexpected_table_start_tag(source, "tbody", 0),
+                &unexpected_table_start_tag(source, "thead", 0),
+                &unexpected_table_start_tag(source, "tfoot", 0),
+                &unexpected_table_start_tag(source, "tr", 0),
+                &unexpected_table_start_tag(source, "td", 0),
+                &unexpected_table_start_tag(source, "th", 0),
+                &unexpected_table_start_tag(source, "tr", 1),
+            ]
+        );
+
+        let fragment_source = "</p><tr>";
+        let fragment = parse_html_fragment_with_diagnostics(fragment_source).unwrap();
+        assert!(fragment
+            .parser_diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic
+                == &unexpected_table_start_tag(fragment_source, "tr", 0)));
+
+        for excluded in [
+            "<!doctype html><table><tr>",
+            "<!doctype html><template><tr>",
+            "<!doctype html><svg><tr>",
+            "<!doctype html><tr",
+        ] {
+            let output = parse_html_with_diagnostics(excluded).unwrap();
+            assert!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .all(|diagnostic| diagnostic.code != "unexpected-table-start-tag"),
+                "source {excluded:?}"
+            );
+        }
+
+        let mut unpositioned = HtmlParser::new();
+        unpositioned.process_token(Token::StartTag {
+            name: "tr".to_string(),
+            attributes: Vec::new(),
+            self_closing: false,
+        });
+        let diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-table-start-tag")
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
+    }
+
+    #[test]
     fn reports_start_tags_ignored_by_seeded_table_fragment_contexts() {
         for (source, context, name) in [
             ("<table><tr>", "table", "table"),
@@ -42295,23 +43161,62 @@ mod tests {
     }
 
     #[test]
-    fn reports_text_ignored_by_a_seeded_colgroup_fragment_context() {
-        let output =
-            parse_html_fragment_for_context_with_diagnostics("foo<col>", "colgroup").unwrap();
+    fn positions_text_ignored_by_a_seeded_colgroup_fragment_context() {
+        let source = "é\r\nfoo<col>β<col>γ";
+        let output = parse_html_fragment_for_context_with_diagnostics(source, "colgroup").unwrap();
+        let first_col = source.find("<col>").unwrap();
+        let second_col = source.match_indices("<col>").nth(1).unwrap().0;
 
-        assert_eq!(output.nodes.len(), 1);
-        assert_eq!(element(&output.nodes[0]).name, "col");
+        assert_eq!(
+            output
+                .nodes
+                .iter()
+                .filter_map(|node| match node {
+                    Node::Element(element) => Some(element.name.as_str()),
+                    _ => None,
+                })
+                .collect::<Vec<_>>(),
+            vec!["col", "col"]
+        );
         assert_eq!(
             output.parser_diagnostics,
-            vec![ParserDiagnostic::new(
-                "unexpected-character-in-colgroup",
-                "non-whitespace character data was ignored by the seeded colgroup fragment context"
-            )]
+            vec![
+                character_in_colgroup_fragment_recovery(source, first_col),
+                character_in_colgroup_fragment_recovery(source, second_col),
+                character_in_colgroup_fragment_recovery(source, source.len()),
+            ]
         );
+        assert!(source.len() > source.chars().count());
+
+        for source in [" \t\r\n<col>", "<col", "<div"] {
+            let output =
+                parse_html_fragment_for_context_with_diagnostics(source, "colgroup").unwrap();
+            assert!(output
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "unexpected-character-in-colgroup"));
+        }
+        let ordinary = parse_html_with_diagnostics("<!doctype html><div>x</div>").unwrap();
+        assert!(ordinary
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-character-in-colgroup"));
+
+        let mut unpositioned = HtmlParser::with_fragment_context_options(
+            HtmlParseOptions::default(),
+            "colgroup",
+        );
+        unpositioned.process_token(Token::Text("x".to_string()));
+        let diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-character-in-colgroup")
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
     }
 
     #[test]
-    fn reports_end_tags_targeting_seeded_fragment_shells() {
+    fn positions_end_tags_targeting_seeded_fragment_shells() {
         for (source, context, name) in [
             ("</table><tr>", "table", "table"),
             ("</tr><td>", "tr", "tr"),
@@ -42322,17 +43227,44 @@ mod tests {
             let output = parse_html_fragment_for_context_with_diagnostics(source, context).unwrap();
             assert!(
                 output.parser_diagnostics.iter().any(|diagnostic| {
-                    diagnostic
-                        == &ParserDiagnostic::new(
-                            "unexpected-fragment-context-end-tag",
-                            format!(
-                                "end tag `</{name}>` targeted a seeded fragment context element"
-                            ),
-                        )
+                    diagnostic == &fragment_context_end_tag(source, name, 0)
                 }),
                 "source {source:?} in context {context:?}"
             );
         }
+
+        let repeated_source = "<!--é-->\r\n</table><!--split--></table>";
+        let repeated =
+            parse_html_fragment_for_context_with_diagnostics(repeated_source, "table").unwrap();
+        assert_eq!(
+            repeated.parser_diagnostics,
+            vec![
+                fragment_context_end_tag(repeated_source, "table", 0),
+                fragment_context_end_tag(repeated_source, "table", 1),
+            ]
+        );
+        assert!(repeated_source.len() > repeated_source.chars().count());
+
+        let incomplete =
+            parse_html_fragment_for_context_with_diagnostics("</table", "table").unwrap();
+        assert!(incomplete
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-fragment-context-end-tag"));
+
+        let mut unpositioned = HtmlParser::with_fragment_context_options(
+            HtmlParseOptions::default(),
+            "table",
+        );
+        unpositioned.process_token(Token::EndTag {
+            name: "table".to_string(),
+        });
+        let diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-fragment-context-end-tag")
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
 
         let valid = parse_html_fragment_for_context_with_diagnostics("<td>x", "tr").unwrap();
         assert!(valid
@@ -44064,10 +44996,7 @@ mod tests {
         .unwrap();
         assert_eq!(
             fragment.parser_diagnostics,
-            vec![ParserDiagnostic::new(
-                "unexpected-fragment-context-end-tag",
-                "end tag `</template>` targeted a seeded fragment context element",
-            )]
+            vec![fragment_context_end_tag("</template><p>x", "template", 0)]
         );
 
         let ordinary = parse_html_with_diagnostics("<!doctype html><div></span></div>").unwrap();
@@ -44479,55 +45408,141 @@ mod tests {
     }
 
     #[test]
-    fn reports_non_whitespace_text_that_leaves_template_table_mode() {
-        let output = parse_html_with_diagnostics(
-            "<!DOCTYPE HTML><template><tr><td>cell</td></tr>a</template>",
-        )
-        .unwrap();
+    fn positions_non_whitespace_text_that_leaves_template_table_mode() {
+        let source =
+            "<!doctype html><!--é-->\r\n<template><tr><td>cell</td></tr>a<!--split-->β</template>";
+        let output = parse_html_with_diagnostics(source).unwrap();
         assert_eq!(
             output.parser_diagnostics,
-            vec![ParserDiagnostic::new(
-                "unexpected-character-in-template-table-mode",
-                "non-whitespace character data forced recovery from template table mode"
-            )]
+            vec![
+                character_in_template_table_mode_recovery(source, "<!--split-->"),
+                character_in_template_table_mode_recovery(source, "</template>"),
+            ]
         );
+        assert!(source.len() > source.chars().count());
+
+        let fragment_source = "<template><tr><td>x</td></tr>y";
+        let fragment =
+            parse_html_fragment_for_context_with_diagnostics(fragment_source, "div").unwrap();
+        assert!(fragment
+            .parser_diagnostics
+            .contains(
+                &ParserDiagnostic::new(
+                    "unexpected-character-in-template-table-mode",
+                    "non-whitespace character data forced recovery from template table mode",
+                )
+                .at_emission(Some(eof_position(fragment_source))),
+            ));
 
         for source in [
             "<!doctype html><template>text</template>",
             "<!doctype html><template><tr><td>cell</td></tr> </template>",
+            "<!doctype html><template><table><tr><td>cell</td></tr>x</table></template>",
+            "<!doctype html><template><tr><td>cell</td></tr><template>x</template></template>",
+            "<!doctype html><template><tr",
         ] {
             let output = parse_html_with_diagnostics(source).unwrap();
             assert!(output.parser_diagnostics.iter().all(|diagnostic| {
                 diagnostic.code != "unexpected-character-in-template-table-mode"
             }));
         }
+
+        let mut unpositioned = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        for token in [
+            Token::StartTag {
+                name: "template".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "tr".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "td".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("cell".to_string()),
+            Token::EndTag {
+                name: "td".to_string(),
+            },
+            Token::EndTag {
+                name: "tr".to_string(),
+            },
+            Token::Text("x".to_string()),
+        ] {
+            unpositioned.process_token(token);
+        }
+        let diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-character-in-template-table-mode")
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
     }
 
     #[test]
-    fn reports_non_whitespace_character_data_fostered_from_tables() {
-        for source in [
-            "<!doctype html><table> x</table>",
-            "<!doctype html><table><tr> x</table>",
-            "<!doctype html><div><table><a>foo</a> <tr><td>bar</td></tr></table></div>",
+    fn positions_non_whitespace_character_data_fostered_from_tables() {
+        for (source, emission_boundary) in [
+            ("<!doctype html><table> x</table>", "</table>"),
+            ("<!doctype html><table><tr> x</table>", "</table>"),
+            (
+                "<!doctype html><div><table><a>foo</a> <tr><td>bar</td></tr></table></div>",
+                "</a>",
+            ),
         ] {
             let output = parse_html_with_diagnostics(source).unwrap();
             assert!(
                 output.parser_diagnostics.iter().any(|diagnostic| {
-                    diagnostic
-                        == &ParserDiagnostic::new(
-                            "unexpected-character-in-table",
-                            "non-whitespace character data in a table context was foster parented",
-                        )
+                    diagnostic == &character_in_table_recovery(source, emission_boundary)
                 }),
                 "source {source:?}"
             );
         }
+
+        let repeated_source =
+            "<!doctype html><!--é-->\r\n<table>a<!--split-->β</table>";
+        let repeated = parse_html_with_diagnostics(repeated_source).unwrap();
+        assert_eq!(
+            repeated
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-character-in-table")
+                .collect::<Vec<_>>(),
+            vec![
+                &character_in_table_recovery(repeated_source, "<!--split-->"),
+                &character_in_table_recovery(repeated_source, "</table>"),
+            ]
+        );
+        assert!(repeated_source.len() > repeated_source.chars().count());
 
         let whitespace = parse_html_with_diagnostics("<!doctype html><table> \n</table>").unwrap();
         assert!(whitespace
             .parser_diagnostics
             .iter()
             .all(|diagnostic| diagnostic.code != "unexpected-character-in-table"));
+
+        let incomplete = parse_html_with_diagnostics("<!doctype html><table><tr").unwrap();
+        assert!(incomplete
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-character-in-table"));
+
+        let mut unpositioned = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        unpositioned.process_token(Token::StartTag {
+            name: "table".to_string(),
+            attributes: Vec::new(),
+            self_closing: false,
+        });
+        unpositioned.process_token(Token::Text("x".to_string()));
+        let diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-character-in-table")
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
     }
 
     #[test]
@@ -47445,10 +48460,7 @@ mod tests {
         assert_eq!(
             output.parser_diagnostics,
             vec![
-                ParserDiagnostic::new(
-                    "unexpected-fragment-context-end-tag",
-                    "end tag `</html>` targeted a seeded fragment context element"
-                ),
+                fragment_context_end_tag("<body>X</body></html>Y", "html", 0),
                 ParserDiagnostic::new(
                     "unexpected-token-after-body",
                     "unexpected token was reprocessed from the after body insertion mode"
@@ -47812,15 +48824,14 @@ mod tests {
 
     #[test]
     fn ignores_head_start_tags_after_body_content_starts() {
-        let output = parse_html_with_diagnostics(
-            "<!doctype html><body><p>before</p><head data-late=yes><p>after</p>",
-        )
-        .unwrap();
+        let source = "<!doctype html><body><p>before</p><head data-late=yes><p>after</p>";
+        let output = parse_html_with_diagnostics(source).unwrap();
 
         assert_eq!(
             output.parser_diagnostics,
-            vec![ParserDiagnostic::new(
-                "unexpected-head-start-tag",
+            vec![unexpected_head_start_tag(
+                source,
+                0,
                 "head start tag was ignored after body content had already started"
             )]
         );

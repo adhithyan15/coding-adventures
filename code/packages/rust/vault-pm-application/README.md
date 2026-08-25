@@ -566,6 +566,45 @@ takes its three seeds through `take_secret_fixed` rather than plain
 draws between an object's secret fields and its public identifiers. See
 VLT-PM05 section 13.7.
 
+### One poisoned record used to block the whole export
+
+The write-side treatment above (report `BoundExceeded`, leave the vault
+untouched) is right for `item edit` and the authored conflict merges, which
+have no answer beyond refusing to write an item that genuinely cannot be
+re-encoded — there is no smaller record to substitute for one whose own
+untouched fields are what is oversized, and no schema to author a
+replacement against for a content type this build cannot even parse.
+`delete` remains the universal, content-agnostic escape hatch for such a
+record (see the two sections below).
+
+`export_portable_with_passphrase` had the same `BoundExceeded` propagate
+through a different door: it walks every current candidate of every item to
+build the export snapshot, and one candidate this build cannot re-encode
+used to deny the *whole* export via the surrounding `?` — not just that
+item's own participation in it. That is worse than an ordinary write
+refusal, because export is the evacuation path: an operator who has just
+discovered a poisoned item (through a failed edit, a failed merge, or export
+itself refusing) is in exactly the situation where they most want a backup
+of everything *else* before deciding what to do about the one broken item,
+and the old behavior denied them that at the exact moment they needed it.
+
+`export_portable_with_passphrase_best_effort` (and its audited counterpart)
+is the explicit, opt-in fix: `PortableExportCompletenessV1::BestEffort`
+excludes an item whole — never a partial candidate set, since dropping only
+an oversized candidate of a conflict while keeping its small sibling would
+silently misrepresent an unresolved conflict as a resolved one — and names
+every excluded item in the returned `PortableExportOutcomeV1`. The
+unmodified `Strict` behavior (fail the whole export, as before) stays the
+default every caller who does not ask for `BestEffort` by name still gets;
+`export_portable_with_passphrase`'s own signature and return type never
+changed. The wire format gained one new, optional field
+(`excluded_item_ids`), emitted only when non-empty, so an ordinary export —
+`Strict`, or `BestEffort` with nothing to exclude — produces the identical
+five-field artifact this module always has, readable by any version of this
+crate. See VLT-PM05 section 13.9 for the complete design, including the two
+alternatives (an unconditional silent skip, and a persistent catalog-level
+quarantine state) weighed and rejected before this one.
+
 ## Attachments, and why they are chunked
 
 An attachment is the one thing a vault-pm item holds that cannot be a field.

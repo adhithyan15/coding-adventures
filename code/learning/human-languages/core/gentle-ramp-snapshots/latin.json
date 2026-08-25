@@ -1,7 +1,7 @@
 {
   "language": "latin",
-  "lessonCount": 109,
-  "atomMeasurableLessons": 109,
+  "lessonCount": 111,
+  "atomMeasurableLessons": 111,
   "atomMeasurementBlindLessons": 0,
   "durationViolations": 0,
   "atomLessonSpikes": 1,
@@ -26,7 +26,7 @@
     "R4": 66
   },
   "payoffSurprises": 0,
-  "writingPracticeLessons": 2,
+  "writingPracticeLessons": 4,
   "firstWritingPracticeAt": 0,
   "lessonsBeforeWritingPractice": 0,
   "findings": [

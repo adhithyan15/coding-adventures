@@ -1,6 +1,6 @@
 //! # java-to-semantic-ir
 //!
-//! Java CST → narrow-waist Semantic IR, **v0.1.0**.
+//! Java CST → narrow-waist Semantic IR, **v0.4.0**.
 //!
 //! This is the first frontend for [SIR29](../../../specs/SIR29-nominal-static-oop-profile.md),
 //! the nominal/static-dispatch OOP profile extension of the SIR10 narrow-waist
@@ -33,19 +33,29 @@
 //! assert!(module.functions.iter().any(|f| f.name == "main"));
 //! ```
 //!
-//! ## Scope (v0.1.0 — JV02 milestone M0)
+//! ## Scope (v0.4.0 — JV02 milestones M0 + M1 + M2a + M2b)
 //!
 //! Java requires an explicit `class`/`main`-method wrapper at the source
 //! level (unlike Ruby/Python/JS, which allow bare top-level statements) —
-//! this milestone recognizes exactly that minimal shape: one top-level
-//! class declaring a `public static void main(String[] args)` method, whose
-//! body is a flat sequence of literal expression statements
-//! (`42;`/`3.14;`/`true;`/`false;`/`null;`/`"str";`). Everything else
-//! (variable references, operators, control flow, additional classes or
-//! methods, non-`main` entry shapes) is out of scope for this milestone and
-//! returns a clean [`JavaLowerError`] rather than being silently
-//! mis-lowered — see `lower.rs`'s own module doc for the exact boundary and
-//! JV02's own milestone table (M1 onward) for what comes next.
+//! this crate recognizes exactly that minimal shape: one top-level class
+//! declaring a `public static void main(String[] args)` method. Supported
+//! so far: literal expressions (`42`/`3.14`/`true`/`false`/`null`/
+//! `"str"`, M0); local variable declarations (explicit primitive/
+//! `String` types, or `var` type inference), re-assignment, arithmetic/
+//! comparison/logical operators, and `+`-based string concatenation
+//! (M1); `if`/`else`, `while`, `do`/`while`, and compound-assignment/
+//! increment/decrement as bare statements (M2a); classic `for` (desugared
+//! to `while`, since SIR's `Stmt::ForRange` is a canonical counting loop
+//! too narrow for Java's fully general three-clause form) and enhanced
+//! `for` (→ `Stmt::ForEach` directly, M2b) — every block, including a
+//! classic `for`'s own init-declared variable's scope, is a real lexical
+//! scope, mirroring the SIR validator's own block-scoping contract
+//! exactly. Everything else (`switch`, `break`/`continue` — SIR has no IR
+//! primitive for either — method calls, field/array access, lambdas,
+//! casts, additional classes or methods, non-`main` entry shapes) is out
+//! of scope so far and returns a clean [`JavaLowerError`] rather than
+//! being silently mis-lowered — see `lower.rs`'s own module doc for the
+//! exact boundary and JV02's own milestone table for what comes next.
 
 mod lower;
 pub use lower::{compile, JavaLowerError};

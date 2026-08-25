@@ -1,5 +1,54 @@
 # Changelog — `lang-aot`
 
+## 0.238.0 - 2026-08-25 (ALGOL parenthesized selector identities)
+
+The seven-backend ALGOL matrix now proves parenthesized integer self-references
+and neutral literals remain stable selector dependencies. Compiler regressions
+cover the same exact wrapper for boolean and real identities and retain
+conservative handling for parenthesized changing expressions.
+
+## 0.237.0 - 2026-08-25 (ALGOL unary-plus selector writes)
+
+The seven-backend ALGOL matrix now proves leading unary plus composes with an
+integer identity tail without changing a bounded-while selector dependency.
+Compiler regressions cover integer and real wrappers and retain conservative
+unary-minus handling.
+
+## 0.236.0 - 2026-08-25 (ALGOL power-one selector writes)
+
+The seven-backend ALGOL matrix now proves a literal exponent chain equal to
+one preserves an integer selector dependency. Compiler regressions cover both
+integer and real bases while retaining fail-closed non-unit and runtime-power
+cases.
+
+## 0.235.0 - 2026-08-25 (ALGOL boolean identity selector chains)
+
+The seven-backend ALGOL matrix now proves an `and true` chain preserves a
+transitive bounded-while selector dependency. Compiler regressions also cover
+`or false` and `eqv true` chains while retaining fail-closed implication and
+non-identity cases.
+
+## 0.234.0 - 2026-08-25 (ALGOL real unit selector chains)
+
+The seven-backend ALGOL matrix now proves a chain of finite-real multiplication
+and division by exact positive one preserves a transitive bounded-while
+selector dependency. Compiler regressions pin leading-one multiplication and
+retain fail-closed treatment for non-unit and reversed-division chains.
+
+## 0.233.0 - 2026-08-25 (ALGOL integer identity selector chains)
+
+The seven-backend ALGOL matrix now proves a mixed-precedence chain of additive
+zero and multiplicative one preserves a transitive bounded-while selector
+dependency. Compiler regressions also pin longer additive and multiplicative
+chains while unsupported terms remain conservative.
+
+## 0.232.0 - 2026-08-25 (ALGOL even boolean negation selector writes)
+
+The seven-backend ALGOL matrix now proves `flag := not not flag` preserves a
+transitive bounded-while selector dependency. Compiler regressions also pin a
+four-negation identity while retaining the existing odd-negation fail-closed
+case.
+
 ## 0.231.0 - 2026-08-25 (ALGOL real unit selector writes)
 
 The seven-backend ALGOL matrix now proves a computed `choose := choose * 1.0`

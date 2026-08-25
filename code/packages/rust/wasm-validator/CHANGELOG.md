@@ -2,6 +2,178 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.59] - 2026-08-25 (Relaxed SIMD epic PR1: i8x16.relaxed_swizzle)
+
+### Added
+
+- Type-check coverage for `i8x16.relaxed_swizzle` (`SimdOpKind::
+  RelaxedSwizzle`): joins the existing shared `(v128, v128) -> v128`
+  binary-shape arm right alongside `Swizzle` -- identical type rule (pop
+  two `V128`, push one `V128`); its implementation-defined out-of-range
+  behavior is entirely a runtime concern, invisible at this layer. First
+  opcode of the relaxed-simd epic that follows the now-complete base
+  SIMD epic (PR1-PR47) -- see `code/specs/
+  W19-wasm-relaxed-simd-first-slice.md`.
+- New test: `valid_i8x16_relaxed_swizzle_pops_two_v128_pushes_v128`,
+  `invalid_i8x16_relaxed_swizzle_with_an_i32_operand`.
+
+## [0.2.58] - 2026-08-25 (SIMD PR47: v128.load64_lane/store64_lane)
+
+### Added
+
+- Type-check coverage for `v128.load64_lane`/`v128.store64_lane`
+  (`SimdOpKind::Load64Lane`/`Store64Lane`): a new sibling match arm to
+  PR46's `Load32Lane`/`Store32Lane` arm -- decodes a memarg (align,
+  offset[, memidx], same multi-memory-memidx-rejection discipline)
+  FOLLOWED BY a lane-index byte, verified against BinarySIMD.md's own
+  encoding order (`m:memarg, i:ImmLaneIdx2`).
+- REAL lane-index bounds checking via `read_lane_index`: lane index must
+  be `0..=1`, matching `i64x2`'s 2-lane width -- a dedicated `>= 2`
+  check, NOT the 32-bit pair's `>= 4` (an `i64x2` v128 has only 2 lanes,
+  not `i32x4`'s 4; reusing the wider bound would silently accept an
+  invalid lane index 2-3).
+- Type rule: `Load64Lane` pops the existing `v128` (top of stack) then
+  the `i32` address, pushes an updated `v128`; `Store64Lane` pops the
+  same pair, pushes nothing -- identical shape to `Load32Lane`/
+  `Store32Lane`.
+- 7 new dedicated integration tests in `tests/type_check.rs`: valid
+  (bare and with explicit `offset=`/`align=` attributes, boundary lanes
+  0 and 1), invalid with no declared memory, invalid wrong-operand-type
+  (address/v128 swapped), invalid out-of-range lane index (`2`, not
+  `4`) for both directions, and a security-review-style cross-decoder
+  consistency check (multi-memory flag bit set, explicit `memidx=0`)
+  mirroring PR44/PR45/PR46's own regression tests for the 8-bit/16-bit/
+  32-bit pairs. Closes the entire lane-load/store family's type-check
+  coverage (PR44-47).
+
+## [0.2.57] - 2026-08-25 (SIMD PR46: v128.load32_lane/store32_lane)
+
+### Added
+
+- Type-check coverage for `v128.load32_lane`/`v128.store32_lane`
+  (`SimdOpKind::Load32Lane`/`Store32Lane`): a new sibling match arm to
+  PR45's `Load16Lane`/`Store16Lane` arm -- decodes a memarg (align,
+  offset[, memidx], same multi-memory-memidx-rejection discipline)
+  FOLLOWED BY a lane-index byte, verified against BinarySIMD.md's own
+  encoding order (`m:memarg, i:ImmLaneIdx4`).
+- REAL lane-index bounds checking via `read_lane_index`: lane index must
+  be `0..=3`, matching `i32x4`'s 4-lane width -- a dedicated `>= 4`
+  check, NOT the 16-bit pair's `>= 8` (an `i32x4` v128 has 4 lanes, not
+  `i16x8`'s 8; reusing the wider bound would silently accept an invalid
+  lane index 4-7).
+- Type rule: `Load32Lane` pops the existing `v128` (top of stack) then
+  the `i32` address, pushes an updated `v128`; `Store32Lane` pops the
+  same pair, pushes nothing -- identical shape to `Load16Lane`/
+  `Store16Lane`.
+- 7 new dedicated integration tests in `tests/type_check.rs`: valid
+  (bare and with explicit `offset=`/`align=` attributes, boundary lanes
+  0 and 3), invalid with no declared memory, invalid wrong-operand-type
+  (address/v128 swapped), invalid out-of-range lane index (`4`, not
+  `8`) for both directions, and a security-review-style cross-decoder
+  consistency check (multi-memory flag bit set, explicit `memidx=0`)
+  mirroring PR44/PR45's own regression tests for the 8-bit/16-bit pairs.
+
+## [0.2.56] - 2026-08-25 (SIMD PR45: v128.load16_lane/store16_lane)
+
+### Added
+
+- Type-check coverage for `v128.load16_lane`/`v128.store16_lane`
+  (`SimdOpKind::Load16Lane`/`Store16Lane`): a new sibling match arm to
+  PR44's `Load8Lane`/`Store8Lane` arm -- decodes a memarg (align,
+  offset[, memidx], same multi-memory-memidx-rejection discipline)
+  FOLLOWED BY a lane-index byte, verified against BinarySIMD.md's own
+  encoding order (`m:memarg, i:ImmLaneIdx8`).
+- REAL lane-index bounds checking via `read_lane_index`: lane index must
+  be `0..=7`, matching `i16x8`'s 8-lane width -- a dedicated `>= 8`
+  check, NOT the 8-bit pair's `>= 16` (an `i16x8` v128 has 8 lanes, not
+  `i8x16`'s 16; reusing the wider bound would silently accept an
+  invalid lane index 8-15).
+- Type rule: `Load16Lane` pops the existing `v128` (top of stack) then
+  the `i32` address, pushes an updated `v128`; `Store16Lane` pops the
+  same pair, pushes nothing -- identical shape to `Load8Lane`/
+  `Store8Lane`.
+- 7 new dedicated integration tests in `tests/type_check.rs`: valid
+  (bare and with explicit `offset=`/`align=` attributes, boundary lanes
+  0 and 7), invalid with no declared memory, invalid wrong-operand-type
+  (address/v128 swapped), invalid out-of-range lane index (`8`, not
+  `16`) for both directions, and a security-review-style cross-decoder
+  consistency check (multi-memory flag bit set, explicit `memidx=0`)
+  mirroring PR44's own regression test for the 8-bit pair.
+
+## [0.2.55] - 2026-08-25 (SIMD PR44: v128.load8_lane/store8_lane)
+
+### Added
+
+- Type-check coverage for `v128.load8_lane`/`v128.store8_lane`
+  (`SimdOpKind::Load8Lane`/`Store8Lane`): a NEW match arm, distinct from
+  the existing `Load`/`Store`/etc. memarg-only arm -- decodes a memarg
+  (align, offset[, memidx], same multi-memory-memidx-rejection
+  discipline as every other SIMD load/store opcode) FOLLOWED BY a
+  lane-index byte, verified against BinarySIMD.md's own encoding order
+  (`m:memarg, i:ImmLaneIdx16`).
+- REAL lane-index bounds checking via the existing `read_lane_index`
+  helper (PR37's own precedent: reject an out-of-range VALUE at
+  validation time, not just check the immediate's presence) -- lane
+  index must be `0..=15`, matching `i8x16`'s 16-lane width.
+- Type rule: `Load8Lane` pops the existing `v128` (top of stack) then
+  the `i32` address, pushes an updated `v128`; `Store8Lane` pops the
+  same pair, pushes nothing -- mirrors `Store`'s own pop order and
+  no-result shape exactly.
+- 6 new dedicated integration tests in `tests/type_check.rs`: valid
+  (bare and with explicit `offset=`/`align=` attributes), invalid with
+  no declared memory, invalid wrong-operand-type (address/v128 swapped),
+  and invalid out-of-range lane index (`16`) for both directions.
+
+## [0.2.54] - 2026-08-25 (SIMD PR42: v128.load_extend family)
+
+### Added
+
+- Type-check coverage for the 6 new load-extend opcodes
+  (`v128.load8x8_s`/`_u`, `v128.load16x4_s`/`_u`, `v128.load32x2_s`/
+  `_u`): joined the existing `Load`/`Store`/`Load8Splat`/`Load32Zero`/
+  etc. memarg-decoding match arm -- identical memarg parsing (align,
+  offset[, memidx]) and identical multi-memory-memidx rejection (fail
+  closed until real multi-memory support lands, same security-review
+  discipline as `v128.load`/`v128.store` from PR15/task #162-164 and the
+  `load_splat`/`load_zero` families from PR40/PR41), just with the same
+  pop-I32/push-V128 type rule already shared by `Load`/`Load8Splat`/etc.
+  (which loaded lane gets sign- vs. zero-extended is a pure
+  execution-time concern, invisible to the type checker).
+- 6 new unit tests in `tests/type_check.rs`: `valid_v128_load_extend_
+  family` (all 6 opcodes build cleanly with a declared memory),
+  `invalid_v128_load_extend_family_with_no_memory_at_all`,
+  `invalid_v128_load_extend_family_wrong_operand_type` (mirrors the
+  upstream `simd_load_extend.wast` corpus's own type-mismatch checks),
+  and `invalid_v128_load8x8_s_explicit_nonzero_memidx_is_rejected_not_
+  silently_redirected_to_memory_0` (mirrors the existing
+  `v128.load`/`v128.load8_splat`/`v128.load32_zero` security-review
+  tests for the shared memidx-rejection code path).
+
+## [0.2.53] - 2026-08-25 (SIMD PR41: v128.loadN_zero family)
+
+### Added
+
+- Type-check coverage for the 2 new load-zero opcodes
+  (`v128.load32_zero`/`load64_zero`): joined the existing `Load`/
+  `Store`/`Load8Splat`/etc. memarg-decoding match arm -- identical
+  memarg parsing (align, offset[, memidx]) and identical
+  multi-memory-memidx rejection (fail closed until real multi-memory
+  support lands, same security-review discipline as `v128.load`/
+  `v128.store` from PR15/task #162-164 and the `load_splat` family from
+  PR40), just with the same pop-I32/push-V128 type rule already shared
+  by `Load`/`Load8Splat`/etc. (the "zero" half of the semantics is a
+  pure execution-time concern, invisible to the type checker).
+- 6 new unit tests in `tests/type_check.rs`: `valid_v128_load_zero_
+  family` (both opcodes build cleanly with a declared memory),
+  `invalid_v128_load_zero_family_with_no_memory_at_all`,
+  `invalid_v128_load_zero_family_wrong_operand_type` (mirrors the
+  upstream `simd_load_zero.wast` corpus's own type-mismatch checks), and
+  `invalid_v128_load32_zero_explicit_nonzero_memidx_is_rejected_not_
+  silently_redirected_to_memory_0`/`invalid_v128_load64_zero_explicit_
+  nonzero_memidx_is_rejected_not_silently_redirected_to_memory_0`
+  (mirror the existing `v128.load`/`v128.load8_splat` security-review
+  tests for the shared memidx-rejection code path).
+
 ## [0.2.52] - 2026-08-25 (SIMD PR40: v128.loadN_splat family)
 
 ### Added

@@ -2,6 +2,26 @@
 
 All notable changes to the `coding-adventures-java-parser` crate will be documented in this file.
 
+## [0.1.2] - 2026-08-25
+
+### Fixed — multi-level nested generics (`Map<String, List<Integer>>`) now parse
+
+Previously a KNOWN, tracked gap (see this crate's own `README.md`/test
+comments before this version): the lexer merges consecutive `>`
+characters into a single `RIGHT_SHIFT`/`UNSIGNED_RIGHT_SHIFT`-typed token,
+and this parser had no contextual token-splitting to recover two/three
+separate closers from it. Fixed at the shared `parser` crate engine level
+(`parser` 0.4.4's new `split_angle_bracket_run`, a shared fix that also
+resolves the identical gap in `coding-adventures-csharp-parser`) — no
+code change needed in this crate itself, only new tests proving the fix:
+`two_level_nested_generic_closes_from_a_merged_right_shift_token`,
+`three_level_nested_generic_closes_from_a_merged_unsigned_right_shift_token`,
+two tests confirming a real `>>`/`>>>` shift expression still parses
+correctly (including alongside a nested generic in the same file), and
+`many_scattered_nested_generics_in_one_large_file_all_parse_correctly` —
+a regression guard for a `/security-review` finding on the shared-engine
+fix's first draft (see `parser` 0.4.4's own changelog entry).
+
 ## [0.1.1] - 2026-08-24
 
 ### Added

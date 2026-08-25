@@ -3,12 +3,12 @@ schema_version: 2
 id: GU-C03-kem
 spine_node: SPINE-CHECK-WELLBEING
 sequence: 170
-chapter: 4
+chapter: 5
 type: word
 headword: કેમ
 gloss: how (also "why")
 concept_tag: QUESTION-HOW
-prerequisites: [GU-C02-shun]
+prerequisites: [GU-C02-shun, GU-W02-bha]
 sounds: [e-sign]
 roots: [ka-interrogative]
 duration:
@@ -18,8 +18,8 @@ requires:
 introduces:
   knowledge: [GU-CONCEPT-C03-KEM-01]
 practises:
-  knowledge: [GU-CONCEPT-C02-SHUN-01, GU-CONCEPT-C03-KEM-01]
-skills: [listening, speaking, reading]
+  knowledge: [GU-CONCEPT-C02-SHUN-01, GU-CONCEPT-C03-KEM-01, GU-SCRIPT-BHA-01]
+skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
@@ -55,6 +55,13 @@ most Gujaratis, the real everyday hello — warmer than *namaste*.
 [PAUSE 1s]
 - [YOU SAY: "kem"]
 - [YOU SAY: the k- question family — *kem, kōṇ, kyā̃, kyāre*]
+
+## Script retrieval
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-BHA-01] -->
+<!-- hl-activity: {"id":"GU-C03-kem-bha-retrieval","kind":"text","assesses":["GU-SCRIPT-BHA-01"],"prompt":"Without looking back, write ભ once.","answer":"ભ","accepted":[],"feedback":{"correct":"Good: one careful retrieval is enough.","incorrect":"Look at ભ once, hide it, and write it one time."},"response_seconds":12} -->
+
+Hide the earlier model for **ભ**. Write it once, compare, and stop after one
+possible repair.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C02-SHUN-01, GU-CONCEPT-C03-KEM-01] -->

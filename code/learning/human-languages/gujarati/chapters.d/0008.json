@@ -1,25 +1,23 @@
 {
   "chapter": 8,
-  "title": "Six Verbs at the Core",
-  "label": "ch:gu-core-verbs",
-  "canDo": "I can name six everyday Gujarati verbs by the neuter -વું ending they all share, strip that ending to reach the stem, and say what I do with stem, person-ending, and the copula છે.",
+  "title": "Numbers One to Five",
+  "label": "ch:numbers-one-to-five",
+  "canDo": "I can count from one to five in headless Gujarati script and explain why બે starts with b where its neighbours start with d, and why ત્રણ has an r that Hindi tīn does not.",
   "spineNodes": [
-    "SPINE-SAY-WHAT-I-DO"
+    "SPINE-COUNT-ONE-TO-FIVE"
   ],
   "payoff": {
-    "lesson": "GU-C07-jaanvun",
-    "kind": "production",
-    "summary": "The sixth verb runs the whole chapter at once: strip the neuter -વું from all six infinitives, hold the retroflex ણ that Prakrit pulled back from a plain n, put the stem into hũ jāṇũ chhũ, and connect jāṇvũ to the English know it is genuinely cousin to.",
+    "lesson": "GU-C06-number-histories",
+    "kind": "task",
+    "summary": "Take the two odd numerals apart: બે descends from the feminine/neuter dvé by dv → bb → b, while ત્રણ's r is a learned restoration from Sanskrit, put back after Prakrit tiṇṇi had already dropped it.",
     "assesses": [
-      "GU-LEX-HOVU",
-      "GU-LEX-JAVU",
-      "GU-LEX-AAVVU",
-      "GU-LEX-KHAAVU",
-      "GU-LEX-JOVU",
-      "GU-GRAMMAR-VU-NEUTER-INFINITIVE",
-      "GU-GRAMMAR-PRESENT-STEM-PERSON-COPULA",
-      "GU-LEX-JAANVU",
-      "GU-ETYMON-JAANVU-KNOW"
+      "GU-LEX-NUMBERS-ONE-TO-FIVE",
+      "GU-FORM-BE-INITIAL-B",
+      "GU-FORM-TRAN-R",
+      "GU-ETYMON-BE-DVE-SELECTION",
+      "GU-SOUND-DV-BB-B",
+      "GU-ETYMON-TRAN-R-RESTORATION",
+      "GU-HISTORY-LEARNED-RESTORATION"
     ]
   }
 }

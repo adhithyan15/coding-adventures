@@ -69,7 +69,15 @@ pub fn ping(socket_path: &Path) -> Result<bool, AgentHostError> {
 /// Poll `ping` until it succeeds or `timeout` elapses.
 ///
 /// Used by `agent start` so the command does not return before the freshly
-/// spawned agent is actually ready to serve `agent unlock`.
+/// spawned agent is actually ready to serve `agent unlock`. Each attempt is
+/// bounded by [`DEFAULT_TIMEOUT`], which is correct for this function's one
+/// real use: while a freshly spawned agent is still starting, nothing is
+/// listening yet, so a `ping` fails (connection refused) almost instantly —
+/// the retry loop gets many real attempts regardless of `DEFAULT_TIMEOUT`'s
+/// size. That assumption does *not* hold for a server that is up but
+/// transiently refusing connections (e.g. sitting at a concurrency cap) —
+/// see [`ping_with_timeout`]'s doc comment for why that case needs a
+/// different per-attempt bound, not this function.
 pub fn wait_until_ready(socket_path: &Path, timeout: Duration) -> bool {
     let deadline = std::time::Instant::now() + timeout;
     loop {
@@ -80,6 +88,40 @@ pub fn wait_until_ready(socket_path: &Path, timeout: Duration) -> bool {
             return false;
         }
         std::thread::sleep(Duration::from_millis(50));
+    }
+}
+
+/// Like [`ping`], but with a caller-chosen per-attempt timeout instead of
+/// the fixed [`DEFAULT_TIMEOUT`].
+///
+/// Test-only. Every real caller in this crate goes through [`ping`] or
+/// [`wait_until_ready`], which are deliberately pinned to `DEFAULT_TIMEOUT`
+/// — see this module's doc comment for why that constant is tuned the way
+/// it is for a one-shot command talking to a *healthy* agent.
+///
+/// This exists for a different situation: `server::tests`'
+/// `connections_past_the_concurrency_cap_are_dropped_and_capacity_recovers`
+/// polls a server that has just been asked to free a connection slot it is
+/// sitting at the cap for. A `ping`'s connection can land in the accept
+/// backlog before the server's accept loop is scheduled to reject or serve
+/// it, and then block for the *entire* `DEFAULT_TIMEOUT` waiting for a
+/// response that was never coming — so on a CPU-contended CI runner, a
+/// single `DEFAULT_TIMEOUT`-bound attempt can by itself consume nearly an
+/// entire short retry budget, leaving the retry loop far fewer real attempts
+/// than its interval would suggest and defeating the whole point of
+/// retrying. (This is exactly what made that test's first fix — a bounded
+/// retry built on [`wait_until_ready`] — itself flake in CI.) A short
+/// per-attempt timeout here means a slow or still-refused attempt costs only
+/// that much of the budget, so a caller-driven retry loop gets many more
+/// real attempts within its own overall deadline.
+#[cfg(test)]
+pub(crate) fn ping_with_timeout(
+    socket_path: &Path,
+    timeout: Duration,
+) -> Result<bool, AgentHostError> {
+    match round_trip(socket_path, &AgentRequest::Ping, timeout)? {
+        AgentResponse::Ok => Ok(true),
+        _ => Err(AgentHostError::Protocol),
     }
 }
 

@@ -1188,34 +1188,66 @@ mod glyph_run_overlay {
         CGContextSetShouldSmoothFonts(ctx, true);
         CGContextSetTextMatrix(ctx, CGAffineTransform::IDENTITY);
 
-        for gr in runs {
-            draw_one_glyph_run(ctx, gr, height as f64);
+        for (gr, transform) in runs {
+            draw_one_glyph_run(ctx, gr, transform, height as f64);
         }
 
         CGContextRestoreGState(ctx);
         CGContextRelease(ctx);
     }
 
-    fn collect_coretext_runs(instructions: &[PaintInstruction]) -> Vec<&PaintGlyphRun> {
-        let mut out: Vec<&PaintGlyphRun> = Vec::new();
-        fn walk<'a>(ins: &'a [PaintInstruction], out: &mut Vec<&'a PaintGlyphRun>) {
+    fn multiply_transform(parent: [f64; 6], local: [f64; 6]) -> [f64; 6] {
+        [
+            parent[0] * local[0] + parent[2] * local[1],
+            parent[1] * local[0] + parent[3] * local[1],
+            parent[0] * local[2] + parent[2] * local[3],
+            parent[1] * local[2] + parent[3] * local[3],
+            parent[0] * local[4] + parent[2] * local[5] + parent[4],
+            parent[1] * local[4] + parent[3] * local[5] + parent[5],
+        ]
+    }
+
+    fn collect_coretext_runs(instructions: &[PaintInstruction]) -> Vec<(&PaintGlyphRun, [f64; 6])> {
+        let mut out = Vec::new();
+        fn walk<'a>(
+            ins: &'a [PaintInstruction],
+            transform: [f64; 6],
+            out: &mut Vec<(&'a PaintGlyphRun, [f64; 6])>,
+        ) {
             for i in ins {
                 match i {
                     PaintInstruction::GlyphRun(g) if g.font_ref.starts_with("coretext:") => {
-                        out.push(g);
+                        out.push((g, transform));
                     }
-                    PaintInstruction::Group(grp) => walk(&grp.children, out),
-                    PaintInstruction::Clip(c) => walk(&c.children, out),
-                    PaintInstruction::Layer(l) => walk(&l.children, out),
+                    PaintInstruction::Group(grp) => walk(
+                        &grp.children,
+                        grp.transform
+                            .map(|local| multiply_transform(transform, local))
+                            .unwrap_or(transform),
+                        out,
+                    ),
+                    PaintInstruction::Clip(c) => walk(&c.children, transform, out),
+                    PaintInstruction::Layer(l) => walk(
+                        &l.children,
+                        l.transform
+                            .map(|local| multiply_transform(transform, local))
+                            .unwrap_or(transform),
+                        out,
+                    ),
                     _ => {}
                 }
             }
         }
-        walk(instructions, &mut out);
+        walk(instructions, [1.0, 0.0, 0.0, 1.0, 0.0, 0.0], &mut out);
         out
     }
 
-    unsafe fn draw_one_glyph_run(ctx: CGContextRef, run: &PaintGlyphRun, image_height: f64) {
+    unsafe fn draw_one_glyph_run(
+        ctx: CGContextRef,
+        run: &PaintGlyphRun,
+        transform: [f64; 6],
+        image_height: f64,
+    ) {
         let (ps_name, size_from_ref) = parse_coretext_font_ref(&run.font_ref);
         let size = size_from_ref.unwrap_or(run.font_size);
 
@@ -1229,8 +1261,20 @@ mod glyph_run_overlay {
             return;
         }
 
-        let (r, g, b, a) = parse_css_color(run.fill.as_deref().unwrap_or("rgb(0, 0, 0)"));
+        let color = parse_css_color(run.fill.as_deref().unwrap_or("rgb(0, 0, 0)"));
+        let (r, g, b, a) = coregraphics_fill_color(color);
         CGContextSetRGBFillColor(ctx, r, g, b, a);
+        CGContextSetTextMatrix(
+            ctx,
+            CGAffineTransform {
+                a: transform[0],
+                b: -transform[1],
+                c: -transform[2],
+                d: transform[3],
+                tx: transform[2] * image_height + transform[4],
+                ty: image_height * (1.0 - transform[3]) - transform[5],
+            },
+        );
 
         let glyph_ids: Vec<u16> = run.glyphs.iter().map(|g| g.glyph_id as u16).collect();
         let positions: Vec<CGPoint> = run
@@ -1297,6 +1341,12 @@ mod glyph_run_overlay {
         )
     }
 
+    fn coregraphics_fill_color((r, g, b, a): (f64, f64, f64, f64)) -> (f64, f64, f64, f64) {
+        // This supported bitmap format is BGRA in memory while PixelContainer is RGBA.
+        // Swap red and blue at the CoreGraphics boundary so stored bytes remain RGBA.
+        (b, g, r, a)
+    }
+
     #[cfg(test)]
     mod tests {
         use super::*;
@@ -1338,9 +1388,38 @@ mod glyph_run_overlay {
         }
 
         #[test]
+        fn coregraphics_fill_color_preserves_rgba_pixel_bytes() {
+            assert_eq!(
+                coregraphics_fill_color((1.0, 0.5, 0.25, 0.75)),
+                (0.25, 0.5, 1.0, 0.75)
+            );
+        }
+
+        #[test]
         fn parse_css_color_malformed_returns_black() {
             let (r, g, b, a) = parse_css_color("not-a-color");
             assert_eq!((r, g, b, a), (0.0, 0.0, 0.0, 1.0));
+        }
+
+        #[test]
+        fn coretext_runs_inherit_group_transforms() {
+            let transform = [0.0, -1.0, 1.0, 0.0, 25.0, 40.0];
+            let instructions = vec![PaintInstruction::Group(paint_instructions::PaintGroup {
+                base: paint_instructions::PaintBase::default(),
+                children: vec![PaintInstruction::GlyphRun(PaintGlyphRun {
+                    base: paint_instructions::PaintBase::default(),
+                    glyphs: vec![],
+                    font_ref: "coretext:Helvetica@14".into(),
+                    font_size: 14.0,
+                    fill: None,
+                })],
+                transform: Some(transform),
+                opacity: None,
+            })];
+
+            let runs = collect_coretext_runs(&instructions);
+            assert_eq!(runs.len(), 1);
+            assert_eq!(runs[0].1, transform);
         }
     }
 }

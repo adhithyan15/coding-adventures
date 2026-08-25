@@ -262,6 +262,15 @@ jobs:
           # prefers `.d/`, so a resurrected monolith is not merely redundant: it
           # is edited, committed, and silently ignored.
           npm run check:shards
+          # HL22: BACKLOG.d/ and CHANGELOG.d/ are the source of truth for
+          # the two Markdown documents every human-languages author touches —
+          # 100 and 75 of the last 200 commits respectively. Nothing READS
+          # either monolith programmatically; they survive because seven docs
+          # link BACKLOG.md by relative path (two by section anchor, none
+          # validated by CI) and because CLAUDE.md requires a CHANGELOG.md in
+          # every package. Same rule as above: a derived file nothing verifies
+          # is worse than no file. Regenerate with `npm run unshard:docs`.
+          npm run check:doc-shards
           mkdir -p "$GITHUB_WORKSPACE/dist/human-languages/books"
           npm run --silent report -- --format json \
             > "$GITHUB_WORKSPACE/dist/human-languages/books/curriculum-gaps.json"

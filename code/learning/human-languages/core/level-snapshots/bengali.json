@@ -1,0 +1,15 @@
+{
+  "language": "bengali",
+  "lessonCount": 80,
+  "byLevel": {
+    "pre-A1": 60,
+    "A1": 1,
+    "A2": 19,
+    "B1": 0,
+    "B2": 0,
+    "C1": 0,
+    "C2": 0
+  },
+  "unmapped": 0,
+  "reach": "A2"
+}

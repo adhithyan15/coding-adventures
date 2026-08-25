@@ -1,5 +1,156 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.69 — 2026-08-25 — Relaxed SIMD epic PR1: i8x16.relaxed_swizzle + the `either` assert_return combinator
+
+### Added
+
+- `SimdOpKind::RelaxedSwizzle` joined the existing no-immediate SIMD
+  match arm (same list `Swizzle` is already in) in both
+  `encode_stream_instr` and `encode_flat_instr` -- `i8x16.relaxed_
+  swizzle` takes no immediate beyond the opcode itself, identical
+  encoding shape to `i8x16.swizzle`. First opcode of the relaxed-simd
+  epic that follows the now-complete base SIMD epic (PR1-PR47) -- see
+  `code/specs/W19-wasm-relaxed-simd-first-slice.md`.
+- New top-level `assert_return` expected-value combinator:
+  `Expected::Either(Box<Expected>, Box<Expected>)`, parsed from
+  `(either A B)`. The relaxed-simd spec deliberately leaves certain ops
+  implementation-defined for certain inputs; the upstream corpus grades
+  those cases with `either` instead of one exact expected value.
+  `parse_expected` gained a new `("either", _)` arm that recurses into
+  itself for both children, so `either` can wrap any other `Expected`
+  shape (a NaN class, a nested `either`, etc.), not just a plain
+  `v128.const`. Every relaxed-simd `.wast` file in the pinned upstream
+  corpus uses `either` at least once -- a genuine prerequisite for
+  vendoring any relaxed-simd fixture, discovered by reading the real
+  corpus content, not assumed from the opcode list.
+- `Expected` is no longer `Copy` (only `Clone`) -- a `Box<Expected>`
+  can't be `Copy`. Every existing call site already took `&Expected` or
+  moved a freshly constructed value, so this cost nothing; confirmed by
+  this crate's full test suite passing unchanged.
+- New tests: `either_of_two_v128_const_values_parses_as_expected_either`,
+  `either_recurses_through_parse_expected_for_non_v128_children`.
+
+## 0.1.68 — 2026-08-25 — SIMD PR47: v128.load64_lane/store64_lane text-form encoding
+
+### Added
+
+- `SimdOpKind::Load64Lane`/`Store64Lane` joined the existing
+  `Load8Lane`/`Store8Lane`/`Load16Lane`/`Store16Lane`/`Load32Lane`/
+  `Store32Lane` match arm (unchanged otherwise) in both
+  `encode_stream_instr` and `encode_flat_instr` -- the encoding shape
+  PR44 built (memarg first, then the raw lane-index byte) is IDENTICAL
+  across the 8-bit, 16-bit, 32-bit, and 64-bit pairs; only
+  `simd_op.sub_opcode` differs, already captured generically. Confirmed
+  against the pinned `simd_load64_lane.wast`/`simd_store64_lane.wast`
+  corpus's own source order (`(v128.load64_lane offset=N lane addr x)`,
+  same order as the 8-bit, 16-bit, and 32-bit pairs).
+- 1 new unit test:
+  `v128_load64_lane_and_store64_lane_encode_the_real_sub_opcode_with_a_combined_memarg_and_lane_index`,
+  covering the folded form (with explicit `offset=`) for both opcodes
+  and the flat/stream form for one, verifying the exact byte sequence
+  (sub-opcode `0x57`/`0x5B`, align, offset, THEN the raw lane-index
+  byte). Closes the entire lane-load/store family's text-form encoding
+  coverage (PR44-47).
+
+## 0.1.67 — 2026-08-25 — SIMD PR46: v128.load32_lane/store32_lane text-form encoding
+
+### Added
+
+- `SimdOpKind::Load32Lane`/`Store32Lane` joined the existing
+  `Load8Lane`/`Store8Lane`/`Load16Lane`/`Store16Lane` match arm
+  (unchanged otherwise) in both `encode_stream_instr` and
+  `encode_flat_instr` -- the encoding shape PR44 built (memarg first,
+  then the raw lane-index byte) is IDENTICAL across the 8-bit, 16-bit,
+  and 32-bit pairs; only `simd_op.sub_opcode` differs, already captured
+  generically. Confirmed against the pinned `simd_load32_lane.wast`/
+  `simd_store32_lane.wast` corpus's own source order
+  (`(v128.load32_lane offset=N lane addr x)`, same order as the 8-bit
+  and 16-bit pairs).
+- 1 new unit test:
+  `v128_load32_lane_and_store32_lane_encode_the_real_sub_opcode_with_a_combined_memarg_and_lane_index`,
+  covering the folded form (with explicit `offset=`) for both opcodes
+  and the flat/stream form for one, verifying the exact byte sequence
+  (sub-opcode `0x56`/`0x5A`, align, offset, THEN the raw lane-index
+  byte).
+
+## 0.1.66 — 2026-08-25 — SIMD PR45: v128.load16_lane/store16_lane text-form encoding
+
+### Added
+
+- `SimdOpKind::Load16Lane`/`Store16Lane` joined the existing
+  `Load8Lane`/`Store8Lane` match arm (unchanged otherwise) in both
+  `encode_stream_instr` and `encode_flat_instr` -- the encoding shape
+  PR44 built (memarg first, then the raw lane-index byte) is IDENTICAL
+  between the 8-bit and 16-bit pairs; only `simd_op.sub_opcode` differs,
+  already captured generically. Confirmed against the pinned
+  `simd_load16_lane.wast`/`simd_store16_lane.wast` corpus's own source
+  order (`(v128.load16_lane offset=N lane addr x)`, same order as the
+  8-bit pair).
+- 1 new unit test:
+  `v128_load16_lane_and_store16_lane_encode_the_real_sub_opcode_with_a_combined_memarg_and_lane_index`,
+  covering the folded form (with explicit `offset=`) for both opcodes
+  and the flat/stream form for one, verifying the exact byte sequence
+  (sub-opcode `0x55`/`0x59`, align, offset, THEN the raw lane-index
+  byte).
+
+## 0.1.65 — 2026-08-25 — SIMD PR44: v128.load8_lane/store8_lane text-form encoding
+
+### Added
+
+- New `SimdOpKind::Load8Lane | Store8Lane` match arm in both
+  `encode_stream_instr` and `encode_flat_instr` -- a GENUINELY NEW
+  encoder shape, distinct from the existing memarg-only arm
+  (`Load`/`Store`/etc.) and the existing lane-index-only arm
+  (`ExtractLane`/`ReplaceLane`): this carries BOTH a memarg AND a
+  lane-index immediate, in that order (memarg first), confirmed against
+  the pinned `simd_load8_lane.wast`/`simd_store8_lane.wast` corpus's own
+  source order (`(v128.load8_lane offset=N lane addr x)`). In folded
+  form: memarg tokens lead, the lane-index literal comes next, the two
+  operand expressions (address, existing v128) trail. In flat/stream
+  form: the two operands are already emitted by preceding instructions,
+  so only the memarg tokens and the trailing lane-index literal need
+  reading.
+- 1 new unit test:
+  `v128_load8_lane_and_store8_lane_encode_the_real_sub_opcode_with_a_combined_memarg_and_lane_index`,
+  covering the folded form (with explicit `offset=`) for both opcodes
+  and the flat/stream form for one, verifying the exact byte sequence
+  (sub-opcode, align, offset, THEN the raw lane-index byte).
+
+## 0.1.64 — 2026-08-25 — SIMD PR42: v128.load_extend family text-form encoding
+
+### Added
+
+- 6 new `SimdOpKind` variants (`Load8x8S`/`Load8x8U`/`Load16x4S`/
+  `Load16x4U`/`Load32x2S`/`Load32x2U`) joined the existing
+  memarg-encoding match arm in both `encode_stream_instr` and
+  `encode_flat_instr` alongside `Load`/`Store`/the `load_splat`/
+  `load_zero` families -- identical `parse_memarg` (align, offset)
+  handling, no explicit leading memidx token support (memory 0 only,
+  same scope as `v128.load`/`v128.store`). Only the sub-opcode value
+  differs between all fourteen kinds sharing this arm now.
+- 1 new unit test:
+  `v128_load_extend_family_encodes_the_real_sub_opcodes_with_a_memarg`,
+  covering the folded form with an explicit `offset=` attribute for all
+  6 opcodes plus the flat/stream form for one, mirroring
+  `v128_load_zero_family_encodes_the_real_sub_opcodes_with_a_memarg`.
+
+## 0.1.63 — 2026-08-25 — SIMD PR41: v128.loadN_zero family text-form encoding
+
+### Added
+
+- 2 new `SimdOpKind` variants (`Load32Zero`/`Load64Zero`) joined the
+  existing memarg-encoding match arm in both `encode_stream_instr` and
+  `encode_flat_instr` alongside `Load`/`Store`/the `load_splat` family
+  -- identical `parse_memarg` (align, offset) handling, no explicit
+  leading memidx token support (memory 0 only, same scope as
+  `v128.load`/`v128.store`). Only the sub-opcode value differs between
+  all eight kinds sharing this arm now.
+- 1 new unit test:
+  `v128_load_zero_family_encodes_the_real_sub_opcodes_with_a_memarg`,
+  covering the folded form with an explicit `offset=` attribute for both
+  opcodes plus the flat/stream form for one, mirroring
+  `v128_load_splat_family_encodes_the_real_sub_opcodes_with_a_memarg`.
+
 ## 0.1.62 — 2026-08-25 — SIMD PR40: v128.loadN_splat family text-form encoding
 
 ### Added

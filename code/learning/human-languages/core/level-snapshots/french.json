@@ -1,0 +1,15 @@
+{
+  "language": "french",
+  "lessonCount": 122,
+  "byLevel": {
+    "pre-A1": 46,
+    "A1": 33,
+    "A2": 29,
+    "B1": 0,
+    "B2": 0,
+    "C1": 0,
+    "C2": 0
+  },
+  "unmapped": 14,
+  "reach": "A2"
+}

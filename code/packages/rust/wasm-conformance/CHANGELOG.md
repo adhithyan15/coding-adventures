@@ -1,5 +1,258 @@
 # Changelog — wasm-conformance
 
+## 0.1.81 — 2026-08-25 — Relaxed SIMD epic PR1: vendor i8x16_relaxed_swizzle.wast + the `either` grading combinator
+
+### Added
+
+- Vendored `i8x16_relaxed_swizzle.wast` (pinned commit
+  `28864811cf03bdbf880733786148feaba339582d`), the FIRST file from the
+  relaxed-simd proposal -- a SEPARATE proposal from base SIMD (PR1-PR47)
+  with its own encoding table. Confirmed live via the GitHub API tree
+  listing that relaxed-simd `.wast` files genuinely exist at this
+  repo's existing pinned SHA. Added to `TESTSUITE_FILES` in
+  `fetch_testsuite.py` (lives at the testsuite repo root, no
+  `PROPOSAL_FILES` entry needed); NOTICE updated with full provenance.
+  Grades 1/1 `module`, 5/5 `assert_return` (all real passes). See
+  `code/specs/W19-wasm-relaxed-simd-first-slice.md`.
+- `value_matches_expected` gained an `Expected::Either(a, b)` arm --
+  tries `a` then `b`, generic over any nested `Expected` shape. This
+  grades the upstream corpus's new `(either A B)` assert_return
+  combinator (relaxed-simd ops are spec-sanctioned as implementation-
+  defined for certain inputs), reusable unchanged by every future
+  relaxed-simd PR in this epic.
+- Baseline regenerated: `testsuite-status.json` now includes
+  `i8x16_relaxed_swizzle.wast`. Aggregate `module` 1268/1269 ->
+  1269/1270 (+1); `assert_return` 44624/44641 -> 44629/44646 (+5). No
+  other file's stats changed.
+- New tests: `either_accepts_a_value_matching_the_first_alternative`,
+  `either_accepts_a_value_matching_the_second_alternative`,
+  `either_rejects_a_value_matching_neither_alternative`,
+  `either_v128_matches_the_real_relaxed_swizzle_out_of_range_shape`.
+
+## 0.1.80 — 2026-08-25 — vendor simd_load64_lane.wast/simd_store64_lane.wast (SIMD PR47, 2 new opcodes)
+
+### Added
+
+- Vendored `simd_load64_lane.wast`/`simd_store64_lane.wast` (pinned
+  commit `28864811cf03bdbf880733786148feaba339582d`), the dedicated
+  upstream files for `v128.load64_lane`/`v128.store64_lane` -- the
+  FOURTH and FINAL bite into the `load{8,16,32,64}_lane`/
+  `store{8,16,32,64}_lane` family, one width up from PR46's 32-bit pair.
+  Added to `TESTSUITE_FILES` in `fetch_testsuite.py`; NOTICE updated
+  with full provenance and per-file directive-kind counts. This closes
+  the entire lane-load/store family (all 8 opcodes across 8 vendored
+  files, PR44-47) and, with it, the larger load-extend/splat/zero/lane
+  epic started in PR40.
+- Both files pass 100% on `module` (2/2) and `assert_return` (24/24
+  combined) -- every byte-pattern/lane-preservation case passes.
+  `simd_load64_lane.wast`'s `assert_invalid` grades 2/2 pass (type
+  mismatch, out-of-range lane index `2`) with 1 `NotYetSupported` (an
+  invalid `align=16` case -- same pre-existing alignment-validation gap
+  `simd_align.wast`/`simd_load8_lane.wast`/`simd_load16_lane.wast`/
+  `simd_load32_lane.wast` already surfaced, not newly introduced here).
+  `simd_store64_lane.wast`'s `assert_invalid` grades 3/3 pass (its own
+  `align=16` case is independently caught by the pre-existing
+  "declared-result-type mismatch" check, same reason `simd_store8_
+  lane.wast`/`simd_store16_lane.wast`/`simd_store32_lane.wast`'s
+  equivalent cases pass).
+- Regenerated `testsuite-status.json` baseline: aggregate `module` rose
+  from 1266/1267 to 1268/1269 (+2 pass); `assert_return` rose from
+  44600/44617 to 44624/44641 (+24 pass); `assert_invalid` rose from
+  2028/2028 to 2033/2033 pass (+5) with `NotYetSupported` rising from 91
+  to 92 (+1); `assert_malformed` unchanged (525/525 pass, 538
+  `NotYetSupported` -- neither file has any `assert_malformed`
+  directives). No other already-vendored file's stats changed.
+
+## 0.1.79 — 2026-08-25 — vendor simd_load32_lane.wast/simd_store32_lane.wast (SIMD PR46, 2 new opcodes)
+
+### Added
+
+- Vendored `simd_load32_lane.wast`/`simd_store32_lane.wast` (pinned
+  commit `28864811cf03bdbf880733786148feaba339582d`), the dedicated
+  upstream files for `v128.load32_lane`/`v128.store32_lane` -- the
+  THIRD bite into the `load{8,16,32,64}_lane`/`store{8,16,32,64}_lane`
+  family, one width up from PR45's 16-bit pair. Added to
+  `TESTSUITE_FILES` in `fetch_testsuite.py`; NOTICE updated with full
+  provenance and per-file directive-kind counts.
+- Both files pass 100% on `module` (2/2) and `assert_return` (40/40
+  combined) -- every byte-pattern/lane-preservation case passes.
+  `simd_load32_lane.wast`'s `assert_invalid` grades 2/2 pass (type
+  mismatch, out-of-range lane index `4`) with 1 `NotYetSupported` (an
+  invalid `align=8` case -- same pre-existing alignment-validation gap
+  `simd_align.wast`/`simd_load8_lane.wast`/`simd_load16_lane.wast`
+  already surfaced, not newly introduced here). `simd_store32_lane.
+  wast`'s `assert_invalid` grades 3/3 pass (its own `align=8` case is
+  independently caught by the pre-existing "declared-result-type
+  mismatch" check, same reason `simd_store8_lane.wast`/`simd_store16_
+  lane.wast`'s equivalent cases pass).
+- Regenerated `testsuite-status.json` baseline: aggregate `module` rose
+  from 1264/1265 to 1266/1267 (+2 pass); `assert_return` rose from
+  44560/44577 to 44600/44617 (+40 pass); `assert_invalid` rose from
+  2023/2023 to 2028/2028 pass (+5) with `NotYetSupported` rising from 90
+  to 91 (+1); `assert_malformed` unchanged (525/525 pass, 538
+  `NotYetSupported` -- neither file has any `assert_malformed`
+  directives). No other already-vendored file's stats changed.
+
+## 0.1.78 — 2026-08-25 — vendor simd_load16_lane.wast/simd_store16_lane.wast (SIMD PR45, 2 new opcodes)
+
+### Added
+
+- Vendored `simd_load16_lane.wast`/`simd_store16_lane.wast` (pinned
+  commit `28864811cf03bdbf880733786148feaba339582d`), the dedicated
+  upstream files for `v128.load16_lane`/`v128.store16_lane` -- the
+  SECOND bite into the `load{8,16,32,64}_lane`/`store{8,16,32,64}_lane`
+  family, one width up from PR44's 8-bit pair. Added to
+  `TESTSUITE_FILES` in `fetch_testsuite.py`; NOTICE updated with full
+  provenance and per-file directive-kind counts.
+- Both files pass 100% on `module` (2/2) and `assert_return` (64/64
+  combined) -- every byte-pattern/lane-preservation case passes.
+  `simd_load16_lane.wast`'s `assert_invalid` grades 2/2 pass (type
+  mismatch, out-of-range lane index `8`) with 1 `NotYetSupported` (an
+  invalid `align=4` case -- same pre-existing alignment-validation gap
+  `simd_align.wast`/`simd_load8_lane.wast` already surfaced, not newly
+  introduced here). `simd_store16_lane.wast`'s `assert_invalid` grades
+  3/3 pass (its own `align=4` case is independently caught by the
+  pre-existing "declared-result-type mismatch" check, same reason
+  `simd_store8_lane.wast`'s equivalent case passes).
+- Regenerated `testsuite-status.json` baseline: aggregate `module` rose
+  from 1262/1263 to 1264/1265 (+2 pass); `assert_return` rose from
+  44496/44513 to 44560/44577 (+64 pass); `assert_invalid` rose from
+  2018/2018 to 2023/2023 pass (+5) with `NotYetSupported` rising from 89
+  to 90 (+1); `assert_malformed` unchanged (525/525 pass, 538
+  `NotYetSupported` -- neither file has any `assert_malformed`
+  directives). No other already-vendored file's stats changed.
+
+## 0.1.77 — 2026-08-25 — vendor simd_load8_lane.wast/simd_store8_lane.wast (SIMD PR44, 2 new opcodes)
+
+### Added
+
+- Vendored `simd_load8_lane.wast`/`simd_store8_lane.wast` (pinned commit
+  `28864811cf03bdbf880733786148feaba339582d`), the dedicated upstream
+  files for `v128.load8_lane`/`v128.store8_lane` -- the FIRST bite into
+  the `load{8,16,32,64}_lane`/`store{8,16,32,64}_lane` family every PR
+  since PR39 has deferred (a genuinely new instruction shape: an
+  existing `v128` operand PLUS a lane-index immediate PLUS a memarg, all
+  in one instruction). Added to `TESTSUITE_FILES` in
+  `fetch_testsuite.py`; NOTICE updated with full provenance and per-file
+  directive-kind counts.
+- Both files pass 100% on `module` (2/2) and `assert_return` (96/96
+  combined) -- every byte-pattern/lane-preservation case passes.
+  `simd_load8_lane.wast`'s `assert_invalid` grades 2/2 pass (type
+  mismatch, out-of-range lane index) with 1 `NotYetSupported` (an
+  invalid `align=2` case -- this repo's SIMD memarg decode path still
+  never checks an over-large `align=` against natural alignment, the
+  SAME pre-existing gap PR43's `simd_align.wast` vendoring surfaced and
+  documented, not newly introduced here).
+  `simd_store8_lane.wast`'s `assert_invalid` grades 3/3 pass (its own
+  `align=2` case is independently caught by the pre-existing
+  "declared-result-type mismatch" check, since that test's function
+  wrongly declares `(result v128)` on a `store8_lane`-only body).
+- Regenerated `testsuite-status.json` baseline: aggregate `module` rose
+  from 1260/1261 to 1262/1263 (+2 pass); `assert_return` rose from
+  44400/44417 to 44496/44513 (+96 pass); `assert_invalid` rose from
+  2013/2013 to 2018/2018 pass (+5) with `NotYetSupported` rising from 88
+  to 89 (+1); `assert_malformed` unchanged (525/525 pass, 538
+  `NotYetSupported` -- neither file has any `assert_malformed`
+  directives). No other already-vendored file's stats changed.
+
+## 0.1.76 — 2026-08-25 — vendor simd_align.wast (SIMD PR43, zero new opcodes)
+
+### Added
+
+- Vendored `simd_align.wast` (pinned commit
+  `28864811cf03bdbf880733786148feaba339582d`) covering `align=` hint
+  validation for `v128.load`/`v128.store` plus the `load_splat`/
+  `load_extend` families landed in PR15/PR39-42. Adds ZERO new opcodes
+  — every instruction this file exercises was already implemented.
+  Added to `TESTSUITE_FILES` in `fetch_testsuite.py`; NOTICE updated
+  with full provenance and per-file directive-kind counts.
+- The file passes 100% on `module` (46/46) and `assert_return` (8/8),
+  the directives that only exercise already-implemented opcode
+  execution. `assert_invalid` grades 0/12 (all `NotYetSupported`) and
+  `assert_malformed` grades 12/34 pass with 22 `NotYetSupported`: this
+  repo's SIMD memarg decode path in `wasm-validator` never checks an
+  over-large `align=` against each v128 opcode's natural alignment (the
+  scalar `iNN.load`/`iNN.store` arm does, via `memory_op_shape`/
+  `max_align_for`, but the shared v128 memarg arm doesn't), and
+  `wasm-wast-parser`'s `parse_memarg` never validates that `align=N` is
+  a power of two. Both gaps are pre-existing and shared with the class
+  already tracked as `NotYetSupported` in the plain (non-SIMD)
+  `align.wast` vendored earlier — this file surfaces the same known gap
+  for the v128 opcode family, tracked for a dedicated follow-up, not a
+  new regression.
+
+### Changed
+
+- Regenerated `tests/fixtures/testsuite-status.json` (`--write-baseline`).
+  Aggregate `module` rose from 1214/1215 to 1260/1261 (+46 pass, 67
+  `NotYetSupported` unchanged); `assert_return` rose from 44392/44409 to
+  44400/44417 (+8 pass, 545 `NotYetSupported` unchanged); `assert_invalid`
+  stayed at 2013/2013 pass with `NotYetSupported` rising from 76 to 88
+  (+12, exactly this file's own gap); `assert_malformed` rose from
+  513/513 to 525/525 pass (+12) with `NotYetSupported` rising from 516
+  to 538 (+22, exactly this file's own gap). No other already-vendored
+  file's stats changed — zero regressions.
+
+## 0.1.75 — 2026-08-25 — vendor simd_load_extend.wast (SIMD PR42)
+
+### Added
+
+- Vendored `simd_load_extend.wast` (pinned commit
+  `28864811cf03bdbf880733786148feaba339582d`) covering the new
+  `v128.load8x8_s`/`_u`, `v128.load16x4_s`/`_u`, `v128.load32x2_s`/`_u`
+  opcodes added in `wasm-opcodes`/`wasm-execution`/`wasm-validator`/
+  `wasm-wast-parser`. Added to `TESTSUITE_FILES` in
+  `fetch_testsuite.py`; NOTICE updated with full provenance and per-file
+  directive-kind counts (also backfilled a missing PR41 header entry
+  found while updating this same list). Third and FINAL bite into the
+  wider `load_extend`/`load_splat`/`load_zero`/`load{8,16,32,64}_lane`/
+  `store{8,16,32,64}_lane` memory-access family PR39 deferred and
+  PR40/PR41 opened.
+- The file passes 100% of its directives: 2/2 `module`, 72/72
+  `assert_return`, 12/12 `assert_trap`, 12/12 `assert_invalid`, 6/6
+  `assert_malformed`.
+
+### Changed
+
+- Regenerated `tests/fixtures/testsuite-status.json` (`--write-baseline`).
+  Aggregate `assert_return` rose from 44320/44337 to 44392/44409 (+72
+  pass, `fail` unchanged at 17); `assert_trap` rose from 1466/1466 to
+  1478/1478 (+12, still 100%); `assert_invalid` rose from 2001/2001 to
+  2013/2013 (+12, still 100%); `assert_malformed` rose from 507/507 to
+  513/513 (+6, still 100%); `module` pass count rose from 1212/1213 to
+  1214/1215 (+2). The pre-existing, unrelated baseline failures (17
+  `assert_return`, 1 `module`, 1 `assert_unlinkable`, 2 `register`) are
+  byte-for-byte unchanged, confirming zero regressions.
+
+## 0.1.74 — 2026-08-25 — vendor simd_load_zero.wast (SIMD PR41)
+
+### Added
+
+- Vendored `simd_load_zero.wast` (pinned commit
+  `28864811cf03bdbf880733786148feaba339582d`) covering the new
+  `v128.load32_zero`/`load64_zero` opcodes added in `wasm-opcodes`/
+  `wasm-execution`/`wasm-validator`/`wasm-wast-parser`. Added to
+  `TESTSUITE_FILES` in `fetch_testsuite.py`; NOTICE updated with full
+  provenance and per-file directive-kind counts. Second bite into the
+  wider `load_extend`/`load_splat`/`load_zero`/`load{8,16,32,64}_lane`/
+  `store{8,16,32,64}_lane` memory-access family PR39 deferred and PR40
+  opened with `simd_load_splat.wast`.
+- The file passes 100% of its directives: 2/2 `module`, 23/23
+  `assert_return`, 4/4 `assert_trap`, 4/4 `assert_invalid`, 6/6
+  `assert_malformed`.
+
+### Changed
+
+- Regenerated `tests/fixtures/testsuite-status.json` (`--write-baseline`).
+  Aggregate `assert_return` rose from 44297/44314 to 44320/44337 (+23
+  pass, `fail` unchanged at 17); `assert_trap` rose from 1462/1462 to
+  1466/1466 (+4, still 100%); `assert_invalid` rose from 1997/1997 to
+  2001/2001 (+4, still 100%); `assert_malformed` rose from 501/501 to
+  507/507 (+6, still 100%); `module` pass count rose from 1210/1211 to
+  1212/1213 (+2). The pre-existing, unrelated baseline failures (17
+  `assert_return`, 1 `module`, 1 `assert_unlinkable`, 2 `register`) are
+  byte-for-byte unchanged, confirming zero regressions.
+
 ## 0.1.73 — 2026-08-25 — vendor simd_load_splat.wast (SIMD PR40)
 
 ### Added

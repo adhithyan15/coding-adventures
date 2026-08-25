@@ -505,6 +505,75 @@ became visible. Gaps are valid. The application never generates different
 signed bytes for a reserved counter, preventing self-equivocation after a crash
 or ambiguous provider response.
 
+### 7.3 Reclaiming a generation zero orphaned before configuration
+
+§7.1's journal is durably installed under a freshly drawn random
+`BootstrapLocator` *before* the caller (the CLI composition root, for `init`
+and `vault create`) writes the configuration record that makes that locator
+discoverable again. That ordering is required, not incidental: it is what lets
+§7.1's resume path find a crash-resumable journal the instant configuration
+names a locator at all.
+
+It has a mirror-image cost. A crash strictly *between* the `PreparedInit`
+write and the configuration write leaves the journal durable under a locator
+that nothing durable anywhere ever names — the value that would have named it
+lived only in the crashed process's memory. No later command can discover it,
+resume it, or complete it; §7.1's resume path is unreachable because it is
+only ever entered by decoding a locator *out of* configuration. The bytes are
+not lost data — nothing a user created ever existed there — but they are a
+permanent storage leak of ciphertext, salts, and public identifiers absent a
+sweep. VLT-PM41 §8 records the finding.
+
+This is a narrower problem than VLT-PM00 §19.4 general garbage collection,
+which reconciles the *immutable repository object store* against verified
+heads, retained conflicts, history windows, and multi-device grace periods,
+and remains Phase 2 work. The generation-zero case needs none of that
+machinery: a `PreparedInit` record can only exist without a configuration
+reference because of exactly this crash window, since every later transition
+in §7's state machine happens only after the configuration write that names
+the locator has already durably succeeded (§7.1 step 5's `Active` replacement,
+and every `PendingPublication`/`PendingRotation` transition after it, all
+require an already-`Active` — and therefore already-configured — starting
+state). So the state alone is sufficient evidence: a record decoding as
+`PreparedInit` whose locator no live configuration names is provably an
+orphan of this leak, full stop, and every other state is provably never one.
+
+The storage-core adapter (`vault-pm-application-storage-core`) exposes this as
+one operation, run by the CLI composition root immediately before it installs
+a new locator's own `PreparedInit`, holding the same platform-wide writer lock
+that already serializes `init` and `vault create`:
+
+```rust
+impl<B: StorageBackend> StorageCoreApplicationStore<B> {
+    pub fn reclaim_orphaned_preparations(
+        &self,
+        live_locators: &BTreeSet<BootstrapLocator>,
+    ) -> Result<usize, LocalStateStoreError>;
+}
+```
+
+It lists every record in the shared local-state namespace, and for each one
+whose key decodes to a locator absent from `live_locators`, decodes the body
+strictly and deletes it only if it decodes exactly as `LocalVaultStateV1::PreparedInit`
+— compare-and-delete against the exact revision observed, so a record that
+changes between the list and the delete is left alone rather than torn out
+from under a concurrent write. `Active`, `PendingPublication`, and
+`PendingRotation` records are never inspected against `live_locators` at all;
+the state check alone protects them unconditionally, which is the entire
+safety argument — `live_locators` is consulted first only as defense in depth,
+not as the property a real vault's durability rests on. A record this store
+did not write, or whose body fails to decode, is left untouched: reclaiming is
+opt-in per record, never a default for anything unrecognized.
+
+`init`'s fresh-vault path (no configuration exists) calls this with an empty
+`live_locators`, since nothing on that platform home can legitimately
+reference any locator yet. `vault create`'s fresh-target path calls this with
+every locator the current configuration already names, immediately before
+installing the new target's own journal under a different one. Both call
+sites are additive: they run once, before the caller's own
+`compare_exchange(locator, None, ...)`, and change nothing about §7.1's
+resume path for a locator configuration already names.
+
 ## 8. Open and trust
 
 `open` performs:
@@ -1772,6 +1841,320 @@ multi-parent naming, not just that deletion no longer errors.
 covers the mixed case — one ordinary small live candidate concurrent with
 one oversized one — so the fix is confirmed to fold in *whichever*
 candidates are current rather than only ones that happen to be poisoned.
+
+### 13.9 One poisoned record blocking the whole export, finally closed
+
+§13.2 named this residual explicitly and left it deliberately unrepaired,
+longer than any other item in this file's history: "one poisoned record
+blocks the whole export... Making export skip-and-report instead is *not*
+done here either: the snapshot's `candidate_count` and its signed
+`snapshot_hash` currently assert completeness, and VLT-PM19/VLT-PM20
+restore-verification depends on that assertion, so partial export is a
+format and verification change, not a local one." This section is that
+format change, deferred until it could be given the design work a quick
+patch would not have gotten.
+
+**The exact mechanism, confirmed by reading the code, not assumed.**
+`export_portable_with_passphrase` (`export.rs`) walks every current
+candidate of every item and calls `encode_item_revision` on each one to
+build the snapshot's `entries` array. Any oversized first-party record
+(§13.1), oversized opaque record (§13.3), oversized `Quarantined` record
+(§13.5 forwards it through `encode_opaque`, which has the identical size
+ceiling), or oversized candidate of a conflict (§13.8) returns
+`BoundExceeded` from that call, and the surrounding `?` propagates it
+immediately — one poisoned candidate anywhere in the vault, and the loop
+never reaches the rest. This is a *different* failure from `item edit` or
+`conflict merge` refusing on the poisoned item itself (§13.1/§13.5/§13.8):
+those are correctly-designed, unavoidable refusals — there is no smaller
+record to write in place of one whose own untouched fields are what is
+oversized, and no schema to author a replacement against for a content
+type this build cannot even parse. Export's failure is different in kind:
+it denies every *other*, perfectly healthy item in the vault too, because
+one `?` inside a loop over every item has no notion of "this one, not the
+rest."
+
+**Why this is the evacuation path, and why that makes the failure worse
+than an ordinary refusal.** §13.2 already named the reason: "export is the
+evacuation path." An operator who discovers a poisoned item — through a
+failed `item edit`, a failed `conflict merge`, or simply because `export`
+itself refuses — is in exactly the situation where they most want a backup
+of everything else *before* deciding what to do about the one broken item:
+delete it outright, wait for a fixed peer to supersede it, or leave it
+alone and route around it. Requiring them to resolve the poisoned item
+first, with no backup in hand, inverts the usual order of operations for
+anyone who takes data loss seriously, and it does so at the exact moment a
+vault most needs one.
+
+**Options weighed, in the order the backlog item itself named them, plus
+one this investigation added.**
+
+1. **Silently skip and continue, unconditionally — the same shape §13.3
+   used for open.** Rejected as the *default*, and rejected as an
+   *unconditional* behavior at all. §13.3's fix was a strict improvement
+   with no real tradeoff: "the vault opens with a strange item in it" is
+   better than "the vault does not open," full stop, for every caller.
+   Export has a genuine tradeoff a silent default cannot make safely on
+   the operator's behalf: an export that silently omits an item is
+   indistinguishable, from the artifact alone, from a smaller vault that
+   never had that item — the operator who restores it later, or who
+   simply files it away as "my backup," has no way to know it is
+   incomplete unless *something* records that fact. This campaign's own
+   established bias (the ADJ/adjudication work elsewhere in this
+   codebase) treats "every record accounted for, or the gap is visible"
+   as a load-bearing property, not a nicety, and a silent skip violates it
+   outright. It would also apply to `Strict` callers who have never heard
+   of this problem, changing behavior underneath code and operators that
+   did not ask for it.
+2. **Hard-fail always — the status quo.** Rejected as the *only* option,
+   which is exactly why this item stayed open: it is `open`'s pre-§13.3
+   mistake, transplanted one layer up. A single poisoned record denies an
+   operator their one universal, content-agnostic recourse (a full
+   backup) at precisely the moment they are most likely to need it.
+3. **A persistent quarantine mutation — replace the poisoned payload with
+   an inert marker in the live catalog, so export never encounters it
+   again.** This was weighed seriously, because it is the shape the
+   backlog item itself suggested and the shape §13.5's own `Quarantined`
+   precedent might seem to invite extending. It does not survive contact
+   with the actual problem, for two independent reasons:
+   - **It cannot be the answer to an urgent need for a backup**, because it
+     is itself a mutation — the operator would have to authenticate,
+     accept discarding the real payload permanently (there is no more
+     getting it back after quarantining than there is after deleting it),
+     and publish a new commit, all *before* `export` would succeed. That
+     is strictly more friction than the escape hatch this codebase already
+     shipped: `item delete` (§13.2/§13.3/§13.5/§13.8) already lets an
+     operator discard a poisoned item and then export everything else. If
+     "quarantine, then export" were the fix, `delete`, then `export`
+     already *is* that fix today, and the backlog item would not still be
+     open.
+   - **It offers nothing `delete` does not already offer**, and costs
+     more to build: quarantining a live catalog entry, as opposed to
+     tombstoning it, means every place that already matches on
+     `ItemState`/`AnyRecord` — search indexing, `item list`/`item show`,
+     the six typed `conflict merge` preconditions, audit rendering — would
+     need a third arm alongside `Live` and `Tombstone`, for a state whose
+     only practical difference from a tombstone is that it still shows up
+     in `item list`. That is a large surface for a state that does not
+     solve the acute problem (a backup is needed *now*, before any
+     decision about the poisoned item is made) and duplicates a working
+     mechanism.
+4. **An explicit, opt-in, best-effort export that excludes only what it
+   cannot re-encode, records exactly what and how many, and changes
+   nothing about the vault — chosen.** This is the shape actually adopted,
+   detailed below. It answers the acute need directly (a complete-except-
+   flagged backup, on demand, with no prior mutation), keeps the existing
+   completeness guarantee as the unconditional default so no caller's
+   behavior changes without asking for it, and keeps the accounting
+   honest — nothing is ever silently absent, whether or not the caller
+   asked for `BestEffort` at all — by making the omission a first-class,
+   authenticated fact of the export artifact itself rather than a report
+   that lives only in a terminal that scrolls away.
+
+**The design.** A new type governs which of the two behaviors an export
+uses:
+
+```rust
+// coding_adventures_vault_pm_application::PortableExportCompletenessV1
+pub enum PortableExportCompletenessV1 {
+    Strict,      // default: unmodified pre-§13.9 behavior
+    BestEffort,  // new: exclude what cannot be re-encoded, continue
+}
+```
+
+`Strict` is not merely the default — it is the *only* behavior every
+caller who does not know this type exists still gets, because
+`UnlockedVaultV1::export_portable_with_passphrase` (the method every
+existing caller already calls) keeps its original signature and return
+type (`PortableExportArtifactV1`) unchanged, and internally always passes
+`Strict`. A sibling method,
+`export_portable_with_passphrase_best_effort`, is strictly additive: a new
+name, a new return type
+(`PortableExportOutcomeV1 { artifact, excluded_item_ids }`), reached only
+by a caller that asks for it by name. `audited_export_portable_with_
+passphrase_best_effort` is the audited counterpart, reusing the existing
+`PortableExport` audit action — the same "no new audit event kind for a
+new completion mode" precedent VLT-PM49 §4 already established for its own
+new import formats, because this is the same user-visible operation with a
+different completeness policy, not a new kind of operation.
+
+**Per-item, never per-candidate.** `BestEffort` excludes an item's
+*entire* current candidate set the instant any one of its candidates
+cannot be re-encoded — never a subset. A conflicted item with one small,
+healthy candidate and one oversized one is not split into "the small one
+travels, the large one does not": doing that would silently hand the
+target a single, unconflicted candidate where the source actually had an
+unresolved conflict, misrepresenting the item's own history rather than
+merely omitting it from the backup. Losing an item entirely is an
+accounted-for gap (below); losing only its *conflictedness* would be a
+silent correctness defect one layer worse than the bug this section
+fixes. The implementation builds each item's candidates into a scratch
+buffer first and only folds it into the snapshot's real `entries` once the
+whole item is known to be clean; a poisoned item's scratch buffer is
+zeroized and discarded, exactly like every other secret-bearing buffer
+this module wipes on every exit path.
+
+**The wire format.** The plaintext snapshot (`export.rs`'s `field(1..5)`
+map — version, exact bootstrap, entries, candidate count, snapshot hash)
+gains one new, *optional* field:
+
+```text
+6: excluded_item_ids  Array<Bytes[16]>   -- present only when non-empty
+```
+
+- **Optional on read, and only ever present on write when non-empty.** A
+  `Strict` export, and a `BestEffort` export that happened not to need to
+  exclude anything, produce the exact five-field shape every version of
+  this module before this section already writes and reads —
+  byte-for-byte identical, so every export artifact that exists today, and
+  every one a future `Strict` caller writes, stays readable by a `vault-pm`
+  build from before this section shipped. Only an export that actually
+  excluded something grows a sixth field, and only that kind of artifact
+  needs a reader that understands it. No `VERSION` bump, no format
+  migration, no risk to an operator's already-written backups.
+- **Outside `snapshot_hash`'s own domain, on purpose — the same shape
+  `candidate_count` already has.** `snapshot_hash` binds `exact_bootstrap`
+  and the encoded `entries` array; `candidate_count` is not part of that
+  hash either, and is instead separately, structurally cross-checked
+  (`entries.len() == candidate_count`) on read. `excluded_item_ids`
+  follows the identical pattern: structurally validated on its own terms
+  (bounded length, fixed-width ids, no duplicate, disjoint from every item
+  id actually present in `entries` — a producer must never claim one item
+  both present and excluded, which has no honest interpretation) rather
+  than folded into the hash, and still covered end to end, like every
+  other field at this level, by the outer AEAD tag over the complete
+  plaintext.
+- **Bounded the same way `candidate_count` already is** —
+  `MAX_CATALOG_ENTRIES`, since no vault can have more distinct items than
+  that regardless of how many are excluded — checked before the array is
+  walked, matching this module's existing "bound before allocation"
+  discipline throughout.
+
+**What crosses the boundary, and what stays inside it.** Every `ItemId` in
+`PortableExportOutcomeV1::excluded_item_ids()` is already visible to the
+same operator through this exact vault's own `item list` — nothing here
+discloses anything a caller with an open session could not already see
+locally, which is why exposing the identities (not merely a count) on the
+*export* side is consistent with VLT-PM00 §20's aggregate-only
+observability discipline: the discipline exists to keep a *different*
+party (a remote telemetry collector, a different operator on the far side
+of a sync) from learning content it has no standing to see, and an
+operator reading their own vault's own item ids back is not that case. The
+*import* side (`OpenedPortableSnapshotV1`) is narrower on purpose:
+`excluded_item_count()` is the only accessor, an aggregate exactly like
+`item_count`/`candidate_count`/`attachment_bearing_item_count` already
+are, because those excluded identities belong to the *source* vault, which
+the importing operator does not necessarily have any other way to observe
+— the same boundary VLT-PM47 §8.3 already drew for
+`attachment_bearing_item_count`.
+
+**The CLI ceremony.** `vault-pm export FILE [--best-effort]` (VLT-PM17 §2
+amendment, below). Without the flag, behavior is unchanged in every
+respect, including byte-for-byte identical standard output on success.
+With it, an export that excluded nothing prints exactly what it always
+did; an export that excluded something appends, to standard output (not
+the fixed, payload-free standard-error notices `with_attachment_notice`/
+`with_recovery_notice` use — this is genuinely new, dynamic,
+operator-actionable content, the same "aggregate counts belong on stdout"
+shape VLT-PM49 §6's `created=/skipped=/failed=` import report already
+uses, extended one step further because a bare count gives the operator
+nothing to act on):
+
+```text
+Portable export written.
+Excluded (too large to include): 2
+<item id>
+<item id>
+```
+
+An operator who sees this can `item delete ITEM` each listed id (the
+already-shipped, universal escape hatch this section does not touch) and
+re-run `export` — with or without `--best-effort` — for a subsequently
+complete backup, or leave the item alone and simply know their most recent
+backup does not cover it.
+
+**What this does not fix.** Two things, both deliberately:
+
+- **The array-level encode ceiling on a very large, entirely healthy
+  vault.** `export_portable_with_passphrase` still calls `try_encode` once
+  on the *whole* `entries` array (`portable_export_reports_an_
+  oversized_artifact_instead_of_aborting` pins this pre-existing behavior
+  directly: two 600 KiB ordinary items, individually well under the 1 MiB
+  per-record ceiling, already cross it once concatenated into one array
+  value). That is a distinct problem from this section's — no item is
+  poisoned, nothing is unencodable on its own, the vault is simply larger
+  than one canonical-CBOR value can hold — and `BestEffort` does not
+  special-case it: excluding a *healthy* item because the whole array
+  overflowed would silently drop good data to work around a scaling limit,
+  which is a different tradeoff than the one this section makes and needs
+  its own design (most plausibly a chunked or streamed export format, not
+  an extension of the exclusion field this section adds). `BestEffort`'s
+  `?` on that specific `try_encode` call is unchanged and still hard-fails
+  either way.
+- **§13.2's other named residual, ingest gating.** "Nothing rejects a
+  record between 1 MiB and 16 MiB at the point it enters the local
+  catalog" remains true and remains out of scope here, for the exact
+  reason §13.2 already gave: it changes what the product *accepts*, needs
+  its own spec, and — done naively — risks converting a partly-degraded
+  vault into an unopenable one, a strictly worse failure than the one it
+  would prevent. This section is about what `export` does with a record
+  that already got in, not about keeping one out in the first place.
+
+**A named, deliberate limit, not an oversight: `Strict`'s failure carries no
+hint that `--best-effort` exists.** VLT-PM00 §13's error taxonomy is
+static and low-resolution by design — `Display`/`Debug` never format a
+payload, and `vault-pm-cli`'s own `CliFailure::message()` maps every
+variant to one fixed, context-free sentence (`"vault-pm: invalid
+command"` for `BoundExceeded`, identical to every other cause of that same
+variant). A `Strict` export that fails on a poisoned item gets exactly that
+sentence, with nothing pointing the operator at `--best-effort`, the same
+way a failed `item edit` on a poisoned item points at nothing either. Two
+paths were considered and both rejected in favor of leaving this alone:
+teaching this one call site to emit a different, more specific message
+would be the one exception to a discipline every other command's every
+failure mode observes uniformly, for reasons unrelated to this section
+(VLT-PM00 §14.7's closed exit-class taxonomy exists partly so a script
+parsing this product's failures never has to learn a new shape); and
+retrying automatically under `BestEffort` whenever `Strict` fails would
+reintroduce exactly the silent-default problem option 1 above was rejected
+for, just one layer later. The operator's actual discovery path is this
+spec, the CLI README, and `--help` — the same path every other flag in
+this product's surface is discovered through, `--best-effort` included.
+
+**Tests.** `open.rs`:
+`portable_export_best_effort_excludes_a_synced_oversized_item_and_keeps_the_rest`
+reproduces §13.2's residual directly (`Strict` still fails the whole
+export on one synced oversized-opaque item) and then pins the fix
+(`BestEffort` excludes only that item, the vault is untouched by either
+call, and the resulting artifact opens with the one healthy item's
+plaintext present and the poisoned item's absent).
+`portable_export_best_effort_excludes_a_whole_mixed_conflict_not_just_its_
+oversized_half` builds one item with two current candidates — one
+ordinary, one oversized — and confirms the whole item is excluded, not the
+oversized candidate alone: the opened outcome shows zero candidates for
+that item, not one.
+`excluded_item_ids_field_is_optional_and_self_consistency_checked` pins
+the wire-level contract by hand-editing a real, valid artifact's decrypted
+fields: an ordinary `Strict` export stays exactly five fields; a
+manufactured field 6 naming an item id also present among `entries` is
+rejected (`IntegrityFailure`); a manufactured field 6 naming the same
+excluded id twice is rejected; a well-formed, disjoint field 6 opens fine
+and is reflected only in `excluded_item_count()`. `vault-pm-cli`:
+`portable_export_parser_accepts_the_best_effort_flag_after_the_
+destination` pins the closed grammar, including that the flag is
+recognized only in this one fixed position (`export --best-effort FILE`
+is invalid; a bare `export --best-effort` treats `--best-effort` as the
+destination, matching VLT-PM17 §2's pre-existing "a path beginning with
+`-` is a path value whenever it is the sole positional argument" rule).
+`excluded_items_report_lists_the_count_then_every_id_on_its_own_line` pins
+the exact rendering, including that zero excluded items still degrades to
+a bare count rather than an empty, confusing header. The low-level
+peer-signing fixtures a full closed-loop CLI reproduction would need
+(`vault-pm-cli`'s test host has no equivalent of `vault-pm-application`'s
+internal `seal_object`/`V1Keys::derive`, which are not part of that
+crate's public surface) live only at the application layer, which is
+where they already exist and where every test above runs; the CLI layer's
+own tests instead pin its grammar and rendering directly against the real
+`CliOutput` type.
 
 ## 14. Required verification
 

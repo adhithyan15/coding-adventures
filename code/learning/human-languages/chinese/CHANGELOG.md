@@ -5,6 +5,30 @@ tracks: one entry per authored tranche, describing what was added and why.
 
 ## [Unreleased]
 
+### Added — four school compounds with four-stage retrieval (#12789)
+
+- Added 17 super-gentle lessons for **中学**, **中学生**, **同学**, and
+  **上学**, each capped below five minutes and introduced sound-before-shape.
+- Added source-pinned stroke order and real-font ductus for only the two new
+  characters, **中** and **同**, reusing already secure **上**, **学**, and
+  **生** instead of front-loading another script cluster.
+- Added four spaced mixed-retrieval passes and a separately scored four-skill
+  payoff, including no-model writing and contrast with the already learned
+  primary-school and university ladders.
+
+### Added — first official HSK 3.0 vocabulary clusters (#12654, #12729)
+
+- Added three super-gentle chapters that secure 15 official Level 1 family,
+  school, and primary-school words through 40 lessons of five minutes or less.
+- Staged every new character as sound before shape, guided writing before
+  no-model recall, and familiar-character recombination before longer words.
+- Added four-skill retrieval and payoff checks that keep listening, speaking,
+  reading, and writing independently passable instead of letting pinyin or a
+  stronger skill hide a weaker one.
+- Added the authoritative chapter and curriculum shards, generated book and
+  narration artifacts, progress snapshots, and the CJK subset glyphs needed to
+  render the new stroke-component explanations without substitutions.
+
 ### Changed — complete the pre-A1 writing-stage runway (#12449)
 
 - Made the existing first-character practice an explicit model-visible guided

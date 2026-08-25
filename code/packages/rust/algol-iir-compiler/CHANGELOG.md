@@ -1,5 +1,53 @@
 # Changelog
 
+## 0.194.0 — 2026-08-25 — parenthesized selector identities
+
+Bounded static while analysis now treats parentheses as transparent around
+exact scalar self-references and boolean, integer, or real neutral literals.
+Parenthesized changing expressions remain conservative.
+
+## 0.193.0 — 2026-08-25 — unary-plus selector writes
+
+Bounded static while analysis now recognizes leading unary plus as the exact
+no-op already implemented by expression lowering. Integer identity tails remain
+stable, while unary minus continues to fail closed for both integer and real
+selectors.
+
+## 0.192.0 — 2026-08-25 — power-one selector writes
+
+Bounded static while analysis now recognizes integer and real exponentiation
+whose complete literal exponent chain evaluates to one. This matches the
+existing zero-multiply lowering exactly; dynamic, real-valued, zero, and
+otherwise non-unit exponents continue to fail closed.
+
+## 0.191.0 — 2026-08-25 — boolean identity selector chains
+
+Bounded static while analysis now recognizes left-associative boolean identity
+chains composed from `and true`, `or false`, or `eqv true`. Implication retains
+its directional single-operation rule, unsupported terms fail closed, and the
+ten-level selector-dependency cap is unchanged.
+
+## 0.190.0 — 2026-08-25 — real unit selector chains
+
+Bounded static while analysis now recognizes left-associative finite-real
+identity chains composed from multiplication and division by exact positive
+one. Division remains directional, non-unit terms fail closed, and the
+ten-level selector-dependency cap is unchanged.
+
+## 0.189.0 — 2026-08-25 — integer identity selector chains
+
+Bounded static while analysis now recognizes left-associative integer identity
+chains composed from additive zero or multiplicative one. Mixed-precedence
+chains remain structural, unsupported terms fail closed, and the ten-level
+selector-dependency cap is unchanged.
+
+## 0.188.0 — 2026-08-25 — even boolean negation selector writes
+
+Bounded static while analysis now recognizes even chains of unary `not` as
+exact boolean identity writes. Odd chains remain changing, binary identities
+under an even negation chain retain their existing structural proof, and the
+ten-level selector-dependency cap is unchanged.
+
 ## 0.187.0 — 2026-08-25 — real unit selector writes
 
 Bounded static while analysis now recognizes real multiplication and division

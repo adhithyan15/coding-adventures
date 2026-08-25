@@ -13,3 +13,4 @@ storage-core = { path = "../storage-core" }
 
 [dev-dependencies]
 coding_adventures_storage_fs = { path = "../storage-fs" }
+coding_adventures_zeroize = { path = "../zeroize" }

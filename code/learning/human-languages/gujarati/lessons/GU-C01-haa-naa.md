@@ -8,7 +8,7 @@ type: word
 headword: હા / ના
 gloss: yes / no (hā / nā)
 concept_tag: RESPONSE-YESNO
-prerequisites: [GU-C01-namaste]
+prerequisites: [GU-C01-namaste, GU-W02-bha]
 sounds: [long-aa, no-top-line]
 roots: [na-negative]
 duration:
@@ -18,8 +18,8 @@ requires:
 introduces:
   knowledge: [GU-CONCEPT-C01-HAANAA-01]
 practises:
-  knowledge: [GU-CONCEPT-C01-HAANAA-01, GU-CONCEPT-C01-NAMASTE-01]
-skills: [listening, speaking, reading]
+  knowledge: [GU-CONCEPT-C01-HAANAA-01, GU-CONCEPT-C01-NAMASTE-01, GU-SCRIPT-BHA-01, GU-SCRIPT-VA-01]
+skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
@@ -56,6 +56,13 @@ form, from Iceland to Gujarat for five thousand years.
 [PAUSE 1s]
 - [YOU SAY: "hā" (yes) and "nā" (no)]
 - [YOU SAY: the shared ancestor of *nā* and English *no* (PIE *\*ne*)]
+
+## Script retrieval
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-BHA-01, GU-SCRIPT-VA-01] -->
+<!-- hl-activity: {"id":"GU-C01-haa-naa-script-retrieval","kind":"text","assesses":["GU-SCRIPT-BHA-01","GU-SCRIPT-VA-01"],"prompt":"Without looking back, write ભ and વ once each.","answer":"ભ, વ","accepted":[],"feedback":{"correct":"Good: you retrieved both consonants from memory.","incorrect":"Look back once, hide the models, and try ભ and વ one time each."},"response_seconds":18} -->
+
+Hide the earlier models. Write **ભ**, then **વ**, one time each. Compare the
+two shapes and repair only the one that needs it.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C01-HAANAA-01, GU-CONCEPT-C01-NAMASTE-01] -->

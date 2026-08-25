@@ -137,6 +137,18 @@ trailing slash and backslash separators are rejected as empty components. The
 validator never enumerates Git, opens or follows a path, launches a
 process, reads the environment, or accesses the network.
 
+The process-free orphan-crate validator likewise accepts only a closed snapshot
+of normalized Cargo-manifest directories, recognized BUILD paths and states,
+and raw exemption-ledger records. It derives runnable ancestor coverage, empty
+BUILD diagnostics, invalid and stale exemptions, and the active `PENDING`
+count with stable language-neutral ordering. Artifact components are excluded
+by exact case-sensitive name; exemption aliases use the package's pinned
+Unicode 17 NFC and full-casefold tables, while suppression and stale checks use
+exact portable paths. Unsafe exemption paths are redacted to
+`code/BUILD-EXEMPTIONS`. The adapter does not enumerate the checkout, parse a
+live manifest or ledger, consult Git, launch a process, read the environment,
+or access the network.
+
 ## Installation
 
 ```bash

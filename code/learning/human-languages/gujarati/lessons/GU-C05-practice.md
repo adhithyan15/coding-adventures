@@ -3,10 +3,10 @@ schema_version: 2
 id: GU-C05-practice
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 310
-chapter: 6
+chapter: 7
 type: practice
 headword: (dialogue)
-gloss: Chapter 6 recap — the first verbs
+gloss: Chapter 7 recap — the first verbs
 concept_tag: REVIEW
 prerequisites: [GU-C05-bolvun, GU-C05-hun-gujarati-bolun-chhun, GU-C05-rahevun, GU-C05-kaam-karvun]
 sounds: []
@@ -27,7 +27,7 @@ variety: standard-gujarati
 reviews_of: [GU-C05-bolvun, GU-C05-hun-gujarati-bolun-chhun, GU-C05-rahevun, GU-C05-kaam-karvun, GU-C03-hun]
 ---
 
-# Chapter 6 — The first verbs
+# Chapter 7 — The first verbs
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C03-HUN-01, GU-CONCEPT-C05-BOLVUN-01, GU-CONCEPT-C05-HUNGUJARATIBOLUNCHHUN-01, GU-CONCEPT-C05-KAAMKARVUN-01, GU-CONCEPT-C05-RAHEVUN-01] -->

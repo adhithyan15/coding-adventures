@@ -110,6 +110,9 @@ export interface ScriptData {
    *  that ride on a consonant. Kept separate from `letters` so the consonant
    *  syllabary (and anything keyed on it being all-syllables) is untouched. */
   independentVowels?: Letter[];
+  /** Atomic vowel-free consonants used in final position, kept outside a
+   *  generated all-syllable grid so matrix and sibling invariants stay intact. */
+  finalConsonants?: Letter[];
   /** For a script with its own numerals: the digits 0–9 in the script's glyphs
    *  (౦౧౨…). Kept separate from `letters`, like `independentVowels`. */
   digits?: Letter[];
@@ -139,7 +142,11 @@ export const SCRIPTS: ScriptData[] = [
 /** Resolve a cited letter back to the exact canonical script font that owns it. */
 export function verifiedLetterFont(glyph: string, sourceUrl: string): string | undefined {
   return SCRIPTS.find((script) =>
-    [...script.letters, ...(script.independentVowels ?? [])].some(
+    [
+      ...script.letters,
+      ...(script.independentVowels ?? []),
+      ...(script.finalConsonants ?? []),
+    ].some(
       (letter) => letter.glyph === glyph && letter.strokeOrderSource?.url === sourceUrl,
     ),
   )?.font;

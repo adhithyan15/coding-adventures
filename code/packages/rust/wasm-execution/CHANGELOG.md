@@ -2,6 +2,298 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.58] - 2026-08-25 (Relaxed SIMD epic PR1: i8x16.relaxed_swizzle)
+
+### Added
+
+- `SimdOpKind::RelaxedSwizzle` execution arm (sub-opcode `0x100`, the
+  first opcode of the relaxed-simd epic that follows the now-complete
+  base SIMD epic, PR1-PR47 -- see `code/specs/
+  W19-wasm-relaxed-simd-first-slice.md`): a byte-for-byte copy of the
+  existing `Swizzle` arm's body (pop index vector `s`, pop data vector
+  `a`, `result[i] = a[s[i]]` if `s[i] < 16` else `0`). The relaxed-simd
+  spec deliberately leaves out-of-range-index behavior implementation-
+  defined; hand-verified against the real upstream
+  `i8x16_relaxed_swizzle.wast` corpus's own `either`-wrapped expected
+  values that this repo's existing clamp-to-zero choice is a literal
+  member of every `either` pair in that file, so no new numeric
+  semantics were needed -- own match arm rather than merging into
+  `Swizzle`'s pattern, matching this match's convention of one arm per
+  `SimdOpKind`.
+- Confirms no new decoder infrastructure was needed for this opcode:
+  `0x100` is the first sub-opcode in this table `>= 0x100`, and
+  LEB128-encodes as the 2-byte sequence `[0x80, 0x02]` -- the same
+  2-byte-continuation shape this crate already decodes for base-SIMD
+  values `>= 0x80` (e.g. `i32x4.add`'s `0xAE` -> `[0xAE, 0x01]`).
+- New tests: `i8x16_relaxed_swizzle_permutes_lanes_by_the_index_vector`,
+  `i8x16_relaxed_swizzle_out_of_range_index_lane_produces_zero`.
+
+## [0.9.57] - 2026-08-25 (SIMD PR47: v128.load64_lane/store64_lane)
+
+### Added
+
+- `decode_function_body`'s `0xFD` branch: the `sub_opcode == 0x54 ||
+  sub_opcode == 0x58 || sub_opcode == 0x55 || sub_opcode == 0x59 ||
+  sub_opcode == 0x56 || sub_opcode == 0x5A` gate (from PR44/PR45/PR46)
+  widened to also intercept `sub_opcode == 0x57 || sub_opcode == 0x5B`
+  -- `v128.load64_lane`/`v128.store64_lane`, one width up from PR46's
+  32-bit pair, reuse the IDENTICAL `DecodedOperand::SimdMemLane` shape
+  unchanged (`ImmLaneIdx2` is also a single raw byte per BinarySIMD.md,
+  so the one-byte lane read needs no change) -- no new decoder
+  infrastructure needed this time, just the widened condition.
+- `register_simd`: a new `sub_opcode == 0x57 || sub_opcode == 0x5B`
+  early-dispatch branch (same "intercept before the generic `SimdOpKind`
+  lookup" pattern PR44/PR45/PR46's own branches use), implementing:
+  - `v128.load64_lane` (`0x57`): pop the existing `v128` (top of stack),
+    pop the `i32` base address, bounds-checked 8-byte (little-endian)
+    read from memory 0 at `base + memarg offset` (via the existing
+    full-width `load_i64`), overwrite ONLY the selected lane's 8 bytes
+    of the popped `v128` (the other lane passes through unchanged),
+    push the result.
+  - `v128.store64_lane` (`0x5B`): pop the `v128` to read a lane from,
+    pop the `i32` base address, bounds-checked 8-byte write of the
+    selected lane's 8 bytes to memory 0 at `base + memarg offset`.
+  - Lane-index bounds check is `>= 2`, NOT the 32-bit pair's `>= 4` --
+    an `i64x2` v128 holds only 2 lanes (8 bytes each), not `i32x4`'s 4
+    (4 bytes each); reusing the wider bound would silently accept an
+    invalid lane index 2-3.
+- `SimdOpKind::Load64Lane | SimdOpKind::Store64Lane` added to the
+  `unreachable!` match arm (both are always intercepted by the early
+  dispatch above, before the generic `SimdOpKind` lookup runs).
+- 5 new unit tests: lane-preservation (load), memarg-offset honoring
+  (load), neighboring-byte isolation (store), past-end-of-memory
+  trapping (both directions), and out-of-range (`>= 2`) lane-index
+  rejection (both directions) -- direct mirrors of PR46's own 32-bit
+  test suite, at the 64-bit width. Closes the entire lane-load/store
+  family (PR44-47) and, with it, the larger load-extend/splat/zero/lane
+  epic started in PR40.
+
+## [0.9.56] - 2026-08-25 (SIMD PR46: v128.load32_lane/store32_lane)
+
+### Added
+
+- `decode_function_body`'s `0xFD` branch: the `sub_opcode == 0x54 ||
+  sub_opcode == 0x58 || sub_opcode == 0x55 || sub_opcode == 0x59` gate
+  (from PR44/PR45) widened to also intercept `sub_opcode == 0x56 ||
+  sub_opcode == 0x5A` -- `v128.load32_lane`/`v128.store32_lane`, one
+  width up from PR45's 16-bit pair, reuse the IDENTICAL
+  `DecodedOperand::SimdMemLane` shape unchanged (`ImmLaneIdx4` is also a
+  single raw byte per BinarySIMD.md, so the one-byte lane read needs no
+  change) -- no new decoder infrastructure needed this time, just the
+  widened condition.
+- `register_simd`: a new `sub_opcode == 0x56 || sub_opcode == 0x5A`
+  early-dispatch branch (same "intercept before the generic `SimdOpKind`
+  lookup" pattern PR44/PR45's own branches use), implementing:
+  - `v128.load32_lane` (`0x56`): pop the existing `v128` (top of stack),
+    pop the `i32` base address, bounds-checked 4-byte (little-endian)
+    read from memory 0 at `base + memarg offset` (via the existing
+    full-width `load_i32`), overwrite ONLY the selected lane's 4 bytes
+    of the popped `v128` (every other lane passes through unchanged),
+    push the result.
+  - `v128.store32_lane` (`0x5A`): pop the `v128` to read a lane from,
+    pop the `i32` base address, bounds-checked 4-byte write of the
+    selected lane's 4 bytes to memory 0 at `base + memarg offset`.
+  - Lane-index bounds check is `>= 4`, NOT the 16-bit pair's `>= 8` --
+    an `i32x4` v128 holds 4 lanes (4 bytes each), not `i16x8`'s 8 (2
+    bytes each); reusing the wider bound would silently accept an
+    invalid lane index 4-7.
+- `SimdOpKind::Load32Lane | SimdOpKind::Store32Lane` added to the
+  `unreachable!` match arm (both are always intercepted by the early
+  dispatch above, before the generic `SimdOpKind` lookup runs).
+- 5 new unit tests: lane-preservation (load), memarg-offset honoring
+  (load), neighboring-byte isolation (store), past-end-of-memory
+  trapping (both directions), and out-of-range (`>= 4`) lane-index
+  rejection (both directions) -- direct mirrors of PR45's own 16-bit
+  test suite, at the 32-bit width.
+
+## [0.9.55] - 2026-08-25 (SIMD PR45: v128.load16_lane/store16_lane)
+
+### Added
+
+- `decode_function_body`'s `0xFD` branch: the `sub_opcode == 0x54 ||
+  sub_opcode == 0x58` gate (from PR44) widened to also intercept
+  `sub_opcode == 0x55 || sub_opcode == 0x59` -- `v128.load16_lane`/
+  `v128.store16_lane`, one width up from PR44's 8-bit pair, reuse the
+  IDENTICAL `DecodedOperand::SimdMemLane` shape unchanged (both
+  `ImmLaneIdx16` and `ImmLaneIdx8` are single raw bytes per
+  BinarySIMD.md, so the one-byte lane read needs no change) -- no new
+  decoder infrastructure needed this time, just the widened condition.
+- `register_simd`: a new `sub_opcode == 0x55 || sub_opcode == 0x59`
+  early-dispatch branch (same "intercept before the generic `SimdOpKind`
+  lookup" pattern PR44's own `0x54`/`0x58` branch uses), implementing:
+  - `v128.load16_lane` (`0x55`): pop the existing `v128` (top of stack),
+    pop the `i32` base address, bounds-checked 2-byte (little-endian)
+    read from memory 0 at `base + memarg offset`, overwrite ONLY the
+    selected lane's 2 bytes of the popped `v128` (every other lane
+    passes through unchanged), push the result.
+  - `v128.store16_lane` (`0x59`): pop the `v128` to read a lane from,
+    pop the `i32` base address, bounds-checked 2-byte write of the
+    selected lane's 2 bytes to memory 0 at `base + memarg offset`.
+  - Lane-index bounds check is `>= 8`, NOT the 8-bit pair's `>= 16` --
+    an `i16x8` v128 holds 8 lanes (2 bytes each), not `i8x16`'s 16 (1
+    byte each); reusing the wider bound would silently accept an
+    invalid lane index 8-15.
+- `SimdOpKind::Load16Lane | SimdOpKind::Store16Lane` added to the
+  `unreachable!` match arm (both are always intercepted by the early
+  dispatch above, before the generic `SimdOpKind` lookup runs).
+- 8 new unit tests: lane-preservation (load), memarg-offset honoring
+  (load), neighboring-byte isolation (store), past-end-of-memory
+  trapping (both directions), and out-of-range (`>= 8`) lane-index
+  rejection (both directions) -- direct mirrors of PR44's own 8-bit
+  test suite, at the 16-bit width.
+
+## [0.9.54] - 2026-08-25 (SIMD PR44: v128.load8_lane/store8_lane)
+
+### Added
+
+- New `DecodedOperand::SimdMemLane { sub_opcode, offset, lane }` variant:
+  the FIRST SIMD operand shape needing THREE things together (a memarg,
+  a lane-index immediate, and -- read off the stack at execute time, not
+  carried in the operand itself -- an existing `v128`). No existing
+  variant fits: `MemArg` has no lane-index field; `Simd{sub_opcode,aux}`
+  (the shape every OTHER memarg-carrying SIMD op reuses) has only one
+  spare `u32` slot, already fully spoken for by the memarg offset.
+  `convert_operand` packs this via the SAME `simd_consts` const-pool
+  side-table `V128Const`/`Shuffle` already use for their own oversized
+  immediates (offset packed into slot bytes 0-3, lane into byte 4) --
+  sound for the identical reason `Shuffle`'s own doc comment gives: no
+  new field to thread through every call-frame save/restore site
+  `simd_consts` is already wired through.
+- `decode_function_body`'s `0xFD` branch: a new `sub_opcode == 0x54 ||
+  sub_opcode == 0x58` arm, checked BEFORE the generic memarg-detection
+  gate (every load/store-shaped SIMD opcode with an offset/align
+  immediate must be in this gate, per PR40's own decoder-desync lesson)
+  -- these two sub-opcodes carry ONE MORE immediate (the lane index)
+  than that gate knows to consume, so routing them through it would
+  silently drop the lane-index byte and desync the rest of the function
+  body.
+- `register_simd`: a new `sub_opcode == 0x54 || sub_opcode == 0x58`
+  early-dispatch branch (same "intercept before the generic `SimdOpKind`
+  lookup" pattern `v128.const`/`i8x16.shuffle` already use), implementing:
+  - `v128.load8_lane` (`0x54`): pop the existing `v128` (top of stack),
+    pop the `i32` base address, bounds-checked 1-byte read from memory 0
+    at `base + memarg offset`, overwrite ONLY the selected lane of the
+    popped `v128` with that byte (every other lane passes through
+    unchanged), push the result.
+  - `v128.store8_lane` (`0x58`): pop the `v128` to read a lane from, pop
+    the `i32` base address, bounds-checked 1-byte write of the selected
+    lane's byte to memory 0 at `base + memarg offset`.
+  - Defense-in-depth lane-index bounds check (`>= 16` errors cleanly,
+    same discipline as `i8x16.shuffle`'s own `>= 32` check) -- real
+    validation-time rejection lives in `wasm-validator` (see that
+    crate's own changelog), this is only a backstop against a hand-built
+    instruction stream that skipped validation.
+- 6 new dedicated unit tests: lane-preservation (every OTHER lane of the
+  base `v128` unchanged after `load8_lane`), nonzero memarg offset
+  honored, `store8_lane` writes only the selected lane with no
+  neighboring-byte corruption, out-of-bounds-memory traps cleanly (not a
+  panic) for both directions, and out-of-range lane index (`>= 16`)
+  errors cleanly (not a panic) for both directions.
+
+## [0.9.53] - 2026-08-25 (SIMD PR42: v128.load_extend family)
+
+### Added
+
+- `v128.load8x8_s`/`_u`, `v128.load16x4_s`/`_u`, `v128.load32x2_s`/`_u`
+  (`SimdOpKind::Load8x8S`/`Load8x8U`/`Load16x4S`/`Load16x4U`/
+  `Load32x2S`/`Load32x2U`, sub-opcodes `0x01`-`0x06`): pop the `i32` base
+  address, add the instruction's own `memarg` offset, then read 8 raw
+  bytes total from memory 0 as a set of narrow lanes (8x1, 4x2, or 2x4
+  bytes depending on width) via the existing scalar `load_i32_8s`/
+  `load_i32_8u`/`load_i32_16s`/`load_i32_16u`/`load_i64_32s`/
+  `load_i64_32u` narrow loaders -- each already bounds-checked and
+  already implementing the correct sign/zero-extension semantics reused
+  unchanged from the scalar `iNN.load8_s`/etc. family. Each loaded lane
+  is placed independently (little-endian) into the corresponding, WIDER
+  lane of a new `v128`: `load8x8` produces `i16x8`, `load16x4` produces
+  `i32x4`, `load32x2` produces `i64x2`. The FIRST opcodes in this table
+  that widen EACH loaded lane independently, rather than broadcasting one
+  value (`Load8Splat` etc., PR40) or zero-filling the unused lanes
+  (`Load32Zero`/`Load64Zero`, PR41).
+
+### Fixed
+
+- The `0xFD`-prefixed SIMD instruction decoder's memarg-detection gate
+  (widened in PR40/PR41 to cover `0x07..=0x0A` and `0x5C`/`0x5D`) did not
+  yet recognize `0x01..=0x06`. Folded into the existing splat-family
+  range, now `0x01..=0x0A` -- without this, every `v128.load_extend` op
+  with a non-zero `offset=` immediate would have silently fallen through
+  to the "no immediate" decode arm (leaving `aux` at 0) and read from the
+  wrong address. Caught by `v128_load8x8_s_honors_a_nonzero_memarg_offset`
+  and the upstream `simd_load_extend.wast` corpus's own offset-variant
+  `assert_return` directives, all of which would otherwise silently
+  mis-grade. Same lesson PR40/PR41's own decoder fixes already
+  established -- every new memarg-carrying SIMD opcode must be added to
+  this gate, not just to the executor's own `match`; re-verified this gate
+  explicitly for this PR's own new sub-opcode range rather than assuming
+  a prior widening still covers it.
+
+### Tests
+
+- `v128_load8x8_s_sign_extends_each_byte_into_its_own_i16_lane`,
+  `v128_load8x8_u_zero_extends_each_byte_into_its_own_i16_lane`,
+  `v128_load16x4_s_sign_extends_each_halfword_into_its_own_i32_lane`,
+  `v128_load16x4_u_zero_extends_each_halfword_into_its_own_i32_lane`,
+  `v128_load32x2_s_sign_extends_each_word_into_its_own_i64_lane`,
+  `v128_load32x2_u_zero_extends_each_word_into_its_own_i64_lane`: each
+  writes real bytes to memory via plain scalar `i32.store`s (with the
+  LAST narrow lane's high bit deliberately set, e.g. byte `0x80`) and
+  confirms the exact lane-by-lane sign- or zero-extended result -- the
+  correctness-critical distinction this whole family exists to test (a
+  byte/halfword/word with its high bit set must sign-extend to a
+  NEGATIVE lane for `_s` but zero-extend to a small POSITIVE lane for
+  `_u`).
+- `v128_load8x8_s_honors_a_nonzero_memarg_offset`: same "prove the
+  `memarg` offset, not just the base address, is honored" discipline
+  PR40/PR41 established, this PR's own regression test for the
+  decoder-gate fix above.
+- `v128_load_extend_family_past_the_end_of_memory_traps_cleanly_not_panic`:
+  same "verify bounds guards adversarially" discipline as the
+  `load_splat`/`load_zero` families, checked for all 6 new opcodes (every
+  variant reads exactly 8 bytes total regardless of lane width, so one
+  shared width applies to all of them).
+
+## [0.9.52] - 2026-08-25 (SIMD PR41: v128.loadN_zero family)
+
+### Added
+
+- `v128.load32_zero`/`load64_zero` (`SimdOpKind::Load32Zero`/
+  `Load64Zero`, sub-opcodes `0x5C`/`0x5D`): pop the `i32` base address,
+  add the instruction's own `memarg` offset, bounds-checked read of 4/8
+  raw bytes (little-endian) from memory 0 via the existing full-width
+  `load_i32`/`load_i64` loaders, place those bytes in the LOW 32/64 bits
+  of a new `v128` and ZERO the remaining bytes. Same "load then fill a
+  v128" shape as `Load32Splat`/`Load64Splat` (SIMD PR40), but zeroed
+  instead of repeated.
+
+### Fixed
+
+- The `0xFD`-prefixed SIMD instruction decoder's memarg-detection gate
+  (widened in PR40 to cover `0x07..=0x0A`) only recognized `v128.load`/
+  `v128.store`/the `load_splat` family. Widened again to also cover
+  `0x5C`/`0x5D` -- without this, every `v128.loadN_zero` with a non-zero
+  `offset=` immediate would have silently fallen through to the "no
+  immediate" decode arm (leaving `aux` at 0) and read from the wrong
+  address. Caught by `v128_load32_zero_honors_a_nonzero_memarg_offset`
+  and the upstream `simd_load_zero.wast` corpus's own offset-variant
+  `assert_return` directives, all of which would otherwise silently
+  mis-grade. Same lesson PR40's own decoder fix already established --
+  every new memarg-carrying SIMD opcode must be added to this gate, not
+  just to the executor's own `match`.
+
+### Tests
+
+- `v128_load32_zero_places_four_bytes_in_the_low_lane_and_zeroes_the_
+  rest`, `v128_load64_zero_places_eight_bytes_in_the_low_lane_and_
+  zeroes_the_rest`: each reads back the exact bytes a plain scalar
+  `i32.store`/`i64.store` wrote to real memory, placed in the low lane
+  with the rest ZEROED -- same "prove it reads genuine `LinearMemory`
+  content" discipline as the existing `v128.load`/`load_splat` tests.
+- `v128_load32_zero_honors_a_nonzero_memarg_offset`: pins the
+  decoder-gate fix above.
+- `v128_load_zero_family_past_the_end_of_memory_traps_cleanly_not_panic`:
+  both widths trap, not panic, when `address + width` overruns memory.
+
 ## [0.9.51] - 2026-08-25 (SIMD PR40: v128.loadN_splat family)
 
 ### Added

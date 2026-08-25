@@ -1,7 +1,7 @@
 {
   "language": "russian",
-  "lessonCount": 84,
-  "atomMeasurableLessons": 84,
+  "lessonCount": 88,
+  "atomMeasurableLessons": 88,
   "atomMeasurementBlindLessons": 0,
   "durationViolations": 0,
   "atomLessonSpikes": 1,
@@ -17,16 +17,16 @@
   "forwardReviews": 0,
   "forwardReferences": 8,
   "atomsTaught": 160,
-  "atomsNeverRevisited": 22,
-  "reinforcementWindowMisses": 269,
+  "atomsNeverRevisited": 18,
+  "reinforcementWindowMisses": 267,
   "reinforcementMissesByWindow": {
-    "R1": 42,
-    "R2": 105,
+    "R1": 39,
+    "R2": 101,
     "R3": 117,
-    "R4": 5
+    "R4": 10
   },
   "payoffSurprises": 2,
-  "writingPracticeLessons": 36,
+  "writingPracticeLessons": 40,
   "firstWritingPracticeAt": 0,
   "lessonsBeforeWritingPractice": 0,
   "findings": [
@@ -61,7 +61,7 @@
     {
       "language": "russian",
       "kind": "reinforcement",
-      "count": 269,
+      "count": 267,
       "unit": "missed window(s)",
       "detail": "add retrieval at the expanding R1-R4 intervals"
     },

@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.11] - 2026-08-25
+
+### Added
+
+- **Orphan-crate validation conformance**: the Python validator now consumes
+  all four language-neutral orphan snapshots and derives runnable ancestor
+  coverage, closest empty BUILD diagnostics, invalid and stale exemptions,
+  and active `PENDING` debt from inert records only.
+- **Portable redacted policy checks**: exemption paths use pinned Unicode 17
+  NFC and full-casefold identity, exact case-sensitive artifact and snapshot
+  joins, Python-compatible canonical diagnostic ordering, and fixed-ledger
+  redaction without adding filesystem, Git, process, environment, or network
+  authority.
+
 ## [0.3.10] - 2026-08-25
 
 ### Added

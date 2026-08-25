@@ -3,10 +3,10 @@ schema_version: 2
 id: GU-C02-practice
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 150
-chapter: 3
+chapter: 4
 type: practice
 headword: (dialogue)
-gloss: Chapter 3 recap — the introduction exchange
+gloss: Chapter 4 recap — the introduction exchange
 concept_tag: REVIEW
 prerequisites: [GU-C02-maarun-naam-chhe, GU-C02-tamarun-naam-shun-chhe, GU-C02-anand]
 sounds: []
@@ -27,7 +27,7 @@ variety: standard-gujarati
 reviews_of: [GU-C02-naam, GU-C02-maarun, GU-C02-chhe, GU-C02-maarun-naam-chhe, GU-C02-tu-tame, GU-C02-shun, GU-C02-tamarun-naam-shun-chhe, GU-C02-anand]
 ---
 
-# Chapter 3 — The introduction exchange
+# Chapter 4 — The introduction exchange
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C02-ANAND-01, GU-CONCEPT-C02-CHHE-01, GU-CONCEPT-C02-MAARUN-01, GU-CONCEPT-C02-MAARUNNAAMCHHE-01, GU-CONCEPT-C02-NAAM-01, GU-CONCEPT-C02-SHUN-01, GU-CONCEPT-C02-TAMARUNNAAMSHUNCHHE-01, GU-CONCEPT-C02-TUTAME-01] -->

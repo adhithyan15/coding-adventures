@@ -106,7 +106,12 @@ pub enum F64LaneExpected {
 /// its negation) satisfies `NanCanonical`. See the WebAssembly spec's own
 /// NaN propagation rules for why exact NaN payloads aren't always
 /// deterministic across conforming implementations.
-#[derive(Debug, Clone, Copy, PartialEq)]
+///
+/// No longer `Copy` as of [`Self::Either`] (relaxed SIMD epic PR1) — a
+/// `Box<Expected>` can't be. Every existing call site already took
+/// `&Expected`/moved a freshly-constructed value, so this cost nothing;
+/// confirmed by this crate's own test suite passing unchanged.
+#[derive(Debug, Clone, PartialEq)]
 pub enum Expected {
     Value(ConstValue),
     NanCanonicalF32,
@@ -136,6 +141,27 @@ pub enum Expected {
     /// predict which specific function pointer a table lookup returns,
     /// only that it isn't null.
     RefFuncAny,
+    /// `(either A B)` (relaxed SIMD epic PR1 — see `code/specs/
+    /// W19-wasm-relaxed-simd-first-slice.md`) — the actual result must
+    /// match `A` **or** `B`, not necessarily either specific one. The
+    /// upstream corpus uses this to grade relaxed-simd ops, which the
+    /// spec deliberately leaves implementation-defined for certain input
+    /// patterns (e.g. `i8x16.relaxed_swizzle`'s out-of-range-index
+    /// behavior can be "clamp to zero" OR "wrap modulo the lane count",
+    /// both conforming). `A`/`B` are themselves full `Expected` values
+    /// (boxed, recursively — the WAST grammar itself allows nesting),
+    /// not just `ConstValue`s — this is a NEW top-level assert_return
+    /// combinator, not a new `ConstValue`/lane shape like `V128F32x4`/
+    /// `V128F64x2` above. Grading lives in `wasm-conformance`'s
+    /// `value_matches_expected`, which just tries `A` then `B` — see that
+    /// function's own `Either` arm. Discovered by reading the real
+    /// upstream `i8x16_relaxed_swizzle.wast`/`i16x8_relaxed_q15mulr_s.
+    /// wast` corpus content directly, not assumed from the opcode list —
+    /// every relaxed-simd `.wast` file at this repo's pinned
+    /// `WebAssembly/testsuite` commit uses `either` at least once, so
+    /// this is a genuine prerequisite for vendoring ANY relaxed-simd
+    /// fixture, not an optional nicety.
+    Either(Box<Expected>, Box<Expected>),
 }
 
 /// The three ways a `.wast` script can embed a module for `assert_invalid`/
@@ -453,6 +479,20 @@ fn parse_expected(e: &SExpr) -> Result<Expected, WastParseError> {
         // forms carry no second element at all.
         ("ref.null", None) => Ok(Expected::RefNullAny),
         ("ref.func", None) => Ok(Expected::RefFuncAny),
+        // `(either A B)` (relaxed SIMD epic PR1 -- see [`Expected::Either`]'s
+        // own doc comment). `lit` is always `None` here in practice --
+        // both children are LISTS (e.g. `(v128.const i8x16 ...)`), never a
+        // bare atom, so `as_atom()` on `items[1]` never matches -- but the
+        // guard doesn't need to check `lit` itself, `kind` alone
+        // disambiguates. Recurses through the same `parse_expected` this
+        // match arm lives in, so an `either` arm can in principle be any
+        // other `Expected` shape (a NaN class, a nested `either`, etc.),
+        // not just a plain `v128.const`/`ConstValue`.
+        ("either", _) => {
+            let a = parse_expected(expect_get(items, 1)?)?;
+            let b = parse_expected(expect_get(items, 2)?)?;
+            Ok(Expected::Either(Box::new(a), Box::new(b)))
+        }
         _ => Ok(Expected::Value(parse_const_value(e)?)),
     }
 }
@@ -852,6 +892,54 @@ mod tests {
         match &dirs[0] {
             Directive::AssertReturn { expected, .. } => {
                 assert!(matches!(expected[0], Expected::Value(ConstValue::V128(_))), "expected the plain byte-exact V128 path, got {:?}", expected[0]);
+            }
+            other => panic!("expected AssertReturn, got {other:?}"),
+        }
+    }
+
+    // ── Relaxed SIMD epic PR1: `(either A B)` -- see code/specs/
+    // W19-wasm-relaxed-simd-first-slice.md ───────────────────────────────
+
+    #[test]
+    fn either_of_two_v128_const_values_parses_as_expected_either() {
+        // The real upstream shape (`i8x16_relaxed_swizzle.wast`):
+        // `(assert_return (invoke ...) (either (v128.const i8x16 ...)
+        // (v128.const i8x16 ...)))`.
+        let dirs = parse_script(
+            r#"(assert_return (invoke "f") (either (v128.const i32x4 0 0 0 0) (v128.const i32x4 1 1 1 1)))"#,
+        )
+        .unwrap();
+        match &dirs[0] {
+            Directive::AssertReturn { expected, .. } => {
+                let zeros = [0u8; 16];
+                let mut ones = [0u8; 16];
+                for lane in 0..4 {
+                    ones[lane * 4..lane * 4 + 4].copy_from_slice(&1i32.to_le_bytes());
+                }
+                assert_eq!(
+                    expected[0],
+                    Expected::Either(
+                        Box::new(Expected::Value(ConstValue::V128(zeros))),
+                        Box::new(Expected::Value(ConstValue::V128(ones))),
+                    )
+                );
+            }
+            other => panic!("expected AssertReturn, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn either_recurses_through_parse_expected_for_non_v128_children() {
+        // `either`'s children are full `Expected` values, not just
+        // `ConstValue` -- confirms the recursion by nesting a NaN-class
+        // expectation (a shape that ISN'T a plain `ConstValue`) as one arm.
+        let dirs = parse_script(r#"(assert_return (invoke "f") (either (f32.const nan:canonical) (f32.const 0)))"#).unwrap();
+        match &dirs[0] {
+            Directive::AssertReturn { expected, .. } => {
+                assert_eq!(
+                    expected[0],
+                    Expected::Either(Box::new(Expected::NanCanonicalF32), Box::new(Expected::Value(ConstValue::F32Bits(0))))
+                );
             }
             other => panic!("expected AssertReturn, got {other:?}"),
         }

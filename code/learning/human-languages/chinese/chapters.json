@@ -250,6 +250,101 @@
           "ZH-DIALOGUE-POLITE"
         ]
       }
+    },
+    {
+      "chapter": 12,
+      "title": "People under one roof",
+      "label": "ch:zh-family-six",
+      "canDo": "I can understand, say, read and write six HSK Level 1 people-and-family words, building 儿子, 女儿 and 家人 only after their spoken meanings and component characters are secure.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "ZH-C12-practice",
+        "kind": "writing",
+        "summary": "Six family words pass separate listening, speaking, reading and no-model writing checks; pinyin cannot compensate for an unread character, and a strong skill cannot compensate for a weak one.",
+        "assesses": [
+          "ZH-PERFORMANCE-FAMILY-SIX-FOUR-SKILL-01",
+          "ZH-LEX-REN-01",
+          "ZH-LEX-NU-01",
+          "ZH-LEX-ERZI-01",
+          "ZH-LEX-NUER-01",
+          "ZH-LEX-JIA-01",
+          "ZH-LEX-JIAREN-01",
+          "ZH-SCRIPT-ER-CHAR-01",
+          "ZH-SCRIPT-JIA-01"
+        ]
+      }
+    },
+    {
+      "chapter": 13,
+      "title": "From study to university student",
+      "label": "ch:zh-school-six",
+      "canDo": "I can understand, say, read and write six HSK Level 1 size-and-school words, gaining 大, 学 and 生 one gently staged character at a time before recombining them as 大家, 学生, 大学 and 大学生.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "ZH-C13-practice",
+        "kind": "writing",
+        "summary": "Three newly secured characters produce six useful words, each checked separately in listening, speaking, unassisted reading and no-model writing.",
+        "assesses": [
+          "ZH-PERFORMANCE-SCHOOL-SIX-FOUR-SKILL-01",
+          "ZH-LEX-DA-01",
+          "ZH-LEX-DAJIA-01",
+          "ZH-LEX-XUE-01",
+          "ZH-LEX-XUESHENG-01",
+          "ZH-LEX-DAXUE-01",
+          "ZH-LEX-DAXUESHENG-01",
+          "ZH-SCRIPT-DA-01",
+          "ZH-SCRIPT-XUE-01",
+          "ZH-SCRIPT-SHENG-01"
+        ]
+      }
+    },
+    {
+      "chapter": 14,
+      "title": "One small step into school",
+      "label": "ch:zh-primary-three",
+      "canDo": "I can understand, say, read and write 小, 小学 and 小学生, gaining only the three-stroke 小 before recombining it with the already secure 学 and 生.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "ZH-C14-practice",
+        "kind": "writing",
+        "summary": "One new glyph expands into three official Level 1 words, each checked independently in listening, speaking, unassisted reading and no-model writing.",
+        "assesses": [
+          "ZH-PERFORMANCE-PRIMARY-THREE-FOUR-SKILL-01",
+          "ZH-LEX-XIAO-01",
+          "ZH-LEX-XIAOXUE-01",
+          "ZH-LEX-XIAOXUESHENG-01",
+          "ZH-SCRIPT-XIAO-01"
+        ]
+      }
+    },
+    {
+      "chapter": 15,
+      "title": "A wider school map",
+      "label": "ch:zh-school-compounds",
+      "canDo": "I can understand, say, read and write 中学, 中学生, 同学 and 上学 after gaining only 中 and 同 through source-verified, gently staged handwriting practice.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "ZH-C15-practice",
+        "kind": "writing",
+        "summary": "Four official Level 1 school words are retrieved across four spaced reviews, then checked independently in listening, speaking, unassisted reading and no-model writing.",
+        "assesses": [
+          "ZH-PERFORMANCE-SCHOOL-COMPOUNDS-FOUR-SKILL-01",
+          "ZH-LEX-ZHONGXUE-01",
+          "ZH-LEX-ZHONGXUESHENG-01",
+          "ZH-LEX-TONGXUE-01",
+          "ZH-LEX-SHANGXUE-01",
+          "ZH-SCRIPT-ZHONG-01",
+          "ZH-SCRIPT-TONG-01"
+        ]
+      }
     }
   ]
 }

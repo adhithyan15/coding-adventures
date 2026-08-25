@@ -11,8 +11,8 @@ fn main() {
     use text_native_coretext::{CoreTextMetrics, CoreTextResolver, CoreTextShaper};
 
     let diagram = parse_xychart(
-        r##"%%{init: {"xyChart": {"width": 720, "height": 440, "titleFontSize": 24, "titlePadding": 14, "showDataLabel": true, "showDataLabelOutsideBar": true, "xAxis": {"labelFontSize": 13, "labelPadding": 7, "titleFontSize": 17, "titlePadding": 8, "showTick": false, "axisLineWidth": 4}, "yAxis": {"labelFontSize": 15, "labelPadding": 8, "titleFontSize": 18, "titlePadding": 9, "tickLength": 12, "tickWidth": 4, "axisLineWidth": 5}}, "themeVariables": {"xyChart": {"dataLabelColor": "#0b5d4b"}}}}%%
-xychart
+        r##"%%{init: {"xyChart": {"width": 720, "height": 440, "chartOrientation": "vertical", "plotReservedSpacePercent": 55, "titleFontSize": 24, "titlePadding": 14, "showLegend": true, "legendFontSize": 21, "legendPadding": 16, "showDataLabel": true, "showDataLabelOutsideBar": true, "xAxis": {"labelFontSize": 13, "labelPadding": 7, "labelRotation": -45, "titleFontSize": 17, "titlePadding": 8, "showTick": false, "axisLineWidth": 4}, "yAxis": {"labelFontSize": 15, "labelPadding": 8, "titleFontSize": 18, "titlePadding": 9, "tickLength": 12, "tickWidth": 4, "axisLineWidth": 5}}, "themeVariables": {"xyChart": {"backgroundColor": "#fff8e7", "titleColor": "#264653", "plotColorPalette": "#2a9d8f, #e76f51", "dataLabelColor": "#0b5d4b", "xAxisLabelColor": "#005f73", "xAxisTitleColor": "#0a9396", "xAxisTickColor": "#94d2bd", "xAxisLineColor": "#001219", "yAxisLabelColor": "#9b2226", "yAxisTitleColor": "#ae2012", "yAxisTickColor": "#ee9b00", "yAxisLineColor": "#ca6702"}}}}%%
+xychart vertical
 title "Quarterly Throughput"
 x-axis "Quarter" [Q1, Q2, Q3, Q4]
 y-axis "Requests" 0 --> 100

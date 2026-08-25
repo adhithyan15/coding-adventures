@@ -367,6 +367,70 @@ mod tests {
         (handle, path)
     }
 
+    /// Per-attempt timeout for [`wait_for_freed_slot`].
+    ///
+    /// Short on purpose: see that function's doc comment for why bounding
+    /// each attempt by something as large as `client`'s `DEFAULT_TIMEOUT`
+    /// (1.5s) is itself the bug this replaces — a single slow attempt could
+    /// consume nearly this test's whole retry budget. 200ms is generous for
+    /// the fast path (server already scheduled, request served in
+    /// microseconds) while still cheap enough that dozens of attempts fit
+    /// inside [`OVERALL_WAIT_TIMEOUT`].
+    const PROBE_TIMEOUT: Duration = Duration::from_millis(200);
+
+    /// Overall bound for [`wait_for_freed_slot`].
+    ///
+    /// Several multiples of [`CONNECTION_TIMEOUT`] (2s), not that constant
+    /// itself: this test's first fix polled with a `CONNECTION_TIMEOUT`-wide
+    /// overall deadline and *still* flaked on GitHub Actions' shared
+    /// `ubuntu-latest` runners (never locally, including under simulated
+    /// `yes`-process CPU load), because the real bug was the per-attempt
+    /// bound, not the overall one — see [`wait_for_freed_slot`]. This is
+    /// generous enough to absorb genuine multi-second CI scheduling
+    /// contention without the test hanging indefinitely on a real
+    /// regression.
+    const OVERALL_WAIT_TIMEOUT: Duration = Duration::from_secs(10);
+
+    /// Poll for a server that is expected to have just freed a connection
+    /// slot to actually accept a new one, using a short per-attempt probe
+    /// timeout rather than `client::wait_until_ready`'s `DEFAULT_TIMEOUT`
+    /// (1.5s) one.
+    ///
+    /// Dropping a held-open connection closes the socket on the client side
+    /// immediately, but the server only releases that connection's slot
+    /// (`ConnectionSlotGuard`'s `Drop`) once its handler thread's blocking
+    /// read notices the close — which requires the OS to actually schedule
+    /// that thread. Under CI's shared, contended `ubuntu-latest` runners,
+    /// scheduling delays of more than one connection-timeout's worth of
+    /// wall-clock time are apparently real: a fresh polling connection's own
+    /// `ping` can just as easily land in the accept backlog before the
+    /// server's accept loop gets scheduled to reject or serve it, and then
+    /// block waiting for a response that never comes until its own timeout
+    /// elapses. A retry loop built on `client::wait_until_ready` therefore
+    /// has a hidden flaw for this exact scenario: each attempt is bounded by
+    /// `DEFAULT_TIMEOUT`, so under contention a *single* attempt can consume
+    /// nearly an entire short overall budget, leaving far fewer real
+    /// attempts than the retry interval would suggest. Bounding each attempt
+    /// by a short `probe_timeout` instead means a slow or still-refused
+    /// attempt only costs that much of the budget, so this loop gets many
+    /// more real attempts within `overall_timeout`.
+    fn wait_for_freed_slot(
+        path: &Path,
+        probe_timeout: Duration,
+        overall_timeout: Duration,
+    ) -> bool {
+        let deadline = Instant::now() + overall_timeout;
+        loop {
+            if client::ping_with_timeout(path, probe_timeout).unwrap_or(false) {
+                return true;
+            }
+            if Instant::now() >= deadline {
+                return false;
+            }
+            std::thread::sleep(Duration::from_millis(20));
+        }
+    }
+
     #[test]
     fn ping_unlock_get_lock_and_status_round_trip_over_a_real_socket() {
         let path = scratch_socket_path();
@@ -504,6 +568,13 @@ mod tests {
     /// every slot with silent connections, confirm the next connection is
     /// closed without a response rather than served, then free one slot and
     /// confirm a real request succeeds again.
+    ///
+    /// Confirming the freed slot works again is polled via
+    /// [`wait_for_freed_slot`] rather than a single `ping`, and deliberately
+    /// *not* via `client::wait_until_ready` either — see that function's doc
+    /// comment for why a `DEFAULT_TIMEOUT`-bound retry loop is itself
+    /// miscalibrated for this exact scenario (it shipped once, flaked on
+    /// GitHub Actions' shared runners, and was replaced by this).
     #[test]
     fn connections_past_the_concurrency_cap_are_dropped_and_capacity_recovers() {
         let path = scratch_socket_path();
@@ -539,8 +610,21 @@ mod tests {
         }
 
         // Freeing exactly one slot lets exactly one more connection through.
-        silent.pop();
-        assert!(client::ping(&path).unwrap());
+        //
+        // Dropping a `UnixStream` here closes the socket on *this* (the
+        // client) side immediately, but the server's handler thread for that
+        // connection only learns of the close — and only then releases the
+        // slot via `ConnectionSlotGuard` — the next time its blocking read
+        // notices EOF or an error, which is scheduled independently and not
+        // guaranteed to have happened by the time `pop` returns. A single
+        // immediate `ping` therefore races the server's own slot release, so
+        // this polls instead — see `wait_for_freed_slot`'s doc comment for
+        // why it uses a short per-attempt probe timeout rather than
+        // `client::wait_until_ready`'s `DEFAULT_TIMEOUT`-bound one.
+        assert!(
+            wait_for_freed_slot(&path, PROBE_TIMEOUT, OVERALL_WAIT_TIMEOUT),
+            "a freed slot must become usable within the overall wait bound"
+        );
 
         drop(silent);
         client::shutdown(&path).unwrap();

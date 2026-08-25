@@ -1,5 +1,66 @@
 # Changelog
 
+## Unreleased — source-verified Tamil independent u
+
+- Teach Tamil **உ** with its cited three-movement, zero-lift path.
+- Preserve the joined spiral-to-descent-to-baseline sequence and rerank shared
+  **ف** next at 10.
+
+## Unreleased — source-verified Malayalam zha
+
+- Teach Malayalam **ഴ** with its cited three-movement, zero-lift path.
+- Keep the full 13-syllable **ḻa** row in the matrix and rerank Tamil **உ**
+  next.
+- Preserve the no-invented-ductus gate for composed syllables while allowing a
+  cited atomic base consonant to own its verified path.
+
+## Unreleased — source-verified Malayalam chillu N
+
+- Teach Malayalam **ൻ** with its cited four-movement, one-lift path.
+- Preserve both joined runs and rerank Malayalam **ഴ** next.
+
+## Unreleased — source-verified Kannada independent a
+
+- Teach Kannada **ಅ** with its cited four-movement, zero-lift path.
+- Preserve the animation's loop-to-bowl-to-loop-to-inner-bar sequence and
+  rerank Malayalam chillu **ൻ** next.
+
+## Unreleased — source-verified Malayalam chillu L
+
+- Teach Malayalam **ൽ** with its cited five-movement, zero-lift path.
+- Keep the finishing chillu hook joined above the line and rerank Kannada
+  independent **ಅ** next.
+
+## Unreleased — source-verified Tamil zha
+
+- Teach Tamil **ழ** with its cited three-run, six-movement path.
+- Preserve the font-fitted low crossbar and detached lower hook, and rerank
+  Malayalam chillu **ൽ** next.
+
+## Unreleased — source-verified Persian and Urdu kheh
+
+- Teach Persian and Urdu **خ** with separately cited body-first, dot-last paths.
+- Keep both sources distinct from Arabic and rerank Tamil **ழ** next.
+
+## Unreleased — source-verified Persian pe
+
+- Teach Persian **پ** with its cited right-to-left bowl and three separate dots
+  below.
+- Keep its displayed Persian provenance separate from the still-missing Urdu
+  row; Malayalam independent **അ** now leads the measured queue.
+
+## Unreleased — source-verified Malayalam independent a
+
+- Teach Malayalam **അ** with its cited joined left body and lifted right arch.
+- Keep the right outer arch visibly flowing into its lower inner loop.
+- Rerank shared **خ** next while retaining separate Persian and Urdu source debt.
+
+## Unreleased — source-verified Tamil independent short e
+
+- Teach Tamil **எ** with its cited six-movement body and separate upward right
+  upright.
+- Keep independent **எ** distinct from the dependent left-side sign **ெ**.
+
 ## Unreleased — source-verified Malayalam short e
 
 - Teach Malayalam **എ** with its cited two-run body and broad outer arch.

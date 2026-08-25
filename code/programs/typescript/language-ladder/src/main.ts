@@ -594,6 +594,31 @@ function renderIndependentVowels(vowels: Letter[]): HTMLElement {
 }
 
 /**
+ * Atomic vowel-free final consonants (Malayalam chillus) as a separate strip.
+ * They are real teaching letters, but not cells in the generated consonant ×
+ * vowel matrix, so keeping them here preserves that grid's all-syllable shape.
+ */
+function renderFinalConsonants(consonants: Letter[]): HTMLElement {
+  const wrap = el("div", "ivowels");
+  const label = el("span", "ivowels__label");
+  label.textContent = "Final consonants (chillus):";
+  wrap.appendChild(label);
+  const row = el("div", "ivowels__row");
+  consonants.forEach((consonant) => {
+    const tile = el("div", "ivowel");
+    const glyph = el("span", "ivowel__glyph");
+    glyph.textContent = consonant.glyph;
+    const sound = el("span", "ivowel__sound");
+    sound.textContent = consonant.sound;
+    tile.append(glyph, sound);
+    tile.title = consonant.sound;
+    row.appendChild(tile);
+  });
+  wrap.appendChild(row);
+  return wrap;
+}
+
+/**
  * The script's own numerals as a small read-only strip (౦౧౨… = 0–9). Reading a
  * language means reading its numbers, and these are distinct glyphs, not Western
  * 0-9. Recognition only; each tile shows the glyph and its value.
@@ -2218,6 +2243,9 @@ function render(): void {
     const syllabary = isSyllabary(data.letters);
     if (data.independentVowels && data.independentVowels.length > 0) {
       app!.appendChild(renderIndependentVowels(data.independentVowels));
+    }
+    if (data.finalConsonants && data.finalConsonants.length > 0) {
+      app!.appendChild(renderFinalConsonants(data.finalConsonants));
     }
     if (data.digits && data.digits.length > 0) {
       app!.appendChild(renderNumerals(data.digits));

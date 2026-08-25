@@ -82,6 +82,11 @@ const teluguOutline = (character: string): GlyphOutline => {
   return { path: g.path, bounds: boundsOf(g.contours) };
 };
 
+const kannadaOutline = (character: string): GlyphOutline => {
+  const g = parseFont(load("NotoSansKannada-Static.ttf")).glyphFor(character)!;
+  return { path: g.path, bounds: boundsOf(g.contours) };
+};
+
 const malayalamOutline = (character: string): GlyphOutline => {
   const g = parseFont(load("NotoSansMalayalam-Static.ttf")).glyphFor(character)!;
   return { path: g.path, bounds: boundsOf(g.contours) };
@@ -95,10 +100,26 @@ const AA = DUCTUS["ஆ"];
 const aaOutline = tamilOutline("ஆ");
 const I = DUCTUS["இ"];
 const iOutline = tamilOutline("இ");
+const TAMIL_U = DUCTUS["உ"];
+const tamilUOutline = tamilOutline("உ");
+const TAMIL_E = DUCTUS["எ"];
+const tamilEOutline = tamilOutline("எ");
+const TAMIL_ZHA = DUCTUS["ழ"];
+const tamilZhaOutline = tamilOutline("ழ");
 const TELUGU_A = DUCTUS[ductusKey("telugu", "అ")];
 const teluguAOutline = teluguOutline("అ");
+const KANNADA_A = DUCTUS[ductusKey("kannada", "ಅ")];
+const kannadaAOutline = kannadaOutline("ಅ");
 const MALAYALAM_E = DUCTUS[ductusKey("malayalam", "എ")];
 const malayalamEOutline = malayalamOutline("എ");
+const MALAYALAM_A = DUCTUS[ductusKey("malayalam", "അ")];
+const malayalamAOutline = malayalamOutline("അ");
+const MALAYALAM_CHILLU_L = DUCTUS[ductusKey("malayalam", "ൽ")];
+const malayalamChilluLOutline = malayalamOutline("ൽ");
+const MALAYALAM_CHILLU_N = DUCTUS[ductusKey("malayalam", "ൻ")];
+const malayalamChilluNOutline = malayalamOutline("ൻ");
+const MALAYALAM_ZHA = DUCTUS[ductusKey("malayalam", "ഴ")];
+const malayalamZhaOutline = malayalamOutline("ഴ");
 const KA = DUCTUS["க"];
 const kaOutline = tamilOutline("க");
 const CA = DUCTUS["ச"];
@@ -499,6 +520,8 @@ const URDU_BARI_YE = ductusFor("ے", "urdu-nastaliq")!;
 const urduBariYeOutline = naskhOutline("ے");
 const PERSIAN_BEH = DUCTUS["ب"];
 const persianBehOutline = naskhOutline("ب");
+const PERSIAN_PEH = DUCTUS["پ"];
+const persianPehOutline = naskhOutline("پ");
 const PERSIAN_TEH = DUCTUS["ت"];
 const persianTehOutline = naskhOutline("ت");
 const PERSIAN_DAL = DUCTUS["د"];
@@ -528,16 +551,19 @@ function collect(node: SvgNode, pick: (n: SvgNode) => boolean, out: SvgNode[] = 
 const byTag = (node: SvgNode, tag: string) => collect(node, (n) => n.tag === tag);
 
 describe("ductusFor — only cited letters have a ductus", () => {
-  it("finds seventeen Tamil letters, eleven Persian letters, eighteen Arabic letters, and fifteen Urdu letters", () => {
+  it("finds twenty Tamil letters, twelve Persian letters, eighteen Arabic letters, and sixteen Urdu letters", () => {
     expect(ductusFor("ம")?.glyph).toBe("ம");
     expect(ductusFor("அ")?.glyph).toBe("அ");
     expect(ductusFor("ஆ")?.glyph).toBe("ஆ");
     expect(ductusFor("இ")?.glyph).toBe("இ");
+    expect(ductusFor("எ")?.glyph).toBe("எ");
     expect(ductusFor("க")?.glyph).toBe("க");
     expect(ductusFor("ச")?.glyph).toBe("ச");
     expect(ductusFor("ட")?.glyph).toBe("ட");
     expect(ductusFor("வ")?.glyph).toBe("வ");
     expect(ductusFor("ல")?.glyph).toBe("ல");
+    expect(ductusFor("ள")?.glyph).toBe("ள");
+    expect(ductusFor("ழ")?.glyph).toBe("ழ");
     expect(ductusFor("ற")?.glyph).toBe("ற");
     expect(ductusFor("ன")?.glyph).toBe("ன");
     expect(ductusFor("ண")?.glyph).toBe("ண");
@@ -571,6 +597,8 @@ describe("ductusFor — only cited letters have a ductus", () => {
     expect(ductusFor("ي", "arabic")?.glyph).toBe("ي");
     expect(ductusFor("ا", "urdu-nastaliq")?.glyph).toBe("ا");
     expect(ductusFor("ج", "urdu-nastaliq")?.glyph).toBe("ج");
+    expect(ductusFor("خ", "urdu-nastaliq")?.glyph).toBe("خ");
+    expect(ductusFor("خ", "perso-arabic")?.glyph).toBe("خ");
     expect(ductusFor("د", "urdu-nastaliq")?.glyph).toBe("د");
     expect(ductusFor("ج", "perso-arabic")).toBeUndefined();
     expect(ductusFor("ر", "urdu-nastaliq")?.glyph).toBe("ر");
@@ -591,6 +619,16 @@ describe("ductusFor — only cited letters have a ductus", () => {
     expect(ductusFor("ہ", "urdu-nastaliq")?.glyph).toBe("ہ");
     expect(ductusFor("ی", "urdu-nastaliq")?.glyph).toBe("ی");
     expect(ductusFor("ے", "urdu-nastaliq")?.glyph).toBe("ے");
+  });
+
+  it("keeps the shared Arabic, Persian, and Urdu خ independently addressable", () => {
+    const arabic = ductusFor("خ", "arabic");
+    const persian = ductusFor("خ", "perso-arabic");
+    const urdu = ductusFor("خ", "urdu-nastaliq");
+    expect(arabic?.script).toBe("arabic");
+    expect(persian?.script).toBe("perso-arabic");
+    expect(urdu?.script).toBe("urdu-nastaliq");
+    expect(new Set([arabic?.source.url, persian?.source.url, urdu?.source.url]).size).toBe(3);
   });
 
   it("keeps the shared Arabic, Persian, and Urdu د independently addressable", () => {
@@ -689,9 +727,9 @@ describe("ductusFor — only cited letters have a ductus", () => {
   });
 
   it("returns undefined for a letter nobody has authored a stroke order for", () => {
-    // Persian پ is deferred inventory work, not a starter entry or authored
-    // pen path. It must come back empty rather than borrow ب's or Tamil ம's.
-    expect(ductusFor("پ")).toBeUndefined();
+    // Persian پ is now authored, but Urdu پ remains separate inventory debt.
+    expect(ductusFor("پ", "perso-arabic")?.script).toBe("perso-arabic");
+    expect(ductusFor("پ", "urdu-nastaliq")).toBeUndefined();
     expect(ductusFor("A")).toBeUndefined();
     expect(ductusFor("")).toBeUndefined();
   });
@@ -942,6 +980,22 @@ describe("Telugu అ — two joined movement pairs", () => {
   });
 });
 
+describe("Kannada ಅ — four movements in one unbroken run", () => {
+  const steps = ductusSteps(KANNADA_A);
+  const strip = ductusFilmstrip(KANNADA_A, kannadaAOutline);
+
+  it("never inserts a pen lift between the four movements", () => {
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 0]);
+  });
+
+  it("reports one stroke, zero lifts, and four movements", () => {
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 4 movements");
+  });
+});
+
 describe("Malayalam എ — joined body, then a separate broad outer arch", () => {
   const steps = ductusSteps(MALAYALAM_E);
   const strip = ductusFilmstrip(MALAYALAM_E, malayalamEOutline);
@@ -964,6 +1018,181 @@ describe("Malayalam എ — joined body, then a separate broad outer arch", () =
     expect(done).toHaveLength(1);
     expect(done[0].attrs.d).toBe(penPathD(MALAYALAM_E.strokes[0], 1));
     expect(pen.attrs.d).toBe(penPathD(MALAYALAM_E.strokes[1], 1));
+  });
+});
+
+describe("Malayalam അ — joined left body, then joined right arch and loop", () => {
+  const steps = ductusSteps(MALAYALAM_A);
+  const strip = ductusFilmstrip(MALAYALAM_A, malayalamAOutline);
+
+  it("places one lift before the right outer arch", () => {
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false, true, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 1, 1]);
+  });
+
+  it("reports five movements in two strokes", () => {
+    expect(strip.frames).toHaveLength(5);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 5 movements");
+  });
+
+  it("keeps the left body visible while the right inner loop completes", () => {
+    const last = strip.frames[4];
+    const done = byTag(last, "path").filter((path) => path.attrs.class === "ductus__done");
+    const pen = byTag(last, "path").find((path) => path.attrs.class === "ductus__pen")!;
+    expect(done).toHaveLength(1);
+    expect(done[0].attrs.d).toBe(penPathD(MALAYALAM_A.strokes[0], 1));
+    expect(pen.attrs.d).toBe(penPathD(MALAYALAM_A.strokes[1], 1));
+  });
+});
+
+describe("Malayalam ൽ — one joined run through both loops and the chillu hook", () => {
+  const steps = ductusSteps(MALAYALAM_CHILLU_L);
+  const strip = ductusFilmstrip(MALAYALAM_CHILLU_L, malayalamChilluLOutline);
+
+  it("keeps every movement in stroke zero without a lift", () => {
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false, false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 0, 0]);
+  });
+
+  it("reports five movements in one stroke", () => {
+    expect(strip.frames).toHaveLength(5);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 5 movements");
+  });
+
+  it("finishes the one-run path at the above-line hook", () => {
+    const last = strip.frames[4];
+    const done = byTag(last, "path").filter((path) => path.attrs.class === "ductus__done");
+    const pen = byTag(last, "path").find((path) => path.attrs.class === "ductus__pen")!;
+    expect(done).toHaveLength(0);
+    expect(pen.attrs.d).toBe(penPathD(MALAYALAM_CHILLU_L.strokes[0], 1));
+  });
+});
+
+describe("Malayalam ൻ — left body, then lifted right loop and chillu hook", () => {
+  const steps = ductusSteps(MALAYALAM_CHILLU_N);
+  const strip = ductusFilmstrip(MALAYALAM_CHILLU_N, malayalamChilluNOutline);
+
+  it("places one lift before the right-side run", () => {
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, true, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1, 1]);
+  });
+
+  it("reports four movements in two strokes", () => {
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 4 movements");
+  });
+
+  it("keeps the left body visible while the right-side hook completes", () => {
+    const last = strip.frames[3];
+    const done = byTag(last, "path").filter((path) => path.attrs.class === "ductus__done");
+    const pen = byTag(last, "path").find((path) => path.attrs.class === "ductus__pen")!;
+    expect(done).toHaveLength(1);
+    expect(done[0].attrs.d).toBe(penPathD(MALAYALAM_CHILLU_N.strokes[0], 1));
+    expect(pen.attrs.d).toBe(penPathD(MALAYALAM_CHILLU_N.strokes[1], 1));
+  });
+});
+
+describe("Malayalam ഴ — one joined run through the left arch, right loop, and lower hook", () => {
+  const steps = ductusSteps(MALAYALAM_ZHA);
+  const strip = ductusFilmstrip(MALAYALAM_ZHA, malayalamZhaOutline);
+
+  it("keeps every movement in stroke zero without a lift", () => {
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0]);
+  });
+
+  it("reports three movements in one stroke", () => {
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 3 movements");
+  });
+
+  it("finishes the one-run path at the lower hook", () => {
+    const last = strip.frames[2];
+    const done = byTag(last, "path").filter((path) => path.attrs.class === "ductus__done");
+    const pen = byTag(last, "path").find((path) => path.attrs.class === "ductus__pen")!;
+    expect(done).toHaveLength(0);
+    expect(pen.attrs.d).toBe(penPathD(MALAYALAM_ZHA.strokes[0], 1));
+  });
+});
+
+describe("Tamil எ — six joined body movements, then the right upright", () => {
+  const steps = ductusSteps(TAMIL_E);
+  const strip = ductusFilmstrip(TAMIL_E, tamilEOutline);
+
+  it("places the only lift before movement 7", () => {
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([
+      false, false, false, false, false, false, true,
+    ]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 0, 0, 0, 1]);
+  });
+
+  it("reports seven movements in two strokes", () => {
+    expect(strip.frames).toHaveLength(7);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 7 movements");
+  });
+
+  it("keeps the joined body visible while the upright rises", () => {
+    const last = strip.frames[6];
+    const done = byTag(last, "path").filter((path) => path.attrs.class === "ductus__done");
+    const pen = byTag(last, "path").find((path) => path.attrs.class === "ductus__pen")!;
+    expect(done).toHaveLength(1);
+    expect(done[0].attrs.d).toBe(penPathD(TAMIL_E.strokes[0], 1));
+    expect(pen.attrs.d).toBe(penPathD(TAMIL_E.strokes[1], 1));
+  });
+});
+
+describe("Tamil உ — one joined spiral, outer descent, and baseline", () => {
+  const steps = ductusSteps(TAMIL_U);
+  const strip = ductusFilmstrip(TAMIL_U, tamilUOutline);
+
+  it("keeps every Frame 16 movement in stroke zero", () => {
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0]);
+  });
+
+  it("reports three movements in one unbroken stroke", () => {
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 3 movements");
+  });
+
+  it("finishes by carrying the baseline to the right", () => {
+    const last = strip.frames[2];
+    const done = byTag(last, "path").filter((path) => path.attrs.class === "ductus__done");
+    const pen = byTag(last, "path").find((path) => path.attrs.class === "ductus__pen")!;
+    expect(done).toHaveLength(0);
+    expect(pen.attrs.d).toBe(penPathD(TAMIL_U.strokes[0], 1));
+  });
+});
+
+describe("Tamil ழ — joined left body, joined right bowl, then lower hook", () => {
+  const steps = ductusSteps(TAMIL_ZHA);
+  const strip = ductusFilmstrip(TAMIL_ZHA, tamilZhaOutline);
+
+  it("places lifts before movements 4 and 6", () => {
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false, true, false, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 1, 1, 2]);
+  });
+
+  it("reports six movements in three strokes", () => {
+    expect(strip.frames).toHaveLength(6);
+    expect(strip.penLifts).toBe(2);
+    expect(strip.summary).toBe("3 strokes · 2 pen lifts · 6 movements");
+  });
+
+  it("keeps both body runs visible while the detached hook completes", () => {
+    const last = strip.frames[5];
+    const done = byTag(last, "path").filter((path) => path.attrs.class === "ductus__done");
+    const pen = byTag(last, "path").find((path) => path.attrs.class === "ductus__pen")!;
+    expect(done).toHaveLength(2);
+    expect(done[0].attrs.d).toBe(penPathD(TAMIL_ZHA.strokes[0], 1));
+    expect(done[1].attrs.d).toBe(penPathD(TAMIL_ZHA.strokes[1], 1));
+    expect(pen.attrs.d).toBe(penPathD(TAMIL_ZHA.strokes[2], 1));
   });
 });
 
@@ -6648,6 +6877,45 @@ describe("Persian ب — a right-to-left bowl followed by its dot", () => {
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(PERSIAN_BEH.strokes[1], 1),
+    );
+  });
+});
+
+describe("Persian پ — the shared bowl followed by three separate dots", () => {
+  const steps = ductusSteps(PERSIAN_PEH);
+  const strip = ductusFilmstrip(PERSIAN_PEH, persianPehOutline);
+
+  it("keeps the bowl in one run, then preserves all three sourced dot lifts", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "sweep the shallow bowl from right to left",
+      "lift, then place the left dot below",
+      "lift again and place the right dot below",
+      "lift again and place the lower-center dot",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, true, true, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 2, 3]);
+    expect(PERSIAN_PEH.strokes[1].segments[0].path[0].x).toBeLessThan(
+      PERSIAN_PEH.strokes[2].segments[0].path[0].x,
+    );
+    expect(PERSIAN_PEH.strokes[3].segments[0].path[0].y).toBeLessThan(
+      PERSIAN_PEH.strokes[1].segments[0].path[0].y,
+    );
+  });
+
+  it("reports four movements separated by three pen lifts", () => {
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(3);
+    expect(strip.summary).toBe("4 strokes · 3 pen lifts · 4 movements");
+  });
+
+  it("draws the Noto Naskh outline and preserves prior dots in the final frame", () => {
+    const paths = byTag(strip.frames[3], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      persianPehOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(3);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(PERSIAN_PEH.strokes[3], 1),
     );
   });
 });

@@ -1,0 +1,470 @@
+% ============================================================================
+% dolch-sight-word-level — which of Dolch's five grade-banded difficulty
+% levels a common high-frequency "sight word" belongs to (adj-facts-stdlib,
+% LANGUAGE). A K-2 literacy library, grounding ADJ-STDLIB-COVERAGE.md §5.1's
+% "phonics, decoding" Major Gap with a THIRD fresh-WebFetch literacy angle
+% for this loop's `wave2-k8-literacy-foundations` item — genuinely distinct
+% in KIND from `digraph-sound.adj`/`diphthong-sound.adj` (this loop's first
+% two), which are both phonics/decoding tables (letters -> the sound they
+% spell). This table is a WHOLE-WORD-RECOGNITION vocabulary axis instead: a
+% "sight word" is a high-frequency word a beginning reader is taught to
+% recognize instantly, by SIGHT, rather than sound out letter by letter --
+% the opposite reading strategy from phonics decoding, and a genuinely new
+% literacy competency this stdlib has never tabled before.
+% ============================================================================
+% Recall is a binding query:
+%
+%     ? dolch_sight_word_level(the, $Level)   % pre_primer
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `dolch_sight_word_level(word, level)` carrying the source
+% citation, so the lookup above is the ordinary SLD binding query — the
+% engine returns the level WITH its source, on the CPU, with zero model
+% calls, and abstains on any word not one of these source-cited rows. The
+% query also runs BACKWARD — bind a level and recall every word shipped
+% under it:
+%
+%     ? dolch_sight_word_level($W, pre_primer)  % all 40 Pre-Primer words
+%
+% WHAT A "SIGHT WORD" IS, AND WHY DOLCH: In 1936, educator Edward W. Dolch
+% published a list of 220 common "service words" (articles, pronouns,
+% prepositions, conjunctions, and common verbs -- the connective words that
+% recur constantly in children's text but often cannot be sounded out with
+% early phonics skills alone, e.g. "was", "said", "of"). Dolch grouped these
+% 220 words into five reading-level bands: Pre-Primer, Primer, First Grade,
+% Second Grade, and Third Grade -- a genuinely different organizing axis
+% from every phonics table already shipped (`digraph-sound.adj` and
+% `diphthong-sound.adj` both key a SPELLING to the SOUND it makes; this
+% table keys a WHOLE WORD to the READING-LEVEL BAND it is first taught in).
+%
+% EXTENSION (round 2 on this file): the table originally shipped 25 words
+% (the first five of each of Dolch's five levels). Round 2 completed
+% Pre-Primer to its FULL 40 words, re-fetching and re-parsing the SAME
+% cited UFLI slide deck rather than a new source -- exactly the untried
+% angle this loop's own tracking issue backlog flagged after the file first
+% shipped ("a future round can extend any one level with its remaining
+% words as a further instance of this same gap"). Primer/First
+% Grade/Second Grade still ship only their first five words each; Third
+% Grade is now ALSO complete (see round 3 below). This table now carries
+% 96 of the full 220 Dolch words: two COMPLETE levels (Pre-Primer 40/40,
+% Third Grade 41/41) plus three still-partial levels (5 words each),
+% mirroring how `wave2-k8-science-foundations` grows a single gap
+% incrementally across several rounds rather than requiring every instance
+% to close in one pass.
+%
+% EXTENSION (round 3 on this file): completes Third Grade to its FULL 41
+% words, the same zero-new-sourcing re-parse of the SAME cited UFLI deck
+% round 2 used for Pre-Primer. Third Grade (not Primer or Second Grade)
+% was picked because a full-tree scan of `adj-lang`'s reserved-keyword list
+% (`prior`, `for`, `contributes`, `from`, `to`, `interacts`, `when`, `and`,
+% `observe`, `uncertain`, `source`, `trust`, `locator`, `cites`,
+% `consensus`, `authoritative`, `empirical`, `inferred`, `unattributed`)
+% found ZERO collisions against Third Grade's full 41-word list, while
+% First Grade's full list collides on two real Dolch words (`from`,
+% `when` -- both reserved grammar keywords) and Second Grade's includes a
+% word with an internal apostrophe (`don't`) that would need extra
+% atom-quoting care neither this table nor its house style has exercised
+% yet. Third Grade and Primer were the only two remaining collision-free
+% candidates; Third Grade was chosen over Primer to keep the added-row
+% count modest (36 new rows vs. Primer's 47), the same "smallest remaining
+% effort first" discipline round 2 used to pick Pre-Primer over the other
+% partial levels.
+%
+% EXTENSION (round 4 on this file): completes Primer to its FULL 52 words,
+% the same zero-new-sourcing re-parse of the SAME cited UFLI deck rounds 2
+% and 3 used. Primer was the one remaining collision-free candidate flagged
+% by round 3's own backlog note (First Grade and Second Grade both still
+% carry the `from`/`when` reserved-keyword collision and the `don't`
+% apostrophe-atom question noted above, neither resolved yet). This round
+% independently re-checked Primer's full 52-word list against the SAME
+% `adj-lang` reserved-keyword list (see round 3's list above) before
+% shipping -- zero collisions, and zero words with an internal apostrophe
+% or other unusual atom shape -- and additionally empirically parsed all 52
+% words as `row(...)` atoms, and reverse-recalled all 52 back out, against
+% the real built `adj-lang-cli` binary in a scratch table before writing
+% them here (the SAME verify-before-ship discipline rounds 2 and 3 used).
+% Primer is now the THIRD complete level (after Pre-Primer and Third
+% Grade); First Grade and Second Grade remain the only two still-partial
+% levels, each still blocked on the collision/apostrophe question above.
+%
+% EXTENSION (round 5 on this file): completes BOTH remaining levels --
+% First Grade (to its FULL 41 words) and Second Grade (to its FULL 46
+% words) -- finishing the entire 220-word Dolch list in one round, rather
+% than the one-level-per-round pace rounds 2-4 used, because this round's
+% own empirical testing showed both blockers prior rounds flagged (but
+% never actually tested against the real CLI) resolve cleanly:
+%   - `from`/`when` (First Grade's two reserved-grammar-keyword-shaped
+%     words): empirically tested in a scratch table against the real built
+%     `adj-lang-cli` binary and confirmed they parse FINE as plain atoms in
+%     `row(...)` position and in query position, exactly like `to`/`and`/
+%     `for`/`if` before them (rounds 1, 2, and 3 already proved those four
+%     safe the same way). `adj-lang`'s reserved-word list blocks a bare
+%     word only where the grammar actually expects a keyword token in that
+%     syntactic position -- `row(...)`'s argument position expects a plain
+%     atom/term, not a keyword, so a reserved word parses there without
+%     conflict. Prior rounds' notes calling this an open "collision"
+%     question were a documented caution, never an empirically confirmed
+%     block -- this round closes that question for good.
+%   - `don't` (Second Grade's one apostrophe-bearing word): empirically
+%     tested the SAME way and confirmed the raw apostrophe genuinely DOES
+%     block lexing (`LexerError` on the literal `don't` atom) -- a real,
+%     not merely hypothesized, blocker. Resolved using this stdlib's OWN
+%     already-established house convention rather than inventing a new
+%     one: `language/contraction.adj` already tables `dont` (no apostrophe)
+%     as the atom standing for "don't" (its own header states this
+%     explicitly: "`dont` stands for 'don't'"). This file reuses that exact
+%     same convention for consistency -- `dont` is the atom, `don't` is
+%     what it stands for, exactly as `contraction.adj` already documents.
+% Both full word lists were re-derived from the SAME cited UFLI deck, using
+% the SAME true-slide-order resolution method rounds 2-4 introduced (see
+% Provenance), and every word in both lists (not just the newly-added
+% ones) was empirically parsed as a `row(...)` atom and reverse-recalled
+% via `dolch_sight_word_level($W, first_grade)` / `($W, second_grade)`
+% against the real built CLI binary in a scratch table before being
+% written here -- 41/41 First Grade and 46/46 Second Grade answers bound,
+% exit code 0, no LexerError. All FIVE Dolch levels are now COMPLETE: this
+% file carries the full, faithful 220-word Dolch list.
+%
+% The 220 words shipped, banded by Dolch's own five reading levels (ALL
+% FIVE levels are now COMPLETE -- every real Dolch word recalls its level):
+%
+%     level          words (deck's own listed order)
+%     -------------  ------------------------------------------------------
+%     pre_primer     the, to, and, a, i, you, it, in, said, for, up, look,
+%                    is, go, we, little, down, can, see, not, one, my, me,
+%                    big, come, blue, red, where, jump, away, here, help,
+%                    make, yellow, two, play, run, find, three, funny
+%                    (ALL 40 -- this level is COMPLETE)
+%     primer         he, was, that, she, on, they, but, at, with, all,
+%                    there, out, be, have, am, do, did, what, so, get,
+%                    like, this, will, yes, went, are, now, no, came,
+%                    ride, into, good, want, too, pretty, four, saw,
+%                    well, ran, brown, eat, who, new, must, black, white,
+%                    soon, our, ate, say, under, please
+%                    (ALL 52 -- this level is now COMPLETE)
+%     first_grade    of, his, had, him, her, some, as, then, could, when,
+%                    were, them, ask, an, over, just, from, any, how, know,
+%                    put, take, every, old, by, after, think, let, going,
+%                    walk, again, may, stop, fly, round, give, once, open,
+%                    has, live, thank
+%                    (ALL 41 -- this level is now COMPLETE)
+%     second_grade   would, very, your, its, around, dont, right, green,
+%                    their, call, sleep, five, wash, or, before, been, off,
+%                    cold, tell, work, first, does, goes, write, always,
+%                    made, gave, us, buy, those, use, fast, pull, both,
+%                    sit, which, read, why, found, because, best, upon,
+%                    these, sing, wish, many
+%                    (ALL 46 -- this level is now COMPLETE. `dont` stands
+%                    for the deck's actual "don't", following the atom
+%                    convention `language/contraction.adj` already
+%                    established -- apostrophes do not lex as part of a
+%                    bare atom.)
+%     third_grade    if, long, about, got, six, never, seven, eight,
+%                    today, myself, much, keep, try, start, ten, bring,
+%                    drink, only, better, hold, warm, full, done, light,
+%                    pick, hurt, cut, kind, fall, carry, small, own, show,
+%                    hot, far, draw, clean, grow, together, shall, laugh
+%                    (ALL 41 -- this level is COMPLETE)
+%
+% HONEST ABSTENTION -- with all FIVE Dolch levels now complete, the earlier
+% "real word at a not-yet-completed level" abstention case (rounds 2-4's
+% `you`/`they`/`some` examples) no longer applies to any real Dolch word --
+% every one of the full 220 now recalls its correct level. The one
+% remaining, stronger abstention case is a word that is not a Dolch word at
+% all (e.g. `elephant`): it abstains because it is outside the cited source
+% entirely, not merely outside a currently-shipped subset -- there is no
+% subset boundary left to be outside of.
+%
+% Provenance: UFLI's Virtual Teaching Resource Hub page "Irregular and High
+% Frequency Words" (curl-fetched directly and confirmed byte-for-byte) states
+% verbatim: "In 1936, E. W. Dolch identified the 220 most common words
+% encountered in the text children read. This high-frequency word list
+% includes many easily decodable words (e.g., it, get) and some words with
+% irregular parts (e.g., was, said)." That page links UFLI's own "Dolch High
+% Frequency Word List Slides" PowerPoint deck, re-downloaded directly from
+% ufli.education.ufl.edu again this round (the SAME .edu domain and source
+% family `digraph-sound.adj`/`diphthong-sound.adj` already established at
+% `trust authoritative`, and the SAME deck this file's rows have always
+% cited) and unzipped as raw OOXML. This round re-resolved the deck's true
+% slide DISPLAY order via `ppt/presentation.xml`'s `<p:sldId>` list and its
+% `ppt/_rels/presentation.xml.rels` relationship map (rather than assuming
+% the zip's filename order, e.g. `slide1.xml`, `slide2.xml`, ...,
+% `slide10.xml`, which is NOT display order) -- the same rigorous method
+% round 2 introduced. The resolved 226-slide order is: one title slide,
+% five level-DIVIDER slides (each a bare `<a:t>` run naming one Dolch
+% level: "Pre-Primer", "Primer", "First Grade", "Second Grade", "Third
+% Grade", confirmed byte-for-byte in the raw slide XML) and 220 individual
+% word slides, each one word's own `<a:t>` text run, immediately following
+% its level's divider slide in the deck's built-in order. Counting the
+% word slides between each pair of divider slides gives exactly 40
+% (Pre-Primer), 52 (Primer), 41 (First Grade), 46 (Second Grade), and 41
+% (Third Grade) -- summing to exactly 220, independently reproducing the
+% SAME per-level counts this file's header has documented since round 2,
+% confirming this round's re-parse is consistent with all three prior
+% sourcing passes and that the deck faithfully reproduces Dolch's own
+% well-documented 220-word count. The 52 Primer rows below transcribe every
+% one of the 52 word-slide `<a:t>` runs immediately following the "Primer"
+% divider slide (the deck's second level), in that exact deck order. Every
+% new Primer atom was empirically verified to parse as a plain atom in
+% `row(...)` position against the real built `adj-lang-cli` binary in a
+% scratch table, and reverse-recalled back out via `dolch_sight_word_level
+% ($W, primer)` in that same scratch table, before being written here, and
+% cross-checked against `adj-lang`'s reserved-keyword list (see EXTENSION
+% round 4 above) to confirm none of the 47 newly-added words collide with a
+% grammar keyword or contain an apostrophe or other unusual atom shape.
+% Round 5 re-resolved the SAME 226-slide order the SAME way one more time,
+% independently re-confirming the 41 First Grade and 46 Second Grade
+% word-slide counts, and transcribes the FULL First Grade and Second Grade
+% word-slide runs (the words immediately following each level's own divider
+% slide, in the deck's built-in order) rather than only their first five.
+% Every one of the 41 First Grade and 46 Second Grade atoms -- not just the
+% newly-added ones -- was empirically parsed as a plain atom in `row(...)`
+% position and reverse-recalled via `dolch_sight_word_level($W,
+% first_grade)` / `($W, second_grade)` against the real built
+% `adj-lang-cli` binary in a scratch table before being written here (see
+% EXTENSION round 5 above for the `from`/`when`/`don't` findings). The
+% Second Grade row for the deck's own `don't` slide is written here as
+% `dont` (no apostrophe), the SAME atom convention `language/contraction.adj`
+% already established for this exact word. The rows for Pre-Primer, Primer,
+% and Third Grade are unchanged from the prior sourcing passes.
+% `https://ufli.education.ufl.edu/wp-content/uploads/2022/01/Dolch-Words-Slides.pptx`
+% `trust authoritative` — UFLI is a university literacy research center
+% (University of Florida, .edu). Nothing here is asserted from memory.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table dolch_sight_word_level {
+    columns word, level
+
+    row (the, pre_primer)
+    row (to, pre_primer)
+    row (and, pre_primer)
+    row (a, pre_primer)
+    row (i, pre_primer)
+    row (you, pre_primer)
+    row (it, pre_primer)
+    row (in, pre_primer)
+    row (said, pre_primer)
+    row (for, pre_primer)
+    row (up, pre_primer)
+    row (look, pre_primer)
+    row (is, pre_primer)
+    row (go, pre_primer)
+    row (we, pre_primer)
+    row (little, pre_primer)
+    row (down, pre_primer)
+    row (can, pre_primer)
+    row (see, pre_primer)
+    row (not, pre_primer)
+    row (one, pre_primer)
+    row (my, pre_primer)
+    row (me, pre_primer)
+    row (big, pre_primer)
+    row (come, pre_primer)
+    row (blue, pre_primer)
+    row (red, pre_primer)
+    row (where, pre_primer)
+    row (jump, pre_primer)
+    row (away, pre_primer)
+    row (here, pre_primer)
+    row (help, pre_primer)
+    row (make, pre_primer)
+    row (yellow, pre_primer)
+    row (two, pre_primer)
+    row (play, pre_primer)
+    row (run, pre_primer)
+    row (find, pre_primer)
+    row (three, pre_primer)
+    row (funny, pre_primer)
+
+    row (he, primer)
+    row (was, primer)
+    row (that, primer)
+    row (she, primer)
+    row (on, primer)
+    row (they, primer)
+    row (but, primer)
+    row (at, primer)
+    row (with, primer)
+    row (all, primer)
+    row (there, primer)
+    row (out, primer)
+    row (be, primer)
+    row (have, primer)
+    row (am, primer)
+    row (do, primer)
+    row (did, primer)
+    row (what, primer)
+    row (so, primer)
+    row (get, primer)
+    row (like, primer)
+    row (this, primer)
+    row (will, primer)
+    row (yes, primer)
+    row (went, primer)
+    row (are, primer)
+    row (now, primer)
+    row (no, primer)
+    row (came, primer)
+    row (ride, primer)
+    row (into, primer)
+    row (good, primer)
+    row (want, primer)
+    row (too, primer)
+    row (pretty, primer)
+    row (four, primer)
+    row (saw, primer)
+    row (well, primer)
+    row (ran, primer)
+    row (brown, primer)
+    row (eat, primer)
+    row (who, primer)
+    row (new, primer)
+    row (must, primer)
+    row (black, primer)
+    row (white, primer)
+    row (soon, primer)
+    row (our, primer)
+    row (ate, primer)
+    row (say, primer)
+    row (under, primer)
+    row (please, primer)
+
+    row (of, first_grade)
+    row (his, first_grade)
+    row (had, first_grade)
+    row (him, first_grade)
+    row (her, first_grade)
+    row (some, first_grade)
+    row (as, first_grade)
+    row (then, first_grade)
+    row (could, first_grade)
+    row (when, first_grade)
+    row (were, first_grade)
+    row (them, first_grade)
+    row (ask, first_grade)
+    row (an, first_grade)
+    row (over, first_grade)
+    row (just, first_grade)
+    row (from, first_grade)
+    row (any, first_grade)
+    row (how, first_grade)
+    row (know, first_grade)
+    row (put, first_grade)
+    row (take, first_grade)
+    row (every, first_grade)
+    row (old, first_grade)
+    row (by, first_grade)
+    row (after, first_grade)
+    row (think, first_grade)
+    row (let, first_grade)
+    row (going, first_grade)
+    row (walk, first_grade)
+    row (again, first_grade)
+    row (may, first_grade)
+    row (stop, first_grade)
+    row (fly, first_grade)
+    row (round, first_grade)
+    row (give, first_grade)
+    row (once, first_grade)
+    row (open, first_grade)
+    row (has, first_grade)
+    row (live, first_grade)
+    row (thank, first_grade)
+
+    row (would, second_grade)
+    row (very, second_grade)
+    row (your, second_grade)
+    row (its, second_grade)
+    row (around, second_grade)
+    row (dont, second_grade)
+    row (right, second_grade)
+    row (green, second_grade)
+    row (their, second_grade)
+    row (call, second_grade)
+    row (sleep, second_grade)
+    row (five, second_grade)
+    row (wash, second_grade)
+    row (or, second_grade)
+    row (before, second_grade)
+    row (been, second_grade)
+    row (off, second_grade)
+    row (cold, second_grade)
+    row (tell, second_grade)
+    row (work, second_grade)
+    row (first, second_grade)
+    row (does, second_grade)
+    row (goes, second_grade)
+    row (write, second_grade)
+    row (always, second_grade)
+    row (made, second_grade)
+    row (gave, second_grade)
+    row (us, second_grade)
+    row (buy, second_grade)
+    row (those, second_grade)
+    row (use, second_grade)
+    row (fast, second_grade)
+    row (pull, second_grade)
+    row (both, second_grade)
+    row (sit, second_grade)
+    row (which, second_grade)
+    row (read, second_grade)
+    row (why, second_grade)
+    row (found, second_grade)
+    row (because, second_grade)
+    row (best, second_grade)
+    row (upon, second_grade)
+    row (these, second_grade)
+    row (sing, second_grade)
+    row (wish, second_grade)
+    row (many, second_grade)
+
+    row (if, third_grade)
+    row (long, third_grade)
+    row (about, third_grade)
+    row (got, third_grade)
+    row (six, third_grade)
+    row (never, third_grade)
+    row (seven, third_grade)
+    row (eight, third_grade)
+    row (today, third_grade)
+    row (myself, third_grade)
+    row (much, third_grade)
+    row (keep, third_grade)
+    row (try, third_grade)
+    row (start, third_grade)
+    row (ten, third_grade)
+    row (bring, third_grade)
+    row (drink, third_grade)
+    row (only, third_grade)
+    row (better, third_grade)
+    row (hold, third_grade)
+    row (warm, third_grade)
+    row (full, third_grade)
+    row (done, third_grade)
+    row (light, third_grade)
+    row (pick, third_grade)
+    row (hurt, third_grade)
+    row (cut, third_grade)
+    row (kind, third_grade)
+    row (fall, third_grade)
+    row (carry, third_grade)
+    row (small, third_grade)
+    row (own, third_grade)
+    row (show, third_grade)
+    row (hot, third_grade)
+    row (far, third_grade)
+    row (draw, third_grade)
+    row (clean, third_grade)
+    row (grow, third_grade)
+    row (together, third_grade)
+    row (shall, third_grade)
+    row (laugh, third_grade)
+
+    source "In 1936, E. W. Dolch identified the 220 most common words encountered in the text children read. This high-frequency word list includes many easily decodable words (e.g., it, get) and some words with irregular parts (e.g., was, said)."
+    locator "https://ufli.education.ufl.edu/resources/teaching-resources/instructional-activities/irregular-and-high-frequency-words/"
+    trust authoritative
+
+    cites "Pre-Primer (all 40, complete): the, to, and, a, i, you, it, in, said, for, up, look, is, go, we, little, down, can, see, not, one, my, me, big, come, blue, red, where, jump, away, here, help, make, yellow, two, play, run, find, three, funny. Primer (all 52, complete): he, was, that, she, on, they, but, at, with, all, there, out, be, have, am, do, did, what, so, get, like, this, will, yes, went, are, now, no, came, ride, into, good, want, too, pretty, four, saw, well, ran, brown, eat, who, new, must, black, white, soon, our, ate, say, under, please. First Grade (all 41, complete): of, his, had, him, her, some, as, then, could, when, were, them, ask, an, over, just, from, any, how, know, put, take, every, old, by, after, think, let, going, walk, again, may, stop, fly, round, give, once, open, has, live, thank. Second Grade (all 46, complete): would, very, your, its, around, dont, right, green, their, call, sleep, five, wash, or, before, been, off, cold, tell, work, first, does, goes, write, always, made, gave, us, buy, those, use, fast, pull, both, sit, which, read, why, found, because, best, upon, these, sing, wish, many (the deck's own \"don't\" slide is transcribed as the apostrophe-free atom \"dont\", the same convention language/contraction.adj already established for this exact word). Third Grade (all 41, complete): if, long, about, got, six, never, seven, eight, today, myself, much, keep, try, start, ten, bring, drink, only, better, hold, warm, full, done, light, pick, hurt, cut, kind, fall, carry, small, own, show, hot, far, draw, clean, grow, together, shall, laugh. All 220 of Dolch's own words are now shipped. (Transcribed directly from the deck's own level-divider and word-slide text runs, in the deck's true display order resolved via presentation.xml's slide-ID list, not zip filename order.)" locator "https://ufli.education.ufl.edu/wp-content/uploads/2022/01/Dolch-Words-Slides.pptx"
+}

@@ -603,6 +603,125 @@ TESTSUITE_FILES = [
     # First bite into the wider load-extend/splat/zero/lane family opened
     # by this PR's scoping pass -- see this file's own doc comment.
     "simd_load_splat.wast",
+    # SIMD PR41: simd_load_zero.wast -- v128.load32_zero/load64_zero
+    # (sub-opcodes 0x5C/0x5D), same "load then fill a v128" shape as
+    # `simd_load_splat.wast` above, but ZEROES the non-loaded lanes
+    # instead of repeating the loaded value. Second bite into the wider
+    # load_extend/load_splat/load_zero/load{8,16,32,64}_lane/
+    # store{8,16,32,64}_lane memory-access family PR39 deferred and PR40
+    # opened -- the simplest remaining piece (still the plain "pop i32,
+    # push v128" type signature, no new instruction SHAPE needed, unlike
+    # the lane-load/store family which needs a v128 operand input PLUS a
+    # lane-index immediate PLUS a memarg all at once).
+    "simd_load_zero.wast",
+    # SIMD PR42: simd_load_extend.wast -- v128.load8x8_s/_u,
+    # v128.load16x4_s/_u, v128.load32x2_s/_u (sub-opcodes 0x01-0x06), the
+    # FIRST opcodes in this family that widen EACH loaded lane
+    # independently (sign-extending for `_s`, zero-extending for `_u`)
+    # rather than broadcasting one value (`simd_load_splat.wast`) or
+    # zero-filling the unused lanes (`simd_load_zero.wast`). Third and
+    # final bite into the wider load_extend/load_splat/load_zero/
+    # load{8,16,32,64}_lane/store{8,16,32,64}_lane memory-access family
+    # PR39 deferred and PR40/PR41 opened -- the lane-load/store family
+    # (still not implemented) needs its own new instruction SHAPE (a v128
+    # operand input PLUS a lane-index immediate PLUS a memarg all at
+    # once), unlike this file, which stays the plain "pop i32, push v128"
+    # type signature PR40/PR41 already established.
+    "simd_load_extend.wast",
+    # SIMD PR43: simd_align.wast -- alignment-hint coverage (align=1/2/
+    # 4/8/16, valid/invalid/malformed) for `v128.load`/`v128.store` plus
+    # the entire load_splat/load_zero/load_extend family this campaign
+    # already landed (PR15/PR39-42). Adds ZERO new opcodes -- every
+    # instruction this file exercises (`v128.load`, `v128.store`,
+    # `v128.load{8,16,32,64}_splat`, `v128.load{8x8,16x4,32x2}_{s,u}`) was
+    # already implemented before this PR. The remaining piece of the
+    # load-extend/splat/zero/lane family epic is the
+    # load{8,16,32,64}_lane/store{8,16,32,64}_lane shape (a v128 operand
+    # PLUS a lane-index immediate PLUS a memarg all at once) -- this file
+    # needs none of that, so it slots in now as the simplest possible
+    # next bite, same "vendor a corpus file, zero new opcodes" shape as
+    # earlier zero-opcode PRs in this campaign. See the NOTICE file for
+    # the real vendored/pass counts.
+    "simd_align.wast",
+    # SIMD PR44: simd_load8_lane.wast / simd_store8_lane.wast --
+    # `v128.load8_lane` (sub-opcode 0x54) / `v128.store8_lane` (0x58),
+    # the FIRST bite of the load{8,16,32,64}_lane/store{8,16,32,64}_lane
+    # family every PR since PR39 has been forecasting as "needs a new
+    # instruction SHAPE" and deferring. Genuinely new: combines an
+    # EXISTING v128 operand (whose other 15 lanes are preserved on
+    # load, or which the stored lane is read out of), a lane-index
+    # immediate (0-15, same `ImmLaneIdx16` shape `i8x16.extract_lane_s/
+    # u`/`replace_lane` use), AND a memarg (align/offset) in one
+    # instruction -- see `wasm-execution`'s new
+    # `DecodedOperand::SimdMemLane` variant. Deliberately scoped to
+    # JUST the 8-bit width pair, not all 8 files in this family at
+    # once -- the remaining 6 opcodes (16/32/64-bit widths) are later
+    # PRs' scope, same one-family-per-PR cadence PR40-42 established.
+    "simd_load8_lane.wast",
+    "simd_store8_lane.wast",
+    # SIMD PR45: simd_load16_lane.wast / simd_store16_lane.wast --
+    # `v128.load16_lane` (sub-opcode 0x55) / `v128.store16_lane` (0x59),
+    # the SECOND bite of the load{8,16,32,64}_lane/store{8,16,32,64}_lane
+    # family, one width up from PR44's 8-bit pair. Reuses PR44's
+    # `DecodedOperand::SimdMemLane` shape unchanged (no new instruction
+    # SHAPE needed this time) -- just new sub-opcode values, a widened
+    # memarg-detection gate, a narrower lane-index bound (0-7, an i16x8
+    # v128 has 8 lanes not i8x16's 16), and a 2-byte (not 1-byte) memory
+    # access. The remaining 4 opcodes (32/64-bit widths) are later PRs'
+    # scope, same one-family-per-PR cadence PR40-44 established.
+    "simd_load16_lane.wast",
+    "simd_store16_lane.wast",
+    # SIMD PR46: simd_load32_lane.wast / simd_store32_lane.wast --
+    # `v128.load32_lane` (sub-opcode 0x56) / `v128.store32_lane` (0x5A),
+    # the THIRD bite of the load{8,16,32,64}_lane/store{8,16,32,64}_lane
+    # family, one width up from PR45's 16-bit pair. Reuses PR44's
+    # `DecodedOperand::SimdMemLane` shape unchanged (no new instruction
+    # SHAPE needed this time either) -- just new sub-opcode values, a
+    # widened memarg-detection gate, a narrower lane-index bound (0-3, an
+    # i32x4 v128 has 4 lanes not i16x8's 8), and a 4-byte (not 2-byte)
+    # memory access. The remaining 2 opcodes (64-bit width) are a later
+    # PR's scope, same one-family-per-PR cadence PR40-45 established.
+    "simd_load32_lane.wast",
+    "simd_store32_lane.wast",
+    # SIMD PR47: simd_load64_lane.wast / simd_store64_lane.wast --
+    # `v128.load64_lane` (sub-opcode 0x57) / `v128.store64_lane` (0x5B),
+    # the FOURTH and FINAL bite of the
+    # load{8,16,32,64}_lane/store{8,16,32,64}_lane family, one width up
+    # from PR46's 32-bit pair. Reuses PR44's `DecodedOperand::SimdMemLane`
+    # shape unchanged (no new instruction SHAPE needed this time either)
+    # -- just new sub-opcode values, a widened memarg-detection gate, a
+    # narrower lane-index bound (0-1, an i64x2 v128 has only 2 lanes not
+    # i32x4's 4), and an 8-byte (not 4-byte) memory access. This closes
+    # the entire lane-load/store family (all 8 opcodes, PR44-47) and,
+    # with it, the larger load-extend/splat/zero/lane epic started in
+    # PR40.
+    "simd_load64_lane.wast",
+    "simd_store64_lane.wast",
+    # Relaxed SIMD epic PR1 (see code/specs/
+    # W19-wasm-relaxed-simd-first-slice.md): i8x16_relaxed_swizzle.wast --
+    # `i8x16.relaxed_swizzle` (sub-opcode 0x100), the FIRST relaxed-simd
+    # opcode, the smallest self-contained REAL-assertion-bearing file in
+    # the relaxed-simd family (confirmed via a live GitHub API tree
+    # listing at this same pinned SHA -- relaxed-simd is a SEPARATE
+    # proposal from base SIMD, its own encoding table at
+    # `https://github.com/WebAssembly/relaxed-simd/blob/main/proposals/
+    # relaxed-simd/Overview.md`, not `BinarySIMD.md`). Lives at the
+    # testsuite repo ROOT, same as every other file in this list -- no
+    # `PROPOSAL_FILES` entry needed (unlike `atomic.wast`). Real
+    # `assert_return` coverage using the upstream corpus's `either A B`
+    # combinator (a NEW assert_return shape this PR added parsing/grading
+    # support for in `wasm-wast-parser`/`wasm-conformance` -- every
+    # relaxed-simd `.wast` file at this pinned SHA uses it at least once,
+    # confirmed by inspection, so it's a genuine prerequisite for
+    # vendoring ANY relaxed-simd fixture, not opcode-specific). The other
+    # 6 relaxed-simd files (`i16x8_relaxed_q15mulr_s.wast`,
+    # `i32x4_relaxed_trunc.wast` -- flagged as having ZERO real
+    # `assert_return` directives, weaker coverage than every other file
+    # here -- `relaxed_dot_product.wast`, `relaxed_laneselect.wast`,
+    # `relaxed_madd_nmadd.wast`, `relaxed_min_max.wast`) are each a later
+    # PR's scope, same one-opcode-family-per-PR cadence the base SIMD
+    # epic (PR1-PR47) established.
+    "i8x16_relaxed_swizzle.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under

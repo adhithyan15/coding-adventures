@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:225a33fa8b3347a4",
+  "sourceHash": "fnv1a64:24e8d751fd9f2da2",
   "lessons": [
     {
       "id": "LA-C01-salve",
@@ -209,6 +209,180 @@
             {
               "kind": "speech",
               "text": "Compare your copy with the model. If one mark differs, repair only that mark. No hiding, no spelling from memory, and no second word today."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-W01-salve-delayed-copy",
+      "sequence": 106,
+      "title": "salvē — look, hide, write, check",
+      "headword": "salvē",
+      "romanization": "salvē",
+      "gloss": "hide the familiar model and write the greeting once from memory",
+      "script": "latin",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:1ea7f1dbdc9b1e64",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say salvē once: SAL-weh, “be well.” Its sound and meaning are already familiar. Today only the amount of visual help changes."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — delayed copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at salvē for five seconds. Notice the five letters and the short macron over the final ē. Cover the model completely. From memory, write the greeting once. Say SAL-weh as you finish."
+            },
+            {
+              "kind": "speech",
+              "text": "Uncover the model and compare one feature at a time: s-a-l-v-ē. If one feature differs, repair only that feature. This is one gentle memory step, not a speed test."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "LA-W01-salve-delayed-copy-check",
+              "prompt": "Cover the model and write the one-person Latin greeting meaning be well. Then uncover it and check every letter and the macron.",
+              "assesses": [
+                "LA-PHONO-SALVE-01",
+                "LA-ETYMON-SALVE-02",
+                "LA-GRAMMAR-SALVE-03"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "salvē"
+              ],
+              "feedback": {
+                "correct": "Yes: salvē has all five letters and the final long-vowel macron.",
+                "incorrect": "Uncover salvē, compare s-a-l-v-ē, repair only the differing feature, and cover it again."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Writing pass: 1/1 only when the covered-model attempt contains s-a-l-v-ē with the macron. Saying the greeting correctly does not replace the writing point."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-W01-salve-dictation",
+      "sequence": 107,
+      "title": "Hear the greeting; write it independently",
+      "headword": "heard greeting",
+      "romanization": "heard greeting",
+      "gloss": "write salvē independently from its sound and meaning cue",
+      "script": "latin",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:cfaae76e20935341",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover the previous lesson and the answer box below. Hear this cue without looking at Latin spelling: “Greet one person: SAL-weh — literally, be well.”"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — dictation and transcription",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Write the one-word Latin greeting from the sound and meaning cue. Remember that the final vowel is long, so its written vowel carries the macron. Do not copy from an earlier page. Stop after one attempt."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "LA-W01-salve-dictation-check",
+              "prompt": "From the cue SAL-weh, meaning be well to one person, write the Latin greeting with its long-vowel mark.",
+              "assesses": [
+                "LA-PHONO-SALVE-01",
+                "LA-ETYMON-SALVE-02",
+                "LA-GRAMMAR-SALVE-03"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "salvē"
+              ],
+              "feedback": {
+                "correct": "Yes: the heard greeting is written salvē, including the macron over final ē.",
+                "incorrect": "The answer is salvē. Compare your attempt letter by letter and check that final ē carries its macron."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Now uncover the answer: salvē."
+            },
+            {
+              "kind": "speech",
+              "text": "Writing: 1/1 for all five letters plus the final macron; otherwise 0/1."
+            },
+            {
+              "kind": "speech",
+              "text": "Listening: 1/1 if the cue selected the one-person greeting; otherwise 0/1."
+            },
+            {
+              "kind": "speech",
+              "text": "Each skill must pass on its own. A correct listening choice cannot compensate for a missing or incorrect written form."
             }
           ]
         }

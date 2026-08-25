@@ -24,8 +24,15 @@
     {
       "language": "gujarati",
       "chapter": 2,
-      "sourceHash": "fnv1a64:a6aba9cfb0fea7e1",
+      "sourceHash": "fnv1a64:04004e3b92d81fc3",
       "lessonIds": [
+        "GU-W02-ra",
+        "GU-W02-da",
+        "GU-W02-va",
+        "GU-W02-ya",
+        "GU-W02-bha",
+        "GU-W02-dha",
+        "GU-W02-vocalic-r",
         "GU-C01-aabhaar",
         "GU-C01-aavjo",
         "GU-C01-haa-naa",
@@ -40,24 +47,43 @@
     {
       "language": "gujarati",
       "chapter": 3,
-      "sourceHash": "fnv1a64:c9e12c0e23e67a11",
+      "sourceHash": "fnv1a64:da0260ba8b7faa01",
+      "lessonIds": [
+        "GU-W03-ja",
+        "GU-W03-o-matra",
+        "GU-W03-anusvara",
+        "GU-W03-ii-matra",
+        "GU-W03-u-matra",
+        "GU-W03-chha",
+        "GU-W03-ka",
+        "GU-W03-nna",
+        "GU-W03-sha",
+        "GU-R03-doorway-three-r1"
+      ],
+      "tex": "gujarati/book/chapters/ch03-doorway-glyphs.tex"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 4,
+      "sourceHash": "fnv1a64:2555a51f2f04a0aa",
       "lessonIds": [
         "GU-C02-naam",
         "GU-C02-maarun",
         "GU-C02-chhe",
         "GU-C02-maarun-naam-chhe",
         "GU-C02-anand",
+        "GU-R04-doorway-nine-r2",
         "GU-C02-tu-tame",
         "GU-C02-shun",
         "GU-C02-tamarun-naam-shun-chhe",
         "GU-C02-practice"
       ],
-      "tex": "gujarati/book/chapters/ch03-introductions.tex"
+      "tex": "gujarati/book/chapters/ch04-introductions.tex"
     },
     {
       "language": "gujarati",
-      "chapter": 4,
-      "sourceHash": "fnv1a64:db23cc118f5fda2a",
+      "chapter": 5,
+      "sourceHash": "fnv1a64:feafaa24d30ccdd8",
       "lessonIds": [
         "GU-C03-hun",
         "GU-C03-kem",
@@ -66,12 +92,12 @@
         "GU-C03-vandho-nahi",
         "GU-C03-practice"
       ],
-      "tex": "gujarati/book/chapters/ch04-responding.tex"
+      "tex": "gujarati/book/chapters/ch05-responding.tex"
     },
     {
       "language": "gujarati",
-      "chapter": 5,
-      "sourceHash": "fnv1a64:b9d772a09b78a342",
+      "chapter": 6,
+      "sourceHash": "fnv1a64:6012935c2f268cfb",
       "lessonIds": [
         "GU-C04-malishun",
         "GU-C04-kaale",
@@ -79,12 +105,12 @@
         "GU-C04-pachha-malishun",
         "GU-C04-practice"
       ],
-      "tex": "gujarati/book/chapters/ch05-farewells.tex"
+      "tex": "gujarati/book/chapters/ch06-farewells.tex"
     },
     {
       "language": "gujarati",
-      "chapter": 6,
-      "sourceHash": "fnv1a64:b678df59f0d09a07",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:64ad6e35b3d833a2",
       "lessonIds": [
         "GU-C05-bolvun",
         "GU-C05-hun-gujarati-bolun-chhun",
@@ -92,22 +118,22 @@
         "GU-C05-rahevun",
         "GU-C05-practice"
       ],
-      "tex": "gujarati/book/chapters/ch06-first-verbs.tex"
-    },
-    {
-      "language": "gujarati",
-      "chapter": 7,
-      "sourceHash": "fnv1a64:22b69d5e4820edce",
-      "lessonIds": [
-        "GU-C06-numbers-1-5",
-        "GU-C06-number-histories"
-      ],
-      "tex": "gujarati/book/chapters/ch07-numbers-1-5.tex"
+      "tex": "gujarati/book/chapters/ch07-first-verbs.tex"
     },
     {
       "language": "gujarati",
       "chapter": 8,
-      "sourceHash": "fnv1a64:f5c70b675441223e",
+      "sourceHash": "fnv1a64:c3a3de392a52e6e9",
+      "lessonIds": [
+        "GU-C06-numbers-1-5",
+        "GU-C06-number-histories"
+      ],
+      "tex": "gujarati/book/chapters/ch08-numbers-1-5.tex"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:d78697eaa701bdfe",
       "lessonIds": [
         "GU-C07-hovun",
         "GU-C07-javun",
@@ -116,67 +142,67 @@
         "GU-C07-jovun",
         "GU-C07-jaanvun"
       ],
-      "tex": "gujarati/book/chapters/ch08-core-verbs.tex"
+      "tex": "gujarati/book/chapters/ch09-core-verbs.tex"
     },
     {
       "language": "gujarati",
-      "chapter": 9,
-      "sourceHash": "fnv1a64:ea383402a63cadd9",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:930fb7c410b7837c",
       "lessonIds": [
         "GU-C08-vicharvun",
         "GU-C08-samajvun",
         "GU-C08-vanchvun",
         "GU-C08-lakhvun"
       ],
-      "tex": "gujarati/book/chapters/ch09-mind-and-page.tex"
+      "tex": "gujarati/book/chapters/ch10-mind-and-page.tex"
     },
     {
       "language": "gujarati",
-      "chapter": 10,
-      "sourceHash": "fnv1a64:5a7938472c33fe92",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:5b62f783c80c1169",
       "lessonIds": [
         "GU-C09-levun",
         "GU-C09-puchhvun",
         "GU-C09-madad-karvi",
         "GU-C09-gamvun"
       ],
-      "tex": "gujarati/book/chapters/ch10-doing-verbs.tex"
+      "tex": "gujarati/book/chapters/ch11-doing-verbs.tex"
     },
     {
       "language": "gujarati",
-      "chapter": 11,
-      "sourceHash": "fnv1a64:205471bbf7a2f7ea",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:2c6474c788f45178",
       "lessonIds": [
         "GU-C10-paani",
         "GU-C10-chaa",
         "GU-C10-dudh",
         "GU-C10-rotli"
       ],
-      "tex": "gujarati/book/chapters/ch11-request-food-drink.tex"
+      "tex": "gujarati/book/chapters/ch12-request-food-drink.tex"
     },
     {
       "language": "gujarati",
-      "chapter": 12,
-      "sourceHash": "fnv1a64:d00495385912916b",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:da5fd7641842c12e",
       "lessonIds": [
         "GU-C11-mitra",
         "GU-C11-kutumb",
         "GU-C11-bhai",
         "GU-C11-bahen"
       ],
-      "tex": "gujarati/book/chapters/ch12-friend-and-family.tex"
+      "tex": "gujarati/book/chapters/ch13-friend-and-family.tex"
     },
     {
       "language": "gujarati",
-      "chapter": 13,
-      "sourceHash": "fnv1a64:cc7a1ef11c47302b",
+      "chapter": 14,
+      "sourceHash": "fnv1a64:cec5fe765504c08e",
       "lessonIds": [
         "GU-C12-aankh",
         "GU-C12-kaan",
         "GU-C12-modhu",
         "GU-C12-naak"
       ],
-      "tex": "gujarati/book/chapters/ch13-face-parts.tex"
+      "tex": "gujarati/book/chapters/ch14-face-parts.tex"
     }
   ]
 }

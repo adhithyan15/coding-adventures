@@ -2,6 +2,69 @@
 
 ## Unreleased
 
+### Added — source-verified Tamil independent u
+
+- Add Tamil **உ** as one joined run through its compact spiral, broad outer
+  descent, and long rightward baseline.
+- Pin its zero lifts, Appendix I Frame 16 provenance, and Noto Sans Tamil fit.
+
+### Added — source-verified Malayalam zha
+
+- Add Malayalam **ഴ** as one uninterrupted run through the left entry arch,
+  clockwise right loop, descending inner return, and lower hook.
+- Pin its zero lifts, 47-frame Wikimedia Commons animation, and Noto Sans
+  Malayalam fit.
+
+### Added — source-verified Malayalam chillu N
+
+- Add Malayalam **ൻ** as two pen-down runs: the left arch and central stem,
+  then the upper shoulder, right loop, inner return, and above-line hook.
+- Pin its one lift, Wikimedia Commons animation, and Noto Sans Malayalam fit.
+
+### Added — source-verified Kannada independent a
+
+- Add Kannada **ಅ** as one uninterrupted run through the compact left loop,
+  broad lower bowl, rounded right loop, and inward horizontal bar.
+- Pin its zero lifts, 35-frame Wikimedia Commons animation, and Noto Sans
+  Kannada fit.
+
+### Added — source-verified Malayalam chillu L
+
+- Add Malayalam **ൽ** as one joined run through the entry arch, central loop,
+  upper shoulder, right loop, and above-line chillu hook.
+- Pin its zero lifts, Wikimedia Commons animation, and Noto Sans Malayalam fit.
+
+### Added — source-verified Tamil zha
+
+- Add Tamil **ழ** as three pen-down runs: joined left body and bar, joined
+  inner upright and broad right bowl, then the detached lower hook.
+- Pin its two lifts, Appendix I Frame 7 provenance, and Noto Sans Tamil fit.
+
+### Added — source-verified Persian and Urdu kheh
+
+- Add script-scoped Persian and Urdu **خ** paths: one joined head-and-bowl run,
+  then one lifted dot above.
+- Pin their independent sources, one-lift order, and Noto Naskh outline fit.
+
+### Added — source-verified Persian pe
+
+- Add Persian **پ** as the shared right-to-left bowl followed by three
+  separately placed dots below.
+- Pin the source's left, right, then lower-center dot order and its three lifts
+  to the bundled Noto Naskh outline.
+
+### Added — source-verified Malayalam independent a
+
+- Add Malayalam **അ** as two pen-down runs: the joined left-and-central body,
+  then the right outer arch curling into its lower inner loop.
+- Pin its one lift, UT Austin handwriting clip, and Noto Sans Malayalam fit.
+
+### Added — source-verified Tamil independent e
+
+- Add Tamil **எ** as two pen-down runs: six joined body movements, then the
+  separate upward right upright.
+- Pin its one lift, Appendix I Frame 5 provenance, and Noto Sans Tamil fit.
+
 ### Added — source-verified Malayalam short e
 
 - Add Malayalam **എ** as two pen-down runs: the joined hook, bar, upright, and

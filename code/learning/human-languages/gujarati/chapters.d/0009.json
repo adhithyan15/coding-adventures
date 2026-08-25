@@ -1,33 +1,25 @@
 {
   "chapter": 9,
-  "title": "The Mind and the Page",
-  "label": "ch:gu-mind-and-page",
-  "canDo": "I can say that I think, understand, read and write in Gujarati, hear and write the nasal that sits in the middle of વાંચવું, and name what each of the four roots was doing before it meant a mental act — ranging about, waking up, speaking, and scratching.",
+  "title": "Six Verbs at the Core",
+  "label": "ch:gu-core-verbs",
+  "canDo": "I can name six everyday Gujarati verbs by the neuter -વું ending they all share, strip that ending to reach the stem, and say what I do with stem, person-ending, and the copula છે.",
   "spineNodes": [
     "SPINE-SAY-WHAT-I-DO"
   ],
   "payoff": {
-    "lesson": "GU-C08-lakhvun",
+    "lesson": "GU-C07-jaanvun",
     "kind": "production",
-    "summary": "Say હું મારું નામ લખું છું, run the chapter's four verbs back with the four things their roots meant — vichārvũ from a root meaning to range about, samajvũ from one meaning to wake, vā̃chvũ from one meaning to speak, lakhvũ from one meaning to scratch — place the medial nasal of vā̃ch- and the assimilate-then-simplify path from dhy to j, and say which of the four honestly has no English cousin at all.",
+    "summary": "The sixth verb runs the whole chapter at once: strip the neuter -વું from all six infinitives, hold the retroflex ણ that Prakrit pulled back from a plain n, put the stem into hũ jāṇũ chhũ, and connect jāṇvũ to the English know it is genuinely cousin to.",
     "assesses": [
-      "GU-LEX-LAKHVU",
-      "GU-ETYMON-LIKH-SCRATCH",
-      "GU-LEX-VANCHVU",
-      "GU-ETYMON-VAC-VOICE",
-      "GU-SCRIPT-ANUSVARA-MEDIAL",
-      "GU-LEX-SAMAJVU",
-      "GU-ETYMON-BUDH-AWAKE",
-      "GU-SOUND-DHY-JJH-J",
-      "GU-LEX-VICHARVU",
-      "GU-ETYMON-VICHAR-TURN",
+      "GU-LEX-HOVU",
+      "GU-LEX-JAVU",
+      "GU-LEX-AAVVU",
       "GU-LEX-KHAAVU",
-      "GU-ETYMON-KHAAVU-NO-ENGLISH-COUSIN",
-      "GU-ETYMON-JOVU-UNSETTLED",
-      "GU-LEX-JAANVU",
-      "GU-ETYMON-JAANVU-KNOW",
+      "GU-LEX-JOVU",
       "GU-GRAMMAR-VU-NEUTER-INFINITIVE",
-      "GU-GRAMMAR-PRESENT-STEM-PERSON-COPULA"
+      "GU-GRAMMAR-PRESENT-STEM-PERSON-COPULA",
+      "GU-LEX-JAANVU",
+      "GU-ETYMON-JAANVU-KNOW"
     ]
   }
 }

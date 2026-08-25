@@ -2,6 +2,128 @@
 
 ## Unreleased
 
+### Added - source-verified Tamil independent u
+
+- Add Tamil independent **உ** from Appendix I Frame 16 as three joined
+  movements in one uninterrupted pen-down run.
+- Pin its zero lifts, distinction from dependent **ு**, and Noto Sans Tamil
+  fit.
+- Remove all 11 affected realizations and rerank shared **ف** first at 10.
+
+### Added - source-verified Malayalam zha
+
+- Add Malayalam base consonant **ഴ** and its 13-syllable vowel row, grounded
+  in Unicode's LLLA identity and ISO-15919 **ḻa** romanization.
+- Pin Sriveenkat's 47-frame, zero-lift order and Noto Sans Malayalam fit.
+- Remove all 11 affected realizations and rerank Tamil **உ** first at 11.
+
+### Added - BACKLOG.md and CHANGELOG.md are sharded documents (HL22)
+
+- Extend the HL21 `X.d/` convention from JSON ledgers to Markdown documents:
+  `src/doc-shard.ts` partitions a document at heading boundaries, and
+  `src/doc-shard-cli.ts` provides `--shard` / `--unshard` / `--check` as
+  `shard:docs`, `unshard:docs` and `check:doc-shards`.
+- Migrate the two files every human-languages author touches — `BACKLOG.md`
+  (100 of the last 200 human-languages commits, 107 sections) and this
+  `CHANGELOG.md` (75 of 200, 451 entries) — so a new entry is a NEW FILE and
+  five parallel level-authoring agents no longer serialize on two files. The 23
+  per-language `<track>/CHANGELOG.md` files are already partitioned by track
+  and are deliberately left alone.
+- Number the shards by RECENCY RANK rather than by position, because both
+  documents are newest-first: the topmost section takes the highest ordinal, so
+  prepending an entry is an append in ordinal space instead of a reach into a
+  shrinking gap that two agents would both grab.
+- Identify each shard by an 8-hex SHA-256 digest of its heading, not by its
+  ASCII-folded slug: `source-verified Tamil ர` and `source-verified Tamil த`
+  fold to the same slug, and the digest is what keeps them apart.
+- Introduce NO normalization. The rebuild is concatenation of verbatim slices,
+  so both regenerated monoliths are byte-identical to the pre-migration files,
+  asserted by `git diff --exit-code` and by a test over the real documents.
+- Gate both monoliths with `check:doc-shards` in
+  `.github/workflows/human-languages-books.yml` and
+  `verify-human-languages.sh`, beside `check:shards`.
+
+### Added - source-verified Malayalam chillu N
+
+- Add Malayalam chillu **ൻ** from Sriveenkat's 67-frame animation as four
+  movements grouped into two pen-down runs.
+- Pin its one lift, above-line finishing hook, and Noto Sans Malayalam fit.
+- Remove all 11 affected realizations and rerank Malayalam **ഴ** first at 11.
+
+### Fixed - Latin writing activity contracts
+
+- Restore validation for the newly merged delayed-copy and dictation lessons by
+  placing both directives before learner prose.
+- Remove duplicate normalized `salvē` variants while retaining the required
+  empty `accepted` arrays.
+
+### Added - source-verified Kannada independent a
+
+- Add Kannada independent **ಅ** from Gopala Krishna A's 35-frame animation as
+  four movements in one uninterrupted pen-down run.
+- Pin its zero lifts and Noto Sans Kannada geometry.
+- Remove all 11 affected realizations and rerank Malayalam chillu **ൻ** first
+  at 11.
+
+### Added - source-verified Malayalam chillu L
+
+- Add Malayalam chillu **ൽ** from Sriveenkat's 97-frame animation as five
+  movements in one uninterrupted pen-down run.
+- Pin its zero lifts, above-line finishing hook, and Noto Sans Malayalam fit.
+- Remove all 12 affected realizations and rerank Kannada independent **ಅ**
+  first at 11.
+
+### Added - source-verified Tamil zha
+
+- Add Tamil **ழ** from UT Austin's Appendix I Frame 7 as six movements grouped
+  into three pen-down runs.
+- Pin its two lifts and printed Noto Sans Tamil geometry without mistaking the
+  manual's movement numbers for six separate strokes.
+- Remove all 13 affected realizations and rerank Malayalam chillu **ൽ** first
+  at 12.
+
+### Added - conflict-resistant level snapshots
+
+- Replace the shared authored level-total hotspot with one exact generated snapshot
+  per language under `core/level-snapshots/`.
+- Reconstruct and verify the corpus-wide level histogram, unmapped count and mapped
+  percentage from those shards, preserving exact regression coverage.
+- Prove with two synthetic language tranches that independent tracks change disjoint
+  files, so parallel curriculum work no longer conflicts on `levels.test.ts`.
+
+### Added - source-verified Persian and Urdu kheh
+
+- Add separate Persian and Urdu **خ** rows from UT Austin Persian Online and
+  Northwestern's *Zer o Zabar* rather than borrowing Arabic provenance.
+- Pin both body-first, dot-last two-stroke orders to the Noto Naskh fallback.
+- Remove all 13 affected realizations and rerank Tamil **ழ** first at 13.
+
+### Added - source-verified Persian pe
+
+- Add Persian **پ** from UT Austin's freehand alphabet as the shared
+  right-to-left bowl followed by three separate dots below.
+- Pin its three lifts and the source's left, right, then lower-center dot order
+  against the bundled Noto Naskh outline.
+- Remove four Persian realizations without borrowing Persian provenance; ten
+  Urdu **پ** gaps remain while Malayalam independent **അ** reranks first at 13.
+
+### Added - source-verified Malayalam independent a
+
+- Add independent Malayalam **അ** from UT Austin's initial-vowel handwriting
+  clip as a joined left-and-central body followed by the right arch and loop.
+- Pin its one lift, five visible movements, and bundled Noto Sans Malayalam fit.
+- Remove all 13 affected **അ** realizations and rerank shared **خ** first at 13:
+  nine Persian realizations plus four Urdu realizations requiring separate
+  provenance.
+
+### Added - source-verified Tamil independent எ
+
+- Add independent Tamil short **எ** from Appendix I Frame 5 as six joined body
+  movements followed by the separate upward right upright.
+- Pin its one lift, seven movements, distinction from dependent **ெ**, and the
+  bundled Noto Sans Tamil fit.
+- Remove 15 affected Tamil realizations and rerank Persian **پ** first at 14.
+
 ### Fixed - every ledger read in `src/` goes through `shard.ts` (#12564, #12734)
 
 - **The seventeen bare `JSON.parse(readFileSync(...))` sites in `loader.ts` are

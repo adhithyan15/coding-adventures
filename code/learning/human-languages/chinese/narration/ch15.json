@@ -1,0 +1,1479 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 15,
+  "title": "A wider school map",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:662b96560faad4c6",
+  "lessons": [
+    {
+      "id": "ZH-C15-hear-zhong",
+      "sequence": 1100,
+      "title": "Hear zhōng — middle",
+      "headword": "zhōng",
+      "romanization": "zhōng",
+      "gloss": "middle; centre",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:83540c8bd1996720",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 8,
+              "perItem": false,
+              "source": "[PAUSE 8s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say small in Mandarin."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zhōng — middle; centre."
+            },
+            {
+              "kind": "speech",
+              "text": "Hold one high, level tone: zhōng. Stay with sound and meaning. The written shape comes next."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C15-hear-zhong-meaning",
+              "prompt": "What does zhōng mean?",
+              "assesses": [
+                "ZH-LEX-ZHONG-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "middle",
+                "centre",
+                "center",
+                "middle or centre"
+              ],
+              "feedback": {
+                "correct": "Right: zhōng means middle or centre.",
+                "incorrect": "Hear the level tone: zhōng — middle."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W15-zhong",
+      "sequence": 1110,
+      "title": "中 (zhōng) — close, then pass through",
+      "headword": "中",
+      "romanization": "zhōng",
+      "gloss": "middle, written in four strokes",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:4c2e381440ab2eaf",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 8,
+              "perItem": false,
+              "source": "[PAUSE 8s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say middle in Mandarin."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Reuse 口's three-stroke box: left side; joined top and right; closing bottom. Only then draw the long centre vertical through the box. Four strokes; three lifts."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace 中 (zhōng) once. Copy it once while saying box, close, through."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 中 (zhōng), pinned stroke paths and medians."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-W15-zhong-order",
+              "prompt": "What happens immediately before the final centre line in 中 (zhōng)?",
+              "assesses": [
+                "ZH-SCRIPT-ZHONG-01"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "close the box",
+                "the box closes",
+                "draw the bottom horizontal",
+                "close 口"
+              ],
+              "feedback": {
+                "correct": "Right: close the box, then pass through its centre.",
+                "incorrect": "Finish 口 first; the long centre line is fourth."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C15-zhong",
+      "sequence": 1120,
+      "title": "中 (zhōng) — middle on the page",
+      "headword": "中",
+      "romanization": "zhōng",
+      "gloss": "middle; centre, now read and written",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fc22fd13d2fe916d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 9,
+              "perItem": false,
+              "source": "[PAUSE 9s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say middle, then point to 中 (zhōng)'s last stroke."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "中 — zhōng — middle; centre."
+            },
+            {
+              "kind": "speech",
+              "text": "Read the character without pinyin, then hold its first tone level."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy 中 (zhōng) once. Check that the box closes before the centre line."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C15-zhong-write",
+              "prompt": "Write zhōng, middle, in Chinese.",
+              "assesses": [
+                "ZH-LEX-ZHONG-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "中",
+                "中 zhōng"
+              ],
+              "feedback": {
+                "correct": "Right: 中.",
+                "incorrect": "Close 口, then pass the final vertical through it."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C15-hear-zhongxue",
+      "sequence": 1130,
+      "title": "Hear zhōngxué — middle school",
+      "headword": "zhōngxué",
+      "romanization": "zhōngxué",
+      "gloss": "middle school",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2774e884bfa80c64",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 9,
+              "perItem": false,
+              "source": "[PAUSE 9s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say middle, then study."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zhōngxué — middle school."
+            },
+            {
+              "kind": "speech",
+              "text": "Hold zhōng level, then let xué rise. Hear the whole school word before seeing its two characters."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C15-hear-zhongxue-meaning",
+              "prompt": "What does zhōngxué mean?",
+              "assesses": [
+                "ZH-LEX-ZHONGXUE-01"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "middle school",
+                "a middle school"
+              ],
+              "feedback": {
+                "correct": "Right: zhōngxué means middle school.",
+                "incorrect": "Join middle and study: zhōngxué — middle school."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C15-zhongxue",
+      "sequence": 1140,
+      "title": "中学 (zhōngxué) — middle school on the page",
+      "headword": "中学",
+      "romanization": "zhōngxué",
+      "gloss": "middle school, built from known characters",
+      "script": "chinese",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:391373662cfeaa1d",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 10,
+              "perItem": false,
+              "source": "[PAUSE 10s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read 中 (zhōng), then 学."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "中学 — zhōngxué — middle school."
+            },
+            {
+              "kind": "speech",
+              "text": "Read the pair without pinyin: level, then rising."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at 中学 (zhōngxué), cover it, and write it once from memory."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C15-zhongxue-write",
+              "prompt": "Write middle school in Chinese characters.",
+              "assesses": [
+                "ZH-LEX-ZHONGXUE-01"
+              ],
+              "responseSeconds": 13,
+              "acceptedResponses": [
+                "中学",
+                "中学 zhōngxué"
+              ],
+              "feedback": {
+                "correct": "Right: 中学.",
+                "incorrect": "Write middle 中, then study 学."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R15-school-map-1",
+      "sequence": 1150,
+      "title": "Retrieval 1 — middle and middle school",
+      "headword": "中 — 中学",
+      "romanization": "zhōng — zhōngxué",
+      "gloss": "first retrieval of middle and middle school",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e9514c067201edca",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 8,
+              "perItem": false,
+              "source": "[PAUSE 8s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say middle without looking."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear middle and middle school in mixed order. Say each, read its card, then write it once. Repair only the missed item."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-R15-school-map-1-recall",
+              "prompt": "Write middle and middle school in that order.",
+              "assesses": [
+                "ZH-LEX-ZHONG-01",
+                "ZH-LEX-ZHONGXUE-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "中 — 中学",
+                "中 中学",
+                "中, 中学"
+              ],
+              "feedback": {
+                "correct": "Both forms returned.",
+                "incorrect": "Repair the missed form, then retry the pair."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C15-hear-zhongxuesheng",
+      "sequence": 1160,
+      "title": "Hear zhōngxuésheng — middle-school student",
+      "headword": "zhōngxuésheng",
+      "romanization": "zhōngxuésheng",
+      "gloss": "middle-school student",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:07a7d24438682f44",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 10,
+              "perItem": false,
+              "source": "[PAUSE 10s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say middle school, then student."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zhōngxuésheng — middle-school student."
+            },
+            {
+              "kind": "speech",
+              "text": "Say three beats: level zhōng, rising xué, light sheng. The shared xué is spoken only once."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C15-hear-zhongxuesheng-meaning",
+              "prompt": "What does zhōngxuésheng mean?",
+              "assesses": [
+                "ZH-LEX-ZHONGXUESHENG-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "middle-school student",
+                "a middle school student",
+                "middle school student"
+              ],
+              "feedback": {
+                "correct": "Right: zhōngxuésheng means middle-school student.",
+                "incorrect": "Hear middle school plus student, sharing xué."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C15-zhongxuesheng",
+      "sequence": 1170,
+      "title": "中学生 (zhōngxuésheng) — middle-school student on the page",
+      "headword": "中学生",
+      "romanization": "zhōngxuésheng",
+      "gloss": "middle-school student, built from known characters",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bd132f3c8a67f002",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read 中学 (zhōngxué), then point to 生."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "中学生 — zhōngxuésheng — middle-school student."
+            },
+            {
+              "kind": "speech",
+              "text": "Read all three characters once without pinyin."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear zhōngxuésheng, then write 中学生 without looking. Check one character at a time."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C15-zhongxuesheng-write",
+              "prompt": "Write middle-school student in Chinese characters.",
+              "assesses": [
+                "ZH-LEX-ZHONGXUESHENG-01"
+              ],
+              "responseSeconds": 16,
+              "acceptedResponses": [
+                "中学生",
+                "中学生 zhōngxuésheng"
+              ],
+              "feedback": {
+                "correct": "Right: 中学生.",
+                "incorrect": "Write 中, then 学, then 生."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C15-hear-tongxue",
+      "sequence": 1180,
+      "title": "Hear tóngxué — classmate",
+      "headword": "tóngxué",
+      "romanization": "tóngxué",
+      "gloss": "classmate; schoolmate",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c65be4a4637bfce2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 8,
+              "perItem": false,
+              "source": "[PAUSE 8s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say study in Mandarin."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tóngxué — classmate; schoolmate."
+            },
+            {
+              "kind": "speech",
+              "text": "Let both syllables rise: tóng-xué. Keep working only with sound and meaning. The first character comes next."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C15-hear-tongxue-meaning",
+              "prompt": "What does tóngxué mean?",
+              "assesses": [
+                "ZH-LEX-TONGXUE-01"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "classmate",
+                "schoolmate",
+                "a classmate",
+                "a schoolmate"
+              ],
+              "feedback": {
+                "correct": "Right: tóngxué means classmate or schoolmate.",
+                "incorrect": "Hear two rising tones: tóngxué — classmate."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W15-tong",
+      "sequence": 1190,
+      "title": "同 (tóng) — frame, line, box",
+      "headword": "同",
+      "romanization": "tóng",
+      "gloss": "together; same, written in six strokes",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:19e12cdbf935ce51",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 9,
+              "perItem": false,
+              "source": "[PAUSE 9s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say classmate, then air-write 口."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Draw the outer left side. Lift for the joined outer top and right side, ending with its small hook. Add the inner horizontal. Finish the familiar 口 inside: left, joined top-right, closing bottom. Six strokes; five lifts."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace 同 (tóng) once. Copy it once while saying frame, line, box."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 同 (tóng), pinned stroke paths and medians."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-W15-tong-order",
+              "prompt": "What three-stroke shape finishes 同 (tóng)?",
+              "assesses": [
+                "ZH-SCRIPT-TONG-01"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "口",
+                "the inner 口",
+                "mouth box",
+                "a box"
+              ],
+              "feedback": {
+                "correct": "Right: finish the inner 口.",
+                "incorrect": "After the frame and inner line, write 口 inside."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C15-tongxue",
+      "sequence": 1200,
+      "title": "同学 (tóngxué) — classmate on the page",
+      "headword": "同学",
+      "romanization": "tóngxué",
+      "gloss": "classmate; schoolmate, now read and written",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:344f37b317a5e191",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 10,
+              "perItem": false,
+              "source": "[PAUSE 10s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read 同 (tóng), then 学."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "同学 — tóngxué — classmate; schoolmate."
+            },
+            {
+              "kind": "speech",
+              "text": "Read the pair without pinyin. Both syllables rise."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy 同学 (tóngxué) once. Keep the inner 口 inside 同's open-bottom outer frame."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C15-tongxue-write",
+              "prompt": "Write classmate in Chinese characters.",
+              "assesses": [
+                "ZH-LEX-TONGXUE-01"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "同学",
+                "同学 tóngxué"
+              ],
+              "feedback": {
+                "correct": "Right: 同学.",
+                "incorrect": "Write together 同, then study 学."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R15-school-map-2",
+      "sequence": 1210,
+      "title": "Retrieval 2 — school and people",
+      "headword": "中学 — 中学生 — 同学",
+      "romanization": "zhōngxué — zhōngxuésheng — tóngxué",
+      "gloss": "second retrieval of the growing school map",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5672e6977fe93728",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write 中 (zhōng) and 同 (tóng) from memory."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear middle school, middle-school student, and classmate in mixed order. Say, read, and write each. Repair one word at a time."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-R15-school-map-2-recall",
+              "prompt": "Write middle school, middle-school student, and classmate.",
+              "assesses": [
+                "ZH-LEX-ZHONGXUE-01",
+                "ZH-LEX-ZHONGXUESHENG-01",
+                "ZH-LEX-TONGXUE-01"
+              ],
+              "responseSeconds": 22,
+              "acceptedResponses": [
+                "中学 — 中学生 — 同学",
+                "中学 中学生 同学",
+                "中学, 中学生, 同学"
+              ],
+              "feedback": {
+                "correct": "The three school forms stayed distinct.",
+                "incorrect": "Repair only the missed word, then retry the row."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C15-hear-shangxue",
+      "sequence": 1220,
+      "title": "Hear shàngxué — go to school",
+      "headword": "shàngxué",
+      "romanization": "shàngxué",
+      "gloss": "go to school; attend school",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:87a3523fe8f407f0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 9,
+              "perItem": false,
+              "source": "[PAUSE 9s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say up / on, then study."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "shàngxué — go to school; attend school."
+            },
+            {
+              "kind": "speech",
+              "text": "Drop firmly on shàng, then rise on xué. No new character is hiding in the word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C15-hear-shangxue-meaning",
+              "prompt": "What does shàngxué mean?",
+              "assesses": [
+                "ZH-LEX-SHANGXUE-01"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "go to school",
+                "attend school",
+                "to go to school",
+                "to attend school"
+              ],
+              "feedback": {
+                "correct": "Right: shàngxué means go to or attend school.",
+                "incorrect": "Hear falling shàng plus rising xué: go to school."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C15-shangxue",
+      "sequence": 1230,
+      "title": "上学 (shàngxué) — go to school on the page",
+      "headword": "上学",
+      "romanization": "shàngxué",
+      "gloss": "go to school; attend school, built from known characters",
+      "script": "chinese",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:50a923bfa560db05",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 10,
+              "perItem": false,
+              "source": "[PAUSE 10s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read 上, then 学."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "上学 — shàngxué — go to school; attend school."
+            },
+            {
+              "kind": "speech",
+              "text": "Read the pair without pinyin: falling, then rising."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at 上学 (shàngxué), cover it, and write it once from memory."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C15-shangxue-write",
+              "prompt": "Write go to school in Chinese characters.",
+              "assesses": [
+                "ZH-LEX-SHANGXUE-01"
+              ],
+              "responseSeconds": 13,
+              "acceptedResponses": [
+                "上学",
+                "上学 shàngxué"
+              ],
+              "feedback": {
+                "correct": "Right: 上学.",
+                "incorrect": "Write up/on 上, then study 学."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R15-school-map-3",
+      "sequence": 1240,
+      "title": "Retrieval 3 — place, person, classmate, action",
+      "headword": "中学 — 中学生 — 同学 — 上学",
+      "romanization": "zhōngxué — zhōngxuésheng — tóngxué — shàngxué",
+      "gloss": "third retrieval across four school compounds",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f8bfc6d13c136f92",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write 中 (zhōng) and 同 (tóng), then read 学."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Shuffle four meaning cards: middle school, middle-school student, classmate, go to school. Say, read, and write each. Sort them as place, person, relationship, or action."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-R15-school-map-3-recall",
+              "prompt": "Write middle school, middle-school student, classmate, and go to school.",
+              "assesses": [
+                "ZH-LEX-ZHONGXUE-01",
+                "ZH-LEX-ZHONGXUESHENG-01",
+                "ZH-LEX-TONGXUE-01",
+                "ZH-LEX-SHANGXUE-01"
+              ],
+              "responseSeconds": 28,
+              "acceptedResponses": [
+                "中学 — 中学生 — 同学 — 上学",
+                "中学 中学生 同学 上学",
+                "中学, 中学生, 同学, 上学"
+              ],
+              "feedback": {
+                "correct": "All four meanings stayed separate.",
+                "incorrect": "Repair one missed word, then retry the set."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R15-school-map-4",
+      "sequence": 1250,
+      "title": "Retrieval 4 — the full school ladder",
+      "headword": "小学 — 中学 — 大学; 小学生 — 中学生 — 大学生",
+      "romanization": "xiǎoxué — zhōngxué — dàxué; xiǎoxuésheng — zhōngxuésheng — dàxuésheng",
+      "gloss": "fourth retrieval across the full learned school ladder",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a7f0db304babaa68",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 14,
+              "perItem": false,
+              "source": "[PAUSE 14s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write 小, 中 (zhōng), and 大 from memory."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Build two three-item rows without a model: primary / middle / university; then primary-school / middle-school / university students. Read both rows aloud. Add 同学 (tóngxué) and 上学 (shàngxué) from meaning cards."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-R15-school-map-4-recall",
+              "prompt": "Write primary school, middle school, and university in that order.",
+              "assesses": [
+                "ZH-LEX-XIAOXUE-01",
+                "ZH-LEX-ZHONGXUE-01",
+                "ZH-LEX-DAXUE-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "小学 — 中学 — 大学",
+                "小学 中学 大学",
+                "小学, 中学, 大学"
+              ],
+              "feedback": {
+                "correct": "The three-school ladder is secure.",
+                "incorrect": "Keep 学 fixed; repair 小, 中, or 大."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C15-practice",
+      "sequence": 1260,
+      "title": "Payoff — four school compounds in four skills",
+      "headword": "中学 — 中学生 — 同学 — 上学",
+      "romanization": "zhōngxué — zhōngxuésheng — tóngxué — shàngxué",
+      "gloss": "separately scored listening, speaking, reading, and writing school-compound map",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a932033cba82478c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 18,
+              "perItem": false,
+              "source": "[PAUSE 18s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write 中 (zhōng), 同 (tóng), 上, 学, and 生 without a model."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Listening: hear the four words in mixed order and choose each meaning."
+            },
+            {
+              "kind": "speech",
+              "text": "Speaking: produce all four from meaning cards, with tones audible."
+            },
+            {
+              "kind": "speech",
+              "text": "Reading: read all four character cards without pinyin."
+            },
+            {
+              "kind": "speech",
+              "text": "Writing: hear all four and write them without a model."
+            },
+            {
+              "kind": "speech",
+              "text": "Pass each skill separately. Repair and retry only the failed skill."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Official HSK 3.0 syllabus, Level 1 task outline and vocabulary."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ZH-C15-practice-school-payoff",
+              "prompt": "After all four checks pass, write middle school, classmate, and go to school.",
+              "assesses": [
+                "ZH-PERFORMANCE-SCHOOL-COMPOUNDS-FOUR-SKILL-01"
+              ],
+              "responseSeconds": 28,
+              "acceptedResponses": [
+                "中学 — 同学 — 上学",
+                "中学 同学 上学",
+                "中学, 同学, 上学"
+              ],
+              "feedback": {
+                "correct": "The school-compound map passes in all four skills.",
+                "incorrect": "Repair only the failed skill or word, then retry it."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

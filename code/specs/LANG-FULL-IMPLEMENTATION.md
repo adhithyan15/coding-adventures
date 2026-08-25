@@ -936,12 +936,26 @@ backend immediately) come before the enabler-dependent items.
   follow the same finite rule; cyclic and deeper proofs fail closed. Computed
   boolean identity writes (`x and true`, `x or false`, `x eqv true`, and
   `true impl x`, including valid symmetric forms) also preserve a selector
-  dependency without consuming another depth level. Structural integer
+  dependency without consuming another depth level. Left-associative chains
+  of the commutative boolean identities receive the same treatment, while
+  implication retains its directional single-operation rule. Even chains of unary
+  `not` receive the same treatment, while odd chains remain changing.
+  Structural integer
   identity writes using `+ 0`, `- 0`, `* 1`, and `div 1` (including valid
-  commutative forms) receive the same bounded treatment. For finite real
+  commutative forms and left-associative chains of those operations) receive
+  the same bounded treatment. Integer and real exponentiation whose complete
+  literal exponent chain evaluates to one is also preserving because the
+  existing power lowerer returns the base directly without a multiply or
+  runtime power call. Dynamic and otherwise non-unit exponents remain
+  conservative. Leading unary plus, including integer identity tails, is
+  likewise preserving because lowering returns its operand unchanged; unary
+  minus remains conservative. Parentheses are transparent around exact scalar
+  self-references and boolean, integer, or real neutral literals; wrapping a
+  changing expression does not make it preserving. For finite real
   selectors, multiplication and division by exact positive one are likewise
-  preserving; additive zero remains conservative because it can change the
-  sign bit of negative zero. Other real arithmetic and computed selector
+  preserving, including left-associative chains of those operations; additive
+  zero remains conservative because it can change the sign bit of negative
+  zero. Other real arithmetic and computed selector
   assignments, differing,
   computed, or otherwise
   unsupported selector-dependency writes, dynamically selected differing selector leaves,

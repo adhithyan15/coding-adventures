@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 require "pathname"
-require "set"
+require "json"
+require_relative "tracked_artifact_unicode17"
 
 module BuildTool
   module Validator
@@ -19,6 +20,75 @@ module BuildTool
       "kotlin",
       "haskell"
     ].freeze
+    TRACKED_ARTIFACT_COMPONENT_IDENTITY = "node_modules"
+    TRACKED_ARTIFACT_REDACTED_PATH = "repository"
+    TRACKED_ARTIFACT_UNICODE_VERSION = TrackedArtifactUnicode17::UNICODE_VERSION
+    WINDOWS_RESERVED_BASENAMES = Set[
+      "CON",
+      "PRN",
+      "AUX",
+      "NUL",
+      "CONIN$",
+      "CONOUT$",
+      "CLOCK$",
+      *(1..9).map { |index| "COM#{index}" },
+      *(1..9).map { |index| "LPT#{index}" },
+      *%w[¹ ² ³].map { |index| "COM#{index}" },
+      *%w[¹ ² ³].map { |index| "LPT#{index}" }
+    ].freeze
+
+    # Validate caller-supplied records rather than discovering paths here.
+    #
+    # This boundary is intentionally pure: the native adapter that snapshots a
+    # Git index can be reviewed separately, while this policy code never opens a
+    # file, follows a link, launches a process, or consults host path semantics.
+    def validate_tracked_artifact_snapshot(
+      entries,
+      unicode_version: TRACKED_ARTIFACT_UNICODE_VERSION
+    )
+      unless unicode_version == TRACKED_ARTIFACT_UNICODE_VERSION
+        raise ArgumentError,
+          "tracked artifact Unicode version must be #{TRACKED_ARTIFACT_UNICODE_VERSION}"
+      end
+
+      diagnostics = entries.filter_map do |entry|
+        normalized_path, problem = normalize_tracked_artifact_path(entry.fetch("path"))
+        details = {
+          "ordinal" => entry.fetch("ordinal"),
+          "entry_kind" => entry.fetch("entry_kind")
+        }
+        unless problem.nil?
+          details["problem"] = problem
+          next {
+            "code" => "TRACKED_ARTIFACT_PATH_INVALID",
+            "severity" => "error",
+            "path" => TRACKED_ARTIFACT_REDACTED_PATH,
+            "details" => details
+          }
+        end
+
+        forbidden = normalized_path.split("/").any? do |component|
+          TrackedArtifactUnicode17.nfkc_casefold(component) ==
+            TRACKED_ARTIFACT_COMPONENT_IDENTITY
+        end
+        next unless forbidden
+
+        {
+          "code" => "TRACKED_ARTIFACT_FORBIDDEN",
+          "severity" => "error",
+          "path" => normalized_path,
+          "details" => details
+        }
+      end
+
+      diagnostics.sort_by do |diagnostic|
+        [
+          diagnostic.fetch("code").codepoints,
+          diagnostic.fetch("path").codepoints,
+          canonical_details(diagnostic.fetch("details"))
+        ]
+      end
+    end
 
     def validate_ci_full_build_toolchains(root, packages)
       ci_path = Pathname(root) / ".github" / "workflows" / "ci.yml"
@@ -42,14 +112,14 @@ module BuildTool
       parts = []
       unless missing_output_binding.empty?
         parts << "detect outputs for forced main full builds are not normalized through " \
-                 "steps.toolchains for: #{missing_output_binding.join(', ')}"
+                 "steps.toolchains for: #{missing_output_binding.join(", ")}"
       end
       unless missing_main_force.empty?
         parts << "forced main full-build path does not explicitly enable toolchains for: " \
-                 "#{missing_main_force.join(', ')}"
+                 "#{missing_main_force.join(", ")}"
       end
 
-      "#{ci_path.to_s.tr('\\', '/')}: #{parts.join('; ')}"
+      "#{ci_path.to_s.tr("\\", "/")}: #{parts.join("; ")}"
     end
 
     def validate_build_contracts(root, packages)
@@ -73,11 +143,41 @@ module BuildTool
         .sort
     end
 
+    # Replace separators lexically. Pathname would erase empty and dot segments
+    # before policy can reject them, and would inherit the current host's rules.
+    def normalize_tracked_artifact_path(path)
+      normalized = path.tr("\\", "/")
+      return [nil, "EMPTY"] if normalized.empty?
+      return [nil, "TOO_LONG"] if normalized.length > 512
+      return [nil, "NON_NFC"] unless TrackedArtifactUnicode17.nfc(normalized) == normalized
+      return [nil, "ABSOLUTE"] if normalized.start_with?("/")
+      return [nil, "DRIVE_QUALIFIED"] if normalized.match?(/\A[A-Za-z]:/)
+
+      segments = normalized.split("/", -1)
+      return [nil, "EMPTY_SEGMENT"] if segments.any?(&:empty?)
+      if normalized.each_char.any? { |character| character.ord < 32 || '<>:"|?*'.include?(character) }
+        return [nil, "UNSAFE_CHARACTER"]
+      end
+
+      segments.each do |segment|
+        return [nil, "DOT_SEGMENT"] if [".", ".."].include?(segment)
+        return [nil, "TRAILING_DOT_OR_SPACE"] if segment.end_with?(" ", ".")
+
+        basename = TrackedArtifactUnicode17.full_uppercase(segment.split(".", 2).first)
+        return [nil, "RESERVED_BASENAME"] if WINDOWS_RESERVED_BASENAMES.include?(basename)
+      end
+      [normalized, nil]
+    end
+
+    def canonical_details(details)
+      JSON.generate(details.keys.sort.to_h { |key| [key, details.fetch(key)] })
+    end
+
     def validate_lua_isolated_build_files(packages)
       packages.filter_map do |pkg|
         next unless pkg.language == "lua"
 
-        self_rock = "coding-adventures-#{pkg.path.basename.to_s.tr('_', '-')}"
+        self_rock = "coding-adventures-#{pkg.path.basename.to_s.tr("_", "-")}"
         build_lines = {}
         lua_build_files(pkg.path).flat_map do |build_path|
           lines = read_build_lines(build_path)
@@ -88,7 +188,7 @@ module BuildTool
 
           foreign_remove = first_foreign_lua_remove(lines, self_rock)
           unless foreign_remove.nil?
-            errors << "#{build_path.to_s.tr('\\', '/')}: Lua BUILD removes unrelated rock " \
+            errors << "#{build_path.to_s.tr("\\", "/")}: Lua BUILD removes unrelated rock " \
                       "#{foreign_remove}; isolated package builds should only remove the " \
                       "package they are rebuilding"
           end
@@ -96,15 +196,15 @@ module BuildTool
           state_machine_index = first_line_containing(lines, "../state_machine", "..\\state_machine")
           directed_graph_index = first_line_containing(lines, "../directed_graph", "..\\directed_graph")
           if !state_machine_index.nil? && !directed_graph_index.nil? &&
-             state_machine_index < directed_graph_index
-            errors << "#{build_path.to_s.tr('\\', '/')}: Lua BUILD installs state_machine " \
+              state_machine_index < directed_graph_index
+            errors << "#{build_path.to_s.tr("\\", "/")}: Lua BUILD installs state_machine " \
                       "before directed_graph; isolated LuaRocks builds require directed_graph first"
           end
 
           if (guarded_local_lua_install?(lines) ||
               (build_path.basename.to_s == "BUILD_windows" && local_lua_sibling_install?(lines))) &&
-             !self_install_disables_deps?(lines, self_rock)
-            errors << "#{build_path.to_s.tr('\\', '/')}: Lua BUILD bootstraps sibling rocks " \
+              !self_install_disables_deps?(lines, self_rock)
+            errors << "#{build_path.to_s.tr("\\", "/")}: Lua BUILD bootstraps sibling rocks " \
                       "but the final self-install does not pass --deps-mode=none or --no-manifest"
           end
 
@@ -115,8 +215,8 @@ module BuildTool
             build_lines.fetch("BUILD_windows", [])
           )
           unless missing_windows_deps.empty?
-            errors << "#{(pkg.path / 'BUILD_windows').to_s.tr('\\', '/')}: Lua BUILD_windows is " \
-                      "missing sibling installs present in BUILD: #{missing_windows_deps.join(', ')}"
+            errors << "#{(pkg.path / "BUILD_windows").to_s.tr("\\", "/")}: Lua BUILD_windows is " \
+                      "missing sibling installs present in BUILD: #{missing_windows_deps.join(", ")}"
           end
           errors
         end
@@ -135,7 +235,7 @@ module BuildTool
               !line.include?("--notest")
           end
 
-          "#{build_path.to_s.tr('\\', '/')}: Perl BUILD bootstraps Test2::V0 without --notest; " \
+          "#{build_path.to_s.tr("\\", "/")}: Perl BUILD bootstraps Test2::V0 without --notest; " \
             "isolated Windows installs can fail while installing the test framework itself"
         end
       end.flatten
@@ -143,9 +243,9 @@ module BuildTool
 
     def lua_build_files(pkg_path)
       Dir.children(pkg_path)
-         .select { |entry| entry.start_with?("BUILD") }
-         .sort
-         .map { |entry| Pathname(pkg_path) / entry }
+        .select { |entry| entry.start_with?("BUILD") }
+        .sort
+        .map { |entry| Pathname(pkg_path) / entry }
     rescue SystemCallError
       []
     end
@@ -154,9 +254,9 @@ module BuildTool
       return [] unless build_path.exist?
 
       build_path.read
-                .lines
-                .map(&:strip)
-                .reject { |line| line.empty? || line.start_with?("#") }
+        .lines
+        .map(&:strip)
+        .reject { |line| line.empty? || line.start_with?("#") }
     end
 
     def first_foreign_lua_remove(lines, self_rock)

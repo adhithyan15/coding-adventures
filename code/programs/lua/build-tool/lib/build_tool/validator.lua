@@ -1,3 +1,5 @@
+local Unicode = require("build_tool.tracked_artifact_unicode17")
+
 local Validator = {}
 
 local CI_MANAGED_TOOLCHAIN_LANGUAGES = {
@@ -12,6 +14,145 @@ local CI_MANAGED_TOOLCHAIN_LANGUAGES = {
     kotlin = true,
     haskell = true,
 }
+
+local TRACKED_ARTIFACT_COMPONENT_IDENTITY = "node_modules"
+local TRACKED_ARTIFACT_REDACTED_PATH = "repository"
+local WINDOWS_RESERVED_BASENAMES = {
+    CON = true,
+    PRN = true,
+    AUX = true,
+    NUL = true,
+    ["CONIN$"] = true,
+    ["CONOUT$"] = true,
+    ["CLOCK$"] = true,
+}
+for index = 1, 9 do
+    WINDOWS_RESERVED_BASENAMES["COM" .. index] = true
+    WINDOWS_RESERVED_BASENAMES["LPT" .. index] = true
+end
+for _, index in ipairs({"¹", "²", "³"}) do
+    WINDOWS_RESERVED_BASENAMES["COM" .. index] = true
+    WINDOWS_RESERVED_BASENAMES["LPT" .. index] = true
+end
+
+Validator.TRACKED_ARTIFACT_UNICODE_VERSION = Unicode.UNICODE_VERSION
+
+local function split_path(path)
+    local segments = {}
+    local start = 1
+    while true do
+        local separator = path:find("/", start, true)
+        if separator == nil then
+            segments[#segments + 1] = path:sub(start)
+            return segments
+        end
+        segments[#segments + 1] = path:sub(start, separator - 1)
+        start = separator + 1
+    end
+end
+
+local function has_unsafe_character(path)
+    for _, scalar in utf8.codes(path) do
+        if scalar < 32 or scalar == 0x3C or scalar == 0x3E or scalar == 0x3A or
+            scalar == 0x22 or scalar == 0x7C or scalar == 0x3F or scalar == 0x2A
+        then
+            return true
+        end
+    end
+    return false
+end
+
+local function normalize_tracked_artifact_path(path)
+    local normalized = path:gsub("\\", "/")
+    if normalized == "" then return nil, "EMPTY" end
+
+    local scalar_length = utf8.len(normalized)
+    if scalar_length == nil or scalar_length > 512 then return nil, "TOO_LONG" end
+    if Unicode.nfc(normalized) ~= normalized then return nil, "NON_NFC" end
+    if normalized:sub(1, 1) == "/" then return nil, "ABSOLUTE" end
+    if normalized:match("^[A-Za-z]:") then return nil, "DRIVE_QUALIFIED" end
+
+    local segments = split_path(normalized)
+    for _, segment in ipairs(segments) do
+        if segment == "" then return nil, "EMPTY_SEGMENT" end
+    end
+    if has_unsafe_character(normalized) then return nil, "UNSAFE_CHARACTER" end
+
+    for _, segment in ipairs(segments) do
+        if segment == "." or segment == ".." then return nil, "DOT_SEGMENT" end
+        local ending = segment:sub(-1)
+        if ending == " " or ending == "." then return nil, "TRAILING_DOT_OR_SPACE" end
+
+        local basename = segment:match("^([^.]*)")
+        if WINDOWS_RESERVED_BASENAMES[Unicode.full_uppercase(basename)] then
+            return nil, "RESERVED_BASENAME"
+        end
+    end
+    return normalized, nil
+end
+
+local function canonical_details(details)
+    return table.concat({
+        details.entry_kind,
+        tostring(details.ordinal),
+        details.problem or "",
+    }, "\0")
+end
+
+local function diagnostic_less(left, right)
+    if left.code ~= right.code then return left.code < right.code end
+    if left.path ~= right.path then return left.path < right.path end
+    return canonical_details(left.details) < canonical_details(right.details)
+end
+
+-- Validate caller-supplied inert records without reading a checkout, following
+-- links, consulting Git, launching a process, or inheriting host Unicode data.
+function Validator.validate_tracked_artifact_snapshot(entries, unicode_version)
+    unicode_version = unicode_version or Validator.TRACKED_ARTIFACT_UNICODE_VERSION
+    if unicode_version ~= Validator.TRACKED_ARTIFACT_UNICODE_VERSION then
+        error(
+            "tracked artifact Unicode version must be " ..
+                Validator.TRACKED_ARTIFACT_UNICODE_VERSION
+        )
+    end
+
+    local diagnostics = {}
+    for _, entry in ipairs(entries) do
+        local normalized_path, problem = normalize_tracked_artifact_path(entry.path)
+        local details = {
+            ordinal = entry.ordinal,
+            entry_kind = entry.entry_kind,
+        }
+        if problem ~= nil then
+            details.problem = problem
+            diagnostics[#diagnostics + 1] = {
+                code = "TRACKED_ARTIFACT_PATH_INVALID",
+                severity = "error",
+                path = TRACKED_ARTIFACT_REDACTED_PATH,
+                details = details,
+            }
+        else
+            local forbidden = false
+            for _, component in ipairs(split_path(normalized_path)) do
+                if Unicode.nfkc_casefold(component) == TRACKED_ARTIFACT_COMPONENT_IDENTITY then
+                    forbidden = true
+                    break
+                end
+            end
+            if forbidden then
+                diagnostics[#diagnostics + 1] = {
+                    code = "TRACKED_ARTIFACT_FORBIDDEN",
+                    severity = "error",
+                    path = normalized_path,
+                    details = details,
+                }
+            end
+        end
+    end
+
+    table.sort(diagnostics, diagnostic_less)
+    return diagnostics
+end
 
 function Validator.validate_ci_full_build_toolchains(root, packages)
     local ci_path = root .. "/.github/workflows/ci.yml"

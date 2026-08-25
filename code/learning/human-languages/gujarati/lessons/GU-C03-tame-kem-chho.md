@@ -3,12 +3,12 @@ schema_version: 2
 id: GU-C03-tame-kem-chho
 spine_node: SPINE-CHECK-WELLBEING
 sequence: 180
-chapter: 4
+chapter: 5
 type: phrase
 headword: તમે કેમ છો?
 gloss: how are you? (respectful)
 concept_tag: STATE-HOW-ARE-YOU
-prerequisites: [GU-C03-kem, GU-C02-tu-tame, GU-C02-chhe]
+prerequisites: [GU-C03-kem, GU-C02-tu-tame, GU-C02-chhe, GU-W02-dha]
 sounds: [o-ending]
 roots: []
 duration:
@@ -18,8 +18,8 @@ requires:
 introduces:
   knowledge: [GU-CONCEPT-C03-TAMEKEMCHHO-01]
 practises:
-  knowledge: [GU-CONCEPT-C02-CHHE-01, GU-CONCEPT-C02-TUTAME-01, GU-CONCEPT-C03-KEM-01, GU-CONCEPT-C03-TAMEKEMCHHO-01]
-skills: [listening, speaking, reading]
+  knowledge: [GU-CONCEPT-C02-CHHE-01, GU-CONCEPT-C02-TUTAME-01, GU-CONCEPT-C03-KEM-01, GU-CONCEPT-C03-TAMEKEMCHHO-01, GU-SCRIPT-DHA-01]
+skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
@@ -59,6 +59,13 @@ together.
 - [YOU SAY: the respectful greeting — *tame kem chho?*]
 - [YOU SAY: the familiar version — *tũ kem chhe?*]
 - [YOU SAY: where the verb sits (at the end)]
+
+## Script retrieval
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-DHA-01] -->
+<!-- hl-activity: {"id":"GU-C03-tame-kem-chho-dha-retrieval","kind":"text","assesses":["GU-SCRIPT-DHA-01"],"prompt":"Without looking back, write ધ once.","answer":"ધ","accepted":[],"feedback":{"correct":"Good: one careful retrieval is enough.","incorrect":"Look at ધ once, hide it, and write it one time."},"response_seconds":12} -->
+
+Hide the earlier model for **ધ**. Write it once, compare, make at most one
+repair, and stop.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C02-CHHE-01, GU-CONCEPT-C02-TUTAME-01, GU-CONCEPT-C03-KEM-01, GU-CONCEPT-C03-TAMEKEMCHHO-01] -->
