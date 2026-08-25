@@ -3280,6 +3280,58 @@
         "ES-C323-mientras"
       ],
       "tex": "spanish/book/chapters/ch323-antes-y-despues.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 324,
+      "sourceHash": "fnv1a64:6d16d1e3da3e1724",
+      "lessonIds": [
+        "ES-C324-verdad",
+        "ES-C324-falso",
+        "ES-C324-acaso",
+        "ES-C324-menos",
+        "ES-C324-siquiera"
+      ],
+      "tex": "spanish/book/chapters/ch324-verdad-y-siquiera.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 325,
+      "sourceHash": "fnv1a64:8b609d5f8952a119",
+      "lessonIds": [
+        "ES-C325-pais",
+        "ES-C325-ciudad",
+        "ES-C325-barrio",
+        "ES-C325-plaza",
+        "ES-C325-lugar"
+      ],
+      "tex": "spanish/book/chapters/ch325-pais-y-lugar.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 326,
+      "sourceHash": "fnv1a64:1853fc5d3853bb32",
+      "lessonIds": [
+        "ES-C326-nervioso",
+        "ES-C326-valiente",
+        "ES-C326-solo",
+        "ES-C326-libre",
+        "ES-C326-listo"
+      ],
+      "tex": "spanish/book/chapters/ch326-nervioso-y-listo.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 327,
+      "sourceHash": "fnv1a64:a377d5e47b57ea53",
+      "lessonIds": [
+        "ES-C327-despierto",
+        "ES-C327-dormido",
+        "ES-C327-fuerte",
+        "ES-C327-debil",
+        "ES-C327-sano"
+      ],
+      "tex": "spanish/book/chapters/ch327-despierto-y-sano.tex"
     }
   ]
 }
