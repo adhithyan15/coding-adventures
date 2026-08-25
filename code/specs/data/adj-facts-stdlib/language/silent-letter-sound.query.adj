@@ -1,0 +1,16 @@
+% ============================================================================
+% silent-letter-sound.query.adj — worked recall over the
+% silent-letter-sound library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what sound does this
+% silent-letter spelling make?" (direct) or "which spelling makes this
+% sound?" (reverse) — it states no fact of its own — it only `import`s the
+% grounded table and asks binding queries.
+% ============================================================================
+
+import "silent-letter-sound.adj"
+
+? silent_letter_sound(kn, $Sound)      % expect n_sound (direct)
+? silent_letter_sound($Sp, r_sound)    % expect wr (reverse)
+? silent_letter_sound(mb, $Sound)      % expect m_sound (direct)
+? silent_letter_sound(gh, $Sound)      % expect abstain -- a real silent-letter pattern ("night"), but not one of this UFLI lesson's three named patterns
