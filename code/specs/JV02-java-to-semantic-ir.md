@@ -2,15 +2,21 @@
 
 ## Status
 
-New. Spec-only PR — no implementation yet (per this repo's "specs first"
-discipline). Defines the `java-to-semantic-ir` frontend's milestone
-sequence (M1–M9), the `java-lexer`/`java-parser` hardening this frontend's
-own CI needs before it can trust those crates, and the CI toolchain-
-detection gap this frontend's own execution-proof tests expose. This is
-the second slice of the Java frontend/backend initiative, immediately
-after [SIR29](SIR29-nominal-static-oop-profile.md) (Slice 0, merged) —
-the third slice, `semantic-ir-to-java`, follows once this frontend is
-usable end-to-end.
+Defines the `java-to-semantic-ir` frontend's milestone sequence (M0–M9),
+the `java-lexer`/`java-parser` hardening this frontend's own CI needs
+before it can trust those crates, and the CI toolchain-detection gap this
+frontend's own execution-proof tests expose. This is the second slice of
+the Java frontend/backend initiative, immediately after
+[SIR29](SIR29-nominal-static-oop-profile.md) (Slice 0, merged) — the
+third slice, `semantic-ir-to-java`, follows once this frontend is usable
+end-to-end.
+
+**Implementation progress**: M0 (hardening + `main` + literals) and M1
+(local variable declarations, re-assignment, arithmetic/comparison/
+logical operators, `+`-based string concatenation) are merged — see
+`code/packages/rust/java-to-semantic-ir`'s own `CHANGELOG.md` for the
+exact per-milestone construct list and the real correctness bugs each
+milestone's own test suite caught before shipping. M2 onward are pending.
 
 ## Motivation
 

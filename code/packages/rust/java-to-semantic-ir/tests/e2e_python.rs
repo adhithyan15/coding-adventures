@@ -1,0 +1,227 @@
+//! End-to-end execution proof: Java → SIR → Python → `python3`.
+//!
+//! JV02's own "Verification" section requires each milestone to prove its
+//! *combination* of constructs actually lowers to a runnable program, not
+//! just that lowering itself succeeds. M1 has no way to produce observable
+//! output on its own terms, though — `System.out.println` is a method
+//! call, out of scope until JV02 M3 — so unlike every math-language
+//! frontend's own `e2e_node.rs` (which calls a native `disp`/`print`
+//! builtin), there is nothing in real M1-scoped Java source to assert on
+//! directly.
+//!
+//! Instead, `run_via_python` below takes the already-lowered `Module` and
+//! redirects `main`'s trailing block value to whatever the last statement
+//! computed (see its own doc comment) — the Python backend's
+//! `emit_function_body` unconditionally emits `return <block.value>;`, so
+//! this turns `main`'s SIR body into a callable function whose return value
+//! is exactly what the test wants to observe. The Java *lowering* itself
+//! (parsing, kind inference, operator selection) is entirely real and
+//! untouched; only the "how do we observe the result" wiring is
+//! test-harness convenience, done here rather than in the frontend.
+//!
+//! Backend choice: Python, not JavaScript. M1 lowers Java's `+`-based
+//! string concatenation to `Expr::StrConcat`, and the JavaScript backend
+//! does not accept `Feature::StringInterpolation` yet (`StrConcat` is in
+//! its own "deferred, rejected at capability check" list) — the Python
+//! backend already does, so one backend covers every M1 construct.
+
+use std::fs::OpenOptions;
+use std::io::Write as _;
+use std::process::Command;
+
+use java_to_semantic_ir::compile_source;
+use semantic_ir::Stmt;
+
+fn python_available() -> bool {
+    Command::new("python3")
+        .arg("--version")
+        .output()
+        .map(|o| o.status.success())
+        .unwrap_or(false)
+}
+
+/// Lower `java_src`, validate it, then run it through the Python backend
+/// and `python3`, returning trimmed stdout.
+///
+/// `java_src`'s `main` body must end with a bare expression statement
+/// (legal in this frontend's own already-established simplification — see
+/// `lower.rs`'s own module doc comment and M0's identically-shaped
+/// `42;`-as-a-statement tests; real `javac` would reject a bare
+/// non-assignment/non-call expression statement, but this frontend's
+/// grammar is intentionally more permissive). That last statement is
+/// popped off `main.body.stmts` and its expression becomes `main.body`'s
+/// trailing value instead, so the emitted Python function ends with
+/// `return <that expression>`.
+fn run_via_python(name: &str, java_src: &str) -> String {
+    let mut module = compile_source(java_src, "prog").expect("lowering should succeed");
+    let report = semantic_ir::validate(&module);
+    assert!(
+        report.is_ok(),
+        "SIR validation failed for {name}: {:?}",
+        report.issues
+    );
+
+    let main = module
+        .functions
+        .iter_mut()
+        .find(|f| f.name == "main")
+        .expect("expected a synthesized `main` function");
+    match main.body.stmts.pop() {
+        Some(Stmt::ExprStmt { expr, .. }) => main.body.value = expr,
+        Some(other) => panic!(
+            "expected `main`'s last statement to be a bare expression statement, got {other:?}"
+        ),
+        None => panic!("`main` has no statements to observe"),
+    }
+    // The Python backend special-cases a function literally named `main`:
+    // it mangles it to `_sir_user_main` and auto-invokes it (discarding
+    // the return value) at module scope, mirroring a real program's
+    // entry point. Renaming it here sidesteps that convention entirely
+    // rather than depending on its exact mangled name, so this harness
+    // calls the function itself and captures what it returns.
+    main.name = "probe".to_string();
+
+    let artifact = semantic_ir_to_python::compile(&module).expect("backend emit should succeed");
+
+    let mut path = std::env::temp_dir();
+    path.push(format!("java_sir_e2e_{name}_{}.py", std::process::id()));
+    // `create_new`, not `std::fs::write`: fails instead of following a
+    // pre-existing symlink at this predictable shared-temp-dir path (see
+    // `matlab-to-semantic-ir`'s identically-reasoned `e2e_node.rs`, whose
+    // harness this file otherwise mirrors).
+    let mut file = OpenOptions::new()
+        .write(true)
+        .create_new(true)
+        .open(&path)
+        .expect("create temp py (create_new, not following an existing symlink)");
+    file.write_all(artifact.source.as_bytes())
+        .expect("write temp py");
+    writeln!(file, "print(probe())").expect("write print epilogue");
+    drop(file);
+
+    // `sir-runtime-core` unconditionally imports several sibling
+    // per-concern packages at its own module-load time (pairs, for its
+    // display convention; exceptions, for typed `SirError`), regardless
+    // of whether a given emitted program actually uses those features —
+    // mirrors `semantic-ir-to-python`'s own `tests/sir22_array.rs`
+    // harness, which independently discovered the same full sibling set
+    // is required on `PYTHONPATH` even for programs that only exercise a
+    // handful of them.
+    let py_root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../python");
+    let pythonpath = std::env::join_paths([
+        py_root.join("sir-runtime-core/src"),
+        py_root.join("sir-runtime-pairs/src"),
+        py_root.join("sir-runtime-oop/src"),
+        py_root.join("sir-runtime-range/src"),
+        py_root.join("sir-runtime-regex/src"),
+        py_root.join("sir-runtime-exceptions/src"),
+    ])
+    .expect("join PYTHONPATH");
+
+    let output = Command::new("python3")
+        .arg(&path)
+        .env("PYTHONPATH", &pythonpath)
+        .output()
+        .expect("spawn python3");
+    let _ = std::fs::remove_file(&path);
+
+    assert!(
+        output.status.success(),
+        "python3 failed for {name}: stderr=\n{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    String::from_utf8_lossy(&output.stdout).trim().to_string()
+}
+
+fn wrap(body: &str) -> String {
+    format!("class Main {{ public static void main(String[] args) {{ {body} }} }}")
+}
+
+#[test]
+fn arithmetic_composition_runs_in_python() {
+    if !python_available() {
+        eprintln!("skipping arithmetic_composition_runs_in_python: `python3` not available");
+        return;
+    }
+    // Multiplicative binds tighter than additive: 5 + 2 * 3 == 11, not 21.
+    let out = run_via_python(
+        "arithmetic_composition",
+        &wrap("int x = 5; int y = 2; int z = x + y * 3; z;"),
+    );
+    assert_eq!(out, "11");
+}
+
+#[test]
+fn integer_division_truncates_in_python() {
+    if !python_available() {
+        eprintln!("skipping integer_division_truncates_in_python: `python3` not available");
+        return;
+    }
+    let out = run_via_python(
+        "integer_division",
+        &wrap("int a = 7; int b = 2; int c = a / b; c;"),
+    );
+    assert_eq!(out, "3");
+}
+
+#[test]
+fn float_division_runs_in_python() {
+    if !python_available() {
+        eprintln!("skipping float_division_runs_in_python: `python3` not available");
+        return;
+    }
+    let out = run_via_python(
+        "float_division",
+        &wrap("double a = 7.0; double b = 2.0; double c = a / b; c;"),
+    );
+    assert_eq!(out, "3.5");
+}
+
+#[test]
+fn string_concatenation_with_auto_stringify_runs_in_python() {
+    if !python_available() {
+        eprintln!("skipping string_concatenation_with_auto_stringify_runs_in_python: `python3` not available");
+        return;
+    }
+    let out = run_via_python("string_concat", &wrap(r#"String s = "n=" + 5; s;"#));
+    assert_eq!(out, "n=5");
+}
+
+#[test]
+fn comparison_and_logical_and_runs_in_python() {
+    if !python_available() {
+        eprintln!("skipping comparison_and_logical_and_runs_in_python: `python3` not available");
+        return;
+    }
+    let out = run_via_python(
+        "comparison_and_logical",
+        &wrap("int x = 5; int y = 3; boolean r = (x > y) && (x != y); r;"),
+    );
+    assert_eq!(out, "True");
+}
+
+#[test]
+fn reassignment_and_unary_not_runs_in_python() {
+    if !python_available() {
+        eprintln!("skipping reassignment_and_unary_not_runs_in_python: `python3` not available");
+        return;
+    }
+    let out = run_via_python(
+        "reassignment_not",
+        &wrap("boolean flag = true; flag = !flag; flag;"),
+    );
+    assert_eq!(out, "False");
+}
+
+#[test]
+fn var_type_inference_runs_in_python() {
+    if !python_available() {
+        eprintln!("skipping var_type_inference_runs_in_python: `python3` not available");
+        return;
+    }
+    let out = run_via_python(
+        "var_inference",
+        &wrap("var x = 10; var y = 4; var z = x - y; z;"),
+    );
+    assert_eq!(out, "6");
+}
