@@ -71,10 +71,11 @@ if [ "$MODE" != "books" ]; then
   # from the check people actually run before pushing. "Exactly what CI runs" is
   # the promise this section makes in its own heading.
   ( cd "$PKG" && run "check:shards" npm run check:shards )
+  # HL22 does the same for the two Markdown documents every author touches.
+  ( cd "$PKG" && run "check:doc-shards" npm run check:doc-shards )
   ( cd "$PKG" && run "check:gentle-snapshots" npm run check:gentle-snapshots )
   ( cd "$PKG" && run "check:modality" npm run check:modality )
   ( cd "$PKG" && run "check:narration" npm run check:narration )
-  ( cd "$PKG" && run "check:shards" npm run check:shards )
 
   step "language-ladder"
   ( cd "$LADDER" && run "vitest" npx vitest run --testTimeout=60000 )

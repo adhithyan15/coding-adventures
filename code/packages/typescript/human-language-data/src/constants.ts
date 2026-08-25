@@ -157,6 +157,42 @@ export function stripControlCharacters(value: string): string {
   );
 }
 
+/**
+ * A FILESYSTEM-derived name, made safe to print into a CI log.
+ *
+ * `stripControlCharacters` is the right tool for a corpus-derived *string*; this
+ * is the right tool for a corpus-derived *filename*, and the difference is one
+ * character. The strip deliberately KEEPS `\n` and `\t` — they are ordinary
+ * layout, and the render helpers own their own line breaks — but a filename is
+ * printed inside a one-line message, so a name containing a newline forges a
+ * whole extra log line. That is the same attack one level up: instead of
+ * rewriting its own line, the name adds a line that was never emitted.
+ *
+ * On Linux every byte except `/` and NUL is legal in a filename, and git tracks
+ * such names as ordinary blobs, so a pull request can commit one. Anything that
+ * reads a directory and reports what it found is therefore printing
+ * branch-controlled bytes onto a maintainer's runner.
+ *
+ * THE ORDER IS STRIP THEN QUOTE, and it is not interchangeable even though both
+ * orders happen to be safe on today's inputs. `JSON.stringify` escapes only
+ * `< 0x20`, `"` and `\` — it does NOT cover DEL (0x7F) or the C1 range
+ * (0x80–0x9F), which some terminals still act on. Quoting first would therefore
+ * lean on the serializer as the security control, and be safe only because the
+ * strip mopped up afterwards. Stripping first gives each layer exactly one job:
+ * the strip removes what a terminal would execute, the quote removes what a log
+ * reader would mis-parse. It also matches `stripControlCharacters`' own rule —
+ * remove rather than escape, because a visible escape adds noise without adding
+ * information.
+ *
+ * The quoting has a second, duller payoff that is how most people actually meet
+ * this function: a name with leading or trailing spaces is otherwise invisible
+ * in the message, which is how somebody hits this by accident rather than on
+ * purpose.
+ */
+export function reportableFilename(name: string): string {
+  return JSON.stringify(stripControlCharacters(name));
+}
+
 export function hasOwn(obj: object, key: string): boolean {
   return Object.prototype.hasOwnProperty.call(obj, key);
 }

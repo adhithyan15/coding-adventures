@@ -7,5 +7,10 @@
 # WPT tree-construction data includes inputs whose trailing spaces are semantic.
 code/packages/rust/html-parser/tests/fixtures/html5lib-tree-construction-smoke.dat whitespace=-trailing-space
 
+# Markdown document shards retain the inter-section separator at EOF so their
+# ordered concatenation remains byte-identical to the authored monolith.
+code/learning/human-languages/BACKLOG.d/*.md whitespace=-blank-at-eof
+code/packages/typescript/human-language-data/CHANGELOG.d/*.md whitespace=-blank-at-eof
+
 # Content-addressed evidence must survive checkout without byte normalization.
 code/specs/data/adj-stdlib-provenance/cas/objects/** binary
