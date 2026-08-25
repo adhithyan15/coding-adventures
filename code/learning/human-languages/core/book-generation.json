@@ -5262,6 +5262,41 @@
       "output": "spanish/book/chapters/ch327-despierto-y-sano.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 328,
+      "output": "spanish/book/chapters/ch328-asi-y-incluso.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 329,
+      "output": "spanish/book/chapters/ch329-tal-y-salvo.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 330,
+      "output": "spanish/book/chapters/ch330-camino-y-vez.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 331,
+      "output": "spanish/book/chapters/ch331-manera-y-asunto.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 332,
+      "output": "spanish/book/chapters/ch332-permiso-y-voz.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 333,
+      "output": "spanish/book/chapters/ch333-calma-y-prisa.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 334,
+      "output": "spanish/book/chapters/ch334-salud-y-edad.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "output": "tamil/book/chapters/ch06-dative-case.tex",

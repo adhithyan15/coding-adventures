@@ -6410,6 +6410,153 @@
           "ES-LEX-C327-STATE-20"
         ]
       }
+    },
+    {
+      "chapter": 328,
+      "title": "Never, Barely, Almost, Even",
+      "label": "ch:asi-y-incluso",
+      "canDo": "I can size a claim with asi, jamas, apenas, casi and incluso, and say which two Latin words are fused inside jamas.",
+      "spineNodes": [
+        "SPINE-RESPOND-BASIC"
+      ],
+      "payoff": {
+        "lesson": "ES-C328-incluso",
+        "kind": "production",
+        "summary": "Complete ES-C328-incluso: set the manner with asi, then run the scale from jamas through apenas and casi up to incluso.",
+        "assesses": [
+          "ES-LEX-C328-DEGREE-01",
+          "ES-LEX-C328-DEGREE-02",
+          "ES-LEX-C328-DEGREE-03",
+          "ES-LEX-C328-DEGREE-04",
+          "ES-LEX-C328-DEGREE-05"
+        ]
+      }
+    },
+    {
+      "chapter": 329,
+      "title": "Such, Which, Then, But Rather",
+      "label": "ch:tal-y-salvo",
+      "canDo": "I can join and correct two thoughts with tal, cual, pues, sino and salvo, and say why sino needs a no earlier in the sentence.",
+      "spineNodes": [
+        "SPINE-RESPOND-BASIC"
+      ],
+      "payoff": {
+        "lesson": "ES-C329-salvo",
+        "kind": "production",
+        "summary": "Complete ES-C329-salvo: pair tal with cual, conclude with pues, correct a negative with sino, and make an exception with salvo.",
+        "assesses": [
+          "ES-LEX-C329-LINK-06",
+          "ES-LEX-C329-LINK-07",
+          "ES-LEX-C329-LINK-08",
+          "ES-LEX-C329-LINK-09",
+          "ES-LEX-C329-LINK-10"
+        ]
+      }
+    },
+    {
+      "chapter": 330,
+      "title": "The Road and the World",
+      "label": "ch:camino-y-vez",
+      "canDo": "I can name el camino, la parada, el mundo, la vida and la vez, and say which of them is Celtic rather than Latin.",
+      "spineNodes": [
+        "SPINE-MEET-GREET"
+      ],
+      "payoff": {
+        "lesson": "ES-C330-vez",
+        "kind": "production",
+        "summary": "Complete ES-C330-vez: follow a camino to a parada, widen out to el mundo and la vida, and open the noun inside otra vez.",
+        "assesses": [
+          "ES-LEX-C330-WAY-11",
+          "ES-LEX-C330-WAY-12",
+          "ES-LEX-C330-WAY-13",
+          "ES-LEX-C330-WAY-14",
+          "ES-LEX-C330-WAY-15"
+        ]
+      }
+    },
+    {
+      "chapter": 331,
+      "title": "A While, a Way, a Thing",
+      "label": "ch:manera-y-asunto",
+      "canDo": "I can say el rato, la manera, el modo, la cosa and el asunto, and say which noun has been hiding inside como since chapter three.",
+      "spineNodes": [
+        "SPINE-MEET-GREET"
+      ],
+      "payoff": {
+        "lesson": "ES-C331-asunto",
+        "kind": "production",
+        "summary": "Complete ES-C331-asunto: cut a rato out of el tiempo, choose between manera and modo, and go from any cosa to the asunto it becomes.",
+        "assesses": [
+          "ES-LEX-C331-WAY-16",
+          "ES-LEX-C331-WAY-17",
+          "ES-LEX-C331-WAY-18",
+          "ES-LEX-C331-WAY-19",
+          "ES-LEX-C331-WAY-20"
+        ]
+      }
+    },
+    {
+      "chapter": 332,
+      "title": "Permission, Notice, and the Word",
+      "label": "ch:permiso-y-voz",
+      "canDo": "I can say el permiso, el aviso, la disculpa, la palabra and la voz, and say which Greek geometry term became the Spanish word for word.",
+      "spineNodes": [
+        "SPINE-COURTESY-THANK"
+      ],
+      "payoff": {
+        "lesson": "ES-C332-voz",
+        "kind": "production",
+        "summary": "Complete ES-C332-voz: open the noun inside con permiso, give an aviso, offer a disculpa, and carry a palabra on your voz.",
+        "assesses": [
+          "ES-LEX-C332-WORD-21",
+          "ES-LEX-C332-WORD-22",
+          "ES-LEX-C332-WORD-23",
+          "ES-LEX-C332-WORD-24",
+          "ES-LEX-C332-WORD-25"
+        ]
+      }
+    },
+    {
+      "chapter": 333,
+      "title": "Noise, Silence, Calm and Hurry",
+      "label": "ch:calma-y-prisa",
+      "canDo": "I can say el ruido, el silencio, la calma, la prisa and el cuidado, and say why a word for burning heat came to mean stillness.",
+      "spineNodes": [
+        "SPINE-COURTESY-THANK"
+      ],
+      "payoff": {
+        "lesson": "ES-C333-cuidado",
+        "kind": "production",
+        "summary": "Complete ES-C333-cuidado: answer ruido with silencio, ask for calma, take the prisa out of a moment, and say cuidado when it matters.",
+        "assesses": [
+          "ES-LEX-C333-QUIET-26",
+          "ES-LEX-C333-QUIET-27",
+          "ES-LEX-C333-QUIET-28",
+          "ES-LEX-C333-QUIET-29",
+          "ES-LEX-C333-QUIET-30"
+        ]
+      }
+    },
+    {
+      "chapter": 334,
+      "title": "Health, Hunger, Cold and Heat",
+      "label": "ch:salud-y-edad",
+      "canDo": "I can report la salud, el hambre, el frio, el calor and la edad, and say why el hambre takes el while staying feminine.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "ES-C334-edad",
+        "kind": "production",
+        "summary": "Complete ES-C334-edad: name your salud, say tengo hambre, split hace frio from tengo frio, and give your edad two ways.",
+        "assesses": [
+          "ES-LEX-C334-BODY-31",
+          "ES-LEX-C334-BODY-32",
+          "ES-LEX-C334-BODY-33",
+          "ES-LEX-C334-BODY-34",
+          "ES-LEX-C334-BODY-35"
+        ]
+      }
     }
   ]
 }
