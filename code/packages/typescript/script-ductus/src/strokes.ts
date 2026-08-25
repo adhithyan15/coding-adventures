@@ -275,6 +275,14 @@ const malayalamIndependentVowelSource = (glyph: string): StrokeSource => {
   return letter.strokeOrderSource;
 };
 
+const malayalamAlphabetSource = (glyph: string): StrokeSource => {
+  const letter = malayalam.finalConsonants.find((candidate) => candidate.glyph === glyph);
+  if (!letter || !("strokeOrderSource" in letter) || !letter.strokeOrderSource) {
+    throw new Error(`Malayalam ${glyph} has no verified source`);
+  }
+  return letter.strokeOrderSource;
+};
+
 const teluguIndependentVowelSource = (glyph: string): StrokeSource => {
   const letter = telugu.independentVowels.find((candidate) => candidate.glyph === glyph);
   if (!letter || !("strokeOrderSource" in letter) || !letter.strokeOrderSource) {
@@ -13589,6 +13597,101 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: malayalamIndependentVowelSource("അ"),
+  },
+  // Sriveenkat's 97-frame animation draws chillu ൽ as one uninterrupted run:
+  // the left entry arch flows clockwise around the central loop, crosses the
+  // upper shoulder into the right loop, then rises into the above-line hook.
+  // These five movements preserve that zero-lift order on Noto Sans Malayalam.
+  [ductusKey("malayalam", "ൽ")]: {
+    script: "malayalam",
+    glyph: "ൽ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "climb the left entry arch and turn inward at the top",
+            path: [
+              { x: 220, y: 28 },
+              { x: 155, y: 65 },
+              { x: 100, y: 145 },
+              { x: 80, y: 245 },
+              { x: 92, y: 350 },
+              { x: 140, y: 445 },
+              { x: 225, y: 510 },
+              { x: 330, y: 532 },
+              { x: 430, y: 510 },
+              { x: 488, y: 492 },
+            ],
+          },
+          {
+            label: "descend clockwise around the central loop and return to its upper junction",
+            path: [
+              { x: 488, y: 492 },
+              { x: 555, y: 455 },
+              { x: 615, y: 375 },
+              { x: 660, y: 280 },
+              { x: 665, y: 190 },
+              { x: 630, y: 105 },
+              { x: 570, y: 45 },
+              { x: 505, y: 24 },
+              { x: 435, y: 45 },
+              { x: 375, y: 105 },
+              { x: 345, y: 190 },
+              { x: 350, y: 285 },
+              { x: 385, y: 385 },
+              { x: 435, y: 460 },
+              { x: 488, y: 492 },
+            ],
+          },
+          {
+            label: "carry the upper shoulder right",
+            path: [
+              { x: 488, y: 492 },
+              { x: 570, y: 525 },
+              { x: 660, y: 540 },
+              { x: 750, y: 535 },
+              { x: 835, y: 520 },
+              { x: 915, y: 492 },
+            ],
+          },
+          {
+            label: "sweep clockwise around the right loop and return to the upper crossing",
+            path: [
+              { x: 915, y: 492 },
+              { x: 1000, y: 455 },
+              { x: 1060, y: 385 },
+              { x: 1100, y: 300 },
+              { x: 1115, y: 215 },
+              { x: 1095, y: 125 },
+              { x: 1040, y: 60 },
+              { x: 970, y: 25 },
+              { x: 900, y: 45 },
+              { x: 840, y: 105 },
+              { x: 808, y: 190 },
+              { x: 815, y: 280 },
+              { x: 850, y: 375 },
+              { x: 900, y: 455 },
+              { x: 915, y: 492 },
+            ],
+          },
+          {
+            label: "rise into the chillu hook and curl left above the line",
+            path: [
+              { x: 915, y: 492 },
+              { x: 970, y: 535 },
+              { x: 1020, y: 595 },
+              { x: 1045, y: 655 },
+              { x: 1035, y: 705 },
+              { x: 995, y: 742 },
+              { x: 935, y: 755 },
+              { x: 875, y: 748 },
+              { x: 845, y: 738 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: malayalamAlphabetSource("ൽ"),
   },
   எ: {
     script: "tamil",

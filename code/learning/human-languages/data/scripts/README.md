@@ -48,6 +48,10 @@ holds the structured tone (`"1"`–`"4"` | `"neutral"`). No `forms`, no `marks`.
       }
     }
   ],
+  "finalConsonants": [                       // atomic vowel-free letters outside a generated syllable grid
+    { "glyph": "ൽ", "sound": "l", "role": "consonant", "components": ["…"],
+      "strokeOrder": ["…"], "strokeOrderNote": "…" }
+  ],
   "marks": [                                   // vowel signs / harakat / niqqud
     { "mark": "ी", "sound": "ī", "role": "vowel-sign",
       "attachesAs": "a vertical to the right",
@@ -148,9 +152,9 @@ is క with the *i* sign on it.
 
 So handwriting data follows one rule:
 
-> Only **independent vowels**, **base consonants**, and **vowel signs** are ever
-> authored. A syllable's figure is composed from its parts' figures, never
-> authored separately.
+> Only **independent vowels**, **atomic consonants** (base consonants and
+> standalone chillus), and **vowel signs** are ever authored. A syllable's
+> figure is composed from its parts' figures, never authored separately.
 
 In a generated syllabary file independent vowels have their own small inventory;
 the base consonants are the entries whose
@@ -952,8 +956,9 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
 
 The initial source-availability gap recorded by HL-C41 is now being closed one
 verified shape at a time. Telugu has a cited independent **అ** row; Malayalam
-has cited independent **അ** and **എ** rows. Kannada still has no authored
-letter path. An absent `penLifts` remains unverified, never an implied zero.
+has cited independent **അ** and **എ** rows plus standalone chillu **ൽ**.
+Kannada still has no authored letter path. An absent `penLifts` remains
+unverified, never an implied zero.
 
 ## Adding a script (e.g. Gujarati, Bengali, Hebrew)
 

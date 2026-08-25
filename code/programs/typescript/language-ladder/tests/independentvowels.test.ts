@@ -53,3 +53,26 @@ describe("independent (word-initial) vowels", () => {
     expect(cyr.independentVowels).toBeUndefined();
   });
 });
+
+describe("atomic final consonants", () => {
+  it("keeps Malayalam chillu ൽ sourced and outside the all-syllable grid", () => {
+    const malayalam = SCRIPTS.find((s) => s.script === "malayalam")!;
+    expect(malayalam.finalConsonants?.map((entry) => entry.glyph)).toEqual(["ൽ"]);
+    const chilluL = malayalam.finalConsonants![0]!;
+    expect(chilluL.role).toBe("consonant");
+    expect(chilluL.penLifts).toBe(0);
+    expect(chilluL.strokeOrder).toHaveLength(5);
+    expect(chilluL.strokeOrderSource?.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Ml_%E0%B5%BD_order.gif",
+    );
+    expect(malayalam.letters.some((entry) => entry.glyph === "ൽ")).toBe(false);
+    expect(isSyllabary(malayalam.letters)).toBe(true);
+    expect(buildSyllableMatrix(malayalam.letters as never)).not.toBeNull();
+  });
+
+  it("does not invent final-consonant inventories for the sibling scripts", () => {
+    for (const id of ["telugu", "kannada"] as const) {
+      expect(SCRIPTS.find((script) => script.script === id)!.finalConsonants).toBeUndefined();
+    }
+  });
+});

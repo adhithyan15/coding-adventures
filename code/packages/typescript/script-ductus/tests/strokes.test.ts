@@ -241,11 +241,16 @@ const URDU_BARI_YE = DUCTUS[ductusKey("urdu-nastaliq", "ے")];
 const TELUGU_A = DUCTUS[ductusKey("telugu", "అ")];
 const MALAYALAM_A = DUCTUS[ductusKey("malayalam", "അ")];
 const MALAYALAM_E = DUCTUS[ductusKey("malayalam", "എ")];
+const MALAYALAM_CHILLU_L = DUCTUS[ductusKey("malayalam", "ൽ")];
 
 const fontForDuctus = (letter: LetterDuctus) => {
   const script = SCRIPTS.find((candidate) => candidate.script === letter.script);
   if (!script) throw new Error(`no verified script/font owns ${letter.glyph}`);
-  const letterClaim = [...script.letters, ...(script.independentVowels ?? [])].find(
+  const letterClaim = [
+    ...script.letters,
+    ...(script.independentVowels ?? []),
+    ...(script.finalConsonants ?? []),
+  ].find(
     (entry) => entry.glyph === letter.glyph && entry.strokeOrderSource?.url === letter.source.url,
   );
   const ligatureClaim = script.ligatures?.find(
@@ -645,6 +650,18 @@ describe("handwriting ductus", () => {
         "sweep up and over through the right outer arch and descend its far side",
         "curl left around the lower inner loop",
       ],
+    ]);
+  });
+
+  it("Malayalam chillu ൽ keeps all five animated movements in one run", () => {
+    expect(penLifts(MALAYALAM_CHILLU_L)).toBe(0);
+    expect(MALAYALAM_CHILLU_L.strokes).toHaveLength(1);
+    expect(MALAYALAM_CHILLU_L.strokes[0].segments.map((segment) => segment.label)).toEqual([
+      "climb the left entry arch and turn inward at the top",
+      "descend clockwise around the central loop and return to its upper junction",
+      "carry the upper shoulder right",
+      "sweep clockwise around the right loop and return to the upper crossing",
+      "rise into the chillu hook and curl left above the line",
     ]);
   });
 
@@ -3986,6 +4003,12 @@ describe("handwriting ductus", () => {
           script: script.script, identity: letter.glyph, glyph: letter.glyph,
           penLifts: letter.penLifts, source: letter.strokeOrderSource,
         })),
+      ...(script.finalConsonants ?? [])
+        .filter((letter) => letter.penLifts !== undefined || letter.strokeOrderSource !== undefined)
+        .map((letter) => ({
+          script: script.script, identity: letter.glyph, glyph: letter.glyph,
+          penLifts: letter.penLifts, source: letter.strokeOrderSource,
+        })),
       ...(script.ligatures ?? [])
         .filter((ligature) => ligature.penLifts !== undefined || ligature.strokeOrderSource !== undefined)
         .map((ligature) => ({
@@ -4020,6 +4043,9 @@ describe("handwriting ductus", () => {
       "_fonts/NotoSansMalayalam-Static.ttf",
     );
     expect(verifiedLetterFont("അ", MALAYALAM_A.source.url)).toBe(
+      "_fonts/NotoSansMalayalam-Static.ttf",
+    );
+    expect(verifiedLetterFont("ൽ", MALAYALAM_CHILLU_L.source.url)).toBe(
       "_fonts/NotoSansMalayalam-Static.ttf",
     );
     expect(verifiedLetterFont("எ", DUCTUS["எ"].source.url)).toBe(
