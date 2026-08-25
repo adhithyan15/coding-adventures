@@ -22,7 +22,15 @@ on:
       - "code/packages/typescript/human-language-data/**"
       - "code/scripts/build_human_language_book_catalog.py"
       - "code/scripts/scan_latex_log_warnings.py"
+      # The compile gate and its hardening. These were absent from this list,
+      # which meant a pull request editing the script that compiles every book
+      # never ran it — the books gate went green on the strength of nothing.
+      - "code/scripts/check-book-compile.sh"
+      - "code/scripts/check_book_tree_hygiene.py"
+      - "code/scripts/latexmk-safe.rc"
       - "code/scripts/tests/test_build_human_language_book_catalog.py"
+      - "code/scripts/tests/test_check_book_tree_hygiene.py"
+      - "code/scripts/tests/test-check-book-compile-guards.sh"
       - "code/scripts/tests/test_scan_latex_log_warnings.py"
       - ".github/workflows/human-languages-books.yml"
   pull_request:
@@ -76,7 +84,12 @@ jobs:
             code/packages/typescript/human-language-data \
             code/scripts/build_human_language_book_catalog.py \
             code/scripts/scan_latex_log_warnings.py \
+            code/scripts/check-book-compile.sh \
+            code/scripts/check_book_tree_hygiene.py \
+            code/scripts/latexmk-safe.rc \
             code/scripts/tests/test_build_human_language_book_catalog.py \
+            code/scripts/tests/test_check_book_tree_hygiene.py \
+            code/scripts/tests/test-check-book-compile-guards.sh \
             code/scripts/tests/test_scan_latex_log_warnings.py \
             .github/workflows/human-languages-books.yml
           diff_status=$?
@@ -97,16 +110,66 @@ jobs:
               ;;
           esac
 
-  build-and-publish:
-    name: Build and publish all human-language books
+  # Building and publishing are two jobs, not one, because they need opposite
+  # things from the token.
+  #
+  # This job executes pull-request-controlled code by design and at length: an
+  # `npm ci`, a TypeScript build, seven `node dist/*.js` checks, and XeLaTeX
+  # over twenty-three books of repository content. It used to do all of that
+  # holding `contents: write`, on a `pull_request` trigger — so on any
+  # same-repository branch (which is how nearly every change reaches this repo)
+  # a contributor's code ran next to a write-scoped token, and
+  # `actions/checkout`'s default `persist-credentials: true` had left that token
+  # on disk in `.git/config`, inside the workspace latexmk `cd`s into.
+  #
+  # Hardening the latexmk call while leaving that arrangement in place would fix
+  # one door in a room with no walls. So: this job gets `contents: read` and no
+  # persisted credentials, and hands its output to `publish` as an artifact.
+  build:
+    name: Build all human-language books
     needs: detect
     if: ${{ needs.detect.outputs.books == 'true' }}
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: read
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          # Do not leave a usable credential in `.git/config` for the steps
+          # below to find. Nothing in this job talks to the API or pushes.
+          persist-credentials: false
+
+      # FIRST, before Node, before TeX, before anything reads repository content
+      # as code. `latexmk` reads `latexmkrc` / `.latexmkrc` from its working
+      # directory and `eval`s it as Perl, and its working directory during the
+      # build below is `<track>/book` — repository content. Every invocation in
+      # this repository passes `-norc` so that directory is never consulted, but
+      # a flag only protects the call sites somebody remembered to type it at.
+      # This is the second control: the payload must not be in the tree at all.
+      #
+      # Its own tests run first, for the same reason the warning scanner's do —
+      # a silently broken gate is worse than no gate.
+      - name: Test the book-tree hygiene lint
+        env:
+          # The symlink cases skip themselves on a filesystem that cannot create
+          # links. That is right on Windows and a silent hole here: nothing else
+          # asserts the probe SUCCEEDED, so a runner image that broke it would
+          # stop exercising the security tests while the step stayed green —
+          # "compiled 0, skipped 1, failed 0" wearing a different hat, in the
+          # very pull request that removes the original. With this set, a skip
+          # is a failure.
+          REQUIRE_SYMLINK_TESTS: "1"
+        run: |
+          set -euo pipefail
+          python3 -m unittest discover -s code/scripts/tests \
+            -p 'test_check_book_tree_hygiene.py' -v
+
+      - name: Reject any latexmkrc or symlink under a book directory
+        run: |
+          set -euo pipefail
+          python3 code/scripts/check_book_tree_hygiene.py \
+            --book-root code/learning/human-languages
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -147,7 +210,12 @@ jobs:
           (cd ../paint-instructions && npm ci --omit=dev --ignore-scripts)
           (cd ../paint-vm && npm ci --omit=dev --ignore-scripts)
           (cd ../paint-vm-svg && npm ci --omit=dev --ignore-scripts)
-          npm ci
+          # `--ignore-scripts` to match the four sibling installs above. This one
+          # was the odd one out, so a dependency's `postinstall` ran arbitrary
+          # code on a pull-request runner. This package declares only `build`
+          # (`tsc`) — no `prepare`, `preinstall` or `postinstall` — so nothing of
+          # its own is skipped by the flag.
+          npm ci --ignore-scripts
           npm run build
           # Class-A/B SVGs are generated views of canonical curriculum data.
           # A stale vector must fail before it reaches rsvg or XeLaTeX.
@@ -250,24 +318,165 @@ jobs:
           test -f "$latin_modern_path"
           echo "Latin Modern Roman -> $latin_modern_path"
 
-      - name: Convert generated SVG figures to PDF
+      # The SVG-to-PDF conversion that used to live here is gone. It is not
+      # skipped — `check-book-compile.sh` does it, per track, immediately before
+      # compiling that track. Keeping a second copy here was not merely
+      # duplicated work: this one derived its output path as `${svg%.svg}.pdf`
+      # and wrote to it unchecked, so a committed `figures/diagram.pdf` symlink
+      # made `rsvg-convert` open an arbitrary runner-writable path for writing.
+      # The script guards exactly that case with an `[ -L ]` test and always
+      # did. Deleting the unguarded copy is the fix.
+
+      # Exercise the compile script's hostile-input guards against real hostile
+      # input, on the one machine in the loop that can create a symlink.
+      #
+      # These guards refuse a symlinked `book.pdf` and keep a `book/` directory
+      # with no `book.tex` out of the manifest. Both were argued correct by
+      # reading them; neither had been watched refusing anything. The authoring
+      # box cannot create a native symlink without elevation, so the test skips
+      # there and runs here — which is the right way round, since here is where
+      # the guards actually matter.
+      - name: Exercise the compile script's guards
+        env:
+          # Same reasoning as the lint step above: on the one machine in the loop
+          # that can create a symlink, failing to do so must be loud.
+          REQUIRE_SYMLINK_TESTS: "1"
         run: |
           set -euo pipefail
-          figure_count=0
-          while IFS= read -r svg; do
-            pdf="${svg%.svg}.pdf"
-            rsvg-convert --format=pdf --output="$pdf" "$svg"
-            test -s "$pdf"
-            echo "$svg -> $pdf"
-            figure_count=$((figure_count + 1))
-          done < <(
-            find code/learning/human-languages \
-              -path '*/book/figures/*.svg' -type f | sort
-          )
-          test "$figure_count" -gt 0
-          echo "Converted $figure_count generated figure(s)"
+          bash code/scripts/tests/test-check-book-compile-guards.sh
 
+      # Re-run the book-tree hygiene lint immediately before the compile, as well
+      # as at the top of the job.
+      #
+      # The first run is early so a hit fails fast and cheap. But between it and
+      # this point the job runs `npm ci`, a TypeScript build and seven `node`
+      # checks — all pull-request-controlled, all able to write a `latexmkrc`
+      # into a book directory after the early check has passed. A control that
+      # can be invalidated by the code running between it and the thing it
+      # protects is a time-of-check/time-of-use gap. Checking again here, one
+      # step before latexmk runs, closes it for a few milliseconds of `os.walk`.
+      - name: Re-check book-tree hygiene immediately before compiling
+        run: |
+          set -euo pipefail
+          python3 code/scripts/check_book_tree_hygiene.py \
+            --book-root code/learning/human-languages
+
+      # Compile every book through `check-book-compile.sh`, the same script a
+      # human runs locally — not through a second, parallel `latexmk` command
+      # line maintained here.
+      #
+      # That distinction is the entire point of this step. This job used to
+      # inline its own invocation:
+      #
+      #     latexmk -xelatex -interaction=nonstopmode -halt-on-error book.tex
+      #
+      # with no `-norc`, so `<track>/book/latexmkrc` — repository content, added
+      # by any pull request — was read and `eval`ed as Perl before a line of TeX
+      # was parsed, and with TeX Live's *restricted* shell escape rather than
+      # none. Both risks were closed in `check-book-compile.sh`,
+      # `build-books-locally.sh`, `verify-human-languages.sh` and every track's
+      # `book/build.sh` at the time, and in this file at no time. The hardening
+      # was present everywhere except the one place that compiles the books at
+      # scale, because it was added call site by call site and nobody swept.
+      #
+      # Copying the flags here would fix today and re-open the same gap the next
+      # time the local script learns something. Calling the script means there is
+      # one invocation in the repository and CI cannot drift from it.
+      #
+      # `--strict` is what makes this a gate rather than a report: without it the
+      # script SKIPS any track whose figures it cannot convert and exits 0, so a
+      # runner missing `rsvg-convert` would produce "compiled 0, skipped 1,
+      # failed 0" and a green check having verified nothing. With it, "I could
+      # not verify this" is a failure that names the missing dependency.
+      # `librsvg2-bin` is installed above, so the converter is present here and
+      # `--strict` should never have cause to fire — which is exactly the state
+      # in which you want it armed.
+      #
+      # `--manifest` records the book directories this run actually compiled, so
+      # the collection step below publishes those and only those. See its own
+      # comment for why re-deriving the list with `find` is not the same
+      # question.
       - name: Build every book
+        run: |
+          set -euo pipefail
+          bash code/scripts/check-book-compile.sh --strict \
+            --manifest="$RUNNER_TEMP/compiled-books.txt"
+
+      # Prove the hardening was in effect, rather than trusting that the flags
+      # were typed. XeTeX announces its shell-escape state in every book.log:
+      #
+      #   " restricted \write18 enabled."   TeX Live's default -- what this job
+      #                                     ran with before the fix
+      #   "\write18 enabled."               fully unrestricted
+      #   (no line at all)                  disabled, which is what we require
+      #
+      # So the logs the build just wrote are direct evidence. If a future change
+      # drops `-r latexmk-safe.rc`, moves the rc, or hits the older-latexmk quirk
+      # where `-xelatex` overwrites `$pdflatex` and the rc's `$xelatex` is never
+      # consulted, this step goes red with the offending file named — none of
+      # which any amount of reading the YAML would catch.
+      #
+      # Driven by the manifest, for the same reason the collection step is. An
+      # earlier version re-found the logs with `find -path '*/book/book.log'`
+      # and compared a COUNT against the manifest, which is weaker in two ways:
+      # `-path` matches at any depth, so a committed decoy log pads the count and
+      # can mask a real one that dropped out; and a count is not an identity
+      # check, so "same number of logs" was standing in for "the logs of the
+      # books we actually built". Iterating the manifest makes the count
+      # comparison unnecessary — every compiled book is visited by name, and a
+      # missing log is a hard failure rather than a smaller number.
+      - name: Verify shell escape was disabled for every book
+        run: |
+          set -euo pipefail
+          offenders=0
+          checked=0
+          while IFS= read -r book_dir; do
+            [ -n "$book_dir" ] || continue
+            log="$book_dir/book.log"
+            # `-L` before `-f`, because `-f` follows the link and would happily
+            # read an attacker-chosen file that says nothing about this build.
+            # Same reasoning the collect step already gives for `book.pdf`: the
+            # steps should not have to trust each other. The compile refuses a
+            # book directory containing any symlink, so reaching this is a bug
+            # rather than an expected input — which is exactly when a redundant
+            # check earns its place.
+            if [ -L "$log" ]; then
+              echo "::error::$log is a symlink; refusing to read shell-escape state through it."
+              exit 1
+            fi
+            if [ ! -f "$log" ]; then
+              echo "::error::$log is missing, so shell-escape state cannot be verified for a book that compiled."
+              exit 1
+            fi
+            checked=$((checked + 1))
+            if grep -q 'write18 enabled' "$log"; then
+              echo "::error::$log reports shell escape ENABLED; latexmk-safe.rc was not in effect."
+              grep -n 'write18' "$log" | head -3
+              offenders=$((offenders + 1))
+            fi
+          done < "$RUNNER_TEMP/compiled-books.txt"
+
+          # A manifest with no entries means the compile verified nothing, which
+          # --strict should already have caught. Belt and braces, because this is
+          # the step that certifies the security property.
+          test "$checked" -gt 0
+          test "$offenders" -eq 0
+          echo "Shell escape disabled in all $checked book.log file(s)"
+
+      # Collect the PDFs the compile produced. Separate from the compile so a
+      # packaging mistake here can never be mistaken for a LaTeX failure there,
+      # and vice versa.
+      #
+      # The list comes from the compile's own manifest, NOT from a fresh
+      # `find -type d -name book`. Those are different questions with different
+      # answers: `check-book-compile.sh` skips a directory with no `book.tex`,
+      # so a `find` would hand this loop a `<track>/book/book.pdf` that no
+      # compile ever touched. A pull request adding nothing but
+      # `code/learning/human-languages/anything/book/book.pdf` would then have an
+      # attacker-authored file uploaded as a build artifact and, on `main`,
+      # published to Pages and attached to the Release as though it were a book.
+      # Reading the manifest means only what was compiled can be published.
+      - name: Collect book PDFs
         run: |
           set -euo pipefail
           output_dir="dist/human-languages/books"
@@ -275,22 +484,27 @@ jobs:
           book_count=0
 
           while IFS= read -r book_dir; do
+            [ -n "$book_dir" ] || continue
             language=$(basename "$(dirname "$book_dir")")
-            echo "::group::Build $language"
-            (
-              cd "$book_dir"
-              latexmk -xelatex -interaction=nonstopmode -halt-on-error book.tex
-            )
+            # `cp` follows symlinks, so without this a committed
+            # `book.pdf -> ../../../../.git/config` would copy the link's target
+            # into a downloadable artifact. The compile refuses such a book
+            # already; this is the same check on the consuming side, because the
+            # two steps should not have to trust each other.
+            if [ -L "$book_dir/book.pdf" ]; then
+              echo "::error::$book_dir/book.pdf is a symlink; refusing to publish it."
+              exit 1
+            fi
+            if [ ! -s "$book_dir/book.pdf" ]; then
+              echo "::error::$book_dir/book.pdf is missing or empty although the compile reported success."
+              exit 1
+            fi
             cp "$book_dir/book.pdf" "$output_dir/$language.pdf"
-            echo "::endgroup::"
             book_count=$((book_count + 1))
-          done < <(
-            find code/learning/human-languages \
-              -mindepth 2 -maxdepth 2 -type d -name book | sort
-          )
+          done < "$RUNNER_TEMP/compiled-books.txt"
 
           test "$book_count" -gt 0
-          echo "Built $book_count human-language books"
+          echo "Collected $book_count human-language books"
 
       # `latexmk -halt-on-error` stops on hard TeX errors but is perfectly happy
       # with a log full of warnings, so every track's "zero overfull boxes, zero
@@ -338,8 +552,41 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
+  # The only job that holds a write-scoped token, and it runs no repository code
+  # at all: it downloads the bundle the build job produced and hands it to two
+  # publishing actions. Gated at the JOB level on a push to `main`, so on a pull
+  # request it does not run — which means a pull request cannot reach a
+  # `contents: write` token through this workflow even if every check above it
+  # were somehow subverted.
+  #
+  # Note there is no `actions/checkout` here. `release-notes.md` is written from
+  # the artifact's own contents and `github.sha`, so the working copy of the
+  # repository — the thing a build turns into code — never enters this job.
+  publish:
+    name: Publish books to Pages and Releases
+    needs: [detect, build]
+    if: >-
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/main' &&
+      needs.detect.outputs.books == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download the publication bundle
+        uses: actions/download-artifact@v4
+        with:
+          name: human-language-books
+          path: dist/human-languages/books
+
+      - name: Verify the downloaded bundle
+        run: |
+          set -euo pipefail
+          test -s dist/human-languages/books/index.html
+          test -s dist/human-languages/books/catalog.json
+          test -n "$(find dist/human-languages/books -maxdepth 1 -name '*.pdf' -print -quit)"
+
       - name: Publish books to GitHub Pages
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -353,7 +600,6 @@ jobs:
       # get distinct, monotonically increasing releases without any manual
       # version bump.
       - name: Determine release version
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         id: version
         run: |
           set -euo pipefail
@@ -362,24 +608,31 @@ jobs:
           echo "name=Human Languages Books $version" >> "$GITHUB_OUTPUT"
 
       - name: Build release notes
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          # Via `env:` rather than inlined into the script. These particular
+          # fields are not attacker-controlled, but interpolating `${{ }}`
+          # straight into a `run:` block is how script injection happens in
+          # Actions, and the habit is worth keeping even where this instance is
+          # safe.
+          COMMIT_SHA: ${{ github.sha }}
+          OWNER: ${{ github.repository_owner }}
+          REPOSITORY: ${{ github.repository }}
         run: |
           set -euo pipefail
           {
             echo "Snapshot of every Human Languages curriculum book, built from"
-            echo "commit $(git rev-parse --short HEAD) on main."
+            echo "commit ${COMMIT_SHA:0:7} on main."
             echo
             echo "## Books in this release"
             for pdf in dist/human-languages/books/*.pdf; do
               echo "- $(basename "$pdf" .pdf)"
             done
             echo
-            echo "Always-current catalog: https://${{ github.repository_owner }}.github.io/$(basename "${{ github.repository }}")/human-languages/books/"
+            echo "Always-current catalog: https://${OWNER}.github.io/$(basename "$REPOSITORY")/human-languages/books/"
           } > release-notes.md
           cat release-notes.md
 
       - name: Publish GitHub Release
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.version.outputs.tag }}
@@ -396,7 +649,11 @@ jobs:
     # Otherwise a faster main/branch push can satisfy protection while the
     # pull-request all-books build is still running.
     name: ${{ github.event_name == 'pull_request' && 'Human Languages Books gate' || 'Human Languages Books push gate' }}
-    needs: [detect, build-and-publish]
+    # `publish` is deliberately NOT a dependency. It only ever runs on a push to
+    # main, so requiring it would make this gate un-satisfiable on the pull
+    # requests it exists to gate. `build` is the job that proves the books are
+    # sound; `publish` merely moves the result it produced.
+    needs: [detect, build]
     if: always()
     runs-on: ubuntu-latest
     steps:
@@ -405,7 +662,7 @@ jobs:
         env:
           DETECT_RESULT: ${{ needs.detect.result }}
           BOOKS_RELEVANT: ${{ needs.detect.outputs.books }}
-          BUILD_RESULT: ${{ needs['build-and-publish'].result }}
+          BUILD_RESULT: ${{ needs.build.result }}
         run: |
           set -euo pipefail
           echo "detect=$DETECT_RESULT relevant=$BOOKS_RELEVANT build=$BUILD_RESULT"

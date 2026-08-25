@@ -4456,3 +4456,342 @@ owned by that same segment. A chapter can still cross two spine nodes, but its
 lessons need separate path segments and separate inline extensions. Chain the
 second extension to the first when both are required; do not use one umbrella
 extension whose lesson list reaches across segment ownership.
+## Hardening added call-site-by-call-site reaches every call site except the one that matters — and the "belt and braces" flag can be the only one working
+
+`latexmk` reads `latexmkrc` / `.latexmkrc` from its **working directory** and hands
+the contents to Perl's `eval`. Every book in this repo is compiled with that
+directory set to `code/learning/human-languages/<track>/book`, which is pull-request
+content. The control is `-norc`.
+
+`-norc -r code/scripts/latexmk-safe.rc` was present and correct in
+`check-book-compile.sh`, `build-books-locally.sh`, `verify-human-languages.sh`, and in
+all 23 tracks' `book/build.sh` **and** `book/build.ps1`. It was absent from
+`.github/workflows/human-languages-books.yml`, which is the only place the books are
+compiled at scale, on every pull request, in a job holding a `contents: write` token.
+
+Nothing detected that, because a grep for the *protection* over the scripts directory
+returns plenty of hits and looks reassuring. The grep that finds this is the one over
+the **invocations**:
+
+    grep -rn 'latexmk\|xelatex\|pdflatex' .github/workflows/
+
+and then checking each hit for the flag — not grepping for the flag and counting.
+
+**The general rule.** When you harden a dangerous call, the unit of work is *every
+invocation in the repository*, enumerated from the dangerous verb. Fixing them one at a
+time as you encounter them guarantees the set you never encountered stays unfixed, and
+the ones you never encounter are disproportionately in CI — nobody runs CI locally, so
+its call sites are not the ones you trip over. Better still, delete the second call site:
+this fix made the workflow invoke `check-book-compile.sh` rather than maintain a
+parallel `latexmk` command line, so there is now one invocation and drift is not
+possible.
+
+**A flag is only present where someone typed it; make the payload impossible instead.**
+`code/scripts/check_no_book_latexmkrc.py` now fails the build if any casing of
+`latexmkrc` appears under the book tree. That protects call sites not yet written.
+
+**Assert the control at runtime, not in review.** XeTeX writes its shell-escape state
+into every `book.log`: `" restricted \write18 enabled."`, `"\write18 enabled."`, or —
+when off — no line at all. CI now greps the logs the build just produced. This is the
+only check that catches the failure mode below, which no amount of reading the YAML
+would find.
+
+**The measured control matrix (latexmk 4.88), which is not the one you would guess:**
+
+    invocation                                    latexmkrc    shell escape
+    --------------------------------------------  -----------  -------------------
+    latexmk -xelatex ...            (old CI)      EXECUTED     restricted, enabled
+    latexmk -norc -xelatex ...                    not read     restricted, enabled
+    latexmk -norc -r latexmk-safe.rc -xelatex     not read     DISABLED
+    shell_escape=f latexmk -xelatex ...           EXECUTED     restricted, enabled
+
+Two things fall out. `-norc` alone does **not** turn shell escape off — it only stops
+the rc being read; the `-r` that loads `$xelatex = "xelatex -no-shell-escape %O %S"` is
+what disables it, so the two flags are not redundant with each other. And
+`shell_escape=f` in the environment did nothing on this box: **MiKTeX ignores the
+kpathsea `shell_escape` and `openout_any` environment variables entirely** (`openout_any`
+set to `p`, `a`, or unset all behaved identically, all blocking `../` writes under
+MiKTeX's own configuration). TeX Live honours them; MiKTeX does not. So a Windows
+verification of an env-var-based TeX hardening proves nothing either way — say so
+rather than reporting it as tested.
+
+**`TEXMFOUTPUT` is not a sibling of `openout_any`.** It reads like another lockdown knob
+and is the opposite: paths under `TEXMFOUTPUT` are *exempt* from `openout_any=p`. Setting
+it widens what TeX may write. Leave it unset.
+
+## A gate that cannot run its check must fail, not skip — "compiled 0, skipped 1, failed 0" and exit 0
+
+`check-book-compile.sh` skips any track whose SVG figures it cannot convert, because a
+missing figure PDF is a compile failure that says nothing about the LaTeX under test.
+That is right on a laptop. Wired into CI unchanged it is a gate that reports success
+having verified nothing — on a runner without `rsvg-convert`, every illustrated track
+skips, the summary reads `compiled 0, skipped 1, failed 0`, and the exit status is 0.
+
+This is the same absent-vs-could-not-determine conflation as #12731 and #12734, one
+layer up: there it was a bare `catch → "missing"`, here it is `skip → pass`.
+
+**The shape of the fix, reusable:** keep the lenient behaviour, add `--strict` that
+turns every "could not verify" into a failure **naming the missing dependency**, and
+additionally fail when the run verified *zero* items — because a selection typo or a
+renamed directory produces a clean-looking green with an empty work list. Then make the
+lenient path announce its own weakness in its output (`"CI runs this script with
+--strict, where each of those is a failure"`), so a local pass is never quoted as
+evidence the gate would pass.
+
+**And prove the red before trusting the green.** A gate that has only ever been observed
+passing has not been observed working. Both directions were run here: `--strict` on a
+track with a figure and no converter fails with the dependency named; the same command
+with a converter on `PATH` compiles the book and reports `compiled 1, skipped 0,
+failed 0`.
+
+## Fixing the RCE is not the fix if the job still hands the attacker a write token
+
+The security review of the latexmk hardening above found the real ranking, and it was not
+the one the PR started with. Closing the `latexmkrc` `eval` mattered — but the same job
+was `pull_request`-triggered with `permissions: contents: write`, ran `npm ci` (without
+`--ignore-scripts`), a TypeScript build and seven `node dist/*.js` checks, all
+pull-request-controlled, and `actions/checkout@v4` defaults to
+`persist-credentials: true`, which leaves the write-scoped token in `.git/config` **inside
+the workspace latexmk `cd`s into**. Anyone who could have used the latexmk hole already
+had a dozen easier ones.
+
+**Ask what the job is holding, not only what it is running.** The durable fix is
+structural: the job that executes repository content gets `contents: read` and
+`persist-credentials: false`; a separate job holds `contents: write`, runs no repository
+code, has no `actions/checkout` at all, and is gated at JOB level (not step level) on
+`github.event_name == 'push' && github.ref == 'refs/heads/main'`. Step-level `if:` on the
+publish steps was already there and was not enough — the token is scoped to the job, so it
+is live for every earlier step in it regardless.
+
+When splitting, remember the aggregating gate job: `needs: [detect, build-and-publish]`
+and `needs['build-and-publish'].result` both have to move, and the new publish job must
+**not** become a dependency of the gate, or the gate can never pass on a pull request.
+
+## "Which artifacts did we build?" and "which directories look like books?" are different questions
+
+The same review caught a regression this PR introduced. Splitting compile from collection
+left the collector re-deriving its work list with `find -type d -name book`, while the
+compiler skipped any directory with no `book.tex`. Two enumerations, one of them
+attacker-extensible: a PR adding only `code/learning/human-languages/anything/book/book.pdf`
+gets that file uploaded as a build artifact and, on `main`, pushed to Pages and attached
+to the Release — an attacker-authored PDF served as a book. Make it a symlink and `cp`
+dereferences it, so the bytes of whatever it names go out instead.
+
+**The rule: a producer that hands work downstream must say what it produced.** Add a
+`--manifest` the compile appends to on success, and have the consumer read that file.
+One writer, one reader, nothing to disagree about. Re-deriving a list is not a check on
+the first derivation — it is a second, independent, silently-different answer.
+
+Two corollaries, both bit here:
+- Guard the OUTPUT path for a symlink, not only the input. `figures/*.svg` was vetted with
+  `find -type f` and the derived `${svg%.svg}.pdf` was written unchecked; `book.pdf` had no
+  guard at all even though XeLaTeX opens it for writing. `[ -L "$out" ]` before writing,
+  and again before publishing, because the two steps should not have to trust each other.
+- Deleting a duplicated step beats hardening it. The workflow's own SVG conversion existed
+  only because the script's conversion was invisible from the YAML; the script's copy had
+  the symlink guard and the workflow's did not.
+
+## Count what you inspected, or the loop that inspects nothing reports success
+
+Also from the same review, in — of all places — the step added to *prove* the hardening
+was in effect:
+
+```bash
+offenders=0
+while IFS= read -r log; do ... done < <(find … -name book.log | sort)
+test "$offenders" -eq 0
+echo "Shell escape disabled in every book.log"     # printed after reading zero files
+```
+
+`find` inside a process substitution has an exit status `set -o pipefail` cannot see, and
+a loop body that never executes leaves the counter at its initial value. Zero matches is
+indistinguishable from a clean corpus. Any later change that adds `-outdir=` to the
+latexmk line disarms the check silently, and the job stays green while asserting the
+opposite.
+
+**Every verification loop needs a `checked` counter and a floor**, and the floor should
+come from the producer (`wc -l < manifest`) rather than a hardcoded number that goes stale
+when a track is added. This is the same failure as `compiled 0, skipped 1, failed 0` two
+lessons up — which is the point: the shape recurs, including inside the fix for itself.
+
+## `openout_any=p` vets the NAME and then opens it — it does not resolve symlinks, so guarding one output filename guards one of eight
+
+Round two of the same security review. The `book.pdf` symlink guard added in round
+one — itself a review finding — was **still wrong**, in the same shape as the bug it
+fixed: it enumerated a filename instead of banning a category.
+
+A XeLaTeX run writes at least eight files into the book directory:
+
+    book.aux  book.log  book.toc  book.out  book.xdv  book.pdf
+    book.fdb_latexmk   book.fls        <- latexmk's own, written from Perl
+
+`openout_any=p` looks like it covers these and does not. It is a **name** check: it
+rejects absolute paths, `..`, and dotfiles, and then hands the name to `fopen(name, "w")`,
+which follows the link. `book.fdb_latexmk` and `book.fls` never reach a TeX-side check at
+all, because latexmk writes them itself with a plain Perl `open(…, ">")`.
+
+So `<track>/book/book.aux -> /home/runner/.ssh/authorized_keys` is an **arbitrary write as
+the build user, from a pull request, with no shell escape and no `latexmkrc` involved.**
+Seven doors stood open next to the one that got locked.
+
+**The rule: ban the category, do not enumerate the cases.** The fix moved into the
+tree-walking lint, which now refuses *any* symlink under the book tree. Cost of the
+blanket ban: zero — `git ls-files -s <tree> | awk '$1=="120000"'` returned nothing, and no
+curriculum book has a reason to contain a link. Cost of the enumeration: one missed
+filename is a full compromise, and the list grows whenever XeLaTeX or latexmk decides to
+write something new. An allowlist of safe things beats a denylist of dangerous ones, and
+"the file XeLaTeX happens to write today" is a denylist.
+
+**`.gitignore` is not a boundary.** `book.aux` and friends are ignored — and `git add -f`
+commits them anyway. Ignoring a path says where files come from, not what may exist.
+
+**Corollary on where the guard belongs.** It went in the Python lint that already walks
+the tree, not in the shell script, because the walk is one pass that already runs twice
+and the shell script would need the check at every write site. Put a categorical ban where
+the enumeration already happens.
+
+## Adjacent code being correct is not evidence about this line
+
+Three times in one day, in unrelated files: `doc-shard.ts` kept a sanitization gap after
+the CLI beside it was fixed; `shard.ts` kept a bare `catch → "missing"` while
+`shard-cli.ts` had it right; and the `book.pdf` symlink guard was defended in review with
+"same `[ -L ]` idiom as the figure guard twenty lines above." The first two were real
+misses. The third was a real miss too — the idiom was right and the *coverage* was wrong,
+which the analogy could not have revealed, because the sibling guarded a genuinely
+complete set (`figures/*.pdf`) and this one did not.
+
+**A sibling proves the idiom compiles, never that the coverage is complete.** When
+tempted to write "same pattern as X, so it is fine", the honest move is to enumerate what
+this line must cover and check the list — the sibling's list is the sibling's.
+
+## If you cannot execute the proof locally, move the proof to where it runs — do not infer it
+
+The `book.pdf` symlink guard could not be exercised on the authoring box: native symlinks
+need elevation or Developer Mode, `New-Item -ItemType SymbolicLink` fails with
+"Administrator privilege required", and WSL is not installed. The tempting write-up is
+"same idiom as the guard above, so it is fine" — an inferred pass, and the thing this
+repository has been burned by.
+
+**Better than a local demo: make it a test that runs where the capability exists.**
+`tests/test-check-book-compile-guards.sh` and the lint's `SymlinkBanTests` create a real
+symlink, run the real code, and assert the real refusal. They **skip with a printed
+reason** on a filesystem that cannot make one, and run on the Linux CI runner — which is
+also where the guard actually matters. A one-off local observation would have proved it
+once; this proves it on every run.
+
+Two details that make the skip honest rather than a dodge:
+- **Probe, don't guess.** Try `ln -s` / `Path.symlink_to` and check `[ -L ]`; do not branch
+  on `$OSTYPE` or `os.name`. Git Bash reports `msys` whether or not Developer Mode is on.
+- **Scope the skip to the test that needs the capability**, not the whole file. The first
+  draft `exit 0`-ed the entire suite before the `book.tex`/manifest cases, which need no
+  symlink — so Windows verified nothing at all. Scoped, a Windows run still executes three
+  real assertions.
+
+**And mutation-test the new test before believing it.** Removing
+`[ -f "$dir/book.tex" ] || continue` turned the suite red; restoring it turned it green. A
+test that has only ever been observed passing has not been observed working — the same
+principle as proving a gate's red path, applied to the gate's own tests.
+
+## A lint that only CI runs protects only CI — the script a human runs must carry its own guarantee
+
+Round three of the same review, and the same lesson eating its own tail for the third
+time. The general symlink ban was moved into `check_book_tree_hygiene.py` — correct — and
+`check-book-compile.sh` never calls it. CI was safe, because the workflow runs the lint
+immediately before compiling. But the script is documented as *the same one a human runs
+locally*, and locally nothing runs the lint:
+
+    git checkout <contributor-branch>
+    ./code/scripts/check-book-compile.sh          # on Linux or macOS
+
+still wrote through `<track>/book/book.aux -> ~/.ssh/authorized_keys`. Not a mere
+destructive overwrite, either: `.aux` content is substantially author-controlled through
+labels and TOC entries. The two surviving `[ -L ]` guards covered 2 of the 9 files a
+XeLaTeX run writes.
+
+This is the PR's own thesis one level up. The thesis was "a flag only protects the call
+sites somebody remembered to type it at", and the answer was "move the guarantee into a
+lint". Then the lint became the thing only some call sites invoke. **Ask, of every control
+you extract into a shared checker: who calls the checker, and what happens to the callers
+who do not?**
+
+The fix is four lines in the existing idiom — a whole-directory
+`find -type l -print -quit` sweep before any write — after which the narrow `[ -L ]` guards
+are genuinely redundant in CI and the script finally carries its guarantee everywhere.
+Keeping the narrow guards anyway is right: they cost nothing and they name the specific
+file rather than the first link found.
+
+## A test that skips is a test that did not run — say so where it was supposed to run
+
+Both new symlink suites probe the filesystem and skip when it cannot create links. Correct
+on Windows. On the Linux runner the probe will succeed — but **nothing asserted that it
+had**. A runner image that broke symlink creation would silently stop exercising the
+security tests, and the step would stay green.
+
+That is `compiled 0, skipped 1, failed 0` wearing a different hat, and it would have
+shipped in the same pull request that removes the original.
+
+**The fix is exactly the `--strict` shape, applied to the test suite instead of the gate:**
+an environment variable the CI job sets (`REQUIRE_SYMLINK_TESTS=1`) that turns the skip
+into a failure. Local runs keep the honest skip; the machine where the capability must
+exist asserts that it does.
+
+Generalised: *a conditional skip needs a caller who can say "not here it isn't."* Any
+`skipTest`/`SKIP` guarding a capability that is mandatory somewhere should have a way for
+that somewhere to demand it. Verify both directions — the skip path locally, and the fatal
+path by setting the variable on a box that genuinely lacks the capability, which is the
+one place you can observe the failure for free.
+
+## Two bans on one file need two messages, or the remediation advice contradicts itself
+
+A symlink named `latexmkrc` violates both of this lint's rules. Collapsing them with
+`elif` — reporting only the symlink — looked like sensible de-duplication and was a bug in
+the *advice*, not the detection. The symlink message ends:
+
+    Replace the link with the real file, or delete it.
+
+For this path that instructs the author to create a real `latexmkrc`, which is precisely
+what the other ban exists to prevent. The detection was fine either way; the report was
+telling somebody to do the dangerous thing.
+
+**When one artefact trips several rules, de-duplicate the FAILURE, never the GUIDANCE.**
+One non-zero exit, one entry per rule — because the remediation for rule A can be a
+violation of rule B, and the reader follows whichever text you printed.
+
+## A script documented as `./script.sh` must ship mode 100755 — and only the platform that cannot detect it will introduce the bug
+
+`check-book-compile.sh` documents its own usage as `./code/scripts/check-book-compile.sh`
+and shipped git mode **100644**. The documented command had therefore never worked on a
+fresh Linux or macOS clone: `Permission denied`, exit **126**.
+
+Two things hid it, and they reinforce each other:
+
+- **Windows does not model the executable bit.** `[ -x file ]` is true for every readable
+  file there, so an authoring box in this repo can neither cause nor detect the problem —
+  and the same box is where most of these scripts get written.
+- **Every automated caller sidesteps it.** CI ran `bash code/scripts/check-book-compile.sh`,
+  which works at 100644. So the one invocation form that was broken was the one only
+  humans use, and no gate used it.
+
+`verify-human-languages.sh` had the identical defect. `build-books-locally.sh`,
+`generate-compiled-grammars.sh` and `miri-twig-vm.sh` were all already 100755, which is
+what marks the other two as oversights rather than a convention.
+
+**Fix the mode, not the caller.** The test that found this invoked `"$SCRIPT"` directly.
+The tempting repair is `bash "$SCRIPT"` — the suite goes green in one character. It also
+leaves the documented command broken forever, and deletes the only thing in the repo that
+was executing it the way a human would. When a test catches a real defect, the defect is
+what moves.
+
+**Assert the index mode, not `-x`.** A `[ -x ]` regression test is vacuous on Windows, so
+it would pass on the platform most likely to reintroduce the bug. `git ls-files -s` reports
+what actually ships and is meaningful everywhere:
+
+    git_mode=$(git ls-files -s -- "$SCRIPT" | awk '{print $1}')
+    [ "$git_mode" = "100755" ] || fail
+
+Mutation-check it with `git update-index --chmod=-x` / `--chmod=+x`, which flips the index
+mode without touching the filesystem — so it works as a test even on Windows.
+
+**Generalisable check:** for every script whose header documents a `./` invocation,
+`git ls-files -s` it. The two are independent facts and nothing in this repo tied them
+together.
