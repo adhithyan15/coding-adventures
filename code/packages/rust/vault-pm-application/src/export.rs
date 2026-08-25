@@ -695,10 +695,23 @@ pub(crate) fn export_portable_with_passphrase(
                     return Err(error);
                 }
             };
-            item_size = item_size
+            item_size = match item_size
                 .checked_add(revision.len())
                 .and_then(|size| size.checked_add(CANDIDATE_ESTIMATE_OVERHEAD))
-                .ok_or(ApplicationError::BoundExceeded)?;
+            {
+                Some(size) => size,
+                None => {
+                    // Unreachable in practice (usize overflow would need
+                    // far more than MAX_CANDIDATES_PER_ITEM bounded-length
+                    // revisions), but every other exit from this loop
+                    // zeroizes item_entries before returning, and this one
+                    // should not be the exception that leaves already-
+                    // pushed plaintext candidate bytes unwiped in freed
+                    // heap. Found in security review.
+                    zeroize_cbor_values(&mut item_entries);
+                    return Err(ApplicationError::BoundExceeded);
+                }
+            };
             item_entries.push(CborValue::Map(vec![
                 field(1, bytes(item_id.as_bytes())),
                 field(2, bytes(candidate.revision_id().as_bytes())),
