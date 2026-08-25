@@ -1401,49 +1401,68 @@ fn walk_node(
     }
 }
 
-/// Find all nodes matching a rule name (depth-first order).
+/// Find all nodes matching a rule name (depth-first, pre-order).
+///
+/// Iterative (an explicit `Vec`-backed stack), not recursive, deliberately:
+/// this is a public entry point that accepts any caller-constructed
+/// `GrammarASTNode`, not only trees produced by [`GrammarParser::parse`]'s
+/// own depth-capped recursion. `/security-review` flagged the original
+/// recursive version as a CWE-674 uncontrolled-recursion risk — a
+/// pathologically deep hand-built tree handed straight to this function
+/// could overflow the native call stack, an *uncatchable* crash no
+/// `Result` could report. An iterative walk has no such ceiling: its
+/// "stack" is heap-allocated and bounded by available memory, not the
+/// thread's fixed native stack size, and it can't be bypassed by a caller
+/// skipping `GrammarParser` entirely (as at least one `-to-semantic-ir`
+/// frontend's own `compile()` does, working directly with a raw
+/// `GrammarASTNode`). Preserves the original recursive version's
+/// visitation order: a node is checked before its children, and each
+/// child's own subtree is fully explored before moving to the next
+/// sibling.
 pub fn find_nodes(node: &GrammarASTNode, rule_name: &str) -> Vec<GrammarASTNode> {
     let mut results = Vec::new();
-    collect_matching_nodes(node, rule_name, &mut results);
-    results
-}
-
-fn collect_matching_nodes(
-    node: &GrammarASTNode,
-    rule_name: &str,
-    results: &mut Vec<GrammarASTNode>,
-) {
-    if node.rule_name == rule_name {
-        results.push(node.clone());
-    }
-    for child in &node.children {
-        if let ASTNodeOrToken::Node(child_node) = child {
-            collect_matching_nodes(child_node, rule_name, results);
+    let mut stack: Vec<&GrammarASTNode> = vec![node];
+    while let Some(current) = stack.pop() {
+        if current.rule_name == rule_name {
+            results.push(current.clone());
+        }
+        // Push in reverse so the leftmost child ends up on top of the
+        // stack and is therefore popped (and thus visited) first --
+        // reproducing the same left-to-right pre-order traversal the
+        // original recursive version walked.
+        for child in current.children.iter().rev() {
+            if let ASTNodeOrToken::Node(child_node) = child {
+                stack.push(child_node);
+            }
         }
     }
+    results
 }
 
 /// Collect all tokens in depth-first order, optionally filtered by type.
 ///
 /// If `type_filter` is `None`, all tokens are collected. If `Some(type_name)`,
 /// only tokens whose effective type name matches are collected.
+///
+/// Iterative for the same reason [`find_nodes`] is — see its doc comment.
+/// Uses an explicit stack of child-slice iterators (rather than a stack of
+/// nodes, as `find_nodes` uses) because token results must interleave
+/// correctly with descending into sibling nodes: a `children` list mixes
+/// `Token` and `Node` entries in source order, so each node's children
+/// need to resume exactly where they left off after a nested node's own
+/// subtree has been fully drained, not be visited as one atomic unit.
 pub fn collect_tokens(node: &GrammarASTNode, type_filter: Option<&str>) -> Vec<Token> {
     let mut results = Vec::new();
-    collect_tokens_recursive(node, type_filter, &mut results);
-    results
-}
-
-fn collect_tokens_recursive(
-    node: &GrammarASTNode,
-    type_filter: Option<&str>,
-    results: &mut Vec<Token>,
-) {
-    for child in &node.children {
-        match child {
-            ASTNodeOrToken::Node(child_node) => {
-                collect_tokens_recursive(child_node, type_filter, results);
+    let mut stack: Vec<std::slice::Iter<'_, ASTNodeOrToken>> = vec![node.children.iter()];
+    while let Some(top) = stack.last_mut() {
+        match top.next() {
+            None => {
+                stack.pop();
             }
-            ASTNodeOrToken::Token(tok) => {
+            Some(ASTNodeOrToken::Node(child_node)) => {
+                stack.push(child_node.children.iter());
+            }
+            Some(ASTNodeOrToken::Token(tok)) => {
                 match type_filter {
                     None => results.push(tok.clone()),
                     Some(type_name) => {
@@ -1455,6 +1474,7 @@ fn collect_tokens_recursive(
             }
         }
     }
+    results
 }
 
 // ===========================================================================
@@ -1785,6 +1805,133 @@ mod tests {
         };
         assert!(!non_leaf.is_leaf());
         assert!(non_leaf.token().is_none());
+    }
+
+    // -----------------------------------------------------------------------
+    // find_nodes / collect_tokens (`/security-review` CWE-674 hardening)
+    // -----------------------------------------------------------------------
+
+    fn leaf_node(rule_name: &str, tok: Token) -> GrammarASTNode {
+        GrammarASTNode {
+            rule_name: rule_name.to_string(),
+            children: vec![ASTNodeOrToken::Token(tok)],
+            start_line: None, start_column: None, end_line: None, end_column: None,
+        }
+    }
+
+    fn wrap_node(rule_name: &str, children: Vec<ASTNodeOrToken>) -> GrammarASTNode {
+        GrammarASTNode {
+            rule_name: rule_name.to_string(),
+            children,
+            start_line: None, start_column: None, end_line: None, end_column: None,
+        }
+    }
+
+    /// `find_nodes` must visit the root before its children, and each
+    /// child's own subtree before moving to the next sibling -- the same
+    /// order the original recursive version walked.
+    #[test]
+    fn find_nodes_visits_in_pre_order_left_to_right() {
+        let a = wrap_node("target", vec![ASTNodeOrToken::Token(tok(TokenType::Number, "1"))]);
+        let b_inner = wrap_node("target", vec![ASTNodeOrToken::Token(tok(TokenType::Number, "2"))]);
+        let b = wrap_node("wrapper", vec![ASTNodeOrToken::Node(b_inner)]);
+        let root = wrap_node(
+            "target",
+            vec![ASTNodeOrToken::Node(a), ASTNodeOrToken::Node(b)],
+        );
+
+        let matches = find_nodes(&root, "target");
+        assert_eq!(matches.len(), 3);
+        // Root first (its own child is a Node, not a Token), then "a"
+        // (left child, value "1"), then "b"'s nested "target" (value "2").
+        let values: Vec<&str> = matches
+            .iter()
+            .map(|n| match &n.children[0] {
+                ASTNodeOrToken::Token(t) => t.value.as_str(),
+                ASTNodeOrToken::Node(_) => "<root>",
+            })
+            .collect();
+        assert_eq!(values[1], "1");
+        assert_eq!(values[2], "2");
+    }
+
+    /// `collect_tokens` must interleave correctly with node descent: a
+    /// bare token sibling and a nested node's own tokens must come out in
+    /// source order, not "all direct tokens then all nested tokens."
+    #[test]
+    fn collect_tokens_preserves_source_order_across_nested_nodes() {
+        let inner = wrap_node(
+            "inner",
+            vec![ASTNodeOrToken::Token(tok(TokenType::Number, "2"))],
+        );
+        let root = wrap_node(
+            "root",
+            vec![
+                ASTNodeOrToken::Token(tok(TokenType::Number, "1")),
+                ASTNodeOrToken::Node(inner),
+                ASTNodeOrToken::Token(tok(TokenType::Number, "3")),
+            ],
+        );
+        let values: Vec<String> = collect_tokens(&root, None).into_iter().map(|t| t.value).collect();
+        assert_eq!(values, vec!["1".to_string(), "2".to_string(), "3".to_string()]);
+    }
+
+    #[test]
+    fn collect_tokens_respects_type_filter() {
+        let root = wrap_node(
+            "root",
+            vec![
+                ASTNodeOrToken::Token(tok(TokenType::Number, "1")),
+                ASTNodeOrToken::Token(tok(TokenType::Plus, "+")),
+                ASTNodeOrToken::Token(tok(TokenType::Number, "2")),
+            ],
+        );
+        let numbers = collect_tokens(&root, Some("NUMBER"));
+        assert_eq!(numbers.len(), 2);
+        assert_eq!(numbers[0].value, "1");
+        assert_eq!(numbers[1].value, "2");
+    }
+
+    /// Regression guard for the `/security-review` CWE-674 finding: both
+    /// `find_nodes` and `collect_tokens` are public entry points reachable
+    /// on a raw, caller-constructed `GrammarASTNode` -- not only trees
+    /// produced by `GrammarParser::parse`'s own depth-capped recursion.
+    /// Before the iterative rewrite, a pathologically deep hand-built tree
+    /// handed straight to either function would overflow the *native*
+    /// call stack -- an uncatchable crash, not a recoverable error. This
+    /// builds a tree far deeper than any recursive implementation could
+    /// survive on a default-stack thread and proves both functions still
+    /// complete cleanly and correctly.
+    #[test]
+    fn find_nodes_and_collect_tokens_survive_pathologically_deep_trees_on_default_stack() {
+        let handle = std::thread::spawn(|| {
+            let mut inner = leaf_node("target", tok(TokenType::Number, "42"));
+            for _ in 0..50_000 {
+                inner = wrap_node("wrapper", vec![ASTNodeOrToken::Node(inner)]);
+            }
+
+            let matches = find_nodes(&inner, "target");
+            assert_eq!(matches.len(), 1, "the one deeply-buried target node must still be found");
+
+            let tokens = collect_tokens(&inner, None);
+            assert_eq!(tokens.len(), 1);
+            assert_eq!(tokens[0].value, "42");
+
+            // Deliberately leak `inner` rather than let it drop normally.
+            // This is testing `find_nodes`/`collect_tokens` specifically,
+            // not `GrammarASTNode`'s ordinary compiler-generated `Drop`
+            // glue -- which, being itself a plain recursive walk of the
+            // same nested `Vec<ASTNodeOrToken>` structure, independently
+            // overflows the native stack on a tree this deep. That's a
+            // real, separate CWE-674-shaped gap (discovered while writing
+            // this test), logged as its own follow-up rather than fixed
+            // here or silently worked around by shrinking this test's
+            // depth to hide it.
+            std::mem::forget(inner);
+        });
+        handle
+            .join()
+            .expect("find_nodes/collect_tokens must not overflow the native stack on deep input");
     }
 
     // -----------------------------------------------------------------------
