@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.124.0";
+pub const VERSION: &str = "0.125.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -520,7 +520,7 @@ use diagram_ir::{
     SequenceParticipantGroup, SequenceParticipantKind, SequenceProperty, SequenceTextWrap,
     SeriesKind, StructuralDiagram, StructuralGroup, StructuralKind, StructuralNode,
     StructuralNodeKind, StructuralNodeMetadata, StructuralRelationship, TaskStart, TaskStatus,
-    TemporalBody, TemporalDiagram, TemporalKind,
+    TemporalBody, TemporalDiagram, TemporalKind, XyChartConfig,
 };
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -1875,6 +1875,7 @@ pub fn parse_xychart(source: &str) -> Result<ChartDiagram, ParseError> {
         quadrant_labels: [None, None, None, None],
         quadrant_points: vec![],
         quadrant_config: QuadrantConfig::default(),
+        xy_config: parse_xychart_config(source),
         orientation,
     })
 }
@@ -1887,6 +1888,39 @@ fn xychart_metadata_value(token: &Token) -> String {
         .1
         .trim()
         .to_string()
+}
+
+fn parse_xychart_config(source: &str) -> XyChartConfig {
+    let positive_number = |key| {
+        quadrant_directive_value(source, key)
+            .and_then(|value| value.parse::<f64>().ok())
+            .filter(|value| *value > 0.0)
+    };
+    let non_negative_number = |key| {
+        quadrant_directive_value(source, key)
+            .and_then(|value| value.parse::<f64>().ok())
+            .filter(|value| *value >= 0.0)
+    };
+    let boolean = |key| {
+        quadrant_directive_value(source, key).and_then(|value| {
+            match value.to_ascii_lowercase().as_str() {
+                "true" => Some(true),
+                "false" => Some(false),
+                _ => None,
+            }
+        })
+    };
+
+    XyChartConfig {
+        width: positive_number("width"),
+        height: positive_number("height"),
+        title_font_size: positive_number("titleFontSize"),
+        title_padding: non_negative_number("titlePadding"),
+        show_title: boolean("showTitle"),
+        show_data_label: boolean("showDataLabel"),
+        show_data_label_outside_bar: boolean("showDataLabelOutsideBar"),
+        data_label_color: quadrant_directive_value(source, "dataLabelColor"),
+    }
 }
 
 fn parse_xychart_axis(token: &Token, is_x: bool) -> Result<Axis, ParseError> {
@@ -2313,6 +2347,7 @@ pub fn parse_quadrant_chart(source: &str) -> Result<ChartDiagram, ParseError> {
         quadrant_labels,
         quadrant_points,
         quadrant_config,
+        xy_config: XyChartConfig::default(),
         orientation: ChartOrientation::Vertical,
     })
 }
@@ -4717,6 +4752,7 @@ pub fn parse_pie(source: &str) -> Result<ChartDiagram, ParseError> {
         quadrant_labels: [None, None, None, None],
         quadrant_points: vec![],
         quadrant_config: QuadrantConfig::default(),
+        xy_config: XyChartConfig::default(),
         orientation: ChartOrientation::Vertical,
     })
 }
@@ -4849,6 +4885,7 @@ pub fn parse_sankey(source: &str) -> Result<ChartDiagram, ParseError> {
         quadrant_labels: [None, None, None, None],
         quadrant_points: vec![],
         quadrant_config: QuadrantConfig::default(),
+        xy_config: XyChartConfig::default(),
         orientation: ChartOrientation::Horizontal,
     })
 }
@@ -6028,6 +6065,26 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
             .series
             .iter()
             .all(|series| series.data.len() == 2));
+    }
+
+    #[test]
+    fn xychart_preserves_core_init_configuration() {
+        let diagram = parse_xychart(
+            "%%{init: {\"xyChart\": {\"width\": 720, \"height\": 440, \"titleFontSize\": 24, \"titlePadding\": 14, \"showTitle\": false, \"showDataLabel\": true, \"showDataLabelOutsideBar\": true}, \"themeVariables\": {\"xyChart\": {\"dataLabelColor\": \"#123456\"}}}}%%\nxychart\ntitle Hidden\nbar [10, 20]\n",
+        )
+        .unwrap();
+
+        assert_eq!(diagram.xy_config.width, Some(720.0));
+        assert_eq!(diagram.xy_config.height, Some(440.0));
+        assert_eq!(diagram.xy_config.title_font_size, Some(24.0));
+        assert_eq!(diagram.xy_config.title_padding, Some(14.0));
+        assert_eq!(diagram.xy_config.show_title, Some(false));
+        assert_eq!(diagram.xy_config.show_data_label, Some(true));
+        assert_eq!(diagram.xy_config.show_data_label_outside_bar, Some(true));
+        assert_eq!(
+            diagram.xy_config.data_label_color.as_deref(),
+            Some("#123456")
+        );
     }
 
     #[test]
@@ -7944,7 +8001,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.124.0");
+        assert_eq!(crate::VERSION, "0.125.0");
     }
 
     #[test]

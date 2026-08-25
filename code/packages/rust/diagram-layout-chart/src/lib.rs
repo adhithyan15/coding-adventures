@@ -16,7 +16,7 @@ use diagram_ir::{
 };
 use std::collections::{HashMap, VecDeque};
 
-pub const VERSION: &str = "0.14.0";
+pub const VERSION: &str = "0.15.0";
 
 const MARGIN: f64 = 24.0;
 const TITLE_H: f64 = 32.0;
@@ -29,6 +29,18 @@ const POINT_LABEL_FONT_SIZE: f64 = 12.0;
 
 fn point_label_size(label: &str) -> (f64, f64) {
     ((label.chars().count() as f64 * 7.0 + 4.0).max(12.0), 14.4)
+}
+
+fn chart_value_label(value: f64) -> String {
+    if value.fract().abs() < f64::EPSILON {
+        format!("{value:.0}")
+    } else {
+        let formatted = format!("{value:.6}");
+        formatted
+            .trim_end_matches('0')
+            .trim_end_matches('.')
+            .to_string()
+    }
 }
 
 fn maximum_series_len(diagram: &ChartDiagram) -> usize {
@@ -95,6 +107,8 @@ fn resolve_y_range(diagram: &ChartDiagram) -> (f64, f64) {
 }
 
 fn layout_xy(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagram {
+    let cw = diagram.xy_config.width.unwrap_or(cw);
+    let ch = diagram.xy_config.height.unwrap_or(ch);
     match diagram.orientation {
         diagram_ir::ChartOrientation::Vertical => layout_xy_vertical(diagram, cw, ch),
         diagram_ir::ChartOrientation::Horizontal => layout_xy_horizontal(diagram, cw, ch),
@@ -102,7 +116,15 @@ fn layout_xy(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagram {
 }
 
 fn layout_xy_vertical(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagram {
-    let has_title = diagram.title.is_some();
+    let show_title = diagram.xy_config.show_title.unwrap_or(true);
+    let has_title = show_title && diagram.title.is_some();
+    let title_font_size = diagram.xy_config.title_font_size.unwrap_or(20.0);
+    let title_padding = diagram.xy_config.title_padding.unwrap_or(10.0);
+    let title_height = if has_title {
+        title_font_size + title_padding * 2.0
+    } else {
+        0.0
+    };
     let has_series = !diagram.series.is_empty();
     let has_x_title = diagram
         .x_axis
@@ -117,7 +139,7 @@ fn layout_xy_vertical(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChart
     let lh = if has_series { LEGEND_H } else { 0.0 };
 
     // Plot area bounds
-    let pt = MARGIN + if has_title { TITLE_H } else { 0.0 }; // top
+    let pt = MARGIN + title_height; // top
     let pl = MARGIN + Y_LBL_W + if has_y_title { X_LBL_H } else { 0.0 }; // left
     let pb = ch - MARGIN - X_LBL_H - lh - if has_x_title { X_LBL_H } else { 0.0 }; // bottom
     let pr = cw - MARGIN; // right
@@ -157,12 +179,13 @@ fn layout_xy_vertical(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChart
     let mut items: Vec<LayoutedChartItem> = Vec::new();
 
     // Title
-    if let Some(ref t) = diagram.title {
+    if has_title {
+        let t = diagram.title.as_ref().expect("visible XY title");
         items.push(LayoutedChartItem::DataLabel {
             x: cw / 2.0,
-            y: MARGIN + TITLE_H * 0.5,
+            y: MARGIN + title_padding + title_font_size * 0.5,
             text: t.clone(),
-            font_size: None,
+            font_size: Some(title_font_size),
             color: None,
         });
     }
@@ -284,6 +307,45 @@ fn layout_xy_vertical(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChart
                         height: bh,
                         color: color.clone(),
                     });
+                    if diagram.xy_config.show_data_label.unwrap_or(false) && bar_w > 0.0 && bh > 0.0
+                    {
+                        let text = chart_value_label(val);
+                        let outside = diagram
+                            .xy_config
+                            .show_data_label_outside_bar
+                            .unwrap_or(false);
+                        let font_size = if outside {
+                            12.0
+                        } else {
+                            (bar_w / (text.chars().count().max(1) as f64 * 0.7))
+                                .min((bh - 10.0).max(1.0))
+                                .min(12.0)
+                                .floor()
+                                .max(1.0)
+                        };
+                        let label_width = if outside {
+                            (text.chars().count() as f64 * font_size * 0.7 + 4.0).max(bar_w)
+                        } else {
+                            bar_w
+                        };
+                        items.push(LayoutedChartItem::BarLabel {
+                            x: bx + bar_w / 2.0 - label_width / 2.0,
+                            y: if outside {
+                                by - 10.0 - font_size * 1.2
+                            } else {
+                                by + 10.0
+                            },
+                            width: label_width,
+                            height: font_size * 1.2,
+                            text,
+                            font_size,
+                            color: diagram
+                                .xy_config
+                                .data_label_color
+                                .clone()
+                                .unwrap_or_else(|| "#374151".into()),
+                        });
+                    }
                 }
                 bar_series_idx += 1;
             }
@@ -352,7 +414,15 @@ fn layout_xy_vertical(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChart
 }
 
 fn layout_xy_horizontal(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagram {
-    let has_title = diagram.title.is_some();
+    let show_title = diagram.xy_config.show_title.unwrap_or(true);
+    let has_title = show_title && diagram.title.is_some();
+    let title_font_size = diagram.xy_config.title_font_size.unwrap_or(20.0);
+    let title_padding = diagram.xy_config.title_padding.unwrap_or(10.0);
+    let title_height = if has_title {
+        title_font_size + title_padding * 2.0
+    } else {
+        0.0
+    };
     let has_series = !diagram.series.is_empty();
     let has_x_title = diagram
         .x_axis
@@ -366,7 +436,7 @@ fn layout_xy_horizontal(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedCha
         .is_some();
     let legend_height = if has_series { LEGEND_H } else { 0.0 };
 
-    let top = MARGIN + if has_title { TITLE_H } else { 0.0 };
+    let top = MARGIN + title_height;
     let left = MARGIN + Y_LBL_W + if has_x_title { X_LBL_H } else { 0.0 };
     let bottom = ch - MARGIN - X_LBL_H - legend_height - if has_y_title { X_LBL_H } else { 0.0 };
     let right = cw - MARGIN;
@@ -403,12 +473,13 @@ fn layout_xy_horizontal(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedCha
     };
     let mut items = Vec::new();
 
-    if let Some(title) = &diagram.title {
+    if has_title {
+        let title = diagram.title.as_ref().expect("visible XY title");
         items.push(LayoutedChartItem::DataLabel {
             x: cw / 2.0,
-            y: MARGIN + TITLE_H * 0.5,
+            y: MARGIN + title_padding + title_font_size * 0.5,
             text: title.clone(),
-            font_size: None,
+            font_size: Some(title_font_size),
             color: None,
         });
     }
@@ -520,6 +591,47 @@ fn layout_xy_horizontal(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedCha
                         height: bar_height,
                         color: color.clone(),
                     });
+                    if diagram.xy_config.show_data_label.unwrap_or(false)
+                        && width > 0.0
+                        && bar_height > 0.0
+                    {
+                        let text = chart_value_label(point.value);
+                        let outside = diagram
+                            .xy_config
+                            .show_data_label_outside_bar
+                            .unwrap_or(false);
+                        let available_width = (width - 20.0).max(1.0);
+                        let font_size = if outside {
+                            12.0
+                        } else {
+                            (bar_height * 0.7)
+                                .min(available_width / (text.chars().count().max(1) as f64 * 0.7))
+                                .floor()
+                                .max(1.0)
+                        };
+                        let label_width = if outside {
+                            (text.chars().count() as f64 * font_size * 0.7 + 4.0).max(20.0)
+                        } else {
+                            available_width
+                        };
+                        items.push(LayoutedChartItem::BarLabel {
+                            x: if outside {
+                                left + width + 10.0
+                            } else {
+                                left + 10.0
+                            },
+                            y,
+                            width: label_width,
+                            height: bar_height,
+                            text,
+                            font_size,
+                            color: diagram
+                                .xy_config
+                                .data_label_color
+                                .clone()
+                                .unwrap_or_else(|| "#374151".into()),
+                        });
+                    }
                 }
                 bar_series_index += 1;
             }
@@ -1009,13 +1121,14 @@ mod tests {
             quadrant_labels: [None, None, None, None],
             quadrant_points: vec![],
             quadrant_config: QuadrantConfig::default(),
+            xy_config: XyChartConfig::default(),
             orientation: ChartOrientation::Vertical,
         }
     }
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.14.0");
+        assert_eq!(crate::VERSION, "0.15.0");
     }
 
     #[test]
@@ -1119,6 +1232,38 @@ mod tests {
     }
 
     #[test]
+    fn xy_core_config_controls_dimensions_title_and_bar_labels() {
+        let mut diagram = xy_diagram();
+        diagram.xy_config = XyChartConfig {
+            width: Some(720.0),
+            height: Some(440.0),
+            title_font_size: Some(24.0),
+            title_padding: Some(14.0),
+            show_title: Some(false),
+            show_data_label: Some(true),
+            show_data_label_outside_bar: Some(true),
+            data_label_color: Some("#123456".into()),
+        };
+
+        let layout = layout_chart_diagram(&diagram, 600.0, 400.0);
+        assert_eq!((layout.width, layout.height), (720.0, 440.0));
+        assert!(!layout.items.iter().any(
+            |item| matches!(item, LayoutedChartItem::DataLabel { text, .. } if text == "Test")
+        ));
+        let bar_labels = layout
+            .items
+            .iter()
+            .filter(|item| matches!(item, LayoutedChartItem::BarLabel { .. }))
+            .count();
+        assert_eq!(bar_labels, 3);
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
+            LayoutedChartItem::BarLabel { text, color, .. }
+                if text == "40" && color == "#123456"
+        )));
+    }
+
+    #[test]
     fn bar_count_matches_data_points() {
         let d = layout_chart_diagram(&xy_diagram(), 600.0, 400.0);
         let bars: Vec<_> = d
@@ -1156,6 +1301,7 @@ mod tests {
             quadrant_labels: [None, None, None, None],
             quadrant_points: vec![],
             quadrant_config: QuadrantConfig::default(),
+            xy_config: XyChartConfig::default(),
             orientation: ChartOrientation::Vertical,
         };
         let d = layout_chart_diagram(&diagram, 400.0, 400.0);
@@ -1217,6 +1363,7 @@ mod tests {
             quadrant_labels: [None, None, None, None],
             quadrant_points: vec![],
             quadrant_config: QuadrantConfig::default(),
+            xy_config: XyChartConfig::default(),
             orientation: ChartOrientation::Horizontal,
         };
         let d = layout_chart_diagram(&diagram, 600.0, 400.0);
@@ -1269,6 +1416,7 @@ mod tests {
                 stroke_width: Some(3.0),
             }],
             quadrant_config: QuadrantConfig::default(),
+            xy_config: XyChartConfig::default(),
             orientation: ChartOrientation::Vertical,
         };
         let layout = layout_chart_diagram(&diagram, 500.0, 500.0);
