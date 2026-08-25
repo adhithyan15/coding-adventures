@@ -1082,6 +1082,9 @@ pub struct GanttSection {
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct GanttDiagram {
+    pub title: Option<String>,
+    pub accessibility_title: Option<String>,
+    pub accessibility_description: Option<String>,
     pub date_format: String,
     pub sections: Vec<GanttSection>,
 }
@@ -1530,6 +1533,9 @@ mod tests {
             kind: TemporalKind::Gantt,
             title: None,
             body: TemporalBody::Gantt(GanttDiagram {
+                title: None,
+                accessibility_title: None,
+                accessibility_description: None,
                 date_format: "YYYY-MM-DD".into(),
                 sections: vec![GanttSection {
                     label: None,

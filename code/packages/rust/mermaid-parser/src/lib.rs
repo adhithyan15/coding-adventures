@@ -20,8 +20,8 @@ use lexer::token::{Token, TokenType};
 use mermaid_lexer::{
     tokenize_mermaid, tokenize_mermaid_c4, tokenize_mermaid_er, tokenize_mermaid_gitgraph,
     tokenize_mermaid_pie, tokenize_mermaid_sankey, tokenize_mermaid_sequence,
-    tokenize_mermaid_state, try_tokenize_mermaid_journey, try_tokenize_mermaid_quadrant,
-    try_tokenize_mermaid_requirement, try_tokenize_mermaid_xychart,
+    tokenize_mermaid_state, try_tokenize_mermaid_gantt, try_tokenize_mermaid_journey,
+    try_tokenize_mermaid_quadrant, try_tokenize_mermaid_requirement, try_tokenize_mermaid_xychart,
 };
 use parser::grammar_parser::{GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
 
@@ -45,6 +45,7 @@ const REQUIREMENT_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/requirement.grammar");
 const XYCHART_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/xychart.grammar");
+const GANTT_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/gantt.grammar");
 
 /// Recursion-depth cap for the Mermaid [`GrammarParser`] — see
 /// [`GrammarParser::with_max_depth`] for why this guard exists at all (deep
@@ -316,6 +317,23 @@ pub fn parse_mermaid_xychart_ast(source: &str) -> Result<GrammarASTNode, ParseEr
         message: e.message,
         line: e.token.line,
         col: e.token.column,
+    })
+}
+
+pub fn parse_mermaid_gantt_ast(source: &str) -> Result<GrammarASTNode, ParseError> {
+    let preprocessed = preprocess_mermaid_source(source)?;
+    let tokens = try_tokenize_mermaid_gantt(&preprocessed.source).map_err(|message| ParseError {
+        message,
+        line: 1,
+        col: 1,
+    })?;
+    let grammar = parse_parser_grammar(GANTT_PARSER_GRAMMAR_SOURCE)
+        .unwrap_or_else(|error| panic!("Failed to parse gantt.grammar: {error}"));
+    let mut parser = GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH);
+    parser.parse().map_err(|error| ParseError {
+        message: error.message,
+        line: error.token.line,
+        col: error.token.column,
     })
 }
 
@@ -724,9 +742,10 @@ pub fn parse_any_mermaid(source: &str) -> Result<MermaidDiagram, ParseError> {
             })
         }),
         MermaidDiagramType::Gantt => parse_gantt(source).map(|g| {
+            let title = g.title.clone();
             MermaidDiagram::Temporal(TemporalDiagram {
                 kind: TemporalKind::Gantt,
-                title: None,
+                title,
                 body: TemporalBody::Gantt(g),
             })
         }),
@@ -5913,43 +5932,57 @@ fn upsert_c4_node(
 ///     Task B :t2, after t1, 3d
 /// ```
 pub fn parse_gantt(source: &str) -> Result<GanttDiagram, ParseError> {
+    parse_mermaid_gantt_ast(source)?;
+    let preprocessed = preprocess_mermaid_source(source)?;
+    let tokens = try_tokenize_mermaid_gantt(&preprocessed.source).map_err(|message| ParseError {
+        message,
+        line: 1,
+        col: 1,
+    })?;
     let mut date_format = "YYYY-MM-DD".to_string();
+    let mut title = None;
+    let mut accessibility_title = None;
+    let mut accessibility_description = None;
     let mut sections: Vec<GanttSection> = Vec::new();
     let mut current_section: Option<GanttSection> = None;
 
-    let mut past_header = false;
-    for line in source.lines() {
-        let t = line.trim();
-        if t.is_empty() || t.starts_with("%%") {
-            continue;
-        }
-        if !past_header {
-            if t == "gantt" {
-                past_header = true;
+    for token in tokens {
+        match token.type_name.as_deref() {
+            Some("TITLE_STATEMENT") => {
+                title = Some(token.value["title".len()..].trim().to_string());
             }
-            continue;
-        }
-        if t.starts_with("title") {
-            // title is ignored at GanttDiagram level (held at TemporalDiagram)
-            continue;
-        } else if t.starts_with("dateFormat") {
-            date_format = t[10..].trim().to_string();
-        } else if t.starts_with("section") {
-            if let Some(sec) = current_section.take() {
-                sections.push(sec);
+            Some("ACC_TITLE_STATEMENT") => {
+                accessibility_title = gantt_metadata_value(&token);
             }
-            current_section = Some(GanttSection {
-                label: Some(t[7..].trim().to_string()),
-                tasks: vec![],
-            });
-        } else if t.contains(':') {
-            if let Some(task) = parse_gantt_task(t) {
+            Some("ACC_DESCR_STATEMENT") => {
+                accessibility_description = gantt_metadata_value(&token);
+            }
+            Some("ACC_DESCR_BLOCK") => {
+                let open = token.value.find('{').expect("grammar requires '{'");
+                let close = token.value.rfind('}').expect("grammar requires '}'");
+                accessibility_description = Some(token.value[open + 1..close].trim().to_string());
+            }
+            Some("DATE_FORMAT_STATEMENT") => {
+                date_format = token.value["dateFormat".len()..].trim().to_string();
+            }
+            Some("SECTION_STATEMENT") => {
+                if let Some(section) = current_section.take() {
+                    sections.push(section);
+                }
+                current_section = Some(GanttSection {
+                    label: Some(token.value["section".len()..].trim().to_string()),
+                    tasks: vec![],
+                });
+            }
+            Some("TASK_STATEMENT") => {
+                let task = parse_gantt_task(&token)?;
                 let sec = current_section.get_or_insert_with(|| GanttSection {
                     label: None,
                     tasks: vec![],
                 });
                 sec.tasks.push(task);
             }
+            _ => {}
         }
     }
     if let Some(sec) = current_section {
@@ -5957,36 +5990,54 @@ pub fn parse_gantt(source: &str) -> Result<GanttDiagram, ParseError> {
     }
 
     Ok(GanttDiagram {
+        title,
+        accessibility_title,
+        accessibility_description,
         date_format,
         sections,
     })
+}
+
+fn gantt_metadata_value(token: &Token) -> Option<String> {
+    token
+        .value
+        .split_once(':')
+        .map(|(_, value)| value.trim().to_string())
 }
 
 /// Parse a single Gantt task line.
 ///
 /// Format: `label :status, id, start, duration`
 ///    or   `label :id, start, duration`
-fn parse_gantt_task(line: &str) -> Option<GanttTask> {
-    let colon = line.find(':')?;
-    let label = line[..colon].trim().to_string();
-    let rest = line[colon + 1..].trim();
+fn parse_gantt_task(token: &Token) -> Result<GanttTask, ParseError> {
+    let colon = token
+        .value
+        .find(':')
+        .expect("task statement grammar requires ':'");
+    let label = token.value[..colon].trim().to_string();
+    let rest = token.value[colon + 1..].trim();
+    if label.is_empty() {
+        return Err(token_error(token, "Gantt task label cannot be empty"));
+    }
 
     let parts: Vec<&str> = rest.splitn(4, ',').map(str::trim).collect();
-    if parts.is_empty() {
-        return None;
+    if parts.is_empty() || parts[0].is_empty() {
+        return Err(token_error(token, "Gantt task data cannot be empty"));
     }
 
     // Detect status keywords in the first part.
-    let status_keywords = ["done", "active", "crit", "milestone"];
     let first = parts[0];
-    let (status, remaining) = if status_keywords.contains(&first) {
+    let (status, remaining) = if ["done", "active", "crit", "milestone"]
+        .iter()
+        .any(|status| first.eq_ignore_ascii_case(status))
+    {
         (parse_task_status(first), &parts[1..])
     } else {
         (TaskStatus::Normal, &parts[..])
     };
 
-    if remaining.is_empty() {
-        return None;
+    if remaining.is_empty() || remaining[0].is_empty() {
+        return Err(token_error(token, "Gantt task id cannot be empty"));
     }
     let id = remaining[0].to_string();
     let start = if remaining.len() > 1 {
@@ -6000,12 +6051,14 @@ fn parse_gantt_task(line: &str) -> Option<GanttTask> {
         TaskStart::Date("2026-01-01".to_string())
     };
     let duration_days = if remaining.len() > 2 {
-        parse_duration(remaining[2]).unwrap_or(1.0)
+        parse_duration(remaining[2])
+            .filter(|duration| *duration >= 0.0)
+            .ok_or_else(|| token_error(token, "invalid Gantt task duration"))?
     } else {
         1.0
     };
 
-    Some(GanttTask {
+    Ok(GanttTask {
         id,
         label,
         start,
@@ -6016,7 +6069,7 @@ fn parse_gantt_task(line: &str) -> Option<GanttTask> {
 }
 
 fn parse_task_status(s: &str) -> TaskStatus {
-    match s {
+    match s.to_ascii_lowercase().as_str() {
         "done" => TaskStatus::Done,
         "active" => TaskStatus::Active,
         "crit" => TaskStatus::Crit,
@@ -6526,6 +6579,35 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     fn gantt_parses_status() {
         let d = parse_gantt(GANTT_SRC).unwrap();
         assert_eq!(d.sections[0].tasks[0].status, TaskStatus::Done);
+    }
+
+    #[test]
+    fn gantt_grammar_preserves_title_and_accessibility_metadata() {
+        let diagram = parse_gantt(
+            "gantt\n\
+             title Native project\n\
+             accTitle: Accessible project timeline\n\
+             accDescr {\n  Build and ship\n}\n\
+             section Delivery\n\
+             Release :milestone, release, 2026-03-01, 0d\n",
+        )
+        .unwrap();
+        assert_eq!(diagram.title.as_deref(), Some("Native project"));
+        assert_eq!(
+            diagram.accessibility_title.as_deref(),
+            Some("Accessible project timeline")
+        );
+        assert_eq!(
+            diagram.accessibility_description.as_deref(),
+            Some("Build and ship")
+        );
+    }
+
+    #[test]
+    fn gantt_grammar_rejects_missing_header_and_malformed_tasks() {
+        assert!(parse_gantt("section Delivery\nRelease :r1, 2026-03-01, 1d").is_err());
+        assert!(parse_gantt("gantt\nRelease :done,").is_err());
+        assert!(parse_gantt("gantt\nRelease :r1, 2026-03-01, forever").is_err());
     }
 
     #[test]
