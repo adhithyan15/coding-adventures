@@ -79,7 +79,7 @@ use std::collections::HashMap;
 use std::fs::{self, File, OpenOptions};
 use std::io::{self, Read, Write};
 use std::path::{Path, PathBuf};
-use std::sync::atomic::{AtomicU64, Ordering};
+use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 use std::sync::Mutex;
 use std::time::{SystemTime, UNIX_EPOCH};
 use storage_core::{
@@ -160,6 +160,10 @@ pub struct FsStorageBackend {
     /// the revision counter advances monotonically.
     write_lock: Mutex<()>,
     revision_counter: AtomicU64,
+    /// Whether the one-time recovery scan in `initialize()` has completed.
+    /// Per backend instance, so a genuine restart (a NEW `FsStorageBackend`
+    /// over the same root) still scans and still recovers its revision floor.
+    scanned: AtomicBool,
     /// In-memory leases. Same shape as `InMemoryStorageBackend`'s.
     leases: Mutex<HashMap<String, StorageLease>>,
     lease_counter: AtomicU64,
@@ -173,6 +177,7 @@ impl FsStorageBackend {
             root: root.into(),
             write_lock: Mutex::new(()),
             revision_counter: AtomicU64::new(0),
+            scanned: AtomicBool::new(false),
             leases: Mutex::new(HashMap::new()),
             lease_counter: AtomicU64::new(0),
         }
@@ -448,7 +453,48 @@ fn io_to_storage(e: io::Error) -> StorageError {
 
 impl StorageBackend for FsStorageBackend {
     fn initialize(&self) -> Result<(), StorageError> {
+        // The root must exist after every `initialize()`, and creating it is a
+        // single cheap syscall, so that part stays unconditional.
         fs::create_dir_all(&self.root).map_err(io_to_storage)?;
+
+        // The recovery scan below is the expensive part: it reads the body of
+        // every record in every namespace. `ServiceRegistry::load` and `::list`
+        // both call `initialize()`, so on the shipped 5s health-check interval
+        // this walk ran several times per reconcile tick -- over a state
+        // directory shared by the registry, the audit log, channel state and
+        // smart-home state. It therefore grew with data an agent can influence,
+        // and every consumer paid for all of it. It only needs to happen once
+        // per backend instance.
+        //
+        // Fast path: a plain `Acquire` load, no lock, for every call after the
+        // first.
+        if self.scanned.load(Ordering::Acquire) {
+            return Ok(());
+        }
+
+        // The slow path holds `write_lock` -- the same lock `put` holds while
+        // it allocates a revision with `fetch_add`. That is the point, not a
+        // detail. The scan ends in a `store` on `revision_counter`, and doing
+        // that store unlocked let a concurrent `initialize` reset the counter
+        // to a value a writer had already allocated past. The same revision
+        // would then be issued twice, and a stale `if_revision` compare-and-swap
+        // guard would pass where it must fail -- a silently lost CAS, in the
+        // guards the registry's whole concurrency story rests on.
+        //
+        // Caching also removes a second, subtler version of the same hazard:
+        // re-scanning a root whose records have since been DELETED lowers
+        // `highest`, so the counter walks backwards over revisions it has
+        // already handed out. Scanning once can only ever move it forward.
+        let _guard = self.write_lock.lock().map_err(|_| StorageError::Backend {
+            message: "fs storage write lock poisoned".to_string(),
+        })?;
+
+        // Re-check under the lock: another thread may have finished the scan
+        // between our fast-path load and our acquiring the mutex.
+        if self.scanned.load(Ordering::Relaxed) {
+            return Ok(());
+        }
+
         // Walk and remove stranded .tmp files. Also: scan all
         // record files to find the highest revision number so a
         // restart picks up where the previous process left off.
@@ -479,6 +525,12 @@ impl StorageBackend for FsStorageBackend {
             }
         }
         self.revision_counter.store(highest, Ordering::SeqCst);
+
+        // `Release`, paired with the `Acquire` on the fast path, so the counter
+        // store above is visible to any thread that skips the scan. Set last,
+        // and only on success, so a failed `initialize` is retried rather than
+        // remembered as done.
+        self.scanned.store(true, Ordering::Release);
         Ok(())
     }
 
@@ -1016,6 +1068,60 @@ mod tests {
         assert!(!stranded.exists(), ".tmp file should be removed on init");
         // Real record survives.
         assert_eq!(be2.get("ns", "k").unwrap().unwrap().body, b"v");
+        let _ = fs::remove_dir_all(&root);
+    }
+
+    #[test]
+    fn reinitialize_does_not_reissue_a_revision() {
+        // The regression test for the unlocked-counter defect, made
+        // deterministic. The concurrency window (a `put` in flight while
+        // `initialize` stores a lower `highest`) is hard to hit on demand, but
+        // DELETION reaches the identical end state with no threads at all:
+        // remove the record holding the highest revision, and a re-scan lowers
+        // the counter below revisions that were already issued.
+        let root = temp_root();
+        let be = FsStorageBackend::new(&root);
+        be.initialize().unwrap();
+
+        let r1 = be.put(put_input("ns", "k1", b"v1")).unwrap();
+        let r2 = be.put(put_input("ns", "k2", b"v2")).unwrap();
+        // Delete the holder of the high-water mark. Disk now tops out at r1.
+        be.delete("ns", "k2", None).unwrap();
+
+        // A second `initialize()` on the SAME backend. Before the fix this
+        // re-scanned, found only r1, and stored that -- walking the counter
+        // backwards over r2, which had already been handed out.
+        be.initialize().unwrap();
+        let r3 = be.put(put_input("ns", "k3", b"v3")).unwrap();
+
+        let n1 = revision_to_u64(&r1.revision).unwrap();
+        let n2 = revision_to_u64(&r2.revision).unwrap();
+        let n3 = revision_to_u64(&r3.revision).unwrap();
+        assert!(n2 > n1, "revisions must be monotonic: {} <= {}", n2, n1);
+        assert!(
+            n3 > n2,
+            "re-initialize reissued revision {}, already held by k2; a stale \
+             if_revision compare-and-swap guard would now pass",
+            n3
+        );
+        let _ = fs::remove_dir_all(&root);
+    }
+
+    #[test]
+    fn initialize_is_idempotent_and_still_creates_the_root() {
+        // The scan is cached, but the directory postcondition is not: callers
+        // may rely on `initialize()` re-creating a root that has vanished.
+        let root = temp_root();
+        let be = FsStorageBackend::new(&root);
+        be.initialize().unwrap();
+        be.put(put_input("ns", "k", b"v")).unwrap();
+
+        fs::remove_dir_all(&root).unwrap();
+        be.initialize().unwrap();
+        assert!(root.is_dir(), "initialize must re-create a missing root");
+
+        // And the backend is still usable afterwards.
+        be.put(put_input("ns", "k2", b"v2")).unwrap();
         let _ = fs::remove_dir_all(&root);
     }
 

@@ -9,6 +9,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Stopped `initialize()` re-issuing a revision that had already been handed out.
+  The recovery scan ended in `revision_counter.store(highest)` performed WITHOUT
+  `write_lock`, the lock `put()` holds while allocating revisions via
+  `fetch_add`. Any later `initialize()` therefore reset the counter to whatever
+  the on-disk high-water mark happened to be — which moves BACKWARDS as soon as
+  the record holding that mark is deleted. The same revision is then issued
+  twice, and a stale `if_revision` compare-and-swap guard passes where it must
+  fail. The scan now runs once, under `write_lock`, behind a double-checked
+  `scanned` flag.
+
+  Recorded as theoretical in #12139 ("not currently known to be reachable"); it
+  is in fact reachable deterministically and without any concurrency, by
+  deleting the highest-revisioned record and calling `initialize()` again.
+  `reinitialize_does_not_reissue_a_revision` is that sequence, and it fails on
+  the pre-fix code with "re-initialize reissued revision 2, already held by k2".
+
+- Stopped `initialize()` re-reading the entire state directory on every call.
+  It read the body of every record in every namespace, and `ServiceRegistry`'s
+  `load` and `list` both call it, so the walk ran several times per reconcile
+  tick — over a directory shared by the registry, audit log, channel state and
+  smart-home state, i.e. one that grows with data an agent can influence.
+  Measured at ~480 ms per call against a 473 ms baseline tick (#12139).
+
 - Made parallel filesystem-backend tests allocate distinct temporary roots even
   when the platform clock returns the same timestamp.
 
