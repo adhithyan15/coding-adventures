@@ -78,6 +78,16 @@
   rewritten to show the instance rather than assert the rule, rather than
   raising a ceiling that records debt.
 
+- **Five of these words were already previewed elsewhere, and now pay off.**
+  The gentle-ramp snapshot's `forwardReferences` moves 281 -> 295. None of the
+  fourteen originate in these lessons — every one is an EARLIER lesson that
+  had used the word illustratively before anything taught it. `ES-C09-ario`
+  reaches for *aniversario* to show the `-ario` suffix; `ES-C57-es-inicial`
+  and `ES-C34-escribir` use *escuela* and *estación* to show the *e-* Spanish
+  grows in front of *sc-* and *st-*; `ES-C08-numeros-1-5` and tranche 1's
+  `ES-C344-doble` both reach for *triple*. The count rose because those words
+  are now taught at all, and the previews land somewhere.
+
 - **One collision existed only in the union of the two tranches.**
   `ES-C349-agenda` was authored with `concept_tag: ES-CLOCK-SCHEDULE`, which
   tranche 1's `ES-C342-horario` also claims. Both branches were green on their
