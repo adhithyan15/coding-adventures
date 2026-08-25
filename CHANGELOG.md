@@ -114,6 +114,30 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   real script against a real symlink and a real planted `book.pdf`. It skips the
   symlink case where the filesystem cannot create one and runs it on CI.
   Confirmed non-vacuous by mutation: removing the `book.tex` guard turns it red.
+- **`check-book-compile.sh` now sweeps its own book directory for symlinks**
+  before writing anything, rather than relying on a lint only CI invokes. The
+  script is documented as the one a human runs locally, and locally nothing runs
+  that lint — so `git checkout <branch> && ./code/scripts/check-book-compile.sh`
+  on Linux or macOS still wrote through `<track>/book/book.aux -> ~/.ssh/…`,
+  which is author-controlled content, not merely a destructive overwrite. The
+  PR's own thesis one level up: a control protects only the call sites that
+  invoke it.
+- **A skipped symlink test is now a failure where the capability must exist.**
+  Both symlink suites skip on a filesystem that cannot create links, and nothing
+  asserted the probe had succeeded on the runner — so a broken runner image
+  would silently stop exercising the security tests while the step stayed green.
+  CI sets `REQUIRE_SYMLINK_TESTS=1` and the skip becomes fatal. Verified in both
+  directions.
+- **A symlink named `latexmkrc` is now reported under both bans, not just one.**
+  The symlink advisory ends "Replace the link with the real file, or delete it",
+  which for that path instructs the author to create a real `latexmkrc` — the
+  artefact the other ban exists to keep out. De-duplicate the failure, never the
+  guidance.
+- `--book-root=` with an empty value is rejected rather than silently reverting
+  to the real corpus (the same bug as `--manifest=`, one line apart), and the
+  seam is gated behind `CHECK_BOOK_COMPILE_SELF_TEST=1`.
+- The shell-escape verification step checks `-L` before `-f` on each `book.log`,
+  since `-f` follows a link and would read an attacker-chosen file.
 - Read-side TeX exposure (`openin_any`) and third-party action SHA pinning are
   tracked separately rather than guessed at here — see the linked issues. An
   unverified control is worse than an acknowledged gap.

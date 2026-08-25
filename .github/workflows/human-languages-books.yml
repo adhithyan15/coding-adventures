@@ -151,6 +151,15 @@ jobs:
       # Its own tests run first, for the same reason the warning scanner's do —
       # a silently broken gate is worse than no gate.
       - name: Test the book-tree hygiene lint
+        env:
+          # The symlink cases skip themselves on a filesystem that cannot create
+          # links. That is right on Windows and a silent hole here: nothing else
+          # asserts the probe SUCCEEDED, so a runner image that broke it would
+          # stop exercising the security tests while the step stayed green —
+          # "compiled 0, skipped 1, failed 0" wearing a different hat, in the
+          # very pull request that removes the original. With this set, a skip
+          # is a failure.
+          REQUIRE_SYMLINK_TESTS: "1"
         run: |
           set -euo pipefail
           python3 -m unittest discover -s code/scripts/tests \
@@ -319,6 +328,10 @@ jobs:
       # there and runs here — which is the right way round, since here is where
       # the guards actually matter.
       - name: Exercise the compile script's guards
+        env:
+          # Same reasoning as the lint step above: on the one machine in the loop
+          # that can create a symlink, failing to do so must be loud.
+          REQUIRE_SYMLINK_TESTS: "1"
         run: |
           set -euo pipefail
           bash code/scripts/tests/test-check-book-compile-guards.sh
@@ -411,6 +424,17 @@ jobs:
           while IFS= read -r book_dir; do
             [ -n "$book_dir" ] || continue
             log="$book_dir/book.log"
+            # `-L` before `-f`, because `-f` follows the link and would happily
+            # read an attacker-chosen file that says nothing about this build.
+            # Same reasoning the collect step already gives for `book.pdf`: the
+            # steps should not have to trust each other. The compile refuses a
+            # book directory containing any symlink, so reaching this is a bug
+            # rather than an expected input — which is exactly when a redundant
+            # check earns its place.
+            if [ -L "$log" ]; then
+              echo "::error::$log is a symlink; refusing to read shell-escape state through it."
+              exit 1
+            fi
             if [ ! -f "$log" ]; then
               echo "::error::$log is missing, so shell-escape state cannot be verified for a book that compiled."
               exit 1

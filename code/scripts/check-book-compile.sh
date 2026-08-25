@@ -89,7 +89,24 @@ for arg in "$@"; do
     # corpus. The containment check below still applies — it just compares
     # against whichever root was named, so overriding it moves the fence rather
     # than removing it.
-    --book-root=*) BOOK_ROOT="${arg#--book-root=}" ;;
+    #
+    # Gated behind an environment variable so it cannot be reached by accident
+    # from a normal invocation. It costs nothing and keeps the seam obviously a
+    # seam.
+    #
+    # Its safety rests on one property worth stating out loud: the guards test
+    # builds its fixture from a static heredoc. If anyone later parameterises
+    # that fixture from repository data, CI would be compiling unlinted content
+    # from outside the book tree, and this flag becomes the way in. Keep the
+    # fixture static.
+    --book-root=)
+      echo "--book-root= requires a path" >&2; exit 2 ;;
+    --book-root=*)
+      if [ "${CHECK_BOOK_COMPILE_SELF_TEST:-}" != "1" ]; then
+        echo "--book-root is a test seam; set CHECK_BOOK_COMPILE_SELF_TEST=1 to use it." >&2
+        exit 2
+      fi
+      BOOK_ROOT="${arg#--book-root=}" ;;
     -h|--help)
       sed -n '2,50p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'
       exit 0 ;;
@@ -234,12 +251,38 @@ for dir in "$BOOKS"/*/book; do
        FAILED=$((FAILED + 1)); continue ;;
   esac
 
-  # The same symlink reasoning as the figure PDFs below, for the output latexmk
-  # is about to write. `figures/foo.pdf` was guarded and `book.pdf` was not,
-  # which is the more valuable of the two: XeLaTeX opens it for writing, so a
-  # committed `book.pdf -> ../../../../.git/config` is a write THROUGH the link
-  # onto whatever it names, and anything downstream that publishes `book.pdf`
-  # reads back out through it.
+  # NO SYMLINKS ANYWHERE IN THE BOOK DIRECTORY.
+  #
+  # `check_book_tree_hygiene.py` bans these across the whole tree and CI runs it
+  # twice — but CI is not the only caller. This script is documented as the one
+  # a human runs locally, and locally nothing runs that lint. So
+  #
+  #     git checkout <contributor-branch> && ./code/scripts/check-book-compile.sh
+  #
+  # on Linux or macOS would otherwise still write through a committed
+  # `<track>/book/book.aux -> ~/.ssh/authorized_keys`. Not merely a destructive
+  # overwrite either: `.aux` content is substantially author-controlled via
+  # labels and TOC entries.
+  #
+  # That is this script's own thesis turned on itself — a control only protects
+  # the call sites somebody remembered to invoke it at — so the guarantee lives
+  # here too, and does not depend on the caller having run the lint first.
+  #
+  # A whole-directory sweep rather than a list of filenames: a XeLaTeX run
+  # writes at least nine files here (book.aux/.log/.toc/.out/.xdv/.pdf, plus
+  # latexmk's own .fdb_latexmk/.fls), and `openout_any=p` follows a link for
+  # every one of them because it vets the NAME and then opens it.
+  stray_link="$(/usr/bin/find "$dir" -type l -print -quit 2>/dev/null)"
+  if [ -n "$stray_link" ]; then
+    printf 'FAIL %-12s contains a symlink, which a book build would write through: %s\n' \
+      "$track" "$stray_link"
+    FAILED=$((FAILED + 1)); continue
+  fi
+
+  # The two narrower `[ -L ]` guards (here and on the figure PDFs below) are now
+  # redundant with the sweep above. They stay: they are free, they name the
+  # specific file rather than the first link found, and a guard that costs
+  # nothing is not worth removing from a security path.
   if [ -L "$dir/book.pdf" ]; then
     printf 'FAIL %-12s book.pdf is a symlink\n' "$track"
     FAILED=$((FAILED + 1)); continue

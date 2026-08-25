@@ -151,6 +151,21 @@ class SymlinkBanTests(unittest.TestCase):
         self.tree.__enter__()
         if not can_symlink(self.tree.root):
             self.tree.__exit__()
+            # A skip is the right answer on a box that cannot make symlinks, and
+            # the wrong answer on the runner where these are the tests that
+            # matter. Nothing otherwise asserts the probe SUCCEEDED on Linux, so
+            # a future runner image that broke it would silently stop running
+            # the whole suite and the step would stay green — "compiled 0,
+            # skipped 1, failed 0" wearing a different hat, shipped in the very
+            # pull request that removes the original.
+            #
+            # So CI sets REQUIRE_SYMLINK_TESTS=1 and the skip becomes a failure.
+            if os.environ.get("REQUIRE_SYMLINK_TESTS") == "1":
+                self.fail(
+                    "REQUIRE_SYMLINK_TESTS=1 but this filesystem cannot create "
+                    "symlinks, so the symlink ban was NOT exercised. These are "
+                    "the security tests; a skip here is a hole, not a pass."
+                )
             self.skipTest(
                 "this filesystem cannot create symlinks (Windows without "
                 "elevation or Developer Mode); exercised on the Linux CI runner"
@@ -222,15 +237,19 @@ class SymlinkBanTests(unittest.TestCase):
         self.assertIn("->", err)
         self.assertIn("the-target-file", err)
 
-    def test_a_symlink_named_latexmkrc_is_reported_once(self) -> None:
+    def test_a_symlink_named_latexmkrc_is_reported_under_BOTH_bans(self) -> None:
+        # Not a coverage question — either ban alone fails the run. It is a
+        # question of what the report tells the author to do next. The symlink
+        # advisory ends "Replace the link with the real file, or delete it",
+        # which for this path means "create a real latexmkrc" — precisely what
+        # the other ban exists to prevent. So both must appear.
         link = self.tree.root / "spanish" / "book" / "latexmkrc"
         link.symlink_to(self.tree.root / "payload.pl")
         status, _out, err = run("--book-root", str(self.tree.root))
         self.assertEqual(status, 1)
-        # Both bans match it. Reporting it twice would be noise, and the symlink
-        # framing is the more actionable of the two.
         self.assertIn("FORBIDDEN symlink", err)
-        self.assertNotIn("FORBIDDEN latexmkrc", err)
+        self.assertIn("FORBIDDEN latexmkrc", err)
+        self.assertIn("latexmk-safe.rc", err)
 
 
 class CouldNotDetermineTests(unittest.TestCase):

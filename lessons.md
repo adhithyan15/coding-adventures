@@ -4654,3 +4654,68 @@ Two details that make the skip honest rather than a dodge:
 `[ -f "$dir/book.tex" ] || continue` turned the suite red; restoring it turned it green. A
 test that has only ever been observed passing has not been observed working — the same
 principle as proving a gate's red path, applied to the gate's own tests.
+
+## A lint that only CI runs protects only CI — the script a human runs must carry its own guarantee
+
+Round three of the same review, and the same lesson eating its own tail for the third
+time. The general symlink ban was moved into `check_book_tree_hygiene.py` — correct — and
+`check-book-compile.sh` never calls it. CI was safe, because the workflow runs the lint
+immediately before compiling. But the script is documented as *the same one a human runs
+locally*, and locally nothing runs the lint:
+
+    git checkout <contributor-branch>
+    ./code/scripts/check-book-compile.sh          # on Linux or macOS
+
+still wrote through `<track>/book/book.aux -> ~/.ssh/authorized_keys`. Not a mere
+destructive overwrite, either: `.aux` content is substantially author-controlled through
+labels and TOC entries. The two surviving `[ -L ]` guards covered 2 of the 9 files a
+XeLaTeX run writes.
+
+This is the PR's own thesis one level up. The thesis was "a flag only protects the call
+sites somebody remembered to type it at", and the answer was "move the guarantee into a
+lint". Then the lint became the thing only some call sites invoke. **Ask, of every control
+you extract into a shared checker: who calls the checker, and what happens to the callers
+who do not?**
+
+The fix is four lines in the existing idiom — a whole-directory
+`find -type l -print -quit` sweep before any write — after which the narrow `[ -L ]` guards
+are genuinely redundant in CI and the script finally carries its guarantee everywhere.
+Keeping the narrow guards anyway is right: they cost nothing and they name the specific
+file rather than the first link found.
+
+## A test that skips is a test that did not run — say so where it was supposed to run
+
+Both new symlink suites probe the filesystem and skip when it cannot create links. Correct
+on Windows. On the Linux runner the probe will succeed — but **nothing asserted that it
+had**. A runner image that broke symlink creation would silently stop exercising the
+security tests, and the step would stay green.
+
+That is `compiled 0, skipped 1, failed 0` wearing a different hat, and it would have
+shipped in the same pull request that removes the original.
+
+**The fix is exactly the `--strict` shape, applied to the test suite instead of the gate:**
+an environment variable the CI job sets (`REQUIRE_SYMLINK_TESTS=1`) that turns the skip
+into a failure. Local runs keep the honest skip; the machine where the capability must
+exist asserts that it does.
+
+Generalised: *a conditional skip needs a caller who can say "not here it isn't."* Any
+`skipTest`/`SKIP` guarding a capability that is mandatory somewhere should have a way for
+that somewhere to demand it. Verify both directions — the skip path locally, and the fatal
+path by setting the variable on a box that genuinely lacks the capability, which is the
+one place you can observe the failure for free.
+
+## Two bans on one file need two messages, or the remediation advice contradicts itself
+
+A symlink named `latexmkrc` violates both of this lint's rules. Collapsing them with
+`elif` — reporting only the symlink — looked like sensible de-duplication and was a bug in
+the *advice*, not the detection. The symlink message ends:
+
+    Replace the link with the real file, or delete it.
+
+For this path that instructs the author to create a real `latexmkrc`, which is precisely
+what the other ban exists to prevent. The detection was fine either way; the report was
+telling somebody to do the dangerous thing.
+
+**When one artefact trips several rules, de-duplicate the FAILURE, never the GUIDANCE.**
+One non-zero exit, one entry per rule — because the remediation for rule A can be a
+violation of rule B, and the reader follows whichever text you printed.

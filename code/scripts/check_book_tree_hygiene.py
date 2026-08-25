@@ -173,11 +173,22 @@ def scan(
         # listed here and never descended, so this is the only chance to see it.
         for name in dirnames + filenames:
             path = Path(dirpath) / name
+            # Deliberately two independent `if`s, not `if`/`elif`. A symlink
+            # NAMED `latexmkrc` violates both bans and must be reported under
+            # both, because the two advisories say different things and only one
+            # of them is safe to follow in isolation:
+            #
+            #   symlink   -> "Replace the link with the real file, or delete it."
+            #   latexmkrc -> "Delete the file. Put latexmk settings in
+            #                 code/scripts/latexmk-safe.rc instead."
+            #
+            # Print only the symlink advisory and you have just instructed the
+            # author to replace the link with a REAL `latexmkrc` — the exact
+            # artefact the other ban exists to keep out of the tree. Reporting
+            # both costs one extra line and cannot mislead.
             if path.is_symlink():
                 symlinks.append(path)
-            elif name.lower() in FORBIDDEN_NAMES:
-                # `elif`: a symlink NAMED latexmkrc is reported once, as the
-                # symlink it is. Both bans catch it; only one message is useful.
+            if name.lower() in FORBIDDEN_NAMES:
                 hits.append(path)
 
     return sorted(hits), sorted(symlinks), unreadable

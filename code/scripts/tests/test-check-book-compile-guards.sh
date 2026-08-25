@@ -39,6 +39,14 @@ set -uo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd -P)"
 SCRIPT="$ROOT/code/scripts/check-book-compile.sh"
 
+# `--book-root` is gated so a normal invocation cannot reach it by accident.
+# This suite is the reason the seam exists, so it opts in explicitly.
+#
+# The fixtures below are built from static heredocs and must stay that way. If
+# they are ever parameterised from repository data, this flag becomes a route to
+# compiling unlinted content from outside the book tree.
+export CHECK_BOOK_COMPILE_SELF_TEST=1
+
 PASS=0
 FAIL=0
 
@@ -79,9 +87,14 @@ TEX
   out="$("$SCRIPT" --strict --book-root="$BOOKS" --manifest="$TMP/m1.txt" 2>&1)"
   status=$?
 
+  # Two guards can catch this: the whole-directory `find -type l` sweep, which
+  # fires first, and the narrower `[ -L "$dir/book.pdf" ]`. Either is a correct
+  # refusal, so assert on the outcome rather than on which one won the race —
+  # otherwise reordering the guards breaks the test without breaking the code.
   case "$status:$out" in
-    0:*) bad "symlinked book.pdf is refused" "exit status was 0; the guard did not fire" ;;
-    *"book.pdf is a symlink"*) ok "symlinked book.pdf is refused (exit $status)" ;;
+    0:*) bad "symlinked book.pdf is refused" "exit status was 0; no guard fired" ;;
+    *symlink*book.pdf*|*book.pdf*symlink*)
+      ok "symlinked book.pdf is refused (exit $status)" ;;
     *) bad "symlinked book.pdf is refused" "no symlink message. exit=$status output: $out" ;;
   esac
 
@@ -98,11 +111,53 @@ TEX
   else
     ok "a refused track is absent from the manifest"
   fi
+
+  # 1b. The case the narrow filename guards MISS, and the reason the sweep
+  # exists. `book.aux` is one of nine files a XeLaTeX run writes into this
+  # directory, and `openout_any=p` follows a link for every one of them — it
+  # vets the name, then opens it. Before the sweep, only `book.pdf` and
+  # `figures/*.pdf` were guarded, so this was an arbitrary write as the build
+  # user for anyone running the script locally.
+  BOOKS_AUX="$TMP/books-aux"
+  mkdir -p "$BOOKS_AUX/auxtrack/book"
+  cat > "$BOOKS_AUX/auxtrack/book/book.tex" <<'TEX'
+\documentclass{article}
+\begin{document}Hello.\end{document}
+TEX
+  AUX_SENTINEL="$TMP/aux-sentinel.txt"
+  printf 'original aux sentinel\n' > "$AUX_SENTINEL"
+  ln -s "$AUX_SENTINEL" "$BOOKS_AUX/auxtrack/book/book.aux"
+
+  out_aux="$("$SCRIPT" --strict --book-root="$BOOKS_AUX" --manifest="$TMP/m1b.txt" 2>&1)"
+  status_aux=$?
+
+  if [ "$status_aux" -ne 0 ] && printf '%s' "$out_aux" | grep -q 'symlink'; then
+    ok "a symlinked book.aux is refused (the filename guards alone would miss it)"
+  else
+    bad "a symlinked book.aux is refused (the filename guards alone would miss it)" \
+        "exit=$status_aux output: $out_aux"
+  fi
+
+  if [ "$(cat "$AUX_SENTINEL")" = "original aux sentinel" ]; then
+    ok "the book.aux symlink target was not written through"
+  else
+    bad "the book.aux symlink target was not written through" \
+        "sentinel now reads: $(cat "$AUX_SENTINEL")"
+  fi
 else
   rm -f "$TMP/probe"
-  echo "SKIP symlinked book.pdf is refused"
-  echo "     this filesystem cannot create symlinks (Windows without elevation or"
-  echo "     Developer Mode); the guard is exercised on the Linux CI runner."
+  # See the matching note in test_check_book_tree_hygiene.py. A skip is correct
+  # on a box that cannot create symlinks and is a silent hole on the runner
+  # where this is the test that matters, so CI sets REQUIRE_SYMLINK_TESTS=1 and
+  # the skip becomes a failure. Nothing else asserts the probe succeeded there.
+  if [ "${REQUIRE_SYMLINK_TESTS:-}" = "1" ]; then
+    bad "symlinked book.pdf is refused" \
+        "REQUIRE_SYMLINK_TESTS=1 but this filesystem cannot create symlinks, so the guard was NOT exercised."
+  else
+    echo "SKIP symlinked book.pdf is refused"
+    echo "     this filesystem cannot create symlinks (Windows without elevation or"
+    echo "     Developer Mode); the guard is exercised on the Linux CI runner."
+  fi
 fi
 
 # ---------------------------------------------------------------------------
