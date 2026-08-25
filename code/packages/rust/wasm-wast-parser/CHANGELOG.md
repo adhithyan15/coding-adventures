@@ -1,5 +1,28 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.65 — 2026-08-25 — SIMD PR44: v128.load8_lane/store8_lane text-form encoding
+
+### Added
+
+- New `SimdOpKind::Load8Lane | Store8Lane` match arm in both
+  `encode_stream_instr` and `encode_flat_instr` -- a GENUINELY NEW
+  encoder shape, distinct from the existing memarg-only arm
+  (`Load`/`Store`/etc.) and the existing lane-index-only arm
+  (`ExtractLane`/`ReplaceLane`): this carries BOTH a memarg AND a
+  lane-index immediate, in that order (memarg first), confirmed against
+  the pinned `simd_load8_lane.wast`/`simd_store8_lane.wast` corpus's own
+  source order (`(v128.load8_lane offset=N lane addr x)`). In folded
+  form: memarg tokens lead, the lane-index literal comes next, the two
+  operand expressions (address, existing v128) trail. In flat/stream
+  form: the two operands are already emitted by preceding instructions,
+  so only the memarg tokens and the trailing lane-index literal need
+  reading.
+- 1 new unit test:
+  `v128_load8_lane_and_store8_lane_encode_the_real_sub_opcode_with_a_combined_memarg_and_lane_index`,
+  covering the folded form (with explicit `offset=`) for both opcodes
+  and the flat/stream form for one, verifying the exact byte sequence
+  (sub-opcode, align, offset, THEN the raw lane-index byte).
+
 ## 0.1.64 — 2026-08-25 — SIMD PR42: v128.load_extend family text-form encoding
 
 ### Added

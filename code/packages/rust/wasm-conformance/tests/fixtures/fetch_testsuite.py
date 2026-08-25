@@ -643,6 +643,22 @@ TESTSUITE_FILES = [
     # earlier zero-opcode PRs in this campaign. See the NOTICE file for
     # the real vendored/pass counts.
     "simd_align.wast",
+    # SIMD PR44: simd_load8_lane.wast / simd_store8_lane.wast --
+    # `v128.load8_lane` (sub-opcode 0x54) / `v128.store8_lane` (0x58),
+    # the FIRST bite of the load{8,16,32,64}_lane/store{8,16,32,64}_lane
+    # family every PR since PR39 has been forecasting as "needs a new
+    # instruction SHAPE" and deferring. Genuinely new: combines an
+    # EXISTING v128 operand (whose other 15 lanes are preserved on
+    # load, or which the stored lane is read out of), a lane-index
+    # immediate (0-15, same `ImmLaneIdx16` shape `i8x16.extract_lane_s/
+    # u`/`replace_lane` use), AND a memarg (align/offset) in one
+    # instruction -- see `wasm-execution`'s new
+    # `DecodedOperand::SimdMemLane` variant. Deliberately scoped to
+    # JUST the 8-bit width pair, not all 8 files in this family at
+    # once -- the remaining 6 opcodes (16/32/64-bit widths) are later
+    # PRs' scope, same one-family-per-PR cadence PR40-42 established.
+    "simd_load8_lane.wast",
+    "simd_store8_lane.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under

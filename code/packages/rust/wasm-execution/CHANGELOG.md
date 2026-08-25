@@ -2,6 +2,54 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.54] - 2026-08-25 (SIMD PR44: v128.load8_lane/store8_lane)
+
+### Added
+
+- New `DecodedOperand::SimdMemLane { sub_opcode, offset, lane }` variant:
+  the FIRST SIMD operand shape needing THREE things together (a memarg,
+  a lane-index immediate, and -- read off the stack at execute time, not
+  carried in the operand itself -- an existing `v128`). No existing
+  variant fits: `MemArg` has no lane-index field; `Simd{sub_opcode,aux}`
+  (the shape every OTHER memarg-carrying SIMD op reuses) has only one
+  spare `u32` slot, already fully spoken for by the memarg offset.
+  `convert_operand` packs this via the SAME `simd_consts` const-pool
+  side-table `V128Const`/`Shuffle` already use for their own oversized
+  immediates (offset packed into slot bytes 0-3, lane into byte 4) --
+  sound for the identical reason `Shuffle`'s own doc comment gives: no
+  new field to thread through every call-frame save/restore site
+  `simd_consts` is already wired through.
+- `decode_function_body`'s `0xFD` branch: a new `sub_opcode == 0x54 ||
+  sub_opcode == 0x58` arm, checked BEFORE the generic memarg-detection
+  gate (every load/store-shaped SIMD opcode with an offset/align
+  immediate must be in this gate, per PR40's own decoder-desync lesson)
+  -- these two sub-opcodes carry ONE MORE immediate (the lane index)
+  than that gate knows to consume, so routing them through it would
+  silently drop the lane-index byte and desync the rest of the function
+  body.
+- `register_simd`: a new `sub_opcode == 0x54 || sub_opcode == 0x58`
+  early-dispatch branch (same "intercept before the generic `SimdOpKind`
+  lookup" pattern `v128.const`/`i8x16.shuffle` already use), implementing:
+  - `v128.load8_lane` (`0x54`): pop the existing `v128` (top of stack),
+    pop the `i32` base address, bounds-checked 1-byte read from memory 0
+    at `base + memarg offset`, overwrite ONLY the selected lane of the
+    popped `v128` with that byte (every other lane passes through
+    unchanged), push the result.
+  - `v128.store8_lane` (`0x58`): pop the `v128` to read a lane from, pop
+    the `i32` base address, bounds-checked 1-byte write of the selected
+    lane's byte to memory 0 at `base + memarg offset`.
+  - Defense-in-depth lane-index bounds check (`>= 16` errors cleanly,
+    same discipline as `i8x16.shuffle`'s own `>= 32` check) -- real
+    validation-time rejection lives in `wasm-validator` (see that
+    crate's own changelog), this is only a backstop against a hand-built
+    instruction stream that skipped validation.
+- 6 new dedicated unit tests: lane-preservation (every OTHER lane of the
+  base `v128` unchanged after `load8_lane`), nonzero memarg offset
+  honored, `store8_lane` writes only the selected lane with no
+  neighboring-byte corruption, out-of-bounds-memory traps cleanly (not a
+  panic) for both directions, and out-of-range lane index (`>= 16`)
+  errors cleanly (not a panic) for both directions.
+
 ## [0.9.53] - 2026-08-25 (SIMD PR42: v128.load_extend family)
 
 ### Added

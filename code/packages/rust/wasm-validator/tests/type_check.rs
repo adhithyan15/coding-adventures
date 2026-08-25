@@ -1040,6 +1040,65 @@ fn invalid_v128_load_extend_family_wrong_operand_type() {
 }
 
 #[test]
+fn valid_v128_load8_lane_and_store8_lane() {
+    // SIMD PR44: v128.load8_lane/v128.store8_lane -- a GENUINELY NEW
+    // type shape (not just "pop i32, push v128" like the load-family
+    // arm above): load8_lane pops an existing v128 (its other 15 lanes
+    // are preserved unchanged, invisible at the type level) THEN an i32
+    // address, pushes an updated v128; store8_lane pops the same
+    // v128-then-i32 pair, pushes nothing -- mirrors v128.load/v128.store's
+    // own pop order exactly, just with an extra v128 operand and a lane-
+    // index immediate that don't change the STACK shape. Real WAT syntax
+    // confirmed against the pinned simd_load8_lane.wast/
+    // simd_store8_lane.wast corpus: `(v128.load8_lane <lane> <addr>
+    // <v128>)`.
+    assert_valid(
+        r#"(module (memory 1)
+             (func (param i32 v128) (result v128) (v128.load8_lane 0 (local.get 0) (local.get 1)))
+             (func (param i32 v128) (result v128) (v128.load8_lane 15 (local.get 0) (local.get 1)))
+             (func (param i32 v128) (v128.store8_lane 0 (local.get 0) (local.get 1)))
+             (func (param i32 v128) (v128.store8_lane 15 (local.get 0) (local.get 1))))"#,
+    );
+}
+
+#[test]
+fn valid_v128_load8_lane_and_store8_lane_with_explicit_memarg() {
+    // Real corpus syntax puts the memarg attribute(s) BEFORE the bare
+    // lane-index literal: `(v128.load8_lane offset=4 4 ...)`.
+    assert_valid(
+        r#"(module (memory 1)
+             (func (param i32 v128) (result v128) (v128.load8_lane offset=4 4 (local.get 0) (local.get 1)))
+             (func (param i32 v128) (result v128) (v128.load8_lane align=1 4 (local.get 0) (local.get 1)))
+             (func (param i32 v128) (v128.store8_lane offset=4 align=1 4 (local.get 0) (local.get 1))))"#,
+    );
+}
+
+#[test]
+fn invalid_v128_load8_lane_and_store8_lane_with_no_memory_at_all() {
+    assert_invalid("(module (func (param i32 v128) (result v128) (v128.load8_lane 0 (local.get 0) (local.get 1))))");
+    assert_invalid("(module (func (param i32 v128) (v128.store8_lane 0 (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn invalid_v128_load8_lane_and_store8_lane_wrong_operand_type() {
+    // Same "type mismatch" shape the upstream simd_load8_lane.wast/
+    // simd_store8_lane.wast corpus itself checks: swapping the address
+    // and v128 operands (v128 where i32 is expected).
+    assert_invalid("(module (memory 1) (func (param v128) (result v128) (v128.load8_lane 0 (local.get 0) (i32.const 0))))");
+    assert_invalid("(module (memory 1) (func (param v128) (result v128) (v128.store8_lane 0 (local.get 0) (i32.const 0))))");
+}
+
+#[test]
+fn invalid_v128_load8_lane_and_store8_lane_lane_index_out_of_range() {
+    // SIMD PR37's own lesson, applied to this new combined shape: the
+    // validator must reject an out-of-range lane index VALUE (16 is one
+    // past i8x16's 0-15 range), not merely check the immediate's
+    // presence.
+    assert_invalid("(module (memory 1) (func (param i32 v128) (result v128) (v128.load8_lane 16 (local.get 0) (local.get 1))))");
+    assert_invalid("(module (memory 1) (func (param i32 v128) (v128.store8_lane 16 (local.get 0) (local.get 1))))");
+}
+
+#[test]
 fn valid_splat_family() {
     // SIMD widen PR16: i8x16.splat/i16x8.splat/i64x2.splat -- same
     // "pop scalar, push v128" shape as the already-implemented
