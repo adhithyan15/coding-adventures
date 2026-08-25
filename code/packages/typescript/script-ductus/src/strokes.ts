@@ -223,6 +223,10 @@ const chineseCharacterSource = (glyph: string): StrokeSource => {
   return letter.strokeOrderSource;
 };
 
+const simpleStroke = (label: string, path: Point[]): Stroke => ({
+  segments: [{ label, path }],
+});
+
 const cyrillicAlphabetSource = (glyph: string): StrokeSource => {
   const letter = cyrillic.letters.find((candidate) => candidate.glyph === glyph);
   if (!letter || !("strokeOrderSource" in letter) || !letter.strokeOrderSource) {
@@ -2046,6 +2050,225 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       ] }] },
     ],
     source: chineseCharacterSource("上"),
+  },
+  // These six entries close the font-checked ductus for the family and school
+  // vocabulary tranche. Their paths preserve Hanzi Writer Data's pinned PRC
+  // stroke order while fitting the bundled Noto Sans SC outlines.
+  [ductusKey("chinese", "儿")]: {
+    script: "chinese",
+    glyph: "儿",
+    strokes: [
+      simpleStroke("draw the short left-falling piě stroke from the upper centre down-left", [
+        { x: 296, y: 752 }, { x: 296, y: 376 }, { x: 288, y: 368 },
+        { x: 288, y: 312 }, { x: 280, y: 304 }, { x: 272, y: 232 },
+        { x: 264, y: 224 }, { x: 248, y: 160 }, { x: 208, y: 88 },
+        { x: 160, y: 32 },
+      ]),
+      simpleStroke("lift, then draw the vertical shù stroke down from the upper right, bend it right along the baseline, and hook upward without lifting", [
+        { x: 664, y: 736 }, { x: 664, y: 64 }, { x: 672, y: 56 },
+        { x: 672, y: 0 }, { x: 680, y: -16 }, { x: 704, y: -32 },
+        { x: 872, y: -32 }, { x: 888, y: -24 }, { x: 912, y: 8 },
+        { x: 912, y: 40 }, { x: 920, y: 48 }, { x: 920, y: 160 },
+        { x: 904, y: 176 }, { x: 904, y: 192 },
+      ]),
+    ],
+    source: chineseCharacterSource("儿"),
+  },
+  [ductusKey("chinese", "家")]: {
+    script: "chinese",
+    glyph: "家",
+    strokes: [
+      simpleStroke("draw the top dot down and right", [
+        { x: 432, y: 824 }, { x: 456, y: 808 }, { x: 480, y: 808 },
+        { x: 488, y: 792 }, { x: 488, y: 768 }, { x: 496, y: 760 },
+      ]),
+      simpleStroke("lift, then draw the left-side roof dot down and left", [
+        { x: 224, y: 712 }, { x: 128, y: 712 }, { x: 120, y: 704 },
+        { x: 120, y: 576 },
+      ]),
+      simpleStroke("lift, then draw the horizontal roof left-to-right and hook down-left without lifting", [
+        { x: 264, y: 712 }, { x: 488, y: 712 }, { x: 496, y: 720 },
+        { x: 512, y: 720 }, { x: 520, y: 712 }, { x: 872, y: 712 },
+        { x: 880, y: 704 }, { x: 880, y: 616 },
+      ]),
+      simpleStroke("lift, then draw the upper horizontal of the lower body from left to right", [
+        { x: 248, y: 552 }, { x: 456, y: 552 }, { x: 464, y: 544 },
+        { x: 488, y: 544 }, { x: 496, y: 552 }, { x: 640, y: 552 },
+      ]),
+      simpleStroke("lift, then draw its left-falling stroke", [
+        { x: 456, y: 504 }, { x: 448, y: 496 }, { x: 448, y: 480 },
+        { x: 424, y: 456 }, { x: 376, y: 448 }, { x: 304, y: 408 },
+        { x: 288, y: 408 }, { x: 264, y: 392 }, { x: 248, y: 392 },
+        { x: 240, y: 384 }, { x: 224, y: 384 }, { x: 192, y: 368 },
+        { x: 168, y: 368 }, { x: 160, y: 360 }, { x: 112, y: 360 },
+      ]),
+      simpleStroke("lift, then descend the centre and curve to a hook at the base without lifting", [
+        { x: 416, y: 456 }, { x: 432, y: 464 }, { x: 448, y: 448 },
+        { x: 448, y: 440 }, { x: 472, y: 416 }, { x: 488, y: 384 },
+        { x: 488, y: 368 }, { x: 504, y: 352 }, { x: 512, y: 352 },
+        { x: 528, y: 328 }, { x: 536, y: 296 }, { x: 552, y: 280 },
+        { x: 552, y: 224 }, { x: 560, y: 216 }, { x: 560, y: 184 },
+        { x: 568, y: 176 }, { x: 568, y: 96 }, { x: 560, y: 88 },
+        { x: 552, y: 32 }, { x: 512, y: -24 }, { x: 480, y: -40 },
+        { x: 456, y: -48 }, { x: 392, y: -48 }, { x: 360, y: -24 },
+      ]),
+      simpleStroke("lift, then add the short left-falling stroke beside the centre", [
+        { x: 456, y: 432 }, { x: 472, y: 416 }, { x: 488, y: 384 },
+        { x: 488, y: 368 }, { x: 496, y: 360 }, { x: 480, y: 344 },
+        { x: 448, y: 336 }, { x: 392, y: 296 }, { x: 264, y: 232 },
+        { x: 248, y: 232 }, { x: 232, y: 216 }, { x: 216, y: 216 },
+        { x: 208, y: 208 }, { x: 192, y: 208 }, { x: 160, y: 192 },
+        { x: 136, y: 192 },
+      ]),
+      simpleStroke("lift, then add the longer left-falling stroke below it", [
+        { x: 512, y: 344 }, { x: 528, y: 328 }, { x: 528, y: 312 },
+        { x: 552, y: 272 }, { x: 552, y: 224 }, { x: 536, y: 208 },
+        { x: 520, y: 208 }, { x: 488, y: 192 }, { x: 472, y: 176 },
+        { x: 464, y: 176 }, { x: 424, y: 144 }, { x: 400, y: 136 },
+        { x: 384, y: 120 }, { x: 288, y: 72 }, { x: 272, y: 72 },
+        { x: 216, y: 40 }, { x: 200, y: 40 }, { x: 192, y: 32 },
+        { x: 176, y: 32 }, { x: 144, y: 16 }, { x: 96, y: 16 },
+      ]),
+      simpleStroke("lift, then add the lower left-falling stroke", [
+        { x: 832, y: 432 }, { x: 792, y: 432 }, { x: 776, y: 416 },
+        { x: 768, y: 416 }, { x: 736, y: 384 }, { x: 680, y: 352 },
+        { x: 664, y: 320 }, { x: 648, y: 304 }, { x: 624, y: 304 },
+        { x: 616, y: 296 }, { x: 552, y: 280 }, { x: 536, y: 296 },
+        { x: 528, y: 328 },
+      ]),
+      simpleStroke("lift, then finish with the long right-falling nà stroke", [
+        { x: 528, y: 328 }, { x: 528, y: 312 }, { x: 552, y: 280 },
+        { x: 568, y: 288 }, { x: 592, y: 288 }, { x: 624, y: 304 },
+        { x: 648, y: 304 }, { x: 656, y: 312 }, { x: 672, y: 296 },
+        { x: 672, y: 280 }, { x: 720, y: 184 }, { x: 760, y: 136 },
+        { x: 760, y: 128 }, { x: 832, y: 56 }, { x: 840, y: 56 },
+        { x: 888, y: 16 }, { x: 928, y: 16 }, { x: 936, y: 24 },
+      ]),
+    ],
+    source: chineseCharacterSource("家"),
+  },
+  [ductusKey("chinese", "大")]: {
+    script: "chinese",
+    glyph: "大",
+    strokes: [
+      simpleStroke("draw the horizontal héng stroke from left to right", [
+        { x: 104, y: 512 }, { x: 472, y: 512 }, { x: 488, y: 496 },
+        { x: 504, y: 496 }, { x: 520, y: 512 }, { x: 896, y: 512 },
+      ]),
+      simpleStroke("lift, then start above the bar and draw the left-falling piě stroke through it", [
+        { x: 496, y: 792 }, { x: 496, y: 624 }, { x: 488, y: 616 },
+        { x: 488, y: 536 }, { x: 472, y: 512 }, { x: 496, y: 488 },
+        { x: 496, y: 472 }, { x: 464, y: 440 }, { x: 456, y: 424 },
+        { x: 448, y: 376 }, { x: 440, y: 368 }, { x: 432, y: 328 },
+        { x: 416, y: 304 }, { x: 416, y: 288 }, { x: 352, y: 176 },
+        { x: 320, y: 144 }, { x: 320, y: 136 }, { x: 232, y: 48 },
+        { x: 224, y: 48 }, { x: 200, y: 24 }, { x: 168, y: 8 },
+      ]),
+      simpleStroke("lift, return near the crossing, and draw the long right-falling nà stroke", [
+        { x: 464, y: 432 }, { x: 464, y: 440 }, { x: 496, y: 472 },
+        { x: 536, y: 432 }, { x: 552, y: 400 }, { x: 552, y: 384 },
+        { x: 576, y: 344 }, { x: 576, y: 328 }, { x: 616, y: 248 },
+        { x: 632, y: 232 }, { x: 640, y: 208 }, { x: 696, y: 144 },
+        { x: 696, y: 136 }, { x: 800, y: 32 }, { x: 808, y: 32 },
+        { x: 832, y: 8 }, { x: 856, y: 0 }, { x: 880, y: -24 },
+        { x: 896, y: -16 }, { x: 920, y: -16 }, { x: 928, y: -8 },
+      ]),
+    ],
+    source: chineseCharacterSource("大"),
+  },
+  [ductusKey("chinese", "小")]: {
+    script: "chinese",
+    glyph: "小",
+    strokes: [
+      simpleStroke("draw the centre vertical shù stroke downward and hook left without lifting", [
+        { x: 504, y: 776 }, { x: 504, y: 48 }, { x: 496, y: 40 },
+        { x: 496, y: -8 }, { x: 488, y: -24 }, { x: 464, y: -40 },
+        { x: 384, y: -40 },
+      ]),
+      simpleStroke("lift, then draw the short left-falling piě stroke", [
+        { x: 224, y: 496 }, { x: 216, y: 488 }, { x: 216, y: 472 },
+        { x: 200, y: 440 }, { x: 200, y: 416 }, { x: 192, y: 408 },
+        { x: 184, y: 368 }, { x: 96, y: 192 },
+      ]),
+      simpleStroke("lift, then draw the right dot downward", [
+        { x: 776, y: 520 }, { x: 792, y: 488 }, { x: 808, y: 472 },
+        { x: 824, y: 440 }, { x: 824, y: 424 }, { x: 864, y: 352 },
+        { x: 864, y: 336 }, { x: 880, y: 312 }, { x: 888, y: 272 },
+        { x: 904, y: 248 }, { x: 920, y: 184 },
+      ]),
+    ],
+    source: chineseCharacterSource("小"),
+  },
+  [ductusKey("chinese", "学")]: {
+    script: "chinese",
+    glyph: "学",
+    strokes: [
+      simpleStroke("draw the centre top dot downward", [
+        { x: 232, y: 768 }, { x: 232, y: 760 }, { x: 272, y: 704 },
+        { x: 272, y: 648 }, { x: 280, y: 640 }, { x: 384, y: 640 },
+      ]),
+      simpleStroke("lift, then draw the left top dot downward", [
+        { x: 448, y: 816 }, { x: 464, y: 816 }, { x: 496, y: 776 },
+        { x: 520, y: 728 }, { x: 520, y: 688 },
+      ]),
+      simpleStroke("lift, then draw the right top stroke down-left", [
+        { x: 768, y: 744 }, { x: 768, y: 736 }, { x: 744, y: 712 },
+        { x: 736, y: 656 }, { x: 720, y: 640 }, { x: 592, y: 640 },
+      ]),
+      simpleStroke("lift, then draw the left dot of the cover", [
+        { x: 236, y: 466 }, { x: 264, y: 464 },
+      ]),
+      simpleStroke("lift, then draw the horizontal cover and hook downward without lifting", [
+        { x: 112, y: 568 }, { x: 112, y: 632 }, { x: 120, y: 640 },
+        { x: 872, y: 640 }, { x: 888, y: 624 }, { x: 888, y: 512 },
+      ]),
+      simpleStroke("lift, then draw 子's top horizontal and turn down-left without lifting", [
+        { x: 336, y: 464 }, { x: 656, y: 464 }, { x: 664, y: 456 },
+        { x: 664, y: 440 }, { x: 656, y: 432 }, { x: 656, y: 416 },
+        { x: 640, y: 400 }, { x: 504, y: 328 },
+      ]),
+      simpleStroke("lift, then draw 子's vertical and hook left without lifting", [
+        { x: 504, y: 328 }, { x: 496, y: 312 }, { x: 496, y: 248 },
+        { x: 504, y: 240 }, { x: 496, y: 232 }, { x: 496, y: 0 },
+        { x: 488, y: -8 }, { x: 488, y: -24 }, { x: 456, y: -40 },
+        { x: 352, y: -40 },
+      ]),
+      simpleStroke("lift, then draw 子's bottom horizontal from left to right", [
+        { x: 96, y: 240 }, { x: 488, y: 240 }, { x: 496, y: 248 },
+        { x: 504, y: 240 }, { x: 896, y: 240 },
+      ]),
+    ],
+    source: chineseCharacterSource("学"),
+  },
+  [ductusKey("chinese", "生")]: {
+    script: "chinese",
+    glyph: "生",
+    strokes: [
+      simpleStroke("draw the short upper left-falling piě stroke", [
+        { x: 288, y: 792 }, { x: 256, y: 760 }, { x: 240, y: 696 }, { x: 224, y: 672 },
+        { x: 224, y: 632 }, { x: 216, y: 624 }, { x: 208, y: 600 },
+        { x: 192, y: 568 }, { x: 176, y: 536 }, { x: 152, y: 504 },
+        { x: 134, y: 480 },
+      ]),
+      simpleStroke("lift, then draw the upper horizontal héng stroke", [
+        { x: 320, y: 608 }, { x: 488, y: 608 }, { x: 496, y: 600 },
+        { x: 504, y: 608 }, { x: 856, y: 608 },
+      ]),
+      simpleStroke("lift, then draw the shorter middle horizontal héng stroke", [
+        { x: 168, y: 312 }, { x: 488, y: 312 }, { x: 496, y: 304 },
+        { x: 504, y: 312 }, { x: 824, y: 312 },
+      ]),
+      simpleStroke("lift, then draw the vertical shù stroke through the two bars", [
+        { x: 496, y: 792 }, { x: 496, y: 616 }, { x: 504, y: 608 },
+        { x: 496, y: 600 }, { x: 496, y: 320 }, { x: 504, y: 312 },
+        { x: 496, y: 304 }, { x: 496, y: 96 },
+      ]),
+      simpleStroke("lift, then draw the long bottom horizontal héng stroke", [
+        { x: 144, y: -16 }, { x: 488, y: -16 }, { x: 496, y: -8 },
+        { x: 504, y: -16 }, { x: 904, y: -16 },
+      ]),
+    ],
+    source: chineseCharacterSource("生"),
   },
   // Hanzi Writer Data draws 一 with a single left-to-right héng. There is nothing
   // to lift between, so the ductus is one stroke of one segment -- the shortest
