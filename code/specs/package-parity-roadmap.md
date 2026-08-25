@@ -7088,6 +7088,46 @@ extra-CI and OCaml owners remain collision-unsafe while live PRs #12149 and
 state now has 496 unique owners and 752 complete acyclic dependency edges, with
 one in-progress owner and no missing prerequisite.
 
+### TypeScript tracked-artifact implementation
+
+The TypeScript build tool now consumes the five language-neutral
+tracked-artifact fixtures through a pure in-memory snapshot adapter. It follows
+the closed error precedence, redacts hostile input, normalizes separators only
+lexically, counts and orders Unicode scalar values, detects exact, nested,
+case, and compatibility aliases of `node_modules`, and evaluates reserved
+Windows basenames with full uppercase. It adds no Git, filesystem, process,
+environment, network, or credential authority.
+
+The engine uses newly generated source-embedded Unicode 17.0.0 NFC, NFKC,
+full-fold, NFKC-plus-fold, and full-uppercase tables. The exact Unicode notice
+ships in the npm package and both manifest and lock metadata declare
+`MIT AND Unicode-3.0`. The generator verifies pinned upstream sizes and SHA-256
+identities, then executes both the generated Python and TypeScript runtimes over
+all 20,034 official normalization vectors, 1,585 C/F folding rows, 1,581
+unconditional uppercase mappings, derived NFKC-fold expectations, and Unicode
+17 sentinels before accepting either artifact.
+
+Seven generator tests, 34 focused validator tests, and the full 307-test Vitest
+suite pass. V8 coverage is 89.61% statements, 82.16% branches, 94.18%
+functions, and 89.51% lines overall; the validator reaches 100% statements,
+lines, and functions plus 95.04% branches. A pinned temporary TypeScript 5.9.2
+toolchain passes `tsc --noEmit`. Both literal npm BUILD steps, the complete
+111-case and 269-file neutral corpus, 201 conformance tests with 23 expected
+skips, the package-parity and capability suites, and Go test, vet, trimpath,
+and BUILD validation pass. The npm package has an explicit 18-file allowlist,
+includes the Unicode notice and generated source, and excludes local coverage
+and dependency trees. Production dependency audit is clean; the sole full
+audit finding is the already registered development-only `nanoid` owner.
+
+Independent differential review compared 1,183,049 Unicode inputs with the
+Python runtime without a mismatch. Independent security review found no
+authority, dependency, license, credential, or packaging blocker. Its initial
+package-allowlist finding and a separate persistent TypeScript full-vector
+self-check finding were both corrected and revalidated. The implementation is
+committed as `f67f787433d18061a21fdde81eef222a4d400173`; the exact-base inventory
+remains 15 established lanes, 1,373 identities, 4,566 slots, zero collisions,
+and zero unknown buckets.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
