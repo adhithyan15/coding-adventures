@@ -1,0 +1,21 @@
+{
+  "chapter": 60,
+  "title": "Animals",
+  "label": "ch:te-animals",
+  "canDo": "I can name five common animals in Telugu, and greet the house that keeps them.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "TE-C60-bird",
+    "kind": "production",
+    "summary": "Complete TE-C60-bird and demonstrate the chapter promise.",
+    "assesses": [
+      "TE-LEX-C60-ANIMAL-01",
+      "TE-LEX-C60-ANIMAL-02",
+      "TE-LEX-C60-ANIMAL-03",
+      "TE-LEX-C60-ANIMAL-04",
+      "TE-LEX-C60-ANIMAL-05"
+    ]
+  }
+}

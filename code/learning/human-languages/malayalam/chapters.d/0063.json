@@ -1,0 +1,21 @@
+{
+  "chapter": 63,
+  "title": "How the Body Reports",
+  "label": "ch:ml-how-the-body-reports",
+  "canDo": "I can name hunger, tiredness, pain, a cough and a fever in Malayalam.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "ML-C63-fever",
+    "kind": "production",
+    "summary": "Complete ML-C63-fever and say all five words in order.",
+    "assesses": [
+      "ML-LEX-C63-FEEL-01",
+      "ML-LEX-C63-FEEL-02",
+      "ML-LEX-C63-FEEL-03",
+      "ML-LEX-C63-FEEL-04",
+      "ML-LEX-C63-FEEL-05"
+    ]
+  }
+}

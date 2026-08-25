@@ -1,0 +1,25 @@
+{
+  "chapter": 14,
+  "title": "Having and Telling Your Age",
+  "label": "ch:it-having-and-age",
+  "canDo": "I can ask an Italian's age and give my own, saying that I have my years rather than that I am them.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "IT-C14-eta",
+    "kind": "task",
+    "summary": "Ask Quanti anni hai?, answer Ho venti anni with the doubled nn held, and hear hanno and anno come out identical because avere's h is silent.",
+    "assesses": [
+      "IT-LEX-AVERE-02",
+      "IT-GRAMMAR-AVERE-03",
+      "IT-ETYMON-AVERE-04",
+      "IT-GRAMMAR-NUMERI-17-20-02",
+      "IT-NOTICE-NUMERI-17-20-03",
+      "IT-LEX-ETA-02",
+      "IT-ETYMON-ETA-03",
+      "IT-GRAMMAR-ETA-04",
+      "IT-GRAMMAR-ETA-05"
+    ]
+  }
+}

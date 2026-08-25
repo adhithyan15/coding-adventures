@@ -1,0 +1,21 @@
+{
+  "chapter": 61,
+  "title": "In the Kitchen",
+  "label": "ch:ka-kitchen",
+  "canDo": "I can name five things in a Kannada kitchen, from the curd to the sugar.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "KA-C61-sugar",
+    "kind": "production",
+    "summary": "Complete KA-C61-sugar and say all five words in order.",
+    "assesses": [
+      "KA-LEX-C61-KITCHEN-01",
+      "KA-LEX-C61-KITCHEN-02",
+      "KA-LEX-C61-KITCHEN-03",
+      "KA-LEX-C61-KITCHEN-04",
+      "KA-LEX-C61-KITCHEN-05"
+    ]
+  }
+}

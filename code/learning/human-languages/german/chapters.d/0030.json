@@ -1,0 +1,30 @@
+{
+  "chapter": 30,
+  "title": "Eyes, Ears, Mouth, Nose",
+  "label": "ch:ge-face-parts",
+  "canDo": "I can name the eye, ear, mouth, and nose in German, and say which of the four traces to a confirmed ancient root and which does not.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "GE-C30-nase",
+    "kind": "production",
+    "summary": "The chapter closes on Nase, cousin of both English nose and Latin nasus by separate descent: the reader produces all four face parts with articles and plurals, names Auge and Ohr as words with confirmed Proto-Indo-European roots, names Mund as inherited but not traced further, and completes Chapter 17's face by running Kopf, Auge, Ohr, Mund, Nase, Hand together. It reaches back to Chapter 17's Kopf and Hand and to Chapter 26's hören, rescuing the disputed 'sharp-eared' link between hören and Ohr.",
+    "assesses": [
+      "GE-LEX-AUGE-02",
+      "GE-SOUND-AUGE-03",
+      "GE-ETYMON-AUGE-04",
+      "GE-LEX-OHR-02",
+      "GE-SOUND-OHR-03",
+      "GE-ETYMON-OHR-04",
+      "GE-LEX-MUND-02",
+      "GE-SOUND-MUND-03",
+      "GE-ETYMON-MUND-04",
+      "GE-LEX-NASE-02",
+      "GE-SOUND-NASE-03",
+      "GE-ETYMON-NASE-04",
+      "GE-LEX-KOPF-02",
+      "GE-LEX-HAND-02"
+    ]
+  }
+}

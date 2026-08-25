@@ -1,0 +1,22 @@
+{
+  "chapter": 6,
+  "title": "The First Verbs",
+  "label": "ch:first-verbs",
+  "canDo": "I can build short present-tense Gujarati sentences with the chapter's first verbs.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "GU-C05-practice",
+    "kind": "task",
+    "summary": "Complete GU-C05-practice, the canonical closing checkpoint, and demonstrate the chapter promise: build short present-tense Gujarati sentences with the chapter's first verbs.",
+    "assesses": [
+      "GU-CONCEPT-C03-HUN-01",
+      "GU-CONCEPT-C05-BOLVUN-01",
+      "GU-CONCEPT-C05-HUNGUJARATIBOLUNCHHUN-01",
+      "GU-CONCEPT-C05-KAAMKARVUN-01",
+      "GU-CONCEPT-C05-PRACTICE-01",
+      "GU-CONCEPT-C05-RAHEVUN-01"
+    ]
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "chapter": 2,
+  "title": "Courtesy and Responses",
+  "label": "ch:greetings",
+  "canDo": "I can thank someone, take my leave, answer yes or no, say that something is good, and write હા from a heard cue after a gentle copy-to-dictation ramp.",
+  "spineNodes": [
+    "SPINE-MEET-GREET",
+    "SPINE-COURTESY-THANK",
+    "SPINE-TAKE-LEAVE",
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "GU-C01-practice",
+    "kind": "task",
+    "summary": "Complete GU-C01-practice, choose an appropriate courtesy or response, and retrieve હા in writing from sound with no visible model.",
+    "assesses": [
+      "GU-CONCEPT-C01-AABHAAR-01",
+      "GU-CONCEPT-C01-AAVJO-01",
+      "GU-CONCEPT-C01-HAANAA-01",
+      "GU-CONCEPT-C01-NAMASTE-01",
+      "GU-CONCEPT-C01-PRACTICE-01",
+      "GU-CONCEPT-C01-SAARUN-01",
+      "GU-SCRIPT-HA-01",
+      "GU-SCRIPT-AA-MATRA-01"
+    ]
+  }
+}

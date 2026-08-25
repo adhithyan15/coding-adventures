@@ -1,0 +1,17 @@
+{
+  "chapter": 213,
+  "title": "Dijo Que --- Both Verbs Step Back",
+  "label": "ch:dijo-que",
+  "canDo": "I can report what someone said, with the tense the report actually needs.",
+  "spineNodes": [
+    "SPINE-REPORT-WHAT-OTHERS-SAID"
+  ],
+  "payoff": {
+    "lesson": "ES-C57-dijo-que",
+    "kind": "task",
+    "summary": "I can report what someone said, with the tense the report actually needs.",
+    "assesses": [
+      "ES-GRAMMAR-REPORTED-BACKSHIFT"
+    ]
+  }
+}

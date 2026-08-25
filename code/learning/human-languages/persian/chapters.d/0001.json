@@ -1,0 +1,23 @@
+{
+  "chapter": 1,
+  "title": "Greetings and responses",
+  "label": "ch:persian-greetings",
+  "canDo": "I can greet someone in Persian, respond courteously, answer yes or no, and copy one alef with a visible model.",
+  "spineNodes": [
+    "SPINE-MEET-GREET",
+    "SPINE-COURTESY-THANK",
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "FA-C01-practice",
+    "kind": "task",
+    "summary": "Hold a four-line greeting exchange, point to its right-to-left start, and copy one alef beside the visible model.",
+    "assesses": [
+      "FA-LEX-SALAM-01",
+      "FA-ETYMON-SALAM-SLM-02",
+      "FA-SCRIPT-RTL-01",
+      "FA-SCRIPT-ALEF-01"
+    ],
+    "note": "The schema-v2 opener and two-minute alef bridge introduce four measurable atoms, all revisited by FA-C01-practice. Mamnoon, bale and na remain legacy whole-word supports and are not falsely represented as typed atoms yet."
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 25,
+  "title": "Good Night",
+  "label": "ch:ta-good-night",
+  "canDo": "I can say good night in Tamil out of roots I already own, and trace every one of those forms back to நல்.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "TA-C25-goodnight-alternatives",
+    "kind": "production",
+    "summary": "Say nalla iravu and iravu vaṇakkam, then run nal- forward into nalam, naṉṟi and nalla.",
+    "assesses": [
+      "TA-ETYMON-INIYA-IRAVU-01",
+      "TA-LEX-GOODNIGHT-ALTERNATIVES-01"
+    ],
+    "note": "This chapter gained TA-W10-read-naan when the writing strand was extended to cover the glyphs chapters 2-3 had been explaining inline, and the payoff was not widened to match, so representativeness fell from 2/3 to 2/5 and this chapter joins payoffsNotRepresentative. That is the same trade chapter 13 records. Widening it means authoring a payoff that assesses both the good-night vocabulary and the ா sign, which is HL-C25 work."
+  }
+}

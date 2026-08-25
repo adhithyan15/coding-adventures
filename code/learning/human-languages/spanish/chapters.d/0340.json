@@ -1,0 +1,21 @@
+{
+  "chapter": 340,
+  "title": "Near, Far, and Which Side",
+  "label": "ch:cerca-y-lejos",
+  "canDo": "I can say cerca, lejos, a la derecha, a la izquierda and enfrente, and say why the left-hand side is the one Spanish word in the set that is older than Rome.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ES-C340-enfrente",
+    "kind": "production",
+    "summary": "Complete ES-C340-enfrente: place a thing near or far, send somebody right or left, and put one thing facing another.",
+    "assesses": [
+      "ES-LEX-C340-WHERE-01",
+      "ES-LEX-C340-WHERE-02",
+      "ES-LEX-C340-WHERE-03",
+      "ES-LEX-C340-WHERE-04",
+      "ES-LEX-C340-WHERE-05"
+    ]
+  }
+}

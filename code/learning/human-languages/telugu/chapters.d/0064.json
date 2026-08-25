@@ -1,0 +1,21 @@
+{
+  "chapter": 64,
+  "title": "Words That Join an Answer",
+  "label": "ch:te-joining-words",
+  "canDo": "I can add to a Telugu answer, limit it, put it in order, or say it is not finished.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "TE-C64-still",
+    "kind": "production",
+    "summary": "Complete TE-C64-still and demonstrate the chapter promise.",
+    "assesses": [
+      "TE-LEX-C64-JOIN-01",
+      "TE-LEX-C64-JOIN-02",
+      "TE-LEX-C64-JOIN-03",
+      "TE-LEX-C64-JOIN-04",
+      "TE-LEX-C64-JOIN-05"
+    ]
+  }
+}

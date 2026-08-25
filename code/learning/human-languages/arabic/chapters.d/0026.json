@@ -1,0 +1,18 @@
+{
+  "chapter": 26,
+  "title": "Night",
+  "label": "ch:ar-night",
+  "canDo": "I can say 'night' in Arabic and point to layl inside the midnight phrase I already know.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "AR-C26-layl",
+    "kind": "production",
+    "summary": "Say layl, find it inside muntaṣaf al-layl, and pair it with yawm as the other pan-Semitic half of the day.",
+    "assesses": [
+      "AR-CONCEPT-C26-LAYL-01",
+      "AR-CONCEPT-C26-LAYL-02"
+    ]
+  }
+}

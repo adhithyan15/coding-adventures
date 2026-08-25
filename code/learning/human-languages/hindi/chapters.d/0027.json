@@ -1,0 +1,18 @@
+{
+  "chapter": 27,
+  "title": "Good Night",
+  "label": "ch:hi-good-night",
+  "canDo": "I can wish someone good night in Hindi and say why the phrase uses literary रात्रि rather than everyday रात.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "HI-C27-shubh-raatri",
+    "kind": "production",
+    "summary": "Say शुभ रात्रि at parting, name the raat / rātri register pair, and trace śubh from 'to shine' to 'auspicious'.",
+    "assesses": [
+      "HI-CONCEPT-C27-SHUBH-RAATRI-01",
+      "HI-CONCEPT-C27-SHUBH-RAATRI-02"
+    ]
+  }
+}

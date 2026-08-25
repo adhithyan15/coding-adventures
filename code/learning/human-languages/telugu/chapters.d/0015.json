@@ -1,0 +1,20 @@
+{
+  "chapter": 15,
+  "title": "Water and Rice",
+  "label": "ch:te-water-and-rice",
+  "canDo": "I can ask for water in Telugu and tell raw rice apart from cooked rice.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "TE-C15-neellu-biyyam",
+    "kind": "task",
+    "summary": "Say నీళ్ళు — matching Tamil and Kannada — then separate బియ్యం, Telugu's own word for raw rice, from అన్నం, the cooked rice on the plate.",
+    "assesses": [
+      "TE-LEX-C14-RUTUVULU-01",
+      "TE-PRAGMATICS-C14-RUTUVULU-02",
+      "TE-ETYMON-C15-NEELLU-BIYYAM-01",
+      "TE-ETYMON-C15-NEELLU-BIYYAM-02"
+    ]
+  }
+}

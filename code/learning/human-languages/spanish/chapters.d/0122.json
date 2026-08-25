@@ -1,0 +1,19 @@
+{
+  "chapter": 122,
+  "title": "The Future --- Saying What Will Happen",
+  "label": "ch:spanish-futuro",
+  "canDo": "I can say what I will do, in the singular, across all three verb families.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "ES-C17-vivir-futuro",
+    "kind": "task",
+    "summary": "The future endings ride on the whole infinitive, one family at a time.",
+    "assesses": [
+      "ES-GRAMMAR-AR-FUTURE-SINGULAR",
+      "ES-PATTERN-ER-FUTURE-SINGULAR",
+      "ES-GRAMMAR-IR-FUTURE-SINGULAR"
+    ]
+  }
+}

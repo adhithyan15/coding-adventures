@@ -1,0 +1,18 @@
+{
+  "chapter": 18,
+  "title": "Weather",
+  "label": "ch:ar-weather",
+  "canDo": "I can say what the weather is doing in Arabic -- hot, cold, or raining.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "AR-C18-al-taqs",
+    "kind": "production",
+    "summary": "Say aṭ-ṭaqs, then the verbless al-jaw ḥārr / al-jaw bārid, then innahā tumṭir, which does take a verb.",
+    "assesses": [
+      "AR-CONCEPT-C18-AL-TAQS-01",
+      "AR-CONCEPT-C18-AL-TAQS-02"
+    ]
+  }
+}

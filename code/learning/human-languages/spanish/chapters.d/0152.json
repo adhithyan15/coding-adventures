@@ -1,0 +1,19 @@
+{
+  "chapter": 152,
+  "title": "Synthesis --- Saying Something About Your Own Life",
+  "label": "ch:spanish-synthesis-describing",
+  "canDo": "I can describe things around me with the nouns and colours I hold, choosing un rather than el.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C40-sintesis-describir",
+    "kind": "dialogue",
+    "summary": "Fourteen chapters of nouns and colours, combined for the first time - and the article that makes it possible.",
+    "assesses": [
+      "ES-GRAMMAR-INDEFINITE-ARTICLE-MASCULINE",
+      "ES-GRAMMAR-TENER-PRESENT-SINGULAR",
+      "ES-LEX-PERRO-03"
+    ]
+  }
+}

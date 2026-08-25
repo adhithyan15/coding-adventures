@@ -1,0 +1,29 @@
+{
+  "chapter": 6,
+  "title": "Asking Someone's Name",
+  "label": "ch:asking-a-name",
+  "canDo": "I can ask someone's name in either register and say it was a pleasure.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING",
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "ES-C03-practice",
+    "kind": "dialogue",
+    "summary": "Asking Someone's Name — the chapter run end to end.",
+    "assesses": [
+      "ES-LEX-COMO",
+      "ES-ETYMON-QUOMODO",
+      "ES-SCRIPT-INVERTED-QUESTION",
+      "ES-GRAMMAR-QUESTION-ACCENT",
+      "ES-ETYMON-QUESTION-QU",
+      "ES-LEX-SE-LLAMA",
+      "ES-LEX-TE-LLAMAS",
+      "ES-GRAMMAR-REFLEXIVE-THIRD-PERSON",
+      "ES-LEX-COMO-SE-LLAMA",
+      "ES-LEX-MUCHO",
+      "ES-LEX-GUSTO",
+      "ES-LEX-MUCHO-GUSTO"
+    ]
+  }
+}

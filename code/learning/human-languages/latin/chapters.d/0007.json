@@ -1,0 +1,21 @@
+{
+  "chapter": 7,
+  "title": "Family",
+  "label": "ch:la-family",
+  "canDo": "I can name my father, mother, brother, and sister in Latin, and say why Spanish stopped using frāter.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "LA-C07-frater-soror",
+    "kind": "production",
+    "summary": "Name the four household members aloud, then trace frāter germānus down to Spanish hermano.",
+    "assesses": [
+      "LA-ETYMON-PATER-MATER-01",
+      "LA-ETYMON-PATER-MATER-02",
+      "LA-ETYMON-FRATER-SOROR-01",
+      "LA-ETYMON-FRATER-SOROR-02",
+      "LA-PRAGMATICS-FRATER-SOROR-03"
+    ]
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "chapter": 139,
+  "title": "Black, White, Red, and Blue",
+  "label": "ch:spanish-black-white-red-blue",
+  "canDo": "I can name black, white, red and blue in Spanish and say which of them Spanish borrowed rather than inherited.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C22-azul",
+    "kind": "task",
+    "summary": "Say negro, blanco, rojo and azul, then sort them by origin: negro inherited from Latin, blanco traditionally linked to the Germanic Visigoths, rojo a cousin of English red by a different Latin branch, and azul carried in from Arabic lāzaward.",
+    "assesses": [
+      "ES-ETYMON-NEGRO-02",
+      "ES-ETYMON-BLANCO-04",
+      "ES-LEX-ROJO-01",
+      "ES-ETYMON-ROJO-02",
+      "ES-LEX-AZUL-03",
+      "ES-ETYMON-AZUL-04"
+    ]
+  }
+}

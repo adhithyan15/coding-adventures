@@ -1,0 +1,21 @@
+{
+  "chapter": 54,
+  "title": "Things in the House",
+  "label": "ch:ta-things-in-the-house",
+  "canDo": "I can name the mat, basket, knife, bowl and box a Tamil house sets out for a guest.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "TA-C54-box",
+    "kind": "production",
+    "summary": "Complete TA-C54-box and say all five words in order.",
+    "assesses": [
+      "TA-LEX-C54-HOUSE-01",
+      "TA-LEX-C54-HOUSE-02",
+      "TA-LEX-C54-HOUSE-03",
+      "TA-LEX-C54-HOUSE-04",
+      "TA-LEX-C54-HOUSE-05"
+    ]
+  }
+}

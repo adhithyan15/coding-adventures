@@ -1,0 +1,29 @@
+{
+  "chapter": 41,
+  "title": "Walking, Running, Opening, Closing",
+  "label": "ch:la-motion-verbs",
+  "canDo": "I can say I walk, I run, I open and I close in Latin, produce the he-or-she form of each, name the conjugation each belongs to, and say what a Latin prefix does to the verb it sits on.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "LA-C41-claudo",
+    "kind": "production",
+    "summary": "The chapter closes on claudō: after learning it the reader produces all four first-person forms and all four third-person forms in sequence — ambulō, currō, aperiō, claudō and ambulat, currit, aperit, claudit — reads include/exclude beside accept/except and intellegō as one prefix rule, and so retrieves capiō and intellegō from two and three chapters back, neither of them revisited before now.",
+    "assesses": [
+      "LA-LEX-AMBULO-01",
+      "LA-LEX-CURRO-01",
+      "LA-LEX-APERIO-01",
+      "LA-ETYMON-APERIO-02",
+      "LA-ETYMON-APERIO-OPERIO-03",
+      "LA-LEX-CLAUDO-01",
+      "LA-ETYMON-CLAUDO-02",
+      "LA-LEX-CAPIO-01",
+      "LA-ETYMON-CAPIO-02",
+      "LA-LEX-INTELLEGO-01",
+      "LA-ETYMON-INTELLEGO-02",
+      "LA-ETYMON-SEDEO-02",
+      "LA-ETYMON-INHERITED-VS-BORROWED-03"
+    ]
+  }
+}

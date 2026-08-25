@@ -1,0 +1,27 @@
+{
+  "chapter": 40,
+  "title": "The Meal",
+  "label": "ch:ml-the-meal",
+  "canDo": "I can say I am having a meal in Malayalam, using a second eat-verb this book never taught until now, and close the polite-request-and-repair stretch that dayavaayi opened eight chapters ago.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "ML-C40-oon",
+    "kind": "production",
+    "summary": "Say njaan oon unnunnu against Chapter 32's tinnunnu, say enikku oon ishtamaanu on Chapter 6's dative and Chapter 34's frame, and name kshamikkanam as the repair half of the spine node dayavaayi's asking half opened.",
+    "assesses": [
+      "ML-CONCEPT-C40-OON-01",
+      "ML-CONCEPT-C40-OON-02",
+      "ML-CONCEPT-C40-OON-03",
+      "ML-CONCEPT-C32-TINNUKA-01",
+      "ML-CONCEPT-C09-KSHAMIKKANAM-01",
+      "ML-CONCEPT-C09-KSHAMIKKANAM-02",
+      "ML-CONCEPT-C09-KSHAMIKKANAM-03",
+      "ML-CONCEPT-C06-DATIVE-IKKU-01",
+      "ML-CONCEPT-C06-DATIVE-IKKU-02",
+      "ML-CONCEPT-C06-DATIVE-SUBJECT-03",
+      "ML-CONCEPT-C39-PAAL-01"
+    ]
+  }
+}

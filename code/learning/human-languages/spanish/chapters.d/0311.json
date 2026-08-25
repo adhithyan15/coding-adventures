@@ -1,0 +1,21 @@
+{
+  "chapter": 311,
+  "title": "La Tienda Y La Cuenta --- Shop, Bill, Price, Bag, Seat",
+  "label": "ch:la-tienda-y-la-cuenta",
+  "canDo": "I can carry out a transaction in Spanish: find the shop, ask the price, ask for the bill, ask for a bag and ask for a seat.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "ES-C311-asiento",
+    "kind": "production",
+    "summary": "Complete ES-C311-asiento: walk in, ask the price, ask for the bill, take the bag and ask for a seat.",
+    "assesses": [
+      "ES-LEX-C311-ASK-06",
+      "ES-LEX-C311-ASK-07",
+      "ES-LEX-C311-ASK-08",
+      "ES-LEX-C311-ASK-09",
+      "ES-LEX-C311-ASK-10"
+    ]
+  }
+}

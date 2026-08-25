@@ -1,0 +1,21 @@
+{
+  "chapter": 60,
+  "title": "Things People Make",
+  "label": "ch:ta-things-people-make",
+  "canDo": "I can name a needle, a rope, an umbrella, a broom and a comb in Tamil.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "TA-C60-comb",
+    "kind": "production",
+    "summary": "Complete TA-C60-comb and say all five words in order.",
+    "assesses": [
+      "TA-LEX-C60-MADE-01",
+      "TA-LEX-C60-MADE-02",
+      "TA-LEX-C60-MADE-03",
+      "TA-LEX-C60-MADE-04",
+      "TA-LEX-C60-MADE-05"
+    ]
+  }
+}

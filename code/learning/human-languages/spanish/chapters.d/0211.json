@@ -1,0 +1,17 @@
+{
+  "chapter": 211,
+  "title": "Dice Que --- Someone Else's Sentence, Inside Yours",
+  "label": "ch:dice-que",
+  "canDo": "I can report what someone says right now.",
+  "spineNodes": [
+    "SPINE-REPORT-WHAT-OTHERS-SAID"
+  ],
+  "payoff": {
+    "lesson": "ES-C57-dice-que",
+    "kind": "task",
+    "summary": "I can report what someone says right now.",
+    "assesses": [
+      "ES-GRAMMAR-REPORTED-QUE-OBLIGATORY"
+    ]
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "chapter": 1,
+  "title": "Namaskar, Piece by Piece",
+  "label": "ch:first-greeting-script",
+  "canDo": "I can hear and say namaskār, move हो from tracing through dictation, and read नमस्कार by assembling only signs I have already practised.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "MR-W01-namaskar-read",
+    "kind": "task",
+    "summary": "Read नमस्कार and copy it only after hearing its meaning, writing हो from memory and sound, and tracing every load-bearing sign in its own short lesson.",
+    "assesses": [
+      "MR-LEX-NAMASKAR-01",
+      "MR-SCRIPT-HA-01",
+      "MR-SCRIPT-O-MATRA-01",
+      "MR-SCRIPT-NA-01",
+      "MR-SCRIPT-AA-MATRA-01",
+      "MR-SCRIPT-II-MATRA-01",
+      "MR-SCRIPT-MA-01",
+      "MR-SCRIPT-SA-01",
+      "MR-SCRIPT-KA-01",
+      "MR-SCRIPT-VIRAMA-01",
+      "MR-SCRIPT-RA-01",
+      "MR-SCRIPT-NAMASKAR-READ-01"
+    ],
+    "note": "The chapter reaches the twelve-atom ceiling exactly without combining signs or asking for whole-word decoding before the one-sign lessons."
+  }
+}

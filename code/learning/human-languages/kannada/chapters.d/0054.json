@@ -1,0 +1,21 @@
+{
+  "chapter": 54,
+  "title": "The Tree",
+  "label": "ch:ka-tree",
+  "canDo": "I can name a tree and its parts in Kannada, from the seed it started as to the branch at the top.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "KA-C54-seed",
+    "kind": "production",
+    "summary": "Complete KA-C54-seed and say all five words in order.",
+    "assesses": [
+      "KA-LEX-C54-TREE-01",
+      "KA-LEX-C54-TREE-02",
+      "KA-LEX-C54-TREE-03",
+      "KA-LEX-C54-TREE-04",
+      "KA-LEX-C54-TREE-05"
+    ]
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "chapter": 13,
+  "title": "Colours",
+  "label": "ch:pt-colours",
+  "canDo": "I can name black, white, red and blue in Portuguese and say why not one of the four is a plain inherited Latin colour word.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C13-vermelho-azul",
+    "kind": "task",
+    "summary": "Say preto, branco, vermelho and azul, take vermelho back to vermiculus, the little worm crushed for dye, and azul back to Arabic lāzaward.",
+    "assesses": [
+      "PT-ETYMON-PRETO-BRANCO-02",
+      "PT-ETYMON-PRETO-BRANCO-03",
+      "PT-ETYMON-PRETO-BRANCO-04",
+      "PT-ETYMON-VERMELHO-AZUL-02",
+      "PT-ETYMON-VERMELHO-AZUL-03",
+      "PT-NOTICE-VERMELHO-AZUL-04"
+    ]
+  }
+}

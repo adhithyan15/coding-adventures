@@ -1,0 +1,17 @@
+{
+  "chapter": 233,
+  "title": "O --- One Letter, One Catch",
+  "label": "ch:o",
+  "canDo": "I can offer a choice between two things.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C61-o",
+    "kind": "task",
+    "summary": "I can offer a choice between two things.",
+    "assesses": [
+      "ES-LEX-O"
+    ]
+  }
+}

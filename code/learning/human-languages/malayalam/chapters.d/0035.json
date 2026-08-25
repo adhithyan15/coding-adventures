@@ -1,0 +1,22 @@
+{
+  "chapter": 35,
+  "title": "Family and Friend",
+  "label": "ch:ml-family-and-friend",
+  "canDo": "I can name my family as a group and name a friend in Malayalam, and say which of the two words is a Sanskrit loan and which of Malayalam's two friend-words leans on a borrowed ending even though its root is native.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "ML-C35-suhruthu",
+    "kind": "production",
+    "summary": "Say ithu ente kudumbamaanu and ithu ente suhruthaanu, take suhruthu apart into su plus hrid, and name the six Chapter 12 people-words next to the one group-word none of them supplied.",
+    "assesses": [
+      "ML-CONCEPT-C35-SUHRUTHU-01",
+      "ML-CONCEPT-C35-SUHRUTHU-02",
+      "ML-CONCEPT-C35-KUDUMBAM-01",
+      "ML-CONCEPT-C35-KUDUMBAM-02",
+      "ML-CONCEPT-C12-KUDUMBAM-01",
+      "ML-CONCEPT-C12-KUDUMBAM-02"
+    ]
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "chapter": 32,
+  "title": "Good Morning",
+  "label": "ch:la-good-morning",
+  "canDo": "I can say good morning in Latin, and describe the salūtātiō Romans actually performed at dawn.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "LA-C32-bonum-mane",
+    "kind": "dialogue",
+    "summary": "Say bonum māne, note that its neuter case is invisible, and describe the dawn salūtātiō Romans really used.",
+    "assesses": [
+      "LA-GRAMMAR-MANE-01",
+      "LA-ETYMON-MANE-02",
+      "LA-PHONO-SALVE-01",
+      "LA-ETYMON-SALVE-02",
+      "LA-GRAMMAR-SALVE-03",
+      "LA-PRAGMATICS-BONUM-MANE-01",
+      "LA-PRAGMATICS-BONUM-MANE-02"
+    ]
+  }
+}

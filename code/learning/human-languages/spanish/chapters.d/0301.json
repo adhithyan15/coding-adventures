@@ -1,0 +1,21 @@
+{
+  "chapter": 301,
+  "title": "Five More Things You Ask For --- Rope, Needle, Thread, Basket, Paper",
+  "label": "ch:mas-cosas-que-pedir",
+  "canDo": "I can ask for a rope, a needle, thread, a basket and paper in Spanish, politely.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "ES-C301-papel",
+    "kind": "production",
+    "summary": "Complete ES-C301-papel: ask for all five in turn, with por favor on the end of each.",
+    "assesses": [
+      "ES-LEX-C301-ASK-01",
+      "ES-LEX-C301-ASK-02",
+      "ES-LEX-C301-ASK-03",
+      "ES-LEX-C301-ASK-04",
+      "ES-LEX-C301-ASK-05"
+    ]
+  }
+}

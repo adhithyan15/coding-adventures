@@ -1,0 +1,17 @@
+{
+  "chapter": 217,
+  "title": "Synthesis --- Carrying a Conversation",
+  "label": "ch:sintesis-reportar",
+  "canDo": "I can report a whole exchange to somebody who was not there.",
+  "spineNodes": [
+    "SPINE-REPORT-WHAT-OTHERS-SAID"
+  ],
+  "payoff": {
+    "lesson": "ES-C57-sintesis-reportar",
+    "kind": "task",
+    "summary": "I can report a whole exchange to somebody who was not there.",
+    "assesses": [
+      "ES-GRAMMAR-REPORTED-BACKSHIFT"
+    ]
+  }
+}

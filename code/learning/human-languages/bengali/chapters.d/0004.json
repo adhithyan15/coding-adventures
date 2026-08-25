@@ -1,0 +1,22 @@
+{
+  "chapter": 4,
+  "title": "Farewells",
+  "label": "ch:farewells",
+  "canDo": "I can end a Bengali conversation politely and choose a farewell that fits the situation.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "BN-C04-practice",
+    "kind": "task",
+    "summary": "Complete BN-C04-practice, the canonical closing checkpoint, and demonstrate the chapter promise: end a Bengali conversation politely and choose a farewell that fits the situation.",
+    "assesses": [
+      "BN-CONCEPT-C01-ASHI-01",
+      "BN-CONCEPT-C04-ABAR-01",
+      "BN-CONCEPT-C04-ABARDEKHAHOBE-01",
+      "BN-CONCEPT-C04-DEKHAHOBE-01",
+      "BN-CONCEPT-C04-KALDEKHAHOBE-01",
+      "BN-CONCEPT-C04-PRACTICE-01"
+    ]
+  }
+}

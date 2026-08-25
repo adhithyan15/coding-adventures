@@ -1,0 +1,25 @@
+{
+  "chapter": 11,
+  "title": "Friend, Family, Brother, and Sister",
+  "label": "ch:pa-friend-and-family",
+  "canDo": "I can name a friend, a family, a brother, and a sister in Punjabi, split ਪਰਿਵਾਰ into its two Sanskrit pieces, and hear the same low tone open both ਭਰਾ and ਭੈਣ even though only one of the two is truly a cousin of its English counterpart.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "PA-C11-bhain",
+    "kind": "production",
+    "summary": "The chapter closes on ਭੈਣ, said pàiṇ with the same initial-bh-to-low-tone shift as ਭਰਾ: the reader produces ਦੋਸਤ, ਪਰਿਵਾਰ, ਭਰਾ and ਭੈਣ, states that ਭਰਾ is the unbroken PIE cousin of brother while ਭੈਣ descends from bhaginī and is NOT a cousin of sister, and names the tone rule's low-tone, word-initial case for the first time on a noun rather than a verb.",
+    "assesses": [
+      "PA-LEX-BHAIN",
+      "PA-ETYMON-BHAIN-BHAGA",
+      "PA-LEX-BHARA",
+      "PA-ETYMON-BHARA-BROTHER",
+      "PA-SOUND-TONE-LOW",
+      "PA-LEX-DOST",
+      "PA-ETYMON-DOST-CHOOSE",
+      "PA-LEX-PARIVAR",
+      "PA-ETYMON-PARIVAR-SURROUND"
+    ]
+  }
+}

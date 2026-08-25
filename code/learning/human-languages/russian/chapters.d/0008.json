@@ -1,0 +1,24 @@
+{
+  "chapter": 8,
+  "title": "Family",
+  "label": "ch:russian-family",
+  "canDo": "I can name a family in Russian, and say what its own root shares with the English word home.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "RU-C08-semya",
+    "kind": "production",
+    "summary": "A one-lesson chapter that gathers Chapter 7's four people under семья, and reaches all the way back to Chapter 3's жить to rescue that lesson's stranded etymon — the two words share an idea, if not a root, and the chapter says so honestly.",
+    "assesses": [
+      "RU-LEX-SEMYA",
+      "RU-ETYMON-SEMYA-HOME",
+      "RU-LEX-DRUG",
+      "RU-LEX-PODRUGA",
+      "RU-LEX-BRAT-NOUN",
+      "RU-LEX-SESTRA",
+      "RU-LEX-ZHIT",
+      "RU-ETYMON-ZHIT-QUICK"
+    ]
+  }
+}

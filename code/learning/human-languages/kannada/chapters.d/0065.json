@@ -1,0 +1,21 @@
+{
+  "chapter": 65,
+  "title": "More Good Manners",
+  "label": "ch:ka-manners",
+  "canDo": "I can name what Kannada courtesy is made of, from a request to good manners.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "KA-C65-manners",
+    "kind": "production",
+    "summary": "Complete KA-C65-manners and say all five words in order.",
+    "assesses": [
+      "KA-LEX-C65-MANNERS-01",
+      "KA-LEX-C65-MANNERS-02",
+      "KA-LEX-C65-MANNERS-03",
+      "KA-LEX-C65-MANNERS-04",
+      "KA-LEX-C65-MANNERS-05"
+    ]
+  }
+}

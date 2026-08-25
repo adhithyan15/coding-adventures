@@ -1,0 +1,21 @@
+{
+  "chapter": 84,
+  "title": "La --- The Pronoun Carries What Left",
+  "label": "ch:pronoun-la",
+  "canDo": "I can replace a feminine noun with la, and explain that the pronoun carries a gender the sentence no longer states.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C42-la",
+    "kind": "task",
+    "summary": "Complete ES-C42-la: turn Hago la comida into La hago and say what decides between lo and la.",
+    "assesses": [
+      "ES-LEX-LA-OBJECT",
+      "ES-GRAMMAR-DIRECT-OBJECT-LA",
+      "ES-GRAMMAR-NOUN-GENDER",
+      "ES-ETYMON-ILLE-ILLA"
+    ],
+    "note": "First point in the path where a word must remember a property of something that has been removed from the sentence."
+  }
+}

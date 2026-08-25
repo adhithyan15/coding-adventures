@@ -1,0 +1,21 @@
+{
+  "chapter": 54,
+  "title": "The Tree",
+  "label": "ch:te-tree",
+  "canDo": "I can name a tree and its parts in Telugu, from the seed it started as to the branch at the top.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "TE-C54-seedling",
+    "kind": "production",
+    "summary": "Complete TE-C54-seedling and demonstrate the chapter promise.",
+    "assesses": [
+      "TE-LEX-C54-TREE-01",
+      "TE-LEX-C54-TREE-02",
+      "TE-LEX-C54-TREE-03",
+      "TE-LEX-C54-TREE-04",
+      "TE-LEX-C54-TREE-05"
+    ]
+  }
+}

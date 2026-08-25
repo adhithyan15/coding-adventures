@@ -1,0 +1,21 @@
+{
+  "chapter": 36,
+  "title": "Cups, Plates, and More Than One",
+  "label": "ch:ar-cups-plates-and-more-than-one",
+  "canDo": "I can ask for oil, a cup, a plate and a spoon in Arabic, and I can tell a broken plural from a sound one and say which kind of noun usually takes which.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "AR-C36-milaqa",
+    "kind": "production",
+    "summary": "Set the mi- tool shape of milʿaqa and mirʾāh against the ma- place shape of maṭʿam and maktab, then sort the plurals: akwāb, aṭbāq and malāʿiq re-poured into a new shape against qahawāt and ṣadīqāt, which only add an ending — and ask for each thing with min faḍlik.",
+    "assesses": [
+      "AR-CONCEPT-C36-MILAQA-01",
+      "AR-CONCEPT-C36-MILAQA-02",
+      "AR-CONCEPT-C36-TABAQ-02",
+      "AR-CONCEPT-C36-KUB-02",
+      "AR-CONCEPT-C36-ZAYT-02"
+    ]
+  }
+}

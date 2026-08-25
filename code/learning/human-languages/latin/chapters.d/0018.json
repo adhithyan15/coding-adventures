@@ -1,0 +1,21 @@
+{
+  "chapter": 18,
+  "title": "Green and Yellow",
+  "label": "ch:la-green-and-yellow",
+  "canDo": "I can say green and yellow in Latin, and explain why almost no Romance language kept flāvus.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C18-viridis-flavus",
+    "kind": "production",
+    "summary": "Say viridis and flāvus, then follow verde one way and galbinus the other into jaune, giallo, and galben.",
+    "assesses": [
+      "LA-ETYMON-CANIS-FELES-CATTUS-01",
+      "LA-LEX-CANIS-FELES-CATTUS-02",
+      "LA-PRAGMATICS-CANIS-FELES-CATTUS-03",
+      "LA-ETYMON-VIRIDIS-FLAVUS-01",
+      "LA-ETYMON-VIRIDIS-FLAVUS-02"
+    ]
+  }
+}

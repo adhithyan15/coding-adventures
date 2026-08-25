@@ -1,0 +1,19 @@
+{
+  "chapter": 18,
+  "title": "He, She, and the Polite You",
+  "label": "ch:habla",
+  "canDo": "I can say what someone else does, and address someone respectfully, with one form.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "ES-C06-habla",
+    "kind": "dialogue",
+    "summary": "One form doing three jobs, and the vuestra merced fossil behind it.",
+    "assesses": [
+      "ES-GRAMMAR-AR-PRESENT-3SG",
+      "ES-GRAMMAR-USTED-THIRD-PERSON",
+      "ES-LEX-USTED"
+    ]
+  }
+}

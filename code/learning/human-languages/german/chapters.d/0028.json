@@ -1,0 +1,27 @@
+{
+  "chapter": 28,
+  "title": "Coffee, Tea, and Milk",
+  "label": "ch:ge-coffee-tea-milk",
+  "canDo": "I can politely ask for coffee, tea, or milk in German, and say which of the three words is native and which two are loans.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "GE-C28-milch",
+    "kind": "production",
+    "summary": "The chapter closes on Milch, the native word beside two loans: the reader produces all three drinks with der/die articles, extends Chapter 19's Wasser, bitte pattern to Kaffee, bitte and Tee, bitte, and states each word's route — Kaffee overland through Arabic, Turkish and Italian; Tee by sea from Hokkien Chinese by way of Dutch; Milch never borrowed at all. It reaches back to Chapter 19's bitte pattern and rescues Chapter 27's final atoms, GE-LEX-SCHLIESSEN-10 and GE-ETYMON-SCHLIESSEN-11, which no lesson had revisited.",
+    "assesses": [
+      "GE-LEX-KAFFEE-02",
+      "GE-SOUND-KAFFEE-03",
+      "GE-ETYMON-KAFFEE-04",
+      "GE-LEX-TEE-02",
+      "GE-SOUND-TEE-03",
+      "GE-ETYMON-TEE-04",
+      "GE-LEX-MILCH-02",
+      "GE-SOUND-MILCH-03",
+      "GE-ETYMON-MILCH-04",
+      "GE-LEX-BITTE-PLEASE-02",
+      "GE-PHRASE-WASSER-BITTE-03"
+    ]
+  }
+}

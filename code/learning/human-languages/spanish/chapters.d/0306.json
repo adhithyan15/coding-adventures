@@ -1,0 +1,21 @@
+{
+  "chapter": 306,
+  "title": "Blood and Household --- Son, Daughter, Grandfather, Grandmother, Husband",
+  "label": "ch:hijos-y-abuelos",
+  "canDo": "I can name the closest members of a family in Spanish --- son, daughter, grandfather, grandmother and husband --- and switch the ending to say which one I mean.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "ES-C306-esposo",
+    "kind": "production",
+    "summary": "Complete ES-C306-esposo: name all five relatives, taking the -o/-a switch in both directions.",
+    "assesses": [
+      "ES-LEX-C306-KIN-01",
+      "ES-LEX-C306-KIN-02",
+      "ES-LEX-C306-KIN-03",
+      "ES-LEX-C306-KIN-04",
+      "ES-LEX-C306-KIN-05"
+    ]
+  }
+}

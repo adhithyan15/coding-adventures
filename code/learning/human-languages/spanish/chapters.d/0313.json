@@ -1,0 +1,21 @@
+{
+  "chapter": 313,
+  "title": "El Mostrador --- Ticket, Coin, Passport, Entrance, Change",
+  "label": "ch:el-mostrador",
+  "canDo": "I can get through a counter in Spanish: ask for the ticket, hand over the passport, find the entrance and ask for my change.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "ES-C313-cambio",
+    "kind": "production",
+    "summary": "Complete ES-C313-cambio: ask for a ticket, produce the passport, find the entrance and ask for the change owed.",
+    "assesses": [
+      "ES-LEX-C313-ASK-16",
+      "ES-LEX-C313-ASK-17",
+      "ES-LEX-C313-ASK-18",
+      "ES-LEX-C313-ASK-19",
+      "ES-LEX-C313-ASK-20"
+    ]
+  }
+}

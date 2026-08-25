@@ -1,0 +1,21 @@
+{
+  "chapter": 34,
+  "title": "Four Verbs of the Mind",
+  "label": "ch:hi-verbs-of-the-mind",
+  "canDo": "I can say what I think, understand, read and write in Hindi, run all four through the present habitual, and say \"Sorry, I don't understand\" when I need to.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "HI-C34-likhna",
+    "kind": "task",
+    "summary": "Run सोचना, समझना, पढ़ना and लिखना through मैं …ता/ती हूँ, spell out मेरा नाम from the letters you first wrote by hand, and name the one meaning — to scratch — that four unrelated families each chose for \"write\".",
+    "assesses": [
+      "HI-CONCEPT-C34-SOCHNA-01",
+      "HI-CONCEPT-C34-SAMAJHNA-01",
+      "HI-CONCEPT-C34-PADHNA-01",
+      "HI-CONCEPT-C34-LIKHNA-01",
+      "HI-CONCEPT-C34-LIKHNA-02"
+    ]
+  }
+}

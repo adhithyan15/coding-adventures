@@ -1,0 +1,17 @@
+{
+  "chapter": 258,
+  "title": "Hablo, Hablas, Habla --- The Ending Says Who",
+  "label": "ch:terminacion",
+  "canDo": "I can state why Spanish verbs change their endings, and why the pronoun can go.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C66-la-terminacion-dice-quien",
+    "kind": "task",
+    "summary": "I can state why Spanish verbs change their endings, and why the pronoun can go.",
+    "assesses": [
+      "ES-GRAMMAR-SUBJECT-VERB-AGREEMENT-RULE"
+    ]
+  }
+}

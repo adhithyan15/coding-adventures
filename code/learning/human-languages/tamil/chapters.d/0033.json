@@ -1,0 +1,26 @@
+{
+  "chapter": 33,
+  "title": "Four Verbs of the Mind",
+  "label": "ch:ta-verbs-of-the-mind",
+  "canDo": "I can say I think, I understand, I read and I write in Tamil with the same three slots, tell a strong verb from a weak one by its held consonant, explain why எனக்குப் புரிகிறது has no I in it, and make the ழ in எழுது.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "TA-C33-ezhutu",
+    "kind": "production",
+    "summary": "Say நான் தமிழ் எழுதுகிறேன், run the chapter's four verbs in the present and sort them into strong and weak, produce ழ without letting the tongue touch, and name the one word here whose origin is unsettled.",
+    "assesses": [
+      "TA-LEX-EZHUTU-01",
+      "TA-SOUND-EZHUTU-02",
+      "TA-ETYMON-EZHUTU-03",
+      "TA-LEX-PADI-01",
+      "TA-ETYMON-PADI-02",
+      "TA-LEX-PURI-01",
+      "TA-LEX-NINAI-01",
+      "TA-ETYMON-NUMBERS-6-10-FAMILY-01",
+      "TA-SCRIPT-PULLI-VANAKKAM-02",
+      "TA-GRAMMAR-PO-02"
+    ]
+  }
+}

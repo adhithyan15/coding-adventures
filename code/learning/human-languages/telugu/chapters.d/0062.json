@@ -1,0 +1,21 @@
+{
+  "chapter": 62,
+  "title": "Things People Make",
+  "label": "ch:te-made-things",
+  "canDo": "I can name five things a Telugu household makes or keeps, and ask politely for one of them.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "TE-C62-mirror",
+    "kind": "production",
+    "summary": "Complete TE-C62-mirror and demonstrate the chapter promise.",
+    "assesses": [
+      "TE-LEX-C62-MADE-01",
+      "TE-LEX-C62-MADE-02",
+      "TE-LEX-C62-MADE-03",
+      "TE-LEX-C62-MADE-04",
+      "TE-LEX-C62-MADE-05"
+    ]
+  }
+}

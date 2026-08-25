@@ -1,0 +1,21 @@
+{
+  "chapter": 10,
+  "title": "The Written Accent",
+  "label": "ch:written-accent",
+  "canDo": "I can hear where a Spanish word is stressed and see why the accent is written.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "ES-W01-repaso-acento",
+    "kind": "dialogue",
+    "summary": "The Written Accent — the chapter run end to end.",
+    "assesses": [
+      "ES-SCRIPT-ACUTE-ACCENT",
+      "ES-GRAMMAR-DEFAULT-STRESS",
+      "ES-GRAMMAR-STRESS-EXCEPTION",
+      "ES-LEX-EL-PRONOUN",
+      "ES-GRAMMAR-DIACRITIC-ACCENT"
+    ]
+  }
+}

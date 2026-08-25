@@ -1,0 +1,21 @@
+{
+  "chapter": 331,
+  "title": "A While, a Way, a Thing",
+  "label": "ch:manera-y-asunto",
+  "canDo": "I can say el rato, la manera, el modo, la cosa and el asunto, and say which noun has been hiding inside como since chapter three.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "ES-C331-asunto",
+    "kind": "production",
+    "summary": "Complete ES-C331-asunto: cut a rato out of el tiempo, choose between manera and modo, and go from any cosa to the asunto it becomes.",
+    "assesses": [
+      "ES-LEX-C331-WAY-16",
+      "ES-LEX-C331-WAY-17",
+      "ES-LEX-C331-WAY-18",
+      "ES-LEX-C331-WAY-19",
+      "ES-LEX-C331-WAY-20"
+    ]
+  }
+}

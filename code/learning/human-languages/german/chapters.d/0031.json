@@ -1,0 +1,28 @@
+{
+  "chapter": 31,
+  "title": "Arm, Finger, Foot, Heart",
+  "label": "ch:ge-hand-table-complete",
+  "canDo": "I can name the arm, finger, foot, and heart in German, completing the Hand/Arm/Finger/Fuß/Herz table Chapter 17 named but did not finish teaching, and say which of the four shows Grimm's law and which sits outside it.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "GE-C31-herz",
+    "kind": "production",
+    "summary": "The chapter closes on Herz, the third word in the book to show Grimm's law's k-to-h swap: the reader produces all four words with articles, names Arm as a word outside Grimm's law's reach entirely, Fuß as a second p-to-f case beside Vater, and Finger's disputed link to fünf, and finally completes the five-word table Chapter 17 printed but only taught one-fifth of. It reaches back to Chapter 17's Hand and Grimm's law, Chapter 26's hören, and Chapter 22's Hund, all three of which supply the k-to-h comparison.",
+    "assesses": [
+      "GE-LEX-ARM-02",
+      "GE-SOUND-ARM-03",
+      "GE-ETYMON-ARM-04",
+      "GE-LEX-FINGER-02",
+      "GE-ETYMON-FINGER-03",
+      "GE-EVIDENCE-FINGER-FUENF-04",
+      "GE-LEX-FUSS-02",
+      "GE-SOUND-FUSS-03",
+      "GE-ETYMON-FUSS-04",
+      "GE-LEX-HERZ-02",
+      "GE-SOUND-HERZ-03",
+      "GE-ETYMON-HERZ-04"
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "chapter": 254,
+  "title": "Vuestro --- The Last Possessive",
+  "label": "ch:vuestro",
+  "canDo": "I can use every possessive in the set.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C65-vuestro",
+    "kind": "task",
+    "summary": "I can use every possessive in the set.",
+    "assesses": [
+      "ES-GRAMMAR-POSSESSIVE-COMPLETE"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 65,
+  "title": "Asking Well",
+  "label": "ch:ml-asking-well",
+  "canDo": "I can name a request, permission, consent, good manners and trust in Malayalam.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "ML-C65-trust",
+    "kind": "production",
+    "summary": "Complete ML-C65-trust and say all five words in order.",
+    "assesses": [
+      "ML-LEX-C65-ASK-01",
+      "ML-LEX-C65-ASK-02",
+      "ML-LEX-C65-ASK-03",
+      "ML-LEX-C65-ASK-04",
+      "ML-LEX-C65-ASK-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 38,
+  "title": "Fire and Stone",
+  "label": "ch:sa-fire-and-stone",
+  "canDo": "I can name fire, ash, a stone, sand and soil in Sanskrit.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "SA-C38-soil",
+    "kind": "production",
+    "summary": "Complete SA-C38-soil and demonstrate the chapter promise.",
+    "assesses": [
+      "SA-LEX-C38-EARTH-01",
+      "SA-LEX-C38-EARTH-02",
+      "SA-LEX-C38-EARTH-03",
+      "SA-LEX-C38-EARTH-04",
+      "SA-LEX-C38-EARTH-05"
+    ]
+  }
+}

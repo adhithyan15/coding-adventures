@@ -1,0 +1,19 @@
+{
+  "chapter": 13,
+  "title": "Head and Hand",
+  "label": "ch:te-head-and-hand",
+  "canDo": "I can name the head and the hand in Telugu.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "TE-C13-sharira-bhagalu",
+    "kind": "production",
+    "summary": "Say తల, plainly matching its cousins, and చెయ్యి — the same Dravidian root as kai, reshaped by sound change past easy recognition.",
+    "assesses": [
+      "TE-LEX-C12-KUTUMBAM-01",
+      "TE-ETYMON-C12-KUTUMBAM-02",
+      "TE-LEX-C13-SHARIRA-BHAGALU-01"
+    ]
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "chapter": 2,
+  "title": "Courtesy, Responses, and Leave-Taking",
+  "label": "ch:greetings",
+  "canDo": "I can thank someone, answer yes or no, say that things are fine, and take my leave politely in Marathi.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK",
+    "SPINE-RESPOND-BASIC",
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "MR-C01-practice",
+    "kind": "task",
+    "summary": "Retrieve thanks, yes, fine, no, and gendered leave-taking in one short listening-and-speaking checkpoint, then write familiar हो without a visible model.",
+    "assesses": [
+      "MR-LEX-DHANYAVAD-01",
+      "MR-LEX-HO-01",
+      "MR-LEX-BARAM-01",
+      "MR-LEX-NAHI-01",
+      "MR-PHRASE-YETO-YETE-01"
+    ],
+    "note": "The checkpoint keeps independent writing and spoken retrieval separately observable rather than allowing one strong skill to hide another."
+  }
+}

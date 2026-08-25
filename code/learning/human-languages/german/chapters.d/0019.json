@@ -1,0 +1,19 @@
+{
+  "chapter": 19,
+  "title": "Please",
+  "label": "ch:ge-please",
+  "canDo": "I can ask politely for something in German by putting bitte after the thing I want — Wasser, bitte.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "GE-C19-bitte-requests",
+    "kind": "task",
+    "summary": "Assemble a complete polite request out of two words already learned — Wasser, bitte — and hear the request still living inside bitte via bitten, English bid and bead. The chapter's only lesson, so the payoff covers everything it introduces.",
+    "assesses": [
+      "GE-LEX-BITTE-PLEASE-02",
+      "GE-PHRASE-WASSER-BITTE-03",
+      "GE-ETYMON-BITTE-04"
+    ]
+  }
+}

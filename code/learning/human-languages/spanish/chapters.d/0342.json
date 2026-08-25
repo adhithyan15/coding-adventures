@@ -1,0 +1,21 @@
+{
+  "chapter": 342,
+  "title": "The Clock, Taken Apart",
+  "label": "ch:el-minuto-y-el-cuarto",
+  "canDo": "I can say el minuto, el cuarto, en punto, el horario and la madrugada, and say why the minute and the second are two halves of one Latin phrase.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "ES-C342-madrugada",
+    "kind": "production",
+    "summary": "Complete ES-C342-madrugada: cut an hour into minutes and quarters, give a time on the dot, ask for a timetable, and name the hours before dawn.",
+    "assesses": [
+      "ES-LEX-C342-CLOCK-01",
+      "ES-LEX-C342-CLOCK-02",
+      "ES-LEX-C342-CLOCK-03",
+      "ES-LEX-C342-CLOCK-04",
+      "ES-LEX-C342-CLOCK-05"
+    ]
+  }
+}

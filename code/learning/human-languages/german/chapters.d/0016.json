@@ -1,0 +1,16 @@
+{
+  "chapter": 16,
+  "title": "To Be, and the Past That Takes It",
+  "label": "ch:sein",
+  "canDo": "I can use the German verb for “to be” and form the past of verbs that select it.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "GE-C16-perfekt-sein-agreement",
+    "kind": "task",
+    "summary": "Complete GE-C16-perfekt-sein-agreement, the canonical closing checkpoint, and demonstrate the chapter promise: use the German verb for “to be” and form the past of verbs that select it.",
+    "assesses": [],
+    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+  }
+}

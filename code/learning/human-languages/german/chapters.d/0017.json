@@ -1,0 +1,21 @@
+{
+  "chapter": 17,
+  "title": "Head and Hand",
+  "label": "ch:ge-head-and-hand",
+  "canDo": "I can name the head and the hand in German, devoice the final d of Hand, and say where the Germanic and Latin families stop matching.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "GE-C17-hand",
+    "kind": "production",
+    "summary": "Say die Hand with its final d spoken as t, bring the d back in die Hände, run the Germanic body set Hand/Arm/Finger/Fuß/Herz, and name the gap: main, mano, mão — but Hand.",
+    "assesses": [
+      "GE-LEX-HAND-02",
+      "GE-SOUND-HAND-03",
+      "GE-ETYMON-HAND-04",
+      "GE-ETYMON-HAND-MANUS-05"
+    ],
+    "note": "Chapter 17 has no terminal practice lesson, so the payoff is the last lesson by sequence and reaches only its own third of the chapter (4 of 12 atoms, below the 0.5 floor)."
+  }
+}

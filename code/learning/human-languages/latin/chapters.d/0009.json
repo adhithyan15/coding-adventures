@@ -1,0 +1,22 @@
+{
+  "chapter": 9,
+  "title": "Seasons",
+  "label": "ch:la-seasons",
+  "canDo": "I can name the four seasons in Latin and say which ones Romance rebuilt out of a phrase instead.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "LA-C09-anni-tempora",
+    "kind": "production",
+    "summary": "Name vēr, aestās, autumnus, and hiems, then sort which survived plainly and which Romance rebuilt as prīma vēra and hībernum.",
+    "assesses": [
+      "LA-ETYMON-MANUS-01",
+      "LA-ETYMON-MANUS-02",
+      "LA-ETYMON-CAPUT-01",
+      "LA-PRAGMATICS-CAPUT-02",
+      "LA-LEX-ANNI-TEMPORA-01",
+      "LA-PRAGMATICS-ANNI-TEMPORA-02"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 61,
+  "title": "At the Cooking Fire",
+  "label": "ch:hi-at-the-cooking-fire",
+  "canDo": "I can name five things at a Hindi cooking fire and ask for them politely.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "HI-C61-stove",
+    "kind": "production",
+    "summary": "Complete HI-C61-stove and say all five words in order.",
+    "assesses": [
+      "HI-LEX-C61-FIRE-01",
+      "HI-LEX-C61-FIRE-02",
+      "HI-LEX-C61-FIRE-03",
+      "HI-LEX-C61-FIRE-04",
+      "HI-LEX-C61-FIRE-05"
+    ]
+  }
+}

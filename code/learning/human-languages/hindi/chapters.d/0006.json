@@ -1,0 +1,17 @@
+{
+  "chapter": 6,
+  "title": "Numbers One to Five",
+  "label": "ch:hi-numbers-1-5",
+  "canDo": "I can count from one to five in Hindi and hear the older Sanskrit shapes still sitting inside तीन, चार and पाँच.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "HI-C06-paanch-nasal",
+    "kind": "task",
+    "summary": "Say पाँच beside Sanskrit pañca and point to the moon-dot that is all that survives of the lost nasal consonant.",
+    "assesses": [
+      "HI-CONCEPT-C06-PAANCH-NASAL-01"
+    ]
+  }
+}

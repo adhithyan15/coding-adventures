@@ -1,0 +1,20 @@
+{
+  "chapter": 26,
+  "title": "Review --- Three Endings",
+  "label": "ch:review-friends",
+  "canDo": "I can name the three endings, their partners, and which give gender for free.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C56-repaso-amigos",
+    "kind": "task",
+    "summary": "Complete ES-C56-repaso-amigos: give the three pairs and distinguish a decoder from a machine.",
+    "assesses": [
+      "ES-FRIEND-CION-TION",
+      "ES-FRIEND-DAD-TY",
+      "ES-FRIEND-MENTE-LY"
+    ],
+    "note": "States the arithmetic plainly: three chapters reach further than every vocabulary lesson in the book combined, which changes what a reader should expect the rest of it to be."
+  }
+}

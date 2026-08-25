@@ -1,0 +1,21 @@
+{
+  "chapter": 71,
+  "title": "The Wider Family",
+  "label": "ch:te-the-wider-family",
+  "canDo": "I can name the family a Telugu marriage adds, and ask after each of them.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "TE-C71-son-in-law",
+    "kind": "production",
+    "summary": "Complete TE-C71-son-in-law and demonstrate the chapter promise.",
+    "assesses": [
+      "TE-LEX-C71-KIN-01",
+      "TE-LEX-C71-KIN-02",
+      "TE-LEX-C71-KIN-03",
+      "TE-LEX-C71-KIN-04",
+      "TE-LEX-C71-KIN-05"
+    ]
+  }
+}

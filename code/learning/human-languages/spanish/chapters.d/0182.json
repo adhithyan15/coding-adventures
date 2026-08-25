@@ -1,0 +1,19 @@
+{
+  "chapter": 182,
+  "title": "Se Compran Libros --- The Verb Tells On Itself",
+  "label": "ch:se-agreement",
+  "canDo": "I can make the verb agree with the thing, and say why it does.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C52-se-venden",
+    "kind": "task",
+    "summary": "Complete ES-C52-se-venden: produce se compran libros and read it as if se still meant themselves.",
+    "assesses": [
+      "ES-GRAMMAR-SE-PASSIVE-AGREEMENT",
+      "ES-GRAMMAR-REFLEXIVE-THIRD-PERSON"
+    ],
+    "note": "The agreement is the fossil: books buy themselves. The impersonal grew out of the reflexive rather than being borrowed from anywhere."
+  }
+}

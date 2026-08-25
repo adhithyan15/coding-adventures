@@ -1,0 +1,18 @@
+{
+  "chapter": 27,
+  "title": "Good Night",
+  "label": "ch:ar-good-night",
+  "canDo": "I can wish someone good night in Arabic and explain why the phrase actually talks about the morning.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "AR-C27-tusbih-ala-khayr",
+    "kind": "production",
+    "summary": "Say tuṣbiḥ ʿalā khayr, translate it as 'may you wake into goodness', and trace tuṣbiḥ back to ṣabāḥ al-khayr's own root.",
+    "assesses": [
+      "AR-CONCEPT-C27-TUSBIH-ALA-KHAYR-01",
+      "AR-CONCEPT-C27-TUSBIH-ALA-KHAYR-02"
+    ]
+  }
+}

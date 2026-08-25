@@ -1,0 +1,28 @@
+{
+  "chapter": 42,
+  "title": "Bringing, Getting, Playing, Waiting",
+  "label": "ch:la-getting-and-waiting-verbs",
+  "canDo": "I can say I bring, I get, I play and I wait in Latin, produce the he-or-she form of each, and say whether a verb is welded together from two roots, built from a prefix on an older verb, or of ancestry nobody has settled.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "LA-C42-exspecto",
+    "kind": "production",
+    "summary": "The chapter closes on exspectō: after learning it the reader produces all four first-person forms and all four third-person forms in sequence — ferō, accipiō, lūdō, exspectō and fert, accipit, lūdit, exspectat — sorts a verb's children from its siblings (expect against spectacle), and reaches back five chapters to retrieve videō and dō, neither of which had been revisited since chapter 37.",
+    "assesses": [
+      "LA-LEX-FERO-01",
+      "LA-GRAMMAR-FERO-SUPPLETION-02",
+      "LA-ETYMON-FERO-03",
+      "LA-LEX-ACCIPIO-01",
+      "LA-LEX-OBTINEO-02",
+      "LA-ETYMON-ACCIPIO-OBTINEO-03",
+      "LA-LEX-LUDO-01",
+      "LA-ETYMON-LUDO-02",
+      "LA-LEX-EXSPECTO-01",
+      "LA-ETYMON-EXSPECTO-02",
+      "LA-LEX-VIDEO-01",
+      "LA-ETYMON-VIDEO-02"
+    ]
+  }
+}

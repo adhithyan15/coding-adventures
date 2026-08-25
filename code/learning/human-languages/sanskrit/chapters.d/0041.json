@@ -1,0 +1,21 @@
+{
+  "chapter": 41,
+  "title": "Things People Make",
+  "label": "ch:sa-things-people-make",
+  "canDo": "I can name a wheel, a water-pot, a boat, a mirror and a parasol in Sanskrit.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "SA-C41-parasol",
+    "kind": "production",
+    "summary": "Complete SA-C41-parasol and demonstrate the chapter promise.",
+    "assesses": [
+      "SA-LEX-C41-CRAFT-01",
+      "SA-LEX-C41-CRAFT-02",
+      "SA-LEX-C41-CRAFT-03",
+      "SA-LEX-C41-CRAFT-04",
+      "SA-LEX-C41-CRAFT-05"
+    ]
+  }
+}

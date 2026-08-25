@@ -1,0 +1,28 @@
+{
+  "chapter": 25,
+  "title": "The People You Introduce",
+  "label": "ch:pt-people-you-introduce",
+  "canDo": "I can name a friend, a family, a man and a woman in Portuguese with the right gender, and say which Latin root each of the four Romance sisters picked for 'woman'.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "PT-C25-mulher",
+    "kind": "production",
+    "summary": "The chapter's last lesson closes the set with a one-table review of all four people-words' Latin roots, shows mulher/mujer against femme (fēmina) and donna (domina) as a three-way Romance split, and reaches back to Chapter 3's introduction practice and Chapter 15's tenho falado to build Tenho falado com a minha familia.",
+    "assesses": [
+      "PT-LEX-AMIGO-02",
+      "PT-ETYMON-AMIGO-03",
+      "PT-LEX-FAMILIA-02",
+      "PT-ETYMON-FAMILIA-03",
+      "PT-LEX-HOMEM-02",
+      "PT-ETYMON-HOMEM-03",
+      "PT-LEX-MULHER-02",
+      "PT-ETYMON-MULHER-03",
+      "PT-NOTICE-C25-PESSOAS-04",
+      "PT-LEX-C03-PRACTICE-02",
+      "PT-GRAMMAR-TENHO-FALADO-03",
+      "PT-PRAGMATICS-TENHO-FALADO-04"
+    ]
+  }
+}

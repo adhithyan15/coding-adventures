@@ -1,0 +1,19 @@
+{
+  "chapter": 24,
+  "title": "Night",
+  "label": "ch:ta-night",
+  "canDo": "I can use இரவு for night and இருள் for darkness without collapsing the two, and treat the claim that ராத்திரி is the more colloquial word as a claim still to be tested.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "TA-C24-night-register-darkness",
+    "kind": "task",
+    "summary": "State the source's rāttiri claim with its hedge intact, set it against native regional usage, and hold iravu and iruḷ apart.",
+    "assesses": [
+      "TA-LEX-IRAVU-01",
+      "TA-PRAGMATICS-NIGHT-REGISTER-DARKNESS-01",
+      "TA-LEX-NIGHT-REGISTER-DARKNESS-02"
+    ]
+  }
+}

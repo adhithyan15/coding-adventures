@@ -1,0 +1,50 @@
+{
+  "chapter": 8,
+  "title": "Taking, Asking, Helping, Loving",
+  "label": "ch:fa-doing-verbs",
+  "canDo": "I can say take, ask, help and love in Persian, give the present stem where a verb has one, and sort all thirteen verbs I hold into compounds, -idan verbs and inherited verbs.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "FA-C08-dust-dashtan",
+    "kind": "production",
+    "summary": "The chapter closes on dust dâshtan — to have as friend — and its dâr- stem, then runs all thirteen verbs the track has taught: this chapter's four, Chapter 7's four, and Chapter 6's five, each with its stem, sorted into the three shapes a Persian verb can take.",
+    "assesses": [
+      "FA-LEX-GEREFTAN",
+      "FA-STEM-GIR",
+      "FA-ETYMON-GEREFTAN-GRAB",
+      "FA-LEX-PORSIDAN",
+      "FA-STEM-PORS",
+      "FA-ETYMON-PORSIDAN-ASK",
+      "FA-LEX-KOMAK-KARDAN",
+      "FA-ETYMON-KOMAK-TURKIC",
+      "FA-LEX-DUST-DASHTAN",
+      "FA-LEX-DASHTAN",
+      "FA-STEM-DAR",
+      "FA-LEX-FEKR-KARDAN",
+      "FA-GRAMMAR-COMPOUND-VERB-KARDAN",
+      "FA-STEM-KON",
+      "FA-LEX-FAHMIDAN",
+      "FA-GRAMMAR-IDAN-REGULAR-STEM",
+      "FA-STEM-FAHM",
+      "FA-LEX-KHANDAN",
+      "FA-SCRIPT-SILENT-VAV",
+      "FA-STEM-KHAN",
+      "FA-LEX-NEVESHTAN",
+      "FA-STEM-NEVIS",
+      "FA-ETYMON-NEVESHTAN-PAINT",
+      "FA-GRAMMAR-INFINITIVE-TAN-DAN",
+      "FA-GRAMMAR-PRESENT-STEM",
+      "FA-LEX-BUDAN",
+      "FA-LEX-RAFTAN",
+      "FA-STEM-RAV",
+      "FA-LEX-AMADAN",
+      "FA-STEM-A",
+      "FA-LEX-GOFTAN",
+      "FA-STEM-GU",
+      "FA-LEX-DANESTAN",
+      "FA-STEM-DAN"
+    ]
+  }
+}

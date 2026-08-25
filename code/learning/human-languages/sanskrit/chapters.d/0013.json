@@ -1,0 +1,26 @@
+{
+  "chapter": 13,
+  "title": "The Face, Part Two",
+  "label": "ch:sa-face-nouns-2",
+  "canDo": "I can name a nose and a heart in Sanskrit, say which daughter-language nose-word नासिका is a relative of rather than a parent of, and close the chapter's twelve nouns against the cousin words this book has already shown.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "SA-C13-hridayam",
+    "kind": "production",
+    "summary": "Say हृदयम्, name the PIE root it shares with heart, cor and kardia, place हृदयम् beside the same root's other independent inheritances, and run all twelve of this tranche's nouns back together by group and by gender.",
+    "assesses": [
+      "SA-LEX-NASIKA-NOSE",
+      "SA-ETYMON-NEHAS-NOSE",
+      "SA-LEX-HRIDAYAM-HEART",
+      "SA-ETYMON-KERD-HEART",
+      "SA-LEX-PANIYAM-WATER",
+      "SA-LEX-ANNAM-FOOD",
+      "SA-LEX-MITRAM-FRIEND",
+      "SA-LEX-BHRATA-BROTHER",
+      "SA-LEX-BHAGINI-SISTER",
+      "SA-GRAMMAR-NOUN-GENDER-THREE"
+    ]
+  }
+}

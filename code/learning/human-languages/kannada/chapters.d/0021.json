@@ -1,0 +1,20 @@
+{
+  "chapter": 21,
+  "title": "Dog and Cat",
+  "label": "ch:ka-dog-and-cat",
+  "canDo": "I can name a dog and a cat in Kannada.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C21-naayi-bekku",
+    "kind": "production",
+    "summary": "Say ನಾಯಿ, an unambiguously native Dravidian root, and ಬೆಕ್ಕು, a different ancient root from Tamil's everyday cat word.",
+    "assesses": [
+      "KA-ETYMON-C20-HANNONDU-IPPATTU-01",
+      "KA-ETYMON-C20-HANNONDU-IPPATTU-02",
+      "KA-ETYMON-C21-NAAYI-BEKKU-01",
+      "KA-ETYMON-C21-NAAYI-BEKKU-02"
+    ]
+  }
+}

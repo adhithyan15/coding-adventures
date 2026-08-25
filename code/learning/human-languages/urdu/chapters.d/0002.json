@@ -1,0 +1,19 @@
+{
+  "chapter": 2,
+  "title": "Give your name",
+  "label": "ch:urdu-name",
+  "canDo": "I can say my name in Urdu in one sentence, keeping hai at the end where Urdu puts it.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "UR-C02-mera-naam",
+    "kind": "production",
+    "summary": "One sentence with a slot for your own name: merā nām ... hai, with the copula held to the end of the line.",
+    "assesses": [
+      "UR-LEX-MERA-NAAM-HAI",
+      "UR-SCRIPT-MERA-NAAM-HAI",
+      "UR-GRAMMAR-COPULA-FINAL"
+    ]
+  }
+}

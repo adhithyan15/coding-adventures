@@ -1,0 +1,31 @@
+{
+  "chapter": 8,
+  "title": "The Mind and the Page",
+  "label": "ch:bn-mind-and-page",
+  "canDo": "I can say that I think, understand, read and write in Bengali, hear the stem vowel rise whenever the -i ending arrives, and read the flapped ড় that Sanskrit never needed.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "BN-C08-lekha",
+    "kind": "production",
+    "summary": "Say āmi likhi against se lekhe, run the chapter's four verbs back — bhābā, bojhā, pôṛā, lekhā — say lekhāpôṛā with the flap in it, and explain that দেখা হবে was never 'we will see' but 'a seeing will happen', because every -ā form is a noun too.",
+    "assesses": [
+      "BN-LEX-C08-BHABA-01",
+      "BN-GRAMMAR-C08-BHABA-02",
+      "BN-LEX-C08-BOJHA-01",
+      "BN-GRAMMAR-C08-BOJHA-02",
+      "BN-LEX-C08-PORA-01",
+      "BN-SOUND-C08-PORA-02",
+      "BN-LEX-C07-DEKHA-01",
+      "BN-GRAMMAR-C07-DEKHA-02",
+      "BN-LEX-NUMBERS-ONE-TO-FIVE",
+      "BN-SCRIPT-CHANDRABINDU-NASAL",
+      "BN-ETYMON-DUI-COMPARISON",
+      "BN-HISTORY-DV-NUMERAL-SIMPLIFICATION",
+      "BN-HISTORY-DUI-AREAL-COMPANY",
+      "BN-LEX-C08-LEKHA-01",
+      "BN-GRAMMAR-C08-LEKHA-02"
+    ]
+  }
+}

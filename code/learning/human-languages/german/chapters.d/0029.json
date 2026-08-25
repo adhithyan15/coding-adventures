@@ -1,0 +1,25 @@
+{
+  "chapter": 29,
+  "title": "Friend and Family",
+  "label": "ch:ge-friend-and-family",
+  "canDo": "I can name a friend, male or female, and my family in German, build a feminine person-noun with -in, and say which of the three words is native and which is borrowed.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "GE-C29-familie",
+    "kind": "production",
+    "summary": "The chapter closes on Familie, the one Latin loan beside two native words: the reader produces der Freund, die Freundin and die Familie with articles, builds the feminine -in suffix on a masculine person-noun and names its one English fossil (vixen), and states that Familie gathers the very members Chapter 10 already named (Vater, Mutter, Bruder, Schwester, Geschwister). It reaches back to Chapter 2's freut mich, which shares Freund's root, and to Chapter 10's family words.",
+    "assesses": [
+      "GE-LEX-FREUND-02",
+      "GE-SOUND-FREUND-03",
+      "GE-ETYMON-FREUND-04",
+      "GE-LEX-FREUNDIN-02",
+      "GE-GRAMMAR-SUFFIX-IN-03",
+      "GE-ETYMON-SUFFIX-IN-04",
+      "GE-LEX-FAMILIE-02",
+      "GE-SOUND-FAMILIE-03",
+      "GE-ETYMON-FAMILIE-04"
+    ]
+  }
+}

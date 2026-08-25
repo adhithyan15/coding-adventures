@@ -1,0 +1,22 @@
+{
+  "chapter": 41,
+  "title": "Describing Things",
+  "label": "ch:ta-describing-things",
+  "canDo": "I can point at something in Tamil and ask who or where it is — and I can say what the six words have in common.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C41-adjective-system",
+    "kind": "production",
+    "summary": "Say the near word, the far word and the question word in a row, and name the part that changed.",
+    "assesses": [
+      "TA-LEX-C41-ADJ-01",
+      "TA-LEX-C41-ADJ-02",
+      "TA-LEX-C41-ADJ-03",
+      "TA-LEX-C41-ADJ-04",
+      "TA-LEX-C41-ADJ-05",
+      "TA-GRAMMAR-C41-ADJ-SYSTEM"
+    ]
+  }
+}

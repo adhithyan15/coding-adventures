@@ -1,0 +1,32 @@
+{
+  "chapter": 18,
+  "title": "Four Verbs of the Mind",
+  "label": "ch:it-mind-verbs",
+  "canDo": "I can say in Italian that I think, understand, read and write, put a verb into each of the language's three families including the -isc- group, and build the past of reading and writing.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "IT-C18-scrivere",
+    "kind": "production",
+    "summary": "The chapter's last lesson closes the set: penso, capisco, leggo and scrivo run in one breath, one verb from each of Italian's three families, and the participles letto and scritto are rebuilt from lectum and scriptum by the same -ct- to -tt- law that made sette and otto.",
+    "assesses": [
+      "IT-SOUND-PENSARE-02",
+      "IT-ETYMON-PENSARE-03",
+      "IT-GRAMMAR-PENSARE-04",
+      "IT-LEX-CAPIRE-02",
+      "IT-ETYMON-CAPIRE-03",
+      "IT-GRAMMAR-CAPIRE-04",
+      "IT-SOUND-LEGGERE-02",
+      "IT-ETYMON-LEGGERE-03",
+      "IT-GRAMMAR-LEGGERE-04",
+      "IT-ETYMON-SCRIVERE-02",
+      "IT-GRAMMAR-SCRIVERE-03",
+      "IT-NOTICE-SCRIVERE-04",
+      "IT-GRAMMAR-PARLARE-04",
+      "IT-GRAMMAR-PASSATO-PROSSIMO-02",
+      "IT-ETYMON-NUMERI-6-10-03",
+      "IT-ETYMON-MANO-04"
+    ]
+  }
+}

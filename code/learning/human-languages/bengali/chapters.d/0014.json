@@ -1,0 +1,21 @@
+{
+  "chapter": 14,
+  "title": "Five Colors",
+  "label": "ch:bn-five-colors",
+  "canDo": "I can name five colors in Bengali and say which came from Persian, which from Sanskrit, and which is the one color where Bengali and Hindi genuinely parted ways.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "BN-C14-shobuj",
+    "kind": "production",
+    "summary": "The chapter closes on সবুজ, 'green', a second Persian loan (sabz, the same root behind Hindi and Urdu's sabzī, 'vegetable') that sets beside লাল's own Persian gem-name. The reader names all five colors — lāl, nīl, kālo, shādā, shôbuj — and sorts them by origin: two Persian loans, two Sanskrit words, and one worn down by sound change, a more even split between inherited and borrowed than food or family showed.",
+    "assesses": [
+      "BN-LEX-C14-LAL-01",
+      "BN-LEX-C14-NIL-01",
+      "BN-LEX-C14-KALO-01",
+      "BN-LEX-C14-SHADA-01",
+      "BN-LEX-C14-SHOBUJ-01"
+    ]
+  }
+}

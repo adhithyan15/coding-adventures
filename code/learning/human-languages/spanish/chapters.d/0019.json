@@ -1,0 +1,20 @@
+{
+  "chapter": 19,
+  "title": "Review --- The Three Forms Side by Side",
+  "label": "ch:review-ar-singular",
+  "canDo": "I can hold all three singular -ar forms at once and choose between them without stopping.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "ES-C06-ar-presente",
+    "kind": "dialogue",
+    "summary": "The first paradigm table in the book, arriving only after all three of its cells are owned.",
+    "assesses": [
+      "ES-GRAMMAR-AR-PRESENT-SINGULAR",
+      "ES-GRAMMAR-AR-PRESENT-1SG",
+      "ES-GRAMMAR-AR-PRESENT-2SG",
+      "ES-GRAMMAR-AR-PRESENT-3SG"
+    ]
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "chapter": 18,
+  "title": "Telling Time",
+  "label": "ch:ka-telling-time",
+  "canDo": "I can tell someone the time on the hour in Kannada.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "KA-C18-gante",
+    "kind": "task",
+    "summary": "Say ಗಂಟೆ — hour, and also \"bell\" — then ಒಂದು ಗಂಟೆ and ಎರಡು ಗಂಟೆ for one and two o'clock.",
+    "assesses": [
+      "KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-01",
+      "KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-02",
+      "KA-PRAGMATICS-C17-MADHYAAHNA-MADHYARAATRI-03",
+      "KA-ETYMON-C18-GANTE-01",
+      "KA-PRAGMATICS-C18-GANTE-02",
+      "KA-GRAMMAR-C18-GANTE-03"
+    ]
+  }
+}

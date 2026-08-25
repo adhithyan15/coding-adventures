@@ -1,0 +1,20 @@
+{
+  "chapter": 27,
+  "title": "Synthesis --- Reading What You Were Never Taught",
+  "label": "ch:synthesis-friends",
+  "canDo": "I can read a sentence containing words no lesson has taught me.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C56-sintesis-leer",
+    "kind": "task",
+    "summary": "Complete ES-C56-sintesis-leer: read a four-new-word sentence and say what let you read it.",
+    "assesses": [
+      "ES-FRIEND-CION-TION",
+      "ES-FRIEND-DAD-TY",
+      "ES-FRIEND-MENTE-LY"
+    ],
+    "note": "First chapter that asks the reader to read words nobody taught them. Also warns, at no cost, that the endings are reliable rather than perfect, so the false friends later land as memorable rather than as a betrayal."
+  }
+}

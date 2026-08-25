@@ -1,0 +1,22 @@
+{
+  "chapter": 59,
+  "title": "The Vowel You Write and Do Not Say",
+  "label": "ch:hi-script-second-wave",
+  "canDo": "I can apply Hindi's word-final schwa deletion so a word I sound out letter by letter comes out the length a speaker says it, write three more matras and both forms of two vowels, nasalise with the chandrabindu, and produce the aspirated and retroflex contrasts English does not have.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "HI-W12-da-retroflex",
+    "kind": "writing",
+    "summary": "The retroflex position -- the single most audible foreign-accent tell in Hindi -- closing a chapter that opened with the vowel Hindi writes and does not say.",
+    "assesses": [
+      "HI-SCRIPT-DA-RETROFLEX-01",
+      "HI-SCRIPT-BA-01",
+      "HI-SCRIPT-BHA-01",
+      "HI-SCRIPT-SCHWA-DROP-01",
+      "HI-SCRIPT-YA-01",
+      "HI-SCRIPT-CHANDRABINDU-01"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 11,
+  "title": "Four Core Colours",
+  "label": "ch:ka-core-colours",
+  "canDo": "I can name four basic colours in Kannada — black, white, red, and blue.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C11-bannagalu",
+    "kind": "production",
+    "summary": "Say ಕಪ್ಪು, ಬಿಳಿ, ಕೆಂಪು — the three native colours — then the borrowed ನೀಲಿ, and point out that the week is Sanskritic where the colours are not.",
+    "assesses": [
+      "KA-LEX-C10-VAARA-01",
+      "KA-LEX-C11-BANNAGALU-01",
+      "KA-LEX-C11-BANNAGALU-02"
+    ]
+  }
+}

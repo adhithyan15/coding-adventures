@@ -1,0 +1,17 @@
+{
+  "chapter": 196,
+  "title": "Si --- If, and the Word Yes Is Made Of",
+  "label": "ch:si",
+  "canDo": "I can make a real condition with si and the present.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ES-C55-si",
+    "kind": "task",
+    "summary": "I can make a real condition with si and the present.",
+    "assesses": [
+      "ES-GRAMMAR-SI-REAL-CONDITION"
+    ]
+  }
+}

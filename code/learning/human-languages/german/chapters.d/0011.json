@@ -1,0 +1,16 @@
+{
+  "chapter": 11,
+  "title": "Bread, Water, Wine",
+  "label": "ch:food",
+  "canDo": "I can name and request bread, water, and wine in German.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "GE-C11-wasser-wein",
+    "kind": "task",
+    "summary": "Complete GE-C11-wasser-wein, the canonical closing checkpoint, and demonstrate the chapter promise: name and request bread, water, and wine in German.",
+    "assesses": [],
+    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 35,
+  "title": "In the House",
+  "label": "ch:sa-house",
+  "canDo": "I can name five things in a house in Sanskrit, and say which one of them came into the language from Persian.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "SA-C35-bed",
+    "kind": "production",
+    "summary": "Complete SA-C35-bed and demonstrate the chapter promise.",
+    "assesses": [
+      "SA-LEX-C35-HOUSE-01",
+      "SA-LEX-C35-HOUSE-02",
+      "SA-LEX-C35-HOUSE-03",
+      "SA-LEX-C35-HOUSE-04",
+      "SA-LEX-C35-HOUSE-05"
+    ]
+  }
+}

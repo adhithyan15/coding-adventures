@@ -1,0 +1,21 @@
+{
+  "chapter": 49,
+  "title": "Answering With More Than Yes",
+  "label": "ch:te-replies",
+  "canDo": "I can answer in Telugu with more than yes and no --- true, enough, certainly, perhaps, just so --- and see the three-vowel grid running under అది, ఇక్కడ and ఎలా.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "TE-C49-alright",
+    "kind": "production",
+    "summary": "Complete TE-C49-alright and demonstrate the chapter promise.",
+    "assesses": [
+      "TE-LEX-C49-REPLY-01",
+      "TE-LEX-C49-REPLY-02",
+      "TE-LEX-C49-REPLY-03",
+      "TE-LEX-C49-REPLY-04",
+      "TE-LEX-C49-REPLY-05"
+    ]
+  }
+}

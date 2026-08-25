@@ -1,0 +1,17 @@
+{
+  "chapter": 23,
+  "title": "Dog and Cat",
+  "label": "ch:hi-dog-and-cat",
+  "canDo": "I can name a dog and a cat in Hindi and say honestly how far back each word can actually be traced.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C23-billi-history",
+    "kind": "task",
+    "summary": "Trace बिल्ली back through biḍālikā to biḍāla, then say out loud where the evidence stops being solid.",
+    "assesses": [
+      "HI-CONCEPT-C23-BILLI-HISTORY-01"
+    ]
+  }
+}

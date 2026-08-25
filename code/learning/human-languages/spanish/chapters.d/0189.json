@@ -1,0 +1,20 @@
+{
+  "chapter": 189,
+  "title": "Review --- Three Jobs, No New Words",
+  "label": "ch:review-relative",
+  "canDo": "I can use all three relative patterns and name the error that outlives the others.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C53-repaso-que",
+    "kind": "task",
+    "summary": "Complete ES-C53-repaso-que: say how many new words the rung added and name the trap.",
+    "assesses": [
+      "ES-GRAMMAR-RELATIVE-QUE",
+      "ES-GRAMMAR-RELATIVE-QUE-OBLIGATORY",
+      "ES-GRAMMAR-LO-QUE"
+    ],
+    "note": "Answer: none. The last big structural piece a beginner's course owes, and it cost no vocabulary at all."
+  }
+}

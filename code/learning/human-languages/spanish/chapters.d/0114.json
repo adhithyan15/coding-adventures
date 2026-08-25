@@ -1,0 +1,20 @@
+{
+  "chapter": 114,
+  "title": "Review --- One Question, Three Answers",
+  "label": "ch:review-two-pasts",
+  "canDo": "I can state the single question that chooses between the two past tenses.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "ES-C48-repaso-dos-pasados",
+    "kind": "task",
+    "summary": "Complete ES-C48-repaso-dos-pasados: state the question, identify the scene verb, and name the pair that changes meaning.",
+    "assesses": [
+      "ES-GRAMMAR-ASPECT-NOT-TIME",
+      "ES-GRAMMAR-BACKDROP-AND-EVENT",
+      "ES-GRAMMAR-ASPECT-CHANGES-MEANING"
+    ],
+    "note": "Deliberately gives a question rather than a list of trigger words, because trigger lists fail exactly where the choice is interesting."
+  }
+}

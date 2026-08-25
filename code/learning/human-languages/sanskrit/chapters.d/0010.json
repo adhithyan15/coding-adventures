@@ -1,0 +1,25 @@
+{
+  "chapter": 10,
+  "title": "What You'd Ask For",
+  "label": "ch:sa-request-nouns",
+  "canDo": "I can name water, milk and food in Sanskrit, say that food is grammatically the eaten thing, and name the three genders every Sanskrit noun carries.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "SA-C10-annam",
+    "kind": "production",
+    "summary": "Say अन्नम्, name the root अद् it shares with खादति's cousin अत्ति, and state the three grammatical genders Sanskrit sorts every noun into, tying the neuter -म् running through the chapter back to the neuter numeral forms of Chapter 6.",
+    "assesses": [
+      "SA-LEX-PANIYAM-WATER",
+      "SA-ETYMON-PA-DRINK-POTION",
+      "SA-LEX-KSHIRAM-MILK",
+      "SA-ETYMON-KSHIRA-DISPUTED",
+      "SA-LEX-ANNAM-FOOD",
+      "SA-ETYMON-AD-EAT-COGNATE",
+      "SA-GRAMMAR-NOUN-GENDER-THREE",
+      "SA-GRAMMAR-NUMERAL-GENDER",
+      "SA-HISTORY-INDO-ARYAN-NEUTER-FORMS"
+    ]
+  }
+}

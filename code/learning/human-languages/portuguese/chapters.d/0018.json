@@ -1,0 +1,30 @@
+{
+  "chapter": 18,
+  "title": "Verbs at the Core",
+  "label": "ch:pt-core-verbs",
+  "canDo": "I can say I am, I have, I go, I come, I say, I see and I know in Portuguese, pick the right member of its two be-verbs and its two know-verbs, and name the English words each verb left behind.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "PT-C18-saber-conhecer",
+    "kind": "production",
+    "summary": "The chapter's last lesson closes the set: after saber and conhecer the reader produces all nine first-person forms in one run - sou, estou, tenho, vou, venho, digo, vejo, sei, conheco - and re-derives the roots behind estar and ter.",
+    "assesses": [
+      "PT-LEX-SER-ESTAR-02",
+      "PT-ETYMON-SER-ESTAR-03",
+      "PT-LEX-TER-HAVER-02",
+      "PT-ETYMON-TER-HAVER-03",
+      "PT-LEX-IR-02",
+      "PT-ETYMON-IR-03",
+      "PT-LEX-VIR-02",
+      "PT-ETYMON-VIR-03",
+      "PT-LEX-DIZER-02",
+      "PT-ETYMON-DIZER-03",
+      "PT-LEX-VER-02",
+      "PT-ETYMON-VER-03",
+      "PT-LEX-SABER-CONHECER-02",
+      "PT-ETYMON-SABER-CONHECER-03"
+    ]
+  }
+}

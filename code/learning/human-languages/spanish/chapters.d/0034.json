@@ -1,0 +1,22 @@
+{
+  "chapter": 34,
+  "title": "Comer --- the Second Verb Family, One Slot at a Time",
+  "label": "ch:spanish-comer",
+  "canDo": "I can use all three singular forms of a regular -er verb, having built each one separately.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO",
+    "SPINE-EXCHANGE-NAMES",
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ES-C07-repaso-comer",
+    "kind": "dialogue",
+    "summary": "The -er singular, earned a slot at a time - and the yo ending that never changed.",
+    "assesses": [
+      "ES-GRAMMAR-ER-PRESENT-SINGULAR",
+      "ES-GRAMMAR-ER-PRESENT-1SG",
+      "ES-GRAMMAR-ER-PRESENT-2SG",
+      "ES-GRAMMAR-ER-PRESENT-3SG"
+    ]
+  }
+}

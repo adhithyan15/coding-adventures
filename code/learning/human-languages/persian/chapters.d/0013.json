@@ -1,0 +1,31 @@
+{
+  "chapter": 13,
+  "title": "Sky, Sun, Moon, Star, Rain",
+  "label": "ch:fa-sky-words",
+  "canDo": "I can name the sky, sun, moon, star, and rain in Persian, and I can say which of those words has no established English cousin.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "FA-C13-baran",
+    "kind": "production",
+    "summary": "The chapter closes on bârân, a word with no English cousin, then runs all five sky words back to back and rebuilds the careful wellbeing question the weather now follows in ordinary small talk.",
+    "assesses": [
+      "FA-LEX-ASEMAN",
+      "FA-ETYMON-ASEMAN",
+      "FA-LEX-KHORSHID",
+      "FA-ETYMON-KHORSHID",
+      "FA-LEX-MAH",
+      "FA-ETYMON-MAH",
+      "FA-LEX-SETARE",
+      "FA-ETYMON-SETARE",
+      "FA-LEX-BARAN",
+      "FA-ETYMON-BARAN",
+      "FA-GRAMMAR-HAL-E-SHOMA",
+      "FA-PRAGMATICS-WELLBEING-FORMAL",
+      "FA-LEX-CHETOR",
+      "FA-LEX-KHUBAM-REPLY",
+      "FA-SCRIPT-KHUBAM"
+    ]
+  }
+}

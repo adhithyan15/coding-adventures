@@ -1,0 +1,22 @@
+{
+  "chapter": 22,
+  "title": "Green and Yellow",
+  "label": "ch:ka-green-and-yellow",
+  "canDo": "I can name green and yellow in Kannada, on top of the four colours I already had.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C22-hasiru-haladi",
+    "kind": "production",
+    "summary": "Say ಹಸಿರು, a true cousin of Tamil paccai and Telugu pacca, then ಹಳದಿ, the turmeric-borrowing that is secretly a cousin of German gelb.",
+    "assesses": [
+      "KA-LEX-C11-BANNAGALU-01",
+      "KA-LEX-C11-BANNAGALU-02",
+      "KA-ETYMON-C21-NAAYI-BEKKU-01",
+      "KA-ETYMON-C21-NAAYI-BEKKU-02",
+      "KA-ETYMON-C22-HASIRU-HALADI-01",
+      "KA-ETYMON-C22-HASIRU-HALADI-02"
+    ]
+  }
+}

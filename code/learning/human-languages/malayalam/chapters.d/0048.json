@@ -1,0 +1,21 @@
+{
+  "chapter": 48,
+  "title": "Who Someone Is",
+  "label": "ch:ml-roles",
+  "canDo": "I can say what someone's work is in Malayalam, and recognise the masculine ending that three of the five words share.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "ML-C48-guest",
+    "kind": "production",
+    "summary": "Complete ML-C48-guest and say all five words in order.",
+    "assesses": [
+      "ML-LEX-C48-ROLE-01",
+      "ML-LEX-C48-ROLE-02",
+      "ML-LEX-C48-ROLE-03",
+      "ML-LEX-C48-ROLE-04",
+      "ML-LEX-C48-ROLE-05"
+    ]
+  }
+}

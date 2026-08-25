@@ -1,0 +1,28 @@
+{
+  "chapter": 48,
+  "title": "Ser and Estar --- Two Ways to Be",
+  "label": "ch:ser-y-estar",
+  "canDo": "I can identify someone, state origin, check wellbeing, and give a location by choosing a learned singular form of ser or estar.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO",
+    "SPINE-CHECK-WELLBEING",
+    "SPINE-EXCHANGE-NAMES",
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ES-C09-practice",
+    "kind": "task",
+    "summary": "Identify Ana, state an origin with soy de, check a current state, and locate Ana with está en using only previously introduced vocabulary and singular forms.",
+    "assesses": [
+      "ES-LEX-SER",
+      "ES-GRAMMAR-SER-PRESENT-SINGULAR",
+      "ES-ETYMON-ESSE-SEDERE",
+      "ES-GRAMMAR-SER-IDENTITY",
+      "ES-GRAMMAR-SER-ESTAR-CONTRAST",
+      "ES-LEX-DE",
+      "ES-GRAMMAR-ORIGIN-WITH-SER",
+      "ES-ETYMON-DE",
+      "ES-ETYMON-IN"
+    ]
+  }
+}

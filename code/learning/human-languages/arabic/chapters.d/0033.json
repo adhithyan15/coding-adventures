@@ -1,0 +1,21 @@
+{
+  "chapter": 33,
+  "title": "Asking for a Drink",
+  "label": "ch:ar-asking-for-a-drink",
+  "canDo": "I can name tea, milk, sugar and coffee in Arabic and ask for any of them politely, and I can tell at sight whether an Arabic noun is feminine.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "AR-C33-qahwa",
+    "kind": "production",
+    "summary": "Say the chapter's drinks and name which of them Arabic built and which it borrowed — ḥalīb from ḥalaba, 'he milked', against shāy and sukkar, which arrived with no root at all — then read the ة off qahwa as a gender marker, place it beside maktaba and as-salāma, and order each drink with min faḍlik, answering ʿafwan.",
+    "assesses": [
+      "AR-CONCEPT-C33-QAHWA-01",
+      "AR-CONCEPT-C33-QAHWA-02",
+      "AR-CONCEPT-C33-SUKKAR-02",
+      "AR-CONCEPT-C33-HALIB-02",
+      "AR-CONCEPT-C33-SHAY-02"
+    ]
+  }
+}

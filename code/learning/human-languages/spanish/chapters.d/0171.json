@@ -1,0 +1,19 @@
+{
+  "chapter": 171,
+  "title": "Conocer --- Coming to Know",
+  "label": "ch:spanish-conocer",
+  "canDo": "I can say who and what I am acquainted with, and choose conocer over saber.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C39-conocer",
+    "kind": "task",
+    "summary": "cognoscere, whose -sc- means BEGIN to know; English know is its Germanic sibling.",
+    "assesses": [
+      "ES-LEX-CONOCER-10",
+      "ES-ETYMON-CONOCER-11",
+      "ES-GRAMMAR-CONOCER-SABER-12"
+    ]
+  }
+}

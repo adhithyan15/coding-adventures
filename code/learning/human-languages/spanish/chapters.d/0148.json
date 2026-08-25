@@ -1,0 +1,23 @@
+{
+  "chapter": 148,
+  "title": "The Weather",
+  "label": "ch:spanish-weather",
+  "canDo": "I can talk about the weather in Spanish and know why llueve refuses to join hace.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "ES-C30-llueve",
+    "kind": "task",
+    "summary": "Ask about el tiempo, answer hace calor, hace frío, hace sol, then switch to llueve — a verb of its own, whose ll- is the same sound change that gave llamar.",
+    "assesses": [
+      "ES-LEX-LLAMO",
+      "ES-LEX-TIEMPO-01",
+      "ES-ETYMON-TIEMPO-02",
+      "ES-LEX-WEATHER-03",
+      "ES-ETYMON-WEATHER-04",
+      "ES-GRAMMAR-WEATHER-05",
+      "ES-ETYMON-LLOVER-06"
+    ]
+  }
+}

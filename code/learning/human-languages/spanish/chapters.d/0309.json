@@ -1,0 +1,21 @@
+{
+  "chapter": 309,
+  "title": "Naming the Whole --- Family, Nickname, Relative, Partner, Baby",
+  "label": "ch:familia-y-pareja",
+  "canDo": "I can name a family, a partner, a relative and a baby in Spanish, and I can say what somebody is called by nickname as well as by name and surname.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "ES-C309-bebe",
+    "kind": "production",
+    "summary": "Complete ES-C309-bebe: gather the whole household into one word, add the third kind of name, and close on the youngest person in the room.",
+    "assesses": [
+      "ES-LEX-C309-KIN-16",
+      "ES-LEX-C309-KIN-17",
+      "ES-LEX-C309-KIN-18",
+      "ES-LEX-C309-KIN-19",
+      "ES-LEX-C309-KIN-20"
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "chapter": 231,
+  "title": "Del --- And Then the List Stops",
+  "label": "ch:del",
+  "canDo": "I can say whose something is, and I know both contractions exist.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C61-del",
+    "kind": "task",
+    "summary": "I can say whose something is, and I know both contractions exist.",
+    "assesses": [
+      "ES-GRAMMAR-CONTRACTION-DEL"
+    ]
+  }
+}

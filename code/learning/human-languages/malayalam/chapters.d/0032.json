@@ -1,0 +1,23 @@
+{
+  "chapter": 32,
+  "title": "The Core Verbs",
+  "label": "ch:ml-core-verbs",
+  "canDo": "I can build a Malayalam verb as stem plus one ending with no person marking at all, swap that ending for past, future or mood, and say why 'I know Malayalam' puts me in the dative instead of the subject slot.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ML-C32-ariyuka",
+    "kind": "production",
+    "summary": "Say എനിക്ക് മലയാളം അറിയാം, name the two slots that built irikkunnu, pōkunnu and kāṇunnu, and explain why this verb moves the knower out of the subject slot altogether.",
+    "assesses": [
+      "ML-CONCEPT-C32-UNDU-01",
+      "ML-CONCEPT-C32-UNDU-02",
+      "ML-CONCEPT-C32-POKUKA-02",
+      "ML-CONCEPT-C32-VARUKA-02",
+      "ML-CONCEPT-C32-KAANUKA-02",
+      "ML-CONCEPT-C32-ARIYUKA-01",
+      "ML-CONCEPT-C32-ARIYUKA-02"
+    ]
+  }
+}

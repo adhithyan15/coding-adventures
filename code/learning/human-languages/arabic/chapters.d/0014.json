@@ -1,0 +1,18 @@
+{
+  "chapter": 14,
+  "title": "Months",
+  "label": "ch:ar-months",
+  "canDo": "I can name the months in Arabic and tell the borrowed civil calendar apart from the Islamic one.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "AR-C14-ashhur",
+    "kind": "production",
+    "summary": "Say the Latin-sounding civil months, then the first Hijri months, and state what each calendar is used for.",
+    "assesses": [
+      "AR-CONCEPT-C14-ASHHUR-01",
+      "AR-CONCEPT-C14-ASHHUR-02"
+    ]
+  }
+}

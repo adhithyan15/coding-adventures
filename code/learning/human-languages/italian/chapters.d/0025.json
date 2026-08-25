@@ -1,0 +1,25 @@
+{
+  "chapter": 25,
+  "title": "Nose, Stomach, and Throat",
+  "label": "ch:it-nose-stomach-throat",
+  "canDo": "I can name my nose, stomach and throat in Italian, closing the body-word set Chapter 17 opened.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "IT-C25-gola",
+    "kind": "task",
+    "summary": "The chapter's last lesson gathers il naso, lo stomaco and la gola, closing the seven-word body set begun in Chapter 24, and lays out the five different kinds of word-history behind those seven words in one place.",
+    "assesses": [
+      "IT-LEX-NASO-02",
+      "IT-ETYMON-NASO-03",
+      "IT-LEX-STOMACO-02",
+      "IT-ETYMON-STOMACO-03",
+      "IT-LEX-BOCCA-02",
+      "IT-LEX-CUORE-02",
+      "IT-LEX-GOLA-02",
+      "IT-ETYMON-GOLA-03",
+      "IT-NOTICE-GOLA-04"
+    ]
+  }
+}

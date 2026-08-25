@@ -1,0 +1,19 @@
+{
+  "chapter": 18,
+  "title": "Telling Time",
+  "label": "ch:ta-telling-time",
+  "canDo": "I can tell the time on the hour in Tamil and keep the hour-word மணி apart from the unrelated Sanskrit gem-word spelled exactly the same way.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "TA-C18-mani-homophone-time",
+    "kind": "production",
+    "summary": "Say oru maṇi and iraṇṭu maṇi for one and two o'clock, then choose hour or gem by the context the word sits in.",
+    "assesses": [
+      "TA-ETYMON-MANI-01",
+      "TA-ETYMON-MANI-HOMOPHONE-TIME-01",
+      "TA-GRAMMAR-MANI-HOMOPHONE-TIME-02"
+    ]
+  }
+}

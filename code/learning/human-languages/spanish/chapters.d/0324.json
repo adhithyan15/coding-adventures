@@ -1,0 +1,21 @@
+{
+  "chapter": 324,
+  "title": "True, False, and Not Even",
+  "label": "ch:verdad-y-siquiera",
+  "canDo": "I can weigh what somebody has told me with verdad, falso, acaso, menos and ni siquiera, and say which two Latin twins gave mas and menos.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "ES-C324-siquiera",
+    "kind": "production",
+    "summary": "Complete ES-C324-siquiera: call a claim la verdad or falso, hedge it with acaso, size it with mas o menos, and empty it out with ni siquiera.",
+    "assesses": [
+      "ES-LEX-C324-TRUE-01",
+      "ES-LEX-C324-TRUE-02",
+      "ES-LEX-C324-TRUE-03",
+      "ES-LEX-C324-TRUE-04",
+      "ES-LEX-C324-TRUE-05"
+    ]
+  }
+}

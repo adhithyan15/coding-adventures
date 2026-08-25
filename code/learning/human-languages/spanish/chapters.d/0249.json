@@ -1,0 +1,17 @@
+{
+  "chapter": 249,
+  "title": "María, Ven --- Naming Who You Are Talking To",
+  "label": "ch:maria-ven",
+  "canDo": "I can address somebody by name.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C64-maria-ven",
+    "kind": "task",
+    "summary": "I can address somebody by name.",
+    "assesses": [
+      "ES-GRAMMAR-VOCATIVE-COMMA"
+    ]
+  }
+}

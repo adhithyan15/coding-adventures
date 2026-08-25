@@ -1,0 +1,24 @@
+{
+  "chapter": 7,
+  "title": "Thank You, Yes, and No",
+  "label": "ch:thank-you",
+  "canDo": "I can thank someone, answer when I am thanked, and say yes or no.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK",
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "ES-C04-repaso-gracias",
+    "kind": "dialogue",
+    "summary": "Thanks, the answer to thanks, and the two words that let you accept or decline.",
+    "assesses": [
+      "ES-LEX-SI-01",
+      "ES-ETYMON-SI-02",
+      "ES-LEX-NO-01",
+      "ES-LEX-GRACIAS",
+      "ES-ETYMON-GRATIA",
+      "ES-LEX-DE-NADA",
+      "ES-ETYMON-NATA"
+    ]
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "chapter": 25,
+  "title": "Day",
+  "label": "ch:hi-day",
+  "canDo": "I can say day in Hindi and explain how दिन both is and is not related to Latin's diēs.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "HI-C25-din",
+    "kind": "task",
+    "summary": "Say दिन, put it and diēs on the same PIE \\*dyew- root but different branches, then name द्यु/दिव् as the closer cousins.",
+    "assesses": [
+      "HI-CONCEPT-C25-DIN-01",
+      "HI-CONCEPT-C25-DIN-02"
+    ]
+  }
+}

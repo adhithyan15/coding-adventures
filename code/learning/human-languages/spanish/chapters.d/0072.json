@@ -1,0 +1,18 @@
+{
+  "chapter": 72,
+  "title": "Salir --- Leaving",
+  "label": "ch:spanish-salir",
+  "canDo": "I can say that I leave, and use the regular forms for anyone else.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C13-salir",
+    "kind": "task",
+    "summary": "salgo in the yo slot; sales and sale behave normally.",
+    "assesses": [
+      "ES-LEX-SALIR",
+      "ES-GRAMMAR-SALIR-PRESENT-SINGULAR"
+    ]
+  }
+}

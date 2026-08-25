@@ -1,0 +1,19 @@
+{
+  "chapter": 12,
+  "title": "Family",
+  "label": "ch:ta-family",
+  "canDo": "I can use Tamil's four sibling words correctly, settling relative age before gender — the question English never makes you answer.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "TA-C12-kudumbam",
+    "kind": "production",
+    "summary": "Name appā and ammā, then place aṇṇaṉ, tambi, akkā and tangai by asking \"older, or younger?\" before you can say \"brother\" at all.",
+    "assesses": [
+      "TA-ETYMON-NIRANGAL-01",
+      "TA-ETYMON-KUDUMBAM-01",
+      "TA-LEX-KUDUMBAM-02"
+    ]
+  }
+}

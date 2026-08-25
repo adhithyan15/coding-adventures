@@ -1,0 +1,21 @@
+{
+  "chapter": 58,
+  "title": "More Short Replies",
+  "label": "ch:ka-more-replies",
+  "canDo": "I can answer an offer in Kannada five ways, from a little to no thank you.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "KA-C58-thats-all",
+    "kind": "production",
+    "summary": "Complete KA-C58-thats-all and say all five words in order.",
+    "assesses": [
+      "KA-LEX-C58-REPLY-01",
+      "KA-LEX-C58-REPLY-02",
+      "KA-LEX-C58-REPLY-03",
+      "KA-LEX-C58-REPLY-04",
+      "KA-LEX-C58-REPLY-05"
+    ]
+  }
+}

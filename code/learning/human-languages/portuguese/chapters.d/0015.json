@@ -1,0 +1,23 @@
+{
+  "chapter": 15,
+  "title": "The Past Portuguese Kept",
+  "label": "ch:pt-past-portuguese-kept",
+  "canDo": "I can say in Portuguese what I did with the simple past, and avoid reading tenho falado as I have spoken.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "PT-C15-tenho-falado",
+    "kind": "production",
+    "summary": "Put falei com ele ontem, one finished act, beside tenho falado com ele, repeatedly and lately, and say out loud why the compound never took the simple past's job.",
+    "assesses": [
+      "PT-LEX-PRETERITO-PERFEITO-02",
+      "PT-PRAGMATICS-PRETERITO-PERFEITO-03",
+      "PT-LEX-TER-02",
+      "PT-ETYMON-TER-03",
+      "PT-LEX-TENHO-FALADO-02",
+      "PT-GRAMMAR-TENHO-FALADO-03",
+      "PT-PRAGMATICS-TENHO-FALADO-04"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 290,
+  "title": "What Is Eaten --- Wheat, Rice, Onion, Tomato, Honey",
+  "label": "ch:lo-que-se-come",
+  "canDo": "I can name wheat, rice, an onion, a tomato and honey in Spanish, and thank somebody for them.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "ES-C290-miel",
+    "kind": "production",
+    "summary": "Complete ES-C290-miel: name all five foods in turn and thank somebody for each.",
+    "assesses": [
+      "ES-LEX-C290-FOOD-01",
+      "ES-LEX-C290-FOOD-02",
+      "ES-LEX-C290-FOOD-03",
+      "ES-LEX-C290-FOOD-04",
+      "ES-LEX-C290-FOOD-05"
+    ]
+  }
+}

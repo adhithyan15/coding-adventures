@@ -1,0 +1,18 @@
+{
+  "chapter": 25,
+  "title": "Good Night",
+  "label": "ch:ml-good-night",
+  "canDo": "I can wish someone good night in Malayalam with śubha rāthri.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "ML-C25-shubha-rathri",
+    "kind": "production",
+    "summary": "Say śubha rāthri as 'auspicious night', and mark the English code-switching claim as thinly sourced and not unique to Malayalam.",
+    "assesses": [
+      "ML-CONCEPT-C25-SHUBHA-RATHRI-01",
+      "ML-CONCEPT-C25-SHUBHA-RATHRI-02"
+    ]
+  }
+}

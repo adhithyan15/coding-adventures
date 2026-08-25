@@ -1,0 +1,18 @@
+{
+  "chapter": 9,
+  "title": "Sorry",
+  "label": "ch:hi-sorry",
+  "canDo": "I can apologise in Hindi with माफ़ कीजिए and reach for its more formal cousin when the moment calls for it.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "HI-C09-maaf-kijiye",
+    "kind": "production",
+    "summary": "Say माफ़ कीजिए as 'please do forgiveness', then क्षमा करें when the setting is formal.",
+    "assesses": [
+      "HI-CONCEPT-C09-MAAF-KIJIYE-01",
+      "HI-CONCEPT-C09-MAAF-KIJIYE-02"
+    ]
+  }
+}

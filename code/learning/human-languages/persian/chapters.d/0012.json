@@ -1,0 +1,31 @@
+{
+  "chapter": 12,
+  "title": "Name, Heart, Door, Book",
+  "label": "ch:fa-name-heart-door-book",
+  "canDo": "I can say name, heart, door, and book in Persian, and I can tell which of the four is inherited and which is a later Arabic loan.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "FA-C12-ketab",
+    "kind": "production",
+    "summary": "The chapter closes on ketâb, an Arabic loan, then runs all four words back to back — nâm, del, dar, ketâb — sorts them by vocabulary layer, and rebuilds the earlier name exchange the reappearance of nâm reopens.",
+    "assesses": [
+      "FA-LEX-NAM",
+      "FA-ETYMON-NAM",
+      "FA-LEX-DEL",
+      "FA-ETYMON-DEL",
+      "FA-LEX-DAR",
+      "FA-ETYMON-DAR",
+      "FA-LEX-KETAB",
+      "FA-ETYMON-KETAB",
+      "FA-GRAMMAR-EZAFE-OWNER",
+      "FA-PHRASE-LOTFAN",
+      "FA-GRAMMAR-CHI-AST-FUSION",
+      "FA-GRAMMAR-NAME-QUESTION-ORDER",
+      "FA-LEX-KHOSHVAGHTAM",
+      "FA-SCRIPT-CHE-AND-YE",
+      "FA-SCRIPT-SHOMA-TO"
+    ]
+  }
+}

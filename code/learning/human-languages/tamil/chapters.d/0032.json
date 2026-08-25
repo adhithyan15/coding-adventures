@@ -1,0 +1,23 @@
+{
+  "chapter": 32,
+  "title": "The Core Verbs",
+  "label": "ch:ta-core-verbs",
+  "canDo": "I can build a Tamil verb as stem plus tense plus person, swap the tense bead for past or future, tell a strong verb from a weak one by its doubled consonant, and say why தெரியும் carries no person at all.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "TA-C32-teri",
+    "kind": "production",
+    "summary": "Say எனக்குத் தமிழ் தெரியும், name the three slots that built irukkiṟēṉ, pōgiṟēṉ and pārkkiṟēṉ, and explain which slot தெரியும் leaves empty and where its person went instead.",
+    "assesses": [
+      "TA-LEX-IRU-01",
+      "TA-GRAMMAR-IRU-02",
+      "TA-LEX-PO-01",
+      "TA-GRAMMAR-PO-02",
+      "TA-LEX-PAAR-01",
+      "TA-LEX-TERI-01",
+      "TA-GRAMMAR-TERI-02"
+    ]
+  }
+}

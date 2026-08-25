@@ -1,0 +1,21 @@
+{
+  "chapter": 51,
+  "title": "Courtesy Words",
+  "label": "ch:ka-courtesy",
+  "canDo": "I can be polite in Kannada beyond thank you --- gratitude, a good turn, respect, a blessing, a salutation --- and name the piece that a blessing shares with the thanks I learned first.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "KA-C51-salutation",
+    "kind": "production",
+    "summary": "Complete KA-C51-salutation and say all five words in order.",
+    "assesses": [
+      "KA-LEX-C51-COURTESY-01",
+      "KA-LEX-C51-COURTESY-02",
+      "KA-LEX-C51-COURTESY-03",
+      "KA-LEX-C51-COURTESY-04",
+      "KA-LEX-C51-COURTESY-05"
+    ]
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "chapter": 37,
+  "title": "Four Words on the Face",
+  "label": "ch:ka-face-words",
+  "canDo": "I can name my eye, ear, nose and mouth in Kannada, and say which of the four the Dravidian family agrees on closely and which one splits.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "KA-C37-baayi",
+    "kind": "production",
+    "summary": "Name ಕಣ್ಣು, ಕಿವಿ, ಮೂಗು and ಬಾಯಿ, and finally explain ಬಾಯಿ — the word this book already used twice, unglossed, as proof of the v → b law behind ಬಾ and ಬರೆ.",
+    "assesses": [
+      "KA-LEX-C37-KANNU-01",
+      "KA-ETYMON-C37-KANNU-02",
+      "KA-LEX-C37-KIVI-01",
+      "KA-ETYMON-C37-KIVI-02",
+      "KA-LEX-C37-MOOGU-01",
+      "KA-ETYMON-C37-MOOGU-02",
+      "KA-LEX-C37-BAAYI-01",
+      "KA-ETYMON-C37-BAAYI-02"
+    ]
+  }
+}

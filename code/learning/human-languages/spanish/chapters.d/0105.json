@@ -1,0 +1,20 @@
+{
+  "chapter": 105,
+  "title": "The Strong Preterites",
+  "label": "ch:spanish-preterito-fuerte",
+  "canDo": "I can use tuve, hice and estuve, and hear that their stress sits on the stem.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "ES-C15-preterite-fuertes",
+    "kind": "task",
+    "summary": "Latin's own perfect, carried through on verbs too heavily used to be rebuilt.",
+    "assesses": [
+      "ES-GRAMMAR-STRONG-PRETERITE-SINGULAR-PATTERN",
+      "ES-GRAMMAR-TENER-PRETERITE-SINGULAR",
+      "ES-GRAMMAR-HACER-PRETERITE-SINGULAR",
+      "ES-GRAMMAR-ESTAR-PRETERITE-SINGULAR"
+    ]
+  }
+}

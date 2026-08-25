@@ -1,0 +1,22 @@
+{
+  "chapter": 41,
+  "title": "Describing Things",
+  "label": "ch:hi-describing-things",
+  "canDo": "I can point at something in Hindi and ask who or where it is — and I can say what the six words have in common.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C41-adjective-system",
+    "kind": "production",
+    "summary": "Say the near word, the far word and the question word in a row, and name the part that changed.",
+    "assesses": [
+      "HI-LEX-C41-ADJ-01",
+      "HI-LEX-C41-ADJ-02",
+      "HI-LEX-C41-ADJ-03",
+      "HI-LEX-C41-ADJ-04",
+      "HI-LEX-C41-ADJ-05",
+      "HI-GRAMMAR-C41-ADJ-SYSTEM"
+    ]
+  }
+}

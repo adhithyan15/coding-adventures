@@ -1,0 +1,21 @@
+{
+  "chapter": 52,
+  "title": "Welcoming a Guest",
+  "label": "ch:te-welcome",
+  "canDo": "I can name the five things a Telugu welcome puts between the street and the guest, from the mark on the ground to the garland.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "TE-C52-garland",
+    "kind": "production",
+    "summary": "Complete TE-C52-garland and demonstrate the chapter promise.",
+    "assesses": [
+      "TE-LEX-C52-WELCOME-01",
+      "TE-LEX-C52-WELCOME-02",
+      "TE-LEX-C52-WELCOME-03",
+      "TE-LEX-C52-WELCOME-04",
+      "TE-LEX-C52-WELCOME-05"
+    ]
+  }
+}

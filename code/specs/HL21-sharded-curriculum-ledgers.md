@@ -260,6 +260,76 @@ committed file with SHA-256
 `c230a32258b7c2f492221a22edac19b429c3e357f15cebfd2ac062f80fe19098` unchanged,
 asserted by a test over the real ledger rather than only a fixture.
 
+### 4.1a `<track>/chapters.json` — DONE for 20 of 23 tracks
+
+```text
+<track>/chapters.d/_meta.json      version, language, note
+<track>/chapters.d/<NNNN>.json     one chapter each, named for the chapter number
+```
+
+Round-tripping is byte-exact for all twenty, verified against the real committed
+ledgers rather than a fixture; the SHA-256 of each rebuild is recorded in the
+package CHANGELOG.
+
+Three findings, all of which contradict something this spec assumed:
+
+1. **§5.1 said "no separate prefix is needed".** That is true of the *prefix*
+   but not of the *padding*: the chapter number alone, unpadded, re-sorts every
+   one of the twenty tracks. Eleven chapters is enough — `10.json` and
+   `11.json` both sort before `2.json`. The shard name is the chapter number
+   zero-padded to four digits.
+
+2. **`french`, `japanese` and `marwadi` do not round-trip.** Their committed
+   `chapters.json` is hand-formatted with inline one-line arrays that
+   `JSON.stringify(x, null, 2)` expands. The data is identical; the bytes are
+   not. Per §8.5 they are reported rather than reformatted, and keep their
+   monoliths. This is a decision waiting for an owner, not an oversight.
+
+3. **The monolith could not be deleted, and §5.1 did not anticipate why.**
+   See §4.3.
+
+### 4.3 The eager glob-table cost — why browser-read ledgers keep their monoliths
+
+§4.1 explains `core/spine.json`'s surviving monolith as a *static import* a
+browser cannot follow. The real constraint is broader, and it decides the
+disposition of every ledger `language-ladder` reads.
+
+`bookhashes.ts` already reads `<track>/chapters.json` through
+`import.meta.glob` — the browser equivalent of `readdirSync`, resolved by Vite
+at build time. A glob's **modules** are lazy. Its **key table** is not: Vite
+expands the glob into one string key plus one `() => import(…)` arrow per
+matching file, as ordinary code in the importing module, and that module is on
+the eager path.
+
+Sharding takes the match count from 23 files to ~1,020. Measured:
+
+| | largest eager chunk |
+| --- | ---: |
+| before | 312,216 bytes |
+| with `chapters.d/` globbed | 503,765 bytes |
+
+which is through the hard 500 kB ceiling in
+`language-ladder/scripts/check-bundle.mjs`. That ceiling is a debt ceiling and
+was not raised.
+
+The dodge worth naming, because it looks free and is not: move the four
+capability fields into `core/generated-book-hashes/<lang>.json`, which the app
+already loads lazily in 23 pieces. That would work and would cost a real check.
+The app recomputes each chapter's fingerprint from the **currently authored**
+capability, so a capability edited without regenerating the book reads as
+`stale`. Sourcing the capability from the same generated file as the hash it is
+compared against would make that comparison agree with itself, and the drift it
+exists to catch would go silent.
+
+So: **a ledger the browser globs keeps its monolith as a generated artifact.**
+The conflict is not removed, it is downgraded — from a hand-merge of JSON to
+"take either side, re-run `npm run unshard`", which is §3's rule and is
+mechanical. Removing it outright needs the app to stop reading authored ledgers
+at all, which is its own piece of work with its own trade to decide.
+
+This applies directly to `<track>/curriculum.json` (§5.2), which the app globs
+**eagerly** — a stricter case again.
+
 ### 4.2 Tooling
 
 ```sh
@@ -290,6 +360,15 @@ separate prefix is needed and no id-safety question arises.
 
 **Difficulty: low.** This is the cleanest of the remaining migrations and should
 go first.
+
+> **DONE for 20 of 23 tracks — see §4.1a.** Three corrections to the paragraph
+> above, all found by doing it. The chapter numbers are contiguous `1..n` as
+> claimed, but "no separate prefix is needed" understates the requirement: the
+> number must be ZERO-PADDED or sorted filename order re-sorts every track in
+> the corpus. `french`, `japanese` and `marwadi` do not round-trip byte-exactly
+> and were left alone. And the monolith could not be deleted, for the reason in
+> §4.3 — which is the finding that matters most here, because it governs §5.2
+> and §5.3 as well.
 
 ### 5.2 `<track>/curriculum.json` → four sibling directories
 

@@ -1,0 +1,21 @@
+{
+  "chapter": 45,
+  "title": "Earth, Fire, Wind, Sky, Sea",
+  "label": "ch:la-mundus",
+  "canDo": "I can name the five great outdoor things in Latin and say which of them English inherited by descent and which it borrowed from books.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "LA-C45-mare",
+    "kind": "task",
+    "summary": "The fifth word of the group, taken apart against the four before it.",
+    "assesses": [
+      "LA-LEX-C45-WORLD-01",
+      "LA-LEX-C45-WORLD-02",
+      "LA-LEX-C45-WORLD-03",
+      "LA-LEX-C45-WORLD-04",
+      "LA-LEX-C45-WORLD-05"
+    ]
+  }
+}

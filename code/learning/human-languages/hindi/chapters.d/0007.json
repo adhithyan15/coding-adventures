@@ -1,0 +1,19 @@
+{
+  "chapter": 7,
+  "title": "Yes and No",
+  "label": "ch:hi-yes-and-no",
+  "canDo": "I can say yes and no in Hindi and use नहीं to negate a whole sentence.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "HI-C07-nahin",
+    "kind": "production",
+    "summary": "Say नहीं, put it in front of a verb — मैं नहीं जानता — and hear the single PIE \\*ne behind no, non and nein.",
+    "assesses": [
+      "HI-CONCEPT-C07-NAHIN-01",
+      "HI-CONCEPT-C07-NAHIN-02",
+      "HI-CONCEPT-C07-NAHIN-03"
+    ]
+  }
+}

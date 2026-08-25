@@ -1,0 +1,19 @@
+{
+  "chapter": 127,
+  "title": "The Subjunctive, Regular",
+  "label": "ch:spanish-subjuntivo-regular",
+  "canDo": "I can form the singular present subjunctive of a regular verb in any of the three families.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "ES-C18-vivir-subjuntivo",
+    "kind": "task",
+    "summary": "hable, coma, viva - the vowels swap sides, and -er and -ir agree again.",
+    "assesses": [
+      "ES-GRAMMAR-AR-SUBJUNCTIVE-SINGULAR",
+      "ES-GRAMMAR-ER-SUBJUNCTIVE-SINGULAR",
+      "ES-GRAMMAR-IR-SUBJUNCTIVE-SINGULAR"
+    ]
+  }
+}

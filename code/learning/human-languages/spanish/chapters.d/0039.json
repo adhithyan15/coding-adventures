@@ -1,0 +1,18 @@
+{
+  "chapter": 39,
+  "title": "Hablan --- They, and Ustedes",
+  "label": "ch:spanish-hablan",
+  "canDo": "I can say what they do, and address any group as ustedes.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ES-C07-hablan",
+    "kind": "task",
+    "summary": "ustedes is vuestras mercedes - so it takes the they form for the same reason usted takes the he form.",
+    "assesses": [
+      "ES-GRAMMAR-AR-PRESENT-3PL",
+      "ES-LEX-USTEDES"
+    ]
+  }
+}

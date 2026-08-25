@@ -1,0 +1,18 @@
+{
+  "chapter": 17,
+  "title": "Time --- Day, Night, and When Things Happen",
+  "label": "ch:sa-time",
+  "canDo": "I can name the parts of a day in Sanskrit, say today, yesterday and always, and place a time word in a sentence.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C17-time-words",
+    "kind": "production",
+    "summary": "Complete SA-C17-time-words and demonstrate the chapter promise.",
+    "assesses": [
+      "SA-LEX-C17-TIME-01",
+      "SA-GRAMMAR-C17-TIME-WORDS"
+    ]
+  }
+}

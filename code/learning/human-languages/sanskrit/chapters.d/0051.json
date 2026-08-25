@@ -1,0 +1,21 @@
+{
+  "chapter": 51,
+  "title": "More of the Family",
+  "label": "ch:sa-family-more",
+  "canDo": "I can name a husband, a wife, a grandfather, a grandmother and a mother's brother in Sanskrit.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "SA-C51-uncle",
+    "kind": "production",
+    "summary": "Complete SA-C51-uncle and demonstrate the chapter promise.",
+    "assesses": [
+      "SA-LEX-C51-KIN-01",
+      "SA-LEX-C51-KIN-02",
+      "SA-LEX-C51-KIN-03",
+      "SA-LEX-C51-KIN-04",
+      "SA-LEX-C51-KIN-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 46,
+  "title": "Things You Ask For",
+  "label": "ch:ka-ask-for",
+  "canDo": "I can name five everyday things I might ask someone for in Kannada, and say which of them Kannada has always had and which arrived from elsewhere.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "KA-C46-book",
+    "kind": "production",
+    "summary": "Complete KA-C46-book and say all five words in order.",
+    "assesses": [
+      "KA-LEX-C46-ASK-01",
+      "KA-LEX-C46-ASK-02",
+      "KA-LEX-C46-ASK-03",
+      "KA-LEX-C46-ASK-04",
+      "KA-LEX-C46-ASK-05"
+    ]
+  }
+}

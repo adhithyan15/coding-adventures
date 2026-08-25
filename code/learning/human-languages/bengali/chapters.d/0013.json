@@ -1,0 +1,21 @@
+{
+  "chapter": 13,
+  "title": "Please, Sorry, and Welcome",
+  "label": "ch:bn-please-sorry-welcome",
+  "canDo": "I can say please and sorry in Bengali, excuse myself politely, and welcome someone with a word that carries the same 'hither' prefix already met on the verb for coming.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR",
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "BN-C13-sbagotom",
+    "kind": "production",
+    "summary": "The chapter closes on স্বাগতম, 'welcome', literally 'a good coming': su-, 'good' (PIE h1su-, cousin of Greek eu-), fused by ordinary sandhi onto āgata, 'arrived', which opens with the same ā- 'hither' prefix already met on āsā, this time riding √gam, PIE gʷem-, the secure direct ancestor of English come. The reader gives all four new words of the chapter — doya kore, dukkhito, maf korben, shbagotom — closing the two courtesy concepts, please and sorry, this book had never taught, and a third greeting concept, welcome.",
+    "assesses": [
+      "BN-LEX-C13-DOYAKORE-01",
+      "BN-LEX-C13-DUKKHITO-01",
+      "BN-LEX-C13-MAFKORBEN-01",
+      "BN-LEX-C13-SBAGOTOM-01"
+    ]
+  }
+}

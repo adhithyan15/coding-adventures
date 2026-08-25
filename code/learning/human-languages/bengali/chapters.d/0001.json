@@ -1,0 +1,25 @@
+{
+  "chapter": 1,
+  "title": "Greetings",
+  "label": "ch:greetings",
+  "canDo": "I can greet someone in Bengali, recognize the reply, and choose an appropriate response.",
+  "spineNodes": [
+    "SPINE-MEET-GREET",
+    "SPINE-COURTESY-THANK",
+    "SPINE-RESPOND-BASIC",
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "BN-C01-practice",
+    "kind": "task",
+    "summary": "Complete BN-C01-practice, the canonical closing checkpoint, and demonstrate the chapter promise: greet someone in Bengali, recognize the reply, and choose an appropriate response.",
+    "assesses": [
+      "BN-CONCEPT-C01-ACHCHHA-01",
+      "BN-CONCEPT-C01-ASHI-01",
+      "BN-CONCEPT-C01-DHONNOBAD-01",
+      "BN-CONCEPT-C01-HYANNA-01",
+      "BN-CONCEPT-C01-NOMOSHKAR-01",
+      "BN-CONCEPT-C01-PRACTICE-01"
+    ]
+  }
+}

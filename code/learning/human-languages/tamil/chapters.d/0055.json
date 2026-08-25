@@ -1,0 +1,21 @@
+{
+  "chapter": 55,
+  "title": "The Rest of You",
+  "label": "ch:ta-the-rest-of-you",
+  "canDo": "I can name my neck, my back, a lip, a nail and a bone in Tamil.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "TA-C55-bone",
+    "kind": "production",
+    "summary": "Complete TA-C55-bone and say all five words in order.",
+    "assesses": [
+      "TA-LEX-C55-BODY-01",
+      "TA-LEX-C55-BODY-02",
+      "TA-LEX-C55-BODY-03",
+      "TA-LEX-C55-BODY-04",
+      "TA-LEX-C55-BODY-05"
+    ]
+  }
+}

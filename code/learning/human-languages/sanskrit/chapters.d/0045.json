@@ -1,0 +1,21 @@
+{
+  "chapter": 45,
+  "title": "Times of the Day",
+  "label": "ch:sa-times-of-the-day",
+  "canDo": "I can name morning, noon, evening, a month and a year in Sanskrit.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "SA-C45-year",
+    "kind": "production",
+    "summary": "Complete SA-C45-year and demonstrate the chapter promise.",
+    "assesses": [
+      "SA-LEX-C45-DAYTIME-01",
+      "SA-LEX-C45-DAYTIME-02",
+      "SA-LEX-C45-DAYTIME-03",
+      "SA-LEX-C45-DAYTIME-04",
+      "SA-LEX-C45-DAYTIME-05"
+    ]
+  }
+}

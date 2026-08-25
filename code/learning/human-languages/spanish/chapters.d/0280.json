@@ -1,0 +1,24 @@
+{
+  "chapter": 280,
+  "title": "Four Things You Buy --- Cheese, Egg, Apple, Money",
+  "label": "ch:la-compra",
+  "canDo": "I can name cheese, an egg, an apple and money in Spanish, and say which of them is named after a Roman gardener and which after a Roman coin.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C280-dinero",
+    "kind": "task",
+    "summary": "Complete ES-C280-dinero: name the four, then say which two carry a proper name and a coin inside them.",
+    "assesses": [
+      "ES-LEX-QUESO",
+      "ES-ETYMON-QUESO",
+      "ES-LEX-HUEVO",
+      "ES-ETYMON-HUEVO",
+      "ES-LEX-MANZANA",
+      "ES-ETYMON-MANZANA",
+      "ES-LEX-DINERO",
+      "ES-ETYMON-DINERO"
+    ]
+  }
+}

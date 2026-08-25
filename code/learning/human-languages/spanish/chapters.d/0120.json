@@ -1,0 +1,20 @@
+{
+  "chapter": 120,
+  "title": "Review --- A Tense You Build",
+  "label": "ch:review-perfect",
+  "canDo": "I can name the two pieces of the perfect and say which carries the person.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "ES-C49-repaso-perfecto",
+    "kind": "task",
+    "summary": "Complete ES-C49-repaso-perfecto: name the two pieces and say why this tense cost less than the present or preterite.",
+    "assesses": [
+      "ES-GRAMMAR-PERFECT-COMPLETE",
+      "ES-GRAMMAR-PAST-PARTICIPLE",
+      "ES-GRAMMAR-IRREGULAR-PARTICIPLES"
+    ],
+    "note": "Names the shape: a tense that is BUILT costs a fixed amount, not a per-verb amount -- and Spanish reuses these same two pieces for more tenses later."
+  }
+}

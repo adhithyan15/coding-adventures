@@ -1,0 +1,20 @@
+{
+  "chapter": 35,
+  "title": "Family and Friends",
+  "label": "ch:te-family-and-friends",
+  "canDo": "I can name my family as a group in Telugu and name a friend, and say which of the two words is a Sanskrit loan and which is Telugu's own native word.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "TE-C35-snehitudu",
+    "kind": "production",
+    "summary": "Say ఇది నా కుటుంబం and ఇతను నా స్నేహితుడు, trace కుటుంబం and స్నేహితుడు back to Sanskrit, and set స్నేహితుడు beside the native, DEDR-attested నేస్తం.",
+    "assesses": [
+      "TE-LEX-C35-KUTUMBAM-01",
+      "TE-ETYMON-C35-KUTUMBAM-02",
+      "TE-LEX-C35-SNEHITUDU-01",
+      "TE-ETYMON-C35-SNEHITUDU-02"
+    ]
+  }
+}

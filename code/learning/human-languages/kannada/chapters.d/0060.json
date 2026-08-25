@@ -1,0 +1,21 @@
+{
+  "chapter": 60,
+  "title": "Animals of the House",
+  "label": "ch:ka-animals",
+  "canDo": "I can name five animals a Kannada household lives with, from the cow to the bird.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "KA-C60-bird",
+    "kind": "production",
+    "summary": "Complete KA-C60-bird and say all five words in order.",
+    "assesses": [
+      "KA-LEX-C60-ANIMAL-01",
+      "KA-LEX-C60-ANIMAL-02",
+      "KA-LEX-C60-ANIMAL-03",
+      "KA-LEX-C60-ANIMAL-04",
+      "KA-LEX-C60-ANIMAL-05"
+    ]
+  }
+}

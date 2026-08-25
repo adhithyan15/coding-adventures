@@ -1,0 +1,18 @@
+{
+  "chapter": 43,
+  "title": "Where -er and -ir Part Company",
+  "label": "ch:spanish-er-ir-1pl",
+  "canDo": "I can say what we eat and what we live, and explain why the singular hid the difference.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ES-C07-vivimos",
+    "kind": "task",
+    "summary": "comemos and vivimos: one vowel apart, audible only because the ending is stressed.",
+    "assesses": [
+      "ES-GRAMMAR-ER-PRESENT-1PL",
+      "ES-GRAMMAR-IR-PRESENT-1PL"
+    ]
+  }
+}

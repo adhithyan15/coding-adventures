@@ -1,0 +1,18 @@
+{
+  "chapter": 130,
+  "title": "Synthesis --- Claiming, and Not Claiming",
+  "label": "ch:spanish-synthesis-subjuntivo",
+  "canDo": "I can choose the mood by deciding whether I am willing to assert the thing at all.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "ES-C18-sintesis-subjuntivo",
+    "kind": "dialogue",
+    "summary": "Indicative: this is so. Subjunctive: I am not saying this is so.",
+    "assesses": [
+      "ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED",
+      "ES-ETYMON-OJALA-HISPANIC-ARABIC"
+    ]
+  }
+}

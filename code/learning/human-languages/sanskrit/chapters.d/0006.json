@@ -1,0 +1,23 @@
+{
+  "chapter": 6,
+  "title": "Numbers One to Five",
+  "label": "ch:numbers-one-to-five",
+  "canDo": "I can say the Sanskrit numerals एक to पञ्च with their dual and gendered forms, and follow पञ्च outward into Punjab, pentagon, and the disputed history of punch.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "SA-C06-pancha-travels",
+    "kind": "task",
+    "summary": "Trace pañca out of Sanskrit: into Persian panj-āb, the five waters behind Punjab; into Greek pente in pentagon and pentathlon; and into punch, with the five-ingredients account labelled as common rather than settled.",
+    "assesses": [
+      "SA-LEX-NUMBERS-ONE-TO-FIVE",
+      "SA-COMPARISON-NUMERAL-FAMILY",
+      "SA-HISTORY-NUMERAL-INHERITANCE",
+      "SA-HISTORY-PUNJAB-FIVE-WATERS",
+      "SA-ETYMON-PANJ-PANCA-COGNATE",
+      "SA-ETYMON-PENTE-DESCENDANTS",
+      "SA-ETYMON-PUNCH-DISPUTED"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 317,
+  "title": "Something, Somebody, Nobody",
+  "label": "ch:algo-y-nadie",
+  "canDo": "I can answer with something, somebody, nobody, another and a little in Spanish.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "ES-C317-poco",
+    "kind": "production",
+    "summary": "Complete ES-C317-poco: run algo/nada and alguien/nadie as matched pairs, then add otro and poco with both endings.",
+    "assesses": [
+      "ES-LEX-C317-ANSW-16",
+      "ES-LEX-C317-ANSW-17",
+      "ES-LEX-C317-ANSW-18",
+      "ES-LEX-C317-ANSW-19",
+      "ES-LEX-C317-ANSW-20"
+    ]
+  }
+}

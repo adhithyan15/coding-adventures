@@ -1,0 +1,21 @@
+{
+  "chapter": 83,
+  "title": "Lo --- Saying It Without Naming It",
+  "label": "ch:pronoun-lo",
+  "canDo": "I can replace a masculine noun already named with lo, in front of the verb.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C42-lo",
+    "kind": "task",
+    "summary": "Complete ES-C42-lo: turn Tengo el libro into Lo tengo, and name the article that shares lo's Latin ancestor.",
+    "assesses": [
+      "ES-LEX-LO-OBJECT",
+      "ES-GRAMMAR-DIRECT-OBJECT-LO",
+      "ES-GRAMMAR-OBJECT-PRONOUN",
+      "ES-ETYMON-ILLE-ILLA"
+    ],
+    "note": "The pre-verb slot is not new: it has been held since me llamo. Only the word filling it is."
+  }
+}

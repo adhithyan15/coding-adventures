@@ -1,0 +1,36 @@
+{
+  "chapter": 38,
+  "title": "Six Words for Where It Hurts",
+  "label": "ch:hi-where-it-hurts",
+  "canDo": "I can name six parts of my body, say that one of them is not well, and tell which three are word-for-word cousins of their English translations — and which one has no traceable ancestry at all.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "HI-C38-pet",
+    "kind": "task",
+    "summary": "Say all six body words with the possessive each one demands — मेरा सिर, मेरा हाथ, मेरी आँख, मेरा दाँत, मेरा पैर, मेरा पेट — then say मेरा पेट ठीक नहीं है, and separate the three exact Indo-European cousins from the two words, पेट and रोटी, whose histories genuinely stop.",
+    "assesses": [
+      "HI-CONCEPT-C38-AANKH-01",
+      "HI-CONCEPT-C38-AANKH-02",
+      "HI-CONCEPT-C38-DAANT-01",
+      "HI-CONCEPT-C38-DAANT-02",
+      "HI-CONCEPT-C38-PAIR-01",
+      "HI-CONCEPT-C38-PAIR-02",
+      "HI-CONCEPT-C38-PET-01",
+      "HI-CONCEPT-C38-PET-02",
+      "HI-CONCEPT-C13-SIR-01",
+      "HI-CONCEPT-C13-HAATH-01",
+      "HI-CONCEPT-C13-HAATH-02",
+      "HI-CONCEPT-C07-NAHIN-02",
+      "HI-CONCEPT-C07-NAHIN-03",
+      "HI-CONCEPT-C15-PAANI-ROTI-01",
+      "HI-CONCEPT-C15-PAANI-ROTI-02",
+      "HI-CONCEPT-W03-MATRAS-NAAM-01",
+      "HI-CONCEPT-W03-MATRAS-NAAM-02",
+      "HI-CONCEPT-W03-MATRAS-NAAM-03",
+      "HI-CONCEPT-C37-KITAAB-01",
+      "HI-CONCEPT-C36-KURSI-01"
+    ]
+  }
+}

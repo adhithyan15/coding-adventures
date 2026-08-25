@@ -1,0 +1,17 @@
+{
+  "chapter": 30,
+  "title": "Es- --- the Vowel Spanish Put in Front",
+  "label": "ch:es-inicial",
+  "canDo": "I can strip the e- from a Spanish word beginning es- plus a consonant and recognise the English word underneath.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C57-es-inicial",
+    "kind": "task",
+    "summary": "Decode estacion, estudiante and espacio by taking the e- off the front.",
+    "assesses": [
+      "ES-SOUND-ES-PROTHESIS"
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "chapter": 11,
+  "title": "Enye and the Upside-Down Marks",
+  "label": "ch:enye-and-marks",
+  "canDo": "I can read and write ñ and the upside-down question and exclamation marks.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "ES-C04-practice",
+    "kind": "dialogue",
+    "summary": "Enye and the Upside-Down Marks — the chapter run end to end.",
+    "assesses": [
+      "ES-SCRIPT-ENYE",
+      "ES-SOUND-ENYE",
+      "ES-ETYMON-DOUBLE-N",
+      "ES-FORM-MANANA",
+      "ES-FORM-ESPANOL",
+      "ES-SCRIPT-INVERTED-EXCLAMATION",
+      "ES-ORTHOGRAPHY-OPENING-PUNCTUATION",
+      "ES-HISTORY-RAE-INVERTED-MARKS",
+      "ES-ORTHOGRAPHY-PUNCTUATION-SPAN"
+    ]
+  }
+}

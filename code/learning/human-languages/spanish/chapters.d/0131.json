@@ -1,0 +1,19 @@
+{
+  "chapter": 131,
+  "title": "Habla --- Telling Somebody To Do Something",
+  "label": "ch:command-tu",
+  "canDo": "I can give an informal positive command using a form I already hold.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C50-habla",
+    "kind": "task",
+    "summary": "Complete ES-C50-habla: give a tu command and name the form it reuses.",
+    "assesses": [
+      "ES-GRAMMAR-COMMAND-TU-AFFIRMATIVE",
+      "ES-ETYMON-IMPERARE"
+    ],
+    "note": "Costs nothing: the tu command IS the he/she present. Spanish reuses a form and lets context sort it out."
+  }
+}

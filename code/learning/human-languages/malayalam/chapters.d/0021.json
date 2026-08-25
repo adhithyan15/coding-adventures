@@ -1,0 +1,18 @@
+{
+  "chapter": 21,
+  "title": "Dog and Cat",
+  "label": "ch:ml-dog-and-cat",
+  "canDo": "I can name a dog and a cat in Malayalam.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C21-naaya-poocha",
+    "kind": "production",
+    "summary": "Say nāya on the shared Dravidian dog-root, then pūcha, which follows Tamil's cat-word rather than Kannada's.",
+    "assesses": [
+      "ML-CONCEPT-C21-NAAYA-POOCHA-01",
+      "ML-CONCEPT-C21-NAAYA-POOCHA-02"
+    ]
+  }
+}

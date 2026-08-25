@@ -1,0 +1,18 @@
+{
+  "chapter": 30,
+  "title": "Afternoon",
+  "label": "ch:hi-afternoon",
+  "canDo": "I can say afternoon in Hindi using दोपहर in its modern, widened sense.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "HI-C30-dopahar-widened",
+    "kind": "production",
+    "summary": "Say दोपहर में for 'in the afternoon' — the Chapter 17 word doing a wider job than its etymology promises.",
+    "assesses": [
+      "HI-CONCEPT-C30-DOPAHAR-WIDENED-01",
+      "HI-CONCEPT-C30-DOPAHAR-WIDENED-02"
+    ]
+  }
+}

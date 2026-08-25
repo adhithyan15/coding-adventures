@@ -1,0 +1,21 @@
+{
+  "chapter": 27,
+  "title": "Answering With More Than Yes",
+  "label": "ch:sa-replies",
+  "canDo": "I can answer in Sanskrit with more than yes and no, and hear the be-verb sitting inside three of the answers.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "SA-C27-thus",
+    "kind": "production",
+    "summary": "Complete SA-C27-thus and demonstrate the chapter promise.",
+    "assesses": [
+      "SA-LEX-C27-REPLY-01",
+      "SA-LEX-C27-REPLY-02",
+      "SA-LEX-C27-REPLY-03",
+      "SA-LEX-C27-REPLY-04",
+      "SA-LEX-C27-REPLY-05"
+    ]
+  }
+}

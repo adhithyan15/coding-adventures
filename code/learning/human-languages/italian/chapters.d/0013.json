@@ -1,0 +1,23 @@
+{
+  "chapter": 13,
+  "title": "Colours",
+  "label": "ch:it-colours",
+  "canDo": "I can name black, white, red and blue in Italian and say which of them Italian borrowed rather than inherited.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "IT-C13-rosso-blu",
+    "kind": "task",
+    "summary": "Say nero, bianco, rosso and blu, add azzurro for gli Azzurri, and sort the four: nero and rosso inherited, bianco and blu Germanic loans, azzurro out of Arabic lāzaward.",
+    "assesses": [
+      "IT-ETYMON-NERO-BIANCO-02",
+      "IT-ETYMON-NERO-BIANCO-03",
+      "IT-ETYMON-NERO-BIANCO-04",
+      "IT-ETYMON-ROSSO-BLU-02",
+      "IT-ETYMON-ROSSO-BLU-03",
+      "IT-ETYMON-ROSSO-BLU-04",
+      "IT-NOTICE-ROSSO-BLU-05"
+    ]
+  }
+}

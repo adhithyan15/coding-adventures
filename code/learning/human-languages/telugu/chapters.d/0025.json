@@ -1,0 +1,20 @@
+{
+  "chapter": 25,
+  "title": "Good Night",
+  "label": "ch:te-good-night",
+  "canDo": "I can wish someone good night in Telugu.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "TE-C25-shubha-ratri",
+    "kind": "dialogue",
+    "summary": "Say శుభ రాత్రి — \"auspicious night\" — pairing the రాత్రి already learned with śubha, while knowing many speakers code-switch to English here.",
+    "assesses": [
+      "TE-ETYMON-C24-RATRI-01",
+      "TE-ETYMON-C24-RATRI-02",
+      "TE-ETYMON-C25-SHUBHA-RATRI-01",
+      "TE-PRAGMATICS-C25-SHUBHA-RATRI-02"
+    ]
+  }
+}

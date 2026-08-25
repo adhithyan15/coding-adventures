@@ -1,0 +1,19 @@
+{
+  "chapter": 16,
+  "title": "Ser and Estar",
+  "label": "ch:pt-ser-and-estar",
+  "canDo": "I can choose between ser and estar in Portuguese and change what an adjective means by switching them.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "PT-C16-ser-estar-meaning",
+    "kind": "production",
+    "summary": "Say Ela é bonita and Ela está bonita back to back, then A sopa é boa and a sopa está boa, naming the quality against the current condition each time.",
+    "assesses": [
+      "PT-GRAMMAR-SER-VS-ESTAR-02",
+      "PT-NOTICE-SER-VS-ESTAR-03",
+      "PT-ETYMON-SER-ESTAR-MEANING-02"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 52,
+  "title": "Welcoming a Guest",
+  "label": "ch:ka-welcome",
+  "canDo": "I can name the five things a Kannada welcome puts between the street and the guest, from the pattern on the ground to the garland.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "KA-C52-garland",
+    "kind": "production",
+    "summary": "Complete KA-C52-garland and say all five words in order.",
+    "assesses": [
+      "KA-LEX-C52-WELCOME-01",
+      "KA-LEX-C52-WELCOME-02",
+      "KA-LEX-C52-WELCOME-03",
+      "KA-LEX-C52-WELCOME-04",
+      "KA-LEX-C52-WELCOME-05"
+    ]
+  }
+}

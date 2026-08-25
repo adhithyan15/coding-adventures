@@ -1,0 +1,36 @@
+{
+  "chapter": 36,
+  "title": "One House, Four Languages",
+  "label": "ch:hi-one-house-four-languages",
+  "canDo": "I can name a house, its door, a room and the chair I am offered, give each one the possessive its gender demands, and say where each of the four words came from — Sanskrit, Persian, Portuguese and Arabic.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "HI-C36-kursi",
+    "kind": "task",
+    "summary": "Run घर, दरवाज़ा, कमरा and कुर्सी with the right possessive — and hear मेरा turn into मेरी at the first feminine noun, the promise chapter 2 made and never kept. Then name the four languages one room drew on, spell कुर्सी with its virāma and its conjunct, and say नमस्ते at the door coming in and शुभ रात्रि going out.",
+    "assesses": [
+      "HI-CONCEPT-C36-GHAR-01",
+      "HI-CONCEPT-C36-GHAR-02",
+      "HI-CONCEPT-C36-DARVAAZA-01",
+      "HI-CONCEPT-C36-DARVAAZA-02",
+      "HI-CONCEPT-C36-DARVAAZA-03",
+      "HI-CONCEPT-C36-KAMRA-01",
+      "HI-CONCEPT-C36-KAMRA-02",
+      "HI-CONCEPT-C36-KURSI-01",
+      "HI-CONCEPT-C36-KURSI-02",
+      "HI-CONCEPT-C36-KURSI-03",
+      "HI-CONCEPT-W02-ABUGIDA-KA-TA-01",
+      "HI-CONCEPT-W02-ABUGIDA-KA-TA-02",
+      "HI-CONCEPT-W03-PREPOSED-I-01",
+      "HI-CONCEPT-W04-RA-SA-MERA-NAAM-01",
+      "HI-CONCEPT-W04-RA-SA-MERA-NAAM-02",
+      "HI-CONCEPT-W05-CONJUNCTS-01",
+      "HI-CONCEPT-W05-CONJUNCTS-02",
+      "HI-CONCEPT-W05-VIRAMA-NAMASTE-01",
+      "HI-CONCEPT-C27-SHUBH-RAATRI-01",
+      "HI-CONCEPT-C27-SHUBH-RAATRI-02"
+    ]
+  }
+}

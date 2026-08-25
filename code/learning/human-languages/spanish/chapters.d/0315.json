@@ -1,0 +1,21 @@
+{
+  "chapter": 315,
+  "title": "What the Body Feels --- Chest, Strength, Rest, Fear, Laughter",
+  "label": "ch:fuerza-y-risa",
+  "canDo": "I can name the chest, and say strength, rest, fear and laughter in Spanish.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "ES-C315-risa",
+    "kind": "production",
+    "summary": "Complete ES-C315-risa: name all five, and say which two of them are opposites.",
+    "assesses": [
+      "ES-LEX-C315-BODY-06",
+      "ES-LEX-C315-BODY-07",
+      "ES-LEX-C315-BODY-08",
+      "ES-LEX-C315-BODY-09",
+      "ES-LEX-C315-BODY-10"
+    ]
+  }
+}

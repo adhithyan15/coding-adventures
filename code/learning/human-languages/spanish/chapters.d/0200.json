@@ -1,0 +1,17 @@
+{
+  "chapter": 200,
+  "title": "Hablamos --- We Speak, and We Spoke",
+  "label": "ch:hablamos-dos",
+  "canDo": "I can use one form for both tenses and let context decide.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ES-C55-hablamos-dos",
+    "kind": "task",
+    "summary": "I can use one form for both tenses and let context decide.",
+    "assesses": [
+      "ES-GRAMMAR-AR-PRETERITE-1PL-SYNCRETISM"
+    ]
+  }
+}

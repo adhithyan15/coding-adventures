@@ -1,0 +1,21 @@
+{
+  "chapter": 51,
+  "title": "Courtesy",
+  "label": "ch:ml-courtesy",
+  "canDo": "I can thank, respect and bless in the formal Malayalam register, and say how each word differs from its everyday partner.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "ML-C51-salutation",
+    "kind": "production",
+    "summary": "Complete ML-C51-salutation and say all five words in order.",
+    "assesses": [
+      "ML-LEX-C51-COURTESY-01",
+      "ML-LEX-C51-COURTESY-02",
+      "ML-LEX-C51-COURTESY-03",
+      "ML-LEX-C51-COURTESY-04",
+      "ML-LEX-C51-COURTESY-05"
+    ]
+  }
+}

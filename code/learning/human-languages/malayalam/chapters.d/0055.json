@@ -1,0 +1,21 @@
+{
+  "chapter": 55,
+  "title": "Ground Underfoot",
+  "label": "ch:ml-ground-underfoot",
+  "canDo": "I can name five features of the Kerala landscape in Malayalam.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "ML-C55-field",
+    "kind": "production",
+    "summary": "Complete ML-C55-field and say all five words in order.",
+    "assesses": [
+      "ML-LEX-C55-GROUND-01",
+      "ML-LEX-C55-GROUND-02",
+      "ML-LEX-C55-GROUND-03",
+      "ML-LEX-C55-GROUND-04",
+      "ML-LEX-C55-GROUND-05"
+    ]
+  }
+}

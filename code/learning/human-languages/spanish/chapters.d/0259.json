@@ -1,0 +1,17 @@
+{
+  "chapter": 259,
+  "title": "Mucha Agua --- When the Quantity Word Agrees",
+  "label": "ch:mucha-agua",
+  "canDo": "I can decide whether a quantity word agrees or freezes.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C66-mucha-agua",
+    "kind": "task",
+    "summary": "I can decide whether a quantity word agrees or freezes.",
+    "assesses": [
+      "ES-GRAMMAR-QUANTIFIER-AGREES-WITH-NOUN"
+    ]
+  }
+}

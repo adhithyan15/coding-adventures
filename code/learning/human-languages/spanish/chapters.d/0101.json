@@ -1,0 +1,20 @@
+{
+  "chapter": 101,
+  "title": "Review --- The Pairs",
+  "label": "ch:review-double-object",
+  "canDo": "I can generate every permitted pair of object pronouns from two facts.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C47-repaso-dobles",
+    "kind": "task",
+    "summary": "Complete ES-C47-repaso-dobles: state the two facts that generate the table and say how many new pronouns the arc added.",
+    "assesses": [
+      "ES-GRAMMAR-DOUBLE-OBJECT-ORDER",
+      "ES-GRAMMAR-SE-FOR-LE",
+      "ES-ETYMON-GELO"
+    ],
+    "note": "Answer: none. One order and one substitution, and the substitution is an accident of medieval pronunciation rather than a rule."
+  }
+}

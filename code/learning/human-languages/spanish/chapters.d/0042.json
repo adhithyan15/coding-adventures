@@ -1,0 +1,18 @@
+{
+  "chapter": 42,
+  "title": "Synthesis --- the Same Sentence, Two Continents",
+  "label": "ch:spanish-synthesis-plural-you",
+  "canDo": "I can choose between vosotros and ustedes by where I am, and say that neither corrects the other.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ES-C07-sintesis-dos-continentes",
+    "kind": "dialogue",
+    "summary": "The first choice in this book decided by geography rather than meaning.",
+    "assesses": [
+      "ES-CULTURE-VOSOTROS-USTEDES-SPLIT",
+      "ES-GRAMMAR-AR-PRESENT-COMPLETE"
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "chapter": 261,
+  "title": "Review --- Four Rules You Already Obeyed",
+  "label": "ch:repaso-implicito",
+  "canDo": "I can state four rules I had been following without knowing.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C66-repaso-lo-implicito",
+    "kind": "task",
+    "summary": "I can state four rules I had been following without knowing.",
+    "assesses": [
+      "ES-GRAMMAR-SUBJECT-VERB-AGREEMENT-RULE"
+    ]
+  }
+}

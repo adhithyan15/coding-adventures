@@ -1,0 +1,20 @@
+{
+  "chapter": 157,
+  "title": "Review --- Four Verbs of the Mind",
+  "label": "ch:spanish-review-verbs-of-mind",
+  "canDo": "I can hold all four mind-verbs at once and name the physical act inside each one.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C34-repaso-mente",
+    "kind": "dialogue",
+    "summary": "Four abstractions, four labourers: weighing, stretching, gathering, scratching.",
+    "assesses": [
+      "ES-ETYMON-PENSAR-02",
+      "ES-ETYMON-ENTENDER-04",
+      "ES-ETYMON-LEER-06",
+      "ES-ETYMON-ESCRIBIR-08"
+    ]
+  }
+}

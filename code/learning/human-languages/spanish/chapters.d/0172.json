@@ -1,0 +1,19 @@
+{
+  "chapter": 172,
+  "title": "Review --- All Four Stem Changes",
+  "label": "ch:spanish-review-stem-changes",
+  "canDo": "I can name all four stem-change patterns and the single verb that owns one of them.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C39-repaso-cambios",
+    "kind": "dialogue",
+    "summary": "The system closes at four - and u-to-ue has exactly one member.",
+    "assesses": [
+      "ES-GRAMMAR-STEM-CHANGE-CONTRAST-SINGULAR",
+      "ES-GRAMMAR-STEM-E-I-06",
+      "ES-GRAMMAR-STEM-U-UE-09"
+    ]
+  }
+}

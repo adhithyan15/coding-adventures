@@ -1,0 +1,22 @@
+{
+  "chapter": 42,
+  "title": "Describing Things",
+  "label": "ch:te-describing-things",
+  "canDo": "I can point at something in Telugu and ask who or where it is — and I can say what the six words have in common.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "TE-C42-adjective-system",
+    "kind": "production",
+    "summary": "Say the near word, the far word and the question word in a row, and name the part that changed.",
+    "assesses": [
+      "TE-LEX-C42-ADJ-01",
+      "TE-LEX-C42-ADJ-02",
+      "TE-LEX-C42-ADJ-03",
+      "TE-LEX-C42-ADJ-04",
+      "TE-LEX-C42-ADJ-05",
+      "TE-GRAMMAR-C42-ADJ-SYSTEM"
+    ]
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "chapter": 40,
+  "title": "Pointing, and Asking",
+  "label": "ch:hi-pointing-and-asking",
+  "canDo": "I can point at something in Hindi and ask who or where it is — and I can say what the six words have in common.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C40-deixis-system",
+    "kind": "production",
+    "summary": "Say the near word, the far word and the question word in a row, and name the part that changed.",
+    "assesses": [
+      "HI-LEX-C40-DEIXIS-01",
+      "HI-LEX-C40-DEIXIS-02",
+      "HI-LEX-C40-DEIXIS-03",
+      "HI-LEX-C40-DEIXIS-04",
+      "HI-LEX-C40-DEIXIS-05",
+      "HI-LEX-C40-DEIXIS-06",
+      "HI-GRAMMAR-C40-DEIXIS-SYSTEM"
+    ]
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "chapter": 85,
+  "title": "Me and Te --- The Two People Talking",
+  "label": "ch:pronoun-me-te",
+  "canDo": "I can say te quiero and me quieres, and tell the doer form apart from the object form.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C42-te",
+    "kind": "task",
+    "summary": "Complete ES-C42-te: produce te quiero and me quieres, and name the English pair that matches tu and te.",
+    "assesses": [
+      "ES-LEX-TE-OBJECT",
+      "ES-GRAMMAR-TE-DIRECT-OBJECT",
+      "ES-ETYMON-TE-TU",
+      "ES-LEX-TE-QUIERO",
+      "ES-GRAMMAR-ME-DIRECT-OBJECT"
+    ],
+    "note": "Exactly one new form. Me contributes a second use of a word held since chapter four, which is why both lessons fit one chapter without crowding it."
+  }
+}

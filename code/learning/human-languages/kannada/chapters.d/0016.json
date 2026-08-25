@@ -1,0 +1,20 @@
+{
+  "chapter": 16,
+  "title": "The Traditional Months",
+  "label": "ch:ka-traditional-months",
+  "canDo": "I can name the twelve traditional Kannada months and say when the new year Ugadi falls.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "KA-C16-tingalugalu",
+    "kind": "task",
+    "summary": "Recite Caitra through Phālguṇa, place Ugadi at Chaitra Śukla Pratipada, and note that this calendar is shared with Hindi, not with Tamil or Malayalam.",
+    "assesses": [
+      "KA-ETYMON-C15-NIIRU-AKKI-01",
+      "KA-ETYMON-C15-NIIRU-AKKI-02",
+      "KA-LEX-C16-TINGALUGALU-01",
+      "KA-PRAGMATICS-C16-TINGALUGALU-02"
+    ]
+  }
+}

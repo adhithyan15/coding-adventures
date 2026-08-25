@@ -1,0 +1,21 @@
+{
+  "chapter": 72,
+  "title": "The Market",
+  "label": "ch:te-the-market",
+  "canDo": "I can buy something in a Telugu shop, ask the price, and thank the seller.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "TE-C72-bargain",
+    "kind": "production",
+    "summary": "Complete TE-C72-bargain and demonstrate the chapter promise.",
+    "assesses": [
+      "TE-LEX-C72-MARKET-01",
+      "TE-LEX-C72-MARKET-02",
+      "TE-LEX-C72-MARKET-03",
+      "TE-LEX-C72-MARKET-04",
+      "TE-LEX-C72-MARKET-05"
+    ]
+  }
+}

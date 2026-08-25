@@ -1,0 +1,26 @@
+{
+  "chapter": 9,
+  "title": "Taking, Asking, Helping, and What Pleases You",
+  "label": "ch:pa-taking-and-liking",
+  "canDo": "I can take, ask, help and say what I like in Punjabi, build a fresh verb by putting a noun in front of ਕਰਨਾ, tell an inherited word from a borrowed one by its line of descent rather than by how it looks, and say why ਮੈਨੂੰ ਪੰਜਾਬੀ ਪਸੰਦ ਹੈ has no room for me as its subject.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "PA-C09-pasand",
+    "kind": "production",
+    "summary": "Say ਮੈਨੂੰ ਪੰਜਾਬੀ ਪਸੰਦ ਹੈ and hear that you are not its subject, swap any infinitive into the middle slot, and run the chapter's four verbs back to where each came from — laiṇā worn down from Sanskrit labhate, puchhṇā from pṛcchati and cousin to Persian porsīdan without either being a loan, madad genuinely borrowed from Arabic through Persian, and pasand a Persian noun whose *pati- 'toward' does the same job as the ā- of ਆਉਣਾ.",
+    "assesses": [
+      "PA-LEX-LAINA",
+      "PA-ETYMON-LAINA-LABH",
+      "PA-LEX-PUCHHNA",
+      "PA-ETYMON-PUCHHNA-PRACH",
+      "PA-LEX-MADAD-KARNA",
+      "PA-ETYMON-MADAD-ARABIC",
+      "PA-GRAMMAR-NOUN-PLUS-KARNA",
+      "PA-LEX-PASAND",
+      "PA-GRAMMAR-DATIVE-LIKING",
+      "PA-ETYMON-PASAND-SHINE"
+    ]
+  }
+}

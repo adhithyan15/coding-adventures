@@ -1,0 +1,20 @@
+{
+  "chapter": 117,
+  "title": "He Hablado --- A Verb With No Meaning Left",
+  "label": "ch:perfect-first-person",
+  "canDo": "I can say he hablado, and say what haber contributes to it.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "ES-C49-he-hablado",
+    "kind": "task",
+    "summary": "Complete ES-C49-he-hablado: produce he hablado espanol and say what haber means there.",
+    "assesses": [
+      "ES-LEX-HABER",
+      "ES-GRAMMAR-PERFECT-FIRST-PERSON",
+      "ES-ETYMON-HABERE"
+    ],
+    "note": "Answers the question learners actually have: haber means nothing here. Spanish gave the meaning to tener, exactly as English hollowed out have."
+  }
+}

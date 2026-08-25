@@ -1,0 +1,21 @@
+{
+  "chapter": 19,
+  "title": "Asking Someone's Age",
+  "label": "ch:te-asking-age",
+  "canDo": "I can ask someone how old they are in Telugu and give my own age in return.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "TE-C19-vayasu",
+    "kind": "dialogue",
+    "summary": "Ask నీ వయసెంత? and answer నా వయసు ఇరవై — a complete verbless exchange about age.",
+    "assesses": [
+      "TE-LEX-C18-GANTA-01",
+      "TE-PRAGMATICS-C18-GANTA-02",
+      "TE-GRAMMAR-C18-GANTA-03",
+      "TE-ETYMON-C19-VAYASU-01",
+      "TE-GRAMMAR-C19-VAYASU-02"
+    ]
+  }
+}

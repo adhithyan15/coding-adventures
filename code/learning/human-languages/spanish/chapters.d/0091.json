@@ -1,0 +1,24 @@
+{
+  "chapter": 91,
+  "title": "Review --- All Eight",
+  "label": "ch:review-object-complete",
+  "canDo": "I can give all eight direct object pronouns and say which four depend on a noun.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C45-repaso-ocho",
+    "kind": "task",
+    "summary": "Complete ES-C45-repaso-ocho: give the eight pronouns and identify the four that a noun decides.",
+    "assesses": [
+      "ES-GRAMMAR-ME-DIRECT-OBJECT",
+      "ES-GRAMMAR-TE-DIRECT-OBJECT",
+      "ES-GRAMMAR-DIRECT-OBJECT-LO",
+      "ES-GRAMMAR-DIRECT-OBJECT-LA",
+      "ES-GRAMMAR-NOS-DIRECT-OBJECT",
+      "ES-GRAMMAR-OS-DIRECT-OBJECT",
+      "ES-GRAMMAR-DIRECT-OBJECT-PLURAL"
+    ],
+    "note": "Nine chapters of one cell at a time; this is the first page on which all eight appear together, and two of them were never taught at all."
+  }
+}

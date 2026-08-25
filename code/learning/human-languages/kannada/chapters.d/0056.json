@@ -1,0 +1,21 @@
+{
+  "chapter": 56,
+  "title": "In the House",
+  "label": "ch:ka-house",
+  "canDo": "I can name five ordinary things in a Kannada house, and say which two of them arrived with borrowed names.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "KA-C56-box",
+    "kind": "production",
+    "summary": "Complete KA-C56-box and say all five words in order.",
+    "assesses": [
+      "KA-LEX-C56-HOUSE-01",
+      "KA-LEX-C56-HOUSE-02",
+      "KA-LEX-C56-HOUSE-03",
+      "KA-LEX-C56-HOUSE-04",
+      "KA-LEX-C56-HOUSE-05"
+    ]
+  }
+}

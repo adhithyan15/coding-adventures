@@ -1,0 +1,21 @@
+{
+  "chapter": 5,
+  "title": "Take Leave",
+  "label": "ch:ur-take-leave",
+  "canDo": "I can open a short Urdu conversation, ask how the other person is, and close it with khudā hāfiz.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "UR-C05-practice",
+    "kind": "dialogue",
+    "summary": "A four-line interaction with a beginning and an end: salām, the wellbeing check, then khudā hāfiz from both voices.",
+    "assesses": [
+      "UR-DIALOGUE-WELLBEING",
+      "UR-LEX-KHUDA-HAFIZ",
+      "UR-SCRIPT-KHUDA-HAFIZ-SPACED",
+      "UR-PRAGMATICS-STANDARD-FAREWELL",
+      "UR-DIALOGUE-TAKE-LEAVE"
+    ]
+  }
+}

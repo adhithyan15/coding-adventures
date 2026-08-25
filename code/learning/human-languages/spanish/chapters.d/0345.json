@@ -1,0 +1,21 @@
+{
+  "chapter": 345,
+  "title": "Pinning Down Which One",
+  "label": "ch:cada-y-mismo",
+  "canDo": "I can say mismo, cada, la parte, la persona and el objeto, and say why a Latin actor's mask became the ordinary word for a human being.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C345-objeto",
+    "kind": "production",
+    "summary": "Complete ES-C345-objeto: say it is the same one, take a set one at a time, name a share of it, name a single human being, and name a thing on purpose.",
+    "assesses": [
+      "ES-LEX-C345-REF-01",
+      "ES-LEX-C345-REF-02",
+      "ES-LEX-C345-REF-03",
+      "ES-LEX-C345-REF-04",
+      "ES-LEX-C345-REF-05"
+    ]
+  }
+}

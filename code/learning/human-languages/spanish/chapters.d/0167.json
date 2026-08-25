@@ -1,0 +1,24 @@
+{
+  "chapter": 167,
+  "title": "Telling What Happened",
+  "label": "ch:spanish-narrating",
+  "canDo": "I can tell a short connected story about something that happened — ordering the events with luego, giving a reason with porque, and choosing the imperfect for the scene and the preterite for the events.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C38-contar",
+    "kind": "task",
+    "summary": "Tell a four-sentence story out loud: Llovía. Me levanté, luego bebí café. No corrí, porque llovía mucho. Me senté y leí. Every word in it has been taught in this book, and the two pasts divide the work between scene and event.",
+    "assesses": [
+      "ES-GRAMMAR-LUEGO-CONNECTIVE-01",
+      "ES-LEX-PORQUE-03",
+      "ES-ETYMON-PORQUE-04",
+      "ES-GRAMMAR-SCENE-VS-EVENT-06",
+      "ES-ETYMON-IMPERFECTUS-07",
+      "ES-LEX-CONTAR-08",
+      "ES-ETYMON-CONTAR-09",
+      "ES-GRAMMAR-NARRATIVE-10"
+    ]
+  }
+}

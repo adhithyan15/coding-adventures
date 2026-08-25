@@ -1,0 +1,18 @@
+{
+  "chapter": 75,
+  "title": "Synthesis --- You, and Somebody Else",
+  "label": "ch:spanish-synthesis-yo-go",
+  "canDo": "I can say the same thing about myself and about someone else, and know which of the two is irregular.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C13-sintesis-yo-go",
+    "kind": "dialogue",
+    "summary": "The oddity lives only in the yo slot - the form a beginner says most.",
+    "assesses": [
+      "ES-GRAMMAR-YO-GO-CONTRAST-LEARNED",
+      "ES-GRAMMAR-PRO-DROP"
+    ]
+  }
+}

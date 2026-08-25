@@ -1,0 +1,22 @@
+{
+  "chapter": 7,
+  "title": "Numbers One to Ten",
+  "label": "ch:te-numbers-one-to-ten",
+  "canDo": "I can count from one to ten in Telugu, including the numbers that wander furthest from their Dravidian cousins.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "TE-C07-numbers-6-10",
+    "kind": "task",
+    "summary": "Count ఒకటి through పది, say the two Telugu builds fresh — enimidi and tommidi — and hear seven's three fates in ēḻu, ēḷu and ēḍu.",
+    "assesses": [
+      "TE-LEX-C07-NUMBERS-1-5-01",
+      "TE-ETYMON-C07-NUMBERS-1-5-02",
+      "TE-SCRIPT-C07-NUMBERS-1-5-03",
+      "TE-LEX-C07-NUMBERS-6-10-01",
+      "TE-ETYMON-C07-NUMBERS-6-10-02",
+      "TE-ETYMON-C07-NUMBERS-6-10-03"
+    ]
+  }
+}

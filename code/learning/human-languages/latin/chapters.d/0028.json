@@ -1,0 +1,22 @@
+{
+  "chapter": 28,
+  "title": "Day",
+  "label": "ch:la-day",
+  "canDo": "I can use diēs on its own for day, after meeting it inside the weekday and noon phrases.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "LA-C28-dies",
+    "kind": "production",
+    "summary": "Say diēs alone, point to it inside diēs Lūnae and medius diēs, and separate journal and journey from diary.",
+    "assesses": [
+      "LA-LEX-DIES-LUNAE-VENERIS-01",
+      "LA-PRAGMATICS-DIES-LUNAE-VENERIS-02",
+      "LA-LEX-MEDIUS-DIES-NOX-01",
+      "LA-PRAGMATICS-MEDIUS-DIES-NOX-02",
+      "LA-LEX-DIES-01",
+      "LA-ETYMON-DIES-02"
+    ]
+  }
+}

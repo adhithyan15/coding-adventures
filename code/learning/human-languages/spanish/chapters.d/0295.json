@@ -1,0 +1,21 @@
+{
+  "chapter": 295,
+  "title": "The Way Out --- Path, Bridge, Shore, Island, Mist",
+  "label": "ch:el-sendero",
+  "canDo": "I can name the path, the bridge, the shore, the island and the mist in Spanish.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "ES-C295-niebla",
+    "kind": "production",
+    "summary": "Complete ES-C295-niebla: name all five of the way out, from the path to the mist behind you.",
+    "assesses": [
+      "ES-LEX-C295-PATH-01",
+      "ES-LEX-C295-PATH-02",
+      "ES-LEX-C295-PATH-03",
+      "ES-LEX-C295-PATH-04",
+      "ES-LEX-C295-PATH-05"
+    ]
+  }
+}

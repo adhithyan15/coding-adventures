@@ -1,0 +1,19 @@
+{
+  "chapter": 2,
+  "title": "Give your name",
+  "label": "ch:persian-name",
+  "canDo": "I can say my name in Persian in one careful sentence, and I can hear the small linking -e that ties the name to its owner.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "FA-C02-esm-e-man",
+    "kind": "production",
+    "summary": "One careful sentence with a slot for your own name: esm-e man ... ast, with the spoken ezafe doing the linking.",
+    "assesses": [
+      "FA-LEX-ESM-E-MAN-AST",
+      "FA-SCRIPT-ESM-MAN-AST",
+      "FA-GRAMMAR-EZAFE-OWNER"
+    ]
+  }
+}

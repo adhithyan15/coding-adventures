@@ -1,0 +1,20 @@
+{
+  "chapter": 2,
+  "title": "Reading the Greeting — One Piece at a Time",
+  "label": "ch:zh-components",
+  "canDo": "I can write each component the greeting's two characters are built from, and then assemble both characters from those pieces rather than recalling them as whole shapes.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "ZH-W01-hao-build",
+    "kind": "writing",
+    "summary": "The second assembly, built from two components the reader wrote individually a moment earlier — and a caution that the memorable story about why it means what it means is a story, not a source.",
+    "assesses": [
+      "ZH-SCRIPT-HAO-BUILD-01",
+      "ZH-SCRIPT-NU-01",
+      "ZH-SCRIPT-ZI-01",
+      "ZH-SCRIPT-NI-BUILD-01"
+    ]
+  }
+}

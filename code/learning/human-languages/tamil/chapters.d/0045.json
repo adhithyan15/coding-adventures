@@ -1,0 +1,21 @@
+{
+  "chapter": 45,
+  "title": "More of the Body",
+  "label": "ch:ta-body-more",
+  "canDo": "I can name five more parts of the body in Tamil, and point to the sound changes that separate them from their Malayalam, Telugu and Kannada cousins.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "TA-C45-stomach",
+    "kind": "production",
+    "summary": "Complete TA-C45-stomach and say all five words in order.",
+    "assesses": [
+      "TA-LEX-C45-BODY-01",
+      "TA-LEX-C45-BODY-02",
+      "TA-LEX-C45-BODY-03",
+      "TA-LEX-C45-BODY-04",
+      "TA-LEX-C45-BODY-05"
+    ]
+  }
+}

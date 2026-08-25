@@ -1,0 +1,18 @@
+{
+  "chapter": 17,
+  "title": "Noon and Midnight",
+  "label": "ch:hi-noon-and-midnight",
+  "canDo": "I can say noon and midnight in Hindi and explain the old three-hour pahar hidden inside दोपहर.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "HI-C17-dopahar-aadhi-raat",
+    "kind": "production",
+    "summary": "Say दोपहर as 'two pahars' and आधी रात as 'half night', contrasting one built on an old time-unit with one built plainly.",
+    "assesses": [
+      "HI-CONCEPT-C17-DOPAHAR-AADHI-RAAT-01",
+      "HI-CONCEPT-C17-DOPAHAR-AADHI-RAAT-02"
+    ]
+  }
+}

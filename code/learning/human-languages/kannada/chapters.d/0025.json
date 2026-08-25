@@ -1,0 +1,21 @@
+{
+  "chapter": 25,
+  "title": "Good Night",
+  "label": "ch:ka-good-night",
+  "canDo": "I can wish someone good night in Kannada.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "KA-C25-shubha-ratri",
+    "kind": "dialogue",
+    "summary": "Say ಶುಭ ರಾತ್ರಿ — \"auspicious night\" — pairing the ರಾತ್ರಿ already learned with śubha, from a root meaning \"to be beautiful.\"",
+    "assesses": [
+      "KA-ETYMON-C24-RATRI-01",
+      "KA-ETYMON-C24-RATRI-02",
+      "KA-ETYMON-C25-SHUBHA-RATRI-01",
+      "KA-ETYMON-C25-SHUBHA-RATRI-02",
+      "KA-ETYMON-C25-SHUBHA-RATRI-03"
+    ]
+  }
+}

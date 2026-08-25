@@ -1,0 +1,17 @@
+{
+  "chapter": 235,
+  "title": "Review --- Four Small Words, One Instinct",
+  "label": "ch:repaso-juntores",
+  "canDo": "I can use the small joining words without hesitating.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C61-repaso-juntores",
+    "kind": "task",
+    "summary": "I can use the small joining words without hesitating.",
+    "assesses": [
+      "ES-GRAMMAR-CONTRACTION-ONLY-TWO"
+    ]
+  }
+}

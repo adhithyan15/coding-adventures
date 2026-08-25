@@ -1,0 +1,34 @@
+{
+  "chapter": 34,
+  "title": "Four Verbs Between People",
+  "label": "ch:te-verbs-between-people",
+  "canDo": "I can say I take, I ask and I help in Telugu, say నాకు తెలుగు ఇష్టం knowing there is no verb in it, place it beside the three other dative sentences I have built, and name the branch of Dravidian Telugu actually belongs to.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "TE-C34-ishtam",
+    "kind": "production",
+    "summary": "Say నాకు తెలుగు ఇష్టం and unpack it as \"to me, Telugu, a liking\" with no verb at all; line it up against నాకు తెలుగు వచ్చు, నాకు తెలుసు and నాకు అర్థమైంది; choose between the native నచ్చు and ఇష్టపడు, whose పడు is the falling of వర్షం పడుతోంది; and trace ఇష్టం to the Indo-European root behind English ask.",
+    "assesses": [
+      "TE-LEX-C34-ISHTAM-01",
+      "TE-GRAMMAR-C34-ISHTAM-02",
+      "TE-ETYMON-C34-ISHTAM-03",
+      "TE-LEX-C34-SAHAYAM-CEYU-01",
+      "TE-ETYMON-C34-SAHAYAM-CEYU-02",
+      "TE-LEX-C34-ADUGU-01",
+      "TE-ETYMON-C34-ADUGU-02",
+      "TE-ETYMON-C34-ADUGU-03",
+      "TE-LEX-C34-TIISUKO-01",
+      "TE-ETYMON-C34-TIISUKO-02",
+      "TE-LEX-C06-DATIVE-SUBJECT-01",
+      "TE-GRAMMAR-C06-DATIVE-SUBJECT-02",
+      "TE-ETYMON-C06-DATIVE-SUBJECT-03",
+      "TE-LEX-C32-TELUSU-01",
+      "TE-GRAMMAR-C32-TELUSU-02",
+      "TE-GRAMMAR-C33-ARTHAM-CESUKO-02",
+      "TE-GRAMMAR-C20-VATAVARANAM-02",
+      "TE-ETYMON-C07-NUMBERS-6-10-03"
+    ]
+  }
+}

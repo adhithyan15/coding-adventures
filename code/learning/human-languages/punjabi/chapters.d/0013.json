@@ -1,0 +1,24 @@
+{
+  "chapter": 13,
+  "title": "Heart and Head",
+  "label": "ch:pa-heart-and-head",
+  "canDo": "I can name the heart and the head in Punjabi, tell that ਦਿਲ is Punjabi's one borrowed body word against four inherited ones, and trace ਸਿਰ to the same root as English horn rather than English head.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "PA-C13-sir",
+    "kind": "production",
+    "summary": "The tranche closes on ਸਿਰ: the reader produces all six body words from this tranche, states that ਸਿਰ's real English cousin is horn, not head, and that its resemblance to Persian sar is convergence from a shared Proto-Indo-Iranian ancestor rather than a loan — the opposite case from ਦਿਲ, which genuinely was borrowed from Persian despite sharing the same deep Indo-European root as English heart.",
+    "assesses": [
+      "PA-LEX-SIR",
+      "PA-ETYMON-SIR-HORN",
+      "PA-LEX-DIL",
+      "PA-ETYMON-DIL-HEART",
+      "PA-LEX-NAKK",
+      "PA-LEX-AKKH",
+      "PA-LEX-KANN",
+      "PA-LEX-MUNH"
+    ]
+  }
+}

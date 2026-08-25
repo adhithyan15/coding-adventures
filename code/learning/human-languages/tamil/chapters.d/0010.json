@@ -1,0 +1,19 @@
+{
+  "chapter": 10,
+  "title": "Days of the Week",
+  "label": "ch:ta-days-of-the-week",
+  "canDo": "I can name the seven weekdays, take each apart as planet plus கிழமை, and say which are Tamil's own words and which arrived from Sanskrit.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "TA-C10-vaara-kizhamai",
+    "kind": "production",
+    "summary": "Run the week from thiṅgaḷ to ñāyiṟu, sorting the four native planet-words from the three Sanskrit ones as you go.",
+    "assesses": [
+      "TA-PRAGMATICS-SORRY-REGISTER-01",
+      "TA-GRAMMAR-VAARA-KIZHAMAI-01",
+      "TA-PRAGMATICS-VAARA-KIZHAMAI-02"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "chapter": 5,
+  "title": "Days of the Week",
+  "label": "ch:la-days-of-the-week",
+  "canDo": "I can name all seven Roman weekdays and say which modern names kept Rome's gods and which were rewritten.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "LA-C05-saturni-solis",
+    "kind": "task",
+    "summary": "Name the full seven-day planetary week, then sort Saturday and Sunday by which languages kept Rome's gods and which renamed them.",
+    "assesses": [
+      "LA-LEX-DIES-LUNAE-VENERIS-01",
+      "LA-PRAGMATICS-DIES-LUNAE-VENERIS-02",
+      "LA-LEX-SATURNI-SOLIS-01",
+      "LA-PRAGMATICS-SATURNI-SOLIS-02"
+    ]
+  }
+}

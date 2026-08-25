@@ -1,0 +1,26 @@
+{
+  "chapter": 1,
+  "title": "Nǐ Hǎo — Hello, Character by Character",
+  "label": "ch:zh-nihao",
+  "canDo": "I can greet someone in Mandarin and answer when greeted, reading both characters unaided and saying the greeting with the tone a speaker actually uses rather than the one the dictionary prints.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "ZH-C01-practice",
+    "kind": "dialogue",
+    "summary": "A two-line meeting in which both voices say the same word — read from the characters alone, with the first third tone raised by sandhi.",
+    "assesses": [
+      "ZH-LEX-NI",
+      "ZH-LEX-HAO",
+      "ZH-SCRIPT-NI",
+      "ZH-SCRIPT-HAO",
+      "ZH-LEX-NIHAO",
+      "ZH-TONE-SANDHI-THIRD",
+      "ZH-TONE-LEXICAL",
+      "ZH-METHOD-COMPONENT-HOOK",
+      "ZH-GRAMMAR-COMPOUND-WORD",
+      "ZH-DIALOGUE-GREET"
+    ]
+  }
+}

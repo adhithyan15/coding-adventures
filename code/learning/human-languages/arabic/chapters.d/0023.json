@@ -1,0 +1,18 @@
+{
+  "chapter": 23,
+  "title": "You're Welcome",
+  "label": "ch:ar-youre-welcome",
+  "canDo": "I can reply to shukran with ʿafwan, and use the same word to say excuse me.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "AR-C23-afwan",
+    "kind": "production",
+    "summary": "Say ʿafwan as the reply to thanks, unpack the root 'to erase' behind it, and hear the same -an ending it shares with shukran.",
+    "assesses": [
+      "AR-CONCEPT-C23-AFWAN-01",
+      "AR-CONCEPT-C23-AFWAN-02"
+    ]
+  }
+}

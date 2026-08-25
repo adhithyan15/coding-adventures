@@ -1,0 +1,20 @@
+{
+  "chapter": 277,
+  "title": "Working From Sources --- Credit It, Restate It, Hold Both, Compress",
+  "label": "ch:fuentes",
+  "canDo": "I can attribute a claim in Spanish, restate it in my own words, hold two disagreeing sources in one structure, and compress both into a sentence.",
+  "spineNodes": [
+    "SPINE-SUMMARIZE-FROM-SOURCES"
+  ],
+  "payoff": {
+    "lesson": "ES-C277-practice",
+    "kind": "task",
+    "summary": "Complete ES-C277-practice: run all four moves on two sources that disagree, then say what the summary left out.",
+    "assesses": [
+      "ES-SEMANTIC-ATTRIBUTION",
+      "ES-SEMANTIC-PARAPHRASE",
+      "ES-SEMANTIC-SYNTHESIS",
+      "ES-SEMANTIC-COMPRESSION"
+    ]
+  }
+}

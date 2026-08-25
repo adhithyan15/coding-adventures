@@ -1,0 +1,21 @@
+{
+  "chapter": 6,
+  "title": "Case Endings and Dative Subjects",
+  "label": "ch:te-dative-case",
+  "canDo": "I can say that I know Telugu the way Telugu itself says it — \"to me Telugu comes,\" with no subject and the dative -ku.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "TE-C06-dative-subject",
+    "kind": "production",
+    "summary": "Say నాకు తెలుగు వచ్చు against నేను తెలుగు మాట్లాడతాను, then line up the four Dravidian datives -ku · -ukku · -ge · -ikku.",
+    "assesses": [
+      "TE-LEX-C06-DATIVE-KU-01",
+      "TE-GRAMMAR-C06-DATIVE-KU-02",
+      "TE-LEX-C06-DATIVE-SUBJECT-01",
+      "TE-GRAMMAR-C06-DATIVE-SUBJECT-02",
+      "TE-ETYMON-C06-DATIVE-SUBJECT-03"
+    ]
+  }
+}

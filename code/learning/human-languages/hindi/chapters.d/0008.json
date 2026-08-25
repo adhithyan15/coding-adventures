@@ -1,0 +1,18 @@
+{
+  "chapter": 8,
+  "title": "Please",
+  "label": "ch:hi-please",
+  "canDo": "I can say please in Hindi, both with कृपया and with the polite verb ending everyday speech actually prefers.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "HI-C08-kripaya",
+    "kind": "production",
+    "summary": "Say कृपया with its vocalic ऋ, unpack it as 'of your compassion', then switch to the everyday बैठिए, 'please sit'.",
+    "assesses": [
+      "HI-CONCEPT-C08-KRIPAYA-01",
+      "HI-CONCEPT-C08-KRIPAYA-02"
+    ]
+  }
+}

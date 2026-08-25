@@ -1,0 +1,19 @@
+{
+  "chapter": 19,
+  "title": "How Are You?",
+  "label": "ch:la-how-are-you",
+  "canDo": "I can ask someone in Latin how they are, and answer that I am well.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "LA-C19-practice",
+    "kind": "dialogue",
+    "summary": "A five-line exchange run end to end: salvē, quid agis?, valeō with grātiās tibi agō, ut valēs?, and valē from both voices.",
+    "assesses": [
+      "LA-PRAGMATICS-QUID-AGIS-01",
+      "LA-LEX-VALEO-FAMILY-01",
+      "LA-DIALOGUE-WELLBEING-01"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 158,
+  "title": "Synthesis --- What You Understand, and What You Don't",
+  "label": "ch:spanish-synthesis-verbs-of-mind",
+  "canDo": "I can report which part of what I heard landed and which did not, instead of only signalling that I am lost.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C34-sintesis-mente",
+    "kind": "dialogue",
+    "summary": "The chapter-14 distress signal becomes a sentence with moving parts.",
+    "assesses": [
+      "ES-LEX-NO-ENTIENDO-01",
+      "ES-LEX-ENTENDER-03",
+      "ES-ETYMON-ENTENDER-04"
+    ]
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "chapter": 23,
+  "title": "Friends, Family, and a Name",
+  "label": "ch:it-friends-family-name",
+  "canDo": "I can introduce a friend, name a family as a whole, ask for someone's name with the word itself, and say 'person' the way Italian always does.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "IT-C23-persona",
+    "kind": "task",
+    "summary": "The chapter's last lesson gathers l'amico/l'amica, la famiglia, il nome and la persona, closing on the one noun taught so far whose grammatical gender never tracks the sex of whoever it names.",
+    "assesses": [
+      "IT-LEX-AMICO-AMICA-02",
+      "IT-GRAMMAR-AMICO-AMICA-04",
+      "IT-LEX-FAMIGLIA-02",
+      "IT-LEX-NOME-02",
+      "IT-ETYMON-NOME-03",
+      "IT-NOTICE-NOME-04",
+      "IT-ETYMON-GENITORI-02",
+      "IT-LEX-TESTA-02",
+      "IT-LEX-PERSONA-02",
+      "IT-ETYMON-PERSONA-03",
+      "IT-GRAMMAR-PERSONA-04"
+    ]
+  }
+}

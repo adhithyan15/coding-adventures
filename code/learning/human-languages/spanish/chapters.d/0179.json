@@ -1,0 +1,20 @@
+{
+  "chapter": 179,
+  "title": "Review --- One Arrow",
+  "label": "ch:review-por-para",
+  "canDo": "I can state both directions and place my old por phrases under them.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C51-repaso-flecha",
+    "kind": "task",
+    "summary": "Complete ES-C51-repaso-flecha: give both directions, name three old phrases containing por, and say what it means when a sentence takes either.",
+    "assesses": [
+      "ES-GRAMMAR-POR-PARA-CONTRAST",
+      "ES-LEX-POR-FAVOR",
+      "ES-LEX-PORQUE-03"
+    ],
+    "note": "Mostly re-files old Spanish under a heading that explains it, and says so -- much of what looks like late grammar is a name for something already done blindly."
+  }
+}

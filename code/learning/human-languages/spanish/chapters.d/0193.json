@@ -1,0 +1,19 @@
+{
+  "chapter": 193,
+  "title": "Hay Que --- Somebody Has To, and Nobody in Particular",
+  "label": "ch:hay-que",
+  "canDo": "I can express an obligation without naming who is obliged.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ES-C54-hay-que",
+    "kind": "task",
+    "summary": "Complete ES-C54-hay-que: produce hay que hablar espanol and name the other construction that leaves the person out.",
+    "assesses": [
+      "ES-GRAMMAR-HAY-QUE",
+      "ES-GRAMMAR-SE-IMPERSONAL"
+    ],
+    "note": "Pairs with the impersonal se: one says something happens without a doer, the other says something must happen without one."
+  }
+}

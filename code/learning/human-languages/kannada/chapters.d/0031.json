@@ -1,0 +1,25 @@
+{
+  "chapter": 31,
+  "title": "Good Afternoon",
+  "label": "ch:ka-good-afternoon",
+  "canDo": "I can wish someone good afternoon in Kannada, and fall back on ನಮಸ್ಕಾರ when I want a greeting that fits any hour.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "KA-C31-shubha-madhyahna",
+    "kind": "dialogue",
+    "summary": "Say ಶುಭ ಮಧ್ಯಾಹ್ನ — built on the \"noon\" word rather than ಅಪರಾಹ್ನ — and reach instead for ನಮಸ್ಕಾರ, the greeting confirmed to work at any time of day.",
+    "assesses": [
+      "KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-01",
+      "KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-02",
+      "KA-PRAGMATICS-C17-MADHYAAHNA-MADHYARAATRI-03",
+      "KA-ETYMON-C28-APARAHNA-01",
+      "KA-PRAGMATICS-C28-APARAHNA-02",
+      "KA-ETYMON-C30-SHUBHA-SANJE-01",
+      "KA-PRAGMATICS-C30-SHUBHA-SANJE-02",
+      "KA-ETYMON-C31-SHUBHA-MADHYAHNA-01",
+      "KA-PRAGMATICS-C31-SHUBHA-MADHYAHNA-02"
+    ]
+  }
+}

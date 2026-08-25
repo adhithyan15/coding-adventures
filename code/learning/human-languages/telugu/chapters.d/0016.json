@@ -1,0 +1,20 @@
+{
+  "chapter": 16,
+  "title": "The Traditional Months",
+  "label": "ch:te-traditional-months",
+  "canDo": "I can name the twelve traditional Telugu months and say when Ugadi, the new year, falls.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "TE-C16-nelalu",
+    "kind": "task",
+    "summary": "Recite Caitraṁ through Phālguṇaṁ, place Ugadi at Chaitra Śuddha Pādyami, and note the family split: Telugu and Kannada share Hindi's calendar, Tamil and Malayalam do not.",
+    "assesses": [
+      "TE-ETYMON-C15-NEELLU-BIYYAM-01",
+      "TE-ETYMON-C15-NEELLU-BIYYAM-02",
+      "TE-LEX-C16-NELALU-01",
+      "TE-ETYMON-C16-NELALU-02"
+    ]
+  }
+}

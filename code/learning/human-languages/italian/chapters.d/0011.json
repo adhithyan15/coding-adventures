@@ -1,0 +1,20 @@
+{
+  "chapter": 11,
+  "title": "Bread, Water, and Wine",
+  "label": "ch:it-bread-water-wine",
+  "canDo": "I can name bread, water and wine in Italian and show how acqua kept the whole of Latin's aqua.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "IT-C11-acqua-vino",
+    "kind": "task",
+    "summary": "Say il pane, l'acqua and il vino, hold the doubled -cq- of acqua against French's worn-down eau, and follow pane out to the companion who shares it.",
+    "assesses": [
+      "IT-ETYMON-PANE-02",
+      "IT-ETYMON-PANE-03",
+      "IT-ETYMON-ACQUA-VINO-02",
+      "IT-ETYMON-ACQUA-VINO-03"
+    ]
+  }
+}

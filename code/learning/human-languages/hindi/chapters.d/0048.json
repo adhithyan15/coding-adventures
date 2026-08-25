@@ -1,0 +1,21 @@
+{
+  "chapter": 48,
+  "title": "Short Replies",
+  "label": "ch:hi-replies",
+  "canDo": "I can answer someone in Hindi with one word, and pick how certain that one word sounds.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "HI-C48-absolutely",
+    "kind": "production",
+    "summary": "Complete HI-C48-absolutely and say all five words in order.",
+    "assesses": [
+      "HI-LEX-C48-REPLY-01",
+      "HI-LEX-C48-REPLY-02",
+      "HI-LEX-C48-REPLY-03",
+      "HI-LEX-C48-REPLY-04",
+      "HI-LEX-C48-REPLY-05"
+    ]
+  }
+}

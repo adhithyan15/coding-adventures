@@ -1,0 +1,17 @@
+{
+  "chapter": 63,
+  "title": "-ario --- the Eighth and Last Ending",
+  "label": "ch:ario",
+  "canDo": "I can read an -ario word as English -ary and tell noun from adjective.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C09-ario",
+    "kind": "task",
+    "summary": "I can read an -ario word as English -ary and tell noun from adjective.",
+    "assesses": [
+      "ES-FRIEND-ARIO-ARY"
+    ]
+  }
+}

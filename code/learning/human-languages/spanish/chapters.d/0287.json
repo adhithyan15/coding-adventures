@@ -1,0 +1,21 @@
+{
+  "chapter": 287,
+  "title": "Five Things You Ask For --- Soap, Towel, Glass, Spoon, Plate",
+  "label": "ch:cinco-cosas",
+  "canDo": "I can ask for soap, a towel, a glass, a spoon and a plate in Spanish, politely.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "ES-C287-plato",
+    "kind": "production",
+    "summary": "Complete ES-C287-plato: ask for all five in turn, with por favor on the end of each.",
+    "assesses": [
+      "ES-LEX-C287-ASK-01",
+      "ES-LEX-C287-ASK-02",
+      "ES-LEX-C287-ASK-03",
+      "ES-LEX-C287-ASK-04",
+      "ES-LEX-C287-ASK-05"
+    ]
+  }
+}

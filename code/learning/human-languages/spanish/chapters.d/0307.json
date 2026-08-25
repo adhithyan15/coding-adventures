@@ -1,0 +1,21 @@
+{
+  "chapter": 307,
+  "title": "The Wider Circle --- Wife, Uncle, Aunt, Cousin",
+  "label": "ch:esposos-y-tios",
+  "canDo": "I can name a wife, an uncle, an aunt and a cousin in Spanish, in either gender, and I know why Spanish and English chose different ancient words for the same relatives.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "ES-C307-prima",
+    "kind": "production",
+    "summary": "Complete ES-C307-prima: name the wider circle of relatives and pair each -o form with its -a form.",
+    "assesses": [
+      "ES-LEX-C307-KIN-06",
+      "ES-LEX-C307-KIN-07",
+      "ES-LEX-C307-KIN-08",
+      "ES-LEX-C307-KIN-09",
+      "ES-LEX-C307-KIN-10"
+    ]
+  }
+}

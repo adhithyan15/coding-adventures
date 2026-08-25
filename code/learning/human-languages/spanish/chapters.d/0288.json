@@ -1,0 +1,21 @@
+{
+  "chapter": 288,
+  "title": "Setting Off --- The Way Out, the Journey, the Return, the Arrival, the Farewell",
+  "label": "ch:la-partida",
+  "canDo": "I can name the way out, the journey, the return, the arrival and the farewell in Spanish.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "ES-C288-despedida",
+    "kind": "production",
+    "summary": "Complete ES-C288-despedida: name all five stages of a departure in order, from the way out to the goodbye.",
+    "assesses": [
+      "ES-LEX-C288-LEAVE-01",
+      "ES-LEX-C288-LEAVE-02",
+      "ES-LEX-C288-LEAVE-03",
+      "ES-LEX-C288-LEAVE-04",
+      "ES-LEX-C288-LEAVE-05"
+    ]
+  }
+}

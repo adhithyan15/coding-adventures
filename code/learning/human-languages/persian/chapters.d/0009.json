@@ -1,0 +1,26 @@
+{
+  "chapter": 9,
+  "title": "Please: Water, Bread, Tea, Key",
+  "label": "ch:fa-please-requests",
+  "canDo": "I can politely ask for water, bread, tea, or my key in Persian, and I can name the four vocabulary layers those four words come from.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "FA-C09-kelid",
+    "kind": "production",
+    "summary": "The chapter closes on kelid, a Greek loan, then runs all four requests back to back — âb, nân, chây, kelid, each with lotfan — and reuses the ezafe from Chapter 2 to ask for kelid-e man, my key.",
+    "assesses": [
+      "FA-LEX-AB",
+      "FA-PHRASE-LOTFAN",
+      "FA-ETYMON-AB",
+      "FA-LEX-NAN",
+      "FA-ETYMON-NAN",
+      "FA-LEX-CHAY",
+      "FA-ETYMON-CHAY",
+      "FA-LEX-KELID",
+      "FA-ETYMON-KELID",
+      "FA-GRAMMAR-EZAFE-OWNER"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 53,
+  "title": "The Sky",
+  "label": "ch:te-sky",
+  "canDo": "I can name five things overhead in Telugu, and say which of them Telugu borrowed and which it has always had.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "TE-C53-cloud",
+    "kind": "production",
+    "summary": "Complete TE-C53-cloud and demonstrate the chapter promise.",
+    "assesses": [
+      "TE-LEX-C53-SKY-01",
+      "TE-LEX-C53-SKY-02",
+      "TE-LEX-C53-SKY-03",
+      "TE-LEX-C53-SKY-04",
+      "TE-LEX-C53-SKY-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 56,
+  "title": "La Casa --- Your First Everyday Noun",
+  "label": "ch:noun-casa",
+  "canDo": "I can say la casa and tengo una casa, using the article and gender rules I already hold.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C43-casa",
+    "kind": "task",
+    "summary": "Complete ES-C43-casa: produce la casa and tengo una casa, and say what casa meant in Latin.",
+    "assesses": [
+      "ES-LEX-CASA",
+      "ES-ETYMON-CASA",
+      "ES-GRAMMAR-NOUN-GENDER",
+      "ES-GRAMMAR-INDEFINITE-ARTICLE-FEMININE"
+    ],
+    "note": "The chapter adds a noun and no grammar: the article, gender and tener machinery were all in place, and had nothing ordinary to act on."
+  }
+}

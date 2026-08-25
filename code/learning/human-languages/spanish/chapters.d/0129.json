@@ -1,0 +1,18 @@
+{
+  "chapter": 129,
+  "title": "Ojala --- a Prayer That Outlived Its Religion",
+  "label": "ch:spanish-ojala",
+  "canDo": "I can wish for something with ojala, and say where the word came from.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "ES-C18-practice",
+    "kind": "dialogue",
+    "summary": "wa-sha' allah, carried through al-Andalus and kept long after.",
+    "assesses": [
+      "ES-LEX-OJALA-SUBJUNCTIVE-TRIGGER",
+      "ES-ETYMON-OJALA-HISPANIC-ARABIC"
+    ]
+  }
+}

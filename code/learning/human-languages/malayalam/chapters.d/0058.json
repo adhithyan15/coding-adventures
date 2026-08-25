@@ -1,0 +1,21 @@
+{
+  "chapter": 58,
+  "title": "Five More Short Answers",
+  "label": "ch:ml-five-more-short-answers",
+  "canDo": "I can accept, refuse and ask for more or less in Malayalam.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "ML-C58-that-will-do",
+    "kind": "production",
+    "summary": "Complete ML-C58-that-will-do and say all five words in order.",
+    "assesses": [
+      "ML-LEX-C58-ANSWER-01",
+      "ML-LEX-C58-ANSWER-02",
+      "ML-LEX-C58-ANSWER-03",
+      "ML-LEX-C58-ANSWER-04",
+      "ML-LEX-C58-ANSWER-05"
+    ]
+  }
+}

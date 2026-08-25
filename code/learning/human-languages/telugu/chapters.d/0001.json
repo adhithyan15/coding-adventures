@@ -1,0 +1,18 @@
+{
+  "chapter": 1,
+  "title": "Greetings",
+  "label": "ch:greetings",
+  "canDo": "I can greet someone in Telugu, recognize the reply, and choose an appropriate response.",
+  "spineNodes": [
+    "SPINE-MEET-GREET",
+    "SPINE-RESPOND-BASIC",
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "TE-C01-practice",
+    "kind": "task",
+    "summary": "Complete TE-C01-practice, the canonical closing checkpoint, and demonstrate the chapter promise: greet someone in Telugu, recognize the reply, and choose an appropriate response.",
+    "assesses": [],
+    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "chapter": 11,
+  "title": "Head and Hand",
+  "label": "ch:ar-head-and-hand",
+  "canDo": "I can name the head and the hand in Arabic.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "AR-C11-yad",
+    "kind": "production",
+    "summary": "Say yad, set it against its near-identical Hebrew twin, and contrast how much further raʾs drifted.",
+    "assesses": [
+      "AR-CONCEPT-C11-YAD-01",
+      "AR-CONCEPT-C11-YAD-02"
+    ]
+  }
+}

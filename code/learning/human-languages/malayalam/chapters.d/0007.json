@@ -1,0 +1,22 @@
+{
+  "chapter": 7,
+  "title": "Numbers One to Ten",
+  "label": "ch:ml-numbers-one-to-ten",
+  "canDo": "I can hear, say, read, and write representative numbers from one to ten in Malayalam.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "ML-C07-numbers-practice",
+    "kind": "production",
+    "summary": "Count onnu to pathu, read the ten numeral shapes out of order, and write ezhu with its numeral from sound alone.",
+    "assesses": [
+      "ML-CONCEPT-C07-NUMBERS-1-5-01",
+      "ML-CONCEPT-C07-NUMBERS-1-5-02",
+      "ML-CONCEPT-C07-NUMBERS-1-5-03",
+      "ML-CONCEPT-C07-NUMBERS-6-10-01",
+      "ML-CONCEPT-C07-NUMBERS-6-10-02",
+      "ML-CONCEPT-C07-NUMBERS-6-10-03"
+    ]
+  }
+}

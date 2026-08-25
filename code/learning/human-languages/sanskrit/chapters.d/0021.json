@@ -1,0 +1,20 @@
+{
+  "chapter": 21,
+  "title": "More Everyday Verbs",
+  "label": "ch:sa-more-verbs",
+  "canDo": "I can say that someone drinks, laughs, stands and remembers in Sanskrit.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "SA-C21-remember",
+    "kind": "production",
+    "summary": "Complete SA-C21-remember and say all four verbs in order.",
+    "assesses": [
+      "SA-LEX-DANCE",
+      "SA-LEX-LAUGH",
+      "SA-LEX-STAND",
+      "SA-LEX-REMEMBER"
+    ]
+  }
+}

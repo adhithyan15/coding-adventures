@@ -1,0 +1,17 @@
+{
+  "chapter": 264,
+  "title": "Comer Es Bueno --- The Infinitive as Subject",
+  "label": "ch:comer-es-bueno",
+  "canDo": "I can name an activity and say something about it.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C67-comer-es-bueno",
+    "kind": "task",
+    "summary": "I can name an activity and say something about it.",
+    "assesses": [
+      "ES-GRAMMAR-INFINITIVE-AS-SUBJECT"
+    ]
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "chapter": 34,
+  "title": "Good Evening",
+  "label": "ch:la-good-evening",
+  "canDo": "I can wish someone a good evening in Latin, and point to the accusative that bonum māne could not show.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "LA-C34-bonum-vesperum",
+    "kind": "dialogue",
+    "summary": "Wish someone bonum vesperum, and use its masculine ending to show the accusative rule bonum māne could not.",
+    "assesses": [
+      "LA-LEX-VESPER-AFTERLIVES-01",
+      "LA-ETYMON-VESPER-AFTERLIVES-02",
+      "LA-GRAMMAR-BONAM-NOCTEM-01",
+      "LA-GRAMMAR-BONAM-NOCTEM-02",
+      "LA-PRAGMATICS-BONUM-MANE-01",
+      "LA-PRAGMATICS-BONUM-MANE-02",
+      "LA-GRAMMAR-BONUM-VESPERUM-01",
+      "LA-GRAMMAR-BONUM-VESPERUM-02"
+    ]
+  }
+}

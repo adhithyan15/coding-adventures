@@ -1,0 +1,21 @@
+{
+  "chapter": 300,
+  "title": "What the Body Says --- Thirst, Sleep, Skin, Blood, Remedy",
+  "label": "ch:el-cuerpo-dice",
+  "canDo": "I can say in Spanish that I am thirsty or sleepy, name the skin and the blood, and say there is no remedy.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "ES-C300-remedio",
+    "kind": "production",
+    "summary": "Complete ES-C300-remedio: name all five, and put three of them into a sentence with tengo or no hay.",
+    "assesses": [
+      "ES-LEX-C300-BODY-01",
+      "ES-LEX-C300-BODY-02",
+      "ES-LEX-C300-BODY-03",
+      "ES-LEX-C300-BODY-04",
+      "ES-LEX-C300-BODY-05"
+    ]
+  }
+}

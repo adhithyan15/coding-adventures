@@ -1,0 +1,22 @@
+{
+  "chapter": 20,
+  "title": "Numbers 11–20 and Weather",
+  "label": "ch:te-numbers-and-weather",
+  "canDo": "I can say what the weather is doing in Telugu and count past ten up to twenty.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE",
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "TE-C20-vatavaranam",
+    "kind": "task",
+    "summary": "Say వాతావరణం — a pure Sanskrit vāta + āvaraṇa, \"the covering of air\" — and report the weather with వర్షం పడుతోంది, \"rain is falling.\"",
+    "assesses": [
+      "TE-LEX-C18-GANTA-01",
+      "TE-PRAGMATICS-C18-GANTA-02",
+      "TE-GRAMMAR-C18-GANTA-03",
+      "TE-ETYMON-C20-VATAVARANAM-01",
+      "TE-GRAMMAR-C20-VATAVARANAM-02"
+    ]
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "chapter": 11,
+  "title": "Water, Tea, Milk, and Bhakri",
+  "label": "ch:mr-request-food-drink",
+  "canDo": "I can politely ask for water, tea, milk, or bhakri in Marathi, name which of the four is a Chinese loan and which never touched Sanskrit at all, and say why all three of Marathi's genders already show up in one short chapter.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "MR-C10-bhakari",
+    "kind": "production",
+    "summary": "The chapter closes on भाकरी, the request that breaks every pattern the first three set: the reader produces all four requests with कृपया, sorts पाणी and दूध (inherited from Sanskrit) against चहा (a Chinese loan by the overland route) against भाकरी (native to Marathi's own ground, sharing Sanskrit with none of them), and names the three genders the four words already cover.",
+    "assesses": [
+      "MR-LEX-PAANI",
+      "MR-PHRASE-KRUPAYA",
+      "MR-ETYMON-PAANI-DRINK",
+      "MR-LEX-CHAHA",
+      "MR-ETYMON-CHAHA-OVERLAND",
+      "MR-LEX-DUDH",
+      "MR-ETYMON-DUDH-DUGDHA",
+      "MR-LEX-BHAKARI",
+      "MR-ETYMON-BHAKARI-LUMP",
+      "MR-GRAMMAR-THREE-GENDERS-ONE-CHAPTER"
+    ]
+  }
+}

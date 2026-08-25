@@ -1,0 +1,21 @@
+{
+  "chapter": 328,
+  "title": "Never, Barely, Almost, Even",
+  "label": "ch:asi-y-incluso",
+  "canDo": "I can size a claim with asi, jamas, apenas, casi and incluso, and say which two Latin words are fused inside jamas.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "ES-C328-incluso",
+    "kind": "production",
+    "summary": "Complete ES-C328-incluso: set the manner with asi, then run the scale from jamas through apenas and casi up to incluso.",
+    "assesses": [
+      "ES-LEX-C328-DEGREE-01",
+      "ES-LEX-C328-DEGREE-02",
+      "ES-LEX-C328-DEGREE-03",
+      "ES-LEX-C328-DEGREE-04",
+      "ES-LEX-C328-DEGREE-05"
+    ]
+  }
+}

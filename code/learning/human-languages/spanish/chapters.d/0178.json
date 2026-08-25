@@ -1,0 +1,20 @@
+{
+  "chapter": 178,
+  "title": "Which Way Is the Arrow Pointing?",
+  "label": "ch:por-para-contrast",
+  "canDo": "I can choose between por and para with one question instead of a list of rules.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C51-la-flecha",
+    "kind": "task",
+    "summary": "Complete ES-C51-la-flecha: contrast para ti with por ti and state the arrow test.",
+    "assesses": [
+      "ES-GRAMMAR-POR-PARA-CONTRAST",
+      "ES-ETYMON-PER-AD",
+      "ES-ETYMON-PRO-PER"
+    ],
+    "note": "The test is not a mnemonic: para contains ad (toward) and por contains per (through), so it describes the words and keeps working on uses the book never showed."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 36,
+  "title": "Son and Daughter, Two Different Roots",
+  "label": "ch:te-son-and-daughter",
+  "canDo": "I can say son and daughter in Telugu, and show that they trace to two different Proto-Dravidian roots rather than one shared root.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "TE-C36-kuuturu",
+    "kind": "production",
+    "summary": "Line up కొడుకు and కూతురు against their two separate Proto-Dravidian roots, trace కొడుకు's own root sideways to కోడలు (\"daughter-in-law\"), and trace కూతురు's root across the family to Kannada's word for infant.",
+    "assesses": [
+      "TE-LEX-C35-SNEHITUDU-01",
+      "TE-LEX-C36-KODUKU-01",
+      "TE-ETYMON-C36-KODUKU-02",
+      "TE-LEX-C36-KUUTURU-01",
+      "TE-ETYMON-C36-KUUTURU-02"
+    ]
+  }
+}

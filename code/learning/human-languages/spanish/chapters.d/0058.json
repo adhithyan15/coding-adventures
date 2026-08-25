@@ -1,0 +1,17 @@
+{
+  "chapter": 58,
+  "title": "Grande --- the First Word for What a Thing Is Like",
+  "label": "ch:grande",
+  "canDo": "I can describe a thing with an adjective after the noun.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C09-grande",
+    "kind": "task",
+    "summary": "I can describe a thing with an adjective after the noun.",
+    "assesses": [
+      "ES-GRAMMAR-ADJECTIVE-AFTER-NOUN"
+    ]
+  }
+}

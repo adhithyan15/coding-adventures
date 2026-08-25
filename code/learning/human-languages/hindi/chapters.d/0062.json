@@ -1,0 +1,21 @@
+{
+  "chapter": 62,
+  "title": "What Hands Work With",
+  "label": "ch:hi-what-hands-work-with",
+  "canDo": "I can name five things a pair of hands works with when I say what something is called.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "HI-C62-wood",
+    "kind": "production",
+    "summary": "Complete HI-C62-wood and say all five words in order.",
+    "assesses": [
+      "HI-LEX-C62-HANDS-01",
+      "HI-LEX-C62-HANDS-02",
+      "HI-LEX-C62-HANDS-03",
+      "HI-LEX-C62-HANDS-04",
+      "HI-LEX-C62-HANDS-05"
+    ]
+  }
+}

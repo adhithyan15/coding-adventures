@@ -1,0 +1,20 @@
+{
+  "chapter": 30,
+  "title": "Good Evening",
+  "label": "ch:te-good-evening",
+  "canDo": "I can wish someone good evening in Telugu.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "TE-C30-subha-sayantram",
+    "kind": "dialogue",
+    "summary": "Say శుభ సాయంత్రం, backed by two independent sources as genuinely common in both formal and casual speech, with నమస్కారం as an alternative rather than a replacement.",
+    "assesses": [
+      "TE-ETYMON-C27-SAYANTRAM-01",
+      "TE-ETYMON-C27-SAYANTRAM-02",
+      "TE-ETYMON-C30-SUBHA-SAYANTRAM-01",
+      "TE-PRAGMATICS-C30-SUBHA-SAYANTRAM-02"
+    ]
+  }
+}

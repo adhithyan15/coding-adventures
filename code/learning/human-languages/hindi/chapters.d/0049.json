@@ -1,0 +1,21 @@
+{
+  "chapter": 49,
+  "title": "Taking Your Leave",
+  "label": "ch:hi-taking-leave",
+  "canDo": "I can say when I am leaving and when I will be back in Hindi.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "HI-C49-meeting",
+    "kind": "production",
+    "summary": "Complete HI-C49-meeting and say all five words in order.",
+    "assesses": [
+      "HI-LEX-C49-LEAVE-01",
+      "HI-LEX-C49-LEAVE-02",
+      "HI-LEX-C49-LEAVE-03",
+      "HI-LEX-C49-LEAVE-04",
+      "HI-LEX-C49-LEAVE-05"
+    ]
+  }
+}

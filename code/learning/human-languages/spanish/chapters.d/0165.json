@@ -1,0 +1,30 @@
+{
+  "chapter": 165,
+  "title": "Hearing, Sleeping, Walking, Running",
+  "label": "ch:spanish-hear-sleep-walk-run",
+  "canDo": "I can say I hear, sleep, walk and run in Spanish, write oír's y where the spelling demands it, and break dormir's o to ue the way a boot verb does.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C36-correr",
+    "kind": "task",
+    "summary": "Run the chapter's four verbs together and sort them by what they do to their stems: correr, caminar and andar leave theirs alone, dormir breaks o to ue, oír grows a g in oigo and writes y in oyes. Then name each verb's source in turn — audīre, dormīre, Gaulish camminus, currere — and set the two words with no settled origin, andar and perro, against them.",
+    "assesses": [
+      "ES-LEX-OIR-01",
+      "ES-ETYMON-OIR-02",
+      "ES-GRAMMAR-OIR-Y-03",
+      "ES-LEX-DORMIR-04",
+      "ES-ETYMON-DORMIR-05",
+      "ES-GRAMMAR-STEM-O-UE-06",
+      "ES-LEX-CAMINAR-07",
+      "ES-LEX-ANDAR-08",
+      "ES-ETYMON-CAMINAR-09",
+      "ES-LEX-CORRER-10",
+      "ES-ETYMON-CORRER-11",
+      "ES-LEX-PERRO-03",
+      "ES-EVIDENCE-PERRO-04",
+      "ES-LEX-WEEKEND-01"
+    ]
+  }
+}

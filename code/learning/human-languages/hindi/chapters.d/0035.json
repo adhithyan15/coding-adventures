@@ -1,0 +1,22 @@
+{
+  "chapter": 35,
+  "title": "Taking, Asking, Helping — and Liking",
+  "label": "ch:hi-pasand",
+  "canDo": "I can say I take, ask and help in Hindi, build a conjunct verb out of any noun plus करना, and say what I like the way Hindi says it — with the thing liked as the subject and me in the dative.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "HI-C35-pasand",
+    "kind": "task",
+    "summary": "Say लेना, पूछना and मदद करना, then turn the sentence inside out: मुझे रोटी पसंद है is bread being pleasing to me, so है agrees with the bread and I move into मुझे — the same inversion Spanish and Italian reached on their own.",
+    "assesses": [
+      "HI-CONCEPT-C35-LENA-01",
+      "HI-CONCEPT-C35-PUCHNA-01",
+      "HI-CONCEPT-C35-MADAD-01",
+      "HI-CONCEPT-C35-PASAND-01",
+      "HI-CONCEPT-C35-PASAND-02",
+      "HI-CONCEPT-C35-PASAND-03"
+    ]
+  }
+}

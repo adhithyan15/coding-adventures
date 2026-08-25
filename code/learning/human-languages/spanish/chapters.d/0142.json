@@ -1,0 +1,19 @@
+{
+  "chapter": 142,
+  "title": "The Seasons",
+  "label": "ch:spanish-seasons",
+  "canDo": "I can name the four seasons in Spanish and explain how verano moved from spring to summer.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "ES-C25-las-estaciones",
+    "kind": "task",
+    "summary": "Run primavera, verano, otoño, invierno, unpack primavera as prīma vēra, and show verano growing out of that same vēr before its meaning slid across to summer.",
+    "assesses": [
+      "ES-LEX-SEASONS-01",
+      "ES-ETYMON-SEASONS-02",
+      "ES-ETYMON-VERANO-03"
+    ]
+  }
+}

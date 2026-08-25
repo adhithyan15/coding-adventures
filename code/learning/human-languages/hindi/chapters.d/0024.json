@@ -1,0 +1,17 @@
+{
+  "chapter": 24,
+  "title": "Green and Yellow",
+  "label": "ch:hi-green-and-yellow",
+  "canDo": "I can name green and yellow in Hindi and trace पीला step by step back to Sanskrit.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C24-pila-history",
+    "kind": "task",
+    "summary": "Trace pīta · pītala · pīala · pīlā in order, and flag the drink-to-yellow link as uncertain rather than settled.",
+    "assesses": [
+      "HI-CONCEPT-C24-PILA-HISTORY-01"
+    ]
+  }
+}
