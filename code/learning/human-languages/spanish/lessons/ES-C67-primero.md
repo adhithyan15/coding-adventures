@@ -6,20 +6,20 @@ sequence: 2545
 chapter: 262
 type: word
 headword: primero · segundo · tercero
-gloss: first, second, third — the counting words for order rather than amount, and two of them shorten in a way you have now seen three times
+gloss: first, second, third — the counting words for order rather than amount, and the story inside the second one
 concept_tag: ES-ORDINAL
 prerequisites: [ES-C66-repaso-lo-implicito]
 sounds: []
 roots: [primus-latin, secundus-latin]
 etymology_hook: "segundo is Latin secundus, which meant FOLLOWING -- from the verb to follow -- so second place is literally the one that comes after, and English second is the same word"
 duration:
-  max_seconds: 280
+  max_seconds: 230
 requires:
-  knowledge: [ES-LEX-NUMBERS-1-5, ES-LEX-NUMBERS-6-10, ES-GRAMMAR-APOCOPE-PATTERN, ES-LEX-LIBRO, ES-GRAMMAR-ADJECTIVE-AFTER-NOUN, ES-GRAMMAR-NOUN-GENDER]
+  knowledge: [ES-LEX-NUMBERS-1-5, ES-LEX-NUMBERS-6-10, ES-GRAMMAR-NOUN-GENDER]
 introduces:
-  knowledge: [ES-LEX-ORDINALS, ES-GRAMMAR-ORDINAL-BEFORE-NOUN, ES-GRAMMAR-ORDINAL-APOCOPE, ES-ETYMON-SEGUNDO-SEQUI]
+  knowledge: [ES-LEX-ORDINALS, ES-ETYMON-SEGUNDO-SEQUI]
 practises:
-  knowledge: [ES-LEX-ORDINALS, ES-GRAMMAR-ORDINAL-BEFORE-NOUN, ES-GRAMMAR-ORDINAL-APOCOPE, ES-ETYMON-SEGUNDO-SEQUI, ES-GRAMMAR-APOCOPE-PATTERN, ES-LEX-NUMBERS-1-5, ES-LEX-LIBRO, ES-GRAMMAR-NOUN-GENDER]
+  knowledge: [ES-LEX-ORDINALS, ES-ETYMON-SEGUNDO-SEQUI, ES-LEX-NUMBERS-1-5, ES-GRAMMAR-NOUN-GENDER]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -52,45 +52,26 @@ same word, and *sequence* and *consequence* are its cousins.
 [PAUSE 2s] They behave as adjectives: *la* ***segunda*** *casa*, *los*
 ***primeros*** *libros*.
 
-## Why it's said this way
-<!-- hl-knowledge: introduces=[ES-GRAMMAR-ORDINAL-BEFORE-NOUN, ES-GRAMMAR-ORDINAL-APOCOPE]; assesses=[ES-GRAMMAR-APOCOPE-PATTERN, ES-LEX-LIBRO] -->
-
-Two things set them apart from ordinary adjectives.
-
-[PAUSE 2s] **They go in front.** Where *grande* follows its noun, an ordinal
-leads: *el* ***primer*** *libro*, not *el libro primero*.
-
-[PAUSE 2s] And there — did you catch it? ***Primer***, not *primero*. In front
-of a masculine singular noun, *primero* and *tercero* drop their final *o*.
-
-| | |
-|---|---|
-| *el* ***primer*** *libro* | but *la* ***primera*** *casa* |
-| *el* ***tercer*** *libro* | but *la* ***tercera*** *casa* |
-
-[PAUSE 2s] You have met this exact habit twice already: *mucho* to *muy*, and
-*malo* to *mal*. Three times now, so it is not a set of exceptions — it is what
-Spanish does to a word leaning on a masculine noun.
-
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-ORDINALS, ES-GRAMMAR-ORDINAL-APOCOPE, ES-ETYMON-SEGUNDO-SEQUI] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-ORDINALS, ES-ETYMON-SEGUNDO-SEQUI, ES-LEX-NUMBERS-1-5, ES-GRAMMAR-NOUN-GENDER] -->
 
-<!-- hl-activity: {"id":"ES-C67-primero-first","kind":"text","assesses":["ES-GRAMMAR-ORDINAL-APOCOPE"],"prompt":"Say: the first book.","answer":"el primer libro","accepted":["el primer libro."],"feedback":{"correct":"Primer, not primero -- the o goes.","incorrect":"El primer libro."},"response_seconds":12} -->
-<!-- hl-activity: {"id":"ES-C67-primero-fem","kind":"text","assesses":["ES-LEX-ORDINALS"],"prompt":"And the first house?","answer":"la primera casa","accepted":["la primera casa."],"feedback":{"correct":"Feminine keeps its ending.","incorrect":"La primera casa -- no shortening."},"response_seconds":12} -->
+<!-- hl-activity: {"id":"ES-C67-primero-count","kind":"text","assesses":["ES-LEX-ORDINALS","ES-LEX-NUMBERS-1-5"],"prompt":"Uno, dos, tres tells how many. Give the three words that tell which one in the line.","answer":"primero, segundo, tercero","accepted":["primero segundo tercero"],"feedback":{"correct":"Order, not amount.","incorrect":"Primero, segundo, tercero."},"response_seconds":13} -->
+<!-- hl-activity: {"id":"ES-C67-primero-fem","kind":"text","assesses":["ES-LEX-ORDINALS","ES-GRAMMAR-NOUN-GENDER"],"prompt":"Say: the second house.","answer":"la segunda casa","accepted":["la segunda casa."],"feedback":{"correct":"They agree like any adjective.","incorrect":"La segunda casa."},"response_seconds":12} -->
 <!-- hl-activity: {"id":"ES-C67-primero-second","kind":"text","assesses":["ES-ETYMON-SEGUNDO-SEQUI"],"prompt":"What did the Latin word behind segundo actually mean?","answer":"following","accepted":["following, from sequi"],"feedback":{"correct":"Second place is the one that comes after.","incorrect":"Following -- from sequi, to follow."},"response_seconds":14} -->
 
 [PAUSE 1s]
 
 - [YOU SAY: *primero*, *segundo*, *tercero*, *cuarto*, *quinto*]
-- [YOU SAY: *el primer libro*, *la primera casa*]
+- [YOU SAY: *la segunda casa*, *los primeros libros*]
 
 [REPEAT x2]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-ORDINAL-BEFORE-NOUN] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-ORDINALS, ES-ETYMON-SEGUNDO-SEQUI] -->
 
-[PAUSE 2s] Where does an ordinal stand? (**Before** the noun, unlike other
-adjectives.)
+[PAUSE 2s] Give the first three in order. (***Primero***, ***segundo***,
+***tercero***.)
 
-[PAUSE 2s] And which two lose their *o*? (***Primero*** and ***tercero***, in
-front of a masculine noun.)
+[PAUSE 2s] And what did *secundus* mean before it meant *second*? (**Following**
+— the one that comes after.) Next: where these words stand, and what happens to
+two of them when they get there.

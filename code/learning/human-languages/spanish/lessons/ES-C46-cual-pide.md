@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C46-cual-pide
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1233
+sequence: 1234
 chapter: 95
 type: grammar
 headword: lo tengo / le hablo

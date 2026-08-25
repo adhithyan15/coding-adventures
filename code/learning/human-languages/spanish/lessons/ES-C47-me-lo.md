@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C47-me-lo
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1236
+sequence: 1237
 chapter: 98
 type: grammar
 headword: me lo

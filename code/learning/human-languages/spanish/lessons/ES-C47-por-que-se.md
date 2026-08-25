@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C47-por-que-se
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1238
+sequence: 1239
 chapter: 100
 type: etymology
 headword: gelo → se lo

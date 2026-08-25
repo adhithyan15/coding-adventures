@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C47-se-lo
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1237
+sequence: 1238
 chapter: 99
 type: grammar
 headword: se lo

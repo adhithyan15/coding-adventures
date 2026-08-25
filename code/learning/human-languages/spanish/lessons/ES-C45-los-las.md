@@ -2,13 +2,13 @@
 schema_version: 2
 id: ES-C45-los-las
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1227
+sequence: 1228
 chapter: 89
 type: grammar
 headword: los, las
 gloss: "them" — the two forms you can produce before being told, and the one place the pronoun is tidier than the article
 concept_tag: ES-GRAMMAR-DIRECT-OBJECT-PLURAL
-prerequisites: [ES-C45-nos, ES-C44-los, ES-C44-las, ES-C12-hacer]
+prerequisites: [ES-C45-nosotros, ES-C44-los, ES-C44-las, ES-C12-hacer]
 sounds: [s-final]
 roots: [ille, illa]
 teaches_cells: []
