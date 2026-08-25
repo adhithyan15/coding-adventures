@@ -4,9 +4,10 @@ id: ZH-C12-jiaren
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 810
 chapter: 12
-type: practice-mix
+type: word
 headword: 家人
 romanization: jiārén
+concept_tag: ZH-FAMILY-MEMBERS
 gloss: family members, now read and written
 prerequisites: [ZH-C12-hear-jiaren]
 sounds: [tone-1, tone-2]

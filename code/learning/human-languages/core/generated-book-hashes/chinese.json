@@ -156,7 +156,7 @@
     {
       "language": "chinese",
       "chapter": 12,
-      "sourceHash": "fnv1a64:d7accfe628bc5bc7",
+      "sourceHash": "fnv1a64:bdbc7ba7be6933c0",
       "lessonIds": [
         "ZH-C12-ren",
         "ZH-C12-nu",
@@ -178,7 +178,7 @@
     {
       "language": "chinese",
       "chapter": 13,
-      "sourceHash": "fnv1a64:114f0a640c4c9d43",
+      "sourceHash": "fnv1a64:f567d6edf004445c",
       "lessonIds": [
         "ZH-C13-hear-da",
         "ZH-W13-da",
@@ -203,7 +203,7 @@
     {
       "language": "chinese",
       "chapter": 14,
-      "sourceHash": "fnv1a64:c45e079390864180",
+      "sourceHash": "fnv1a64:3be3efc2a91d2482",
       "lessonIds": [
         "ZH-C14-hear-xiao",
         "ZH-W14-xiao",

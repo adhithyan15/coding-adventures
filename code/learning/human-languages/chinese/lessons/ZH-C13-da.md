@@ -4,9 +4,10 @@ id: ZH-C13-da
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 860
 chapter: 13
-type: practice-mix
+type: word
 headword: 大
 romanization: dà
+concept_tag: ZH-SCHOOL-BIG
 gloss: big; large, now read and written
 prerequisites: [ZH-W13-da]
 sounds: [tone-4]

@@ -4,9 +4,10 @@ id: ZH-C14-xiao
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 1030
 chapter: 14
-type: practice-mix
+type: word
 headword: 小
 romanization: xiǎo
+concept_tag: ZH-SCHOOL-SMALL
 gloss: small; little, now read and written
 prerequisites: [ZH-W14-xiao]
 sounds: [tone-3]

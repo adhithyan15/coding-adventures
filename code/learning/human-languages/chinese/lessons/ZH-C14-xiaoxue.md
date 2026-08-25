@@ -4,9 +4,10 @@ id: ZH-C14-xiaoxue
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 1050
 chapter: 14
-type: practice-mix
+type: word
 headword: 小学
 romanization: xiǎoxué
+concept_tag: ZH-SCHOOL-PRIMARY
 gloss: primary school, built from known characters
 prerequisites: [ZH-C14-hear-xiaoxue]
 sounds: [tone-3, tone-2]

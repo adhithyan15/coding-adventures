@@ -4,9 +4,10 @@ id: ZH-C13-daxuesheng
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 980
 chapter: 13
-type: practice-mix
+type: word
 headword: 大学生
 romanization: dàxuésheng
+concept_tag: ZH-SCHOOL-UNIVERSITY-STUDENT
 gloss: university student, built from known characters
 prerequisites: [ZH-C13-hear-daxuesheng]
 sounds: [tone-4, tone-2, tone-neutral]

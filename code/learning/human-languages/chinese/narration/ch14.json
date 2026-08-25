@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "One small step into school",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:6c10fd3312a480f2",
+  "sourceHash": "fnv1a64:f2b53fef3e4412ee",
   "lessons": [
     {
       "id": "ZH-C14-hear-xiao",
@@ -198,7 +198,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:20b2fbb56246b9d8",
+      "sourceHash": "fnv1a64:b10fc10a9567cde0",
       "notice": null,
       "blocks": [
         {
@@ -368,7 +368,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:bec5300c095b5f73",
+      "sourceHash": "fnv1a64:5577901e994bbb7c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -546,7 +546,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:7aee30e8720e5fe6",
+      "sourceHash": "fnv1a64:ed5dfa619025fd19",
       "notice": {
         "modality": "sight",
         "needs": [

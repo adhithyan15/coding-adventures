@@ -4,9 +4,10 @@ id: ZH-C14-xiaoxuesheng
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 1070
 chapter: 14
-type: practice-mix
+type: word
 headword: 小学生
 romanization: xiǎoxuésheng
+concept_tag: ZH-SCHOOL-PRIMARY-STUDENT
 gloss: primary-school student, built from known characters
 prerequisites: [ZH-C14-hear-xiaoxuesheng]
 sounds: [tone-3, tone-2, tone-neutral]

@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "From study to university student",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:cd3cbc61104725c9",
+  "sourceHash": "fnv1a64:bb34b2852c9ae5aa",
   "lessons": [
     {
       "id": "ZH-C13-hear-da",
@@ -202,7 +202,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a4a510228a1592bb",
+      "sourceHash": "fnv1a64:c41cebf0ae1709ee",
       "notice": null,
       "blocks": [
         {
@@ -371,7 +371,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:8c3d396a829b0cd7",
+      "sourceHash": "fnv1a64:5cea47fa960fe801",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -652,7 +652,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:388f9f30da93a6fc",
+      "sourceHash": "fnv1a64:0dacc2c7501ade1e",
       "notice": null,
       "blocks": [
         {
@@ -920,7 +920,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:16c496572463722b",
+      "sourceHash": "fnv1a64:ba024f08cbd9354f",
       "notice": null,
       "blocks": [
         {
@@ -1090,7 +1090,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:d14e7a02b09723d6",
+      "sourceHash": "fnv1a64:5f961651fe2a2f65",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1268,7 +1268,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:0454237376a5c183",
+      "sourceHash": "fnv1a64:4093985f75f50fb8",
       "notice": {
         "modality": "sight",
         "needs": [

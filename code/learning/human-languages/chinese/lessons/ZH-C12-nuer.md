@@ -4,9 +4,10 @@ id: ZH-C12-nuer
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 760
 chapter: 12
-type: practice-mix
+type: word
 headword: 女儿
 romanization: nǚ'ér
+concept_tag: ZH-FAMILY-DAUGHTER
 gloss: daughter, now read and written
 prerequisites: [ZH-C12-hear-nuer]
 sounds: [tone-3, tone-2]

@@ -4,9 +4,10 @@ id: ZH-C13-daxue
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 960
 chapter: 13
-type: practice-mix
+type: word
 headword: 大学
 romanization: dàxué
+concept_tag: ZH-SCHOOL-UNIVERSITY
 gloss: university; college, built from known characters
 prerequisites: [ZH-C13-hear-daxue]
 sounds: [tone-4, tone-2]

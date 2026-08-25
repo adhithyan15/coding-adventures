@@ -4,9 +4,10 @@ id: ZH-C12-jia
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 790
 chapter: 12
-type: practice-mix
+type: word
 headword: 家
 romanization: jiā
+concept_tag: ZH-FAMILY-HOME
 gloss: home or family, now read and written
 prerequisites: [ZH-W12-jia]
 sounds: [tone-1]

@@ -4,9 +4,10 @@ id: ZH-C13-xuesheng
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 940
 chapter: 13
-type: practice-mix
+type: word
 headword: 学生
 romanization: xuésheng
+concept_tag: ZH-SCHOOL-STUDENT
 gloss: student, now read and written
 prerequisites: [ZH-W13-sheng]
 sounds: [tone-2, tone-neutral]

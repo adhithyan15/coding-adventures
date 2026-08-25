@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:ec7631514261eee7",
+  "sourceHash": "fnv1a64:55a6291fc715ec8e",
   "summary": {
     "totalLessons": 103,
     "voice": 57,
@@ -1655,7 +1655,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:f979bb2600627c0d"
+      "sourceHash": "fnv1a64:bebc6c05960290b8"
     },
     {
       "id": "ZH-C12-hear-nuer",
@@ -1691,7 +1691,7 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:86c27c08c250753b"
+      "sourceHash": "fnv1a64:465f38d36acfaddc"
     },
     {
       "id": "ZH-C12-hear-jia",
@@ -1750,7 +1750,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b9b0f577c3807708"
+      "sourceHash": "fnv1a64:7384800d4b0bb0ae"
     },
     {
       "id": "ZH-C12-hear-jiaren",
@@ -1786,7 +1786,7 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:b5f30f5080216dfc"
+      "sourceHash": "fnv1a64:9d94b71035359378"
     },
     {
       "id": "ZH-R12-family-six",
@@ -1881,7 +1881,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a4a510228a1592bb"
+      "sourceHash": "fnv1a64:c41cebf0ae1709ee"
     },
     {
       "id": "ZH-C13-hear-dajia",
@@ -1917,7 +1917,7 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:8c3d396a829b0cd7"
+      "sourceHash": "fnv1a64:5cea47fa960fe801"
     },
     {
       "id": "ZH-C13-hear-xue",
@@ -1976,7 +1976,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:388f9f30da93a6fc"
+      "sourceHash": "fnv1a64:0dacc2c7501ade1e"
     },
     {
       "id": "ZH-C13-hear-xuesheng",
@@ -2035,7 +2035,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:16c496572463722b"
+      "sourceHash": "fnv1a64:ba024f08cbd9354f"
     },
     {
       "id": "ZH-C13-hear-daxue",
@@ -2071,7 +2071,7 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:d14e7a02b09723d6"
+      "sourceHash": "fnv1a64:5f961651fe2a2f65"
     },
     {
       "id": "ZH-C13-hear-daxuesheng",
@@ -2107,7 +2107,7 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:0454237376a5c183"
+      "sourceHash": "fnv1a64:4093985f75f50fb8"
     },
     {
       "id": "ZH-R13-school-six",
@@ -2202,7 +2202,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:20b2fbb56246b9d8"
+      "sourceHash": "fnv1a64:b10fc10a9567cde0"
     },
     {
       "id": "ZH-C14-hear-xiaoxue",
@@ -2238,7 +2238,7 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:bec5300c095b5f73"
+      "sourceHash": "fnv1a64:5577901e994bbb7c"
     },
     {
       "id": "ZH-C14-hear-xiaoxuesheng",
@@ -2274,7 +2274,7 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:7aee30e8720e5fe6"
+      "sourceHash": "fnv1a64:ed5dfa619025fd19"
     },
     {
       "id": "ZH-R14-primary-three",

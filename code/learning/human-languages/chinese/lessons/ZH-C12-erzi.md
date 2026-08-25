@@ -4,9 +4,10 @@ id: ZH-C12-erzi
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 740
 chapter: 12
-type: practice-mix
+type: word
 headword: 儿子
 romanization: érzi
+concept_tag: ZH-FAMILY-SON
 gloss: son, now read and written
 prerequisites: [ZH-W12-er]
 sounds: [tone-2, tone-neutral]

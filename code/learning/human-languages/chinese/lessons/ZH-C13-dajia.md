@@ -4,9 +4,10 @@ id: ZH-C13-dajia
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 880
 chapter: 13
-type: practice-mix
+type: word
 headword: 大家
 romanization: dàjiā
+concept_tag: ZH-SCHOOL-EVERYONE
 gloss: everyone, built from known characters
 prerequisites: [ZH-C13-hear-dajia]
 sounds: [tone-4, tone-1]

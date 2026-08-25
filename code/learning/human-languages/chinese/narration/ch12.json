@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "People under one roof",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:f0602da8dc62347d",
+  "sourceHash": "fnv1a64:626eb96c5ac549d1",
   "lessons": [
     {
       "id": "ZH-C12-ren",
@@ -379,7 +379,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f979bb2600627c0d",
+      "sourceHash": "fnv1a64:bebc6c05960290b8",
       "notice": null,
       "blocks": [
         {
@@ -548,7 +548,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:86c27c08c250753b",
+      "sourceHash": "fnv1a64:465f38d36acfaddc",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -833,7 +833,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b9b0f577c3807708",
+      "sourceHash": "fnv1a64:7384800d4b0bb0ae",
       "notice": null,
       "blocks": [
         {
@@ -1004,7 +1004,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:b5f30f5080216dfc",
+      "sourceHash": "fnv1a64:9d94b71035359378",
       "notice": {
         "modality": "sight",
         "needs": [

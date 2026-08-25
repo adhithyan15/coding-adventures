@@ -212,7 +212,7 @@
     {
       "language": "chinese",
       "chapter": 12,
-      "sourceHash": "fnv1a64:f0602da8dc62347d",
+      "sourceHash": "fnv1a64:626eb96c5ac549d1",
       "lessonIds": [
         "ZH-C12-ren",
         "ZH-C12-nu",
@@ -234,12 +234,12 @@
       "text": "chinese/narration/ch12.txt",
       "json": "chinese/narration/ch12.json",
       "textHash": "fnv1a64:925ead23f8c92412",
-      "jsonHash": "fnv1a64:6ca92ebb9e9880a8"
+      "jsonHash": "fnv1a64:6823524bb175d7b9"
     },
     {
       "language": "chinese",
       "chapter": 13,
-      "sourceHash": "fnv1a64:cd3cbc61104725c9",
+      "sourceHash": "fnv1a64:bb34b2852c9ae5aa",
       "lessonIds": [
         "ZH-C13-hear-da",
         "ZH-W13-da",
@@ -264,12 +264,12 @@
       "text": "chinese/narration/ch13.txt",
       "json": "chinese/narration/ch13.json",
       "textHash": "fnv1a64:5081e6f35dc7c846",
-      "jsonHash": "fnv1a64:1809ded09f61692d"
+      "jsonHash": "fnv1a64:76f17bdf425ca511"
     },
     {
       "language": "chinese",
       "chapter": 14,
-      "sourceHash": "fnv1a64:6c10fd3312a480f2",
+      "sourceHash": "fnv1a64:f2b53fef3e4412ee",
       "lessonIds": [
         "ZH-C14-hear-xiao",
         "ZH-W14-xiao",
@@ -286,7 +286,7 @@
       "text": "chinese/narration/ch14.txt",
       "json": "chinese/narration/ch14.json",
       "textHash": "fnv1a64:ba9939450ed875a6",
-      "jsonHash": "fnv1a64:b1e14daef26f476e"
+      "jsonHash": "fnv1a64:d12e75692bbd6022"
     }
   ],
   "findings": []

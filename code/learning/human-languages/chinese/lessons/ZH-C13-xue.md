@@ -4,9 +4,10 @@ id: ZH-C13-xue
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 910
 chapter: 13
-type: practice-mix
+type: word
 headword: 学
 romanization: xué
+concept_tag: ZH-SCHOOL-STUDY
 gloss: study; learn, now read and written
 prerequisites: [ZH-W13-xue]
 sounds: [tone-2]
