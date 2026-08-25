@@ -2,6 +2,46 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.57] - 2026-08-25 (SIMD PR47: v128.load64_lane/store64_lane)
+
+### Added
+
+- `decode_function_body`'s `0xFD` branch: the `sub_opcode == 0x54 ||
+  sub_opcode == 0x58 || sub_opcode == 0x55 || sub_opcode == 0x59 ||
+  sub_opcode == 0x56 || sub_opcode == 0x5A` gate (from PR44/PR45/PR46)
+  widened to also intercept `sub_opcode == 0x57 || sub_opcode == 0x5B`
+  -- `v128.load64_lane`/`v128.store64_lane`, one width up from PR46's
+  32-bit pair, reuse the IDENTICAL `DecodedOperand::SimdMemLane` shape
+  unchanged (`ImmLaneIdx2` is also a single raw byte per BinarySIMD.md,
+  so the one-byte lane read needs no change) -- no new decoder
+  infrastructure needed this time, just the widened condition.
+- `register_simd`: a new `sub_opcode == 0x57 || sub_opcode == 0x5B`
+  early-dispatch branch (same "intercept before the generic `SimdOpKind`
+  lookup" pattern PR44/PR45/PR46's own branches use), implementing:
+  - `v128.load64_lane` (`0x57`): pop the existing `v128` (top of stack),
+    pop the `i32` base address, bounds-checked 8-byte (little-endian)
+    read from memory 0 at `base + memarg offset` (via the existing
+    full-width `load_i64`), overwrite ONLY the selected lane's 8 bytes
+    of the popped `v128` (the other lane passes through unchanged),
+    push the result.
+  - `v128.store64_lane` (`0x5B`): pop the `v128` to read a lane from,
+    pop the `i32` base address, bounds-checked 8-byte write of the
+    selected lane's 8 bytes to memory 0 at `base + memarg offset`.
+  - Lane-index bounds check is `>= 2`, NOT the 32-bit pair's `>= 4` --
+    an `i64x2` v128 holds only 2 lanes (8 bytes each), not `i32x4`'s 4
+    (4 bytes each); reusing the wider bound would silently accept an
+    invalid lane index 2-3.
+- `SimdOpKind::Load64Lane | SimdOpKind::Store64Lane` added to the
+  `unreachable!` match arm (both are always intercepted by the early
+  dispatch above, before the generic `SimdOpKind` lookup runs).
+- 5 new unit tests: lane-preservation (load), memarg-offset honoring
+  (load), neighboring-byte isolation (store), past-end-of-memory
+  trapping (both directions), and out-of-range (`>= 2`) lane-index
+  rejection (both directions) -- direct mirrors of PR46's own 32-bit
+  test suite, at the 64-bit width. Closes the entire lane-load/store
+  family (PR44-47) and, with it, the larger load-extend/splat/zero/lane
+  epic started in PR40.
+
 ## [0.9.56] - 2026-08-25 (SIMD PR46: v128.load32_lane/store32_lane)
 
 ### Added
