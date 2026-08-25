@@ -5478,10 +5478,13 @@ impl HtmlParser {
             && !self.current_element_is("colgroup")
             && !self.has_open_element("template")
         {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-col-start-tag",
-                "start tag `<col>` outside a column group was ignored",
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-col-start-tag",
+                    "start tag `<col>` outside a column group was ignored",
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             return;
         }
 
@@ -27719,6 +27722,14 @@ mod tests {
         .at_emission(Some(start_tag_position_at(source, "hr", occurrence)))
     }
 
+    fn unexpected_col_start_tag(source: &str, occurrence: usize) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-col-start-tag",
+            "start tag `<col>` outside a column group was ignored",
+        )
+        .at_emission(Some(start_tag_position_at(source, "col", occurrence)))
+    }
+
     fn nested_heading_start_tag(
         source: &str,
         name: &str,
@@ -42039,6 +42050,50 @@ mod tests {
             .diagnostics()
             .iter()
             .find(|diagnostic| diagnostic.code == "unexpected-table-start-tag-in-fragment")
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
+    }
+
+    #[test]
+    fn positions_col_start_tags_ignored_outside_column_groups() {
+        let source = "<!doctype html><!--é-->\r\n<col><col>";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        assert_eq!(
+            output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-col-start-tag")
+                .collect::<Vec<_>>(),
+            vec![
+                &unexpected_col_start_tag(source, 0),
+                &unexpected_col_start_tag(source, 1),
+            ]
+        );
+
+        for valid in [
+            "<!doctype html><table><colgroup><col></table>",
+            "<!doctype html><template><col></template>",
+            "<!doctype html><svg><col></col></svg>",
+            "<!doctype html><col",
+        ] {
+            let output = parse_html_with_diagnostics(valid).unwrap();
+            assert!(output
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "unexpected-col-start-tag"));
+        }
+
+        let mut unpositioned = HtmlParser::new();
+        unpositioned.process_token(Token::StartTag {
+            name: "col".to_string(),
+            attributes: Vec::new(),
+            self_closing: false,
+        });
+        unpositioned.process_token(Token::Eof);
+        let diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-col-start-tag")
             .unwrap();
         assert_eq!(diagnostic.position, None);
     }
