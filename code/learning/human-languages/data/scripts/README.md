@@ -235,6 +235,10 @@ second row of Frame 5 gives independent **எ** six connected movements through
 its left climb, top bar, inner spiral, and lower foot, then one lift before the
 separate right upright rises. This row is distinct from dependent **ெ** in
 Frame 6, whose placement metadata makes no standalone ductus claim. The
+independent Tamil **உ** follows Appendix I Frame 16's three joined movements:
+the compact spiral opens into a broad descending curve, then continues along
+the long baseline to the right without lifting. The Noto Sans Tamil fit keeps
+all three movements in that single source-attested run. The
 Tamil **ழ** adds Appendix I Frame 7's six numbered movements as three
 pen-down runs: a joined left body and bar, a joined inner upright and broad
 right bowl, and the detached lower hook. Noto Sans Tamil simplifies the

@@ -245,6 +245,7 @@ const MALAYALAM_E = DUCTUS[ductusKey("malayalam", "എ")];
 const MALAYALAM_CHILLU_L = DUCTUS[ductusKey("malayalam", "ൽ")];
 const MALAYALAM_CHILLU_N = DUCTUS[ductusKey("malayalam", "ൻ")];
 const MALAYALAM_ZHA = DUCTUS[ductusKey("malayalam", "ഴ")];
+const TAMIL_U = DUCTUS["உ"];
 
 const fontForDuctus = (letter: LetterDuctus) => {
   const script = SCRIPTS.find((candidate) => candidate.script === letter.script);
@@ -587,6 +588,16 @@ describe("handwriting ductus", () => {
   it("ம is written without lifting the pen (one stroke)", () => {
     expect(penLifts(DUCTUS["ம"])).toBe(0);
     expect(DUCTUS["ம"].strokes).toHaveLength(1);
+  });
+
+  it("Tamil உ keeps all three Frame 16 movements in one run", () => {
+    expect(penLifts(TAMIL_U)).toBe(0);
+    expect(TAMIL_U.strokes).toHaveLength(1);
+    expect(TAMIL_U.strokes[0].segments.map((segment) => segment.label)).toEqual([
+      "sweep outward around the compact upper spiral",
+      "descend through the broad outer curve and turn left onto the baseline",
+      "carry the long baseline straight to the right",
+    ]);
   });
 
   it("ப descends, crosses the bottom, and rises without lifting", () => {
