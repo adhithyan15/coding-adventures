@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 15,
+  "title": "Fourth Return: Script and Names",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:659a1320eee45603",
+  "lessons": [
+    {
+      "id": "GU-R15-u-matra-r4",
+      "sequence": 620,
+      "title": "The short-u hook returns at R4",
+      "headword": "ુ ી",
+      "romanization": "short-u sign — long-ii sign",
+      "gloss": "retrieve the short-u sign at its fourth spacing window",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:fc99bd251576e2b4",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 5,
+              "perItem": false,
+              "source": "[PAUSE 5s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say short u once. Picture its small hook below a consonant before you look at any form."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read ુ ી (short-u sign — long-ii sign) ુ once and score recognition 3/3. The short-u sign introduced at position 30 has now travelled 61 lessons to position 91: this closes its R4 window. Repair only a missed sign."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R15-u-matra-r4-reading",
+              "prompt": "Read this shuffled sign row aloud: ુ ી (short-u sign — long-ii sign) ુ.",
+              "assesses": [
+                "GU-SCRIPT-U-MATRA-01",
+                "GU-SCRIPT-II-MATRA-01"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "short-u sign; long-ii sign; short-u sign"
+              ],
+              "feedback": {
+                "correct": "You kept the below-letter short-u hook distinct from long ii.",
+                "incorrect": "Compare only the missed sign, cover the names, and read the row once more."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — from sound",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep the visible row covered. Write the three sound cues, then score writing 3/3 separately. A perfect reading score cannot replace the written one."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R15-u-matra-r4-dictation",
+              "prompt": "Cover every model. Write: long-ii sign, short-u sign, short-u sign.",
+              "assesses": [
+                "GU-SCRIPT-U-MATRA-01",
+                "GU-SCRIPT-II-MATRA-01"
+              ],
+              "responseSeconds": 35,
+              "acceptedResponses": [
+                "ી ુ ુ"
+              ],
+              "feedback": {
+                "correct": "The short-u hook returned twice from sound with no model.",
+                "incorrect": "Check only a missed sign, cover the model again, and rewrite that cue."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does ુ sit? (Below its consonant.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R15-chha-r4",
+      "sequence": 630,
+      "title": "Chha returns beside sha",
+      "headword": "છ શ",
+      "romanization": "chha — sha",
+      "gloss": "retrieve chha at its fourth spacing window",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:2a7f87219a567b00",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 5,
+              "perItem": false,
+              "source": "[PAUSE 5s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Picture chha: two high lobes around a broad lower body."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read શ છ છ once and score recognition 3/3. Chha moved from position 31 to position 92, exactly 61 lessons, so its R4 window closes here."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R15-chha-r4-reading",
+              "prompt": "Read this shuffled consonant row aloud: શ છ છ.",
+              "assesses": [
+                "GU-SCRIPT-CHHA-01",
+                "GU-SCRIPT-SHA-01"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "sha; chha; chha"
+              ],
+              "feedback": {
+                "correct": "You found chha twice without letting sha's shape distract you.",
+                "incorrect": "Check only the missed consonant, hide the names, and read the row again."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — from sound",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "With every model covered, write the three cues and score writing 3/3 on its own. Repair only a missed form."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R15-chha-r4-dictation",
+              "prompt": "Cover every model. Write: chha, sha, chha.",
+              "assesses": [
+                "GU-SCRIPT-CHHA-01",
+                "GU-SCRIPT-SHA-01"
+              ],
+              "responseSeconds": 40,
+              "acceptedResponses": [
+                "છ શ છ"
+              ],
+              "feedback": {
+                "correct": "Both chha responses returned from sound in the new order.",
+                "incorrect": "Check only a missed consonant, cover it, and rewrite that cue."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which form has two high lobes? (છ, chha.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R15-ka-r4",
+      "sequence": 640,
+      "title": "Ka returns beside ja",
+      "headword": "ક જ",
+      "romanization": "ka — ja",
+      "gloss": "retrieve ka at its fourth spacing window",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:0c08c2215a51f909",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 5,
+              "perItem": false,
+              "source": "[PAUSE 5s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Picture ka: its compact upper turn leads into the lower body."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read ક જ (ka — ja) ક once and score recognition 3/3. Ka moved from position 32 to position 93, exactly 61 lessons, closing its R4 window."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R15-ka-r4-reading",
+              "prompt": "Read this shuffled consonant row aloud: ક જ (ka — ja) ક.",
+              "assesses": [
+                "GU-SCRIPT-KA-01",
+                "GU-SCRIPT-JA-01"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "ka; ja; ka"
+              ],
+              "feedback": {
+                "correct": "Ka stayed distinct from the earlier doorway consonant ja.",
+                "incorrect": "Check only the missed consonant, hide the names, and read the row again."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — from sound",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover every model, write the cues, and score writing 3/3 independently. Repair only a missed form."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R15-ka-r4-dictation",
+              "prompt": "Cover every model. Write: ja, ka, ka.",
+              "assesses": [
+                "GU-SCRIPT-KA-01",
+                "GU-SCRIPT-JA-01"
+              ],
+              "responseSeconds": 40,
+              "acceptedResponses": [
+                "જ ક ક"
+              ],
+              "feedback": {
+                "correct": "Ka returned twice from sound without a visible model.",
+                "incorrect": "Check only a missed consonant, cover it, and rewrite that cue."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write ka once more without looking. (ક)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R15-nna-r4",
+      "sequence": 650,
+      "title": "Retroflex nna returns beside na",
+      "headword": "ણ ન",
+      "romanization": "retroflex nna — na",
+      "gloss": "retrieve retroflex nna at its fourth spacing window",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:e3b9c2683a30dcbf",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 5,
+              "perItem": false,
+              "source": "[PAUSE 5s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say retroflex nna and picture ણ before looking."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read ન ણ ણ once and score recognition 3/3. Retroflex nna moved from position 33 to position 94, exactly 61 lessons, closing its R4 window."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R15-nna-r4-reading",
+              "prompt": "Read this shuffled consonant row aloud: ન ણ ણ.",
+              "assesses": [
+                "GU-SCRIPT-NNA-01",
+                "GU-SCRIPT-NA-01"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "na; retroflex nna; retroflex nna"
+              ],
+              "feedback": {
+                "correct": "The retroflex consonant stayed distinct from ordinary na.",
+                "incorrect": "Check only the missed consonant, hide the names, and read the row again."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — from sound",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover every model, write the three cues, and score writing 3/3 separately. Repair only a missed form."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R15-nna-r4-dictation",
+              "prompt": "Cover every model. Write: retroflex nna, na, retroflex nna.",
+              "assesses": [
+                "GU-SCRIPT-NNA-01",
+                "GU-SCRIPT-NA-01"
+              ],
+              "responseSeconds": 40,
+              "acceptedResponses": [
+                "ણ ન ણ"
+              ],
+              "feedback": {
+                "correct": "Retroflex nna returned twice from sound with no model.",
+                "incorrect": "Check only a missed consonant, cover it, and rewrite that cue."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which form answers the retroflex cue? (ણ)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R15-sha-r4",
+      "sequence": 660,
+      "title": "Sha returns beside sa",
+      "headword": "શ સ",
+      "romanization": "sha — sa",
+      "gloss": "retrieve sha at its fourth spacing window",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:8dfad07db239bb70",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 5,
+              "perItem": false,
+              "source": "[PAUSE 5s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say sha, then picture શ without drawing it yet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read શ સ (sha — sa) શ once and score recognition 3/3. Sha moved from position 34 to position 95, exactly 61 lessons, so its R4 window closes here."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R15-sha-r4-reading",
+              "prompt": "Read this shuffled consonant row aloud: શ સ (sha — sa) શ.",
+              "assesses": [
+                "GU-SCRIPT-SHA-01",
+                "GU-SCRIPT-SA-01"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "sha; sa; sha"
+              ],
+              "feedback": {
+                "correct": "Sha stayed distinct from the familiar consonant sa.",
+                "incorrect": "Check only the missed consonant, hide the names, and read the row again."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — from sound",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover every model, write the cues, and score writing 3/3 independently. Repair only a missed form."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R15-sha-r4-dictation",
+              "prompt": "Cover every model. Write: sa, sha, sha.",
+              "assesses": [
+                "GU-SCRIPT-SHA-01",
+                "GU-SCRIPT-SA-01"
+              ],
+              "responseSeconds": 40,
+              "acceptedResponses": [
+                "સ શ શ"
+              ],
+              "feedback": {
+                "correct": "Sha returned twice from sound without a visible model.",
+                "incorrect": "Check only a missed consonant, cover it, and rewrite that cue."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write sha once more from sound. (શ)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R15-name-exchange-r3",
+      "sequence": 670,
+      "title": "The name exchange returns after a long interval",
+      "headword": "મારું નામ … છે। તમારું નામ શું છે?",
+      "romanization": "mārũ nām … chhe. tamārũ nām shũ chhe?",
+      "gloss": "retrieve the introduction exchange after a long interval",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:70e94ee73b776554",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 8,
+              "perItem": false,
+              "source": "[PAUSE 8s]"
+            },
+            {
+              "kind": "speech",
+              "text": "With the page covered, say the three pieces for my name is: mārũ — nām — chhe."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read the three lines once and score meaning retrieval 3/3. Position 35 was already a zero-atom checkpoint, so position 96 uses the open slot to close R3 name-exchange debt rather than pretending to retrieve a nonexistent new atom."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R15-name-exchange-r3-reading",
+              "prompt": "Read the shuffled lines and give each meaning: તમને મળીને આનંદ થયો. / તમારું નામ શું છે? / મારું નામ મીરા છે.",
+              "assesses": [
+                "GU-CONCEPT-C02-ANAND-01",
+                "GU-CONCEPT-C02-MAARUNNAAMCHHE-01",
+                "GU-CONCEPT-C02-PRACTICE-01",
+                "GU-CONCEPT-C02-TAMARUNNAAMSHUNCHHE-01"
+              ],
+              "responseSeconds": 45,
+              "acceptedResponses": [
+                "pleased to meet you. / what is your name? / my name is mira."
+              ],
+              "feedback": {
+                "correct": "All three introduction lines returned in a new order.",
+                "incorrect": "Check only the missed line, cover its meaning, and read the three lines again."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — from sound",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover every Gujarati model and write the three English-cued lines. Score written production 3/3 separately from reading; repair only a missed line."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R15-name-exchange-r3-production",
+              "prompt": "Cover every Gujarati model. Write: My name is Arun. / What is your name? / Pleased to meet you.",
+              "assesses": [
+                "GU-CONCEPT-C02-ANAND-01",
+                "GU-CONCEPT-C02-CHHE-01",
+                "GU-CONCEPT-C02-MAARUN-01",
+                "GU-CONCEPT-C02-MAARUNNAAMCHHE-01",
+                "GU-CONCEPT-C02-NAAM-01",
+                "GU-CONCEPT-C02-SHUN-01",
+                "GU-CONCEPT-C02-TAMARUNNAAMSHUNCHHE-01"
+              ],
+              "responseSeconds": 60,
+              "acceptedResponses": [
+                "મારું નામ અરુણ છે। / તમારું નામ શું છે? / તમને મળીને આનંદ થયો।"
+              ],
+              "feedback": {
+                "correct": "You produced the complete introduction from meaning with no model.",
+                "incorrect": "Check only the missed line, cover it, and produce that line once more from its English cue."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which you belongs in this polite exchange? (tame.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

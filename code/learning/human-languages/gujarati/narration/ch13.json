@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Friend and Family",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:a6263a0357f8706d",
+  "sourceHash": "fnv1a64:10370952859476cb",
   "lessons": [
     {
       "id": "GU-C11-mitra",
@@ -597,6 +597,138 @@
             {
               "kind": "speech",
               "text": "Sources: Wiktionary: બહેન (bahen); Wiktionary: Sanskrit bhagini."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R13-doorway-nine-r3",
+      "sequence": 575,
+      "title": "The doorway nine return in a new order",
+      "headword": "ણ જ ુ શ ં ક ો છ ી",
+      "romanization": "retroflex nna — ja — u sign — sha — nasal mark — ka — o sign — chha — long-ii sign",
+      "gloss": "retrieve the nine doorway forms after a durable interval",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:3e29912a91218801",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 10,
+              "perItem": false,
+              "source": "[PAUSE 10s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Without looking back, write ja, the nasal mark, and ka. Check only a missed form, cover the model again, and make one repair."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read the shuffled row once. Identify each form on sight; do not rebuild the original doorway order. Record the reading score before the row is covered; repair only missed forms, then reach 9/9 once."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R13-doorway-nine-r3-reading",
+              "prompt": "Read this shuffled row aloud: ણ જ ુ શ ં ક ો છ ી (retroflex nna — ja — u sign — sha — nasal mark — ka — o sign — chha — long-ii sign).",
+              "assesses": [
+                "GU-SCRIPT-JA-01",
+                "GU-SCRIPT-O-MATRA-01",
+                "GU-SCRIPT-ANUSVARA-01",
+                "GU-SCRIPT-II-MATRA-01",
+                "GU-SCRIPT-U-MATRA-01",
+                "GU-SCRIPT-CHHA-01",
+                "GU-SCRIPT-KA-01",
+                "GU-SCRIPT-NNA-01",
+                "GU-SCRIPT-SHA-01"
+              ],
+              "responseSeconds": 45,
+              "acceptedResponses": [
+                "retroflex nna; ja; u sign; sha; nasal mark; ka; o sign; chha; long-ii sign"
+              ],
+              "feedback": {
+                "correct": "All nine forms survived the long interval and the new order.",
+                "incorrect": "Repair only the missed card, then read the shuffled row once more."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — from sound",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep every model covered. Write the nine sound cues in their new order, then score the writing response separately from reading. Writing also needs 9/9; the reading score cannot compensate for it. Repair only missed forms."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R13-doorway-nine-r3-dictation",
+              "prompt": "Cover every model. Write from these cues: nasal mark, sha, attached u, ja, ka, attached long ii, chha, retroflex nna, attached o.",
+              "assesses": [
+                "GU-SCRIPT-JA-01",
+                "GU-SCRIPT-O-MATRA-01",
+                "GU-SCRIPT-ANUSVARA-01",
+                "GU-SCRIPT-II-MATRA-01",
+                "GU-SCRIPT-U-MATRA-01",
+                "GU-SCRIPT-CHHA-01",
+                "GU-SCRIPT-KA-01",
+                "GU-SCRIPT-NNA-01",
+                "GU-SCRIPT-SHA-01"
+              ],
+              "responseSeconds": 60,
+              "acceptedResponses": [
+                "ં શ ુ જ ક ી છ ણ ો"
+              ],
+              "feedback": {
+                "correct": "All nine forms returned from sound in a second new order.",
+                "incorrect": "Check only each missed form, cover every model, and retry those cues once."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many marks and consonants returned? (Four marks and five consonants.)"
             }
           ]
         }

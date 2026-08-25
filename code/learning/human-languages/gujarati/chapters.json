@@ -383,6 +383,30 @@
           "GU-SCRIPT-ANUSVARA-MEDIAL"
         ]
       }
+    },
+    {
+      "chapter": 15,
+      "title": "Fourth Return: Script and Names",
+      "label": "ch:gu-r4-script-names",
+      "canDo": "I can retrieve five Gujarati doorway forms at their fourth spacing window, distinguish each from a nearby familiar form, and independently read and write a complete name exchange after a long interval.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "GU-R15-name-exchange-r3",
+        "kind": "production",
+        "summary": "The chapter closes without adding an atom: the learner independently reads three shuffled introduction lines, then writes a complete name exchange from English cues after first closing exact R4 windows for the short-u sign, chha, ka, retroflex nna, and sha.",
+        "assesses": [
+          "GU-SCRIPT-U-MATRA-01",
+          "GU-SCRIPT-CHHA-01",
+          "GU-SCRIPT-KA-01",
+          "GU-SCRIPT-NNA-01",
+          "GU-SCRIPT-SHA-01",
+          "GU-CONCEPT-C02-ANAND-01",
+          "GU-CONCEPT-C02-MAARUNNAAMCHHE-01",
+          "GU-CONCEPT-C02-TAMARUNNAAMSHUNCHHE-01"
+        ]
+      }
     }
   ]
 }

@@ -121,6 +121,13 @@
       "output": "gujarati/book/chapters/ch14-face-parts.tex",
       "unicodeScript": "Gujarati",
       "scriptCommand": "gu"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 15,
+      "output": "gujarati/book/chapters/ch15-r4-script-names.tex",
+      "unicodeScript": "Gujarati",
+      "scriptCommand": "gu"
     }
   ]
 }
