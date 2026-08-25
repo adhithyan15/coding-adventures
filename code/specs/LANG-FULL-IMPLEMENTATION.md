@@ -949,7 +949,9 @@ backend immediately) come before the enabler-dependent items.
   runtime power call. Dynamic and otherwise non-unit exponents remain
   conservative. Leading unary plus, including integer identity tails, is
   likewise preserving because lowering returns its operand unchanged; unary
-  minus remains conservative. For finite real
+  minus remains conservative. Parentheses are transparent around exact scalar
+  self-references and boolean, integer, or real neutral literals; wrapping a
+  changing expression does not make it preserving. For finite real
   selectors, multiplication and division by exact positive one are likewise
   preserving, including left-associative chains of those operations; additive
   zero remains conservative because it can change the sign bit of negative
