@@ -28,6 +28,29 @@ CI_MANAGED_TOOLCHAIN_LANGUAGES = frozenset(
 TRACKED_ARTIFACT_COMPONENT_IDENTITY = "node_modules"
 TRACKED_ARTIFACT_REDACTED_PATH = "repository"
 TRACKED_ARTIFACT_UNICODE_VERSION = tracked_unicode.UNICODE_VERSION
+ORPHAN_SCAN_ROOT = "code"
+ORPHAN_LEDGER_PATH = "code/BUILD-EXEMPTIONS"
+ORPHAN_BUILD_NAMES = (
+    "BUILD",
+    "BUILD_windows",
+    "BUILD_mac",
+    "BUILD_linux",
+    "BUILD_mac_and_linux",
+)
+ORPHAN_SKIP_COMPONENTS = frozenset(
+    {
+        ".git",
+        "target",
+        "node_modules",
+        "vendor",
+        ".venv",
+        "_build",
+        "deps",
+        ".build",
+        "dist-newstyle",
+        ".cargo",
+    }
+)
 WINDOWS_RESERVED_BASENAMES = frozenset(
     {
         "CON",
@@ -53,6 +76,38 @@ class TrackedArtifactEntry(TypedDict):
     entry_kind: Literal["regular", "symlink", "reparse"]
 
 
+class OrphanManifest(TypedDict):
+    """One normalized Cargo manifest directory in a closed snapshot."""
+
+    path: str
+    kind: Literal["package", "virtual_workspace"]
+
+
+class OrphanBuildFile(TypedDict):
+    """One recognized BUILD path and its independently derived state."""
+
+    path: str
+    state: Literal["runnable", "empty"]
+
+
+class OrphanExemption(TypedDict):
+    """One inert ledger entry, including invalid kinds for fail-closed tests."""
+
+    line: int
+    kind: str
+    path: str
+    reason: str
+
+
+class OrphanCrateSnapshot(TypedDict):
+    """The complete bounded input needed by orphan-crate validation."""
+
+    directories: list[str]
+    manifests: list[OrphanManifest]
+    build_files: list[OrphanBuildFile]
+    exemptions: list[OrphanExemption]
+
+
 class ValidationDiagnostic(TypedDict):
     """Stable language-neutral build validation diagnostic."""
 
@@ -60,6 +115,15 @@ class ValidationDiagnostic(TypedDict):
     severity: Literal["error"]
     path: str
     details: dict[str, int | str]
+
+
+class OrphanCrateValidationResult(TypedDict):
+    """Canonical result derived from one closed orphan-crate snapshot."""
+
+    valid: bool
+    diagnostic_codes: list[str]
+    pending_exemption_count: int
+    diagnostics: list[ValidationDiagnostic]
 
 
 def validate_ci_full_build_toolchains(
@@ -275,6 +339,225 @@ def validate_tracked_artifact_snapshot(
             item["path"],
             json.dumps(item["details"], sort_keys=True),
         ),
+    )
+
+
+def validate_orphan_crate_snapshot(
+    snapshot: OrphanCrateSnapshot,
+) -> OrphanCrateValidationResult:
+    """Validate inert Cargo, BUILD, and exemption records without host authority.
+
+    Snapshot construction is deliberately outside this function. The validator
+    does not enumerate a checkout, inspect Git, open a path, launch a process,
+    read the environment, or access the network.
+    """
+    manifests = [
+        manifest
+        for manifest in snapshot["manifests"]
+        if not _is_orphan_artifact_path(manifest["path"])
+    ]
+    directories = set(snapshot["directories"])
+    manifest_by_path = {manifest["path"]: manifest for manifest in manifests}
+    coverage = {
+        manifest["path"]: _find_covering_build(
+            snapshot["build_files"], manifest["path"], "runnable"
+        )
+        for manifest in manifests
+    }
+    empty_builds = {
+        manifest["path"]: _find_covering_build(
+            snapshot["build_files"], manifest["path"], "empty"
+        )
+        for manifest in manifests
+    }
+
+    diagnostics: list[ValidationDiagnostic] = []
+    seen_exemption_paths: set[str] = set()
+    valid_exemptions: list[OrphanExemption] = []
+
+    # Reserve every portable identity before applying the policy-field
+    # precedence. Thus an invalid first spelling cannot hide a later alias.
+    for exemption in snapshot["exemptions"]:
+        path = exemption["path"]
+        identity: str | None = None
+        path_problem: str | None = None
+        if not _is_portable_orphan_path(path):
+            path_problem = "PATH_UNSAFE"
+        else:
+            identity = _orphan_path_identity(path)
+            if not _is_under_orphan_scan_root(path):
+                path_problem = "PATH_OUTSIDE_SCAN"
+            elif _is_orphan_artifact_path(path):
+                path_problem = "PATH_ARTIFACT"
+
+        duplicate = identity is not None and identity in seen_exemption_paths
+        if identity is not None and not duplicate:
+            seen_exemption_paths.add(identity)
+
+        problem: str | None
+        if exemption["kind"] not in {"EXCLUDED", "PENDING"}:
+            problem = "UNKNOWN_KIND"
+        elif not exemption["reason"].strip():
+            problem = "REASON_MISSING"
+        elif duplicate:
+            problem = "DUPLICATE_PATH"
+        else:
+            problem = path_problem
+
+        if problem is not None:
+            diagnostics.append(
+                {
+                    "code": "ORPHAN_EXEMPTION_INVALID",
+                    "severity": "error",
+                    "path": ORPHAN_LEDGER_PATH,
+                    "details": {"line": exemption["line"], "problem": problem},
+                }
+            )
+            continue
+        valid_exemptions.append(exemption)
+
+    active_exemptions: dict[str, OrphanExemption] = {}
+    pending_exemption_count = 0
+    for exemption in valid_exemptions:
+        exemption_path = exemption["path"]
+        stale_problem: str | None = None
+        if exemption_path not in directories:
+            stale_problem = "MISSING_DIRECTORY"
+        elif exemption_path not in manifest_by_path:
+            stale_problem = "NO_MANIFEST"
+        elif coverage[exemption_path] is not None:
+            stale_problem = "COVERED"
+
+        if stale_problem is not None:
+            diagnostics.append(
+                {
+                    "code": "ORPHAN_EXEMPTION_STALE",
+                    "severity": "error",
+                    "path": ORPHAN_LEDGER_PATH,
+                    "details": {
+                        "entry_path": exemption_path,
+                        "kind": exemption["kind"],
+                        "line": exemption["line"],
+                        "problem": stale_problem,
+                    },
+                }
+            )
+            continue
+
+        active_exemptions[exemption_path] = exemption
+        if exemption["kind"] == "PENDING":
+            pending_exemption_count += 1
+
+    for manifest in manifests:
+        manifest_path = manifest["path"]
+        if coverage[manifest_path] is not None or manifest_path in active_exemptions:
+            continue
+        empty_build = empty_builds[manifest_path]
+        if empty_build is None:
+            diagnostics.append(
+                {
+                    "code": "ORPHAN_CRATE_UNLISTED",
+                    "severity": "error",
+                    "path": manifest_path,
+                    "details": {"manifest_kind": manifest["kind"]},
+                }
+            )
+        else:
+            diagnostics.append(
+                {
+                    "code": "ORPHAN_CRATE_EMPTY_BUILD",
+                    "severity": "error",
+                    "path": manifest_path,
+                    "details": {
+                        "build_path": empty_build["path"],
+                        "manifest_kind": manifest["kind"],
+                    },
+                }
+            )
+
+    diagnostics.sort(key=_validation_diagnostic_sort_key)
+    diagnostic_codes = sorted({diagnostic["code"] for diagnostic in diagnostics})
+    return {
+        "valid": not diagnostics,
+        "diagnostic_codes": diagnostic_codes,
+        "pending_exemption_count": pending_exemption_count,
+        "diagnostics": diagnostics,
+    }
+
+
+def _find_covering_build(
+    build_files: Iterable[OrphanBuildFile],
+    manifest_path: str,
+    state: Literal["runnable", "empty"],
+) -> OrphanBuildFile | None:
+    """Choose the deepest component-wise ancestor, then the fixed name rank."""
+    build_name_rank = {name: index for index, name in enumerate(ORPHAN_BUILD_NAMES)}
+    candidates: list[OrphanBuildFile] = []
+    for build_file in build_files:
+        if build_file["state"] != state:
+            continue
+        parent, _, name = build_file["path"].rpartition("/")
+        if not _is_under_orphan_scan_root(parent):
+            continue
+        if manifest_path != parent and not manifest_path.startswith(f"{parent}/"):
+            continue
+        if name not in build_name_rank:
+            continue
+        candidates.append(build_file)
+
+    if not candidates:
+        return None
+    return min(
+        candidates,
+        key=lambda item: (
+            -len(item["path"].rpartition("/")[0].split("/")),
+            build_name_rank[item["path"].rpartition("/")[2]],
+            item["path"],
+        ),
+    )
+
+
+def _is_portable_orphan_path(path: str) -> bool:
+    """Apply the shared portable directory grammar without host path APIs."""
+    if not path or len(path) > 512 or tracked_unicode.nfc(path) != path:
+        return False
+    if path.startswith("/") or "\\" in path or "//" in path:
+        return False
+    if len(path) >= 2 and path[0].isascii() and path[0].isalpha() and path[1] == ":":
+        return False
+    if any(ord(character) < 32 or character in '<>:"|?*' for character in path):
+        return False
+    for component in path.split("/"):
+        if not component or component in {".", ".."}:
+            return False
+        if component.endswith((" ", ".")):
+            return False
+        basename = tracked_unicode.full_uppercase(component.split(".", 1)[0])
+        if basename in WINDOWS_RESERVED_BASENAMES:
+            return False
+    return True
+
+
+def _orphan_path_identity(path: str) -> str:
+    return tracked_unicode.casefold(tracked_unicode.nfc(path))
+
+
+def _is_under_orphan_scan_root(path: str) -> bool:
+    return path == ORPHAN_SCAN_ROOT or path.startswith(f"{ORPHAN_SCAN_ROOT}/")
+
+
+def _is_orphan_artifact_path(path: str) -> bool:
+    return any(component in ORPHAN_SKIP_COMPONENTS for component in path.split("/"))
+
+
+def _validation_diagnostic_sort_key(
+    diagnostic: ValidationDiagnostic,
+) -> tuple[str, str, str, str]:
+    return (
+        diagnostic["code"],
+        diagnostic["path"],
+        "",
+        json.dumps(diagnostic["details"], sort_keys=True),
     )
 
 

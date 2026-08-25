@@ -11,10 +11,15 @@ import pytest
 from build_tool.discovery import Package
 from build_tool.validator import (
     TRACKED_ARTIFACT_UNICODE_VERSION,
+    OrphanBuildFile,
+    OrphanCrateSnapshot,
+    OrphanExemption,
+    OrphanManifest,
     TrackedArtifactEntry,
     ValidationDiagnostic,
     validate_build_contracts,
     validate_ci_full_build_toolchains,
+    validate_orphan_crate_snapshot,
     validate_tracked_artifact_snapshot,
 )
 
@@ -28,6 +33,12 @@ TRACKED_ARTIFACT_CASES = (
     "validation-tracked-artifacts-aliases.json",
     "validation-tracked-artifacts-invalid.json",
     "validation-tracked-artifacts-unicode-boundaries.json",
+)
+ORPHAN_CRATE_CASES = (
+    "validation-orphan-crates-clean.json",
+    "validation-orphan-crates-unlisted.json",
+    "validation-orphan-exemptions-invalid.json",
+    "validation-orphan-exemptions-stale.json",
 )
 
 
@@ -229,6 +240,212 @@ luarocks make --local --deps-mode=none coding-adventures-safe-pkg-0.1.0-1.rocksp
     )
 
     assert validate_build_contracts(tmp_path, packages) is None
+
+
+@pytest.mark.parametrize("case_name", ORPHAN_CRATE_CASES)
+def test_validate_orphan_crates_consumes_shared_cases(case_name):
+    case = json.loads((CONFORMANCE_CASES / case_name).read_text(encoding="utf-8"))
+    snapshot = cast(
+        OrphanCrateSnapshot,
+        case["input"]["options"]["orphan_snapshot"],
+    )
+    expected = case["expected"]
+
+    result = validate_orphan_crate_snapshot(snapshot)
+
+    assert result["diagnostics"] == expected["diagnostics"]
+    assert result["valid"] == expected["result"]["valid"]
+    assert result["diagnostic_codes"] == expected["result"]["diagnostic_codes"]
+    assert (
+        result["pending_exemption_count"]
+        == expected["result"]["pending_exemption_count"]
+    )
+
+
+@pytest.mark.parametrize(
+    "unsafe_path",
+    (
+        "",
+        "a" * 513,
+        "/absolute/secret-project",
+        "C:/host/secret-project",
+        "code/packages/rust/bad<name>",
+        "code/packages/rust/trailing.",
+        "code/packages/rust/CON",
+    ),
+)
+def test_validate_orphan_crates_redacts_unsafe_exemption_paths(unsafe_path):
+    result = validate_orphan_crate_snapshot(
+        {
+            "directories": ["code/packages/rust/demo"],
+            "manifests": [
+                cast(
+                    OrphanManifest,
+                    {"path": "code/packages/rust/demo", "kind": "package"},
+                )
+            ],
+            "build_files": [],
+            "exemptions": [
+                cast(
+                    OrphanExemption,
+                    {
+                        "line": 7,
+                        "kind": "PENDING",
+                        "path": unsafe_path,
+                        "reason": "not allowed",
+                    },
+                )
+            ],
+        }
+    )
+
+    diagnostic = next(
+        item
+        for item in result["diagnostics"]
+        if item["code"] == "ORPHAN_EXEMPTION_INVALID"
+    )
+    assert diagnostic == {
+        "code": "ORPHAN_EXEMPTION_INVALID",
+        "severity": "error",
+        "path": "code/BUILD-EXEMPTIONS",
+        "details": {"line": 7, "problem": "PATH_UNSAFE"},
+    }
+    if unsafe_path:
+        assert unsafe_path not in repr(result)
+
+
+def test_validate_orphan_crates_uses_python_whitespace_for_reasons():
+    result = validate_orphan_crate_snapshot(
+        {
+            "directories": ["code/packages/rust/demo"],
+            "manifests": [{"path": "code/packages/rust/demo", "kind": "package"}],
+            "build_files": [],
+            "exemptions": [
+                {
+                    "line": 7,
+                    "kind": "PENDING",
+                    "path": "code/packages/rust/demo",
+                    "reason": "\u001c",
+                }
+            ],
+        }
+    )
+
+    assert result["pending_exemption_count"] == 0
+    assert result["diagnostic_codes"] == [
+        "ORPHAN_CRATE_UNLISTED",
+        "ORPHAN_EXEMPTION_INVALID",
+    ]
+    assert result["diagnostics"][1]["details"]["problem"] == "REASON_MISSING"
+
+
+def test_validate_orphan_crates_chooses_closest_empty_then_fixed_name_order():
+    result = validate_orphan_crate_snapshot(
+        {
+            "directories": ["code/packages/rust/demo/child"],
+            "manifests": [
+                {"path": "code/packages/rust/demo/child", "kind": "package"}
+            ],
+            "build_files": cast(
+                list[OrphanBuildFile],
+                [
+                    {"path": "code/packages/rust/BUILD", "state": "empty"},
+                    {
+                        "path": "code/packages/rust/demo/BUILD_linux",
+                        "state": "empty",
+                    },
+                    {
+                        "path": "code/packages/rust/demo/BUILD",
+                        "state": "empty",
+                    },
+                ],
+            ),
+            "exemptions": [],
+        }
+    )
+
+    assert result["diagnostics"] == [
+        {
+            "code": "ORPHAN_CRATE_EMPTY_BUILD",
+            "severity": "error",
+            "path": "code/packages/rust/demo/child",
+            "details": {
+                "build_path": "code/packages/rust/demo/BUILD",
+                "manifest_kind": "package",
+            },
+        }
+    ]
+
+
+def test_validate_orphan_crates_uses_nfc_full_casefold_duplicate_identity():
+    result = validate_orphan_crate_snapshot(
+        {
+            "directories": ["code/packages/rust/Straße"],
+            "manifests": [
+                {"path": "code/packages/rust/Straße", "kind": "package"}
+            ],
+            "build_files": [],
+            "exemptions": [
+                {
+                    "line": 7,
+                    "kind": "EXCLUDED",
+                    "path": "code/packages/rust/Straße",
+                    "reason": "first",
+                },
+                {
+                    "line": 8,
+                    "kind": "PENDING",
+                    "path": "CODE/PACKAGES/RUST/STRASSE",
+                    "reason": "duplicate",
+                },
+            ],
+        }
+    )
+
+    assert result["diagnostics"] == [
+        {
+            "code": "ORPHAN_EXEMPTION_INVALID",
+            "severity": "error",
+            "path": "code/BUILD-EXEMPTIONS",
+            "details": {"line": 8, "problem": "DUPLICATE_PATH"},
+        }
+    ]
+
+
+def test_validate_orphan_crates_uses_ascii_json_unicode_detail_ordering():
+    result = validate_orphan_crate_snapshot(
+        {
+            "directories": [],
+            "manifests": [],
+            "build_files": [],
+            "exemptions": [
+                {
+                    "line": 9,
+                    "kind": "EXCLUDED",
+                    "path": "code/packages/rust/z",
+                    "reason": "removed",
+                },
+                {
+                    "line": 8,
+                    "kind": "EXCLUDED",
+                    "path": "code/packages/rust/😀",
+                    "reason": "removed",
+                },
+                {
+                    "line": 7,
+                    "kind": "EXCLUDED",
+                    "path": "code/packages/rust/é",
+                    "reason": "removed",
+                },
+            ],
+        }
+    )
+
+    assert [item["details"]["entry_path"] for item in result["diagnostics"]] == [
+        "code/packages/rust/é",
+        "code/packages/rust/😀",
+        "code/packages/rust/z",
+    ]
 
 
 @pytest.mark.parametrize("case_name", TRACKED_ARTIFACT_CASES)

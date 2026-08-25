@@ -6964,6 +6964,85 @@ overlap. The generated 459.6 MiB `target_isolated/` directory from the exact
 Windows front was verified inside the dedicated worktree and removed with
 `cargo clean`, while its separately owned hygiene item remains pending.
 
+### Post-#12738 refresh and Python orphan-validator selection
+
+PR #12738 completed every reported check without a failure or pending job.
+GitHub reported the branch clean and mergeable, so the loop enabled squash
+auto-merge; GitHub merged it as
+`847c3f2fcd27f2491fcd3ae53948786e6d24e118` at
+`2026-08-25T10:06:09Z` without a manual merge command. The exact merged head is
+`8a969ecb9482145f86e8857ae8bbf741f2e98612`.
+
+The mandatory post-merge refresh followed current `origin/main` through
+`2445ef2bd42ddefd6b47ab3d9fc6aec5ac5c1e39`. The collision-checked schema-3
+inventory is structurally unchanged: 15 established lanes, 1,373
+implementation identities, 4,566 package slots, 175 high-consensus packages
+with 276 missing slots, 122 five-to-nine-lane packages with 926 gaps, 166
+two-to-four-lane packages with 2,087 gaps, 910 singletons with 12,740 gaps, and
+721 Rust singletons. Canonical collisions and unknown language buckets remain
+zero; OCaml remains correctly emerging at zero packages.
+
+The source audit assigned every intervening change before selection. Merged PR
+#12722 adds sourced Malayalam authored strokes to the existing neutral
+script-ductus data owner; #12735 extends the HTML frontend's exact recovery
+diagnostics; #12740 adds ADJ curriculum and E2E-harness authority evidence; and
+#12741 extends the existing portable WAST parser, WebAssembly conformance, and
+selection-blocked corpus-host owners. The ALGOL unit-selector repair remains
+identity-neutral compiler semantics. After #12738, Spanish #12743 and Gujarati
+#12747 are curriculum-only changes. Mermaid XY tick controls from #12744 extend
+the existing chart conformance owner. Storage-fs #12728 closes the narrower
+Unix directory-fsync error-propagation subrequirement but leaves its durable
+monotone floor, cross-process coordination, crash/rollback, containment,
+two-instance, documentation-truthfulness, and native-authority review pending.
+No commit adds a package marker or requires a new owner.
+
+The selected next owner is
+`build-tool-python-orphan-crate-validation-conformance` on exact base
+`2445ef2bd42ddefd6b47ab3d9fc6aec5ac5c1e39`. Its sole neutral-corpus
+prerequisite is merged. Python is the widest remaining supported lane at 502
+packages, already carries the pinned source-embedded Unicode 17 normalization,
+full-folding, and uppercase substrate required by exemption validation, and can
+add a bounded native adapter without filesystem, Git, process, environment, or
+network authority. Eleven live PRs and every non-main remote head have zero
+exact overlap with the six expected Python build-tool, state, and roadmap
+paths; the target remote branch was absent. The higher-descendant extra-CI
+corpus and OCaml process-free substrate remain collision-unsafe while live PRs
+#12149 and #12162 own their required Go main and validator surfaces.
+
+### Python orphan-validator implementation and exact-main refresh
+
+The Python engine now consumes the four language-neutral orphan-crate cases
+through a pure in-memory adapter. It matches the reviewed Rust oracle for
+component-wise BUILD ancestry, runnable-over-empty precedence, the fixed BUILD
+filename rank, exemption error and stale-entry precedence, Unicode 17 NFC plus
+full-fold identities, portable-path rejection and hostile-path redaction, and
+Python-ASCII-JSON diagnostic ordering. The adapter does not enumerate the
+checkout, invoke Git or another process, read the environment, open a path, or
+access the network.
+
+Both literal `BUILD_windows` and `BUILD` fronts pass from independently cleared
+uv 0.11.28 / Python 3.13.14 environments with 442 tests and 90.58% total
+coverage in each run; the focused validator passes 40 tests at 97% coverage.
+The neutral schema and runner suites pass 80 tests plus 121 subtests, and the
+complete 111-case, 269-file corpus validates. The Go oracle passes tests, vet,
+and trimpath compilation; its forced Python plan validates metadata and reports
+all 494 discovered packages would build. Ruff, strict MyPy, compileall, focused
+Bandit, uv dependency compatibility, pip-audit, wheel/sdist construction, the
+package-parity collision gate, capability suites, state graph, credential, and
+diff checks are clean. A source-wide Bandit probe retains only already-present
+process-execution findings in unchanged CI, executor, and Git-diff modules.
+
+Two conflict-free rebases brought the branch to exact `origin/main`
+`d4e91eb24f1ed9f24e834fbff264b08dcaf60511`. PR #12755's guarded curriculum
+ledger routing stays inside the existing TypeScript human-language-data owner;
+PR #12751 is ADJ loop bookkeeping only; and PR #12750's positioned void-end-tag
+diagnostics remain inside the existing Rust HTML-parser owner. None adds a
+package marker, requires a new parity owner, or overlaps the six Python
+build-tool, state, and roadmap paths. The refreshed collision report is
+unchanged at 15 established lanes, 1,373 identities, 4,566 slots, 175
+high-consensus packages with 276 gaps, 910 singletons with 12,740 gaps, 721
+Rust singletons, zero collisions, and zero unknown buckets.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
