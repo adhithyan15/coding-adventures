@@ -8472,12 +8472,15 @@ impl HtmlParser {
                 element_at_path(&self.document, path).is_some_and(is_implied_end_tag_element)
             });
         if !current_after_implied_end_tags_is_caption {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-token-in-caption",
-                format!(
-                    "{token} closed a caption while a non-caption node remained current after implied-end-tag generation"
-                ),
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-token-in-caption",
+                    format!(
+                        "{token} closed a caption while a non-caption node remained current after implied-end-tag generation"
+                    ),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
         }
     }
 
@@ -27631,6 +27634,16 @@ mod tests {
         .at_emission(Some(start_tag_position_at(source, name, occurrence)))
     }
 
+    fn token_in_caption_recovery(token: &str, position: SourcePosition) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-token-in-caption",
+            format!(
+                "{token} closed a caption while a non-caption node remained current after implied-end-tag generation"
+            ),
+        )
+        .at_emission(Some(position))
+    }
+
     fn row_start_tag_in_template_body_recovery(
         source: &str,
         occurrence: usize,
@@ -37165,25 +37178,28 @@ mod tests {
 
     #[test]
     fn reports_caption_recovery_with_a_non_caption_current_node() {
-        for (source, token) in [
+        for (source, token, position) in [
             (
                 "<!doctype html><table><caption><b>Cap<col><tr><td>A</table>",
                 "start tag `<col>`",
+                start_tag_position(
+                    "<!doctype html><table><caption><b>Cap<col><tr><td>A</table>",
+                    "col",
+                ),
             ),
             (
                 "<!doctype html><table><caption><i>Cap</table>",
                 "end tag `</table>`",
+                end_tag_position(
+                    "<!doctype html><table><caption><i>Cap</table>",
+                    "table",
+                ),
             ),
         ] {
             let output = parse_html_with_diagnostics(source).unwrap();
             assert_eq!(
                 output.parser_diagnostics,
-                vec![ParserDiagnostic::new(
-                    "unexpected-token-in-caption",
-                    format!(
-                        "{token} closed a caption while a non-caption node remained current after implied-end-tag generation"
-                    ),
-                )],
+                vec![token_in_caption_recovery(token, position)],
                 "source {source:?}"
             );
         }
@@ -37206,6 +37222,83 @@ mod tests {
             element(&body.children[1]).children,
             vec![Node::text("After")]
         );
+
+        let repeated_source =
+            "<!doctype html><table><caption><b>one<col><caption><i>two<col>";
+        let repeated = parse_html_with_diagnostics(repeated_source).unwrap();
+        let repeated_diagnostics = repeated
+            .parser_diagnostics
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-token-in-caption")
+            .collect::<Vec<_>>();
+        assert_eq!(
+            repeated_diagnostics,
+            vec![
+                &token_in_caption_recovery(
+                    "start tag `<col>`",
+                    start_tag_position_at(repeated_source, "col", 0),
+                ),
+                &token_in_caption_recovery(
+                    "start tag `<col>`",
+                    start_tag_position_at(repeated_source, "col", 1),
+                ),
+            ]
+        );
+
+        let unicode_source =
+            "<!doctype html><!--é-->\r\n<table><caption><i>Cap</table>";
+        let unicode = parse_html_with_diagnostics(unicode_source).unwrap();
+        assert!(unicode_source.len() > unicode_source.chars().count());
+        assert!(unicode.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic
+                == &token_in_caption_recovery(
+                    "end tag `</table>`",
+                    end_tag_position(unicode_source, "table"),
+                )
+        }));
+
+        for source in [
+            "<!doctype html><table><caption><b>Cap<col",
+            "<!doctype html><table><caption><i>Cap</table",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output.parser_diagnostics.iter().all(|diagnostic| {
+                diagnostic.code != "unexpected-token-in-caption"
+            }));
+        }
+
+        let mut unpositioned = HtmlParser::new();
+        for token in [
+            Token::StartTag {
+                name: "table".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "caption".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "b".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "col".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+        ] {
+            unpositioned.process_token(token);
+        }
+        let diagnostics = unpositioned
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-token-in-caption")
+            .collect::<Vec<_>>();
+        assert_eq!(diagnostics.len(), 1);
+        assert_eq!(diagnostics[0].position, None);
     }
 
     #[test]
