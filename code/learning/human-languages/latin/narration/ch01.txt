@@ -1,8 +1,8 @@
 Latin, chapter 1: Greetings.
-7 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+9 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 7.
+Lesson 1 of 9.
 salvē / salvēte — "hello" (be well).
 
 Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
@@ -38,7 +38,7 @@ Wrap-up Recall.
 What does salvē literally wish, and how do you greet more than one person? ("Be well / be in good health"; salvēte, with the plural -ēte ending.)
 
 
-Lesson 2 of 7.
+Lesson 2 of 9.
 salvē — copy one greeting with help.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
@@ -54,7 +54,43 @@ Wrap-up recall.
 Compare your copy with the model. If one mark differs, repair only that mark. No hiding, no spelling from memory, and no second word today.
 
 
-Lesson 3 of 7.
+Lesson 3 of 9.
+salvē — look, hide, write, check.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+Say salvē once: SAL-weh, “be well.” Its sound and meaning are already familiar. Today only the amount of visual help changes.
+
+Writing — delayed copy.
+Look at salvē for five seconds. Notice the five letters and the short macron over the final ē. Cover the model completely. From memory, write the greeting once. Say SAL-weh as you finish.
+Uncover the model and compare one feature at a time: s-a-l-v-ē. If one feature differs, repair only that feature. This is one gentle memory step, not a speed test.
+<!-- hl-activity: {"id":"LA-W01-salve-delayed-copy-check","kind":"text","assesses":["LA-PHONO-SALVE-01","LA-ETYMON-SALVE-02","LA-GRAMMAR-SALVE-03"],"prompt":"Cover the model and write the one-person Latin greeting meaning be well. Then uncover it and check every letter and the macron.","answer":"salvē","accepted":["salvē"],"feedback":{"correct":"Yes: salvē has all five letters and the final long-vowel macron.","incorrect":"Uncover salvē, compare s-a-l-v-ē, repair only the differing feature, and cover it again."},"response_seconds":20} -->.
+
+Wrap-up recall.
+Writing pass: 1/1 only when the covered-model attempt contains s-a-l-v-ē with the macron. Saying the greeting correctly does not replace the writing point.
+
+
+Lesson 4 of 9.
+Hear the greeting; write it independently — write salvē independently from its sound and meaning cue.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+Cover the previous lesson and the answer box below. Hear this cue without looking at Latin spelling: “Greet one person: SAL-weh — literally, be well.”
+
+Writing — dictation and transcription.
+Write the one-word Latin greeting from the sound and meaning cue. Remember that the final vowel is long, so its written vowel carries the macron. Do not copy from an earlier page. Stop after one attempt.
+<!-- hl-activity: {"id":"LA-W01-salve-dictation-check","kind":"text","assesses":["LA-PHONO-SALVE-01","LA-ETYMON-SALVE-02","LA-GRAMMAR-SALVE-03"],"prompt":"From the cue SAL-weh, meaning be well to one person, write the Latin greeting with its long-vowel mark.","answer":"salvē","accepted":["salvē"],"feedback":{"correct":"Yes: the heard greeting is written salvē, including the macron over final ē.","incorrect":"The answer is salvē. Compare your attempt letter by letter and check that final ē carries its macron."},"response_seconds":25} -->.
+
+Wrap-up Recall.
+Now uncover the answer: salvē.
+Writing: 1/1 for all five letters plus the final macron; otherwise 0/1.
+Listening: 1/1 if the cue selected the one-person greeting; otherwise 0/1.
+Each skill must pass on its own. A correct listening choice cannot compensate for a missing or incorrect written form.
+
+
+Lesson 5 of 9.
 avē / avēte — "hail" (a formal greeting).
 
 Warm-up.
@@ -84,7 +120,7 @@ Wrap-up Recall.
 What register does avē carry, and in what famous phrase does English keep it? (Formal / ceremonial, for emperors and gods; Ave Maria.)
 
 
-Lesson 4 of 7.
+Lesson 6 of 9.
 valē / valēte — "goodbye" (be strong).
 
 Warm-up.
@@ -116,7 +152,7 @@ Wrap-up Recall.
 What does valē literally wish, and what everyday English noun comes straight from its root? ("Be strong / be well"; value — from valēre "to be worth.")
 
 
-Lesson 5 of 7.
+Lesson 7 of 9.
 grātiās (tibi) agō — "thank you" (I give thanks).
 
 Warm-up.
@@ -146,7 +182,7 @@ Wrap-up Recall.
 Grātiās agō literally says what, and why is there no word for "I"? ("I give thanks"; the -ō verb-ending already carries "I.")
 
 
-Lesson 6 of 7.
+Lesson 8 of 9.
 ita / nōn — "yes" and "no".
 
 Warm-up.
@@ -176,7 +212,7 @@ Wrap-up Recall.
 How did Romans say "yes," and what Romance word grew out of sīc? (With ita/sīc/certē or by repeating the verb; sí / sì.)
 
 
-Lesson 7 of 7.
+Lesson 9 of 9.
 Chapter 1 — Practice and Recall.
 
 Warm-up.
