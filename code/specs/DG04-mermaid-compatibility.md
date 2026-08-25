@@ -77,7 +77,9 @@ The XY-chart subset preserves Mermaid's bounded `xAxis.labelRotation` and
 renderer, rotation affects labels only when that axis is placed at the bottom;
 layout reserves the rotated bounds before transformed Paint glyphs reach native
 backends. The family remains partial until its pinned syntax and visual corpus
-passes in full.
+passes in full. Its eight nested `xyChart` axis theme variables preserve
+independent label, title, tick, and spine colors for both axes through semantic
+IR, layout, and backend-neutral Paint instructions.
 
 The existing IR already has useful downstream capacity for the next group:
 

@@ -1261,7 +1261,8 @@ mod glyph_run_overlay {
             return;
         }
 
-        let (r, g, b, a) = parse_css_color(run.fill.as_deref().unwrap_or("rgb(0, 0, 0)"));
+        let color = parse_css_color(run.fill.as_deref().unwrap_or("rgb(0, 0, 0)"));
+        let (r, g, b, a) = coregraphics_fill_color(color);
         CGContextSetRGBFillColor(ctx, r, g, b, a);
         CGContextSetTextMatrix(
             ctx,
@@ -1340,6 +1341,12 @@ mod glyph_run_overlay {
         )
     }
 
+    fn coregraphics_fill_color((r, g, b, a): (f64, f64, f64, f64)) -> (f64, f64, f64, f64) {
+        // This supported bitmap format is BGRA in memory while PixelContainer is RGBA.
+        // Swap red and blue at the CoreGraphics boundary so stored bytes remain RGBA.
+        (b, g, r, a)
+    }
+
     #[cfg(test)]
     mod tests {
         use super::*;
@@ -1378,6 +1385,14 @@ mod glyph_run_overlay {
         fn parse_css_color_rgba() {
             let (_r, _g, _b, a) = parse_css_color("rgba(0, 0, 0, 0.5)");
             assert!((a - 0.5).abs() < 1e-6);
+        }
+
+        #[test]
+        fn coregraphics_fill_color_preserves_rgba_pixel_bytes() {
+            assert_eq!(
+                coregraphics_fill_color((1.0, 0.5, 0.25, 0.75)),
+                (0.25, 0.5, 1.0, 0.75)
+            );
         }
 
         #[test]
