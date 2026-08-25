@@ -1,0 +1,144 @@
+% ============================================================================
+% dolch-sight-word-level — which of Dolch's five grade-banded difficulty
+% levels a common high-frequency "sight word" belongs to (adj-facts-stdlib,
+% LANGUAGE). A K-2 literacy library, grounding ADJ-STDLIB-COVERAGE.md §5.1's
+% "phonics, decoding" Major Gap with a THIRD fresh-WebFetch literacy angle
+% for this loop's `wave2-k8-literacy-foundations` item — genuinely distinct
+% in KIND from `digraph-sound.adj`/`diphthong-sound.adj` (this loop's first
+% two), which are both phonics/decoding tables (letters -> the sound they
+% spell). This table is a WHOLE-WORD-RECOGNITION vocabulary axis instead: a
+% "sight word" is a high-frequency word a beginning reader is taught to
+% recognize instantly, by SIGHT, rather than sound out letter by letter --
+% the opposite reading strategy from phonics decoding, and a genuinely new
+% literacy competency this stdlib has never tabled before.
+% ============================================================================
+% Recall is a binding query:
+%
+%     ? dolch_sight_word_level(the, $Level)   % pre_primer
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `dolch_sight_word_level(word, level)` carrying the source
+% citation, so the lookup above is the ordinary SLD binding query — the
+% engine returns the level WITH its source, on the CPU, with zero model
+% calls, and abstains on any word not one of these source-cited rows. The
+% query also runs BACKWARD — bind a level and recall every word shipped
+% under it:
+%
+%     ? dolch_sight_word_level($W, pre_primer)  % the ; to ; and ; a ; i
+%
+% WHAT A "SIGHT WORD" IS, AND WHY DOLCH: In 1936, educator Edward W. Dolch
+% published a list of 220 common "service words" (articles, pronouns,
+% prepositions, conjunctions, and common verbs -- the connective words that
+% recur constantly in children's text but often cannot be sounded out with
+% early phonics skills alone, e.g. "was", "said", "of"). Dolch grouped these
+% 220 words into five reading-level bands: Pre-Primer, Primer, First Grade,
+% Second Grade, and Third Grade -- a genuinely different organizing axis
+% from every phonics table already shipped (`digraph-sound.adj` and
+% `diphthong-sound.adj` both key a SPELLING to the SOUND it makes; this
+% table keys a WHOLE WORD to the READING-LEVEL BAND it is first taught in).
+%
+% DESIGN NOTE — why this table carries only 25 of the full 220 Dolch words
+% (5 per level), not the complete list: the SAME "representative subset"
+% convention this stdlib already established in `nutrition/food-groups.adj`
+% (which tables 4-5 "example foods" per USDA MyPlate group rather than
+% MyPlate's full food list). The subset here is not a content-based edit —
+% it is the first FIVE words of each level exactly as the cited slide deck
+% itself presents them, in the deck's own built-in order (see Provenance),
+% so no editorial judgment selects which words "feel" most representative.
+% This keeps the largest table this stdlib has shipped to a genetic-code.adj
+% (64 rows) scale of effort at 25 rows, while still genuinely exercising all
+% five of Dolch's real category values (unlike a single-level table, whose
+% second column would never vary). A future round can extend any one level
+% with its remaining words as a further instance of this same gap, mirroring
+% how `wave2-k8-science-foundations` grows a gap across several rounds.
+%
+% The 25 words shipped, banded by Dolch's own five reading levels:
+%
+%     level          words (deck's own listed order, first five per level)
+%     -------------  ----------------------------------------------------
+%     pre_primer     the, to, and, a, i
+%     primer         he, was, that, she, on
+%     first_grade    of, his, had, him, her
+%     second_grade   would, very, your, its, around
+%     third_grade    if, long, about, got, six
+%
+% HONEST ABSTENTION — a word that is a REAL Dolch word at a level shipped
+% here, but not one of that level's first five (e.g. `you`, the sixth
+% Pre-Primer word in the deck) is deliberately NOT a row, so a recall on it
+% ABSTAINS rather than inventing a level for a word this table's own scoped
+% subset does not carry — the same honest-narrowing discipline
+% `food-groups.adj` already established for a real MyPlate food outside its
+% own "example foods" subset. A word that is not a Dolch word at all (e.g.
+% `elephant`) abstains for the same reason, more strongly (it is outside the
+% cited source entirely, not merely outside this table's chosen subset).
+%
+% Provenance: UFLI's Virtual Teaching Resource Hub page "Irregular and High
+% Frequency Words" (curl-fetched directly and confirmed byte-for-byte) states
+% verbatim: "In 1936, E. W. Dolch identified the 220 most common words
+% encountered in the text children read. This high-frequency word list
+% includes many easily decodable words (e.g., it, get) and some words with
+% irregular parts (e.g., was, said)." That page links UFLI's own "Dolch High
+% Frequency Word List Slides" PowerPoint deck, downloaded directly from
+% ufli.education.ufl.edu (the SAME .edu domain and source family
+% `digraph-sound.adj`/`diphthong-sound.adj` already established at `trust
+% authoritative`) and unzipped as raw OOXML — its 227 slides are: one title
+% slide, five level-DIVIDER slides (each a bare `<a:t>` run naming one Dolch
+% level: "Pre-Primer", "Primer", "First Grade", "Second Grade", "Third
+% Grade", confirmed byte-for-byte in the raw slide XML) and 220 individual
+% word slides, each one word's own `<a:t>` text run, immediately following
+% its level's divider slide in the deck's built-in order. Counting the word
+% slides between each pair of divider slides gives exactly 40 (Pre-Primer),
+% 52 (Primer), 41 (First Grade), 46 (Second Grade), and 41 (Third Grade) —
+% summing to exactly 220, an independent cross-check that this deck faithfully
+% reproduces Dolch's own well-documented 220-word count, not a corrupted or
+% partial copy. The 25 rows below transcribe the first five word-slide `<a:t>`
+% runs immediately following each level's divider slide, in that exact order.
+% `https://ufli.education.ufl.edu/wp-content/uploads/2022/01/Dolch-Words-Slides.pptx`
+% `trust authoritative` — UFLI is a university literacy research center
+% (University of Florida, .edu). A full-tree grep for `dolch`/`sight word`/
+% `sight_word` across the whole shipped stdlib (the mandatory duplication
+% check before scoping) found zero prior hits — confirming this is the
+% FIRST sight-word/high-frequency-word content anywhere in this stdlib.
+% Nothing here is asserted from memory. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table dolch_sight_word_level {
+    columns word, level
+
+    row (the, pre_primer)
+    row (to, pre_primer)
+    row (and, pre_primer)
+    row (a, pre_primer)
+    row (i, pre_primer)
+
+    row (he, primer)
+    row (was, primer)
+    row (that, primer)
+    row (she, primer)
+    row (on, primer)
+
+    row (of, first_grade)
+    row (his, first_grade)
+    row (had, first_grade)
+    row (him, first_grade)
+    row (her, first_grade)
+
+    row (would, second_grade)
+    row (very, second_grade)
+    row (your, second_grade)
+    row (its, second_grade)
+    row (around, second_grade)
+
+    row (if, third_grade)
+    row (long, third_grade)
+    row (about, third_grade)
+    row (got, third_grade)
+    row (six, third_grade)
+
+    source "In 1936, E. W. Dolch identified the 220 most common words encountered in the text children read. This high-frequency word list includes many easily decodable words (e.g., it, get) and some words with irregular parts (e.g., was, said)."
+    locator "https://ufli.education.ufl.edu/resources/teaching-resources/instructional-activities/irregular-and-high-frequency-words/"
+    trust authoritative
+
+    cites "Pre-Primer: the, to, and, a, i. Primer: he, was, that, she, on. First Grade: of, his, had, him, her. Second Grade: would, very, your, its, around. Third Grade: if, long, about, got, six. (Transcribed directly from the deck's own level-divider and word-slide text runs, in the deck's built-in order.)" locator "https://ufli.education.ufl.edu/wp-content/uploads/2022/01/Dolch-Words-Slides.pptx"
+}
