@@ -1157,6 +1157,64 @@ fn invalid_v128_load16_lane_and_store16_lane_lane_index_out_of_range() {
 }
 
 #[test]
+fn valid_v128_load32_lane_and_store32_lane() {
+    // SIMD PR46: v128.load32_lane/v128.store32_lane -- one width up from
+    // the 16-bit pair above, same type shape (load32_lane pops an
+    // existing v128, its other 3 lanes preserved unchanged, THEN an i32
+    // address, pushes an updated v128; store32_lane pops the same
+    // v128-then-i32 pair, pushes nothing). Real WAT syntax confirmed
+    // against the pinned simd_load32_lane.wast/simd_store32_lane.wast
+    // corpus: `(v128.load32_lane <lane> <addr> <v128>)`. Valid lane
+    // range is 0-3 here (NOT 0-7 -- an i32x4 v128 has 4 lanes, not
+    // i16x8's 8), so this test's boundary probes (0 and 3) differ from
+    // the 16-bit pair's (0 and 7).
+    assert_valid(
+        r#"(module (memory 1)
+             (func (param i32 v128) (result v128) (v128.load32_lane 0 (local.get 0) (local.get 1)))
+             (func (param i32 v128) (result v128) (v128.load32_lane 3 (local.get 0) (local.get 1)))
+             (func (param i32 v128) (v128.store32_lane 0 (local.get 0) (local.get 1)))
+             (func (param i32 v128) (v128.store32_lane 3 (local.get 0) (local.get 1))))"#,
+    );
+}
+
+#[test]
+fn valid_v128_load32_lane_and_store32_lane_with_explicit_memarg() {
+    // Real corpus syntax puts the memarg attribute(s) BEFORE the bare
+    // lane-index literal: `(v128.load32_lane offset=4 4 ...)`.
+    assert_valid(
+        r#"(module (memory 1)
+             (func (param i32 v128) (result v128) (v128.load32_lane offset=4 2 (local.get 0) (local.get 1)))
+             (func (param i32 v128) (result v128) (v128.load32_lane align=1 2 (local.get 0) (local.get 1)))
+             (func (param i32 v128) (v128.store32_lane offset=4 align=1 2 (local.get 0) (local.get 1))))"#,
+    );
+}
+
+#[test]
+fn invalid_v128_load32_lane_and_store32_lane_with_no_memory_at_all() {
+    assert_invalid("(module (func (param i32 v128) (result v128) (v128.load32_lane 0 (local.get 0) (local.get 1))))");
+    assert_invalid("(module (func (param i32 v128) (v128.store32_lane 0 (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn invalid_v128_load32_lane_and_store32_lane_wrong_operand_type() {
+    // Same "type mismatch" shape the upstream simd_load32_lane.wast/
+    // simd_store32_lane.wast corpus itself checks: swapping the address
+    // and v128 operands (v128 where i32 is expected).
+    assert_invalid("(module (memory 1) (func (param v128) (result v128) (v128.load32_lane 0 (local.get 0) (i32.const 0))))");
+    assert_invalid("(module (memory 1) (func (param v128) (result v128) (v128.store32_lane 0 (local.get 0) (i32.const 0))))");
+}
+
+#[test]
+fn invalid_v128_load32_lane_and_store32_lane_lane_index_out_of_range() {
+    // SIMD PR37's own lesson, applied to this new combined shape at the
+    // 32-bit width: the validator must reject an out-of-range lane index
+    // VALUE (4 is one past i32x4's 0-3 range -- NOT 8, which would be
+    // the 16-bit pair's own boundary, reused incorrectly).
+    assert_invalid("(module (memory 1) (func (param i32 v128) (result v128) (v128.load32_lane 4 (local.get 0) (local.get 1))))");
+    assert_invalid("(module (memory 1) (func (param i32 v128) (v128.store32_lane 4 (local.get 0) (local.get 1))))");
+}
+
+#[test]
 fn valid_splat_family() {
     // SIMD widen PR16: i8x16.splat/i16x8.splat/i64x2.splat -- same
     // "pop scalar, push v128" shape as the already-implemented
@@ -2997,6 +3055,61 @@ fn v128_load16_lane_with_the_multi_memory_flag_bit_set_validates_and_decodes_con
             assert_eq!(
                 *lane, 3,
                 "the decoder must land on lane=3 (the real lane byte, right after the memidx), not lane=0 (the memidx byte itself) -- proof it correctly skipped the memidx"
+            );
+        }
+        other => panic!("expected DecodedOperand::SimdMemLane, got {other:?}"),
+    }
+    assert_eq!(decoded[3].opcode, 0x0B, "the trailing `end` must be recognized as its own instruction, not swallowed into the SIMD op's operand");
+}
+
+/// Same decoder-desync regression as
+/// `v128_load16_lane_with_the_multi_memory_flag_bit_set_validates_and_
+/// decodes_consistently` above, applied to `v128.load32_lane` (0x56) --
+/// confirms this PR's widened memarg-detection gate in `wasm-execution`
+/// (see that crate's own doc comment on the gate) and the mirrored arm
+/// in `wasm-validator` agree on how many bytes the multi-memory-flagged
+/// memarg consumes, exactly like the 8-bit and 16-bit pairs already do.
+#[test]
+fn v128_load32_lane_with_the_multi_memory_flag_bit_set_validates_and_decodes_consistently() {
+    use wasm_types::*;
+    // v128.load32_lane with the multi-memory flag bit (0x40) set on the
+    // align byte, explicit memidx=0 following the offset.
+    // bytes: align=0x40|0x01=0x41, offset=0, memidx=0, lane=2
+    let mut code = vec![0x20, 0x00]; // local.get 0 (i32 addr)
+    code.push(0xFD);
+    code.push(0x0C); // v128.const
+    code.extend([0u8; 16]);
+    code.push(0xFD);
+    code.push(0x56); // v128.load32_lane
+    code.push(0x41); // align byte: 0x40 flag | 0x01 align
+    code.push(0x00); // offset = 0
+    code.push(0x00); // memidx = 0
+    code.push(0x02); // lane = 2 (in-range for the 0-3 i32x4 bound)
+    code.push(0x0B); // end
+
+    let module = WasmModule {
+        types: vec![FuncType { params: vec![ValueType::I32], results: vec![ValueType::V128] }],
+        functions: vec![0],
+        memories: vec![MemoryType { limits: Limits { min: 1, max: None }, shared: false }],
+        code: vec![FunctionBody { locals: vec![], code: code.clone() }],
+        ..Default::default()
+    };
+
+    assert!(
+        wasm_validator::validate(&module).is_ok(),
+        "an explicit memidx=0 (this repo's only supported memory) must validate, not be rejected"
+    );
+
+    let decoded = wasm_execution::decode_function_body(&module.code[0]);
+    assert_eq!(decoded.len(), 4, "the decoder must produce exactly 4 instructions (local.get, v128.const, v128.load32_lane, end) -- a desync would merge/split these");
+    assert_eq!(decoded[2].opcode, 0xFD);
+    match &decoded[2].operand {
+        wasm_execution::DecodedOperand::SimdMemLane { sub_opcode, offset, lane } => {
+            assert_eq!(*sub_opcode, 0x56);
+            assert_eq!(*offset, 0);
+            assert_eq!(
+                *lane, 2,
+                "the decoder must land on lane=2 (the real lane byte, right after the memidx), not lane=0 (the memidx byte itself) -- proof it correctly skipped the memidx"
             );
         }
         other => panic!("expected DecodedOperand::SimdMemLane, got {other:?}"),

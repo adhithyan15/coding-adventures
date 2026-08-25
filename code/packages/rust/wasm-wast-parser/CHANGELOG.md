@@ -1,5 +1,26 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.67 — 2026-08-25 — SIMD PR46: v128.load32_lane/store32_lane text-form encoding
+
+### Added
+
+- `SimdOpKind::Load32Lane`/`Store32Lane` joined the existing
+  `Load8Lane`/`Store8Lane`/`Load16Lane`/`Store16Lane` match arm
+  (unchanged otherwise) in both `encode_stream_instr` and
+  `encode_flat_instr` -- the encoding shape PR44 built (memarg first,
+  then the raw lane-index byte) is IDENTICAL across the 8-bit, 16-bit,
+  and 32-bit pairs; only `simd_op.sub_opcode` differs, already captured
+  generically. Confirmed against the pinned `simd_load32_lane.wast`/
+  `simd_store32_lane.wast` corpus's own source order
+  (`(v128.load32_lane offset=N lane addr x)`, same order as the 8-bit
+  and 16-bit pairs).
+- 1 new unit test:
+  `v128_load32_lane_and_store32_lane_encode_the_real_sub_opcode_with_a_combined_memarg_and_lane_index`,
+  covering the folded form (with explicit `offset=`) for both opcodes
+  and the flat/stream form for one, verifying the exact byte sequence
+  (sub-opcode `0x56`/`0x5A`, align, offset, THEN the raw lane-index
+  byte).
+
 ## 0.1.66 — 2026-08-25 — SIMD PR45: v128.load16_lane/store16_lane text-form encoding
 
 ### Added

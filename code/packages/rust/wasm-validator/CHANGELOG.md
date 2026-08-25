@@ -2,6 +2,33 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.57] - 2026-08-25 (SIMD PR46: v128.load32_lane/store32_lane)
+
+### Added
+
+- Type-check coverage for `v128.load32_lane`/`v128.store32_lane`
+  (`SimdOpKind::Load32Lane`/`Store32Lane`): a new sibling match arm to
+  PR45's `Load16Lane`/`Store16Lane` arm -- decodes a memarg (align,
+  offset[, memidx], same multi-memory-memidx-rejection discipline)
+  FOLLOWED BY a lane-index byte, verified against BinarySIMD.md's own
+  encoding order (`m:memarg, i:ImmLaneIdx4`).
+- REAL lane-index bounds checking via `read_lane_index`: lane index must
+  be `0..=3`, matching `i32x4`'s 4-lane width -- a dedicated `>= 4`
+  check, NOT the 16-bit pair's `>= 8` (an `i32x4` v128 has 4 lanes, not
+  `i16x8`'s 8; reusing the wider bound would silently accept an invalid
+  lane index 4-7).
+- Type rule: `Load32Lane` pops the existing `v128` (top of stack) then
+  the `i32` address, pushes an updated `v128`; `Store32Lane` pops the
+  same pair, pushes nothing -- identical shape to `Load16Lane`/
+  `Store16Lane`.
+- 7 new dedicated integration tests in `tests/type_check.rs`: valid
+  (bare and with explicit `offset=`/`align=` attributes, boundary lanes
+  0 and 3), invalid with no declared memory, invalid wrong-operand-type
+  (address/v128 swapped), invalid out-of-range lane index (`4`, not
+  `8`) for both directions, and a security-review-style cross-decoder
+  consistency check (multi-memory flag bit set, explicit `memidx=0`)
+  mirroring PR44/PR45's own regression tests for the 8-bit/16-bit pairs.
+
 ## [0.2.56] - 2026-08-25 (SIMD PR45: v128.load16_lane/store16_lane)
 
 ### Added

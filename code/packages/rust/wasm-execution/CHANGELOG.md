@@ -2,6 +2,44 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.56] - 2026-08-25 (SIMD PR46: v128.load32_lane/store32_lane)
+
+### Added
+
+- `decode_function_body`'s `0xFD` branch: the `sub_opcode == 0x54 ||
+  sub_opcode == 0x58 || sub_opcode == 0x55 || sub_opcode == 0x59` gate
+  (from PR44/PR45) widened to also intercept `sub_opcode == 0x56 ||
+  sub_opcode == 0x5A` -- `v128.load32_lane`/`v128.store32_lane`, one
+  width up from PR45's 16-bit pair, reuse the IDENTICAL
+  `DecodedOperand::SimdMemLane` shape unchanged (`ImmLaneIdx4` is also a
+  single raw byte per BinarySIMD.md, so the one-byte lane read needs no
+  change) -- no new decoder infrastructure needed this time, just the
+  widened condition.
+- `register_simd`: a new `sub_opcode == 0x56 || sub_opcode == 0x5A`
+  early-dispatch branch (same "intercept before the generic `SimdOpKind`
+  lookup" pattern PR44/PR45's own branches use), implementing:
+  - `v128.load32_lane` (`0x56`): pop the existing `v128` (top of stack),
+    pop the `i32` base address, bounds-checked 4-byte (little-endian)
+    read from memory 0 at `base + memarg offset` (via the existing
+    full-width `load_i32`), overwrite ONLY the selected lane's 4 bytes
+    of the popped `v128` (every other lane passes through unchanged),
+    push the result.
+  - `v128.store32_lane` (`0x5A`): pop the `v128` to read a lane from,
+    pop the `i32` base address, bounds-checked 4-byte write of the
+    selected lane's 4 bytes to memory 0 at `base + memarg offset`.
+  - Lane-index bounds check is `>= 4`, NOT the 16-bit pair's `>= 8` --
+    an `i32x4` v128 holds 4 lanes (4 bytes each), not `i16x8`'s 8 (2
+    bytes each); reusing the wider bound would silently accept an
+    invalid lane index 4-7.
+- `SimdOpKind::Load32Lane | SimdOpKind::Store32Lane` added to the
+  `unreachable!` match arm (both are always intercepted by the early
+  dispatch above, before the generic `SimdOpKind` lookup runs).
+- 5 new unit tests: lane-preservation (load), memarg-offset honoring
+  (load), neighboring-byte isolation (store), past-end-of-memory
+  trapping (both directions), and out-of-range (`>= 4`) lane-index
+  rejection (both directions) -- direct mirrors of PR45's own 16-bit
+  test suite, at the 32-bit width.
+
 ## [0.9.55] - 2026-08-25 (SIMD PR45: v128.load16_lane/store16_lane)
 
 ### Added
