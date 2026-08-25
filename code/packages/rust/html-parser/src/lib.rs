@@ -7578,12 +7578,15 @@ impl HtmlParser {
                 return;
             }
 
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-non-current-formatting-end-tag",
-                format!(
-                    "end tag `</{name}>` triggered adoption-agency recovery before its formatting element was current"
-                ),
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-non-current-formatting-end-tag",
+                    format!(
+                        "end tag `</{name}>` triggered adoption-agency recovery before its formatting element was current"
+                    ),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             self.pop_foreign_elements();
         }
         if self.current_namespace().is_some()
@@ -8151,12 +8154,15 @@ impl HtmlParser {
                     .current_element_name()
                     .is_some_and(|current| current.eq_ignore_ascii_case(name))
             {
-                self.diagnostics.push(ParserDiagnostic::new(
-                    "unexpected-non-current-formatting-end-tag",
-                    format!(
-                        "end tag `</{name}>` triggered adoption-agency recovery before its formatting element was current"
-                    ),
-                ));
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-non-current-formatting-end-tag",
+                        format!(
+                            "end tag `</{name}>` triggered adoption-agency recovery before its formatting element was current"
+                        ),
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
             }
             if is_formatting_element(name)
                 && !blocked_by_formatting_marker
@@ -9588,12 +9594,15 @@ impl HtmlParser {
                 trim_formatting_reconstruction_noah_ark(pending_formatting_reconstruction);
         }
         if report_repeated_iteration {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-non-current-formatting-end-tag",
-                format!(
-                    "end tag `</{formatting_name}>` triggered adoption-agency recovery before its formatting element was current"
-                ),
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-non-current-formatting-end-tag",
+                    format!(
+                        "end tag `</{formatting_name}>` triggered adoption-agency recovery before its formatting element was current"
+                    ),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
         }
         true
     }
@@ -27587,6 +27596,20 @@ mod tests {
         .at_emission(Some(end_tag_position_at(source, name, occurrence)))
     }
 
+    fn unexpected_non_current_formatting_end_tag(
+        source: &str,
+        name: &str,
+        occurrence: usize,
+    ) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-non-current-formatting-end-tag",
+            format!(
+                "end tag `</{name}>` triggered adoption-agency recovery before its formatting element was current"
+            ),
+        )
+        .at_emission(Some(end_tag_position_at(source, name, occurrence)))
+    }
+
     fn unexpected_p_end_tag(source: &str) -> ParserDiagnostic {
         ParserDiagnostic::new(
             "unexpected-p-end-tag",
@@ -40875,13 +40898,7 @@ mod tests {
             let output = parse_html_with_diagnostics(source).unwrap();
             assert!(
                 output.parser_diagnostics.iter().any(|diagnostic| {
-                    diagnostic
-                        == &ParserDiagnostic::new(
-                            "unexpected-non-current-formatting-end-tag",
-                            format!(
-                                "end tag `</{name}>` triggered adoption-agency recovery before its formatting element was current"
-                            ),
-                        )
+                    diagnostic == &unexpected_non_current_formatting_end_tag(source, name, 0)
                 }),
                 "source {source:?}"
             );
@@ -40908,8 +40925,68 @@ mod tests {
     }
 
     #[test]
+    fn positions_non_current_formatting_end_tags_at_token_emission() {
+        let source =
+            "<!doctype html><!--é-->\r\n<b>ok</b><b>1<i>2<p>3</b>4";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        let diagnostics = output
+            .parser_diagnostics
+            .iter()
+            .filter(|diagnostic| {
+                diagnostic.code == "unexpected-non-current-formatting-end-tag"
+            })
+            .collect::<Vec<_>>();
+        assert_eq!(diagnostics.len(), 1);
+        assert_eq!(
+            diagnostics[0],
+            &unexpected_non_current_formatting_end_tag(source, "b", 1)
+        );
+        assert!(source.len() > source.chars().count());
+
+        let incomplete =
+            parse_html_with_diagnostics("<!doctype html><b><i><p></b").unwrap();
+        assert!(incomplete.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-non-current-formatting-end-tag"
+        }));
+
+        let mut unpositioned =
+            HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        for token in [
+            Token::StartTag {
+                name: "b".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "i".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "p".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::EndTag {
+                name: "b".to_string(),
+            },
+            Token::Eof,
+        ] {
+            unpositioned.process_token(token);
+        }
+        assert!(unpositioned.diagnostics().iter().any(|diagnostic| {
+            diagnostic.code == "unexpected-non-current-formatting-end-tag"
+        }));
+        assert!(unpositioned
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
     fn reports_each_non_current_iteration_of_div_adoption_recovery() {
-        let output = parse_html_with_diagnostics("<!doctype html><a><div><p></a>").unwrap();
+        let source = "<!doctype html><a><div><p></a>";
+        let output = parse_html_with_diagnostics(source).unwrap();
         assert_eq!(
             output
                 .parser_diagnostics
@@ -40920,6 +40997,11 @@ mod tests {
                 .count(),
             2
         );
+        assert!(output.parser_diagnostics.iter().filter(|diagnostic| {
+            diagnostic.code == "unexpected-non-current-formatting-end-tag"
+        }).all(|diagnostic| {
+            diagnostic == &unexpected_non_current_formatting_end_tag(source, "a", 0)
+        }));
 
         let document_body = body(&output.document);
         assert_eq!(document_body.children.len(), 2);
@@ -40944,8 +41026,9 @@ mod tests {
             2
         );
 
+        let fragment_source = "<a><div><p></a>";
         let fragment =
-            parse_html_fragment_for_context_with_diagnostics("<a><div><p></a>", "div").unwrap();
+            parse_html_fragment_for_context_with_diagnostics(fragment_source, "div").unwrap();
         assert_eq!(
             fragment
                 .parser_diagnostics
@@ -40956,6 +41039,12 @@ mod tests {
                 .count(),
             2
         );
+        assert!(fragment.parser_diagnostics.iter().filter(|diagnostic| {
+            diagnostic.code == "unexpected-non-current-formatting-end-tag"
+        }).all(|diagnostic| {
+            diagnostic
+                == &unexpected_non_current_formatting_end_tag(fragment_source, "a", 0)
+        }));
 
         for (source, expected_count) in [
             ("<!doctype html><b>1<i>2<p>3</b>4", 1),
@@ -41196,12 +41285,7 @@ mod tests {
                 output.parser_diagnostics,
                 vec![
                     generic_foreign_end_tag_mismatch(&source, name),
-                    ParserDiagnostic::new(
-                        "unexpected-non-current-formatting-end-tag",
-                        format!(
-                            "end tag `</{name}>` triggered adoption-agency recovery before its formatting element was current"
-                        ),
-                    ),
+                    unexpected_non_current_formatting_end_tag(&source, name, 0),
                 ],
                 "source {source:?}"
             );
@@ -41289,7 +41373,10 @@ mod tests {
             output.parser_diagnostics[0],
             generic_foreign_end_tag_mismatch(source, "b")
         );
-        assert_eq!(output.parser_diagnostics[1].position, None);
+        assert_eq!(
+            output.parser_diagnostics[1],
+            unexpected_non_current_formatting_end_tag(source, "b", 0)
+        );
         assert!(source.len() > source.chars().count());
 
         let eof_source = "<!doctype html><b><math><mi></b";
@@ -41327,12 +41414,10 @@ mod tests {
         ] {
             unpositioned.process_token(token);
         }
-        let diagnostic = unpositioned
+        assert!(unpositioned
             .diagnostics()
             .iter()
-            .find(|diagnostic| diagnostic.code == "unexpected-end-tag-in-foreign-content")
-            .unwrap();
-        assert_eq!(diagnostic.position, None);
+            .all(|diagnostic| diagnostic.position.is_none()));
     }
 
     #[test]
