@@ -5,10 +5,12 @@
     {
       "language": "latin",
       "chapter": 1,
-      "sourceHash": "fnv1a64:9067ced7825e1851",
+      "sourceHash": "fnv1a64:f2ac7085303ebeb6",
       "lessonIds": [
         "LA-C01-salve",
         "LA-W01-salve-guided-copy",
+        "LA-W01-salve-delayed-copy",
+        "LA-W01-salve-dictation",
         "LA-C01-ave",
         "LA-C01-vale",
         "LA-C01-gratias",

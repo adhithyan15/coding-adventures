@@ -7,14 +7,14 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:d878c8fc646de6a3",
+  "sourceHash": "fnv1a64:ab635e2edfc64b40",
   "summary": {
-    "totalLessons": 109,
+    "totalLessons": 111,
     "voice": 102,
     "sight": 5,
-    "pen": 2,
+    "pen": 4,
     "drivableLessons": 102,
-    "drivablePercent": 94,
+    "drivablePercent": 92,
     "trackCount": 1,
     "chapterCount": 47,
     "drivablePrefixTotal": 94,
@@ -26,11 +26,11 @@
   "tracks": [
     {
       "language": "latin",
-      "lessonCount": 109,
+      "lessonCount": 111,
       "voice": 102,
       "sight": 5,
-      "pen": 2,
-      "drivablePercent": 94,
+      "pen": 4,
+      "drivablePercent": 92,
       "drivablePrefixTotal": 94,
       "modalities": [
         "voice",
@@ -40,10 +40,10 @@
       "chapters": [
         {
           "chapter": 1,
-          "lessonCount": 7,
+          "lessonCount": 9,
           "voice": 5,
           "sight": 0,
-          "pen": 2,
+          "pen": 4,
           "modalities": [
             "voice",
             "sight",
@@ -884,6 +884,51 @@
       "sourceHash": "fnv1a64:10dd2485d465e053",
       "detachableSegments": [
         "Writing — one guided copy"
+      ]
+    },
+    {
+      "id": "LA-W01-salve-delayed-copy",
+      "language": "latin",
+      "chapter": 1,
+      "sequence": 106,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "sight-cue"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:833c63fcd54142a8",
+      "detachableSegments": [
+        "Writing — delayed copy"
+      ]
+    },
+    {
+      "id": "LA-W01-salve-dictation",
+      "language": "latin",
+      "chapter": 1,
+      "sequence": 107,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:c20025262a318c97",
+      "detachableSegments": [
+        "Writing — dictation and transcription"
       ]
     },
     {
