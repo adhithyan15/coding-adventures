@@ -1,0 +1,791 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 349,
+  "title": "The Stretches A Calendar Marks",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8f73341b9aeaf9c5",
+  "lessons": [
+    {
+      "id": "ES-C349-jornada",
+      "sequence": 6370,
+      "title": "la jornada — a day's worth, and the journey inside it",
+      "headword": "la jornada",
+      "romanization": "la jornada",
+      "gloss": "the day's stretch, a working day — Latin diurnus, of the day, through Occitan; English journey, journal and adjourn are the same day",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:173283530cced760",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the delay, then the turn. (La demora; el turno.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el día — the same Latin day, by a different road."
+            },
+            {
+              "kind": "speech",
+              "text": "la hora — what this is measured in."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hor-NA-da, three beats with the weight on the second. The j is the scraped jota, back in the throat. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la jornada — \"a day's stretch\": a working day, a day's march, a day's play."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin diēs was day, and diurnus meant belonging to the day. Spanish already had día straight from diēs. So why a second word?"
+            },
+            {
+              "kind": "speech",
+              "text": "Because this one came the long way round. Diurnāta travelled north into Occitan and French, was reshaped there into jornada and journée, and then walked back south into Spanish as a borrowing. Two words, one Latin day, different roads — which is why they do not look alike."
+            },
+            {
+              "kind": "speech",
+              "text": "The northern road left tracks in English. A journey was originally one day's travel. A journal is a day-book. To adjourn is to put something off to another day, and a sojourn is a stay counted in days. Diurnal came by the straight Latin route."
+            },
+            {
+              "kind": "speech",
+              "text": "Jornada is the word a Spanish speaker reaches for when a day is a quantity of work rather than a square on a calendar."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A day measured by what fits inside it."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la jornada",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la jornada*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "una jornada de ocho horas",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *una jornada de ocho horas*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la jornada de hoy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la jornada de hoy*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was a journey at first? (One day's travel.) And which Spanish word comes from the same diēs by the straight road? (Día.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C349-decada",
+      "sequence": 6380,
+      "title": "la década — ten years, and the ten scattered through English",
+      "headword": "la década",
+      "romanization": "la década",
+      "gloss": "the decade — Greek deka, ten, through Latin decas; English decade, decimal, December and dean all count in tens",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b169c1be7460871b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the turn, then a day's stretch. (El turno; la jornada.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "seis, siete, ocho, nueve, diez — the ten this counts by."
+            },
+            {
+              "kind": "speech",
+              "text": "veinte — two of them."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "DÉ-ca-da, three beats with the weight on the first, which is why it is written with an accent. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la década — \"the decade,\" ten years taken as one block."
+            },
+            {
+              "kind": "speech",
+              "text": "Greek déka is ten. A dekás was a set of ten — of soldiers, of verses, of anything. Latin borrowed it as decas, and Spanish as década."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin also had its own ten, decem, and the two roots are the same ancient word travelling by different families. Between them they seeded English thickly."
+            },
+            {
+              "kind": "speech",
+              "text": "Decimal counts by tens. To decimate a legion was to execute one man in ten. A dime is a tenth of a dollar. And December is the tenth month — which it was, before Rome shoved January and February in front of it and left the last four months carrying the wrong numbers forever."
+            },
+            {
+              "kind": "speech",
+              "text": "Even a dean is here: a decanus was a man set over ten monks."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish keeps it as well, in the diez you already count with."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Time in blocks bigger than a day."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la década",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la década*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "una década",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *una década*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "en una década",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *en una década*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What number is déka? (Ten.) And why is December named for the tenth? (It was the tenth month before January and February were added.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C349-fiesta",
+      "sequence": 6390,
+      "title": "la fiesta — the day set apart, and the word English took twice",
+      "headword": "la fiesta",
+      "romanization": "la fiesta",
+      "gloss": "the holiday, the party — Latin festa, the feast days; English feast, festival and festive are the same word, and English borrowed fiesta itself",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4acb04c87c3b322f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say a day's stretch, then a decade. (La jornada; la década.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "feliz — how the day is meant to feel."
+            },
+            {
+              "kind": "speech",
+              "text": "la semana — the run of days it interrupts."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "FIES-ta, two beats with the weight on the first. The ie is one glide, not two beats. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la fiesta — \"the holiday,\" and also \"the party.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin fēstus meant set apart, solemn, not for work. A fēstum was such a day, and the plural fēsta — the feast days — is what Spanish inherited, which is why the word arrives already meaning a whole stretch rather than a single hour."
+            },
+            {
+              "kind": "speech",
+              "text": "That double sense is still there. La fiesta can be a public holiday marked on a calendar, or the party you throw on a Saturday night, and Spanish does not think it needs two words."
+            },
+            {
+              "kind": "speech",
+              "text": "English took the Latin road first and got feast, festival, festive, festoon and fête. Then, much later, it borrowed the Spanish shape whole, so fiesta now sits in an English dictionary beside feast, the same word arriving twice, centuries apart, by different ships."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The days a calendar marks off from the rest."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la fiesta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la fiesta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "una fiesta grande",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *una fiesta grande*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el día de la fiesta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el día de la fiesta*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did Latin fēstus mean? (Set apart, not for work.) And which plain English word is the same Latin word? (Feast.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C349-aniversario",
+      "sequence": 6400,
+      "title": "el aniversario — the year turning back to the same day",
+      "headword": "el aniversario",
+      "romanization": "el aniversario",
+      "gloss": "the anniversary — Latin annus, year, plus vertere, to turn; the year turning back to the same day, and English annual, versus and reverse share the pieces",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:36b0d2e66e8397f4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say a decade, then the holiday. (La década; la fiesta.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "¿Cuántos años tienes? — the year this counts."
+            },
+            {
+              "kind": "speech",
+              "text": "los meses — the twelve it walks through."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a-ni-ver-SA-rio, five beats with the weight on the fourth. The v is made with both lips, close to a soft b. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el aniversario — \"the anniversary.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Two Latin pieces. Annus is a year. Vertere is to turn. Put them together and anniversārius means the year-turning — the wheel has gone all the way round and stopped where it started."
+            },
+            {
+              "kind": "speech",
+              "text": "That is a more exact picture than the English feeling of the word. An anniversary is not a memory. It is a position: the year has come back to the same mark."
+            },
+            {
+              "kind": "speech",
+              "text": "Annus gave English annual, annals (a year-by-year record), biennial and per annum."
+            },
+            {
+              "kind": "speech",
+              "text": "Vertere is even busier. A verse is where the plough turns at the end of a furrow. To convert is to turn something round; to reverse is to turn it back. Versus sets one side turned against another, and vertigo is the world turning when it should not."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A date that comes back around, and a reason to call it a fiesta."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el aniversario",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el aniversario*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un aniversario feliz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un aniversario feliz*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el aniversario es hoy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el aniversario es hoy*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What two Latin words are inside it? (Annus, year, and vertere, to turn.) And what does vertigo name? (The world turning when it should not.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C349-agenda",
+      "sequence": 6410,
+      "title": "la agenda — the things that must be done",
+      "headword": "la agenda",
+      "romanization": "la agenda",
+      "gloss": "the diary, the schedule — Latin agenda, the things that must be done, from agere to drive; English agent, agile and act come off the same verb",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d054718f47e7e7a4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the holiday, then the anniversary. (La fiesta; el aniversario.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la semana — what it is usually laid out by."
+            },
+            {
+              "kind": "speech",
+              "text": "los meses — the bigger squares in it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a-JEN-da, three beats with the weight on the second. The g before e is the scraped jota. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la agenda — \"the diary,\" \"the schedule,\" \"the list of what is coming.\""
+            },
+            {
+              "kind": "speech",
+              "text": "This one is a Latin grammatical form that walked into modern life without being translated. Agenda is a plural, and it means the things that must be done. Not things done, not things happening — things owed to the future."
+            },
+            {
+              "kind": "speech",
+              "text": "Behind it stands agere, one of Latin's great workhorse verbs. Its first sense is to drive, the way a herdsman drives cattle down a road."
+            },
+            {
+              "kind": "speech",
+              "text": "Once you know the driving is there, the family opens up. An agent is somebody who drives a thing along. Something agile moves quickly. Agitate is to drive hard and repeatedly. To act is agere itself, and so are exact, transact and navigate."
+            },
+            {
+              "kind": "speech",
+              "text": "And an agenda is the herd of tasks being driven at you."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five stretches of time and the book you write them in."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la agenda",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la agenda*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mi agenda",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mi agenda*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la agenda de la semana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la agenda de la semana*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does agenda mean, word for word? (The things that must be done.) And what does agere mean first of all? (To drive, as a herdsman drives cattle.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

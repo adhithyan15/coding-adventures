@@ -1,0 +1,799 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 350,
+  "title": "Mine, Somebody Else's, And Which Kind",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ae492ba39ba2b892",
+  "lessons": [
+    {
+      "id": "ES-C350-propio",
+      "sequence": 6420,
+      "title": "propio — one's own, and the owning inside proper",
+      "headword": "propio",
+      "romanization": "propio",
+      "gloss": "one's own — Latin proprius, belonging to the individual; English proper, property and appropriate all began as words about owning",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2dc5970e2149c1de",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the anniversary, then the diary. (El aniversario; la agenda.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "María, España, profesor — the names this word labels."
+            },
+            {
+              "kind": "speech",
+              "text": "la casa — the sort of thing you say it about."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "PRO-pio, two beats with the weight on the first. -pio is one glide, not two beats. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "propio — \"one's own.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish already has mi, tu, su. Propio is what you add when su is not emphatic enough: su propia casa, her own house — hers and nobody else's."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin proprius meant exactly that: belonging to the individual rather than held in common. The old guess at its make-up is prō prīvō, for the private one."
+            },
+            {
+              "kind": "speech",
+              "text": "English took it and let it drift a long way. Proper meant owned first — a proper noun is a name that belongs to one thing only, which is the original sense sitting in plain sight. Property is what you own. A proprietor owns it. To appropriate something is to make it your own, and it is impolite for exactly that reason."
+            },
+            {
+              "kind": "speech",
+              "text": "Only later did proper slide into correct, by way of fitting, belonging to this occasion."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A way to say a thing is yours and not somebody else's."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "propio",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *propio*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mi propia casa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mi propia casa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "su propio libro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *su propio libro*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did English proper mean before it meant correct? (Owned.) And what is a proper noun, on that older sense? (A name belonging to one thing only.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C350-ajeno",
+      "sequence": 6430,
+      "title": "ajeno — somebody else's, the exact opposite of propio",
+      "headword": "ajeno",
+      "romanization": "ajeno",
+      "gloss": "somebody else's — Latin alienus from alius, other; English alien, alias and alibi all point at somebody who is not you",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f1463880e60e5f54",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the diary, then one's own. (La agenda; propio.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "otro — the other one this belongs to."
+            },
+            {
+              "kind": "speech",
+              "text": "alguien — the somebody in question."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a-JE-no, three beats with the weight on the second. The j is scraped at the back of the throat. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ajeno — \"somebody else's,\" \"not mine.\""
+            },
+            {
+              "kind": "speech",
+              "text": "English has no single word for this. It says someone else's, three words where Spanish uses one: una casa ajena, a house belonging to another person."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin aliēnus is built on alius, other. And Latin had two words for other, used carefully: alius, another out of many, and alter, the other of exactly two."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish inherited both. Otro comes down from alter — the other one of a pair. Ajeno comes from alius — belonging to some other person out there, unnamed."
+            },
+            {
+              "kind": "speech",
+              "text": "English took alius whole and never softened it. An alien is from elsewhere. To alienate somebody is to make them another person's problem. An alias is your other name, and an alibi is the plea that you were elsewhere."
+            },
+            {
+              "kind": "speech",
+              "text": "Together with propio, you can now sort the world into mine and not-mine."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two sides of ownership, in one word each."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ajeno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ajeno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "una casa ajena",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *una casa ajena*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "propio o ajeno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *propio o ajeno*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which Latin word for other is inside ajeno? (Alius.) And what does an alibi claim? (That you were elsewhere.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C350-igual",
+      "sequence": 6440,
+      "title": "igual — the same, from a surface with no tilt",
+      "headword": "igual",
+      "romanization": "igual",
+      "gloss": "the same, equal — Latin aequalis from aequus, level; English equal, equator and adequate are all about a surface with no tilt in it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3abbec89686e9e94",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say one's own, then somebody else's. (Propio; ajeno.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "todo — the whole this measures against."
+            },
+            {
+              "kind": "speech",
+              "text": "la manera — the thing two people can do equally."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "i-GUAL, two beats with the weight on the second. The gua is one glide, and the g is hard. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "igual — \"the same,\" \"equal.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin aequus did not mean identical. It meant level — a plain with no slope, a scale with neither pan down, water lying flat."
+            },
+            {
+              "kind": "speech",
+              "text": "Aequālis is what has that levelness, and Spanish wore it into igual."
+            },
+            {
+              "kind": "speech",
+              "text": "Hold on to the flatness and the English family falls open. The equator is the line that levels the globe into halves. An equinox is the day whose night is level with it. To be adequate is to come up level with what is needed. Equity is fairness weighed on a level scale. Equanimity is a mind that does not tilt."
+            },
+            {
+              "kind": "speech",
+              "text": "Two everyday Spanish uses to keep. Es igual means it's all the same, a polite shrug. And igual que compares: igual que ayer, the same as yesterday."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A way to say two things match."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "igual",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *igual*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "es igual",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *es igual*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "igual que ayer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *igual que ayer*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did Latin aequus mean? (Level, with no tilt.) And what does the equator do to the globe? (Levels it into halves.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C350-distinto",
+      "sequence": 6450,
+      "title": "distinto — a different one, marked apart with a pin",
+      "headword": "distinto",
+      "romanization": "distinto",
+      "gloss": "a different one — Latin distinctus, pricked apart, from dis and stinguere; English distinct, distinguish and instinct all come off the same pricking",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7ec67e8632ff58db",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say somebody else's, then the same. (Ajeno; igual.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "otro — the plain way to say another one."
+            },
+            {
+              "kind": "speech",
+              "text": "el modo — one of the things that can differ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dis-TIN-to, three beats with the weight on the second. Both consonants of -st- are sounded. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "distinto — \"different,\" \"a different one.\""
+            },
+            {
+              "kind": "speech",
+              "text": "You have otro for another. Distinto is sharper: not merely a second one, but one that is unlike the first."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin distinguere is dis-, apart, plus an old verb stinguere, to prick. Marking things apart meant putting a pinprick beside them — a tally, a dot, a small wound in the wax."
+            },
+            {
+              "kind": "speech",
+              "text": "So a distinct thing is one somebody has pricked apart from its neighbours, and to distinguish is to do the pricking."
+            },
+            {
+              "kind": "speech",
+              "text": "The family is odd and worth having. To extinguish is to prick a flame out. An instinct is an urge that pricks you from inside. Something distinguished has been marked off from the crowd."
+            },
+            {
+              "kind": "speech",
+              "text": "In use, remember that distinto usually goes after its noun — un libro distinto — while otro goes in front."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Same, and not the same, in one pair."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "distinto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *distinto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un libro distinto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un libro distinto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "igual o distinto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *igual o distinto*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did stinguere mean? (To prick.) And what does it mean to extinguish a flame, on that picture? (To prick it out.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C350-tipo",
+      "sequence": 6460,
+      "title": "el tipo — the kind, and the dent a hammer leaves",
+      "headword": "el tipo",
+      "romanization": "el tipo",
+      "gloss": "the kind, the sort — Greek typos, a blow and the dent a blow leaves; English type, typical, typography and prototype all take the same impression",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5903b5cdd9ed65b1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the same, then a different one. (Igual; distinto.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la cosa — what has a kind."
+            },
+            {
+              "kind": "speech",
+              "text": "la manera — the near neighbour of this word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "TI-po, two beats with the weight on the first. The t is made with the tongue against the teeth, not the ridge behind them. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el tipo — \"the kind,\" \"the sort.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Greek týptein was to strike, and a týpos was first the blow, then the dent the blow left behind."
+            },
+            {
+              "kind": "speech",
+              "text": "Watch it move. Strike a coin with a die and the coin carries a typos. Strike a thousand coins with the same die and every one carries the same mark — so the word slides again, from the single dent to the pattern all the dents share. That is a kind."
+            },
+            {
+              "kind": "speech",
+              "text": "English follows the whole path. Movable type is metal that strikes paper. Typography is writing by striking. Something typical matches the pattern. A prototype is the first strike, and a stereotype was a printing plate cast solid so it could never be re-set — which is why calling a thought a stereotype is an insult."
+            },
+            {
+              "kind": "speech",
+              "text": "One warning. In everyday Latin American speech un tipo also means a guy. It is casual; it is not for strangers."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five ways to pin down which one: yours, another's, the same, a different one, and what sort it is."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el tipo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el tipo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un tipo de libro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un tipo de libro*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "¿qué tipo?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *¿qué tipo?*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was a týpos first? (A blow, and then the dent it left.) And what was a stereotype before it was an insult? (A printing plate cast solid.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
