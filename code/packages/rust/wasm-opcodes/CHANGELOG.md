@@ -2,6 +2,34 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.36] - 2026-08-24 - SIMD widen PR33: i8x16/i16x8 add_sat/sub_sat (task #214-216)
+
+### Added
+
+- 8 new `SIMD_OPS` entries: `i8x16.add_sat_s` (`0x6F`), `i8x16.add_sat_u`
+  (`0x70`), `i8x16.sub_sat_s` (`0x72`), `i8x16.sub_sat_u` (`0x73`),
+  `i16x8.add_sat_s` (`0x8F`), `i16x8.add_sat_u` (`0x90`),
+  `i16x8.sub_sat_s` (`0x92`), `i16x8.sub_sat_u` (`0x93`) -- the
+  saturating integer add/sub family, BINARY, same pop-order/lane-count
+  shape as the already-implemented `i8x16.add`/`.sub`/`i16x8.add`/
+  `.sub`, except the result is CLAMPED to the lane type's range instead
+  of wrapped on overflow/underflow. 185 SIMD opcodes total, up from 177.
+  Each sub-opcode byte fetched live from the SIMD proposal's own
+  `BinarySIMD.md` and cross-checked against every existing `SIMD_OPS`
+  entry: `0x6F`/`0x70` sit immediately past `i8x16.add`'s `0x6E` with no
+  gap, `0x72`/`0x73` sit immediately past `i8x16.sub`'s `0x71` with no
+  gap, `0x8F`/`0x90` sit immediately past `i16x8.add`'s `0x8E` with no
+  gap, `0x92`/`0x93` sit immediately past `i16x8.sub`'s `0x91` with no
+  gap -- all eight confirmed free of collision with every existing
+  `SIMD_OPS` entry.
+- 8 new `SimdOpKind` variants: `AddSatI8x16S`, `AddSatI8x16U`,
+  `SubSatI8x16S`, `SubSatI8x16U`, `AddSatI16x8S`, `AddSatI16x8U`,
+  `SubSatI16x8S`, `SubSatI16x8U`.
+- New test: `simd_sat_add_sub_family_has_the_real_verified_sub_opcode_values`
+  (all eight sub-opcode values, plus confirming `i8x16.add`/`.sub` and
+  `i16x8.add`/`.sub` still resolve to their own unchanged sub-opcodes).
+  Table-size test updated 177 -> 185.
+
 ## [0.2.35] - 2026-08-24 - SIMD widen PR32: f64x2 eq/ne/lt/gt/le/ge (task #211-213)
 
 ### Added

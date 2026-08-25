@@ -1,5 +1,25 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.55 — 2026-08-24 — SIMD widen PR33: i8x16/i16x8 add_sat/sub_sat text-form (task #214-216)
+
+### Added
+
+- `SimdOpKind::AddSatI8x16S`/`AddSatI8x16U`/`SubSatI8x16S`/
+  `SubSatI8x16U`/`AddSatI16x8S`/`AddSatI16x8U`/`SubSatI16x8S`/
+  `SubSatI16x8U` join the shared "no immediate beyond the opcode byte
+  itself" SIMD dispatch arm (already used for `NarrowI16x8S`/`_U`/etc.)
+  in both the folded (`encode_stream_instr`) and flat
+  (`encode_flat_instr`) instruction encoders -- verified byte-identical
+  at both call sites before editing. All eight sub-opcodes are looked up
+  by name from `wasm_opcodes::SIMD_OPS` (data-driven, via
+  `get_simd_op_by_name`). The `i8x16` quartet (`0x6F`/`0x70`/`0x72`/
+  `0x73`) is all `< 0x80`, so each encodes as a SINGLE byte (`[0xFD,
+  byte]`); the `i16x8` quartet (`0x8F`/`0x90`/`0x92`/`0x93`) is all
+  `>= 0x80`, so each encodes as a real 2-byte LEB128 sequence (`[0xFD,
+  byte, 0x01]`).
+- New test: `simd_sat_add_sub_family_encodes_the_real_sub_opcodes`
+  (folded and flat forms, all eight sub-opcodes).
+
 ## 0.1.54 — 2026-08-24 — SIMD widen PR32: f64x2 eq/ne/lt/gt/le/ge text-form (task #211-213)
 
 ### Added

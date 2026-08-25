@@ -1499,7 +1499,15 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     | wasm_opcodes::SimdOpKind::NarrowI16x8S
                     | wasm_opcodes::SimdOpKind::NarrowI16x8U
                     | wasm_opcodes::SimdOpKind::NarrowI32x4S
-                    | wasm_opcodes::SimdOpKind::NarrowI32x4U => {
+                    | wasm_opcodes::SimdOpKind::NarrowI32x4U
+                    | wasm_opcodes::SimdOpKind::AddSatI8x16S
+                    | wasm_opcodes::SimdOpKind::AddSatI8x16U
+                    | wasm_opcodes::SimdOpKind::SubSatI8x16S
+                    | wasm_opcodes::SimdOpKind::SubSatI8x16U
+                    | wasm_opcodes::SimdOpKind::AddSatI16x8S
+                    | wasm_opcodes::SimdOpKind::AddSatI16x8U
+                    | wasm_opcodes::SimdOpKind::SubSatI16x8S
+                    | wasm_opcodes::SimdOpKind::SubSatI16x8U => {
                         // `dot_i16x8_s`/`extmul_low`/`high_i16x8_s`/`_u`/
                         // `i8x16.add`/`sub`/`i16x8.add`/`sub`/`mul`/
                         // `i8x16.min_s`/`min_u`/`max_s`/`max_u`/`avgr_u`/
@@ -1541,6 +1549,13 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         // behavior is, same as every other kind in this
                         // arm, entirely invisible to the type checker --
                         // still just two V128 pops, one V128 push.
+                        // `i8x16.add_sat_s`/`_u`/`.sub_sat_s`/`_u`/
+                        // `i16x8.add_sat_s`/`_u`/`.sub_sat_s`/`_u` (SIMD
+                        // widen PR33) join too: same BINARY pop-two-push-
+                        // one-V128 shape as `NarrowI16x8S/U` above -- the
+                        // compute-in-a-wider-type-then-clamp saturation
+                        // arithmetic is entirely a runtime concern,
+                        // invisible to the type checker.
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         push_val(&mut stack, ValueType::V128);

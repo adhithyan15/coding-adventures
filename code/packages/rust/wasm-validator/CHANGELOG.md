@@ -2,6 +2,30 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.45] - 2026-08-24 (task #214-216 — SIMD widen PR33: i8x16/i16x8 add_sat/sub_sat type rules)
+
+### Added
+
+- `SimdOpKind::AddSatI8x16S`/`AddSatI8x16U`/`SubSatI8x16S`/
+  `SubSatI8x16U`/`AddSatI16x8S`/`AddSatI16x8U`/`SubSatI16x8S`/
+  `SubSatI16x8U` join the existing BINARY `v128,v128->v128` arm alongside
+  `NarrowI16x8S`/`NarrowI16x8U`/`NarrowI32x4S`/`NarrowI32x4U` -- same
+  pop-two-push-one `V128` shape. The compute-in-a-wider-type-then-clamp
+  saturation arithmetic is entirely a runtime concern, invisible to the
+  type checker.
+- New tests: `valid_simd_sat_add_sub_family`,
+  `invalid_i8x16_add_sat_s_given_an_i32_operand_instead_of_v128`,
+  `invalid_i8x16_add_sat_u_given_an_i32_operand_instead_of_v128`,
+  `invalid_i8x16_sub_sat_s_given_an_i32_operand_instead_of_v128`,
+  `invalid_i8x16_sub_sat_u_given_an_i32_operand_instead_of_v128`,
+  `invalid_i16x8_add_sat_s_given_an_i32_operand_instead_of_v128`,
+  `invalid_i16x8_add_sat_u_given_an_i32_operand_instead_of_v128`,
+  `invalid_i16x8_sub_sat_s_given_an_i32_operand_instead_of_v128`,
+  `invalid_i16x8_sub_sat_u_given_an_i32_operand_instead_of_v128`,
+  `invalid_i8x16_add_sat_s_given_only_one_operand_instead_of_two`,
+  `invalid_i16x8_sub_sat_u_given_no_operand_at_all`,
+  `invalid_i8x16_add_sat_s_given_an_i32_result_type_instead_of_v128`.
+
 ## [0.2.44] - 2026-08-24 (task #211-213 — SIMD widen PR32: f64x2 eq/ne/lt/gt/le/ge type rules)
 
 ### Added
