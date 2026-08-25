@@ -7255,10 +7255,13 @@ impl HtmlParser {
         if (name != "html" && self.current_element_is_marked_fragment_context(name))
             || self.open_marked_fragment_shell_element_matches(name)
         {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-fragment-context-end-tag",
-                format!("end tag `</{name}>` targeted a seeded fragment context element"),
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-fragment-context-end-tag",
+                    format!("end tag `</{name}>` targeted a seeded fragment context element"),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             return;
         }
         let in_foreign_content = self.current_namespace().is_some()
@@ -27230,6 +27233,18 @@ mod tests {
         end_tag_position_at(source, name, 0)
     }
 
+    fn fragment_context_end_tag(
+        source: &str,
+        name: &str,
+        occurrence: usize,
+    ) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-fragment-context-end-tag",
+            format!("end tag `</{name}>` targeted a seeded fragment context element"),
+        )
+        .at_emission(Some(end_tag_position_at(source, name, occurrence)))
+    }
+
     fn shell_end_tag_outside_scope(source: &str, name: &str) -> ParserDiagnostic {
         ParserDiagnostic::new(
             "unexpected-shell-end-tag-outside-scope",
@@ -33474,10 +33489,7 @@ mod tests {
         assert_eq!(fragment.nodes, vec![Node::text("X")]);
         assert_eq!(
             fragment.parser_diagnostics,
-            vec![ParserDiagnostic::new(
-                "unexpected-fragment-context-end-tag",
-                "end tag `</p>` targeted a seeded fragment context element"
-            )]
+            vec![fragment_context_end_tag("</p>X", "p", 0)]
         );
     }
 
@@ -33556,10 +33568,7 @@ mod tests {
         assert_eq!(matching_foreign.nodes, vec![Node::text("X")]);
         assert_eq!(
             matching_foreign.parser_diagnostics,
-            vec![ParserDiagnostic::new(
-                "unexpected-fragment-context-end-tag",
-                "end tag `</p>` targeted a seeded fragment context element"
-            )]
+            vec![fragment_context_end_tag("</p>X", "p", 0)]
         );
 
         let fragment =
@@ -34233,10 +34242,7 @@ mod tests {
             assert_eq!(fragment.nodes, vec![Node::text("X")]);
             assert_eq!(
                 fragment.parser_diagnostics,
-                vec![ParserDiagnostic::new(
-                    "unexpected-fragment-context-end-tag",
-                    format!("end tag `</{name}>` targeted a seeded fragment context element")
-                )]
+                vec![fragment_context_end_tag(&source, name, 0)]
             );
         }
     }
@@ -41193,10 +41199,7 @@ mod tests {
         assert_eq!(fragment.nodes, vec![Node::text("X")]);
         assert_eq!(
             fragment.parser_diagnostics,
-            vec![ParserDiagnostic::new(
-                "unexpected-fragment-context-end-tag",
-                "end tag `</h1>` targeted a seeded fragment context element"
-            )]
+            vec![fragment_context_end_tag("</h1>X", "h1", 0)]
         );
     }
 
@@ -43034,7 +43037,7 @@ mod tests {
     }
 
     #[test]
-    fn reports_end_tags_targeting_seeded_fragment_shells() {
+    fn positions_end_tags_targeting_seeded_fragment_shells() {
         for (source, context, name) in [
             ("</table><tr>", "table", "table"),
             ("</tr><td>", "tr", "tr"),
@@ -43045,17 +43048,44 @@ mod tests {
             let output = parse_html_fragment_for_context_with_diagnostics(source, context).unwrap();
             assert!(
                 output.parser_diagnostics.iter().any(|diagnostic| {
-                    diagnostic
-                        == &ParserDiagnostic::new(
-                            "unexpected-fragment-context-end-tag",
-                            format!(
-                                "end tag `</{name}>` targeted a seeded fragment context element"
-                            ),
-                        )
+                    diagnostic == &fragment_context_end_tag(source, name, 0)
                 }),
                 "source {source:?} in context {context:?}"
             );
         }
+
+        let repeated_source = "<!--é-->\r\n</table><!--split--></table>";
+        let repeated =
+            parse_html_fragment_for_context_with_diagnostics(repeated_source, "table").unwrap();
+        assert_eq!(
+            repeated.parser_diagnostics,
+            vec![
+                fragment_context_end_tag(repeated_source, "table", 0),
+                fragment_context_end_tag(repeated_source, "table", 1),
+            ]
+        );
+        assert!(repeated_source.len() > repeated_source.chars().count());
+
+        let incomplete =
+            parse_html_fragment_for_context_with_diagnostics("</table", "table").unwrap();
+        assert!(incomplete
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-fragment-context-end-tag"));
+
+        let mut unpositioned = HtmlParser::with_fragment_context_options(
+            HtmlParseOptions::default(),
+            "table",
+        );
+        unpositioned.process_token(Token::EndTag {
+            name: "table".to_string(),
+        });
+        let diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-fragment-context-end-tag")
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
 
         let valid = parse_html_fragment_for_context_with_diagnostics("<td>x", "tr").unwrap();
         assert!(valid
@@ -44787,10 +44817,7 @@ mod tests {
         .unwrap();
         assert_eq!(
             fragment.parser_diagnostics,
-            vec![ParserDiagnostic::new(
-                "unexpected-fragment-context-end-tag",
-                "end tag `</template>` targeted a seeded fragment context element",
-            )]
+            vec![fragment_context_end_tag("</template><p>x", "template", 0)]
         );
 
         let ordinary = parse_html_with_diagnostics("<!doctype html><div></span></div>").unwrap();
@@ -48219,10 +48246,7 @@ mod tests {
         assert_eq!(
             output.parser_diagnostics,
             vec![
-                ParserDiagnostic::new(
-                    "unexpected-fragment-context-end-tag",
-                    "end tag `</html>` targeted a seeded fragment context element"
-                ),
+                fragment_context_end_tag("<body>X</body></html>Y", "html", 0),
                 ParserDiagnostic::new(
                     "unexpected-token-after-body",
                     "unexpected token was reprocessed from the after body insertion mode"
