@@ -312,7 +312,14 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   lower-right dots nearer the main line before the lower-center dot. The
   chapter's prose independently requires that triangular arrangement, and the
   script-owned source remains separate from Persian **پ** while both paths fit
-  the same Noto Naskh fallback outline. Urdu **ج** follows from *Zer o Zabar*'s independent handwriting animation: place
+  the same Noto Naskh fallback outline. Urdu **ھ** comes from *Zer o Zabar*'s
+  independent calligraphic and handwriting animations: circle the right eye,
+  continue left along the baseline, reverse at its far edge, circle the left
+  eye, and complete the low leftward finish without lifting. The adjacent
+  prose names the letter for its two eyes, explains its aspiration job, and
+  warns about the direction reversal in medial and final forms. The learner
+  path preserves that zero-lift order separately from chhoṭī he **ہ**. Urdu
+  **ج** follows from *Zer o Zabar*'s independent handwriting animation: place
   the dot below, lift once, then keep the pointed hooked head, descent, and bowl
   in one continuous run. The chapter's alternate flat head is purely aesthetic,
   so the learner path preserves the pointed form without inventing a different
