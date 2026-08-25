@@ -13,6 +13,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   precedence, validates and redacts exemption-ledger failures, filters exact
   artifact components, detects NFC/full-casefold duplicate identities, and
   emits deterministically ordered diagnostics plus pending-exemption counts.
+  Canonical detail ordering matches the neutral Python oracle's ASCII JSON
+  escaping even when stale exemption paths contain non-ASCII scalars.
 
 ## [0.2.6] - 2026-08-25
 

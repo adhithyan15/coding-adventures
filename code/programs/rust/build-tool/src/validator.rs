@@ -1,4 +1,5 @@
 use std::collections::{BTreeMap, BTreeSet};
+use std::fmt::Write as _;
 use std::fs;
 use std::path::Path;
 
@@ -555,38 +556,72 @@ fn portable_basename(path: &str) -> &str {
 }
 
 fn canonical_orphan_details_key(details: &OrphanCrateDiagnosticDetails) -> String {
-    let mut object = serde_json::Map::new();
+    let mut fields = Vec::new();
     if let Some(build_path) = &details.build_path {
-        object.insert(
-            "build_path".to_string(),
-            serde_json::Value::String(build_path.clone()),
-        );
+        fields.push(format!(
+            "\"build_path\": {}",
+            python_ascii_json_string(build_path)
+        ));
     }
     if let Some(entry_path) = &details.entry_path {
-        object.insert(
-            "entry_path".to_string(),
-            serde_json::Value::String(entry_path.clone()),
-        );
+        fields.push(format!(
+            "\"entry_path\": {}",
+            python_ascii_json_string(entry_path)
+        ));
     }
     if let Some(kind) = &details.kind {
-        object.insert("kind".to_string(), serde_json::Value::String(kind.clone()));
+        fields.push(format!("\"kind\": {}", python_ascii_json_string(kind)));
     }
     if let Some(line) = details.line {
-        object.insert("line".to_string(), serde_json::Value::Number(line.into()));
+        fields.push(format!("\"line\": {line}"));
     }
     if let Some(manifest_kind) = &details.manifest_kind {
-        object.insert(
-            "manifest_kind".to_string(),
-            serde_json::Value::String(manifest_kind.clone()),
-        );
+        fields.push(format!(
+            "\"manifest_kind\": {}",
+            python_ascii_json_string(manifest_kind)
+        ));
     }
     if let Some(problem) = &details.problem {
-        object.insert(
-            "problem".to_string(),
-            serde_json::Value::String(problem.clone()),
-        );
+        fields.push(format!(
+            "\"problem\": {}",
+            python_ascii_json_string(problem)
+        ));
     }
-    serde_json::to_string(&object).expect("orphan diagnostic details are JSON-safe")
+    format!("{{{}}}", fields.join(", "))
+}
+
+fn python_ascii_json_string(value: &str) -> String {
+    let mut output = String::with_capacity(value.len() + 2);
+    output.push('"');
+    for character in value.chars() {
+        match character {
+            '"' => output.push_str("\\\""),
+            '\\' => output.push_str("\\\\"),
+            '\u{0008}' => output.push_str("\\b"),
+            '\u{000c}' => output.push_str("\\f"),
+            '\n' => output.push_str("\\n"),
+            '\r' => output.push_str("\\r"),
+            '\t' => output.push_str("\\t"),
+            printable_ascii if ('\u{0020}'..='\u{007e}').contains(&printable_ascii) => {
+                output.push(printable_ascii);
+            }
+            non_ascii => {
+                let scalar = non_ascii as u32;
+                if scalar <= 0xffff {
+                    write!(output, "\\u{scalar:04x}")
+                        .expect("writing to an in-memory string cannot fail");
+                } else {
+                    let supplementary = scalar - 0x1_0000;
+                    let high = 0xd800 + (supplementary >> 10);
+                    let low = 0xdc00 + (supplementary & 0x3ff);
+                    write!(output, "\\u{high:04x}\\u{low:04x}")
+                        .expect("writing to an in-memory string cannot fail");
+                }
+            }
+        }
+    }
+    output.push('"');
+    output
 }
 
 pub fn validate_ci_full_build_toolchains(repo_root: &Path, packages: &[Package]) -> Option<String> {
@@ -1088,6 +1123,38 @@ mod tests {
         assert_eq!(
             result.diagnostics[0].details.problem.as_deref(),
             Some("DUPLICATE_PATH")
+        );
+    }
+
+    #[test]
+    fn orphan_crate_validation_matches_python_unicode_detail_ordering() {
+        let result = validate_orphan_crate_snapshot(&OrphanCrateSnapshot {
+            directories: vec![],
+            manifests: vec![],
+            build_files: vec![],
+            exemptions: vec![
+                OrphanExemption {
+                    line: 8,
+                    kind: "EXCLUDED".to_string(),
+                    path: "code/packages/rust/z".to_string(),
+                    reason: "removed".to_string(),
+                },
+                OrphanExemption {
+                    line: 7,
+                    kind: "EXCLUDED".to_string(),
+                    path: "code/packages/rust/é".to_string(),
+                    reason: "removed".to_string(),
+                },
+            ],
+        });
+
+        assert_eq!(
+            result
+                .diagnostics
+                .iter()
+                .map(|diagnostic| diagnostic.details.entry_path.as_deref().unwrap())
+                .collect::<Vec<_>>(),
+            ["code/packages/rust/é", "code/packages/rust/z"]
         );
     }
 

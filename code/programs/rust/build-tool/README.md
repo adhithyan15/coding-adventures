@@ -139,6 +139,8 @@ closed on unsafe, outside-scan, artifact, duplicate, unknown-kind, or blank-
 reason entries, redact hostile paths to `code/BUILD-EXEMPTIONS`, and report
 covered or removed entries as stale. Its tests consume all four shared
 `validation/orphan-*` conformance fixtures and adversarial Unicode/path cases.
+Canonical diagnostic detail keys use the neutral oracle's Python-compatible
+ASCII JSON escaping so Unicode values retain identical cross-runtime ordering.
 
 Tracked-artifact validation consumes caller-supplied inert records only. It
 slash-normalizes portable paths, rejects unsafe paths at the fixed redacted
