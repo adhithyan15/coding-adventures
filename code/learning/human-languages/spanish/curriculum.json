@@ -4136,6 +4136,118 @@
       "after": []
     },
     {
+      "id": "ES-PATH-328-01",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "ES-C328-asi",
+        "ES-C328-jamas",
+        "ES-C328-apenas",
+        "ES-C328-casi",
+        "ES-C328-incluso"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-328-DEGREE"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-329-01",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "ES-C329-tal",
+        "ES-C329-cual",
+        "ES-C329-pues",
+        "ES-C329-sino",
+        "ES-C329-salvo"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-329-LINK"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-330-01",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "ES-C330-camino",
+        "ES-C330-parada",
+        "ES-C330-mundo",
+        "ES-C330-vida",
+        "ES-C330-vez"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-330-WAY"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-331-01",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "ES-C331-rato",
+        "ES-C331-manera",
+        "ES-C331-modo",
+        "ES-C331-cosa",
+        "ES-C331-asunto"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-331-WAY"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-332-01",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "ES-C332-permiso",
+        "ES-C332-aviso",
+        "ES-C332-disculpa",
+        "ES-C332-palabra",
+        "ES-C332-voz"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-332-WORD"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-333-01",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "ES-C333-ruido",
+        "ES-C333-silencio",
+        "ES-C333-calma",
+        "ES-C333-prisa",
+        "ES-C333-cuidado"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-333-QUIET"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-334-01",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "ES-C334-salud",
+        "ES-C334-hambre",
+        "ES-C334-frio",
+        "ES-C334-calor",
+        "ES-C334-edad"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-334-BODY"
+      ],
+      "after": []
+    },
+    {
       "id": "ES-PATH-310-01",
       "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
       "lessons": [
@@ -4272,7 +4384,9 @@
         "ES-PATH-282-01",
         "ES-PATH-289-01",
         "ES-PATH-296-01",
-        "ES-PATH-325-01"
+        "ES-PATH-325-01",
+        "ES-PATH-330-01",
+        "ES-PATH-331-01"
       ],
       "omits": [
         "GREETING-FORMAL",
@@ -4288,7 +4402,9 @@
         "ES-PATH-290-01",
         "ES-PATH-297-01",
         "ES-PATH-320-01",
-        "ES-PATH-321-01"
+        "ES-PATH-321-01",
+        "ES-PATH-332-01",
+        "ES-PATH-333-01"
       ],
       "omits": [
         "COURTESY-THANKS-CASUAL"
@@ -4304,7 +4420,9 @@
         "ES-PATH-316-01",
         "ES-PATH-317-01",
         "ES-PATH-319-04",
-        "ES-PATH-324-01"
+        "ES-PATH-324-01",
+        "ES-PATH-328-01",
+        "ES-PATH-329-01"
       ],
       "omits": [
         "RESPONSE-YESNO",
@@ -4353,7 +4471,8 @@
         "ES-PATH-318-03",
         "ES-PATH-318-04",
         "ES-PATH-326-01",
-        "ES-PATH-327-01"
+        "ES-PATH-327-01",
+        "ES-PATH-334-01"
       ],
       "omits": [
         "WORD-GOOD"
@@ -8536,6 +8655,111 @@
         "ES-C327-fuerte",
         "ES-C327-debil",
         "ES-C327-sano"
+      ]
+    },
+    {
+      "id": "ES-EXT-328-DEGREE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can say how much of something there is, from none at all to more than expected.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C328-asi",
+        "ES-C328-jamas",
+        "ES-C328-apenas",
+        "ES-C328-casi",
+        "ES-C328-incluso"
+      ]
+    },
+    {
+      "id": "ES-EXT-329-LINK",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can qualify, conclude, correct a negative statement and carve out an exception.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C329-tal",
+        "ES-C329-cual",
+        "ES-C329-pues",
+        "ES-C329-sino",
+        "ES-C329-salvo"
+      ]
+    },
+    {
+      "id": "ES-EXT-330-WAY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can talk about a road, a stop, the world, a life and a single occasion.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C330-camino",
+        "ES-C330-parada",
+        "ES-C330-mundo",
+        "ES-C330-vida",
+        "ES-C330-vez"
+      ]
+    },
+    {
+      "id": "ES-EXT-331-WAY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can point at a stretch of time, a way of doing something, and a topic I cannot name.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C331-rato",
+        "ES-C331-manera",
+        "ES-C331-modo",
+        "ES-C331-cosa",
+        "ES-C331-asunto"
+      ]
+    },
+    {
+      "id": "ES-EXT-332-WORD",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can ask leave, give notice, apologise, and name a word and a voice.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C332-permiso",
+        "ES-C332-aviso",
+        "ES-C332-disculpa",
+        "ES-C332-palabra",
+        "ES-C332-voz"
+      ]
+    },
+    {
+      "id": "ES-EXT-333-QUIET",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can ask for quiet, ask somebody to take their time, and warn them to be careful.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C333-ruido",
+        "ES-C333-silencio",
+        "ES-C333-calma",
+        "ES-C333-prisa",
+        "ES-C333-cuidado"
+      ]
+    },
+    {
+      "id": "ES-EXT-334-BODY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can say I am hungry, cold or hot, ask after somebody's health, and give my age.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C334-salud",
+        "ES-C334-hambre",
+        "ES-C334-frio",
+        "ES-C334-calor",
+        "ES-C334-edad"
       ]
     },
     {
