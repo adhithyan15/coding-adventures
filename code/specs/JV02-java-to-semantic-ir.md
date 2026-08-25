@@ -24,7 +24,11 @@ and M3b (lambda expressions with explicitly-typed parameters →
 function; captures discovered on-resolve, effectively-final enforced;
 both lambda-body shapes — though a lambda value can only be created and
 passed around this milestone, never actually invoked, since `Expr::
-IndirectCall` isn't wired up yet) are merged — see `code/packages/rust/
+IndirectCall` isn't wired up yet), and M4a (single-dimensional array
+types with a bare `{ ... }` literal initializer → `Expr::SeqLit`,
+indexing reads → `Expr::SeqIndex`, `.length` → `Expr::SeqLen` — SIR16's
+`Sequences` primitives, not SIR22's `NDArrays`/matrix family; see this
+section's own M4a entry for why) are merged — see `code/packages/rust/
 java-to-semantic-ir`'s own `CHANGELOG.md` for the exact per-milestone
 construct list and the real correctness bugs each milestone's own test
 suite caught before shipping. M2's own scope split into two PRs (M2a;
@@ -32,13 +36,19 @@ M2b) once implementation revealed how much scope-stack infrastructure
 `if`/`while`/`do`-`while` alone already needed; M3 similarly split into
 M3a and M3b (this section) once research showed M3's combined scope —
 multi-function tables, typed params, tail-position return, *and* lambda
-capture analysis — was comparably large to M2's own combined scope.
+capture analysis — was comparably large to M2's own combined scope; M4
+was likewise narrowed into M4a (this section, merged) and M4b (deferred)
+once design research (grammar probing + a direct read of `semantic-ir`'s
+own node/validator/backend source) showed the original undifferentiated
+M4 scope — arrays, `new`-based array creation, indexed assignment,
+multi-dimensional arrays, `String` methods, and `List`/`Map` literals,
+all at once — was comparably large to M2's and M3's own combined scopes.
 `switch` was also discovered, during M2a, to have no corresponding SIR
 IR node at all (confirmed by a repo-wide grep, not assumed) — it needs
 its own spec-level design decision (Java's fall-through semantics in
 particular) before any frontend can target it, tracked as a separate
 backlog item rather than folded into "M2"/"M3" implicitly; `break`/
-`continue` have the identical gap. M4 onward are pending.
+`continue` have the identical gap. M4b onward are pending.
 
 ## Motivation
 
@@ -227,13 +237,49 @@ but never called), so no execution-proof test exists for this milestone
 (see `tests/e2e_python.rs`'s own doc comment) — only structural
 verification against `semantic_ir::validate()`.
 
-**M4 — arrays / collections / strings / indexing.** Java arrays (`int[]
-xs = {1, 2, 3};`, `xs[0]`, `xs.length`), `String` method surface
-(`.length()`, `.charAt()`, `.substring()`, etc. — the built-in method
-catalog `sir-method-dispatch.md`/`sir-collection-methods.md` already
-define, reused rather than redefined), `List`/`Map` collection literals
-where a fixed-shape lowering is unambiguous (`List.of(...)`, `new
-ArrayList<>()` + `.add`).
+**M4a — array declarations, indexing reads, `.length`.** Single-
+dimensional Java arrays of primitive/`String` element type: `int[] xs =
+{1, 2, 3};` (bare `{ ... }` array-initializer literal syntax only —
+`new int[5]`/`new int[]{...}` array-creation-*expression* forms are
+deferred to M4b; confirmed via empirical probing, not assumed, that they
+genuinely fall through to this frontend's existing "unsupported primary
+expression" rejection rather than being silently mis-lowered), indexing
+reads (`xs[0]`), and `.length`. Lowers to SIR16's `Sequences` primitives
+(`Expr::SeqLit`/`SeqIndex`/`SeqLen`, `Feature::Sequences`) rather than
+SIR22's row-major-matrix-shaped `NDArrays`/`ArrayLit`/`IndexGet` family —
+a direct read of `semantic-ir`'s own node/validator/Python-backend source
+confirmed SIR16 Sequences is the better structural fit for Java's flat
+1-D arrays, and the only one `semantic-ir-to-python` already fully
+supports without a separate `sir-runtime-array` dependency, which is what
+makes this the first milestone since M3a able to add a real execution-
+proof test (unlike M3b's lambdas, creatable but not yet invocable). A new
+`Kind::Array(ArrayElemKind)` variant (`ArrayElemKind` a small flat `Copy`
+enum, kept separate from `Kind` so `Kind` itself doesn't need a recursive
+`Box` and lose its own `Copy` derive) tracks an array-typed local's/
+parameter's/return's element kind — since every array-typed declaration,
+parameter, and return type already routes through the one shared
+`kind_of_type_node`, array-typed method parameters and call-argument kind
+checking fall out for free as a side effect of this milestone, without
+needing their own dedicated work.
+
+**M4b — indexed assignment, `new`-based array creation, multi-
+dimensional arrays.** Deferred from M4a during scope narrowing. Indexed
+assignment (`xs[i] = v;`, and the same treatment for compound-assignment/
+increment-decrement on an indexed target) needs `Stmt::SeqSet` and new
+lvalue-parsing machinery beyond the current bare-name-only assignment
+target. `new int[5]` (sized, uninitialized) and `new int[]{1,2,3}`
+(explicit array-creation-type + initializer) are new primary-expression
+forms. Multi-dimensional arrays (`int[][] grid`) need a real
+`Kind::Array(Box<Kind>)`-shaped (or equivalent) nested representation —
+deliberately not attempted as part of M4a's flat `ArrayElemKind`, which
+is single-level by construction. Also still open from the original
+undifferentiated M4 scope: `String` method-dispatch surface (`.length()`,
+`.charAt()`, `.substring()`, etc. — the built-in method catalog
+`sir-method-dispatch.md`/`sir-collection-methods.md` already define,
+reused rather than redefined; needs qualified-call support, itself still
+out of scope everywhere in this frontend), and `List`/`Map` collection
+literals where a fixed-shape lowering is unambiguous (`List.of(...)`,
+`new ArrayList<>()` + `.add`).
 
 **M5 — statics/breadth parity groundwork.** Pulled forward from the
 original M9 slot: static field/method access patterns

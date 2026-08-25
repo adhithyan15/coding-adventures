@@ -2,6 +2,92 @@
 
 All notable changes to the `java-to-semantic-ir` crate will be documented in this file.
 
+## [0.7.0] - 2026-08-25
+
+### Added
+
+- JV02 milestone M4a: array declarations, indexing reads, `.length`.
+- Narrowed during design research (grammar probing + a direct read of
+  `semantic-ir`'s own node/validator/Python-backend source) from the
+  original broader M4 scope (arrays + collections + strings) to
+  single-dimensional Java arrays of primitive/`String` element type only.
+  `int[] xs = {1, 2, 3};` (bare `{ ... }` array-initializer literal syntax
+  only — the `new int[5]`/`new int[]{...}` array-creation-*expression*
+  forms are deferred, confirmed by probing to genuinely fall through to
+  `lower_primary`'s existing "unsupported primary expression" rejection,
+  not silently mis-lowered), indexing reads (`xs[i]`), and `.length` lower
+  to SIR16's `Sequences` primitives (`Expr::SeqLit`/`SeqIndex`/`SeqLen`,
+  `Feature::Sequences`) rather than SIR22's row-major-matrix-shaped
+  `NDArrays`/`ArrayLit`/`IndexGet` family — the two are a meaningfully
+  different domain (SIR22 is designed for MATLAB/Octave-style N-D
+  arrays), and SIR16 Sequences is both the better structural fit for
+  Java's flat 1-D arrays and the only one `semantic-ir-to-python` already
+  fully supports without a separate `sir-runtime-array` dependency,
+  which is what makes this the first milestone since M3a able to add a
+  real execution-proof test (unlike M3b's lambdas, which can be created
+  but not yet invoked).
+- A new `ArrayElemKind` enum (`Int`/`Float`/`Bool`/`Str`, `#[derive(Copy)]`)
+  and `Kind::Array(ArrayElemKind)` variant. `ArrayElemKind` is
+  deliberately a separate small flat enum rather than a recursive
+  `Kind::Array(Box<Kind>)`: `Kind` derives `Copy` and is threaded by value
+  through hundreds of call sites across this crate, and a `Box` field
+  would force dropping that derive and adding `.clone()` everywhere —
+  the same non-recursive-placeholder pattern `Kind::Void`/`Kind::Closure`
+  already use.
+- `kind_of_type_node` now counts bracket-pairs among a `type` node's
+  direct children: zero delegates to a new `scalar_kind_of_type_node`
+  (the original body, extracted unchanged); exactly one resolves the
+  base scalar kind and wraps it as `Kind::Array`; more than one is
+  rejected ("multi-dimensional arrays are not supported yet"). Since
+  this is the one function every array-typed declaration, parameter, and
+  return type all already route through, array-typed method parameters
+  and call-argument kind checking fall out for free as a natural side
+  effect — M3a's own `array_parameter_type_is_still_unsupported` test is
+  repurposed into a positive test (`array_parameter_type_is_now_
+  supported_since_m4a`) rather than silently deleted.
+- `lower_variable_declarator`'s initializer handling now also accepts an
+  `array_initializer` node (previously only a bare `expression`), routing
+  to a new `lower_array_initializer`: lowers each element, infers or
+  validates a single common `ArrayElemKind` across all of them (an
+  explicit declared array type constrains it; `var` infers it from the
+  literal itself), rejects an empty `var`-inferred array ("cannot infer
+  an empty array literal's element type") and an element-kind mismatch,
+  and rejects a nested `array_initializer` element ("multi-dimensional
+  array literals are not supported yet") rather than attempting to
+  flatten or mis-lower it.
+- `lower_primary_expression`'s single-suffix dispatch is now keyed on the
+  suffix's own leading token (`(` → call, as before; `[` → new
+  `lower_index_get`; `.` → new `lower_dot_suffix`) instead of a single
+  call-shaped check — `lower_index_get` requires the indexed target be
+  `Kind::Array` and the index be `Kind::Int`, emitting `Expr::SeqIndex`
+  with the array's own element kind as its result; `lower_dot_suffix`
+  only recognizes `.length` this milestone (any other field/method name
+  is rejected with a clear "not supported yet" error, not silently
+  treated as a no-op), emitting `Expr::SeqLen` with `Kind::Int`.
+- 22 new tests in `tests/test_lower.rs` (literal declarations with an
+  explicit type and with `var` inference, empty-array-with-explicit-type,
+  element-kind mismatch, declaring an array initializer against a
+  non-array declared type, `String`-array literals, indexing reads and
+  their result kind, indexing/`.length` on a non-array value, non-`int`
+  index rejection, array-typed method parameters and call-argument kind
+  checking including a kind-mismatch rejection, `Feature::Sequences`
+  manifest declaration, and every deferred-construct rejection —
+  multi-dimensional array *types*, nested array *literals*, `new`-based
+  array creation, indexed assignment, and field access other than
+  `.length`) plus 4 new execution-proof tests in `tests/e2e_python.rs`
+  (an array literal plus `.length`, an indexed read, a full indexed
+  `for`-loop summing an array's elements, and a `var`-inferred array) —
+  the first real array *execution*, not just structural lowering, proven
+  through the actual Python backend and `python3`.
+- **Design near-miss caught via empirical probing, not assumed**: before
+  implementing, a throwaway grammar-probing test confirmed
+  `new int[]{...}`/`new int[5]` genuinely fall through to
+  `lower_primary`'s existing catch-all "unsupported primary expression"
+  rejection rather than accidentally working or silently mis-lowering —
+  confirming this form is correctly out of scope this milestone (deferred
+  to M4b) rather than a bug to fix, before any implementation code
+  assumed otherwise.
+
 ## [0.6.0] - 2026-08-25
 
 ### Added

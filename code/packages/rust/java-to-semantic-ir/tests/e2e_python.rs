@@ -486,3 +486,67 @@ fn void_method_call_runs_without_crashing_in_python() {
 // assert on. Every positive lambda test in `tests/test_lower.rs` still
 // asserts the lowered `Module` passes `semantic_ir::validate()`, which is
 // the honest ceiling of what's provable here.
+
+// ── M4a: array declarations, indexing reads, .length ─────────────────────
+
+#[test]
+fn array_literal_and_length_run_in_python() {
+    if !python_available() {
+        eprintln!("skipping array_literal_and_length_run_in_python: `python3` not available");
+        return;
+    }
+    let out = run_via_python(
+        "array_literal_and_length",
+        &wrap("int[] xs = {10, 20, 30}; xs.length;"),
+    );
+    assert_eq!(out, "3");
+}
+
+#[test]
+fn array_index_read_runs_in_python() {
+    if !python_available() {
+        eprintln!("skipping array_index_read_runs_in_python: `python3` not available");
+        return;
+    }
+    let out = run_via_python("array_index_read", &wrap("int[] xs = {10, 20, 30}; xs[1];"));
+    assert_eq!(out, "20");
+}
+
+#[test]
+fn array_sum_via_indexed_for_loop_runs_in_python() {
+    if !python_available() {
+        eprintln!(
+            "skipping array_sum_via_indexed_for_loop_runs_in_python: `python3` not available"
+        );
+        return;
+    }
+    // The realistic pattern this milestone exists to enable: `for (int i
+    // = 0; i < xs.length; i++)` summing an array by index -- exercises
+    // the array literal, `.length`, and indexed reads together, not just
+    // each in isolation.
+    let out = run_via_python(
+        "array_sum_via_indexed_for_loop",
+        &wrap(concat!(
+            "int[] xs = {1, 2, 3, 4, 5}; ",
+            "int sum = 0; ",
+            "for (int i = 0; i < xs.length; i++) { sum = sum + xs[i]; } ",
+            "sum;"
+        )),
+    );
+    assert_eq!(out, "15");
+}
+
+#[test]
+fn var_inferred_array_runs_in_python() {
+    if !python_available() {
+        eprintln!("skipping var_inferred_array_runs_in_python: `python3` not available");
+        return;
+    }
+    let out = run_via_python("var_inferred_array", &wrap("var xs = {7, 8, 9}; xs[2];"));
+    assert_eq!(out, "9");
+}
+
+// No execution-proof test for indexed assignment (`xs[i] = v;`) or the
+// `new int[5]`/`new int[]{...}` array-creation-expression forms --
+// deferred to task #56 (M4b), where their own execution-proof tests
+// belong.

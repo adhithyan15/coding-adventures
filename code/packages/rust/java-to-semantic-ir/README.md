@@ -4,7 +4,7 @@ Java CST → narrow-waist Semantic IR. The first frontend for
 [SIR29](../../../specs/SIR29-nominal-static-oop-profile.md), the
 nominal/static-dispatch OOP profile extension of the SIR10 narrow-waist IR.
 See [JV02](../../../specs/JV02-java-to-semantic-ir.md) for this frontend's
-full milestone plan (M0 + M1 + M2a + M2b + M3a + M3b here, through M9).
+full milestone plan (M0 + M1 + M2a + M2b + M3a + M3b + M4a here, through M9).
 
 ## Where this fits
 
@@ -34,7 +34,7 @@ let module = compile_source(
 )?;
 ```
 
-## Scope (v0.6.0 — JV02 milestones M0 + M1 + M2a + M2b + M3a + M3b)
+## Scope (v0.7.0 — JV02 milestones M0 + M1 + M2a + M2b + M3a + M3b + M4a)
 
 Java requires an explicit `class`/`main`-method wrapper at the source level
 (unlike Ruby/Python/JS, which allow bare top-level statements) — this crate
@@ -71,18 +71,37 @@ lambda-body shapes — an expression directly, or a block using the same
 tail-position-only `return` rule methods use, but with no declared type to
 validate the returned kind against (M3b — though a lambda value can only be
 *created* and passed around this milestone, never actually *invoked*; see
-below). Everything else — `switch`/`break`/`continue` (SIR has no IR node
-for any of the three — confirmed by a repo-wide grep, not assumed — so this
-needs a spec-level design decision before any frontend can target it; note
-a bare `for (;;)` loop genuinely cannot terminate without `break`, a real
-and permanent limitation until it exists), qualified calls (`x.foo(...)`),
+below). Single-dimensional array types (`int[]`/`String[]`/etc.) with a
+bare `{ ... }` literal initializer (`int[] xs = {1, 2, 3};`, or `var xs =
+{1, 2, 3};` inferring the element kind from the literal itself) lower to
+`Expr::SeqLit`; indexing reads (`xs[i]`) lower to `Expr::SeqIndex`; and
+`.length` lowers to `Expr::SeqLen` — using SIR16's flat `Sequences`
+primitives (`Feature::Sequences`) rather than SIR22's row-major-matrix-
+shaped `NDArrays`/`ArrayLit`/`IndexGet` family, confirmed via direct
+reading of `semantic-ir`'s own node/validator/Python-backend source to be
+the better fit for Java's flat single-dimensional arrays — and the only
+one of the two the Python backend already fully supports, which is what
+makes a real execution-proof test possible this milestone (M4a). A new
+`Kind::Array(ArrayElemKind)` variant (`ArrayElemKind` a small flat `Copy`
+enum of `Int`/`Float`/`Bool`/`Str`, kept separate from `Kind` itself so
+`Kind` doesn't need a recursive `Box` and lose its own `Copy` derive)
+tracks an array-typed local/parameter/return's element kind. Everything
+else — `switch`/`break`/`continue` (SIR has no IR node for any of the
+three — confirmed by a repo-wide grep, not assumed — so this needs a
+spec-level design decision before any frontend can target it; note a bare
+`for (;;)` loop genuinely cannot terminate without `break`, a real and
+permanent limitation until it exists), qualified calls (`x.foo(...)`),
 method overloading, an early or branched `return` (in a method *or* a
 lambda), untyped/`var`-inferred lambda parameters (Java infers these from
 the lambda's own target functional-interface type, which this frontend has
 no visibility into — no functional-interface declarations exist yet),
-*invoking* a lambda value (`Expr::IndirectCall` isn't wired up), field/
-array access, casts, `instanceof`, the ternary conditional, bitwise/shift
-operators, fields/constructors/nested types, and every SIR29 construct
+*invoking* a lambda value (`Expr::IndirectCall` isn't wired up),
+multi-dimensional arrays, indexed array assignment (`xs[i] = v;`),
+`new`-based array creation (`new int[5]`/`new int[]{...}`), List/Map
+collection literals, the array/String method-call surface beyond
+`.length`, field access other than an array's own `.length`, casts,
+`instanceof`, the ternary conditional, bitwise/shift operators,
+fields/constructors/nested types, and every SIR29 construct
 (`NominalClassDef`/`InterfaceDef`/`MethodDef`/`VirtualCall`) — is out of
 scope so far and returns a clean `JavaLowerError` rather than being
 silently mis-lowered. See `src/lower.rs`'s own module doc comment for the
@@ -102,9 +121,18 @@ exact boundary, and the JV02 spec's milestone table for what comes next.
   multi-parameter, captures from both `Local`- and `Param`-scoped
   enclosing declarations, captures crossing *two* nested lambda
   boundaries, effectively-final rejection on assignment/increment to a
-  captured local, and every untyped/`var`-parameter rejection). Every
-  positive test also asserts the lowered `Module` passes `semantic_ir::
-  validate()` — not just that lowering itself didn't error.
+  captured local, and every untyped/`var`-parameter rejection), and
+  M4a's own array shapes (literal declarations with an explicit type or
+  `var`-inferred, empty-array-with-explicit-type, element-kind mismatch
+  and empty-array-with-`var` rejection, indexing reads and their kind,
+  indexing/`.length` on a non-array value rejection, non-`int` index
+  rejection, array-typed method parameters and call-argument kind
+  checking, `Feature::Sequences` manifest declaration, and every
+  deferred-construct rejection — multi-dimensional array types, nested
+  array initializers, indexed assignment, `new`-based array creation,
+  and field access other than `.length`). Every positive test also
+  asserts the lowered `Module` passes `semantic_ir::validate()` — not
+  just that lowering itself didn't error.
 - `tests/e2e_python.rs` — execution-proof tests, per JV02's own
   "Verification" section. Real Java source lowers through this crate,
   then through the Python backend (`semantic-ir-to-python`, a dev-
@@ -129,7 +157,15 @@ exact boundary, and the JV02 spec's milestone table for what comes next.
   milestone — so there is nothing a lambda-using program could do that
   produces *observably different* output than not using one at all) —
   all four are covered structurally in `tests/test_lower.rs` instead,
-  honestly reflecting what's actually provable at this milestone. Python,
+  honestly reflecting what's actually provable at this milestone. M4a
+  adds 4 real execution-proof tests — the first milestone since M3a to
+  add any, since unlike lambdas, arrays lower to a primitive
+  (`Expr::SeqLit`/`SeqIndex`/`SeqLen`) the Python backend already fully
+  supports: an array literal plus `.length`, an indexed read, a full
+  indexed `for`-loop summing an array's elements, and a `var`-inferred
+  array. No execution-proof test exists for indexed assignment or
+  `new`-based array creation (both deferred to M4b, not implemented at
+  all this milestone). Python,
   not JavaScript: the JavaScript backend does not accept `Feature::
   StringInterpolation` yet, and M1's `+`-based string concatenation needs
   it. The harness redirects `main`'s trailing block value to its last
