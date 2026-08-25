@@ -2565,6 +2565,72 @@ pub enum SimdOpKind {
     /// c)` per lane, hand-verified against the corpus's
     /// `f64x2.relaxed_nmadd` cases the same way.
     RelaxedNmaddF64x2,
+    /// `i16x8.relaxed_dot_i8x16_i7x16_s` (relaxed-SIMD epic, PR6 -- see
+    /// `code/specs/W19-wasm-relaxed-simd-first-slice.md`) -- sub-opcode
+    /// `0x112`, the 2-byte LEB128 sequence `[0x92, 0x02]`, confirmed live
+    /// against the same relaxed-simd Overview.md encoding table every
+    /// other relaxed-simd row above cites. BINARY `(v128, v128) -> v128`,
+    /// same shape as [`Self::DotI16x8S`] but at the narrower `i8x16`
+    /// lane width with a WIDER (`i16x8`) result: reinterpret both
+    /// operands as 16 `i8` lanes each; for each of the 8 result lanes
+    /// `i`, compute `a[2i] * b[2i] + a[2i+1] * b[2i+1]` (a per-pair
+    /// multiply-accumulate), producing an `i16x8` result.
+    ///
+    /// The `i7x16` half of the name is the relaxed-simd spec's own way of
+    /// flagging that the SECOND operand's high (sign) bit is
+    /// implementation-defined -- some hosts' native dot-product
+    /// instruction reads it as signed, others as unsigned, others may
+    /// even treat the FIRST operand as unsigned too (mirroring whichever
+    /// native SIMD instruction the host maps this op onto, e.g. x86
+    /// `PMADDUBSW`-family vs. ARM `SDOT`-family). Hand-verified against
+    /// the real vendored `relaxed_dot_product.wast` corpus (pinned
+    /// `WebAssembly/testsuite` SHA
+    /// `28864811cf03bdbf880733786148feaba339582d`): its one genuinely
+    /// ambiguous case (`a=[-128,-128,0,...], b=[-127,-127,0,...]`) is an
+    /// `either` of THREE alternatives, annotated in the corpus's own
+    /// comments as "signed * unsigned" (`-32768`, saturated), "signed *
+    /// signed" (`32512`), and "unsigned * unsigned" (`33024`). Treating
+    /// BOTH operands as plain signed `i8` (the "signed * signed"
+    /// reading) lands on the middle alternative in that case, and is
+    /// bit-for-bit identical to every other (non-`either`, exact)
+    /// assertion in the file, since every other case's operand values are
+    /// all non-negative -- where signed/unsigned interpretation cannot
+    /// differ. So this op reuses [`Self::DotI16x8S`]'s exact
+    /// multiply-accumulate shape, just at `i8x16` input width instead of
+    /// `i16x8`, treating both operands as signed throughout -- no new
+    /// numeric logic, no saturation (the corpus never exercises an
+    /// overflow case for the plain, non-accumulating variant).
+    RelaxedDotI8x16I7x16S,
+    /// `i32x4.relaxed_dot_i8x16_i7x16_add_s` (relaxed-SIMD epic, PR6) --
+    /// sub-opcode `0x113`, the 2-byte LEB128 sequence `[0x93, 0x02]`,
+    /// confirmed live against the same relaxed-simd Overview.md encoding
+    /// table. TERNARY `(v128, v128, v128) -> v128` -- the first ternary
+    /// SIMD op in this crate whose THIRD operand is a genuine numeric
+    /// accumulator rather than a bitwise mask ([`Self::Bitselect`]/
+    /// `RelaxedLaneselect*`) or a third arithmetic input to a single
+    /// fused op ([`Self::RelaxedMaddF32x4`] etc.): the first two operands
+    /// feed [`Self::RelaxedDotI8x16I7x16S`]'s own per-pair
+    /// multiply-accumulate to produce an intermediate `i16x8`, which is
+    /// then itself pairwise-added (0+1, 2+3, ... 14+15) into the third
+    /// operand's 4 `i32` lanes -- same "widen `i8x16` dot-product then
+    /// pairwise-fold into `i32x4`" shape the corpus's own comments
+    /// describe as `dot(a, b)` then `extadd_pairwise` (conceptually) then
+    /// `add` with the accumulator, computed here directly in one pass
+    /// with `i32` intermediates throughout (so no separate saturating
+    /// step is needed for the inner dot before the final add). Same
+    /// "signed * signed" semantic choice as
+    /// [`Self::RelaxedDotI8x16I7x16S`] applies here too: hand-verified
+    /// against the corpus's own 4-way `either` case
+    /// (`a=[-128,-128,-128,-128,0,...], b=[-127,-127,-127,-127,0,...],
+    /// acc=[1,2,3,4]`) -- "signed * signed: -128 * -127 * 4 = 65,024"
+    /// plus the accumulator's `1` gives `65025`, the corpus's THIRD
+    /// `either` alternative, matching exactly; every other (non-`either`)
+    /// case in the file is unambiguous since its operand values are
+    /// non-negative, and this exact per-lane-`i32` computation matches
+    /// those too (e.g. `a`/`b` = `0..15` twice, `acc = [0,1,2,3]` gives
+    /// `[14, 127, 368, 737]`, matching the corpus's plain exact case
+    /// bit-for-bit).
+    RelaxedDotI8x16I7x16AddS,
 }
 
 /// One entry in the SIMD opcode table: everything a consumer needs to
@@ -3471,6 +3537,31 @@ pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "f32x4.relaxed_nmadd", sub_opcode: 0x106, kind: SimdOpKind::RelaxedNmaddF32x4 },
     SimdOpInfo { name: "f64x2.relaxed_madd", sub_opcode: 0x107, kind: SimdOpKind::RelaxedMaddF64x2 },
     SimdOpInfo { name: "f64x2.relaxed_nmadd", sub_opcode: 0x108, kind: SimdOpKind::RelaxedNmaddF64x2 },
+
+    // ── Relaxed SIMD epic, PR6 -- see code/specs/
+    // W19-wasm-relaxed-simd-first-slice.md ──────────────────────────────
+    //
+    // `i16x8.relaxed_dot_i8x16_i7x16_s`/`i32x4.relaxed_dot_i8x16_i7x16_add_s`
+    // -- sub-opcodes `0x112`-`0x113`, confirmed live against the same
+    // relaxed-simd Overview.md encoding table every other relaxed-simd
+    // row above cites -- the LAST two entries in the 19-opcode relaxed-
+    // simd range (`0x101`-`0x104`, the `relaxed_trunc` family, remain
+    // deliberately unimplemented: `i32x4_relaxed_trunc.wast` carries zero
+    // real `assert_return` directives at the pinned corpus SHA, see
+    // `W19-wasm-relaxed-simd-first-slice.md`'s own explicit deferral).
+    // LEB128 encodings: `0x112` (274) -> `[0x92, 0x02]`, `0x113` (275) ->
+    // `[0x93, 0x02]` -- same 2-byte-continuation shape every relaxed-simd
+    // row uses (max value in this whole range is 275, still fits `7 + 7`
+    // = 14 bits, no 3rd LEB128 byte needed). See
+    // `SimdOpKind::RelaxedDotI8x16I7x16S`/`RelaxedDotI8x16I7x16AddS`'s own
+    // doc comments for the semantic choice ("signed * signed" throughout,
+    // hand-verified against the real vendored `relaxed_dot_product.wast`
+    // corpus's `either` alternatives) -- the FIRST relaxed-simd family
+    // whose ternary member (`relaxed_dot_i8x16_i7x16_add_s`) accumulates
+    // into a genuine numeric third operand rather than a bitwise mask or
+    // a second arithmetic operand feeding one fused op.
+    SimdOpInfo { name: "i16x8.relaxed_dot_i8x16_i7x16_s", sub_opcode: 0x112, kind: SimdOpKind::RelaxedDotI8x16I7x16S },
+    SimdOpInfo { name: "i32x4.relaxed_dot_i8x16_i7x16_add_s", sub_opcode: 0x113, kind: SimdOpKind::RelaxedDotI8x16I7x16AddS },
 ];
 
 /// Look up a SIMD opcode by its LEB128-decoded sub-opcode value (the
@@ -3890,7 +3981,7 @@ mod tests {
 
     #[test]
     fn simd_ops_table_has_the_expected_250_entries_and_no_duplicates() {
-        assert_eq!(SIMD_OPS.len(), 250);
+        assert_eq!(SIMD_OPS.len(), 252);
 
         let mut seen_sub_opcodes = std::collections::HashSet::new();
         let mut seen_names = std::collections::HashSet::new();
@@ -5303,5 +5394,36 @@ mod tests {
         assert_eq!(nmadd64.name, "f64x2.relaxed_nmadd");
         assert_eq!(nmadd64.kind, SimdOpKind::RelaxedNmaddF64x2);
         assert_eq!(get_simd_op_by_name("f64x2.relaxed_nmadd").map(|o| o.sub_opcode), Some(0x108));
+    }
+
+    // ── Relaxed SIMD epic, PR6 -- see code/specs/
+    // W19-wasm-relaxed-simd-first-slice.md ──────────────────────────────
+
+    #[test]
+    fn simd_relaxed_dot_product_has_the_real_verified_sub_opcode_values() {
+        // Relaxed SIMD epic PR6: `i16x8.relaxed_dot_i8x16_i7x16_s`
+        // (0x112), `i32x4.relaxed_dot_i8x16_i7x16_add_s` (0x113) --
+        // fifteenth/sixteenth relaxed-simd opcodes, same Overview.md
+        // encoding table as every other relaxed-simd row above cites.
+        // `0x112` (274), `0x113` (275) LEB128-encode as 2-byte sequences
+        // (`[0x92, 0x02]`, `[0x93, 0x02]`) -- these are the LAST two
+        // opcodes in the 19-opcode `0x100`-`0x113` relaxed-simd range;
+        // only the deliberately-deferred `relaxed_trunc` family
+        // (`0x101`-`0x104`) remains unimplemented after this PR.
+        let dot16 = get_simd_op(0x112).expect("0x112 should be i16x8.relaxed_dot_i8x16_i7x16_s");
+        assert_eq!(dot16.name, "i16x8.relaxed_dot_i8x16_i7x16_s");
+        assert_eq!(dot16.kind, SimdOpKind::RelaxedDotI8x16I7x16S);
+        assert_eq!(
+            get_simd_op_by_name("i16x8.relaxed_dot_i8x16_i7x16_s").map(|o| o.sub_opcode),
+            Some(0x112)
+        );
+
+        let dot32add = get_simd_op(0x113).expect("0x113 should be i32x4.relaxed_dot_i8x16_i7x16_add_s");
+        assert_eq!(dot32add.name, "i32x4.relaxed_dot_i8x16_i7x16_add_s");
+        assert_eq!(dot32add.kind, SimdOpKind::RelaxedDotI8x16I7x16AddS);
+        assert_eq!(
+            get_simd_op_by_name("i32x4.relaxed_dot_i8x16_i7x16_add_s").map(|o| o.sub_opcode),
+            Some(0x113)
+        );
     }
 }

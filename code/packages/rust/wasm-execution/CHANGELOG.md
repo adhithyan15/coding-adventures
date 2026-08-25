@@ -2,6 +2,40 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.63] - 2026-08-25 (Relaxed SIMD epic PR6: i16x8/i32x4.relaxed_dot_i8x16_i7x16_s/_add_s)
+
+### Added
+
+- `SimdOpKind::RelaxedDotI8x16I7x16S` execution arm: BINARY, reinterprets
+  both popped `v128`s as 16 signed `i8` lanes each; for each of the 8
+  result lanes, computes `a[2i] * b[2i] + a[2i+1] * b[2i+1]` in `i32`
+  arithmetic, truncating down to `i16` for the result -- same
+  per-pair multiply-accumulate shape as `DotI16x8S`, one lane width
+  narrower.
+- `SimdOpKind::RelaxedDotI8x16I7x16AddS` execution arm: TERNARY -- the
+  first two operands feed the same per-pair signed-`i8`
+  multiply-accumulate, widened and pairwise-folded four-at-a-time into
+  4 `i32` lanes, then added into the third operand's `i32x4`
+  accumulator. The first ternary SIMD op in this crate whose third
+  operand is a genuine numeric accumulator.
+- Both ops read their operands as plain signed `i8` throughout ("signed
+  * signed") -- hand-verified against every `either` alternative in the
+  real vendored `relaxed_dot_product.wast` corpus (pinned
+  `WebAssembly/testsuite` SHA `28864811cf03bdbf880733786148feaba339582d`)
+  to land on one literal alternative in each ambiguous case, and to
+  match every exact (non-`either`) case bit-for-bit.
+- New tests: `i16x8_relaxed_dot_i8x16_i7x16_s_matches_the_real_corpus_exact_cases`,
+  `i16x8_relaxed_dot_i8x16_i7x16_s_matches_the_signed_signed_either_alternative`,
+  `i32x4_relaxed_dot_i8x16_i7x16_add_s_matches_the_real_corpus_exact_cases`,
+  `i32x4_relaxed_dot_i8x16_i7x16_add_s_matches_the_signed_signed_either_alternative`,
+  `relaxed_dot_product_family_is_self_consistent_across_repeated_invocations`.
+- Verified bit-for-bit identical under Linux/x86_64 via Docker
+  (`rust:latest`, `--platform linux/amd64`) in addition to native
+  macOS/ARM64 -- the implementation is pure integer arithmetic
+  (`wrapping_mul`/`wrapping_add` over `i32`), with no floating-point
+  rounding or platform-dependent SIMD intrinsics involved, so no
+  platform divergence is possible.
+
 ## [0.9.62] - 2026-08-25 (Relaxed SIMD epic PR5: f32x4/f64x2.relaxed_madd/relaxed_nmadd)
 
 ### Added

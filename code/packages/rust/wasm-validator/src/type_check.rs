@@ -1526,6 +1526,7 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     | wasm_opcodes::SimdOpKind::MaxS
                     | wasm_opcodes::SimdOpKind::MaxU
                     | wasm_opcodes::SimdOpKind::DotI16x8S
+                    | wasm_opcodes::SimdOpKind::RelaxedDotI8x16I7x16S
                     | wasm_opcodes::SimdOpKind::ExtmulLowI16x8S
                     | wasm_opcodes::SimdOpKind::ExtmulHighI16x8S
                     | wasm_opcodes::SimdOpKind::ExtmulLowI16x8U
@@ -1685,6 +1686,14 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         // verbatim -- the NaN/signed-zero handling choice
                         // is, same as every other kind in this arm,
                         // entirely a runtime concern, invisible here.
+                        // `i16x8.relaxed_dot_i8x16_i7x16_s` (relaxed SIMD
+                        // epic PR6) joins too: same `(v128, v128) -> v128`
+                        // shape as `DotI16x8S` above, at the narrower
+                        // `i8x16` input width -- the "signed * signed"
+                        // semantic choice for its `i7x16`-named operand
+                        // (see wasm-opcodes' `SimdOpKind::
+                        // RelaxedDotI8x16I7x16S` doc comment) is entirely
+                        // a runtime concern, invisible here.
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         push_val(&mut stack, ValueType::V128);
@@ -1888,7 +1897,8 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     | wasm_opcodes::SimdOpKind::RelaxedMaddF32x4
                     | wasm_opcodes::SimdOpKind::RelaxedNmaddF32x4
                     | wasm_opcodes::SimdOpKind::RelaxedMaddF64x2
-                    | wasm_opcodes::SimdOpKind::RelaxedNmaddF64x2 => {
+                    | wasm_opcodes::SimdOpKind::RelaxedNmaddF64x2
+                    | wasm_opcodes::SimdOpKind::RelaxedDotI8x16I7x16AddS => {
                         // The first TERNARY SIMD op in this crate: pops
                         // THREE v128s, pushes one. See
                         // `SimdOpKind::Bitselect`'s own doc comment in
@@ -1917,6 +1927,16 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         // numeric distinction in this match, entirely a
                         // runtime concern -- still just three V128 pops,
                         // one V128 push at this level.
+                        // `i32x4.relaxed_dot_i8x16_i7x16_add_s` (relaxed-
+                        // SIMD epic PR6) joins too: same TERNARY `(v128,
+                        // v128, v128) -> v128` shape, but the FIRST
+                        // ternary op in this crate whose third operand is
+                        // a genuine numeric accumulator rather than a
+                        // bitwise mask or a second fused-arithmetic input
+                        // (see `SimdOpKind::RelaxedDotI8x16I7x16AddS`'s own
+                        // doc comment in wasm-opcodes) -- entirely a
+                        // runtime concern, invisible here: still just
+                        // three V128 pops, one V128 push.
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
