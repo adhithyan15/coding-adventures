@@ -183,6 +183,22 @@ describe("real curriculum", () => {
       /three-movement ஈ frame.*angular short fourth movement.*varies by school.*three-run order.*Noto Sans Tamil/i,
     );
 
+    const tamilCa = scripts.tamil!.letters.find((letter) => letter.glyph === "ச")!;
+    expect(tamilCa.strokeOrder).toEqual([
+      "start at the middle left and climb the left upright",
+      "without lifting, carry the top bar to the right and return along it to the inner corner",
+      "without lifting, drop the inner upright and carry the middle bar right — then lift once",
+      "set the pen at the inner crossing, curve down and around the lower-left bowl, return up its outer left side, and close the bowl at the crossing — and only now lift",
+    ]);
+    expect(tamilCa.penLifts).toBe(1);
+    expect(tamilCa.strokeOrderSource?.url).toBe(
+      "https://sites.la.utexas.edu/tamilscript/files/2009/08/hw_lettersinstructions.pdf",
+    );
+    expect(tamilCa.strokeOrderSource?.citation).toMatch(/Appendix I.*Frame 3.*ச.*p\. 191/i);
+    expect(tamilCa.strokeOrderSource?.variation).toMatch(
+      /three joined upper-frame movements.*separate fourth movement.*lower-left bowl.*varies by school.*two-run order.*Noto Sans Tamil/i,
+    );
+
     const tamilYa = scripts.tamil!.letters.find((letter) => letter.glyph === "ய")!;
     expect(tamilYa.strokeOrder).toEqual([
       "start at the top left and descend the left upright",
@@ -270,9 +286,11 @@ describe("real curriculum", () => {
     expect(missingByScript.get("perso-arabic.json")?.has("د")).toBe(false);
     expect(missingByScript.get("urdu-nastaliq.json")?.has("د")).toBe(false);
     expect(affected.get("د") ?? 0).toBe(0);
+    expect(missingByScript.get("tamil.json")?.has("ச")).toBe(false);
+    expect(affected.get("ச") ?? 0).toBe(0);
     expect(
       [...affected.entries()].sort((left, right) => right[1] - left[1])[0],
-    ).toEqual(["ச", 31]);
+    ).toEqual(["ட", 30]);
   });
 
   it("loaded every track (17+ and growing)", () => {

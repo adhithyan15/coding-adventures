@@ -5,6 +5,18 @@ Findings from the pre-A1 tranche work were recorded in commit messages and PR
 bodies, which are durable and searchable, but a reader opening this file found
 nothing. The entries below are the ones that change how the work is done.
 
+## HL-C09U — Tamil ச closes the next Frame 3 consonant gap
+
+After the Persian and Urdu dāl records landed, the measured queue put Tamil
+**ச** first at **31 affected realizations**. The UT Austin *Tamil Script
+Learners Manual* presents ச in Frame 3 as three joined movements for the upper
+frame and projecting middle bar, followed by one lifted movement that turns
+around and closes the lower-left bowl. The vendored Noto Sans Tamil outline
+preserves that same visible ச/க family relationship.
+
+The new inventory and ductus entry remove all **31 affected realizations** for
+**ச**. The reranked queue keeps Tamil first with **ட** at 30.
+
 ## HL-C09T — Persian and Urdu د keep one glyph's provenance separate
 
 After Tamil **ய** landed, the measured queue put **د** first at **33 affected
