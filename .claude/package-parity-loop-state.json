@@ -11,14 +11,9 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 12802,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/12802",
-    "branch": "codex/build-tool-ruby-tracked-artifact-validation-conformance",
-    "status": "open"
-  },
+  "active_pr": null,
   "last_inventory": {
-    "revision": "3e29b2fee9572cf6a244c0bc8a889b655c2a3c22",
+    "revision": "e9f7e8e8c5957a90f5dc775c30ca3f5793d74f8f",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1373,
@@ -5223,15 +5218,17 @@
     {
       "id": "build-tool-elixir-tracked-artifact-validation-conformance",
       "title": "Make the Elixir build tool consume tracked-artifact validation",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": [
         "build-tool-tracked-artifact-validation-corpus",
         "build-tool-tracked-artifact-unicode-cross-runtime-corpus-hardening",
         "build-tool-tracked-artifact-trailing-empty-segment-cross-runtime-hardening",
         "build-tool-tracked-artifact-unicode-version-contract"
       ],
-      "branch": null,
+      "branch": "codex/build-tool-elixir-tracked-artifact-validation-conformance",
       "pr_number": null,
+      "selection_revision": "e9f7e8e8c5957a90f5dc775c30ca3f5793d74f8f",
+      "selection_notes": "Selected only after PR #12802 completed all 30 terminal acceptable checks and GitHub merged reviewed head 463d4a883535356809d16838bd426da901db4c0f through squash auto-merge as 7a43168ec941da34b418ddefa34eff5056ac1d79 at 2026-08-25T15:08:06Z without a manual merge command. The collision-checked exact-main schema-3 report at e9f7e8e8c5957a90f5dc775c30ca3f5793d74f8f remains 15 established lanes, 1,373 identities, 4,566 slots, 175 high-consensus packages with 276 gaps, 910 singletons with 12,740 gaps, 721 Rust singletons, zero canonical collisions, and zero unknown buckets; OCaml remains correctly emerging at zero packages. Every intervening commit is classified: Tamil zha, Malayalam chillu l, and Latin writing stages remain under the script-ductus and curriculum owners; the Chinese school cluster, exact level-snapshot shards, and Dolch Primer completion remain curriculum/ADJ data; WASM lane-memory syntax remains inside the WAST and portable WebAssembly owners; Mermaid plot reservation remains inside the XY-chart owner; ALGOL selector preservation remains inside the existing frontend owner; HTML diagnostics remain inside the HTML-frontend owner; and the shared parser depth guard remains inside the contextual generic-closer/parser-hardening owner. No commit adds or removes a package identity, BUILD marker, build-tool marker, or newly unowned portable contract. All four Elixir dependencies are merged. Elixir is the widest remaining tracked-artifact lane at 279 packages and this consumer has two direct children plus three unfinished descendants through the Elixir orphan validator and both completion umbrellas; Ruby orphan is newly ready but has only one unfinished descendant. Its expected Elixir validator, generated Unicode, generator, generator test, fixture README, Unicode license, tests, README, CHANGELOG, state, roadmap, and CI surfaces have zero overlap across all 13 live open PRs; the target branch and prior PR were absent before creating the fresh worktree. The stale fixture/generator wording that names only earlier runtime consumers is folded into this owner because full emitted-Elixir verification must update the same contract documentation. The higher-leverage OCaml process-free substrate and extra-CI corpus remain collision-unsafe while PRs #12149 and #12162 own their required Go validator and main surfaces.",
       "notes": "Consume the closed process-free tracked-artifact snapshot and diagnostics in the Elixir engine without adding Git, filesystem, or process authority."
     },
     {
@@ -5299,7 +5296,7 @@
     {
       "id": "build-tool-ruby-tracked-artifact-validation-conformance",
       "title": "Make the Ruby build tool consume tracked-artifact validation",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "build-tool-tracked-artifact-validation-corpus",
         "build-tool-tracked-artifact-unicode-cross-runtime-corpus-hardening",
@@ -5318,6 +5315,10 @@
       "validation_notes": "The Ruby engine now exposes one pure in-memory tracked-artifact snapshot validator and independently consumes all five language-neutral fixtures. It implements the closed portable-path precedence; slash normalization; Unicode-scalar length and diagnostic ordering; hostile invalid-path redaction while retaining normalized safe forbidden paths; NFKC plus full default folding for exact node_modules components; full-uppercase reserved basenames; inert regular, symlink, and reparse kinds; and canonical detail sorting without Git, filesystem, process, environment, or network authority. A generated source-embedded Unicode 17.0.0 module supplies NFC, NFKC, full folding, NFKC-fold, and full uppercase; exact upstream sizes and SHA-256 identities plus the complete Unicode License v3 notice are pinned. The generator runs Python, emitted TypeScript, and emitted Ruby across all official normalization, folding, uppercase, derived NFKC-fold, and Unicode 17 sentinel vectors, and its 10-test suite is now an explicit CI gate. The canonical Ruby BUILD front passes 321 tests and 717 assertions with one expected macOS-only skip, 89.57% line and 73.36% branch coverage; Bundle check and Ruby syntax checks pass. The neutral corpus validates all 111 cases and 269 files; 201 conformance tests pass with 23 expected platform skips. Package-parity, capability-taxonomy, Haskell-capability, and OCaml-lock suites pass; the exact-main schema-3 inventory remains 15 lanes, 1,373 identities, 4,566 slots, 175 high-consensus packages with 276 gaps, 910 singletons with 12,740 gaps, 721 Rust singletons, zero collisions, and zero unknown buckets. The Go build tool passes all packages, vet, trimpath compilation, BUILD validation, and a forced Ruby dry plan over 305 packages with the five-entry orphan ledger intact. Ruby advisory audit reports no vulnerability and production npm audit reports none; the unchanged development-only nanoid advisory remains in its registered owner. Bandit reports no medium or high issue; its three low subprocess notices are captured by the expanded selection-blocked Unicode-generator host-authority owner. Strict JSON and the 499-owner, 762-edge complete acyclic state graph pass. Three independent read-only audits found no remaining correctness, supply-chain, metadata, ownership, or integration defect; the required split security review passed in one round and the exact-head documentation recheck also passed.",
       "rebase_notes": "Rebased without conflict onto exact origin/main 3e29b2fee9572cf6a244c0bc8a889b655c2a3c22 after classifying the intervening ADJ tracking-only finalization and rejected-body HTML parser diagnostics under the existing ADJ capability and HTML frontend owners. Neither changes a package identity, BUILD/build-tool marker, selected surface, or newly unowned portable contract. The refreshed collision inventory is structurally unchanged, all 12 live open PRs have zero exact overlap across this branch's 11 changed paths, and the target remote branch remains absent.",
       "publication_notes": "Opened ready-for-review PR #12802 from clean validated head 8593e7fce3160c2fa25d87844f7c632d929c6733 after a normal first push. Immediately before publication, exact origin/main remained 3e29b2fee9572cf6a244c0bc8a889b655c2a3c22, the target remote branch and prior PR were absent, and all 12 other open PRs had zero exact overlap across the 11 changed paths. GitHub reports the PR mergeable with required checks queued, so auto-merge remains disabled until every required check is terminal and acceptable and no merge conflict exists.",
+      "merged_head_revision": "463d4a883535356809d16838bd426da901db4c0f",
+      "merge_revision": "7a43168ec941da34b418ddefa34eff5056ac1d79",
+      "merged_at": "2026-08-25T15:08:06Z",
+      "merge_notes": "All 30 reported checks reached terminal acceptable conclusions: 24 successes, five expected skips, and one neutral CodeQL aggregate, with no failure or pending work. GitHub reported the branch clean and mergeable; the loop enabled squash auto-merge, and GitHub merged PR #12802 without a manual merge command.",
       "notes": "Consume the closed process-free tracked-artifact snapshot and diagnostics in the Ruby engine without adding Git, filesystem, or process authority."
     },
     {
@@ -5594,12 +5595,13 @@
       "depends_on": [
         "build-tool-tracked-artifact-unicode-version-contract",
         "build-tool-typescript-tracked-artifact-validation-conformance",
-        "build-tool-ruby-tracked-artifact-validation-conformance"
+        "build-tool-ruby-tracked-artifact-validation-conformance",
+        "build-tool-elixir-tracked-artifact-validation-conformance"
       ],
       "branch": null,
       "pr_number": null,
       "selection_blocked": true,
-      "notes": "Discovered after merged PR #12773 extended the shared Unicode 17 generator to resolve `node` through PATH, write temporary TypeScript sources and runner files, and invoke `tsx` for full-vector verification. The Ruby tracked-artifact consumer extends the same native generator boundary to PATH-resolved `ruby`, temporary Ruby source and runner files, inherited `RUBYOPT`/`RUBYLIB` and other environment state, buffered child output, and child diagnostics. Review executable identity and version pinning, environment and PATH authority, temporary-directory containment and cleanup, command construction, dependency resolution, bounded output and diagnostics, process failures and process-tree cleanup, offline determinism, credential redaction, and truthful capabilities separately from the pure runtime validators. This native generator-shell authority work is excluded from autonomous portable selection."
+      "notes": "Discovered after merged PR #12773 extended the shared Unicode 17 generator to resolve `node` through PATH, write temporary TypeScript sources and runner files, and invoke `tsx` for full-vector verification. The Ruby tracked-artifact consumer extends the same native generator boundary to PATH-resolved `ruby`, temporary Ruby source and runner files, inherited `RUBYOPT`/`RUBYLIB` and other environment state, buffered child output, and child diagnostics. The selected Elixir consumer adds PATH-resolved `elixir`, temporary emitted modules and runners, inherited `ERL_AFLAGS`/`ERL_FLAGS`/`ELIXIR_ERL_OPTIONS` and related runtime state, buffered child output, and child diagnostics to that same generator boundary. Review executable identity and version pinning, environment and PATH authority, temporary-directory containment and cleanup, command construction, dependency resolution, bounded output and diagnostics, process failures and process-tree cleanup, offline determinism, credential redaction, and truthful capabilities separately from the pure runtime validators. This native generator-shell authority work is excluded from autonomous portable selection."
     }
   ]
 }

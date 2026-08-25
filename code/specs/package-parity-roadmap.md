@@ -7358,6 +7358,62 @@ were absent immediately before publication. GitHub reports the PR mergeable
 with required checks queued, so auto-merge remains disabled until every check
 is terminal and acceptable and no merge conflict exists.
 
+### Post-#12802 refresh and Elixir tracked-artifact selection
+
+PR #12802 reached 30 terminal acceptable checks: 24 succeeded, five skipped,
+and one CodeQL aggregate completed neutrally, with no failure or pending job.
+GitHub reported reviewed head
+`463d4a883535356809d16838bd426da901db4c0f` clean and mergeable, so the loop
+enabled squash auto-merge. GitHub merged it as
+`7a43168ec941da34b418ddefa34eff5056ac1d79` at
+`2026-08-25T15:08:06Z` without a manual merge command.
+
+The exact-main schema-3 collision report at
+`e9f7e8e8c5957a90f5dc775c30ca3f5793d74f8f` remains structurally unchanged:
+15 established lanes, 1,373 implementation identities, 4,566 package slots,
+175 high-consensus packages with 276 missing slots, 910 singletons with 12,740
+missing slots, and 721 Rust singletons. Canonical collisions and unknown
+language buckets remain zero; OCaml remains correctly emerging at zero
+packages.
+
+Every intervening commit is classified before selection. Tamil zha, Malayalam
+chillu l, and Latin writing stages remain under the existing script-ductus and
+curriculum owners; the Chinese school cluster, exact level-snapshot shards, and
+Dolch Primer completion are curriculum and ADJ data. The WebAssembly
+lane-memory syntax remains inside the WAST-parser and portable WebAssembly
+owners, Mermaid plot reservation remains inside the XY chart owner, ALGOL
+selector preservation remains inside the existing frontend owner, HTML
+self-closing diagnostics remain inside the HTML-frontend owner, and the shared
+parser depth guard remains inside the contextual generic-closer/parser-hardening
+owner. None adds or removes a package identity, BUILD marker, build-tool
+marker, or newly unowned portable contract.
+
+The dependency/leverage pass selects
+`build-tool-elixir-tracked-artifact-validation-conformance` on branch
+`codex/build-tool-elixir-tracked-artifact-validation-conformance`. All four
+declared dependencies are merged. Elixir is the widest remaining
+tracked-artifact lane at 279 packages and this consumer has two direct children
+plus three unfinished descendants through the Elixir orphan validator and both
+completion umbrellas. Ruby orphan validation is newly ready after #12802, but
+has only one unfinished descendant; Lua, Perl, Haskell, and Swift tracked
+consumers cover 252, 251, 204, and 161 packages respectively. The expected
+Elixir validator, generated Unicode, generator and generator-test, fixture
+README, license, tests, package docs, CI, state, and roadmap surfaces have zero
+exact overlap across all 13 live open PRs; the target branch and prior PR were
+absent before the fresh worktree was created.
+
+The audit found no newly unowned behavior or package gap. Stale fixture and
+generator wording still names only earlier runtime consumers; full emitted
+Elixir verification owns that documentation repair. Because that verification
+adds a PATH-resolved Elixir process boundary, the selection-blocked Unicode
+generator authority review now depends explicitly on this consumer and covers
+the Elixir executable, inherited BEAM/Elixir environment, temporary modules and
+runners, output, diagnostics, failure, and cleanup risks. The reconciled state
+graph contains 499 unique owners and 763 complete acyclic dependency edges,
+with exactly one in-progress owner and no active PR. The strategically broader
+OCaml process-free substrate and extra-CI corpus remain collision-unsafe while
+live PRs #12149 and #12162 own their required Go validator and main surfaces.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
