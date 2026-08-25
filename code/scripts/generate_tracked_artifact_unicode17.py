@@ -4,7 +4,7 @@
 The generated modules are source-embedded so validation never reads Unicode
 data from the filesystem and never inherits the host runtime's tables. This
 generator is the only networked step: it downloads exact Unicode Consortium
-files, verifies their SHA-256 digests, renders both runtimes, and exercises the
+files, verifies their SHA-256 digests, renders every runtime, and exercises the
 official normalization and case-folding vectors before accepting output.
 """
 
@@ -34,6 +34,7 @@ LICENSE_TARGETS = (
     Path("code/programs/dotnet/build-tool-fsharp/UNICODE-LICENSE.txt"),
     Path("code/programs/typescript/build-tool/UNICODE-LICENSE.txt"),
     Path("code/programs/ruby/build-tool/UNICODE-LICENSE.txt"),
+    Path("code/programs/elixir/build-tool/UNICODE-LICENSE.txt"),
 )
 SOURCES = {
     "UnicodeData.txt": "2e1efc1dcb59c575eedf5ccae60f95229f706ee6d031835247d843c11d96470c",
@@ -64,6 +65,9 @@ TYPESCRIPT_TARGET = Path(
 )
 RUBY_TARGET = Path(
     "code/programs/ruby/build-tool/lib/build_tool/tracked_artifact_unicode17.rb"
+)
+ELIXIR_TARGET = Path(
+    "code/programs/elixir/build-tool/lib/build_tool/tracked_artifact_unicode17.ex"
 )
 
 
@@ -1208,6 +1212,225 @@ end
     return header + body
 
 
+def _render_elixir(
+    tables: tuple[
+        list[tuple[int, int]],
+        list[tuple[int, bool, tuple[int, ...]]],
+        list[tuple[int, int, int]],
+        list[tuple[int, tuple[int, ...]]],
+        list[tuple[int, tuple[int, ...]]],
+    ],
+) -> str:
+    """Render the process-free Elixir implementation from the pinned UCD rows."""
+    combining, decomposition, composition, folding, uppercase = tables
+
+    combining_text = ",\n".join(
+        f"    0x{scalar:X} => {combining_class}"
+        for scalar, combining_class in combining
+    )
+
+    decomposition_rows = []
+    for scalar, compatibility, mapping in decomposition:
+        rendered_mapping = ", ".join(f"0x{value:X}" for value in mapping)
+        row = (
+            f"    0x{scalar:X} => "
+            f"{{{str(compatibility).lower()}, [{rendered_mapping}]}}"
+        )
+        if len(row) <= 98:
+            decomposition_rows.append(row)
+        else:
+            mapping_lines = ",\n".join(f"         0x{value:X}" for value in mapping)
+            decomposition_rows.append(
+                f"    0x{scalar:X} =>\n"
+                f"      {{{str(compatibility).lower()},\n"
+                f"       [\n{mapping_lines}\n       ]}}"
+            )
+    decomposition_text = ",\n".join(decomposition_rows)
+
+    composition_text = ",\n".join(
+        f"    0x{(left * 0x110000) + right:X} => 0x{result:X}"
+        for left, right, result in composition
+    )
+    folding_text = ",\n".join(
+        f"    0x{scalar:X} => [{', '.join(f'0x{value:X}' for value in mapping)}]"
+        for scalar, mapping in folding
+    )
+    uppercase_text = ",\n".join(
+        f"    0x{scalar:X} => [{', '.join(f'0x{value:X}' for value in mapping)}]"
+        for scalar, mapping in uppercase
+    )
+    hashes = ", ".join(f"{name} sha256:{digest}" for name, digest in SOURCES.items())
+    header = f'''# Generated Unicode {UNICODE_VERSION} data and algorithms.
+# DO NOT EDIT. Run `python code/scripts/generate_tracked_artifact_unicode17.py`.
+# Sources: {UCD_BASE}
+# {hashes}
+# Unicode License v3: every source and binary distribution carries the full
+# notice as UNICODE-LICENSE.txt (sha256:{LICENSE_SHA256}).
+
+defmodule BuildTool.TrackedArtifactUnicode17 do
+  @moduledoc false
+
+  # Elixir and Erlang host tables move with the runtime. These generated maps
+  # keep validation results independent of the installed BEAM version.
+  @unicode_version "{UNICODE_VERSION}"
+  @combining %{{
+{combining_text}
+  }}
+  @decomposition %{{
+{decomposition_text}
+  }}
+  @composition %{{
+{composition_text}
+  }}
+  @folding %{{
+{folding_text}
+  }}
+  @uppercase %{{
+{uppercase_text}
+  }}
+'''
+    body = r"""
+  @s_base 0xAC00
+  @l_base 0x1100
+  @v_base 0x1161
+  @t_base 0x11A7
+  @l_count 19
+  @v_count 21
+  @t_count 28
+  @n_count @v_count * @t_count
+  @s_count @l_count * @n_count
+
+  def unicode_version, do: @unicode_version
+
+  def nfc(value), do: normalize(value, false)
+  def nfkc(value), do: normalize(value, true)
+  def casefold(value), do: map_scalars(value, @folding)
+  def nfkc_casefold(value), do: value |> nfkc() |> casefold()
+  def full_uppercase(value), do: map_scalars(value, @uppercase)
+
+  defp combining_class(scalar), do: Map.get(@combining, scalar, 0)
+
+  defp decompose_scalar(scalar, _compatibility)
+       when scalar >= @s_base and scalar < @s_base + @s_count do
+    index = scalar - @s_base
+    leading = @l_base + div(index, @n_count)
+    vowel = @v_base + div(rem(index, @n_count), @t_count)
+    trailing = @t_base + rem(index, @t_count)
+
+    if trailing == @t_base do
+      [leading, vowel]
+    else
+      [leading, vowel, trailing]
+    end
+  end
+
+  defp decompose_scalar(scalar, compatibility) do
+    case Map.get(@decomposition, scalar) do
+      nil ->
+        [scalar]
+
+      {true, _mapping} when not compatibility ->
+        [scalar]
+
+      {_compatibility_mapping, mapping} ->
+        Enum.flat_map(mapping, &decompose_scalar(&1, compatibility))
+    end
+  end
+
+  defp canonical_order(scalars) do
+    Enum.reduce(scalars, [], fn scalar, ordered ->
+      scalar_class = combining_class(scalar)
+
+      if scalar_class == 0 do
+        ordered ++ [scalar]
+      else
+        insert_combining(ordered, scalar, scalar_class)
+      end
+    end)
+  end
+
+  defp insert_combining(ordered, scalar, scalar_class) do
+    {later, earlier_reversed} =
+      ordered
+      |> Enum.reverse()
+      |> Enum.split_while(fn previous ->
+        previous_class = combining_class(previous)
+        previous_class != 0 and previous_class > scalar_class
+      end)
+
+    Enum.reverse(earlier_reversed) ++ [scalar] ++ Enum.reverse(later)
+  end
+
+  defp pair_key(left, right), do: left * 0x110000 + right
+
+  defp compose_pair(left, right)
+       when left >= @l_base and left < @l_base + @l_count and
+              right >= @v_base and right < @v_base + @v_count do
+    @s_base + ((left - @l_base) * @v_count + right - @v_base) * @t_count
+  end
+
+  defp compose_pair(left, right)
+       when left >= @s_base and left < @s_base + @s_count and
+              rem(left - @s_base, @t_count) == 0 and right > @t_base and
+              right < @t_base + @t_count do
+    left + right - @t_base
+  end
+
+  defp compose_pair(left, right), do: Map.get(@composition, pair_key(left, right))
+
+  defp compose([]), do: []
+
+  defp compose([first | rest]) do
+    last_class = if combining_class(first) == 0, do: 0, else: 255
+
+    {output, _starter_index, _starter, _last_class} =
+      Enum.reduce(rest, {[first], 0, first, last_class}, fn scalar,
+                                                            {output, starter_index, starter,
+                                                             previous_class} ->
+        scalar_class = combining_class(scalar)
+
+        composite =
+          if previous_class == 0 or previous_class < scalar_class do
+            compose_pair(starter, scalar)
+          end
+
+        if is_nil(composite) do
+          output = output ++ [scalar]
+
+          if scalar_class == 0 do
+            {output, length(output) - 1, scalar, scalar_class}
+          else
+            {output, starter_index, starter, scalar_class}
+          end
+        else
+          {List.replace_at(output, starter_index, composite), starter_index, composite,
+           previous_class}
+        end
+      end)
+
+    output
+  end
+
+  defp normalize(value, compatibility) do
+    value
+    |> String.to_charlist()
+    |> Enum.flat_map(&decompose_scalar(&1, compatibility))
+    |> canonical_order()
+    |> compose()
+    |> List.to_string()
+  end
+
+  defp map_scalars(value, table) do
+    value
+    |> String.to_charlist()
+    |> Enum.flat_map(fn scalar -> Map.get(table, scalar, [scalar]) end)
+    |> List.to_string()
+  end
+end
+"""
+    return header + body
+
+
 def _load_generated_module(path: Path):
     spec = importlib.util.spec_from_file_location("tracked_unicode17_generated", path)
     if spec is None or spec.loader is None:
@@ -1508,6 +1731,96 @@ def _self_check_ruby(
         raise RuntimeError(f"generated Ruby Unicode self-check failed: {detail}")
 
 
+_ELIXIR_SELF_CHECK = r"""Code.compiler_options(ignore_module_conflict: true)
+Code.require_file("tracked_artifact_unicode17.ex", __DIR__)
+
+unicode = BuildTool.TrackedArtifactUnicode17
+payload = IO.read(:stdio, :eof) |> :json.decode()
+fail_vector = fn kind, index -> raise "#{kind} Elixir self-check failed at vector #{index}" end
+
+unless unicode.unicode_version() == payload["unicodeVersion"] do
+  raise "generated Elixir Unicode version drift"
+end
+
+payload["normalization"]
+|> Enum.with_index()
+|> Enum.each(fn {[c1, c2, c3, c4, c5], index} ->
+  valid =
+    unicode.nfc(c1) == c2 and unicode.nfc(c2) == c2 and
+      unicode.nfc(c3) == c2 and unicode.nfc(c4) == c4 and
+      unicode.nfc(c5) == c4 and unicode.nfkc(c1) == c4 and
+      unicode.nfkc(c2) == c4 and unicode.nfkc(c3) == c4 and
+      unicode.nfkc(c4) == c4 and unicode.nfkc(c5) == c4
+
+  unless valid, do: fail_vector.("normalization", index)
+end)
+
+payload["folding"]
+|> Enum.with_index()
+|> Enum.each(fn {[source, expected_fold, expected_nfkc_fold], index} ->
+  unless unicode.casefold(source) == expected_fold, do: fail_vector.("case-fold", index)
+
+  unless unicode.nfkc_casefold(source) == expected_nfkc_fold,
+    do: fail_vector.("NFKC-case-fold", index)
+end)
+
+payload["uppercase"]
+|> Enum.with_index()
+|> Enum.each(fn {[source, expected], index} ->
+  unless unicode.full_uppercase(source) == expected,
+    do: fail_vector.("full-uppercase", index)
+end)
+
+outlined = "\u{1CCE3}\u{1CCE4}\u{1CCD9}\u{1CCDA}_\u{1CCE2}\u{1CCE4}\u{1CCD9}\u{1CCEA}\u{1CCE1}\u{1CCDA}\u{1CCE8}"
+
+unless unicode.nfkc_casefold(outlined) == "node_modules" do
+  raise "Unicode 17 outlined-letter Elixir sentinel failed"
+end
+
+unless unicode.nfc("\u{105D2}\u0307") == "\u{105C9}" do
+  raise "Unicode 17 Todhri Elixir sentinel failed"
+end
+
+IO.write("ok\n")
+"""
+
+
+def _self_check_elixir(
+    root: Path,
+    elixir_output: str,
+    sources: dict[str, str],
+    python_module,
+) -> None:
+    elixir = shutil.which("elixir")
+    if elixir is None:
+        raise RuntimeError("Elixir Unicode self-check requires Elixir on PATH")
+
+    del root  # Kept parallel with the TypeScript self-check call signature.
+    with tempfile.TemporaryDirectory(prefix="unicode17-elixir-check-") as temporary:
+        temporary_path = Path(temporary)
+        generated_path = temporary_path / "tracked_artifact_unicode17.ex"
+        runner_path = temporary_path / "self_check.exs"
+        generated_path.write_text(elixir_output, encoding="utf-8", newline="\n")
+        runner_path.write_text(_ELIXIR_SELF_CHECK, encoding="utf-8", newline="\n")
+        result = subprocess.run(
+            [elixir, str(runner_path)],
+            cwd=temporary_path,
+            input=json.dumps(
+                _typescript_self_check_payload(python_module, sources),
+                ensure_ascii=True,
+                separators=(",", ":"),
+            ),
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            timeout=180,
+            check=False,
+        )
+    if result.returncode != 0 or result.stdout != "ok\n":
+        detail = result.stderr.strip() or result.stdout.strip() or "no diagnostic"
+        raise RuntimeError(f"generated Elixir Unicode self-check failed: {detail}")
+
+
 def _write_or_check(root: Path, target: Path, content: str, check: bool) -> None:
     absolute = root / target
     content = content.replace("\r\n", "\n")
@@ -1531,9 +1844,25 @@ def _write_bytes_or_check(
     absolute.write_bytes(content)
 
 
+def _selected_runtime_self_checks(requested: list[str] | None) -> tuple[str, ...]:
+    """Return the emitted runtimes whose official-vector checks must run."""
+    if requested is None:
+        return ("typescript", "ruby", "elixir")
+    return tuple(dict.fromkeys(requested))
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--check", action="store_true")
+    parser.add_argument(
+        "--self-check-runtime",
+        action="append",
+        choices=("typescript", "ruby", "elixir"),
+        help=(
+            "limit emitted-runtime official-vector checks; repeat to select more "
+            "than one runtime (default: every emitted runtime)"
+        ),
+    )
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[2]
     license_payload = (root / LICENSE_PATH).read_bytes()
@@ -1551,22 +1880,30 @@ def main() -> int:
     csharp_output = _render_csharp(tables)
     typescript_output = _render_typescript(tables)
     ruby_output = _render_ruby(tables)
+    elixir_output = _render_elixir(tables)
     for target in PYTHON_TARGETS:
         _write_or_check(root, target, python_output, args.check)
     _write_or_check(root, CSHARP_TARGET, csharp_output, args.check)
     _write_or_check(root, TYPESCRIPT_TARGET, typescript_output, args.check)
     _write_or_check(root, RUBY_TARGET, ruby_output, args.check)
+    _write_or_check(root, ELIXIR_TARGET, elixir_output, args.check)
     for target in LICENSE_TARGETS:
         _write_bytes_or_check(root, target, upstream_license, args.check)
     python_module = _load_generated_module(root / PYTHON_TARGETS[0])
     _self_check(python_module, sources)
-    _self_check_typescript(root, typescript_output, sources, python_module)
-    _self_check_ruby(root, ruby_output, sources, python_module)
+    selected_runtimes = _selected_runtime_self_checks(args.self_check_runtime)
+    if "typescript" in selected_runtimes:
+        _self_check_typescript(root, typescript_output, sources, python_module)
+    if "ruby" in selected_runtimes:
+        _self_check_ruby(root, ruby_output, sources, python_module)
+    if "elixir" in selected_runtimes:
+        _self_check_elixir(root, elixir_output, sources, python_module)
     print(
         f"Unicode {UNICODE_VERSION} generated and verified: "
         f"{len(tables[0])} combining, {len(tables[1])} decomposition, "
         f"{len(tables[2])} composition, {len(tables[3])} folding, "
-        f"{len(tables[4])} uppercase rows"
+        f"{len(tables[4])} uppercase rows; emitted runtime checks "
+        f"{','.join(selected_runtimes)}"
     )
     return 0
 

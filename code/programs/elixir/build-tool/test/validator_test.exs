@@ -3,6 +3,18 @@ defmodule BuildTool.ValidatorTest do
 
   alias BuildTool.Validator
 
+  @conformance_cases Path.expand(
+                       "../../../../specs/fixtures/build-tool-v1/cases",
+                       __DIR__
+                     )
+  @tracked_artifact_cases [
+    "validation-tracked-artifacts-clean.json",
+    "validation-tracked-artifacts-forbidden.json",
+    "validation-tracked-artifacts-aliases.json",
+    "validation-tracked-artifacts-invalid.json",
+    "validation-tracked-artifacts-unicode-boundaries.json"
+  ]
+
   setup do
     tmp_dir = Path.join(System.tmp_dir!(), "build_tool_validator_test_#{:rand.uniform(100_000)}")
     File.rm_rf!(tmp_dir)
@@ -182,5 +194,228 @@ defmodule BuildTool.ValidatorTest do
     ]
 
     assert Validator.validate_build_contracts(tmp_dir, packages) == nil
+  end
+
+  for fixture_name <- @tracked_artifact_cases do
+    test "matches shared #{fixture_name} fixture" do
+      fixture =
+        @conformance_cases
+        |> Path.join(unquote(fixture_name))
+        |> File.read!()
+        |> Jason.decode!()
+
+      snapshot = get_in(fixture, ["input", "options", "tracked_artifact_snapshot"])
+
+      actual =
+        Validator.validate_tracked_artifact_snapshot(
+          snapshot["entries"],
+          snapshot["unicode_version"]
+        )
+
+      assert actual == get_in(fixture, ["expected", "diagnostics"])
+    end
+  end
+
+  test "tracked artifact rejects Unicode version drift before entries" do
+    assert Validator.tracked_artifact_unicode_version() == "17.0.0"
+
+    assert_raise ArgumentError,
+                 "tracked artifact Unicode version must be 17.0.0",
+                 fn ->
+                   Validator.validate_tracked_artifact_snapshot(
+                     [%{}],
+                     "15.1.0"
+                   )
+                 end
+  end
+
+  test "tracked artifact applies invalid-path precedence before redaction" do
+    invalid_paths = [
+      {String.duplicate("a", 512) <> "e\u0301", "TOO_LONG"},
+      {"/e\u0301", "NON_NFC"},
+      {"/../file.ex", "ABSOLUTE"},
+      {"code//../file.ex", "EMPTY_SEGMENT"},
+      {"code/../<unsafe>/file.ex", "UNSAFE_CHARACTER"},
+      {"code/CON./file.ex", "TRAILING_DOT_OR_SPACE"}
+    ]
+
+    for {path, expected_problem} <- invalid_paths do
+      [diagnostic] =
+        Validator.validate_tracked_artifact_snapshot([
+          %{"ordinal" => 1, "path" => path, "entry_kind" => "regular"}
+        ])
+
+      assert diagnostic["path"] == "repository"
+      assert diagnostic["details"]["problem"] == expected_problem
+    end
+  end
+
+  test "tracked artifact redacts every unsafe path class" do
+    unsafe_paths = [
+      {"", "EMPTY"},
+      {String.duplicate("a", 513), "TOO_LONG"},
+      {"code/packages/e\u0301/file.ex", "NON_NFC"},
+      {"/absolute/file.ex", "ABSOLUTE"},
+      {"C:\\repo\\file.ex", "DRIVE_QUALIFIED"},
+      {"code//file.ex", "EMPTY_SEGMENT"},
+      {"code/trailing/", "EMPTY_SEGMENT"},
+      {"code\\trailing\\", "EMPTY_SEGMENT"},
+      {"code/<unsafe>/file.ex", "UNSAFE_CHARACTER"},
+      {"code/../file.ex", "DOT_SEGMENT"},
+      {"code/trailing./file.ex", "TRAILING_DOT_OR_SPACE"},
+      {"code/CON.txt/file.ex", "RESERVED_BASENAME"}
+    ]
+
+    for {unsafe_path, expected_problem} <- unsafe_paths do
+      diagnostics =
+        Validator.validate_tracked_artifact_snapshot([
+          %{"ordinal" => 7, "path" => unsafe_path, "entry_kind" => "regular"}
+        ])
+
+      assert diagnostics == [
+               %{
+                 "code" => "TRACKED_ARTIFACT_PATH_INVALID",
+                 "severity" => "error",
+                 "path" => "repository",
+                 "details" => %{
+                   "ordinal" => 7,
+                   "entry_kind" => "regular",
+                   "problem" => expected_problem
+                 }
+               }
+             ]
+    end
+  end
+
+  test "tracked artifact uses lexical separators and Unicode scalar lengths" do
+    assert Validator.validate_tracked_artifact_snapshot([
+             %{"ordinal" => 1, "path" => "code\\src\\file.ex", "entry_kind" => "regular"}
+           ]) == []
+
+    assert Validator.validate_tracked_artifact_snapshot([
+             %{
+               "ordinal" => 2,
+               "path" => String.duplicate("😀", 512),
+               "entry_kind" => "regular"
+             }
+           ]) == []
+
+    diagnostics =
+      Validator.validate_tracked_artifact_snapshot([
+        %{
+          "ordinal" => 3,
+          "path" => String.duplicate("😀", 513),
+          "entry_kind" => "regular"
+        }
+      ])
+
+    assert get_in(hd(diagnostics), ["details", "problem"]) == "TOO_LONG"
+  end
+
+  test "tracked artifact uses only pinned Unicode 17 tables" do
+    unicode = BuildTool.TrackedArtifactUnicode17
+    todhri_source = <<0x105D2::utf8, 0x0307::utf8>>
+    todhri_composed = <<0x105C9::utf8>>
+    assert unicode.nfc(todhri_source) == todhri_composed
+
+    diagnostics =
+      Validator.validate_tracked_artifact_snapshot([
+        %{"ordinal" => 1, "path" => todhri_source, "entry_kind" => "regular"}
+      ])
+
+    assert get_in(hd(diagnostics), ["details", "problem"]) == "NON_NFC"
+
+    outlined =
+      "NODE_MODULES"
+      |> String.to_charlist()
+      |> Enum.map(fn scalar -> if scalar == ?_, do: scalar, else: 0x1CCD6 + scalar - ?A end)
+      |> List.to_string()
+
+    assert unicode.nfkc_casefold(outlined) == "node_modules"
+
+    assert hd(
+             Validator.validate_tracked_artifact_snapshot([
+               %{
+                 "ordinal" => 2,
+                 "path" => "code/#{outlined}/file.ex",
+                 "entry_kind" => "regular"
+               }
+             ])
+           )["code"] == "TRACKED_ARTIFACT_FORBIDDEN"
+
+    assert unicode.full_uppercase("conın$") == "CONIN$"
+
+    assert get_in(
+             hd(
+               Validator.validate_tracked_artifact_snapshot([
+                 %{
+                   "ordinal" => 3,
+                   "path" => "code/conın$.txt/file.ex",
+                   "entry_kind" => "regular"
+                 }
+               ])
+             ),
+             ["details", "problem"]
+           ) == "RESERVED_BASENAME"
+
+    assert unicode.nfc("q\u0300") == "q\u0300"
+
+    assert Validator.validate_tracked_artifact_snapshot([
+             %{"ordinal" => 4, "path" => "q\u0300/file.ex", "entry_kind" => "regular"}
+           ]) == []
+  end
+
+  test "tracked artifact sorts by Unicode scalar value" do
+    private_use = <<0xE000::utf8>>
+    supplementary = <<0x10000::utf8>>
+
+    diagnostics =
+      Validator.validate_tracked_artifact_snapshot([
+        %{
+          "ordinal" => 1,
+          "path" => "#{supplementary}/node_modules/a",
+          "entry_kind" => "regular"
+        },
+        %{
+          "ordinal" => 2,
+          "path" => "#{private_use}/node_modules/b",
+          "entry_kind" => "regular"
+        }
+      ])
+
+    assert Enum.map(diagnostics, & &1["path"]) == [
+             "#{private_use}/node_modules/b",
+             "#{supplementary}/node_modules/a"
+           ]
+  end
+
+  test "tracked artifact uses canonical detail text as the final sort key" do
+    diagnostics =
+      Validator.validate_tracked_artifact_snapshot([
+        %{"ordinal" => 2, "path" => "node_modules/a", "entry_kind" => "regular"},
+        %{"ordinal" => 10, "path" => "node_modules/a", "entry_kind" => "regular"}
+      ])
+
+    assert Enum.map(diagnostics, &get_in(&1, ["details", "ordinal"])) == [10, 2]
+  end
+
+  test "tracked artifact entry kind is inert metadata" do
+    diagnostics =
+      ["regular", "symlink", "reparse"]
+      |> Enum.with_index(1)
+      |> Enum.map(fn {entry_kind, ordinal} ->
+        %{
+          "ordinal" => ordinal,
+          "path" => "node_modules/#{<<96 + ordinal>>}",
+          "entry_kind" => entry_kind
+        }
+      end)
+      |> Validator.validate_tracked_artifact_snapshot()
+
+    assert Enum.map(diagnostics, &get_in(&1, ["details", "entry_kind"])) == [
+             "regular",
+             "symlink",
+             "reparse"
+           ]
   end
 end
