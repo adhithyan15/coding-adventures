@@ -200,6 +200,7 @@ const ARABIC_KHAA = DUCTUS[ductusKey("arabic", "خ")];
 const ARABIC_DAAL = DUCTUS[ductusKey("arabic", "د")];
 const ARABIC_DHAAL = DUCTUS[ductusKey("arabic", "ذ")];
 const ARABIC_RAA = DUCTUS[ductusKey("arabic", "ر")];
+const PERSIAN_RA = DUCTUS[ductusKey("perso-arabic", "ر")];
 const ARABIC_ZAY = DUCTUS[ductusKey("arabic", "ز")];
 const ARABIC_SEEN = DUCTUS[ductusKey("arabic", "س")];
 const ARABIC_SHIIN = DUCTUS[ductusKey("arabic", "ش")];
@@ -3808,6 +3809,17 @@ describe("handwriting ductus", () => {
     const baseline = dal.strokes[0].segments[1].path;
     expect(baseline[0]).toEqual(shoulder.at(-1));
     expect(baseline[0].x).toBeGreaterThan(baseline.at(-1)!.x);
+  });
+
+  it("Persian ر descends and sweeps left without lifting", () => {
+    expect(PERSIAN_RA.script).toBe("perso-arabic");
+    expect(penLifts(PERSIAN_RA)).toBe(0);
+    expect(PERSIAN_RA.strokes).toHaveLength(1);
+    expect(PERSIAN_RA.strokes[0].segments).toHaveLength(2);
+    const descent = PERSIAN_RA.strokes[0].segments[0].path;
+    const curve = PERSIAN_RA.strokes[0].segments[1].path;
+    expect(curve[0]).toEqual(descent.at(-1));
+    expect(curve[0].x).toBeGreaterThan(curve.at(-1)!.x);
   });
 
   it("Persian س joins its three teeth directly to the final bowl", () => {
