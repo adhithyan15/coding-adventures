@@ -148,10 +148,12 @@ is క with the *i* sign on it.
 
 So handwriting data follows one rule:
 
-> Only **base consonants** and **vowel signs** are ever authored. A syllable's
-> figure is composed from its parts' figures, never authored separately.
+> Only **independent vowels**, **base consonants**, and **vowel signs** are ever
+> authored. A syllable's figure is composed from its parts' figures, never
+> authored separately.
 
-In a generated syllabary file the base consonants are the entries whose
+In a generated syllabary file independent vowels have their own small inventory;
+the base consonants are the entries whose
 `components` list has a single line (`క  ka — base consonant (inherent "a")`); the
 vowel signs are the `marks`, where a file has them. Both inventories are small —
 about 36 consonants and a dozen signs per script — which is what makes authoring

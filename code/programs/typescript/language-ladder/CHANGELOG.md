@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased — source-verified Malayalam short e
+
+- Teach Malayalam **എ** with its cited two-run body and broad outer arch.
+- Keep the inner loop and outer ending visibly below the line.
+
 ## Unreleased — source-verified Urdu wāw
 
 - Teach Urdu **و** with its cited one-run looped head and down-left tail.

@@ -6,7 +6,7 @@
   "system": "abugida",
   "signature": "Highly rounded and loopy — full circles, hooks and curls, with almost no straight lines.",
   "complete": false,
-  "notes": "Syllabary generated from Unicode by generate_syllabary.py: each syllable is a base consonant (varga order) composed with a core vowel sign. Romanization is ISO-15919. The independent (word-initial) vowels are in `independentVowels`; the script's own digits are in `digits`. Recognition only — stroke order is a separate, source-gated effort and is omitted. Parts, not the grid: when stroke data does arrive it is authored only for the base consonants (the entries with a single `components` line) and for the vowel signs; a syllable's figure is assembled from its parts and is never authored separately. `penLifts` is absent from every entry here, and absent means NOT VERIFIED — never none — and must never be inferred from the length of `strokeOrder`.",
+  "notes": "Syllabary generated from Unicode by generate_syllabary.py: each syllable is a base consonant (varga order) composed with a core vowel sign. Romanization is ISO-15919. The independent (word-initial) vowels are in `independentVowels`; the script's own digits are in `digits`. Stroke order is a separate, source-gated effort: only source-verified entries carry it, beginning with independent short e എ. Parts, not the grid: handwriting is authored only for independent vowels, base consonants (the entries with a single `components` line), and vowel signs; a syllable's figure is assembled from its parts and is never authored separately. When `penLifts` is absent it means NOT VERIFIED — never none — and must never be inferred from the length of `strokeOrder`.",
   "letters": [
     {
       "glyph": "ക",
@@ -5655,10 +5655,23 @@
       "sound": "e",
       "role": "vowel",
       "components": [
-        "എ  e — independent vowel (word-initial)"
+        "the compact left hook flowing into the middle bar and upright",
+        "the below-line inner loop",
+        "the broad outer arch descending below the line"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "turn around the compact left hook and carry the middle bar right",
+        "without lifting, climb the upright, retrace it downward, and loop below the line",
+        "after one lift, sweep up and over through the broad outer arch, ending below the line"
+      ],
+      "strokeOrderNote": "Three visible movements in two pen-down runs: the left hook, bar, upright, and inner loop stay joined; after one lift, the broad outer arch is a separate continuous sweep.",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "Donald R. Davis Jr., The Malayalam Script, Initial Vowels, എ handwriting clip, 00:01–00:04 (University of Texas at Austin)",
+        "url": "https://malayalam.la.utexas.edu/resources/the-malayalam-script/",
+        "variation": "The page identifies initial vowels as word-initial forms and supplies a click-to-play handwriting clip for each. The എ clip visibly uses two pen-down runs and carries both the inner loop and outer arch below the line, matching the page's note that lower elements of initial e extend below the line. This is one attested pedagogical order fitted to the bundled Noto Sans Malayalam outline."
+      },
+      "notes": "Independent short e used when a word or syllable begins with a vowel."
     },
     {
       "glyph": "ഏ",
