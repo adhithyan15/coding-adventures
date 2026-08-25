@@ -3552,6 +3552,97 @@
         "ES-C345-objeto"
       ],
       "tex": "spanish/book/chapters/ch345-cada-y-mismo.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 346,
+      "sourceHash": "fnv1a64:edf15fd2f349f3f4",
+      "lessonIds": [
+        "ES-C346-escuela",
+        "ES-C346-iglesia",
+        "ES-C346-mercado",
+        "ES-C346-oficina",
+        "ES-C346-estacion"
+      ],
+      "tex": "spanish/book/chapters/ch346-lugares-del-pueblo.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 347,
+      "sourceHash": "fnv1a64:a0b0ee6069234a0a",
+      "lessonIds": [
+        "ES-C347-norte",
+        "ES-C347-sur",
+        "ES-C347-oeste",
+        "ES-C347-centro",
+        "ES-C347-alrededor"
+      ],
+      "tex": "spanish/book/chapters/ch347-el-norte-y-el-sur.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 348,
+      "sourceHash": "fnv1a64:393475ed6edbd8d4",
+      "lessonIds": [
+        "ES-C348-principio",
+        "ES-C348-fin",
+        "ES-C348-instante",
+        "ES-C348-demora",
+        "ES-C348-turno"
+      ],
+      "tex": "spanish/book/chapters/ch348-el-principio-y-el-fin.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 349,
+      "sourceHash": "fnv1a64:caba183d1d48bc81",
+      "lessonIds": [
+        "ES-C349-jornada",
+        "ES-C349-decada",
+        "ES-C349-fiesta",
+        "ES-C349-aniversario",
+        "ES-C349-agenda"
+      ],
+      "tex": "spanish/book/chapters/ch349-la-jornada-y-la-decada.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 350,
+      "sourceHash": "fnv1a64:3a8b50ff46c100ac",
+      "lessonIds": [
+        "ES-C350-propio",
+        "ES-C350-ajeno",
+        "ES-C350-igual",
+        "ES-C350-distinto",
+        "ES-C350-tipo"
+      ],
+      "tex": "spanish/book/chapters/ch350-propio-y-ajeno.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 351,
+      "sourceHash": "fnv1a64:f54b40b47c4adb8a",
+      "lessonIds": [
+        "ES-C351-cien",
+        "ES-C351-cantidad",
+        "ES-C351-ambos",
+        "ES-C351-varios",
+        "ES-C351-triple"
+      ],
+      "tex": "spanish/book/chapters/ch351-cien-y-la-cantidad.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 352,
+      "sourceHash": "fnv1a64:ae75ca8766286818",
+      "lessonIds": [
+        "ES-C352-conjunto",
+        "ES-C352-entero",
+        "ES-C352-mayoria",
+        "ES-C352-resto",
+        "ES-C352-escaso"
+      ],
+      "tex": "spanish/book/chapters/ch352-el-conjunto-y-el-resto.tex"
     }
   ]
 }

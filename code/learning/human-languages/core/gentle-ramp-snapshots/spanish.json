@@ -1,7 +1,7 @@
 {
   "language": "spanish",
-  "lessonCount": 791,
-  "atomMeasurableLessons": 787,
+  "lessonCount": 826,
+  "atomMeasurableLessons": 822,
   "atomMeasurementBlindLessons": 4,
   "durationViolations": 0,
   "atomLessonSpikes": 0,
@@ -15,15 +15,15 @@
   "unknownPrerequisites": 0,
   "forwardPrerequisites": 0,
   "forwardReviews": 0,
-  "forwardReferences": 281,
-  "atomsTaught": 1058,
-  "atomsNeverRevisited": 118,
-  "reinforcementWindowMisses": 2846,
+  "forwardReferences": 295,
+  "atomsTaught": 1093,
+  "atomsNeverRevisited": 119,
+  "reinforcementWindowMisses": 2950,
   "reinforcementMissesByWindow": {
-    "R1": 221,
-    "R2": 881,
-    "R3": 908,
-    "R4": 836
+    "R1": 222,
+    "R2": 916,
+    "R3": 941,
+    "R4": 871
   },
   "payoffSurprises": 26,
   "writingPracticeLessons": 14,
@@ -33,7 +33,7 @@
     {
       "language": "spanish",
       "kind": "forward-language",
-      "count": 281,
+      "count": 295,
       "unit": "use(s)",
       "detail": "teach target-language material before load-bearing use"
     },
@@ -47,7 +47,7 @@
     {
       "language": "spanish",
       "kind": "reinforcement",
-      "count": 2846,
+      "count": 2950,
       "unit": "missed window(s)",
       "detail": "add retrieval at the expanding R1-R4 intervals"
     },
@@ -69,7 +69,7 @@
   "next": {
     "language": "spanish",
     "kind": "forward-language",
-    "count": 281,
+    "count": 295,
     "unit": "use(s)",
     "detail": "teach target-language material before load-bearing use"
   }

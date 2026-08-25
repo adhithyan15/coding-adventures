@@ -5278,6 +5278,132 @@
       "json": "spanish/narration/ch345.json",
       "textHash": "fnv1a64:a02b8556f653ff41",
       "jsonHash": "fnv1a64:4a2df3a9cc0ea213"
+    },
+    {
+      "language": "spanish",
+      "chapter": 346,
+      "sourceHash": "fnv1a64:c91efd0e783d0928",
+      "lessonIds": [
+        "ES-C346-escuela",
+        "ES-C346-iglesia",
+        "ES-C346-mercado",
+        "ES-C346-oficina",
+        "ES-C346-estacion"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch346.txt",
+      "json": "spanish/narration/ch346.json",
+      "textHash": "fnv1a64:a95687f57dfa1fed",
+      "jsonHash": "fnv1a64:81002a956929e82d"
+    },
+    {
+      "language": "spanish",
+      "chapter": 347,
+      "sourceHash": "fnv1a64:fe0fbf1109d33463",
+      "lessonIds": [
+        "ES-C347-norte",
+        "ES-C347-sur",
+        "ES-C347-oeste",
+        "ES-C347-centro",
+        "ES-C347-alrededor"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch347.txt",
+      "json": "spanish/narration/ch347.json",
+      "textHash": "fnv1a64:f21309e254fd33da",
+      "jsonHash": "fnv1a64:fd2bdc4fe5498b6a"
+    },
+    {
+      "language": "spanish",
+      "chapter": 348,
+      "sourceHash": "fnv1a64:7cd8a48eac412bde",
+      "lessonIds": [
+        "ES-C348-principio",
+        "ES-C348-fin",
+        "ES-C348-instante",
+        "ES-C348-demora",
+        "ES-C348-turno"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch348.txt",
+      "json": "spanish/narration/ch348.json",
+      "textHash": "fnv1a64:de6a203fa96b960f",
+      "jsonHash": "fnv1a64:cf2a4cdafe729c17"
+    },
+    {
+      "language": "spanish",
+      "chapter": 349,
+      "sourceHash": "fnv1a64:93267b1fde8627ad",
+      "lessonIds": [
+        "ES-C349-jornada",
+        "ES-C349-decada",
+        "ES-C349-fiesta",
+        "ES-C349-aniversario",
+        "ES-C349-agenda"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch349.txt",
+      "json": "spanish/narration/ch349.json",
+      "textHash": "fnv1a64:573a8c24be52efdc",
+      "jsonHash": "fnv1a64:fea3c261af0ad3bd"
+    },
+    {
+      "language": "spanish",
+      "chapter": 350,
+      "sourceHash": "fnv1a64:ae492ba39ba2b892",
+      "lessonIds": [
+        "ES-C350-propio",
+        "ES-C350-ajeno",
+        "ES-C350-igual",
+        "ES-C350-distinto",
+        "ES-C350-tipo"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch350.txt",
+      "json": "spanish/narration/ch350.json",
+      "textHash": "fnv1a64:f11bb94a9b3f8ae8",
+      "jsonHash": "fnv1a64:4a96eccf51ebf0fa"
+    },
+    {
+      "language": "spanish",
+      "chapter": 351,
+      "sourceHash": "fnv1a64:2851f0fb24d23d94",
+      "lessonIds": [
+        "ES-C351-cien",
+        "ES-C351-cantidad",
+        "ES-C351-ambos",
+        "ES-C351-varios",
+        "ES-C351-triple"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch351.txt",
+      "json": "spanish/narration/ch351.json",
+      "textHash": "fnv1a64:9258d24d8f1e6294",
+      "jsonHash": "fnv1a64:2e915e7016ed7548"
+    },
+    {
+      "language": "spanish",
+      "chapter": 352,
+      "sourceHash": "fnv1a64:8197d0927b11e2f8",
+      "lessonIds": [
+        "ES-C352-conjunto",
+        "ES-C352-entero",
+        "ES-C352-mayoria",
+        "ES-C352-resto",
+        "ES-C352-escaso"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch352.txt",
+      "json": "spanish/narration/ch352.json",
+      "textHash": "fnv1a64:fa6e39d47b3d619d",
+      "jsonHash": "fnv1a64:9e12bc2a8115d6df"
     }
   ],
   "findings": []
