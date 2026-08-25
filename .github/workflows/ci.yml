@@ -20,7 +20,9 @@
 #      exercises every official Unicode 17 normalization/casing vector.
 #   9. unicode17-lua-conformance: runs the generated Lua tables against every
 #      official Unicode 17 normalization/casing vector.
-#   10. build: Installs only the needed toolchains, then runs the build.
+#   10. unicode17-perl-conformance: runs the generated Perl tables against
+#       every official Unicode 17 normalization/casing vector.
+#   11. build: Installs only the needed toolchains, then runs the build.
 #
 # This saves 3-5 minutes on language-specific changes by skipping
 # unneeded toolchain installations (e.g., Rust tarpaulin, Elixir/Erlang).
@@ -721,7 +723,31 @@ jobs:
           --self-check-runtime lua
           --lua-executable .lua/bin/lua
 
-  # ── Job 10: Build and test ─────────────────────────────────────
+  # ── Job 10: Unicode 17 generated Perl conformance ──────────────
+  unicode17-perl-conformance:
+    name: Unicode 17 generated Perl conformance
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Verify reviewed Perl 5.38.2 runtime
+        run: |
+          test "$(command -v perl)" = "/usr/bin/perl"
+          test "$(perl -e 'printf "%vd", $^V')" = "5.38.2"
+
+      - name: Verify generated Perl against every official Unicode 17 vector
+        run: >-
+          python3 code/scripts/generate_tracked_artifact_unicode17.py
+          --check
+          --self-check-runtime perl
+          --perl-executable /usr/bin/perl
+
+  # ── Job 11: Build and test ─────────────────────────────────────
   #
   # Installs only the toolchains flagged by the detect job, then
   # compiles the build tool and runs the incremental build.
@@ -2008,7 +2034,7 @@ jobs:
           if [ "$RUNNER_OS" = "Windows" ]; then BT=./build-tool.exe; else BT=./build-tool; fi
           $BT -root . -plan-file build-plan.json -shard-index "${{ matrix.shard_index }}" -force -validate-build-files -clippy -language all
 
-  # ── Job 10: CI gate ────────────────────────────────────────────
+  # ── Job 12: CI gate ────────────────────────────────────────────
   #
   # A single, always-present status check that summarizes the result of
   # every real job. The `build` job is a DYNAMIC matrix — its `build (…)`
@@ -2025,7 +2051,7 @@ jobs:
   # dependency failed, so it can report the failure rather than being skipped.
   ci-gate:
     name: ${{ github.event_name == 'pull_request' && 'CI gate' || 'CI push gate' }}
-    needs: [detect, phy00-phy01-fixture-consumers, d18f-message-conformance, d18p-channel-conformance, d18q-channel-key-grant-conformance, d18t-durable-epoch-activation-conformance, ruby-grammar-regen-check, unicode17-elixir-conformance, unicode17-lua-conformance, build]
+    needs: [detect, phy00-phy01-fixture-consumers, d18f-message-conformance, d18p-channel-conformance, d18q-channel-key-grant-conformance, d18t-durable-epoch-activation-conformance, ruby-grammar-regen-check, unicode17-elixir-conformance, unicode17-lua-conformance, unicode17-perl-conformance, build]
     if: always()
     runs-on: ubuntu-latest
     steps:
@@ -2041,11 +2067,12 @@ jobs:
           RUBY_GRAMMAR_REGEN_RESULT: ${{ needs['ruby-grammar-regen-check'].result }}
           UNICODE17_ELIXIR_RESULT: ${{ needs['unicode17-elixir-conformance'].result }}
           UNICODE17_LUA_RESULT: ${{ needs['unicode17-lua-conformance'].result }}
+          UNICODE17_PERL_RESULT: ${{ needs['unicode17-perl-conformance'].result }}
           BUILD_RESULT: ${{ needs.build.result }}
         run: |
-          echo "detect=$DETECT_RESULT phy=$PHY_RESULT d18f=$D18F_RESULT d18p=$D18P_RESULT d18q=$D18Q_RESULT d18t=$D18T_RESULT ruby_grammar_regen=$RUBY_GRAMMAR_REGEN_RESULT unicode17_elixir=$UNICODE17_ELIXIR_RESULT unicode17_lua=$UNICODE17_LUA_RESULT build=$BUILD_RESULT"
+          echo "detect=$DETECT_RESULT phy=$PHY_RESULT d18f=$D18F_RESULT d18p=$D18P_RESULT d18q=$D18Q_RESULT d18t=$D18T_RESULT ruby_grammar_regen=$RUBY_GRAMMAR_REGEN_RESULT unicode17_elixir=$UNICODE17_ELIXIR_RESULT unicode17_lua=$UNICODE17_LUA_RESULT unicode17_perl=$UNICODE17_PERL_RESULT build=$BUILD_RESULT"
           fail=0
-          for r in "$DETECT_RESULT" "$PHY_RESULT" "$D18F_RESULT" "$D18P_RESULT" "$D18Q_RESULT" "$D18T_RESULT" "$RUBY_GRAMMAR_REGEN_RESULT" "$UNICODE17_ELIXIR_RESULT" "$UNICODE17_LUA_RESULT" "$BUILD_RESULT"; do
+          for r in "$DETECT_RESULT" "$PHY_RESULT" "$D18F_RESULT" "$D18P_RESULT" "$D18Q_RESULT" "$D18T_RESULT" "$RUBY_GRAMMAR_REGEN_RESULT" "$UNICODE17_ELIXIR_RESULT" "$UNICODE17_LUA_RESULT" "$UNICODE17_PERL_RESULT" "$BUILD_RESULT"; do
             case "$r" in
               success|skipped) ;;
               *) echo "::error::a required job did not pass (result: $r)"; fail=1 ;;
