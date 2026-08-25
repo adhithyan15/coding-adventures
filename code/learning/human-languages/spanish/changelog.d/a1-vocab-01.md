@@ -3,9 +3,9 @@
 ### Added
 
 - **Thirty A1 vocabulary lessons across six chapters**, the first tranche
-  authored against the A1 gate rather than pre-A1. Spanish entered at **378**
+  authored against the A1 gate rather than pre-A1. Spanish entered at **379**
   distinct headwords taught at or below A1, against the HL09 §3.1 floor of
-  **600**; it leaves at **408**. The remaining shortfall is **192**. Spanish
+  **600**; it leaves at **409**. The remaining shortfall is **191**. Spanish
   stays at **pre-A1 attained** — this tranche moves the A1 vocabulary
   criterion and regresses nothing.
 
@@ -90,7 +90,7 @@
   stated plainly rather than papered over.
 
 - **Thirty words, and the at-or-below-A1 count rose by exactly thirty**
-  (378 → 408, total 482 → 512). An exact match is the check that no
+  (379 → 409, total 483 → 513). An exact match is the check that no
   near-duplicate slipped through: a word already taught under a different
   string would have raised the total while adding nothing a learner does not
   already have.
@@ -103,3 +103,8 @@
 
 - All six chapters are ear-only: each chapter's narration opens *"All 5 can be
   done entirely by ear."*
+
+- **Re-verified after chapters 337-339 merged mid-flight.** That tranche also
+  split two existing compound headwords (`ahora · hoy` and `vi · di`) into
+  singletons, which moves the corpus the freedom check runs against. All thirty
+  headwords were re-checked against the new 650-entry corpus and remain free.
