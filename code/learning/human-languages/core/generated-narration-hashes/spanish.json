@@ -5122,6 +5122,114 @@
       "json": "spanish/narration/ch336.json",
       "textHash": "fnv1a64:9facf9c92a5dbc7e",
       "jsonHash": "fnv1a64:34d0a5009112e9fd"
+    },
+    {
+      "language": "spanish",
+      "chapter": 340,
+      "sourceHash": "fnv1a64:ca2b780f9c1cd64c",
+      "lessonIds": [
+        "ES-C340-cerca",
+        "ES-C340-lejos",
+        "ES-C340-derecha",
+        "ES-C340-izquierda",
+        "ES-C340-enfrente"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch340.txt",
+      "json": "spanish/narration/ch340.json",
+      "textHash": "fnv1a64:e9c3cacf4e88b229",
+      "jsonHash": "fnv1a64:240aa83549eaebca"
+    },
+    {
+      "language": "spanish",
+      "chapter": 341,
+      "sourceHash": "fnv1a64:354c93f5a2cbf6b9",
+      "lessonIds": [
+        "ES-C341-arriba",
+        "ES-C341-abajo",
+        "ES-C341-delante",
+        "ES-C341-detras",
+        "ES-C341-dentro"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch341.txt",
+      "json": "spanish/narration/ch341.json",
+      "textHash": "fnv1a64:a54f9715b0d2e63b",
+      "jsonHash": "fnv1a64:0f71f8ca230db932"
+    },
+    {
+      "language": "spanish",
+      "chapter": 342,
+      "sourceHash": "fnv1a64:b3ee20f58de2f7e9",
+      "lessonIds": [
+        "ES-C342-minuto",
+        "ES-C342-cuarto",
+        "ES-C342-punto",
+        "ES-C342-horario",
+        "ES-C342-madrugada"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch342.txt",
+      "json": "spanish/narration/ch342.json",
+      "textHash": "fnv1a64:96d1369df0e2c312",
+      "jsonHash": "fnv1a64:692cc883a54ba9ac"
+    },
+    {
+      "language": "spanish",
+      "chapter": 343,
+      "sourceHash": "fnv1a64:f6677e6db5993b1c",
+      "lessonIds": [
+        "ES-C343-fecha",
+        "ES-C343-calendario",
+        "ES-C343-proximo",
+        "ES-C343-epoca",
+        "ES-C343-siglo"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch343.txt",
+      "json": "spanish/narration/ch343.json",
+      "textHash": "fnv1a64:7933493d5307ddda",
+      "jsonHash": "fnv1a64:9ae2209323dc777d"
+    },
+    {
+      "language": "spanish",
+      "chapter": 344,
+      "sourceHash": "fnv1a64:c537885101397e3d",
+      "lessonIds": [
+        "ES-C344-cero",
+        "ES-C344-numero",
+        "ES-C344-mitad",
+        "ES-C344-docena",
+        "ES-C344-doble"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch344.txt",
+      "json": "spanish/narration/ch344.json",
+      "textHash": "fnv1a64:3f6db0d43c8389fe",
+      "jsonHash": "fnv1a64:24c11b958267cd80"
+    },
+    {
+      "language": "spanish",
+      "chapter": 345,
+      "sourceHash": "fnv1a64:d82b85b2a7ddb928",
+      "lessonIds": [
+        "ES-C345-mismo",
+        "ES-C345-cada",
+        "ES-C345-parte",
+        "ES-C345-persona",
+        "ES-C345-objeto"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "spanish/narration/ch345.txt",
+      "json": "spanish/narration/ch345.json",
+      "textHash": "fnv1a64:a02b8556f653ff41",
+      "jsonHash": "fnv1a64:4a2df3a9cc0ea213"
     }
   ],
   "findings": []

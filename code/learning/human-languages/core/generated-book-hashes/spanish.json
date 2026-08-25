@@ -3441,6 +3441,84 @@
         "ES-C336-repaso-seis-en-uso"
       ],
       "tex": "spanish/book/chapters/ch336-repaso-seis-en-uso.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 340,
+      "sourceHash": "fnv1a64:c3861aaffb584f30",
+      "lessonIds": [
+        "ES-C340-cerca",
+        "ES-C340-lejos",
+        "ES-C340-derecha",
+        "ES-C340-izquierda",
+        "ES-C340-enfrente"
+      ],
+      "tex": "spanish/book/chapters/ch340-cerca-y-lejos.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 341,
+      "sourceHash": "fnv1a64:423980fff8c1c174",
+      "lessonIds": [
+        "ES-C341-arriba",
+        "ES-C341-abajo",
+        "ES-C341-delante",
+        "ES-C341-detras",
+        "ES-C341-dentro"
+      ],
+      "tex": "spanish/book/chapters/ch341-arriba-y-abajo.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 342,
+      "sourceHash": "fnv1a64:60f14cce1705c85c",
+      "lessonIds": [
+        "ES-C342-minuto",
+        "ES-C342-cuarto",
+        "ES-C342-punto",
+        "ES-C342-horario",
+        "ES-C342-madrugada"
+      ],
+      "tex": "spanish/book/chapters/ch342-el-minuto-y-el-cuarto.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 343,
+      "sourceHash": "fnv1a64:675a7a3f5d36ea1f",
+      "lessonIds": [
+        "ES-C343-fecha",
+        "ES-C343-calendario",
+        "ES-C343-proximo",
+        "ES-C343-epoca",
+        "ES-C343-siglo"
+      ],
+      "tex": "spanish/book/chapters/ch343-la-fecha-y-el-siglo.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 344,
+      "sourceHash": "fnv1a64:b7e9654c0cbf4c59",
+      "lessonIds": [
+        "ES-C344-cero",
+        "ES-C344-numero",
+        "ES-C344-mitad",
+        "ES-C344-docena",
+        "ES-C344-doble"
+      ],
+      "tex": "spanish/book/chapters/ch344-cero-y-mitad.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 345,
+      "sourceHash": "fnv1a64:dee933cd5c8ea0f5",
+      "lessonIds": [
+        "ES-C345-mismo",
+        "ES-C345-cada",
+        "ES-C345-parte",
+        "ES-C345-persona",
+        "ES-C345-objeto"
+      ],
+      "tex": "spanish/book/chapters/ch345-cada-y-mismo.tex"
     }
   ]
 }
