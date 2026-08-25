@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:586eda240ba8813f",
+  "sourceHash": "fnv1a64:1f3287efc736e1a5",
   "summary": {
-    "totalLessons": 715,
-    "voice": 653,
+    "totalLessons": 750,
+    "voice": 688,
     "sight": 51,
     "pen": 11,
-    "drivableLessons": 653,
-    "drivablePercent": 91,
+    "drivableLessons": 688,
+    "drivablePercent": 92,
     "trackCount": 1,
-    "chapterCount": 327,
-    "drivablePrefixTotal": 625,
-    "fullyDrivableChapters": 277,
+    "chapterCount": 334,
+    "drivablePrefixTotal": 660,
+    "fullyDrivableChapters": 284,
     "unstartableChapters": 39,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -26,12 +26,12 @@
   "tracks": [
     {
       "language": "spanish",
-      "lessonCount": 715,
-      "voice": 653,
+      "lessonCount": 750,
+      "voice": 688,
       "sight": 51,
       "pen": 11,
-      "drivablePercent": 91,
-      "drivablePrefixTotal": 625,
+      "drivablePercent": 92,
+      "drivablePrefixTotal": 660,
       "modalities": [
         "voice",
         "sight",
@@ -5548,6 +5548,146 @@
             "ES-C327-fuerte",
             "ES-C327-debil",
             "ES-C327-sano"
+          ]
+        },
+        {
+          "chapter": 328,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C328-asi",
+            "ES-C328-jamas",
+            "ES-C328-apenas",
+            "ES-C328-casi",
+            "ES-C328-incluso"
+          ]
+        },
+        {
+          "chapter": 329,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C329-tal",
+            "ES-C329-cual",
+            "ES-C329-pues",
+            "ES-C329-sino",
+            "ES-C329-salvo"
+          ]
+        },
+        {
+          "chapter": 330,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C330-camino",
+            "ES-C330-parada",
+            "ES-C330-mundo",
+            "ES-C330-vida",
+            "ES-C330-vez"
+          ]
+        },
+        {
+          "chapter": 331,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C331-rato",
+            "ES-C331-manera",
+            "ES-C331-modo",
+            "ES-C331-cosa",
+            "ES-C331-asunto"
+          ]
+        },
+        {
+          "chapter": 332,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C332-permiso",
+            "ES-C332-aviso",
+            "ES-C332-disculpa",
+            "ES-C332-palabra",
+            "ES-C332-voz"
+          ]
+        },
+        {
+          "chapter": 333,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C333-ruido",
+            "ES-C333-silencio",
+            "ES-C333-calma",
+            "ES-C333-prisa",
+            "ES-C333-cuidado"
+          ]
+        },
+        {
+          "chapter": 334,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C334-salud",
+            "ES-C334-hambre",
+            "ES-C334-frio",
+            "ES-C334-calor",
+            "ES-C334-edad"
           ]
         }
       ]
@@ -18471,6 +18611,636 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:ad6fb92e8729fac1"
+    },
+    {
+      "id": "ES-C328-asi",
+      "language": "spanish",
+      "chapter": 328,
+      "sequence": 5520,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:93f669e53d57878e"
+    },
+    {
+      "id": "ES-C328-jamas",
+      "language": "spanish",
+      "chapter": 328,
+      "sequence": 5530,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:5cc4643b0667dd44"
+    },
+    {
+      "id": "ES-C328-apenas",
+      "language": "spanish",
+      "chapter": 328,
+      "sequence": 5540,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:ce8d845404f3a67e"
+    },
+    {
+      "id": "ES-C328-casi",
+      "language": "spanish",
+      "chapter": 328,
+      "sequence": 5550,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:69f76a8a64e36d7a"
+    },
+    {
+      "id": "ES-C328-incluso",
+      "language": "spanish",
+      "chapter": 328,
+      "sequence": 5560,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:82c1b5968e9bc509"
+    },
+    {
+      "id": "ES-C329-tal",
+      "language": "spanish",
+      "chapter": 329,
+      "sequence": 5570,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:2097516f71a6a8ad"
+    },
+    {
+      "id": "ES-C329-cual",
+      "language": "spanish",
+      "chapter": 329,
+      "sequence": 5580,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:3c889cccf163e3e3"
+    },
+    {
+      "id": "ES-C329-pues",
+      "language": "spanish",
+      "chapter": 329,
+      "sequence": 5590,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:b94615f3affecd1b"
+    },
+    {
+      "id": "ES-C329-sino",
+      "language": "spanish",
+      "chapter": 329,
+      "sequence": 5600,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:cb187af8a7b40312"
+    },
+    {
+      "id": "ES-C329-salvo",
+      "language": "spanish",
+      "chapter": 329,
+      "sequence": 5610,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:af37212ea841c0dd"
+    },
+    {
+      "id": "ES-C330-camino",
+      "language": "spanish",
+      "chapter": 330,
+      "sequence": 5620,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:90b52688e53340cf"
+    },
+    {
+      "id": "ES-C330-parada",
+      "language": "spanish",
+      "chapter": 330,
+      "sequence": 5630,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:0b89ff169d6261ab"
+    },
+    {
+      "id": "ES-C330-mundo",
+      "language": "spanish",
+      "chapter": 330,
+      "sequence": 5640,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:578dc5acf6282197"
+    },
+    {
+      "id": "ES-C330-vida",
+      "language": "spanish",
+      "chapter": 330,
+      "sequence": 5650,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:4fef3875f78d473b"
+    },
+    {
+      "id": "ES-C330-vez",
+      "language": "spanish",
+      "chapter": 330,
+      "sequence": 5660,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:4b5be8a4be2a6ee7"
+    },
+    {
+      "id": "ES-C331-rato",
+      "language": "spanish",
+      "chapter": 331,
+      "sequence": 5670,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:32b58e5804fb361e"
+    },
+    {
+      "id": "ES-C331-manera",
+      "language": "spanish",
+      "chapter": 331,
+      "sequence": 5680,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e6d7bec23e2649d3"
+    },
+    {
+      "id": "ES-C331-modo",
+      "language": "spanish",
+      "chapter": 331,
+      "sequence": 5690,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:46f228137a04ea70"
+    },
+    {
+      "id": "ES-C331-cosa",
+      "language": "spanish",
+      "chapter": 331,
+      "sequence": 5700,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:0b556d3c04b5dde1"
+    },
+    {
+      "id": "ES-C331-asunto",
+      "language": "spanish",
+      "chapter": 331,
+      "sequence": 5710,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:64bb9912e5f6204c"
+    },
+    {
+      "id": "ES-C332-permiso",
+      "language": "spanish",
+      "chapter": 332,
+      "sequence": 5720,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:96950ed000228c11"
+    },
+    {
+      "id": "ES-C332-aviso",
+      "language": "spanish",
+      "chapter": 332,
+      "sequence": 5730,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:0710faea139ed61c"
+    },
+    {
+      "id": "ES-C332-disculpa",
+      "language": "spanish",
+      "chapter": 332,
+      "sequence": 5740,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:3ddaee8a2f8adcaf"
+    },
+    {
+      "id": "ES-C332-palabra",
+      "language": "spanish",
+      "chapter": 332,
+      "sequence": 5750,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:1a562191c92edd2a"
+    },
+    {
+      "id": "ES-C332-voz",
+      "language": "spanish",
+      "chapter": 332,
+      "sequence": 5760,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:0381b13a10c7aee0"
+    },
+    {
+      "id": "ES-C333-ruido",
+      "language": "spanish",
+      "chapter": 333,
+      "sequence": 5770,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:cf96f0a909631c8d"
+    },
+    {
+      "id": "ES-C333-silencio",
+      "language": "spanish",
+      "chapter": 333,
+      "sequence": 5780,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:d7592d80e1d248bc"
+    },
+    {
+      "id": "ES-C333-calma",
+      "language": "spanish",
+      "chapter": 333,
+      "sequence": 5790,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:76fe69f8b5d1aa77"
+    },
+    {
+      "id": "ES-C333-prisa",
+      "language": "spanish",
+      "chapter": 333,
+      "sequence": 5800,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:9a90438690a37bc3"
+    },
+    {
+      "id": "ES-C333-cuidado",
+      "language": "spanish",
+      "chapter": 333,
+      "sequence": 5810,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:5ad72445d6885e8f"
+    },
+    {
+      "id": "ES-C334-salud",
+      "language": "spanish",
+      "chapter": 334,
+      "sequence": 5820,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:186d7b6bbe834d6e"
+    },
+    {
+      "id": "ES-C334-hambre",
+      "language": "spanish",
+      "chapter": 334,
+      "sequence": 5830,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:bb424c08d29f2813"
+    },
+    {
+      "id": "ES-C334-frio",
+      "language": "spanish",
+      "chapter": 334,
+      "sequence": 5840,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:8efff9afd5f50667"
+    },
+    {
+      "id": "ES-C334-calor",
+      "language": "spanish",
+      "chapter": 334,
+      "sequence": 5850,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:ab5b44218dbd2cf4"
+    },
+    {
+      "id": "ES-C334-edad",
+      "language": "spanish",
+      "chapter": 334,
+      "sequence": 5860,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:b128d93ff109052b"
     }
   ],
   "findings": []

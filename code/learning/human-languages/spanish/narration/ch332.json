@@ -1,0 +1,791 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 332,
+  "title": "Permission, Notice, and the Word",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:aa46c6aac82158ee",
+  "lessons": [
+    {
+      "id": "ES-C332-permiso",
+      "sequence": 5720,
+      "title": "el permiso — the noun you have been saying since con permiso",
+      "headword": "el permiso",
+      "romanization": "el permiso",
+      "gloss": "permission, leave — Latin permissus from permittere, per + mittere, to let go through; English permit, mission, transmit, submit and promise are all sendings",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:96950ed000228c11",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the thing, then the matter. (La cosa; el asunto.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "con permiso — the phrase this word already lives in."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "per-MI-so, three beats with the weight in the middle. The r is a single tap, and the s stays crisp all the way to the end. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el permiso — \"permission,\" \"leave,\" and on paper, \"a permit.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin mittere meant to send, to let go. Put per- in front — through — and permittere is to let go through. Its past participle permissus is let through, and that is where this noun comes from."
+            },
+            {
+              "kind": "speech",
+              "text": "That is a nicer picture than the English word gives you. To grant permission is not to approve; it is to stand out of the way. You were going somewhere, and somebody let you through."
+            },
+            {
+              "kind": "speech",
+              "text": "Which is exactly what con permiso does. You have been saying it to squeeze past people in a corridor — with permission — and the word inside it means with being-let-through. The phrase and its literal sense agree perfectly."
+            },
+            {
+              "kind": "speech",
+              "text": "Mittere is one of the busiest roots in English, and once you hear the -mit- and -miss- you will hear it everywhere. To permit is to send through. To transmit is to send across. To submit is to send under. To admit is to send toward. To dismiss is to send away. To emit is to send out. A missile is a thing sent, a mission is a sending, and a missionary is somebody sent."
+            },
+            {
+              "kind": "speech",
+              "text": "Even promise belongs: prō mittere, to send forth — words sent ahead of the deed they commit you to."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first of five words for what courtesy is actually made of. Por favor gave you el favor; now con permiso gives you this."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el permiso",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el permiso*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "con permiso",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *con permiso*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un permiso más",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un permiso más*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did Latin mittere mean? (To send, to let go.) And what does permittere mean piece by piece? (To let go through.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C332-aviso",
+      "sequence": 5730,
+      "title": "el aviso — a notice is something made to be seen",
+      "headword": "el aviso",
+      "romanization": "el aviso",
+      "gloss": "the notice, the warning — from avisar, and Latin ad visum, to what is seen; English advise, advice, vision, evident and provide share the root videre",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0710faea139ed61c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the matter, then permission. (El asunto; el permiso.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el permiso — the word you met one lesson ago."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a-VI-so, three beats, the weight in the middle. The v is soft, made without the lips closing fully. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el aviso — \"the notice,\" \"the warning,\" \"the heads-up.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Behind it is the verb avisar, to notify, and behind that is Latin ad vīsum — toward what has been seen. The root verb is vidēre, to see."
+            },
+            {
+              "kind": "speech",
+              "text": "So an aviso is not an instruction. It is a making-visible: somebody has put a thing where you can see it, and what you do next is yours to decide. That is why aviso covers a posted notice, a warning sign and a friendly heads-up without straining."
+            },
+            {
+              "kind": "speech",
+              "text": "English built two words on the identical formation. Advise and advice come from the same ad vīsum through French, and they carry the same modesty — to advise is to make something visible to somebody, not to command them."
+            },
+            {
+              "kind": "speech",
+              "text": "Vidēre is one of the great English suppliers. Vision and visible and visit are obvious. Evident is ē-vidēns, seeing-out, plain to see. To provide is to see beforehand, and prudent is the same word worn down. Survey is to see over. A video is, in Latin, the single word I see. And envy is invidia, seeing against — looking at somebody with a bad eye."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish uses the phrase sin previo aviso, without prior notice, and you now have both halves of the idea."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two of five. A word for being let through, and a word for being shown."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el aviso",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el aviso*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un aviso",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un aviso*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sin aviso",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sin aviso*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did Latin vidēre mean? (To see.) And which two English words come from the same ad vīsum? (Advise and advice.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C332-disculpa",
+      "sequence": 5740,
+      "title": "la disculpa — an apology is blame taken back off",
+      "headword": "la disculpa",
+      "romanization": "la disculpa",
+      "gloss": "the apology — dis- undoing culpa, blame, from Latin culpa; English culpable, culprit, exculpate and mea culpa keep the blame in place",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3ddaee8a2f8adcaf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say permission, then the notice. (El permiso; el aviso.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la culpa — the noun this word undoes."
+            },
+            {
+              "kind": "speech",
+              "text": "perdón — the apology you already say."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dis-CUL-pa, three beats with the weight in the middle. The c before u is a hard k, and the l is light and forward. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la disculpa — \"the apology,\" \"the excuse.\""
+            },
+            {
+              "kind": "speech",
+              "text": "This one is transparent once the seam is named. Dis- is the Latin prefix that undoes, reverses or removes. Culpa is Latin for fault, blame. So a disculpa is, structurally, an un-blaming — the act of taking the fault back off somebody."
+            },
+            {
+              "kind": "speech",
+              "text": "You already have the second half on its own: la culpa is blame, and es mi culpa is it is my fault."
+            },
+            {
+              "kind": "speech",
+              "text": "English kept culpa without ever building the negative form. Somebody culpable is blameworthy. A culprit is the one who carries the blame. To exculpate is to clear of blame — ex-culpa, blame out — which is the same idea as disculpa built with a different prefix. And mea culpa is Latin still being spoken, word for word: my fault."
+            },
+            {
+              "kind": "speech",
+              "text": "There is a difference in feel worth having. Perdón asks the other person to give something — pardon, a gift of forgiveness. Disculpa does the work at your own end: you are removing the blame yourself. And disculpe is the polite form you use to stop a stranger, where English says excuse me — which is, note, the same idea again, blame removed from me."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three of five. Let through, shown, and un-blamed."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la disculpa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la disculpa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "una disculpa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *una disculpa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sin disculpa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sin disculpa*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does the dis- in disculpa do? (It undoes — it removes the blame.) And what does mea culpa mean word for word? (My fault.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C332-palabra",
+      "sequence": 5750,
+      "title": "la palabra — a word that is Greek for thrown alongside",
+      "headword": "la palabra",
+      "romanization": "la palabra",
+      "gloss": "the word — Latin parabola from Greek parabole, a throwing beside; the same Greek word gave English parable, parabola, parley and parliament",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1a562191c92edd2a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the notice, then the apology. (El aviso; la disculpa.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la voz — the sound a word is carried on, next lesson."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pa-LA-bra, three beats with the weight in the middle. The b between vowels is soft, made without the lips fully meeting, and br runs together as one cluster. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la palabra — \"the word.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin had a perfectly good word for word: verbum. Spanish barely uses its descendant. What it uses instead is a borrowed Greek technical term that got loose."
+            },
+            {
+              "kind": "speech",
+              "text": "Greek parabolḗ meant a throwing beside — para- (beside) plus bállein (to throw). It named a comparison: you throw one thing down next to another so the likeness shows. Greek-speaking writers used it for a figure of speech, and the Latin Bible took it over as parabola for the comparison-stories Jesus told."
+            },
+            {
+              "kind": "speech",
+              "text": "Those stories were so central to preaching that the word for them drifted outward — from the comparison to the speech to the utterance to, finally, the single word. Spanish smoothed parabola into palabra, swapping the r and l along the way, and ended up with its ordinary noun."
+            },
+            {
+              "kind": "speech",
+              "text": "Meanwhile the untouched Greek form was borrowed a second time, and English has both. A parable is the story. A parabola is the curve, named because it lies alongside a line of the cone. Parley is talk, parole is a prisoner released on his word, and Parliament is the place where the talking happens."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin verbum did survive in Spanish, but only in the grammatical verbo — and in English verb, verbal and proverb."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four of five. And one of them turns out to be a Greek geometry term that went to church."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la palabra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la palabra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "otra palabra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *otra palabra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "una palabra más",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *una palabra más*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did Greek parabolḗ mean? (A throwing beside — a comparison.) And which Latin word did palabra push out of everyday use? (Verbum.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C332-voz",
+      "sequence": 5760,
+      "title": "la voz — the voice, and the vowels named after it",
+      "headword": "la voz",
+      "romanization": "la voz",
+      "gloss": "the voice — Latin vox, vocem; English voice, vocal, vowel, vocation, advocate, evoke and provoke all come off it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0381b13a10c7aee0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the apology, then the word. (La disculpa; la palabra.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la palabra — what this one carries."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "VOS, one beat. The v is soft. The final z is a plain s across the Americas, and a th sound in much of Spain. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la voz — \"the voice.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin vōx, in its other cases vōcem, which is the form Spanish worked from — that is why the c shows up in every relative and the z only here."
+            },
+            {
+              "kind": "speech",
+              "text": "English took the word twice, once through French and once from Latin directly, which is why the family looks slightly mixed. Voice came through French. Vocal, vocalise, vociferous and vocabulary came straight from the books."
+            },
+            {
+              "kind": "speech",
+              "text": "A vowel is the quiet surprise in the list. It is vocālis littera — the vocal letter, the one made with voice alone and nothing blocking it. Every other letter needs some obstruction; a vowel is pure voice. The name is a definition."
+            },
+            {
+              "kind": "speech",
+              "text": "A vocation is a calling — the noun assumes somebody is doing the calling. An advocate is one called to your side, which is what a lawyer is. To evoke is to call out, to provoke is to call forth, to revoke is to call back, and to convoke is to call together."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish has en voz alta — in a high voice, meaning aloud — and its partner en voz baja, under your breath."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five words for the machinery of politeness and speech: el permiso, el aviso, la disculpa, la palabra, la voz. Two of them were inside phrases you already said."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la voz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la voz*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mi voz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mi voz*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "una voz más",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *una voz más*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is a vowel, translated from its Latin name? (A vocal letter — made with voice alone.) And what is an advocate? (One called to your side.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

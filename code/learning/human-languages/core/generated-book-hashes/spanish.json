@@ -3332,6 +3332,97 @@
         "ES-C327-sano"
       ],
       "tex": "spanish/book/chapters/ch327-despierto-y-sano.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 328,
+      "sourceHash": "fnv1a64:d45317358595e16a",
+      "lessonIds": [
+        "ES-C328-asi",
+        "ES-C328-jamas",
+        "ES-C328-apenas",
+        "ES-C328-casi",
+        "ES-C328-incluso"
+      ],
+      "tex": "spanish/book/chapters/ch328-asi-y-incluso.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 329,
+      "sourceHash": "fnv1a64:ae5b034fb81dda16",
+      "lessonIds": [
+        "ES-C329-tal",
+        "ES-C329-cual",
+        "ES-C329-pues",
+        "ES-C329-sino",
+        "ES-C329-salvo"
+      ],
+      "tex": "spanish/book/chapters/ch329-tal-y-salvo.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 330,
+      "sourceHash": "fnv1a64:9ed1244e53a2a597",
+      "lessonIds": [
+        "ES-C330-camino",
+        "ES-C330-parada",
+        "ES-C330-mundo",
+        "ES-C330-vida",
+        "ES-C330-vez"
+      ],
+      "tex": "spanish/book/chapters/ch330-camino-y-vez.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 331,
+      "sourceHash": "fnv1a64:7e404e85ae74eed8",
+      "lessonIds": [
+        "ES-C331-rato",
+        "ES-C331-manera",
+        "ES-C331-modo",
+        "ES-C331-cosa",
+        "ES-C331-asunto"
+      ],
+      "tex": "spanish/book/chapters/ch331-manera-y-asunto.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 332,
+      "sourceHash": "fnv1a64:c2771073dfcc5763",
+      "lessonIds": [
+        "ES-C332-permiso",
+        "ES-C332-aviso",
+        "ES-C332-disculpa",
+        "ES-C332-palabra",
+        "ES-C332-voz"
+      ],
+      "tex": "spanish/book/chapters/ch332-permiso-y-voz.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 333,
+      "sourceHash": "fnv1a64:0c0d40eb323cc83c",
+      "lessonIds": [
+        "ES-C333-ruido",
+        "ES-C333-silencio",
+        "ES-C333-calma",
+        "ES-C333-prisa",
+        "ES-C333-cuidado"
+      ],
+      "tex": "spanish/book/chapters/ch333-calma-y-prisa.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 334,
+      "sourceHash": "fnv1a64:ab80435761d4d495",
+      "lessonIds": [
+        "ES-C334-salud",
+        "ES-C334-hambre",
+        "ES-C334-frio",
+        "ES-C334-calor",
+        "ES-C334-edad"
+      ],
+      "tex": "spanish/book/chapters/ch334-salud-y-edad.tex"
     }
   ]
 }
