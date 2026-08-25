@@ -5902,9 +5902,10 @@ would otherwise never see. Eleven live open PRs and 35 current non-main heads
 have zero candidate-surface overlap; the target branch and prior PR are absent,
 and only stale squash-source branches for merged parity PRs intersect shared
 history. The higher-leverage OCaml core remains collision-unsafe while PRs
-#12149 and #12162 touch Go validator/main surfaces. The Ruby/Rust
+#12149 and #12162 touch Go validator/main surfaces. The Ruby-only
 `dist-newstyle` repair remains a ready sibling with TypeScript and Swift owned
-separately. The live reviewed exemption ledger contains five active entries,
+separately; Rust's half was later closed by the focused CI repair in PR #12633.
+The live reviewed exemption ledger contains five active entries,
 so the neutral contract must preserve reasoned exceptions and countable
 PENDING debt rather than treating every missing BUILD as equivalent.
 
@@ -6308,6 +6309,112 @@ and all seven changed paths had zero exact overlap across twelve other live
 open PRs. GitHub reports the PR non-draft and mergeable, with required checks
 queued or in progress. Auto-merge remains disabled until every required check
 is terminal and acceptable.
+
+PR #12625 completed 29 terminal acceptable checks (23 successes and six
+expected skips). With GitHub reporting a clean mergeable branch, the loop
+enabled squash auto-merge; GitHub merged it as
+`015a9da640ab2cd02e74110e31e1916d0671a8f5` at
+`2026-08-24T22:32:48Z` without a manual merge command. The exact-main
+collision report remains schema 3 with 15 established lanes, 1,370 identities,
+4,563 slots, 718 Rust singletons, zero collisions, and zero unknown buckets.
+No new package, identity, fixture, or authority owner was discovered.
+
+The next selected owner is
+`build-tool-rust-tracked-artifact-validation-conformance`. Both prerequisites
+are merged, and this bounded process-free child closes one of the eight
+remaining engine consumers. Rust is the widest established lane; the C# child
+had temporarily outranked it only because that work unlocked the now-complete
+two-step .NET chain. Ten live open PRs have zero exact overlap on the Rust
+build-tool, shared spec, state, or roadmap surfaces, and the target remote
+branch was absent. The strategic OCaml process-free substrate remains
+collision-unsafe while live PRs #12149 and #12162 touch its Go validator and
+main surfaces.
+
+The Rust implementation review exposed three separately owned follow-ups before
+publication. A trailing slash or backslash creates a final empty component that
+the shared Python and C# validators currently accept despite the portable-path
+contract; the Rust child rejects both forms directly, while
+`build-tool-tracked-artifact-trailing-empty-segment-cross-runtime-hardening`
+owns the neutral fixture and reviewed shared-engine repairs. The contract also
+needs one explicit Unicode data version across runtimes, now owned by
+`build-tool-tracked-artifact-unicode-version-contract`; Rust uses one exactly
+pinned Unicode 17.0.0 snapshot for normalization, full default folding, and
+reserved-name uppercase rather than mixing Unicode 17 normalization with an
+older folding table. Both owners now gate the unfinished native consumers and
+the Go, JVM, and Dart implementations.
+
+The canonical Rust `BUILD_windows` recipe also leaves an unignored
+`target_isolated/` directory after a real run. The generated validation output
+was removed, and `build-tool-rust-windows-isolated-target-artifact-hygiene`
+owns the durable build-front fix and repeated-clean-run proof without widening
+the process-free validator tranche.
+
+The implemented Rust validator is a pure in-memory consumer of the closed
+snapshot schema. It independently loads all five neutral cases and matches the
+contract's slash normalization, closed path-error precedence, hostile-input
+redaction, Unicode-scalar length and sorting, NFKC plus full default folding,
+full-uppercase reserved-name membership, inert entry kinds, and canonical
+diagnostic ordering. One exact `oxixml-unicode` 0.1.2 dependency supplies NFC,
+NFKC, full folding, and full uppercase from the same Unicode 17.0.0 snapshot;
+the dependency is Apache-2.0, has no transitives, and forbids unsafe code.
+
+Focused tests pass 2/2 at 98.98% validator line and 100% function coverage;
+Clippy passes all targets with warnings denied. The first GitHub check run
+exposed the registered Rust `dist-newstyle` discovery gap on Ubuntu and macOS:
+actual logs showed the shared fixture fail after 141 passes because the
+generated Haskell decoy was discovered. The minimal repair adds that exact,
+case-sensitive component to Rust's existing artifact exclusion. The focused
+regression, complete all-target suite, canonical BUILD, and canonical
+BUILD_windows front now pass 142 unit tests plus three CLI integrations.
+Coverage reports 94.03% discovery lines and 80.44% lines overall. The stable
+`build-tool-dist-newstyle-discovery-exclusion-remaining-engines` owner is now
+Ruby-only; TypeScript and Swift remain separately owned. Neutral schema and
+runner suites pass 80 tests plus 119 subtests, and all 111 corpus cases across 269 files
+validate. Parity, capability, Haskell-capability, and OCaml-lock suites pass 68
+tests with two expected Windows symlink skips. The Go build tool passes tests,
+vet, trimpath compilation, BUILD validation, and a real no-change dry run over
+45 Starlark files and 5,070 packages. Cargo audit reports no vulnerability in
+57 dependencies, and dependency, credential, diff, capability-manifest, and
+production-authority reviews are clean.
+
+The branch rebased without conflict over nine unrelated main commits to exact
+`origin/main` `d0d6ab3846ca56175b8d2e66b901d1facf32202a`. A fresh schema-3
+collision report at that revision remains 15 established lanes, 1,370
+identities, 4,563 slots, 718 Rust singletons, zero collisions, and zero unknown
+buckets. The state graph contains 486 unique owners with complete dependencies
+and no cycle. The final 467,724,669-byte `target_isolated/` validation artifact was
+removed after the exact Windows front ran; its durable cleanliness repair stays
+with the separately registered owner.
+
+Final fixture/inventory review caught one subtle NFC issue before publication:
+the Unicode library's fast predicate is conservative for `NFC_QC=Maybe`
+scalars. The validator now uses that predicate only as a fast path and performs
+an exact normalization comparison whenever it is inconclusive. A focused
+q-plus-combining-grave regression proves an already-normalized path remains
+accepted while the existing decomposed e-plus-acute case remains `NON_NFC`.
+Three independent read-only reviews verified the correction and found no
+remaining implementation, ownership, security, authority, or publication
+defect.
+
+Ready-for-review PR #12633 opened from clean validated head
+`b445baa5f43991f96db9540b2fb86b50f8057365` after a normal first push and one
+focused metadata correction on the same branch. Immediately before
+publication, the branch was based on exact `origin/main`
+`d0d6ab3846ca56175b8d2e66b901d1facf32202a`, the target remote branch was
+absent, and all seven changed paths had zero exact overlap across six other
+live open PRs. GitHub reports the PR non-draft and mergeable while required
+checks are queued or in progress. Auto-merge remains disabled until every
+required check is terminal and acceptable.
+
+The first CI run reached 18 successes and six expected skips, but Ubuntu and
+macOS build jobs plus their aggregate gate failed on the exact registered Rust
+`dist-newstyle` fixture. After inspecting the actual job logs, the branch added
+only the exact generated-artifact exclusion, its changelog entry, and README
+clarification. Commit `f0754ce362bae712b33380595394d2337b436450` was pushed
+normally to the same PR after the focused, full-suite, Clippy, both BUILD-front,
+coverage, diff, artifact-cleanliness, and security validations passed. The PR
+remains mergeable while replacement checks run; auto-merge stays disabled until
+all required checks are terminal and acceptable.
 
 ## Autonomous Loop Protocol
 

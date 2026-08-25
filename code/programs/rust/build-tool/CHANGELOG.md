@@ -4,6 +4,21 @@ All notable changes to the Rust build tool will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.2.5] - 2026-08-24
+
+### Added
+
+- Add a process-free tracked-artifact validator that consumes all five shared
+  conformance fixtures, validates portable paths with hostile-input redaction,
+  detects Unicode compatibility aliases of `node_modules` with one pinned
+  Unicode 17.0.0 normalization/casing snapshot, and preserves Unicode-scalar
+  diagnostic ordering across regular, symlink, and reparse metadata.
+
+### Fixed
+
+- Skip Cabal `dist-newstyle` output during discovery so generated Haskell
+  artifacts cannot become packages or fail the shared language-registry case.
+
 ## [0.2.4] - 2026-08-02
 
 ### Fixed

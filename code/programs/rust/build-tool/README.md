@@ -4,7 +4,7 @@ A **Rust port** of the Go build tool for the coding-adventures monorepo. It disc
 
 ## What it does
 
-This tool discovers packages in the monorepo via recursive `BUILD` file walking, resolves inter-package dependencies, hashes source files for change detection, and only rebuilds packages whose source or dependency inputs changed. Independent packages are built in parallel. Discovery uses the repository's canonical language registry, and programs retain a `programs` identity segment so a library and program with the same basename stay distinct. Text metadata is decoded deterministically: Lua `.rockspec` files must be strict UTF-8, and invalid bytes fail closed instead of silently deleting dependency edges.
+This tool discovers packages in the monorepo via recursive `BUILD` file walking, resolves inter-package dependencies, hashes source files for change detection, and only rebuilds packages whose source or dependency inputs changed. Independent packages are built in parallel. Discovery uses the repository's canonical language registry, skips generated artifact trees such as Cabal `dist-newstyle`, and preserves a `programs` identity segment so a library and program with the same basename stay distinct. Text metadata is decoded deterministically: Lua `.rockspec` files must be strict UTF-8, and invalid bytes fail closed instead of silently deleting dependency edges.
 
 ## Building
 
@@ -57,7 +57,7 @@ The release binary is at `target/release/build-tool` (or `build-tool.exe` on Win
 
 ## Architecture
 
-The tool is organized into eight modules, each responsible for one aspect of the build pipeline:
+The tool is organized into focused modules, each responsible for one aspect of the build pipeline:
 
 1. **graph** — Directed graph data structure with topological sort and affected-node queries
 2. **discovery** — Recursively walks for `BUILD` files to find packages
@@ -67,6 +67,7 @@ The tool is organized into eight modules, each responsible for one aspect of the
 6. **executor** — Parallel execution with Rayon thread pool
 7. **gitdiff** — Git-based change detection (default mode)
 8. **reporter** — Terminal-friendly build report formatting
+9. **validator** — Pure build-contract and inert tracked-artifact validation
 
 ## Rayon parallelism
 
@@ -123,6 +124,16 @@ METADATA_INVALID_UTF8: package=lua/pkg manifest=code/packages/lua/pkg/coding-adv
 
 The resolver and real CLI tests materialize the language-neutral
 `resolution/lua-utf8` and `resolution/lua-invalid-utf8` fixtures.
+
+Tracked-artifact validation consumes caller-supplied inert records only. It
+slash-normalizes portable paths, rejects unsafe paths at the fixed redacted
+path `repository`, and identifies `node_modules` components with full Unicode
+NFKC case folding. Normalization, folding, and reserved-name uppercasing all use
+one exactly pinned Unicode 17.0.0 table snapshot. Regular files, symlinks, and
+reparse points follow the same policy; the validator does not inspect Git, the
+filesystem, processes, the environment, or the network. Its tests consume all five shared
+`validation/tracked-artifacts-*` conformance fixtures, including Unicode scalar
+length and ordering boundaries.
 
 A resolved dependency self-edge also fails closed with exit code `2` instead
 of reaching the embedded graph assertion:
