@@ -14,6 +14,7 @@ import devanagari from "../../../../learning/human-languages/data/scripts/devana
 import gujarati from "../../../../learning/human-languages/data/scripts/gujarati.json";
 import hebrew from "../../../../learning/human-languages/data/scripts/hebrew.json";
 import persoArabic from "../../../../learning/human-languages/data/scripts/perso-arabic.json";
+import telugu from "../../../../learning/human-languages/data/scripts/telugu.json";
 import urduNastaliq from "../../../../learning/human-languages/data/scripts/urdu-nastaliq.json";
 //
 // The model, in one breath
@@ -257,6 +258,14 @@ const persianAlphabetSource = (glyph: string): StrokeSource => {
   const letter = persoArabic.letters.find((candidate) => candidate.glyph === glyph);
   if (!letter || !("strokeOrderSource" in letter) || !letter.strokeOrderSource) {
     throw new Error(`Persian ${glyph} has no verified source`);
+  }
+  return letter.strokeOrderSource;
+};
+
+const teluguIndependentVowelSource = (glyph: string): StrokeSource => {
+  const letter = telugu.independentVowels.find((candidate) => candidate.glyph === glyph);
+  if (!letter || !("strokeOrderSource" in letter) || !letter.strokeOrderSource) {
+    throw new Error(`Telugu independent vowel ${glyph} has no verified source`);
   }
   return letter.strokeOrderSource;
 };
@@ -12714,5 +12723,84 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       variation:
         "Tamil handwriting is taught with school-to-school variation; there is no single national stroke-order standard. This is one attested order.",
     },
+  },
+  [ductusKey("telugu", "అ")]: {
+    script: "telugu",
+    glyph: "అ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "turn around the left lobe",
+            path: [
+              { x: 142, y: 258 },
+              { x: 200, y: 270 },
+              { x: 260, y: 310 },
+              { x: 315, y: 370 },
+              { x: 310, y: 425 },
+              { x: 265, y: 468 },
+              { x: 220, y: 468 },
+              { x: 155, y: 450 },
+              { x: 100, y: 395 },
+              { x: 72, y: 325 },
+              { x: 74, y: 245 },
+              { x: 90, y: 180 },
+            ],
+          },
+          {
+            label: "sweep around the broad lower bowl",
+            path: [
+              { x: 90, y: 180 },
+              { x: 125, y: 105 },
+              { x: 215, y: 48 },
+              { x: 315, y: 24 },
+              { x: 420, y: 24 },
+              { x: 535, y: 50 },
+              { x: 630, y: 105 },
+              { x: 700, y: 185 },
+              { x: 724, y: 270 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "turn around the right lobe",
+            path: [
+              { x: 610, y: 220 },
+              { x: 610, y: 190 },
+              { x: 665, y: 170 },
+              { x: 690, y: 220 },
+              { x: 700, y: 270 },
+              { x: 710, y: 300 },
+              { x: 715, y: 360 },
+              { x: 680, y: 420 },
+              { x: 620, y: 465 },
+              { x: 575, y: 465 },
+              { x: 530, y: 465 },
+              { x: 500, y: 435 },
+              { x: 478, y: 395 },
+              { x: 478, y: 360 },
+              { x: 500, y: 320 },
+              { x: 550, y: 285 },
+              { x: 575, y: 270 },
+              { x: 610, y: 255 },
+              { x: 610, y: 220 },
+            ],
+          },
+          {
+            label: "return left along the inner bar",
+            path: [
+              { x: 610, y: 220 },
+              { x: 520, y: 220 },
+              { x: 420, y: 220 },
+              { x: 305, y: 220 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: teluguIndependentVowelSource("అ"),
   },
 };

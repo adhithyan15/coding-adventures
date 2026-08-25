@@ -804,6 +804,10 @@ export interface ScriptData {
   direction: Direction;
   system: WritingSystem;
   letters: Letter[];
+  /** Word-initial vowel letters kept outside generated consonant syllable grids. */
+  independentVowels?: Letter[];
+  /** Script-native digits kept outside the teaching-letter inventory. */
+  digits?: Letter[];
   /** Obligatory contextual shapes composed from existing letters, not new rows. */
   ligatures?: Ligature[];
   marks?: Mark[];

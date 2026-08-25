@@ -15,9 +15,15 @@ describe("independent (word-initial) vowels", () => {
     expect(iv.map((v) => v.sound)).toEqual(
       ["a", "ā", "i", "ī", "u", "ū", "e", "ē", "o", "ō", "ai", "au", "r̥"],
     );
-    // Independent vowels are vowels, not syllables, and carry no fabricated ductus.
+    // Independent vowels are vowels, not syllables. Only అ has crossed the
+    // source-and-font gate; every other row remains free of fabricated ductus.
     expect(iv.every((v) => v.role === "vowel")).toBe(true);
-    expect(iv.every((v) => v.strokeOrder.length === 0)).toBe(true);
+    expect(iv[0]!.strokeOrder).toHaveLength(4);
+    expect(iv[0]!.penLifts).toBe(1);
+    expect(iv[0]!.strokeOrderSource?.url).toBe(
+      "https://write-telugu-alphabets.en.aptoide.com/app",
+    );
+    expect(iv.slice(1).every((v) => v.strokeOrder.length === 0)).toBe(true);
     // The vocalic-R vowel is ISO-15919 r̥ = r + U+0325 (ring below), not IAST ṛ.
     expect([...iv[12]!.sound].map((c) => c.codePointAt(0))).toEqual([0x72, 0x325]);
   });

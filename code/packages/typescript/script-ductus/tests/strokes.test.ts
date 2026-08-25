@@ -234,11 +234,12 @@ const URDU_GHUNNA = DUCTUS[ductusKey("urdu-nastaliq", "ں")];
 const URDU_HE = DUCTUS[ductusKey("urdu-nastaliq", "ہ")];
 const URDU_YE = DUCTUS[ductusKey("urdu-nastaliq", "ی")];
 const URDU_BARI_YE = DUCTUS[ductusKey("urdu-nastaliq", "ے")];
+const TELUGU_A = DUCTUS[ductusKey("telugu", "అ")];
 
 const fontForDuctus = (letter: LetterDuctus) => {
   const script = SCRIPTS.find((candidate) => candidate.script === letter.script);
   if (!script) throw new Error(`no verified script/font owns ${letter.glyph}`);
-  const letterClaim = script.letters.find(
+  const letterClaim = [...script.letters, ...(script.independentVowels ?? [])].find(
     (entry) => entry.glyph === letter.glyph && entry.strokeOrderSource?.url === letter.source.url,
   );
   const ligatureClaim = script.ligatures?.find(
@@ -525,14 +526,17 @@ describe("handwriting ductus", () => {
         const inInk = makeInInk(glyph().contours);
         for (let s = 0; s < letter.strokes.length; s++) {
           const frac = fractionOnInk(penPath(letter.strokes[s]), inInk);
-          // Two cited handwriting animations keep a run continuous across a
+          // Three cited handwriting animations keep a run continuous across a
           // gap in Noto's printed contours: Gujarati હ and Devanagari ख's
-          // upper-right loop. Permit only those documented bridges; every
+          // upper-right loop, plus Telugu అ's right-lobe return. Permit only
+          // those documented bridges; every
           // other authored path retains the stricter general-purpose floor.
           const minimumInkFit = letter.script === "gujarati" && letter.glyph === "હ"
             ? 0.92
             : letter.script === "devanagari" && letter.glyph === "ख"
               ? 0.95
+            : letter.script === "telugu" && letter.glyph === "అ"
+              ? 0.96
               : 0.97;
           expect(frac, `stroke ${s} strays off the glyph`).toBeGreaterThan(minimumInkFit);
         }
@@ -596,6 +600,15 @@ describe("handwriting ductus", () => {
       ["carry the short upper bar right", "curve down around the broad right bowl"],
       ["turn around the compact left loop", "curl back to the central crossing"],
       ["sweep the low tail left"],
+    ]);
+  });
+
+  it("Telugu అ groups four source-verified movements into two pen-down runs", () => {
+    expect(penLifts(TELUGU_A)).toBe(1);
+    expect(TELUGU_A.strokes).toHaveLength(2);
+    expect(TELUGU_A.strokes.map((stroke) => stroke.segments.map((segment) => segment.label))).toEqual([
+      ["turn around the left lobe", "sweep around the broad lower bowl"],
+      ["turn around the right lobe", "return left along the inner bar"],
     ]);
   });
 
@@ -3882,6 +3895,12 @@ describe("handwriting ductus", () => {
           script: script.script, identity: letter.glyph, glyph: letter.glyph,
           penLifts: letter.penLifts, source: letter.strokeOrderSource,
         })),
+      ...(script.independentVowels ?? [])
+        .filter((letter) => letter.penLifts !== undefined || letter.strokeOrderSource !== undefined)
+        .map((letter) => ({
+          script: script.script, identity: letter.glyph, glyph: letter.glyph,
+          penLifts: letter.penLifts, source: letter.strokeOrderSource,
+        })),
       ...(script.ligatures ?? [])
         .filter((ligature) => ligature.penLifts !== undefined || ligature.strokeOrderSource !== undefined)
         .map((ligature) => ({
@@ -3909,6 +3928,9 @@ describe("handwriting ductus", () => {
   });
 
   it("routes each verified ductus to the owning script font", () => {
+    expect(verifiedLetterFont("అ", TELUGU_A.source.url)).toBe(
+      "_fonts/NotoSansTelugu-Static.ttf",
+    );
     expect(verifiedLetterFont("人", CHINESE_REN.source.url)).toBe(
       "_fonts/NotoSansSC-Subset.ttf",
     );
