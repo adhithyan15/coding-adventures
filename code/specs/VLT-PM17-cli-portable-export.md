@@ -8,6 +8,17 @@ by VLT-PM00, VLT-PM05, and VLT-PM15. Portable import remains a separate
 follow-up so creation, opening, target initialization, and cross-vault identity
 allocation are not hidden inside one oversized ceremony.
 
+**Amendment (VLT-PM05 §13.9).** The optional `--best-effort` flag in §2, the
+exclusion report in §9, and gate 10 in §11 were added later, closing the
+backlog item §13.2 opened and left deliberately unrepaired: a single item
+this build cannot re-encode used to deny the export of an entire otherwise-
+healthy vault. Without the flag, every byte of this spec's original text
+below still describes this command's exact, unmodified behavior — the
+amendment is strictly additive, reached only by a caller who asks for it by
+name, the same "does not silently change what an existing caller already
+depends on" posture VLT-PM49's own amendment took for its two new import
+formats.
+
 ## 1. Purpose
 
 The local CLI needs a backup users can place in a directory synchronized by a
@@ -24,10 +35,10 @@ provider detail enters command output or the audit projection.
 
 ## 2. Command grammar
 
-The complete V1 grammar is:
+The complete grammar, after the VLT-PM05 §13.9 amendment, is:
 
 ```text
-vault-pm export FILE
+vault-pm export FILE [--best-effort]
 ```
 
 `FILE` is one explicit destination path. Missing, empty, additional, or
@@ -39,7 +50,22 @@ destination.
 The parser treats a path beginning with `-` as a path value only because it is
 the sole positional argument after the closed `export` command. It does not
 interpret path contents, expand a shell token, resolve a provider, or render
-the path back to the user.
+the path back to the user. This rule is unchanged by the amendment and takes
+precedence over it: `vault-pm export --best-effort` is one positional
+argument — a destination literally named `--best-effort` — not the flag,
+because the flag is recognized only in the two-token shape below.
+
+**`--best-effort` (VLT-PM05 §13.9 amendment).** Optional, and recognized only
+immediately after `FILE` — `export FILE --best-effort`, never
+`export --best-effort FILE` — matching this grammar's existing
+flags-after-positional order elsewhere in the command surface (VLT-PM00
+§14.4's `item show ITEM [--field FIELD] [--copy|--reveal]`, for one). Absent,
+this command's behavior is byte-for-byte what the rest of this spec already
+describes. Present, an item this build cannot re-encode (an oversized
+first-party, opaque, or quarantined record, or a conflict with one such
+candidate — VLT-PM05 §13.1/§13.3/§13.5/§13.8) is excluded from the artifact
+instead of denying the whole export; §9 states what changes in the command's
+output when that happens, and VLT-PM05 §13.9 states the complete design.
 
 ## 3. Authorities and ownership
 
@@ -135,6 +161,16 @@ bound to the exact signed source bootstrap. It excludes local owner-private
 state, provider credentials, configuration, cache/search projections, pins,
 and raw repository frames.
 
+Without `--best-effort`, that "every" is unconditional: one candidate this
+build cannot re-encode denies the artifact entirely (§9). With
+`--best-effort` (VLT-PM05 §13.9 amendment), "every" instead means every item
+this build *could* re-encode; an item it could not is left out in its
+entirety — never a partial candidate set — and its identity is carried, still
+inside the same passphrase-encrypted plaintext as everything else, in the
+snapshot's own `excluded_item_ids` field, so the gap is a recorded fact of
+the artifact rather than something indistinguishable from a smaller vault
+that never had the item.
+
 The complete plaintext snapshot is encrypted under the separately collected
 passphrase using a fresh Argon2id salt and XChaCha20-Poly1305 nonce. The host
 cannot parse record fields and may copy the resulting bytes through any
@@ -163,13 +199,37 @@ explicit user operations; a typo must not destroy the only known-good backup.
 
 ## 9. Rendering and exit behavior
 
-Success emits exactly:
+Success without `--best-effort`, or success with `--best-effort` and nothing
+excluded, emits exactly:
 
 ```text
 Portable export written.
 ```
 
-The destination is not echoed. Failures use the existing bounded CLI classes:
+**With `--best-effort` and at least one item excluded (VLT-PM05 §13.9
+amendment)**, success instead emits:
+
+```text
+Portable export written.
+Excluded (too large to include): N
+<item id>
+...
+```
+
+one item id per line, in this build's own canonical id rendering (the same
+form `item show`/`item delete` accept). This is dynamic, operator-actionable
+content and belongs on standard output — the same "aggregate counts on
+stdout" shape the `import` command's `created=/skipped=/failed=` report
+already uses (`VLT-PM49-cli-external-import.md` §6) — not a fixed,
+payload-free sentence on standard error the way the VLT-PM42 recovery notice
+and the VLT-PM47 attachments-left-behind notice are: unlike those two, a bare
+count here would leave the operator with nothing to act on. Every id printed
+is already visible through this vault's own `item list`; nothing about this
+line discloses anything the operator's own already-open session could not
+already show them.
+
+The destination is not echoed either way. Failures use the existing bounded
+CLI classes:
 
 - malformed grammar, passphrase mismatch, or existing destination: invalid;
 - wrong vault passphrase: locked;
@@ -177,8 +237,19 @@ The destination is not echoed. Failures use the existing bounded CLI classes:
 - terminal, entropy, repository, or destination write failure: provider;
 - unsupported target: unsupported.
 
+`--best-effort` changes none of these classes and introduces no new one: it
+changes only whether an otherwise-`BoundExceeded` outcome is reachable at
+all for the item(s) it excludes. A `BoundExceeded` from the array-level
+encode ceiling on an entirely healthy, merely very large vault (VLT-PM05
+§13.9's own "what this does not fix") is unaffected by the flag and still
+surfaces as the ordinary invalid-command-adjacent failure this command
+already had before the amendment.
+
 No diagnostic includes OS error text, a path, a passphrase, record data,
-provider metadata, or cryptographic material.
+provider metadata, or cryptographic material. The exclusion report above is
+the one deliberate, narrow exception to "record data never enters command
+output" — item ids are identifiers, not record fields, and VLT-PM05 §13.9
+states why exposing them here does not weaken that guarantee.
 
 ## 10. Recovery and interruption
 
@@ -208,9 +279,18 @@ The slice is complete only when tests prove:
    passphrases or record secrets;
 6. an existing destination is byte-for-byte unchanged after a retry;
 7. Unix creation requests mode `0600`;
-8. audit output contains neither destination nor passphrase; and
+8. audit output contains neither destination nor passphrase;
 9. the real executable completes the hidden-prompt ceremony across a fresh
-   pseudo-terminal and restart-backed vault.
+   pseudo-terminal and restart-backed vault; and
+10. **(VLT-PM05 §13.9 amendment)** `--best-effort` is recognized only in the
+    fixed `export FILE --best-effort` position, and a bare
+    `export --best-effort` parses `--best-effort` as the destination, not the
+    flag; without `--best-effort`, standard output for both a clean and a
+    would-have-excluded export is byte-for-byte identical to the pre-
+    amendment text of §9; with it and at least one exclusion, standard
+    output carries the exact count and every excluded item's canonical id,
+    and none of the excluded items' record data — title, username, password,
+    or any other field.
 
 ## 12. Non-goals and backlog
 
@@ -220,3 +300,10 @@ Google Drive APIs, or a restore-completed claim. The prioritized follow-up is
 the bounded audited import ceremony in `VLT-PM18-cli-portable-import.md`.
 Explicit target creation/configuration switching and application-owned
 field-by-field semantic restore comparison remain later recovery work.
+
+The VLT-PM05 §13.9 amendment does not extend `--best-effort` (or an
+equivalent) to `vault-pm import portable`, nor does it address the
+array-level encode ceiling on a large, entirely healthy vault (VLT-PM05
+§13.9's own stated exclusion) or VLT-PM05 §13.2's separate, still-open
+ingest-gating residual. Each remains exactly as open as it was before this
+amendment.
