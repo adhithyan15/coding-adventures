@@ -1857,6 +1857,51 @@ file's stats changed -- zero regressions. This closes the entire
 lane-load/store family: every one of the 8 opcodes across 8 vendored
 files (PR44-47) is now implemented and gradeable.
 
+extended 2026-08-25 (relaxed SIMD epic PR1 -- see code/specs/
+               W19-wasm-relaxed-simd-first-slice.md -- i8x16_relaxed_
+               swizzle.wast, `i8x16.relaxed_swizzle` (sub-opcode 0x100),
+               same pinned commit, no re-pin): the FIRST file from the
+               relaxed-simd proposal, a SEPARATE proposal from base SIMD
+               (PR1-PR47) with its own encoding table (`https://github.
+               com/WebAssembly/relaxed-simd/blob/main/proposals/relaxed-
+               simd/Overview.md`, not `BinarySIMD.md`) -- confirmed live
+               via the GitHub API that relaxed-simd `.wast` files exist
+               at this repo's existing pinned SHA (a real, non-guaranteed
+               outcome: relaxed-simd was still an early-phase proposal
+               around when many testsuite snapshots were cut). Lives at
+               the testsuite repo ROOT like every other file above, no
+               `PROPOSAL_FILES` entry needed. Grades 1/1 `module` and
+               5/5 `assert_return`, ALL REAL passes -- the file's own
+               `assert_return` directives use the upstream corpus's
+               `either A B` combinator (accepts EITHER of two values,
+               not one exact one -- relaxed-simd ops are spec-sanctioned
+               as implementation-defined for specific inputs), a NEW
+               top-level assert_return shape this PR added parsing
+               support for in `wasm-wast-parser::script::Expected::
+               Either` and grading support for in `wasm-conformance`'s
+               `value_matches_expected` -- confirmed by hand that this
+               repo's chosen `i8x16.relaxed_swizzle` behavior (identical
+               to its non-relaxed `i8x16.swizzle` sibling: clamp
+               out-of-range indices to 0) is a literal member of every
+               `either` pair in this file, so no new numeric semantics
+               were needed for this specific opcode, only the new
+               grading MACHINERY (reused unchanged by every future
+               relaxed-simd PR in this epic). The other 6 relaxed-simd
+               files at this pinned SHA (`i16x8_relaxed_q15mulr_s.wast`,
+               `i32x4_relaxed_trunc.wast` -- flagged as having ZERO real
+               assert_return directives, weaker coverage than every
+               other relaxed-simd file -- `relaxed_dot_product.wast`,
+               `relaxed_laneselect.wast`, `relaxed_madd_nmadd.wast`,
+               `relaxed_min_max.wast`) remain unvendored, each its own
+               future PR's scope.
+
+Aggregate `module` rose from 1268/1269 to 1269/1270 (+1 pass, +1
+gradeable, `NotYetSupported` unchanged at 67); `assert_return` rose from
+44624/44641 to 44629/44646 (+5 pass, +5 gradeable, `NotYetSupported`
+unchanged at 545). No other already-vendored file's stats changed --
+zero regressions. This is the FIRST file of a new epic (relaxed SIMD),
+following the now-complete base SIMD epic (PR1-PR47).
+
 The vendored files are licensed under the Apache License, Version 2.0 --
 see the accompanying LICENSE file, itself vendored verbatim from the same
 pinned commit.

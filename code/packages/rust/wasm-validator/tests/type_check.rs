@@ -1324,6 +1324,23 @@ fn valid_i8x16_swizzle_pops_two_v128_pushes_v128() {
     assert_valid("(module (func (param v128 v128) (result v128) (i8x16.swizzle (local.get 0) (local.get 1))))");
 }
 
+#[test]
+fn valid_i8x16_relaxed_swizzle_pops_two_v128_pushes_v128() {
+    // Relaxed SIMD epic PR1 (see code/specs/
+    // W19-wasm-relaxed-simd-first-slice.md): i8x16.relaxed_swizzle --
+    // same pop-two-push-one v128 shape as plain i8x16.swizzle above; its
+    // implementation-defined out-of-range-index behavior is entirely a
+    // runtime concern, invisible to the type checker.
+    assert_valid("(module (func (param v128 v128) (result v128) (i8x16.relaxed_swizzle (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn invalid_i8x16_relaxed_swizzle_with_an_i32_operand() {
+    // Confirms the type checker actually enforces V128 for both operands,
+    // not just accepting whatever's on the stack.
+    assert_invalid("(module (func (param i32 v128) (result v128) (i8x16.relaxed_swizzle (local.get 0) (local.get 1))))");
+}
+
 // ── SIMD widen PR38 (task #229-231): i8x16.shuffle ───────────────────────
 //
 // The most structurally complex SIMD opcode implemented in this campaign

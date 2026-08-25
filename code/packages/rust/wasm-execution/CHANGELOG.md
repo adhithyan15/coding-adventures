@@ -2,6 +2,32 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.58] - 2026-08-25 (Relaxed SIMD epic PR1: i8x16.relaxed_swizzle)
+
+### Added
+
+- `SimdOpKind::RelaxedSwizzle` execution arm (sub-opcode `0x100`, the
+  first opcode of the relaxed-simd epic that follows the now-complete
+  base SIMD epic, PR1-PR47 -- see `code/specs/
+  W19-wasm-relaxed-simd-first-slice.md`): a byte-for-byte copy of the
+  existing `Swizzle` arm's body (pop index vector `s`, pop data vector
+  `a`, `result[i] = a[s[i]]` if `s[i] < 16` else `0`). The relaxed-simd
+  spec deliberately leaves out-of-range-index behavior implementation-
+  defined; hand-verified against the real upstream
+  `i8x16_relaxed_swizzle.wast` corpus's own `either`-wrapped expected
+  values that this repo's existing clamp-to-zero choice is a literal
+  member of every `either` pair in that file, so no new numeric
+  semantics were needed -- own match arm rather than merging into
+  `Swizzle`'s pattern, matching this match's convention of one arm per
+  `SimdOpKind`.
+- Confirms no new decoder infrastructure was needed for this opcode:
+  `0x100` is the first sub-opcode in this table `>= 0x100`, and
+  LEB128-encodes as the 2-byte sequence `[0x80, 0x02]` -- the same
+  2-byte-continuation shape this crate already decodes for base-SIMD
+  values `>= 0x80` (e.g. `i32x4.add`'s `0xAE` -> `[0xAE, 0x01]`).
+- New tests: `i8x16_relaxed_swizzle_permutes_lanes_by_the_index_vector`,
+  `i8x16_relaxed_swizzle_out_of_range_index_lane_produces_zero`.
+
 ## [0.9.57] - 2026-08-25 (SIMD PR47: v128.load64_lane/store64_lane)
 
 ### Added

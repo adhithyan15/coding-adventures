@@ -1557,6 +1557,7 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     | wasm_opcodes::SimdOpKind::SubI64x2
                     | wasm_opcodes::SimdOpKind::MulI64x2
                     | wasm_opcodes::SimdOpKind::Swizzle
+                    | wasm_opcodes::SimdOpKind::RelaxedSwizzle
                     | wasm_opcodes::SimdOpKind::MulF32x4
                     | wasm_opcodes::SimdOpKind::MinF32x4
                     | wasm_opcodes::SimdOpKind::MaxF32x4
@@ -1655,6 +1656,14 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         // wasm-opcodes' `SimdOpKind::MinF64x2`/`PminF64x2`
                         // doc comments), entirely invisible here -- still
                         // just two V128 pops, one V128 push.
+                        // `i8x16.relaxed_swizzle` (relaxed SIMD epic PR1 --
+                        // see code/specs/W19-wasm-relaxed-simd-first-slice.
+                        // md) joins too: same `(v128, v128) -> v128` shape
+                        // as `Swizzle` above, its only difference being
+                        // that its out-of-range index behavior is spec-
+                        // sanctioned as implementation-defined at RUNTIME
+                        // -- entirely invisible here, still just two V128
+                        // pops, one V128 push.
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         push_val(&mut stack, ValueType::V128);

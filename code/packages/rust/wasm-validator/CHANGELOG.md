@@ -2,6 +2,21 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.59] - 2026-08-25 (Relaxed SIMD epic PR1: i8x16.relaxed_swizzle)
+
+### Added
+
+- Type-check coverage for `i8x16.relaxed_swizzle` (`SimdOpKind::
+  RelaxedSwizzle`): joins the existing shared `(v128, v128) -> v128`
+  binary-shape arm right alongside `Swizzle` -- identical type rule (pop
+  two `V128`, push one `V128`); its implementation-defined out-of-range
+  behavior is entirely a runtime concern, invisible at this layer. First
+  opcode of the relaxed-simd epic that follows the now-complete base
+  SIMD epic (PR1-PR47) -- see `code/specs/
+  W19-wasm-relaxed-simd-first-slice.md`.
+- New test: `valid_i8x16_relaxed_swizzle_pops_two_v128_pushes_v128`,
+  `invalid_i8x16_relaxed_swizzle_with_an_i32_operand`.
+
 ## [0.2.58] - 2026-08-25 (SIMD PR47: v128.load64_lane/store64_lane)
 
 ### Added

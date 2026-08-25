@@ -2310,6 +2310,31 @@ pub enum SimdOpKind {
     /// PR40-46 established) -- and closes the lane-load/store family
     /// entirely.
     Store64Lane,
+    /// `i8x16.relaxed_swizzle` (SIMD relaxed-SIMD epic, PR1 -- see
+    /// `code/specs/W19-wasm-relaxed-simd-first-slice.md`) -- the relaxed
+    /// SIMD proposal's own opcode, sub-opcode `0x100`, the FIRST entry in
+    /// this table whose sub-opcode is `>= 0x100` (every relaxed-simd
+    /// opcode is, so every one of them needs the 2-byte LEB128
+    /// continuation encoding this crate already exercises for base-SIMD
+    /// values `>= 0x80`, e.g. `i32x4.add`'s `0xAE`). Same `(v128, v128)
+    /// -> v128` binary shape as [`Self::Swizzle`], and -- verified by
+    /// hand against the real upstream `i8x16_relaxed_swizzle.wast`
+    /// corpus's own `either` expected-value pairs, not assumed from spec
+    /// prose alone -- [`Self::Swizzle`]'s existing clamp-to-zero
+    /// out-of-range behavior (`a[s[i]]` if `s[i] < 16`, else `0`) is a
+    /// literal, deterministic member of EVERY `either` pair in that
+    /// file. The relaxed-simd spec deliberately leaves out-of-range
+    /// behavior implementation-defined (engines may instead wrap the
+    /// index modulo 16 for a `< 128` index); this repo picks the same
+    /// deterministic clamp-to-zero behavior `Swizzle` already uses
+    /// rather than introducing a second, genuinely different code path
+    /// for no observable benefit -- the corpus's `either` wrapper is
+    /// exactly what makes both choices conformant. See `wasm-execution`'s
+    /// `SimdOpKind::RelaxedSwizzle` match arm, which is intentionally a
+    /// byte-for-byte copy of `Swizzle`'s own body (own arm, not a shared
+    /// helper, matching this table's existing per-kind-duplication
+    /// convention).
+    RelaxedSwizzle,
 }
 
 /// One entry in the SIMD opcode table: everything a consumer needs to
@@ -3110,6 +3135,24 @@ pub static SIMD_OPS: &[SimdOpInfo] = &[
     // fetch_testsuite.py`.
     SimdOpInfo { name: "v128.load64_lane", sub_opcode: 0x57, kind: SimdOpKind::Load64Lane },
     SimdOpInfo { name: "v128.store64_lane", sub_opcode: 0x5B, kind: SimdOpKind::Store64Lane },
+
+    // ── Relaxed SIMD epic, PR1 -- see code/specs/
+    // W19-wasm-relaxed-simd-first-slice.md ──────────────────────────────
+    //
+    // `i8x16.relaxed_swizzle`, sub-opcode `0x100` -- fetched live from the
+    // relaxed-simd proposal's own encoding table (`https://github.com/
+    // WebAssembly/relaxed-simd/blob/main/proposals/relaxed-simd/
+    // Overview.md`, NOT `BinarySIMD.md` -- a different proposal repo),
+    // the FIRST row in this table with a sub-opcode `>= 0x100` (every
+    // relaxed-simd opcode is). `0x100` LEB128-encodes as the 2-byte
+    // sequence `[0x80, 0x02]` -- same 2-byte-continuation shape this
+    // table already exercises for `i32x4.add` (`0xAE` -> `[0xAE, 0x01]`),
+    // just one bit further into the second byte, so no new decoder
+    // infrastructure was needed for this PR (see `SimdOpKind::
+    // RelaxedSwizzle`'s own doc comment for the full verification this PR
+    // did, including the hand-checked `either`-pair semantics that let
+    // this reuse `Swizzle`'s existing execution body unchanged).
+    SimdOpInfo { name: "i8x16.relaxed_swizzle", sub_opcode: 0x100, kind: SimdOpKind::RelaxedSwizzle },
 ];
 
 /// Look up a SIMD opcode by its LEB128-decoded sub-opcode value (the
@@ -3528,8 +3571,8 @@ mod tests {
     // ── SIMD (0xFD prefix, v128 first slice) ─────────────────────────────────
 
     #[test]
-    fn simd_ops_table_has_the_expected_236_entries_and_no_duplicates() {
-        assert_eq!(SIMD_OPS.len(), 236);
+    fn simd_ops_table_has_the_expected_237_entries_and_no_duplicates() {
+        assert_eq!(SIMD_OPS.len(), 237);
 
         let mut seen_sub_opcodes = std::collections::HashSet::new();
         let mut seen_names = std::collections::HashSet::new();
@@ -4799,5 +4842,27 @@ mod tests {
         assert_eq!(get_simd_op(0x56).map(|o| o.name), Some("v128.load32_lane"));
         assert_eq!(get_simd_op(0x5A).map(|o| o.name), Some("v128.store32_lane"));
         assert_eq!(get_simd_op(0x5C).map(|o| o.name), Some("v128.load32_zero"));
+    }
+
+    // ── Relaxed SIMD epic, PR1 -- see code/specs/
+    // W19-wasm-relaxed-simd-first-slice.md ──────────────────────────────
+
+    #[test]
+    fn simd_relaxed_swizzle_has_the_real_verified_sub_opcode_value() {
+        // Relaxed SIMD epic PR1: `i8x16.relaxed_swizzle` (0x100) --
+        // fetched live from the relaxed-simd proposal's own encoding
+        // table (`https://github.com/WebAssembly/relaxed-simd/blob/main/
+        // proposals/relaxed-simd/Overview.md`), a DIFFERENT document from
+        // `BinarySIMD.md` every base-SIMD entry above cites. `0x100` is
+        // the FIRST sub-opcode in this whole table `>= 0x100` -- every
+        // relaxed-simd opcode needs the 2-byte LEB128 continuation
+        // encoding (`0x100` = `[0x80, 0x02]`), same shape this table
+        // already exercises for base-SIMD values `>= 0x80` (e.g.
+        // `i32x4.add`'s `0xAE` = `[0xAE, 0x01]`), just one bit further
+        // into the second byte.
+        let op = get_simd_op(0x100).expect("0x100 should be i8x16.relaxed_swizzle");
+        assert_eq!(op.name, "i8x16.relaxed_swizzle");
+        assert_eq!(op.kind, SimdOpKind::RelaxedSwizzle);
+        assert_eq!(get_simd_op_by_name("i8x16.relaxed_swizzle").map(|o| o.sub_opcode), Some(0x100));
     }
 }
