@@ -1,0 +1,14 @@
+[package]
+name = "java-to-semantic-ir"
+version = "0.1.0"
+edition = "2021"
+description = "Java (GrammarASTNode CST) → narrow-waist Semantic IR. JV02 frontend, milestone M0: literals + a synthesized `main` function."
+
+[dependencies]
+coding-adventures-java-lexer = { path = "../java-lexer" }
+coding-adventures-java-parser = { path = "../java-parser" }
+# The parser emits a generic `parser::grammar_parser::GrammarASTNode` whose
+# leaf tokens are `lexer::token::Token`; we walk both directly.
+parser = { path = "../parser" }
+lexer = { path = "../lexer" }
+semantic-ir = { path = "../semantic-ir" }
