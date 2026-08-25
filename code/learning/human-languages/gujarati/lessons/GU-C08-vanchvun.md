@@ -3,7 +3,7 @@ schema_version: 2
 id: GU-C08-vanchvun
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 440
-chapter: 9
+chapter: 10
 type: word
 headword: વાંચવું
 romanization: vā̃chvũ

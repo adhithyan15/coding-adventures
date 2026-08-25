@@ -1,22 +1,24 @@
 {
   "chapter": 5,
-  "title": "Farewells",
-  "label": "ch:farewells",
-  "canDo": "I can end a Gujarati conversation politely and choose a farewell that fits the situation.",
+  "title": "How Are You?",
+  "label": "ch:responding",
+  "canDo": "I can ask how someone is in Gujarati, answer naturally, and return the question.",
   "spineNodes": [
-    "SPINE-TAKE-LEAVE"
+    "SPINE-EXCHANGE-NAMES",
+    "SPINE-CHECK-WELLBEING",
+    "SPINE-COURTESY-THANK"
   ],
   "payoff": {
-    "lesson": "GU-C04-practice",
+    "lesson": "GU-C03-practice",
     "kind": "task",
-    "summary": "Complete GU-C04-practice, the canonical closing checkpoint, and demonstrate the chapter promise: end a Gujarati conversation politely and choose a farewell that fits the situation.",
+    "summary": "Complete GU-C03-practice, the canonical closing checkpoint, and demonstrate the chapter promise: ask how someone is in Gujarati, answer naturally, and return the question.",
     "assesses": [
-      "GU-CONCEPT-C01-AAVJO-01",
-      "GU-CONCEPT-C04-KAALE-01",
-      "GU-CONCEPT-C04-MALISHUN-01",
-      "GU-CONCEPT-C04-PACHHA-01",
-      "GU-CONCEPT-C04-PACHHAMALISHUN-01",
-      "GU-CONCEPT-C04-PRACTICE-01"
+      "GU-CONCEPT-C03-HUN-01",
+      "GU-CONCEPT-C03-KEM-01",
+      "GU-CONCEPT-C03-MAJAA-01",
+      "GU-CONCEPT-C03-PRACTICE-01",
+      "GU-CONCEPT-C03-TAMEKEMCHHO-01",
+      "GU-CONCEPT-C03-VANDHONAHI-01"
     ]
   }
 }

@@ -2,33 +2,34 @@
   "version": 1,
   "language": "gujarati",
   "chapter": 5,
-  "title": "Farewells",
+  "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:190616973f9d072e",
+  "sourceHash": "fnv1a64:cad1eb9c6b45cd8c",
   "lessons": [
     {
-      "id": "GU-C04-malishun",
-      "sequence": 220,
-      "title": "મળીશું (maḷīshũ) — \"(we) will meet\"",
-      "headword": "મળીશું",
+      "id": "GU-C03-hun",
+      "sequence": 160,
+      "title": "હું (hũ) — \"I\"",
+      "headword": "હું",
       "romanization": "",
-      "gloss": "(we) will meet",
+      "gloss": "I",
       "script": "gujarati",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:73dd9035762b57b3",
+      "sourceHash": "fnv1a64:dfdf311903de277b",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "The letters in this word",
+          "Script retrieval"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Script retrieval until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -44,7 +45,7 @@
             },
             {
               "kind": "speech",
-              "text": "A future-tense verb — the other half of \"see you again.\""
+              "text": "To answer \"how are you?\" you first need \"I.\" In the name exchange you learned mārũ (\"my\"); here is its owner."
             }
           ]
         },
@@ -55,7 +56,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "મ (ma) + ળી (ḷī, with the retroflex ળ ḷ) + શું (shũ) becomes મળીશું (maḷīshũ)."
+              "text": "હ (ha) + the u-sign + nasal becomes હું (hũ). One nasal syllable."
             }
           ]
         },
@@ -66,18 +67,18 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "મળીશું (maḷīshũ, \"we will meet\") is the future of મળવું (maḷvũ, \"to meet\"), from Sanskrit મિલ્ (mil-, \"to join, unite\") — the same root as Hindi milnā and Punjabi milṇā. Note the retroflex ળ (ḷ): Gujarati keeps this extra letter — like Marathi and the Dravidian south, and unlike Hindi. The ending -શું (-shũ) is the \"we will\" future."
+              "text": "હું (hũ, \"I\") descends from Sanskrit અહમ્ (aham, \"I\"), worn down through Old Gujarati (haũ) to hũ. That aham is from Proto-Indo-European h₁eǵ(H)om — the ancestor of Latin ego and English I. So Gujarati's hũ, Latin ego, and English I are one ancient word. Its possessive is the મારું (mārũ, \"my\") from that name exchange."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: the future is an ending",
+          "title": "Grammar Lens: \"I\" plus the copula",
           "segments": [
             {
               "kind": "speech",
-              "text": "Gujarati marks the future with an ending on the stem: maḷ- (\"meet\") + -īshũ (\"we will\") becomes maḷīshũ. No helper-word like English \"will.\""
+              "text": "Hũ takes the copula છું (chhũ, \"am\"): hũ … chhũ. So the answer to tame kem chho? begins હું (hũ …)."
             }
           ]
         },
@@ -95,29 +96,200 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"maḷīshũ\"",
+              "instruction": "\"hũ\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"maḷīshũ\"]"
+              "source": "[YOU SAY: \"hũ\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the verb it's from (maḷvũ, \"to meet,\" from Sanskrit mil-)",
+              "instruction": "the family — hũ / Latin ego / English I",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the verb it's from (*maḷvũ*, \"to meet,\" ← Sanskrit *mil-*)]"
+              "source": "[YOU SAY: the family — *hũ* / Latin *ego* / English **I**]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the extra letter it shows (retroflex ળ, ḷ)",
+              "instruction": "\"hũ … chhũ\" — I am …",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the extra letter it shows (retroflex ળ, *ḷ*)]"
+              "source": "[YOU SAY: \"hũ … chhũ\" — I am …]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "script",
+          "title": "Script retrieval",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hide the earlier model for ય. Write it once, compare, and repair only one part if needed."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C03-hun-ya-retrieval",
+              "prompt": "Without looking back, write ય once.",
+              "assesses": [
+                "GU-SCRIPT-YA-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "ય"
+              ],
+              "feedback": {
+                "correct": "Good: one careful retrieval is enough.",
+                "incorrect": "Look at ય once, hide it, and write it one time."
+              }
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What Sanskrit word is hũ from, and its cousins? (Aham; Latin ego, English I.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C03-kem",
+      "sequence": 170,
+      "title": "કેમ (kem) — \"how,\" a proper k- question",
+      "headword": "કેમ",
+      "romanization": "",
+      "gloss": "how (also \"why\")",
+      "script": "gujarati",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:f1af538d700fe2b8",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word",
+          "Script retrieval"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Script retrieval until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where shũ (\"what\") hid its k-, this one wears it plainly — and it opens the most Gujarati of greetings."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ક (ka) + ે (the e-sign) + મ (ma) becomes કેમ (kem)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કેમ (kem, \"how\"; also \"why\") is from the interrogative stem ક- (ka-), PIE kʷo- — the same root behind English wh- and Latin qu-. It heads the plain k- family Gujarati mostly kept: kem (how), kōṇ (who), kyā̃ (where), kyāre (when). And કેમ છો? (kem chho?, \"how are you?\") is, for most Gujaratis, the real everyday hello — warmer than namaste."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"kem\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"kem\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the k- question family — kem, kōṇ, kyā̃, kyāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the k- question family — *kem, kōṇ, kyā̃, kyāre*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "script",
+          "title": "Script retrieval",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hide the earlier model for ભ. Write it once, compare, and stop after one possible repair."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C03-kem-bha-retrieval",
+              "prompt": "Without looking back, write ભ once.",
+              "assesses": [
+                "GU-SCRIPT-BHA-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "ભ"
+              ],
+              "feedback": {
+                "correct": "Good: one careful retrieval is enough.",
+                "incorrect": "Look at ભ once, hide it, and write it one time."
+              }
             }
           ]
         },
@@ -134,35 +306,35 @@
             },
             {
               "kind": "speech",
-              "text": "What verb is maḷīshũ from, and what special letter does it use? (Maḷvũ \"to meet\"; the retroflex ળ ḷ, which Hindi lacks.)"
+              "text": "What root does kem share with English how/what? (The interrogative ka-, PIE kʷo-.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "GU-C04-kaale",
-      "sequence": 230,
-      "title": "કાલે મળીશું (kāle maḷīshũ) — \"see you tomorrow\"",
-      "headword": "કાલે મળીશું",
+      "id": "GU-C03-tame-kem-chho",
+      "sequence": 180,
+      "title": "તમે કેમ છો? (tame kem chho?) — \"how are you?\"",
+      "headword": "તમે કેમ છો?",
       "romanization": "",
-      "gloss": "see you tomorrow (and the કાલ puzzle)",
+      "gloss": "how are you? (respectful)",
       "script": "gujarati",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a534f7f973de6d88",
+      "sourceHash": "fnv1a64:5c65f1896ae4caee",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "Script retrieval"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script retrieval until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -178,235 +350,7 @@
             },
             {
               "kind": "speech",
-              "text": "A goodbye for tomorrow — built on a word that means both tomorrow and yesterday."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "કા (kā) + લે (le) becomes કાલે (kāle, \"on [the] kāl\"). The base is કાલ (kāl)."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "કાલ (kāl) means both \"tomorrow\" and \"yesterday\" — the day on either side of today — from Sanskrit કાલ (kāla, \"time\"). (It is the very same kāla behind Hindi's kal, Bengali's kāl, and Punjabi's akāl \"timeless.\") The verb's tense tells which: kāle maḷīshũ (future becomes \"tomorrow we'll meet\"), kāle maḷyā (past becomes \"we met yesterday\"). So કાલે મળીશું = \"tomorrow we'll meet\" = \"see you tomorrow.\""
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"kāle maḷīshũ\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"kāle maḷīshũ\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the puzzle — kāl means both tomorrow and yesterday",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the puzzle — *kāl* means both **tomorrow** and **yesterday**]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the root and its cousins (kāla \"time\"; Hindi kal, Punjabi akāl)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the root and its cousins (*kāla* \"time\"; Hindi *kal*, Punjabi *akāl*)]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What two opposite days does kāl mean, and what tells them apart? (Both tomorrow and yesterday; the verb's tense.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GU-C04-pachha",
-      "sequence": 240,
-      "title": "પાછા (pāchhā) — \"again, back\"",
-      "headword": "પાછા",
-      "romanization": "",
-      "gloss": "again, back",
-      "script": "gujarati",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:985ec44f0b00541e",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "One small word turns a goodbye into \"till next time.\" You already have the other half — āvjo (\"come again\") — from the earlier courtesy chapter."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "પા (pā) + છા (chhā) becomes પાછા (pāchhā)."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "પાછા (pāchhā, \"back, again, returning\") is from Sanskrit પશ્ચાત્ (paścāt, \"behind, afterward\") — the same \"behind/after\" root behind English post- words, distantly. It carries the sense of return: pāchhā āvvũ (\"to come back\"), pāchhā jāvũ (\"to go back\"). Add it to \"we'll meet\" and you get the warm goodbye of the next lesson."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"pāchhā\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"pāchhā\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "what it adds to a goodbye (\"again / back\")",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: what it adds to a goodbye (\"again / back\")]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does pāchhā mean, and what sense does it carry? (\"Back / again\"; the sense of return — pāchhā āvvũ, \"to come back.\")"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GU-C04-pachha-malishun",
-      "sequence": 250,
-      "title": "પાછા મળીશું (pāchhā maḷīshũ) — \"we'll meet again\"",
-      "headword": "પાછા મળીશું",
-      "romanization": "",
-      "gloss": "we'll meet again (goodbye)",
-      "script": "gujarati",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:8ae9dab2ff48b357",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The warm, explicit goodbye — the companion of the earlier āvjo."
+              "text": "The greeting most Gujaratis actually use — three words you already own."
             }
           ]
         },
@@ -417,12 +361,31 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "પાછા મળીશું = પાછા (pāchhā, \"again\") + મળીશું (maḷīshũ, \"we will meet\") — \"we'll meet again.\" Where the earlier આવજો (āvjo) is the quick, warm \"come again,\" pāchhā maḷīshũ spells out the promise: we will meet once more. It is the same \"promise of return\" the whole subcontinent prefers (Hindi phir milenge, Bengali āshi, Tamil pōy varugiṟēṉ)."
+              "text": "તમે કેમ છો? = તમે (tame, respectful \"you\") + કેમ (kem, \"how\") + છો (chho, \"are\") — literally \"you how are?\", the verb last. Chho is the respectful/plural form of the copula chhe you met in the name exchange (hũ chhũ I am / tame chho you are). To a friend (tũ): તું કેમ છે? (tũ kem chhe?)."
             }
           ]
         },
         {
           "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: match the \"you\" to the copula",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Respectful: તમે કેમ છો? (tame … chho)."
+            },
+            {
+              "kind": "speech",
+              "text": "Familiar: તું કેમ છે? (tũ … chhe)."
+            },
+            {
+              "kind": "speech",
+              "text": "Same pattern as every Indo-Aryan track: the \"you\" and its verb-form travel together."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -435,34 +398,62 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the warm goodbye — pāchhā maḷīshũ",
+              "instruction": "the respectful greeting — tame kem chho?",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the warm goodbye — *pāchhā maḷīshũ*]"
+              "source": "[YOU SAY: the respectful greeting — *tame kem chho?*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the two words it's built from (pāchhā + maḷīshũ)",
+              "instruction": "the familiar version — tũ kem chhe?",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the two words it's built from (*pāchhā* + *maḷīshũ*)]"
+              "source": "[YOU SAY: the familiar version — *tũ kem chhe?*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the Chapter-1 goodbye it partners (āvjo)",
+              "instruction": "where the verb sits (at the end)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the Chapter-1 goodbye it partners (*āvjo*)]"
+              "source": "[YOU SAY: where the verb sits (at the end)]"
             }
           ]
         },
         {
-          "index": 3,
+          "index": 4,
+          "type": "script",
+          "title": "Script retrieval",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hide the earlier model for ધ. Write it once, compare, make at most one repair, and stop."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C03-tame-kem-chho-dha-retrieval",
+              "prompt": "Without looking back, write ધ once.",
+              "assesses": [
+                "GU-SCRIPT-DHA-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "ધ"
+              ],
+              "feedback": {
+                "correct": "Good: one careful retrieval is enough.",
+                "incorrect": "Look at ધ once, hide it, and write it one time."
+              }
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -474,26 +465,312 @@
             },
             {
               "kind": "speech",
-              "text": "What does pāchhā maḷīshũ literally say, and how does it relate to āvjo? (\"We'll meet again\"; it's the explicit form of Ch.1's \"come again\" goodbye.)"
+              "text": "Give the everyday Gujarati \"how are you?\", and its copula form. (Tame kem chho?; chho — the respectful form of chhe.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "GU-C04-practice",
-      "sequence": 260,
-      "title": "Chapter 5 — The farewells",
+      "id": "GU-C03-majaa",
+      "sequence": 190,
+      "title": "મજા (majā) — \"enjoyment,\" and how to answer",
+      "headword": "મજા",
+      "romanization": "",
+      "gloss": "enjoyment, fun — and the reply \"હું મજામાં છું\"",
+      "script": "gujarati",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:461b1b10379875ad",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word",
+          "Script retrieval"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Script retrieval until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word that answers \"how are you?\" — and it comes not from Sanskrit but from Persia."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "મ (ma) + જા (jā) becomes મજા (majā)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "મજા (majā, \"enjoyment, fun, relish, pleasure\") is not Sanskrit — it is Perso-Arabic, from Persian maza (\"taste, relish\"). Gujaratis, a great trading people, wove thousands of Persian and Arabic words into their speech over centuries of commerce across the Arabian Sea — and even \"how are you\" is answered with one. To say \"I'm well,\" Gujarati says હું મજામાં છું (hũ majāmā chhũ) — literally \"I am in enjoyment\" (majā + -mā \"in\" + chhũ \"am\")."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "input",
+          "title": "The exchange — the reply",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "— tame kem chho? (\"How are you?\") — majāmā, ābhār. (\"Well [lit. 'in enjoyment'], thank you.\")"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"majā\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"majā\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the full reply — hũ majāmā chhũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the full reply — *hũ majāmā chhũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which heritage majā belongs to (Persian, not Sanskrit)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which heritage *majā* belongs to (Persian, not Sanskrit)]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "script",
+          "title": "Script retrieval",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hide the earlier model for ૃ. Write the below-consonant sign once, compare, and stop after one possible repair."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C03-majaa-vocalic-r-retrieval",
+              "prompt": "Without looking back, write the vowel sign ૃ once.",
+              "assesses": [
+                "GU-SCRIPT-VOCALIC-R-MATRA-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "ૃ"
+              ],
+              "feedback": {
+                "correct": "Good: ૃ is the small vowel sign written below its consonant.",
+                "incorrect": "Look once at ૃ below a consonant, hide it, and try the sign one time."
+              }
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How does Gujarati say \"I'm well,\" and where does majā come from? (Hũ majāmā chhũ, \"I'm in enjoyment\"; Persian maza, \"taste/relish.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C03-vandho-nahi",
+      "sequence": 200,
+      "title": "વાંધો નહીં (vāndho nahĩ) — \"no problem\"",
+      "headword": "વાંધો નહીં",
+      "romanization": "",
+      "gloss": "no problem / it's okay / you're welcome",
+      "script": "gujarati",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:8d9214283e9a1323",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "When someone thanks you — or apologises — this is the easy, gracious reply."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વાંધો (vāndho, \"objection, problem\" — with the nasal on વાં) + નહીં (nahĩ, \"not\") becomes vāndho nahĩ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વાંધો નહીં literally means \"[there is] no objection\" — vāndho (\"objection, difficulty, harm\") + નહીં (nahĩ, \"not / no\"). It serves as \"it's okay / no worries / no problem / you're welcome.\" The negative નહીં (nahĩ) is the fuller form of the ના (nā) from the earlier yes/no lesson — both from the ancient na-, Proto-Indo-European ne, behind English no, not, and Hindi nahīṁ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"vāndho nahĩ\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"vāndho nahĩ\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what it literally means (\"no objection\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what it literally means (\"no objection\")]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the exchange — ābhār / vāndho nahĩ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the exchange — *ābhār* / *vāndho nahĩ*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does vāndho nahĩ literally say, and what ancient root is its nahĩ from? (\"No objection\"; PIE ne — English no/not.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C03-practice",
+      "sequence": 210,
+      "title": "Chapter 5 — The how-are-you exchange",
       "headword": "(dialogue)",
       "romanization": "",
-      "gloss": "Chapter 5 recap — the farewells",
+      "gloss": "Chapter 5 recap — the how-are-you exchange",
       "script": "gujarati",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a875bc396360ec6c",
+      "sourceHash": "fnv1a64:6a58377d2b3e0ba9",
       "notice": null,
       "blocks": [
         {
@@ -509,14 +786,14 @@
             },
             {
               "kind": "speech",
-              "text": "No new words. Three ways to part — none of them a blunt \"goodbye.\""
+              "text": "No new words. The whole responding cycle, from atoms you now own."
             }
           ]
         },
         {
           "index": 1,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way — the farewells",
+          "type": "input",
+          "title": "The exchange",
           "segments": [
             {
               "kind": "pause",
@@ -527,29 +804,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the quick \"come again\" from the earlier courtesy chapter — āvjo",
+              "instruction": "\"How are you?\" (the everyday hello) — tame kem chho?",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the quick \"come again\" from the earlier courtesy chapter — *āvjo*]"
+              "source": "[YOU SAY: \"How are you?\" (the everyday hello) — *tame kem chho?*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the explicit \"we'll meet again\" — pāchhā maḷīshũ",
+              "instruction": "\"I'm well, thank you.\" — hũ majāmā chhũ, ābhār.",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the explicit \"we'll meet again\" — *pāchhā maḷīshũ*]"
+              "source": "[YOU SAY: \"I'm well, thank you.\" — *hũ majāmā chhũ, ābhār.*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"see you tomorrow\" — kāle maḷīshũ",
+              "instruction": "\"No problem / you're welcome.\" — vāndho nahĩ.",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"see you tomorrow\" — *kāle maḷīshũ*]"
+              "source": "[YOU SAY: \"No problem / you're welcome.\" — *vāndho nahĩ.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the familiar question — tũ kem chhe?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the familiar question — *tũ kem chhe?*]"
             }
           ]
         },
@@ -567,29 +853,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"again\" and \"(we) will meet\" (pāchhā, maḷīshũ)",
+              "instruction": "the k- question-word for \"how\" (kem)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"again\" and \"(we) will meet\" (*pāchhā*, *maḷīshũ*)]"
+              "source": "[YOU SAY: the k- question-word for \"how\" (*kem*)]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the word that means BOTH tomorrow and yesterday (kāl)",
+              "instruction": "\"I\" and its copula (hũ, chhũ)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the word that means BOTH tomorrow and yesterday (*kāl*)]"
+              "source": "[YOU SAY: \"I\" and its copula (*hũ*, *chhũ*)]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the retroflex letter in maḷīshũ (ળ, ḷ)",
+              "instruction": "which of your words is Persian, not Sanskrit (majā)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the retroflex letter in *maḷīshũ* (ળ, *ḷ*)]"
+              "source": "[YOU SAY: which of your words is Persian, not Sanskrit (*majā*)]"
             }
           ]
         },
@@ -606,15 +892,19 @@
             },
             {
               "kind": "speech",
-              "text": "āvjo (\"goodbye\") = \"come [again],\" from āvvũ \"to come\"."
+              "text": "kem from the interrogative k- (PIE kʷo-), cousin of English how/what."
             },
             {
               "kind": "speech",
-              "text": "maḷīshũ from maḷvũ \"to meet\" (Sanskrit mil-); the retroflex ળ."
+              "text": "hũ from Sanskrit aham becomes Latin ego, English I."
             },
             {
               "kind": "speech",
-              "text": "kāl from kāla \"time\" (Hindi kal, Punjabi akāl)."
+              "text": "majā from Persian maza, \"taste/relish\" — the trade-language layer."
+            },
+            {
+              "kind": "speech",
+              "text": "nahĩ from PIE ne, English no (in vāndho nahĩ)."
             }
           ]
         },
@@ -631,7 +921,7 @@
             },
             {
               "kind": "speech",
-              "text": "You're leaving a friend and will see them tomorrow. Give the goodbye and the \"tomorrow\" version. (Āvjo — and kāle maḷīshũ.)"
+              "text": "Someone greets you with tame kem chho? — reply that you're well and thank them. (Hũ majāmā chhũ, ābhār — and to their thanks, vāndho nahĩ.)"
             }
           ]
         }

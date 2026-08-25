@@ -2,6 +2,23 @@
 
 ## [Unreleased]
 
+### Added — nine prerequisite-safe doorway forms (#12811)
+
+- Inserted a nine-lesson Chapter 3 before the first name exchange so learners
+  meet **જ, ો, ં, ી, ુ, છ, ક, ણ, શ** one form at a time before later lessons
+  ask them to decode those forms. Every micro-lesson stays at five minutes or
+  less and follows observe/trace, guided copy, then delayed copy.
+- Closed the chapter with separate reading and model-free writing checks over
+  all nine forms. No new form is introduced in the payoff.
+- Renumbered downstream chapters and generated book, narration, modality, and
+  progress artifacts without changing stable lesson IDs or prerequisite links.
+- Exact script-closure measurements improve from **25 to 16** never-taught
+  glyphs and from **45 to 31** affected lessons, with no duration, order,
+  forward-reference, glyph-load, or script-system regression.
+- The longer runway exposes 21 additional mature reinforcement-window misses
+  (**145 to 166**). This is recorded as follow-up #12814 rather than hidden by
+  weakening the continuity gate.
+
 ### Fixed — the opening ramp now has two honest book chapters
 
 - Split the 19-lesson opening container into an 11-step meaning-and-script

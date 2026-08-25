@@ -3,7 +3,7 @@ schema_version: 2
 id: GU-C02-maarun
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 80
-chapter: 3
+chapter: 4
 type: word
 headword: મારું
 gloss: my (neuter; also મારો m. / મારી f.)

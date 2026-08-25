@@ -3,7 +3,7 @@ schema_version: 2
 id: GU-C02-tamarun-naam-shun-chhe
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 140
-chapter: 3
+chapter: 4
 type: phrase
 headword: તમારું નામ શું છે?
 gloss: what's your name?

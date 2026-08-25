@@ -3,7 +3,7 @@ schema_version: 2
 id: GU-C07-javun
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 370
-chapter: 8
+chapter: 9
 type: word
 headword: જવું
 romanization: javũ

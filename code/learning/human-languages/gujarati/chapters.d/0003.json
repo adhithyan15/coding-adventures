@@ -1,25 +1,26 @@
 {
   "chapter": 3,
-  "title": "Introducing Yourself",
-  "label": "ch:introductions",
-  "canDo": "I can introduce myself in Gujarati, give my name, and understand the other person's name.",
+  "title": "Nine Doorway Forms",
+  "label": "ch:gu-doorway-forms",
+  "canDo": "I can read and write nine Gujarati forms needed by the next conversations: જ, ો, ં, ી, ુ, છ, ક, ણ, and શ.",
   "spineNodes": [
+    "SPINE-MEET-GREET",
     "SPINE-EXCHANGE-NAMES"
   ],
   "payoff": {
-    "lesson": "GU-C02-practice",
+    "lesson": "GU-W03-sha",
     "kind": "task",
-    "summary": "Complete GU-C02-practice, the canonical closing checkpoint, and demonstrate the chapter promise: introduce myself in Gujarati, give my name, and understand the other person's name.",
+    "summary": "With every model covered, identify the nine doorway forms and write them from spoken sound or role cues, earning separate reading and writing scores.",
     "assesses": [
-      "GU-CONCEPT-C02-ANAND-01",
-      "GU-CONCEPT-C02-CHHE-01",
-      "GU-CONCEPT-C02-MAARUN-01",
-      "GU-CONCEPT-C02-MAARUNNAAMCHHE-01",
-      "GU-CONCEPT-C02-NAAM-01",
-      "GU-CONCEPT-C02-PRACTICE-01",
-      "GU-CONCEPT-C02-SHUN-01",
-      "GU-CONCEPT-C02-TAMARUNNAAMSHUNCHHE-01",
-      "GU-CONCEPT-C02-TUTAME-01"
+      "GU-SCRIPT-JA-01",
+      "GU-SCRIPT-O-MATRA-01",
+      "GU-SCRIPT-ANUSVARA-01",
+      "GU-SCRIPT-II-MATRA-01",
+      "GU-SCRIPT-U-MATRA-01",
+      "GU-SCRIPT-CHHA-01",
+      "GU-SCRIPT-KA-01",
+      "GU-SCRIPT-NNA-01",
+      "GU-SCRIPT-SHA-01"
     ]
   }
 }
