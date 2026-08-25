@@ -7650,13 +7650,15 @@ colors extend their already registered neutral/parity or frontend owners. None
 adds or removes a package identity or BUILD/build-tool marker.
 
 Merged PR #12844 does expose one genuinely unowned portable behavior family:
-Rust alone now implements `i8x16.relaxed_swizzle` and recursive `(either A B)`
-expected-result grading across the WAST parser, conformance reporter, opcode,
-validator, and execution stack. Two newly registered owners separate a neutral
-relaxed-SIMD contract from an established-lane completion umbrella. The neutral
-owner covers all nineteen `0x100` through `0x113` instructions, canonical
-multi-byte LEB128 encoding, deterministic permitted implementations,
-recursive accepted-result sets, validator shapes, and diagnostics. Existing
+Rust alone now implements the relaxed-SIMD families including
+`i8x16.relaxed_swizzle`, `f32x4.relaxed_min/max`, and
+`f64x2.relaxed_min/max`, plus recursive N-ary `either` expected-result grading
+across the WAST parser, conformance reporter, opcode, validator, and execution
+stack. Two registered owners separate a neutral relaxed-SIMD contract from an
+established-lane completion umbrella. The neutral owner covers all twenty
+`0x100` through `0x113` instructions, canonical multi-byte LEB128 encoding,
+deterministic permitted implementations, recursive N-ary accepted-result sets,
+validator shapes, and diagnostics. Existing
 WAT/WAST, conformance-report, corpus, and host-authority owners retain syntax,
 directive execution, pinned provenance, fetching, and baseline writes. The
 state graph now has 505 unique owners and 768 complete acyclic edges.
@@ -7831,9 +7833,10 @@ three examples, and the build tool's 44 examples. HPC reports 75% expression,
 69% alternative, and 59% top-level-definition coverage across the existing
 large `BuildTool` module. The complete shared resolver fixtures also exposed
 and this tranche repairs two existing Haskell-engine defects: ambiguous
-multi-Cabal roots and duplicate Dart manifest-name roots no longer enter the
-dependency graph, while a package identity still wins over a same-basename
-program identity.
+multi-Cabal metadata and duplicate Dart manifest-name aliases contribute no
+ambiguous edge, while every discovered package node and the Haskell directory
+aliases remain available and a package identity still wins over a
+same-basename program identity.
 
 All 29 generator tests and the real emitted-Haskell official-vector check pass.
 The neutral corpus validates 111 cases and 269 files; conformance,
@@ -7850,6 +7853,27 @@ A required read-only `ubuntu-24.04` job pins GHC 9.4.8 and Cabal 3.10.3.0,
 disables checkout credentials, executes the real full-vector verifier, and
 feeds its result into the stable CI gate. Generator subprocess authority stays
 under the separate selection-blocked host-authority owner.
+
+Independent generator and CI security review passed the exact emitted-vector
+implementation, pinned action and toolchain objects, package isolation,
+bounded streams, process-tree cleanup, Unicode provenance, and read-only gate.
+Adapter review caught one real resolver regression in the first implementation:
+ambiguous Haskell and Dart metadata had removed whole packages from the graph.
+The final repair suppresses only the ambiguous aliases and dependency edges,
+retains all discovered nodes and Haskell directory aliases, and extends the
+shared node and scheduling assertions. All 51 Haskell examples pass afterward.
+
+The branch rebased without conflict onto exact `origin/main`
+`89a236a69a925673b734cacf07a1ebca4024205d`. Grouped ALGOL selector identity,
+relaxed SIMD min/max, HTML table diagnostics, Tamil dependent long-i, Gujarati
+R4 bridge B, suffix-meaning ADJ work, and its later thread-ledger update remain
+inside their existing neutral, frontend, conformance, curriculum, or adjacent
+automation-state owners and do not overlap this tranche.
+The first Mermaid Gantt grammar/parser/IR/temporal-layout/paint pipeline was
+newly unowned, so `mermaid-gantt-chart-portable-conformance` and its dependent
+established-lane parity umbrella were registered before publication. The state
+graph now contains 507 unique owners and 770 complete acyclic edges: 142 merged,
+364 pending, and exactly one in progress.
 
 ## Autonomous Loop Protocol
 
