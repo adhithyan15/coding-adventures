@@ -88,6 +88,37 @@ class UnicodeDownloadBoundaryTests(unittest.TestCase):
                 "https://internal.example/test.txt",
             )
 
+    def test_typescript_renderer_exports_the_pinned_process_free_api(self) -> None:
+        rendered = generator._render_typescript(
+            (
+                [(0x0300, 230)],
+                [(0x00C0, False, (0x0041, 0x0300))],
+                [(0x0041, 0x0300, 0x00C0)],
+                [(0x0041, (0x0061,))],
+                [(0x0061, (0x0041,))],
+            )
+        )
+
+        self.assertIn('export const UNICODE_VERSION = "17.0.0";', rendered)
+        self.assertIn("export function nfc", rendered)
+        self.assertIn("export function nfkcCasefold", rendered)
+        self.assertIn("export function fullUppercase", rendered)
+        self.assertNotIn(".normalize(", rendered)
+        self.assertNotIn("toLocale", rendered)
+
+    def test_typescript_output_and_license_are_declared_targets(self) -> None:
+        self.assertEqual(
+            generator.TYPESCRIPT_TARGET,
+            Path(
+                "code/programs/typescript/build-tool/src/"
+                "tracked-artifact-unicode17.ts"
+            ),
+        )
+        self.assertIn(
+            Path("code/programs/typescript/build-tool/UNICODE-LICENSE.txt"),
+            generator.LICENSE_TARGETS,
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
