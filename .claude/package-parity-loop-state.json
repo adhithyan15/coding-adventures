@@ -11,7 +11,12 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 12762,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/12762",
+    "branch": "codex/build-tool-python-orphan-crate-validation-conformance",
+    "status": "open"
+  },
   "last_inventory": {
     "revision": "d4e91eb24f1ed9f24e834fbff264b08dcaf60511",
     "schema_version": 3,
@@ -4900,10 +4905,14 @@
     {
       "id": "build-tool-python-orphan-crate-validation-conformance",
       "title": "Make the Python build tool consume orphan-crate validation",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-orphan-crate-validation-corpus"],
       "branch": "codex/build-tool-python-orphan-crate-validation-conformance",
-      "pr_number": null,
+      "pr_number": 12762,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/12762",
+      "opened_at": "2026-08-25T10:45:40Z",
+      "opened_revision": "e414dc766c0e03bb3aa38f2fbc046e34e8fc7405",
+      "final_revision": "e414dc766c0e03bb3aa38f2fbc046e34e8fc7405",
       "selection_revision": "2445ef2bd42ddefd6b47ab3d9fc6aec5ac5c1e39",
       "selection_notes": "Selected only after PR #12738 completed every reported check and merged through squash auto-merge, its stale active-PR and Rust-owner lifecycle were reconciled, every intervening main commit through 2445ef2bd42ddefd6b47ab3d9fc6aec5ac5c1e39 was classified, and the exact collision inventory was regenerated. The schema-3 report remains 15 established lanes, 1,373 implementation identities, 4,566 slots, 175 high-consensus packages with 276 gaps, 910 singletons with 12,740 gaps, 721 Rust singletons, zero collisions, and zero unknown buckets; OCaml remains correctly emerging at zero packages. This bounded process-free Python consumer is dependency-ready behind the merged orphan corpus, advances the widest remaining supported lane at 502 packages, and reuses the already pinned source-embedded Unicode 17 normalization and casing substrate without adding discovery authority. Eleven live open PRs and all non-main remote heads have zero exact overlap with the Python build-tool, state, or roadmap surfaces, and the target remote branch was absent. The higher-descendant extra-CI-toolchain corpus and OCaml process-free core remain collision-unsafe while live PRs #12149 and #12162 own their required Go main and validator surfaces.",
       "implementation_revision": "ba12c800ef4aace529564db812051feec92d6c9e",
@@ -4911,6 +4920,7 @@
       "rebase_revision": "d4e91eb24f1ed9f24e834fbff264b08dcaf60511",
       "rebase_notes": "Rebased twice without conflict before publication over guarded TypeScript human-language-data ledger routing, ADJ loop bookkeeping, and Rust HTML-parser diagnostic positioning. Those commits remain in existing human-language, ADJ, and HTML-parser owners, add no package identity, and have zero exact overlap with the selected Python build-tool, state, or roadmap implementation surfaces. The refreshed collision report remains 15 established lanes, 1,373 identities, 4,566 slots, zero collisions, and zero unknown buckets; a late publication audit found zero exact candidate-path overlap across all 13 live open PRs, while the independent semantic audit found zero Python build-tool or neutral-corpus overlap across the preceding 12-PR snapshot and 34 non-main remote heads.",
       "validation_notes": "The pure Python adapter exactly consumes all four orphan-crate fixtures and adds direct coverage for unsafe-path redaction, U+001C blank reasons, fixed BUILD-name ranking, runnable-over-empty ancestry, full-fold-equivalent exemption duplicates, and BMP plus supplementary diagnostic ordering. Both literal BUILD_windows and BUILD fronts pass from cleared uv 0.11.28 / Python 3.13.14 environments with 442 tests at 90.58% total coverage; the focused validator passes 40 tests at 97% coverage. Ruff, selective test lint, strict MyPy, compileall, focused Bandit, uv dependency compatibility, and wheel/sdist builds pass. pip-audit reports no known vulnerability in non-editable dependencies; the two repository packages are explicitly skipped because they are editable. The full-package Bandit probe reports only inherited process execution in unchanged ci_workflow.py, executor.py, and gitdiff.py, while the changed validator adds no filesystem, Git, process, environment, network, native, credential, or dependency authority. The neutral 111-case, 269-file corpus validates; its schema and runner suites pass 80 tests plus 121 subtests. Package-parity, capability-taxonomy, Haskell-capability, and OCaml-lock suites pass 66 tests plus 807 subtests with two expected Windows skips. The Go oracle passes all packages, vet, and trimpath compilation, and a forced Python dry plan validates all BUILD metadata and reports 494 packages would build. After two conflict-free rebases, the exact-main schema-3 inventory at d4e91eb24f1ed9f24e834fbff264b08dcaf60511 remains 15 established lanes, 1,373 identities, 4,566 slots, 175 high-consensus packages with 276 gaps, 910 singletons with 12,740 gaps, 721 Rust singletons, zero collisions, and zero unknown buckets. Intervening human-language-data guard routing, ADJ loop bookkeeping, and Rust HTML-parser diagnostic positioning are package-neutral, remain in existing owners, and have zero exact changed-path overlap. Three independent read-only implementation, security, ownership, and lifecycle reviews report no remaining finding; the implementation review also ran 20,000 randomized differential snapshots against the neutral oracle with zero mismatch. Dry-run-verified path-scoped cleanup removed the generated venv, coverage file, and caches, leaving no ignored artifact under the package.",
+      "publication_notes": "Opened ready-for-review PR #12762 from clean validated head e414dc766c0e03bb3aa38f2fbc046e34e8fc7405 after a normal first push from exact origin/main d4e91eb24f1ed9f24e834fbff264b08dcaf60511. Immediately before publication, the target remote branch and prior PR were absent, and all six changed paths had zero exact overlap across 13 other live open PRs. GitHub reports the PR non-draft and mergeable; required checks are queued, so auto-merge remains disabled until every check is terminal and acceptable and GitHub reports no conflict.",
       "notes": "Consume the closed process-free orphan-crate snapshot and diagnostics in the Python engine without adding filesystem enumeration or process authority."
     },
     {
