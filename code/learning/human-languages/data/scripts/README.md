@@ -231,7 +231,13 @@ second row of Frame 5 gives independent **எ** six connected movements through
 its left climb, top bar, inner spiral, and lower foot, then one lift before the
 separate right upright rises. This row is distinct from dependent **ெ** in
 Frame 6, whose placement metadata makes no standalone ductus claim. The
-Tamil starter inventory is now fully verified. Persian **ا** adds the first
+Tamil **ழ** adds Appendix I Frame 7's six numbered movements as three
+pen-down runs: a joined left body and bar, a joined inner upright and broad
+right bowl, and the detached lower hook. Noto Sans Tamil simplifies the
+manual's looped left body and high bar to a retraced upright with a low
+crossbar, so the font-fitted path preserves the source's run boundaries rather
+than copying its display geometry literally. The Tamil starter inventory is
+now fully verified. Persian **ا** adds the first
 right-to-left-script ductus: UT Austin's freehand lesson shows one top-to-bottom
 Naskh stem at 00:08–00:11, with no lift. The adjacent **ب** demonstration at
 00:11–00:15 sweeps its shallow bowl right-to-left, then lifts once for the dot
