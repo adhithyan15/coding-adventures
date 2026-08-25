@@ -1,0 +1,759 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 21,
+  "title": "Bus, Vehicle, and Cart: No New Signs",
+  "drivablePrefix": 9,
+  "sourceHash": "fnv1a64:eef5ca68be538974",
+  "lessons": [
+    {
+      "id": "MW-C16-hear-bas",
+      "sequence": 1560,
+      "title": "Hear bas — bus",
+      "headword": "bas",
+      "romanization": "bas",
+      "gloss": "bus",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dbc27e3abec046aa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 20,
+              "perItem": false,
+              "source": "[PAUSE 20s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the seven-word shopping payoff, then say expensive and price."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bas — bus."
+            },
+            {
+              "kind": "speech",
+              "text": "Hear it twice, point to a bus picture, and say it once. Keep the spelling covered until the sound and meaning are easy."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 10."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C16-hear-bas-meaning",
+              "prompt": "What vehicle does bas name?",
+              "assesses": [
+                "MW-LEX-BAS-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "bus",
+                "a bus"
+              ],
+              "feedback": {
+                "correct": "Right: bas names a bus.",
+                "incorrect": "Keep the short sound with the vehicle: bas — bus."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C16-bas",
+      "sequence": 1570,
+      "title": "बस (bas) — bus on the page",
+      "headword": "बस",
+      "romanization": "bas",
+      "gloss": "bus, written with familiar signs",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ccfe088cc364ad49",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 20,
+              "perItem": false,
+              "source": "[PAUSE 20s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say bus and maternal grandfather, then write expensive and price."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ब + स becomes बस — bas — bus."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look, cover, wait five seconds, and write बस (bas)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 10."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C16-bas-dictation",
+              "prompt": "From bas, write bus.",
+              "assesses": [
+                "MW-LEX-BAS-01",
+                "MW-SCRIPT-BAS-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "बस",
+                "बस bus"
+              ],
+              "feedback": {
+                "correct": "Right: बस means bus.",
+                "incorrect": "Write familiar ब, then स."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C16-hear-gaadi",
+      "sequence": 1580,
+      "title": "Hear gāṛī — vehicle",
+      "headword": "gāṛī",
+      "romanization": "gāṛī",
+      "gloss": "vehicle",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ee307df55f0ca109",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 20,
+              "perItem": false,
+              "source": "[PAUSE 20s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say bus and clothes, write bus and maternal grandfather, then write ड़."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gāṛī — vehicle."
+            },
+            {
+              "kind": "speech",
+              "text": "Use vehicle as the broad meaning here. Hear the curled middle sound, then say the word once from a vehicle picture."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 10."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C16-hear-gaadi-meaning",
+              "prompt": "What does gāṛī name here?",
+              "assesses": [
+                "MW-LEX-GAADI-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "vehicle",
+                "a vehicle",
+                "car",
+                "a car"
+              ],
+              "feedback": {
+                "correct": "Right: gāṛī is the general vehicle word in this lesson.",
+                "incorrect": "Keep the sound with the broad vehicle meaning: gā-ṛī."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C16-gaadi",
+      "sequence": 1590,
+      "title": "गाड़ी (gāṛī) — vehicle on the page",
+      "headword": "गाड़ी",
+      "romanization": "gāṛī",
+      "gloss": "vehicle",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5c2e4ec84c428190",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 20,
+              "perItem": false,
+              "source": "[PAUSE 20s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say vehicle and maternal grandmother, write clothes, then recall the three-word shopping payoff."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गा + ड़ी becomes गाड़ी — gāṛī — vehicle."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look, cover, wait five seconds, and write गाड़ी (gāṛī). Keep the dot below ड and the long-ī mark after it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 10."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C16-gaadi-dictation",
+              "prompt": "From gāṛī, write vehicle.",
+              "assesses": [
+                "MW-LEX-GAADI-01",
+                "MW-SCRIPT-GAADI-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "गाड़ी",
+                "गाड़ी vehicle",
+                "गाड़ी car"
+              ],
+              "feedback": {
+                "correct": "Right: गाड़ी names a vehicle.",
+                "incorrect": "Build गा + ड़ी."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C16-hear-thela",
+      "sequence": 1600,
+      "title": "Hear ṭhelā — cart",
+      "headword": "ṭhelā",
+      "romanization": "ṭhelā",
+      "gloss": "cart or handcart",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b4961d6322311a6d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 16,
+              "perItem": false,
+              "source": "[PAUSE 16s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say vehicle and bus, then write ठ and maternal grandmother."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ṭhelā — cart; handcart."
+            },
+            {
+              "kind": "speech",
+              "text": "Hear the strong first sound, point to a handcart, and say the word once."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 10."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C16-hear-thela-meaning",
+              "prompt": "What does ṭhelā name?",
+              "assesses": [
+                "MW-LEX-THELA-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "cart",
+                "handcart",
+                "a cart",
+                "a handcart"
+              ],
+              "feedback": {
+                "correct": "Right: ṭhelā names a cart or handcart.",
+                "incorrect": "Keep the strong first sound with the picture: ṭhe-lā — cart."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C16-thela",
+      "sequence": 1610,
+      "title": "ठेला (ṭhelā) — cart on the page",
+      "headword": "ठेला",
+      "romanization": "ṭhelā",
+      "gloss": "cart or handcart",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d52b4d8cc151830b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 18,
+              "perItem": false,
+              "source": "[PAUSE 18s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say cart, husband, and cheap, then write vehicle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ठे + ला becomes ठेला — ṭhelā — cart."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look, cover, wait five seconds, and write ठेला (ṭhelā)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 10."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C16-thela-dictation",
+              "prompt": "From ṭhelā, write cart.",
+              "assesses": [
+                "MW-LEX-THELA-01",
+                "MW-SCRIPT-THELA-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "ठेला",
+                "ठेला cart",
+                "ठेला handcart"
+              ],
+              "feedback": {
+                "correct": "Right: ठेला means cart.",
+                "incorrect": "Build ठे + ला."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R16-transport-three",
+      "sequence": 1620,
+      "title": "Retrieve three transport words",
+      "headword": "बस — गाड़ी — ठेला",
+      "romanization": "bas — gāṛī — ṭhelā",
+      "gloss": "bus, vehicle, and cart",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f2cde1d1cbe0d755",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 22,
+              "perItem": false,
+              "source": "[PAUSE 22s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the seven-word shopping payoff, then write त, cheap, and ड़."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear the three words in a mixed order, give each meaning, read three shuffled cards, then write all three from sound."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 10."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-R16-transport-three-recall",
+              "prompt": "Write bus, vehicle, and cart in order.",
+              "assesses": [
+                "MW-LEX-BAS-01",
+                "MW-LEX-GAADI-01",
+                "MW-LEX-THELA-01"
+              ],
+              "responseSeconds": 28,
+              "acceptedResponses": [
+                "बस — गाड़ी — ठेला",
+                "बस गाड़ी ठेला",
+                "बस, गाड़ी, ठेला"
+              ],
+              "feedback": {
+                "correct": "All three transport meanings remain distinct.",
+                "incorrect": "Repair only the missed word, then repeat the set."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C16-transport-three",
+      "sequence": 1630,
+      "title": "Payoff — three transport words in four skills",
+      "headword": "बस — गाड़ी — ठेला",
+      "romanization": "bas — gāṛī — ṭhelā",
+      "gloss": "a three-word transport map",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3884e0f41ceceb51",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 16,
+              "perItem": false,
+              "source": "[PAUSE 16s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write husband, then say goods."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Identify three heard words."
+            },
+            {
+              "kind": "speech",
+              "text": "Produce three words from meaning cues."
+            },
+            {
+              "kind": "speech",
+              "text": "Match three printed cards to meanings."
+            },
+            {
+              "kind": "speech",
+              "text": "Write all three heard words without a model."
+            },
+            {
+              "kind": "speech",
+              "text": "Pass each skill separately. Timetables, tickets, and location phrases remain later work."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 10."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C16-transport-three-payoff",
+              "prompt": "Complete all four scored checks, then write the three words.",
+              "assesses": [
+                "MW-PERFORMANCE-TRANSPORT-THREE-FOUR-SKILL-01"
+              ],
+              "responseSeconds": 36,
+              "acceptedResponses": [
+                "बस — गाड़ी — ठेला",
+                "बस गाड़ी ठेला"
+              ],
+              "feedback": {
+                "correct": "The three-word transport map passes in all four skills.",
+                "incorrect": "Repair only the failed skill or word, then retry that part."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R16-transport-close",
+      "sequence": 1640,
+      "title": "Close the first transport loop",
+      "headword": "first transport set",
+      "romanization": "transport close",
+      "gloss": "delayed independent recall of three transport words",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:672e1ff5960bc24a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 18,
+              "perItem": false,
+              "source": "[PAUSE 18s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the ten-label family payoff, then write goods."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "With every model hidden, identify, say, read, and write बस (bas), गाड़ी (gāṛī), and ठेला (ṭhelā) in a shuffled order."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 10."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-R16-transport-close-recall",
+              "prompt": "Which four skills must pass independently?",
+              "assesses": [
+                "MW-PERFORMANCE-TRANSPORT-THREE-FOUR-SKILL-01"
+              ],
+              "responseSeconds": 18,
+              "acceptedResponses": [
+                "listening, speaking, reading, writing",
+                "listening speaking reading writing"
+              ],
+              "feedback": {
+                "correct": "All four skills remain independently required.",
+                "incorrect": "Retry only the failed skill; do not average it away."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

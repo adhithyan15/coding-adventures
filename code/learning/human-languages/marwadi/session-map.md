@@ -60,6 +60,124 @@ memory demand at a time.
 | S52 | `MW-W07-la` | recall and write **ल** | one consonant only |
 | S53 | `MW-C07-read-later` | assemble **पाछे मिलसू** from known units | delayed phrase writing |
 | S54 | `MW-C07-practice` | distinguish goodbye from see you later in four skills | phrase dictation plus spoken farewell |
+| S55 | `MW-C08-hear-maa` | hear *mā̃* as mother | none; meaning precedes spelling |
+| S56 | `MW-C08-maa` | read **मां** from known signs | delayed copy, then hidden-model recall |
+| S57 | `MW-C08-hear-baap` | hear *bāp* as father | none; the new sign stays hidden |
+| S58 | `MW-W08-ba` | distinguish **ब** from familiar **भ** | observe, trace, copy one sign |
+| S59 | `MW-C08-baap` | assemble **बाप** | dictation of one word |
+| S60 | `MW-C08-hear-bhai` | hear *bhāī* as brother | none; meaning precedes spelling |
+| S61 | `MW-C08-bhai` | assemble **भाई** from known signs | delayed copy and word dictation |
+| S62 | `MW-C08-hear-bahan` | hear *bahan* as sister | none; meaning precedes spelling |
+| S63 | `MW-C08-bahan` | assemble **बहन** from known signs | delayed copy and word dictation |
+| S64 | `MW-C08-family-four` | retrieve mother, father, brother, and sister separately in four skills | independent two-word dictation |
+| S65 | `MW-C08-hear-dada` | hear *dādā* as paternal grandfather | none; meaning precedes spelling |
+| S66 | `MW-W08-da` | form **द** once before a doubled word | observe, trace, copy one sign |
+| S67 | `MW-C08-dada` | assemble **दादा** and revisit earlier family words | dictation of one repeated word |
+| S68 | `MW-C08-hear-dadi` | hear *dādī* as paternal grandmother | none; contrast the final vowel by ear |
+| S69 | `MW-C08-dadi` | change **दादा** to **दादी** | delayed copy and word dictation |
+| S70 | `MW-C08-hear-parivaar` | hear *parivār* as family | none; meaning precedes spelling |
+| S71 | `MW-W08-va` | isolate the only new sign in **परिवार** | observe, trace, copy one sign |
+| S72 | `MW-C08-parivaar` | assemble **परिवार** from one new and familiar signs | delayed copy and word dictation |
+| S73 | `MW-R08-family-foundation` | retrieve three family words after a gap | independent mixed recall |
+| S74 | `MW-R08-family-map` | rebuild the seven-word meaning map | write selected labels without a model |
+| S75 | `MW-C08-family-seven` | pass a seven-label four-skill payoff | independent listening, speaking, reading, and writing |
+| S76 | `MW-R08-script-close` | close the script loop for **ब**, **द**, and **व** | write all three from sound cues |
+| S77 | `MW-C09-hear-nana` | hear *nānā* as maternal grandfather | none; meaning precedes spelling |
+| S78 | `MW-C09-nana` | assemble **नाना** from known signs | delayed copy and dictation |
+| S79 | `MW-C09-hear-nani` | hear *nānī* as maternal grandmother | none; contrast the final vowel by ear |
+| S80 | `MW-C09-nani` | change **नाना** to **नानी** | delayed copy and dictation |
+| S81 | `MW-C09-hear-pati` | hear *pati* as husband | none; meaning precedes the new sign |
+| S82 | `MW-W09-ta` | distinguish dental **त** from known **थ** and **ठ** | observe, trace, copy one sign |
+| S83 | `MW-C09-pati` | assemble **पति** | delayed copy and word dictation |
+| S84 | `MW-R09-maternal-three` | pass three relationship labels in four skills | independent three-word recall |
+| S85 | `MW-C09-hear-patni` | hear *patnī* as wife and notice the source's alternative | none; meaning precedes spelling |
+| S86 | `MW-C09-patni` | assemble **पत्नी** from known signs | delayed copy and dictation |
+| S87 | `MW-C09-hear-bachcha` | hear *bachchā* as child | none; meaning precedes the new sign |
+| S88 | `MW-W09-cha` | distinguish **च** from familiar **छ** | observe, trace, copy one sign |
+| S89 | `MW-C09-bachcha` | assemble **बच्चा** and its doubled middle | delayed copy and dictation |
+| S90 | `MW-R09-family-new-five` | retrieve all five new labels after a gap | mixed four-skill recall |
+| S91 | `MW-C09-family-twelve` | pass a twelve-label family map | non-compensatory listening, speaking, reading, and writing |
+| S92 | `MW-R09-script-close` | close the writing loop for **त** and **च** | write both signs and their load-bearing words |
+| S93 | `MW-C10-hear-bajar` | hear *bājār* as market | none; meaning precedes the new sign |
+| S94 | `MW-W10-ja` | isolate **ज** | observe, trace, copy one sign |
+| S95 | `MW-C10-bajar` | assemble **बाजार** | delayed copy and dictation |
+| S96 | `MW-C10-hear-ghar` | hear *ghar* as home | none; meaning precedes the new sign |
+| S97 | `MW-W10-gha` | isolate aspirated **घ** | observe, trace, copy one sign |
+| S98 | `MW-C10-ghar` | assemble **घर** | delayed copy and dictation |
+| S99 | `MW-C10-hear-mandir` | hear *mandir* as temple | none; meaning precedes spelling |
+| S100 | `MW-C10-mandir` | assemble **मंदिर** from known signs | delayed copy and dictation |
+| S101 | `MW-R10-places-three` | retrieve market, home, and temple | independent four-skill checkpoint |
+| S102 | `MW-C10-hear-haath` | hear *hāth* as hand in direction cues | none; meaning precedes spelling |
+| S103 | `MW-C10-haath` | assemble **हाथ** from known signs | delayed copy and dictation |
+| S104 | `MW-C10-hear-paisa` | hear *paisā* as money in a travel-cost cue | none; meaning precedes spelling |
+| S105 | `MW-C10-paisa` | assemble **पैसा** from known signs | delayed copy and dictation |
+| S106 | `MW-R10-travel-five` | retrieve all five words after a gap | mixed four-skill recall |
+| S107 | `MW-C10-travel-five` | pass the five-word travel map | non-compensatory listening, speaking, reading, and writing |
+| S108 | `MW-R10-script-close` | close the writing loop for **ज** and **घ** | write both signs and their load-bearing words |
+| S109 | `MW-C11-hear-hawa` | hear *havā* as wind | none; meaning precedes spelling |
+| S110 | `MW-C11-hawa` | assemble **हवा** from known signs | delayed copy and dictation |
+| S111 | `MW-C11-hear-baadal` | hear *bādal* as cloud | none; meaning precedes spelling |
+| S112 | `MW-C11-baadal` | assemble **बादल** from known signs | delayed copy and dictation |
+| S113 | `MW-C11-hear-barsaat` | hear *barsāt* as rain | none; meaning precedes spelling |
+| S114 | `MW-C11-barsaat` | assemble **बरसात** from known signs | delayed copy and dictation |
+| S115 | `MW-R11-weather-three` | retrieve wind, cloud, and rain after a gap | mixed four-skill recall |
+| S116 | `MW-C11-weather-three` | pass the three-word weather map | non-compensatory listening, speaking, reading, and writing |
+| S117 | `MW-R11-weather-close` | close the weather meaning-and-writing loop | hidden-model three-word recall |
+| S118 | `MW-C12-hear-mausam` | hear *mausam* as weather | none; meaning precedes the new vowel mark |
+| S119 | `MW-W12-au-matra` | isolate **ौ** on familiar **म** | observe, trace, copy one vowel mark |
+| S120 | `MW-C12-mausam` | assemble **मौसम** | delayed copy and dictation |
+| S121 | `MW-C12-hear-garmi` | hear *garmī* as heat or hot weather | none; meaning precedes the new consonant |
+| S122 | `MW-W12-ga` | distinguish **ग** from aspirated **घ** | observe, trace, copy one sign |
+| S123 | `MW-C12-garmi` | assemble **गर्मी** | delayed copy and dictation |
+| S124 | `MW-R12-weather-first-two` | retrieve weather and heat after a gap | mixed four-skill recall |
+| S125 | `MW-C12-hear-thandi` | hear *ṭhaṇḍī* as cold or cold weather | none; meaning precedes the new consonant |
+| S126 | `MW-W12-dda` | distinguish retroflex **ड** from dental **द** | observe, trace, copy one sign |
+| S127 | `MW-C12-thandi` | assemble **ठंडी** | delayed copy and dictation |
+| S128 | `MW-R12-weather-new-three` | retrieve weather, heat, and cold | mixed four-skill recall |
+| S129 | `MW-C12-weather-six` | pass the six-word weather map | non-compensatory listening, speaking, reading, and writing |
+| S130 | `MW-R12-script-close` | close the writing loop for **ौ**, **ग**, and **ड** | hidden-model signs and words |
+| S131 | `MW-C13-hear-dukan` | hear *dukān* as shop | none; meaning precedes the new vowel mark |
+| S132 | `MW-W13-u-matra` | distinguish short **ु** from familiar **ू** | observe, trace, copy one vowel mark |
+| S133 | `MW-C13-dukan` | assemble **दुकान** | delayed copy and dictation |
+| S134 | `MW-C13-hear-vastu` | hear *vastu* as item or thing | none; meaning precedes spelling |
+| S135 | `MW-C13-vastu` | assemble **वस्तु** with the known short-u mark | delayed copy and dictation |
+| S136 | `MW-C13-hear-bhaav` | hear *bhāv* as price | none; meaning precedes spelling |
+| S137 | `MW-C13-bhaav` | assemble **भाव** from known signs | delayed copy and dictation |
+| S138 | `MW-R13-shopping-three` | retrieve shop, item, and price | mixed four-skill recall |
+| S139 | `MW-C13-shopping-three` | pass the three-word shopping map | non-compensatory listening, speaking, reading, and writing |
+| S140 | `MW-R13-shopping-close` | close the first shopping loop | hidden-model three-word recall |
+| S141 | `MW-C14-hear-sasta` | hear *sastā* as cheap | none; meaning precedes spelling |
+| S142 | `MW-C14-sasta` | assemble **सस्ता** from known signs | delayed copy and dictation |
+| S143 | `MW-C14-hear-samaan` | hear *sāmān* as goods | none; meaning precedes spelling |
+| S144 | `MW-C14-samaan` | assemble **सामान** from known signs | delayed copy and dictation |
+| S145 | `MW-R14-shopping-new-two` | retrieve cheap and goods | mixed four-skill recall |
+| S146 | `MW-C14-shopping-five` | pass the five-word shopping map | non-compensatory listening, speaking, reading, and writing |
+| S147 | `MW-R14-shopping-close` | close the five-word shopping loop | hidden-model five-word recall |
+| S148 | `MW-C15-hear-kapda` | hear *kapṛā* as clothes | none; meaning precedes the dotted consonant |
+| S149 | `MW-W15-nukta` | change familiar **ड** to **ड़** with one dot | observe, trace, copy one mark |
+| S150 | `MW-C15-kapda` | assemble **कपड़ा** | delayed copy and dictation |
+| S151 | `MW-C15-hear-mahango` | hear *mahaṅgo* as expensive | none; contrast cheap by ear |
+| S152 | `MW-C15-mahango` | assemble **महंगो** from known signs | delayed copy and dictation |
+| S153 | `MW-R15-shopping-new-two` | retrieve clothes and expensive | mixed four-skill recall |
+| S154 | `MW-C15-shopping-seven` | pass the seven-word shopping map | non-compensatory listening, speaking, reading, and writing |
+| S155 | `MW-R15-shopping-close` | close the seven-word shopping loop | hidden-model seven-word recall |
+| S156 | `MW-C16-hear-bas` | hear *bas* as bus | none; meaning precedes spelling |
+| S157 | `MW-C16-bas` | assemble **बस** from known signs | delayed copy and dictation |
+| S158 | `MW-C16-hear-gaadi` | hear *gāṛī* as vehicle | none; reuse the dotted sound by ear |
+| S159 | `MW-C16-gaadi` | assemble **गाड़ी** from known signs | delayed copy and dictation |
+| S160 | `MW-C16-hear-thela` | hear *ṭhelā* as cart | none; meaning precedes spelling |
+| S161 | `MW-C16-thela` | assemble **ठेला** from known signs | delayed copy and dictation |
+| S162 | `MW-R16-transport-three` | retrieve bus, vehicle, and cart | mixed four-skill recall |
+| S163 | `MW-C16-transport-three` | pass the first transport map | non-compensatory listening, speaking, reading, and writing |
+| S164 | `MW-R16-transport-close` | close the three-word transport loop | hidden-model three-word recall |
+| S165 | `MW-C17-hear-riksha` | hear *rikśā* as rickshaw | none; meaning precedes the new consonant |
+| S166 | `MW-W17-sha` | distinguish **श** from familiar **स** | observe, trace, copy one sign |
+| S167 | `MW-C17-riksha` | assemble **रिक्शा** | delayed copy and dictation |
+| S168 | `MW-C17-hear-ghodo` | hear *ghoṛo* as horse | none; reuse the dotted sound by ear |
+| S169 | `MW-C17-ghodo` | assemble **घोड़ो** from known signs | delayed copy and dictation |
+| S170 | `MW-R17-transport-new-two` | retrieve rickshaw and horse | mixed four-skill recall |
+| S171 | `MW-C17-transport-five` | pass the five-word transport map | non-compensatory listening, speaking, reading, and writing |
+| S172 | `MW-R17-script-close` | close **ड़** and **श** in load-bearing words | independent sign and word dictation |
 
 Reviews use expanding spacing: repeat S7 the next day, after three days, after
 one week, and after two weeks. A failed written recall sends the learner back to

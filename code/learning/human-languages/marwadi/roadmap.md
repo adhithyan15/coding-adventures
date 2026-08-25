@@ -25,13 +25,43 @@ practice, writing progression, full mocks, answer keys, rubrics, and a pass rule
 
 ## Current tranche
 
-Chapter 1 teaches **राम-राम सा** through seven lessons. Chapter 2 adds formal
-**आभार** through four more sessions: independent **आ**, then **भ**, then the
-whole word, then a hidden-model four-skill response. Chapter 3 adds polite
-**हां सा** through two sign-sized steps, assembly, ear/voice retrieval, and an
-independent four-skill check. Chapter 4 adds **पाणी**, "water": meaning is
-secured by ear first, then **प**, **ण**, and **ी** arrive one at a time before
-delayed copy and dictation. The next independent content tranche should add the
-contrasting no response before a complete yes/no exchange; okay, casual
-gratitude, a you're-welcome response, and a full request for water remain
-explicit debt.
+Chapters 1–9 contain 54 lessons for a greeting, formal thanks, polite yes,
+water, a name exchange, a wellbeing exchange, and taking leave. Chapters 10–13
+add 38 lessons and twelve relationship labels: **मां, बाप, भाई, बहन, दादा,
+दादी, परिवार, नाना, नानी, पति, पत्नी, बच्चा**. Each word begins with sound and
+meaning, writing adds only **ब**, **द**, **व**, **त**, and **च** one at a time, and
+the slice closes with separately scored listening, speaking, reading, and
+writing. The strict gentle-ramp report is all-zero at 92 lessons: no duration,
+load, script closure, ordering, forward-reference, or reinforcement-window
+findings. Chapters 14–15 add 16 more meaning-first lessons for **बाजार, घर,
+मंदिर, हाथ, पैसा**, with only **ज** and **घ** new and the same independently
+scored four-skill close. The strict report remains all-zero at 108 lessons.
+Chapter 16 adds nine meaning-first lessons for **हवा, बादल, बरसात** without
+adding a new sign, then closes with separately scored listening, speaking,
+reading, and writing. The strict report remains all-zero at 117 lessons.
+Chapter 17 adds thirteen more meaning-first lessons for **मौसम, गर्मी, ठंडी**,
+isolating only **ौ**, **ग**, and **ड** before those forms are decoded. The new
+three-word map then joins wind, cloud, and rain in a six-word four-skill payoff.
+The strict report remains all-zero at 130 lessons.
+Chapters 18–19 add seventeen meaning-first lessons for **दुकान, वस्तु, भाव,
+सस्ता, सामान**. Only short **ु** is new; it is isolated before **दुकान** and
+**वस्तु** are decoded, while every other form reuses secure signs. The slice
+closes with a five-word four-skill payoff but leaves price questions and
+bargaining phrases as explicit debt. The strict report remains all-zero at 147
+lessons, including R1–R4 continuity.
+
+Chapter 20 adds eight meaning-first lessons for **कपड़ा, महंगो**, introducing
+only the nukta and securing a seven-word shopping map. Chapters 21--22 add
+seventeen lessons for **बस, गाड़ी, ठेला, रिक्शा, घोड़ो**. Only **श** is new;
+the dotted **ड़** from clothes is deliberately reused in vehicle and horse.
+The transport set closes in separately scored listening, speaking, reading,
+and independent writing without claiming untaught ticket, timetable, location,
+or problem-report language. The strict report remains all-zero at 172 lessons.
+
+This completes the issue's 35-word vocabulary expansion, bringing the track
+from 11 to 46 distinct taught headwords. The next dependency-unblocking slice
+should turn the secured shopping and transport nouns into tiny source-backed
+interactions, one function at a time, while continuing to reuse the current
+script inventory. The contrasting no response before a complete yes/no
+exchange, okay, casual gratitude, a you're-welcome response, and a full request
+for water also remain explicit debt.

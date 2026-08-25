@@ -1,0 +1,1146 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 17,
+  "title": "Weather, Heat, and Cold: Three New Signs",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:daedcb1295c8f545",
+  "lessons": [
+    {
+      "id": "MW-C12-hear-mausam",
+      "sequence": 1180,
+      "title": "Hear mausam — weather",
+      "headword": "mausam",
+      "romanization": "mausam",
+      "gloss": "weather",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:41377f9803eaed37",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 26,
+              "perItem": false,
+              "source": "[PAUSE 26s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall wind, cloud, and rain in four skills, then write ई, कांई, and घर."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mausam — weather."
+            },
+            {
+              "kind": "speech",
+              "text": "Listen for the au sound. Say the general word once; its new vowel mark stays off the page until the next lesson."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 7."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C12-hear-mausam-meaning",
+              "prompt": "What does mausam name?",
+              "assesses": [
+                "MW-LEX-MAUSAM-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "weather",
+                "the weather"
+              ],
+              "feedback": {
+                "correct": "Right: mausam is weather.",
+                "incorrect": "Keep the sound and meaning together: mau-sam — weather."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-W12-au-matra",
+      "sequence": 1190,
+      "title": "ौ — the au mark in weather",
+      "headword": "ौ",
+      "romanization": "au",
+      "gloss": "the Devanagari au vowel mark",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:d7a63195e168c502",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — one sign"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — one sign until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 26,
+              "perItem": false,
+              "source": "[PAUSE 26s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say weather and temple, write म, बरसात, and कांई, then contrast familiar ै and ो."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — one sign",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ौ — au after a consonant."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace ौ (au) on म once, copy मौ once, cover it, and write मौ from sound."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Devanagari chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-W12-au-matra-write",
+              "prompt": "Add the au mark to म and write mau.",
+              "assesses": [
+                "MW-SCRIPT-AU-MATRA-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "मौ",
+                "मौ mau"
+              ],
+              "feedback": {
+                "correct": "Right: म + ौ gives मौ.",
+                "incorrect": "Place ौ around the right side and top of म."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C12-mausam",
+      "sequence": 1200,
+      "title": "मौसम (mausam) — weather on the page",
+      "headword": "मौसम",
+      "romanization": "mausam",
+      "gloss": "weather, written after the au mark is isolated",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b077c0d587e04283",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 30,
+              "perItem": false,
+              "source": "[PAUSE 30s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask and answer the known name exchange, say weather and wind, write मंदिर, बादल, and थारो, then form मौ and स."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मौ + सम becomes मौसम — mausam — weather."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look, cover, wait five seconds, and write मौसम (mausam). Check the first-syllable vowel mark."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 7."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C12-mausam-dictation",
+              "prompt": "From mausam, write the general weather word.",
+              "assesses": [
+                "MW-LEX-MAUSAM-01",
+                "MW-SCRIPT-MAUSAM-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "मौसम",
+                "मौसम weather"
+              ],
+              "feedback": {
+                "correct": "Right: मौसम is weather.",
+                "incorrect": "Build two chunks: मौ + सम."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C12-hear-garmi",
+      "sequence": 1210,
+      "title": "Hear garmī — heat",
+      "headword": "garmī",
+      "romanization": "garmī",
+      "gloss": "heat or hot weather; the source also labels summer",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:546aa4939aa138aa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 30,
+              "perItem": false,
+              "source": "[PAUSE 30s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say and write weather, recall rain and the three-place payoff, ask āp kaiso ho?, then write the है ending from the known name line."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "garmī — heat; hot weather."
+            },
+            {
+              "kind": "speech",
+              "text": "The source also groups this word with summer. Keep the narrow heat meaning for now; the season contrast comes later."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 7."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C12-hear-garmi-meaning",
+              "prompt": "What condition does garmī name?",
+              "assesses": [
+                "MW-LEX-GARMI-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "heat",
+                "hot weather",
+                "summer heat"
+              ],
+              "feedback": {
+                "correct": "Right: garmī names heat or hot weather here.",
+                "incorrect": "Keep the sound and feeling together: gar-mī — heat."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-W12-ga",
+      "sequence": 1220,
+      "title": "ग (ga) — the start of heat",
+      "headword": "ग",
+      "romanization": "ga",
+      "gloss": "the Devanagari consonant sign for ga",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:5225cb79f8d76962",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — one sign"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — one sign until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 28,
+              "perItem": false,
+              "source": "[PAUSE 28s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say heat, weather, and hand; write आप कैसो हो?, घ, मौ, and म्हारो."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — one sign",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ग — ga."
+            },
+            {
+              "kind": "speech",
+              "text": "Compare ग (ga) with aspirated घ; this word begins with the unaspirated sign."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace once, copy once, cover the model, and write ग (ga) from sound."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Devanagari chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-W12-ga-write",
+              "prompt": "Write the unaspirated Devanagari sign for ga.",
+              "assesses": [
+                "MW-SCRIPT-GA-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ग",
+                "ग ga"
+              ],
+              "feedback": {
+                "correct": "Right: ग carries ga.",
+                "incorrect": "Retrace ग and contrast it with the extra stroke in घ."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C12-garmi",
+      "sequence": 1230,
+      "title": "गर्मी (garmī) — heat on the page",
+      "headword": "गर्मी",
+      "romanization": "garmī",
+      "gloss": "heat or hot weather, written after ga is isolated",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3af20aa6e0504034",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 30,
+              "perItem": false,
+              "source": "[PAUSE 30s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say heat, weather, wind, and the known fine answer; write हाथ and मौसम (mausam), then form ग (ga), र्, म, and ी."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गर् + मी becomes गर्मी — garmī — heat."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look, cover, wait five seconds, and write गर्मी (garmī). Check the virama under र and long ी after म."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 7."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C12-garmi-dictation",
+              "prompt": "From garmī, write the heat word.",
+              "assesses": [
+                "MW-LEX-GARMI-01",
+                "MW-SCRIPT-GARMI-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "गर्मी",
+                "गर्मी heat",
+                "गर्मी hot weather"
+              ],
+              "feedback": {
+                "correct": "Right: गर्मी names heat here.",
+                "incorrect": "Build two chunks: गर् + मी."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R12-weather-first-two",
+      "sequence": 1240,
+      "title": "Retrieve weather and heat",
+      "headword": "मौसम — गर्मी",
+      "romanization": "mausam — garmī",
+      "gloss": "weather and heat",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f9de8b3b623f5284",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 25,
+              "perItem": false,
+              "source": "[PAUSE 25s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say money, then write मौ, ग (ga), बादल, है, and ू."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear the two words in mixed order, give each meaning, read both cards, then write both from sound."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Marwari Pathshala, Lesson 7; Unicode Devanagari chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-R12-weather-first-two-recall",
+              "prompt": "Write weather and heat in order.",
+              "assesses": [
+                "MW-LEX-MAUSAM-01",
+                "MW-LEX-GARMI-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "मौसम — गर्मी",
+                "मौसम गर्मी",
+                "मौसम, गर्मी"
+              ],
+              "feedback": {
+                "correct": "Weather and heat remain distinct.",
+                "incorrect": "Repair only the missed card, then rebuild the pair."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C12-hear-thandi",
+      "sequence": 1250,
+      "title": "Hear ṭhaṇḍī — cold",
+      "headword": "ṭhaṇḍī",
+      "romanization": "ṭhaṇḍī",
+      "gloss": "cold or cold weather; the source also labels winter",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4426d0e9956acfcd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 26,
+              "perItem": false,
+              "source": "[PAUSE 26s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say and write weather and heat, recall cloud, then write rain and money."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ṭhaṇḍī — cold; cold weather."
+            },
+            {
+              "kind": "speech",
+              "text": "The source also groups this form with winter. Keep the narrow cold meaning for now and contrast it with heat."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 7."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C12-hear-thandi-meaning",
+              "prompt": "What condition does ṭhaṇḍī name?",
+              "assesses": [
+                "MW-LEX-THANDI-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "cold",
+                "cold weather",
+                "winter cold"
+              ],
+              "feedback": {
+                "correct": "Right: ṭhaṇḍī names cold or cold weather here.",
+                "incorrect": "Keep the sound and feeling together: ṭhaṇ-ḍī — cold."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-W12-dda",
+      "sequence": 1260,
+      "title": "ड (ḍa) — the middle of cold",
+      "headword": "ड",
+      "romanization": "ḍa",
+      "gloss": "the Devanagari retroflex consonant sign for dda",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:ae1b8fb1f10c2ba7",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — one sign"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — one sign until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 30,
+              "perItem": false,
+              "source": "[PAUSE 30s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say cold, heat, and the known wellbeing answer; write हूं ठीक हूं, then द, ठ, ग (ga), and हवा."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — one sign",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ड — ḍa, with the tongue curled back."
+            },
+            {
+              "kind": "speech",
+              "text": "Keep ड (ḍa) distinct from dental द."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace once, copy once, cover the model, and write ड (ḍa) from sound."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Devanagari chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-W12-dda-write",
+              "prompt": "Write the retroflex Devanagari sign for ḍa.",
+              "assesses": [
+                "MW-SCRIPT-DDA-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ड",
+                "ड ḍa",
+                "ड dda"
+              ],
+              "feedback": {
+                "correct": "Right: ड carries retroflex ḍa.",
+                "incorrect": "Retrace ड and contrast its bowl with द."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C12-thandi",
+      "sequence": 1270,
+      "title": "ठंडी (ṭhaṇḍī) — cold on the page",
+      "headword": "ठंडी",
+      "romanization": "ṭhaṇḍī",
+      "gloss": "cold or cold weather, written after dda is isolated",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7e1d4da3196c463d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 30,
+              "perItem": false,
+              "source": "[PAUSE 30s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Perform the known wellbeing exchange and travel payoff, say cold, heat, and weather, write गर्मी (garmī), then form ठ, ं, ड (ḍa), and ी."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ठं + डी becomes ठंडी — ṭhaṇḍī — cold."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look, cover, wait five seconds, and write ठंडी (ṭhaṇḍī). Check the nasal mark and keep ड (ḍa) distinct from द."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 7."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C12-thandi-dictation",
+              "prompt": "From ṭhaṇḍī, write the cold word.",
+              "assesses": [
+                "MW-LEX-THANDI-01",
+                "MW-SCRIPT-THANDI-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "ठंडी",
+                "ठंडी cold",
+                "ठंडी cold weather"
+              ],
+              "feedback": {
+                "correct": "Right: ठंडी names cold here.",
+                "incorrect": "Build two chunks: ठं + डी."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R12-weather-new-three",
+      "sequence": 1280,
+      "title": "Retrieve weather, heat, and cold",
+      "headword": "मौसम — गर्मी — ठंडी",
+      "romanization": "mausam — garmī — ṭhaṇḍī",
+      "gloss": "weather, heat, and cold",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d94206ebdbb40e1f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 26,
+              "perItem": false,
+              "source": "[PAUSE 26s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the known see-you-later line, then write मौ, ग (ga), ड (ḍa), and बरसात."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear the three words in mixed order, give each meaning, read three cards, then write all three from sound."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Marwari Pathshala, Lesson 7; Unicode Devanagari chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-R12-weather-new-three-recall",
+              "prompt": "Write weather, heat, and cold in order.",
+              "assesses": [
+                "MW-LEX-MAUSAM-01",
+                "MW-LEX-GARMI-01",
+                "MW-LEX-THANDI-01"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "मौसम — गर्मी — ठंडी",
+                "मौसम गर्मी ठंडी",
+                "मौसम, गर्मी, ठंडी"
+              ],
+              "feedback": {
+                "correct": "The three new weather meanings remain distinct.",
+                "incorrect": "Repair only the missed card, then rebuild the line."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C12-weather-six",
+      "sequence": 1290,
+      "title": "Payoff — six weather words in four skills",
+      "headword": "हवा — बादल — बरसात — मौसम — गर्मी — ठंडी",
+      "romanization": "havā — bādal — barsāt — mausam — garmī — ṭhaṇḍī",
+      "gloss": "six source-attested weather words",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4a438415824d43db",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 18,
+              "perItem": false,
+              "source": "[PAUSE 18s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write छ, then recall the earlier wind-cloud-rain payoff before adding three words."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Identify six heard words."
+            },
+            {
+              "kind": "speech",
+              "text": "Produce six words from meaning cues."
+            },
+            {
+              "kind": "speech",
+              "text": "Match six printed cards to meanings."
+            },
+            {
+              "kind": "speech",
+              "text": "Write three heard words from each half without a model."
+            },
+            {
+              "kind": "speech",
+              "text": "Pass each skill separately."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 7."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C12-weather-six-payoff",
+              "prompt": "Complete all four checks, then write the six weather words in order.",
+              "assesses": [
+                "MW-PERFORMANCE-WEATHER-SIX-FOUR-SKILL-01",
+                "MW-LEX-HAWA-01",
+                "MW-LEX-BAADAL-01",
+                "MW-LEX-BARSAAT-01",
+                "MW-LEX-MAUSAM-01",
+                "MW-LEX-GARMI-01",
+                "MW-LEX-THANDI-01"
+              ],
+              "responseSeconds": 48,
+              "acceptedResponses": [
+                "हवा — बादल — बरसात — मौसम — गर्मी — ठंडी",
+                "हवा बादल बरसात मौसम गर्मी ठंडी"
+              ],
+              "feedback": {
+                "correct": "The six-word weather map passes in all four skills.",
+                "incorrect": "Repair only the failed skill or word, then retry that part."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R12-script-close",
+      "sequence": 1300,
+      "title": "Close the chapter — three new signs",
+      "headword": "ौ — ग — ड — मौसम — गर्मी — ठंडी",
+      "romanization": "au — ga — ḍa — mausam — garmī — ṭhaṇḍī",
+      "gloss": "close the three-sign weather-writing loop",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:49ff6b162224de28",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 24,
+              "perItem": false,
+              "source": "[PAUSE 24s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write ज, घ, े, and हवा, then name the four weather-payoff skills."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "From sound alone, write मौ, ग, ड (ḍa), then मौसम (mausam), गर्मी (garmī), and ठंडी (ṭhaṇḍī). Give each word's meaning."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Unicode Devanagari chart; Marwari Pathshala, Lesson 7."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-R12-script-close-recall",
+              "prompt": "Write mau, ga, dda, weather, heat, and cold from sound cues.",
+              "assesses": [
+                "MW-SCRIPT-AU-MATRA-01",
+                "MW-SCRIPT-GA-01",
+                "MW-SCRIPT-DDA-01",
+                "MW-SCRIPT-MAUSAM-01",
+                "MW-SCRIPT-GARMI-01",
+                "MW-SCRIPT-THANDI-01"
+              ],
+              "responseSeconds": 42,
+              "acceptedResponses": [
+                "मौ — ग — ड — मौसम — गर्मी — ठंडी",
+                "मौ ग ड मौसम गर्मी ठंडी",
+                "मौ, ग, ड, मौसम, गर्मी, ठंडी"
+              ],
+              "feedback": {
+                "correct": "All three signs and their weather words are secure.",
+                "incorrect": "Repair only the missed sign, then rebuild its word."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

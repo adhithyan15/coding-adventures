@@ -1,0 +1,863 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 18,
+  "title": "Shop, Item, and Price: One New Vowel Mark",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:4cfad76bf34a267f",
+  "lessons": [
+    {
+      "id": "MW-C13-hear-dukan",
+      "sequence": 1310,
+      "title": "Hear dukān — shop",
+      "headword": "dukān",
+      "romanization": "dukān",
+      "gloss": "shop",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0427eaa1542d9910",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 24,
+              "perItem": false,
+              "source": "[PAUSE 24s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the six-word weather payoff, say market, then write मौसम, गर्मी, and ठंडी, then form ि once."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dukān — shop."
+            },
+            {
+              "kind": "speech",
+              "text": "Hear the two beats and say the word once from a shop cue. Keep the sound and meaning together; the unfamiliar vowel mark waits for the next lesson."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 9."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C13-hear-dukan-meaning",
+              "prompt": "What place does dukān name?",
+              "assesses": [
+                "MW-LEX-DUKAN-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "shop",
+                "a shop",
+                "store",
+                "a store"
+              ],
+              "feedback": {
+                "correct": "Right: dukān is a shop.",
+                "incorrect": "Keep the sound and place together: du-kān — shop."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-W13-u-matra",
+      "sequence": 1320,
+      "title": "ु — short u after a consonant",
+      "headword": "ु",
+      "romanization": "u",
+      "gloss": "the Devanagari short-u vowel mark",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:b076618785134dbc",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — one mark"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — one mark until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 24,
+              "perItem": false,
+              "source": "[PAUSE 24s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say shop, write द, ू, ौ, ड, ल, and पत्नी."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — one mark",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ु — short u after a consonant."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace ु below द once, copy दु once, cover it, and write दु from sound. Keep it shorter than familiar दू."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Devanagari chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-W13-u-matra-write",
+              "prompt": "Add short u to द and write du.",
+              "assesses": [
+                "MW-SCRIPT-U-MATRA-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "दु",
+                "दु du"
+              ],
+              "feedback": {
+                "correct": "Right: द + ु gives दु.",
+                "incorrect": "Place the short-u hook below द."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C13-dukan",
+      "sequence": 1330,
+      "title": "दुकान (dukān) — shop on the page",
+      "headword": "दुकान",
+      "romanization": "dukān",
+      "gloss": "shop, written after short u is isolated",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0ef8de73fed357d1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 25,
+              "perItem": false,
+              "source": "[PAUSE 25s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say shop and market, write बाजार, बरसात, and कांई, then write पाछे मिलसू, then form दु, का, and न."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दु + कान becomes दुकान — dukān — shop."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look, cover, wait five seconds, and write दुकान (dukān). Check short ु below the first sign and long ा in the second chunk."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 9."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C13-dukan-dictation",
+              "prompt": "From dukān, write shop.",
+              "assesses": [
+                "MW-LEX-DUKAN-01",
+                "MW-SCRIPT-DUKAN-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "दुकान",
+                "दुकान shop",
+                "दुकान store"
+              ],
+              "feedback": {
+                "correct": "Right: दुकान is shop.",
+                "incorrect": "Build two chunks: दु + कान."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C13-hear-vastu",
+      "sequence": 1340,
+      "title": "Hear vastu — item",
+      "headword": "vastu",
+      "romanization": "vastu",
+      "gloss": "item or thing",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:919c150a6fa65776",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 22,
+              "perItem": false,
+              "source": "[PAUSE 22s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say and write shop, form short ु, then recall money, temple, and cold, then retrieve the see-you-later line from its cue."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vastu — item; thing."
+            },
+            {
+              "kind": "speech",
+              "text": "Say the two beats once from an item cue. The word can name the thing being bought; no buying sentence is claimed yet."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 9."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C13-hear-vastu-meaning",
+              "prompt": "What does vastu name in a shop?",
+              "assesses": [
+                "MW-LEX-VASTU-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "item",
+                "an item",
+                "thing",
+                "a thing"
+              ],
+              "feedback": {
+                "correct": "Right: vastu is an item or thing.",
+                "incorrect": "Keep the sound and object together: vas-tu — item."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C13-vastu",
+      "sequence": 1350,
+      "title": "वस्तु (vastu) — item on the page",
+      "headword": "वस्तु",
+      "romanization": "vastu",
+      "gloss": "item or thing, written with familiar signs and short u",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:605005dd224ad897",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 24,
+              "perItem": false,
+              "source": "[PAUSE 24s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say item and shop, write दुकान (dukān), गर्मी, and हाथ, then say mother, then form short ु and the familiar vowel-off mark ्."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वस् + तु becomes वस्तु — vastu — item."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look, cover, wait five seconds, and write वस्तु (vastu). Check the middle consonant join and the final short ु."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 9."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C13-vastu-dictation",
+              "prompt": "From vastu, write item.",
+              "assesses": [
+                "MW-LEX-VASTU-01",
+                "MW-SCRIPT-VASTU-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "वस्तु",
+                "वस्तु item",
+                "वस्तु thing"
+              ],
+              "feedback": {
+                "correct": "Right: वस्तु is an item or thing.",
+                "incorrect": "Build two chunks: वस् + तु."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C13-hear-bhaav",
+      "sequence": 1360,
+      "title": "Hear bhāv — price",
+      "headword": "bhāv",
+      "romanization": "bhāv",
+      "gloss": "price",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:17fb35093869d064",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 24,
+              "perItem": false,
+              "source": "[PAUSE 24s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say and write item and shop, then recall market and write money and cloud, then write मां."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bhāv — price."
+            },
+            {
+              "kind": "speech",
+              "text": "Say the single long beat from a price-tag cue. This lesson teaches the noun; asking the final price remains later phrase work."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 9."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C13-hear-bhaav-meaning",
+              "prompt": "What does bhāv mean in shopping?",
+              "assesses": [
+                "MW-LEX-BHAAV-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "price",
+                "the price"
+              ],
+              "feedback": {
+                "correct": "Right: bhāv is price.",
+                "incorrect": "Keep the long sound and meaning together: bhāv — price."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C13-bhaav",
+      "sequence": 1370,
+      "title": "भाव (bhāv) — price on the page",
+      "headword": "भाव",
+      "romanization": "bhāv",
+      "gloss": "price, written entirely with familiar signs",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e7c7b31f7e22da6c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 24,
+              "perItem": false,
+              "source": "[PAUSE 24s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say price, item, shop, and father. Write वस्तु (vastu), बाप, and हवा, then form familiar भ, ा, and व."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भा + व becomes भाव — bhāv — price."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look, cover, wait five seconds, and write भाव (bhāv). Hold the long vowel in speech and keep ा after भ in writing."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 9."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C13-bhaav-dictation",
+              "prompt": "From bhāv, write price.",
+              "assesses": [
+                "MW-LEX-BHAAV-01",
+                "MW-SCRIPT-BHAAV-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "भाव",
+                "भाव price"
+              ],
+              "feedback": {
+                "correct": "Right: भाव is price.",
+                "incorrect": "Build two chunks: भा + व."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R13-shopping-three",
+      "sequence": 1380,
+      "title": "Retrieve shop, item, and price",
+      "headword": "दुकान — वस्तु — भाव",
+      "romanization": "dukān — vastu — bhāv",
+      "gloss": "shop, item, and price",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:208c70132fa2f586",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 24,
+              "perItem": false,
+              "source": "[PAUSE 24s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write ु (u), ौ, ग, ड, and ब, then recall the six-word weather payoff."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear the three words in mixed order, say each from its meaning, match three printed cards, then write all three from sound."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 9."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-R13-shopping-three-recall",
+              "prompt": "Write shop, item, and price in order.",
+              "assesses": [
+                "MW-LEX-DUKAN-01",
+                "MW-LEX-VASTU-01",
+                "MW-LEX-BHAAV-01"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "दुकान — वस्तु — भाव",
+                "दुकान वस्तु भाव",
+                "दुकान, वस्तु, भाव"
+              ],
+              "feedback": {
+                "correct": "All three shopping meanings remain distinct.",
+                "incorrect": "Repair only the missed card, then rebuild the line."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C13-shopping-three",
+      "sequence": 1390,
+      "title": "Payoff — three shopping words in four skills",
+      "headword": "दुकान — वस्तु — भाव",
+      "romanization": "dukān — vastu — bhāv",
+      "gloss": "three source-attested shopping words",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:74f721a2bf0ad88b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 24,
+              "perItem": false,
+              "source": "[PAUSE 24s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say market, write money, recall the weather payoff, then ask and answer the known wellbeing exchange, then write बाप."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Identify three heard words."
+            },
+            {
+              "kind": "speech",
+              "text": "Produce three words from meaning cues."
+            },
+            {
+              "kind": "speech",
+              "text": "Match three printed cards to meanings."
+            },
+            {
+              "kind": "speech",
+              "text": "Write all three heard words without a model."
+            },
+            {
+              "kind": "speech",
+              "text": "Pass each skill separately."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 9."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C13-shopping-three-payoff",
+              "prompt": "Complete all four scored checks, then write shop, item, and price.",
+              "assesses": [
+                "MW-PERFORMANCE-SHOPPING-THREE-FOUR-SKILL-01",
+                "MW-LEX-DUKAN-01",
+                "MW-LEX-VASTU-01",
+                "MW-LEX-BHAAV-01"
+              ],
+              "responseSeconds": 36,
+              "acceptedResponses": [
+                "दुकान — वस्तु — भाव",
+                "दुकान वस्तु भाव"
+              ],
+              "feedback": {
+                "correct": "The three-word shopping map passes in all four skills.",
+                "incorrect": "Repair only the failed skill or word, then retry that part."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R13-shopping-close",
+      "sequence": 1400,
+      "title": "Close the first shopping loop",
+      "headword": "दुकान — वस्तु — भाव",
+      "romanization": "dukān — vastu — bhāv",
+      "gloss": "close the first shopping loop",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:14cef151a956ab64",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 70,
+              "perItem": false,
+              "source": "[PAUSE 70s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write ु, घ, ज, and त; say brother; retrieve cloud, rain, weather, heat, and cold; write ड, गर्मी, and ठंडी; then recall the three-word weather payoff and name the four shopping-payoff skills."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Without a model, hear one word, say its meaning, read the other two in mixed order, then write all three from meaning cues."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sources: Marwari Pathshala, Lesson 9; Unicode Devanagari chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-R13-shopping-close-recall",
+              "prompt": "After the four-skill pass, write shop, item, and price without a model.",
+              "assesses": [
+                "MW-PERFORMANCE-SHOPPING-THREE-FOUR-SKILL-01",
+                "MW-SCRIPT-DUKAN-01",
+                "MW-SCRIPT-VASTU-01",
+                "MW-SCRIPT-BHAAV-01"
+              ],
+              "responseSeconds": 36,
+              "acceptedResponses": [
+                "दुकान — वस्तु — भाव",
+                "दुकान वस्तु भाव",
+                "दुकान, वस्तु, भाव"
+              ],
+              "feedback": {
+                "correct": "The shopping meanings and spellings remain secure.",
+                "incorrect": "Repair only the missed word, then repeat the hidden-model line."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
