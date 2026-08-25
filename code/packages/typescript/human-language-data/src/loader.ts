@@ -1,6 +1,36 @@
 // The filesystem boundary. Everything impure lives here: it reads the curriculum
 // directory off disk and hands strings to the pure parse/build/validate core.
 // This is the only module that needs the `filesystem` capability.
+//
+// ---------------------------------------------------------------------------
+// Every JSON read in this file goes through `shard.ts`. None of them parse.
+// ---------------------------------------------------------------------------
+//
+// A ledger is read one of exactly two ways:
+//
+//   readMaybeSharded(path, merge)   the ledger may live as `X.d/`; merge folds
+//                                   the shards back into the document
+//   readLedgerFile(path)            the ledger is one file, and if an `X.d/`
+//                                   ever appears beside it this REFUSES
+//
+// Never `JSON.parse(readFileSync(...))`. That form was how seventeen reads in
+// this file came to skip, all at once, four controls that `shard.ts` applies:
+// the symlink refusal (a committed `core/spine.json -> ~/.aws/credentials` is
+// refused rather than followed), the `__proto__`/`constructor`/`prototype`
+// rejection, the parse-error scrubbing that keeps V8 from splicing file bytes
+// into a CI log, and — since HL21 — the check that the file being opened has
+// not been superseded by a sibling `X.d/`.
+//
+// That last one is the reason this convention is worth stating rather than just
+// following. `chapters.d/`, `curriculum.d/` and `core/book-generation.d/` are
+// now the source of truth, and the `.json` beside each is a GENERATED artifact
+// that is current only until somebody edits a shard. A bare parse of one of
+// those reads stale data that parses cleanly, validates cleanly, and is wrong —
+// no exception, no diagnostic, just a quietly older corpus. `readLedgerFile`
+// turns that into an error naming the directory that actually holds the data.
+//
+// `readFileSync` still appears below, for `.tex` sources and for font binaries.
+// Those are not ledgers and have no sharded form.
 
 import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { join, dirname, resolve } from "node:path";
@@ -20,9 +50,11 @@ import {
 import { parseTaskShapeInventory, type TaskShapeInventory } from "./task-shapes.js";
 import {
   CURRICULUM_SECTIONS,
+  LedgerParseError,
   isSharded,
   mergeMetaAndList,
   mergeSectionedShards,
+  readLedgerFile,
   readMaybeSharded,
 } from "./shard.js";
 import { CEFR_LEVELS, type CefrLevel } from "./levels.js";
@@ -70,6 +102,29 @@ function sortedEntries(root: string) {
   );
 }
 
+/**
+ * A track id, and therefore a directory name this file is willing to build a
+ * path out of.
+ *
+ * One constant rather than the four hand-written copies that were here, because
+ * they had already drifted: `loadTaskShapeInventory` and `loadTrackLessons`
+ * used different patterns for the same thing, and `loadTrackGrammarCells` and
+ * `trackScript` had none at all. A guard that is spelled differently in each
+ * place it appears is a guard whose absence in the fifth place nobody notices.
+ *
+ * Anchored at both ends, and `$` in JavaScript means end-of-input rather than
+ * end-of-line unless `m` is set — so `"spanish\n../../etc"` does not slip past.
+ * It admits no `/`, no `\`, no `:` and no `.`, which makes it strictly stronger
+ * than `assertRelativeManifestPath`: there is no relative traversal, no
+ * drive-qualified `D:\…` and no UNC `\\server\share` that can satisfy it.
+ * That is why the manifest-path helper is not additionally needed here — an id
+ * that matches this cannot be any of the shapes that helper exists to catch.
+ *
+ * Must start with a letter, so a directory like `_fonts` or `0-scratch` is
+ * refused rather than treated as a track.
+ */
+const TRACK_ID = /^[a-z][a-z0-9-]*$/;
+
 export function defaultCurriculumRoot(): string {
   const here = dirname(fileURLToPath(import.meta.url));
   // src/ -> human-language-data -> typescript -> packages -> code
@@ -77,21 +132,19 @@ export function defaultCurriculumRoot(): string {
 }
 
 export function loadTaxonomy(root = defaultCurriculumRoot()): Taxonomy {
-  const raw = JSON.parse(readFileSync(join(root, "concepts", "taxonomy.json"), "utf8"));
+  const raw = readLedgerFile<{ version?: number; concepts?: Taxonomy["concepts"] }>(
+    join(root, "concepts", "taxonomy.json"),
+  );
   return { version: raw.version ?? 1, concepts: raw.concepts ?? {} };
 }
 
 export function loadLanguageRegistry(root = defaultCurriculumRoot()): LanguageRegistry {
-  return JSON.parse(
-    readFileSync(join(root, "core", "languages.json"), "utf8"),
-  ) as LanguageRegistry;
+  return readLedgerFile<LanguageRegistry>(join(root, "core", "languages.json"));
 }
 
 /** HL16: the universal five-minute, four-skill and writing-ramp contract. */
 export function loadAssessmentPolicy(root = defaultCurriculumRoot()): AssessmentPolicy {
-  return parseAssessmentPolicy(
-    JSON.parse(readFileSync(join(root, "core", "assessment-policy.json"), "utf8")),
-  );
+  return parseAssessmentPolicy(readLedgerFile(join(root, "core", "assessment-policy.json")));
 }
 
 /**
@@ -108,7 +161,7 @@ export function listAssessmentContracts(root = defaultCurriculumRoot()): string[
   for (const track of registry.languages) {
     const path = join(root, track.id, "assessment.json");
     if (!existsSync(path)) continue;
-    parseAssessmentContract(JSON.parse(readFileSync(path, "utf8")), track.id, policy);
+    parseAssessmentContract(readLedgerFile(path), track.id, policy);
     out.push(track.id);
   }
   return out;
@@ -132,7 +185,7 @@ export function listExternalExamCapstones(root = defaultCurriculumRoot()): Exter
     const contractPath = join(root, track.id, "assessment.json");
     if (!existsSync(contractPath)) continue;
     const contract: AssessmentContract = parseAssessmentContract(
-      JSON.parse(readFileSync(contractPath, "utf8")),
+      readLedgerFile(contractPath),
       track.id,
       policy,
     );
@@ -164,11 +217,11 @@ export function loadTaskShapeInventory(
   level: string,
   root = defaultCurriculumRoot(),
 ): TaskShapeInventory {
-  if (!/^[a-z][a-z0-9-]*$/.test(language) || !/^(pre-a1|a1|a2|b1|b2|c1|c2)$/i.test(level)) {
+  if (!TRACK_ID.test(language) || !/^(pre-a1|a1|a2|b1|b2|c1|c2)$/i.test(level)) {
     throw new Error("task shapes: unsafe language or level path");
   }
   const path = join(root, language, "task-shapes", `${level.toLowerCase()}.json`);
-  const inventory = parseTaskShapeInventory(JSON.parse(readFileSync(path, "utf8")), language);
+  const inventory = parseTaskShapeInventory(readLedgerFile(path), language);
   if (inventory.level.toLowerCase() !== level.toLowerCase()) {
     throw new Error(`task shapes: ${language}/${level} file declares level ${inventory.level}`);
   }
@@ -213,16 +266,12 @@ export function loadCurriculumSpine(root = defaultCurriculumRoot()): CurriculumS
 
 /** HL10 section 7.5: the metalanguage ramp -- the words for talking about language. */
 export function loadMetalanguage(root = defaultCurriculumRoot()): MetalanguageInventory {
-  return JSON.parse(
-    readFileSync(join(root, "core", "metalanguage.json"), "utf8"),
-  ) as MetalanguageInventory;
+  return readLedgerFile<MetalanguageInventory>(join(root, "core", "metalanguage.json"));
 }
 
 /** HL10 section 5.1: the universal grammar-slot inventory, generated and committed. */
 export function loadGrammarSlots(root = defaultCurriculumRoot()): GrammarSlotInventory {
-  return JSON.parse(
-    readFileSync(join(root, "core", "grammar-slots.json"), "utf8"),
-  ) as GrammarSlotInventory;
+  return readLedgerFile<GrammarSlotInventory>(join(root, "core", "grammar-slots.json"));
 }
 
 /** HL10 section 5: one track's filling of those slots, with its prerequisite ordering. */
@@ -230,9 +279,20 @@ export function loadTrackGrammarCells(
   language: string,
   root = defaultCurriculumRoot(),
 ): TrackGrammarCells {
-  return JSON.parse(
-    readFileSync(join(root, language, "grammar-cells.json"), "utf8"),
-  ) as TrackGrammarCells;
+  // `language` is interpolated straight into a path, and `join` NORMALISES an
+  // embedded `..` rather than refusing it — so `"../../.."` reaches out of the
+  // curriculum root entirely and the trailing `grammar-cells.json` is no
+  // protection. Every sibling loader that interpolates a track id already
+  // allowlists it (`loadTaskShapeInventory`, `loadExamInventory`,
+  // `loadTrackLessons`, `book-cli`'s `manifestPath`); this one was the gap.
+  //
+  // Both callers pass the literal `"spanish"`, which is exactly when the guard
+  // is free — and this is an EXPORTED function, so the callers it has today are
+  // not the callers it will have.
+  if (!TRACK_ID.test(language)) {
+    throw new Error(`grammar cells: refusing unsafe language id '${language}'`);
+  }
+  return readLedgerFile<TrackGrammarCells>(join(root, language, "grammar-cells.json"));
 }
 
 /** Read each track's authored shared-spine realization map. */
@@ -317,9 +377,7 @@ export function loadTrackChapters(root = defaultCurriculumRoot()): TrackChapters
  * quietly stops running is worse than one that fails loudly.
  */
 export function loadChapterPolicy(root = defaultCurriculumRoot()): ChapterPolicy {
-  const policy = JSON.parse(
-    readFileSync(join(root, "core", "chapter-policy.json"), "utf8"),
-  ) as ChapterPolicy;
+  const policy = readLedgerFile<ChapterPolicy>(join(root, "core", "chapter-policy.json"));
 
   // Validate the budgets, because the alternative is a gate that reads zero and looks
   // clean. `JSON.parse` turns `1e999` into `Infinity`, and `newTarget.size > Infinity`
@@ -417,13 +475,43 @@ export function loadBookCorpus(root = defaultCurriculumRoot()): BookCorpus {
  * `undefined` when there's no declaration, and the parser falls back to the map.
  */
 export function trackScript(root: string, trackName: string): Script | undefined {
+  // Allowlisted before the `join`, like every other exported loader that
+  // interpolates a track id. `join` NORMALISES an embedded `..` rather than
+  // refusing it, so `"../../../.."` reaches any `track.json` on the machine and
+  // this function hands back its `script` field.
+  //
+  // THROWS rather than returning `undefined`, even though `undefined` is this
+  // function's answer for every other kind of unusable declaration. A caller
+  // that passed a traversing id has a bug or is hostile; folding that into the
+  // ordinary "no declaration, use the built-in map" answer would let it retry
+  // silently. The `catch` below deliberately sits inside the guard, not around
+  // it, so a refusal cannot be swallowed by it.
+  if (!TRACK_ID.test(trackName)) {
+    throw new Error(`track script: refusing unsafe track id '${trackName}'`);
+  }
   const p = join(root, trackName, "track.json");
   if (!existsSync(p)) return undefined;
   try {
-    const t = JSON.parse(readFileSync(p, "utf8"));
+    // Through the guarded door. Previously this FOLLOWED a symlinked
+    // `track.json` and read whatever it pointed at; now such a file is refused
+    // and the catch below RETHROWS it. Only a parse failure falls back to the
+    // built-in map — see the catch for why that distinction is load-bearing.
+    const t = readLedgerFile<{ script?: unknown }>(p);
     return typeof t?.script === "string" ? t.script : undefined;
-  } catch {
-    return undefined; // a malformed track.json just falls back to the map
+  } catch (error) {
+    // ONLY a parse failure falls back. This was a bare `catch {}`, which was
+    // true to its comment when a parse was the only thing that could go wrong —
+    // and stopped being true the moment `readLedgerFile` grew the symlink
+    // refusal, the dangerous-key rejection and the sharded-sibling check.
+    //
+    // The consequence here is not abstract. `parse.ts` resolves an absent
+    // script to the built-in map and ultimately to `latin`, so a track that
+    // declares its script ONLY in `track.json` would have been silently
+    // re-parsed as Latin because an antivirus scanner held the file for a
+    // moment. Swallowing "I could not tell" is the exact fault `isAbsentErrno`
+    // was written to remove; it is not better one layer up.
+    if (error instanceof LedgerParseError) return undefined;
+    throw error;
   }
 }
 
@@ -432,9 +520,16 @@ export function loadTrackLessons(
   language: string,
   root = defaultCurriculumRoot(),
 ): ParsedLesson[] {
+  // Validated FIRST, before the id reaches a path at all. It used to run after
+  // the `join` and after the `existsSync` probe, which left an existence
+  // oracle: a traversing id returned `[]` when the target had no `lessons/`
+  // subdirectory and threw when it did, so the return value answered "does
+  // <arbitrary path>/lessons exist" for any path on the machine. No read
+  // happened past the guard, so this was disclosure only — but a check placed
+  // after the thing it guards is not a check.
+  if (!TRACK_ID.test(language)) throw new Error(`unsafe language id '${language}'`);
   const lessonsDir = join(root, language, "lessons");
   if (!existsSync(lessonsDir)) return [];
-  if (!/^[a-z0-9-]+$/.test(language)) throw new Error(`unsafe language id '${language}'`);
   const script = trackScript(root, language);
   return readdirSync(lessonsDir)
     .sort()
@@ -445,7 +540,48 @@ export function loadTrackLessons(
 export function loadLessons(root = defaultCurriculumRoot()): ParsedLesson[] {
   const out: ParsedLesson[] = [];
   for (const track of sortedEntries(root)) {
-    if (!track.isDirectory()) continue;
+    if (!track.isDirectory()) {
+      // `Dirent.isDirectory()` is FALSE for a symlink, so a committed
+      // `spanish -> ../elsewhere` would be dropped here — before the id check
+      // below could ever see it — and the track would vanish from the corpus in
+      // silence. On a Windows checkout with `core.symlinks=false` git
+      // materialises that link as a plain file, which lands on the same
+      // `continue`. Every other symlink encounter in this package throws
+      // (`isSharded`, `collectShardNames`, `assertRealFile`); this one did not,
+      // and it is the one that can delete a whole track from every gate at
+      // once.
+      if (existsSync(join(root, track.name, "lessons"))) {
+        throw new Error(
+          `'${track.name}' is not a real directory but holds lessons/ — a track must ` +
+            `be a real directory in the tree, not a link, so that the corpus cannot ` +
+            `silently shrink`,
+        );
+      }
+      continue;
+    }
+    // Not every directory under the root is a track. Measured, not assumed:
+    // `_assets`, `_fonts` and `_shared` are the only three that fail
+    // `TRACK_ID` — `concepts`, `core`, `data` and `progress` all match it and
+    // fall through to `loadTrackLessons`, which returns `[]` because they hold
+    // no `lessons/`. Skipping here exists so the id check can sit at the FRONT
+    // of `loadTrackLessons`, where it closes the existence oracle described
+    // there, rather than after the path it is supposed to guard.
+    //
+    // But `continue` alone would be fail-OPEN, and this package's recurring
+    // defect is a loader that drops a track and leaves every gate green on the
+    // smaller corpus. So a directory that fails the id test and NEVERTHELESS
+    // holds lessons is an error, not a skip: that is a real track nobody can
+    // load, and it should say so rather than quietly not exist. The set is
+    // empty today, which is exactly when this is cheap to state.
+    if (!TRACK_ID.test(track.name)) {
+      if (existsSync(join(root, track.name, "lessons"))) {
+        throw new Error(
+          `'${track.name}' holds a lessons/ directory but is not a usable track id ` +
+            `(must match ${TRACK_ID.source}) — it would be silently excluded from the corpus`,
+        );
+      }
+      continue;
+    }
     out.push(...loadTrackLessons(track.name, root));
   }
   return out;
@@ -466,13 +602,18 @@ export function loadLessons(root = defaultCurriculumRoot()): ParsedLesson[] {
  */
 export function loadModalityManifest(root = defaultCurriculumRoot()): ModalityManifest {
   const directory = join(root, MODALITY_MANIFEST_DIR);
+  // Enumerated here, but READ through `readLedgerFile` — which is the split
+  // that matters. `core/lesson-modality/` is NOT an HL21 `X.d/`: it is the
+  // older PR #12443 shape, a plain directory of per-language files with no
+  // monolith anywhere, so `readShards` (which derives `X.d` from an `X.json`
+  // that does not exist) is the wrong tool and would have to invent a ledger
+  // path to be handed one. What these files DO share with a shard is the trust
+  // boundary — each is a repo file a pull request chooses — so each gets the
+  // same per-file guards a shard gets.
   const manifests = readdirSync(directory)
     .filter((name) => name.endsWith(".json"))
     .sort()
-    .map(
-      (name) =>
-        JSON.parse(readFileSync(join(directory, name), "utf8")) as ModalityManifest,
-    );
+    .map((name) => readLedgerFile<ModalityManifest>(join(directory, name)));
   return mergeModalityManifests(manifests);
 }
 
@@ -524,7 +665,10 @@ export function loadScripts(root = defaultCurriculumRoot()): Record<string, Scri
     // silently overwrite the other. Which one won would depend on filename
     // sort order, which is not a thing to depend on.
     if (isLedgerFile(file)) continue;
-    const sd = JSON.parse(readFileSync(join(dir, file), "utf8")) as ScriptData;
+    // Same reasoning as `loadModalityManifest`: `data/scripts/` is a plain
+    // directory of authored files, not an `X.d/`, so the enumeration stays and
+    // only the READ moves behind the guards.
+    const sd = readLedgerFile<ScriptData>(join(dir, file));
     out[sd.script] = sd;
   }
   return out;
@@ -546,7 +690,7 @@ export function loadLetterLedgers(root = defaultCurriculumRoot()): LetterLedger[
   const out: LetterLedger[] = [];
   for (const file of readdirSync(dir).sort()) {
     if (!isLedgerFile(file)) continue;
-    const raw = JSON.parse(readFileSync(join(dir, file), "utf8")) as Partial<LetterLedger>;
+    const raw = readLedgerFile<Partial<LetterLedger>>(join(dir, file));
     // Shape-checked at the boundary. `validateLetterLedger` cannot report a
     // malformed ledger, because it walks these two arrays before it checks
     // anything -- so a missing key would surface as an unhandled TypeError out
@@ -698,7 +842,7 @@ export function loadExamInventory(
     throw new Error("exam inventory: resolved path escapes the curriculum root");
   }
 
-  const parsed = JSON.parse(readFileSync(file, "utf8")) as unknown;
+  const parsed = readLedgerFile<unknown>(file);
   if (
     typeof parsed !== "object" ||
     parsed === null ||
@@ -788,7 +932,7 @@ export function listExamInventories(
   for (const file of readdirSync(directory).sort()) {
     if (!file.startsWith("exam-inventory-") || !file.endsWith(".json")) continue;
     try {
-      const parsed = JSON.parse(readFileSync(resolve(directory, file), "utf8")) as Partial<ExamInventory>;
+      const parsed = readLedgerFile<Partial<ExamInventory>>(resolve(directory, file));
       if (typeof parsed.language === "string" && typeof parsed.level === "string") {
         found.push({
           language: parsed.language,
@@ -796,8 +940,12 @@ export function listExamInventories(
           complete: declaredInventoryComplete(parsed),
         });
       }
-    } catch {
-      // Skipped on purpose — see the note above.
+    } catch (error) {
+      // Skipped on purpose — see the note above — but only for the failure the
+      // note is about. A symlinked inventory, a `__proto__` key or an `EBUSY`
+      // is not "one unparseable file"; absorbing those would drop a target from
+      // the plan and queue somebody to write an inventory that already exists.
+      if (!(error instanceof LedgerParseError)) throw error;
     }
   }
   return found;
@@ -947,9 +1095,9 @@ function readFontCoverage(buffer: Buffer): Set<number> {
 
 /** The characters verified present in the books' main font. */
 export function loadMainFontCharset(root = defaultCurriculumRoot()): Set<string> {
-  const parsed = JSON.parse(readFileSync(resolve(root, "core", "main-font-charset.json"), "utf8")) as {
-    characters: { char: string }[];
-  };
+  const parsed = readLedgerFile<{ characters: { char: string }[] }>(
+    resolve(root, "core", "main-font-charset.json"),
+  );
   if (!Array.isArray(parsed.characters) || parsed.characters.length === 0) {
     throw new Error("main-font-charset.json has no characters; refusing to report a clean glyph gate");
   }

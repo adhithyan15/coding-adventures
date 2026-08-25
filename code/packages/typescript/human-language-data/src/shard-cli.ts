@@ -74,6 +74,7 @@ import {
   KEY_ORDER_FIELD,
   META_SHARD,
   assertRealFile,
+  isAbsentErrno,
   isSharded,
   listShardNames,
   readLedgerFile,
@@ -599,7 +600,14 @@ function statIfPresent(path: string): ReturnType<typeof lstatSync> | undefined {
   try {
     return lstatSync(path);
   } catch (error) {
-    if ((error as NodeJS.ErrnoException).code === "ENOENT") return undefined;
+    // `isAbsentErrno`, shared with `shard.ts`, rather than the local `=== ENOENT`
+    // this used to carry. This function already drew the line in the right
+    // PLACE — only absence is absence, everything else rethrows — while
+    // `isSharded` next door collapsed every errno into `false`. Now that the
+    // reader has been fixed there is one definition of "absent" instead of two
+    // that can drift, and this side additionally picks up `ENOTDIR`, which means
+    // a parent component is a file and so the path cannot exist either.
+    if (isAbsentErrno((error as NodeJS.ErrnoException).code)) return undefined;
     throw error;
   }
 }
@@ -1036,7 +1044,18 @@ export function shardLedger(root: string, plan: ShardPlan): string[] {
   // `readLedgerFile`, not a bare `JSON.parse(readFileSync(...))`. The bare form
   // skipped the symlink refusal, the dangerous-key check and the parse-error
   // scrubbing all at once — three controls lost to one convenience.
-  const document = readLedgerFile<Record<string, unknown>>(monolith);
+  //
+  // `allowShardedSibling`, and this is the ONE call in the package entitled to
+  // it. `readLedgerFile` otherwise refuses a monolith whose `X.d/` exists,
+  // because to every other reader that file is a generated artifact that may be
+  // stale. Re-sharding is the exception by definition: `--shard` exists to
+  // rebuild `X.d/` FROM the monolith, so "the shards already exist" is the
+  // ordinary case here rather than the error. The `"removed"` branch above has
+  // already ruled out the one shape where reading it WOULD be wrong — a
+  // migrated ledger whose monolith is gone on purpose.
+  const document = readLedgerFile<Record<string, unknown>>(monolith, {
+    allowShardedSibling: true,
+  });
   assertShardable(document, plan);
   const contents = shardContents(document, plan);
   const dir = shardDirectoryFor(monolith);
