@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+### Added
+
+- A pure tracked-artifact snapshot validator now independently consumes the
+  five language-neutral fixtures, including redacted portable-path failures,
+  Unicode-scalar boundaries and ordering, inert link metadata, and exact,
+  case, nested, and Unicode-compatible `node_modules` aliases.
+- Generated source-embedded Unicode 17.0.0 normalization, full default-fold,
+  and full-uppercase tables keep validation independent of host Lua tables;
+  the generator verifies the emitted Lua module against every official vector.
+
 ### Fixed
 
 - Lua `.rockspec` dependency metadata now follows the shared strict UTF-8

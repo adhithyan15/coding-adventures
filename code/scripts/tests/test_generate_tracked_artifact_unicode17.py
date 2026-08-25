@@ -42,7 +42,7 @@ class UnicodeDownloadBoundaryTests(unittest.TestCase):
     ) -> None:
         self.assertEqual(
             generator._selected_runtime_self_checks(None),
-            ("typescript", "ruby", "elixir"),
+            ("typescript", "ruby", "elixir", "lua"),
         )
 
     def test_runtime_self_check_selection_can_isolate_elixir_for_ci(self) -> None:
@@ -200,6 +200,39 @@ class UnicodeDownloadBoundaryTests(unittest.TestCase):
             generator.LICENSE_TARGETS,
         )
 
+    def test_lua_renderer_exports_the_pinned_process_free_api(self) -> None:
+        rendered = generator._render_lua(
+            (
+                [(0x0300, 230)],
+                [(0x00C0, False, (0x0041, 0x0300))],
+                [(0x0041, 0x0300, 0x00C0)],
+                [(0x0041, (0x0061,))],
+                [(0x0061, (0x0041,))],
+            )
+        )
+
+        self.assertIn('Unicode.UNICODE_VERSION = "17.0.0"', rendered)
+        self.assertIn("function Unicode.nfc", rendered)
+        self.assertIn("function Unicode.nfkc", rendered)
+        self.assertIn("function Unicode.casefold", rendered)
+        self.assertIn("function Unicode.nfkc_casefold", rendered)
+        self.assertIn("function Unicode.full_uppercase", rendered)
+        self.assertNotIn("utf8.nf", rendered)
+        self.assertNotIn("string.lower", rendered)
+
+    def test_lua_output_and_license_are_declared_targets(self) -> None:
+        self.assertEqual(
+            generator.LUA_TARGET,
+            Path(
+                "code/programs/lua/build-tool/lib/build_tool/"
+                "tracked_artifact_unicode17.lua"
+            ),
+        )
+        self.assertIn(
+            Path("code/programs/lua/build-tool/UNICODE-LICENSE.txt"),
+            generator.LICENSE_TARGETS,
+        )
+
     def test_typescript_self_check_runs_every_official_vector_family(self) -> None:
         sources = {
             "NormalizationTest.txt": "0041;0041;0041;0041;0041; # LATIN A\n",
@@ -313,6 +346,41 @@ class UnicodeDownloadBoundaryTests(unittest.TestCase):
         self.assertEqual(payload["normalization"], [["A", "A", "A", "A", "A"]])
         self.assertEqual(payload["folding"], [["A", "a", "a"]])
         self.assertEqual(payload["uppercase"], [["a", "A"]])
+        self.assertEqual(invocation["timeout"], 180)
+        self.assertFalse(invocation["check"])
+
+    def test_lua_self_check_runs_every_official_vector_family(self) -> None:
+        sources = {
+            "NormalizationTest.txt": "0041;0041;0041;0041;0041; # LATIN A\n",
+            "CaseFolding.txt": "0041; C; 0061; # LATIN A\n",
+            "UnicodeData.txt": ";".join(["0061"] + [""] * 11 + ["0041"] + [""] * 2),
+            "SpecialCasing.txt": "0061; 0061; 0041; 0041; ; # LATIN A\n",
+        }
+
+        class _Module:
+            @staticmethod
+            def nfkc_casefold(value: str) -> str:
+                return value.lower()
+
+        completed = subprocess.CompletedProcess([], 0, "ok\n", "")
+        with (
+            mock.patch.object(generator.shutil, "which", return_value="lua"),
+            mock.patch.object(
+                generator.subprocess, "run", return_value=completed
+            ) as run,
+        ):
+            generator._self_check_lua(
+                Path("C:/repo"),
+                "return {}\n",
+                sources,
+                _Module(),
+            )
+
+        invocation = run.call_args.kwargs
+        self.assertEqual(
+            invocation["input"],
+            "V;17.0.0\nN;41;41;41;41;41\nF;41;61;61\nU;61;41\n",
+        )
         self.assertEqual(invocation["timeout"], 180)
         self.assertFalse(invocation["check"])
 

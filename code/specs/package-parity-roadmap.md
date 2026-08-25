@@ -7546,6 +7546,49 @@ the Lua generator-authority edge, the graph contains 503 unique owners and 766
 complete acyclic dependency edges, with exactly one in-progress owner and no
 active parity PR.
 
+### Lua tracked-artifact implementation
+
+The Lua build tool now exposes a pure
+`validate_tracked_artifact_snapshot` adapter and independently consumes all
+five language-neutral fixtures. It implements the closed portable-path error
+precedence, lexical slash normalization, Unicode-scalar length limits and
+ordering, hostile-path redaction, normalized safe forbidden paths, NFKC plus
+full default folding for exact `node_modules` components, full-uppercase
+Windows reserved basenames, inert entry kinds, and deterministic canonical
+diagnostic ordering. The adapter adds no Git, filesystem, process,
+environment, or network authority.
+
+Generated source-embedded Unicode 17.0.0 tables provide NFC, NFKC, full
+folding, NFKC-fold, and full uppercase without inheriting host Unicode data.
+The generator pins the upstream byte counts and SHA-256 identities, carries
+the complete Unicode License v3 notice, and checks the emitted Lua module over
+every official normalization, C/F folding, unconditional uppercase, derived
+NFKC-fold, and Unicode 17 sentinel vector. A required read-only CI job builds
+the repository-pinned Lua 5.4.7 toolchain and runs that real emitted-runtime
+check; the stable CI gate explicitly requires its result.
+
+The repository-pinned Lua 5.4.7 toolchain passes syntax compilation, 19
+focused validator tests, and the complete 72-test Lua build-tool suite. LuaCov
+measures the validator at 98.23% and the generated Unicode module at 84.06%; the
+package-wide total is 50.82% because unchanged CLI, resolver, and bundled test
+framework code remains outside this bounded consumer. All 18 generator tests
+and six pinned-Lua setup tests pass. Ruff, changed-source Luacheck, workflow
+YAML parsing, generated-byte verification, and the full emitted Lua Unicode
+self-check pass.
+
+The neutral corpus validates 111 cases and 269 files. The schema and runner
+conformance families pass 22 and 58 tests respectively; package-parity,
+capability, Haskell-capability, and OCaml-lock suites pass another 68 tests
+with two expected platform skips. The Go build tool passes all packages with
+coverage, vet, and trimpath compilation, then a fresh binary evaluates 45
+Starlark BUILD files and validates a forced dry plan over all 259 Lua packages.
+The refreshed schema-3 inventory remains 15 established lanes, 1,373
+implementation identities, 4,566 slots, 175 high-consensus packages with 276
+gaps, 910 singletons with 12,740 gaps, 721 Rust singletons, zero collisions,
+and zero unknown buckets. Bandit medium/high, strict JSON, state-graph, and diff
+checks pass; no package dependency changed. Generator subprocess authority
+remains explicitly selection-blocked under its separate review owner.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

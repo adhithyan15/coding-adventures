@@ -29,6 +29,11 @@ The build tool follows a pipeline:
 5. **Reporting** (`lib/build_tool/reporter.lua`): Print a summary of
    pass/fail results.
 
+6. **Validation** (`lib/build_tool/validator.lua`): Apply process-free policy
+   to caller-supplied snapshots. Tracked dependency artifacts consume all five
+   language-neutral fixtures and reject unsafe or Unicode-compatible
+   `node_modules` paths without reading a checkout.
+
 ## Usage
 
 ```bash
@@ -59,7 +64,26 @@ the package and repository-relative manifest, and make the CLI exit with code
 2. Diagnostics never expose the checkout path or silently replace invalid
 input bytes; a well-formed literal Unicode replacement character remains valid.
 
+## Tracked-Artifact Validation
+
+`Validator.validate_tracked_artifact_snapshot(entries, unicode_version)` is a
+pure adapter over inert path and entry-kind records. It performs lexical slash
+normalization, rejects non-portable paths with redacted diagnostics, detects
+exact, case, nested, and Unicode compatibility aliases of `node_modules`, and
+sorts diagnostics by Unicode scalar value. Regular, symlink, and reparse kinds
+are policy metadata only; the adapter never opens or follows them.
+
+The adapter uses generated, source-embedded Unicode 17.0.0 NFC, NFKC, full
+default case-fold, and full-uppercase tables. It therefore does not inherit
+normalization or casing behavior from the installed Lua runtime. Regenerate
+the module and its Unicode License v3 notice with:
+
+```bash
+python code/scripts/generate_tracked_artifact_unicode17.py
+```
+
 ## Dependencies
 
 - Lua 5.4 (for native integers and bitwise operators)
 - LuaFileSystem (optional, for faster directory traversal)
+- DKJSON (tests only, for consuming the shared JSON fixtures)
