@@ -37,8 +37,8 @@ reviews_of: [ES-W01-frase-propia, ES-C09-soy-de]
 [PAUSE 2s] Last time you chose two things and put them in an order. Nothing new
 went on the page, and it was still your own line.
 
-[PAUSE 1s] Now four of them, and the same rule holds: no word that the course
-has not already given you.
+[PAUSE 1s] Now four of them, and the same rule holds: no word you have not
+already been given.
 
 ## Writing — controlled composition
 <!-- hl-knowledge: introduces=[]; assesses=[ES-WRITING-CONTROLLED-COMPOSITION, ES-LEX-ME-LLAMO, ES-GRAMMAR-AGE-WITH-TENER, ES-GRAMMAR-ORIGIN-WITH-SER, ES-LEX-DE, ES-LEX-VIVIR, ES-LEX-EN, ES-LEX-GRACIAS] -->

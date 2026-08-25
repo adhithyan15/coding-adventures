@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:0248f8ec483dd5ac",
+  "sourceHash": "fnv1a64:6b094c231d07b1fb",
   "summary": {
     "totalLessons": 761,
     "voice": 697,
@@ -19509,7 +19509,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7edd294c8355e83c",
+      "sourceHash": "fnv1a64:98a3b39597b987a4",
       "detachableSegments": [
         "Writing — controlled composition"
       ]

@@ -5146,7 +5146,7 @@
     {
       "language": "spanish",
       "chapter": 338,
-      "sourceHash": "fnv1a64:2e120037083aa97c",
+      "sourceHash": "fnv1a64:39ce2716b30262bf",
       "lessonIds": [
         "ES-W01-ficha-personal"
       ],
@@ -5154,8 +5154,8 @@
       "drivablePrefix": 0,
       "text": "spanish/narration/ch338.txt",
       "json": "spanish/narration/ch338.json",
-      "textHash": "fnv1a64:2ae0f07e5595aead",
-      "jsonHash": "fnv1a64:56019a6e749a1276"
+      "textHash": "fnv1a64:33062d46d3a29dfa",
+      "jsonHash": "fnv1a64:45234bc5e0db0a83"
     },
     {
       "language": "spanish",

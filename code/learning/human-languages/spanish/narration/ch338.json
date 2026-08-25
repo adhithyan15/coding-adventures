@@ -4,7 +4,7 @@
   "chapter": 338,
   "title": "Writing --- Four Lines About You",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:2e120037083aa97c",
+  "sourceHash": "fnv1a64:39ce2716b30262bf",
   "lessons": [
     {
       "id": "ES-W01-ficha-personal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:7edd294c8355e83c",
+      "sourceHash": "fnv1a64:98a3b39597b987a4",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "Now four of them, and the same rule holds: no word that the course has not already given you."
+              "text": "Now four of them, and the same rule holds: no word you have not already been given."
             }
           ]
         },
