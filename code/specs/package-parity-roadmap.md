@@ -7304,6 +7304,53 @@ contextual generic-closer work. The reconciled graph remains 499 unique owners
 and 762 complete acyclic dependency edges, with exactly one in-progress owner
 and no active PR.
 
+### Ruby tracked-artifact implementation
+
+The Ruby engine now exposes a pure in-memory tracked-artifact snapshot
+validator and independently consumes all five language-neutral fixtures. It
+implements the closed portable-path precedence, lexical slash normalization,
+Unicode-scalar limits and ordering, invalid-path redaction, normalized safe
+forbidden paths, NFKC plus full default folding for exact `node_modules`
+components, full-uppercase reserved basenames, inert entry kinds, and canonical
+diagnostic ordering. The runtime adapter adds no Git, filesystem, process,
+environment, or network authority.
+
+Generated source-embedded Unicode 17.0.0 tables provide NFC, NFKC, full
+folding, NFKC-fold, and full-uppercase behavior without inheriting the host
+Ruby tables. The generator pins every upstream size and SHA-256 identity,
+ships the complete Unicode License v3 notice, and runs Python, emitted
+TypeScript, and emitted Ruby over every official normalization, folding,
+uppercase, derived NFKC-fold, and Unicode 17 sentinel family. Its 10-test suite
+is now an explicit CI gate. The separate selection-blocked generator authority
+owner now depends on this Ruby consumer and truthfully covers PATH-resolved
+Ruby, inherited environment state, temporary sources and runners, buffered
+output, diagnostics, and process-tree cleanup.
+
+The canonical Ruby BUILD front passes 321 tests and 717 assertions with one
+expected macOS-only skip, 89.57% line coverage, and 73.36% branch coverage;
+Bundle check, StandardRB's substantive rules, and Ruby syntax checks pass. The
+neutral corpus validates all 111 cases across 269 files, and the full build-tool
+conformance family passes 201 tests with 23 expected platform skips. The
+package-parity, capability, Haskell, and OCaml gates pass. The Go build tool
+passes all packages, vet, trimpath compilation, BUILD validation, and a forced
+Ruby dry plan over 305 packages while preserving the five-entry orphan ledger.
+Ruby advisory audit and production npm audit report no vulnerability; the
+unchanged development-only `nanoid` advisory remains registered separately.
+Bandit reports no medium or high issue, and its low child-process notices are
+owned by the generator authority review. Strict JSON and the 499-owner,
+762-edge complete acyclic state graph pass.
+
+Three independent read-only audits found no remaining correctness,
+supply-chain, metadata, ownership, or integration defect. The required split
+security review passed in one round, and its exact-head documentation recheck
+also passed. A conflict-free rebase advanced the branch to exact `origin/main`
+`3e29b2fee9572cf6a244c0bc8a889b655c2a3c22`; the intervening ADJ tracking-only
+finalization and rejected-body HTML parser diagnostics remain under existing
+owners and do not add identities or overlap. The refreshed schema-3 inventory
+remains 15 established lanes, 1,373 identities, 4,566 slots, zero collisions,
+and zero unknown buckets. All 12 live open PRs have zero exact overlap across
+this branch's 11 changed paths.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
