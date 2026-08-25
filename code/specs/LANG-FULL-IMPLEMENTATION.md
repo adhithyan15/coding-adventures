@@ -943,8 +943,9 @@ backend immediately) come before the enabler-dependent items.
   commutative forms and left-associative chains of those operations) receive
   the same bounded treatment. For finite real
   selectors, multiplication and division by exact positive one are likewise
-  preserving; additive zero remains conservative because it can change the
-  sign bit of negative zero. Other real arithmetic and computed selector
+  preserving, including left-associative chains of those operations; additive
+  zero remains conservative because it can change the sign bit of negative
+  zero. Other real arithmetic and computed selector
   assignments, differing,
   computed, or otherwise
   unsupported selector-dependency writes, dynamically selected differing selector leaves,

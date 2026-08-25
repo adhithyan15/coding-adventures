@@ -6028,18 +6028,45 @@ impl Compiler {
         {
             return self.real_unit_identity_expression_preserves_name(child, name);
         }
-        let [Piece::Node(lhs), Piece::Op(op), Piece::Node(rhs)] = sequence.as_slice() else {
+        if sequence.len() < 3 || sequence.len().is_multiple_of(2) {
+            return false;
+        }
+        let Piece::Node(first) = &sequence[0] else {
             return false;
         };
-        let lhs_preserves = self.real_unit_identity_expression_preserves_name(lhs, name);
-        let rhs_preserves = self.real_unit_identity_expression_preserves_name(rhs, name);
-        let lhs_is_one = literal_numeric_one(lhs);
-        let rhs_is_one = literal_numeric_one(rhs);
-        match op.as_str() {
-            "*" => (lhs_preserves && rhs_is_one) || (rhs_preserves && lhs_is_one),
-            "/" => lhs_preserves && rhs_is_one,
-            _ => false,
+        if sequence.iter().skip(1).step_by(2).any(|piece| {
+            !matches!(piece, Piece::Op(op) if matches!(op.as_str(), "*" | "/"))
+        }) {
+            return false;
         }
+        let mut preserves = self.real_unit_identity_expression_preserves_name(first, name);
+        let mut is_one = literal_numeric_one(first);
+        for index in (1..sequence.len()).step_by(2) {
+            let (Piece::Op(op), Piece::Node(rhs)) = (&sequence[index], &sequence[index + 1]) else {
+                return false;
+            };
+            let rhs_preserves = self.real_unit_identity_expression_preserves_name(rhs, name);
+            let rhs_is_one = literal_numeric_one(rhs);
+            if preserves {
+                if !rhs_is_one {
+                    return false;
+                }
+            } else if is_one {
+                if op == "*" {
+                    if rhs_preserves {
+                        preserves = true;
+                        is_one = false;
+                    } else if !rhs_is_one {
+                        return false;
+                    }
+                } else if !rhs_is_one {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+        preserves
     }
 
     fn collect_static_predicate_dependencies(
@@ -10567,7 +10594,13 @@ mod tests {
 
     #[test]
     fn al4_real_unit_selector_writes_stay_stable() {
-        for write in ["choose * 1.0", "1.0 * choose", "choose / 1.0"] {
+        for write in [
+            "choose * 1.0",
+            "1.0 * choose",
+            "choose / 1.0",
+            "choose * 1.0 / 1.0 * 1.0",
+            "1.0 * choose * 1.0 / 1.0",
+        ] {
             compile_source(
                 &format!(
                     "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := {write} end; print(i + 0.25) end"
@@ -10575,6 +10608,20 @@ mod tests {
                 "test",
             )
             .unwrap_or_else(|_| panic!("real unit write {write:?} must stay stable"));
+        }
+    }
+
+    #[test]
+    fn al4_real_non_unit_selector_chains_remain_conservative() {
+        for write in ["choose * 1.0 * 2.0", "1.0 / choose * 1.0"] {
+            let err = compile_source(
+                &format!(
+                    "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := {write} end; print(i + 0.25) end"
+                ),
+                "test",
+            )
+            .expect_err("real non-unit chains must fail closed");
+            assert!(format!("{err:?}").contains("cannot print a real value"));
         }
     }
 
