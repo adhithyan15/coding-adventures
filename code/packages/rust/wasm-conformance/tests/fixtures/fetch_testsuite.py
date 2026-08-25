@@ -577,6 +577,23 @@ TESTSUITE_FILES = [
     # `not_yet_supported`. See the NOTICE file for the real vendored/pass
     # counts.
     "simd_lane.wast",
+    # SIMD widen PR39: simd_f32x4_rounding.wast and
+    # simd_f64x2_rounding.wast -- vendors the dedicated upstream files for
+    # the ceil/floor/trunc/nearest "rounding" family across both shapes,
+    # this PR's 8 new opcodes (f32x4.ceil/floor/trunc/nearest, f64x2.ceil/
+    # floor/trunc/nearest). Verified NOT already vendored/implemented as
+    # of PR38's i8x16.shuffle -- this was one of the two open fronts left
+    # after the lane-immediate family closed out (the other, the
+    # `load_extend`/`load_splat`/`load_zero`/`load{8,16,32,64}_lane`/
+    # `store{8,16,32,64}_lane` memory-access family, is deferred to a
+    # later PR: it introduces new instruction SHAPES, not just new
+    # arithmetic). Both files are self-contained (each covers exactly one
+    # vector shape's 4 rounding ops), have real `assert_return` coverage
+    # over boundary/special float values plus `assert_invalid`/
+    # `assert_malformed` type-mismatch and unknown-operator coverage. See
+    # the NOTICE file for the real vendored/pass counts.
+    "simd_f32x4_rounding.wast",
+    "simd_f64x2_rounding.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under

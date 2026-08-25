@@ -1990,7 +1990,15 @@ fn encode_stream_instr(
             | wasm_opcodes::SimdOpKind::MinF64x2
             | wasm_opcodes::SimdOpKind::MaxF64x2
             | wasm_opcodes::SimdOpKind::PminF64x2
-            | wasm_opcodes::SimdOpKind::PmaxF64x2 => {
+            | wasm_opcodes::SimdOpKind::PmaxF64x2
+            | wasm_opcodes::SimdOpKind::CeilF32x4
+            | wasm_opcodes::SimdOpKind::FloorF32x4
+            | wasm_opcodes::SimdOpKind::TruncF32x4
+            | wasm_opcodes::SimdOpKind::NearestF32x4
+            | wasm_opcodes::SimdOpKind::CeilF64x2
+            | wasm_opcodes::SimdOpKind::FloorF64x2
+            | wasm_opcodes::SimdOpKind::TruncF64x2
+            | wasm_opcodes::SimdOpKind::NearestF64x2 => {
                 // `i8x16.add_sat_s`/`_u`/`.sub_sat_s`/`_u`/
                 // `i16x8.add_sat_s`/`_u`/`.sub_sat_s`/`_u` (SIMD widen
                 // PR33) join too: same BINARY (pop two v128s, push one),
@@ -2076,6 +2084,14 @@ fn encode_stream_instr(
                 // NaN-canonicalizing vs. `<`-based-select runtime
                 // distinction (see `SimdOpKind::MinF64x2`/`PminF64x2`'s
                 // own doc comments) is likewise entirely invisible here.
+                // `f32x4.ceil`/`floor`/`trunc`/`nearest` and
+                // `f64x2.ceil`/`floor`/`trunc`/`nearest` (SIMD widen PR39)
+                // join too, closing the rounding family across both
+                // shapes in one PR -- all 8 UNARY, same no-immediate
+                // encoding shape; the per-lane IEEE-754 rounding-mode
+                // selection (including `nearest`'s ties-to-even semantics,
+                // see `SimdOpKind::NearestF32x4`'s own doc comment) is
+                // entirely a runtime concern, invisible here.
                 out.push(0xFD);
                 out.extend(wasm_leb128::encode_unsigned(simd_op.sub_opcode as u64));
                 return Ok(0);
@@ -2900,7 +2916,15 @@ fn encode_flat_instr(
             | wasm_opcodes::SimdOpKind::MinF64x2
             | wasm_opcodes::SimdOpKind::MaxF64x2
             | wasm_opcodes::SimdOpKind::PminF64x2
-            | wasm_opcodes::SimdOpKind::PmaxF64x2 => {
+            | wasm_opcodes::SimdOpKind::PmaxF64x2
+            | wasm_opcodes::SimdOpKind::CeilF32x4
+            | wasm_opcodes::SimdOpKind::FloorF32x4
+            | wasm_opcodes::SimdOpKind::TruncF32x4
+            | wasm_opcodes::SimdOpKind::NearestF32x4
+            | wasm_opcodes::SimdOpKind::CeilF64x2
+            | wasm_opcodes::SimdOpKind::FloorF64x2
+            | wasm_opcodes::SimdOpKind::TruncF64x2
+            | wasm_opcodes::SimdOpKind::NearestF64x2 => {
                 // `i8x16.add_sat_s`/`_u`/`.sub_sat_s`/`_u`/
                 // `i16x8.add_sat_s`/`_u`/`.sub_sat_s`/`_u` (SIMD widen
                 // PR33) join too, same reasoning as `NarrowI16x8S/_U`
@@ -2945,6 +2969,10 @@ fn encode_flat_instr(
                 // `AbsF64x2`/`MinF64x2`/`MaxF64x2`/`PminF64x2`/`PmaxF64x2`
                 // (SIMD widen PR35) join too, same reasoning -- see the
                 // matching comment in `encode_stream_instr` above.
+                // `f32x4.ceil`/`floor`/`trunc`/`nearest` and
+                // `f64x2.ceil`/`floor`/`trunc`/`nearest` (SIMD widen PR39)
+                // join too, same reasoning -- see the matching comment in
+                // `encode_stream_instr` above.
                 encode_instr_list(args, icx, out)?;
                 out.push(0xFD);
                 out.extend(wasm_leb128::encode_unsigned(simd_op.sub_opcode as u64));
@@ -6152,6 +6180,62 @@ mod tests {
             assert!(code.windows(3).any(|w| w == [0xFD, 0xF5, 0x01]), "missing f64x2.max: {code:?}");
             assert!(code.windows(3).any(|w| w == [0xFD, 0xF6, 0x01]), "missing f64x2.pmin: {code:?}");
             assert!(code.windows(3).any(|w| w == [0xFD, 0xF7, 0x01]), "missing f64x2.pmax: {code:?}");
+        }
+    }
+
+    #[test]
+    fn f32x4_rounding_family_encodes_the_real_single_byte_leb128_sub_opcodes() {
+        // SIMD widen PR39: f32x4.ceil (0x67), f32x4.floor (0x68),
+        // f32x4.trunc (0x69), f32x4.nearest (0x6A) -- all four sub-opcode
+        // values are < 128, so each encodes as a single-byte LEB128
+        // value (`[0xFD, byte]`, NO `0x01` continuation byte) -- same
+        // shape as the comparison family's 0x41-0x46, unlike
+        // `f32x4.abs`'s 0xE0 or `f32x4.add`'s 0xE4. All four are UNARY
+        // (one v128 operand), no immediate beyond the opcode bytes
+        // themselves.
+        let folded = parse_module(
+            r#"(module (func (param v128) (result v128)
+                 (f32x4.nearest (f32x4.trunc (f32x4.floor (f32x4.ceil (local.get 0)))))))"#,
+        )
+        .unwrap();
+        let flat = parse_module(
+            r#"(module (func (param v128) (result v128)
+                 local.get 0 f32x4.ceil f32x4.floor f32x4.trunc f32x4.nearest))"#,
+        )
+        .unwrap();
+        for code in [code_of(&folded, 0), code_of(&flat, 0)] {
+            assert!(code.windows(2).any(|w| w == [0xFD, 0x67]), "missing f32x4.ceil: {code:?}");
+            assert!(code.windows(2).any(|w| w == [0xFD, 0x68]), "missing f32x4.floor: {code:?}");
+            assert!(code.windows(2).any(|w| w == [0xFD, 0x69]), "missing f32x4.trunc: {code:?}");
+            assert!(code.windows(2).any(|w| w == [0xFD, 0x6A]), "missing f32x4.nearest: {code:?}");
+        }
+    }
+
+    #[test]
+    fn f64x2_rounding_family_encodes_ceil_floor_trunc_single_byte_and_nearest_two_byte() {
+        // SIMD widen PR39: f64x2.ceil (0x74), f64x2.floor (0x75),
+        // f64x2.trunc (0x7A) -- all < 128, single-byte LEB128, direct
+        // 2-lane mirror of the f32x4 rounding family above.
+        // f64x2.nearest (0x94 = 148) is DELIBERATELY >= 128 -- the one
+        // sub-opcode in this 8-opcode family that exercises the real
+        // 2-byte LEB128 continuation encoding (`[0x94, 0x01]`), same
+        // "one entry needs the multi-byte path" shape as `i32x4.add`'s
+        // 0xAE precedent in wasm-opcodes' own sub-opcode-value test.
+        let folded = parse_module(
+            r#"(module (func (param v128) (result v128)
+                 (f64x2.nearest (f64x2.trunc (f64x2.floor (f64x2.ceil (local.get 0)))))))"#,
+        )
+        .unwrap();
+        let flat = parse_module(
+            r#"(module (func (param v128) (result v128)
+                 local.get 0 f64x2.ceil f64x2.floor f64x2.trunc f64x2.nearest))"#,
+        )
+        .unwrap();
+        for code in [code_of(&folded, 0), code_of(&flat, 0)] {
+            assert!(code.windows(2).any(|w| w == [0xFD, 0x74]), "missing f64x2.ceil: {code:?}");
+            assert!(code.windows(2).any(|w| w == [0xFD, 0x75]), "missing f64x2.floor: {code:?}");
+            assert!(code.windows(2).any(|w| w == [0xFD, 0x7A]), "missing f64x2.trunc: {code:?}");
+            assert!(code.windows(3).any(|w| w == [0xFD, 0x94, 0x01]), "missing f64x2.nearest: {code:?}");
         }
     }
 

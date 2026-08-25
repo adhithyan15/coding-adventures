@@ -2011,6 +2011,83 @@ pub enum SimdOpKind {
     /// [`Self::MaxF64x2`]'s NaN-canonicalizing behavior. Deliberately NOT
     /// implemented by reusing `MaxF64x2`'s NaN logic.
     PmaxF64x2,
+    /// `f32x4.ceil` (SIMD widen PR39) -- pop one `v128`, round each of the
+    /// 4 `f32` lanes UP to the nearest integer value (toward positive
+    /// infinity), push one `v128`. Rust's `f32::ceil()` is directly IEEE-
+    /// 754-`roundToIntegralTowardPositive`-compliant: `ceil(NaN) == NaN`
+    /// (sign/payload preserved), `ceil(+/-0.0) == +/-0.0` (sign
+    /// preserved, NOT canonicalized to `+0.0`), `ceil(+/-inf) ==
+    /// +/-inf`, and an already-integral lane (including a tiny subnormal
+    /// like `f32::MIN_POSITIVE`, which rounds UP to `1.0` unless it's
+    /// already `0`) passes straight through -- so no bespoke NaN/signed-
+    /// zero handling is needed, same "Rust's native op is already
+    /// spec-correct" discipline as [`Self::SqrtF32x4`]. Same UNARY "pop
+    /// v128, push v128" shape as [`Self::AbsF32x4`]/[`Self::SqrtF32x4`],
+    /// the first member of this table's ceil/floor/trunc/nearest
+    /// "rounding" family -- the two open fronts left after PR38's
+    /// `i8x16.shuffle` closed out the lane-immediate family, and the
+    /// smaller, purely-arithmetic one of the two (the other being the
+    /// `load_extend`/`load_splat`/`load_zero`/`load{8,16,32,64}_lane`/
+    /// `store{8,16,32,64}_lane` memory-access family, deferred to a later
+    /// PR as new instruction SHAPES, not just new arithmetic).
+    CeilF32x4,
+    /// `f32x4.floor` (SIMD widen PR39) -- same UNARY shape as
+    /// [`Self::CeilF32x4`], but rounds each of the 4 `f32` lanes DOWN to
+    /// the nearest integer value (toward negative infinity) instead of
+    /// up. Rust's `f32::floor()` is directly IEEE-754-
+    /// `roundToIntegralTowardNegative`-compliant with the same NaN-
+    /// payload-preserving, signed-zero-preserving, infinity-passthrough
+    /// behavior as `ceil` above -- no bespoke handling needed.
+    FloorF32x4,
+    /// `f32x4.trunc` (SIMD widen PR39) -- same UNARY shape as
+    /// [`Self::CeilF32x4`]/[`Self::FloorF32x4`], but rounds each of the 4
+    /// `f32` lanes TOWARD ZERO (drops the fractional part, so a positive
+    /// lane rounds down and a negative lane rounds up) instead of always
+    /// up or always down. Rust's `f32::trunc()` is directly IEEE-754-
+    /// `roundToIntegralTowardZero`-compliant, same NaN/signed-zero/
+    /// infinity discipline as `ceil`/`floor` above.
+    TruncF32x4,
+    /// `f32x4.nearest` (SIMD widen PR39) -- same UNARY shape as
+    /// [`Self::CeilF32x4`]/[`Self::FloorF32x4`]/[`Self::TruncF32x4`], but
+    /// rounds each of the 4 `f32` lanes to the NEAREST integer value,
+    /// with ties broken TOWARD EVEN (banker's rounding) -- e.g. `2.5 ->
+    /// 2.0` and `3.5 -> 4.0`, NOT the "round half away from zero"
+    /// convention `f32::round()` uses (which would send `2.5 -> 3.0`,
+    /// the WRONG answer here). This is IEEE-754's
+    /// `roundToIntegralTiesToEven`, exactly what Rust's
+    /// `f32::round_ties_even()` (stable since Rust 1.77, already used
+    /// elsewhere in this repo -- see `x86-simulator`'s own `roundps`
+    /// handler) implements directly: NaN payload/sign preserved, signed
+    /// zero preserved, infinities pass through unchanged, same as
+    /// `ceil`/`floor`/`trunc` above -- deliberately NOT `f32::round()`,
+    /// which would silently produce spec-WRONG results on every exact
+    /// `.5` boundary.
+    NearestF32x4,
+    /// `f64x2.ceil` (SIMD widen PR39) -- direct 2-lane mirror of
+    /// [`Self::CeilF32x4`] at `f64x2`'s lane width: pop one `v128`, round
+    /// each of the 2 `f64` lanes UP to the nearest integer value, push
+    /// one `v128`. `f64::ceil()` has the identical IEEE-754-compliant
+    /// NaN/signed-zero/infinity discipline as `f32::ceil()` above, so
+    /// again no bespoke handling is needed.
+    CeilF64x2,
+    /// `f64x2.floor` (SIMD widen PR39) -- direct 2-lane mirror of
+    /// [`Self::FloorF32x4`], same `f64::floor()` IEEE-754-compliant
+    /// discipline as [`Self::CeilF64x2`] above, rounding DOWN instead of
+    /// up.
+    FloorF64x2,
+    /// `f64x2.trunc` (SIMD widen PR39) -- direct 2-lane mirror of
+    /// [`Self::TruncF32x4`], same `f64::trunc()` IEEE-754-compliant
+    /// discipline, rounding TOWARD ZERO.
+    TruncF64x2,
+    /// `f64x2.nearest` (SIMD widen PR39) -- direct 2-lane mirror of
+    /// [`Self::NearestF32x4`]: `f64::round_ties_even()`, IEEE-754
+    /// `roundToIntegralTiesToEven` -- ties broken toward even, NOT
+    /// `f64::round()`'s away-from-zero convention. CLOSES this table's
+    /// ceil/floor/trunc/nearest "rounding" family across both `f32x4`
+    /// and `f64x2` -- all 8 opcodes land in this single PR, mirroring the
+    /// established one-family-per-PR cadence (e.g. PR30/PR32's
+    /// comparison families, PR34/PR35's max/pmin/pmax families).
+    NearestF64x2,
 }
 
 /// One entry in the SIMD opcode table: everything a consumer needs to
@@ -2634,6 +2711,27 @@ pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "f64x2.max", sub_opcode: 0xF5, kind: SimdOpKind::MaxF64x2 },
     SimdOpInfo { name: "f64x2.pmin", sub_opcode: 0xF6, kind: SimdOpKind::PminF64x2 },
     SimdOpInfo { name: "f64x2.pmax", sub_opcode: 0xF7, kind: SimdOpKind::PmaxF64x2 },
+    // SIMD widen PR39 (rounding family): f32x4.ceil/floor/trunc/nearest
+    // and f64x2.ceil/floor/trunc/nearest. Sub-opcode values verified
+    // live against the SIMD proposal's own BinarySIMD.md
+    // (https://github.com/WebAssembly/spec/blob/main/proposals/simd/
+    // BinarySIMD.md) at the time of this PR -- none of these 8 values
+    // collided with any pre-existing entry in this table. See each
+    // variant's own doc comment above (`SimdOpKind::CeilF32x4` etc.) for
+    // the exact IEEE-754 rounding-mode semantics and why Rust's native
+    // `ceil`/`floor`/`trunc`/`round_ties_even` are directly correct with
+    // no bespoke NaN/signed-zero handling needed. This PR also vendors
+    // `simd_f32x4_rounding.wast` and `simd_f64x2_rounding.wast` -- see
+    // `code/packages/rust/wasm-conformance/tests/fixtures/
+    // fetch_testsuite.py`.
+    SimdOpInfo { name: "f32x4.ceil", sub_opcode: 0x67, kind: SimdOpKind::CeilF32x4 },
+    SimdOpInfo { name: "f32x4.floor", sub_opcode: 0x68, kind: SimdOpKind::FloorF32x4 },
+    SimdOpInfo { name: "f32x4.trunc", sub_opcode: 0x69, kind: SimdOpKind::TruncF32x4 },
+    SimdOpInfo { name: "f32x4.nearest", sub_opcode: 0x6A, kind: SimdOpKind::NearestF32x4 },
+    SimdOpInfo { name: "f64x2.ceil", sub_opcode: 0x74, kind: SimdOpKind::CeilF64x2 },
+    SimdOpInfo { name: "f64x2.floor", sub_opcode: 0x75, kind: SimdOpKind::FloorF64x2 },
+    SimdOpInfo { name: "f64x2.trunc", sub_opcode: 0x7A, kind: SimdOpKind::TruncF64x2 },
+    SimdOpInfo { name: "f64x2.nearest", sub_opcode: 0x94, kind: SimdOpKind::NearestF64x2 },
 ];
 
 /// Look up a SIMD opcode by its LEB128-decoded sub-opcode value (the
@@ -3052,8 +3150,8 @@ mod tests {
     // ── SIMD (0xFD prefix, v128 first slice) ─────────────────────────────────
 
     #[test]
-    fn simd_ops_table_has_the_expected_208_entries_and_no_duplicates() {
-        assert_eq!(SIMD_OPS.len(), 208);
+    fn simd_ops_table_has_the_expected_216_entries_and_no_duplicates() {
+        assert_eq!(SIMD_OPS.len(), 216);
 
         let mut seen_sub_opcodes = std::collections::HashSet::new();
         let mut seen_names = std::collections::HashSet::new();
@@ -3094,6 +3192,66 @@ mod tests {
         assert_eq!(add.sub_opcode, 0xAE);
 
         assert_eq!(get_simd_op_by_name("i32x4.add").map(|o| o.sub_opcode), Some(174));
+    }
+
+    #[test]
+    fn simd_rounding_family_has_the_real_verified_sub_opcode_values() {
+        // SIMD widen PR39: f32x4.ceil/floor/trunc/nearest and
+        // f64x2.ceil/floor/trunc/nearest, verified live against the SIMD
+        // proposal's own BinarySIMD.md. f64x2.nearest (0x94 = 148) is
+        // deliberately >= 128, the second entry in this table (after
+        // i32x4.add's 0xAE) that exercises the multi-byte LEB128 decode
+        // path -- every other rounding sub-opcode here is single-byte-safe
+        // (< 128).
+        let ceil_f32x4 = get_simd_op(0x67).expect("0x67 should be f32x4.ceil");
+        assert_eq!(ceil_f32x4.name, "f32x4.ceil");
+        assert_eq!(ceil_f32x4.kind, SimdOpKind::CeilF32x4);
+
+        let floor_f32x4 = get_simd_op(0x68).expect("0x68 should be f32x4.floor");
+        assert_eq!(floor_f32x4.name, "f32x4.floor");
+        assert_eq!(floor_f32x4.kind, SimdOpKind::FloorF32x4);
+
+        let trunc_f32x4 = get_simd_op(0x69).expect("0x69 should be f32x4.trunc");
+        assert_eq!(trunc_f32x4.name, "f32x4.trunc");
+        assert_eq!(trunc_f32x4.kind, SimdOpKind::TruncF32x4);
+
+        let nearest_f32x4 = get_simd_op(0x6A).expect("0x6A should be f32x4.nearest");
+        assert_eq!(nearest_f32x4.name, "f32x4.nearest");
+        assert_eq!(nearest_f32x4.kind, SimdOpKind::NearestF32x4);
+
+        let ceil_f64x2 = get_simd_op(0x74).expect("0x74 should be f64x2.ceil");
+        assert_eq!(ceil_f64x2.name, "f64x2.ceil");
+        assert_eq!(ceil_f64x2.kind, SimdOpKind::CeilF64x2);
+
+        let floor_f64x2 = get_simd_op(0x75).expect("0x75 should be f64x2.floor");
+        assert_eq!(floor_f64x2.name, "f64x2.floor");
+        assert_eq!(floor_f64x2.kind, SimdOpKind::FloorF64x2);
+
+        let trunc_f64x2 = get_simd_op(0x7A).expect("0x7A should be f64x2.trunc");
+        assert_eq!(trunc_f64x2.name, "f64x2.trunc");
+        assert_eq!(trunc_f64x2.kind, SimdOpKind::TruncF64x2);
+
+        let nearest_f64x2 = get_simd_op(148).expect("148 (0x94) should be f64x2.nearest");
+        assert_eq!(nearest_f64x2.name, "f64x2.nearest");
+        assert_eq!(nearest_f64x2.kind, SimdOpKind::NearestF64x2);
+        assert_eq!(nearest_f64x2.sub_opcode, 0x94);
+
+        assert_eq!(get_simd_op_by_name("f64x2.nearest").map(|o| o.sub_opcode), Some(148));
+
+        // None of these 8 values collide with any pre-existing entry.
+        for (name, sub_opcode) in [
+            ("f32x4.ceil", 0x67u32),
+            ("f32x4.floor", 0x68),
+            ("f32x4.trunc", 0x69),
+            ("f32x4.nearest", 0x6A),
+            ("f64x2.ceil", 0x74),
+            ("f64x2.floor", 0x75),
+            ("f64x2.trunc", 0x7A),
+            ("f64x2.nearest", 0x94),
+        ] {
+            let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should decode"));
+            assert_eq!(op.name, name, "sub-opcode {sub_opcode:#04x} should be {name}");
+        }
     }
 
     #[test]

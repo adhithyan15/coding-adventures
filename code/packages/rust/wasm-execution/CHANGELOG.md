@@ -2,6 +2,54 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.50] - 2026-08-25 (PR39 CI fix: f32x4/f64x2 rounding family cross-platform NaN quieting)
+
+### Fixed
+
+- `f32x4.ceil`/`floor`/`trunc`/`nearest` and `f64x2.ceil`/`floor`/
+  `trunc`/`nearest` (SIMD widen PR39, added in 0.9.49) now canonicalize
+  a NaN lane to the platform-independent quiet NaN (`f32::NAN`/
+  `f64::NAN`) instead of falling through to `f32::ceil()`/`floor()`/
+  `trunc()`/`round_ties_even()` (or the `f64` equivalents) on a NaN
+  input. This is the exact same cross-platform gap the scalar
+  `f32.ceil`/`floor`/`trunc` opcodes (`0x8D`/`0x8E`/`0x8F`) already hit
+  and fixed -- a SIGNALING NaN input's quiet bit through these
+  functions is platform-dependent (macOS passed, Linux CI failed with
+  8 real `assert_return` mismatches in `simd_f32x4_rounding.wast`,
+  confirmed by reproducing under a Linux/x86_64 container), but WASM's
+  `nan:arithmetic` result class always requires the quiet bit SET
+  regardless of the input NaN's own bit pattern. New tests
+  `f32x4_rounding_family_quiets_a_signaling_nan_lane` and
+  `f64x2_rounding_family_quiets_a_signaling_nan_lane` pin this down
+  the same way `test_f32_ceil_floor_trunc_quiets_signaling_nan`/
+  `test_f64_ceil_floor_trunc_quiets_signaling_nan` do for the scalar
+  opcodes.
+
+## [0.9.49] - 2026-08-25 (SIMD widen PR39: f32x4/f64x2 ceil/floor/trunc/nearest rounding family)
+
+### Added
+
+- `f32x4.ceil`/`floor`/`trunc`/`nearest` and `f64x2.ceil`/`floor`/
+  `trunc`/`nearest` (8 new opcodes, sub-opcodes `0x67`/`0x68`/`0x69`/
+  `0x6A` and `0x74`/`0x75`/`0x7A`/`0x94`): two new combined match arms
+  in `run_simd_op`, `CeilF32x4 | FloorF32x4 | TruncF32x4 | NearestF32x4`
+  and `CeilF64x2 | FloorF64x2 | TruncF64x2 | NearestF64x2`, same UNARY
+  "pop one v128, push one" shape as the existing `AbsF32x4`/`SqrtF32x4`/
+  `AbsF64x2` arms. `ceil`/`floor`/`trunc` use Rust's native
+  `f32::ceil()`/`floor()`/`trunc()` (`f64` equivalents for the `f64x2`
+  arm) directly -- already IEEE-754 compliant (`roundToIntegralToward
+  Positive`/`Negative`/`Zero`), NaN payload/sign preserved, signed zero
+  preserved, infinities pass through unchanged, no bespoke handling
+  needed. `nearest` uses `round_ties_even()` (IEEE-754
+  `roundToIntegralTiesToEven`), DELIBERATELY NOT `round()` -- `round()`
+  breaks ties away from zero (`2.5 -> 3.0`), which is the WRONG answer
+  for WASM's `nearest`; `round_ties_even()` breaks ties toward even
+  (`2.5 -> 2.0`), the spec-correct behavior.
+- 7 new unit tests covering both directions of rounding for ordinary
+  fractional values, `nearest`'s ties-to-even behavior specifically
+  (including a genuine tie case in each direction), and NaN/signed-zero/
+  infinity preservation across all four rounding modes for both shapes.
+
 ## [0.9.48] - 2026-08-24 (task #229-231 — SIMD widen PR38: i8x16.shuffle, unlocks 268 stuck directives in the already-vendored simd_lane.wast)
 
 ### Added

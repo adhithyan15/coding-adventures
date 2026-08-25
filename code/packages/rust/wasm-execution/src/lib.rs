@@ -7177,6 +7177,86 @@ fn register_simd(vm: &mut GenericVM) {
                 let handle = push_v128(ctx, result)?;
                 push_wasm(vm, WasmValue::V128(handle));
             }
+            SimdOpKind::CeilF32x4 | SimdOpKind::FloorF32x4 | SimdOpKind::TruncF32x4 | SimdOpKind::NearestF32x4 => {
+                // f32x4.ceil/floor/trunc/nearest (SIMD widen PR39):
+                // UNARY, pop one v128, round each of the 4 `f32` lanes
+                // according to the selected rounding mode, push one
+                // v128. Same shape as `AbsF32x4`/`SqrtF32x4` above, just
+                // a different per-lane function.
+                //
+                // NaN lanes are special-cased to the canonical quiet NaN
+                // rather than falling through to `f32::ceil()`/`floor()`/
+                // `trunc()`/`round_ties_even()` on a NaN input: the scalar
+                // `f32.ceil`/`floor`/`trunc` opcodes (0x8D/0x8E/0x8F, see
+                // `test_f32_ceil_floor_trunc_quiets_signaling_nan`) hit the
+                // exact same issue via the real corpus -- a SIGNALING NaN
+                // input's quiet bit is platform-dependent through these
+                // functions (macOS vs Linux disagree), but WASM's
+                // `nan:arithmetic` result class always requires the quiet
+                // bit SET regardless of the input NaN's own bit pattern.
+                // `nearest` uses `f32::round_ties_even()` (IEEE-754
+                // `roundToIntegralTiesToEven`), DELIBERATELY NOT
+                // `f32::round()` -- `round()` breaks ties AWAY from zero
+                // (`2.5 -> 3.0`), which is the WRONG answer for WASM's
+                // `nearest`; `round_ties_even()` breaks ties TOWARD even
+                // (`2.5 -> 2.0`), the spec-correct behavior.
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let mut result = [0u8; 16];
+                for i in 0..4 {
+                    let v = f32::from_le_bytes(bytes[i * 4..i * 4 + 4].try_into().unwrap());
+                    let out = if v.is_nan() {
+                        f32::NAN
+                    } else {
+                        match op.kind {
+                            SimdOpKind::CeilF32x4 => v.ceil(),
+                            SimdOpKind::FloorF32x4 => v.floor(),
+                            SimdOpKind::TruncF32x4 => v.trunc(),
+                            SimdOpKind::NearestF32x4 => v.round_ties_even(),
+                            _ => unreachable!("only CeilF32x4/FloorF32x4/TruncF32x4/NearestF32x4 reach this arm"),
+                        }
+                    };
+                    result[i * 4..i * 4 + 4].copy_from_slice(&out.to_le_bytes());
+                }
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::CeilF64x2 | SimdOpKind::FloorF64x2 | SimdOpKind::TruncF64x2 | SimdOpKind::NearestF64x2 => {
+                // f64x2.ceil/floor/trunc/nearest (SIMD widen PR39): direct
+                // 2-lane mirror of `CeilF32x4`/`FloorF32x4`/`TruncF32x4`/
+                // `NearestF32x4` above, at f64x2's lane width -- same
+                // NaN-quieting discipline (see the comment on that arm:
+                // this is `test_f64_ceil_floor_trunc_quiets_signaling_nan`'s
+                // f64 counterpart of the scalar 0x8D/0x8E/0x8F fix), same
+                // deliberate avoidance of `f64::round()`'s away-from-zero
+                // tie-break in favor of `round_ties_even()`.
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let mut result = [0u8; 16];
+                for i in 0..2 {
+                    let v = f64::from_le_bytes(bytes[i * 8..i * 8 + 8].try_into().unwrap());
+                    let out = if v.is_nan() {
+                        f64::NAN
+                    } else {
+                        match op.kind {
+                            SimdOpKind::CeilF64x2 => v.ceil(),
+                            SimdOpKind::FloorF64x2 => v.floor(),
+                            SimdOpKind::TruncF64x2 => v.trunc(),
+                            SimdOpKind::NearestF64x2 => v.round_ties_even(),
+                            _ => unreachable!("only CeilF64x2/FloorF64x2/TruncF64x2/NearestF64x2 reach this arm"),
+                        }
+                    };
+                    result[i * 8..i * 8 + 8].copy_from_slice(&out.to_le_bytes());
+                }
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
             SimdOpKind::TruncSatF32x4S | SimdOpKind::TruncSatF32x4U => {
                 // i32x4.trunc_sat_f32x4_s/_u (SIMD widen PR20): UNARY,
                 // pop one v128, convert each of the 4 `f32` lanes to a
@@ -16770,6 +16850,239 @@ mod tests {
         let (_, pmax_results) = pmax_engine.call_function_with_v128(0, &[]).unwrap();
         let pmax_out = f64x2_lanes(pmax_results[0].unwrap());
         assert_eq!(pmax_out, [2.0, 2.0], "f64x2.pmax must pick the larger value in each lane on ordinary finite operands");
+    }
+
+    // ── f32x4/f64x2 ceil/floor/trunc/nearest (SIMD widen PR39) ──────────────
+
+    /// `f32x4.ceil`/`floor`/`trunc`: ordinary fractional values in both
+    /// signs, confirming each rounding mode's distinct direction --
+    /// `ceil` always rounds up, `floor` always rounds down, `trunc`
+    /// always rounds toward zero (so a positive lane rounds down and a
+    /// negative lane rounds up, unlike `ceil`/`floor`).
+    #[test]
+    fn f32x4_ceil_floor_trunc_round_in_their_respective_directions() {
+        let lanes = [2.5f32, -2.5f32, 2.1f32, -2.1f32];
+        for (sub_opcode, name, expect) in [
+            (0x67u8, "ceil", [3.0f32, -2.0, 3.0, -2.0]),
+            (0x68u8, "floor", [2.0f32, -3.0, 2.0, -3.0]),
+            (0x69u8, "trunc", [2.0f32, -2.0, 2.0, -2.0]),
+        ] {
+            let mut code = vec![0xFD, 0x0C];
+            code.extend(v128_const_bytes_f32x4(lanes));
+            // 0x67-0x69 are all < 0x80, single-byte LEB128, no
+            // continuation byte -- same shape as the comparison family's
+            // 0x41-0x46, unlike f32x4.add's 0xE4.
+            code.extend([0xFD, sub_opcode]);
+            code.push(0x0B);
+            let mut engine = simd_engine_returning_v128(code);
+            let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+            let out = f32x4_lanes(results[0].unwrap());
+            assert_eq!(out, expect, "f32x4.{name} must round {lanes:?} to {expect:?}, got {out:?}");
+        }
+    }
+
+    /// `f32x4.nearest`: the highest-risk correctness case in this family
+    /// -- ties MUST break toward EVEN (`2.5 -> 2.0`, `3.5 -> 4.0`), NOT
+    /// away from zero the way `f32::round()` would (`2.5 -> 3.0`, the
+    /// WRONG answer here). Also confirms an ordinary non-tie value still
+    /// rounds to its nearest integer normally.
+    #[test]
+    fn f32x4_nearest_breaks_ties_toward_even_not_away_from_zero() {
+        let lanes = [2.5f32, 3.5f32, -2.5f32, 2.3f32];
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_f32x4(lanes));
+        code.extend([0xFD, 0x6A]); // f32x4.nearest, single-byte LEB128
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f32x4_lanes(results[0].unwrap());
+        assert_eq!(out[0], 2.0, "nearest(2.5) must break the tie toward even (2.0), not away from zero (3.0)");
+        assert_eq!(out[1], 4.0, "nearest(3.5) must break the tie toward the even neighbor (4.0), not the odd one (3.0)");
+        assert_eq!(out[2], -2.0, "nearest(-2.5) must break the tie toward even (-2.0), not away from zero (-3.0)");
+        assert_eq!(out[3], 2.0, "nearest(2.3) is not a tie -- must round to the ordinary nearest integer 2.0");
+    }
+
+    /// `f32x4.ceil`/`floor`/`trunc`/`nearest`: a NaN lane must stay NaN
+    /// (canonicalized to the quiet NaN -- see
+    /// `f32x4_rounding_family_quiets_a_signaling_nan_lane` below for why),
+    /// signed zero must be preserved (not collapsed to `+0.0`), and
+    /// infinities must pass through unchanged -- all four rounding modes
+    /// share this discipline.
+    #[test]
+    fn f32x4_rounding_family_preserves_nan_signed_zero_and_infinity() {
+        let lanes = [f32::NAN, -0.0f32, f32::INFINITY, f32::NEG_INFINITY];
+        for sub_opcode in [0x67u8, 0x68, 0x69, 0x6A] {
+            let mut code = vec![0xFD, 0x0C];
+            code.extend(v128_const_bytes_f32x4(lanes));
+            code.extend([0xFD, sub_opcode]);
+            code.push(0x0B);
+            let mut engine = simd_engine_returning_v128(code);
+            let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+            let out = f32x4_lanes(results[0].unwrap());
+            assert!(out[0].is_nan(), "sub-opcode {sub_opcode:#04x}: NaN lane must stay NaN, got {}", out[0]);
+            assert!(out[1] == 0.0 && out[1].is_sign_negative(), "sub-opcode {sub_opcode:#04x}: -0.0 lane must stay -0.0, got {}", out[1]);
+            assert_eq!(out[2], f32::INFINITY, "sub-opcode {sub_opcode:#04x}: +inf lane must pass through unchanged");
+            assert_eq!(out[3], f32::NEG_INFINITY, "sub-opcode {sub_opcode:#04x}: -inf lane must pass through unchanged");
+        }
+    }
+
+    /// Found running the real vendored corpus (`simd_f32x4_rounding.wast`)
+    /// through Linux CI (macOS passed locally, exposing this as a genuine
+    /// cross-platform gap): a SIGNALING NaN lane (quiet bit clear) fed
+    /// through `f32x4.ceil`/`floor`/`trunc`/`nearest` must come out with
+    /// the quiet bit SET. The scalar `f32.ceil`/`floor`/`trunc` opcodes
+    /// (0x8D/0x8E/0x8F, see `test_f32_ceil_floor_trunc_quiets_signaling_nan`)
+    /// hit this exact bug earlier -- Rust's `f32::ceil()`/`floor()`/
+    /// `trunc()`/`round_ties_even()` don't guarantee quieting an SNaN
+    /// input, and that behavior differs between macOS and Linux -- but the
+    /// lane-wise SIMD handlers added in SIMD widen PR39 reused the raw
+    /// per-lane call without the same guard.
+    #[test]
+    fn f32x4_rounding_family_quiets_a_signaling_nan_lane() {
+        let signaling_nan = f32::from_bits(0x7FA0_0000); // exponent all-1, quiet bit clear, payload nonzero
+        assert!(signaling_nan.is_nan());
+        assert_eq!(signaling_nan.to_bits() & 0x0040_0000, 0, "test input must actually be signaling");
+
+        let lanes = [signaling_nan; 4];
+        for sub_opcode in [0x67u8, 0x68, 0x69, 0x6A] {
+            let mut code = vec![0xFD, 0x0C];
+            code.extend(v128_const_bytes_f32x4(lanes));
+            code.extend([0xFD, sub_opcode]);
+            code.push(0x0B);
+            let mut engine = simd_engine_returning_v128(code);
+            let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+            let out = f32x4_lanes(results[0].unwrap());
+            for (i, v) in out.iter().enumerate() {
+                assert!(v.is_nan(), "sub-opcode {sub_opcode:#04x} lane {i}: expected a NaN result");
+                assert_ne!(
+                    v.to_bits() & 0x0040_0000,
+                    0,
+                    "sub-opcode {sub_opcode:#04x} lane {i}: result NaN must have the quiet bit set, got {:#010x}",
+                    v.to_bits()
+                );
+            }
+        }
+    }
+
+    /// `f64x2.ceil`/`floor`/`trunc`: direct 2-lane mirror of
+    /// `f32x4_ceil_floor_trunc_round_in_their_respective_directions`
+    /// above, same three distinct rounding directions.
+    #[test]
+    fn f64x2_ceil_floor_trunc_round_in_their_respective_directions() {
+        let lanes = [2.5f64, -2.5f64];
+        for (sub_opcode, name, expect) in [
+            (0x74u8, "ceil", [3.0f64, -2.0]),
+            (0x75u8, "floor", [2.0f64, -3.0]),
+            (0x7Au8, "trunc", [2.0f64, -2.0]),
+        ] {
+            let mut code = vec![0xFD, 0x0C];
+            code.extend(v128_const_bytes_f64x2(lanes));
+            // 0x74/0x75/0x7A are all < 0x80, single-byte LEB128.
+            code.extend([0xFD, sub_opcode]);
+            code.push(0x0B);
+            let mut engine = simd_engine_returning_v128(code);
+            let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+            let out = f64x2_lanes(results[0].unwrap());
+            assert_eq!(out, expect, "f64x2.{name} must round {lanes:?} to {expect:?}, got {out:?}");
+        }
+    }
+
+    /// `f64x2.nearest`: direct 2-lane mirror of
+    /// `f32x4_nearest_breaks_ties_toward_even_not_away_from_zero` above.
+    /// `f64x2.nearest`'s own sub-opcode, 0x94 (148 decimal), is
+    /// DELIBERATELY >= 128 -- the multi-byte LEB128 case in this family
+    /// (mirroring `i32x4.add`'s 0xAE precedent), so this test also
+    /// exercises the 2-byte `[0x94, 0x01]` encoding, not just the
+    /// single-byte-safe happy path every other rounding sub-opcode uses.
+    #[test]
+    fn f64x2_nearest_breaks_ties_toward_even_not_away_from_zero() {
+        let lanes = [2.5f64, -3.5f64];
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_f64x2(lanes));
+        code.extend([0xFD, 0x94, 0x01]); // f64x2.nearest (LEB128: [0x94, 0x01] for sub-opcode 0x94)
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f64x2_lanes(results[0].unwrap());
+        assert_eq!(out[0], 2.0, "nearest(2.5) must break the tie toward even (2.0)");
+        assert_eq!(out[1], -4.0, "nearest(-3.5) must break the tie toward even (-4.0), not away from zero (-3.0)");
+    }
+
+    /// `f64x2.ceil`/`floor`/`trunc`/`nearest`: NaN/signed-zero/infinity
+    /// preservation, direct 2-lane mirror of
+    /// `f32x4_rounding_family_preserves_nan_signed_zero_and_infinity`.
+    #[test]
+    fn f64x2_rounding_family_preserves_nan_signed_zero_and_infinity() {
+        let lanes = [f64::NAN, -0.0f64];
+        // (name, encoded sub-opcode bytes after the 0xFD prefix) -- 0x94
+        // needs the 2-byte LEB128 continuation form, the other three
+        // don't.
+        for (name, sub_opcode_bytes) in [
+            ("ceil", vec![0x74u8]),
+            ("floor", vec![0x75]),
+            ("trunc", vec![0x7A]),
+            ("nearest", vec![0x94, 0x01]),
+        ] {
+            let mut code = vec![0xFD, 0x0C];
+            code.extend(v128_const_bytes_f64x2(lanes));
+            code.push(0xFD);
+            code.extend(&sub_opcode_bytes);
+            code.push(0x0B);
+            let mut engine = simd_engine_returning_v128(code);
+            let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+            let out = f64x2_lanes(results[0].unwrap());
+            assert!(out[0].is_nan(), "f64x2.{name}: NaN lane must stay NaN, got {}", out[0]);
+            assert!(out[1] == 0.0 && out[1].is_sign_negative(), "f64x2.{name}: -0.0 lane must stay -0.0, got {}", out[1]);
+        }
+
+        // Infinity passthrough, checked separately since it needs its own
+        // 2-lane v128 (this family only has 2 f64 lanes to work with).
+        let inf_lanes = [f64::INFINITY, f64::NEG_INFINITY];
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_f64x2(inf_lanes));
+        code.extend([0xFD, 0x74]); // f64x2.ceil
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f64x2_lanes(results[0].unwrap());
+        assert_eq!(out[0], f64::INFINITY, "+inf lane must pass through unchanged");
+        assert_eq!(out[1], f64::NEG_INFINITY, "-inf lane must pass through unchanged");
+    }
+
+    /// As `f32x4_rounding_family_quiets_a_signaling_nan_lane` -- same
+    /// cross-platform bug, same fix, f64x2 (the `f64::NAN` counterpart of
+    /// `test_f64_ceil_floor_trunc_quiets_signaling_nan`).
+    #[test]
+    fn f64x2_rounding_family_quiets_a_signaling_nan_lane() {
+        let signaling_nan = f64::from_bits(0x7FF4_0000_0000_0000); // exponent all-1, quiet bit clear, payload nonzero
+        assert!(signaling_nan.is_nan());
+        assert_eq!(signaling_nan.to_bits() & 0x0008_0000_0000_0000, 0, "test input must actually be signaling");
+
+        let lanes = [signaling_nan; 2];
+        for (name, sub_opcode_bytes) in [
+            ("ceil", vec![0x74u8]),
+            ("floor", vec![0x75]),
+            ("trunc", vec![0x7A]),
+            ("nearest", vec![0x94, 0x01]),
+        ] {
+            let mut code = vec![0xFD, 0x0C];
+            code.extend(v128_const_bytes_f64x2(lanes));
+            code.push(0xFD);
+            code.extend(&sub_opcode_bytes);
+            code.push(0x0B);
+            let mut engine = simd_engine_returning_v128(code);
+            let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+            let out = f64x2_lanes(results[0].unwrap());
+            for (i, v) in out.iter().enumerate() {
+                assert!(v.is_nan(), "f64x2.{name} lane {i}: expected a NaN result");
+                assert_ne!(
+                    v.to_bits() & 0x0008_0000_0000_0000,
+                    0,
+                    "f64x2.{name} lane {i}: result NaN must have the quiet bit set, got {:#018x}",
+                    v.to_bits()
+                );
+            }
+        }
     }
 
     // ── f32x4.eq/ne/lt/gt/le/ge (SIMD widen PR30, task #205-207) ────────────

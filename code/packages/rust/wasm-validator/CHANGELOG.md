@@ -2,6 +2,21 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.51] - 2026-08-25 (SIMD widen PR39: f32x4/f64x2 rounding family)
+
+### Added
+
+- Type-check coverage for the 8 new rounding opcodes (`f32x4.ceil`/
+  `floor`/`trunc`/`nearest`, `f64x2.ceil`/`floor`/`trunc`/`nearest`):
+  joined the existing UNARY "pop one V128, push one V128" match arm
+  alongside `AbsF32x4`/`AbsF64x2` -- the per-lane IEEE-754 rounding-mode
+  selection, including `nearest`'s ties-to-even semantics, is entirely
+  a runtime concern invisible to the type checker.
+- 12 new unit tests in `tests/type_check.rs`: `valid_f32x4_rounding_
+  family`/`valid_f64x2_rounding_family` (all 4 opcodes per shape build
+  cleanly) plus 8 `invalid_*` tests covering wrong-operand-type,
+  no-operand, and wrong-result-type rejections across both shapes.
+
 ## [0.2.50] - 2026-08-24 (task #229-231 — SIMD widen PR38: i8x16.shuffle, elevated-risk validation-time bounds gate)
 
 ### Added

@@ -1,5 +1,22 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.61 — 2026-08-25 — SIMD widen PR39: f32x4/f64x2 rounding family text-form encoding
+
+### Added
+
+- 8 new `SimdOpKind` variants (`CeilF32x4`/`FloorF32x4`/`TruncF32x4`/
+  `NearestF32x4`/`CeilF64x2`/`FloorF64x2`/`TruncF64x2`/`NearestF64x2`)
+  joined the existing no-immediate encoding arm in both
+  `encode_stream_instr` and `encode_flat_instr` -- all 8 are UNARY with
+  no immediate beyond the opcode bytes themselves, same encoding shape
+  as `AbsF32x4`/`AbsF64x2`/etc. `f64x2.nearest`'s `0x94` sub-opcode is
+  the one entry in this family that encodes as a real 2-byte LEB128
+  sequence (`[0xFD, 0x94, 0x01]`); the other 7 are single-byte-safe.
+- 2 new unit tests: `f32x4_rounding_family_encodes_the_real_single_
+  byte_leb128_sub_opcodes` and `f64x2_rounding_family_encodes_ceil_
+  floor_trunc_single_byte_and_nearest_two_byte`, each covering both the
+  folded and flat text forms.
+
 ## 0.1.60 — 2026-08-24 — SIMD widen PR38: i8x16.shuffle text-form encoding (task #229-231)
 
 ### Added
