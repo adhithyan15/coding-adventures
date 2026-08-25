@@ -7241,6 +7241,15 @@ refreshed collision report remains 15 established lanes, 1,373 identities,
 PR #12780 temporarily owns Rust parser surfaces needed by the separate pending
 contextual generic-closer owner.
 
+Ready-for-review PR #12786 opened from clean validated head
+`fe1f7adc7d20e44ef7ab753abf0c99a702330d99` after a normal first push. The
+target remote branch and prior PR were absent immediately before publication.
+Current main then advanced only through PR #12781's ADJ curriculum-loop state
+bookkeeping at `207cd2bd13422b5047631ac0062c4f1954f5db41`; that commit is
+covered by the existing ADJ owner and has no package marker or selected-path
+overlap. GitHub reports PR #12786 mergeable with required checks queued, so
+auto-merge remains disabled until every check is terminal and acceptable.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
