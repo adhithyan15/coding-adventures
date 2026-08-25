@@ -6300,10 +6300,13 @@ impl HtmlParser {
                 return;
             }
             let pending = std::mem::take(&mut self.pending_table_text);
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-character-in-table",
-                "non-whitespace character data in a table context was foster parented",
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-character-in-table",
+                    "non-whitespace character data in a table context was foster parented",
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             if self.foster_text_before_open_table(pending) {
                 return;
             }
@@ -27756,6 +27759,29 @@ mod tests {
         }))
     }
 
+    fn character_in_table_recovery(source: &str, emission_boundary: &str) -> ParserDiagnostic {
+        let byte_offset = source
+            .find(emission_boundary)
+            .expect("source should contain the text emission boundary");
+        let line_start = source[..byte_offset]
+            .rfind('\n')
+            .map_or(0, |index| index + 1);
+        ParserDiagnostic::new(
+            "unexpected-character-in-table",
+            "non-whitespace character data in a table context was foster parented",
+        )
+        .at_emission(Some(SourcePosition {
+            byte_offset,
+            char_offset: source[..byte_offset].chars().count(),
+            line: source[..byte_offset]
+                .chars()
+                .filter(|character| *character == '\n')
+                .count()
+                + 1,
+            column: source[line_start..byte_offset].chars().count() + 1,
+        }))
+    }
+
     fn character_in_colgroup_fragment_recovery(
         source: &str,
         byte_offset: usize,
@@ -45305,30 +45331,65 @@ mod tests {
     }
 
     #[test]
-    fn reports_non_whitespace_character_data_fostered_from_tables() {
-        for source in [
-            "<!doctype html><table> x</table>",
-            "<!doctype html><table><tr> x</table>",
-            "<!doctype html><div><table><a>foo</a> <tr><td>bar</td></tr></table></div>",
+    fn positions_non_whitespace_character_data_fostered_from_tables() {
+        for (source, emission_boundary) in [
+            ("<!doctype html><table> x</table>", "</table>"),
+            ("<!doctype html><table><tr> x</table>", "</table>"),
+            (
+                "<!doctype html><div><table><a>foo</a> <tr><td>bar</td></tr></table></div>",
+                "</a>",
+            ),
         ] {
             let output = parse_html_with_diagnostics(source).unwrap();
             assert!(
                 output.parser_diagnostics.iter().any(|diagnostic| {
-                    diagnostic
-                        == &ParserDiagnostic::new(
-                            "unexpected-character-in-table",
-                            "non-whitespace character data in a table context was foster parented",
-                        )
+                    diagnostic == &character_in_table_recovery(source, emission_boundary)
                 }),
                 "source {source:?}"
             );
         }
+
+        let repeated_source =
+            "<!doctype html><!--é-->\r\n<table>a<!--split-->β</table>";
+        let repeated = parse_html_with_diagnostics(repeated_source).unwrap();
+        assert_eq!(
+            repeated
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-character-in-table")
+                .collect::<Vec<_>>(),
+            vec![
+                &character_in_table_recovery(repeated_source, "<!--split-->"),
+                &character_in_table_recovery(repeated_source, "</table>"),
+            ]
+        );
+        assert!(repeated_source.len() > repeated_source.chars().count());
 
         let whitespace = parse_html_with_diagnostics("<!doctype html><table> \n</table>").unwrap();
         assert!(whitespace
             .parser_diagnostics
             .iter()
             .all(|diagnostic| diagnostic.code != "unexpected-character-in-table"));
+
+        let incomplete = parse_html_with_diagnostics("<!doctype html><table><tr").unwrap();
+        assert!(incomplete
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-character-in-table"));
+
+        let mut unpositioned = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        unpositioned.process_token(Token::StartTag {
+            name: "table".to_string(),
+            attributes: Vec::new(),
+            self_closing: false,
+        });
+        unpositioned.process_token(Token::Text("x".to_string()));
+        let diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-character-in-table")
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
     }
 
     #[test]
