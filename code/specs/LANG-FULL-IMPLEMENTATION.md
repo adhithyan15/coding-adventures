@@ -938,8 +938,10 @@ backend immediately) come before the enabler-dependent items.
   `true impl x`, including valid symmetric forms) also preserve a selector
   dependency without consuming another depth level. Structural integer
   identity writes using `+ 0`, `- 0`, `* 1`, and `div 1` (including valid
-  commutative forms) receive the same bounded treatment. Real arithmetic and
-  other computed selector
+  commutative forms) receive the same bounded treatment. For finite real
+  selectors, multiplication and division by exact positive one are likewise
+  preserving; additive zero remains conservative because it can change the
+  sign bit of negative zero. Other real arithmetic and computed selector
   assignments, differing,
   computed, or otherwise
   unsupported selector-dependency writes, dynamically selected differing selector leaves,

@@ -1864,6 +1864,21 @@
       "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
     },
     {
+      "id": "adj.literacy.k2.diphthong_sound",
+      "title": "Recall the single glided vowel sound each diphthong spelling represents",
+      "band": "K-2",
+      "domain": "literacy",
+      "competency": "recall",
+      "coverage_roots": ["ccss.ela"],
+      "standards": [],
+      "prerequisites": [],
+      "libraries": ["code/specs/data/adj-facts-stdlib/language/diphthong-sound.adj"],
+      "modalities": ["text"],
+      "source_cas_hashes": [],
+      "benchmark_paths": [],
+      "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
+    },
+    {
       "id": "adj.literacy.k2.fable_moral",
       "title": "Recall each fable's own narrator-stated moral",
       "band": "K-2",
