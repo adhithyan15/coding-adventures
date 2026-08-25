@@ -6,7 +6,8 @@
 //! `tests/test_validator.rs` discipline (a module that lowers but fails
 //! the shared SIR validator is not actually working, just runnable).
 
-use java_to_semantic_ir::compile_source;
+use java_to_semantic_ir::{compile, compile_source};
+use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 use semantic_ir::{Expr, Function, Module, Stmt};
 
 fn compile_ok(src: &str) -> Module {
@@ -236,4 +237,45 @@ fn unary_minus_is_unsupported_in_m0() {
 fn method_call_is_unsupported_in_m0() {
     let err = compile_source(&wrap("System.out.println(1);"), "prog").unwrap_err();
     assert!(!err.message.is_empty());
+}
+
+// ── depth-guard regression (CWE-674, found by /security-review) ────────
+
+fn node(rule_name: &str, children: Vec<ASTNodeOrToken>) -> GrammarASTNode {
+    GrammarASTNode {
+        rule_name: rule_name.to_string(),
+        children,
+        start_line: Some(1),
+        start_column: Some(1),
+        end_line: Some(1),
+        end_column: Some(1),
+    }
+}
+
+/// `find_main_method`'s recursive class-body search must not overflow the
+/// native stack on a pathologically deep tree handed directly to the
+/// public `compile()` entry point (which accepts a raw `GrammarASTNode`,
+/// not only one produced by `parse_java`'s own depth-capped parser).
+/// Regression test for a real gap `/security-review` found before this
+/// crate shipped: an earlier version of `find_main_method`'s `search`
+/// helper had no depth cap of its own at all.
+#[test]
+fn deeply_nested_class_body_reports_depth_error_not_stack_overflow() {
+    // Build `program -> class_declaration -> wrapper(wrapper(...(leaf)))`,
+    // far deeper than MAX_TREE_DEPTH, with no `method_declaration`
+    // anywhere -- the search must terminate with a depth error rather
+    // than recursing forever (or, pre-fix, overflowing the stack).
+    let mut inner = node("leaf", vec![]);
+    for _ in 0..500 {
+        inner = node("wrapper", vec![ASTNodeOrToken::Node(inner)]);
+    }
+    let class_decl = node("class_declaration", vec![ASTNodeOrToken::Node(inner)]);
+    let program = node("program", vec![ASTNodeOrToken::Node(class_decl)]);
+
+    let err = compile(&program, "prog").unwrap_err();
+    assert!(
+        err.message.contains("nesting exceeds"),
+        "expected a depth-exceeded error, got: {}",
+        err.message
+    );
 }

@@ -44,6 +44,16 @@ use semantic_ir::{
 /// reliance on that upstream cap.
 const MAX_EXPR_DEPTH: usize = 64;
 
+/// Maximum recursion depth for `find_main_method`'s class-body search — a
+/// separate budget from [`MAX_EXPR_DEPTH`] (that one bounds the
+/// expression-precedence chain specifically; this one bounds an arbitrary
+/// class-body tree walk, a conceptually different traversal even though
+/// both currently use the same numeric value). Exists for the same
+/// reason: `compile()` is a public entry point accepting a raw
+/// `GrammarASTNode`, not guaranteed to have come from a depth-capped
+/// parser.
+const MAX_TREE_DEPTH: usize = 64;
+
 /// Synthetic file name used for all spans (the CST does not carry the
 /// original path).
 const FILE: &str = "<java>";
@@ -157,26 +167,46 @@ impl Lowerer {
     /// owned `GrammarASTNode` clones, which can't be borrowed back into
     /// `class_decl`'s own tree — this search instead walks `class_decl`
     /// directly and returns a real borrow.
+    ///
+    /// Depth-guarded like `descend_to_literal` (see that method's own doc
+    /// comment for why this crate doesn't rely on the upstream parser's
+    /// own `MAX_RULE_DEPTH` cap): `compile()` is a public entry point that
+    /// accepts a raw `GrammarASTNode` directly, not only one produced by
+    /// `parse_java`'s depth-capped parser — a caller could hand it a tree
+    /// built some other, unbounded way. Without its own cap this
+    /// recursive walk over a class body would be a CWE-674 uncontrolled-
+    /// recursion DoS on adversarially deep input; found by
+    /// `/security-review` before this crate shipped.
     fn find_main_method<'a>(
         &self,
         class_decl: &'a GrammarASTNode,
     ) -> Result<&'a GrammarASTNode, JavaLowerError> {
-        fn search<'a>(node: &'a GrammarASTNode, lowerer: &Lowerer) -> Option<&'a GrammarASTNode> {
+        fn search<'a>(
+            node: &'a GrammarASTNode,
+            lowerer: &Lowerer,
+            depth: usize,
+        ) -> Result<Option<&'a GrammarASTNode>, JavaLowerError> {
+            if depth >= MAX_TREE_DEPTH {
+                return Err(lowerer.err_at(
+                    node,
+                    format!("class body nesting exceeds {MAX_TREE_DEPTH} levels"),
+                ));
+            }
             if node.rule_name == "method_declaration"
                 && lowerer.method_name(node).as_deref() == Some("main")
             {
-                return Some(node);
+                return Ok(Some(node));
             }
             for child in &node.children {
                 if let ASTNodeOrToken::Node(n) = child {
-                    if let Some(found) = search(n, lowerer) {
-                        return Some(found);
+                    if let Some(found) = search(n, lowerer, depth + 1)? {
+                        return Ok(Some(found));
                     }
                 }
             }
-            None
+            Ok(None)
         }
-        search(class_decl, self).ok_or_else(|| {
+        search(class_decl, self, 0)?.ok_or_else(|| {
             self.err_at(
                 class_decl,
                 "expected a `main` method (JV02 M0 requires `public static void main(String[] args)`)"
