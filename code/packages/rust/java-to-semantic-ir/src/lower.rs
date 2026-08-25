@@ -1,6 +1,6 @@
 //! The lowering pass from `coding_adventures_java_parser`'s generic
-//! [`GrammarASTNode`] CST → [`semantic_ir::Module`], **v0.6.0 (JV02
-//! milestone M3b)**.
+//! [`GrammarASTNode`] CST → [`semantic_ir::Module`], **v0.7.0 (JV02
+//! milestone M4a)**.
 //!
 //! # Scope
 //!
@@ -134,24 +134,52 @@
 //!   statement, without this frontend needing any real functional-
 //!   interface type system.
 //!
-//! **Deliberately out of scope for v0.6.0** (each rejected with an
+//! **Supported (M4a, new):**
+//! - Single-dimensional array types (`int[]`, `String[]`, …) — a new
+//!   `Kind::Array(ArrayElemKind)` classification, where `ArrayElemKind`
+//!   is a small flat `Copy` enum (not a boxed, recursive `Kind`, which
+//!   would force `Kind` itself to drop `Copy` and ripple `.clone()`
+//!   calls through the hundreds of call sites that thread it by value —
+//!   see `Kind::Array`'s own doc comment). Multi-dimensional arrays
+//!   (`int[][]`) are rejected.
+//! - Array-literal declaration initializers (`int[] xs = {1, 2, 3};`,
+//!   `var xs = {1, 2, 3};`) → [`Expr::SeqLit`]. Uses SIR16's `Expr::
+//!   SeqLit`/`Feature::Sequences` — a flat, homogeneous 1-D sequence
+//!   (`items: Vec<Expr>`) — rather than SIR22's `Expr::ArrayLit`/
+//!   `Feature::NDArrays` (`rows: Vec<Vec<Expr>>`, row-major-matrix-
+//!   shaped, built for MATLAB/Octave's true N-dimensional arrays, a
+//!   meaningfully different domain a Java array isn't). Only the bare
+//!   `{ ... }` initializer form is supported — the `new int[5]` (sized,
+//!   uninitialized) and `new int[]{1,2,3}` array-creation-*expression*
+//!   forms are deferred.
+//! - Array indexing reads (`xs[i]`) → [`Expr::SeqIndex`], and `.length`
+//!   → [`Expr::SeqLen`] — together enabling the realistic `for (int i =
+//!   0; i < xs.length; i++) { ...xs[i]... }` pattern this milestone
+//!   exists to unlock. Indexed *assignment* (`xs[i] = v;`) is deferred —
+//!   this milestone only supports indexing as a value.
+//!
+//! **Deliberately out of scope for v0.7.0** (each rejected with an
 //! explicit [`JavaLowerError`], tracked in
 //! [JV02](../../../specs/JV02-java-to-semantic-ir.md)'s own milestone
 //! table): `switch` (SIR has no `Switch`/`Match`/`Case` IR node at all —
 //! confirmed by a repo-wide grep, not assumed — so this needs its own
 //! spec-level design decision before any frontend can target it, tracked
 //! as a separate backlog item, not silently dropped), qualified/method-
-//! reference calls, method overloading (only one method per name is
-//! supported — this frontend has no type-based overload resolution),
-//! varargs parameters, fields, constructors, static/instance
-//! initializers, nested types, an early or branched `return` (in a
-//! method *or* a lambda), *invoking* a lambda value (`Expr::IndirectCall`
-//! is not wired up — a lambda can be created and passed around inside
-//! this milestone's own scope, e.g. as a `var`-typed local's initializer,
-//! but never called; see `tests/e2e_python.rs`'s own doc comment on why
-//! this makes an execution-proof test impossible this milestone),
-//! untyped or `var`-inferred lambda parameters, field/array access,
-//! casts, `instanceof`, the ternary conditional, bitwise operators
+//! reference calls (including array/`String` method-call surface other
+//! than the special-cased `.length` field access), method overloading
+//! (only one method per name is supported — this frontend has no
+//! type-based overload resolution), varargs parameters, fields,
+//! constructors, static/instance initializers, nested types, an early or
+//! branched `return` (in a method *or* a lambda), *invoking* a lambda
+//! value (`Expr::IndirectCall` is not wired up — a lambda can be created
+//! and passed around inside this milestone's own scope, e.g. as a
+//! `var`-typed local's initializer, but never called; see `tests/
+//! e2e_python.rs`'s own doc comment on why this makes an execution-proof
+//! test impossible this milestone), untyped or `var`-inferred lambda
+//! parameters, multi-dimensional arrays, indexed array *assignment*, the
+//! `new`-based array-creation-expression forms, `List`/`Map` collection
+//! literals, field/array *field* access beyond `.length`, casts,
+//! `instanceof`, the ternary conditional, bitwise operators
 //! (`& | ^ ~ << >> >>>`), increment/decrement or compound assignment
 //! used as a *value* rather than a bare statement, `break`/`continue`
 //! (SIR has no IR primitive for either — every loop body this milestone
@@ -163,8 +191,7 @@
 //! clause, `var` as an enhanced-`for` element type, uninitialized
 //! declarations, multiple declarators per statement, C-style array-
 //! bracket declarators (on a variable, a method parameter, or a method's
-//! own return type), array initializers, and reference types other than
-//! `String`.
+//! own return type), and reference types other than `String`.
 //!
 //! ## The `var` ambiguity
 //!
@@ -278,6 +305,45 @@ enum Kind {
     /// as a valid operand, so any other use falls through to an ordinary
     /// "wrong kind" rejection.
     Closure,
+    /// A single-dimensional Java array's own kind -- M4a's addition.
+    /// Carries the *element* kind (`ArrayElemKind`, a small flat `Copy`
+    /// enum -- not a boxed, recursive `Kind` -- deliberately: `Kind`
+    /// itself derives `Copy` and is threaded by value through hundreds
+    /// of call sites across this file, so a recursive `Kind::
+    /// Array(Box<Kind>)` would force `Kind` to drop `Copy` and ripple
+    /// `.clone()` calls through nearly every one of them. `ArrayElemKind`
+    /// only needs to represent what a single-dimensional array's element
+    /// can actually be this milestone -- a primitive or `String` -- so
+    /// it stays a flat, `Copy` enum with no recursion, and `Kind` itself
+    /// never needs to change shape. An array of arrays, or an array of
+    /// closures, is out of scope (multi-dimensional arrays are rejected
+    /// explicitly by `kind_of_type_node`; nothing in this milestone
+    /// constructs an array-of-closures in the first place).
+    Array(ArrayElemKind),
+}
+
+/// The element kind of a single-dimensional Java array (see `Kind::
+/// Array`'s own doc comment for why this is a separate, non-recursive
+/// type rather than `Box<Kind>`).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum ArrayElemKind {
+    Int,
+    Float,
+    Bool,
+    Str,
+}
+
+impl ArrayElemKind {
+    /// The `Kind` of one element read out of an array of this element
+    /// kind (e.g. `xs[i]`'s own result kind, for `xs: Array(Int)`).
+    fn as_kind(self) -> Kind {
+        match self {
+            ArrayElemKind::Int => Kind::Int,
+            ArrayElemKind::Float => Kind::Float,
+            ArrayElemKind::Bool => Kind::Bool,
+            ArrayElemKind::Str => Kind::Str,
+        }
+    }
 }
 
 /// An error encountered during Java → SIR lowering.
@@ -1919,23 +1985,30 @@ impl Lowerer {
                 "uninitialized local variable declarations are not supported yet (an initializer is required)".to_string(),
             )
         })?;
-        let init_expr_node = match initializer.children.as_slice() {
-            [ASTNodeOrToken::Node(n)] if n.rule_name == "expression" => n,
-            _ => {
-                return Err(self.err_at(
-                    initializer,
-                    "array initializers are not supported yet (deferred to JV02 M4)".to_string(),
-                ))
+        let (value, value_kind) = match initializer.children.as_slice() {
+            [ASTNodeOrToken::Node(n)] if n.rule_name == "expression" => self.lower_expr(n, 0)?,
+            [ASTNodeOrToken::Node(n)] if n.rule_name == "array_initializer" => {
+                let declared_elem_kind = match declared_kind {
+                    Some(Kind::Array(e)) => Some(e),
+                    Some(_) => {
+                        return Err(self.err_at(
+                            n,
+                            "an array initializer (`{ ... }`) cannot initialize a non-array-typed declaration".to_string(),
+                        ))
+                    }
+                    None => None, // `var` -- infer the element kind from the elements themselves.
+                };
+                self.lower_array_initializer(n, declared_elem_kind, 0)?
             }
+            _ => return Err(self.err_at(initializer, "malformed variable initializer".to_string())),
         };
-        let (value, value_kind) = self.lower_expr(init_expr_node, 0)?;
 
         let kind = match declared_kind {
             Some(k) => k,
             None => {
                 if value_kind == Kind::Null {
                     return Err(self.err_at(
-                        init_expr_node,
+                        initializer,
                         "cannot infer `var`'s type from a `null` initializer".to_string(),
                     ));
                 }
@@ -1958,6 +2031,90 @@ impl Lowerer {
             value,
             span,
         })
+    }
+
+    /// Lower an `array_initializer` (`LBRACE [variable_initializer
+    /// {COMMA variable_initializer}] [COMMA] RBRACE`) into an `Expr::
+    /// SeqLit` — the `{1, 2, 3}` shorthand form used directly as a
+    /// variable declarator's own initializer (M4a). Each element must
+    /// itself be a bare `expression`, not a nested `array_initializer` —
+    /// multi-dimensional array literals are out of scope, matching
+    /// `kind_of_type_node`'s own single-dimension restriction (deferred
+    /// to task #56).
+    ///
+    /// SIR16's `Expr::SeqLit`/`Feature::Sequences`, not SIR22's `Expr::
+    /// ArrayLit`/`Feature::NDArrays`: a Java array is a flat, homogeneous
+    /// 1-D sequence, exactly `SeqLit`'s own shape (`items: Vec<Expr>`) —
+    /// `ArrayLit`'s own `rows: Vec<Vec<Expr>>` is row-major-matrix-
+    /// shaped, built for MATLAB/Octave's true N-dimensional arrays, a
+    /// meaningfully different domain. `Feature::Sequences` is also the
+    /// older, more foundational SIR16 layer every backend (including
+    /// Python, this crate's own execution-proof harness) already
+    /// supports, unlike SIR22's newer, narrower-adoption array/matrix
+    /// family.
+    ///
+    /// `declared_elem_kind`: `Some(k)` when the declared type is
+    /// explicitly `T[]` (every element must lower to kind `k`); `None`
+    /// for `var` (every element must share one common kind, inferred
+    /// from the first — an empty `var`-inferred array literal is
+    /// rejected, matching real `javac`'s own identical rejection, since
+    /// there's nothing to infer from).
+    fn lower_array_initializer(
+        &mut self,
+        array_init: &GrammarASTNode,
+        declared_elem_kind: Option<ArrayElemKind>,
+        depth: usize,
+    ) -> Result<(Expr, Kind), JavaLowerError> {
+        let span = self.span_of(array_init);
+        let mut items = Vec::new();
+        let mut elem_kind = declared_elem_kind;
+        for vi in child_nodes(array_init)
+            .into_iter()
+            .filter(|n| n.rule_name == "variable_initializer")
+        {
+            let expr_node = match vi.children.as_slice() {
+                [ASTNodeOrToken::Node(n)] if n.rule_name == "expression" => n,
+                [ASTNodeOrToken::Node(n)] if n.rule_name == "array_initializer" => {
+                    return Err(self.err_at(
+                        n,
+                        "multi-dimensional array literals are not supported yet (deferred to a later JV02 milestone)".to_string(),
+                    ));
+                }
+                _ => return Err(self.err_at(vi, "malformed array element".to_string())),
+            };
+            let (expr, kind) = self.lower_expr(expr_node, depth + 1)?;
+            let this_elem_kind = match kind {
+                Kind::Int => ArrayElemKind::Int,
+                Kind::Float => ArrayElemKind::Float,
+                Kind::Bool => ArrayElemKind::Bool,
+                Kind::Str => ArrayElemKind::Str,
+                _ => {
+                    return Err(self.err_at(
+                        expr_node,
+                        "array elements must be a primitive or `String` value".to_string(),
+                    ))
+                }
+            };
+            match elem_kind {
+                Some(k) if k == this_elem_kind => {}
+                Some(_) => {
+                    return Err(self.err_at(
+                        expr_node,
+                        "array element's kind does not match the array's own declared or already-inferred element type".to_string(),
+                    ));
+                }
+                None => elem_kind = Some(this_elem_kind),
+            }
+            items.push(expr);
+        }
+        let elem_kind = elem_kind.ok_or_else(|| {
+            self.err_at(
+                array_init,
+                "cannot infer an empty array literal's element type without an explicit declared array type".to_string(),
+            )
+        })?;
+        self.observed.add(Feature::Sequences);
+        Ok((Expr::SeqLit { items, span }, Kind::Array(elem_kind)))
     }
 
     /// Resolve `local_var_type`'s declared kind, or `None` for `var`
@@ -1989,16 +2146,43 @@ impl Lowerer {
     /// every other class type (including any user-defined class, since
     /// M1 has no class-declaration lowering yet) is out of scope.
     fn kind_of_type_node(&self, type_node: &GrammarASTNode) -> Result<Kind, JavaLowerError> {
-        let has_array_brackets = type_node
+        let bracket_pairs = type_node
             .children
             .iter()
-            .any(|c| matches!(c, ASTNodeOrToken::Token(t) if t.value == "["));
-        if has_array_brackets {
+            .filter(|c| matches!(c, ASTNodeOrToken::Token(t) if t.value == "["))
+            .count();
+        if bracket_pairs == 0 {
+            return self.scalar_kind_of_type_node(type_node);
+        }
+        if bracket_pairs > 1 {
             return Err(self.err_at(
                 type_node,
-                "array types are not supported yet (deferred to JV02 M4)".to_string(),
+                "multi-dimensional arrays are not supported yet (deferred to a later JV02 milestone)".to_string(),
             ));
         }
+        let elem = match self.scalar_kind_of_type_node(type_node)? {
+            Kind::Int => ArrayElemKind::Int,
+            Kind::Float => ArrayElemKind::Float,
+            Kind::Bool => ArrayElemKind::Bool,
+            Kind::Str => ArrayElemKind::Str,
+            other => {
+                return Err(self.err_at(
+                    type_node,
+                    format!("unsupported array element kind `{other:?}`"),
+                ))
+            }
+        };
+        Ok(Kind::Array(elem))
+    }
+
+    /// Resolve `type_node`'s own base (non-array) kind — the shared core
+    /// `kind_of_type_node` uses both for a plain scalar type and, after
+    /// stripping the array-bracket check, for an array type's own
+    /// element kind. `type_node`'s own trailing `{LBRACKET RBRACKET}`
+    /// tokens (if any — see `kind_of_type_node`'s own caller) are
+    /// ignored here; this function only ever inspects the `primitive_
+    /// type`/`class_type` child.
+    fn scalar_kind_of_type_node(&self, type_node: &GrammarASTNode) -> Result<Kind, JavaLowerError> {
         if let Some(prim) = self.first_child_named(type_node, "primitive_type") {
             let tok = prim
                 .children
@@ -2853,17 +3037,16 @@ impl Lowerer {
         }
     }
 
-    /// `primary_expression = primary { primary_suffix } ;` — M3a adds
-    /// exactly one new shape: a *bare* unqualified call, `NAME(args)`,
-    /// which parses as `primary_expression(primary=NAME, primary_suffix=
-    /// LPAREN [argument_list] RPAREN)` — a `primary` that is a single bare
-    /// `NAME` token followed by exactly *one* suffix, itself starting
-    /// with `(` (confirmed by direct CST inspection, not assumed from the
-    /// grammar text alone). Every other suffix shape — field access
-    /// (`.field`), a *qualified* call (`x.foo(...)`, which chains a
-    /// `.foo` suffix *then* a separate `(...)` suffix — i.e. two
-    /// suffixes, not one), `::` method references, and so on — remains
-    /// out of scope, rejected exactly as before.
+    /// `primary_expression = primary { primary_suffix } ;` — M3a adds one
+    /// shape (a *bare* unqualified call, `NAME(args)`) and M4a adds two
+    /// more (array indexing, `xs[i]`; and `.length`), all reached only
+    /// when there is *exactly one* suffix — a `primary` followed by more
+    /// than one suffix (`.field`, a *qualified* call `x.foo(...)`, which
+    /// chains a `.foo` suffix *then* a separate `(...)` suffix, `::`
+    /// method references, and so on) remains out of scope, rejected as
+    /// before. Which of the three single-suffix shapes applies is
+    /// decided by the suffix's own leading token — confirmed by direct
+    /// CST inspection, not assumed from the grammar text alone.
     fn lower_primary_expression(
         &mut self,
         node: &GrammarASTNode,
@@ -2874,7 +3057,21 @@ impl Lowerer {
             [ASTNodeOrToken::Node(primary), ASTNodeOrToken::Node(suffix)]
                 if suffix.rule_name == "primary_suffix" =>
             {
-                self.lower_call_expression(primary, suffix, node, depth)
+                match suffix.children.first() {
+                    Some(ASTNodeOrToken::Token(t)) if t.value == "(" => {
+                        self.lower_call_expression(primary, suffix, node, depth)
+                    }
+                    Some(ASTNodeOrToken::Token(t)) if t.value == "[" => {
+                        self.lower_index_get(primary, suffix, node, depth)
+                    }
+                    Some(ASTNodeOrToken::Token(t)) if t.value == "." => {
+                        self.lower_dot_suffix(primary, suffix, node, depth)
+                    }
+                    _ => Err(self.err_at(
+                        node,
+                        "this primary suffix is not supported yet (deferred to a later JV02 milestone)".to_string(),
+                    )),
+                }
             }
             _ => Err(self.err_at(
                 node,
@@ -2883,15 +3080,100 @@ impl Lowerer {
         }
     }
 
-    /// Lower a bare unqualified call `NAME(args)` — see
-    /// `lower_primary_expression`'s own doc comment for the exact CST
-    /// shape this expects. `primary` must be a single bare `NAME` token
-    /// (a *qualified* callee, e.g. `x.foo`, never reaches this function —
-    /// it fails `lower_primary_expression`'s own suffix-count match arm
-    /// first, since a qualified call chains two suffixes); `suffix` must
-    /// itself start with `(` (an *unparenthesized* suffix, e.g. `.field`
-    /// with no call, is rejected here rather than silently mis-lowered as
-    /// a call).
+    /// Lower an array-index-read suffix, `xs[i]` (`primary_suffix =
+    /// LBRACKET expression RBRACKET`) into an `Expr::SeqIndex` — M4a.
+    /// `primary` must resolve to an array-typed value; the index
+    /// expression must resolve to `Kind::Int`. Uses SIR16's `Expr::
+    /// SeqIndex` (not SIR22's `Expr::IndexGet`) for the same reason
+    /// `lower_array_initializer` uses `SeqLit` over `ArrayLit` — see
+    /// that function's own doc comment.
+    fn lower_index_get(
+        &mut self,
+        primary: &GrammarASTNode,
+        suffix: &GrammarASTNode,
+        node: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<(Expr, Kind), JavaLowerError> {
+        let (target, target_kind) = self.lower_expr(primary, depth + 1)?;
+        let elem_kind = match target_kind {
+            Kind::Array(e) => e,
+            _ => {
+                return Err(self.err_at(
+                    node,
+                    "indexing (`[...]`) is only supported on an array-typed value".to_string(),
+                ))
+            }
+        };
+        let index_node = self
+            .first_child_named(suffix, "expression")
+            .ok_or_else(|| self.err_at(suffix, "malformed array index".to_string()))?;
+        let (index, index_kind) = self.lower_expr(index_node, depth + 1)?;
+        if index_kind != Kind::Int {
+            return Err(self.err_at(index_node, "an array index must be an `int`".to_string()));
+        }
+        self.observed.add(Feature::Sequences);
+        let span = self.span_of(node);
+        Ok((
+            Expr::SeqIndex {
+                seq: Box::new(target),
+                index: Box::new(index),
+                span,
+            },
+            elem_kind.as_kind(),
+        ))
+    }
+
+    /// Lower a `DOT NAME` suffix — this milestone supports exactly one
+    /// case, `.length` on an array-typed value (`Expr::SeqLen`, M4a).
+    /// Every other dotted suffix (a field, or the first half of a
+    /// qualified method call — which always chains a *second* suffix
+    /// anyway, already rejected by `lower_primary_expression`'s own
+    /// suffix-count check before this function is ever reached) remains
+    /// out of scope.
+    fn lower_dot_suffix(
+        &mut self,
+        primary: &GrammarASTNode,
+        suffix: &GrammarASTNode,
+        node: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<(Expr, Kind), JavaLowerError> {
+        let is_length = suffix.children.iter().find_map(|c| match c {
+            ASTNodeOrToken::Token(t) if t.type_ == lexer::token::TokenType::Name => {
+                Some(t.value.as_str())
+            }
+            _ => None,
+        }) == Some("length");
+        if !is_length {
+            return Err(self.err_at(
+                node,
+                "field access and qualified method calls are not supported yet, except `.length` on an array (deferred to a later JV02 milestone)".to_string(),
+            ));
+        }
+        let (target, target_kind) = self.lower_expr(primary, depth + 1)?;
+        if !matches!(target_kind, Kind::Array(_)) {
+            return Err(self.err_at(
+                node,
+                "`.length` is only supported on an array-typed value".to_string(),
+            ));
+        }
+        self.observed.add(Feature::Sequences);
+        let span = self.span_of(node);
+        Ok((
+            Expr::SeqLen {
+                seq: Box::new(target),
+                span,
+            },
+            Kind::Int,
+        ))
+    }
+
+    /// Lower a bare unqualified call `NAME(args)` — reached only when
+    /// `lower_primary_expression`'s own dispatch has already confirmed
+    /// the suffix starts with `(`. `primary` must be a single bare
+    /// `NAME` token (a *qualified* callee, e.g. `x.foo`, never reaches
+    /// this function — it fails `lower_primary_expression`'s own
+    /// suffix-count match arm first, since a qualified call chains two
+    /// suffixes).
     fn lower_call_expression(
         &mut self,
         primary: &GrammarASTNode,
@@ -2899,14 +3181,6 @@ impl Lowerer {
         node: &GrammarASTNode,
         depth: usize,
     ) -> Result<(Expr, Kind), JavaLowerError> {
-        let is_call_suffix =
-            matches!(suffix.children.first(), Some(ASTNodeOrToken::Token(t)) if t.value == "(");
-        if !is_call_suffix {
-            return Err(self.err_at(
-                node,
-                "field access and other primary suffixes are not supported yet (deferred to a later JV02 milestone)".to_string(),
-            ));
-        }
         let callee = match primary.children.as_slice() {
             [ASTNodeOrToken::Token(t)] if t.type_ == lexer::token::TokenType::Name => {
                 t.value.clone()

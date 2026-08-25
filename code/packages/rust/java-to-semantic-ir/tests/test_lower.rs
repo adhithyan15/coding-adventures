@@ -1765,16 +1765,21 @@ fn bare_return_in_a_non_void_method_is_an_error() {
 }
 
 #[test]
-fn array_parameter_type_is_still_unsupported() {
-    let err = compile_source(
-        &class_src(
-            "public static void main(String[] args) { } \
-             static void f(int[] x) { }",
-        ),
-        "prog",
-    )
-    .unwrap_err();
-    assert!(!err.message.is_empty());
+fn array_parameter_type_is_now_supported_since_m4a() {
+    // `kind_of_type_node` (shared by method-parameter and local-
+    // declaration type resolution) gained array-type support in M4a; an
+    // array-typed method parameter now lowers cleanly as a natural
+    // consequence, not something M4a specifically built -- this is the
+    // positive-test replacement for M3a's own `array_parameter_type_is_
+    // still_unsupported`, which this milestone's own scope change made
+    // stale.
+    let m = compile_ok(&class_src(
+        "public static void main(String[] args) { } \
+         static void f(int[] x) { }",
+    ));
+    let f = find_fn(&m, "f");
+    assert_eq!(f.params.len(), 1);
+    assert_eq!(f.params[0].name, "x");
 }
 
 #[test]
@@ -2143,6 +2148,240 @@ fn return_not_as_the_last_statement_in_a_lambda_body_is_an_error() {
         "unexpected message: {}",
         err.message
     );
+}
+
+// ── M4a: array declarations, indexing reads, .length ─────────────────────
+
+#[test]
+fn array_literal_declaration_lowers_to_seqlit() {
+    let m = compile_ok(&wrap("int[] xs = {1, 2, 3};"));
+    match &main_fn(&m).body.stmts[0] {
+        Stmt::LetStarBinding {
+            name,
+            value: Expr::SeqLit { items, .. },
+            ..
+        } => {
+            assert_eq!(name, "xs");
+            assert_eq!(items.len(), 3);
+            assert!(matches!(items[0], Expr::IntLit { value: 1, .. }));
+            assert!(matches!(items[1], Expr::IntLit { value: 2, .. }));
+            assert!(matches!(items[2], Expr::IntLit { value: 3, .. }));
+        }
+        other => panic!("expected a SeqLit-valued LetStarBinding, got {other:?}"),
+    }
+}
+
+#[test]
+fn empty_array_literal_with_explicit_type_lowers_correctly() {
+    let m = compile_ok(&wrap("int[] xs = {};"));
+    match &main_fn(&m).body.stmts[0] {
+        Stmt::LetStarBinding {
+            value: Expr::SeqLit { items, .. },
+            ..
+        } => assert!(items.is_empty()),
+        other => panic!("expected a SeqLit-valued LetStarBinding, got {other:?}"),
+    }
+}
+
+#[test]
+fn var_infers_array_kind_from_a_non_empty_literal() {
+    let m = compile_ok(&wrap("var xs = {1, 2, 3}; int y = xs[0];"));
+    assert!(matches!(
+        &main_fn(&m).body.stmts[0],
+        Stmt::LetStarBinding {
+            value: Expr::SeqLit { .. },
+            ..
+        }
+    ));
+}
+
+#[test]
+fn empty_array_literal_with_var_cannot_infer_element_type() {
+    let err = compile_source(&wrap("var xs = {};"), "prog").unwrap_err();
+    assert!(
+        err.message.contains("infer"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn array_element_kind_mismatch_is_an_error() {
+    let err = compile_source(&wrap("int[] xs = {1, true, 3};"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn array_initializer_on_a_non_array_declared_type_is_an_error() {
+    let err = compile_source(&wrap("int x = {1, 2, 3};"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn string_array_literal_lowers_correctly() {
+    let m = compile_ok(&wrap("String[] names = {\"a\", \"b\"};"));
+    match &main_fn(&m).body.stmts[0] {
+        Stmt::LetStarBinding {
+            value: Expr::SeqLit { items, .. },
+            ..
+        } => assert_eq!(items.len(), 2),
+        other => panic!("expected a SeqLit-valued LetStarBinding, got {other:?}"),
+    }
+}
+
+#[test]
+fn multi_dimensional_array_type_is_unsupported() {
+    let err = compile_source(&wrap("int[][] grid = {};"), "prog").unwrap_err();
+    assert!(
+        err.message.contains("multi-dimensional"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn nested_array_initializer_is_unsupported() {
+    let err = compile_source(&wrap("int[] xs = {{1, 2}};"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn array_index_read_lowers_to_seqindex() {
+    let m = compile_ok(&wrap("int[] xs = {1, 2, 3}; int y = xs[0];"));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::LetStarBinding {
+            value: Expr::SeqIndex { seq, index, .. },
+            ..
+        } => {
+            assert!(matches!(**seq, Expr::VarRef { .. }));
+            assert!(matches!(**index, Expr::IntLit { value: 0, .. }));
+        }
+        other => panic!("expected a SeqIndex-valued LetStarBinding, got {other:?}"),
+    }
+}
+
+#[test]
+fn array_index_read_kind_is_the_element_kind() {
+    // A `String[]`'s own indexed reads must be usable in a String-typed
+    // position (`String s = names[0];`) -- proves `Expr::SeqIndex`'s own
+    // result kind is correctly the *element* kind, not the array kind.
+    let m = compile_ok(&wrap(
+        "String[] names = {\"a\", \"b\"}; String s = names[0];",
+    ));
+    assert_eq!(main_fn(&m).body.stmts.len(), 2);
+}
+
+#[test]
+fn indexing_a_non_array_value_is_an_error() {
+    let err = compile_source(&wrap("int x = 1; int y = x[0];"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn array_index_must_be_an_int() {
+    let err = compile_source(&wrap("int[] xs = {1}; int y = xs[true];"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn array_length_lowers_to_seqlen() {
+    let m = compile_ok(&wrap("int[] xs = {1, 2, 3}; int n = xs.length;"));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::LetStarBinding {
+            value: Expr::SeqLen { seq, .. },
+            ..
+        } => assert!(matches!(**seq, Expr::VarRef { .. })),
+        other => panic!("expected a SeqLen-valued LetStarBinding, got {other:?}"),
+    }
+}
+
+#[test]
+fn length_on_a_non_array_value_is_an_error() {
+    let err = compile_source(&wrap("int x = 1; int y = x.length;"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn field_access_other_than_length_remains_unsupported() {
+    let err =
+        compile_source(&wrap("int[] xs = {1}; int y = xs.somethingElse;"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn array_typed_method_parameter_is_declared_correctly() {
+    let m = compile_ok(&class_src(
+        "public static void main(String[] args) { } \
+         static int first(int[] xs) { return xs[0]; }",
+    ));
+    let first = find_fn(&m, "first");
+    assert_eq!(first.params.len(), 1);
+    assert_eq!(first.params[0].name, "xs");
+    assert!(matches!(first.body.value, Expr::SeqIndex { .. }));
+}
+
+#[test]
+fn array_call_argument_and_return_kind_check() {
+    let m = compile_ok(&class_src(
+        "public static void main(String[] args) { int[] xs = {1, 2, 3}; int[] ys = copyOf(xs); } \
+         static int[] copyOf(int[] xs) { return xs; }",
+    ));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::LetStarBinding {
+            value: Expr::DirectCall { fn_name, .. },
+            ..
+        } => assert_eq!(fn_name, "copyOf"),
+        other => panic!("expected a DirectCall-valued LetStarBinding, got {other:?}"),
+    }
+}
+
+#[test]
+fn array_call_argument_kind_mismatch_is_an_error() {
+    let err = compile_source(
+        &class_src(
+            "public static void main(String[] args) { int[] xs = {1}; useStrings(xs); } \
+             static void useStrings(String[] ss) { }",
+        ),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn feature_sequences_is_declared_when_an_array_is_lowered() {
+    let m = compile_ok(&wrap(
+        "int[] xs = {1, 2, 3}; int y = xs[0]; int n = xs.length;",
+    ));
+    assert!(m.manifest.contains(Feature::Sequences));
+}
+
+#[test]
+fn new_array_creation_expression_is_deferred() {
+    // `new int[5]` / `new int[]{1,2,3}` -- deferred to task #56 (M4b);
+    // only the bare `{1,2,3}` literal-as-declarator-initializer form is
+    // supported this milestone.
+    let err = compile_source(&wrap("int[] xs = new int[5];"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn indexed_assignment_is_deferred() {
+    // `xs[0] = 5;` -- deferred to task #56 (M4b); this milestone only
+    // supports indexing as a *read*.
+    let err = compile_source(&wrap("int[] xs = {1, 2, 3}; xs[0] = 5;"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn c_style_array_declarator_still_rejected() {
+    // `int xs[] = {1, 2, 3};` -- the C-style declarator-suffix form
+    // remains out of scope regardless of M4a (only the `int[] xs`
+    // type-prefix form is supported) -- unchanged from M1's own
+    // pre-existing rejection, re-verified here since M4a touched the
+    // surrounding code.
+    let err = compile_source(&wrap("int xs[] = {1, 2, 3};"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
 }
 
 // ── depth-guard regression (CWE-674, found by /security-review) ────────
