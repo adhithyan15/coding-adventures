@@ -239,6 +239,7 @@ const URDU_MIM = DUCTUS[ductusKey("urdu-nastaliq", "م")];
 const URDU_NUN = DUCTUS[ductusKey("urdu-nastaliq", "ن")];
 const URDU_GHUNNA = DUCTUS[ductusKey("urdu-nastaliq", "ں")];
 const URDU_HE = DUCTUS[ductusKey("urdu-nastaliq", "ہ")];
+const URDU_DO_CHASHMI_HE = DUCTUS[ductusKey("urdu-nastaliq", "ھ")];
 const URDU_YE = DUCTUS[ductusKey("urdu-nastaliq", "ی")];
 const URDU_BARI_YE = DUCTUS[ductusKey("urdu-nastaliq", "ے")];
 const KANNADA_A = DUCTUS[ductusKey("kannada", "ಅ")];
@@ -3522,6 +3523,23 @@ describe("handwriting ductus", () => {
     expect(Math.min(...loop.map((point) => point.y))).toBeLessThan(100);
     expect(Math.max(...loop.slice(9).map((point) => point.x))).toBeGreaterThan(loop[0].x);
     expect(loop.at(-1)!.y).toBeGreaterThan(loop[0].y);
+  });
+
+  it("Urdu independent ھ joins both eyes and the low finish without lifting", () => {
+    expect(URDU_DO_CHASHMI_HE.script).toBe("urdu-nastaliq");
+    expect(penLifts(URDU_DO_CHASHMI_HE)).toBe(0);
+    expect(URDU_DO_CHASHMI_HE.strokes).toHaveLength(1);
+    expect(URDU_DO_CHASHMI_HE.strokes[0].segments).toHaveLength(4);
+    const [rightEye, baseline, leftEye, finish] = URDU_DO_CHASHMI_HE.strokes[0].segments;
+    expect(rightEye.path.at(-1)).toEqual(baseline.path[0]);
+    expect(baseline.path.at(-1)).toEqual(leftEye.path[0]);
+    expect(leftEye.path.at(-1)).toEqual(finish.path[0]);
+    expect(Math.max(...rightEye.path.map((point) => point.x))).toBeGreaterThan(
+      Math.max(...leftEye.path.map((point) => point.x)),
+    );
+    expect(baseline.path.at(-1)!.x).toBeLessThan(baseline.path[0].x);
+    expect(leftEye.path[1].y).toBeGreaterThan(leftEye.path[0].y);
+    expect(finish.path.at(-1)!.x).toBeLessThan(finish.path[0].x);
   });
 
   it("Urdu independent ی keeps its dotless S and bowl in one unbroken stroke", () => {
@@ -7004,6 +7022,19 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /one uninterrupted counterclockwise loop.*upper right.*down and left.*around the base.*return up the right side.*cross at the top.*without lifting.*independent form.*oval or teardrop.*initial and medial.*small divot.*number-6-like mark.*final form.*up and then down.*Noto Naskh.*Nastaliq/i,
+    );
+  });
+
+  it("Urdu independent ھ traces to Zer o Zabar's unbroken two-eyed animations", () => {
+    const src = URDU_DO_CHASHMI_HE.source;
+    expect(src.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/chhoti-he-do-chashmi-he-chhoti-ye-bari-ye/",
+    );
+    expect(src.citation).toMatch(
+      /Zer o Zabar.*independent ھ.*calligraphic and handwriting animations.*Aspiration with do-chashmī he instructions.*Northwestern/i,
+    );
+    expect(src.variation).toMatch(
+      /one uninterrupted stroke.*upper center.*right eye clockwise.*down and left along the baseline.*reverse at the left edge.*left eye.*low leftward sweep.*without lifting.*two eyes.*aspiration.*pen stops and reverses.*medial and final forms.*Noto Naskh.*Nastaliq/i,
     );
   });
 

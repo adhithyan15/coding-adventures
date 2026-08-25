@@ -135,6 +135,20 @@ describe("Tamil independent vowels in the starter inventory", () => {
 });
 
 describe("shared Perso-Arabic letters retain script-owned provenance", () => {
+  it("keeps Urdu ھ as one sourced two-eyed aspiration path", () => {
+    const urdu = SCRIPTS.find((script) => script.script === "urdu-nastaliq")!
+      .letters.find((entry) => entry.glyph === "ھ")!;
+    expect(urdu.role).toBe("other");
+    expect(urdu.sound).toMatch(/aspirates the preceding consonant/i);
+    expect(urdu.penLifts).toBe(0);
+    expect(urdu.strokeOrder).toHaveLength(4);
+    expect(urdu.strokeOrder[0]).toMatch(/right eye clockwise/i);
+    expect(urdu.strokeOrder[3]).toMatch(/leftward sweep.*without lifting/i);
+    expect(urdu.strokeOrderSource?.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/chhoti-he-do-chashmi-he-chhoti-ye-bari-ye/",
+    );
+  });
+
   it("keeps Persian and Urdu پ separate while both preserve the four-stroke triangle order", () => {
     const persian = SCRIPTS.find((script) => script.script === "perso-arabic")!
       .letters.find((entry) => entry.glyph === "پ")!;

@@ -11260,6 +11260,84 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: urduAlphabetSource("ہ"),
   },
+  // Zer o Zabar's independent calligraphic and handwriting animations both
+  // keep the two eyes and low finish in one continuous motion. This Noto Naskh
+  // fallback fit preserves the right-eye-first order and the reversal at the
+  // far-left baseline without borrowing chhoṭī he's separate path.
+  [ductusKey("urdu-nastaliq", "ھ")]: {
+    script: "urdu-nastaliq",
+    glyph: "ھ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "circle the right eye clockwise from the upper center",
+            path: [
+              { x: 285, y: 395 },
+              { x: 350, y: 375 },
+              { x: 420, y: 335 },
+              { x: 480, y: 280 },
+              { x: 525, y: 210 },
+              { x: 550, y: 135 },
+              { x: 550, y: 75 },
+              { x: 535, y: 35 },
+              { x: 500, y: 18 },
+            ],
+          },
+          {
+            label: "continue down and left along the baseline without lifting",
+            path: [
+              { x: 500, y: 18 },
+              { x: 450, y: 35 },
+              { x: 400, y: 52 },
+              { x: 350, y: 72 },
+              { x: 307, y: 90 },
+              { x: 250, y: 62 },
+              { x: 185, y: 45 },
+              { x: 115, y: 45 },
+              { x: 55, y: 60 },
+            ],
+          },
+          {
+            label: "reverse at the left edge and rise around the left eye",
+            path: [
+              { x: 55, y: 60 },
+              { x: 105, y: 65 },
+              { x: 155, y: 70 },
+              { x: 205, y: 78 },
+              { x: 235, y: 92 },
+              { x: 205, y: 130 },
+              { x: 185, y: 175 },
+              { x: 198, y: 235 },
+              { x: 215, y: 285 },
+              { x: 242, y: 335 },
+              { x: 275, y: 390 },
+              { x: 310, y: 370 },
+              { x: 345, y: 335 },
+              { x: 375, y: 290 },
+              { x: 390, y: 240 },
+              { x: 385, y: 190 },
+              { x: 360, y: 140 },
+              { x: 315, y: 95 },
+            ],
+          },
+          {
+            label: "close at the center and finish with the low leftward sweep",
+            path: [
+              { x: 315, y: 95 },
+              { x: 275, y: 72 },
+              { x: 225, y: 55 },
+              { x: 170, y: 48 },
+              { x: 115, y: 50 },
+              { x: 70, y: 58 },
+              { x: 30, y: 68 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: urduAlphabetSource("ھ"),
+  },
   [ductusKey("urdu-nastaliq", "ی")]: {
     script: "urdu-nastaliq",
     glyph: "ی",
