@@ -6898,7 +6898,7 @@ clean and mergeable, so the loop enabled squash auto-merge; GitHub merged it as
 `5c716a9283e604fa1f922e6f95075fd63b166abd`.
 
 The mandatory post-merge refresh followed every intervening main commit through
-`82ca67c4f15dbdd6211f05bf66d34ce6608aab6a`. The collision-checked schema-3
+`c1659cc9a104d3406d4e4d821e468511ee793701`. The collision-checked schema-3
 inventory now contains 15 established lanes, 1,373 implementation identities,
 4,566 package slots, 175 high-consensus packages with 276 missing slots, 122
 five-to-nine-lane packages with 926 missing slots, 166 two-to-four-lane packages
@@ -6936,11 +6936,15 @@ fixtures and covers runnable ancestor ownership, nearer empty BUILD
 non-masking, fixed closest-empty filename rank, exact artifact exclusions,
 invalid and stale exemption precedence, pending counts, hostile-path
 redaction, NFC/full-casefold duplicate identity, deterministic Unicode-scalar
-ordering, and Python-compatible U+001C-through-U+001F blank reasons. Five
-focused tests and the full 148-test suite plus three CLI integrations pass;
+ordering, Python-compatible ASCII JSON diagnostic keys, and Python-compatible
+U+001C-through-U+001F blank reasons. An independent conformance audit exposed
+the neutral Python oracle's non-ASCII escaping as a second-order sort key; a
+test-first Unicode stale-entry regression reproduced the mismatch before the
+Rust implementation was corrected, including supplementary-plane escapes. Six
+focused tests and the full 149-test suite plus three CLI integrations pass;
 Clippy is clean with warnings denied, the release build and both canonical
-BUILD fronts pass, and LLVM coverage is 82.16% overall plus 98.54% for
-`validator.rs` with every validator function executed. The neutral corpus
+BUILD fronts pass, and LLVM coverage is 82.10% overall plus 97.42% for
+`validator.rs`, with 98.89% of validator functions executed. The neutral corpus
 validates 111 cases across 269 files; 146 repository guard tests plus 928
 subtests pass with two expected Windows skips. The Go oracle passes tests, vet,
 trimpath compilation, and a real forced Rust plan over 45 Starlark files and
@@ -6948,14 +6952,17 @@ trimpath compilation, and a real forced Rust plan over 45 Starlark files and
 reported `WOULD-BUILD`. Cargo audit finds no vulnerability in 57 dependencies.
 
 Before publication the branch rebased without conflict over merged ADJ
-digraph-sound, Spanish A1 PCIC inventory, and Rust WASM SIMD rounding work to
-exact `origin/main` `82ca67c4f15dbdd6211f05bf66d34ce6608aab6a`.
-Those commits remain inside existing ADJ curriculum, human-language curriculum,
-and portable WASM owners and add no package identity. The refreshed report
-therefore remains 15 established lanes, 1,373 identities, 4,566 slots, zero
-collisions, and zero unknown buckets; the generated `target_isolated/`
-directory from the exact Windows front was removed after validation, while its
-separately owned hygiene item remains pending.
+digraph-sound implementation and loop bookkeeping, Spanish A1 PCIC inventory,
+Rust WASM SIMD rounding, Japanese learner-guide reconciliation, and HTML-parser
+diagnostic work to exact `origin/main`
+`c1659cc9a104d3406d4e4d821e468511ee793701`. Those commits remain inside
+existing ADJ curriculum, human-language curriculum, portable WASM, and
+HTML-parser owners and add no package identity. The refreshed report therefore
+remains 15 established lanes, 1,373 identities, 4,566 slots, zero collisions,
+and zero unknown buckets; all 10 live open PRs have zero exact candidate-path
+overlap. The generated 459.6 MiB `target_isolated/` directory from the exact
+Windows front was verified inside the dedicated worktree and removed with
+`cargo clean`, while its separately owned hygiene item remains pending.
 
 ## Autonomous Loop Protocol
 
