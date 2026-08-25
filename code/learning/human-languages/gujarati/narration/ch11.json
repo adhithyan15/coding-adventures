@@ -2,24 +2,24 @@
   "version": 1,
   "language": "gujarati",
   "chapter": 11,
-  "title": "Water, Tea, Milk, and Bread",
+  "title": "Taking, Asking, Helping, Liking",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:af583bddccb08301",
+  "sourceHash": "fnv1a64:2d7f3db239c6cd82",
   "lessons": [
     {
-      "id": "GU-C10-paani",
-      "sequence": 500,
-      "title": "પાણી (pāṇī) — the first thing you'll actually ask for",
-      "headword": "પાણી",
-      "romanization": "pāṇī",
-      "gloss": "water — Gujarati's first noun for something you would actually ask for, and the phrase that asks for it politely",
+      "id": "GU-C09-levun",
+      "sequence": 460,
+      "title": "લેવું (levũ) — \"to take,\" and a family tree with an argument in it",
+      "headword": "લેવું",
+      "romanization": "levũ",
+      "gloss": "to take — the shortest verb yet, and a family tree that is disputed rather than empty",
       "script": "gujarati",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:00a8de9cbe1b8a3f",
+      "sourceHash": "fnv1a64:d09be5aee576c155",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -45,7 +45,7 @@
             },
             {
               "kind": "speech",
-              "text": "Gamvũ let you say what you like; madad karvī let you ask for help. This chapter asks for something smaller and more frequent: a drink."
+              "text": "Lakhvũ and vā̃chvũ — and what was lakh- doing before it wrote anything? (Scratching.) The next verb is shorter than either."
             }
           ]
         },
@@ -56,7 +56,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "પાણી — pāṇī — water."
+              "text": "લેવું — levũ — to take."
+            },
+            {
+              "kind": "speech",
+              "text": "Take the ending off and almost nothing is left: the stem is one syllable, લે- le-."
             }
           ]
         },
@@ -67,33 +71,45 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "પ pa, ા the long-ā sign, ણ the retroflex ṇ you already curled back in jāṇvũ, then ી long-ī. No bar runs across the top of any of them — the headless tell, working the same way in a noun as it did in a verb."
+              "text": "લે is લ la, met in lakhvũ one lesson ago, wearing the sign ે that turns it into le — the same sign sitting on છે chhe at the end of your sentences. Then વું."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: asking politely",
+          "title": "Grammar Lens: the stem relaxes when a person arrives",
           "segments": [
             {
               "kind": "speech",
-              "text": "પાણી, મહેરબાની કરીને. — pāṇī, meherbānī karīne. — Water, please."
+              "text": "હું લઉં છું — hũ laũ chhũ — \"I take.\""
             },
             {
               "kind": "speech",
-              "text": "મહેરબાની કરીને meherbānī karīne is built from મહેરબાની, \"kindness\" or \"favor,\" plus કરીને, \"having done\" — the same કરીને/કરવી family you met in મદદ કરવી, \"to do a favor of help.\" Literally: \"having done a kindness.\" Name the item, add this, and you have a complete polite request with no verb for \"give\" needed at all — the pattern this whole chapter will reuse."
+              "text": "The stem was le- and its vowel has relaxed to a under the person-ending. That is the old rule seen from the other side: javũ's stem ja- stretched to jā- when a person-ending arrived. A one-syllable stem is the piece most likely to move; the ending and the copula behind it never do."
             }
           ]
         },
         {
           "index": 4,
           "type": "etymology",
-          "title": "The word, taken apart — the oldest drinking word you own",
+          "title": "The word, taken apart — probable, not proven",
           "segments": [
             {
               "kind": "speech",
-              "text": "pāṇī comes from Sanskrit pānīya, \"that which is to be drunk,\" built on pā-, \"to drink.\" That root is Indo-European, peh₃(i)-, and English holds two disguised pieces of it: potion and poison both come through Latin potare, \"to drink\" — a poison, etymologically, is just a drink gone wrong. Greek turned the same idea into sympotēs, \"one who drinks together,\" which English keeps as symposium. Pāṇī is not a stranger to those words; it is what \"to drink\" looks like when it never left the family that gave you jāṇvũ's Sanskrit cousin jñā-."
+              "text": "levũ comes through Prakrit lei from Sanskrit labhate, \"takes, gains, obtains\" — the bh worn away between the vowels, as a d was in khāvũ. The root is Indo-European, lebh-, and its meaning is worth holding: not \"seize\" but \"work, harvest, gain, profit.\" Taking, named as what you have earned."
+            },
+            {
+              "kind": "speech",
+              "text": "The secure cousins are outside English: Lithuanian lõbis, \"treasure,\" and Greek láphura, \"spoils of war.\" Both keep the sense of a thing gained rather than grabbed."
+            },
+            {
+              "kind": "speech",
+              "text": "Then the argument. Latin labor, \"toil\" — English's labour, laboratory, elaborate — is often traced to this same root, which would make working and taking one word. That link is contested, and at least one standard authority rejects it. So: probable, not proven, exactly as jovũ was."
+            },
+            {
+              "kind": "speech",
+              "text": "Three settings on one dial. Jāṇvũ is certain — it is English know. Levũ and jovũ are disputed. Khāvũ has nothing, and you say so."
             }
           ]
         },
@@ -105,47 +121,47 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "pāṇī — water",
+              "instruction": "levũ, then hũ laũ chhũ — the stem relaxing under the ending",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: **pāṇī** — water]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "pāṇī, meherbānī karīne. — water, please",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: **pāṇī, meherbānī karīne.** — water, please]"
+              "source": "[YOU SAY: **levũ**, then **hũ laũ chhũ** — the stem relaxing under the ending]"
             },
             {
               "kind": "prompt",
               "action": "MATCH",
-              "instruction": "karīne against madad karvī's own kar- root",
+              "instruction": "le- to la- here, ja- to jā- in javũ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU MATCH: **karīne** against **madad karvī**'s own **kar-** root]"
+              "source": "[YOU MATCH: *le-* to *la-* here, *ja-* to *jā-* in **javũ**]"
             },
             {
               "kind": "prompt",
               "action": "TRACE",
-              "instruction": "pā- \"to drink\" becomes pāṇī, and becomes potion, poison, symposium",
+              "instruction": "labhate \"gains\" becomes levũ, the bh worn away",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU TRACE: *pā-* \"to drink\" → **pāṇī**, and → **potion**, **poison**, **symposium**]"
+              "source": "[YOU TRACE: *labhate* \"gains\" → **levũ**, the *bh* worn away]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SORT",
+              "instruction": "jāṇvũ certain and English know; levũ and jovũ disputed; khāvũ nothing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SORT: **jāṇvũ** certain and English **know**; **levũ** and **jovũ** disputed; **khāvũ** nothing]"
             },
             {
               "kind": "prompt",
               "action": "RUN",
-              "instruction": "mane gujarātī game chhe, then pāṇī, meherbānī karīne — liking and requesting, side by side",
+              "instruction": "vā̃chvũ, lakhvũ, levũ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RUN: **mane gujarātī game chhe**, then **pāṇī, meherbānī karīne** — liking and requesting, side by side]"
+              "source": "[YOU RUN: **vā̃chvũ**, **lakhvũ**, **levũ**]"
             }
           ]
         },
@@ -162,30 +178,30 @@
             },
             {
               "kind": "speech",
-              "text": "Ask for water politely. (Pāṇī, meherbānī karīne.) What does meherbānī karīne mean word for word? (\"Having done a kindness.\") Which two English words for a drink, and one for a whole gathering of them, share pāṇī's root? (Potion, poison, symposium.)"
+              "text": "Say \"I take.\" (Hũ laũ chhũ.) Did the root behind levũ mean seizing or earning? (Earning: \"work, harvest, gain.\") Is English labour a cousin? (Possibly — the link is both made and rejected, so probable, not proven.) Which verb of yours has a certain English cousin, and which has none? (Jāṇvũ is know; khāvũ has none.)"
             },
             {
               "kind": "speech",
-              "text": "Sources: Wiktionary: પાણી (pāṇī); Wiktionary: મહેરબાની."
+              "text": "Source: Wiktionary: લેવું (levũ)."
             }
           ]
         }
       ]
     },
     {
-      "id": "GU-C10-chaa",
-      "sequence": 510,
-      "title": "ચા (chā) — the tea that went overland",
-      "headword": "ચા",
-      "romanization": "chā",
-      "gloss": "tea — a word that took the overland road out of China, so it rhymes with Hindi and Persian rather than with English",
+      "id": "GU-C09-puchhvun",
+      "sequence": 470,
+      "title": "પૂછવું (pūchhvũ) — \"to ask,\" the verb English kept for praying",
+      "headword": "પૂછવું",
+      "romanization": "pūchhvũ",
+      "gloss": "to ask — the verb English kept only for praying, and a p that stayed put because of where it stood",
       "script": "gujarati",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3654467a616af4b0",
+      "sourceHash": "fnv1a64:f232f7be2d82846c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -211,7 +227,7 @@
             },
             {
               "kind": "speech",
-              "text": "Pāṇī, meherbānī karīne — water, please. The next drink uses the exact same pattern, and its own name has traveled further than water's ever needed to."
+              "text": "Hũ laũ chhũ — did the root behind levũ mean seizing or earning? (Earning.) Here is the verb for the one thing you cannot take: an answer."
             }
           ]
         },
@@ -222,11 +238,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ચા — chā — tea."
+              "text": "પૂછવું — pūchhvũ — to ask."
             },
             {
               "kind": "speech",
-              "text": "ચા, મહેરબાની કરીને. — chā, meherbānī karīne. — Tea, please."
+              "text": "The stem is પૂછ- pūchh-, and the present holds no surprises: hũ pūchhũ chhũ, \"I ask.\""
             }
           ]
         },
@@ -237,70 +253,102 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ચ cha — the same letter that opened chār, \"four,\" and sat inside vichār — plus the long-ā sign. Two letters, both already yours."
+              "text": "પ is pa, counted with in પાંચ pā̃ch. On it sits a new sign: ૂ, the long ū, a heavier hook than the short ુ on every -વું. Two different vowels, not two speeds of one. Then છ chha, opening છે chhe."
             }
           ]
         },
         {
           "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart — the word that went by land, not by sea",
+          "type": "notice",
+          "title": "What you've built: a p that stayed because of where it stood",
           "segments": [
             {
               "kind": "speech",
-              "text": "ચા is a loanword — unlike pāṇī, which Gujarati has owned since Sanskrit. It came through Classical Persian chā, from Mandarin Chinese chá. That is the overland route, out through Central Asia and Persia: Hindi and Urdu chāy, Russian chai, Turkish çay all took the same road and the same syllable."
+              "text": "You know a rule that eats p: a single Sanskrit p between two vowels softened to v. It is how āpayati, on a root meaning \"reach,\" became આવવું āvvũ."
             },
             {
               "kind": "speech",
-              "text": "There is another route entirely. Chinese merchants on the coast spoke a different dialect, Hokkien, where the same word is tê. Dutch sailors picked that form up by sea and carried it into Europe: English tea, French thé, German Tee. One plant, one original Chinese word, and two pronunciations of it, sorted by whether a language met the word on a caravan route or a ship's deck. Gujarati's chā and English tea are, in that exact sense, the same word taken two different ways out of the same country."
+              "text": "So why does pūchhvũ still open with a hard પ? Because the condition is the whole rule: that p is not between vowels, it is at the front of the word, where nothing softened it. Count to five for the same shelter — પાંચ pā̃ch keeps its p."
+            },
+            {
+              "kind": "speech",
+              "text": "A sound law you can only recite is a fact. One whose condition you can check is a tool."
             }
           ]
         },
         {
           "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart — asking a person, asking a god",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pūchhvũ comes from Sanskrit pṛcchati, \"asks,\" on the Indo-European root prek-, \"to ask.\" This one paid out generously."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin took it as precārī, \"to beg, to entreat,\" and English has the family: pray, prayer, deprecate. Latin also made precārius, \"held only so long as another allows it,\" English's precarious — a thing you keep by asking. German still says fragen, Persian porsīdan."
+            },
+            {
+              "kind": "speech",
+              "text": "English is the odd one out. Its own inherited cousin, Old English frignan, died out and ask came from elsewhere, so the root survives in English only in its religious clothes. Saying hũ pūchhũ chhũ, you use the verb English kept for praying."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "chā — tea, and chā, meherbānī karīne — tea, please",
+              "instruction": "pūchhvũ, then hũ pūchhũ chhũ — I ask",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: **chā** — tea, and **chā, meherbānī karīne** — tea, please]"
+              "source": "[YOU SAY: **pūchhvũ**, then **hũ pūchhũ chhũ** — I ask]"
             },
             {
               "kind": "prompt",
-              "action": "RUN",
-              "instruction": "both requests — pāṇī, meherbānī karīne; chā, meherbānī karīne",
+              "action": "CONTRAST",
+              "instruction": "short ુ in -વું, long ૂ in પૂ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RUN: both requests — **pāṇī, meherbānī karīne**; **chā, meherbānī karīne**]"
+              "source": "[YOU CONTRAST: short **ુ** in **-વું**, long **ૂ** in **પૂ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "EXPLAIN",
+              "instruction": "why āvvũ lost its p, and pūchhvũ and pā̃ch kept theirs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU EXPLAIN: why **āvvũ** lost its *p*, and **pūchhvũ** and **pā̃ch** kept theirs]"
             },
             {
               "kind": "prompt",
               "action": "TRACE",
-              "instruction": "Chinese chá becomes Persian chā becomes ચા, the overland road",
+              "instruction": "pṛcchati becomes pūchhvũ, and becomes pray, precarious, fragen",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU TRACE: Chinese *chá* → Persian *chā* → **ચા**, the overland road]"
+              "source": "[YOU TRACE: *pṛcchati* → **pūchhvũ**, and → **pray**, **precarious**, *fragen*]"
             },
             {
               "kind": "prompt",
-              "action": "NAME",
-              "instruction": "one language that took the sea road instead, and its word (English, tea)",
+              "action": "RUN",
+              "instruction": "lakhvũ, levũ from lebh-, pūchhvũ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU NAME: one language that took the sea road instead, and its word (English, **tea**)]"
+              "source": "[YOU RUN: **lakhvũ**, **levũ** from *lebh-*, **pūchhvũ**]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -312,30 +360,30 @@
             },
             {
               "kind": "speech",
-              "text": "Ask for tea politely. (Chā, meherbānī karīne.) Did chā come by land or by sea? (Land — through Persian, from Mandarin.) Which English word for the same plant took the sea route instead, and through which language? (Tea, through Dutch.)"
+              "text": "Say \"I ask.\" (Hũ pūchhũ chhũ.) Why did pūchhvũ's p survive when the one inside āvvũ's ancestor did not, and which number of yours is sheltered the same way? (It stands at the front, not between vowels; pā̃ch.) Which English word for addressing a god is its cousin? (Pray.)"
             },
             {
               "kind": "speech",
-              "text": "Sources: Wiktionary: ચા (chā); Etymonline: chai."
+              "text": "Source: Wiktionary: પૂછવું (pūchhvũ)."
             }
           ]
         }
       ]
     },
     {
-      "id": "GU-C10-dudh",
-      "sequence": 520,
-      "title": "દૂધ (dūdh) — a verb frozen into a noun",
-      "headword": "દૂધ",
-      "romanization": "dūdh",
-      "gloss": "milk — inherited straight from Sanskrit, and a root English keeps in an unexpected word",
+      "id": "GU-C09-madad-karvi",
+      "sequence": 480,
+      "title": "મદદ કરવી (madad karvī) — \"to help,\" which is a hand held out",
+      "headword": "મદદ કરવી",
+      "romanization": "madad karvī",
+      "gloss": "to help — an Arabic word that came by way of Persian, and the one place the verb ending stops being neuter",
       "script": "gujarati",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:55b1fd302fdde432",
+      "sourceHash": "fnv1a64:fc1a5db77ad2e793",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -361,22 +409,26 @@
             },
             {
               "kind": "speech",
-              "text": "પાણી (pāṇī) was never borrowed. ચા (chā) came the long way from China. The third drink is, like water, entirely Gujarati's own — but it got that way differently."
+              "text": "Pūchhvũ and levũ — and which English word for talking to a god is pūchhvũ's cousin? (Pray.) Now, what you do once someone has asked."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know first — one word",
+          "title": "You'll want to know first — one phrase",
           "segments": [
             {
               "kind": "speech",
-              "text": "દૂધ — dūdh — milk."
+              "text": "મદદ કરવી — madad karvī — to help."
             },
             {
               "kind": "speech",
-              "text": "દૂધ, મહેરબાની કરીને. — dūdh, meherbānī karīne. — Milk, please."
+              "text": "Two words. મદદ madad is a noun, \"help\"; કરવું karvũ is \"to do,\" yours since kām karvũ. Gujarati helps by doing help."
+            },
+            {
+              "kind": "speech",
+              "text": "હું મદદ કરું છું — hũ madad karũ chhũ — \"I help.\""
             }
           ]
         },
@@ -387,182 +439,45 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "દ da, ૂ the long-ū sign below it, then ધ dha — the aspirated d, the same puff of breath that made ખ the aspirated k and ભ the aspirated b. You have met the letter itself before, in વાંધો નહીં."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart — the verb that became its own product",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "dūdh comes from Sanskrit dugdha, and dugdha is not, at root, a noun at all — it is the past participle of duh-, \"to milk,\" so it means literally \"milked.\" The action came first; the word for the substance is just that verb, frozen. It is the same trick gamvũ played with \"to please,\" run on a different part of speech: a verb collapsing into the thing it names."
-            },
-            {
-              "kind": "speech",
-              "text": "The Indo-European root is dheugh-, \"to be fit, useful, of avail.\" Its Germanic descendant did not go on to mean milk in English at all — it survives in doughty, \"valiant, capable,\" from Old English dohtig, \"of good use.\" Dūdh and doughty are cousins by way of a root that once meant simply being of use — milk as the useful thing, valor as the useful person."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "dūdh — milk, and dūdh, meherbānī karīne — milk, please",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: **dūdh** — milk, and **dūdh, meherbānī karīne** — milk, please]"
-            },
-            {
-              "kind": "prompt",
-              "action": "RUN",
-              "instruction": "all three requests so far — pāṇī, chā, dūdh, each with meherbānī karīne",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU RUN: all three requests so far — **pāṇī**, **chā**, **dūdh**, each with *meherbānī karīne*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "TRACE",
-              "instruction": "duh- \"to milk\" becomes dugdha \"milked\" becomes dūdh, and becomes English doughty",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU TRACE: *duh-* \"to milk\" → *dugdha* \"milked\" → **dūdh**, and → English **doughty**]"
-            },
-            {
-              "kind": "prompt",
-              "action": "NAME",
-              "instruction": "which of the three drinks is a loanword (ચા (chā)) and which two are not",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU NAME: which of the three drinks is a loanword (**ચા**) and which two are not]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Ask for milk politely. (Dūdh, meherbānī karīne.) What part of speech was dugdha before it became a noun for milk? (A past participle — \"milked.\") Which unexpected English word for bravery shares its root with dūdh? (Doughty.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Sources: Wiktionary: દૂધ (dūdh); Etymonline: doughty."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GU-C10-rotli",
-      "sequence": 530,
-      "title": "રોટલી (roṭlī) — a request pattern, run four times",
-      "headword": "રોટલી",
-      "romanization": "roṭlī",
-      "gloss": "flatbread — the fourth request, an honest dead end for its origin, and the letter -ī does not always mean what you'd guess",
-      "script": "gujarati",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:a5742f7d8db85833",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Three drinks, one pattern: pāṇī, chā, dūdh, each followed by meherbānī karīne. The fourth request is food, not drink, and it closes the chapter by finally breaking a pattern instead of continuing one."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know first — one word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "રોટલી — roṭlī — flatbread."
-            },
-            {
-              "kind": "speech",
-              "text": "રોટલી, મહેરબાની કરીને. — roṭlī, meherbānī karīne. — Bread, please."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ર ra, ો the o sign, then a new letter: ટ, a retroflex ṭ — the tongue curls back the way it does for ણ, but here it stops the airflow instead of letting it through the nose. Then લ la, and ી long-ī. Headless throughout, like every letter you've met."
+              "text": "મદદ is three bare consonants with their built-in a: મ ma, then a doubled દ da — the દ that ends ānand. In કરવી the last letter wears the long ી you met in maḷīshũ, and that ી is what this lesson is about."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: an -ī that does not mean \"feminine, guaranteed\"",
+          "title": "Grammar Lens: the ending that stopped being neuter",
           "segments": [
             {
               "kind": "speech",
-              "text": "રોટલી (roṭlī) is feminine, and its ending fits: many Gujarati nouns ending in -ī are feminine, the same -ī you saw mark the feminine adjective ending in sārī. But you already own the counter-example: પાણી also ends in -ī, and pāṇī is neuter. The ending is a hint worth noticing, not a rule you can trust blind — every noun's gender has to be learned with the noun, the way madad karvī forced કરવી into its feminine shape only because madad itself was feminine, not because of any ending on karvī alone."
+              "text": "Every Gujarati verb so far has been named in the neuter: -વું -vũ, the third of the three genders, the -ũ of sārũ and mārũ. This one is not. કરવી karvī wears -ī, the feminine of sārī and mārī, because મદદ is a feminine noun and the infinitive agrees with what is done:"
+            },
+            {
+              "kind": "speech",
+              "text": "કામ કરવું kām karvũ — \"to work.\" Kām is neuter, so karvũ."
+            },
+            {
+              "kind": "speech",
+              "text": "મદદ કરવી madad karvī — \"to help.\" Madad is feminine, so karvī."
+            },
+            {
+              "kind": "speech",
+              "text": "Gujarati keeps three genders where Hindi next door keeps two, and here that system does visible work. You have watched gender decide a form once before, at the other end of a word's life: બે be comes down from Sanskrit's feminine and neuter dvé, not the masculine dváu. Gender chose the ancestor there; it chooses the ending here."
             }
           ]
         },
         {
           "index": 4,
           "type": "etymology",
-          "title": "The word, taken apart — where the trail runs out",
+          "title": "The word, taken apart — help as a hand extended",
           "segments": [
             {
               "kind": "speech",
-              "text": "roṭlī is inherited from Sanskrit roṭikā, \"a kind of bread.\" That much is certain. What roṭikā itself comes from is not: the standard comparative dictionaries weigh an unattested root meaning \"to strike against\" against another meaning \"to crush,\" and neither Turner nor Mayrhofer picks a winner."
+              "text": "મદદ is not Sanskrit at all. It is Arabic madad, borrowed through Persian, on the root m-d-d, \"to stretch out, to extend\" — whose plainest sentence is \"extend your hand.\" Madad is a thing held out: a hand, or reinforcements sent to an army."
             },
             {
               "kind": "speech",
-              "text": "That gives this chapter its own three-way dial, the same shape jāṇvũ, levũ, and khāvũ once drew for verbs: pāṇī and dūdh are inherited straight from Sanskrit with a full etymology behind them; chā is a loan, traceable to Mandarin by a known road; roṭlī is inherited too, but its own root is where recorded history simply stops."
+              "text": "It belongs to a layer you have tasted. Gujarati was a great trading tongue of the Arabian Sea, and the Persian and Arabic that settled into it is the layer answering \"how are you\" with મજા majā."
             }
           ]
         },
@@ -574,38 +489,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "roṭlī, meherbānī karīne — bread, please",
+              "instruction": "madad karvī, then hũ madad karũ chhũ — I help",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: **roṭlī, meherbānī karīne** — bread, please]"
-            },
-            {
-              "kind": "prompt",
-              "action": "RUN",
-              "instruction": "all four requests — pāṇī, chā, dūdh, roṭlī, each with meherbānī karīne",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU RUN: all four requests — **pāṇī**, **chā**, **dūdh**, **roṭlī**, each with *meherbānī karīne*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SORT",
-              "instruction": "inherited with a known root (pāṇī, dūdh), loaned (chā), inherited with an unknown root (roṭlī)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SORT: inherited with a known root (**pāṇī**, **dūdh**), loaned (**chā**), inherited with an unknown root (**roṭlī**)]"
+              "source": "[YOU SAY: **madad karvī**, then **hũ madad karũ chhũ** — I help]"
             },
             {
               "kind": "prompt",
               "action": "CONTRAST",
-              "instruction": "roṭlī feminine by its -ī, pāṇī neuter despite its -ī",
+              "instruction": "kām karvũ neuter, madad karvī feminine — the noun decides",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU CONTRAST: **roṭlī** feminine by its **-ī**, **pāṇī** neuter despite its **-ī**]"
+              "source": "[YOU CONTRAST: **kām karvũ** neuter, **madad karvī** feminine — the noun decides]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "Arabic m-d-d \"extend\" becomes Persian becomes madad, beside majā",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: Arabic *m-d-d* \"extend\" → Persian → **madad**, beside **majā**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "levũ, pūchhvũ, madad karvī — gender picking an ending here, an ancestor in be",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: **levũ**, **pūchhvũ**, **madad karvī** — gender picking an ending here, an ancestor in **be**]"
             }
           ]
         },
@@ -622,11 +537,201 @@
             },
             {
               "kind": "speech",
-              "text": "Ask for bread politely. (Roṭlī, meherbānī karīne.) Does roṭikā's own root have a settled answer? (No — the dictionaries disagree and leave it open.) Name one Gujarati noun ending in -ī that is feminine and one that is neuter. (Roṭlī; pāṇī.) Run all four requests from this chapter. (Pāṇī, chā, dūdh, roṭlī, each with meherbānī karīne.)"
+              "text": "Say \"I help.\" (Hũ madad karũ chhũ.) Why karvī and not karvũ? (મદદ is feminine; kām is neuter.) Where is madad from, and which count of yours was also shaped by gender? (Arabic through Persian, a root meaning \"to stretch out\"; be, from dvé.)"
             },
             {
               "kind": "speech",
-              "text": "Sources: Wiktionary: રોટલી (roṭlī); Wiktionary: Sanskrit rotika."
+              "text": "Sources: Wiktionary: મદદ; Wiktionary: Arabic madad."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C09-gamvun",
+      "sequence": 490,
+      "title": "ગમવું (gamvũ) — \"to like,\" which is not something you do",
+      "headword": "ગમવું",
+      "romanization": "gamvũ",
+      "gloss": "to like — the chapter's payoff, a verb that will not let you be its subject, born as the passive of \"to go\"",
+      "script": "gujarati",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:745dc72d7b7e8b6c",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three verbs from this chapter: levũ, pūchhvũ, madad karvī. Each let you act. The fourth will not."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ગમવું — gamvũ — to like."
+            },
+            {
+              "kind": "speech",
+              "text": "The infinitive wears the neuter -વું like every verb you own. What comes next does not."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ગ ga opened gujarātī, મ ma has been everywhere, then વું — three shapes floating free, no bar across their tops, the fastest tell of Gujarati."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: you are not the subject of this sentence",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "મને ગુજરાતી ગમે છે — mane gujarātī game chhe — I like Gujarati."
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word: \"to me Gujarati pleases.\" No hũ anywhere. મને mane is \"to me,\" carrying the -ને -ne of તમને tamne."
+            },
+            {
+              "kind": "speech",
+              "text": "હું ગુજરાતી બોલું છું — I speak Gujarati. I am the doer."
+            },
+            {
+              "kind": "speech",
+              "text": "મને ગુજરાતી ગમે છે — I like Gujarati. Gujarati is."
+            },
+            {
+              "kind": "speech",
+              "text": "The verb answers to gujarātī, not to me — the instinct behind madad karvī. Spanish reaches this shape in me gusta, Tamil in enakku piḍikkum, neither borrowing from Gujarati nor from each other. Hindi and Urdu use the Persian loan pasand; gamvũ is Gujarati's own inherited word."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart — liking was born a passive",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gamvũ is Old Gujarati gamaï, \"to please,\" from Prakrit gammaï, \"is known,\" from Sanskrit gamyate — the passive of gam-, \"to go.\" \"It is gone to\" became \"it is grasped\" became \"it pleases.\" The word was born doerless and never took one."
+            },
+            {
+              "kind": "speech",
+              "text": "Two things you hold fall into place. Gammaï meant \"is known,\" the work of જાણવું jāṇvũ. And gamyate holds a y that did not become j: that rule was for Sanskrit y- at the front of a word, as in javũ. This one stood against an m, was swallowed into it, and the doubled mm thinned — assimilate, then simplify, as samajvũ did."
+            },
+            {
+              "kind": "speech",
+              "text": "The root is gwem-, and English come is the same word; Latin venīre gave advent, venue, invent. Āvvũ runs off another root, one that meant \"to reach.\""
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "PRODUCE",
+              "instruction": "mane gujarātī game chhe, then hũ gujarātī bolũ chhũ — naming the doer in each",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU PRODUCE: **mane gujarātī game chhe**, then **hũ gujarātī bolũ chhũ** — naming the doer in each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "levũ from lebh- \"gain\", pūchhvũ from prek- \"ask\", madad from Arabic through Persian, gamvũ from a passive — and why karvī ends in -ī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: **levũ** from *lebh-* \"gain\", **pūchhvũ** from *prek-* \"ask\", **madad** from Arabic through Persian, **gamvũ** from a passive — and why *karvī* ends in *-ī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "gam- \"go\" becomes gamyate becomes gamvũ, and becomes come, advent",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: *gam-* \"go\" → *gamyate* → **gamvũ**, and → **come**, **advent**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "EXPLAIN",
+              "instruction": "why gamyate's y did not become j as javũ's did",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU EXPLAIN: why *gamyate*'s *y* did not become *j* as *javũ*'s did]"
+            },
+            {
+              "kind": "prompt",
+              "action": "MATCH",
+              "instruction": "gammaï \"is known\" against jāṇvũ and know; gam- against āvvũ's \"reach\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU MATCH: *gammaï* \"is known\" against **jāṇvũ** and **know**; *gam-* against *āvvũ*'s \"reach\"]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I like Gujarati,\" and name its subject. (Mane gujarātī game chhe; Gujarati.) Which Sanskrit form is gamvũ from, what kind is it, and which English verb is the same word? (Gamyate, the passive of gam-; come.) Why madad karvī? (Madad is feminine.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: ગમવું (gamvũ); Wiktionary: Sanskrit gamyate."
             }
           ]
         }

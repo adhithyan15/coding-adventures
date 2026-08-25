@@ -1,39 +1,39 @@
 {
   "language": "gujarati",
-  "lessonCount": 79,
-  "atomMeasurableLessons": 79,
+  "lessonCount": 88,
+  "atomMeasurableLessons": 88,
   "atomMeasurementBlindLessons": 0,
   "durationViolations": 0,
   "atomLessonSpikes": 2,
   "atomChapterSpikes": 1,
   "glyphLessonSpikes": 0,
   "scriptSystemSpikes": 0,
-  "scriptClosureViolations": 45,
-  "neverTaughtGlyphs": 25,
+  "scriptClosureViolations": 31,
+  "neverTaughtGlyphs": 16,
   "orderDefects": 0,
   "lessonsWithoutSequence": 0,
   "unknownPrerequisites": 0,
   "forwardPrerequisites": 0,
   "forwardReviews": 0,
   "forwardReferences": 0,
-  "atomsTaught": 122,
+  "atomsTaught": 131,
   "atomsNeverRevisited": 9,
-  "reinforcementWindowMisses": 145,
+  "reinforcementWindowMisses": 166,
   "reinforcementMissesByWindow": {
     "R1": 22,
-    "R2": 66,
-    "R3": 57,
-    "R4": 0
+    "R2": 71,
+    "R3": 65,
+    "R4": 8
   },
   "payoffSurprises": 0,
-  "writingPracticeLessons": 64,
+  "writingPracticeLessons": 73,
   "firstWritingPracticeAt": 1,
   "lessonsBeforeWritingPractice": 1,
   "findings": [
     {
       "language": "gujarati",
       "kind": "script-closure",
-      "count": 25,
+      "count": 16,
       "unit": "glyph(s)",
       "detail": "teach every load-bearing glyph before asking the learner to decode it"
     },
@@ -54,7 +54,7 @@
     {
       "language": "gujarati",
       "kind": "reinforcement",
-      "count": 145,
+      "count": 166,
       "unit": "missed window(s)",
       "detail": "add retrieval at the expanding R1-R4 intervals"
     }
@@ -62,7 +62,7 @@
   "next": {
     "language": "gujarati",
     "kind": "script-closure",
-    "count": 25,
+    "count": 16,
     "unit": "glyph(s)",
     "detail": "teach every load-bearing glyph before asking the learner to decode it"
   }

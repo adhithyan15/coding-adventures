@@ -3,7 +3,7 @@ schema_version: 2
 id: GU-C04-pachha
 spine_node: SPINE-TAKE-LEAVE
 sequence: 240
-chapter: 5
+chapter: 6
 type: word
 headword: પાછા
 gloss: again, back

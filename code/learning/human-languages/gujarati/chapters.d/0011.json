@@ -1,28 +1,36 @@
 {
   "chapter": 11,
-  "title": "Water, Tea, Milk, and Bread",
-  "label": "ch:gu-request-food-drink",
-  "canDo": "I can politely ask for water, tea, milk, or bread in Gujarati, name which of the four is a loanword and which have no settled root beyond Sanskrit, and explain why a word ending in -ī is not automatically feminine.",
+  "title": "Taking, Asking, Helping, Liking",
+  "label": "ch:gu-doing-verbs",
+  "canDo": "I can take, ask, help and say what I like in Gujarati, explain why મદદ કરવી ends in the feminine -ી while કામ કરવું ends in the neuter, and say why મને ગુજરાતી ગમે છે leaves no room for me as its subject.",
   "spineNodes": [
-    "SPINE-POLITE-REQUEST-REPAIR"
+    "SPINE-SAY-WHAT-I-DO"
   ],
   "payoff": {
-    "lesson": "GU-C10-rotli",
+    "lesson": "GU-C09-gamvun",
     "kind": "production",
-    "summary": "The chapter closes on રોટલી, the request that breaks the drink pattern: the reader produces all four requests with મહેરબાની કરીને, sorts પાણી and દૂધ (inherited, known root) against ચા (loaned from Chinese by the overland route) against રોટલી (inherited, root unknown), and uses પાણી's neuter gender despite its -ī ending to show that રોટલી's own feminine -ī is a hint, not a rule.",
+    "summary": "Say મને ગુજરાતી ગમે છે and hear that you are not its subject, set it against હું ગુજરાતી બોલું છું where you are, trace ગમવું back to gamyate — the passive of gam- 'to go', so the verb was born without a doer and is English come besides — and run the chapter's four verbs back with where each came from: Sanskrit prek- behind pūchhvũ, lebh- behind levũ, Arabic madad through Persian, and the feminine ending madad forces onto karvī.",
     "assesses": [
-      "GU-LEX-PAANI",
-      "GU-PHRASE-MEHERBANI-KARINE",
-      "GU-ETYMON-PAANI-DRINK",
-      "GU-LEX-CHA",
-      "GU-ETYMON-CHA-CHINESE",
-      "GU-HISTORY-TEA-CHA-ISOGLOSS",
-      "GU-LEX-DUDH",
-      "GU-ETYMON-DUDH-DUGDHA",
-      "GU-LEX-ROTLI",
-      "GU-ETYMON-ROTLI-UNKNOWN",
-      "GU-GRAMMAR-GENDER-NOT-BY-ENDING",
-      "GU-SCRIPT-HEADLESS-CLUE"
+      "GU-LEX-GAMVU",
+      "GU-GRAMMAR-DATIVE-LIKING",
+      "GU-ETYMON-GAM-GO",
+      "GU-LEX-MADAD-KARVI",
+      "GU-ETYMON-MADAD-ARABIC",
+      "GU-GRAMMAR-INFINITIVE-OBJECT-GENDER",
+      "GU-LEX-PUCHHVU",
+      "GU-ETYMON-PRACH-ASK",
+      "GU-LEX-LEVU",
+      "GU-ETYMON-LABH-GAIN",
+      "GU-LEX-AAVVU",
+      "GU-ETYMON-AAVVU-REACH",
+      "GU-LEX-JAVU",
+      "GU-SOUND-PRAKRIT-Y-TO-J",
+      "GU-SOUND-DHY-JJH-J",
+      "GU-LEX-JAANVU",
+      "GU-ETYMON-JAANVU-KNOW",
+      "GU-SCRIPT-HEADLESS-CLUE",
+      "GU-GRAMMAR-VU-NEUTER-INFINITIVE",
+      "GU-GRAMMAR-PRESENT-STEM-PERSON-COPULA"
     ]
   }
 }

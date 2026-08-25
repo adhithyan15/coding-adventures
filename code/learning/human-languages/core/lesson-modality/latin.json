@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:ab635e2edfc64b40",
+  "sourceHash": "fnv1a64:e03499fd4b5b6bc8",
   "summary": {
     "totalLessons": 111,
     "voice": 102,
@@ -904,7 +904,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:833c63fcd54142a8",
+      "sourceHash": "fnv1a64:1ea7f1dbdc9b1e64",
       "detachableSegments": [
         "Writing — delayed copy"
       ]
@@ -926,7 +926,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:c20025262a318c97",
+      "sourceHash": "fnv1a64:cfaae76e20935341",
       "detachableSegments": [
         "Writing — dictation and transcription"
       ]

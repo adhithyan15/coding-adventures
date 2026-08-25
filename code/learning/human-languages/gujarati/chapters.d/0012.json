@@ -1,27 +1,28 @@
 {
   "chapter": 12,
-  "title": "Friend and Family",
-  "label": "ch:gu-friend-and-family",
-  "canDo": "I can name a friend, a family, a brother, and a sister in Gujarati, explain which of these words was inherited whole from Sanskrit rather than worn down by sound change, and say which sibling word is genuinely a cousin of its English counterpart and which is not.",
+  "title": "Water, Tea, Milk, and Bread",
+  "label": "ch:gu-request-food-drink",
+  "canDo": "I can politely ask for water, tea, milk, or bread in Gujarati, name which of the four is a loanword and which have no settled root beyond Sanskrit, and explain why a word ending in -ī is not automatically feminine.",
   "spineNodes": [
-    "SPINE-EXCHANGE-NAMES"
+    "SPINE-POLITE-REQUEST-REPAIR"
   ],
   "payoff": {
-    "lesson": "GU-C11-bahen",
+    "lesson": "GU-C10-rotli",
     "kind": "production",
-    "summary": "The chapter closes on બહેન, deliberately not a cousin of English sister: the reader produces મિત્ર, કુટુંબ, ભાઈ and બહેન, names ભાઈ as English brother's unbroken cousin against બહેન's unrelated (disputed bhaga-based) root, and names કુટુંબ as taken up whole from Sanskrit rather than worn down like the other three — while recalling that મિત્ર and મહેરબાની, taught a chapter apart, share the same ancient Indo-Iranian root.",
+    "summary": "The chapter closes on રોટલી, the request that breaks the drink pattern: the reader produces all four requests with મહેરબાની કરીને, sorts પાણી and દૂધ (inherited, known root) against ચા (loaned from Chinese by the overland route) against રોટલી (inherited, root unknown), and uses પાણી's neuter gender despite its -ī ending to show that રોટલી's own feminine -ī is a hint, not a rule.",
     "assesses": [
-      "GU-LEX-MITRA",
-      "GU-ETYMON-MITRA-BIND",
-      "GU-LEX-KUTUMB",
-      "GU-ETYMON-KUTUMB-DRAVIDIAN",
-      "GU-GRAMMAR-LEARNED-BORROWING",
-      "GU-LEX-BHAI",
-      "GU-ETYMON-BHAI-BROTHER",
-      "GU-LEX-BAHEN",
-      "GU-ETYMON-BAHEN-BHAGA",
+      "GU-LEX-PAANI",
       "GU-PHRASE-MEHERBANI-KARINE",
-      "GU-HISTORY-LEARNED-RESTORATION"
+      "GU-ETYMON-PAANI-DRINK",
+      "GU-LEX-CHA",
+      "GU-ETYMON-CHA-CHINESE",
+      "GU-HISTORY-TEA-CHA-ISOGLOSS",
+      "GU-LEX-DUDH",
+      "GU-ETYMON-DUDH-DUGDHA",
+      "GU-LEX-ROTLI",
+      "GU-ETYMON-ROTLI-UNKNOWN",
+      "GU-GRAMMAR-GENDER-NOT-BY-ENDING",
+      "GU-SCRIPT-HEADLESS-CLUE"
     ]
   }
 }

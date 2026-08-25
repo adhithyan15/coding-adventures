@@ -1,0 +1,21 @@
+{
+  "id": "GU-EXT-018-DOORWAY-SCRIPT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can trace, copy, recall and distinguish nine Gujarati forms needed by the first name exchange and later everyday words.",
+  "prerequisites": [
+    "GU-EXT-017-COURTESY-GLYPHS"
+  ],
+  "lessons": [
+    "GU-W03-ja",
+    "GU-W03-o-matra",
+    "GU-W03-anusvara",
+    "GU-W03-ii-matra",
+    "GU-W03-u-matra",
+    "GU-W03-chha",
+    "GU-W03-ka",
+    "GU-W03-nna",
+    "GU-W03-sha"
+  ]
+}

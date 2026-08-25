@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c14d6e7ba041eb44",
+  "sourceHash": "fnv1a64:24e8d751fd9f2da2",
   "lessons": [
     {
       "id": "LA-C01-salve",
@@ -229,7 +229,7 @@
         "writing-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:833c63fcd54142a8",
+      "sourceHash": "fnv1a64:1ea7f1dbdc9b1e64",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -265,8 +265,23 @@
               "text": "Uncover the model and compare one feature at a time: s-a-l-v-ē. If one feature differs, repair only that feature. This is one gentle memory step, not a speed test."
             },
             {
-              "kind": "speech",
-              "text": "<!-- hl-activity: {\"id\":\"LA-W01-salve-delayed-copy-check\",\"kind\":\"text\",\"assesses\":[\"LA-PHONO-SALVE-01\",\"LA-ETYMON-SALVE-02\",\"LA-GRAMMAR-SALVE-03\"],\"prompt\":\"Cover the model and write the one-person Latin greeting meaning be well. Then uncover it and check every letter and the macron.\",\"answer\":\"salvē\",\"accepted\":[\"salvē\"],\"feedback\":{\"correct\":\"Yes: salvē has all five letters and the final long-vowel macron.\",\"incorrect\":\"Uncover salvē, compare s-a-l-v-ē, repair only the differing feature, and cover it again.\"},\"response_seconds\":20} -->."
+              "kind": "activity",
+              "scored": true,
+              "id": "LA-W01-salve-delayed-copy-check",
+              "prompt": "Cover the model and write the one-person Latin greeting meaning be well. Then uncover it and check every letter and the macron.",
+              "assesses": [
+                "LA-PHONO-SALVE-01",
+                "LA-ETYMON-SALVE-02",
+                "LA-GRAMMAR-SALVE-03"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "salvē"
+              ],
+              "feedback": {
+                "correct": "Yes: salvē has all five letters and the final long-vowel macron.",
+                "incorrect": "Uncover salvē, compare s-a-l-v-ē, repair only the differing feature, and cover it again."
+              }
             }
           ]
         },
@@ -297,7 +312,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:c20025262a318c97",
+      "sourceHash": "fnv1a64:cfaae76e20935341",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -328,8 +343,23 @@
               "text": "Write the one-word Latin greeting from the sound and meaning cue. Remember that the final vowel is long, so its written vowel carries the macron. Do not copy from an earlier page. Stop after one attempt."
             },
             {
-              "kind": "speech",
-              "text": "<!-- hl-activity: {\"id\":\"LA-W01-salve-dictation-check\",\"kind\":\"text\",\"assesses\":[\"LA-PHONO-SALVE-01\",\"LA-ETYMON-SALVE-02\",\"LA-GRAMMAR-SALVE-03\"],\"prompt\":\"From the cue SAL-weh, meaning be well to one person, write the Latin greeting with its long-vowel mark.\",\"answer\":\"salvē\",\"accepted\":[\"salvē\"],\"feedback\":{\"correct\":\"Yes: the heard greeting is written salvē, including the macron over final ē.\",\"incorrect\":\"The answer is salvē. Compare your attempt letter by letter and check that final ē carries its macron.\"},\"response_seconds\":25} -->."
+              "kind": "activity",
+              "scored": true,
+              "id": "LA-W01-salve-dictation-check",
+              "prompt": "From the cue SAL-weh, meaning be well to one person, write the Latin greeting with its long-vowel mark.",
+              "assesses": [
+                "LA-PHONO-SALVE-01",
+                "LA-ETYMON-SALVE-02",
+                "LA-GRAMMAR-SALVE-03"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "salvē"
+              ],
+              "feedback": {
+                "correct": "Yes: the heard greeting is written salvē, including the macron over final ē.",
+                "incorrect": "The answer is salvē. Compare your attempt letter by letter and check that final ē carries its macron."
+              }
             }
           ]
         },

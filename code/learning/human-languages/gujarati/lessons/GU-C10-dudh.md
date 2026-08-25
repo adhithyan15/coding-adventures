@@ -3,7 +3,7 @@ schema_version: 2
 id: GU-C10-dudh
 spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 520
-chapter: 11
+chapter: 12
 type: word
 headword: દૂધ
 romanization: dūdh
