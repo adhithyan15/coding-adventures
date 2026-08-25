@@ -6762,10 +6762,13 @@ impl HtmlParser {
                 .at_emission(self.current_token_emission_position),
             );
             if incoming_name == "a" && self.has_active_html_anchor() {
-                self.diagnostics.push(ParserDiagnostic::new(
-                    "nested-anchor-start-tag",
-                    "start tag `<a>` triggered adoption-agency recovery for an active anchor",
-                ));
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "nested-anchor-start-tag",
+                        "start tag `<a>` triggered adoption-agency recovery for an active anchor",
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
                 self.diagnostics.push(ParserDiagnostic::new(
                     "formatting-element-not-in-table-scope",
                     "active anchor was outside table scope during adoption-agency recovery",
@@ -8614,10 +8617,13 @@ impl HtmlParser {
         match incoming_name {
             "a" => {
                 if self.has_active_html_anchor() {
-                    self.diagnostics.push(ParserDiagnostic::new(
-                        "nested-anchor-start-tag",
-                        "start tag `<a>` triggered adoption-agency recovery for an active anchor",
-                    ));
+                    self.diagnostics.push(
+                        ParserDiagnostic::new(
+                            "nested-anchor-start-tag",
+                            "start tag `<a>` triggered adoption-agency recovery for an active anchor",
+                        )
+                        .at_emission(self.current_token_emission_position),
+                    );
                 }
                 let consumes_pending_anchor = !self.has_open_table_context()
                     && !matches!(self.current_element_name(), Some("p"));
@@ -28067,6 +28073,14 @@ mod tests {
         .at_emission(Some(start_tag_position_at(source, "form", occurrence)))
     }
 
+    fn nested_anchor_start_tag(source: &str, occurrence: usize) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "nested-anchor-start-tag",
+            "start tag `<a>` triggered adoption-agency recovery for an active anchor",
+        )
+        .at_emission(Some(start_tag_position_at(source, "a", occurrence)))
+    }
+
     fn unexpected_description_item_end_tag(source: &str, name: &str) -> ParserDiagnostic {
         ParserDiagnostic::new(
             "unexpected-description-item-end-tag",
@@ -42487,10 +42501,7 @@ mod tests {
         assert_eq!(
             output.parser_diagnostics,
             vec![
-                ParserDiagnostic::new(
-                    "nested-anchor-start-tag",
-                    "start tag `<a>` triggered adoption-agency recovery for an active anchor"
-                ),
+                nested_anchor_start_tag(source, 1),
                 eof_with_unclosed_elements(source),
             ]
         );
@@ -42520,6 +42531,58 @@ mod tests {
             .parser_diagnostics
             .iter()
             .all(|diagnostic| diagnostic.code != "nested-anchor-start-tag"));
+    }
+
+    #[test]
+    fn positions_nested_anchor_start_tag_diagnostics_at_token_emission() {
+        let source = "<!doctype html><!--é-->\r\n<a><span></span><a>";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        assert!(output
+            .parser_diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic == &nested_anchor_start_tag(source, 1)));
+        assert!(source.len() > source.chars().count());
+
+        let fragment_source = "<a><a>";
+        let fragment =
+            parse_html_fragment_for_context_with_diagnostics(fragment_source, "div").unwrap();
+        assert_eq!(
+            fragment
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "nested-anchor-start-tag")
+                .collect::<Vec<_>>(),
+            vec![&nested_anchor_start_tag(fragment_source, 1)]
+        );
+
+        let incomplete = parse_html_with_diagnostics("<!doctype html><a><a").unwrap();
+        assert!(incomplete
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "nested-anchor-start-tag"));
+
+        let mut unpositioned = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        for token in [
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Eof,
+        ] {
+            unpositioned.process_token(token);
+        }
+        let diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| diagnostic.code == "nested-anchor-start-tag")
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
     }
 
     #[test]
@@ -42799,17 +42862,19 @@ mod tests {
         assert!(repeated.parser_diagnostics.iter().any(|diagnostic| {
             diagnostic == &formatting_start_tag_in_table_recovery(repeated_source, "a")
         }));
-        for code in ["nested-anchor-start-tag", "formatting-element-not-in-table-scope"] {
-            assert_eq!(
-                repeated
-                    .parser_diagnostics
-                    .iter()
-                    .find(|diagnostic| diagnostic.code == code)
-                    .unwrap()
-                    .position,
-                None
-            );
-        }
+        assert!(repeated
+            .parser_diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic == &nested_anchor_start_tag(repeated_source, 0)));
+        assert_eq!(
+            repeated
+                .parser_diagnostics
+                .iter()
+                .find(|diagnostic| diagnostic.code == "formatting-element-not-in-table-scope")
+                .unwrap()
+                .position,
+            None
+        );
 
         for source in [
             "<!doctype html><table><i>A</table><i>B",
@@ -42871,10 +42936,7 @@ mod tests {
                 diagnostics
                     == [
                         formatting_start_tag_in_table_recovery(source, "a"),
-                        ParserDiagnostic::new(
-                            "nested-anchor-start-tag",
-                            "start tag `<a>` triggered adoption-agency recovery for an active anchor",
-                        ),
+                        nested_anchor_start_tag(source, 0),
                         ParserDiagnostic::new(
                             "formatting-element-not-in-table-scope",
                             "active anchor was outside table scope during adoption-agency recovery",
