@@ -5889,14 +5889,36 @@ impl Compiler {
         node: &GrammarASTNode,
         name: &str,
     ) -> bool {
+        self.boolean_identity_expression_preserves_name_with_negation(node, name, false)
+    }
+
+    fn boolean_identity_expression_preserves_name_with_negation(
+        &self,
+        node: &GrammarASTNode,
+        name: &str,
+        negated: bool,
+    ) -> bool {
         if exact_bare_variable_expression_name(node).as_deref() == Some(name) {
-            return true;
+            return !negated;
         }
         let sequence = pieces(node);
+        let tokens = direct_tokens(node);
+        if let ([token], [Piece::Node(child)]) = (tokens.as_slice(), sequence.as_slice()) {
+            if token.value == "not" {
+                return self.boolean_identity_expression_preserves_name_with_negation(
+                    child, name, !negated,
+                );
+            }
+        }
         if let (true, [Piece::Node(child)]) =
-            (direct_tokens(node).is_empty(), sequence.as_slice())
+            (tokens.is_empty(), sequence.as_slice())
         {
-            return self.boolean_identity_expression_preserves_name(child, name);
+            return self.boolean_identity_expression_preserves_name_with_negation(
+                child, name, negated,
+            );
+        }
+        if negated {
+            return false;
         }
         let [Piece::Node(lhs), Piece::Op(op), Piece::Node(rhs)] = sequence.as_slice() else {
             return false;
@@ -10434,6 +10456,21 @@ mod tests {
         )
         .expect_err("a boolean non-identity write may change the selector dependency");
         assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_even_boolean_negation_selector_writes_stay_stable() {
+        for write in ["not not flag", "not not not not flag"] {
+            compile_source(
+                &format!(
+                    "begin integer i, n, limit, choose; boolean other, flag; n := 3; limit := 3; choose := 1; other := true; flag := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := if flag then other else false; flag := {write} end; print(i + 0.25) end"
+                ),
+                "test",
+            )
+            .unwrap_or_else(|err| {
+                panic!("even boolean negation {write:?} must stay stable: {err:?}")
+            });
+        }
     }
 
     #[test]
