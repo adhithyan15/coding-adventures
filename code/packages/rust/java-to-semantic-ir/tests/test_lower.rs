@@ -1090,19 +1090,41 @@ fn do_while_desugars_to_a_flag_guarded_while_not_a_body_clone() {
 
 #[test]
 fn nested_do_while_lowers_without_cloning_the_inner_body() {
-    // A direct regression test for the exponential-blowup bug itself:
-    // each nesting level must contribute its body's statements exactly
-    // ONCE to the final IR, not twice. 5 levels deep, each with 2 body
-    // statements (an outer marker assignment plus the next nested
-    // do-while), should never come close to `2^5` duplicated statements
-    // -- if the clone bug ever came back, this assertion would fail on
-    // a total-statement-count explosion, not just time out.
-    let mut body = "y = y + 1;".to_string();
-    for _ in 0..5 {
-        body = format!("do {{ {body} }} while (y < 100);");
+    // A direct regression test for the exponential-blowup bug itself
+    // (see CHANGELOG under 0.3.0): the pre-fix desugaring cloned the
+    // already-lowered body, so each additional nesting level roughly
+    // *doubled* the emitted node count -- O(2^N) for N levels. This
+    // compares the module's own `Debug`-formatted size (a proxy for
+    // total emitted-node count -- deliberately not `main.body.stmts.len()`
+    // at the top level, since nested do-while bodies live several
+    // `Expr::Block`/`Stmt::While` layers deep and a shallow top-level
+    // count would stay constant regardless of what's cloned underneath)
+    // at two different nesting depths and asserts *linear*, not
+    // exponential, growth -- a check that would fail against the old
+    // code (2 -> 6 levels is a 2^4 = 16x blowup there, vs. the expected
+    // ~3x for genuinely linear growth) rather than passing vacuously
+    // either way. Levels are capped at 6: the pre-existing, unrelated
+    // `collect_bounded`/`MAX_TREE_DEPTH` guard (bounding raw CST depth
+    // from `program` down, not statement nesting specifically -- see
+    // that guard's own doc comment) trips first past that on this
+    // particular construct's per-level raw-node footprint, independent
+    // of whatever this test is actually trying to measure.
+    fn nested_do_while_source(levels: usize) -> String {
+        let mut body = "y = y + 1;".to_string();
+        for _ in 0..levels {
+            body = format!("do {{ {body} }} while (y < 100);");
+        }
+        wrap(&format!("int y = 0; {body}"))
     }
-    let m = compile_ok(&wrap(&format!("int y = 0; {body}")));
-    assert_eq!(main_fn(&m).body.stmts.len(), 2);
+
+    let small = compile_ok(&nested_do_while_source(2));
+    let large = compile_ok(&nested_do_while_source(6));
+    let small_size = format!("{small:?}").len();
+    let large_size = format!("{large:?}").len();
+    assert!(
+        large_size < small_size * 8,
+        "module size grew from {small_size} to {large_size} bytes across 2->6 nesting levels of do-while -- looks exponential (~16x expected), not linear (~3x expected)"
+    );
 }
 
 #[test]
@@ -1111,6 +1133,38 @@ fn a_local_declared_inside_a_do_while_body_does_not_leak_past_it() {
         "int i = 0; do { int x = i; i = i + 1; } while (i < 3); int y = i;",
     ));
     assert_eq!(main_fn(&m).body.stmts.len(), 3);
+}
+
+#[test]
+fn do_while_flag_name_does_not_collide_with_a_same_named_user_variable() {
+    // Caught by /security-review: an earlier version generated the
+    // do-while desugaring's synthetic flag as a bare `__do_while_N`
+    // with no collision check against real Java locals already in
+    // scope. `__do_while_0` is a legal Java identifier, so a program
+    // that happens to declare a variable by that exact name is a real,
+    // reachable case -- the old version silently shadowed and corrupted
+    // it (through the Python backend, `x` came back `42` instead of the
+    // correct `43`) rather than picking a different synthetic name.
+    // `do_while_counter` starts at 0, so the very first synthetic name
+    // it would try is exactly `__do_while_0` -- this test collides on
+    // the first possible attempt, not an edge case reached only after
+    // several unrelated do-while statements.
+    let m = compile_ok(&wrap(concat!(
+        "int __do_while_0 = 1; ",
+        "do { __do_while_0 = __do_while_0 + 1; } while (false); ",
+        "__do_while_0;"
+    )));
+    // `__do_while_0` (the user's own variable) must have been mutated by
+    // the loop body exactly like any other local -- the fix's own
+    // collision check must not have skipped lowering the mutation, and
+    // the synthetic flag it generated instead must be a different name.
+    match &main_fn(&m).body.stmts[2] {
+        Stmt::ExprStmt {
+            expr: Expr::VarRef { name, .. },
+            ..
+        } => assert_eq!(name, "__do_while_0"),
+        other => panic!("expected ExprStmt(VarRef(\"__do_while_0\")), got {other:?}"),
+    }
 }
 
 // ── M2a: switch / break / continue have no SIR IR yet ───────────────────

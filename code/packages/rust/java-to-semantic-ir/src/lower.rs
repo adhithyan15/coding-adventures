@@ -36,11 +36,10 @@
 //!   block — matching the established `javascript-to-semantic-ir`/
 //!   `ruby-to-semantic-ir` precedent for the same "the IR's `If` is an
 //!   expression with two non-optional branches" shape).
-//! - `while` and `do`/`while` (the latter desugars to "run the body once,
-//!   then `while`" — the already-lowered body [`Block`] is cloned rather
-//!   than re-walking the CST a second time, wrapped in a synthetic
-//!   [`Expr::Block`] so the once-executed copy's own locals go out of
-//!   scope at exactly the point Java's own do-while body scope ends).
+//! - `while` and `do`/`while` (the latter desugars to a synthetic flag-
+//!   guarded pretest loop, lowering the body exactly once — see
+//!   `lower_do_while_statement`'s own doc comment for why, and for the
+//!   exact desugared shape).
 //! - Compound assignment (`+= -= *= /= %=`) and increment/decrement
 //!   (`++`/`--`, prefix and postfix) — but **only as a bare statement**
 //!   (`i++;`, `x += 1;`), desugaring to `Stmt::Assign` by reusing M1's own
@@ -605,17 +604,35 @@ impl Lowerer {
 
     /// `do_while_statement = "do" statement "while" LPAREN expression
     /// RPAREN SEMICOLON ;`. SIR's `Stmt::While` is pretest-only (there is
-    /// no do-while primitive), so this desugars `do S while (C);` to `{
-    /// S; while (C) S }` — `S` is lowered exactly once and its already-
-    /// lowered `Block.stmts` cloned for the second copy (`Stmt`/`Block`
-    /// both derive `Clone`), not re-walked from the CST a second time.
-    /// Both copies keep their own independent scope: `S`'s own
-    /// `lower_body` call already pushes/pops one scope for the "loop"
-    /// copy, and the synthetic outer `Expr::Block` this wraps everything
-    /// in gives the once-executed copy's own locals a scope boundary
-    /// that ends at exactly the point Java's own do-while body scope
-    /// does (the original statement's closing semicolon), not the
-    /// surrounding function.
+    /// no do-while primitive), so this desugars `do S while (C);` to a
+    /// synthetic flag-guarded pretest loop — `boolean __do_while_N =
+    /// true; while (__do_while_N || C) { S; __do_while_N = false; }` —
+    /// lowering `S` exactly **once**.
+    ///
+    /// An earlier version instead built the more literal `{ S; while (C)
+    /// S }` shape by lowering `S` once and *cloning* its already-lowered
+    /// `Block.stmts` for the second copy. `/security-review` caught that
+    /// as a real resource-exhaustion DoS: cloning duplicates whatever
+    /// nested `do`/`while` structure `S` *itself* already contains, so
+    /// `N` levels of nested `do`/`while` — ordinary, valid, brace-less
+    /// Java source, no adversarial tree needed — produced `O(2^N)`
+    /// emitted IR nodes from `O(N)` source bytes (the same amplification
+    /// shape as XML "billion laughs"), invisible to `MAX_STMT_DEPTH`
+    /// since the blowup happens on each stack frame's *return* (the
+    /// clone), not from call-stack recursion depth. The flag-guarded
+    /// rewrite here has no clone at all, so emitted IR size is always
+    /// linear in source size.
+    ///
+    /// `__do_while_N`'s uniqueness comes from `do_while_counter` (a
+    /// monotonic per-`Lowerer` counter — two sibling do-while statements
+    /// in the same function must not share a flag) *and* a collision
+    /// check against every currently-visible name via `lookup_local`:
+    /// the flag lives in the enclosing scope for the duration of the
+    /// synthetic `Expr::Block` (it is not itself scope-pushed), so it
+    /// must not collide with any real Java local already in scope at
+    /// this point — `__do_while_0` is a legal Java identifier, so a
+    /// program that happens to declare a variable by that exact name is
+    /// a real, reachable case, not a hypothetical one.
     fn lower_do_while_statement(
         &mut self,
         node: &GrammarASTNode,
@@ -667,12 +684,22 @@ impl Lowerer {
         // `__do_while_N`'s uniqueness comes from a per-`Lowerer` counter
         // (`do_while_counter`), not just its `__`-prefix: two sibling
         // do-while statements in the same function must not share a
-        // flag. It never goes through `declare_local`/`lookup_local` —
-        // it's synthetic IR the frontend constructs directly, never a
-        // name real Java source can look up — so it needs no entry in
-        // this crate's own scope-tracking `locals` stack.
-        let flag_name = format!("__do_while_{}", self.do_while_counter);
+        // flag. It is never *declared* via `declare_local` (real Java
+        // source can never look this name up), but it still must not
+        // *collide* with a real Java local already in scope at this
+        // point — `__do_while_0` is a legal Java identifier, so a
+        // program that happens to declare a variable by that exact name
+        // is a real, reachable case (caught by `/security-review`: an
+        // earlier version skipped this check entirely, silently
+        // shadowing and corrupting the user's own same-named variable
+        // instead of erroring or picking a different name). Keep
+        // incrementing past any name already visible in scope.
+        let mut flag_name = format!("__do_while_{}", self.do_while_counter);
         self.do_while_counter += 1;
+        while self.lookup_local(&flag_name).is_some() {
+            flag_name = format!("__do_while_{}", self.do_while_counter);
+            self.do_while_counter += 1;
+        }
 
         let flag_decl = Stmt::LetStarBinding {
             name: flag_name.clone(),

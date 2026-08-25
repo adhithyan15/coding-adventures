@@ -310,3 +310,31 @@ fn increment_in_a_while_loop_runs_in_python() {
     );
     assert_eq!(out, "10");
 }
+
+#[test]
+fn do_while_flag_name_collision_does_not_corrupt_a_real_variable() {
+    if !python_available() {
+        eprintln!(
+            "skipping do_while_flag_name_collision_does_not_corrupt_a_real_variable: `python3` not available"
+        );
+        return;
+    }
+    // Real execution proof for the /security-review finding fixed
+    // alongside this milestone: a user variable literally named
+    // `__do_while_0` (a legal Java identifier) must be mutated by the
+    // loop body exactly like any other local. The pre-fix desugaring
+    // generated its synthetic flag as a bare `__do_while_0` with no
+    // collision check, silently shadowing this exact variable — the
+    // mutation inside the loop body would apply to the *synthetic*
+    // flag instead, so the real variable would come back unmodified
+    // (`1`) rather than the correct `2`.
+    let out = run_via_python(
+        "do_while_flag_collision",
+        &wrap(concat!(
+            "int __do_while_0 = 1; ",
+            "do { __do_while_0 = __do_while_0 + 1; } while (false); ",
+            "__do_while_0;"
+        )),
+    );
+    assert_eq!(out, "2");
+}

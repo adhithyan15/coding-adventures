@@ -56,12 +56,12 @@ All notable changes to the `java-to-semantic-ir` crate will be documented in thi
   Every occurrence is rejected with a clean error via the same
   unhandled-statement-kind catch-all every other unsupported statement
   hits — no special-casing was needed to guarantee this.
-- 23 new tests in `tests/test_lower.rs` (if/else shape, brace-less
+- 24 new tests in `tests/test_lower.rs` (if/else shape, brace-less
   bodies, boolean-condition requirements, block-scope leak prevention in
   both directions, while/do-while shape, every compound-assignment
   operator including the `/=` div_trunc/div_true selection and `+=` on
   `String`, every increment/decrement shape, switch/break/continue
-  rejection, and the new depth-guard regression) plus 6 new execution-
+  rejection, and the new depth-guard regression) plus 7 new execution-
   proof tests in `tests/e2e_python.rs` (if/else both branches, while,
   do-while — specifically covering the "condition already false on
   entry, but the body still runs once" case a plain pretest `while`
@@ -86,11 +86,37 @@ All notable changes to the `java-to-semantic-ir` crate will be documented in thi
   section above for the exact desugared shape) — the fix that closes the
   bug class, not merely a size cap that would still pay the `O(2^N)` cost
   before rejecting. `nested_do_while_lowers_without_cloning_the_inner_body`
-  (5 levels deep) is a direct regression test; the existing
-  `do_while_loop_runs_in_python` execution-proof test (asserting the
-  "condition already false on entry, body still runs once" semantic)
-  also re-passed against the new desugaring, confirming the fix didn't
-  just close the DoS but preserved correctness.
+  compares the module's own serialized size at two nesting depths and
+  asserts linear (not exponential) growth — deliberately not a shallow
+  top-level statement count, which a round of `/security-review` pointed
+  out would stay constant regardless of nesting and so would not actually
+  catch a reintroduced clone; the existing `do_while_loop_runs_in_python`
+  execution-proof test (asserting the "condition already false on entry,
+  body still runs once" semantic) also re-passed against the new
+  desugaring, confirming the fix didn't just close the DoS but preserved
+  correctness.
+- **Caught by a second round of `/security-review` on the fix itself
+  (HIGH, silent variable corruption)**: the flag-guarded rewrite above
+  generated its synthetic flag name (`__do_while_N`) from a monotonic
+  counter alone, with no check against names already in scope.
+  `__do_while_0` is a legal Java identifier, so a program that happens
+  to declare a variable by that exact name is a real, reachable case,
+  not a hypothetical one — confirmed with a live repro: `int
+  __do_while_0 = 1; do { __do_while_0 = __do_while_0 + 1; } while
+  (false); __do_while_0;` returned `1` (the assignment silently applied
+  to the synthetic flag instead) rather than the correct `2`. Fixed by
+  checking the candidate name against `lookup_local` and incrementing
+  past any collision before use.
+  `do_while_flag_name_does_not_collide_with_a_same_named_user_variable`
+  (structural) and `do_while_flag_name_collision_does_not_corrupt_a_real_variable`
+  (a `tests/e2e_python.rs` execution proof reproducing the exact live
+  repro above through the real Python backend) are regression tests for
+  this specifically. The same review round also found the regression
+  test for the exponential-blowup finding didn't actually exercise
+  nested-doubling (see above) and that this crate's own module-level and
+  `lower_do_while_statement`-level doc comments still described the
+  pre-fix "clone the body" shape after the code had moved on — both
+  fixed in the same pass.
 - **Caught by the crate's own test suite while writing this milestone**
   (not `/security-review`): two tests from M1's own suite
   (`compound_assignment_is_unsupported`, `postfix_increment_is_unsupported`)
