@@ -109,6 +109,7 @@ jobs:
           python3 -m unittest discover -s code/scripts/tests -p 'test_typescript_tsconfig_portability.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_haskell_required_capabilities.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_ocaml_toolchain_lock.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_generate_tracked_artifact_unicode17.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_setup_lua.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_capability_taxonomy.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_phy00_phy01_fixtures.py'

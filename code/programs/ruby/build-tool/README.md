@@ -92,6 +92,7 @@ of inheriting the host Ruby runtime's Unicode tables. Regenerate and verify all
 language targets with:
 
 ```bash
+(cd code/programs/typescript/build-tool && npm ci)
 python code/scripts/generate_tracked_artifact_unicode17.py
 python code/scripts/generate_tracked_artifact_unicode17.py --check
 ```

@@ -7174,9 +7174,12 @@ contextual `>>` and `>>>` splitting with transactional rollback and memo
 coherence in nested generic parsing. The state now records a neutral contract
 root and a dependent established-lane umbrella. PR #12773 also exposes a
 separate selection-blocked host-authority review for the Unicode generator's
-PATH-resolved Node execution and temporary TypeScript runner. Six orphan
-consumers now explicitly depend on their same-language tracked-artifact
-consumer so no lane is falsely ready without its reviewed Unicode substrate.
+PATH-resolved Node execution and temporary TypeScript runner. The Ruby
+tracked-artifact consumer extends that same owner to PATH-resolved Ruby,
+inherited Ruby environment state, temporary Ruby sources and runner, buffered
+child output, diagnostics, and process-tree cleanup. Six orphan consumers now
+explicitly depend on their same-language tracked-artifact consumer so no lane
+is falsely ready without its reviewed Unicode substrate.
 
 The selected next owner is
 `build-tool-typescript-orphan-crate-validation-conformance` on exact base
@@ -7189,7 +7192,7 @@ six expected paths have zero exact overlap across all 10 live open PRs and 33
 non-main remote heads; the target branch was absent before the fresh worktree
 was created. Extra-CI and OCaml work remain collision-unsafe while PRs #12149
 and #12162 own their required Go entry-point and validator surfaces. The
-reconciled graph has 499 unique owners and 761 complete acyclic dependency
+reconciled graph has 499 unique owners and 762 complete acyclic dependency
 edges, with exactly one in-progress owner and no active PR.
 
 ### TypeScript orphan-crate implementation
@@ -7298,7 +7301,7 @@ absent before the fresh worktree was created. Extra-CI and OCaml remain
 collision-unsafe while PRs #12149 and #12162 own required Go entry-point and
 validator surfaces, and PR #12780 owns the Rust parser surfaces required by
 contextual generic-closer work. The reconciled graph remains 499 unique owners
-and 761 complete acyclic dependency edges, with exactly one in-progress owner
+and 762 complete acyclic dependency edges, with exactly one in-progress owner
 and no active PR.
 
 ## Autonomous Loop Protocol

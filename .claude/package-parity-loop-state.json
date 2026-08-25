@@ -5581,12 +5581,13 @@
       "status": "pending",
       "depends_on": [
         "build-tool-tracked-artifact-unicode-version-contract",
-        "build-tool-typescript-tracked-artifact-validation-conformance"
+        "build-tool-typescript-tracked-artifact-validation-conformance",
+        "build-tool-ruby-tracked-artifact-validation-conformance"
       ],
       "branch": null,
       "pr_number": null,
       "selection_blocked": true,
-      "notes": "Discovered after merged PR #12773 extended the shared Unicode 17 generator to resolve `node` through PATH, write temporary TypeScript sources and runner files, and invoke `tsx` for full-vector verification. Review executable identity and version pinning, environment and PATH authority, temporary-directory containment and cleanup, command construction, dependency resolution, process failures and diagnostics, offline determinism, credential redaction, and truthful capabilities separately from the pure runtime validator. This native generator-shell authority work is excluded from autonomous portable selection."
+      "notes": "Discovered after merged PR #12773 extended the shared Unicode 17 generator to resolve `node` through PATH, write temporary TypeScript sources and runner files, and invoke `tsx` for full-vector verification. The Ruby tracked-artifact consumer extends the same native generator boundary to PATH-resolved `ruby`, temporary Ruby source and runner files, inherited `RUBYOPT`/`RUBYLIB` and other environment state, buffered child output, and child diagnostics. Review executable identity and version pinning, environment and PATH authority, temporary-directory containment and cleanup, command construction, dependency resolution, bounded output and diagnostics, process failures and process-tree cleanup, offline determinism, credential redaction, and truthful capabilities separately from the pure runtime validators. This native generator-shell authority work is excluded from autonomous portable selection."
     }
   ]
 }
