@@ -2101,10 +2101,17 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     | wasm_opcodes::SimdOpKind::Load32Splat
                     | wasm_opcodes::SimdOpKind::Load64Splat
                     | wasm_opcodes::SimdOpKind::Load32Zero
-                    | wasm_opcodes::SimdOpKind::Load64Zero => {
+                    | wasm_opcodes::SimdOpKind::Load64Zero
+                    | wasm_opcodes::SimdOpKind::Load8x8S
+                    | wasm_opcodes::SimdOpKind::Load8x8U
+                    | wasm_opcodes::SimdOpKind::Load16x4S
+                    | wasm_opcodes::SimdOpKind::Load16x4U
+                    | wasm_opcodes::SimdOpKind::Load32x2S
+                    | wasm_opcodes::SimdOpKind::Load32x2U => {
                         // v128.load/v128.store (SIMD widen PR15), the
-                        // v128.loadN_splat family (SIMD PR40), plus the
-                        // v128.loadN_zero family (SIMD PR41): a standard
+                        // v128.loadN_splat family (SIMD PR40), the
+                        // v128.loadN_zero family (SIMD PR41), plus the
+                        // v128.load_extend family (SIMD PR42): a standard
                         // `memarg` immediate (align, offset[, memidx]) --
                         // decoded exactly like every scalar `iNN.load`/
                         // `iNN.store` (mirrors the `0x28..=0x3E` arm's own
@@ -2114,16 +2121,17 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         // the function body. Unlike the scalar arm, this
                         // first slice's EXECUTOR unconditionally targets
                         // memory 0 (see wasm-execution's own scope note,
-                        // which the load_splat/load_zero families inherit
-                        // unchanged) -- so an explicit non-zero memidx
-                        // must be REJECTED here, not merely bounds-checked
-                        // against `ctx.memory_count`. Bounds-checking
-                        // alone would let a module targeting a real,
-                        // in-bounds memory 1 validate successfully and
-                        // then silently read/write memory 0 at execution
-                        // time instead -- fail closed until multi-memory
-                        // v128.load/store is actually implemented
-                        // (security review finding, task #162-164).
+                        // which the load_extend/load_splat/load_zero
+                        // families inherit unchanged) -- so an explicit
+                        // non-zero memidx must be REJECTED here, not
+                        // merely bounds-checked against `ctx.memory_
+                        // count`. Bounds-checking alone would let a
+                        // module targeting a real, in-bounds memory 1
+                        // validate successfully and then silently
+                        // read/write memory 0 at execution time instead
+                        // -- fail closed until multi-memory v128.load/
+                        // store is actually implemented (security review
+                        // finding, task #162-164).
                         if !ctx.has_memory {
                             err!("v128.load/v128.store used, but module declares no memory");
                         }
@@ -2147,14 +2155,22 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                             | wasm_opcodes::SimdOpKind::Load32Splat
                             | wasm_opcodes::SimdOpKind::Load64Splat
                             | wasm_opcodes::SimdOpKind::Load32Zero
-                            | wasm_opcodes::SimdOpKind::Load64Zero => {
+                            | wasm_opcodes::SimdOpKind::Load64Zero
+                            | wasm_opcodes::SimdOpKind::Load8x8S
+                            | wasm_opcodes::SimdOpKind::Load8x8U
+                            | wasm_opcodes::SimdOpKind::Load16x4S
+                            | wasm_opcodes::SimdOpKind::Load16x4U
+                            | wasm_opcodes::SimdOpKind::Load32x2S
+                            | wasm_opcodes::SimdOpKind::Load32x2U => {
                                 // v128.load and the whole loadN_splat/
-                                // loadN_zero families share the identical
-                                // type signature: pop one i32 base
-                                // address, push one v128 result -- the
-                                // "splat"/"zero" half (whether the
-                                // non-loaded lanes repeat the loaded value
-                                // or get zeroed) changes nothing at the
+                                // loadN_zero/load_extend families share
+                                // the identical type signature: pop one
+                                // i32 base address, push one v128 result
+                                // -- whether the non-loaded lanes repeat
+                                // the loaded value ("splat"), get zeroed
+                                // ("zero"), or every loaded lane gets
+                                // independently sign/zero-extended
+                                // ("load_extend") changes nothing at the
                                 // TYPE level, only at execution time.
                                 pop_expect(&mut stack, frame!(), ValueType::I32)?;
                                 push_val(&mut stack, ValueType::V128);
@@ -2163,7 +2179,7 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                                 pop_expect(&mut stack, frame!(), ValueType::V128)?;
                                 pop_expect(&mut stack, frame!(), ValueType::I32)?;
                             }
-                            _ => unreachable!("only Load/Store/Load8Splat/Load16Splat/Load32Splat/Load64Splat/Load32Zero/Load64Zero reach this arm"),
+                            _ => unreachable!("only Load/Store/Load8Splat/Load16Splat/Load32Splat/Load64Splat/Load32Zero/Load64Zero/Load8x8S/Load8x8U/Load16x4S/Load16x4U/Load32x2S/Load32x2U reach this arm"),
                         }
                     }
                 }

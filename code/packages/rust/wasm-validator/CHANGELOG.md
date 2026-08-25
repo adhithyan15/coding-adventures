@@ -2,6 +2,31 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.54] - 2026-08-25 (SIMD PR42: v128.load_extend family)
+
+### Added
+
+- Type-check coverage for the 6 new load-extend opcodes
+  (`v128.load8x8_s`/`_u`, `v128.load16x4_s`/`_u`, `v128.load32x2_s`/
+  `_u`): joined the existing `Load`/`Store`/`Load8Splat`/`Load32Zero`/
+  etc. memarg-decoding match arm -- identical memarg parsing (align,
+  offset[, memidx]) and identical multi-memory-memidx rejection (fail
+  closed until real multi-memory support lands, same security-review
+  discipline as `v128.load`/`v128.store` from PR15/task #162-164 and the
+  `load_splat`/`load_zero` families from PR40/PR41), just with the same
+  pop-I32/push-V128 type rule already shared by `Load`/`Load8Splat`/etc.
+  (which loaded lane gets sign- vs. zero-extended is a pure
+  execution-time concern, invisible to the type checker).
+- 6 new unit tests in `tests/type_check.rs`: `valid_v128_load_extend_
+  family` (all 6 opcodes build cleanly with a declared memory),
+  `invalid_v128_load_extend_family_with_no_memory_at_all`,
+  `invalid_v128_load_extend_family_wrong_operand_type` (mirrors the
+  upstream `simd_load_extend.wast` corpus's own type-mismatch checks),
+  and `invalid_v128_load8x8_s_explicit_nonzero_memidx_is_rejected_not_
+  silently_redirected_to_memory_0` (mirrors the existing
+  `v128.load`/`v128.load8_splat`/`v128.load32_zero` security-review
+  tests for the shared memidx-rejection code path).
+
 ## [0.2.53] - 2026-08-25 (SIMD PR41: v128.loadN_zero family)
 
 ### Added

@@ -5488,6 +5488,62 @@
         "not_yet_supported": 0
       }
     },
+    "simd_load_extend.wast": {
+      "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_exhaustion": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_invalid": {
+        "pass": 12,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_malformed": {
+        "pass": 6,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_return": {
+        "pass": 72,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_trap": {
+        "pass": 12,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_unlinkable": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "module": {
+        "pass": 2,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "register": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      }
+    },
     "simd_load_splat.wast": {
       "action": {
         "pass": 0,
@@ -6679,25 +6735,25 @@
       "not_yet_supported": 0
     },
     "assert_invalid": {
-      "pass": 2001,
+      "pass": 2013,
       "fail": 0,
       "trap": 0,
       "not_yet_supported": 76
     },
     "assert_malformed": {
-      "pass": 507,
+      "pass": 513,
       "fail": 0,
       "trap": 0,
       "not_yet_supported": 516
     },
     "assert_return": {
-      "pass": 44320,
+      "pass": 44392,
       "fail": 17,
       "trap": 0,
       "not_yet_supported": 545
     },
     "assert_trap": {
-      "pass": 1466,
+      "pass": 1478,
       "fail": 0,
       "trap": 0,
       "not_yet_supported": 938
@@ -6709,7 +6765,7 @@
       "not_yet_supported": 0
     },
     "module": {
-      "pass": 1212,
+      "pass": 1214,
       "fail": 1,
       "trap": 0,
       "not_yet_supported": 67
