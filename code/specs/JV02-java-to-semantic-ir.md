@@ -16,16 +16,21 @@ end-to-end.
 logical operators, `+`-based string concatenation), M2a (`if`/`else`,
 `while`, `do`/`while`, compound-assignment/increment/decrement as bare
 statements), M2b (classic `for`, desugared to `while`; enhanced `for`, →
-`Stmt::ForEach` directly), and M3a (every method in the class body,
-typed parameters, two-pass forward-reference/recursion resolution, bare
-unqualified calls → `Expr::DirectCall`, `return` in tail position only)
-are merged — see `code/packages/rust/java-to-semantic-ir`'s own
-`CHANGELOG.md` for the exact per-milestone construct list and the real
-correctness bugs each milestone's own test suite caught before shipping.
-M2's own scope split into two PRs (M2a; M2b) once implementation
-revealed how much scope-stack infrastructure `if`/`while`/`do`-`while`
-alone already needed; M3 similarly split into M3a (this section) and
-M3b (lambdas, pending) once research showed M3's combined scope —
+`Stmt::ForEach` directly), M3a (every method in the class body, typed
+parameters, two-pass forward-reference/recursion resolution, bare
+unqualified calls → `Expr::DirectCall`, `return` in tail position only),
+and M3b (lambda expressions with explicitly-typed parameters →
+`Expr::MakeClosure`, hoisting the body to a synthesized top-level
+function; captures discovered on-resolve, effectively-final enforced;
+both lambda-body shapes — though a lambda value can only be created and
+passed around this milestone, never actually invoked, since `Expr::
+IndirectCall` isn't wired up yet) are merged — see `code/packages/rust/
+java-to-semantic-ir`'s own `CHANGELOG.md` for the exact per-milestone
+construct list and the real correctness bugs each milestone's own test
+suite caught before shipping. M2's own scope split into two PRs (M2a;
+M2b) once implementation revealed how much scope-stack infrastructure
+`if`/`while`/`do`-`while` alone already needed; M3 similarly split into
+M3a and M3b (this section) once research showed M3's combined scope —
 multi-function tables, typed params, tail-position return, *and* lambda
 capture analysis — was comparably large to M2's own combined scope.
 `switch` was also discovered, during M2a, to have no corresponding SIR
@@ -33,7 +38,7 @@ IR node at all (confirmed by a repo-wide grep, not assumed) — it needs
 its own spec-level design decision (Java's fall-through semantics in
 particular) before any frontend can target it, tracked as a separate
 backlog item rather than folded into "M2"/"M3" implicitly; `break`/
-`continue` have the identical gap. M3b onward are pending.
+`continue` have the identical gap. M4 onward are pending.
 
 ## Motivation
 
@@ -195,17 +200,32 @@ grammar distinguishes from a bare call by chaining *two* `primary_suffix`
 nodes rather than one) and method overloading (this frontend has no
 type-based overload resolution — only one method per name is supported)
 are explicitly out of scope. **M3b** — Java lambdas
-(`lambda_expression`, all three `lambda_parameters` shapes — bare name,
-untyped-parenthesized, typed-parenthesized — and both `lambda_body`
-shapes — expression and block) → `Expr::MakeClosure`, reusing
-`javascript-to-semantic-ir`'s on-resolve capture-discovery approach
-(captures fall out of ordinary name resolution walking the scope-frame
-stack outward, no separate free-variable pre-scan needed) rather than
-`python-to-semantic-ir`'s separate AST pre-scan, since this crate's
-existing M1/M2 scope-stack machinery (`Lowerer.locals`) is
-architecturally closer to JS's per-frame model; the lambda body hoists
-to a synthesized top-level `Function` (`__lambda_N`, mirroring how
-`main` itself is already synthesized).
+(`lambda_expression`, both `lambda_body` shapes — expression and block)
+→ `Expr::MakeClosure`, reusing `javascript-to-semantic-ir`'s on-resolve
+capture-discovery approach (captures fall out of ordinary name
+resolution walking the scope-frame stack outward, no separate free-
+variable pre-scan needed) rather than `python-to-semantic-ir`'s separate
+AST pre-scan, since this crate's existing M1/M2 scope-stack machinery
+(`Lowerer.locals`) is architecturally closer to JS's per-frame model
+(adapted from JS's one-frame-per-*function* design to this crate's own
+one-frame-per-*block* stack via a `closure_stack` of scope-index marks);
+the lambda body hoists to a synthesized top-level `Function`
+(`__lambda_N`, mirroring how `main` itself is already synthesized).
+**Scope narrowed during implementation** from the original three-shape
+`lambda_parameters` plan to explicitly-typed parameters only: an
+untyped or `var`-inferred lambda parameter's type is inferred by real
+Java from the lambda's own *target functional-interface type* (the
+abstract method it implements), and this frontend has no visibility
+into that at all — no functional-interface declarations exist anywhere
+yet (a later SIR29 milestone) — so the bare-name and untyped-
+parenthesized `lambda_parameters` shapes are rejected rather than
+guessed at, the same "reject rather than mis-lower" discipline this
+crate uses everywhere else. Also out of scope: *invoking* a lowered
+closure value (`Expr::IndirectCall` is not wired up — a lambda can be
+created and passed around, e.g. as a `var`-typed local's initializer,
+but never called), so no execution-proof test exists for this milestone
+(see `tests/e2e_python.rs`'s own doc comment) — only structural
+verification against `semantic_ir::validate()`.
 
 **M4 — arrays / collections / strings / indexing.** Java arrays (`int[]
 xs = {1, 2, 3};`, `xs[0]`, `xs.length`), `String` method surface

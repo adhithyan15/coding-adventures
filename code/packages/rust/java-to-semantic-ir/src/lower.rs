@@ -1,6 +1,6 @@
 //! The lowering pass from `coding_adventures_java_parser`'s generic
-//! [`GrammarASTNode`] CST → [`semantic_ir::Module`], **v0.5.0 (JV02
-//! milestone M3a)**.
+//! [`GrammarASTNode`] CST → [`semantic_ir::Module`], **v0.6.0 (JV02
+//! milestone M3b)**.
 //!
 //! # Scope
 //!
@@ -98,7 +98,43 @@
 //!   mis-lowering. `void` methods may end with a bare `return;` or simply
 //!   fall off the end (both become an empty, nil-valued body tail).
 //!
-//! **Deliberately out of scope for v0.5.0** (each rejected with an
+//! **Supported (M3b, new):**
+//! - Lambda expressions (`(int x) -> x + 1`, `(int a, int b) -> { return
+//!   a + b; }`) → [`Expr::MakeClosure`], hoisting the body to a
+//!   synthesized top-level `Function` (`__lambda_N`, mirroring how `main`
+//!   itself is already synthesized). Every parameter must be explicitly
+//!   typed — the untyped-inferred forms (a bare `x -> ...` with no
+//!   parentheses, an untyped `(x) -> ...`, and `var`-inferred parameters)
+//!   are rejected: Java infers an untyped/`var` lambda parameter's type
+//!   from the lambda's own *target functional-interface type* (the
+//!   abstract method it implements), and this frontend has no visibility
+//!   into that at all (no functional-interface declarations exist yet —
+//!   that's a later SIR29 milestone), so guessing would be a real
+//!   mis-lowering, not a convenience.
+//! - Captures, discovered *on-resolve* (mirrors
+//!   `javascript-to-semantic-ir`'s identically-reasoned approach, adapted
+//!   from that crate's one-scope-frame-per-function design to this
+//!   crate's own one-frame-per-*block* `locals` stack — see
+//!   `resolve_name`'s own doc comment for the full mechanism): a bare
+//!   name referenced from inside a lambda body that isn't declared by
+//!   the lambda itself is captured from the enclosing scope, however many
+//!   lambda boundaries deep that enclosing declaration actually is.
+//!   Assigning to (or incrementing/decrementing) a captured name is
+//!   rejected — Java requires captured locals to be effectively final.
+//! - Both `lambda_body` shapes: an expression body (the lambda's value
+//!   directly) and a block body (`{ ... }`, using the *same*
+//!   "`return` only in tail position" rule method bodies use, but with no
+//!   declared return type to validate the returned value's kind against —
+//!   a lambda's own return kind is simply *inferred*, not checked,
+//!   mirroring how there is no declared parameter type to check argument
+//!   kinds against for the same underlying reason).
+//! - A new `Kind::Closure` classification (a lambda's own result kind) —
+//!   lets a lambda be the initializer of a `var`-inferred local (`var f =
+//!   (int x) -> x + 1;`, inferring `f: Closure`) or a bare expression
+//!   statement, without this frontend needing any real functional-
+//!   interface type system.
+//!
+//! **Deliberately out of scope for v0.6.0** (each rejected with an
 //! explicit [`JavaLowerError`], tracked in
 //! [JV02](../../../specs/JV02-java-to-semantic-ir.md)'s own milestone
 //! table): `switch` (SIR has no `Switch`/`Match`/`Case` IR node at all —
@@ -108,21 +144,27 @@
 //! reference calls, method overloading (only one method per name is
 //! supported — this frontend has no type-based overload resolution),
 //! varargs parameters, fields, constructors, static/instance
-//! initializers, nested types, an early or branched `return`, lambdas
-//! (JV02 M3b), field/array access, casts, `instanceof`, the ternary
-//! conditional, bitwise operators (`& | ^ ~ << >> >>>`), increment/
-//! decrement or compound assignment used as a *value* rather than a bare
-//! statement, `break`/`continue` (SIR has no IR primitive for either —
-//! every loop body this milestone lowers must not contain one, checked
-//! structurally, not merely "happens not to occur in the test corpus" —
-//! this also means a bare `for (;;)` loop genuinely cannot terminate via
-//! any construct this milestone can lower, a real and permanent
-//! limitation until `break` exists), multiple comma-separated expressions
-//! in one `for` init/update clause, `var` as an enhanced-`for` element
-//! type, uninitialized declarations, multiple declarators per statement,
-//! C-style array-bracket declarators (on a variable, a method parameter,
-//! or a method's own return type), array initializers, and reference
-//! types other than `String`.
+//! initializers, nested types, an early or branched `return` (in a
+//! method *or* a lambda), *invoking* a lambda value (`Expr::IndirectCall`
+//! is not wired up — a lambda can be created and passed around inside
+//! this milestone's own scope, e.g. as a `var`-typed local's initializer,
+//! but never called; see `tests/e2e_python.rs`'s own doc comment on why
+//! this makes an execution-proof test impossible this milestone),
+//! untyped or `var`-inferred lambda parameters, field/array access,
+//! casts, `instanceof`, the ternary conditional, bitwise operators
+//! (`& | ^ ~ << >> >>>`), increment/decrement or compound assignment
+//! used as a *value* rather than a bare statement, `break`/`continue`
+//! (SIR has no IR primitive for either — every loop body this milestone
+//! lowers must not contain one, checked structurally, not merely
+//! "happens not to occur in the test corpus" — this also means a bare
+//! `for (;;)` loop genuinely cannot terminate via any construct this
+//! milestone can lower, a real and permanent limitation until `break`
+//! exists), multiple comma-separated expressions in one `for` init/update
+//! clause, `var` as an enhanced-`for` element type, uninitialized
+//! declarations, multiple declarators per statement, C-style array-
+//! bracket declarators (on a variable, a method parameter, or a method's
+//! own return type), array initializers, and reference types other than
+//! `String`.
 //!
 //! ## The `var` ambiguity
 //!
@@ -142,8 +184,8 @@
 
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 use semantic_ir::{
-    Block, EffectSet, Expr, Feature, FeatureManifest, Function, Metadata, Module, Param, ParamKind,
-    Scope, Span, Stmt,
+    Block, Capture, CaptureValue, EffectSet, Expr, Feature, FeatureManifest, Function, Metadata,
+    Module, Param, ParamKind, Scope, Span, Stmt,
 };
 use std::collections::{HashMap, HashSet};
 
@@ -226,6 +268,16 @@ enum Kind {
     /// consume it — the same "reject rather than mis-lower" discipline
     /// this crate uses everywhere else, not a dedicated special case.
     Void,
+    /// The kind of an `Expr::MakeClosure` (a lowered lambda expression)
+    /// — M3b's addition. Exists so a lambda can be the initializer of a
+    /// `var`-inferred local (`var f = (int x) -> x + 1;`, inferring `f`
+    /// as `Closure`) or a bare expression statement, without needing a
+    /// real functional-interface type system (out of scope — this
+    /// frontend has no notion of `Runnable`/`Function<T,R>`/etc. as a
+    /// declarable type). Like `Void`, no operator recognizes `Closure`
+    /// as a valid operand, so any other use falls through to an ordinary
+    /// "wrong kind" rejection.
+    Closure,
 }
 
 /// An error encountered during Java → SIR lowering.
@@ -313,6 +365,24 @@ struct Lowerer {
     /// `/security-review`, on the first round's own fix). A `HashMap`
     /// gives `O(1)`-average insertion instead.
     call_graph: HashMap<String, HashSet<String>>,
+    /// Stack of currently-open lambda bodies, innermost last — M3b's
+    /// addition, empty except while lowering a `lambda_expression`'s own
+    /// body. Drives capture discovery: see `resolve_name`'s own doc
+    /// comment for the full design (mirrors `javascript-to-semantic-ir`'s
+    /// "on-resolve" approach, adapted from that crate's one-frame-per-
+    /// function scope stack to this crate's own one-frame-per-*block*
+    /// `locals` stack).
+    closure_stack: Vec<ClosureFrame>,
+    /// Counter for the synthesized `__lambda_N` function name each
+    /// lambda expression lowers to — mirrors `do_while_counter`'s own
+    /// monotonic-uniqueness role, just for a different synthetic name.
+    lambda_counter: usize,
+    /// Every lambda body lowered so far, as a synthesized top-level
+    /// `Function` (`__lambda_N`), accumulated while lowering method
+    /// bodies and appended to `Module.functions` once at the end of
+    /// `lower_program` — mirrors `javascript-to-semantic-ir`'s own
+    /// `synthesised` list.
+    synthesized_functions: Vec<Function>,
 }
 
 /// A method's call-site-relevant signature: what `lower_call_expression`
@@ -328,6 +398,35 @@ struct MethodSig {
     return_kind: Kind,
 }
 
+/// One entry per currently-open lambda body (see `Lowerer::closure_stack`).
+/// Tracks where its own scope begins in the shared `locals` stack and
+/// accumulates the captures discovered while lowering its body.
+struct ClosureFrame {
+    /// `self.locals.len()` at the moment this lambda's own first scope
+    /// frame was pushed (immediately before its own parameters were
+    /// declared). Any `locals` frame at an index *below* this mark
+    /// belongs to an enclosing scope (the containing method, or an outer
+    /// lambda); any frame at index *at or above* this mark belongs to
+    /// this lambda's own body. See `resolve_name`'s own doc comment for
+    /// how this mark is used to detect a capture.
+    locals_mark: usize,
+    /// The lambda expression's own span — used as the span of every
+    /// `CaptureValue`'s `value` expression, since a capture's value is
+    /// conceptually read at the point the closure literal itself is
+    /// constructed, not at any particular reference inside its body.
+    span: Span,
+    /// Captures discovered so far, in first-reference order, deduplicated
+    /// by name (each name is captured at most once per lambda, however
+    /// many times its body references it). Becomes the synthesized
+    /// `Function`'s own `captures` field.
+    captures: Vec<Capture>,
+    /// Parallel to `captures`: for each captured name, the expression
+    /// (evaluated in the *enclosing* scope) supplying its value at the
+    /// point this lambda literal is constructed. Becomes `Expr::
+    /// MakeClosure`'s own `captures: Vec<CaptureValue>`.
+    capture_values: Vec<CaptureValue>,
+}
+
 impl Lowerer {
     fn new(module_name: &str) -> Self {
         Self {
@@ -338,6 +437,9 @@ impl Lowerer {
             method_signatures: HashMap::new(),
             current_method: String::new(),
             call_graph: HashMap::new(),
+            closure_stack: Vec::new(),
+            lambda_counter: 0,
+            synthesized_functions: Vec::new(),
         }
     }
 
@@ -380,11 +482,104 @@ impl Lowerer {
     /// Returns the declaration's `Kind` *and* its `Scope` tag (`Local` or
     /// `Param`) — see the `locals` field's own doc comment for why both
     /// matter to every caller that goes on to build a `VarRef`/`Assign`.
+    ///
+    /// A thin wrapper over `lookup_local_with_frame`, dropping the frame
+    /// index that only capture-aware resolution (`resolve_name`) needs —
+    /// kept as its own method so the many M1–M3a call sites that predate
+    /// M3b's lambdas need no change.
     fn lookup_local(&self, name: &str) -> Option<(Kind, Scope)> {
+        self.lookup_local_with_frame(name).map(|(k, s, _)| (k, s))
+    }
+
+    /// Like `lookup_local`, but also returns the `locals` frame index the
+    /// name was found in — needed by `resolve_name` to decide whether a
+    /// reference crosses a lambda's own `ClosureFrame::locals_mark` (i.e.
+    /// is a genuine capture) or is simply local/param to whichever
+    /// function is currently being lowered.
+    fn lookup_local_with_frame(&self, name: &str) -> Option<(Kind, Scope, usize)> {
         self.locals
             .iter()
+            .enumerate()
             .rev()
-            .find_map(|frame| frame.get(name).copied())
+            .find_map(|(i, frame)| frame.get(name).map(|&(k, s)| (k, s, i)))
+    }
+
+    /// Resolve a bare name for use as a `VarRef`/assignment target,
+    /// capture-aware — the M3b counterpart of `lookup_local`, and what
+    /// every *use* of a resolved name (as opposed to internal kind-only
+    /// checks like the `do`-`while` flag-collision probe) should call
+    /// instead.
+    ///
+    /// Mirrors `javascript-to-semantic-ir`'s "on-resolve" capture
+    /// discovery: a capture is never pre-scanned for, it simply falls
+    /// out of ordinary name resolution the first time a lambda body
+    /// references a name it doesn't itself declare. Adapted from that
+    /// crate's one-`FnScope`-per-*function* design to this crate's own
+    /// one-frame-per-*block* `locals` stack via `closure_stack`: each
+    /// open lambda records the `locals.len()` at the moment its own
+    /// scope began (`ClosureFrame::locals_mark`), so "does this
+    /// reference cross a lambda boundary" is just "did `lookup_local`
+    /// find the name at a frame index below that mark".
+    ///
+    /// A reference crossing *more than one* nested lambda boundary (a
+    /// lambda inside a lambda capturing from the outermost enclosing
+    /// method) is threaded through every intermediate boundary in turn —
+    /// each records its own capture of the name, using the *previous*
+    /// boundary's own capture as its value once one exists — exactly
+    /// mirroring `javascript-to-semantic-ir`'s identically-reasoned
+    /// `resolve_local_chain`.
+    ///
+    /// Idempotent: once a name is captured by a given lambda, `record_capture`
+    /// installs a `Scope::Capture` entry directly into that lambda's own
+    /// first scope frame, so a *second* reference to the same name from
+    /// within the same lambda body resolves directly via the ordinary
+    /// `lookup_local_with_frame` walk (frame index at-or-above that
+    /// lambda's own mark) without re-crossing the boundary — a name
+    /// referenced many times in one lambda is captured only once.
+    ///
+    /// When `closure_stack` is empty (not currently lowering a lambda
+    /// body), behaves identically to `lookup_local`.
+    fn resolve_name(&mut self, name: &str) -> Option<(Kind, Scope)> {
+        let (kind, scope, frame_idx) = self.lookup_local_with_frame(name)?;
+        if self.closure_stack.is_empty() {
+            return Some((kind, scope));
+        }
+        let crossed: Vec<usize> = (0..self.closure_stack.len())
+            .filter(|&k| frame_idx < self.closure_stack[k].locals_mark)
+            .collect();
+        let mut current_scope = scope;
+        for k in crossed {
+            current_scope = self.record_capture(k, name, kind, current_scope);
+        }
+        Some((kind, current_scope))
+    }
+
+    /// Record `name` (already known to have kind `kind`, currently
+    /// reachable as `value_scope` one level out from lambda boundary
+    /// `k`) as one of that lambda's own captures, if not already
+    /// recorded. Returns `Scope::Capture` — what every reference to
+    /// `name` from *within* this lambda (or a lambda nested further
+    /// inside it) must use from this point on.
+    fn record_capture(&mut self, k: usize, name: &str, kind: Kind, value_scope: Scope) -> Scope {
+        let mark = self.closure_stack[k].locals_mark;
+        if !self.locals[mark].contains_key(name) {
+            let span = self.closure_stack[k].span.clone();
+            let value = Expr::VarRef {
+                name: name.to_string(),
+                scope: value_scope,
+                span,
+            };
+            self.closure_stack[k].captures.push(Capture {
+                name: name.to_string(),
+                sir_type: None,
+            });
+            self.closure_stack[k].capture_values.push(CaptureValue {
+                name: name.to_string(),
+                value,
+            });
+            self.locals[mark].insert(name.to_string(), (kind, Scope::Capture));
+        }
+        Scope::Capture
     }
 
     fn lower_program(&mut self, program: &GrammarASTNode) -> Result<Module, JavaLowerError> {
@@ -443,6 +638,16 @@ impl Lowerer {
         for (name, decl) in &order {
             functions.push(self.lower_method_declaration(name, decl)?);
         }
+        // Every lambda expression lowered while lowering method bodies
+        // above hoisted its own body into `synthesized_functions`
+        // (M3b) -- append them now. Order relative to the methods above
+        // is cosmetic (the validator resolves names against the whole
+        // set, and a synthesized `__lambda_N` is never called by a
+        // `DirectCall` from method-name text anyway), so simple
+        // append-after mirrors this crate's own preference for the
+        // least surprising, most direct code over a more elaborate
+        // ordering convention.
+        functions.append(&mut self.synthesized_functions);
 
         if self.has_mutual_recursion() {
             self.observed.add(Feature::MutualRecursion);
@@ -1841,12 +2046,6 @@ impl Lowerer {
             [ASTNodeOrToken::Node(n)] => n,
             _ => return Err(self.err_at(expression, "malformed `expression` node".to_string())),
         };
-        if inner.rule_name == "lambda_expression" {
-            return Err(self.err_at(
-                inner,
-                "lambda expressions are not supported yet (deferred to JV02 M3b)".to_string(),
-            ));
-        }
         if inner.rule_name == "assignment_expression" {
             if let [ASTNodeOrToken::Node(lvalue_node), ASTNodeOrToken::Node(op_node), ASTNodeOrToken::Node(rhs_node)] =
                 inner.children.as_slice()
@@ -1863,12 +2062,18 @@ impl Lowerer {
                     })?;
                 let name = self.extract_bare_name(lvalue_node, 0)?;
                 let (declared_kind, declared_scope) =
-                    self.lookup_local(&name).ok_or_else(|| {
+                    self.resolve_name(&name).ok_or_else(|| {
                         self.err_at(
                             lvalue_node,
                             format!("assignment to undeclared local variable `{name}`"),
                         )
                     })?;
+                if declared_scope == Scope::Capture {
+                    return Err(self.err_at(
+                        lvalue_node,
+                        format!("cannot assign to `{name}`: local variables referenced from a lambda body must be effectively final"),
+                    ));
+                }
                 let span = self.span_of(inner);
                 let value = match op_tok.value.as_str() {
                     "=" => self.lower_expr(rhs_node, 0)?.0,
@@ -1903,12 +2108,18 @@ impl Lowerer {
         }
         if let Some((target_node, op)) = self.bare_incdec_target(inner, 0)? {
             let name = self.extract_bare_name(target_node, 0)?;
-            let (declared_kind, declared_scope) = self.lookup_local(&name).ok_or_else(|| {
+            let (declared_kind, declared_scope) = self.resolve_name(&name).ok_or_else(|| {
                 self.err_at(
                     target_node,
                     format!("`{op}{op}` on undeclared local variable `{name}`"),
                 )
             })?;
+            if declared_scope == Scope::Capture {
+                return Err(self.err_at(
+                    target_node,
+                    format!("cannot assign to `{name}`: local variables referenced from a lambda body must be effectively final"),
+                ));
+            }
             if !matches!(declared_kind, Kind::Int | Kind::Float) {
                 return Err(self.err_at(
                     target_node,
@@ -2095,6 +2306,7 @@ impl Lowerer {
             "postfix_expression" => self.lower_postfix(node, depth),
             "primary_expression" => self.lower_primary_expression(node, depth),
             "primary" => self.lower_primary(node, depth),
+            "lambda_expression" => self.lower_lambda_expression(node, depth),
             other => Err(self.err_at(
                 node,
                 format!(
@@ -2104,18 +2316,16 @@ impl Lowerer {
         }
     }
 
-    /// `expression = lambda_expression | assignment_expression ;`
+    /// `expression = lambda_expression | assignment_expression ;` — both
+    /// alternatives are single-child wrappers, so this just recurses
+    /// through `lower_expr`'s own dispatch (which recognizes
+    /// `lambda_expression` directly, M3b).
     fn lower_expression_rule(
         &mut self,
         node: &GrammarASTNode,
         depth: usize,
     ) -> Result<(Expr, Kind), JavaLowerError> {
         match node.children.as_slice() {
-            [ASTNodeOrToken::Node(only)] if only.rule_name == "lambda_expression" => Err(self
-                .err_at(
-                    only,
-                    "lambda expressions are not supported yet (deferred to JV02 M3b)".to_string(),
-                )),
             [ASTNodeOrToken::Node(only)] => self.lower_expr(only, depth + 1),
             _ => Err(self.err_at(node, "malformed `expression` node".to_string())),
         }
@@ -2787,7 +2997,7 @@ impl Lowerer {
             // lexeme here.
             [ASTNodeOrToken::Token(t)] if t.type_ == lexer::token::TokenType::Name => {
                 let name = t.value.clone();
-                let (kind, scope) = self.lookup_local(&name).ok_or_else(|| {
+                let (kind, scope) = self.resolve_name(&name).ok_or_else(|| {
                     self.err_at(node, format!("reference to undeclared local variable `{name}`"))
                 })?;
                 let span = self.span_of(node);
@@ -2801,6 +3011,278 @@ impl Lowerer {
             _ => Err(self.err_at(
                 node,
                 "unsupported primary expression (JV02 M1 supports only literals, bare variable references, and parenthesized expressions)".to_string(),
+            )),
+        }
+    }
+
+    /// Lower a `lambda_expression` (`lambda_parameters ARROW lambda_body`)
+    /// into an `Expr::MakeClosure`, hoisting its body to a synthesized
+    /// top-level `Function` (`__lambda_N`, mirroring how `main` itself is
+    /// already synthesized) — the JV02 M3b entry point. Every parameter
+    /// must be explicitly typed (`lambda_parameter_kind_name_pairs`'s own
+    /// doc comment explains why the untyped/`var`-inferred forms are
+    /// rejected); captures are discovered on-resolve while the body is
+    /// lowered (`resolve_name`'s own doc comment has the full design).
+    ///
+    /// Threads `depth` (not a fresh `0`) into every recursive call this
+    /// makes, including the lambda body's own — deliberately *not*
+    /// mirroring `lower_method_declaration`'s own "reset to 0" pattern
+    /// for its method body. Method declarations can never nest inside
+    /// each other at the source level (a `class_body`'s own
+    /// `method_declaration`s are always flat siblings), so resetting the
+    /// depth budget once per method body is safe. Lambda *expressions*
+    /// can nest arbitrarily inside each other via ordinary expression or
+    /// statement syntax (`x -> (y -> (z -> ...))`, or a block-bodied
+    /// lambda's own tail `return` producing another lambda), so if this
+    /// function reset the depth counter at its own boundary the way a
+    /// method body does, nested lambdas could bypass `MAX_EXPR_DEPTH`/
+    /// `MAX_STMT_DEPTH` entirely — an attacker gets a *fresh* budget at
+    /// every lambda boundary instead of one shared, bounded budget. This
+    /// was caught during design, before writing any code, by asking
+    /// specifically whether the M3a method-body precedent's own
+    /// depth-reset was safe to copy here — it wasn't, given lambdas
+    /// (unlike methods) are a genuinely recursive source-level construct.
+    fn lower_lambda_expression(
+        &mut self,
+        node: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<(Expr, Kind), JavaLowerError> {
+        if depth >= MAX_EXPR_DEPTH {
+            return Err(self.err_at(
+                node,
+                format!("expression nesting exceeds {MAX_EXPR_DEPTH} levels"),
+            ));
+        }
+        let params_node = self
+            .first_child_named(node, "lambda_parameters")
+            .ok_or_else(|| {
+                self.err_at(
+                    node,
+                    "malformed lambda expression (missing parameters)".to_string(),
+                )
+            })?;
+        let body_node = self.first_child_named(node, "lambda_body").ok_or_else(|| {
+            self.err_at(
+                node,
+                "malformed lambda expression (missing body)".to_string(),
+            )
+        })?;
+        let span = self.span_of(node);
+        let pairs = self.lambda_parameter_kind_name_pairs(params_node)?;
+
+        self.closure_stack.push(ClosureFrame {
+            locals_mark: self.locals.len(),
+            span: span.clone(),
+            captures: vec![],
+            capture_values: vec![],
+        });
+        self.push_scope();
+        let mut params = Vec::with_capacity(pairs.len());
+        for (name, kind) in pairs {
+            self.declare_param(name.clone(), kind);
+            self.observed.add(Feature::DynamicTyping);
+            params.push(Param {
+                name,
+                sir_type: None,
+                kind: ParamKind::Required,
+                default: None,
+                span: span.clone(),
+            });
+        }
+
+        let body_result = self.lower_lambda_body(body_node, depth + 1);
+        self.pop_scope();
+        let closure_frame = self.closure_stack.pop().expect("just pushed above");
+        let (body, _body_kind) = body_result?;
+
+        let fn_name = format!("__lambda_{}", self.lambda_counter);
+        self.lambda_counter += 1;
+        self.observed.add(Feature::Closures);
+
+        self.synthesized_functions.push(Function {
+            name: fn_name.clone(),
+            params,
+            return_type: None,
+            captures: closure_frame.captures,
+            body,
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: span.clone(),
+        });
+
+        Ok((
+            Expr::MakeClosure {
+                fn_name,
+                captures: closure_frame.capture_values,
+                span,
+            },
+            Kind::Closure,
+        ))
+    }
+
+    /// Lower a `lambda_body` (`expression | block`) into the synthesized
+    /// function's own value/tail-return `Block`, and the `Kind` that
+    /// value naturally has (there is no *declared* return type to
+    /// validate against — see `lower_lambda_block_body`'s own doc
+    /// comment).
+    fn lower_lambda_body(
+        &mut self,
+        body_node: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<(Block, Kind), JavaLowerError> {
+        match body_node.children.as_slice() {
+            [ASTNodeOrToken::Node(n)] if n.rule_name == "expression" => {
+                let span = self.span_of(body_node);
+                let (value, kind) = self.lower_expr(n, depth)?;
+                Ok((
+                    Block {
+                        stmts: vec![],
+                        value,
+                        span,
+                    },
+                    kind,
+                ))
+            }
+            [ASTNodeOrToken::Node(n)] if n.rule_name == "block" => {
+                self.lower_lambda_block_body(n, depth)
+            }
+            _ => Err(self.err_at(body_node, "malformed lambda body".to_string())),
+        }
+    }
+
+    /// Lower a block-bodied lambda's own `block` node — a variant of
+    /// `lower_method_body_block` for the one place they genuinely
+    /// differ: a lambda has no *declared* return type to validate
+    /// against (Java infers it from the lambda's target functional-
+    /// interface's own abstract method, which this frontend has no
+    /// visibility into — no functional-interface declarations exist at
+    /// all yet, that's a later SIR29 milestone), so whatever `Kind` the
+    /// tail-position `return`'s expression happens to produce (or
+    /// `Kind::Void` for a bare `return;`, or for falling off the end
+    /// with no `return` at all — a legal "statement lambda" shape, e.g.
+    /// `Runnable`-shaped) is simply *returned to the caller*, not
+    /// checked against anything. The "`return` only in tail position"
+    /// rule itself is unconditional regardless of whether there's a
+    /// declared type to check against — SIR still has no `Stmt::Return`
+    /// primitive at all — so that half of `lower_method_body_block`'s
+    /// own logic is unchanged here.
+    fn lower_lambda_block_body(
+        &mut self,
+        block: &GrammarASTNode,
+        depth: usize,
+    ) -> Result<(Block, Kind), JavaLowerError> {
+        if depth >= MAX_STMT_DEPTH {
+            return Err(self.err_at(
+                block,
+                format!("statement/block nesting exceeds {MAX_STMT_DEPTH} levels"),
+            ));
+        }
+        let span = self.span_of(block);
+        let block_stmts: Vec<&GrammarASTNode> = child_nodes(block)
+            .into_iter()
+            .filter(|n| n.rule_name == "block_statement")
+            .collect();
+        let mut stmts = Vec::with_capacity(block_stmts.len());
+        let mut value = Expr::NilLit { span: span.clone() };
+        let mut value_kind = Kind::Void;
+        for (i, block_stmt) in block_stmts.iter().enumerate() {
+            let is_last = i + 1 == block_stmts.len();
+            if let Some(ret) = self.find_return_statement_direct(block_stmt) {
+                if !is_last {
+                    return Err(self.err_at(
+                        ret,
+                        "`return` is only supported as the last statement of a lambda body (an early or branched return is deferred to a later JV02 milestone)".to_string(),
+                    ));
+                }
+                if let Some(expr_node) = self.first_child_named(ret, "expression") {
+                    let (expr, kind) = self.lower_expr(expr_node, depth + 1)?;
+                    value = expr;
+                    value_kind = kind;
+                }
+                break;
+            }
+            stmts.push(self.lower_block_statement(block_stmt, depth + 1)?);
+        }
+        Ok((Block { stmts, value, span }, value_kind))
+    }
+
+    /// Extract each lambda parameter's `(name, Kind)` pair from a
+    /// `lambda_parameters` node — the lambda counterpart of
+    /// `formal_parameter_kind_name_pairs`. Only the fully-explicit-type
+    /// shape is supported: `lambda_parameter = type NAME | "var" NAME |
+    /// NAME` (JLS), and only the *first* alternative resolves a `Kind`
+    /// this frontend can actually know — both `"var" NAME` and a bare
+    /// `NAME` rely on inferring the parameter's type from the lambda's
+    /// own target functional-interface type (the abstract method it
+    /// implements), which this frontend has no visibility into (no
+    /// functional-interface declarations exist at all yet — interfaces
+    /// are a later SIR29 milestone). Rejecting the untyped/`var` forms
+    /// here, rather than guessing, is this crate's own established
+    /// "reject rather than mis-lower" discipline — the same reasoning
+    /// M1 already applies to `int`/`String` vs. every other reference
+    /// type.
+    fn lambda_parameter_kind_name_pairs(
+        &self,
+        params_node: &GrammarASTNode,
+    ) -> Result<Vec<(String, Kind)>, JavaLowerError> {
+        match params_node.children.as_slice() {
+            // `lambda_parameters = NAME` -- a single untyped parameter
+            // with no parentheses at all (`x -> ...`). Always untyped by
+            // this shape's own grammar production, so always rejected.
+            [ASTNodeOrToken::Token(t)] if t.type_ == lexer::token::TokenType::Name => {
+                Err(self.err_at(
+                    params_node,
+                    format!("lambda parameter `{}` has no explicit type, and its type cannot be inferred without a target functional-interface declaration (deferred to a later JV02 milestone — every lambda parameter must be explicitly typed for now)", t.value),
+                ))
+            }
+            _ => {
+                let Some(list) = self.first_child_named(params_node, "lambda_parameter_list")
+                else {
+                    return Ok(vec![]); // `() -> ...` -- zero parameters.
+                };
+                let mut out = Vec::with_capacity(list.children.len());
+                for lp in child_nodes(list)
+                    .into_iter()
+                    .filter(|n| n.rule_name == "lambda_parameter")
+                {
+                    out.push(self.lambda_parameter_kind_name(lp)?);
+                }
+                Ok(out)
+            }
+        }
+    }
+
+    /// Resolve one `lambda_parameter` (`{annotation} ["final"] type NAME
+    /// | {annotation} ["final"] "var" NAME | {annotation} ["final"]
+    /// NAME`) — see `lambda_parameter_kind_name_pairs`'s own doc comment
+    /// for why only the first alternative is supported. Handles both
+    /// possible parse shapes for `var x` defensively (the literal `"var"
+    /// NAME` grammar alternative, and — mirroring the same PEG-ordering
+    /// ambiguity this module's own doc comment documents for top-level
+    /// `var` declarations — `var` absorbed into the `type` alternative
+    /// as a single-segment class type literally named `var`), rather
+    /// than assuming which one the parser actually produces.
+    fn lambda_parameter_kind_name(
+        &self,
+        lp: &GrammarASTNode,
+    ) -> Result<(String, Kind), JavaLowerError> {
+        let name_tok = lp
+            .children
+            .iter()
+            .find_map(|c| match c {
+                ASTNodeOrToken::Token(t) if t.type_ == lexer::token::TokenType::Name => Some(t),
+                _ => None,
+            })
+            .ok_or_else(|| {
+                self.err_at(lp, "malformed lambda parameter (missing name)".to_string())
+            })?;
+        match self.first_child_named(lp, "type") {
+            Some(ty) if single_segment_class_type_name(ty) != Some("var") => {
+                Ok((name_tok.value.clone(), self.kind_of_type_node(ty)?))
+            }
+            _ => Err(self.err_at(
+                lp,
+                format!("lambda parameter `{}` has no explicit type (`var` and untyped lambda parameters infer their type from a target functional-interface declaration, which this frontend has no visibility into — deferred to a later JV02 milestone)", name_tok.value),
             )),
         }
     }

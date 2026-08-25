@@ -12,7 +12,7 @@
 use java_to_semantic_ir::{compile, compile_source};
 use lexer::token::{Token, TokenType};
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
-use semantic_ir::{Expr, Feature, Function, Module, ParamKind, Stmt};
+use semantic_ir::{Expr, Feature, Function, Module, ParamKind, Scope, Stmt};
 
 fn compile_ok(src: &str) -> Module {
     let module = compile_source(src, "prog")
@@ -1826,6 +1826,295 @@ fn qualified_call_remains_unsupported() {
     assert!(!err.message.is_empty());
 }
 
+// ── M3b: lambda expressions ──────────────────────────────────────────────
+
+fn make_closure_fn_name(value: &Expr) -> &str {
+    match value {
+        Expr::MakeClosure { fn_name, .. } => fn_name,
+        other => panic!("expected MakeClosure, got {other:?}"),
+    }
+}
+
+#[test]
+fn lambda_with_expression_body_lowers_to_make_closure() {
+    let m = compile_ok(&wrap("var f = (int x) -> x + 1;"));
+    match &main_fn(&m).body.stmts[0] {
+        Stmt::LetStarBinding { name, value, .. } => {
+            assert_eq!(name, "f");
+            let lambda = find_fn(&m, make_closure_fn_name(value));
+            assert_eq!(lambda.params.len(), 1);
+            assert_eq!(lambda.params[0].name, "x");
+            assert!(lambda.captures.is_empty());
+            assert!(!matches!(lambda.body.value, Expr::NilLit { .. }));
+        }
+        other => panic!("expected LetStarBinding, got {other:?}"),
+    }
+}
+
+#[test]
+fn zero_parameter_lambda_lowers_correctly() {
+    let m = compile_ok(&wrap("var f = () -> 42;"));
+    match &main_fn(&m).body.stmts[0] {
+        Stmt::LetStarBinding { value, .. } => {
+            let lambda = find_fn(&m, make_closure_fn_name(value));
+            assert!(lambda.params.is_empty());
+            assert!(matches!(lambda.body.value, Expr::IntLit { value: 42, .. }));
+        }
+        other => panic!("expected LetStarBinding, got {other:?}"),
+    }
+}
+
+#[test]
+fn multi_parameter_typed_lambda_preserves_parameter_order() {
+    let m = compile_ok(&wrap("var f = (int a, int b) -> a + b;"));
+    match &main_fn(&m).body.stmts[0] {
+        Stmt::LetStarBinding { value, .. } => {
+            let lambda = find_fn(&m, make_closure_fn_name(value));
+            let names: Vec<&str> = lambda.params.iter().map(|p| p.name.as_str()).collect();
+            assert_eq!(names, ["a", "b"]);
+        }
+        other => panic!("expected LetStarBinding, got {other:?}"),
+    }
+}
+
+#[test]
+fn lambda_captures_an_enclosing_local() {
+    let m = compile_ok(&wrap("int n = 10; var f = (int x) -> x + n;"));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::LetStarBinding { value, .. } => match value {
+            Expr::MakeClosure {
+                fn_name, captures, ..
+            } => {
+                assert_eq!(captures.len(), 1);
+                assert_eq!(captures[0].name, "n");
+                match &captures[0].value {
+                    Expr::VarRef { name, scope, .. } => {
+                        assert_eq!(name, "n");
+                        assert_eq!(*scope, Scope::Local);
+                    }
+                    other => panic!("expected VarRef, got {other:?}"),
+                }
+                let lambda = find_fn(&m, fn_name);
+                assert_eq!(lambda.captures.len(), 1);
+                assert_eq!(lambda.captures[0].name, "n");
+            }
+            other => panic!("expected MakeClosure, got {other:?}"),
+        },
+        other => panic!("expected LetStarBinding, got {other:?}"),
+    }
+}
+
+#[test]
+fn lambda_capturing_a_method_parameter_uses_param_scope() {
+    // Proves `resolve_name` correctly threads a `Scope::Param`-declared
+    // enclosing name (not just `Scope::Local`) through a capture.
+    let m = compile_ok(&class_src(
+        "public static void main(String[] args) { } \
+         static int adder(int n) { var f = (int x) -> x + n; return n; }",
+    ));
+    let adder = find_fn(&m, "adder");
+    match &adder.body.stmts[0] {
+        Stmt::LetStarBinding {
+            value: Expr::MakeClosure { captures, .. },
+            ..
+        } => {
+            assert_eq!(captures[0].name, "n");
+            match &captures[0].value {
+                Expr::VarRef { scope, .. } => assert_eq!(*scope, Scope::Param),
+                other => panic!("expected VarRef, got {other:?}"),
+            }
+        }
+        other => panic!("expected a MakeClosure-valued LetStarBinding, got {other:?}"),
+    }
+}
+
+#[test]
+fn nested_lambda_captures_transitively_across_both_boundaries() {
+    let m = compile_ok(&wrap(
+        "int n = 10; var f = (int x) -> (int y) -> x + y + n;",
+    ));
+    match &main_fn(&m).body.stmts[1] {
+        Stmt::LetStarBinding {
+            value:
+                Expr::MakeClosure {
+                    fn_name: outer_name,
+                    captures: outer_captures,
+                    ..
+                },
+            ..
+        } => {
+            // Outer lambda captures `n` from `main`, as an ordinary Local.
+            assert_eq!(outer_captures.len(), 1);
+            assert_eq!(outer_captures[0].name, "n");
+            assert_eq!(
+                match &outer_captures[0].value {
+                    Expr::VarRef { scope, .. } => *scope,
+                    other => panic!("expected VarRef, got {other:?}"),
+                },
+                Scope::Local
+            );
+            let outer_lambda = find_fn(&m, outer_name);
+            // Outer lambda's own body is itself a MakeClosure (the inner
+            // lambda), which must capture BOTH `x` (the outer lambda's
+            // own param) and `n` (re-threaded through as the outer
+            // lambda's own capture) -- crossing two boundaries.
+            match &outer_lambda.body.value {
+                Expr::MakeClosure {
+                    fn_name: inner_name,
+                    captures: inner_captures,
+                    ..
+                } => {
+                    let mut names: Vec<&str> =
+                        inner_captures.iter().map(|c| c.name.as_str()).collect();
+                    names.sort_unstable();
+                    assert_eq!(names, ["n", "x"]);
+                    let x_capture = inner_captures.iter().find(|c| c.name == "x").unwrap();
+                    assert_eq!(
+                        match &x_capture.value {
+                            Expr::VarRef { scope, .. } => *scope,
+                            other => panic!("expected VarRef, got {other:?}"),
+                        },
+                        Scope::Param,
+                        "x should be read from the outer lambda's own param scope"
+                    );
+                    let n_capture = inner_captures.iter().find(|c| c.name == "n").unwrap();
+                    assert_eq!(
+                        match &n_capture.value {
+                            Expr::VarRef { scope, .. } => *scope,
+                            other => panic!("expected VarRef, got {other:?}"),
+                        },
+                        Scope::Capture,
+                        "n should be re-threaded through the outer lambda's own capture, not read from main directly"
+                    );
+                    let inner_lambda = find_fn(&m, inner_name);
+                    assert_eq!(inner_lambda.captures.len(), 2);
+                }
+                other => {
+                    panic!("expected the outer lambda's body to be a MakeClosure, got {other:?}")
+                }
+            }
+        }
+        other => panic!("expected a MakeClosure-valued LetStarBinding, got {other:?}"),
+    }
+}
+
+#[test]
+fn block_bodied_lambda_with_tail_return_lowers_correctly() {
+    let m = compile_ok(&wrap("var f = (int x) -> { int y = x * 2; return y; };"));
+    match &main_fn(&m).body.stmts[0] {
+        Stmt::LetStarBinding { value, .. } => {
+            let lambda = find_fn(&m, make_closure_fn_name(value));
+            assert_eq!(lambda.body.stmts.len(), 1);
+            assert!(!matches!(lambda.body.value, Expr::NilLit { .. }));
+        }
+        other => panic!("expected LetStarBinding, got {other:?}"),
+    }
+}
+
+#[test]
+fn block_bodied_lambda_with_bare_return_has_a_nil_block_value() {
+    let m = compile_ok(&wrap("int n = 0; var f = (int x) -> { return; };"));
+    let value = match &main_fn(&m).body.stmts[1] {
+        Stmt::LetStarBinding { value, .. } => value,
+        other => panic!("expected LetStarBinding, got {other:?}"),
+    };
+    let lambda = find_fn(&m, make_closure_fn_name(value));
+    assert!(matches!(lambda.body.value, Expr::NilLit { .. }));
+}
+
+#[test]
+fn block_bodied_lambda_falling_off_the_end_has_a_nil_block_value() {
+    // A legal "statement lambda" shape (e.g. `Runnable`-like) -- no
+    // `return` at all.
+    let m = compile_ok(&wrap("var f = (int x) -> { int y = x + 1; };"));
+    match &main_fn(&m).body.stmts[0] {
+        Stmt::LetStarBinding { value, .. } => {
+            let lambda = find_fn(&m, make_closure_fn_name(value));
+            assert_eq!(lambda.body.stmts.len(), 1);
+            assert!(matches!(lambda.body.value, Expr::NilLit { .. }));
+        }
+        other => panic!("expected LetStarBinding, got {other:?}"),
+    }
+}
+
+#[test]
+fn lambda_as_a_bare_statement_lowers_to_expr_stmt() {
+    let m = compile_ok(&wrap("(int x) -> x;"));
+    match &main_fn(&m).body.stmts[0] {
+        Stmt::ExprStmt {
+            expr: Expr::MakeClosure { .. },
+            ..
+        } => {}
+        other => panic!("expected an ExprStmt-wrapped MakeClosure, got {other:?}"),
+    }
+}
+
+#[test]
+fn feature_closures_is_declared_when_a_lambda_is_lowered() {
+    let m = compile_ok(&wrap("var f = (int x) -> x;"));
+    assert!(m.manifest.contains(Feature::Closures));
+}
+
+#[test]
+fn assignment_to_a_captured_variable_is_an_error() {
+    let err = compile_source(
+        &wrap("int n = 0; var f = (int x) -> { n = n + x; return n; };"),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(
+        err.message.contains("effectively final"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn increment_of_a_captured_variable_is_an_error() {
+    let err = compile_source(
+        &wrap("int n = 0; var f = (int x) -> { n++; return n; };"),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(
+        err.message.contains("effectively final"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
+#[test]
+fn bare_unparenthesized_lambda_parameter_is_unsupported() {
+    let err = compile_source(&wrap("var f = x -> x + 1;"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn untyped_parenthesized_lambda_parameter_is_unsupported() {
+    let err = compile_source(&wrap("var f = (x) -> x + 1;"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn var_lambda_parameter_is_unsupported() {
+    let err = compile_source(&wrap("var f = (var x) -> x + 1;"), "prog").unwrap_err();
+    assert!(!err.message.is_empty());
+}
+
+#[test]
+fn return_not_as_the_last_statement_in_a_lambda_body_is_an_error() {
+    let err = compile_source(
+        &wrap("var f = (int x) -> { return x; int y = 1; };"),
+        "prog",
+    )
+    .unwrap_err();
+    assert!(
+        err.message.contains("return"),
+        "unexpected message: {}",
+        err.message
+    );
+}
+
 // ── depth-guard regression (CWE-674, found by /security-review) ────────
 
 fn node(rule_name: &str, children: Vec<ASTNodeOrToken>) -> GrammarASTNode {
@@ -1980,6 +2269,81 @@ fn deeply_nested_if_statements_report_depth_error_not_stack_overflow() {
         ],
     );
     let class_decl = node("class_declaration", vec![ASTNodeOrToken::Node(method_decl)]);
+    let program = node("program", vec![ASTNodeOrToken::Node(class_decl)]);
+
+    let err = compile(&program, "prog").unwrap_err();
+    assert!(
+        err.message.contains("nesting exceeds"),
+        "expected a depth-exceeded error, got: {}",
+        err.message
+    );
+}
+
+/// Deeply nested lambda expressions (`x -> (y -> (z -> ...)))`) handed
+/// directly to the public `compile()` entry point must not overflow the
+/// native stack. This is specifically the property `lower_lambda_
+/// expression`'s own doc comment argues for: it deliberately threads the
+/// ambient `depth` counter through every recursive call it makes,
+/// instead of resetting to a fresh budget at its own boundary the way
+/// `lower_method_declaration`'s method-body lowering safely does (safe
+/// there only because a `method_declaration` can never nest inside
+/// another one at the source level — lambdas, unlike methods, can nest
+/// arbitrarily via ordinary expression syntax, so resetting the depth
+/// counter per lambda would let nested lambdas bypass `MAX_EXPR_DEPTH`/
+/// `MAX_STMT_DEPTH` entirely).
+///
+/// In practice, for this hand-built tree `collect_bounded`'s own blanket
+/// per-raw-node `MAX_TREE_DEPTH` cap is the guard that actually fires
+/// (each lambda level costs it 4 raw nodes — `lambda_expression` +
+/// `lambda_parameters` + `lambda_body` + the `expression` wrapper — so
+/// it reaches its own 64-level cap well before this lambda chain could
+/// reach `MAX_EXPR_DEPTH` on its own terms) — the same situation the
+/// `if`-statement depth-guard test right above already discloses for
+/// itself. Regardless of *which* guard fires first, the property this
+/// test actually verifies is the same one: a clean, typed error instead
+/// of a native stack overflow.
+#[test]
+fn deeply_nested_lambda_expressions_report_depth_error_not_stack_overflow() {
+    fn zero_param_lambda(body: GrammarASTNode) -> GrammarASTNode {
+        node(
+            "lambda_expression",
+            vec![
+                ASTNodeOrToken::Node(node("lambda_parameters", vec![])),
+                ASTNodeOrToken::Node(node("lambda_body", vec![ASTNodeOrToken::Node(body)])),
+            ],
+        )
+    }
+    let mut inner = bool_true_expr();
+    for _ in 0..70 {
+        let lam = zero_param_lambda(inner);
+        inner = node("expression", vec![ASTNodeOrToken::Node(lam)]);
+    }
+    let expr_stmt = node("expression_statement", vec![ASTNodeOrToken::Node(inner)]);
+    let stmt = node("statement", vec![ASTNodeOrToken::Node(expr_stmt)]);
+    let block_stmt = node("block_statement", vec![ASTNodeOrToken::Node(stmt)]);
+    let block = node("block", vec![ASTNodeOrToken::Node(block_stmt)]);
+    let method_body = node("method_body", vec![ASTNodeOrToken::Node(block)]);
+    let method_declarator = node(
+        "method_declarator",
+        vec![ASTNodeOrToken::Token(Token {
+            type_: TokenType::Name,
+            value: "main".to_string(),
+            line: 1,
+            column: 1,
+            type_name: None,
+            flags: None,
+            cv: None,
+        })],
+    );
+    let method_decl = node(
+        "method_declaration",
+        vec![
+            ASTNodeOrToken::Node(method_declarator),
+            ASTNodeOrToken::Node(method_body),
+        ],
+    );
+    let class_body = node("class_body", vec![ASTNodeOrToken::Node(method_decl)]);
+    let class_decl = node("class_declaration", vec![ASTNodeOrToken::Node(class_body)]);
     let program = node("program", vec![ASTNodeOrToken::Node(class_decl)]);
 
     let err = compile(&program, "prog").unwrap_err();
