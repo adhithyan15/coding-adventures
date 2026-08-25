@@ -5,7 +5,9 @@
 - Pinned tracked-artifact snapshots to Unicode 17.0.0 and added version-delta
   vectors for Todhri NFC composition and outlined-letter NFKC case folding.
   The neutral oracle, Python, C#, F#, and Rust consumers now reject host-table
-  drift while retaining the process-free authority boundary.
+  drift while retaining the process-free authority boundary. The generator
+  now rejects redirects, enforces exact source byte counts before hashing, and
+  keeps the full Unicode License v3 notice in every distributable artifact.
 - Added forward- and backslash trailing-separator records to the invalid
   tracked-artifact fixture. Both normalize to a trailing empty path component
   and must report redacted `EMPTY_SEGMENT` diagnostics.

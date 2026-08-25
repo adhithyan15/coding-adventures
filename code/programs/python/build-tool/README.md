@@ -75,6 +75,9 @@ names Unicode 17.0.0, and NFC, NFKC, full default folding, and root full
 uppercase use generated source-embedded tables from hash-pinned Unicode
 Consortium inputs. Validation does not read Unicode data from the filesystem,
 launch a process, inspect the environment, or access the network.
+The package remains MIT-licensed code with its derived Unicode tables under
+Unicode License v3 (`Unicode-3.0`); every wheel and source distribution ships
+the full `UNICODE-LICENSE.txt` notice.
 
 Ordinary dependency aliases are resolved only inside the package's ecosystem.
 For example, the same `coding-adventures-shared` name in Lua, Perl, Python, and

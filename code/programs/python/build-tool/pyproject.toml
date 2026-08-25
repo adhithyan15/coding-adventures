@@ -7,7 +7,8 @@ name = "coding-adventures-build-tool"
 version = "0.1.0"
 description = "Incremental, parallel monorepo build tool with hash-based caching"
 requires-python = ">=3.12"
-license = "MIT"
+license = "MIT AND Unicode-3.0"
+license-files = ["UNICODE-LICENSE.txt"]
 authors = [{ name = "Adhithya Rajasekaran" }]
 readme = "README.md"
 keywords = ["build-tool", "monorepo", "incremental-build", "parallel-build"]

@@ -26,6 +26,8 @@ report redacted `EMPTY_SEGMENT` diagnostics and carry the exact Unicode 17.0.0
 table version consumed by the generated shared .NET engine. The facade does
 not enumerate Git, inspect the filesystem, launch a process, read the
 environment, or access the network.
+Build, publish, and package outputs declare the shared engine's mixed MIT and
+Unicode-3.0 licensing and include the full `UNICODE-LICENSE.txt` notice.
 
 ## Usage
 

@@ -80,7 +80,8 @@ The 111-case bootstrap corpus covers every process-free v1 domain:
   case-fold version sentinels. The source-embedded Python and .NET tables are
   regenerated from hash-pinned Unicode Consortium inputs by
   `code/scripts/generate_tracked_artifact_unicode17.py`; the derived tables
-  retain the Unicode License v3 notice in `UNICODE-LICENSE.txt`;
+  retain the Unicode License v3 notice in `UNICODE-LICENSE.txt`, and the
+  generator byte-checks distributable Python, C#, and F# notice copies;
   and
 - bounded process-free CLI parsing with deterministic typed defaults, modeled
   post-parse outcomes, exact multibyte and astral-scalar limits, and adversarial

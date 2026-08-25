@@ -44,3 +44,6 @@ dotnet run -- --emit-plan --plan-file build-plan.json
   path components. The snapshot pins Unicode 17.0.0, and all four Unicode
   operations use source-embedded tables rather than host or operating-system
   globalization data.
+- Declares the mixed MIT and Unicode-3.0 licensing of the engine and derived
+  tables and copies the full `UNICODE-LICENSE.txt` notice beside build,
+  publish, and package outputs.

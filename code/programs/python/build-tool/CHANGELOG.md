@@ -9,7 +9,9 @@ All notable changes to this project will be documented in this file.
 - **Pinned Unicode policy tables**: tracked-artifact NFC, NFKC, full default
   folding, and root full-uppercase now use source-embedded Unicode 17.0.0 data
   generated from hash-verified Unicode Consortium inputs instead of the host
-  Python runtime's Unicode database.
+  Python runtime's Unicode database. Wheel and source-distribution metadata now
+  declare the mixed MIT and Unicode-3.0 licensing and include the full Unicode
+  License v3 notice.
 
 ## [0.3.9] - 2026-08-25
 

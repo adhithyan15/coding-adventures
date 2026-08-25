@@ -8,8 +8,8 @@ Sources: https://www.unicode.org/Public/17.0.0/ucd/
 # CaseFolding.txt: sha256:ff8d8fefbf123574205085d6714c36149eb946d717a0c585c27f0f4ef58c4183
 # SpecialCasing.txt: sha256:efc25faf19de21b92c1194c111c932e03d2a5eaf18194e33f1156e96de4c9588
 # NormalizationTest.txt: sha256:5019ffd530751a741900c849c0e010332f142a3612234639bd200b82138a87db
-Unicode data is used under Unicode License v3; see
-code/specs/fixtures/build-tool-v1/UNICODE-LICENSE.txt
+Unicode data is used under Unicode License v3. Every source and binary
+distribution carries the full notice as UNICODE-LICENSE.txt
 (sha256:e7a93b009565cfce55919a381437ac4db883e9da2126fa28b91d12732bc53d96).
 """
 
