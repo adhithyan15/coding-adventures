@@ -1210,6 +1210,19 @@ pub enum DecodedOperand {
     /// `v128.const`'s 16-byte literal immediate (SIMD), decoded from the
     /// bytecode's raw bytes.
     V128Const([u8; 16]),
+    /// `i8x16.shuffle`'s 16-byte RAW (non-LEB128) lane-index immediate
+    /// (SIMD widen PR38) -- one byte per output lane, each `0..=31`
+    /// (already range-checked by `wasm-validator` before this ever runs;
+    /// see that crate's `type_check.rs`), indexing into the COMBINED
+    /// 32-lane space of the instruction's two v128 stack operands.
+    /// Deliberately its own variant, not folded into `V128Const` above,
+    /// even though both carry exactly 16 raw bytes: `convert_operand`
+    /// (below) tags whichever const-pool slot it lands in with the
+    /// SPECIFIC sub-opcode (`0x0C` for `v128.const`, `0x0D` for this) so
+    /// `register_simd`'s early special-case dispatch can tell which
+    /// instruction it's actually handling -- reusing `V128Const` here
+    /// would have silently mislabeled every shuffle as a `v128.const`.
+    Shuffle([u8; 16]),
     /// Any other `0xFD`-prefixed SIMD instruction in this first slice
     /// (`i32x4.splat`/`.add`/`.eq`/`.extract_lane`) -- the LEB128 sub-
     /// opcode, plus `aux`: the single-byte lane-index immediate for
@@ -1477,6 +1490,25 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
                 instructions.push(DecodedInstruction {
                     opcode: 0xFD,
                     operand: DecodedOperand::V128Const(bytes),
+                });
+            } else if sub_opcode == 0x0D {
+                // i8x16.shuffle (SIMD widen PR38): same 16-byte raw
+                // (not LEB128) immediate shape as v128.const just above
+                // -- one lane-index byte per output lane -- but tagged
+                // as `DecodedOperand::Shuffle` (not `V128Const`) so
+                // `register_simd` can tell the two apart. The
+                // `0..=31` per-byte range check is `wasm-validator`'s
+                // job (validation-time, before this decoder even runs
+                // in the real pipeline), not this decoder's -- mirrors
+                // the lane-index family just below, which also defers
+                // its own range check the same way.
+                let mut bytes = [0u8; 16];
+                let available = (code.len().saturating_sub(offset)).min(16);
+                bytes[..available].copy_from_slice(&code[offset..offset + available]);
+                offset += 16;
+                instructions.push(DecodedInstruction {
+                    opcode: 0xFD,
+                    operand: DecodedOperand::Shuffle(bytes),
                 });
             } else if (0x15..=0x22).contains(&sub_opcode) {
                 // The entire extract_lane/replace_lane family, across all
@@ -2317,6 +2349,21 @@ fn convert_operand(
             let idx = simd_consts.len();
             simd_consts.push(*bytes);
             Some(Operand::Index((0x0Cusize << 32) | idx))
+        }
+        // `i8x16.shuffle` (SIMD widen PR38): same const-pool mechanism as
+        // `V128Const` just above -- its 16-byte immediate has nowhere
+        // else to live in the packed `usize`, so it shares the SAME
+        // `simd_consts` pool (a plain `Vec<[u8; 16]>` with no notion of
+        // "which instruction owns this entry" -- reusing it is exactly
+        // as sound as adding a second pool, just without a second field
+        // to thread through every call-frame save/restore site) -- but
+        // tagged with sub-opcode `0x0D` (not `0x0C`) so `register_simd`'s
+        // early dispatch reads it back as a shuffle immediate, not a
+        // v128.const literal.
+        DecodedOperand::Shuffle(bytes) => {
+            let idx = simd_consts.len();
+            simd_consts.push(*bytes);
+            Some(Operand::Index((0x0Dusize << 32) | idx))
         }
         DecodedOperand::Simd { sub_opcode, aux } => Some(Operand::Index(((*sub_opcode as usize) << 32) | (*aux as usize))),
         DecodedOperand::BulkMemory { sub, data_idx, aux } => {
@@ -4720,12 +4767,90 @@ fn register_simd(vm: &mut GenericVM) {
             return Ok(None);
         }
 
+        if sub_opcode == 0x0D {
+            // i8x16.shuffle (SIMD widen PR38) -- the most structurally
+            // complex SIMD op in this crate so far: 16 attacker-
+            // controlled immediate bytes, each used to index into a
+            // COMBINED 32-lane array built from two popped v128
+            // operands.
+            //
+            // Security note (see this PR's own security review): every
+            // one of the 16 `imm` bytes below is guaranteed `0..=31` for
+            // ANY module that passed `wasm-validator`'s validation-time
+            // check (see that crate's `type_check.rs`, `SimdOpKind::
+            // Shuffle` arm) -- a module with an out-of-range byte is
+            // rejected before it can ever reach this code. The `idx < 32`
+            // guard below is still real bounds-checking, not dead code:
+            // it's DEFENSE IN DEPTH against this executor ever being
+            // driven directly by a hand-built `DecodedInstruction`/
+            // `Operand::Index` that skipped validation (this repo's own
+            // unit tests do exactly that below), not a claim that a
+            // validated module could ever trip it. Either way, indexing
+            // `combined[idx]` can never panic: `idx` is a `u8` widened to
+            // `usize` (`0..=255`, no overflow possible in that widening),
+            // and the explicit `< 32` check -- not a `% 32` wrap or an
+            // unchecked index -- is what keeps an out-of-range byte from
+            // ever reaching the 32-byte `combined` array at all.
+            //
+            // Stack order mirrors `Swizzle` above: the SECOND operand in
+            // source order (`b`) is pushed last, so it's on TOP of the
+            // stack and popped FIRST here -- it supplies combined lanes
+            // 16-31. The FIRST operand in source order (`a`) is popped
+            // SECOND and supplies combined lanes 0-15. This is the
+            // ordinary WASM binary-op convention (rhs on top), same as
+            // every other binary SIMD op in this crate.
+            let imm = *ctx
+                .simd_consts
+                .get(aux)
+                .ok_or_else(|| VMError::GenericError("i8x16.shuffle: const-pool index out of range".into()))?;
+            let b_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+            let a_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+            let b = *ctx
+                .v128_heap
+                .get(b_handle as usize)
+                .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+            let a = *ctx
+                .v128_heap
+                .get(a_handle as usize)
+                .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+            let mut combined = [0u8; 32];
+            combined[..16].copy_from_slice(&a);
+            combined[16..].copy_from_slice(&b);
+            let mut result = [0u8; 16];
+            for i in 0..16 {
+                let idx = imm[i] as usize;
+                if idx >= 32 {
+                    // Defense in depth only -- see the doc comment
+                    // above: an out-of-range byte here means this
+                    // instruction was reached WITHOUT going through
+                    // `wasm-validator`'s shuffle range check, not that a
+                    // validated module produced one. Erroring cleanly
+                    // (rather than clamping to 0 the way `Swizzle`'s
+                    // runtime-index variant does, or panicking) is
+                    // deliberate: `Swizzle`'s clamp-to-zero is REAL WASM
+                    // SPEC BEHAVIOR for its runtime index operand;
+                    // `shuffle`'s immediate has no such spec-defined
+                    // fallback because the spec requires it to already
+                    // be in range by the time execution starts.
+                    return Err(VMError::GenericError(format!(
+                        "i8x16.shuffle: lane index {idx} at position {i} out of range (must be 0-31) -- this should have been rejected at validation time"
+                    )));
+                }
+                result[i] = combined[idx];
+            }
+            let handle = push_v128(ctx, result)?;
+            push_wasm(vm, WasmValue::V128(handle));
+            vm.advance_pc();
+            return Ok(None);
+        }
+
         let op = wasm_opcodes::get_simd_op(sub_opcode)
             .ok_or_else(|| VMError::GenericError(format!("unknown SIMD sub-opcode {sub_opcode:#x}")))?;
 
         use wasm_opcodes::SimdOpKind;
         match op.kind {
             SimdOpKind::Const => unreachable!("v128.const handled above, before this lookup"),
+            SimdOpKind::Shuffle => unreachable!("i8x16.shuffle handled above, before this lookup"),
             SimdOpKind::ExtractLane => {
                 // i32x4.extract_lane: pop a v128, read the `aux`-selected
                 // lane back out as a plain i32 -- the only opcode in this
@@ -15510,6 +15635,139 @@ mod tests {
             Some(V128Bytes([0u8; 16])),
             "every index lane here is >= 16 (as an unsigned byte), so every result lane must be 0"
         );
+    }
+
+    // ── SIMD widen PR38 (task #229-231): i8x16.shuffle ──────────────────
+
+    /// `i8x16.shuffle` identity case: an immediate of `[0, 1, ..., 15]`
+    /// must copy the FIRST operand unchanged, never reading the second
+    /// operand's bytes at all.
+    #[test]
+    fn i8x16_shuffle_identity_copies_first_operand_unchanged() {
+        let a: [i8; 16] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+        let b: [i8; 16] = [100; 16]; // must never appear in the result
+        let imm: [u8; 16] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_i8x16(a));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes_i8x16(b));
+        code.extend([0xFD, 0x0D]); // i8x16.shuffle (sub-opcode 0x0D)
+        code.extend(imm);
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            results[0],
+            Some(V128Bytes(v128_const_bytes_i8x16(a).try_into().unwrap())),
+            "identity shuffle (indices 0-15) must copy the first operand unchanged"
+        );
+    }
+
+    /// `i8x16.shuffle` pure-second-operand case: an immediate of
+    /// `[16, 17, ..., 31]` must copy the SECOND operand unchanged,
+    /// never reading the first operand's bytes at all.
+    #[test]
+    fn i8x16_shuffle_second_operand_only_copies_second_operand_unchanged() {
+        let a: [i8; 16] = [100; 16]; // must never appear in the result
+        let b: [i8; 16] = [-16, -15, -14, -13, -12, -11, -10, -9, -8, -7, -6, -5, -4, -3, -2, -1];
+        let imm: [u8; 16] = [16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_i8x16(a));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes_i8x16(b));
+        code.extend([0xFD, 0x0D]);
+        code.extend(imm);
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            results[0],
+            Some(V128Bytes(v128_const_bytes_i8x16(b).try_into().unwrap())),
+            "shuffle with indices 16-31 must copy the second operand unchanged"
+        );
+    }
+
+    /// `i8x16.shuffle` reverse case, exercising the SECOND half of the
+    /// combined 32-lane space specifically (distinct from `swizzle`'s
+    /// own single-operand reverse test above, which only ever touches
+    /// lanes 0-15): `[31, 30, ..., 16]` must reverse the second
+    /// operand's own 16 bytes into the result.
+    #[test]
+    fn i8x16_shuffle_reverses_second_operand() {
+        let a: [i8; 16] = [100; 16];
+        let b: [i8; 16] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+        let imm: [u8; 16] = [31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16];
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_i8x16(a));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes_i8x16(b));
+        code.extend([0xFD, 0x0D]);
+        code.extend(imm);
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let expected: [i8; 16] = [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0];
+        assert_eq!(
+            results[0],
+            Some(V128Bytes(v128_const_bytes_i8x16(expected).try_into().unwrap())),
+            "indices 31..16 must reverse the second operand's own 16 bytes"
+        );
+    }
+
+    /// `i8x16.shuffle` interleaving case: alternate between the two
+    /// operands lane by lane -- the genuinely MIXED case that reads from
+    /// BOTH halves of the combined 32-lane space within one instruction,
+    /// not just one or the other.
+    #[test]
+    fn i8x16_shuffle_interleaves_both_operands() {
+        let a: [i8; 16] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]; // a[i] = i
+        let b: [i8; 16] = [-1, -2, -3, -4, -5, -6, -7, -8, -9, -10, -11, -12, -13, -14, -15, -16]; // b[j] = -1-j
+        // For even i: imm[i] = i (< 16, selects a[i] = i).
+        // For odd i:  imm[i] = 16 + i (selects combined[16+i] = b[i] = -1-i).
+        let imm: [u8; 16] = [0, 17, 2, 19, 4, 21, 6, 23, 8, 25, 10, 27, 12, 29, 14, 31];
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_i8x16(a));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes_i8x16(b));
+        code.extend([0xFD, 0x0D]);
+        code.extend(imm);
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        // expected[i] = a[i] = i for even i; expected[i] = b[i] = -1-i for odd i.
+        let expected: [i8; 16] = [0, -2, 2, -4, 4, -6, 6, -8, 8, -10, 10, -12, 12, -14, 14, -16];
+        assert_eq!(
+            results[0],
+            Some(V128Bytes(v128_const_bytes_i8x16(expected).try_into().unwrap())),
+            "interleaving even lanes from a with odd lanes from b must alternate their values"
+        );
+    }
+
+    /// Defense in depth: `wasm-validator` rejects a module with an
+    /// out-of-range shuffle immediate byte (`>= 32`) before it can ever
+    /// reach this crate's executor (see `wasm-validator`'s own coverage
+    /// for that half of the guarantee) -- but this crate's own executor
+    /// has no validation pass of its own, so a hand-built instruction
+    /// stream like this test's CAN still present one. Confirm the
+    /// executor's own bounds check inside `register_simd` returns a
+    /// clean `Err`, never a panic or an out-of-bounds read of the
+    /// 32-byte combined array.
+    #[test]
+    fn i8x16_shuffle_out_of_range_immediate_byte_errors_cleanly_not_panics() {
+        let a: [i8; 16] = [0; 16];
+        let b: [i8; 16] = [0; 16];
+        let mut imm = [0u8; 16];
+        imm[8] = 32; // one byte just past the valid 0-31 range
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_i8x16(a));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes_i8x16(b));
+        code.extend([0xFD, 0x0D]);
+        code.extend(imm);
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let result = engine.call_function_with_v128(0, &[]);
+        assert!(result.is_err(), "an out-of-range shuffle immediate byte must error cleanly, not panic: {result:?}");
     }
 
     /// `i8x16.extract_lane_s`: a lane byte >= 0x80 must SIGN-extend to a

@@ -4536,6 +4536,118 @@
         "ES-EXT-345-REF"
       ],
       "after": []
+    },
+    {
+      "id": "ES-PATH-346-01",
+      "spine_node": "SPINE-ASK-LOCATION",
+      "lessons": [
+        "ES-C346-escuela",
+        "ES-C346-iglesia",
+        "ES-C346-mercado",
+        "ES-C346-oficina",
+        "ES-C346-estacion"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-346-PLACE"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-347-01",
+      "spine_node": "SPINE-ASK-LOCATION",
+      "lessons": [
+        "ES-C347-norte",
+        "ES-C347-sur",
+        "ES-C347-oeste",
+        "ES-C347-centro",
+        "ES-C347-alrededor"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-347-PLACE"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-348-01",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "ES-C348-principio",
+        "ES-C348-fin",
+        "ES-C348-instante",
+        "ES-C348-demora",
+        "ES-C348-turno"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-348-SPAN"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-349-01",
+      "spine_node": "SPINE-TIME-OF-DAY",
+      "lessons": [
+        "ES-C349-jornada",
+        "ES-C349-decada",
+        "ES-C349-fiesta",
+        "ES-C349-aniversario",
+        "ES-C349-agenda"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-349-SPAN"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-350-01",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C350-propio",
+        "ES-C350-ajeno",
+        "ES-C350-igual",
+        "ES-C350-distinto",
+        "ES-C350-tipo"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-350-REF"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-351-01",
+      "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+      "lessons": [
+        "ES-C351-cien",
+        "ES-C351-cantidad",
+        "ES-C351-ambos",
+        "ES-C351-varios",
+        "ES-C351-triple"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-351-COUNT"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-352-01",
+      "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+      "lessons": [
+        "ES-C352-conjunto",
+        "ES-C352-entero",
+        "ES-C352-mayoria",
+        "ES-C352-resto",
+        "ES-C352-escaso"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-352-COUNT"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -4692,7 +4804,9 @@
         "ES-PATH-338-01",
         "ES-PATH-339-01",
         "ES-PATH-342-01",
-        "ES-PATH-343-01"
+        "ES-PATH-343-01",
+        "ES-PATH-348-01",
+        "ES-PATH-349-01"
       ],
       "omits": [
         "TIME-MORNING",
@@ -4713,7 +4827,9 @@
         "ES-PATH-015-REVIEW-HAY",
         "ES-PATH-015-SYNTH-HAY",
         "ES-PATH-340-01",
-        "ES-PATH-341-01"
+        "ES-PATH-341-01",
+        "ES-PATH-346-01",
+        "ES-PATH-347-01"
       ],
       "omits": [],
       "relocates": {}
@@ -4803,7 +4919,8 @@
         "ES-PATH-279-01",
         "ES-PATH-280-01",
         "ES-PATH-281-01",
-        "ES-PATH-345-01"
+        "ES-PATH-345-01",
+        "ES-PATH-350-01"
       ],
       "omits": [],
       "relocates": {}
@@ -4813,7 +4930,9 @@
         "ES-PATH-016",
         "ES-PATH-016-AGE",
         "ES-PATH-026",
-        "ES-PATH-344-01"
+        "ES-PATH-344-01",
+        "ES-PATH-351-01",
+        "ES-PATH-352-01"
       ],
       "omits": [],
       "relocates": {}
@@ -9204,6 +9323,111 @@
         "ES-C345-parte",
         "ES-C345-persona",
         "ES-C345-objeto"
+      ]
+    },
+    {
+      "id": "ES-EXT-346-PLACE",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five buildings a town has -- a school, a church, a market, an office and a station -- and ask where each one is.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C346-escuela",
+        "ES-C346-iglesia",
+        "ES-C346-mercado",
+        "ES-C346-oficina",
+        "ES-C346-estacion"
+      ]
+    },
+    {
+      "id": "ES-EXT-347-PLACE",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can send somebody north, south or west, name the middle of a town, and say what lies all around it.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C347-norte",
+        "ES-C347-sur",
+        "ES-C347-oeste",
+        "ES-C347-centro",
+        "ES-C347-alrededor"
+      ]
+    },
+    {
+      "id": "ES-EXT-348-SPAN",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name the start and the end of a stretch of time, name a single instant inside it, report a delay, and claim my turn.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C348-principio",
+        "ES-C348-fin",
+        "ES-C348-instante",
+        "ES-C348-demora",
+        "ES-C348-turno"
+      ]
+    },
+    {
+      "id": "ES-EXT-349-SPAN",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name a day's whole stretch, a decade, a holiday and an anniversary, and name the book those dates are written in.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C349-jornada",
+        "ES-C349-decada",
+        "ES-C349-fiesta",
+        "ES-C349-aniversario",
+        "ES-C349-agenda"
+      ]
+    },
+    {
+      "id": "ES-EXT-350-REF",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can say a thing is my own or somebody else's, say two things are the same or different, and ask what kind it is.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C350-propio",
+        "ES-C350-ajeno",
+        "ES-C350-igual",
+        "ES-C350-distinto",
+        "ES-C350-tipo"
+      ]
+    },
+    {
+      "id": "ES-EXT-351-COUNT",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can count to a hundred, name an amount, take two things together, say there are several, and treble a figure.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C351-cien",
+        "ES-C351-cantidad",
+        "ES-C351-ambos",
+        "ES-C351-varios",
+        "ES-C351-triple"
+      ]
+    },
+    {
+      "id": "ES-EXT-352-COUNT",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name a set, say it is whole, name most of it, name what is left, and say there is not enough.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C352-conjunto",
+        "ES-C352-entero",
+        "ES-C352-mayoria",
+        "ES-C352-resto",
+        "ES-C352-escaso"
       ]
     }
   ],

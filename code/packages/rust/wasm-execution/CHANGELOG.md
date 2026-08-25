@@ -2,6 +2,45 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.48] - 2026-08-24 (task #229-231 — SIMD widen PR38: i8x16.shuffle, unlocks 268 stuck directives in the already-vendored simd_lane.wast)
+
+### Added
+
+- `i8x16.shuffle` (sub-opcode `0x0D`): the most structurally complex
+  SIMD opcode implemented in this crate so far. Decoded as a new
+  `DecodedOperand::Shuffle([u8; 16])` variant (mirrors `V128Const`'s
+  16-byte-raw-immediate decode arm exactly, since the binary shape is
+  identical -- 16 raw, non-LEB128 bytes right after the sub-opcode), and
+  packed into the SAME `ctx.simd_consts` const-pool `convert_operand`
+  already uses for `v128.const`, tagged with sub-opcode `0x0D` instead
+  of `0x0C` so `register_simd` can tell the two apart. Reusing the pool
+  (rather than adding a second `Vec<[u8; 16]>` field to
+  `WasmExecutionContext`) avoided touching every call-frame save/restore
+  site that field would otherwise need threading through.
+- `register_simd`'s dispatch: a new `sub_opcode == 0x0D` early
+  special-case (mirroring the existing `sub_opcode == 0x0C` v128.const
+  case, both intercepted before the generic `SimdOpKind` lookup). Pops
+  TWO v128 operands (rhs on top, popped first, per the usual WASM
+  binary-op convention), conceptually concatenates them into a 32-byte
+  `combined` array (first-popped/bottom operand = lanes 0-15,
+  second-popped/top operand = lanes 16-31), then for each of the 16
+  output lanes reads `combined[immediate[i]]`.
+- Security: every one of the 16 immediate bytes is guaranteed `0..=31`
+  for any module that passed `wasm-validator`'s new validation-time
+  check (see that crate's own changelog) -- this executor's own
+  `idx >= 32` guard is real bounds-checking kept as DEFENSE IN DEPTH
+  (this crate has no validation pass of its own; a hand-built
+  instruction stream, as this crate's own unit tests build directly,
+  can still reach it), not a claim that a validated module could ever
+  trip it. On that path it returns a clean `VMError`, never a panic or
+  an out-of-bounds read of the 32-byte `combined` array -- no `%`-wrap,
+  no unchecked index.
+- 5 new unit tests: identity shuffle (indices 0-15, copies the first
+  operand unchanged), pure-second-operand shuffle (indices 16-31),
+  reverse-second-operand shuffle, an interleaving shuffle that reads
+  from BOTH operands' halves of the combined space in one instruction,
+  and the out-of-range-immediate-byte defense-in-depth case above.
+
 ## [0.9.47] - 2026-08-24 (task #226-228 — SIMD widen PR37: extract_lane/replace_lane family, remaining shapes)
 
 ### Added
