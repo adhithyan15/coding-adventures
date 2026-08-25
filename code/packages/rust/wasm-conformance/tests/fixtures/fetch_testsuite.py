@@ -731,6 +731,28 @@ TESTSUITE_FILES = [
     # `either` grading infrastructure PR1 added unchanged -- no new
     # harness work needed for this PR.
     "i16x8_relaxed_q15mulr_s.wast",
+    # Relaxed SIMD epic PR3 (see code/specs/
+    # W19-wasm-relaxed-simd-first-slice.md): relaxed_min_max.wast --
+    # `f32x4.relaxed_min`/`relaxed_max` (sub-opcodes 0x10d/0x10e),
+    # `f64x2.relaxed_min`/`relaxed_max` (sub-opcodes 0x10f/0x110), the
+    # THIRD relaxed-simd PR (8577 bytes, confirmed byte-identical against
+    # the same pinned SHA). The first relaxed-simd file whose `either`
+    # groups carry FOUR alternatives, not two -- forced a genuine
+    # generalization of `wasm-wast-parser`'s `either` parsing arm (folds
+    # N children into a right-leaning chain of nested `Expected::Either`s
+    # instead of assuming exactly 2; `value_matches_expected`'s existing
+    # recursive `||` grading needed no changes at all). All 4 opcodes
+    # reuse this repo's existing `PminF32x4`/`PmaxF32x4`/`PminF64x2`/
+    # `PmaxF64x2` bodies verbatim -- hand-verified against every `either`
+    # group in this file to be an exact, literal match to one of the real
+    # alternatives (see `SimdOpKind::RelaxedMinF32x4`'s own doc comment).
+    # The other 4 remaining relaxed-simd files (`i32x4_relaxed_trunc.wast`
+    # -- flagged as having ZERO real `assert_return` directives, weaker
+    # coverage than every other file here -- `relaxed_dot_product.wast`,
+    # `relaxed_laneselect.wast`, `relaxed_madd_nmadd.wast`) are each a
+    # later PR's scope, same one-opcode-family-per-PR cadence the base
+    # SIMD epic (PR1-PR47) established.
+    "relaxed_min_max.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under

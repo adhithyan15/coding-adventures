@@ -2068,7 +2068,11 @@ fn encode_stream_instr(
             | wasm_opcodes::SimdOpKind::TruncF64x2
             | wasm_opcodes::SimdOpKind::NearestF64x2
             | wasm_opcodes::SimdOpKind::RelaxedSwizzle
-            | wasm_opcodes::SimdOpKind::RelaxedQ15mulrI16x8S => {
+            | wasm_opcodes::SimdOpKind::RelaxedQ15mulrI16x8S
+            | wasm_opcodes::SimdOpKind::RelaxedMinF32x4
+            | wasm_opcodes::SimdOpKind::RelaxedMaxF32x4
+            | wasm_opcodes::SimdOpKind::RelaxedMinF64x2
+            | wasm_opcodes::SimdOpKind::RelaxedMaxF64x2 => {
                 // `i8x16.add_sat_s`/`_u`/`.sub_sat_s`/`_u`/
                 // `i16x8.add_sat_s`/`_u`/`.sub_sat_s`/`_u` (SIMD widen
                 // PR33) join too: same BINARY (pop two v128s, push one),
@@ -2162,6 +2166,14 @@ fn encode_stream_instr(
                 // selection (including `nearest`'s ties-to-even semantics,
                 // see `SimdOpKind::NearestF32x4`'s own doc comment) is
                 // entirely a runtime concern, invisible here.
+                // `f32x4.relaxed_min`/`relaxed_max`,
+                // `f64x2.relaxed_min`/`relaxed_max` (relaxed SIMD epic PR3
+                // -- see code/specs/W19-wasm-relaxed-simd-first-slice.md)
+                // join too: same `(v128, v128) -> v128` shape as
+                // `PminF32x4`/`PmaxF32x4`/`PminF64x2`/`PmaxF64x2` above,
+                // whose bodies they reuse verbatim at the runtime level --
+                // entirely invisible here, still just two V128 pops, one
+                // V128 push.
                 out.push(0xFD);
                 out.extend(wasm_leb128::encode_unsigned(simd_op.sub_opcode as u64));
                 return Ok(0);
@@ -3048,7 +3060,11 @@ fn encode_flat_instr(
             | wasm_opcodes::SimdOpKind::TruncF64x2
             | wasm_opcodes::SimdOpKind::NearestF64x2
             | wasm_opcodes::SimdOpKind::RelaxedSwizzle
-            | wasm_opcodes::SimdOpKind::RelaxedQ15mulrI16x8S => {
+            | wasm_opcodes::SimdOpKind::RelaxedQ15mulrI16x8S
+            | wasm_opcodes::SimdOpKind::RelaxedMinF32x4
+            | wasm_opcodes::SimdOpKind::RelaxedMaxF32x4
+            | wasm_opcodes::SimdOpKind::RelaxedMinF64x2
+            | wasm_opcodes::SimdOpKind::RelaxedMaxF64x2 => {
                 // `i8x16.add_sat_s`/`_u`/`.sub_sat_s`/`_u`/
                 // `i16x8.add_sat_s`/`_u`/`.sub_sat_s`/`_u` (SIMD widen
                 // PR33) join too, same reasoning as `NarrowI16x8S/_U`
@@ -3095,6 +3111,10 @@ fn encode_flat_instr(
                 // matching comment in `encode_stream_instr` above.
                 // `f32x4.ceil`/`floor`/`trunc`/`nearest` and
                 // `f64x2.ceil`/`floor`/`trunc`/`nearest` (SIMD widen PR39)
+                // join too, same reasoning -- see the matching comment in
+                // `encode_stream_instr` above.
+                // `f32x4.relaxed_min`/`relaxed_max`,
+                // `f64x2.relaxed_min`/`relaxed_max` (relaxed SIMD epic PR3)
                 // join too, same reasoning -- see the matching comment in
                 // `encode_stream_instr` above.
                 encode_instr_list(args, icx, out)?;

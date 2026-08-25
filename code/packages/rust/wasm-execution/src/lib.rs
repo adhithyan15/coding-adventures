@@ -7075,6 +7075,110 @@ fn register_simd(vm: &mut GenericVM) {
                 let handle = push_v128(ctx, result)?;
                 push_wasm(vm, WasmValue::V128(handle));
             }
+            SimdOpKind::RelaxedMinF32x4 | SimdOpKind::RelaxedMaxF32x4 => {
+                // f32x4.relaxed_min/relaxed_max (relaxed SIMD epic PR3 --
+                // see `code/specs/W19-wasm-relaxed-simd-first-slice.md`):
+                // the relaxed-simd spec deliberately leaves `min`/`max`'s
+                // NaN and signed-zero handling implementation-defined --
+                // an engine MAY propagate NaN and canonicalize signed
+                // zeros (this repo's plain `MinF32x4`/`MaxF32x4` behavior,
+                // above) OR use the simpler `pmin`/`pmax`-style `<`-based
+                // select that returns the first/lower-pushed operand
+                // unchanged on a NaN or a zero-sign tie (`PminF32x4`/
+                // `PmaxF32x4`, above). Verified BY HAND against the real
+                // upstream `relaxed_min_max.wast` corpus's own `either`
+                // expected-value groups (not assumed from spec prose
+                // alone; this file's `either` groups have FOUR
+                // alternatives each, the first relaxed-simd file to need
+                // more than two -- see `wasm-wast-parser`'s
+                // `Expected::Either` doc comment for the N-ary
+                // generalization this forced): for
+                // `relaxed_min(a=[-nan,nan,0,0], b=[0,0,-nan,nan])`,
+                // `PminF32x4`'s formula (`lane_b < lane_a ? lane_b :
+                // lane_a`) returns `a` unchanged in all 4 lanes (`b < a`
+                // is always `false` when either lane is NaN), giving
+                // `[-nan,nan,0,0]` -- an EXACT, literal match to that
+                // test's second `either` alternative
+                // (`nan:canonical nan:canonical 0 0`, which accepts
+                // either NaN sign). For the zero-sign case
+                // (`a=[+0,-0,+0,-0]`, `b=[-0,+0,+0,-0]`), `Pmin`'s `<`
+                // comparison is `false` for every signed-zero pair
+                // (`-0.0 == +0.0` under IEEE-754 `<`), so the result is
+                // `a` unchanged (`[+0,-0,+0,-0]`) -- again an exact match
+                // to that test's second `either` alternative.
+                // `relaxed_max` mirrors this exactly with `PmaxF32x4`'s
+                // formula (`lane_a < lane_b ? lane_b : lane_a`): NaN
+                // comparisons are `false` regardless of which side of `<`
+                // they're on, so `Pmax` ALSO returns `a` unchanged
+                // whenever either lane is NaN or the zero signs tie --
+                // hand-checked against every `f32x4.relaxed_max` case in
+                // the same file, same exact-match result. So these two
+                // arms are intentionally byte-for-byte copies of
+                // `PminF32x4`/`PmaxF32x4`'s body above -- same shape, same
+                // deterministic choice, no new numeric logic needed. Own
+                // arm rather than folding into `PminF32x4`/`PmaxF32x4`'s
+                // pattern above, matching this match's existing
+                // convention of one arm per `SimdOpKind` even when kinds
+                // share identical bodies (e.g. `RelaxedSwizzle`/`Swizzle`
+                // above don't merge either).
+                let rhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let lhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let b = *ctx
+                    .v128_heap
+                    .get(rhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let a = *ctx
+                    .v128_heap
+                    .get(lhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let mut result = [0u8; 16];
+                for i in 0..4 {
+                    let lane_a = f32::from_le_bytes(a[i * 4..i * 4 + 4].try_into().unwrap());
+                    let lane_b = f32::from_le_bytes(b[i * 4..i * 4 + 4].try_into().unwrap());
+                    let out = match op.kind {
+                        SimdOpKind::RelaxedMinF32x4 => if lane_b < lane_a { lane_b } else { lane_a },
+                        SimdOpKind::RelaxedMaxF32x4 => if lane_a < lane_b { lane_b } else { lane_a },
+                        _ => unreachable!("only RelaxedMinF32x4/RelaxedMaxF32x4 reach this arm"),
+                    };
+                    result[i * 4..i * 4 + 4].copy_from_slice(&out.to_le_bytes());
+                }
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::RelaxedMinF64x2 | SimdOpKind::RelaxedMaxF64x2 => {
+                // f64x2.relaxed_min/relaxed_max (relaxed SIMD epic PR3):
+                // direct 2-lane mirror of `RelaxedMinF32x4`/
+                // `RelaxedMaxF32x4` just above, reusing `PminF64x2`/
+                // `PmaxF64x2`'s body verbatim -- same hand-verification
+                // discipline against the real `relaxed_min_max.wast`
+                // corpus's `f64x2.relaxed_min`/`relaxed_max` cases (e.g.
+                // `relaxed_min(a=[0,0], b=[-nan,nan])` -> `Pmin` returns
+                // `a` unchanged (`[0,0]`), an exact match to that test's
+                // `either` alternative #2/#4).
+                let rhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let lhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let b = *ctx
+                    .v128_heap
+                    .get(rhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let a = *ctx
+                    .v128_heap
+                    .get(lhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let mut result = [0u8; 16];
+                for i in 0..2 {
+                    let lane_a = f64::from_le_bytes(a[i * 8..i * 8 + 8].try_into().unwrap());
+                    let lane_b = f64::from_le_bytes(b[i * 8..i * 8 + 8].try_into().unwrap());
+                    let out = match op.kind {
+                        SimdOpKind::RelaxedMinF64x2 => if lane_b < lane_a { lane_b } else { lane_a },
+                        SimdOpKind::RelaxedMaxF64x2 => if lane_a < lane_b { lane_b } else { lane_a },
+                        _ => unreachable!("only RelaxedMinF64x2/RelaxedMaxF64x2 reach this arm"),
+                    };
+                    result[i * 8..i * 8 + 8].copy_from_slice(&out.to_le_bytes());
+                }
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
             SimdOpKind::ExtractLaneI8x16S | SimdOpKind::ExtractLaneI8x16U => {
                 // i8x16.extract_lane_s/_u (SIMD widen PR18): pop a v128,
                 // read the `aux`-selected `i8` lane back out as a plain
@@ -18054,6 +18158,179 @@ mod tests {
             Some(V128Bytes(v128_const_bytes_i16x8([32767, 32767, 32766, 0, 0, 0, 0, 0]).try_into().unwrap())),
             "must exactly match the corpus's second `either` alternative -- lane 0 (MIN, MIN) saturates to i16::MAX"
         );
+    }
+
+    // ── Relaxed SIMD epic PR3: f32x4.relaxed_min/max, f64x2.relaxed_min/max
+    // -- see code/specs/W19-wasm-relaxed-simd-first-slice.md ────────────
+
+    /// `f32x4.relaxed_min`/`relaxed_max`'s sub-opcodes are `0x10d`/`0x10e`
+    /// (269/270 decimal) -- LEB128-encode as `[0x8D, 0x02]`/`[0x8E, 0x02]`
+    /// (low 7 bits with the continuation bit set, remaining bits `0x02`).
+    /// This test confirms that 2-byte encoding decodes correctly AND that
+    /// these opcodes reuse `PminF32x4`/`PmaxF32x4`'s exact body: on an
+    /// operand pair where EITHER lane is NaN, the relaxed op must return
+    /// the FIRST operand `a` UNCHANGED (not a canonicalized NaN the way
+    /// `MinF32x4`/`MaxF32x4` would produce) -- verified by hand against
+    /// the real upstream `relaxed_min_max.wast` corpus's own `either`
+    /// groups (see `SimdOpKind::RelaxedMinF32x4`'s doc comment): this
+    /// repo's choice is a literal, exact match to that corpus's second
+    /// `either` alternative in every NaN-bearing case.
+    #[test]
+    fn f32x4_relaxed_min_max_return_the_first_operand_unchanged_when_either_operand_is_nan() {
+        let op_code = |lhs: [f32; 4], rhs: [f32; 4], sub_opcode: u8| {
+            let mut code = vec![0xFD, 0x0C];
+            code.extend(v128_const_bytes_f32x4(lhs));
+            code.extend([0xFD, 0x0C]);
+            code.extend(v128_const_bytes_f32x4(rhs));
+            code.extend([0xFD, sub_opcode, 0x02]); // 2-byte LEB128 (sub-opcode is >= 0x100)
+            code.push(0x0B);
+            code
+        };
+
+        // relaxed_min(NaN, 5.0): a=NaN is the first operand -> result must
+        // be NaN (a itself, unchanged).
+        let mut engine = simd_engine_returning_v128(op_code([f32::NAN; 4], [5.0; 4], 0x8D));
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f32x4_lanes(results[0].unwrap());
+        assert!(out.iter().all(|v| v.is_nan()), "relaxed_min(NaN, 5.0) must return the first operand (NaN), got {out:?}");
+
+        // relaxed_min(5.0, NaN): a=5.0 is the first operand, b=NaN -> `b <
+        // a` is false (NaN comparisons are always false), so the result
+        // must be `a` (5.0) UNCHANGED, NOT NaN.
+        let mut engine = simd_engine_returning_v128(op_code([5.0; 4], [f32::NAN; 4], 0x8D));
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f32x4_lanes(results[0].unwrap());
+        assert_eq!(out, [5.0; 4], "relaxed_min(5.0, NaN) must return the first operand (5.0) UNCHANGED, not NaN -- got {out:?}");
+
+        // relaxed_max(NaN, 5.0): a=NaN is the first operand -> result must
+        // be NaN.
+        let mut engine = simd_engine_returning_v128(op_code([f32::NAN; 4], [5.0; 4], 0x8E));
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f32x4_lanes(results[0].unwrap());
+        assert!(out.iter().all(|v| v.is_nan()), "relaxed_max(NaN, 5.0) must return the first operand (NaN), got {out:?}");
+
+        // relaxed_max(5.0, NaN): a=5.0 is the first operand, b=NaN -> `a <
+        // b` is false -> result must be `a` (5.0) UNCHANGED, NOT NaN.
+        let mut engine = simd_engine_returning_v128(op_code([5.0; 4], [f32::NAN; 4], 0x8E));
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f32x4_lanes(results[0].unwrap());
+        assert_eq!(out, [5.0; 4], "relaxed_max(5.0, NaN) must return the first operand (5.0) UNCHANGED, not NaN -- got {out:?}");
+    }
+
+    /// `f32x4.relaxed_min`/`relaxed_max`: ordinary non-NaN values must
+    /// match the plain `<`-based select exactly, same as `pmin`/`pmax`.
+    #[test]
+    fn f32x4_relaxed_min_max_normal_case_matches_plain_less_than_select() {
+        let lhs = [-3.0f32, 2.0f32, 7.5f32, -1.5f32];
+        let rhs = [2.0f32, -3.0f32, 7.5f32, -1.5f32];
+
+        let mut min_code = vec![0xFD, 0x0C];
+        min_code.extend(v128_const_bytes_f32x4(lhs));
+        min_code.extend([0xFD, 0x0C]);
+        min_code.extend(v128_const_bytes_f32x4(rhs));
+        min_code.extend([0xFD, 0x8D, 0x02]); // f32x4.relaxed_min (sub-opcode 0x10d)
+        min_code.push(0x0B);
+        let mut min_engine = simd_engine_returning_v128(min_code);
+        let (_, min_results) = min_engine.call_function_with_v128(0, &[]).unwrap();
+        let min_out = f32x4_lanes(min_results[0].unwrap());
+        assert_eq!(min_out, [-3.0, -3.0, 7.5, -1.5], "f32x4.relaxed_min must pick the smaller value in each lane on ordinary finite operands");
+
+        let mut max_code = vec![0xFD, 0x0C];
+        max_code.extend(v128_const_bytes_f32x4(lhs));
+        max_code.extend([0xFD, 0x0C]);
+        max_code.extend(v128_const_bytes_f32x4(rhs));
+        max_code.extend([0xFD, 0x8E, 0x02]); // f32x4.relaxed_max (sub-opcode 0x10e)
+        max_code.push(0x0B);
+        let mut max_engine = simd_engine_returning_v128(max_code);
+        let (_, max_results) = max_engine.call_function_with_v128(0, &[]).unwrap();
+        let max_out = f32x4_lanes(max_results[0].unwrap());
+        assert_eq!(max_out, [2.0, 2.0, 7.5, -1.5], "f32x4.relaxed_max must pick the larger value in each lane on ordinary finite operands");
+    }
+
+    /// `f64x2.relaxed_min`/`relaxed_max`: 2-lane mirror of the `f32x4`
+    /// tests above, sub-opcodes `0x10f`/`0x110` (2-byte LEB128 `[0x8F,
+    /// 0x02]`/`[0x90, 0x02]`). Reuses `PminF64x2`/`PmaxF64x2`'s body
+    /// verbatim -- same NaN/first-operand-unchanged behavior, verified by
+    /// hand against the real corpus's `f64x2.relaxed_min`/`relaxed_max`
+    /// cases (see `SimdOpKind::RelaxedMinF64x2`'s doc comment).
+    #[test]
+    fn f64x2_relaxed_min_max_return_the_first_operand_unchanged_when_either_operand_is_nan() {
+        let op_code = |lhs: [f64; 2], rhs: [f64; 2], sub_opcode: u8| {
+            let mut code = vec![0xFD, 0x0C];
+            code.extend(v128_const_bytes_f64x2(lhs));
+            code.extend([0xFD, 0x0C]);
+            code.extend(v128_const_bytes_f64x2(rhs));
+            code.extend([0xFD, sub_opcode, 0x02]);
+            code.push(0x0B);
+            code
+        };
+
+        let mut engine = simd_engine_returning_v128(op_code([f64::NAN; 2], [5.0; 2], 0x8F));
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f64x2_lanes(results[0].unwrap());
+        assert!(out.iter().all(|v| v.is_nan()), "relaxed_min(NaN, 5.0) must return the first operand (NaN), got {out:?}");
+
+        let mut engine = simd_engine_returning_v128(op_code([5.0; 2], [f64::NAN; 2], 0x8F));
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f64x2_lanes(results[0].unwrap());
+        assert_eq!(out, [5.0; 2], "relaxed_min(5.0, NaN) must return the first operand (5.0) UNCHANGED, not NaN -- got {out:?}");
+
+        let mut engine = simd_engine_returning_v128(op_code([f64::NAN; 2], [5.0; 2], 0x90));
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f64x2_lanes(results[0].unwrap());
+        assert!(out.iter().all(|v| v.is_nan()), "relaxed_max(NaN, 5.0) must return the first operand (NaN), got {out:?}");
+
+        let mut engine = simd_engine_returning_v128(op_code([5.0; 2], [f64::NAN; 2], 0x90));
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f64x2_lanes(results[0].unwrap());
+        assert_eq!(out, [5.0; 2], "relaxed_max(5.0, NaN) must return the first operand (5.0) UNCHANGED, not NaN -- got {out:?}");
+    }
+
+    /// `f64x2.relaxed_min`/`relaxed_max`: ordinary non-NaN values, plus
+    /// the zero-sign-tie case lifted directly from the real corpus (both
+    /// `0x8D`-style opcodes fall back to `a` unchanged on an IEEE-754 `<`
+    /// tie, same as their `f32x4` counterparts).
+    #[test]
+    fn f64x2_relaxed_min_max_normal_case_matches_plain_less_than_select() {
+        let lhs = [-3.0f64, 7.5f64];
+        let rhs = [2.0f64, 7.5f64];
+
+        let mut min_code = vec![0xFD, 0x0C];
+        min_code.extend(v128_const_bytes_f64x2(lhs));
+        min_code.extend([0xFD, 0x0C]);
+        min_code.extend(v128_const_bytes_f64x2(rhs));
+        min_code.extend([0xFD, 0x8F, 0x02]); // f64x2.relaxed_min (sub-opcode 0x10f)
+        min_code.push(0x0B);
+        let mut min_engine = simd_engine_returning_v128(min_code);
+        let (_, min_results) = min_engine.call_function_with_v128(0, &[]).unwrap();
+        let min_out = f64x2_lanes(min_results[0].unwrap());
+        assert_eq!(min_out, [-3.0, 7.5], "f64x2.relaxed_min must pick the smaller value in each lane on ordinary finite operands");
+
+        let mut max_code = vec![0xFD, 0x0C];
+        max_code.extend(v128_const_bytes_f64x2(lhs));
+        max_code.extend([0xFD, 0x0C]);
+        max_code.extend(v128_const_bytes_f64x2(rhs));
+        max_code.extend([0xFD, 0x90, 0x02]); // f64x2.relaxed_max (sub-opcode 0x110)
+        max_code.push(0x0B);
+        let mut max_engine = simd_engine_returning_v128(max_code);
+        let (_, max_results) = max_engine.call_function_with_v128(0, &[]).unwrap();
+        let max_out = f64x2_lanes(max_results[0].unwrap());
+        assert_eq!(max_out, [2.0, 7.5], "f64x2.relaxed_max must pick the larger value in each lane on ordinary finite operands");
+
+        // Zero-sign tie, lifted from the real `relaxed_min_max.wast`
+        // corpus: relaxed_min(a=[+0.0, +0.0], b=[+0.0, +0.0]) must return
+        // `a` unchanged (+0.0 in both lanes) since `b < a` is false for a
+        // tie.
+        let mut tie_code = vec![0xFD, 0x0C];
+        tie_code.extend(v128_const_bytes_f64x2([0.0, 0.0]));
+        tie_code.extend([0xFD, 0x0C]);
+        tie_code.extend(v128_const_bytes_f64x2([0.0, 0.0]));
+        tie_code.extend([0xFD, 0x8F, 0x02]);
+        tie_code.push(0x0B);
+        let mut tie_engine = simd_engine_returning_v128(tie_code);
+        let (_, tie_results) = tie_engine.call_function_with_v128(0, &[]).unwrap();
+        let tie_out = f64x2_lanes(tie_results[0].unwrap());
+        assert_eq!(tie_out, [0.0, 0.0], "relaxed_min(+0.0, +0.0) must return +0.0 in both lanes");
     }
 
     // ── SIMD widen PR38 (task #229-231): i8x16.shuffle ──────────────────

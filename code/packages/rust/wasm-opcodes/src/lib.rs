@@ -2362,6 +2362,69 @@ pub enum SimdOpKind {
     /// `SimdOpKind::RelaxedQ15mulrI16x8S` match arm (own arm, not shared,
     /// matching this table's per-kind-duplication convention).
     RelaxedQ15mulrI16x8S,
+    /// `f32x4.relaxed_min` (SIMD relaxed-SIMD epic, PR3 -- see
+    /// `code/specs/W19-wasm-relaxed-simd-first-slice.md`) -- sub-opcode
+    /// `0x10d`, the THIRD relaxed-simd opcode after [`Self::RelaxedSwizzle`]/
+    /// [`Self::RelaxedQ15mulrI16x8S`]. Same `(v128, v128) -> v128` binary
+    /// shape as every other relaxed-simd op so far. Confirmed against the
+    /// real upstream `relaxed_min_max.wast` corpus (pinned
+    /// `WebAssembly/testsuite` SHA `28864811cf03bdbf880733786148feaba339582d`):
+    /// EVERY `either` in that file has FOUR alternatives, not the two
+    /// [`Self::RelaxedSwizzle`]/[`Self::RelaxedQ15mulrI16x8S`] each used --
+    /// see [`crate` sibling crate] `wasm-wast-parser`'s `Expected::Either`
+    /// doc comment for the generalization this forced (an N-ary `either`
+    /// folds into nested binary `Either`s, not a data-structure change).
+    /// Hand-verified lane-by-lane against every `either` case in the real
+    /// file (not assumed from spec prose): this repo's existing
+    /// [`Self::PminF32x4`] body (`lane_b < lane_a ? lane_b : lane_a`, i.e.
+    /// return the FIRST/lower-pushed operand unchanged whenever either
+    /// lane is NaN or the two lanes tie under IEEE-754 `<`) reproduces the
+    /// corpus's second `either` alternative EXACTLY in every one of that
+    /// file's `f32x4.relaxed_min` cases -- e.g. for
+    /// `relaxed_min(a=[-nan,nan,0,0], b=[0,0,-nan,nan])`, `Pmin`'s formula
+    /// returns `a` in all 4 lanes (since `b < a` is `false` whenever
+    /// either lane is a NaN), giving `[-nan,nan,0,0]`, a literal, bit-
+    /// exact match to that test's `either` alternative #2
+    /// (`nan:canonical nan:canonical 0 0`, which accepts either NaN
+    /// sign). So this opcode reuses [`Self::PminF32x4`]'s body verbatim --
+    /// the relaxed-simd spec's own text explicitly allows `min`/`max` to
+    /// pick either the strict NaN-propagating behavior OR the simpler
+    /// `pmin`/`pmax`-style select, and this repo picks the latter since
+    /// it already exists and is a literal member of the corpus's `either`
+    /// set. See `wasm-execution`'s `SimdOpKind::RelaxedMinF32x4` match arm
+    /// (own arm, not shared, matching this table's per-kind-duplication
+    /// convention).
+    RelaxedMinF32x4,
+    /// `f32x4.relaxed_max` (relaxed-SIMD epic, PR3) -- sub-opcode `0x10e`,
+    /// the mirror of [`Self::RelaxedMinF32x4`] using [`Self::PmaxF32x4`]'s
+    /// body (`lane_a < lane_b ? lane_b : lane_a`) instead of `Pmin`'s.
+    /// Hand-verified the same way: for
+    /// `relaxed_max(a=[-nan,nan,0,0], b=[0,0,-nan,nan])`, `Pmax`'s formula
+    /// ALSO returns `a` in all 4 lanes (NaN comparisons are always
+    /// `false` regardless of which side of `<` they're on), giving the
+    /// same `[-nan,nan,0,0]` -- again an exact match to that test's
+    /// `either` alternative #2. For the zero-sign case
+    /// (`relaxed_max(a=[+0,-0,+0,-0], b=[-0,+0,+0,-0])`), `Pmax` returns
+    /// `a` in every lane too (`+0.0 < -0.0` and `-0.0 < +0.0` are both
+    /// `false` under IEEE-754 equality of signed zeros), giving
+    /// `[+0,-0,+0,-0]` -- an exact match to that test's `either`
+    /// alternative #2 as well. Reuses [`Self::PmaxF32x4`]'s body verbatim.
+    RelaxedMaxF32x4,
+    /// `f64x2.relaxed_min` (relaxed-SIMD epic, PR3) -- sub-opcode `0x10f`,
+    /// the 2-lane mirror of [`Self::RelaxedMinF32x4`], reusing
+    /// [`Self::PminF64x2`]'s body verbatim. Hand-verified against the
+    /// real corpus's `f64x2.relaxed_min` cases the same way: e.g.
+    /// `relaxed_min(a=[0,0], b=[-nan,nan])` -- `Pmin` returns `a` in both
+    /// lanes (`b < a` is `false` whenever `b` is NaN), giving `[0,0]`, an
+    /// exact match to that test's `either` alternative #2/#4 (both `0
+    /// 0`).
+    RelaxedMinF64x2,
+    /// `f64x2.relaxed_max` (relaxed-SIMD epic, PR3) -- sub-opcode `0x110`,
+    /// the 2-lane mirror of [`Self::RelaxedMaxF32x4`], reusing
+    /// [`Self::PmaxF64x2`]'s body verbatim. Hand-verified the same way as
+    /// [`Self::RelaxedMinF64x2`] against the real corpus's
+    /// `f64x2.relaxed_max` cases.
+    RelaxedMaxF64x2,
 }
 
 /// One entry in the SIMD opcode table: everything a consumer needs to
@@ -3194,6 +3257,31 @@ pub static SIMD_OPS: &[SimdOpInfo] = &[
     // `either`-pair semantics that let this reuse `Q15mulrSatI16x8S`'s
     // existing execution body unchanged.
     SimdOpInfo { name: "i16x8.relaxed_q15mulr_s", sub_opcode: 0x111, kind: SimdOpKind::RelaxedQ15mulrI16x8S },
+
+    // ── Relaxed SIMD epic, PR3 -- see code/specs/
+    // W19-wasm-relaxed-simd-first-slice.md ──────────────────────────────
+    //
+    // `f32x4.relaxed_min`/`relaxed_max`, `f64x2.relaxed_min`/`relaxed_max`
+    // -- sub-opcodes `0x10d`-`0x110`, confirmed against the same
+    // relaxed-simd Overview.md encoding table `relaxed_swizzle`/
+    // `relaxed_q15mulr_s` above cite (fetched live, not guessed). LEB128
+    // encodings: `0x10d` (269) -> `[0x8D, 0x02]`, `0x10e` (270) ->
+    // `[0x8E, 0x02]`, `0x10f` (271) -> `[0x8F, 0x02]`, `0x110` (272) ->
+    // `[0x90, 0x02]` -- same 2-byte-continuation shape every relaxed-simd
+    // row uses (every value here is `>= 0x100`, past the single-LEB128-
+    // byte range). See `SimdOpKind::RelaxedMinF32x4`/`RelaxedMaxF32x4`/
+    // `RelaxedMinF64x2`/`RelaxedMaxF64x2`'s own doc comments for the
+    // hand-verified `either`-pair semantics (against the real
+    // `relaxed_min_max.wast` corpus, which uses a FOUR-alternative
+    // `either` -- the first relaxed-simd file to need more than two, see
+    // `wasm-wast-parser`'s `Expected::Either` doc comment for the N-ary
+    // generalization this forced) that let these reuse `PminF32x4`/
+    // `PmaxF32x4`/`PminF64x2`/`PmaxF64x2`'s existing execution bodies
+    // unchanged.
+    SimdOpInfo { name: "f32x4.relaxed_min", sub_opcode: 0x10d, kind: SimdOpKind::RelaxedMinF32x4 },
+    SimdOpInfo { name: "f32x4.relaxed_max", sub_opcode: 0x10e, kind: SimdOpKind::RelaxedMaxF32x4 },
+    SimdOpInfo { name: "f64x2.relaxed_min", sub_opcode: 0x10f, kind: SimdOpKind::RelaxedMinF64x2 },
+    SimdOpInfo { name: "f64x2.relaxed_max", sub_opcode: 0x110, kind: SimdOpKind::RelaxedMaxF64x2 },
 ];
 
 /// Look up a SIMD opcode by its LEB128-decoded sub-opcode value (the
@@ -3612,8 +3700,8 @@ mod tests {
     // ── SIMD (0xFD prefix, v128 first slice) ─────────────────────────────────
 
     #[test]
-    fn simd_ops_table_has_the_expected_238_entries_and_no_duplicates() {
-        assert_eq!(SIMD_OPS.len(), 238);
+    fn simd_ops_table_has_the_expected_242_entries_and_no_duplicates() {
+        assert_eq!(SIMD_OPS.len(), 242);
 
         let mut seen_sub_opcodes = std::collections::HashSet::new();
         let mut seen_names = std::collections::HashSet::new();
@@ -4921,5 +5009,38 @@ mod tests {
         assert_eq!(op.name, "i16x8.relaxed_q15mulr_s");
         assert_eq!(op.kind, SimdOpKind::RelaxedQ15mulrI16x8S);
         assert_eq!(get_simd_op_by_name("i16x8.relaxed_q15mulr_s").map(|o| o.sub_opcode), Some(0x111));
+    }
+
+    // ── Relaxed SIMD epic, PR3 -- see code/specs/
+    // W19-wasm-relaxed-simd-first-slice.md ──────────────────────────────
+
+    #[test]
+    fn simd_relaxed_min_max_have_the_real_verified_sub_opcode_values() {
+        // Relaxed SIMD epic PR3: `f32x4.relaxed_min`/`relaxed_max`,
+        // `f64x2.relaxed_min`/`relaxed_max` -- third/fourth/fifth/sixth
+        // relaxed-simd opcodes, same Overview.md encoding table as
+        // `relaxed_swizzle`/`relaxed_q15mulr_s` above. `0x10d` (269),
+        // `0x10e` (270), `0x10f` (271), `0x110` (272) all LEB128-encode
+        // as 2-byte sequences (`[0x8D, 0x02]`, `[0x8E, 0x02]`,
+        // `[0x8F, 0x02]`, `[0x90, 0x02]`).
+        let min32 = get_simd_op(0x10d).expect("0x10d should be f32x4.relaxed_min");
+        assert_eq!(min32.name, "f32x4.relaxed_min");
+        assert_eq!(min32.kind, SimdOpKind::RelaxedMinF32x4);
+        assert_eq!(get_simd_op_by_name("f32x4.relaxed_min").map(|o| o.sub_opcode), Some(0x10d));
+
+        let max32 = get_simd_op(0x10e).expect("0x10e should be f32x4.relaxed_max");
+        assert_eq!(max32.name, "f32x4.relaxed_max");
+        assert_eq!(max32.kind, SimdOpKind::RelaxedMaxF32x4);
+        assert_eq!(get_simd_op_by_name("f32x4.relaxed_max").map(|o| o.sub_opcode), Some(0x10e));
+
+        let min64 = get_simd_op(0x10f).expect("0x10f should be f64x2.relaxed_min");
+        assert_eq!(min64.name, "f64x2.relaxed_min");
+        assert_eq!(min64.kind, SimdOpKind::RelaxedMinF64x2);
+        assert_eq!(get_simd_op_by_name("f64x2.relaxed_min").map(|o| o.sub_opcode), Some(0x10f));
+
+        let max64 = get_simd_op(0x110).expect("0x110 should be f64x2.relaxed_max");
+        assert_eq!(max64.name, "f64x2.relaxed_max");
+        assert_eq!(max64.kind, SimdOpKind::RelaxedMaxF64x2);
+        assert_eq!(get_simd_op_by_name("f64x2.relaxed_max").map(|o| o.sub_opcode), Some(0x110));
     }
 }
