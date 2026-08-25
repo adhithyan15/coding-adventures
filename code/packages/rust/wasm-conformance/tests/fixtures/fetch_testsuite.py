@@ -659,6 +659,18 @@ TESTSUITE_FILES = [
     # PRs' scope, same one-family-per-PR cadence PR40-42 established.
     "simd_load8_lane.wast",
     "simd_store8_lane.wast",
+    # SIMD PR45: simd_load16_lane.wast / simd_store16_lane.wast --
+    # `v128.load16_lane` (sub-opcode 0x55) / `v128.store16_lane` (0x59),
+    # the SECOND bite of the load{8,16,32,64}_lane/store{8,16,32,64}_lane
+    # family, one width up from PR44's 8-bit pair. Reuses PR44's
+    # `DecodedOperand::SimdMemLane` shape unchanged (no new instruction
+    # SHAPE needed this time) -- just new sub-opcode values, a widened
+    # memarg-detection gate, a narrower lane-index bound (0-7, an i16x8
+    # v128 has 8 lanes not i8x16's 16), and a 2-byte (not 1-byte) memory
+    # access. The remaining 4 opcodes (32/64-bit widths) are later PRs'
+    # scope, same one-family-per-PR cadence PR40-44 established.
+    "simd_load16_lane.wast",
+    "simd_store16_lane.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under

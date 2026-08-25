@@ -2,6 +2,42 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.55] - 2026-08-25 (SIMD PR45: v128.load16_lane/store16_lane)
+
+### Added
+
+- `decode_function_body`'s `0xFD` branch: the `sub_opcode == 0x54 ||
+  sub_opcode == 0x58` gate (from PR44) widened to also intercept
+  `sub_opcode == 0x55 || sub_opcode == 0x59` -- `v128.load16_lane`/
+  `v128.store16_lane`, one width up from PR44's 8-bit pair, reuse the
+  IDENTICAL `DecodedOperand::SimdMemLane` shape unchanged (both
+  `ImmLaneIdx16` and `ImmLaneIdx8` are single raw bytes per
+  BinarySIMD.md, so the one-byte lane read needs no change) -- no new
+  decoder infrastructure needed this time, just the widened condition.
+- `register_simd`: a new `sub_opcode == 0x55 || sub_opcode == 0x59`
+  early-dispatch branch (same "intercept before the generic `SimdOpKind`
+  lookup" pattern PR44's own `0x54`/`0x58` branch uses), implementing:
+  - `v128.load16_lane` (`0x55`): pop the existing `v128` (top of stack),
+    pop the `i32` base address, bounds-checked 2-byte (little-endian)
+    read from memory 0 at `base + memarg offset`, overwrite ONLY the
+    selected lane's 2 bytes of the popped `v128` (every other lane
+    passes through unchanged), push the result.
+  - `v128.store16_lane` (`0x59`): pop the `v128` to read a lane from,
+    pop the `i32` base address, bounds-checked 2-byte write of the
+    selected lane's 2 bytes to memory 0 at `base + memarg offset`.
+  - Lane-index bounds check is `>= 8`, NOT the 8-bit pair's `>= 16` --
+    an `i16x8` v128 holds 8 lanes (2 bytes each), not `i8x16`'s 16 (1
+    byte each); reusing the wider bound would silently accept an
+    invalid lane index 8-15.
+- `SimdOpKind::Load16Lane | SimdOpKind::Store16Lane` added to the
+  `unreachable!` match arm (both are always intercepted by the early
+  dispatch above, before the generic `SimdOpKind` lookup runs).
+- 8 new unit tests: lane-preservation (load), memarg-offset honoring
+  (load), neighboring-byte isolation (store), past-end-of-memory
+  trapping (both directions), and out-of-range (`>= 8`) lane-index
+  rejection (both directions) -- direct mirrors of PR44's own 8-bit
+  test suite, at the 16-bit width.
+
 ## [0.9.54] - 2026-08-25 (SIMD PR44: v128.load8_lane/store8_lane)
 
 ### Added
