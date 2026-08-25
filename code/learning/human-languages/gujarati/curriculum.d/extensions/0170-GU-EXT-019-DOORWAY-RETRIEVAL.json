@@ -1,0 +1,13 @@
+{
+  "id": "GU-EXT-019-DOORWAY-RETRIEVAL",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can retrieve the nine Gujarati doorway forms after meaning lessons, first by reading and then by writing from sound.",
+  "prerequisites": [
+    "GU-EXT-018-DOORWAY-SCRIPT"
+  ],
+  "lessons": [
+    "GU-R04-doorway-nine-r2"
+  ]
+}

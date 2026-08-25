@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+### Added — doorway retrieval earns R1 and R2 (#12834)
+
+- Add two zero-new-atom micro-lessons at the exact expanding intervals: the
+  final three doorway consonants return immediately for R1, then all nine forms
+  return after the first five name-exchange lessons for R2.
+- Score visible-form reading and model-free writing separately in both
+  checkpoints. Each lesson stays under five minutes and a recognition answer
+  cannot substitute for the written response.
+
 ### Added — nine prerequisite-safe doorway forms (#12811)
 
 - Inserted a nine-lesson Chapter 3 before the first name exchange so learners

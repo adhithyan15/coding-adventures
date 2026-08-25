@@ -95,7 +95,8 @@
         "GU-W03-chha",
         "GU-W03-ka",
         "GU-W03-nna",
-        "GU-W03-sha"
+        "GU-W03-sha",
+        "GU-R03-doorway-three-r1"
       ],
       "before": [],
       "inline": [],
@@ -112,13 +113,16 @@
         "GU-C02-maarun",
         "GU-C02-maarun-naam-chhe",
         "GU-C02-anand",
+        "GU-R04-doorway-nine-r2",
         "GU-C02-shun",
         "GU-C02-tu-tame",
         "GU-C02-tamarun-naam-shun-chhe",
         "GU-C03-hun"
       ],
       "before": [],
-      "inline": [],
+      "inline": [
+        "GU-EXT-019-DOORWAY-RETRIEVAL"
+      ],
       "after": []
     },
     {
@@ -893,7 +897,21 @@
         "GU-W03-chha",
         "GU-W03-ka",
         "GU-W03-nna",
-        "GU-W03-sha"
+        "GU-W03-sha",
+        "GU-R03-doorway-three-r1"
+      ]
+    },
+    {
+      "id": "GU-EXT-019-DOORWAY-RETRIEVAL",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can retrieve the nine Gujarati doorway forms after meaning lessons, first by reading and then by writing from sound.",
+      "prerequisites": [
+        "GU-EXT-018-DOORWAY-SCRIPT"
+      ],
+      "lessons": [
+        "GU-R04-doorway-nine-r2"
       ]
     }
   ]

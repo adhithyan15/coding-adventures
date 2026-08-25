@@ -63,8 +63,8 @@ it("pins Gujarati's meaning-first opening script spine", () => {
   expect([...chapterSizes.entries()]).toEqual([
     ["1", 11],
     ["2", 15],
-    ["3", 9],
-    ["4", 9],
+    ["3", 10],
+    ["4", 10],
     ["5", 6],
     ["6", 5],
     ["7", 5],
@@ -147,6 +147,8 @@ it("pins Gujarati's complete pre-A1 writing runway", () => {
     "observe-trace",
     "guided-copy",
     "delayed-copy",
+    "dictation-transcription",
+    "dictation-transcription",
   ]);
 });
 
@@ -170,6 +172,10 @@ it("pins Gujarati-owned objective activities", () => {
     "GU-C03-majaa-vocalic-r-retrieval",
     "GU-C03-tame-kem-chho-dha-retrieval",
     "GU-C06-number-histories-be-source",
+    "GU-R03-doorway-three-r1-dictation",
+    "GU-R03-doorway-three-r1-reading",
+    "GU-R04-doorway-nine-r2-dictation",
+    "GU-R04-doorway-nine-r2-reading",
     "GU-W01-aa-matra-observe-check",
     "GU-W01-ha-observe-check",
     "GU-W01-haa-delayed-copy-check",

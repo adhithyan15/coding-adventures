@@ -47,7 +47,7 @@
     {
       "language": "gujarati",
       "chapter": 3,
-      "sourceHash": "fnv1a64:b46eaa55cab4184b",
+      "sourceHash": "fnv1a64:da0260ba8b7faa01",
       "lessonIds": [
         "GU-W03-ja",
         "GU-W03-o-matra",
@@ -57,20 +57,22 @@
         "GU-W03-chha",
         "GU-W03-ka",
         "GU-W03-nna",
-        "GU-W03-sha"
+        "GU-W03-sha",
+        "GU-R03-doorway-three-r1"
       ],
       "tex": "gujarati/book/chapters/ch03-doorway-glyphs.tex"
     },
     {
       "language": "gujarati",
       "chapter": 4,
-      "sourceHash": "fnv1a64:64a301c2f459091f",
+      "sourceHash": "fnv1a64:2555a51f2f04a0aa",
       "lessonIds": [
         "GU-C02-naam",
         "GU-C02-maarun",
         "GU-C02-chhe",
         "GU-C02-maarun-naam-chhe",
         "GU-C02-anand",
+        "GU-R04-doorway-nine-r2",
         "GU-C02-tu-tame",
         "GU-C02-shun",
         "GU-C02-tamarun-naam-shun-chhe",

@@ -7,12 +7,12 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:2aa88271dd0dce65",
+  "sourceHash": "fnv1a64:ec24a08006f0eda7",
   "summary": {
-    "totalLessons": 88,
+    "totalLessons": 90,
     "voice": 15,
     "sight": 43,
-    "pen": 30,
+    "pen": 32,
     "drivableLessons": 15,
     "drivablePercent": 17,
     "trackCount": 1,
@@ -26,10 +26,10 @@
   "tracks": [
     {
       "language": "gujarati",
-      "lessonCount": 88,
+      "lessonCount": 90,
       "voice": 15,
       "sight": 43,
-      "pen": 30,
+      "pen": 32,
       "drivablePercent": 17,
       "drivablePrefixTotal": 9,
       "modalities": [
@@ -73,10 +73,10 @@
         },
         {
           "chapter": 3,
-          "lessonCount": 9,
+          "lessonCount": 10,
           "voice": 0,
           "sight": 0,
-          "pen": 9,
+          "pen": 10,
           "modalities": [
             "sight",
             "pen"
@@ -88,13 +88,14 @@
         },
         {
           "chapter": 4,
-          "lessonCount": 9,
+          "lessonCount": 10,
           "voice": 2,
           "sight": 7,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
             "voice",
-            "sight"
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 0,
           "firstNonVoiceLesson": "GU-C02-naam",
@@ -1132,10 +1133,33 @@
       "delivery": "script"
     },
     {
+      "id": "GU-R03-doorway-three-r1",
+      "language": "gujarati",
+      "chapter": 3,
+      "sequence": 70,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:29217bc373f59f75",
+      "detachableSegments": [
+        "Writing — from sound"
+      ],
+      "delivery": "script"
+    },
+    {
       "id": "GU-C02-naam",
       "language": "gujarati",
       "chapter": 4,
-      "sequence": 70,
+      "sequence": 71,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -1147,7 +1171,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:2c0b947e5f5e3a69",
+      "sourceHash": "fnv1a64:3c530f0f3a400372",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1232,6 +1256,29 @@
       "detachableSegments": [
         "The letters in this word"
       ]
+    },
+    {
+      "id": "GU-R04-doorway-nine-r2",
+      "language": "gujarati",
+      "chapter": 4,
+      "sequence": 115,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:372e88ee440f1890",
+      "detachableSegments": [
+        "Writing — from sound"
+      ],
+      "delivery": "script"
     },
     {
       "id": "GU-C02-tu-tame",

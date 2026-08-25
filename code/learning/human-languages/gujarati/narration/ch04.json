@@ -4,11 +4,11 @@
   "chapter": 4,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:8435a8e3cc0323a4",
+  "sourceHash": "fnv1a64:b8a36b9f1b2be367",
   "lessons": [
     {
       "id": "GU-C02-naam",
-      "sequence": 70,
+      "sequence": 71,
       "title": "નામ (nām) — \"name,\" a word older than Europe",
       "headword": "નામ",
       "romanization": "",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:2c0b947e5f5e3a69",
+      "sourceHash": "fnv1a64:3c530f0f3a400372",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -627,6 +627,138 @@
             {
               "kind": "speech",
               "text": "What does the phrase literally say, and what is ānand? (\"Having met you, joy happened\"; Sanskrit ānanda, \"bliss.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R04-doorway-nine-r2",
+      "sequence": 115,
+      "title": "The nine-form doorway returns",
+      "headword": "જ ો ં ી ુ છ ક ણ શ",
+      "romanization": "ja — o sign — nasal mark — long-ii sign — u sign — chha — ka — retroflex nna — sha",
+      "gloss": "retrieve the nine doorway forms at the first expanding interval",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:372e88ee440f1890",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 15,
+              "perItem": false,
+              "source": "[PAUSE 15s]"
+            },
+            {
+              "kind": "speech",
+              "text": "With no model, write ક ણ શ once. Check only the form you missed, if any, then put the model away again."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read the visible row once. Keep the four marks and five consonants distinct; score 8/9 before moving to writing."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R04-doorway-nine-r2-reading",
+              "prompt": "Read these nine forms aloud in order: જ ો ં ી ુ છ ક ણ શ (ja — o sign — nasal mark — long-ii sign — u sign — chha — ka — retroflex nna — sha).",
+              "assesses": [
+                "GU-SCRIPT-JA-01",
+                "GU-SCRIPT-O-MATRA-01",
+                "GU-SCRIPT-ANUSVARA-01",
+                "GU-SCRIPT-II-MATRA-01",
+                "GU-SCRIPT-U-MATRA-01",
+                "GU-SCRIPT-CHHA-01",
+                "GU-SCRIPT-KA-01",
+                "GU-SCRIPT-NNA-01",
+                "GU-SCRIPT-SHA-01"
+              ],
+              "responseSeconds": 45,
+              "acceptedResponses": [
+                "ja; o sign; nasal mark; long-ii sign; u sign; chha; ka; retroflex nna; sha"
+              ],
+              "feedback": {
+                "correct": "All nine forms were identified at the expanding interval.",
+                "incorrect": "Repair only the missed card, then read the complete row once more."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — from sound",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover every form. Write the nine spoken cues in their taught order. Writing also needs 8/9; the reading score cannot compensate for it."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-R04-doorway-nine-r2-dictation",
+              "prompt": "Cover the row. Write from these cues: ja, attached o, nasal dot, attached long ii, attached u, chha, ka, retroflex nna, sha.",
+              "assesses": [
+                "GU-SCRIPT-JA-01",
+                "GU-SCRIPT-O-MATRA-01",
+                "GU-SCRIPT-ANUSVARA-01",
+                "GU-SCRIPT-II-MATRA-01",
+                "GU-SCRIPT-U-MATRA-01",
+                "GU-SCRIPT-CHHA-01",
+                "GU-SCRIPT-KA-01",
+                "GU-SCRIPT-NNA-01",
+                "GU-SCRIPT-SHA-01"
+              ],
+              "responseSeconds": 60,
+              "acceptedResponses": [
+                "જ ો ં ી ુ છ ક ણ શ"
+              ],
+              "feedback": {
+                "correct": "The entire doorway row returned without a visible model.",
+                "incorrect": "Check only each missed form, cover every model, and retry the row once."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the four marks, then write the five consonants without looking."
             }
           ]
         }
