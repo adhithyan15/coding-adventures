@@ -6070,10 +6070,13 @@ impl HtmlParser {
         let text = if self.current_element_is_marked_fragment_context("colgroup")
             && !is_html_whitespace_text(&text)
         {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-character-in-colgroup",
-                "non-whitespace character data was ignored by the seeded colgroup fragment context",
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-character-in-colgroup",
+                    "non-whitespace character data was ignored by the seeded colgroup fragment context",
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             text.chars()
                 .filter(|character| is_html_whitespace(*character))
                 .collect::<String>()
@@ -27709,6 +27712,29 @@ mod tests {
         }))
     }
 
+    fn character_in_colgroup_fragment_recovery(
+        source: &str,
+        byte_offset: usize,
+    ) -> ParserDiagnostic {
+        let line_start = source[..byte_offset]
+            .rfind('\n')
+            .map_or(0, |index| index + 1);
+        ParserDiagnostic::new(
+            "unexpected-character-in-colgroup",
+            "non-whitespace character data was ignored by the seeded colgroup fragment context",
+        )
+        .at_emission(Some(SourcePosition {
+            byte_offset,
+            char_offset: source[..byte_offset].chars().count(),
+            line: source[..byte_offset]
+                .chars()
+                .filter(|character| *character == '\n')
+                .count()
+                + 1,
+            column: source[line_start..byte_offset].chars().count() + 1,
+        }))
+    }
+
     fn li_start_tag_in_table_recovery(source: &str, occurrence: usize) -> ParserDiagnostic {
         let prefix = "<li";
         let start = source
@@ -42924,19 +42950,58 @@ mod tests {
     }
 
     #[test]
-    fn reports_text_ignored_by_a_seeded_colgroup_fragment_context() {
-        let output =
-            parse_html_fragment_for_context_with_diagnostics("foo<col>", "colgroup").unwrap();
+    fn positions_text_ignored_by_a_seeded_colgroup_fragment_context() {
+        let source = "é\r\nfoo<col>β<col>γ";
+        let output = parse_html_fragment_for_context_with_diagnostics(source, "colgroup").unwrap();
+        let first_col = source.find("<col>").unwrap();
+        let second_col = source.match_indices("<col>").nth(1).unwrap().0;
 
-        assert_eq!(output.nodes.len(), 1);
-        assert_eq!(element(&output.nodes[0]).name, "col");
+        assert_eq!(
+            output
+                .nodes
+                .iter()
+                .filter_map(|node| match node {
+                    Node::Element(element) => Some(element.name.as_str()),
+                    _ => None,
+                })
+                .collect::<Vec<_>>(),
+            vec!["col", "col"]
+        );
         assert_eq!(
             output.parser_diagnostics,
-            vec![ParserDiagnostic::new(
-                "unexpected-character-in-colgroup",
-                "non-whitespace character data was ignored by the seeded colgroup fragment context"
-            )]
+            vec![
+                character_in_colgroup_fragment_recovery(source, first_col),
+                character_in_colgroup_fragment_recovery(source, second_col),
+                character_in_colgroup_fragment_recovery(source, source.len()),
+            ]
         );
+        assert!(source.len() > source.chars().count());
+
+        for source in [" \t\r\n<col>", "<col", "<div"] {
+            let output =
+                parse_html_fragment_for_context_with_diagnostics(source, "colgroup").unwrap();
+            assert!(output
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "unexpected-character-in-colgroup"));
+        }
+        let ordinary = parse_html_with_diagnostics("<!doctype html><div>x</div>").unwrap();
+        assert!(ordinary
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-character-in-colgroup"));
+
+        let mut unpositioned = HtmlParser::with_fragment_context_options(
+            HtmlParseOptions::default(),
+            "colgroup",
+        );
+        unpositioned.process_token(Token::Text("x".to_string()));
+        let diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-character-in-colgroup")
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
     }
 
     #[test]
