@@ -1,74 +1,58 @@
-# Japanese Session Map — Script Before Decoding
+# Japanese Session Map — One Small Lesson at a Time
 
-This is the authoritative order for the starter course. Every new lesson is an
-independent step of at most 225 seconds. A learner may add due review prompts,
-but no session fuses two new signs into one indivisible lesson.
+This map describes the current authored pre-A1 runway. One canonical lesson is
+one new-lesson session, and every lesson has a hard ceiling of five minutes.
+Reviews may be added when due, but two new signs are never fused into one larger
+lesson merely to shorten the schedule.
 
-The governing rule is simple: a sign becomes load-bearing only after a script
-lesson has isolated its shape, sound or reading, and a small writing action. A
-historical spelling or advanced example that has not earned that preparation is
-given in romanization and postponed.
+The exact order is derived from lesson frontmatter: chapter, then `sequence`,
+then lesson id as a stable tie-breaker. [`curriculum.json`](./curriculum.json)
+and [`chapters.json`](./chapters.json) are authoritative; this learner-facing map
+summarises them instead of maintaining a second 100-row ordering by hand.
 
-## New-lesson sessions
+## Current sessions
 
-| Session | Chapter | New lesson | One small outcome |
-|---|---:|---|---|
-| **S1** | 1 | [`JA-W01-i`](./lessons/JA-W01-i.md) | trace and write **い** |
-| **S2** | 1 | [`JA-W01-ha`](./lessons/JA-W01-ha.md) | trace and write **は** |
-| **S3** | 1 | [`JA-W01-hai-read`](./lessons/JA-W01-hai-read.md) | join **は + い** |
-| **S4** | 1 | [`JA-W01-e`](./lessons/JA-W01-e.md) | trace and write **え** |
-| **S5** | 1 | [`JA-C01-hai`](./lessons/JA-C01-hai.md) | hear, say, read and write **はい** |
-| **S6** | 1 | [`JA-C01-iie`](./lessons/JA-C01-iie.md) | contrast **はい / いいえ** |
-| **S7** | 2 | [`JA-W01-ko`](./lessons/JA-W01-ko.md) | trace and write **こ** |
-| **S8** | 2 | [`JA-W01-n`](./lessons/JA-W01-n.md) | trace and write **ん** |
-| **S9** | 2 | [`JA-W01-ni`](./lessons/JA-W01-ni.md) | trace and write **に** |
-| **S10** | 2 | [`JA-W01-chi`](./lessons/JA-W01-chi.md) | trace and write **ち** |
-| **S11** | 2 | [`JA-W01-wa`](./lessons/JA-W01-wa.md) | trace and write **わ** |
-| **S12** | 2 | [`JA-W01-konnichiwa-read`](./lessons/JA-W01-konnichiwa-read.md) | assemble the greeting |
-| **S13** | 2 | [`JA-C01-konnichiwa`](./lessons/JA-C01-konnichiwa.md) | use the daytime greeting |
-| **S14** | 3 | [`JA-W03-a`](./lessons/JA-W03-a.md) | trace and write **あ** |
-| **S15** | 3 | [`JA-W03-ri`](./lessons/JA-W03-ri.md) | trace and write **り** |
-| **S16** | 3 | [`JA-W03-ka`](./lessons/JA-W03-ka.md) | trace and write **か** |
-| **S17** | 3 | [`JA-W03-dakuten`](./lessons/JA-W03-dakuten.md) | add the dakuten |
-| **S18** | 3 | [`JA-W03-to`](./lessons/JA-W03-to.md) | trace and write **と** |
-| **S19** | 3 | [`JA-W03-u`](./lessons/JA-W03-u.md) | trace and write **う** |
-| **S20** | 3 | [`JA-W03-arigatou-read`](./lessons/JA-W03-arigatou-read.md) | assemble **ありがとう** |
-| **S21** | 3 | [`JA-C01-arigatou`](./lessons/JA-C01-arigatou.md) | use plain thanks |
-| **S22** | 4 | [`JA-W03-sa`](./lessons/JA-W03-sa.md) | trace and write **さ / ざ** |
-| **S23** | 4 | [`JA-W03-ma`](./lessons/JA-W03-ma.md) | trace and write **ま** |
-| **S24** | 4 | [`JA-W03-su`](./lessons/JA-W03-su.md) | trace and write **す** |
-| **S25** | 4 | [`JA-C01-gozaimasu`](./lessons/JA-C01-gozaimasu.md) | choose polite thanks |
-| **S26** | 4 | [`JA-C03-practice`](./lessons/JA-C03-practice.md) | read the complete polite form |
-| **S27** | 5 | [`JA-W05-nichi-kanji`](./lessons/JA-W05-nichi-kanji.md) | write four-stroke **日** |
-| **S28** | 5 | [`JA-W05-hon-kanji`](./lessons/JA-W05-hon-kanji.md) | write five-stroke **本** |
-| **S29** | 5 | [`JA-W05-gen-component`](./lessons/JA-W05-gen-component.md) | practise speech component **言** |
-| **S30** | 5 | [`JA-W05-five-component`](./lessons/JA-W05-five-component.md) | practise sound clue **五** |
-| **S31** | 5 | [`JA-W05-mouth-component`](./lessons/JA-W05-mouth-component.md) | practise box component **口** |
-| **S32** | 5 | [`JA-W05-go-kanji`](./lessons/JA-W05-go-kanji.md) | assemble **語** from three blocks |
-| **S33** | 5 | [`JA-C01-nihongo`](./lessons/JA-C01-nihongo.md) | read and write **日本語** |
-| **S34** | 6 | [`JA-W06-ko-katakana`](./lessons/JA-W06-ko-katakana.md) | write katakana **コ** |
-| **S35** | 6 | [`JA-W06-long-mark`](./lessons/JA-W06-long-mark.md) | add one mora with **ー** |
-| **S36** | 6 | [`JA-W06-hi-katakana`](./lessons/JA-W06-hi-katakana.md) | write katakana **ヒ** |
-| **S37** | 6 | [`JA-C01-koohii`](./lessons/JA-C01-koohii.md) | read **コーヒー** as four morae |
-| **S38** | 7 | [`JA-C01-practice`](./lessons/JA-C01-practice.md) | run the complete doorway exchange |
-| **S39** | 8 | [`JA-C08-hear-sayounara`](./lessons/JA-C08-hear-sayounara.md) | hear and say one farewell before seeing it |
-| **S40** | 8 | [`JA-W08-yo`](./lessons/JA-W08-yo.md) | trace and write **よ** |
-| **S41** | 8 | [`JA-W08-na`](./lessons/JA-W08-na.md) | copy and recall **な** |
-| **S42** | 8 | [`JA-W08-ra`](./lessons/JA-W08-ra.md) | recall and write **ら** |
-| **S43** | 8 | [`JA-W08-sayounara-read`](./lessons/JA-W08-sayounara-read.md) | assemble **さようなら** from known signs |
-| **S44** | 8 | [`JA-C08-sayounara`](./lessons/JA-C08-sayounara.md) | pass the farewell in all four skills |
+| Sessions | Chapter | Lessons | Learner outcome |
+|---|---:|---:|---|
+| **S1-S6** | 1 | 6 | trace, copy, recall, read, and answer with **はい / いいえ** |
+| **S7-S13** | 2 | 7 | build **こんにちは** from five prepared signs and explain final **は = wa** |
+| **S14-S21** | 3 | 8 | build and use plain **ありがとう** with its dakuten and long final vowel |
+| **S22-S26** | 4 | 5 | extend the known form to polite **ありがとうございます** and choose its register |
+| **S27-S33** | 5 | 7 | write **日 / 本**, practise the components of **語**, and read **日本語** |
+| **S34-S37** | 6 | 4 | write **コ / ー / ヒ** and read **コーヒー** as four morae |
+| **S38** | 7 | 1 | retrieve the doorway exchange in four independently checked skills |
+| **S39-S44** | 8 | 6 | hear and say **さようなら**, add three signs, then read and write it |
+| **S45-S56** | 9 | 12 | say “I do not understand” and ask for one repetition politely |
+| **S57-S68** | 10 | 12 | ask for slower speech, confirm understanding, and write five new signs |
+| **S69-S80** | 11 | 12 | learn seven body words with four prepared signs and a no-guessing body map |
+| **S81-S100** | 12 | 20 | add seven body words while interleaving twelve foundation, repair, script, and body reviews |
+
+The current ledger therefore contains 100 sessions across twelve chapters. Its
+47 writing lessons teach all 47 target-script glyphs that the book currently
+shows in load-bearing text. The 35 lexical lessons are 28 words plus seven
+phrases; reading, listening/speaking, mixed-practice, and retrieval lessons are
+counted separately so practice volume is never mistaken for vocabulary volume.
+
+## Script-before-decoding rule
+
+A sign becomes load-bearing only after a writing lesson has isolated its shape,
+sound or reading, and a small hand action. A useful spoken expression may arrive
+first in romanization. The learner then observes and traces its new forms, copies
+with support, recalls without the model, and only afterward decodes or writes the
+whole expression. The current script-closure measurement is 47 shown, 47 taught,
+zero never taught, and zero violations.
 
 ## Review rule
 
 The `reviews_of` field in each lesson is the machine-checked review queue. The
 fixed no-tracking fallback uses the session-count windows from
 [`HL00`](../../../specs/HL00-human-language-curriculum-framework.md): retrieve a
-new atom at N+1, N+3, N+7 and N+15 when the authored runway is long enough, then
-move it into the mixed pool. A missed item returns sooner; it never causes the
-new-sign lesson to grow beyond five minutes.
+new atom at N+1, N+3, N+7, and N+15 when the authored runway is long enough, then
+move it into mixed practice. A missed item returns sooner; it never makes the
+next new lesson exceed five minutes.
 
-The six chapter payoffs at S6, S13, S21, S26, S33 and S37 are cumulative review
-points. S38 checks listening, speaking, reading and writing separately rather
-than letting recognition stand in for production. S39--S44 extend the same rule:
-sound and social meaning first, three new signs one at a time, then a separately
-scored four-skill farewell.
+Chapter payoffs are cumulative retrieval points, not permission to forget the
+earlier material. Chapters 7, 8, 9, 10, 11, and 12 deliberately mix skills and
+old material. Listening, speaking, reading, and writing are scored separately,
+matching the eventual assessment contract rather than allowing recognition to
+hide a production gap.

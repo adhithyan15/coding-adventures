@@ -1,63 +1,72 @@
-# Japanese Roadmap — Absolute Beginner toward B1
+# Japanese Roadmap — Pre-A1 Runway toward C2
 
-Japanese follows the shared communicative spine and extends it where the language
-genuinely differs. The unit is one expression per lesson, under five minutes.
-Script is learned inside useful words, never as a gated kana course.
+Japanese follows the shared communicative spine with one expression or writing
+action per lesson and a hard five-minute ceiling. Script is learned inside useful
+language, never as a prerequisite kana chart. The current twelve chapters are an
+authored pre-A1 slice; they are the opening of the book, not the complete exam
+destination.
 
-Two structural facts shape every chapter below, and they are stated here rather
-than discovered later:
+## Authored runway
 
-- **Three writing systems run at once.** Hiragana carries grammar, kanji carries
-  content words, katakana carries borrowings. A single sentence uses all three,
-  so the track opens all three in Chapter 1 instead of finishing one first.
-- **Politeness is grammar.** Every Japanese predicate carries a politeness level,
-  and there is no neutral setting. The choice appears the first time the track
-  says thank you, not in a later "formality" chapter.
+1. **Two answers:** write and read **はい / いいえ**.
+2. **A daytime greeting:** build **こんにちは** one sign at a time and meet the
+   historical topic-particle spelling.
+3. **Plain thanks:** build **ありがとう**, including dakuten and mora timing.
+4. **Polite thanks:** add **ございます** and make an explicit register choice.
+5. **The language name:** build **日本語** from two simple kanji and three
+   separately practised components of **語**.
+6. **A katakana borrowing:** build **コーヒー** from two shapes and the long mark.
+7. **Doorway payoff:** retrieve the opening exchange across all four skills.
+8. **Take leave:** hear and use *sayōnara* before seeing it, add three signs, and
+   finish with a non-compensatory four-skill payoff.
+9. **One more time, please:** say that understanding failed and request one
+   repetition without losing politeness.
+10. **A little more slowly:** control speech rate, confirm understanding, and
+    extend the earned hiragana inventory.
+11. **First body map:** learn seven body words only after their new forms have
+    separate writing steps.
+12. **Second body map and retrieval:** add seven words while twelve short reviews
+    repair the N+1/N+3/N+7/N+15 foundation, repair-language, writing, and body
+    windows.
 
-## Chapter 1 — Three writing systems in one doorway *(authored)*
+The current data measures 100 lessons, 47 script lessons, 47 taught of 47 shown
+glyphs, no never-taught glyphs, and no script-closure violations. It also contains
+28 word lessons and seven phrase lessons. These are generated measurements, not
+completion claims: the kana inventory is not yet exhaustive and the current book
+does not yet make a learner JLPT- or C2-ready.
 
-**はい** *hai* → **いいえ** *iie* → **こんにちは** *konnichiwa* → **日本語**
-*nihongo* → **コーヒー** *kōhī* → **ありがとう** *arigatō* →
-**ありがとうございます** *arigatō gozaimasu* → one daytime exchange.
+## Dependency order from here
 
-The order is chosen so each system arrives on the word that forces it. Two short
-answers establish hiragana and the mora. The greeting adds four signs and the
-topic particle **は**, read *wa*. **日本語** opens kanji on the word that names
-the language, and with it the fact that a character carries a set of readings
-rather than a sound. **コーヒー** opens katakana on the one word in the chapter
-that really is a cousin of an English word — both borrowed from Arabic *qahwa*
-by different roads. **ありがとう** adds the dakuten and its own etymology
-(有り難し, "hard to exist" → rare → precious → thanks), and **ございます** turns
-it into the polite form, which is where the grammar of politeness is named.
+The next pre-A1 work should preserve the same gentle order:
 
-## Chapter 2 — Give your name *(planned)*
+1. finish the remaining hiragana through useful sound-first expressions, with no
+   more than three genuinely new forms in a lesson and with the full early writing
+   runway;
+2. close exact N+1/N+3/N+7/N+15 retrieval debt before widening the active
+   vocabulary sharply;
+3. add the first self-introduction, name, wellbeing, number, time, food, travel,
+   and emergency can-dos through independently scored chapter payoffs;
+4. grow katakana on real borrowings and kanji on words the learner can already
+   understand and say; and
+5. pass a complete pre-A1 mock before promoting the learner into A1 material.
 
-**私** *watashi* → **です** *desu* → **私は … です**. The copula **です** is the
-polite predicate the chapter-1 register lesson already prepared, and the topic
-particle **は** returns doing its actual job. The first personal pronoun also
-introduces the fact that Japanese normally omits it.
+After pre-A1, each CEFR rung repeats the same dependency chain: authoritative
+content inventory, tiny lessons, script and composition progression, authentic
+task shapes, cumulative review, then two timed rubric-backed mocks. Official JLPT
+score bands anchor reception from A1 through C1, but JLPT does not test speaking,
+writing, or interaction. [`assessment.json`](./assessment.json) therefore pairs
+those receptive anchors with project-defined JF Standard/CEFR-aligned production
+papers, and defines pre-A1 and C2 wholly inside the project. A level is complete
+only when reading, listening, writing, and speaking all pass independently.
 
-## Chapter 3 — Ask and answer names *(planned)*
+The durable artifacts are:
 
-**お名前** *o-namae* → **は** as a question frame → **何** *nani/nan* →
-**よろしくお願いします**. The honorific prefix **お-** is the second face of
-politeness: marking the *listener's* possessions rather than the speaker's verb.
-
-## Chapter 4 — Ask about wellbeing *(planned)*
-
-**元気** *genki* → **お元気ですか** → **はい、元気です**. Two more kanji, both
-with readings the word selects, and the question particle **か**.
-
-## Chapter 5 — Take leave *(planned)*
-
-**さようなら** *sayōnara* → **また** *mata* → **またね / また明日**. **さようなら**
-is another abandoned sentence (左様ならば, "if that is how it is"), and it is far
-more final than English "goodbye" — the register note matters more than the word.
-
-## Part II onward *(sketch)*
-
-Build through numbers and counters (which are their own system), particles
-**が / を / に / で**, the -masu verb forms and their plain counterparts, past
-tense, adjective classes, and te-form linking. Keigo widens from teineigo into
-sonkeigo and kenjōgo only once a plain verb inventory exists to contrast against.
-Kanji accumulate word by word; no chapter teaches a character list.
+- [`chapters.json`](./chapters.json) for authored chapter can-dos and payoffs;
+- [`curriculum.json`](./curriculum.json) for lesson order and shared-spine
+  dependencies;
+- [`session-map.md`](./session-map.md) for the current one-lesson-per-session map;
+- [`assessment-spec.md`](./assessment-spec.md) and
+  [`assessment.json`](./assessment.json) for the seven-rung exam contract; and
+- the program backlog in [`../BACKLOG.md`](../BACKLOG.md) and GitHub issue
+  [#12206](https://github.com/adhithyan15/coding-adventures/issues/12206) for work
+  that is not yet authored.
