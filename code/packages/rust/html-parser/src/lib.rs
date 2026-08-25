@@ -5457,10 +5457,15 @@ impl HtmlParser {
             && self.current_has_child_element("tr")
         {
             if self.first_authored_open_template_index().is_some() {
-                self.diagnostics.push(ParserDiagnostic::new(
-                    "unexpected-cell-start-tag-in-template-table-body",
-                    format!("start tag `<{name}>` in a template table body implied a missing row"),
-                ));
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-cell-start-tag-in-template-table-body",
+                        format!(
+                            "start tag `<{name}>` in a template table body implied a missing row"
+                        ),
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
             }
             self.append_implied_element("tr");
         }
@@ -27450,6 +27455,18 @@ mod tests {
         .at_emission(Some(start_tag_position_at(source, name, occurrence)))
     }
 
+    fn cell_start_tag_in_template_table_body_recovery(
+        source: &str,
+        name: &str,
+        occurrence: usize,
+    ) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-cell-start-tag-in-template-table-body",
+            format!("start tag `<{name}>` in a template table body implied a missing row"),
+        )
+        .at_emission(Some(start_tag_position_at(source, name, occurrence)))
+    }
+
     fn row_start_tag_in_template_body_recovery(
         source: &str,
         occurrence: usize,
@@ -43015,11 +43032,8 @@ mod tests {
             let output = parse_html_with_diagnostics(source).unwrap();
             assert_eq!(
                 output.parser_diagnostics,
-                vec![ParserDiagnostic::new(
-                    "unexpected-cell-start-tag-in-template-table-body",
-                    format!(
-                        "start tag `<{name}>` in a template table body implied a missing row"
-                    ),
+                vec![cell_start_tag_in_template_table_body_recovery(
+                    source, name, 0,
                 )],
                 "source {source:?}"
             );
@@ -43050,6 +43064,62 @@ mod tests {
         assert!(fragment.parser_diagnostics.iter().all(|diagnostic| {
             diagnostic.code != "unexpected-cell-start-tag-in-template-table-body"
         }));
+
+        let repeated_source =
+            "<!doctype html><!--é-->\r\n<template><tr></tr><td></td></tr><td>";
+        let repeated = parse_html_with_diagnostics(repeated_source).unwrap();
+        assert_eq!(
+            repeated
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| {
+                    diagnostic.code == "unexpected-cell-start-tag-in-template-table-body"
+                })
+                .collect::<Vec<_>>(),
+            vec![
+                &cell_start_tag_in_template_table_body_recovery(repeated_source, "td", 0),
+                &cell_start_tag_in_template_table_body_recovery(repeated_source, "td", 1),
+            ]
+        );
+
+        let incomplete =
+            parse_html_with_diagnostics("<!doctype html><template><tr></tr><td").unwrap();
+        assert!(incomplete.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-cell-start-tag-in-template-table-body"
+        }));
+
+        let mut unpositioned = HtmlParser::new();
+        for token in [
+            Token::StartTag {
+                name: "template".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "tr".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::EndTag {
+                name: "tr".to_string(),
+            },
+            Token::StartTag {
+                name: "td".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Eof,
+        ] {
+            unpositioned.process_token(token);
+        }
+        let diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| {
+                diagnostic.code == "unexpected-cell-start-tag-in-template-table-body"
+            })
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
     }
 
     #[test]
