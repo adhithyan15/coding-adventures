@@ -77,6 +77,14 @@ can hide an absolute symlink that works only in its author's checkout.
 
 ## Metadata safety
 
+A package's CI toolchain is normally inferred purely from its path bucket
+(`packages/<language>/...`) — but a package whose own tests need a
+*different* toolchain (e.g. a Rust crate under `packages/rust/**` that
+shells out to a `javac`/`java` process) can declare that with a bare
+BUILD-file comment: `# needs-toolchain: java`. This is consulted alongside
+the inferred language, not instead of it, and multiple lines are supported
+for a package needing more than one extra toolchain.
+
 Build plans carry optional platform-specific dependency graphs and affected
 closures. The detect job resolves Linux, Darwin, and Windows BUILD metadata,
 unions their required toolchains, and assigns shared shards from the union so
