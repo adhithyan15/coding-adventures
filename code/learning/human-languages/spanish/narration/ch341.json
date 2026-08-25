@@ -1,0 +1,775 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 341,
+  "title": "Above, Below, In Front, Behind",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:354c93f5a2cbf6b9",
+  "lessons": [
+    {
+      "id": "ES-C341-arriba",
+      "sequence": 5970,
+      "title": "arriba — up, from climbing the riverbank",
+      "headword": "arriba",
+      "romanization": "arriba",
+      "gloss": "up, above, upstairs — Latin ripa, a riverbank; English river, riparian and arrive all come off the same bank",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b2ed8c77a8cd533d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the left, then opposite. (La izquierda; enfrente.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "enfrente — the last of the flat directions."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a-RRI-ba, the weight on the middle beat. The rr is a full trill, the tongue bouncing more than once. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "arriba — \"up,\" \"above,\" \"upstairs.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Underneath it is a plus riba, and riba is Latin rīpa — a riverbank."
+            },
+            {
+              "kind": "speech",
+              "text": "A bank is the thing you climb when you come out of the water, and it is always the high side. Ad rīpam, to the bank, became a way of saying upward, and Spanish wore it down to one word."
+            },
+            {
+              "kind": "speech",
+              "text": "The bank is still in English, in three shapes. A river is named for its banks rather than its water. Riparian rights are the rights of whoever owns the bank. And to arrive is Latin ad rīpam as well — it first meant to come to shore, said of a boat, and only later of anybody turning up anywhere."
+            },
+            {
+              "kind": "speech",
+              "text": "So arriba and arrive are the same journey up the same bank, and Spanish kept the climb while English kept the landing."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first of the up-and-down words."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "arriba",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *arriba*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "está arriba",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *está arriba*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aquí arriba",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aquí arriba*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did rīpa mean? (A riverbank.) And what did English arrive first mean? (To come to shore.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C341-abajo",
+      "sequence": 5980,
+      "title": "abajo — down, and the voice that sits at the bottom",
+      "headword": "abajo",
+      "romanization": "abajo",
+      "gloss": "down, below, downstairs — Late Latin bassus, low; English base, bass, abase and debase are the same lowness",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2a7a26f799510816",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say opposite, then up, above. (Enfrente; arriba.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "arriba — the direction this one answers."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a-BA-ho, the weight on the middle beat. The j is the throaty jota again, and the b is soft between vowels. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "abajo — \"down,\" \"below,\" \"downstairs.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Like its opposite, it is two pieces: a plus bajo."
+            },
+            {
+              "kind": "speech",
+              "text": "Bajo is Late Latin bassus, meaning low, squat, not tall. Classical Latin barely used it; it was a plain spoken word that outlived the grand ones, and it gave the ordinary word for low to Spanish, French and Italian alike."
+            },
+            {
+              "kind": "speech",
+              "text": "English has it several ways over. A base is the low part a thing stands on, and base behaviour is low behaviour. To abase or debase somebody is to bring them down. And the bass voice is the low one — spelled like the fish, pronounced like the Italian basso, and meaning nothing more exotic than the low part."
+            },
+            {
+              "kind": "speech",
+              "text": "So arriba climbs the riverbank and abajo goes back down to the low ground."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Up and down are both yours now."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abajo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abajo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "está abajo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *está abajo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "arriba o abajo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *arriba o abajo*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did bassus mean? (Low.) And which English singing voice is the same word? (The bass, the low one.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C341-delante",
+      "sequence": 5990,
+      "title": "delante — in front, from the word that means before",
+      "headword": "delante",
+      "romanization": "delante",
+      "gloss": "in front, ahead — Latin ante, before; English ante, antecedent, anterior, antique and anticipate all come off it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5e8e27a7fe1406f9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say up, above, then down, below. (Arriba; abajo.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "enfrente — the near neighbour of this one."
+            },
+            {
+              "kind": "speech",
+              "text": "antes — the same root doing time instead of space."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "de-LAN-te, the weight on the middle beat. The l stays bright and forward, never the dark English l of ball. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "delante — \"in front,\" \"ahead.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Buried in it is Latin ante, before — the same ante you already met in antes, doing time. Here it does space instead, which is what before originally meant in both languages: before the king is a position, not an hour."
+            },
+            {
+              "kind": "speech",
+              "text": "English kept ante almost untouched. At a card table the ante is the stake put down before the deal. An antecedent is what went before. Something anterior is at the front. An antique is from before. To anticipate is to take a thing before it arrives."
+            },
+            {
+              "kind": "speech",
+              "text": "Delante and enfrente are close but not the same: enfrente faces you across a gap, while delante is merely ahead of you — the person in the queue in front, who is not facing you at all."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Front and back are starting; the back half comes next."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "delante",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *delante*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "delante de la puerta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *delante de la puerta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "está delante",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *está delante*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which Latin word is inside delante? (Ante, before.) And what is the ante at a card table? (The stake put down before the deal.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C341-detras",
+      "sequence": 6000,
+      "title": "detrás — behind, from the word for beyond",
+      "headword": "detrás",
+      "romanization": "detrás",
+      "gloss": "behind, at the back — Latin trans, across or beyond; English transfer, transit, translate and transparent all carry it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:234f3bb4bdaa69c1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say down, below, then in front. (Abajo; delante.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "delante — the side this one answers."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "de-TRAS, the weight on the second beat, which is why it carries a written accent. The tr is one quick cluster. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "detrás — \"behind,\" \"at the back.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Inside it is tras, which is Latin trāns — across, beyond, on the far side."
+            },
+            {
+              "kind": "speech",
+              "text": "That is a good picture of behind. What is behind you is what lies beyond you, past the edge of what you can see, on the other side of yourself."
+            },
+            {
+              "kind": "speech",
+              "text": "English never wore trans down; it uses it whole, as a prefix, dozens of times. To transfer is to carry across. Transit is going across. To translate is to carry a meaning across into another language. Something transparent lets light come across it. Transatlantic is across the Atlantic."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish did wear it down — trāns to tras — and then built detrás on top. So the same syllable that stands proud at the front of half the long words in English is hiding in the middle of a short Spanish one."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four sides now: up, down, in front, behind."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "detrás",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *detrás*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "detrás de la casa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *detrás de la casa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "delante o detrás",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *delante o detrás*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which Latin word is tras? (Trāns, across or beyond.) And what does translate mean, word for word? (To carry across.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C341-dentro",
+      "sequence": 6010,
+      "title": "dentro — inside, and the entrance you already knew",
+      "headword": "dentro",
+      "romanization": "dentro",
+      "gloss": "inside, within — Latin de intro, from within, on intra; English interior, internal, entrance and the intro of anything share it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b513b73b26fe1ae4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say in front, then behind. (Delante; detrás.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la entrada — the same root, already yours."
+            },
+            {
+              "kind": "speech",
+              "text": "detrás — the last of the position words."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "DEN-tro, the weight on the first beat. The tr is one cluster, and the r is a single tap. see pronunciation reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dentro — \"inside,\" \"within.\""
+            },
+            {
+              "kind": "speech",
+              "text": "It is Latin de intrō, from within, squeezed into one word. Behind intrō stands intra, the Latin for inside."
+            },
+            {
+              "kind": "speech",
+              "text": "You already own a piece of this. La entrada is the way in, and it is built on intrāre, to go inside — the same intra. So dentro and entrada are family: one names the inside, the other names the door to it."
+            },
+            {
+              "kind": "speech",
+              "text": "English took intra and inter and never let go. Your interior is your inside. Something internal happens within. An intranet stays inside one building. And the intro to a song is the way in."
+            },
+            {
+              "kind": "speech",
+              "text": "With this, the set is closed: arriba, abajo, delante, detrás, dentro — and cerca, lejos, la derecha, la izquierda, enfrente before them. Ten words, and almost nothing can hide from you now."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Ten words for where a thing is, and the whole set is closed."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dentro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dentro*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dentro de la casa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dentro de la casa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "está dentro, no está fuera",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *está dentro, no está fuera*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is dentro, taken apart? (De intrō, from within.) And which word you already had is built on the same root? (La entrada.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

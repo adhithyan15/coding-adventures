@@ -6667,6 +6667,132 @@
         ],
         "note": "Timing, word count and criteria are the ones already sourced in spanish/task-shapes/a1.json, not invented here."
       }
+    },
+    {
+      "chapter": 340,
+      "title": "Near, Far, and Which Side",
+      "label": "ch:cerca-y-lejos",
+      "canDo": "I can say cerca, lejos, a la derecha, a la izquierda and enfrente, and say why the left-hand side is the one Spanish word in the set that is older than Rome.",
+      "spineNodes": [
+        "SPINE-ASK-LOCATION"
+      ],
+      "payoff": {
+        "lesson": "ES-C340-enfrente",
+        "kind": "production",
+        "summary": "Complete ES-C340-enfrente: place a thing near or far, send somebody right or left, and put one thing facing another.",
+        "assesses": [
+          "ES-LEX-C340-WHERE-01",
+          "ES-LEX-C340-WHERE-02",
+          "ES-LEX-C340-WHERE-03",
+          "ES-LEX-C340-WHERE-04",
+          "ES-LEX-C340-WHERE-05"
+        ]
+      }
+    },
+    {
+      "chapter": 341,
+      "title": "Above, Below, In Front, Behind",
+      "label": "ch:arriba-y-abajo",
+      "canDo": "I can say arriba, abajo, delante, detras and dentro, and say why arriba and English arrive are the same climb up the same riverbank.",
+      "spineNodes": [
+        "SPINE-ASK-LOCATION"
+      ],
+      "payoff": {
+        "lesson": "ES-C341-dentro",
+        "kind": "production",
+        "summary": "Complete ES-C341-dentro: put a thing above or below, ahead or behind, and inside rather than out.",
+        "assesses": [
+          "ES-LEX-C341-WHERE-06",
+          "ES-LEX-C341-WHERE-07",
+          "ES-LEX-C341-WHERE-08",
+          "ES-LEX-C341-WHERE-09",
+          "ES-LEX-C341-WHERE-10"
+        ]
+      }
+    },
+    {
+      "chapter": 342,
+      "title": "The Clock, Taken Apart",
+      "label": "ch:el-minuto-y-el-cuarto",
+      "canDo": "I can say el minuto, el cuarto, en punto, el horario and la madrugada, and say why the minute and the second are two halves of one Latin phrase.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "ES-C342-madrugada",
+        "kind": "production",
+        "summary": "Complete ES-C342-madrugada: cut an hour into minutes and quarters, give a time on the dot, ask for a timetable, and name the hours before dawn.",
+        "assesses": [
+          "ES-LEX-C342-CLOCK-01",
+          "ES-LEX-C342-CLOCK-02",
+          "ES-LEX-C342-CLOCK-03",
+          "ES-LEX-C342-CLOCK-04",
+          "ES-LEX-C342-CLOCK-05"
+        ]
+      }
+    },
+    {
+      "chapter": 343,
+      "title": "Naming a Date, and the Stretches Around It",
+      "label": "ch:la-fecha-y-el-siglo",
+      "canDo": "I can say la fecha, el calendario, proximo, la epoca and el siglo, and say why a calendar began as a moneylender's account book.",
+      "spineNodes": [
+        "SPINE-TIME-OF-DAY"
+      ],
+      "payoff": {
+        "lesson": "ES-C343-siglo",
+        "kind": "production",
+        "summary": "Complete ES-C343-siglo: name a date, find it on a calendar, point at the next one, and name the age it sits in.",
+        "assesses": [
+          "ES-LEX-C343-CLOCK-06",
+          "ES-LEX-C343-CLOCK-07",
+          "ES-LEX-C343-CLOCK-08",
+          "ES-LEX-C343-CLOCK-09",
+          "ES-LEX-C343-CLOCK-10"
+        ]
+      }
+    },
+    {
+      "chapter": 344,
+      "title": "Zero, Halves and Dozens",
+      "label": "ch:cero-y-mitad",
+      "canDo": "I can say cero, el numero, la mitad, la docena and doble, and say why English borrowed the same Arabic word twice, as zero and as cipher.",
+      "spineNodes": [
+        "SPINE-COUNT-ONE-TO-FIVE"
+      ],
+      "payoff": {
+        "lesson": "ES-C344-doble",
+        "kind": "production",
+        "summary": "Complete ES-C344-doble: count from zero, name the number itself, halve a thing, count it by twelves, and double it.",
+        "assesses": [
+          "ES-LEX-C344-COUNT-01",
+          "ES-LEX-C344-COUNT-02",
+          "ES-LEX-C344-COUNT-03",
+          "ES-LEX-C344-COUNT-04",
+          "ES-LEX-C344-COUNT-05"
+        ]
+      }
+    },
+    {
+      "chapter": 345,
+      "title": "Pinning Down Which One",
+      "label": "ch:cada-y-mismo",
+      "canDo": "I can say mismo, cada, la parte, la persona and el objeto, and say why a Latin actor's mask became the ordinary word for a human being.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C345-objeto",
+        "kind": "production",
+        "summary": "Complete ES-C345-objeto: say it is the same one, take a set one at a time, name a share of it, name a single human being, and name a thing on purpose.",
+        "assesses": [
+          "ES-LEX-C345-REF-01",
+          "ES-LEX-C345-REF-02",
+          "ES-LEX-C345-REF-03",
+          "ES-LEX-C345-REF-04",
+          "ES-LEX-C345-REF-05"
+        ]
+      }
     }
   ]
 }
