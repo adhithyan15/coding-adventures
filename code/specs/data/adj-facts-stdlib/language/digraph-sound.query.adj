@@ -1,0 +1,16 @@
+% ============================================================================
+% digraph-sound.query.adj — worked recall over the digraph-sound library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what sound does this
+% digraph make?" (direct) or "which digraph makes this sound?" (reverse) —
+% it states no fact of its own — it only `import`s the grounded table and
+% asks binding queries.
+% ============================================================================
+
+import "digraph-sound.adj"
+
+? digraph_sound(sh, $Sound)          % expect sh_sound (direct)
+? digraph_sound($D, ch_sound)        % expect ch (reverse)
+? digraph_sound(th, $Sound)          % expect BOTH th_voiced_sound and th_unvoiced_sound (one key, two sounds)
+? digraph_sound(wh, $Sound)          % expect w_sound (direct)
+? digraph_sound(qu, $Sound)          % expect abstain -- a real digraph the same UFLI scope-and-sequence covers elsewhere, but not one of these nine lessons

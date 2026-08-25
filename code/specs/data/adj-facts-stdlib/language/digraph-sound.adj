@@ -1,0 +1,102 @@
+% ============================================================================
+% digraph-sound — common consonant digraphs and the single speech sound each
+% one represents (adj-facts-stdlib, LANGUAGE). A K-2 phonics library, grounding
+% ADJ-STDLIB-COVERAGE.md §5.1's "phonics, decoding" Major Gap with a genuinely
+% NEW angle for this loop's `wave2-k8-literacy-foundations` item, via a FRESH
+% WebFetch rather than the sibling-table-mining technique this item's own
+% notes record as exhausted stdlib-wide.
+% ============================================================================
+% A consonant DIGRAPH is two consonant letters that together spell ONE speech
+% sound — "sh" in "ship" is not "s" plus "h", it is a single /sh/ sound. This
+% is categorically distinct from every phonics table already shipped in this
+% library: `r-controlled-vowel-word.adj` names a VOWEL-plus-r pattern in whole
+% WORDS, `silent-e-word.adj`/`syllable-type-alias.adj` name a SYLLABLE
+% structure, and `past-tense-ed-sound.adj`/`plural-s-sound.adj` name how an
+% ENDING is pronounced depending on context — none of them tables a plain
+% two-letter spelling-to-sound mapping for a word-initial/medial consonant
+% digraph, the single most common K-2 phonics unit still missing from this
+% library. Recall is a binding query:
+%
+%     ? digraph_sound(sh, $Sound)
+%       % sh_sound
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `digraph_sound(digraph, sound)` carrying the source citation, so
+% the lookup above is the ordinary SLD binding query — the engine returns the
+% sound WITH its source, on the CPU, with zero model calls, and abstains on
+% any digraph not one of these nine source-cited lessons. The query also runs
+% BACKWARD — bind a sound and recall which digraph carries it:
+%
+%     ? digraph_sound($D, ch_sound)
+%       % ch
+%
+% DESIGN NOTE — why `th` has TWO rows: the cited source splits "th" into two
+% separate lessons, one per pronunciation ("th /th/ (voiced)", as in "this",
+% and "th /th/ (unvoiced)", as in "think") rather than treating "th" as a
+% single sound the way it treats every other digraph here. This table
+% reproduces that split faithfully as two rows sharing the same `digraph`
+% key rather than collapsing it into one — the SAME one-key/many-values shape
+% `opposites.adj`/`synonyms.adj`/`homophones.adj` already established
+% elsewhere in this library (there for one word with several antonyms or
+% synonyms; here for one spelling with two genuinely different sounds). A
+% forward query on `th` therefore yields BOTH rows, not one — an honest
+% reflection of the source, not an omission.
+%
+% Provenance: quoted verbatim from the University of Florida Literacy
+% Institute (UFLI)'s Foundations Toolbox, "Digraphs Unit Resources (Lessons
+% 42-53)" page, whose own lesson table names each digraph lesson with its
+% sound directly in the "Concept" column, alongside the page's own opening
+% definition sentence: "A consonant digraph is a combination of two
+% consonant letters that represent a single consonant speech sound." curl-
+% fetched directly (not just an AI-summarized WebFetch) and confirmed
+% byte-for-byte before writing this file — the raw HTML's lesson table reads,
+% verbatim: "44 ck /k/ ... 45 sh /sh/ ... 46 th /th/ (voiced) ... 47 th /th/
+% (unvoiced) ... 48 ch /ch/ ... 50 wh /w/, ph /f/ ... 51 ng /ŋ/ ... 52 nk
+% /ŋk/". Two lessons in the same unit (42 "FLSZ Spelling Rule", 43 "-all,
+% -oll, -ull", 49 "Digraphs Review 1", 53 "Digraphs Review 2") are review or
+% spelling-rule lessons, not individual digraph-sound lessons, and are
+% deliberately NOT rows here.
+%
+%     digraph (atom label)   sound (atom label)    lesson concept (verbatim)
+%     ----------------------  ---------------------  ---------------------------
+%     ck                      k_sound                "ck /k/"
+%     sh                      sh_sound               "sh /sh/"
+%     th                      th_voiced_sound         "th /th/ (voiced)"
+%     th                      th_unvoiced_sound       "th /th/ (unvoiced)"
+%     ch                      ch_sound               "ch /ch/"
+%     wh                      w_sound                "wh /w/, ph /f/"
+%     ph                      f_sound                "wh /w/, ph /f/"
+%     ng                      ng_sound               "ng /ŋ/"
+%     nk                      nk_sound               "nk /ŋk/"
+%
+% `trust authoritative` — UFLI is a university literacy research center
+% (University of Florida, .edu), the same tier and same source family
+% `r-controlled-vowel-word.adj` already established for this stdlib. A
+% full-tree grep for `digraph`/`\bsh\b`/`\bch\b`/`\bwh\b` across the whole
+% shipped stdlib (the mandatory duplication check before scoping) found zero
+% table `row` hits naming any consonant digraph's sound — confirming this is
+% the FIRST digraph-sound content anywhere in this stdlib. A digraph not one
+% of these — e.g. `qu`, a real digraph the SAME UFLI scope-and-sequence
+% covers elsewhere, but not in this page's own lesson table — is deliberately
+% NOT a row, so a recall ABSTAINS on it rather than inventing a sound. (See
+% ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table digraph_sound {
+    columns digraph, sound
+
+    row (ck, k_sound)
+    row (sh, sh_sound)
+    row (th, th_voiced_sound)
+    row (th, th_unvoiced_sound)
+    row (ch, ch_sound)
+    row (wh, w_sound)
+    row (ph, f_sound)
+    row (ng, ng_sound)
+    row (nk, nk_sound)
+
+    source "A consonant digraph is a combination of two consonant letters that represent a single consonant speech sound. Digraphs Unit Resources (Lessons 42-53): 44 ck /k/, 45 sh /sh/, 46 th /th/ (voiced), 47 th /th/ (unvoiced), 48 ch /ch/, 50 wh /w/, ph /f/, 51 ng /ŋ/, 52 nk /ŋk/."
+    locator "https://ufli.education.ufl.edu/foundations/toolbox-aus/42-53/"
+    trust authoritative
+}
