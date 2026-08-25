@@ -11,7 +11,12 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 12700,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/12700",
+    "branch": "codex/build-tool-csharp-orphan-crate-validation-conformance",
+    "status": "open"
+  },
   "last_inventory": {
     "revision": "671d62d2c1c536da2778c03347e030fae77f6c33",
     "schema_version": 3,
@@ -4813,10 +4818,14 @@
     {
       "id": "build-tool-csharp-orphan-crate-validation-conformance",
       "title": "Make the C# build tool consume orphan-crate validation",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-orphan-crate-validation-corpus"],
       "branch": "codex/build-tool-csharp-orphan-crate-validation-conformance",
-      "pr_number": null,
+      "pr_number": 12700,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/12700",
+      "opened_at": "2026-08-25T06:23:56Z",
+      "opened_revision": "29b203f905a4982dfcdf60dee340b273ca635643",
+      "final_revision": "29b203f905a4982dfcdf60dee340b273ca635643",
       "implementation_revision": "4dd44395b2a508c51045d10ea8d4ef8342f76819",
       "validation_revision": "4dd44395b2a508c51045d10ea8d4ef8342f76819",
       "selection_revision": "8bda602ea0546ae6c078faa1f833f835d43fb233",
@@ -4824,7 +4833,8 @@
       "rebase_revision": "48c0096df92b73c66ba116e9f7023de2e8701e39",
       "rebase_notes": "Rebased without conflict before the first push over package-neutral ADJ PR #12684, Go build-tool PR #12687, Persian ductus PR #12688, vault-auth PR #12685, Rust html-parser PR #12689, and ADJ loop-state PR #12691. PR #12687 adds a Go-only extra CI toolchain declaration, so the refresh registers a neutral corpus owner plus a selection-blocked remaining-engines umbrella before publication. None of these main advances overlaps the six selected paths or changes package identities or slots.",
       "notes": "Consume the closed process-free orphan-crate snapshot and diagnostics in the C# engine without adding filesystem enumeration or process authority.",
-      "validation_notes": "The C# engine now exposes one process-free orphan-crate snapshot validator and exactly consumes all four language-neutral fixtures. It covers direct and ancestor BUILD ownership, closer empty BUILD precedence, the fixed platform filename order, exact case-sensitive artifact exclusions, invalid exemption precedence, stale exemptions, pending-debt counting, hostile-path redaction, deterministic Unicode-scalar ordering, Unicode 17 NFC/full-fold collision checks, and Python-compatible reason blankness including U+001C through U+001F. The focused fixture/adversarial family passes 13 tests and the complete canonical C# BUILD front passes all 43 tests twice; Release coverage is 94.6% line, 42.89% branch, and 76.54% method, and the warnings-as-errors build and publish succeed. The F# downstream facade passes all seven tests. The neutral corpus validates 111 cases and 269 files; 146 conformance, parity, capability, Haskell, and OCaml-lock tests plus 928 subtests pass with two expected Windows skips. The current Go build tool passes all packages, vet, and trimpath compilation; its real forced C# plan evaluates 45 Starlark BUILD files, discovers 200 packages, preserves five reviewed orphan exemptions, and reports 200 of 200 WOULD-BUILD. NuGet reports no vulnerable direct or transitive dependency. The schema-3 inventory remains 15 established lanes, 1,372 identities, 4,565 slots, zero collisions, zero unknown buckets, and OCaml at zero packages. Strict JSON, the complete acyclic 491-owner/749-edge graph, diff hygiene, dependency scope, and production authority scans pass. Source-wide dotnet format reproduces only the exact pre-existing whitespace baseline outside changed lines. Independent implementation, fixture/inventory, state/roadmap, and security reviews found and verified closure of Python whitespace parity, closest-empty filename ranking, the Go-oracle corpus dependency, generated-artifact cleanup, and live-main rebase requirements, then found no remaining publication blocker."
+      "validation_notes": "The C# engine now exposes one process-free orphan-crate snapshot validator and exactly consumes all four language-neutral fixtures. It covers direct and ancestor BUILD ownership, closer empty BUILD precedence, the fixed platform filename order, exact case-sensitive artifact exclusions, invalid exemption precedence, stale exemptions, pending-debt counting, hostile-path redaction, deterministic Unicode-scalar ordering, Unicode 17 NFC/full-fold collision checks, and Python-compatible reason blankness including U+001C through U+001F. The focused fixture/adversarial family passes 13 tests and the complete canonical C# BUILD front passes all 43 tests twice; Release coverage is 94.6% line, 42.89% branch, and 76.54% method, and the warnings-as-errors build and publish succeed. The F# downstream facade passes all seven tests. The neutral corpus validates 111 cases and 269 files; 146 conformance, parity, capability, Haskell, and OCaml-lock tests plus 928 subtests pass with two expected Windows skips. The current Go build tool passes all packages, vet, and trimpath compilation; its real forced C# plan evaluates 45 Starlark BUILD files, discovers 200 packages, preserves five reviewed orphan exemptions, and reports 200 of 200 WOULD-BUILD. NuGet reports no vulnerable direct or transitive dependency. The schema-3 inventory remains 15 established lanes, 1,372 identities, 4,565 slots, zero collisions, zero unknown buckets, and OCaml at zero packages. Strict JSON, the complete acyclic 491-owner/749-edge graph, diff hygiene, dependency scope, and production authority scans pass. Source-wide dotnet format reproduces only the exact pre-existing whitespace baseline outside changed lines. Independent implementation, fixture/inventory, state/roadmap, and security reviews found and verified closure of Python whitespace parity, closest-empty filename ranking, the Go-oracle corpus dependency, generated-artifact cleanup, and live-main rebase requirements, then found no remaining publication blocker.",
+      "publication_notes": "Opened ready-for-review PR #12700 from clean validated head 29b203f905a4982dfcdf60dee340b273ca635643 after a normal first push. Immediately before publication, origin/main and the branch merge base both equaled 48c0096df92b73c66ba116e9f7023de2e8701e39, the six changed paths had zero exact overlap with the live open-PR set, and GitHub reported the PR non-draft and mergeable. Required checks are queued, so auto-merge remains disabled until every check is terminal and acceptable and GitHub reports no conflict."
     },
     {
       "id": "build-tool-fsharp-orphan-crate-validation-conformance",
