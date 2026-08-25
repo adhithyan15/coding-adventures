@@ -7124,9 +7124,18 @@ Python runtime without a mismatch. Independent security review found no
 authority, dependency, license, credential, or packaging blocker. Its initial
 package-allowlist finding and a separate persistent TypeScript full-vector
 self-check finding were both corrected and revalidated. The implementation is
-committed as `f67f787433d18061a21fdde81eef222a4d400173`; the exact-base inventory
-remains 15 established lanes, 1,373 identities, 4,566 slots, zero collisions,
-and zero unknown buckets.
+committed as `1fc9ee695cfceab184b0013b125802df398d6424`.
+
+Before publication the branch rebased without conflict over Rust HTML
+frame-position diagnostics, native Vault generation-zero journal recovery, and
+ADJ curriculum-loop bookkeeping to exact `origin/main`
+`ad36477baa5ada117c52ccb682b5b26fe4ee0510`. Those changes remain inside the
+existing HTML frontend, Vault native storage/CLI, and ADJ fact/capability
+owners, add no package identity or build-tool contract, and have zero exact
+surface overlap. The generator, complete TypeScript suite, coverage, typecheck,
+diff gate, state graph, and collision report pass again after the rebase; the
+exact-main inventory remains 15 established lanes, 1,373 identities, 4,566
+slots, zero collisions, and zero unknown buckets.
 
 ## Autonomous Loop Protocol
 
