@@ -12,6 +12,14 @@
   close measured R3 debt through the familiar wellbeing dialogue. No filler or
   new language is introduced.
 
+### Added — exact Gujarati R4 bridge C (#12859)
+
+- Add six zero-new-atom Chapter 17 lessons at positions 103–108. Familiar and
+  respectful *you*, *what*, the respectful name question, the introduction
+  exchange, *I*, and *how* each return exactly 61 lessons after introduction.
+- Separate listening recognition from model-free Gujarati writing in every
+  lesson, building gently from one-word contrasts to two familiar questions.
+
 ### Added — exact Gujarati R4 bridge A (#12857)
 
 - Add six zero-new-atom, four-minute-or-shorter Chapter 15 lessons at track

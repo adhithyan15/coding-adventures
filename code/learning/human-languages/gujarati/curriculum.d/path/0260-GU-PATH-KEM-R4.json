@@ -1,0 +1,12 @@
+{
+  "id": "GU-PATH-KEM-R4",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "GU-R17-kem-r4"
+  ],
+  "before": [],
+  "inline": [
+    "GU-EXT-025-KEM-R4"
+  ],
+  "after": []
+}

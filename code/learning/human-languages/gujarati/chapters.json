@@ -432,6 +432,28 @@
           "GU-CONCEPT-C03-VANDHONAHI-01"
         ]
       }
+    },
+    {
+      "chapter": 17,
+      "title": "Fourth Return: Respectful Questions",
+      "label": "ch:gu-r4-respectful-questions",
+      "canDo": "I can retrieve familiar and respectful you, what, the respectful name question, the introduction exchange, I, and how at their fourth spacing window, and write each response without a model.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES",
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "GU-R17-kem-r4",
+        "kind": "production",
+        "summary": "The chapter closes without a new atom: six exact R4 returns rebuild respectful name and wellbeing questions one small contrast at a time, ending with independent written production.",
+        "assesses": [
+          "GU-CONCEPT-C02-SHUN-01",
+          "GU-CONCEPT-C02-TAMARUNNAAMSHUNCHHE-01",
+          "GU-CONCEPT-C02-TUTAME-01",
+          "GU-CONCEPT-C03-HUN-01",
+          "GU-CONCEPT-C03-KEM-01"
+        ]
+      }
     }
   ]
 }

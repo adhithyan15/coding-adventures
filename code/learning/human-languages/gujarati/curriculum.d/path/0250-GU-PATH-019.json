@@ -1,0 +1,16 @@
+{
+  "id": "GU-PATH-019",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "GU-R17-you-r4",
+    "GU-R17-shun-r4",
+    "GU-R17-whats-your-name-r4",
+    "GU-R17-introduction-r4",
+    "GU-R17-hun-r4"
+  ],
+  "before": [],
+  "inline": [
+    "GU-EXT-024-R4-BRIDGE-C-NAMES"
+  ],
+  "after": []
+}

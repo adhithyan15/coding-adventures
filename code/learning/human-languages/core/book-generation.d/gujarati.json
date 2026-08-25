@@ -135,6 +135,13 @@
       "output": "gujarati/book/chapters/ch16-r4-introduction.tex",
       "unicodeScript": "Gujarati",
       "scriptCommand": "gu"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 17,
+      "output": "gujarati/book/chapters/ch17-r4-respectful-questions.tex",
+      "unicodeScript": "Gujarati",
+      "scriptCommand": "gu"
     }
   ]
 }
