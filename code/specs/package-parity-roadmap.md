@@ -7570,7 +7570,7 @@ check; the stable CI gate explicitly requires its result.
 The repository-pinned Lua 5.4.7 toolchain passes syntax compilation, 19
 focused validator tests, and the complete 72-test Lua build-tool suite. LuaCov
 measures the validator at 98.23% and the generated Unicode module at 84.06%; the
-package-wide total is 50.82% because unchanged CLI, resolver, and bundled test
+package-wide total is 51.24% because unchanged CLI, resolver, and bundled test
 framework code remains outside this bounded consumer. All 18 generator tests
 and six pinned-Lua setup tests pass. Ruff, changed-source Luacheck, workflow
 YAML parsing, generated-byte verification, and the full emitted Lua Unicode
@@ -7578,16 +7578,25 @@ self-check pass.
 
 The neutral corpus validates 111 cases and 269 files. The schema and runner
 conformance families pass 22 and 58 tests respectively; package-parity,
-capability, Haskell-capability, and OCaml-lock suites pass another 68 tests
-with two expected platform skips. The Go build tool passes all packages with
-coverage, vet, and trimpath compilation, then a fresh binary evaluates 45
-Starlark BUILD files and validates a forced dry plan over all 259 Lua packages.
+capability, Haskell-capability, and OCaml-lock suites pass another 66 tests
+with two expected platform skips and 928 subtests. The Go build tool passes all
+packages with coverage, vet, and trimpath compilation, then a fresh binary
+evaluates 45 Starlark BUILD files and validates a forced dry plan over all 259
+Lua packages.
 The refreshed schema-3 inventory remains 15 established lanes, 1,373
 implementation identities, 4,566 slots, 175 high-consensus packages with 276
 gaps, 910 singletons with 12,740 gaps, 721 Rust singletons, zero collisions,
 and zero unknown buckets. Bandit medium/high, strict JSON, state-graph, and diff
 checks pass; no package dependency changed. Generator subprocess authority
 remains explicitly selection-blocked under its separate review owner.
+
+The branch rebased without conflict onto exact `origin/main`
+`3ef6d4713e358c47035b733c6f9b3ccb46c270c1` after classifying intervening HTML
+parser diagnostics, Malayalam script and language-ladder coverage, Mermaid XY
+rendering, and Java-to-semantic-IR lowering under their existing owners. None
+adds or removes a package identity, BUILD/build-tool marker, or Lua tranche
+path. The focused package, generator, full-vector, Go oracle, build-plan, lint,
+and syntax gates were rerun successfully after the rebase.
 
 ## Autonomous Loop Protocol
 
