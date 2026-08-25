@@ -798,11 +798,6 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Set up pinned Swift toolchain
-        uses: swift-actions/setup-swift@7ca6abe6b3b0e8b5421b88be48feee39cbf52c6a # v2.4.0
-        with:
-          swift-version: '6.3.3'
-
       - name: Verify generated Swift against every official Unicode 17 vector
         shell: bash
         run: |
