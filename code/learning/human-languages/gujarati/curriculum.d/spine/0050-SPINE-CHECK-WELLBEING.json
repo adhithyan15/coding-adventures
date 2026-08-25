@@ -3,7 +3,8 @@
     "GU-PATH-006",
     "GU-PATH-015",
     "GU-PATH-C3P",
-    "GU-PATH-C3R3"
+    "GU-PATH-C3R3",
+    "GU-PATH-KEM-R4"
   ],
   "omits": [
     "WORD-GOOD",

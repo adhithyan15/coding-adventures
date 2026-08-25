@@ -78,6 +78,7 @@ it("pins Gujarati's meaning-first opening script spine", () => {
     ["14", 4],
     ["15", 6],
     ["16", 6],
+    ["17", 6],
   ]);
 });
 
@@ -150,6 +151,12 @@ it("pins Gujarati's complete pre-A1 writing runway", () => {
     "observe-trace",
     "guided-copy",
     "delayed-copy",
+    "dictation-transcription",
+    "dictation-transcription",
+    "dictation-transcription",
+    "dictation-transcription",
+    "dictation-transcription",
+    "dictation-transcription",
     "dictation-transcription",
     "dictation-transcription",
     "dictation-transcription",
@@ -302,7 +309,7 @@ it("pins Gujarati R4 bridge B at positions 97 through 102", () => {
     "GU-CONCEPT-C03-TAMEKEMCHHO-01",
     "GU-CONCEPT-C03-VANDHONAHI-01",
   ]);
-  const continuity = measureContinuity(lessons);
+  const continuity = measureContinuity(ordered.slice(0, 103));
   expect(
     continuity.reinforcement.filter(
       (defect) => exactR4.includes(defect.atom) && defect.missed.includes("R4"),
@@ -326,6 +333,64 @@ it("pins Gujarati R4 bridge B at positions 97 through 102", () => {
   ).length;
   expect(beforeBridge.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(179);
   expect(priorWindowMissesAfterBridge).toBe(173);
+});
+
+it("pins Gujarati R4 bridge C at positions 103 through 108", () => {
+  const lessons = loadTrackLessons("gujarati");
+  const ordered = [...lessons].sort(
+    (left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence),
+  );
+  const bridgeIds = [
+    "GU-R17-you-r4",
+    "GU-R17-shun-r4",
+    "GU-R17-whats-your-name-r4",
+    "GU-R17-introduction-r4",
+    "GU-R17-hun-r4",
+    "GU-R17-kem-r4",
+  ];
+  expect(ordered.slice(103, 109).map((lesson) => lesson.realization.lessonId)).toEqual(bridgeIds);
+  expect(
+    ordered.slice(103, 109).every((lesson) =>
+      ((lesson.frontmatter["introduces.knowledge"] ?? []) as string[]).length === 0,
+    ),
+  ).toBe(true);
+
+  const exactR4 = [
+    "GU-CONCEPT-C02-TUTAME-01",
+    "GU-CONCEPT-C02-SHUN-01",
+    "GU-CONCEPT-C02-TAMARUNNAAMSHUNCHHE-01",
+    "GU-CONCEPT-C02-PRACTICE-01",
+    "GU-CONCEPT-C03-HUN-01",
+    "GU-CONCEPT-C03-KEM-01",
+  ];
+  expect(
+    exactR4.map((atom, offset) => {
+      const introducedAt = ordered.findIndex((lesson) =>
+        ((lesson.frontmatter["introduces.knowledge"] ?? []) as string[]).includes(atom),
+      );
+      return 103 + offset - introducedAt;
+    }),
+  ).toEqual([61, 61, 61, 61, 61, 61]);
+
+  const continuity = measureContinuity(lessons);
+  expect(
+    continuity.reinforcement.filter(
+      (defect) => exactR4.includes(defect.atom) && defect.missed.includes("R4"),
+    ),
+  ).toEqual([]);
+
+  const beforeBridge = measureContinuity(ordered.slice(0, 103));
+  const priorTrackEnd = 102;
+  const firstEligibleDistance = new Map(
+    REINFORCEMENT_WINDOWS.map((window) => [window.name, window.from]),
+  );
+  const priorWindowMissesAfterBridge = continuity.reinforcement.flatMap((defect) =>
+    defect.missed.filter(
+      (window) => defect.introducedAt + firstEligibleDistance.get(window)! <= priorTrackEnd,
+    ),
+  ).length;
+  expect(beforeBridge.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(193);
+  expect(priorWindowMissesAfterBridge).toBe(190);
 });
 
 it("pins Gujarati-owned objective activities", () => {
@@ -378,6 +443,18 @@ it("pins Gujarati-owned objective activities", () => {
     "GU-R16-naam-r4-writing",
     "GU-R16-wellbeing-r3-listening",
     "GU-R16-wellbeing-r3-writing",
+    "GU-R17-hun-r4-listening",
+    "GU-R17-hun-r4-writing",
+    "GU-R17-introduction-r4-listening",
+    "GU-R17-introduction-r4-writing",
+    "GU-R17-kem-r4-listening",
+    "GU-R17-kem-r4-writing",
+    "GU-R17-shun-r4-listening",
+    "GU-R17-shun-r4-writing",
+    "GU-R17-whats-your-name-r4-listening",
+    "GU-R17-whats-your-name-r4-writing",
+    "GU-R17-you-r4-listening",
+    "GU-R17-you-r4-writing",
     "GU-W01-aa-matra-observe-check",
     "GU-W01-ha-observe-check",
     "GU-W01-haa-delayed-copy-check",

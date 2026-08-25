@@ -2,8 +2,8 @@
 
 - Track: [Gujarati](../gujarati/README.md)
 - Family / script: Indo-Aryan / Gujarati
-- Canonical lessons: 103
-- Mapped lessons: 103
-- Book progress: 16 chapters; through Ch. 16; 16 generated
+- Canonical lessons: 109
+- Mapped lessons: 109
+- Book progress: 17 chapters; through Ch. 17; 17 generated
 
 This file is generated from canonical curriculum data. Do not edit it by hand.

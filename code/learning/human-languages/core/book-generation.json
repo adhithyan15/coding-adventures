@@ -1266,6 +1266,13 @@
       "scriptCommand": "gu"
     },
     {
+      "language": "gujarati",
+      "chapter": 17,
+      "output": "gujarati/book/chapters/ch17-r4-respectful-questions.tex",
+      "unicodeScript": "Gujarati",
+      "scriptCommand": "gu"
+    },
+    {
       "language": "hindi",
       "chapter": 1,
       "output": "hindi/book/chapters/ch01-greetings.tex",
