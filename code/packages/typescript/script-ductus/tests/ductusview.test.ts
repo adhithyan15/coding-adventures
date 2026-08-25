@@ -97,6 +97,8 @@ const I = DUCTUS["இ"];
 const iOutline = tamilOutline("இ");
 const TAMIL_E = DUCTUS["எ"];
 const tamilEOutline = tamilOutline("எ");
+const TAMIL_ZHA = DUCTUS["ழ"];
+const tamilZhaOutline = tamilOutline("ழ");
 const TELUGU_A = DUCTUS[ductusKey("telugu", "అ")];
 const teluguAOutline = teluguOutline("అ");
 const MALAYALAM_E = DUCTUS[ductusKey("malayalam", "എ")];
@@ -534,16 +536,19 @@ function collect(node: SvgNode, pick: (n: SvgNode) => boolean, out: SvgNode[] = 
 const byTag = (node: SvgNode, tag: string) => collect(node, (n) => n.tag === tag);
 
 describe("ductusFor — only cited letters have a ductus", () => {
-  it("finds seventeen Tamil letters, twelve Persian letters, eighteen Arabic letters, and sixteen Urdu letters", () => {
+  it("finds twenty Tamil letters, twelve Persian letters, eighteen Arabic letters, and sixteen Urdu letters", () => {
     expect(ductusFor("ம")?.glyph).toBe("ம");
     expect(ductusFor("அ")?.glyph).toBe("அ");
     expect(ductusFor("ஆ")?.glyph).toBe("ஆ");
     expect(ductusFor("இ")?.glyph).toBe("இ");
+    expect(ductusFor("எ")?.glyph).toBe("எ");
     expect(ductusFor("க")?.glyph).toBe("க");
     expect(ductusFor("ச")?.glyph).toBe("ச");
     expect(ductusFor("ட")?.glyph).toBe("ட");
     expect(ductusFor("வ")?.glyph).toBe("வ");
     expect(ductusFor("ல")?.glyph).toBe("ல");
+    expect(ductusFor("ள")?.glyph).toBe("ள");
+    expect(ductusFor("ழ")?.glyph).toBe("ழ");
     expect(ductusFor("ற")?.glyph).toBe("ற");
     expect(ductusFor("ன")?.glyph).toBe("ன");
     expect(ductusFor("ண")?.glyph).toBe("ண");
@@ -1034,6 +1039,32 @@ describe("Tamil எ — six joined body movements, then the right upright", () =
     expect(done).toHaveLength(1);
     expect(done[0].attrs.d).toBe(penPathD(TAMIL_E.strokes[0], 1));
     expect(pen.attrs.d).toBe(penPathD(TAMIL_E.strokes[1], 1));
+  });
+});
+
+describe("Tamil ழ — joined left body, joined right bowl, then lower hook", () => {
+  const steps = ductusSteps(TAMIL_ZHA);
+  const strip = ductusFilmstrip(TAMIL_ZHA, tamilZhaOutline);
+
+  it("places lifts before movements 4 and 6", () => {
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false, true, false, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 1, 1, 2]);
+  });
+
+  it("reports six movements in three strokes", () => {
+    expect(strip.frames).toHaveLength(6);
+    expect(strip.penLifts).toBe(2);
+    expect(strip.summary).toBe("3 strokes · 2 pen lifts · 6 movements");
+  });
+
+  it("keeps both body runs visible while the detached hook completes", () => {
+    const last = strip.frames[5];
+    const done = byTag(last, "path").filter((path) => path.attrs.class === "ductus__done");
+    const pen = byTag(last, "path").find((path) => path.attrs.class === "ductus__pen")!;
+    expect(done).toHaveLength(2);
+    expect(done[0].attrs.d).toBe(penPathD(TAMIL_ZHA.strokes[0], 1));
+    expect(done[1].attrs.d).toBe(penPathD(TAMIL_ZHA.strokes[1], 1));
+    expect(pen.attrs.d).toBe(penPathD(TAMIL_ZHA.strokes[2], 1));
   });
 });
 

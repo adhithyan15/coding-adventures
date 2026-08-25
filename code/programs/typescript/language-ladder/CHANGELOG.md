@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased — source-verified Tamil zha
+
+- Teach Tamil **ழ** with its cited three-run, six-movement path.
+- Preserve the font-fitted low crossbar and detached lower hook, and rerank
+  Malayalam chillu **ൽ** next.
+
 ## Unreleased — source-verified Persian and Urdu kheh
 
 - Teach Persian and Urdu **خ** with separately cited body-first, dot-last paths.

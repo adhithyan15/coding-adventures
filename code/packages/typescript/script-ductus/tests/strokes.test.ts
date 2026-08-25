@@ -664,6 +664,16 @@ describe("handwriting ductus", () => {
     ]);
   });
 
+  it("Tamil ழ groups six movements into three source-verified pen-down runs", () => {
+    expect(penLifts(DUCTUS["ழ"])).toBe(2);
+    expect(DUCTUS["ழ"].strokes).toHaveLength(3);
+    expect(DUCTUS["ழ"].strokes.map((stroke) => stroke.segments.map((segment) => segment.label))).toEqual([
+      ["climb the outer left upright", "retrace down the left upright", "carry the low crossbar right"],
+      ["retrace left into the inner upright", "descend and sweep around the broad right bowl"],
+      ["turn through the detached lower hook"],
+    ]);
+  });
+
   it("ய joins its hook, retraced center, base, and right upright without lifting", () => {
     expect(penLifts(DUCTUS["ய"])).toBe(0);
     expect(DUCTUS["ய"].strokes).toHaveLength(1);
@@ -6272,6 +6282,13 @@ describe("handwriting ductus", () => {
     expect(src.url).toContain("tamilscript/files/2009/08/hw_lettersinstructions.pdf");
     expect(src.citation).toMatch(/Appendix I.*Frame 5.*எ.*p\. 193/);
     expect(src.variation).toMatch(/first six movements.*connected body.*upward right upright.*movement 7.*one lift.*varies by school.*two-run order.*Noto Sans Tamil/i);
+  });
+
+  it("ழ's three-run stroke order traces to Appendix I Frame 7", () => {
+    const src = DUCTUS["ழ"].source;
+    expect(src.url).toContain("tamilscript/files/2009/08/hw_lettersinstructions.pdf");
+    expect(src.citation).toMatch(/Appendix I.*Frame 7.*ழ.*p\. 193/i);
+    expect(src.variation).toMatch(/six movements.*three pen-down runs.*1–3.*left body and bar.*4–5.*inner upright and broad right bowl.*movement 6.*detached lower hook.*Noto Sans Tamil.*low crossbar.*varies by school.*three-run order/i);
   });
 
   it("Persian ا traces to UT Austin's opening right-to-left freehand demonstration", () => {
