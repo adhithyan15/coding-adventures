@@ -222,6 +222,36 @@
         "ZH-EXT-032-FAMILY-FOUR-SKILL"
       ],
       "after": []
+    },
+    {
+      "id": "ZH-PATH-012",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "ZH-C13-hear-da",
+        "ZH-W13-da",
+        "ZH-C13-da",
+        "ZH-C13-hear-dajia",
+        "ZH-C13-dajia",
+        "ZH-C13-hear-xue",
+        "ZH-W13-xue",
+        "ZH-C13-xue",
+        "ZH-C13-hear-xuesheng",
+        "ZH-W13-sheng",
+        "ZH-C13-xuesheng",
+        "ZH-C13-hear-daxue",
+        "ZH-C13-daxue",
+        "ZH-C13-hear-daxuesheng",
+        "ZH-C13-daxuesheng",
+        "ZH-R13-school-six",
+        "ZH-C13-practice"
+      ],
+      "before": [],
+      "inline": [
+        "ZH-EXT-033-SCHOOL-MEANING-FIRST",
+        "ZH-EXT-034-SCHOOL-SCRIPT",
+        "ZH-EXT-035-SCHOOL-FOUR-SKILL"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -260,7 +290,8 @@
       "segments": [
         "ZH-PATH-007",
         "ZH-PATH-008",
-        "ZH-PATH-011"
+        "ZH-PATH-011",
+        "ZH-PATH-012"
       ],
       "omits": [
         "PRONOUN-ME",
@@ -1060,6 +1091,59 @@
       "lessons": [
         "ZH-R12-family-six",
         "ZH-C12-practice"
+      ]
+    },
+    {
+      "id": "ZH-EXT-033-SCHOOL-MEANING-FIRST",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "lexis",
+      "canDo": "I can understand and say 大, 大家, 学, 学生, 大学 and 大学生, with each unfamiliar spoken meaning arriving before any unfamiliar character form.",
+      "prerequisites": [
+        "ZH-EXT-032-FAMILY-FOUR-SKILL"
+      ],
+      "lessons": [
+        "ZH-C13-hear-da",
+        "ZH-C13-hear-dajia",
+        "ZH-C13-hear-xue",
+        "ZH-C13-hear-xuesheng",
+        "ZH-C13-hear-daxue",
+        "ZH-C13-hear-daxuesheng"
+      ]
+    },
+    {
+      "id": "ZH-EXT-034-SCHOOL-SCRIPT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can write 大, 学 and 生 from ordered strokes, then read and write 大家, 学生, 大学 and 大学生 without pinyin.",
+      "prerequisites": [
+        "ZH-EXT-033-SCHOOL-MEANING-FIRST"
+      ],
+      "lessons": [
+        "ZH-W13-da",
+        "ZH-C13-da",
+        "ZH-C13-dajia",
+        "ZH-W13-xue",
+        "ZH-C13-xue",
+        "ZH-W13-sheng",
+        "ZH-C13-xuesheng",
+        "ZH-C13-daxue",
+        "ZH-C13-daxuesheng"
+      ]
+    },
+    {
+      "id": "ZH-EXT-035-SCHOOL-FOUR-SKILL",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "assessment",
+      "canDo": "I can pass separate listening, speaking, reading and writing checks for 大, 大家, 学, 学生, 大学 and 大学生; no strong skill compensates for a weak one.",
+      "prerequisites": [
+        "ZH-EXT-034-SCHOOL-SCRIPT"
+      ],
+      "lessons": [
+        "ZH-R13-school-six",
+        "ZH-C13-practice"
       ]
     }
   ]

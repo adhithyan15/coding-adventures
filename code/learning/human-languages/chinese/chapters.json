@@ -275,6 +275,32 @@
           "ZH-SCRIPT-JIA-01"
         ]
       }
+    },
+    {
+      "chapter": 13,
+      "title": "From study to university student",
+      "label": "ch:zh-school-six",
+      "canDo": "I can understand, say, read and write six HSK Level 1 size-and-school words, gaining 大, 学 and 生 one gently staged character at a time before recombining them as 大家, 学生, 大学 and 大学生.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "ZH-C13-practice",
+        "kind": "writing",
+        "summary": "Three newly secured characters produce six useful words, each checked separately in listening, speaking, unassisted reading and no-model writing.",
+        "assesses": [
+          "ZH-PERFORMANCE-SCHOOL-SIX-FOUR-SKILL-01",
+          "ZH-LEX-DA-01",
+          "ZH-LEX-DAJIA-01",
+          "ZH-LEX-XUE-01",
+          "ZH-LEX-XUESHENG-01",
+          "ZH-LEX-DAXUE-01",
+          "ZH-LEX-DAXUESHENG-01",
+          "ZH-SCRIPT-DA-01",
+          "ZH-SCRIPT-XUE-01",
+          "ZH-SCRIPT-SHENG-01"
+        ]
+      }
     }
   ]
 }
