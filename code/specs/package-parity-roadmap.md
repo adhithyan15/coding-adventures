@@ -7599,13 +7599,17 @@ checks pass; no package dependency changed. Generator subprocess authority
 remains explicitly selection-blocked under its separate review owner.
 
 The branch rebased without conflict onto exact `origin/main`
-`acfb0704bf9ea5898e262e9d98f157e3cff10270` after classifying intervening HTML
+`4faca735e6851d24bb78f96817292dbb354c0748` after classifying intervening HTML
 parser diagnostics and Malayalam script data under their existing owners. The
 merged SIMD lane-memory completion, ALGOL power-one selector writes, and
 Mermaid XY axis theme colors remain inside the neutral/parity owners registered
 before selection and the existing WAST/conformance, ALGOL, and Mermaid XY
-owners. None adds or removes a package identity, BUILD/build-tool marker, or
-Lua tranche path. The focused package, generator, full-vector, Go oracle,
+owners. Later implied-row HTML diagnostics and JV02 classic/enhanced for-loop
+lowering likewise remain inside the HTML frontend and Java-to-Semantic-IR
+owners; its two Python execution proofs retain the already registered extra-CI
+toolchain declaration gap. None adds or removes a package identity,
+BUILD/build-tool marker, or Lua tranche path. The focused package, generator,
+full-vector, Go oracle,
 build-plan, lint, and syntax gates were rerun successfully after the rebase.
 
 Independent split security review passed the pure Lua adapter and generated
@@ -7613,7 +7617,7 @@ Unicode substrate without a finding. Generator and CI review found and then
 closed executable/environment, bounded-output, timeout-tree,
 early-root-descendant, Job Object ownership, and suspended setup-failure risks.
 The final reviews of validated code revision
-`422fdaa06cd23ff64fd745ab626f1bcbe242da14` returned `SECURITY REVIEW PASSED`:
+`f459a4cf54cbddac899a1172a22180d91a4acadd` returned `SECURITY REVIEW PASSED`:
 CI is read-only with checkout credentials disabled, the Unicode and Lua source
 inputs remain hash-pinned, and no actionable security issue remains.
 
