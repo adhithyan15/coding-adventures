@@ -146,23 +146,24 @@ Chapters 35–40 are a pre-A1 vocabulary-depth tranche (family, face, heart, tea
 and a meal) rather than a new grammar arc; every payoff there closes its own
 chapter's atoms at full representativeness.
 
-## Handwriting — the first sourced shape, not yet a writing course
+## Handwriting — two sourced shapes, not yet a writing course
 
-The track still teaches you primarily to **read** Telugu: there are no `type:
-writing` lessons yet. The script inventory now has one source-verified exception
-to its recognition-only baseline, however. Independent short **అ** carries four
-numbered movements in two pen-down runs, and Language Ladder fits those movements
-to the vendored Noto Sans Telugu outline. The remaining recognition rows retain
-empty `strokeOrder` arrays rather than guesses.
+The track still teaches you primarily to **read** Telugu. The script inventory
+now has two source-verified exceptions to its recognition-only baseline.
+Independent short **అ** carries four numbered movements in two pen-down runs;
+independent short **ఎ** carries three movements in two runs. Language Ladder
+fits both orders to the vendored Noto Sans Telugu outline. The remaining
+recognition rows retain empty `strokeOrder` arrays rather than guesses.
 
 That distinction is provenance, not polish. A pen path's *shape* can be checked
 against the vendored font automatically, but no font records the *order* a hand
-travels it in. The order for **అ** comes from Sathish Shanmugam's *Write Telugu
-Alphabets* tracing screen; movements 1–2 stay joined around the left lobe and
-lower bowl, then movements 3–4 restart around the right lobe and return along the
-inner bar. Vemuri's published overview also cautions that Telugu stroke direction
-is not uniform across letters, so this is one attested pedagogical order, not a
-claim that every school uses the same ductus.
+travels it in. Both orders come from Sathish Shanmugam's *Write Telugu
+Alphabets* tracing guides. For **అ**, movements 1–2 stay joined around the left
+lobe and lower bowl, then movements 3–4 restart around the right lobe and return
+along the inner bar. For **ఎ**, movements 1–2 close the compact lower loop,
+then movement 3 restarts at the junction and climbs the broad outer arch.
+Telugu stroke direction is not uniform across letters, so these are attested
+pedagogical orders, not a claim that every school uses the same ductus.
 
 Two things govern the remaining work:
 
