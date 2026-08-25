@@ -9012,10 +9012,13 @@ impl HtmlParser {
             self.open_elements.truncate(index);
             self.template_insertion_modes.pop();
         } else {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-template-end-tag",
-                "end tag `</template>` was ignored because no HTML template element was open",
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-template-end-tag",
+                    "end tag `</template>` was ignored because no HTML template element was open",
+                )
+                .at_emission(self.current_token_emission_position),
+            );
         }
     }
 
@@ -27741,6 +27744,18 @@ mod tests {
         )))
     }
 
+    fn unexpected_template_end_tag(source: &str, occurrence: usize) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-template-end-tag",
+            "end tag `</template>` was ignored because no HTML template element was open",
+        )
+        .at_emission(Some(end_tag_position_at(
+            source,
+            "template",
+            occurrence,
+        )))
+    }
+
     fn unexpected_description_list_item_start_tag(
         source: &str,
         name: &str,
@@ -41918,20 +41933,24 @@ mod tests {
 
     #[test]
     fn reports_template_end_tags_without_an_open_html_template() {
-        for source in [
-            "<!doctype html><div></template></div>",
-            "<!doctype html><template></template></template>",
-            "<!doctype html><svg></template><circle></circle></svg>",
+        for (source, occurrence) in [
+            ("<!doctype html><div></template></div>", 0),
+            ("<!doctype html><template></template></template>", 1),
+            (
+                "<!doctype html><svg></template><circle></circle></svg>",
+                0,
+            ),
         ] {
             let output = parse_html_with_diagnostics(source).unwrap();
-            assert_eq!(
+            assert!(
                 output
                     .parser_diagnostics
                     .iter()
-                    .filter(|diagnostic| diagnostic.code == "unexpected-template-end-tag")
-                    .count(),
-                1,
-                "source {source:?}"
+                    .any(|diagnostic| {
+                        diagnostic == &unexpected_template_end_tag(source, occurrence)
+                    }),
+                "source {source:?}: {:?}",
+                output.parser_diagnostics
             );
         }
 
@@ -41944,6 +41963,61 @@ mod tests {
         )
         .unwrap();
         assert_eq!(ignored.document, control);
+    }
+
+    #[test]
+    fn positions_unexpected_template_end_tags_at_token_emission() {
+        let source = "<!doctype html><!--é-->\r\n<div></template></template></div>";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        let diagnostics = output
+            .parser_diagnostics
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-template-end-tag")
+            .collect::<Vec<_>>();
+        assert_eq!(
+            diagnostics,
+            vec![
+                &unexpected_template_end_tag(source, 0),
+                &unexpected_template_end_tag(source, 1),
+            ]
+        );
+        assert!(source.len() > source.chars().count());
+
+        let fragment_source = "</template>";
+        let fragment =
+            parse_html_fragment_for_context_with_diagnostics(fragment_source, "div").unwrap();
+        assert_eq!(
+            fragment.parser_diagnostics,
+            vec![unexpected_template_end_tag(fragment_source, 0)]
+        );
+
+        let incomplete = parse_html_with_diagnostics("<!doctype html></template").unwrap();
+        assert!(incomplete
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-template-end-tag"));
+
+        let matching = parse_html_with_diagnostics("<!doctype html><template></template>").unwrap();
+        assert!(matching
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-template-end-tag"));
+
+        let mut unpositioned = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        for token in [
+            Token::EndTag {
+                name: "template".to_string(),
+            },
+            Token::Eof,
+        ] {
+            unpositioned.process_token(token);
+        }
+        let diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-template-end-tag")
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
     }
 
     #[test]
