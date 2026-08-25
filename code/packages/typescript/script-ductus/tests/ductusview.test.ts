@@ -87,6 +87,8 @@ const I = DUCTUS["இ"];
 const iOutline = tamilOutline("இ");
 const KA = DUCTUS["க"];
 const kaOutline = tamilOutline("க");
+const CA = DUCTUS["ச"];
+const caOutline = tamilOutline("ச");
 const VA = DUCTUS["வ"];
 const vaOutline = tamilOutline("வ");
 const LA = DUCTUS["ல"];
@@ -504,12 +506,13 @@ function collect(node: SvgNode, pick: (n: SvgNode) => boolean, out: SvgNode[] = 
 const byTag = (node: SvgNode, tag: string) => collect(node, (n) => n.tag === tag);
 
 describe("ductusFor — only cited letters have a ductus", () => {
-  it("finds fifteen Tamil letters, ten Persian letters, eighteen Arabic letters, and fourteen Urdu letters", () => {
+  it("finds sixteen Tamil letters, ten Persian letters, eighteen Arabic letters, and fourteen Urdu letters", () => {
     expect(ductusFor("ம")?.glyph).toBe("ம");
     expect(ductusFor("அ")?.glyph).toBe("அ");
     expect(ductusFor("ஆ")?.glyph).toBe("ஆ");
     expect(ductusFor("இ")?.glyph).toBe("இ");
     expect(ductusFor("க")?.glyph).toBe("க");
+    expect(ductusFor("ச")?.glyph).toBe("ச");
     expect(ductusFor("வ")?.glyph).toBe("வ");
     expect(ductusFor("ல")?.glyph).toBe("ல");
     expect(ductusFor("ற")?.glyph).toBe("ற");
@@ -942,6 +945,36 @@ describe("க — a real cited three-stroke filmstrip", () => {
     expect(done).toHaveLength(2);
     expect(done.map((path) => path.attrs.d)).toEqual([penPathD(KA.strokes[0], 1), penPathD(KA.strokes[1], 1)]);
     expect(pen.attrs.d).toBe(penPathD(KA.strokes[2], 1));
+  });
+});
+
+describe("ச — a real cited two-stroke filmstrip", () => {
+  const steps = ductusSteps(CA);
+  const strip = ductusFilmstrip(CA, caOutline);
+
+  it("has one frame per named movement", () => {
+    expect(steps).toHaveLength(4);
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 4 movements");
+  });
+
+  it("advances through the joined upper frame before the lifted bowl", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "climb the left upright",
+      "carry the top bar to the right",
+      "drop the inner upright and carry right",
+      "turn around and close the lower-left bowl",
+    ]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 1]);
+  });
+
+  it("renders the completed upper frame behind the active bowl", () => {
+    const final = strip.frames.at(-1)!;
+    const done = byTag(final, "path").filter((node) => node.attrs.class === "ductus__done");
+    const pen = byTag(final, "path").find((node) => node.attrs.class === "ductus__pen")!;
+    expect(done.map((path) => path.attrs.d)).toEqual([penPathD(CA.strokes[0], 1)]);
+    expect(pen.attrs.d).toBe(penPathD(CA.strokes[1], 1));
   });
 });
 

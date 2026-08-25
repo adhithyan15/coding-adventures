@@ -613,6 +613,18 @@ describe("handwriting ductus", () => {
     ]);
   });
 
+  it("ச joins its upper frame before lifting for the lower-left bowl", () => {
+    expect(penLifts(DUCTUS["ச"])).toBe(1);
+    expect(DUCTUS["ச"].strokes).toHaveLength(2);
+    expect(DUCTUS["ச"].strokes.map((stroke) => stroke.segments.length)).toEqual([3, 1]);
+    expect(DUCTUS["ச"].strokes[0].segments.map((segment) => segment.label)).toEqual([
+      "climb the left upright",
+      "carry the top bar to the right",
+      "drop the inner upright and carry right",
+    ]);
+    expect(DUCTUS["ச"].strokes[1].segments[0].label).toBe("turn around and close the lower-left bowl");
+  });
+
   it("Chinese 人 draws the left-falling stroke before the lifted right-falling stroke", () => {
     expect(CHINESE_REN.script).toBe("chinese");
     expect(penLifts(CHINESE_REN)).toBe(1);
@@ -6039,6 +6051,13 @@ describe("handwriting ductus", () => {
     expect(src.url).toContain("tamilscript/files/2009/08/hw_lettersinstructions.pdf");
     expect(src.citation).toMatch(/Appendix I.*Frame 3.*ர/i);
     expect(src.variation).toMatch(/three-movement ஈ frame.*angular short fourth movement.*varies by school.*three-run order.*Noto Sans Tamil/i);
+  });
+
+  it("ச's two-run order traces to Frame 3 of the UT Austin primer", () => {
+    const src = DUCTUS["ச"].source;
+    expect(src.url).toContain("tamilscript/files/2009/08/hw_lettersinstructions.pdf");
+    expect(src.citation).toMatch(/Appendix I.*Frame 3.*ச.*p\. 191/i);
+    expect(src.variation).toMatch(/three joined upper-frame movements.*separate fourth movement.*lower-left bowl.*varies by school.*two-run order.*Noto Sans Tamil/i);
   });
 
   it("அ's stroke order traces to Frame 4 of the same primer", () => {
