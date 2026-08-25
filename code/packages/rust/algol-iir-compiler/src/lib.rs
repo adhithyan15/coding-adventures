@@ -8329,9 +8329,22 @@ fn expr_variable_name(node: &GrammarASTNode) -> Option<String> {
     None
 }
 
+fn single_parenthesized_child(node: &GrammarASTNode) -> Option<&GrammarASTNode> {
+    let tokens = direct_tokens(node);
+    let child_nodes = direct_nodes(node);
+    (tokens.len() == 2
+        && tokens[0].effective_type_name() == "LPAREN"
+        && tokens[1].effective_type_name() == "RPAREN"
+        && child_nodes.len() == 1)
+        .then(|| child_nodes[0])
+}
+
 fn exact_bare_variable_expression_name(node: &GrammarASTNode) -> Option<String> {
     if node.rule_name == "variable" {
         return bare_scalar_variable_name(node);
+    }
+    if let Some(child) = single_parenthesized_child(node) {
+        return exact_bare_variable_expression_name(child);
     }
     if !direct_tokens(node).is_empty() {
         return None;
@@ -8343,6 +8356,9 @@ fn exact_bare_variable_expression_name(node: &GrammarASTNode) -> Option<String> 
 }
 
 fn literal_boolean_value(node: &GrammarASTNode) -> Option<bool> {
+    if let Some(child) = single_parenthesized_child(node) {
+        return literal_boolean_value(child);
+    }
     let tokens = direct_tokens(node);
     if tokens.len() == 1 && tokens[0].effective_type_name() == "KEYWORD" {
         return match tokens[0].value.as_str() {
@@ -8358,6 +8374,9 @@ fn literal_boolean_value(node: &GrammarASTNode) -> Option<bool> {
 }
 
 fn literal_integer_value(node: &GrammarASTNode) -> Option<i64> {
+    if let Some(child) = single_parenthesized_child(node) {
+        return literal_integer_value(child);
+    }
     let tokens = direct_tokens(node);
     if tokens.len() == 1 && tokens[0].effective_type_name() == "INTEGER_LIT" {
         return tokens[0].value.parse().ok();
@@ -8369,6 +8388,9 @@ fn literal_integer_value(node: &GrammarASTNode) -> Option<i64> {
 }
 
 fn literal_numeric_one(node: &GrammarASTNode) -> bool {
+    if let Some(child) = single_parenthesized_child(node) {
+        return literal_numeric_one(child);
+    }
     let tokens = direct_tokens(node);
     if tokens.len() == 1 {
         return match tokens[0].effective_type_name() {
@@ -10573,6 +10595,9 @@ mod tests {
             "true and flag and true",
             "false or flag or false",
             "true eqv flag eqv true",
+            "(flag)",
+            "flag and (true)",
+            "(true) and flag",
         ] {
             compile_source(
                 &format!(
@@ -10586,12 +10611,16 @@ mod tests {
 
     #[test]
     fn al4_non_identity_selector_write_remains_conservative() {
-        let err = compile_source(
-            "begin integer i, n, limit, choose; boolean other, flag; n := 3; limit := 3; choose := 1; other := true; flag := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := if flag then other else false; flag := flag and false end; print(i + 0.25) end",
-            "test",
-        )
-        .expect_err("a boolean non-identity write may change the selector dependency");
-        assert!(format!("{err:?}").contains("cannot print a real value"));
+        for write in ["flag and false", "(flag and false)"] {
+            let err = compile_source(
+                &format!(
+                    "begin integer i, n, limit, choose; boolean other, flag; n := 3; limit := 3; choose := 1; other := true; flag := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := if flag then other else false; flag := {write} end; print(i + 0.25) end"
+                ),
+                "test",
+            )
+            .expect_err("a boolean non-identity write may change the selector dependency");
+            assert!(format!("{err:?}").contains("cannot print a real value"));
+        }
     }
 
     #[test]
@@ -10642,6 +10671,10 @@ mod tests {
             "choose ^ 1 ^ 1",
             "+choose",
             "+choose + 0 - 0",
+            "(choose)",
+            "choose + (0)",
+            "(0) + choose",
+            "choose * (1)",
         ] {
             compile_source(
                 &format!(
@@ -10655,7 +10688,7 @@ mod tests {
 
     #[test]
     fn al4_integer_non_identity_selector_write_remains_conservative() {
-        for write in ["choose * 0", "-choose"] {
+        for write in ["choose * 0", "(choose * 0)", "-choose"] {
             let err = compile_source(
                 &format!(
                     "begin integer i, n, limit, choose; boolean other; n := 3; limit := 3; choose := 1; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := other; choose := {write} end; print(i + 0.25) end"
@@ -10711,6 +10744,9 @@ mod tests {
             "choose ** 1",
             "choose ^ 1 ^ 1",
             "+choose",
+            "(choose)",
+            "choose * (1.0)",
+            "(1.0) * choose",
         ] {
             compile_source(
                 &format!(
@@ -10748,7 +10784,11 @@ mod tests {
 
     #[test]
     fn al4_real_non_unit_selector_chains_remain_conservative() {
-        for write in ["choose * 1.0 * 2.0", "1.0 / choose * 1.0"] {
+        for write in [
+            "choose * 1.0 * 2.0",
+            "(choose * 2.0)",
+            "1.0 / choose * 1.0",
+        ] {
             let err = compile_source(
                 &format!(
                     "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := {write} end; print(i + 0.25) end"

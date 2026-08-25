@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.194.0 — 2026-08-25 — parenthesized selector identities
+
+Bounded static while analysis now treats parentheses as transparent around
+exact scalar self-references and boolean, integer, or real neutral literals.
+Parenthesized changing expressions remain conservative.
+
 ## 0.193.0 — 2026-08-25 — unary-plus selector writes
 
 Bounded static while analysis now recognizes leading unary plus as the exact
