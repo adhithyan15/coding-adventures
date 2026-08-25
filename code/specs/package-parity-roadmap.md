@@ -6514,6 +6514,25 @@ preserving the no-filesystem, no-process, no-environment, and no-network
 authority boundary. The strategic OCaml substrate remains collision-unsafe
 while live PRs #12149 and #12162 touch its Go validator and main surfaces.
 
+The selected Unicode tranche now pins five official Unicode 17.0.0 data files
+by exact byte count and SHA-256 and generates one source-embedded policy for
+the neutral oracle, Python, C#, and the F# facade; Rust continues to use its
+reviewed Unicode 17 tables. The generator refuses redirects, exact-origin or
+final-URL drift, oversized and truncated bodies, hash drift, stale generated
+sources, and stale distributable license notices. Full official normalization,
+case-fold, and uppercase checks pass, as do the Todhri and outlined-letter
+version sentinels. Python, C#, F#, and Rust package suites, coverage, lint,
+static analysis, package audits, neutral conformance, Go downstream validation,
+build-file validation, package-parity, capability, Haskell, and OCaml gates all
+pass. Python wheel/sdist and C#/F# publish/NuGet artifacts declare mixed MIT and
+Unicode-3.0 licensing and contain the exact full notice. Two independent
+security reviews found redirect/body-cap and license-distribution defects; both
+were repaired, and the final re-review passed. After conflict-free rebases over
+eight non-overlapping commits, the collision-checked report at exact main
+`88ff366eb5bacc5ad112beb760ec6f6801bd905b` remains 15 lanes, 1,371 identities,
+4,564 slots, 908 singletons with 12,712 gaps, 719 Rust singletons, zero
+collisions, and zero unknown buckets.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
