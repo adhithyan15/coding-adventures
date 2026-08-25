@@ -2,6 +2,69 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.53] - 2026-08-25 (SIMD PR42: v128.load_extend family)
+
+### Added
+
+- `v128.load8x8_s`/`_u`, `v128.load16x4_s`/`_u`, `v128.load32x2_s`/`_u`
+  (`SimdOpKind::Load8x8S`/`Load8x8U`/`Load16x4S`/`Load16x4U`/
+  `Load32x2S`/`Load32x2U`, sub-opcodes `0x01`-`0x06`): pop the `i32` base
+  address, add the instruction's own `memarg` offset, then read 8 raw
+  bytes total from memory 0 as a set of narrow lanes (8x1, 4x2, or 2x4
+  bytes depending on width) via the existing scalar `load_i32_8s`/
+  `load_i32_8u`/`load_i32_16s`/`load_i32_16u`/`load_i64_32s`/
+  `load_i64_32u` narrow loaders -- each already bounds-checked and
+  already implementing the correct sign/zero-extension semantics reused
+  unchanged from the scalar `iNN.load8_s`/etc. family. Each loaded lane
+  is placed independently (little-endian) into the corresponding, WIDER
+  lane of a new `v128`: `load8x8` produces `i16x8`, `load16x4` produces
+  `i32x4`, `load32x2` produces `i64x2`. The FIRST opcodes in this table
+  that widen EACH loaded lane independently, rather than broadcasting one
+  value (`Load8Splat` etc., PR40) or zero-filling the unused lanes
+  (`Load32Zero`/`Load64Zero`, PR41).
+
+### Fixed
+
+- The `0xFD`-prefixed SIMD instruction decoder's memarg-detection gate
+  (widened in PR40/PR41 to cover `0x07..=0x0A` and `0x5C`/`0x5D`) did not
+  yet recognize `0x01..=0x06`. Folded into the existing splat-family
+  range, now `0x01..=0x0A` -- without this, every `v128.load_extend` op
+  with a non-zero `offset=` immediate would have silently fallen through
+  to the "no immediate" decode arm (leaving `aux` at 0) and read from the
+  wrong address. Caught by `v128_load8x8_s_honors_a_nonzero_memarg_offset`
+  and the upstream `simd_load_extend.wast` corpus's own offset-variant
+  `assert_return` directives, all of which would otherwise silently
+  mis-grade. Same lesson PR40/PR41's own decoder fixes already
+  established -- every new memarg-carrying SIMD opcode must be added to
+  this gate, not just to the executor's own `match`; re-verified this gate
+  explicitly for this PR's own new sub-opcode range rather than assuming
+  a prior widening still covers it.
+
+### Tests
+
+- `v128_load8x8_s_sign_extends_each_byte_into_its_own_i16_lane`,
+  `v128_load8x8_u_zero_extends_each_byte_into_its_own_i16_lane`,
+  `v128_load16x4_s_sign_extends_each_halfword_into_its_own_i32_lane`,
+  `v128_load16x4_u_zero_extends_each_halfword_into_its_own_i32_lane`,
+  `v128_load32x2_s_sign_extends_each_word_into_its_own_i64_lane`,
+  `v128_load32x2_u_zero_extends_each_word_into_its_own_i64_lane`: each
+  writes real bytes to memory via plain scalar `i32.store`s (with the
+  LAST narrow lane's high bit deliberately set, e.g. byte `0x80`) and
+  confirms the exact lane-by-lane sign- or zero-extended result -- the
+  correctness-critical distinction this whole family exists to test (a
+  byte/halfword/word with its high bit set must sign-extend to a
+  NEGATIVE lane for `_s` but zero-extend to a small POSITIVE lane for
+  `_u`).
+- `v128_load8x8_s_honors_a_nonzero_memarg_offset`: same "prove the
+  `memarg` offset, not just the base address, is honored" discipline
+  PR40/PR41 established, this PR's own regression test for the
+  decoder-gate fix above.
+- `v128_load_extend_family_past_the_end_of_memory_traps_cleanly_not_panic`:
+  same "verify bounds guards adversarially" discipline as the
+  `load_splat`/`load_zero` families, checked for all 6 new opcodes (every
+  variant reads exactly 8 bytes total regardless of lane width, so one
+  shared width applies to all of them).
+
 ## [0.9.52] - 2026-08-25 (SIMD PR41: v128.loadN_zero family)
 
 ### Added

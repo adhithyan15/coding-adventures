@@ -2135,6 +2135,45 @@ pub enum SimdOpKind {
     /// family (both opcodes land in this single PR, mirroring the
     /// one-family-per-PR cadence PR40 established for `load_splat`).
     Load64Zero,
+    /// `v128.load8x8_s` (SIMD PR42) -- pop the `i32` base address, add
+    /// this instruction's own `memarg` offset, bounds-checked read of
+    /// exactly 8 raw bytes from memory 0, SIGN-extend each of the 8
+    /// bytes to `i16`, producing an `i16x8` result. The FIRST opcode in
+    /// this table that widens EACH loaded lane independently rather than
+    /// broadcasting ([`Self::Load8Splat`]) or zero-filling the unused
+    /// lanes ([`Self::Load32Zero`]) -- every one of the 8 loaded bytes
+    /// becomes its own, wider lane. Opens the `v128.load_extend` family
+    /// (this PR's whole scope), the THIRD and final bite into the wider
+    /// `load_extend`/`load_splat`/`load_zero`/`load{8,16,32,64}_lane`/
+    /// `store{8,16,32,64}_lane` memory-access family PR39 deliberately
+    /// deferred and PR40/PR41 opened -- see
+    /// `code/specs/W13-wasm-simd-v128-first-slice.md`'s staged-PR plan
+    /// and the upstream `simd_load_extend.wast` corpus this PR vendors.
+    Load8x8S,
+    /// `v128.load8x8_u` -- same "load 8 bytes, widen each lane
+    /// independently" shape as [`Self::Load8x8S`], but ZERO-extends each
+    /// byte to `i16` instead of sign-extending -- a byte with its high
+    /// bit set (e.g. `0x80`) becomes `0x0080` (128), not `0xFF80` (-128).
+    Load8x8U,
+    /// `v128.load16x4_s` -- same "load then widen each lane" shape as
+    /// [`Self::Load8x8S`], but reads 4 raw 16-bit little-endian values (8
+    /// bytes total) and SIGN-extends each to `i32`, producing an `i32x4`
+    /// result.
+    Load16x4S,
+    /// `v128.load16x4_u` -- same shape as [`Self::Load16x4S`], but
+    /// ZERO-extends each 16-bit lane to `i32` instead of sign-extending.
+    Load16x4U,
+    /// `v128.load32x2_s` -- same "load then widen each lane" shape as
+    /// [`Self::Load8x8S`], but reads 2 raw 32-bit little-endian values (8
+    /// bytes total) and SIGN-extends each to `i64`, producing an `i64x2`
+    /// result.
+    Load32x2S,
+    /// `v128.load32x2_u` -- same shape as [`Self::Load32x2S`], but
+    /// ZERO-extends each 32-bit lane to `i64` instead of sign-extending.
+    /// Closes the `v128.load_extend` family (all 6 opcodes land in this
+    /// single PR, mirroring the one-family-per-PR cadence PR40/PR41
+    /// established).
+    Load32x2U,
 }
 
 /// One entry in the SIMD opcode table: everything a consumer needs to
@@ -2812,6 +2851,29 @@ pub static SIMD_OPS: &[SimdOpInfo] = &[
     // tests/fixtures/fetch_testsuite.py`.
     SimdOpInfo { name: "v128.load32_zero", sub_opcode: 0x5C, kind: SimdOpKind::Load32Zero },
     SimdOpInfo { name: "v128.load64_zero", sub_opcode: 0x5D, kind: SimdOpKind::Load64Zero },
+
+    // ── v128.load_extend family (SIMD PR42) ─────────────────────────────
+    //
+    // Sub-opcode values verified live against the SIMD proposal's own
+    // BinarySIMD.md (https://github.com/WebAssembly/spec/blob/main/
+    // proposals/simd/BinarySIMD.md) at the time of this PR -- 0x01-0x06
+    // sit immediately after `v128.load` (0x00) and immediately before
+    // the `load_splat` family's own 0x07-0x0A run (PR40's own comment
+    // above already flagged 0x05/0x06 as "not yet implemented" at the
+    // time -- this PR is exactly that follow-up), none of which collided
+    // with any pre-existing entry in this table. See each variant's own
+    // doc comment above (`SimdOpKind::Load8x8S` etc.) for the exact
+    // "load then widen each lane independently" semantics -- sign-
+    // extending for the `_s` variants, zero-extending for the `_u`
+    // variants. This PR also vendors `simd_load_extend.wast` -- see
+    // `code/packages/rust/wasm-conformance/tests/fixtures/
+    // fetch_testsuite.py`.
+    SimdOpInfo { name: "v128.load8x8_s", sub_opcode: 0x01, kind: SimdOpKind::Load8x8S },
+    SimdOpInfo { name: "v128.load8x8_u", sub_opcode: 0x02, kind: SimdOpKind::Load8x8U },
+    SimdOpInfo { name: "v128.load16x4_s", sub_opcode: 0x03, kind: SimdOpKind::Load16x4S },
+    SimdOpInfo { name: "v128.load16x4_u", sub_opcode: 0x04, kind: SimdOpKind::Load16x4U },
+    SimdOpInfo { name: "v128.load32x2_s", sub_opcode: 0x05, kind: SimdOpKind::Load32x2S },
+    SimdOpInfo { name: "v128.load32x2_u", sub_opcode: 0x06, kind: SimdOpKind::Load32x2U },
 ];
 
 /// Look up a SIMD opcode by its LEB128-decoded sub-opcode value (the
@@ -3230,8 +3292,8 @@ mod tests {
     // ── SIMD (0xFD prefix, v128 first slice) ─────────────────────────────────
 
     #[test]
-    fn simd_ops_table_has_the_expected_222_entries_and_no_duplicates() {
-        assert_eq!(SIMD_OPS.len(), 222);
+    fn simd_ops_table_has_the_expected_228_entries_and_no_duplicates() {
+        assert_eq!(SIMD_OPS.len(), 228);
 
         let mut seen_sub_opcodes = std::collections::HashSet::new();
         let mut seen_names = std::collections::HashSet::new();
@@ -4307,5 +4369,36 @@ mod tests {
         // f32x4.demote_f64x2_zero (0x5E) immediately follows v128.load64_
         // zero (0x5D) with no overlap.
         assert_eq!(get_simd_op(0x5E).map(|o| o.name), Some("f32x4.demote_f64x2_zero"));
+    }
+
+    #[test]
+    fn simd_load_extend_family_has_the_real_verified_sub_opcode_values() {
+        // SIMD PR42 (v128.load_extend family): v128.load8x8_s (0x01),
+        // v128.load8x8_u (0x02), v128.load16x4_s (0x03), v128.load16x4_u
+        // (0x04), v128.load32x2_s (0x05), v128.load32x2_u (0x06) --
+        // fetched live from BinarySIMD.md. This contiguous run sits
+        // immediately after `v128.load` (0x00) and immediately before the
+        // `load_splat` family's own 0x07-0x0A run (PR40's own test
+        // comment already flagged 0x05/0x06 as "not yet implemented" at
+        // the time -- this PR is exactly that follow-up), confirming no
+        // overlap with any pre-existing entry in this table.
+        for (name, sub_opcode, kind) in [
+            ("v128.load8x8_s", 0x01, SimdOpKind::Load8x8S),
+            ("v128.load8x8_u", 0x02, SimdOpKind::Load8x8U),
+            ("v128.load16x4_s", 0x03, SimdOpKind::Load16x4S),
+            ("v128.load16x4_u", 0x04, SimdOpKind::Load16x4U),
+            ("v128.load32x2_s", 0x05, SimdOpKind::Load32x2S),
+            ("v128.load32x2_u", 0x06, SimdOpKind::Load32x2U),
+        ] {
+            let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
+            assert_eq!(op.name, name);
+            assert_eq!(op.kind, kind);
+            assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
+        }
+        // v128.load (0x00) and v128.load8_splat (0x07) bracket this run
+        // with no overlap -- the load_extend family sits strictly between
+        // them in the sub-opcode space.
+        assert_eq!(get_simd_op(0x00).map(|o| o.name), Some("v128.load"));
+        assert_eq!(get_simd_op(0x07).map(|o| o.name), Some("v128.load8_splat"));
     }
 }

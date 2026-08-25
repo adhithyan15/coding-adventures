@@ -998,6 +998,48 @@ fn invalid_v128_load_zero_family_wrong_operand_type() {
 }
 
 #[test]
+fn valid_v128_load_extend_family() {
+    // SIMD PR42: v128.load8x8_s/_u, v128.load16x4_s/_u, v128.load32x2_s/
+    // _u -- same type rule as v128.load/the loadN_splat/loadN_zero
+    // families: pop an i32 address, push a v128. Which lanes get SIGN-
+    // extended vs. ZERO-extended (the `_s`/`_u` half of the semantics) is
+    // purely an execution-time concern -- it changes nothing at the
+    // type-checking level, same shape reused unchanged.
+    assert_valid(
+        r#"(module (memory 1)
+             (func (param i32) (result v128) (v128.load8x8_s (local.get 0)))
+             (func (param i32) (result v128) (v128.load8x8_u (local.get 0)))
+             (func (param i32) (result v128) (v128.load16x4_s (local.get 0)))
+             (func (param i32) (result v128) (v128.load16x4_u (local.get 0)))
+             (func (param i32) (result v128) (v128.load32x2_s (local.get 0)))
+             (func (param i32) (result v128) (v128.load32x2_u (local.get 0))))"#,
+    );
+}
+
+#[test]
+fn invalid_v128_load_extend_family_with_no_memory_at_all() {
+    assert_invalid("(module (func (param i32) (result v128) (v128.load8x8_s (local.get 0))))");
+    assert_invalid("(module (func (param i32) (result v128) (v128.load8x8_u (local.get 0))))");
+    assert_invalid("(module (func (param i32) (result v128) (v128.load16x4_s (local.get 0))))");
+    assert_invalid("(module (func (param i32) (result v128) (v128.load16x4_u (local.get 0))))");
+    assert_invalid("(module (func (param i32) (result v128) (v128.load32x2_s (local.get 0))))");
+    assert_invalid("(module (func (param i32) (result v128) (v128.load32x2_u (local.get 0))))");
+}
+
+#[test]
+fn invalid_v128_load_extend_family_wrong_operand_type() {
+    // Same "type mismatch" shape the upstream simd_load_extend.wast
+    // corpus itself checks (`(v128.load8x8_s (f32.const 0))` etc.) --
+    // each op expects an i32 address, not an f32/f64/v128.
+    assert_invalid("(module (memory 0) (func (result v128) (v128.load8x8_s (f32.const 0))))");
+    assert_invalid("(module (memory 0) (func (result v128) (v128.load8x8_u (f32.const 0))))");
+    assert_invalid("(module (memory 0) (func (result v128) (v128.load16x4_s (f64.const 0))))");
+    assert_invalid("(module (memory 0) (func (result v128) (v128.load16x4_u (f64.const 0))))");
+    assert_invalid("(module (memory 0) (func (result v128) (v128.load32x2_s (v128.const i32x4 0 0 0 0))))");
+    assert_invalid("(module (memory 0) (func (result v128) (v128.load32x2_u (v128.const i32x4 0 0 0 0))))");
+}
+
+#[test]
 fn valid_splat_family() {
     // SIMD widen PR16: i8x16.splat/i16x8.splat/i64x2.splat -- same
     // "pop scalar, push v128" shape as the already-implemented
@@ -2594,6 +2636,42 @@ fn invalid_v128_load64_zero_explicit_nonzero_memidx_is_rejected_not_silently_red
     assert!(
         result.is_err(),
         "v128.load64_zero explicitly targeting a real, in-bounds memory 1 must be rejected -- the executor only ever targets memory 0"
+    );
+}
+
+/// Same security-review discipline as
+/// `invalid_v128_load8_splat_explicit_nonzero_memidx_is_rejected_not_silently_redirected_to_memory_0`
+/// above, extended to the new `v128.load_extend` family (SIMD PR42) --
+/// these share the EXACT same memarg-decoding/memidx-rejection code path
+/// in `wasm-validator` (see the `SimdOpKind::Load | ... | Load32x2U`
+/// match arm), but a dedicated test still earns its place: it's the only
+/// thing that would catch a future refactor that accidentally splits
+/// `Load8x8S` etc. out of that shared arm without carrying the memidx
+/// check along.
+#[test]
+fn invalid_v128_load8x8_s_explicit_nonzero_memidx_is_rejected_not_silently_redirected_to_memory_0() {
+    let module = wasm_types::WasmModule {
+        types: vec![wasm_types::FuncType { params: vec![wasm_types::ValueType::I32], results: vec![wasm_types::ValueType::V128] }],
+        functions: vec![0],
+        memories: vec![
+            wasm_types::MemoryType { limits: wasm_types::Limits { min: 1, max: None }, shared: false },
+            wasm_types::MemoryType { limits: wasm_types::Limits { min: 1, max: None }, shared: false },
+        ],
+        code: vec![wasm_types::FunctionBody {
+            locals: vec![],
+            code: vec![
+                0x20, 0x00, // local.get 0 (address)
+                0xFD, 0x01, // v128.load8x8_s
+                0x40, 0x00, 0x01, // align=0 with the multi-memory flag (0x40) set, offset=0, memidx=1
+                0x0B, // end
+            ],
+        }],
+        ..Default::default()
+    };
+    let result = wasm_validator::validate(&module);
+    assert!(
+        result.is_err(),
+        "v128.load8x8_s explicitly targeting a real, in-bounds memory 1 must be rejected -- the executor only ever targets memory 0"
     );
 }
 

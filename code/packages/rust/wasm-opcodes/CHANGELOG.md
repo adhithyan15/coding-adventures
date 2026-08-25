@@ -2,6 +2,42 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.45] - 2026-08-25 - SIMD PR42: v128.load_extend family
+
+### Added
+
+- 6 new `SIMD_OPS` entries, opening the `v128.load_extend` family (the
+  THIRD and FINAL bite into the wider `load_extend`/`load_splat`/
+  `load_zero`/`load{8,16,32,64}_lane`/`store{8,16,32,64}_lane`
+  memory-access family PR39 deferred and PR40/PR41 continued): 228 SIMD
+  opcodes total, up from 222.
+  - `v128.load8x8_s` (`0x01`), `v128.load8x8_u` (`0x02`),
+    `v128.load16x4_s` (`0x03`), `v128.load16x4_u` (`0x04`),
+    `v128.load32x2_s` (`0x05`), `v128.load32x2_u` (`0x06`).
+  - All 6 sub-opcode values verified live against the SIMD proposal's own
+    `BinarySIMD.md` at the time of this PR; none collided with any
+    pre-existing table entry -- this run sits immediately after
+    `v128.load` (`0x00`) and immediately before the `load_splat` family's
+    own `0x07`-`0x0A` run (PR40's own comment already flagged `0x05`/
+    `0x06` as "not yet implemented" at the time -- this PR is exactly
+    that follow-up).
+- 6 new `SimdOpKind` variants: `Load8x8S`, `Load8x8U`, `Load16x4S`,
+  `Load16x4U`, `Load32x2S`, `Load32x2U`. The FIRST opcodes in this table
+  that widen EACH loaded lane INDEPENDENTLY (sign-extending for `_s`,
+  zero-extending for `_u`) rather than broadcasting one value
+  (`Load8Splat` etc., PR40) or zero-filling the unused lanes
+  (`Load32Zero`/`Load64Zero`, PR41) -- still reuses the existing
+  pop-i32/push-v128 type signature, so no new instruction SHAPE was
+  needed (unlike the still-deferred lane-load/store family, which needs
+  a v128 operand input PLUS a lane-index immediate PLUS a memarg all at
+  once).
+- `simd_load_extend_family_has_the_real_verified_sub_opcode_values`: pins
+  all 6 new sub-opcode values and confirms `v128.load` (`0x00`) and
+  `v128.load8_splat` (`0x07`) bracket this run with no overlap.
+- `simd_ops_table_has_the_expected_228_entries_and_no_duplicates`
+  (renamed from `..._222_...`, matching the new real count) confirms the
+  full table has zero duplicate sub-opcodes or names.
+
 ## [0.2.44] - 2026-08-25 - SIMD PR41: v128.loadN_zero family
 
 ### Added

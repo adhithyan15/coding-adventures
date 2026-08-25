@@ -614,6 +614,20 @@ TESTSUITE_FILES = [
     # the lane-load/store family which needs a v128 operand input PLUS a
     # lane-index immediate PLUS a memarg all at once).
     "simd_load_zero.wast",
+    # SIMD PR42: simd_load_extend.wast -- v128.load8x8_s/_u,
+    # v128.load16x4_s/_u, v128.load32x2_s/_u (sub-opcodes 0x01-0x06), the
+    # FIRST opcodes in this family that widen EACH loaded lane
+    # independently (sign-extending for `_s`, zero-extending for `_u`)
+    # rather than broadcasting one value (`simd_load_splat.wast`) or
+    # zero-filling the unused lanes (`simd_load_zero.wast`). Third and
+    # final bite into the wider load_extend/load_splat/load_zero/
+    # load{8,16,32,64}_lane/store{8,16,32,64}_lane memory-access family
+    # PR39 deferred and PR40/PR41 opened -- the lane-load/store family
+    # (still not implemented) needs its own new instruction SHAPE (a v128
+    # operand input PLUS a lane-index immediate PLUS a memarg all at
+    # once), unlike this file, which stays the plain "pop i32, push v128"
+    # type signature PR40/PR41 already established.
+    "simd_load_extend.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under
