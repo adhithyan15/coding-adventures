@@ -1,6 +1,20 @@
 defmodule BuildTool.Validator do
   @moduledoc false
 
+  alias BuildTool.TrackedArtifactUnicode17
+
+  @tracked_artifact_component_identity "node_modules"
+  @tracked_artifact_redacted_path "repository"
+  @tracked_artifact_unicode_version TrackedArtifactUnicode17.unicode_version()
+  @unsafe_tracked_artifact_scalars MapSet.new(~c[<>:"|?*])
+  @windows_reserved_basenames MapSet.new(
+                                ["CON", "PRN", "AUX", "NUL", "CONIN$", "CONOUT$", "CLOCK$"] ++
+                                  Enum.map(1..9, &"COM#{&1}") ++
+                                  Enum.map(1..9, &"LPT#{&1}") ++
+                                  Enum.map(["¹", "²", "³"], &"COM#{&1}") ++
+                                  Enum.map(["¹", "²", "³"], &"LPT#{&1}")
+                              )
+
   @ci_managed_toolchain_languages MapSet.new([
                                     "python",
                                     "ruby",
@@ -13,6 +27,149 @@ defmodule BuildTool.Validator do
                                     "kotlin",
                                     "haskell"
                                   ])
+
+  def tracked_artifact_unicode_version, do: @tracked_artifact_unicode_version
+
+  # Validate caller-supplied records rather than discovering paths here. Native
+  # Git or filesystem enumeration stays outside this process-free policy oracle.
+  def validate_tracked_artifact_snapshot(
+        entries,
+        unicode_version \\ @tracked_artifact_unicode_version
+      ) do
+    if unicode_version != @tracked_artifact_unicode_version do
+      raise ArgumentError,
+            "tracked artifact Unicode version must be #{@tracked_artifact_unicode_version}"
+    end
+
+    entries
+    |> Enum.flat_map(&tracked_artifact_diagnostic/1)
+    |> Enum.sort_by(fn diagnostic ->
+      {
+        String.to_charlist(diagnostic["code"]),
+        String.to_charlist(diagnostic["path"]),
+        [],
+        diagnostic["details"] |> canonical_details() |> String.to_charlist()
+      }
+    end)
+  end
+
+  defp tracked_artifact_diagnostic(entry) do
+    details = %{
+      "ordinal" => Map.fetch!(entry, "ordinal"),
+      "entry_kind" => Map.fetch!(entry, "entry_kind")
+    }
+
+    case normalize_tracked_artifact_path(Map.fetch!(entry, "path")) do
+      {:error, problem} ->
+        [
+          %{
+            "code" => "TRACKED_ARTIFACT_PATH_INVALID",
+            "severity" => "error",
+            "path" => @tracked_artifact_redacted_path,
+            "details" => Map.put(details, "problem", problem)
+          }
+        ]
+
+      {:ok, normalized_path} ->
+        forbidden =
+          normalized_path
+          |> String.split("/", trim: false)
+          |> Enum.any?(fn component ->
+            TrackedArtifactUnicode17.nfkc_casefold(component) ==
+              @tracked_artifact_component_identity
+          end)
+
+        if forbidden do
+          [
+            %{
+              "code" => "TRACKED_ARTIFACT_FORBIDDEN",
+              "severity" => "error",
+              "path" => normalized_path,
+              "details" => details
+            }
+          ]
+        else
+          []
+        end
+    end
+  end
+
+  # Separator replacement is deliberately lexical. Path helpers would erase
+  # empty or dot segments before the portable policy can reject them.
+  defp normalize_tracked_artifact_path(path) do
+    normalized = String.replace(path, "\\", "/")
+    segments = String.split(normalized, "/", trim: false)
+
+    cond do
+      normalized == "" ->
+        {:error, "EMPTY"}
+
+      length(String.to_charlist(normalized)) > 512 ->
+        {:error, "TOO_LONG"}
+
+      TrackedArtifactUnicode17.nfc(normalized) != normalized ->
+        {:error, "NON_NFC"}
+
+      String.starts_with?(normalized, "/") ->
+        {:error, "ABSOLUTE"}
+
+      Regex.match?(~r/^[A-Za-z]:/, normalized) ->
+        {:error, "DRIVE_QUALIFIED"}
+
+      Enum.any?(segments, &(&1 == "")) ->
+        {:error, "EMPTY_SEGMENT"}
+
+      unsafe_tracked_artifact_path?(normalized) ->
+        {:error, "UNSAFE_CHARACTER"}
+
+      true ->
+        case Enum.find_value(segments, &tracked_artifact_segment_problem/1) do
+          nil -> {:ok, normalized}
+          problem -> {:error, problem}
+        end
+    end
+  end
+
+  defp unsafe_tracked_artifact_path?(path) do
+    path
+    |> String.to_charlist()
+    |> Enum.any?(fn scalar ->
+      scalar < 0x20 or MapSet.member?(@unsafe_tracked_artifact_scalars, scalar)
+    end)
+  end
+
+  defp tracked_artifact_segment_problem(segment) when segment in [".", ".."],
+    do: "DOT_SEGMENT"
+
+  defp tracked_artifact_segment_problem(segment) do
+    cond do
+      String.ends_with?(segment, [" ", "."]) ->
+        "TRAILING_DOT_OR_SPACE"
+
+      segment
+      |> String.split(".", parts: 2)
+      |> hd()
+      |> TrackedArtifactUnicode17.full_uppercase()
+      |> then(&MapSet.member?(@windows_reserved_basenames, &1)) ->
+        "RESERVED_BASENAME"
+
+      true ->
+        nil
+    end
+  end
+
+  defp canonical_details(details) do
+    body =
+      details
+      |> Map.keys()
+      |> Enum.sort()
+      |> Enum.map(fn key ->
+        "#{Jason.encode!(key)}: #{Jason.encode!(Map.fetch!(details, key))}"
+      end)
+      |> Enum.join(", ")
+
+    "{#{body}}"
+  end
 
   def validate_ci_full_build_toolchains(repo_root, packages) do
     ci_path = Path.join([repo_root, ".github", "workflows", "ci.yml"])
@@ -77,9 +234,9 @@ defmodule BuildTool.Validator do
 
   def validate_build_contracts(repo_root, packages) do
     errors =
-      [validate_ci_full_build_toolchains(repo_root, packages)] ++
-        validate_lua_isolated_build_files(packages) ++
-        validate_perl_build_files(packages)
+      ([validate_ci_full_build_toolchains(repo_root, packages)] ++
+         validate_lua_isolated_build_files(packages) ++
+         validate_perl_build_files(packages))
       |> Enum.reject(&is_nil/1)
 
     case errors do
@@ -101,6 +258,7 @@ defmodule BuildTool.Validator do
     |> Enum.filter(&(&1.language == "lua"))
     |> Enum.flat_map(fn pkg ->
       self_rock = "coding-adventures-" <> String.replace(Path.basename(pkg.path), "_", "-")
+
       build_lines =
         pkg.path
         |> lua_build_files()
@@ -129,8 +287,11 @@ defmodule BuildTool.Validator do
                 ]
             end
 
-          state_machine_index = first_line_containing(lines, ["../state_machine", "..\\state_machine"])
-          directed_graph_index = first_line_containing(lines, ["../directed_graph", "..\\directed_graph"])
+          state_machine_index =
+            first_line_containing(lines, ["../state_machine", "..\\state_machine"])
+
+          directed_graph_index =
+            first_line_containing(lines, ["../directed_graph", "..\\directed_graph"])
 
           errors =
             if not is_nil(state_machine_index) and not is_nil(directed_graph_index) and
@@ -145,7 +306,8 @@ defmodule BuildTool.Validator do
             end
 
           if (guarded_local_lua_install?(lines) or
-                (Path.basename(build_path) == "BUILD_windows" and local_lua_sibling_install?(lines))) and
+                (Path.basename(build_path) == "BUILD_windows" and
+                   local_lua_sibling_install?(lines))) and
                not self_install_disables_deps?(lines, self_rock) do
             [
               "#{String.replace(build_path, "\\", "/")}: Lua BUILD bootstraps sibling rocks " <>
@@ -181,15 +343,16 @@ defmodule BuildTool.Validator do
     |> Enum.flat_map(fn pkg ->
       pkg.path
       |> lua_build_files()
-      |> Enum.filter_map(fn build_path ->
-        lines = read_build_lines(build_path)
-
-        Enum.any?(lines, fn line ->
+      |> Enum.filter(fn build_path ->
+        build_path
+        |> read_build_lines()
+        |> Enum.any?(fn line ->
           String.contains?(line, "cpanm") and
             String.contains?(line, "Test2::V0") and
             not String.contains?(line, "--notest")
         end)
-      end, fn build_path ->
+      end)
+      |> Enum.map(fn build_path ->
         "#{String.replace(build_path, "\\", "/")}: Perl BUILD bootstraps Test2::V0 without --notest; isolated Windows installs can fail while installing the test framework itself"
       end)
     end)

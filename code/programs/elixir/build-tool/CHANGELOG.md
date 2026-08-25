@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 2026-08-25
+
+### Changed
+
+- Tracked-artifact snapshots now use the shared build-tool v1 portable-path
+  policy with deterministic, root-redacted diagnostics. The pure in-memory
+  validator consumes all five language-neutral fixtures and uses generated,
+  source-embedded Unicode 17 tables for NFC, NFKC, full default case folding,
+  and uppercase behavior; the Unicode License v3 notice ships with the source.
+- The Perl BUILD-contract helper now uses supported `Enum.filter/2` and
+  `Enum.map/2` calls, preserving behavior while keeping warnings-as-errors
+  compilation clean on the pinned Elixir toolchain.
+
 ## [0.2.0] - 2026-03-22
 
 ### Added

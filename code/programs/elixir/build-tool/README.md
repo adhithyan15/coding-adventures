@@ -48,6 +48,8 @@ The build tool follows an 11-step pipeline:
 | `BuildTool.Cache` | Agent-based JSON build cache with atomic writes |
 | `BuildTool.Executor` | Parallel build execution with progress tracking |
 | `BuildTool.Reporter` | Fixed-width report table formatting |
+| `BuildTool.Validator` | Pure build-contract and tracked-artifact validation |
+| `BuildTool.TrackedArtifactUnicode17` | Generated, source-embedded Unicode 17 policy tables |
 
 ## Usage
 
@@ -89,6 +91,50 @@ mix escript.build
 | `--language` | `all` | Filter to a specific language |
 | `--diff-base` | `origin/main` | Git ref to diff against |
 | `--cache-file` | `.build-cache.json` | Path to cache file |
+
+## Tracked-artifact validation
+
+`BuildTool.Validator.validate_tracked_artifact_snapshot/1` accepts bounded,
+caller-supplied index records and returns deterministic diagnostics without
+opening paths, invoking Git, reading environment state, launching a process, or
+using the network. The `/2` form also accepts the required Unicode version and
+rejects anything other than `17.0.0` before inspecting the entries.
+
+The validator lexically normalizes separators, rejects unsafe portable paths,
+redacts invalid paths to `repository`, and rejects every exact, nested, case,
+or Unicode compatibility alias of a `node_modules` component. Safe forbidden
+paths remain visible, entry kinds are inert metadata, and diagnostics sort by
+Unicode scalar values plus canonical detail text.
+
+`BuildTool.TrackedArtifactUnicode17` is generated from exact size- and
+SHA-256-pinned Unicode Consortium inputs. It provides NFC, NFKC, full default
+case folding, NFKC-fold, and full uppercase without inheriting the installed
+Elixir or Erlang runtime's Unicode tables. From the repository root, regenerate
+and byte-check every language target with:
+
+```bash
+(cd code/programs/typescript/build-tool && npm ci)
+python code/scripts/generate_tracked_artifact_unicode17.py
+python code/scripts/generate_tracked_artifact_unicode17.py --check
+```
+
+The generator runs emitted Python, TypeScript, Ruby, and Elixir code over every
+official normalization, case-folding, and unconditional uppercase vector plus
+the Unicode 17 version sentinels. The generated data is redistributed under the
+Unicode License v3; the complete notice is shipped as `UNICODE-LICENSE.txt`.
+
+## Testing
+
+```bash
+mix deps.get
+mix test
+mix test --cover
+```
+
+`test/validator_test.exs` consumes all five language-neutral tracked-artifact
+fixtures and adds focused coverage for version drift, invalid-path precedence
+and redaction, scalar length and ordering, pinned Unicode 17 sentinels, and all
+three inert entry kinds.
 
 ## Dependencies
 
