@@ -1,0 +1,18 @@
+{
+  "chapter": 181,
+  "title": "Se Habla Espanol --- Nobody in Particular",
+  "label": "ch:se-impersonal",
+  "canDo": "I can read and use the impersonal se, where no person is named.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C52-se-habla",
+    "kind": "task",
+    "summary": "Complete ES-C52-se-habla: write the sign and say who is doing the speaking.",
+    "assesses": [
+      "ES-GRAMMAR-SE-IMPERSONAL"
+    ],
+    "note": "English needs a passive or a fake subject to be this vague. Spanish leaves the person out, and the se is the mark that says so."
+  }
+}

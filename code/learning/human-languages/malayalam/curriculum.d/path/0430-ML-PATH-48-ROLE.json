@@ -1,0 +1,16 @@
+{
+  "id": "ML-PATH-48-ROLE",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "ML-C48-teacher",
+    "ML-C48-student",
+    "ML-C48-doctor",
+    "ML-C48-farmer",
+    "ML-C48-guest"
+  ],
+  "before": [],
+  "inline": [
+    "ML-EXT-48-ROLE"
+  ],
+  "after": []
+}

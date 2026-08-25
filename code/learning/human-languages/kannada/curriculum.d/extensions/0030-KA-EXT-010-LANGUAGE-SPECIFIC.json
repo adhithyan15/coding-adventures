@@ -1,0 +1,16 @@
+{
+  "id": "KA-EXT-010-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can use the additional Kannada material required at this point in the path.",
+  "prerequisites": [],
+  "lessons": [
+    "KA-C05-maatanaadu",
+    "KA-C05-iru",
+    "KA-C05-kelasa-maadu",
+    "KA-C05-naanu-kannada-maatanaaduttene",
+    "KA-C06-dative-ge",
+    "KA-C06-dative-subject"
+  ]
+}

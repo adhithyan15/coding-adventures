@@ -1,0 +1,16 @@
+{
+  "id": "RU-PATH-011",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "RU-C07-drug",
+    "RU-C07-podruga",
+    "RU-C07-brat",
+    "RU-C07-sestra",
+    "RU-C08-semya"
+  ],
+  "before": [],
+  "inline": [
+    "RU-EXT-011-FRIEND-FAMILY"
+  ],
+  "after": []
+}

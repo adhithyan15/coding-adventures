@@ -1,0 +1,16 @@
+{
+  "id": "ML-PATH-65-ASK",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "ML-C65-request",
+    "ML-C65-permission",
+    "ML-C65-consent",
+    "ML-C65-manners",
+    "ML-C65-trust"
+  ],
+  "before": [],
+  "inline": [
+    "ML-EXT-65-ASK"
+  ],
+  "after": []
+}

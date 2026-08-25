@@ -1,0 +1,16 @@
+{
+  "id": "SA-PATH-51-KIN",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "SA-C51-husband",
+    "SA-C51-wife",
+    "SA-C51-grandfather",
+    "SA-C51-grandmother",
+    "SA-C51-uncle"
+  ],
+  "before": [],
+  "inline": [
+    "SA-EXT-51-KIN"
+  ],
+  "after": []
+}

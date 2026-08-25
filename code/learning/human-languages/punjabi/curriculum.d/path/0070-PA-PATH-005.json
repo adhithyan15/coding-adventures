@@ -1,0 +1,10 @@
+{
+  "id": "PA-PATH-005",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "PA-C03-kivein"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

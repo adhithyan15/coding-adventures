@@ -1,0 +1,22 @@
+{
+  "chapter": 27,
+  "title": "Evening",
+  "label": "ch:ka-evening",
+  "canDo": "I can say \"evening\" in Kannada.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "KA-C27-sanje",
+    "kind": "production",
+    "summary": "Say ಸಂಜೆ, follow it back through Maharashtri Prakrit to Sanskrit saṃdhyā, and set it beside Hindi's साँझ, the same root down a different Prakrit road.",
+    "assesses": [
+      "KA-ETYMON-C24-RATRI-01",
+      "KA-ETYMON-C24-RATRI-02",
+      "KA-ETYMON-C26-BELAGGE-01",
+      "KA-PRAGMATICS-C26-BELAGGE-02",
+      "KA-ETYMON-C27-SANJE-01",
+      "KA-ETYMON-C27-SANJE-02"
+    ]
+  }
+}

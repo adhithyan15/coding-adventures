@@ -1,0 +1,18 @@
+{
+  "chapter": 29,
+  "title": "Cl-, Pl-, Fl- to Ll-",
+  "label": "ch:sound-cluster-ll",
+  "canDo": "I can try three Latin clusters on an unfamiliar ll- word and find the English cousin.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C57-ll",
+    "kind": "task",
+    "summary": "Complete ES-C57-ll: name llamar's cousins, give the three clusters, and decode llave.",
+    "assesses": [
+      "ES-SOUND-CLUSTER-TO-LL"
+    ],
+    "note": "Three starting points, one destination -- untidy, and useful because of it: an unfamiliar ll- word gives the reader three English shapes to try. Also names what all three sound laws share: Spanish inherited and eroded, English borrowed later and stayed nearer the Latin."
+  }
+}

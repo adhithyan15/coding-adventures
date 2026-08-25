@@ -1,0 +1,21 @@
+{
+  "chapter": 65,
+  "title": "More Good Manners",
+  "label": "ch:te-more-manners",
+  "canDo": "I can welcome somebody in Telugu, make a request, ask their leave, and thank them.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "TE-C65-trust",
+    "kind": "production",
+    "summary": "Complete TE-C65-trust and demonstrate the chapter promise.",
+    "assesses": [
+      "TE-LEX-C65-MANNERS-01",
+      "TE-LEX-C65-MANNERS-02",
+      "TE-LEX-C65-MANNERS-03",
+      "TE-LEX-C65-MANNERS-04",
+      "TE-LEX-C65-MANNERS-05"
+    ]
+  }
+}

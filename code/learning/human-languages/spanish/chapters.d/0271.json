@@ -1,0 +1,20 @@
+{
+  "chapter": 271,
+  "title": "Talking About Ideas --- Hedging From Doubt, and From Inference",
+  "label": "ch:ideas",
+  "canDo": "I can put an idea forward in Spanish while marking how sure I am of it, and tell an admission of ignorance from a claimed inference.",
+  "spineNodes": [
+    "SPINE-DISCUSS-ABSTRACT"
+  ],
+  "payoff": {
+    "lesson": "ES-C271-supongo-que",
+    "kind": "task",
+    "summary": "Complete ES-C271-supongo-que: state one idea three ways -- bare, hedged with quizas, and hedged with supongo que -- and say what each does to your commitment.",
+    "assesses": [
+      "ES-LEX-QUIZAS",
+      "ES-SEMANTIC-HEDGE-EPISTEMIC",
+      "ES-LEX-SUPONGO-QUE",
+      "ES-SEMANTIC-HEDGE-INFERENTIAL"
+    ]
+  }
+}

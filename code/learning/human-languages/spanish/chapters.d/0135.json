@@ -1,0 +1,21 @@
+{
+  "chapter": 135,
+  "title": "Review --- Four Boxes",
+  "label": "ch:review-commands",
+  "canDo": "I can give all four command forms of a regular verb.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C50-repaso-mandatos",
+    "kind": "task",
+    "summary": "Complete ES-C50-repaso-mandatos: give all four boxes for comer and say what the rung genuinely cost.",
+    "assesses": [
+      "ES-GRAMMAR-COMMAND-TU-AFFIRMATIVE",
+      "ES-GRAMMAR-COMMAND-NEGATIVE",
+      "ES-GRAMMAR-COMMAND-USTED",
+      "ES-GRAMMAR-COMMAND-IRREGULAR-EIGHT"
+    ],
+    "note": "A whole mood whose only new material was eight one-syllable words. The messiest box is the most-used one, as it has been for every irregularity in the book."
+  }
+}

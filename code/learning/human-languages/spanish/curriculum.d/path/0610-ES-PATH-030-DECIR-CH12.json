@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-030-DECIR-CH12",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "ES-C12-decir"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-030-DECIR-CH12"
+  ],
+  "after": []
+}

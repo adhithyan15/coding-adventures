@@ -1,0 +1,12 @@
+{
+  "id": "HI-PATH-021",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "HI-C20-mausam"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-021-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

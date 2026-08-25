@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-030-VENIR-CH13",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can use the three learned singular forms of venir and compare them with known tener.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C13-venir"
+  ]
+}

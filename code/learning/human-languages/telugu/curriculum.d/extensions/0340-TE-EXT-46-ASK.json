@@ -1,0 +1,15 @@
+{
+  "id": "TE-EXT-46-ASK",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five everyday things I might ask someone for in Telugu.",
+  "prerequisites": [],
+  "lessons": [
+    "TE-C46-fruit",
+    "TE-C46-cloth",
+    "TE-C46-lamp",
+    "TE-C46-salt",
+    "TE-C46-book"
+  ]
+}

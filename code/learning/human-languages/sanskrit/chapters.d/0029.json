@@ -1,0 +1,21 @@
+{
+  "chapter": 29,
+  "title": "Courtesy Words",
+  "label": "ch:sa-courtesy",
+  "canDo": "I can be polite in Sanskrit --- please, pardon, a bow, a favour --- and say what is inside the thank-you I learned on the first day.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "SA-C29-fortunate",
+    "kind": "production",
+    "summary": "Complete SA-C29-fortunate and demonstrate the chapter promise.",
+    "assesses": [
+      "SA-LEX-C29-COURTESY-01",
+      "SA-LEX-C29-COURTESY-02",
+      "SA-LEX-C29-COURTESY-03",
+      "SA-LEX-C29-COURTESY-04",
+      "SA-LEX-C29-COURTESY-05"
+    ]
+  }
+}

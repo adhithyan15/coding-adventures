@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-A1-EXCLAM",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ES-C64-que-grande"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-A1-EXCLAM"
+  ],
+  "after": []
+}

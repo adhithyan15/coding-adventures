@@ -1,0 +1,25 @@
+{
+  "chapter": 10,
+  "title": "Water, Tea, Milk, and Bread",
+  "label": "ch:pa-request-food-drink",
+  "canDo": "I can politely ask for water, tea, milk, or bread in Punjabi, name which of the four is a loanword and which is inherited with an unknown root, and hear the difference between a tone that stays level and one that never formed at all.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "PA-C10-roti",
+    "kind": "production",
+    "summary": "The chapter closes on ਰੋਟੀ, the request that breaks the drink pattern: the reader produces all four requests with ਕਿਰਪਾ ਕਰਕੇ, sorts ਪਾਣੀ and ਦੁੱਧ (inherited, known root) against ਚਾਹ (loaned from Chinese by the overland route, carrying Punjabi's first noun-level tone) against ਰੋਟੀ (inherited, root unknown), and names the first Punjabi chapter to realize polite requesting at all.",
+    "assesses": [
+      "PA-LEX-ROTI",
+      "PA-ETYMON-ROTI-UNKNOWN",
+      "PA-LEX-DUDH",
+      "PA-ETYMON-DUDH-DUGDHA",
+      "PA-LEX-CHA",
+      "PA-ETYMON-CHA-CHINESE",
+      "PA-LEX-PAANI",
+      "PA-ETYMON-PAANI-DRINK",
+      "PA-PHRASE-KIRPA-KARKE"
+    ]
+  }
+}

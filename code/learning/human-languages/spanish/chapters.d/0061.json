@@ -1,0 +1,17 @@
+{
+  "chapter": 61,
+  "title": "-oso --- a Shelf of Words You Were Never Taught",
+  "label": "ch:oso",
+  "canDo": "I can read an -oso word as English -ous, make it agree, and choose ser or estar for it.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C09-oso",
+    "kind": "task",
+    "summary": "Read misterioso, make comida deliciosa agree, and pick estar for nervioso.",
+    "assesses": [
+      "ES-FRIEND-OSO-OUS"
+    ]
+  }
+}

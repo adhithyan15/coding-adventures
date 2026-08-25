@@ -1,0 +1,17 @@
+{
+  "chapter": 251,
+  "title": "Ahí, Allí --- The Other Two Places",
+  "label": "ch:ahi-alli",
+  "canDo": "I can say where something is, on any of the three sides.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C65-ahi-alli",
+    "kind": "task",
+    "summary": "I can say where something is, on any of the three sides.",
+    "assesses": [
+      "ES-GRAMMAR-PLACE-THREE-DISTANCES"
+    ]
+  }
+}

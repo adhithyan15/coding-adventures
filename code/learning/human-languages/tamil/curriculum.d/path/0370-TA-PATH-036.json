@@ -1,0 +1,14 @@
+{
+  "id": "TA-PATH-036",
+  "spine_node": "SPINE-SAY-WHAT-I-WANT",
+  "lessons": [
+    "TA-C39-vendum",
+    "TA-C39-evvalavu",
+    "TA-C39-oru"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-036-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

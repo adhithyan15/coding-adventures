@@ -1,0 +1,18 @@
+{
+  "chapter": 15,
+  "title": "Water and Rice",
+  "label": "ch:ml-water-and-rice",
+  "canDo": "I can name water and rice in Malayalam, keeping raw ari apart from cooked cōṟu.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "ML-C15-vellam-ari",
+    "kind": "production",
+    "summary": "Say veḷḷam and explain why it does not match Tamil's nīr, then split ari from cōṟu.",
+    "assesses": [
+      "ML-CONCEPT-C15-VELLAM-ARI-01",
+      "ML-CONCEPT-C15-VELLAM-ARI-02"
+    ]
+  }
+}

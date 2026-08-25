@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-030-HACER-CH12",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can use the three learned singular forms of hacer with known words.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C12-hacer"
+  ]
+}

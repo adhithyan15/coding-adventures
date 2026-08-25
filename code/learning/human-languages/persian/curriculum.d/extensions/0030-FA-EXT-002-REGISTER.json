@@ -1,0 +1,13 @@
+{
+  "id": "FA-EXT-002-REGISTER",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "register",
+  "canDo": "I can choose shomâ for a respectful first meeting and distinguish it from familiar to.",
+  "prerequisites": [
+    "FA-EXT-001-GREETING-PAYOFF"
+  ],
+  "lessons": [
+    "FA-C03-shoma-to"
+  ]
+}

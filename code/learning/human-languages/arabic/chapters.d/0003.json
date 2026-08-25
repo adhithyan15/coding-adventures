@@ -1,0 +1,18 @@
+{
+  "chapter": 3,
+  "title": "How Are You?",
+  "label": "ch:ar-how-are-you",
+  "canDo": "I can ask an Arabic speaker how they are, answer that I am well, and change the ending of the question to match a man or a woman.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "AR-C03-practice",
+    "kind": "dialogue",
+    "summary": "The whole how-are-you exchange, run once to a man and once to a woman, with bi-khayr written out by hand.",
+    "assesses": [
+      "AR-CONCEPT-C03-PRACTICE-01",
+      "AR-CONCEPT-C03-PRACTICE-02"
+    ]
+  }
+}

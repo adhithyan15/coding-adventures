@@ -1,0 +1,11 @@
+{
+  "id": "BN-EXT-019-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can welcome someone in Bengali, naming the same 'hither' prefix already met on the verb for coming.",
+  "prerequisites": [],
+  "lessons": [
+    "BN-C13-sbagotom"
+  ]
+}

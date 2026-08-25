@@ -1,0 +1,19 @@
+{
+  "chapter": 164,
+  "title": "Synthesis --- What You Like, and Who Does the Liking",
+  "label": "ch:spanish-synthesis-gustar",
+  "canDo": "I can say what I like without translating I like word by word, and hear mucho gusto as the same word.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C35-sintesis-gustar",
+    "kind": "dialogue",
+    "summary": "Liking started at the tongue; and the chapter-5 phrase turns out to be gustar's noun.",
+    "assesses": [
+      "ES-GRAMMAR-GUSTAR-INVERSION-09",
+      "ES-ETYMON-GUSTAR-08",
+      "ES-LEX-GUSTO"
+    ]
+  }
+}

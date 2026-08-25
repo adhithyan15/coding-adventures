@@ -1,0 +1,20 @@
+{
+  "chapter": 8,
+  "title": "Please",
+  "label": "ch:te-please",
+  "canDo": "I can say please in Telugu, and use the polite -aṇḍi verb ending speakers actually reach for.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "TE-C08-dayachesi",
+    "kind": "production",
+    "summary": "Build దయచేసి out of daya (\"compassion\") + cēsi (\"having done\"), then make the everyday polite request instead: కూర్చోండి, \"please sit.\"",
+    "assesses": [
+      "TE-LEX-C08-DAYACHESI-01",
+      "TE-ETYMON-C08-DAYACHESI-02",
+      "TE-PRAGMATICS-C08-DAYACHESI-03",
+      "TE-SCRIPT-C08-DAYACHESI-04"
+    ]
+  }
+}

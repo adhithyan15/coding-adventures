@@ -1,0 +1,15 @@
+{
+  "id": "BN-PATH-009",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "BN-C04-abar",
+    "BN-C04-dekha-hobe",
+    "BN-C04-abar-dekha-hobe",
+    "BN-C04-kal-dekha-hobe"
+  ],
+  "before": [
+    "BN-EXT-009-LANGUAGE-SPECIFIC"
+  ],
+  "inline": [],
+  "after": []
+}

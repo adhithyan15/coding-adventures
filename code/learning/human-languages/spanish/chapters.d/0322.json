@@ -1,0 +1,21 @@
+{
+  "chapter": 322,
+  "title": "Five Sizes of When",
+  "label": "ch:anoche-y-todavia",
+  "canDo": "I can say last night, the week, early, right away and still in Spanish, and say why an -o on the end of temprano never becomes an -a.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "ES-C322-todavia",
+    "kind": "production",
+    "summary": "Complete ES-C322-todavia: place a thing at anoche, count in semanas, arrive temprano, answer enseguida, and say todavia no.",
+    "assesses": [
+      "ES-LEX-C322-WHEN-11",
+      "ES-LEX-C322-WHEN-12",
+      "ES-LEX-C322-WHEN-13",
+      "ES-LEX-C322-WHEN-14",
+      "ES-LEX-C322-WHEN-15"
+    ]
+  }
+}

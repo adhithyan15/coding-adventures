@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-330-01",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "ES-C330-camino",
+    "ES-C330-parada",
+    "ES-C330-mundo",
+    "ES-C330-vida",
+    "ES-C330-vez"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-330-WAY"
+  ],
+  "after": []
+}

@@ -1,0 +1,10 @@
+{
+  "segments": [],
+  "omits": [
+    "IMPLICATURE",
+    "IRONY-MARKER",
+    "IDIOM-COMMON",
+    "TONE-SHIFT"
+  ],
+  "relocates": {}
+}

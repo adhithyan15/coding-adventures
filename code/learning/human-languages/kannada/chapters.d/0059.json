@@ -1,0 +1,21 @@
+{
+  "chapter": 59,
+  "title": "Weather and Ground",
+  "label": "ch:ka-weather-ground",
+  "canDo": "I can name the weather and the ground under it in Kannada, from the wind to the fire.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "KA-C59-fire",
+    "kind": "production",
+    "summary": "Complete KA-C59-fire and say all five words in order.",
+    "assesses": [
+      "KA-LEX-C59-GROUND-01",
+      "KA-LEX-C59-GROUND-02",
+      "KA-LEX-C59-GROUND-03",
+      "KA-LEX-C59-GROUND-04",
+      "KA-LEX-C59-GROUND-05"
+    ]
+  }
+}

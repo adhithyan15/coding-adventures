@@ -1,0 +1,22 @@
+{
+  "chapter": 6,
+  "title": "See You Again",
+  "label": "ch:zh-zaijian",
+  "canDo": "I can write 再 and 见, say goodbye with 再见, read the word literally as \"see again\" because its two pieces genuinely add up, and name which expressions I know are spoken differently from how they are written.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C06-practice",
+    "kind": "dialogue",
+    "summary": "The first exchange in the track that opens, turns and closes -- greeting, an answer either way, and a parting -- with every line built from characters the reader has written rather than a phrase memorised whole.",
+    "assesses": [
+      "ZH-SCRIPT-ZAI",
+      "ZH-SCRIPT-JIAN",
+      "ZH-LEX-ZAIJIAN",
+      "ZH-LEX-BUSHI",
+      "ZH-TONE-SANDHI-BU",
+      "ZH-DIALOGUE-PART"
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "id": "TA-PATH-60-MADE",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "TA-C60-needle",
+    "TA-C60-rope",
+    "TA-C60-umbrella",
+    "TA-C60-broom",
+    "TA-C60-comb"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-60-MADE"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 13,
+  "title": "Body Parts",
+  "label": "ch:ta-body-parts",
+  "canDo": "I can say head and hand in Tamil, account for why both stayed native here where Hindi's pair came from Sanskrit, and write நன்றி from its pieces.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "TA-C13-udal-uruppugal",
+    "kind": "production",
+    "summary": "Say talai and kai, then state the contrast with Hindi's Sanskrit-descended pair.",
+    "assesses": [
+      "TA-ETYMON-KUDUMBAM-01",
+      "TA-LEX-UDAL-URUPPUGAL-01"
+    ],
+    "note": "This chapter gained TA-W04-i-sign-write-nandri when the writing strand was spread out, and the payoff was not widened to match, so representativeness fell from 2/2 to 1/4 and this chapter is now the tamil entry in payoffsNotRepresentative — the slot chapter 1 used to hold. Widening it means authoring a payoff that assesses both the body-part vocabulary and the நன்றி spelling, which is HL-C25 work."
+  }
+}

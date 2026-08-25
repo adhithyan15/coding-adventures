@@ -1,0 +1,20 @@
+{
+  "id": "JA-PATH-003",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "lessons": [
+    "JA-W03-a",
+    "JA-W03-ri",
+    "JA-W03-ka",
+    "JA-W03-dakuten",
+    "JA-W03-to",
+    "JA-W03-u",
+    "JA-W03-arigatou-read",
+    "JA-C01-arigatou"
+  ],
+  "before": [],
+  "inline": [
+    "JA-EXT-005-DAKUTEN",
+    "JA-EXT-010-HIRAGANA-THANKS"
+  ],
+  "after": []
+}

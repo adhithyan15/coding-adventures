@@ -1,0 +1,36 @@
+{
+  "chapter": 39,
+  "title": "The People Around You",
+  "label": "ch:hi-people-around-you",
+  "canDo": "I can name the friend, the child, the man and the woman around me, I know that दोस्त takes its possessive from the person while आँख never does, and I can choose between औरत and महिला by register.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "HI-C39-aurat",
+    "kind": "task",
+    "summary": "Say the whole household with every possessive right — मेरा पिता, मेरी माता, मेरा भाई, मेरी बहन, मेरा बच्चा, मेरी बच्ची — then मेरा दोस्त or मेरी दोस्त depending on who the friend is, and say why Arabic ʿawra does not mean “woman” even though औरत does.",
+    "assesses": [
+      "HI-CONCEPT-C39-DOST-01",
+      "HI-CONCEPT-C39-DOST-02",
+      "HI-CONCEPT-C39-DOST-03",
+      "HI-CONCEPT-C39-BACCHA-01",
+      "HI-CONCEPT-C39-BACCHA-02",
+      "HI-CONCEPT-C39-AADMI-01",
+      "HI-CONCEPT-C39-AADMI-02",
+      "HI-CONCEPT-C39-AURAT-01",
+      "HI-CONCEPT-C39-AURAT-02",
+      "HI-CONCEPT-C39-AURAT-03",
+      "HI-CONCEPT-C12-BHAAI-BAHIN-01",
+      "HI-CONCEPT-C12-BHAAI-BAHIN-02",
+      "HI-CONCEPT-C12-PITAA-MAATAA-01",
+      "HI-CONCEPT-C12-PITAA-MAATAA-02",
+      "HI-CONCEPT-C37-KITAAB-01",
+      "HI-CONCEPT-C37-KITAAB-03",
+      "HI-CONCEPT-C36-KURSI-01",
+      "HI-CONCEPT-C36-KURSI-03",
+      "HI-CONCEPT-C38-AANKH-01",
+      "HI-CONCEPT-C37-CHAI-01"
+    ]
+  }
+}

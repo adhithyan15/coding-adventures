@@ -1,0 +1,24 @@
+{
+  "id": "ML-PATH-025",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "ML-C23-divasam",
+    "ML-C23-naal",
+    "ML-C24-rathri",
+    "ML-C24-native-night-words",
+    "ML-C25-shubha-rathri",
+    "ML-C26-raavile",
+    "ML-C27-vaikunneram",
+    "ML-C28-uchakazhinju",
+    "ML-C29-suprabhaatham",
+    "ML-C30-shubha-sayaahnam",
+    "ML-C31-shubha-madhyaahnam",
+    "ML-C31-afternoon-convergence"
+  ],
+  "before": [],
+  "inline": [
+    "ML-EXT-025-ETYMOLOGY",
+    "ML-EXT-025-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

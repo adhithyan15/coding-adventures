@@ -1,0 +1,15 @@
+{
+  "id": "TA-EXT-49-COURTESY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can thank and wish well in Tamil.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C49-affection",
+    "TA-C49-respect",
+    "TA-C49-gladness",
+    "TA-C49-good-wish",
+    "TA-C49-many-thanks"
+  ]
+}

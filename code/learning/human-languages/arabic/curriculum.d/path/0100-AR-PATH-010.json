@@ -1,0 +1,11 @@
+{
+  "id": "AR-PATH-010",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "AR-C05-naam",
+    "AR-C05-la"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

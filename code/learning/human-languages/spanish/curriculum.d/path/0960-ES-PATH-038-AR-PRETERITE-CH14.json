@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-038-AR-PRETERITE-CH14",
+  "spine_node": "SPINE-TALK-ABOUT-PAST",
+  "lessons": [
+    "ES-C14-hablar-preterite"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-038-AR-PRETERITE-CH14"
+  ],
+  "after": []
+}

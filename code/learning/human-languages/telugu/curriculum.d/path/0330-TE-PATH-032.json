@@ -1,0 +1,13 @@
+{
+  "id": "TE-PATH-032",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "TE-C39-tii",
+    "TE-C39-paalu"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-033-TEA-MILK"
+  ],
+  "after": []
+}

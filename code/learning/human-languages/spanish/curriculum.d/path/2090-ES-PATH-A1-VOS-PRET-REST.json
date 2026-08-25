@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-A1-VOS-PRET-REST",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ES-C63-comisteis"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-A1-VOS-PRET-REST"
+  ],
+  "after": []
+}

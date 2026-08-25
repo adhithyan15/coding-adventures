@@ -1,0 +1,22 @@
+{
+  "chapter": 10,
+  "title": "One Character, Two Courtesies",
+  "label": "ch:zh-xiexie",
+  "canDo": "I can write the speech radical 讠 and the twelve-stroke 谢, thank someone with 谢谢, answer thanks with 不谢, and predict from the rule alone that 不 rises before 谢 because 谢 is a falling tone.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "ZH-C10-practice",
+    "kind": "dialogue",
+    "summary": "A whole courtesy exchange bought with one new character -- doubled for the thanks, negated for the reply -- and the first place the reader predicts a tone change from a rule rather than being told how a word sounds.",
+    "assesses": [
+      "ZH-SCRIPT-YAN",
+      "ZH-SCRIPT-XIE",
+      "ZH-LEX-XIEXIE",
+      "ZH-LEX-BUXIE",
+      "ZH-TONE-SANDHI-BU",
+      "ZH-DIALOGUE-THANK"
+    ]
+  }
+}

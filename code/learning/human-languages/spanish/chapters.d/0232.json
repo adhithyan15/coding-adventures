@@ -1,0 +1,17 @@
+{
+  "chapter": 232,
+  "title": "Quién --- The Asking Word for People",
+  "label": "ch:quien",
+  "canDo": "I can ask who somebody is.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C61-quien",
+    "kind": "task",
+    "summary": "I can ask who somebody is.",
+    "assesses": [
+      "ES-LEX-QUIEN"
+    ]
+  }
+}

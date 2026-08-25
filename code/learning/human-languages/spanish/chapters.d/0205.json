@@ -1,0 +1,17 @@
+{
+  "chapter": 205,
+  "title": "Synthesis --- Telling What Happened",
+  "label": "ch:sintesis-preterito-completo",
+  "canDo": "I can tell a short past story about other people.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ES-C55-sintesis-preterito-completo",
+    "kind": "task",
+    "summary": "I can tell a short past story about other people.",
+    "assesses": [
+      "ES-GRAMMAR-AR-PRETERITE-3PL"
+    ]
+  }
+}

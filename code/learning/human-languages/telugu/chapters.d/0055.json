@@ -1,0 +1,21 @@
+{
+  "chapter": 55,
+  "title": "River and Road",
+  "label": "ch:te-river-road",
+  "canDo": "I can name the water, the ground and the road around a Telugu village, and ask my way with them.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "TE-C55-path",
+    "kind": "production",
+    "summary": "Complete TE-C55-path and demonstrate the chapter promise.",
+    "assesses": [
+      "TE-LEX-C55-ROAD-01",
+      "TE-LEX-C55-ROAD-02",
+      "TE-LEX-C55-ROAD-03",
+      "TE-LEX-C55-ROAD-04",
+      "TE-LEX-C55-ROAD-05"
+    ]
+  }
+}

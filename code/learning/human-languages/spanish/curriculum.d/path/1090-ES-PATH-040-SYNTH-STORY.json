@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-040-SYNTH-STORY",
+  "spine_node": "SPINE-TALK-ABOUT-PAST",
+  "lessons": [
+    "ES-C48-sintesis-una-historia"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-040-SYNTH-STORY"
+  ],
+  "after": []
+}

@@ -1,0 +1,24 @@
+{
+  "chapter": 12,
+  "title": "Goodbye",
+  "label": "ch:goodbye",
+  "canDo": "I can end a conversation, and I know the word every softer goodbye is built from.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "ES-C05-repaso-adios",
+    "kind": "dialogue",
+    "summary": "Goodbye — the chapter run end to end.",
+    "assesses": [
+      "ES-LEX-ADIOS",
+      "ES-PRAGMATICS-FINAL-FAREWELL",
+      "ES-ETYMON-A-DIOS",
+      "ES-LEX-HASTA",
+      "ES-ETYMON-HATTA",
+      "ES-HISTORY-AL-ANDALUS-LOANS",
+      "ES-LEX-AQUI",
+      "ES-GRAMMAR-HASTA-ENDPOINT"
+    ]
+  }
+}

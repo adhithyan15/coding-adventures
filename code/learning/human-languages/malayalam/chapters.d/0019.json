@@ -1,0 +1,17 @@
+{
+  "chapter": 19,
+  "title": "Asking Someone's Age",
+  "label": "ch:ml-asking-age",
+  "canDo": "I can ask how old someone is in Malayalam and answer with a dative subject.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "ML-C19-vayassu",
+    "kind": "dialogue",
+    "summary": "Ask ningaḷkku ethra vayassuṇṭŭ? and answer enikku irupatu vayassuṇṭŭ -- 'to me twenty age exists'.",
+    "assesses": [
+      "ML-CONCEPT-C19-VAYASSU-01"
+    ]
+  }
+}

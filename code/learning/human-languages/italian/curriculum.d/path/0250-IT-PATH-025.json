@@ -1,0 +1,12 @@
+{
+  "id": "IT-PATH-025",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "IT-C21-giocare",
+    "IT-C21-ottenere",
+    "IT-C21-rispondere"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

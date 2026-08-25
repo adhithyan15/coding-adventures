@@ -1,0 +1,20 @@
+{
+  "chapter": 274,
+  "title": "What a Phrase Carries --- Authority, a Story, a Silence, a Sense of Charm",
+  "label": "ch:peso-cultural",
+  "canDo": "I can name the cultural weight a Spanish phrase carries beyond its meaning, and tell a proverb from an idiom, an allusion from a word, and a euphemism from politeness.",
+  "spineNodes": [
+    "SPINE-READ-CULTURAL-WEIGHT"
+  ],
+  "payoff": {
+    "lesson": "ES-C274-practice",
+    "kind": "task",
+    "summary": "Complete ES-C274-practice: name the weight each of the four phrases borrows, and say which one can be used correctly without knowing its source.",
+    "assesses": [
+      "ES-SEMANTIC-PROVERB",
+      "ES-SEMANTIC-ALLUSION",
+      "ES-SEMANTIC-EUPHEMISM",
+      "ES-SEMANTIC-HUMOR-CONVENTION"
+    ]
+  }
+}

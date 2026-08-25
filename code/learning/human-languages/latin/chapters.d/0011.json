@@ -1,0 +1,23 @@
+{
+  "chapter": 11,
+  "title": "Months",
+  "label": "ch:la-months",
+  "canDo": "I can name all twelve Roman months and say what July and August were called before they were renamed.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "LA-C11-menses",
+    "kind": "task",
+    "summary": "Recite the twelve months in order, then restore Quīntīlis and Sextīlis to July and August's slots.",
+    "assesses": [
+      "LA-ETYMON-PANIS-01",
+      "LA-LEX-PANIS-02",
+      "LA-PRAGMATICS-PANIS-03",
+      "LA-ETYMON-AQUA-VINUM-01",
+      "LA-LEX-AQUA-VINUM-02",
+      "LA-ETYMON-MENSES-01",
+      "LA-PRAGMATICS-MENSES-02"
+    ]
+  }
+}

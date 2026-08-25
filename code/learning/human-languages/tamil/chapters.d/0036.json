@@ -1,0 +1,29 @@
+{
+  "chapter": 36,
+  "title": "What You Are Offered",
+  "label": "ch:ta-what-you-are-offered",
+  "canDo": "I can ask for தேநீர், பால் or உணவு in Tamil, say என் தவறு with no verb in it, find நீர் inside both தண்ணீர் and தேநீர், and state which of this chapter's words was borrowed and which the dictionaries cannot account for.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "TA-C36-tavaru",
+    "kind": "production",
+    "summary": "Repair a wrong order — மன்னிக்கவும், என் தவறு — and account for the chapter honestly: பால் and உண் inherited, தேநீர் half a loan through a Malay port, சாப்பிடு with no entry in the Dravidian dictionary at all, and மன்னி native where the neighbours took Sanskrit kṣamā.",
+    "assesses": [
+      "TA-LEX-TAVARU-01",
+      "TA-ETYMON-TAVARU-02",
+      "TA-LEX-TENEER-01",
+      "TA-ETYMON-TENEER-02",
+      "TA-LEX-PAAL-01",
+      "TA-ETYMON-PAAL-02",
+      "TA-LEX-UNAVU-01",
+      "TA-ETYMON-UNAVU-02",
+      "TA-ETYMON-MANNIKKAVUM-01",
+      "TA-ETYMON-MANNIKKAVUM-02",
+      "TA-PRAGMATICS-SORRY-REGISTER-01",
+      "TA-SCRIPT-SORRY-REGISTER-02",
+      "TA-SCRIPT-VOWEL-SIGNS-NANDRI-02"
+    ]
+  }
+}

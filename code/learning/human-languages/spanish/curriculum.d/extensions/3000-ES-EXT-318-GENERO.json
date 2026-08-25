@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-318-GENERO",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "review",
+  "canDo": "I can place a noun by gender when the ending helps, and use the object pronoun as evidence when it does not.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C318-repaso-genero"
+  ]
+}

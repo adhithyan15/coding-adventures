@@ -1,0 +1,16 @@
+{
+  "id": "IT-EXT-014-LANGUAGE-SPECIFIC",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can use the additional Italian material required at this point in the path.",
+  "prerequisites": [],
+  "lessons": [
+    "IT-C07-giorni-1",
+    "IT-C07-giorni-2",
+    "IT-C08-ora",
+    "IT-C08-mezzogiorno-mezzanotte",
+    "IT-C09-mesi",
+    "IT-C09-stagioni"
+  ]
+}

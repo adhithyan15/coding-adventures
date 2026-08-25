@@ -1,0 +1,10 @@
+{
+  "id": "ES-PATH-210-DEPENDS",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "lessons": [
+    "ES-C56-depende"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-B1-REVIEW-PRET",
+  "spine_node": "SPINE-TALK-ABOUT-PAST",
+  "lessons": [
+    "ES-C55-repaso-preterito"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-B1-REVIEW-PRET"
+  ],
+  "after": []
+}

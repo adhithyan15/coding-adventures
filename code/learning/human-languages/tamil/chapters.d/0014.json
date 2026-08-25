@@ -1,0 +1,19 @@
+{
+  "chapter": 14,
+  "title": "Seasons",
+  "label": "ch:ta-seasons",
+  "canDo": "I can name the four seasons in Tamil and say honestly which one is locally central instead of repeating a Western four-way split.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "TA-C14-kaalangal",
+    "kind": "production",
+    "summary": "Build kodai/mazhai/kulir onto kaalam, name mazhai kaalam as the season that actually organises the year, and flag vasantha as the one loanword.",
+    "assesses": [
+      "TA-LEX-UDAL-URUPPUGAL-01",
+      "TA-LEX-KAALANGAL-01",
+      "TA-PRAGMATICS-KAALANGAL-02"
+    ]
+  }
+}

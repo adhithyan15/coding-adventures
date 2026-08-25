@@ -1,0 +1,18 @@
+{
+  "chapter": 156,
+  "title": "Escribir — Writing Is Scratching",
+  "label": "ch:spanish-escribir",
+  "canDo": "I can say what I write, and explain the propped-up e- in front of it.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C34-escribir",
+    "kind": "task",
+    "summary": "scrībere, to scratch, and Spanish refusing to begin a word with sc-.",
+    "assesses": [
+      "ES-LEX-ESCRIBIR-07",
+      "ES-ETYMON-ESCRIBIR-08"
+    ]
+  }
+}

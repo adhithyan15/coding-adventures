@@ -1,0 +1,18 @@
+{
+  "chapter": 10,
+  "title": "Days of the Week",
+  "label": "ch:ml-days-of-the-week",
+  "canDo": "I can name the seven days of the Malayalam week and say which planet each one is named for.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "ML-C10-azhcha",
+    "kind": "production",
+    "summary": "Name the seven planet-days, separate the native ones from the Sanskrit ones, and explain their near-identity with Tamil's.",
+    "assesses": [
+      "ML-CONCEPT-C10-AZHCHA-01",
+      "ML-CONCEPT-C10-AZHCHA-02"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "segments": [
+    "ES-PATH-013",
+    "ES-PATH-018",
+    "ES-PATH-024",
+    "ES-PATH-024-PRONOUN-EVIDENCE",
+    "ES-PATH-287-01",
+    "ES-PATH-294-01",
+    "ES-PATH-301-01",
+    "ES-PATH-303-01",
+    "ES-PATH-318-02",
+    "ES-PATH-319-01",
+    "ES-PATH-310-01",
+    "ES-PATH-311-01",
+    "ES-PATH-312-01",
+    "ES-PATH-313-01"
+  ],
+  "omits": [],
+  "relocates": {}
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 296,
+  "title": "Animals About the House --- Horse, Cow, Sheep, Hen, Donkey",
+  "label": "ch:animales",
+  "canDo": "I can name the horse, the cow, the sheep, the hen and the donkey in Spanish.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "ES-C296-burro",
+    "kind": "production",
+    "summary": "Complete ES-C296-burro: name all five animals in order, and say which one English took back off Spanish.",
+    "assesses": [
+      "ES-LEX-C296-BEAST-01",
+      "ES-LEX-C296-BEAST-02",
+      "ES-LEX-C296-BEAST-03",
+      "ES-LEX-C296-BEAST-04",
+      "ES-LEX-C296-BEAST-05"
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "id": "MR-EXT-015-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can politely ask for water, tea, milk, or bhakri in Marathi using the request pattern I build in this chapter.",
+  "prerequisites": [],
+  "lessons": [
+    "MR-C10-paani",
+    "MR-C10-chaha",
+    "MR-C10-dudh",
+    "MR-C10-bhakari"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 13,
+  "title": "Head and Hand",
+  "label": "ch:ka-head-and-hand",
+  "canDo": "I can name the head and the hand in Kannada.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "KA-C13-dehada-bhagagalu",
+    "kind": "production",
+    "summary": "Say ತಲೆ and ಕೈ, and hear how nearly unchanged they are across Tamil, Malayalam and Kannada.",
+    "assesses": [
+      "KA-ETYMON-C12-KUTUMBA-01",
+      "KA-ETYMON-C12-KUTUMBA-02",
+      "KA-LEX-C13-DEHADA-BHAGAGALU-01"
+    ]
+  }
+}

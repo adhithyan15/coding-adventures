@@ -1,0 +1,10 @@
+{
+  "id": "PT-PATH-007",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "PT-C01-noite"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

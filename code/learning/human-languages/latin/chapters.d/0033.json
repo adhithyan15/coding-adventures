@@ -1,0 +1,20 @@
+{
+  "chapter": 33,
+  "title": "Evening",
+  "label": "ch:la-evening",
+  "canDo": "I can say evening in Latin, and follow the vesper root into Hesperia, víspera, and vespers.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "LA-C33-practice",
+    "kind": "task",
+    "summary": "Sort any European evening word into the vesper family or the sērus family, then produce vesper and the everyday vespere Cicero uses for in the evening.",
+    "assesses": [
+      "LA-ETYMON-VESPER-01",
+      "LA-LEX-VESPER-AFTERLIVES-01",
+      "LA-ETYMON-VESPER-AFTERLIVES-02",
+      "LA-TASK-VESPER-TRIAGE-01"
+    ]
+  }
+}

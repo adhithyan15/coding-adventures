@@ -1,0 +1,29 @@
+{
+  "chapter": 35,
+  "title": "Arriving at a House",
+  "label": "ch:ta-arriving-at-a-house",
+  "canDo": "I can name a Tamil house, its door, a room and a chair, take நாற்காலி apart into 'four' and 'leg', place வீடு against Kannada ಬೀಡು on the v-to-b shift, and say why கதவு stayed everyday while Sanskrit-derived கபாடம் stayed in books.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "TA-C35-naarkaali",
+    "kind": "production",
+    "summary": "Walk a guest from வீடு through கதவு into அறை and offer a நாற்காலி; split the chair into நால் and கால் and hear ல் harden to ற் at the join; hold the hard ற at the ridge rather than the roof; and name what the puḷḷi does at ற்கா and what Tamil refuses to do there.",
+    "assesses": [
+      "TA-LEX-NAARKAALI-01",
+      "TA-ETYMON-NAARKAALI-02",
+      "TA-LEX-VEEDU-01",
+      "TA-ETYMON-VEEDU-02",
+      "TA-LEX-KADAVU-01",
+      "TA-ETYMON-KADAVU-02",
+      "TA-LEX-ARAI-01",
+      "TA-SOUND-ARAI-02",
+      "TA-LEX-NUMBERS-1-5-01",
+      "TA-SCRIPT-PULLI-VANAKKAM-01",
+      "TA-SCRIPT-PULLI-VANAKKAM-02",
+      "TA-SCRIPT-VOWEL-SIGNS-NANDRI-01",
+      "TA-SCRIPT-I-SIGN-WRITE-NANDRI-01"
+    ]
+  }
+}

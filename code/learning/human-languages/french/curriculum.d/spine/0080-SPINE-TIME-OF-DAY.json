@@ -1,0 +1,16 @@
+{
+  "segments": [
+    "FR-PATH-004",
+    "FR-PATH-006",
+    "FR-PATH-015",
+    "FR-PATH-029",
+    "FR-PATH-021"
+  ],
+  "omits": [
+    "TIME-MORNING",
+    "TIME-AFTERNOON",
+    "GREETING-MORNING",
+    "GREETING-AFTERNOON"
+  ],
+  "relocates": {}
+}

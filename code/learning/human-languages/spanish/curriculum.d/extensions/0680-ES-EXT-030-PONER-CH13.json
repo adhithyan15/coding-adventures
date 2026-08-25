@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-030-PONER-CH13",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can use the three learned singular forms of poner and explain its placing family.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C13-poner"
+  ]
+}

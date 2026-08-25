@@ -1,0 +1,15 @@
+{
+  "id": "UR-PATH-015",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "UR-C14-qamiz",
+    "UR-C14-juta",
+    "UR-C14-topi",
+    "UR-C14-koat"
+  ],
+  "before": [],
+  "inline": [
+    "UR-EXT-025-CLOTHING"
+  ],
+  "after": []
+}

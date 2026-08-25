@@ -1,0 +1,21 @@
+{
+  "chapter": 40,
+  "title": "In the Kitchen",
+  "label": "ch:sa-in-the-kitchen",
+  "canDo": "I can name curd, sugar, fresh butter, a vegetable and a sweet in Sanskrit.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "SA-C40-sweet",
+    "kind": "production",
+    "summary": "Complete SA-C40-sweet and demonstrate the chapter promise.",
+    "assesses": [
+      "SA-LEX-C40-FOOD-01",
+      "SA-LEX-C40-FOOD-02",
+      "SA-LEX-C40-FOOD-03",
+      "SA-LEX-C40-FOOD-04",
+      "SA-LEX-C40-FOOD-05"
+    ]
+  }
+}

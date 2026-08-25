@@ -1,0 +1,21 @@
+{
+  "chapter": 325,
+  "title": "Country, City, Neighbourhood",
+  "label": "ch:pais-y-lugar",
+  "canDo": "I can name five nested places in Spanish — el pais, la ciudad, el barrio, la plaza and el lugar — and say which one of them is Arabic rather than Latin.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "ES-C325-lugar",
+    "kind": "production",
+    "summary": "Complete ES-C325-lugar: say where you are from with pais and ciudad, place yourself in a barrio and a plaza, and name a spot with lugar.",
+    "assesses": [
+      "ES-LEX-C325-PLACE-06",
+      "ES-LEX-C325-PLACE-07",
+      "ES-LEX-C325-PLACE-08",
+      "ES-LEX-C325-PLACE-09",
+      "ES-LEX-C325-PLACE-10"
+    ]
+  }
+}

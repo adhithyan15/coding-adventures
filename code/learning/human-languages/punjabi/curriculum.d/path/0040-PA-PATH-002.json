@@ -1,0 +1,11 @@
+{
+  "id": "PA-PATH-002",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "lessons": [
+    "PA-C01-dhanvaad",
+    "PA-C01-shukriya"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

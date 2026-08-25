@@ -1,0 +1,24 @@
+{
+  "chapter": 11,
+  "title": "The People You'd Introduce",
+  "label": "ch:sa-people-nouns",
+  "canDo": "I can name a friend, a family, a brother and a sister in Sanskrit, and say which of those words travelled with English and which quietly did not.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "SA-C11-bhagini",
+    "kind": "production",
+    "summary": "Say भगिनी, name the share-word भग it is built on, name स्वसृ as the real but non-living PIE cousin of English sister, and run the chapter's four people back together with the roads each one travelled.",
+    "assesses": [
+      "SA-LEX-MITRAM-FRIEND",
+      "SA-ETYMON-MEI-BIND",
+      "SA-LEX-KUTUMBAM-FAMILY",
+      "SA-ETYMON-KUTUMBA-DRAVIDIAN",
+      "SA-LEX-BHRATA-BROTHER",
+      "SA-ETYMON-BHRATER-PIE",
+      "SA-LEX-BHAGINI-SISTER",
+      "SA-ETYMON-BHAGA-SHARE"
+    ]
+  }
+}

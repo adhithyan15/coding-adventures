@@ -1,0 +1,14 @@
+{
+  "id": "IT-EXT-026-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can ask for coffee, tea, milk and sugar in Italian, and tell which of the four were borrowed and which was inherited.",
+  "prerequisites": [],
+  "lessons": [
+    "IT-C22-caffe",
+    "IT-C22-te",
+    "IT-C22-latte",
+    "IT-C22-zucchero"
+  ]
+}

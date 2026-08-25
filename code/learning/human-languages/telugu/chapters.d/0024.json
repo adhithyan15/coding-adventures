@@ -1,0 +1,23 @@
+{
+  "chapter": 24,
+  "title": "Night",
+  "label": "ch:te-night",
+  "canDo": "I can say \"night\" in Telugu and recognise it inside the midnight word I already knew.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "TE-C24-ratri",
+    "kind": "production",
+    "summary": "Say రాత్రి, find it again inside అర్ధరాత్రి, and note the three native words — rēyi, māpu, irulu — it pushed aside.",
+    "assesses": [
+      "TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-01",
+      "TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-02",
+      "TE-GRAMMAR-C17-MADHYAAHNAM-ARDHARAATRI-03",
+      "TE-ETYMON-C23-ROJU-01",
+      "TE-PRAGMATICS-C23-ROJU-02",
+      "TE-ETYMON-C24-RATRI-01",
+      "TE-ETYMON-C24-RATRI-02"
+    ]
+  }
+}

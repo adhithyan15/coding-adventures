@@ -1,0 +1,31 @@
+{
+  "chapter": 14,
+  "title": "Sister, Son, Man, Woman, Friend",
+  "label": "ch:fa-people-words",
+  "canDo": "I can name my sister, son, and friend in Persian, tell man and woman apart, and open and close a short interaction with all of them.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "FA-C14-dust",
+    "kind": "production",
+    "summary": "The chapter and the tranche close on dust, friend, then run all five people-words back to back and rebuild a complete short interaction with a friend: a polite request for tea, a request for a key, and the standard farewell both voices share.",
+    "assesses": [
+      "FA-LEX-KHAHAR",
+      "FA-LEX-PESAR",
+      "FA-LEX-MARD",
+      "FA-LEX-ZAN",
+      "FA-LEX-DUST",
+      "FA-ETYMON-DUST",
+      "FA-LEX-KHODAHAFEZ",
+      "FA-GRAMMAR-KHODAHAFEZ-ELLIPSIS",
+      "FA-SCRIPT-KHODAHAFEZ-JOINED",
+      "FA-PRAGMATICS-STANDARD-FAREWELL",
+      "FA-DIALOGUE-TAKE-LEAVE",
+      "FA-LEX-HAFEZ",
+      "FA-SCRIPT-HAFEZ",
+      "FA-LEX-CHAY",
+      "FA-LEX-KELID"
+    ]
+  }
+}

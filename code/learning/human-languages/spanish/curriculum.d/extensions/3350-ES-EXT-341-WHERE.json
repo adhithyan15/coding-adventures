@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-341-WHERE",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can put a thing above or below me, ahead of me or behind me, and inside rather than outside.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C341-arriba",
+    "ES-C341-abajo",
+    "ES-C341-delante",
+    "ES-C341-detras",
+    "ES-C341-dentro"
+  ]
+}

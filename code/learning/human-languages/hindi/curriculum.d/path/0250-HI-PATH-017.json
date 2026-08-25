@@ -1,0 +1,12 @@
+{
+  "id": "HI-PATH-017",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "HI-C14-ritu"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-017-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

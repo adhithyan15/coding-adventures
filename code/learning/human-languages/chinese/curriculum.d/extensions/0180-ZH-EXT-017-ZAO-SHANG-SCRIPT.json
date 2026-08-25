@@ -1,0 +1,14 @@
+{
+  "id": "ZH-EXT-017-ZAO-SHANG-SCRIPT",
+  "stage": "A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can write 早 and 上, and I know that stroke-order habits carry conditions -- the horizontal leads when two strokes cross, as in 十, but 上 starts with its vertical because its short bar meets that vertical instead of crossing it.",
+  "prerequisites": [
+    "ZH-EXT-016-CONVERSATION-CLOSE"
+  ],
+  "lessons": [
+    "ZH-W07-zao",
+    "ZH-W07-shang"
+  ]
+}

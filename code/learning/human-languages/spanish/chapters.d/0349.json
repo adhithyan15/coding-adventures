@@ -1,0 +1,21 @@
+{
+  "chapter": 349,
+  "title": "The Stretches A Calendar Marks",
+  "label": "ch:la-jornada-y-la-decada",
+  "canDo": "I can name la jornada, la decada, la fiesta, el aniversario and la agenda, and say why a journey was once one day's travel.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "ES-C349-agenda",
+    "kind": "production",
+    "summary": "Complete ES-C349-agenda: name a day's stretch, a decade, a holiday and an anniversary, and name the book they are written in.",
+    "assesses": [
+      "ES-LEX-C349-CLOCK-16",
+      "ES-LEX-C349-CLOCK-17",
+      "ES-LEX-C349-CLOCK-18",
+      "ES-LEX-C349-CLOCK-19",
+      "ES-LEX-C349-CLOCK-20"
+    ]
+  }
+}

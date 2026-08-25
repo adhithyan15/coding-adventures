@@ -1,0 +1,19 @@
+{
+  "chapter": 89,
+  "title": "Los and Las --- Them, Derived",
+  "label": "ch:pronoun-plural",
+  "canDo": "I can make any direct object pronoun plural, and say why the pronoun is tidier than the article.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C45-los-las",
+    "kind": "task",
+    "summary": "Complete ES-C45-los-las: produce los tengo and las hago, and explain why lo needed no repair in the plural when el did.",
+    "assesses": [
+      "ES-GRAMMAR-DIRECT-OBJECT-PLURAL",
+      "ES-ETYMON-ILLE-ILLA"
+    ],
+    "note": "The reader produces both forms in the warm-up before being given them. The etymology pays off a puzzle set two arcs earlier."
+  }
+}

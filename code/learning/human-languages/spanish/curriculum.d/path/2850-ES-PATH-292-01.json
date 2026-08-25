@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-292-01",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "ES-C292-pueblo",
+    "ES-C292-colina",
+    "ES-C292-valle",
+    "ES-C292-lago",
+    "ES-C292-montana"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-292-TIERRA"
+  ],
+  "after": []
+}

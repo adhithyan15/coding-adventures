@@ -1,0 +1,21 @@
+{
+  "chapter": 53,
+  "title": "The Land",
+  "label": "ch:ta-the-land",
+  "canDo": "I can name a river, a hill, a paddy field, a path and a village in Tamil.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "TA-C53-village",
+    "kind": "production",
+    "summary": "Complete TA-C53-village and say all five words in order.",
+    "assesses": [
+      "TA-LEX-C53-LAND-01",
+      "TA-LEX-C53-LAND-02",
+      "TA-LEX-C53-LAND-03",
+      "TA-LEX-C53-LAND-04",
+      "TA-LEX-C53-LAND-05"
+    ]
+  }
+}

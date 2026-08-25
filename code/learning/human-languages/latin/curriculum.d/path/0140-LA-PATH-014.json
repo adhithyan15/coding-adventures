@@ -1,0 +1,14 @@
+{
+  "id": "LA-PATH-014",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "LA-C11-menses",
+    "LA-C12-medius-dies-nox",
+    "LA-C13-hora"
+  ],
+  "before": [],
+  "inline": [
+    "LA-EXT-014-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

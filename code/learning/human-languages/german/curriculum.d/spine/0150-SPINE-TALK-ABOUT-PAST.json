@@ -1,0 +1,9 @@
+{
+  "segments": [
+    "GE-PATH-020"
+  ],
+  "omits": [
+    "VERB-PAST"
+  ],
+  "relocates": {}
+}

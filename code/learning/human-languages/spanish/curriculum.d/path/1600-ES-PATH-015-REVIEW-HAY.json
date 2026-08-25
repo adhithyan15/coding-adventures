@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-015-REVIEW-HAY",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "lessons": [
+    "ES-C54-repaso-hay"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-015-REVIEW-HAY"
+  ],
+  "after": []
+}

@@ -1,0 +1,17 @@
+{
+  "chapter": 17,
+  "title": "Noon and Midnight",
+  "label": "ch:ml-noon-and-midnight",
+  "canDo": "I can say noon and midnight in Malayalam and hear paathi, 'half', inside paathira.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "ML-C17-paathira",
+    "kind": "production",
+    "summary": "Say pāthira, pull pāthi out of it, and show it is a native half-word rather than Sanskrit ardha.",
+    "assesses": [
+      "ML-CONCEPT-C17-PAATHIRA-01"
+    ]
+  }
+}

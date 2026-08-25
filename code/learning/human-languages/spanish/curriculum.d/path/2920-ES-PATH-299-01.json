@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-299-01",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "ES-C299-campo",
+    "ES-C299-granja",
+    "ES-C299-ganado",
+    "ES-C299-cosecha",
+    "ES-C299-pastor"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-299-GRANJA"
+  ],
+  "after": []
+}

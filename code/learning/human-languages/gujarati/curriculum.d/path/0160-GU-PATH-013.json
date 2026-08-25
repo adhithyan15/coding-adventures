@@ -1,0 +1,15 @@
+{
+  "id": "GU-PATH-013",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "GU-C10-paani",
+    "GU-C10-chaa",
+    "GU-C10-dudh",
+    "GU-C10-rotli"
+  ],
+  "before": [],
+  "inline": [
+    "GU-EXT-013-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

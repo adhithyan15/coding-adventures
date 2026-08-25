@@ -1,0 +1,20 @@
+{
+  "id": "FR-PATH-030",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "lessons": [
+    "FR-C32-intonation",
+    "FR-C32-est-ce-que",
+    "FR-C32-ou",
+    "FR-C32-quand",
+    "FR-C32-comment",
+    "FR-C32-combien",
+    "FR-C32-pourquoi",
+    "FR-C32-inversion",
+    "FR-C32-quel"
+  ],
+  "before": [],
+  "inline": [
+    "FR-EXT-029-ASKING"
+  ],
+  "after": []
+}

@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-282-ENCUENTRO",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can welcome someone in Spanish and name the greeting, the hug, the smile and the guest that go with it.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C282-bienvenido",
+    "ES-C282-saludo",
+    "ES-C282-abrazo",
+    "ES-C282-sonrisa",
+    "ES-C282-invitado"
+  ]
+}

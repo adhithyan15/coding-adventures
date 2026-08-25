@@ -1,0 +1,12 @@
+{
+  "id": "TA-PATH-002",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "TA-C01-vanakkam-family-register"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-002-REGISTER"
+  ],
+  "after": []
+}

@@ -1,0 +1,24 @@
+{
+  "id": "FR-PATH-015",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "FR-C06-nombres-1-5",
+    "FR-C06-nombres-6-10",
+    "FR-C07-jours-1",
+    "FR-C09-mois",
+    "FR-C09-saisons",
+    "FR-C10-parents",
+    "FR-C10-freres-soeurs",
+    "FR-C11-pain",
+    "FR-C11-eau-vin",
+    "FR-C12-nombres-11-16",
+    "FR-C12-nombres-17-20",
+    "FR-C13-noir-blanc",
+    "FR-C13-rouge-bleu"
+  ],
+  "before": [],
+  "inline": [
+    "FR-EXT-015-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

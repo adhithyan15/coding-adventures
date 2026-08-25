@@ -1,0 +1,18 @@
+{
+  "id": "ZH-PATH-006",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "ZH-W07-zao",
+    "ZH-W07-shang",
+    "ZH-C07-zaoshang",
+    "ZH-C07-zaoshanghao",
+    "ZH-C07-practice"
+  ],
+  "before": [],
+  "inline": [
+    "ZH-EXT-017-ZAO-SHANG-SCRIPT",
+    "ZH-EXT-018-NEUTRAL-TONE",
+    "ZH-EXT-019-GREETING-FRAME"
+  ],
+  "after": []
+}

@@ -1,0 +1,26 @@
+{
+  "chapter": 39,
+  "title": "Tea, Coffee, Milk",
+  "label": "ch:ml-tea-coffee-milk",
+  "canDo": "I can politely ask for tea, coffee or milk in Malayalam, and trace each word back along the road it travelled to get here.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "ML-C39-paal",
+    "kind": "production",
+    "summary": "Ask dayavaayi oru paal, run chaaya's overland Persian route against kaapi's maritime Arabic-Turkish-Italian-English one, and set paal's perfect three-way match against Chapter 15's vellam, which broke from Tamil entirely.",
+    "assesses": [
+      "ML-CONCEPT-C39-PAAL-01",
+      "ML-CONCEPT-C39-PAAL-02",
+      "ML-CONCEPT-C39-KAAPI-01",
+      "ML-CONCEPT-C39-KAAPI-02",
+      "ML-CONCEPT-C39-CHAAYA-01",
+      "ML-CONCEPT-C39-CHAAYA-02",
+      "ML-CONCEPT-C15-VELLAM-ARI-01",
+      "ML-CONCEPT-C15-VELLAM-ARI-02",
+      "ML-CONCEPT-C08-DAYAVAYI-01",
+      "ML-CONCEPT-C08-DAYAVAYI-02"
+    ]
+  }
+}

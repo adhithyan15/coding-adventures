@@ -1,0 +1,32 @@
+{
+  "chapter": 37,
+  "title": "Your Town, Your Friend",
+  "label": "ch:ta-your-town-your-friend",
+  "canDo": "I can ask உங்கள் ஊர் என்ன? and introduce someone with இவர் என் நண்பர், choose between நண்பன், நண்பி and நண்பர், run Tamil's இ / அ / எ pointing series, and hear ண் voice the ப that follows it.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "TA-C37-ivar-en-nanbar",
+    "kind": "production",
+    "summary": "Say இவர் என் நண்பர் with no verb in it, pick the ending by respect rather than by habit, name the -ūr inside Tanjore and Bengaḷūru, and state what Tamil forces you to decide for a sibling that it does not force for a friend.",
+    "assesses": [
+      "TA-LEX-IVAR-EN-NANBAR-01",
+      "TA-PRAGMATICS-IVAR-EN-NANBAR-02",
+      "TA-LEX-IVAR-01",
+      "TA-GRAMMAR-IVAR-02",
+      "TA-LEX-NANBAN-01",
+      "TA-ETYMON-NANBAN-02",
+      "TA-LEX-UUR-01",
+      "TA-ETYMON-UUR-02",
+      "TA-LEX-KUDUMBAM-02",
+      "TA-ETYMON-KUDUMBAM-01",
+      "TA-SCRIPT-VOWEL-SIGNS-NANDRI-01",
+      "TA-SCRIPT-MA-RETROFLEX-NA-02",
+      "TA-SCRIPT-ABUGIDA-VA-KA-02",
+      "TA-SOUND-I-SIGN-WRITE-NANDRI-03",
+      "TA-GRAMMAR-AGE-REGISTER-GRAMMAR-01",
+      "TA-PRAGMATICS-THANNEER-ARISI-03"
+    ]
+  }
+}

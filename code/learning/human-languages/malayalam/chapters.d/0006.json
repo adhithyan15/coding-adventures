@@ -1,0 +1,19 @@
+{
+  "chapter": 6,
+  "title": "Case Endings and Dative Subjects",
+  "label": "ch:ml-dative-case",
+  "canDo": "I can say that I know Malayalam the way Malayalam itself builds it -- with no subject at all, marking myself with the dative -ikku.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "ML-C06-dative-subject",
+    "kind": "production",
+    "summary": "Say enikku malayāḷam aṟiyām, set it against ñān malayāḷam saṁsārikkunnu, and stack the dative's four Dravidian cousins.",
+    "assesses": [
+      "ML-CONCEPT-C06-DATIVE-SUBJECT-01",
+      "ML-CONCEPT-C06-DATIVE-SUBJECT-02",
+      "ML-CONCEPT-C06-DATIVE-SUBJECT-03"
+    ]
+  }
+}

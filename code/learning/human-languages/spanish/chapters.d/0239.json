@@ -1,0 +1,17 @@
+{
+  "chapter": 239,
+  "title": "Veo a María --- The Little A That Guards People",
+  "label": "ch:veo-a-maria",
+  "canDo": "I can mark the person on the receiving end of a verb.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C62-veo-a-maria",
+    "kind": "task",
+    "summary": "I can mark the person on the receiving end of a verb.",
+    "assesses": [
+      "ES-GRAMMAR-PERSONAL-A"
+    ]
+  }
+}

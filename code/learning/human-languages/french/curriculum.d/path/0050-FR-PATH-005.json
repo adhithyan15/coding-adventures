@@ -1,0 +1,10 @@
+{
+  "id": "FR-PATH-005",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "FR-C01-bonne-nuit"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

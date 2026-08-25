@@ -1,0 +1,21 @@
+{
+  "chapter": 58,
+  "title": "Around the Yard",
+  "label": "ch:ta-around-the-yard",
+  "canDo": "I can name a cow, a goat, a hen, a crow and a bird in Tamil.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "TA-C58-bird",
+    "kind": "production",
+    "summary": "Complete TA-C58-bird and say all five words in order.",
+    "assesses": [
+      "TA-LEX-C58-ANIMAL-01",
+      "TA-LEX-C58-ANIMAL-02",
+      "TA-LEX-C58-ANIMAL-03",
+      "TA-LEX-C58-ANIMAL-04",
+      "TA-LEX-C58-ANIMAL-05"
+    ]
+  }
+}

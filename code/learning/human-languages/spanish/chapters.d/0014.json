@@ -1,0 +1,22 @@
+{
+  "chapter": 14,
+  "title": "A Coffee, Please",
+  "label": "ch:a-coffee",
+  "canDo": "I can ask for something politely.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "ES-C06-repaso-cafe",
+    "kind": "dialogue",
+    "summary": "A Coffee, Please — the chapter run end to end.",
+    "assesses": [
+      "ES-LEX-CAFE",
+      "ES-ETYMON-QAHWA",
+      "ES-GRAMMAR-CAFE-MASCULINE",
+      "ES-LEX-POR-FAVOR",
+      "ES-PRAGMATICS-POLITE-REQUEST",
+      "ES-ETYMON-PRO-FAVOR"
+    ]
+  }
+}

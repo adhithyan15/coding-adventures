@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-030-SALIR-CH13",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can use the three learned singular forms of salir with known de and Madrid.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C13-salir"
+  ]
+}

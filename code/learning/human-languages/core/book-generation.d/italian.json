@@ -1,0 +1,149 @@
+{
+  "glossaries": [
+    {
+      "language": "italian",
+      "output": "italian/book/chapters/appendix-glossary.tex"
+    }
+  ],
+  "answerKeys": [
+    {
+      "language": "italian",
+      "output": "italian/book/chapters/appendix-answer-key.tex"
+    }
+  ],
+  "indexes": [
+    {
+      "language": "italian",
+      "output": "italian/book/chapters/appendix-index.tex"
+    }
+  ],
+  "targets": [
+    {
+      "language": "italian",
+      "chapter": 2,
+      "output": "italian/book/chapters/ch02-how-are-you.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 3,
+      "output": "italian/book/chapters/ch03-introductions.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 4,
+      "output": "italian/book/chapters/ch04-farewells.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 5,
+      "output": "italian/book/chapters/ch05-first-verbs.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 6,
+      "output": "italian/book/chapters/ch06-numbers-1-10.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 7,
+      "output": "italian/book/chapters/ch07-days-of-the-week.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 8,
+      "output": "italian/book/chapters/ch08-telling-time.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 9,
+      "output": "italian/book/chapters/ch09-months-and-seasons.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 10,
+      "output": "italian/book/chapters/ch10-family.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 11,
+      "output": "italian/book/chapters/ch11-bread-water-wine.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 12,
+      "output": "italian/book/chapters/ch12-numbers-11-20.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 13,
+      "output": "italian/book/chapters/ch13-colours.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 14,
+      "output": "italian/book/chapters/ch14-having-and-age.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 15,
+      "output": "italian/book/chapters/ch15-two-pasts.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 16,
+      "output": "italian/book/chapters/ch16-essere-andare-past.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 17,
+      "output": "italian/book/chapters/ch17-head-and-hand.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 18,
+      "output": "italian/book/chapters/ch18-mind-verbs.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 19,
+      "output": "italian/book/chapters/ch19-backwards-verb.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 20,
+      "output": "italian/book/chapters/ch20-carry-buy-wait-meet.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 21,
+      "output": "italian/book/chapters/ch21-play-get-answer.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 22,
+      "output": "italian/book/chapters/ch22-coffee-tea-milk-sugar.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 23,
+      "output": "italian/book/chapters/ch23-friends-family-name.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 24,
+      "output": "italian/book/chapters/ch24-heart-eyes-ears-mouth.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 25,
+      "output": "italian/book/chapters/ch25-nose-stomach-throat.tex"
+    }
+  ],
+  "handwritten": [
+    {
+      "language": "italian",
+      "chapter": 1,
+      "output": "italian/book/chapters/ch01-greetings.tex"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "segments": [],
+  "omits": [
+    "REPORTED-SPEECH",
+    "TENSE-BACKSHIFT",
+    "SPEECH-ACT-REPORT",
+    "QUOTATION-DIRECT"
+  ],
+  "relocates": {}
+}

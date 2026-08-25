@@ -1,0 +1,32 @@
+{
+  "chapter": 33,
+  "title": "The Mind and the Page",
+  "label": "ch:ml-mind-and-page",
+  "canDo": "I can say that I think, understand, read and write in Malayalam, hear from a verb's own ending which of the four Malayalam borrowed, and put the understander in the dative where Malayalam puts him.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ML-C33-ezhutuka",
+    "kind": "production",
+    "summary": "Say ഞാൻ മലയാളം എഴുതുന്നു, run the chapter's four verbs back and pick out the two wearing the Sanskrit ‑ഇക്കുക stamp, and say why Malayalam and Tamil write with one word while Kannada and Telugu, having lost its ഴ, reach for another.",
+    "assesses": [
+      "ML-CONCEPT-C33-CINTIKKUKA-01",
+      "ML-CONCEPT-C33-CINTIKKUKA-02",
+      "ML-CONCEPT-C33-MANASSILAAKKUKA-01",
+      "ML-CONCEPT-C33-MANASSILAAKKUKA-02",
+      "ML-CONCEPT-C33-MANASSILAAKKUKA-03",
+      "ML-CONCEPT-C33-VAAYIKKUKA-01",
+      "ML-CONCEPT-C33-VAAYIKKUKA-02",
+      "ML-CONCEPT-C33-EZHUTUKA-01",
+      "ML-CONCEPT-C33-EZHUTUKA-02",
+      "ML-CONCEPT-C07-NUMBERS-1-5-01",
+      "ML-CONCEPT-C07-NUMBERS-6-10-01",
+      "ML-CONCEPT-C07-NUMBERS-6-10-02",
+      "ML-CONCEPT-C13-SHAREERA-BHAAGANGAL-01",
+      "ML-CONCEPT-C24-RATHRI-01",
+      "ML-CONCEPT-C32-TINNUKA-01",
+      "ML-CONCEPT-C32-KAANUKA-01"
+    ]
+  }
+}

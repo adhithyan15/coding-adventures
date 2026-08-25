@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-318-REPASO",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "review",
+  "canDo": "I can say goodbye for the short term, with the word inside the goodbye.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C318-repaso-despedirse"
+  ]
+}

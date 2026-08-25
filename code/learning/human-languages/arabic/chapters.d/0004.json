@@ -1,0 +1,18 @@
+{
+  "chapter": 4,
+  "title": "Farewells",
+  "label": "ch:ar-farewells",
+  "canDo": "I can close a conversation in Arabic, choosing between maʿa s-salāma and ilā l-liqāʾ.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "AR-C04-practice",
+    "kind": "dialogue",
+    "summary": "The four-chapter conversation end to end -- greet, name, how-are-you, farewell -- with every -ka swapped to -ki on the second run.",
+    "assesses": [
+      "AR-CONCEPT-C04-PRACTICE-01",
+      "AR-CONCEPT-C04-PRACTICE-02"
+    ]
+  }
+}

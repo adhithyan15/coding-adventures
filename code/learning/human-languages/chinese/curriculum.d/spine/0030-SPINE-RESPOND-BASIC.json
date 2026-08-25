@@ -1,0 +1,11 @@
+{
+  "segments": [
+    "ZH-PATH-003",
+    "ZH-PATH-004"
+  ],
+  "omits": [
+    "RESPONSE-YESNO",
+    "RESPONSE-OKAY"
+  ],
+  "relocates": {}
+}

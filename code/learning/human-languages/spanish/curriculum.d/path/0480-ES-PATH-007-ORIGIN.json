@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-007-ORIGIN",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "ES-C09-soy-de"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-007-ORIGIN"
+  ],
+  "after": []
+}

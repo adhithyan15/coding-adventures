@@ -1,0 +1,21 @@
+{
+  "chapter": 283,
+  "title": "Courtesy Past Thank You --- Excuse Me, With Permission, Kind, A Thousand Thanks",
+  "label": "ch:cortesia",
+  "canDo": "I can apologise, ask to pass, call someone kind and thank them at more than one weight in Spanish.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "ES-C283-no-hay-de-que",
+    "kind": "production",
+    "summary": "Complete ES-C283-no-hay-de-que: say all five, and take the last one apart into the words you already had.",
+    "assesses": [
+      "ES-LEX-C283-COURTESY-01",
+      "ES-LEX-C283-COURTESY-02",
+      "ES-LEX-C283-COURTESY-03",
+      "ES-LEX-C283-COURTESY-04",
+      "ES-LEX-C283-COURTESY-05"
+    ]
+  }
+}

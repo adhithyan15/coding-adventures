@@ -1,0 +1,20 @@
+{
+  "chapter": 107,
+  "title": "The Imperfect --- What Used to Happen",
+  "label": "ch:spanish-imperfecto",
+  "canDo": "I can describe an ongoing or habitual past with a regular verb from any family.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "ES-C16-vivir-imperfecto",
+    "kind": "task",
+    "summary": "-aba and -ia, and -er and -ir agreeing once again.",
+    "assesses": [
+      "ES-GRAMMAR-IMPERFECT-ONGOING-HABITUAL",
+      "ES-GRAMMAR-AR-IMPERFECT-SINGULAR",
+      "ES-GRAMMAR-ER-IMPERFECT-SINGULAR",
+      "ES-GRAMMAR-IR-IMPERFECT-SINGULAR"
+    ]
+  }
+}

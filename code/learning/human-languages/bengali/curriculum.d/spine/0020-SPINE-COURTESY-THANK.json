@@ -1,0 +1,10 @@
+{
+  "segments": [
+    "BN-PATH-002",
+    "BN-PATH-007"
+  ],
+  "omits": [
+    "COURTESY-THANKS-CASUAL"
+  ],
+  "relocates": {}
+}

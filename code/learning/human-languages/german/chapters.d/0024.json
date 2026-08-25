@@ -1,0 +1,29 @@
+{
+  "chapter": 24,
+  "title": "Verbs of the Mind",
+  "label": "ch:ge-mind-verbs",
+  "canDo": "I can say I think, I understand, I read and I write in German, break a strong verb's vowel in the du and er forms, and say which of the four German borrowed rather than inherited.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "GE-C24-schreiben",
+    "kind": "production",
+    "summary": "The chapter closes on schreiben, the one loan among four inherited verbs: the reader produces all four ich forms and all four er forms, names liest as the only vowel-breaker, and takes Manuskript apart into the Latin hand German never inherited plus the Latin verb it did. It reaches back past its own chapter to reassess Chapter 17's Hand, the Hand/manus gap, and Grimm's law.",
+    "assesses": [
+      "GE-LEX-DENKEN-02",
+      "GE-ETYMON-DENKEN-03",
+      "GE-FALSEFRIEND-ALSO-04",
+      "GE-LEX-VERSTEHEN-05",
+      "GE-ETYMON-VERSTEHEN-06",
+      "GE-LEX-LESEN-07",
+      "GE-ETYMON-LESEN-08",
+      "GE-GRAMMAR-STRONG-VOWEL-09",
+      "GE-LEX-SCHREIBEN-10",
+      "GE-ETYMON-SCHREIBEN-11",
+      "GE-LEX-HAND-02",
+      "GE-ETYMON-HAND-MANUS-05",
+      "GE-SOUND-GRIMMS-LAW-04"
+    ]
+  }
+}

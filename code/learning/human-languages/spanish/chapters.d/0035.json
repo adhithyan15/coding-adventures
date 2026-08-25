@@ -1,0 +1,19 @@
+{
+  "chapter": 35,
+  "title": "Vivir --- the Family That Costs Nothing",
+  "label": "ch:spanish-vivir",
+  "canDo": "I can use the singular of a regular -ir verb, and say why it asked me to learn no new form.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C07-vivir",
+    "kind": "task",
+    "summary": "In the singular the -ir endings ARE the -er endings; the families part company only in the plural.",
+    "assesses": [
+      "ES-LEX-VIVIR",
+      "ES-GRAMMAR-IR-PRESENT-SINGULAR",
+      "ES-ETYMON-VIVERE"
+    ]
+  }
+}

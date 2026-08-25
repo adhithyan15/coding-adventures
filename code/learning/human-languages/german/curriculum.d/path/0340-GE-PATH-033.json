@@ -1,0 +1,15 @@
+{
+  "id": "GE-PATH-033",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "GE-C30-auge",
+    "GE-C30-ohr",
+    "GE-C30-mund",
+    "GE-C30-nase"
+  ],
+  "before": [],
+  "inline": [
+    "GE-EXT-033-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

@@ -1,0 +1,20 @@
+{
+  "chapter": 79,
+  "title": "Los --- The One That Does Not Add -s",
+  "label": "ch:articles-los",
+  "canDo": "I can say los libros and explain why the masculine plural article is not els.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C44-los",
+    "kind": "task",
+    "summary": "Complete ES-C44-los: produce los libros, give all four articles, and say why el does not simply take an -s.",
+    "assesses": [
+      "ES-GRAMMAR-DEFINITE-PLURAL-MASCULINE",
+      "ES-ETYMON-ILLE-ILLA",
+      "ES-GRAMMAR-DEFINITE-PLURAL-FEMININE"
+    ],
+    "note": "The only article that changes more than its ending. Explained as the third appearance of one sound change: the masculine forms lost a vowel the feminine ones never had to lose."
+  }
+}

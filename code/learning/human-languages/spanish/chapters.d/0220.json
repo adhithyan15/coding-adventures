@@ -1,0 +1,17 @@
+{
+  "chapter": 220,
+  "title": "Tampoco --- The Same Frame, the Other Half",
+  "label": "ch:tampoco",
+  "canDo": "I can agree with a no as easily as with a yes.",
+  "spineNodes": [
+    "SPINE-ARGUE-A-VIEW"
+  ],
+  "payoff": {
+    "lesson": "ES-C58-tampoco",
+    "kind": "task",
+    "summary": "I can agree with a no as easily as with a yes.",
+    "assesses": [
+      "ES-LEX-TAMPOCO"
+    ]
+  }
+}

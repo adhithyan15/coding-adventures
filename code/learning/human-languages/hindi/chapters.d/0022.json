@@ -1,0 +1,20 @@
+{
+  "chapter": 22,
+  "title": "Numbers Eleven to Twenty",
+  "label": "ch:hi-numbers-eleven-to-twenty",
+  "canDo": "I can count from eleven to twenty in Hindi and spot the subtractive nineteen sitting inside the list.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "HI-C22-gyarah-bees",
+    "kind": "production",
+    "summary": "Count ग्यारह to बीस, then read उन्नीस as 'one less than twenty', the same logic as Latin's ūndēvīgintī.",
+    "assesses": [
+      "HI-CONCEPT-C22-GYARAH-BEES-01",
+      "HI-CONCEPT-C22-GYARAH-BEES-02",
+      "HI-CONCEPT-C22-GYARAH-BEES-03",
+      "HI-CONCEPT-C22-GYARAH-BEES-04"
+    ]
+  }
+}

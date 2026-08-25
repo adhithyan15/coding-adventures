@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-291-01",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "ES-C291-semilla",
+    "ES-C291-raiz",
+    "ES-C291-tronco",
+    "ES-C291-rama",
+    "ES-C291-bosque"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-291-ARBOL"
+  ],
+  "after": []
+}

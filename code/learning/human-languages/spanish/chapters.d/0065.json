@@ -1,0 +1,17 @@
+{
+  "chapter": 65,
+  "title": "Synthesis --- Reading a Paragraph",
+  "label": "ch:sintesis-ocho",
+  "canDo": "I can read a paragraph of Spanish I was never taught.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C09-sintesis-ocho",
+    "kind": "task",
+    "summary": "I can read a paragraph of Spanish I was never taught.",
+    "assesses": [
+      "ES-FRIEND-NCIA-NCE"
+    ]
+  }
+}

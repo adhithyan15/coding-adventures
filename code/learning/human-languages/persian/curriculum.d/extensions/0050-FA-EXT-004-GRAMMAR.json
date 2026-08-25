@@ -1,0 +1,14 @@
+{
+  "id": "FA-EXT-004-GRAMMAR",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can reuse ezafe and the chi-plus-ast fusion in a respectful name question.",
+  "prerequisites": [
+    "FA-EXT-002-REGISTER",
+    "FA-EXT-003-SCRIPT"
+  ],
+  "lessons": [
+    "FA-C03-esm-e-shoma-chist"
+  ]
+}

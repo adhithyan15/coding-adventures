@@ -1,0 +1,21 @@
+{
+  "chapter": 350,
+  "title": "Mine, Somebody Else's, And Which Kind",
+  "label": "ch:propio-y-ajeno",
+  "canDo": "I can say propio, ajeno, igual, distinto and el tipo, and say why English proper meant owned long before it meant correct.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C350-tipo",
+    "kind": "production",
+    "summary": "Complete ES-C350-tipo: mark a thing as yours or another's, as the same or a different one, and ask what sort it is.",
+    "assesses": [
+      "ES-LEX-C350-REF-06",
+      "ES-LEX-C350-REF-07",
+      "ES-LEX-C350-REF-08",
+      "ES-LEX-C350-REF-09",
+      "ES-LEX-C350-REF-10"
+    ]
+  }
+}

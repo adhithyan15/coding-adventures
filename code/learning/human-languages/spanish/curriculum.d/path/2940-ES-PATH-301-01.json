@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-301-01",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "ES-C301-cuerda",
+    "ES-C301-aguja",
+    "ES-C301-hilo",
+    "ES-C301-cesta",
+    "ES-C301-papel"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-301-PEDIR"
+  ],
+  "after": []
+}

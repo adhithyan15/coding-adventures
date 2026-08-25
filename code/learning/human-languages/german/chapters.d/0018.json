@@ -1,0 +1,22 @@
+{
+  "chapter": 18,
+  "title": "Yes and No",
+  "label": "ch:ge-yes-and-no",
+  "canDo": "I can answer yes or no in German and take nein apart into ni + ein, the same 'not one' English froze into none.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "GE-C18-nein",
+    "kind": "production",
+    "summary": "Say nein to rhyme with nine, split it into ni + ein and match it to English none, then run the PIE \\*ne chain — nōn, non, nein, nahīṃ.",
+    "assesses": [
+      "GE-LEX-JA-02",
+      "GE-LEX-NEIN-02",
+      "GE-SOUND-NEIN-03",
+      "GE-ETYMON-NEIN-04",
+      "GE-ETYMON-NEGATION-05"
+    ],
+    "note": "Chapter 18 has no terminal practice lesson, so the payoff is the last lesson by sequence; it reaches back to reassess ja."
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "chapter": 1,
+  "title": "Greetings",
+  "label": "ch:greetings",
+  "canDo": "I can greet someone in Punjabi and keep reading, listening, independent writing, and speaking separately measurable when I answer yes or no.",
+  "spineNodes": [
+    "SPINE-MEET-GREET",
+    "SPINE-COURTESY-THANK",
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "PA-C01-practice",
+    "kind": "task",
+    "summary": "Complete four short, separately scored checks: read ਹਾਂ, distinguish heard ਹਾਂ and ਨਹੀਂ, write ਹਾਂ from sound with no visible model, and answer aloud without borrowing credit across skills.",
+    "assesses": [
+      "PA-LEX-SAT-SRI-AKAL-01",
+      "PA-LEX-NAMASTE-01",
+      "PA-LEX-HAAN-NAHIN-01",
+      "PA-SCRIPT-HA-01",
+      "PA-SCRIPT-AA-MATRA-01",
+      "PA-SCRIPT-BINDI-01",
+      "PA-SCRIPT-HAAN-01",
+      "PA-LEX-DHANVAAD-01",
+      "PA-LEX-SHUKRIYA-01"
+    ]
+  }
+}

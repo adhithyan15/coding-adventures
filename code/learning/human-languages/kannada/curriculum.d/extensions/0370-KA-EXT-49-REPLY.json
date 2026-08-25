@@ -1,0 +1,15 @@
+{
+  "id": "KA-EXT-49-REPLY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can answer in Kannada with more than yes and no.",
+  "prerequisites": [],
+  "lessons": [
+    "KA-C49-true",
+    "KA-C49-enough",
+    "KA-C49-certainly",
+    "KA-C49-perhaps",
+    "KA-C49-just-so"
+  ]
+}

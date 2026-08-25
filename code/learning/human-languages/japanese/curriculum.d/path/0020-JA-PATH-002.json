@@ -1,0 +1,20 @@
+{
+  "id": "JA-PATH-002",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "JA-W01-ko",
+    "JA-W01-n",
+    "JA-W01-ni",
+    "JA-W01-chi",
+    "JA-W01-wa",
+    "JA-W01-konnichiwa-read",
+    "JA-C01-konnichiwa"
+  ],
+  "before": [],
+  "inline": [
+    "JA-EXT-002-TOPIC-PARTICLE-SPELLING"
+  ],
+  "after": [
+    "JA-EXT-009-HIRAGANA-GREETING"
+  ]
+}

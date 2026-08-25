@@ -1,0 +1,421 @@
+{
+  "glossaries": [
+    {
+      "language": "hindi",
+      "output": "hindi/book/chapters/appendix-glossary.tex",
+      "scriptSet": "hindi-main"
+    }
+  ],
+  "answerKeys": [
+    {
+      "language": "hindi",
+      "output": "hindi/book/chapters/appendix-answer-key.tex",
+      "scriptSet": "hindi-main"
+    }
+  ],
+  "indexes": [
+    {
+      "language": "hindi",
+      "output": "hindi/book/chapters/appendix-index.tex",
+      "scriptSet": "hindi-main"
+    }
+  ],
+  "targets": [
+    {
+      "language": "hindi",
+      "chapter": 1,
+      "output": "hindi/book/chapters/ch01-greetings.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 2,
+      "output": "hindi/book/chapters/ch02-introductions.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 3,
+      "output": "hindi/book/chapters/ch03-responding.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 4,
+      "output": "hindi/book/chapters/ch04-farewells.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 5,
+      "output": "hindi/book/chapters/ch05-first-verbs.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 6,
+      "output": "hindi/book/chapters/ch06-numbers-1-5.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 7,
+      "output": "hindi/book/chapters/ch07-yes-and-no.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 8,
+      "output": "hindi/book/chapters/ch08-please.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 9,
+      "output": "hindi/book/chapters/ch09-sorry.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 10,
+      "output": "hindi/book/chapters/ch10-days.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 11,
+      "output": "hindi/book/chapters/ch11-colours.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 12,
+      "output": "hindi/book/chapters/ch12-family.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 13,
+      "output": "hindi/book/chapters/ch13-head-and-hand.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 14,
+      "output": "hindi/book/chapters/ch14-seasons.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 15,
+      "output": "hindi/book/chapters/ch15-water-and-bread.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 16,
+      "output": "hindi/book/chapters/ch16-months.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 17,
+      "output": "hindi/book/chapters/ch17-noon-and-midnight.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 18,
+      "output": "hindi/book/chapters/ch18-telling-time.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 19,
+      "output": "hindi/book/chapters/ch19-age.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 20,
+      "output": "hindi/book/chapters/ch20-weather.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 21,
+      "output": "hindi/book/chapters/ch21-numbers-6-10.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 22,
+      "output": "hindi/book/chapters/ch22-numbers-11-20.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 23,
+      "output": "hindi/book/chapters/ch23-dog-and-cat.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 24,
+      "output": "hindi/book/chapters/ch24-green-and-yellow.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 25,
+      "output": "hindi/book/chapters/ch25-day.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 26,
+      "output": "hindi/book/chapters/ch26-night.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 27,
+      "output": "hindi/book/chapters/ch27-good-night.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 28,
+      "output": "hindi/book/chapters/ch28-morning.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 29,
+      "output": "hindi/book/chapters/ch29-evening.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 30,
+      "output": "hindi/book/chapters/ch30-afternoon.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 31,
+      "output": "hindi/book/chapters/ch31-good-morning.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 32,
+      "output": "hindi/book/chapters/ch32-good-evening.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 33,
+      "output": "hindi/book/chapters/ch33-good-afternoon.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 34,
+      "output": "hindi/book/chapters/ch34-verbs-of-the-mind.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 35,
+      "output": "hindi/book/chapters/ch35-pasand.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 36,
+      "output": "hindi/book/chapters/ch36-one-house-four-languages.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 37,
+      "output": "hindi/book/chapters/ch37-one-tea-please.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 38,
+      "output": "hindi/book/chapters/ch38-where-it-hurts.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 39,
+      "output": "hindi/book/chapters/ch39-people-around-you.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 40,
+      "output": "hindi/book/chapters/ch40-pointing-and-asking.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 41,
+      "output": "hindi/book/chapters/ch41-describing-things.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 42,
+      "output": "hindi/book/chapters/ch42-more-verbs.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 43,
+      "output": "hindi/book/chapters/ch43-see-say.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 44,
+      "output": "hindi/book/chapters/ch44-sons-daughters.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 45,
+      "output": "hindi/book/chapters/ch45-things-you-ask-for.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 46,
+      "output": "hindi/book/chapters/ch46-hair-ear-throat.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 47,
+      "output": "hindi/book/chapters/ch47-who-someone-is.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 48,
+      "output": "hindi/book/chapters/ch48-short-replies.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 49,
+      "output": "hindi/book/chapters/ch49-taking-your-leave.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 50,
+      "output": "hindi/book/chapters/ch50-courtesy-words.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 51,
+      "output": "hindi/book/chapters/ch51-welcoming-a-guest.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 52,
+      "output": "hindi/book/chapters/ch52-in-the-kitchen.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 53,
+      "output": "hindi/book/chapters/ch53-more-of-the-body.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 54,
+      "output": "hindi/book/chapters/ch54-animals.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 55,
+      "output": "hindi/book/chapters/ch55-the-sky.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 56,
+      "output": "hindi/book/chapters/ch56-the-road.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 57,
+      "output": "hindi/book/chapters/ch57-a-gift-and-a-feast.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 58,
+      "output": "hindi/book/chapters/ch58-inside-the-house.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 59,
+      "output": "hindi/book/chapters/ch59-script-second-wave.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 60,
+      "output": "hindi/book/chapters/ch60-animals-in-the-yard.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 61,
+      "output": "hindi/book/chapters/ch61-at-the-cooking-fire.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 62,
+      "output": "hindi/book/chapters/ch62-what-hands-work-with.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 63,
+      "output": "hindi/book/chapters/ch63-what-the-body-tells-you.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 64,
+      "output": "hindi/book/chapters/ch64-how-much-and-how-fast.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 65,
+      "output": "hindi/book/chapters/ch65-asking-nicely.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 66,
+      "output": "hindi/book/chapters/ch66-the-field-and-the-well.tex",
+      "scriptSet": "hindi-main"
+    }
+  ]
+}

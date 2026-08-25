@@ -1,0 +1,17 @@
+{
+  "chapter": 54,
+  "title": "Synthesis --- Saying What People Do",
+  "label": "ch:sintesis-trabajo",
+  "canDo": "I can say what I and others do, and turn the question back.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C09-sintesis-trabajo",
+    "kind": "task",
+    "summary": "I can say what I and others do, and turn the question back.",
+    "assesses": [
+      "ES-GRAMMAR-BARE-PROFESSION"
+    ]
+  }
+}

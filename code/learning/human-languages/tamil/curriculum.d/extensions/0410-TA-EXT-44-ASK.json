@@ -1,0 +1,15 @@
+{
+  "id": "TA-EXT-44-ASK",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five everyday things I might ask somebody for in Tamil.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C44-fruit",
+    "TA-C44-cloth",
+    "TA-C44-lamp",
+    "TA-C44-salt",
+    "TA-C44-book"
+  ]
+}

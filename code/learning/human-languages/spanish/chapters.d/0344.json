@@ -1,0 +1,21 @@
+{
+  "chapter": 344,
+  "title": "Zero, Halves and Dozens",
+  "label": "ch:cero-y-mitad",
+  "canDo": "I can say cero, el numero, la mitad, la docena and doble, and say why English borrowed the same Arabic word twice, as zero and as cipher.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "ES-C344-doble",
+    "kind": "production",
+    "summary": "Complete ES-C344-doble: count from zero, name the number itself, halve a thing, count it by twelves, and double it.",
+    "assesses": [
+      "ES-LEX-C344-COUNT-01",
+      "ES-LEX-C344-COUNT-02",
+      "ES-LEX-C344-COUNT-03",
+      "ES-LEX-C344-COUNT-04",
+      "ES-LEX-C344-COUNT-05"
+    ]
+  }
+}

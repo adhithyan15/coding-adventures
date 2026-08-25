@@ -1,0 +1,16 @@
+{
+  "id": "TE-PATH-54-TREE",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "TE-C54-tree",
+    "TE-C54-branch",
+    "TE-C54-root",
+    "TE-C54-seed",
+    "TE-C54-seedling"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-54-TREE"
+  ],
+  "after": []
+}

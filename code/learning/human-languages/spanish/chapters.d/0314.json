@@ -1,0 +1,21 @@
+{
+  "chapter": 314,
+  "title": "The Body, Further Down --- Arm, Leg, Foot, Tooth, Ear",
+  "label": "ch:brazo-y-pie",
+  "canDo": "I can name the arm, the leg, the foot, the tooth and the hearing in Spanish.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "ES-C314-oido",
+    "kind": "production",
+    "summary": "Complete ES-C314-oido: name all five in order, from the arm at the top to the hearing you cannot point at.",
+    "assesses": [
+      "ES-LEX-C314-BODY-01",
+      "ES-LEX-C314-BODY-02",
+      "ES-LEX-C314-BODY-03",
+      "ES-LEX-C314-BODY-04",
+      "ES-LEX-C314-BODY-05"
+    ]
+  }
+}

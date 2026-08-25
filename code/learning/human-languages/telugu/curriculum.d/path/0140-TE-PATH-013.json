@@ -1,0 +1,11 @@
+{
+  "id": "TE-PATH-013",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "TE-C08-dayachesi",
+    "TE-C09-kshaminchandi"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

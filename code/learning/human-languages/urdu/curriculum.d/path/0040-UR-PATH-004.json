@@ -1,0 +1,21 @@
+{
+  "id": "UR-PATH-004",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "UR-C02-mera-naam",
+    "UR-C03-aap-tum-tu",
+    "UR-C03-kya",
+    "UR-C03-aap-ka-naam-kya-hai",
+    "UR-C03-khushi-hui",
+    "UR-C03-practice"
+  ],
+  "before": [],
+  "inline": [
+    "UR-EXT-002-REGISTER",
+    "UR-EXT-003-SCRIPT",
+    "UR-EXT-004-GRAMMAR",
+    "UR-EXT-005-CULTURE",
+    "UR-EXT-006-CONSOLIDATION"
+  ],
+  "after": []
+}

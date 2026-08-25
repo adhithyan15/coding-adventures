@@ -1,0 +1,19 @@
+{
+  "chapter": 191,
+  "title": "Hay --- There Is, There Are, Same Word",
+  "label": "ch:hay",
+  "canDo": "I can say there is and there are with one form that never changes.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ES-C54-hay",
+    "kind": "task",
+    "summary": "Complete ES-C54-hay: produce hay una casa and hay libros, and say what hay agrees with.",
+    "assesses": [
+      "ES-LEX-HAY",
+      "ES-GRAMMAR-HAY-NO-AGREEMENT"
+    ],
+    "note": "The one common Spanish verb form that counts nothing at all -- visible as a gift only now, after 167 chapters of agreement."
+  }
+}

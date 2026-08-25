@@ -1,0 +1,30 @@
+{
+  "chapter": 69,
+  "title": "Verbs That Break in the Middle --- the Stem Changers",
+  "label": "ch:stem-changes",
+  "canDo": "I can express singular wanting and ability, compare the learned e-to-ie and o-to-ue changes, and say our with a known singular noun.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT",
+    "SPINE-SAY-WHAT-I-DO",
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C11-practice",
+    "kind": "task",
+    "summary": "Complete ES-C11-practice, the canonical closing checkpoint, and demonstrate singular querer and poder, the learned vowel-change contrast, and nuestro or nuestra before a known singular noun.",
+    "assesses": [
+      "ES-LEX-QUERER",
+      "ES-GRAMMAR-QUERER-PRESENT-SINGULAR",
+      "ES-ETYMON-QUAERERE",
+      "ES-LEX-PODER",
+      "ES-GRAMMAR-PODER-PRESENT-SINGULAR",
+      "ES-ETYMON-POTERE",
+      "ES-GRAMMAR-STEM-CHANGE-CONTRAST-SINGULAR",
+      "ES-HISTORY-LATIN-STRESSED-VOWEL-BREAKING",
+      "ES-LEX-POSSESSIVES-NUESTRO-NUESTRA",
+      "ES-GRAMMAR-POSSESSIVE-GENDER-AGREEMENT-SINGULAR",
+      "ES-ETYMON-NOSTER"
+    ],
+    "note": "The payoff retrieves all eleven Chapter-11 atoms and deliberately leaves plural persons, plural possessive agreement, and untaught nouns for later lessons."
+  }
+}

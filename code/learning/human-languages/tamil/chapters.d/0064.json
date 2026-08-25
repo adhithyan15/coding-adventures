@@ -1,0 +1,21 @@
+{
+  "chapter": 64,
+  "title": "The Harvest",
+  "label": "ch:ta-the-harvest",
+  "canDo": "I can name paddy, grass, a standing crop, a threshing floor and the harvest in Tamil.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "TA-C64-harvest",
+    "kind": "production",
+    "summary": "Complete TA-C64-harvest and say all five words in order.",
+    "assesses": [
+      "TA-LEX-C64-HARVEST-01",
+      "TA-LEX-C64-HARVEST-02",
+      "TA-LEX-C64-HARVEST-03",
+      "TA-LEX-C64-HARVEST-04",
+      "TA-LEX-C64-HARVEST-05"
+    ]
+  }
+}

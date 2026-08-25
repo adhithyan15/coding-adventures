@@ -1,0 +1,12 @@
+{
+  "id": "LA-PATH-017",
+  "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+  "lessons": [
+    "LA-C16-undecim-viginti"
+  ],
+  "before": [],
+  "inline": [
+    "LA-EXT-017-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

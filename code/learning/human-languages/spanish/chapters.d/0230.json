@@ -1,0 +1,17 @@
+{
+  "chapter": 230,
+  "title": "Al --- Two Words Spanish Will Not Keep Apart",
+  "label": "ch:al",
+  "canDo": "I can say where I am going, with the article fused on.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C61-al",
+    "kind": "task",
+    "summary": "I can say where I am going, with the article fused on.",
+    "assesses": [
+      "ES-GRAMMAR-CONTRACTION-AL"
+    ]
+  }
+}

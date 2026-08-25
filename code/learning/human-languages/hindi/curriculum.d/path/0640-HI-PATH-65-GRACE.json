@@ -1,0 +1,16 @@
+{
+  "id": "HI-PATH-65-GRACE",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "lessons": [
+    "HI-C65-kindness",
+    "HI-C65-entreaty",
+    "HI-C65-permission",
+    "HI-C65-trust",
+    "HI-C65-manners"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-65-GRACE"
+  ],
+  "after": []
+}

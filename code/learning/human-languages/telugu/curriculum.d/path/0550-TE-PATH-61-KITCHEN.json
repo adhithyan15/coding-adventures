@@ -1,0 +1,16 @@
+{
+  "id": "TE-PATH-61-KITCHEN",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "TE-C61-curd",
+    "TE-C61-ghee",
+    "TE-C61-oil",
+    "TE-C61-sugar",
+    "TE-C61-chilli"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-61-KITCHEN"
+  ],
+  "after": []
+}

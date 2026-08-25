@@ -1,0 +1,18 @@
+{
+  "chapter": 6,
+  "title": "Dative Case and Dative Subjects",
+  "label": "ch:ta-dative-case",
+  "canDo": "I can attach -உக்கு to a noun in either of its surface forms and say why \"I know Tamil\" puts the experiencer in the dative instead of giving the sentence a subject.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "TA-C06-dative-subject-family",
+    "kind": "task",
+    "summary": "Line up எனக்கு, నాకు, ನನಗೆ and എനിക്ക്, point to the experiencer in each, and paraphrase எனக்குத் தமிழ் தெரியும் as \"the language is known to me.\"",
+    "assesses": [
+      "TA-LEX-DATIVE-SUBJECT-01",
+      "TA-GRAMMAR-DATIVE-SUBJECT-FAMILY-01"
+    ]
+  }
+}

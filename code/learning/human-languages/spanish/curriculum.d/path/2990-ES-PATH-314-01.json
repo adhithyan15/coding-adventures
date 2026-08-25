@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-314-01",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "ES-C314-brazo",
+    "ES-C314-pierna",
+    "ES-C314-pie",
+    "ES-C314-diente",
+    "ES-C314-oido"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-314-BODY"
+  ],
+  "after": []
+}

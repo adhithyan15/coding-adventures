@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-008",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "ES-C03-como",
+    "ES-C03-como-acento",
+    "ES-C03-familia-qu"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-008-SCRIPT"
+  ],
+  "after": [
+    "ES-EXT-008-ETYMOLOGY"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "chapter": 338,
+  "title": "Writing --- Four Lines About You",
+  "label": "ch:escribir-ficha-personal",
+  "canDo": "I can fill a personal-information form with my name, age, origin and address, using only frames I already hold.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "ES-W01-ficha-personal",
+    "kind": "task",
+    "summary": "Complete ES-W01-ficha-personal: write four frames about yourself in the order a form asks for them, and stop when the four facts are down.",
+    "assesses": [
+      "ES-WRITING-CONTROLLED-COMPOSITION",
+      "ES-GRAMMAR-AGE-WITH-TENER",
+      "ES-GRAMMAR-ORIGIN-WITH-SER",
+      "ES-LEX-VIVIR",
+      "ES-LEX-GRACIAS"
+    ],
+    "note": "Introduces nothing, so the HL05 representativeness rule is skipped by its own zero-guard; every atom assessed here is taught far earlier."
+  }
+}

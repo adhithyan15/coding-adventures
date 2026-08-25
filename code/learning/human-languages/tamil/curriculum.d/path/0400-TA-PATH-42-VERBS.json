@@ -1,0 +1,15 @@
+{
+  "id": "TA-PATH-42-VERBS",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "TA-C42-come",
+    "TA-C42-sit",
+    "TA-C42-read",
+    "TA-C42-give"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-42-VERBS"
+  ],
+  "after": []
+}

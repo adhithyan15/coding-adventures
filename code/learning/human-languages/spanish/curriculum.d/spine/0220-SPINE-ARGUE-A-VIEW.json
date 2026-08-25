@@ -1,0 +1,13 @@
+{
+  "segments": [
+    "ES-PATH-B2-PERO",
+    "ES-PATH-B2-TAMBIEN",
+    "ES-PATH-B2-TAMPOCO",
+    "ES-PATH-270-01",
+    "ES-PATH-270-02",
+    "ES-PATH-270-03",
+    "ES-PATH-270-04"
+  ],
+  "omits": [],
+  "relocates": {}
+}

@@ -1,0 +1,16 @@
+{
+  "id": "ZH-PATH-004",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "ZH-W05-shi",
+    "ZH-C05-shi",
+    "ZH-C05-bushi",
+    "ZH-C05-practice"
+  ],
+  "before": [],
+  "inline": [
+    "ZH-EXT-013-SHI-BUILD",
+    "ZH-EXT-014-BU-SANDHI"
+  ],
+  "after": []
+}

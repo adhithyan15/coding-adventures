@@ -1,0 +1,20 @@
+{
+  "chapter": 77,
+  "title": "La Comida --- A Noun You Can Build",
+  "label": "ch:noun-comida",
+  "canDo": "I can build comida from comer with -ida, and know that nouns made this way are feminine.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C43-comida",
+    "kind": "task",
+    "summary": "Complete ES-C43-comida: derive comida from comer and say what gender the -ida ending guarantees.",
+    "assesses": [
+      "ES-LEX-COMIDA",
+      "ES-GRAMMAR-NOUN-FROM-VERB-IDA",
+      "ES-GRAMMAR-NOUN-GENDER"
+    ],
+    "note": "The ending matters more than the word: it is the first noun the reader could have produced without being told, and it carries its gender with it."
+  }
+}

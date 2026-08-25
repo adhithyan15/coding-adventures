@@ -1,0 +1,15 @@
+{
+  "id": "KA-EXT-62-MADE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five things a Kannada household makes or keeps, and ask politely for one of them.",
+  "prerequisites": [],
+  "lessons": [
+    "KA-C62-thread",
+    "KA-C62-needle",
+    "KA-C62-rope",
+    "KA-C62-broom",
+    "KA-C62-umbrella"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-A1-REVIEW-GER",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ES-C62-repaso-gerundio"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-A1-REVIEW-GER"
+  ],
+  "after": []
+}

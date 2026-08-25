@@ -1,0 +1,15 @@
+{
+  "id": "TE-EXT-65-MANNERS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can welcome somebody in Telugu, make a request, ask their leave, and thank them.",
+  "prerequisites": [],
+  "lessons": [
+    "TE-C65-welcome",
+    "TE-C65-manners",
+    "TE-C65-request",
+    "TE-C65-permission",
+    "TE-C65-trust"
+  ]
+}

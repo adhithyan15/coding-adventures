@@ -1,0 +1,21 @@
+{
+  "chapter": 56,
+  "title": "In the House",
+  "label": "ch:te-house",
+  "canDo": "I can name five ordinary things inside a Telugu house and thank somebody for handing me one.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "TE-C56-box",
+    "kind": "production",
+    "summary": "Complete TE-C56-box and demonstrate the chapter promise.",
+    "assesses": [
+      "TE-LEX-C56-HOUSE-01",
+      "TE-LEX-C56-HOUSE-02",
+      "TE-LEX-C56-HOUSE-03",
+      "TE-LEX-C56-HOUSE-04",
+      "TE-LEX-C56-HOUSE-05"
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "id": "ZH-PATH-008",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "ZH-W09-shen",
+    "ZH-W09-me",
+    "ZH-C09-shenme",
+    "ZH-C09-practice"
+  ],
+  "before": [],
+  "inline": [
+    "ZH-EXT-023-SHENME-SCRIPT",
+    "ZH-EXT-024-QUESTION-WHAT"
+  ],
+  "after": []
+}

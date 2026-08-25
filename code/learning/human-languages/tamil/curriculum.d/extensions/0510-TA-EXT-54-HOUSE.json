@@ -1,0 +1,15 @@
+{
+  "id": "TA-EXT-54-HOUSE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five things a Tamil house sets out for a guest.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C54-mat",
+    "TA-C54-basket",
+    "TA-C54-knife",
+    "TA-C54-bowl",
+    "TA-C54-box"
+  ]
+}

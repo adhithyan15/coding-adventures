@@ -1,0 +1,21 @@
+{
+  "chapter": 48,
+  "title": "More Animals",
+  "label": "ch:sa-more-animals",
+  "canDo": "I can name a lion, a wolf, a goat, a monkey and a goose in Sanskrit.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "SA-C48-goose",
+    "kind": "production",
+    "summary": "Complete SA-C48-goose and demonstrate the chapter promise.",
+    "assesses": [
+      "SA-LEX-C48-BEAST-01",
+      "SA-LEX-C48-BEAST-02",
+      "SA-LEX-C48-BEAST-03",
+      "SA-LEX-C48-BEAST-04",
+      "SA-LEX-C48-BEAST-05"
+    ]
+  }
+}

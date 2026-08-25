@@ -1,0 +1,14 @@
+{
+  "id": "ZH-EXT-018-NEUTRAL-TONE",
+  "stage": "A1",
+  "kind": "required",
+  "category": "phonology",
+  "canDo": "I can recognise a neutral-tone syllable from the absence of a tone mark, say it short and light, and tell it apart from a tone that changes under a sandhi rule.",
+  "prerequisites": [
+    "ZH-EXT-017-ZAO-SHANG-SCRIPT"
+  ],
+  "lessons": [
+    "ZH-C07-zaoshang",
+    "ZH-C07-zaoshanghao"
+  ]
+}

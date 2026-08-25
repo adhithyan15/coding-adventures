@@ -1,0 +1,15 @@
+{
+  "id": "ES-PATH-020",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ES-C22-negro-blanco",
+    "ES-C22-blanco-germanico",
+    "ES-C22-rojo",
+    "ES-C22-azul"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-020-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

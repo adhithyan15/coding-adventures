@@ -1,0 +1,23 @@
+{
+  "chapter": 7,
+  "title": "Numbers One to Five",
+  "label": "ch:numbers-one-to-five",
+  "canDo": "I can count from one to five in headless Gujarati script and explain why બે starts with b where its neighbours start with d, and why ત્રણ has an r that Hindi tīn does not.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "GU-C06-number-histories",
+    "kind": "task",
+    "summary": "Take the two odd numerals apart: બે descends from the feminine/neuter dvé by dv → bb → b, while ત્રણ's r is a learned restoration from Sanskrit, put back after Prakrit tiṇṇi had already dropped it.",
+    "assesses": [
+      "GU-LEX-NUMBERS-ONE-TO-FIVE",
+      "GU-FORM-BE-INITIAL-B",
+      "GU-FORM-TRAN-R",
+      "GU-ETYMON-BE-DVE-SELECTION",
+      "GU-SOUND-DV-BB-B",
+      "GU-ETYMON-TRAN-R-RESTORATION",
+      "GU-HISTORY-LEARNED-RESTORATION"
+    ]
+  }
+}

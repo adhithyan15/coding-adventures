@@ -1,0 +1,13 @@
+{
+  "id": "TA-EXT-022-LANGUAGE-SPECIFIC",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can use the additional Tamil material required at this point in the path.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C16-thamizh-maadangal",
+    "TA-C17-nanpakal-nalliravu",
+    "TA-C18-mani"
+  ]
+}

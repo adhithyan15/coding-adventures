@@ -1,0 +1,17 @@
+{
+  "chapter": 19,
+  "title": "Asking Someone's Age",
+  "label": "ch:hi-asking-age",
+  "canDo": "I can ask someone's age in Hindi and give my own in the belonging-to-years shape Hindi uses.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "HI-C19-age-grammar",
+    "kind": "dialogue",
+    "summary": "Ask तुम कितने साल के हो? and answer मैं बीस साल का हूँ, with के/का carrying the 'belonging to' work.",
+    "assesses": [
+      "HI-CONCEPT-C19-AGE-GRAMMAR-01"
+    ]
+  }
+}

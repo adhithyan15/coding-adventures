@@ -1,0 +1,21 @@
+{
+  "chapter": 44,
+  "title": "Colours",
+  "label": "ch:sa-colours",
+  "canDo": "I can say white, dark, yellow, green and blue in Sanskrit.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "SA-C44-blue",
+    "kind": "production",
+    "summary": "Complete SA-C44-blue and demonstrate the chapter promise.",
+    "assesses": [
+      "SA-LEX-C44-COLOUR-01",
+      "SA-LEX-C44-COLOUR-02",
+      "SA-LEX-C44-COLOUR-03",
+      "SA-LEX-C44-COLOUR-04",
+      "SA-LEX-C44-COLOUR-05"
+    ]
+  }
+}

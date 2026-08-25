@@ -1,0 +1,9 @@
+{
+  "segments": [
+    "BN-PATH-010"
+  ],
+  "omits": [
+    "NUMBER-ONE-TO-FIVE"
+  ],
+  "relocates": {}
+}

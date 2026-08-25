@@ -1,0 +1,16 @@
+{
+  "id": "TA-PATH-64-HARVEST",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "TA-C64-paddy",
+    "TA-C64-grass",
+    "TA-C64-crop",
+    "TA-C64-threshing-floor",
+    "TA-C64-harvest"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-64-HARVEST"
+  ],
+  "after": []
+}

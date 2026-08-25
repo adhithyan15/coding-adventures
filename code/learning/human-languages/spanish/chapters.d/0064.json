@@ -1,0 +1,17 @@
+{
+  "chapter": 64,
+  "title": "Review --- the Eight Endings",
+  "label": "ch:repaso-ocho",
+  "canDo": "I can sort the eight endings by what they make and know which decide gender.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C09-repaso-ocho",
+    "kind": "task",
+    "summary": "I can sort the eight endings by what they make and know which decide gender.",
+    "assesses": [
+      "ES-FRIEND-ARIO-ARY"
+    ]
+  }
+}

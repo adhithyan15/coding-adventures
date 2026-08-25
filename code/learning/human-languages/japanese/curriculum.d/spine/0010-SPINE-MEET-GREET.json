@@ -1,0 +1,13 @@
+{
+  "segments": [
+    "JA-PATH-002",
+    "JA-PATH-005",
+    "JA-PATH-006"
+  ],
+  "omits": [
+    "GREETING-FORMAL",
+    "GREETING-PEACE",
+    "GREETING-WELCOME"
+  ],
+  "relocates": {}
+}

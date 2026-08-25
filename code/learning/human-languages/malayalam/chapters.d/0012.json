@@ -1,0 +1,18 @@
+{
+  "chapter": 12,
+  "title": "Family",
+  "label": "ch:ml-family",
+  "canDo": "I can name my father, mother, and my older and younger brothers and sisters in Malayalam.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "ML-C12-kudumbam",
+    "kind": "production",
+    "summary": "Say the six family words in age-graded pairs, and note that Malayalam built its own sibling set rather than tracking Tamil's.",
+    "assesses": [
+      "ML-CONCEPT-C12-KUDUMBAM-01",
+      "ML-CONCEPT-C12-KUDUMBAM-02"
+    ]
+  }
+}

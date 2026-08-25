@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-317-ANSW",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can answer with something, somebody, nobody, another and a little in Spanish.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C317-algo",
+    "ES-C317-alguien",
+    "ES-C317-nadie",
+    "ES-C317-otro",
+    "ES-C317-poco"
+  ]
+}

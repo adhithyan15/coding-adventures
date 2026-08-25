@@ -1,0 +1,15 @@
+{
+  "id": "FR-EXT-030-MODAL-CHAIN",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can put a plain unchanged verb after veux, peux or dois, and I know the three singular persons of each are one sound apart only in spelling.",
+  "prerequisites": [
+    "FR-EXT-031-REQUEST-REGISTER"
+  ],
+  "lessons": [
+    "FR-C33-pouvoir",
+    "FR-C33-devoir",
+    "FR-C33-practice"
+  ]
+}

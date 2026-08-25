@@ -1,0 +1,17 @@
+{
+  "chapter": 24,
+  "title": "Night",
+  "label": "ch:ml-night",
+  "canDo": "I can say night in Malayalam with rāthri and tell literary iravŭ apart from everyday iruḷ, 'darkness'.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "ML-C24-native-night-words",
+    "kind": "task",
+    "summary": "Sort iravŭ from iruḷ by the job each one still does in the modern language.",
+    "assesses": [
+      "ML-CONCEPT-C24-NATIVE-NIGHT-WORDS-01"
+    ]
+  }
+}

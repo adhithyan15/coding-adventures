@@ -1,0 +1,20 @@
+{
+  "chapter": 8,
+  "title": "Please",
+  "label": "ch:ka-please",
+  "canDo": "I can say please in Kannada, and use the polite verb ending Kannada reaches for far more often than the word itself.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "KA-C08-dayavittu",
+    "kind": "production",
+    "summary": "Build ದಯವಿಟ್ಟು out of daya (\"compassion\") + iṭṭu (\"having placed\"), then make the everyday polite request instead: ಕುಳಿತುಕೊಳ್ಳಿ, \"please sit.\"",
+    "assesses": [
+      "KA-ETYMON-C08-DAYAVITTU-01",
+      "KA-ETYMON-C08-DAYAVITTU-02",
+      "KA-PRAGMATICS-C08-DAYAVITTU-03",
+      "KA-SCRIPT-C08-DAYAVITTU-04"
+    ]
+  }
+}

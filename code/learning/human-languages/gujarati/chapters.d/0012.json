@@ -1,0 +1,27 @@
+{
+  "chapter": 12,
+  "title": "Friend and Family",
+  "label": "ch:gu-friend-and-family",
+  "canDo": "I can name a friend, a family, a brother, and a sister in Gujarati, explain which of these words was inherited whole from Sanskrit rather than worn down by sound change, and say which sibling word is genuinely a cousin of its English counterpart and which is not.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "GU-C11-bahen",
+    "kind": "production",
+    "summary": "The chapter closes on બહેન, deliberately not a cousin of English sister: the reader produces મિત્ર, કુટુંબ, ભાઈ and બહેન, names ભાઈ as English brother's unbroken cousin against બહેન's unrelated (disputed bhaga-based) root, and names કુટુંબ as taken up whole from Sanskrit rather than worn down like the other three — while recalling that મિત્ર and મહેરબાની, taught a chapter apart, share the same ancient Indo-Iranian root.",
+    "assesses": [
+      "GU-LEX-MITRA",
+      "GU-ETYMON-MITRA-BIND",
+      "GU-LEX-KUTUMB",
+      "GU-ETYMON-KUTUMB-DRAVIDIAN",
+      "GU-GRAMMAR-LEARNED-BORROWING",
+      "GU-LEX-BHAI",
+      "GU-ETYMON-BHAI-BROTHER",
+      "GU-LEX-BAHEN",
+      "GU-ETYMON-BAHEN-BHAGA",
+      "GU-PHRASE-MEHERBANI-KARINE",
+      "GU-HISTORY-LEARNED-RESTORATION"
+    ]
+  }
+}

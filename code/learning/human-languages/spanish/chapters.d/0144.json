@@ -1,0 +1,20 @@
+{
+  "chapter": 144,
+  "title": "La Bebo --- The Pronoun Tells the Truth",
+  "label": "ch:pronoun-evidence",
+  "canDo": "I can use an object pronoun to reveal a gender the article hides.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "ES-C55-la-bebo",
+    "kind": "task",
+    "summary": "Complete ES-C55-la-bebo: say la bebo for el agua and explain why the pronoun can report a gender the article hides.",
+    "assesses": [
+      "ES-GRAMMAR-PRONOUN-REVEALS-GENDER",
+      "ES-GRAMMAR-DIRECT-OBJECT-LA",
+      "ES-GRAMMAR-AGUA-ARTICLE-03"
+    ],
+    "note": "A third proof, after the adjective and the plural, and the cheapest of the three: nothing sits in front of a pronoun, so no vowels collide and it reports the gender straight. Turns a memorised exception into a test the reader can run."
+  }
+}

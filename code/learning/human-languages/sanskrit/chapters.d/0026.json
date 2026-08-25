@@ -1,0 +1,21 @@
+{
+  "chapter": 26,
+  "title": "Naming Who Someone Is",
+  "label": "ch:sa-roles",
+  "canDo": "I can say what someone's role is in Sanskrit --- teacher, student, king, guest, physician --- and name the everyday meaning hiding inside two of those words.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "SA-C26-physician",
+    "kind": "production",
+    "summary": "Complete SA-C26-physician and demonstrate the chapter promise.",
+    "assesses": [
+      "SA-LEX-C26-ROLE-01",
+      "SA-LEX-C26-ROLE-02",
+      "SA-LEX-C26-ROLE-03",
+      "SA-LEX-C26-ROLE-04",
+      "SA-LEX-C26-ROLE-05"
+    ]
+  }
+}

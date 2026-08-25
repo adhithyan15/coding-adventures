@@ -1,0 +1,15 @@
+{
+  "id": "SA-PATH-23-KIN",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "SA-C23-father",
+    "SA-C23-mother",
+    "SA-C23-son",
+    "SA-C23-daughter"
+  ],
+  "before": [],
+  "inline": [
+    "SA-EXT-23-KIN"
+  ],
+  "after": []
+}

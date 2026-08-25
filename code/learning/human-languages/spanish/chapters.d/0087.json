@@ -1,0 +1,21 @@
+{
+  "chapter": 87,
+  "title": "Synthesis --- Saying It Once",
+  "label": "ch:synthesis-say-it-once",
+  "canDo": "I can answer a yes/no question about a thing already named without naming it again.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C42-sintesis-decirlo-una-vez",
+    "kind": "task",
+    "summary": "Complete ES-C42-sintesis-decirlo-una-vez: answer Tienes el libro and Haces la comida with lo tengo and la hago, and say what was wrong with the grammatically correct version.",
+    "assesses": [
+      "ES-GRAMMAR-DIRECT-OBJECT-LO",
+      "ES-GRAMMAR-DIRECT-OBJECT-LA",
+      "ES-GRAMMAR-ME-DIRECT-OBJECT",
+      "ES-GRAMMAR-TE-DIRECT-OBJECT"
+    ],
+    "note": "No new forms. The subject is the communicative function no table can drill: noticing that a thing has already been named."
+  }
+}

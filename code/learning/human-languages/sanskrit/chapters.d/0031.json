@@ -1,0 +1,21 @@
+{
+  "chapter": 31,
+  "title": "The Sky and Its Lights",
+  "label": "ch:sa-sky",
+  "canDo": "I can name five things overhead in Sanskrit --- sky, moon, star, wind and snow --- and take apart the name of the mountain range built on the last of them.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "SA-C31-snow",
+    "kind": "production",
+    "summary": "Complete SA-C31-snow and demonstrate the chapter promise.",
+    "assesses": [
+      "SA-LEX-C31-SKY-01",
+      "SA-LEX-C31-SKY-02",
+      "SA-LEX-C31-SKY-03",
+      "SA-LEX-C31-SKY-04",
+      "SA-LEX-C31-SKY-05"
+    ]
+  }
+}

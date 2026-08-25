@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-326-STATE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say I am nervous, brave, alone, free or ready, and choose ser or estar for listo on purpose.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C326-nervioso",
+    "ES-C326-valiente",
+    "ES-C326-solo",
+    "ES-C326-libre",
+    "ES-C326-listo"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "id": "HI-PATH-46-BODY",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "HI-C46-hair",
+    "HI-C46-finger",
+    "HI-C46-ear",
+    "HI-C46-nose",
+    "HI-C46-throat"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-46-BODY"
+  ],
+  "after": []
+}

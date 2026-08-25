@@ -1,0 +1,28 @@
+{
+  "chapter": 5,
+  "title": "The First Verbs",
+  "label": "ch:pt-first-verbs",
+  "canDo": "I can build my own Portuguese sentences with -ar verbs and say what I speak, where I live and where I work.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "PT-C05-practice",
+    "kind": "production",
+    "summary": "Conjugate falar, morar and trabalhar across eu, tu and você with the pronoun dropped, then answer Você fala português? and Onde você mora? about yourself.",
+    "assesses": [
+      "PT-SOUND-FALAR-02",
+      "PT-ETYMON-FALAR-03",
+      "PT-GRAMMAR-FALAR-04",
+      "PT-SOUND-MORAR-02",
+      "PT-ETYMON-MORAR-03",
+      "PT-GRAMMAR-MORAR-04",
+      "PT-SOUND-TRABALHAR-02",
+      "PT-ETYMON-TRABALHAR-03",
+      "PT-GRAMMAR-TRABALHAR-04",
+      "PT-LEX-FALO-PORTUGUES-02",
+      "PT-LEX-FALO-PORTUGUES-03",
+      "PT-NOTICE-C05-PRACTICE-04"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-EXT-001-WRITING-START",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can copy my first German greeting with the model still visible.",
+  "prerequisites": [],
+  "lessons": [
+    "GE-W01-hallo-guided-copy"
+  ]
+}

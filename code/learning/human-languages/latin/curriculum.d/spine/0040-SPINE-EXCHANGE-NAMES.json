@@ -1,0 +1,17 @@
+{
+  "segments": [
+    "LA-PATH-010",
+    "LA-PATH-015",
+    "LA-PATH-020"
+  ],
+  "omits": [
+    "QUESTION-WHAT",
+    "PRONOUN-I",
+    "PRONOUN-ME",
+    "PRONOUN-MY",
+    "WORD-NAME",
+    "WORD-IS",
+    "INTRO-MY-NAME-IS"
+  ],
+  "relocates": {}
+}

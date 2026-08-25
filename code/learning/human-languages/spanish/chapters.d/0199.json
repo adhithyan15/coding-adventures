@@ -1,0 +1,17 @@
+{
+  "chapter": 199,
+  "title": "Hablaron --- They Spoke",
+  "label": "ch:hablaron",
+  "canDo": "I can say what a group of people did, with -ar verbs in the past.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ES-C55-hablaron",
+    "kind": "task",
+    "summary": "I can say what a group of people did, with -ar verbs in the past.",
+    "assesses": [
+      "ES-GRAMMAR-AR-PRETERITE-3PL"
+    ]
+  }
+}

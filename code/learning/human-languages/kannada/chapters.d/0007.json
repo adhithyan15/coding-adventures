@@ -1,0 +1,22 @@
+{
+  "chapter": 7,
+  "title": "Numbers One to Ten",
+  "label": "ch:ka-numbers-one-to-ten",
+  "canDo": "I can count from one to ten in Kannada and read the Kannada digits ೧–೧೦ off the page.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "KA-C07-numbers-6-10",
+    "kind": "task",
+    "summary": "Count ಒಂದು through ಹತ್ತು aloud, read the digits ೬ ೭ ೮ ೯ ೧೦, and hear the p → h shift that turns Tamil pattu into Kannada hattu.",
+    "assesses": [
+      "KA-LEX-C07-NUMBERS-1-5-01",
+      "KA-ETYMON-C07-NUMBERS-1-5-02",
+      "KA-GRAMMAR-C07-NUMBERS-1-5-03",
+      "KA-LEX-C07-NUMBERS-6-10-01",
+      "KA-ETYMON-C07-NUMBERS-6-10-02",
+      "KA-ETYMON-C07-NUMBERS-6-10-03"
+    ]
+  }
+}

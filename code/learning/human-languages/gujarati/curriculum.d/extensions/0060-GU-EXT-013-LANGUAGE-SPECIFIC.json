@@ -1,0 +1,14 @@
+{
+  "id": "GU-EXT-013-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can politely ask for water, tea, milk, or bread in Gujarati using the request pattern I build in this chapter.",
+  "prerequisites": [],
+  "lessons": [
+    "GU-C10-paani",
+    "GU-C10-chaa",
+    "GU-C10-dudh",
+    "GU-C10-rotli"
+  ]
+}

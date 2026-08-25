@@ -1,0 +1,15 @@
+{
+  "id": "SA-EXT-24-ASK",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five everyday things I might ask someone for in Sanskrit.",
+  "prerequisites": [],
+  "lessons": [
+    "SA-C24-water",
+    "SA-C24-rice",
+    "SA-C24-fruit",
+    "SA-C24-cloth",
+    "SA-C24-lamp"
+  ]
+}

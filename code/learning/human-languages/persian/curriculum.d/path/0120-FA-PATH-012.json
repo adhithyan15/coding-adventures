@@ -1,0 +1,15 @@
+{
+  "id": "FA-PATH-012",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "FA-C11-cheshm",
+    "FA-C11-dast",
+    "FA-C11-pa",
+    "FA-C11-zaban"
+  ],
+  "before": [],
+  "inline": [
+    "FA-EXT-019-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

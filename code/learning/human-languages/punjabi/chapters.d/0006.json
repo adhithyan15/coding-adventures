@@ -1,0 +1,24 @@
+{
+  "chapter": 6,
+  "title": "Numbers One to Five",
+  "label": "ch:numbers-one-to-five",
+  "canDo": "I can count from one to five in Gurmukhi, tell the addak apart from the tippi, and show that ਪੰਜ is inherited from Sanskrit rather than borrowed from the Persian panj in Punjab.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "PA-C06-panj-convergence",
+    "kind": "task",
+    "summary": "Set Punjabi ਪੰਜ beside Persian panj and argue the match is convergence, not borrowing: post-nasal voicing carried pañca to panj on the Indo-Aryan side, with panjāh against Hindi pacās as the evidence, while Iranian panč voiced separately.",
+    "assesses": [
+      "PA-LEX-NUMBERS-ONE-TO-FIVE",
+      "PA-HISTORY-PANJABI-FIVE-RIVERS",
+      "PA-COMPARISON-PANJ-MATCH",
+      "PA-ETYMON-PANJ-PANCA-INHERITANCE",
+      "PA-SOUND-NASAL-STOP-VOICING",
+      "PA-EVIDENCE-PANJAH-PACAS",
+      "PA-ETYMON-PERSIAN-PANJ-INDEPENDENT",
+      "PA-HISTORY-PANJ-CONVERGENCE"
+    ]
+  }
+}

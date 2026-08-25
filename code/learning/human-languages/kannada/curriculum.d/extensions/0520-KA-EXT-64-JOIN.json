@@ -1,0 +1,15 @@
+{
+  "id": "KA-EXT-64-JOIN",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can keep a Kannada conversation moving with five joining words instead of yes or no.",
+  "prerequisites": [],
+  "lessons": [
+    "KA-C64-after",
+    "KA-C64-also",
+    "KA-C64-still",
+    "KA-C64-soon",
+    "KA-C64-in-that-case"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 57,
+  "title": "A Gift and a Feast",
+  "label": "ch:hi-a-gift-and-a-feast",
+  "canDo": "I can name five things that go with thanks in Hindi.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "HI-C57-sweetness",
+    "kind": "production",
+    "summary": "Complete HI-C57-sweetness and say all five words in order.",
+    "assesses": [
+      "HI-LEX-C57-GIFT-01",
+      "HI-LEX-C57-GIFT-02",
+      "HI-LEX-C57-GIFT-03",
+      "HI-LEX-C57-GIFT-04",
+      "HI-LEX-C57-GIFT-05"
+    ]
+  }
+}

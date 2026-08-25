@@ -1,0 +1,15 @@
+{
+  "id": "PA-PATH-012",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "PA-C08-sochna",
+    "PA-C08-samajhna",
+    "PA-C08-parhna",
+    "PA-C08-likhna"
+  ],
+  "before": [],
+  "inline": [
+    "PA-EXT-012-MIND-VERBS"
+  ],
+  "after": []
+}

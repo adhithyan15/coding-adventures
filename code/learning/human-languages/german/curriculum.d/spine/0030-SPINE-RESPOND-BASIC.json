@@ -1,0 +1,10 @@
+{
+  "segments": [
+    "GE-PATH-023"
+  ],
+  "omits": [
+    "RESPONSE-YESNO",
+    "RESPONSE-OKAY"
+  ],
+  "relocates": {}
+}

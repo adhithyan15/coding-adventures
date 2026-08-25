@@ -1,0 +1,15 @@
+{
+  "id": "HI-EXT-51-WELCOME",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five things a Hindi household welcomes a guest with.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C51-flower",
+    "HI-C51-garland",
+    "HI-C51-courtyard",
+    "HI-C51-table",
+    "HI-C51-sweet"
+  ]
+}

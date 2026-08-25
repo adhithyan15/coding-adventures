@@ -1,0 +1,17 @@
+{
+  "chapter": 226,
+  "title": "Muy --- The Same Word, Bitten Short",
+  "label": "ch:muy",
+  "canDo": "I can say that something is very something.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C60-muy",
+    "kind": "task",
+    "summary": "I can say that something is very something.",
+    "assesses": [
+      "ES-LEX-MUY"
+    ]
+  }
+}

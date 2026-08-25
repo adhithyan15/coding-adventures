@@ -1,0 +1,11 @@
+{
+  "id": "HI-PATH-002",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "lessons": [
+    "HI-C01-dhanyavad",
+    "HI-C01-shukriya"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

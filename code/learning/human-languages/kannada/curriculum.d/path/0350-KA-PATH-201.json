@@ -1,0 +1,17 @@
+{
+  "id": "KA-PATH-201",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "KA-C42-big",
+    "KA-C42-small",
+    "KA-C42-good",
+    "KA-C42-new",
+    "KA-C42-old",
+    "KA-C42-adjective-system"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-201-ADJ"
+  ],
+  "after": []
+}

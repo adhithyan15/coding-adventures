@@ -1,0 +1,16 @@
+{
+  "id": "UR-PATH-007",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "UR-C06-hona",
+    "UR-C06-jana",
+    "UR-C06-ana",
+    "UR-C06-bolna",
+    "UR-C06-janna"
+  ],
+  "before": [],
+  "inline": [
+    "UR-EXT-017-CORE-VERBS"
+  ],
+  "after": []
+}

@@ -1,0 +1,20 @@
+{
+  "chapter": 15,
+  "title": "Water and Rice",
+  "label": "ch:ka-water-and-rice",
+  "canDo": "I can ask for water in Kannada and tell raw rice apart from cooked rice.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "KA-C15-niiru-akki",
+    "kind": "task",
+    "summary": "Say ನೀರು — matching Tamil's neer, not Malayalam's — then separate ಅಕ್ಕಿ, raw rice, from ಅನ್ನ, the cooked rice on the plate.",
+    "assesses": [
+      "KA-LEX-C14-KAALAGALU-01",
+      "KA-PRAGMATICS-C14-KAALAGALU-02",
+      "KA-ETYMON-C15-NIIRU-AKKI-01",
+      "KA-ETYMON-C15-NIIRU-AKKI-02"
+    ]
+  }
+}

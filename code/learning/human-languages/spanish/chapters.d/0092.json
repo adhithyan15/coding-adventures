@@ -1,0 +1,21 @@
+{
+  "chapter": 92,
+  "title": "Synthesis --- The Conversation Without Them",
+  "label": "ch:synthesis-without-repeating",
+  "canDo": "I can carry a four-turn exchange using pronouns, and say what a pronoun promises the listener.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C45-sintesis-sin-repetir",
+    "kind": "task",
+    "summary": "Complete ES-C45-sintesis-sin-repetir: run the exchange with pronouns and say what goes wrong when the gender points at nothing.",
+    "assesses": [
+      "ES-GRAMMAR-DIRECT-OBJECT-PLURAL",
+      "ES-GRAMMAR-DIRECT-OBJECT-LO",
+      "ES-GRAMMAR-DIRECT-OBJECT-LA",
+      "ES-GRAMMAR-NOS-DIRECT-OBJECT"
+    ],
+    "note": "States the cost as well as the benefit: a pronoun buys speed and is paid for in attention, which is the skill no grid can carry."
+  }
+}

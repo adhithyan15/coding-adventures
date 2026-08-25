@@ -1,0 +1,15 @@
+{
+  "id": "SA-EXT-51-KIN",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five more members of a household in Sanskrit.",
+  "prerequisites": [],
+  "lessons": [
+    "SA-C51-husband",
+    "SA-C51-wife",
+    "SA-C51-grandfather",
+    "SA-C51-grandmother",
+    "SA-C51-uncle"
+  ]
+}

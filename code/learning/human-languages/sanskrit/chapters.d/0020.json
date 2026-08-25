@@ -1,0 +1,18 @@
+{
+  "chapter": 20,
+  "title": "People --- and the Four Noun Endings",
+  "label": "ch:sa-people",
+  "canDo": "I can name five kinds of person in Sanskrit and hear which of the four noun families each one belongs to.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C20-people",
+    "kind": "production",
+    "summary": "Complete SA-C20-people and demonstrate the chapter promise.",
+    "assesses": [
+      "SA-LEX-C20-PERSON-04",
+      "SA-LEX-C20-PERSON-05"
+    ]
+  }
+}

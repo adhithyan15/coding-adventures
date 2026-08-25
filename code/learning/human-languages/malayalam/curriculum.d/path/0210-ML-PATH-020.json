@@ -1,0 +1,15 @@
+{
+  "id": "ML-PATH-020",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "lessons": [
+    "ML-C16-kollavarsham-maasangal",
+    "ML-C17-ucha-paathira",
+    "ML-C17-paathira",
+    "ML-C18-mani"
+  ],
+  "before": [],
+  "inline": [
+    "ML-EXT-020-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

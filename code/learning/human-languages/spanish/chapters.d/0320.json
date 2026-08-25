@@ -1,0 +1,21 @@
+{
+  "chapter": 320,
+  "title": "The Words Behind Please and Sorry",
+  "label": "ch:favor-y-culpa",
+  "canDo": "I can name the favour, the trouble, the shame, the luck and the fault behind a Spanish courtesy.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "ES-C320-culpa",
+    "kind": "production",
+    "summary": "Complete ES-C320-culpa: open por favor into el favor, answer thanks with no es molestia, and place a fault with es mi culpa.",
+    "assesses": [
+      "ES-LEX-C320-COURT-01",
+      "ES-LEX-C320-COURT-02",
+      "ES-LEX-C320-COURT-03",
+      "ES-LEX-C320-COURT-04",
+      "ES-LEX-C320-COURT-05"
+    ]
+  }
+}

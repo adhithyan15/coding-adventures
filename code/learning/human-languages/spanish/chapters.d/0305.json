@@ -1,0 +1,21 @@
+{
+  "chapter": 305,
+  "title": "Naming, Properly --- Name, Surname, Sir, Madam, Delighted",
+  "label": "ch:nombre-y-apellido",
+  "canDo": "I can ask for and give a first name and a surname in Spanish, address a stranger as senor or senora, and answer an introduction.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "ES-C305-encantado",
+    "kind": "production",
+    "summary": "Complete ES-C305-encantado: give both names, address the other person correctly, and answer the introduction.",
+    "assesses": [
+      "ES-LEX-C305-NAME-01",
+      "ES-LEX-C305-NAME-02",
+      "ES-LEX-C305-NAME-03",
+      "ES-LEX-C305-NAME-04",
+      "ES-LEX-C305-NAME-05"
+    ]
+  }
+}

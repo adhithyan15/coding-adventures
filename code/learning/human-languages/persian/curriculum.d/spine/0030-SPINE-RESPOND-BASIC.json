@@ -1,0 +1,11 @@
+{
+  "segments": [
+    "FA-PATH-003",
+    "FA-PATH-016"
+  ],
+  "omits": [
+    "RESPONSE-YESNO",
+    "RESPONSE-OKAY"
+  ],
+  "relocates": {}
+}

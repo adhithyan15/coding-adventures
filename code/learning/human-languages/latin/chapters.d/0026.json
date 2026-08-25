@@ -1,0 +1,20 @@
+{
+  "chapter": 26,
+  "title": "How",
+  "label": "ch:la-how",
+  "canDo": "I can ask how in Latin with quōmodo, and trace it into cómo, come, and comment.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "LA-C26-quomodo",
+    "kind": "production",
+    "summary": "Say quōmodo, split it into quō and modō, and show how comment double-marks the manner that come and cómo mark once.",
+    "assesses": [
+      "LA-LEX-VALEO-FAMILY-01",
+      "LA-LEX-QUOMODO-01",
+      "LA-ETYMON-QUOMODO-02",
+      "LA-ETYMON-QUOMODO-03"
+    ]
+  }
+}

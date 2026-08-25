@@ -1,0 +1,20 @@
+{
+  "chapter": 141,
+  "title": "Head and Hand",
+  "label": "ch:spanish-head-and-hand",
+  "canDo": "I can name the head and the hand in Spanish and get la mano's gender right despite its -o ending.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "ES-C24-mano",
+    "kind": "task",
+    "summary": "Say la cabeza and la mano, use me duele la mano, and explain the feminine article on a word that ends in -o by way of Latin's fourth declension.",
+    "assesses": [
+      "ES-GRAMMAR-NOUN-GENDER",
+      "ES-LEX-MANO-01",
+      "ES-GRAMMAR-MANO-GENDER-02",
+      "ES-ETYMON-MANUS-03"
+    ]
+  }
+}

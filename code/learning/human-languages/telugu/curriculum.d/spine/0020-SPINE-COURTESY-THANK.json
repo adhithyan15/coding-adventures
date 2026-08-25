@@ -1,0 +1,14 @@
+{
+  "segments": [
+    "TE-PATH-003",
+    "TE-PATH-009",
+    "TE-PATH-51-COURTESY",
+    "TE-PATH-56-HOUSE",
+    "TE-PATH-65-MANNERS",
+    "TE-PATH-72-MARKET"
+  ],
+  "omits": [
+    "COURTESY-THANKS-CASUAL"
+  ],
+  "relocates": {}
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-EXT-020-CONSOLIDATION",
+  "stage": "pre-A1",
+  "kind": "supporting",
+  "category": "consolidation",
+  "canDo": "I can trade names on a first meeting and use the attested Plautine phrase where it really belongs.",
+  "prerequisites": [],
+  "lessons": [
+    "LA-C21-practice"
+  ]
+}

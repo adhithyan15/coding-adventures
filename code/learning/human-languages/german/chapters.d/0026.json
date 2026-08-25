@@ -1,0 +1,33 @@
+{
+  "chapter": 26,
+  "title": "Sitting, Standing, Sleeping, Hearing",
+  "label": "ch:ge-still-verbs",
+  "canDo": "I can say I sit, I stand, I sleep and I hear in German, tell the second shift's t-branch from its p-branch, break a verb's a to ä for du and er, and say which of the four changes German made alone and which it made alongside English.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "GE-C26-hoeren",
+    "kind": "production",
+    "summary": "The chapter closes on hören, the one verb of the four whose vowel cannot break because it was born umlauted: the reader produces all four ich forms and all four er forms, names schlafen as the only breaker, tells Grimm's law on the h of hören and Hund from the second shift on sitzen and schlafen, and hangs gern on the new verb. It reaches back past its own chapter to Chapter 17's Grimm's law, Chapter 22's Hund and Katze with the Hund etymology that had never been revisited, and Chapter 25's mögen, lieben and gern, all three of which were orphans until here.",
+    "assesses": [
+      "GE-LEX-SITZEN-02",
+      "GE-ETYMON-SITZEN-03",
+      "GE-LEX-STEHEN-04",
+      "GE-ETYMON-STEHEN-05",
+      "GE-LEX-SCHLAFEN-06",
+      "GE-ETYMON-SCHLAFEN-07",
+      "GE-GRAMMAR-UMLAUT-BREAK-08",
+      "GE-LEX-HOEREN-09",
+      "GE-ETYMON-HOEREN-10",
+      "GE-FALSEFRIEND-GEHOEREN-11",
+      "GE-SOUND-GRIMMS-LAW-04",
+      "GE-LEX-HUND-02",
+      "GE-ETYMON-HUND-03",
+      "GE-LEX-KATZE-04",
+      "GE-LEX-MOEGEN-LIEBEN-09",
+      "GE-ETYMON-MOEGEN-LIEBEN-10",
+      "GE-GRAMMAR-GERN-11"
+    ]
+  }
+}

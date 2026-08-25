@@ -1,0 +1,24 @@
+{
+  "id": "RU-PATH-006",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "RU-C02-ya",
+    "RU-C02-ty-vy",
+    "RU-C02-vy-formality",
+    "RU-C02-menya-zovut",
+    "RU-C02-kak-vas-zovut",
+    "RU-C02-kak-cross-language",
+    "RU-C02-ochen-priyatno",
+    "RU-C02-practice",
+    "RU-C02-practice-cases",
+    "RU-C02-practice-zero-copula"
+  ],
+  "before": [],
+  "inline": [
+    "RU-EXT-006-REGISTER",
+    "RU-EXT-006-GRAMMAR"
+  ],
+  "after": [
+    "RU-EXT-006-CONSOLIDATION"
+  ]
+}

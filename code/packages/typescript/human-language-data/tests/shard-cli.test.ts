@@ -62,8 +62,11 @@ describe("shard/unshard on a scratch ledger", () => {
 
   const plan: ShardPlan = {
     path: "core/toy.json",
-    listKey: "nodes",
-    idOf: (element) => (element as { id?: unknown }).id as string,
+    sections: [{ key: "nodes", idOf: (element) => (element as { id?: unknown }).id as string }],
+    // These fixtures exercise the shard/unshard round trip itself, so they keep
+    // the monolith the way `core/spine.json` does. The `"removed"` disposition
+    // has its own suite in chapters-shards.test.ts.
+    monolith: "generated",
   };
 
   const document = {
@@ -127,7 +130,7 @@ describe("shard/unshard on a scratch ledger", () => {
   });
 
   it("splits every non-list key into _meta", () => {
-    expect(metaOf(document, "nodes")).toEqual({ version: 1, stages: ["one", "two"] });
+    expect(metaOf(document, ["nodes"])).toEqual({ version: 1, stages: ["one", "two"] });
     expect(shardContents(document, plan).get("_meta.json")).toBe(
       `${JSON.stringify({ version: 1, stages: ["one", "two"] }, null, 2)}\n`,
     );
@@ -170,8 +173,11 @@ describe("refusals", () => {
 
   const plan: ShardPlan = {
     path: "core/toy.json",
-    listKey: "nodes",
-    idOf: (element) => (element as { id?: unknown }).id as string,
+    sections: [{ key: "nodes", idOf: (element) => (element as { id?: unknown }).id as string }],
+    // These fixtures exercise the shard/unshard round trip itself, so they keep
+    // the monolith the way `core/spine.json` does. The `"removed"` disposition
+    // has its own suite in chapters-shards.test.ts.
+    monolith: "generated",
   };
 
   it("refuses an id that is not a safe filename", () => {
@@ -194,15 +200,53 @@ describe("refusals", () => {
     expect(() => shardLedger(root, plan)).toThrow(/duplicate nodes id 'ALPHA'/);
   });
 
-  it("refuses a ledger whose array is not the last top-level key", () => {
-    // Appending on rebuild would otherwise silently reorder the keys.
-    write({ version: 1, nodes: [{ id: "ALPHA" }], trailing: true });
-    expect(() => shardLedger(root, plan)).toThrow(/must be the last top-level key/);
+  it("ACCEPTS a ledger whose array is not last, recording the key order", () => {
+    // This used to be a refusal, and HL21 §2.5 said so: with no way to record
+    // where the array sat, the rebuild appended it last, so a ledger with a key
+    // AFTER the array could not round-trip and was rejected rather than
+    // silently reordered.
+    //
+    // `<track>/curriculum.json` is the ledger that refusal was waiting for —
+    // `{version, language, path, spine, extensions, conceptAliases}`, with three
+    // sharded keys in the middle — so the position is now written down in
+    // `_meta.json` and the refusal is gone. The property that mattered is
+    // unchanged and is what this test asserts: the rebuild is byte-exact.
+    const document = { version: 1, nodes: [{ id: "ALPHA" }], trailing: true };
+    write(document);
+    const before = readFileSync(join(root, "core", "toy.json"), "utf8");
+    shardLedger(root, plan);
+    expect(unshardContents(root, plan)).toBe(before);
+
+    // And the order really was the interesting kind: `nodes` is not last.
+    expect(Object.keys(document).at(-1)).not.toBe("nodes");
+    const meta = JSON.parse(
+      readFileSync(join(root, "core", "toy.d", "_meta.json"), "utf8"),
+    ) as { _keys?: string[] };
+    expect(meta._keys).toEqual(["version", "nodes", "trailing"]);
+  });
+
+  it("does NOT record a key order when the array is already last", () => {
+    // The 21 shard sets committed before `_keys` existed must not acquire a
+    // line none of them needs. `needsKeyOrder` is what keeps `_meta.json`
+    // byte-identical for the suffix case.
+    write({ version: 1, nodes: [{ id: "ALPHA" }] });
+    shardLedger(root, plan);
+    const meta = JSON.parse(
+      readFileSync(join(root, "core", "toy.d", "_meta.json"), "utf8"),
+    ) as Record<string, unknown>;
+    expect(Object.hasOwn(meta, "_keys")).toBe(false);
   });
 
   it("refuses a ledger with no such array", () => {
     write({ version: 1 });
-    expect(() => shardLedger(root, plan)).toThrow(/no top-level 'nodes' array/);
+    expect(() => shardLedger(root, plan)).toThrow(/no top-level 'nodes'/);
+  });
+
+  it("refuses a ledger that already has a top-level '_keys'", () => {
+    // `_keys` is read as the recorded key order and stripped on rebuild, so a
+    // document with a real one would lose it and come back reordered.
+    write({ version: 1, _keys: ["whatever"], nodes: [{ id: "ALPHA" }] });
+    expect(() => shardLedger(root, plan)).toThrow(/reserves to record/);
   });
 
   it("contains the ledger path inside the curriculum root", () => {
@@ -244,8 +288,11 @@ describe("the writer cannot be walked outside the checkout", () => {
 
   const plan: ShardPlan = {
     path: "core/toy.json",
-    listKey: "nodes",
-    idOf: (element) => (element as { id?: unknown }).id as string,
+    sections: [{ key: "nodes", idOf: (element) => (element as { id?: unknown }).id as string }],
+    // These fixtures exercise the shard/unshard round trip itself, so they keep
+    // the monolith the way `core/spine.json` does. The `"removed"` disposition
+    // has its own suite in chapters-shards.test.ts.
+    monolith: "generated",
   };
 
   function trySymlink(target: string, path: string): boolean {
@@ -344,7 +391,7 @@ describe("metaOf cannot be walked through the prototype setter", () => {
     // local object's prototype was swapped. Contained, but a silent data loss
     // on top of being the exact sink the key check exists to close.
     const hostile = JSON.parse('{ "version": 1, "__proto__": { "polluted": "yes" }, "nodes": [] }');
-    const meta = metaOf(hostile, "nodes");
+    const meta = metaOf(hostile, ["nodes"]);
     expect(Object.getPrototypeOf(meta)).toBe(null);
     expect(Object.hasOwn(meta, "__proto__")).toBe(true);
     expect(({} as Record<string, unknown>).polluted).toBeUndefined();
@@ -388,6 +435,78 @@ describe("shardFilename", () => {
     expect(() => shardFilename(999, "OVERFLOW")).toThrow(/does not fit 4 digits/);
     // And the ordering claim the guard protects, stated outright.
     expect(["9990-A.json", "10000-B.json"].sort()).toEqual(["10000-B.json", "9990-A.json"]);
+  });
+});
+
+describe("a plan that names shards by its own ordinal, with no id", () => {
+  // The `<track>/chapters.json` shape: identity IS the number, so the filename
+  // is the padded number and nothing else.
+  let root: string;
+
+  const plan: ShardPlan = {
+    path: "core/toy.json",
+    sections: [
+      { key: "chapters", ordinalOf: (element) => (element as { chapter: number }).chapter },
+    ],
+    monolith: "generated",
+  };
+
+  const document = {
+    version: 1,
+    language: "toy",
+    chapters: [{ chapter: 2 }, { chapter: 9 }, { chapter: 10 }, { chapter: 11 }],
+  };
+
+  beforeEach(() => {
+    root = mkdtempSync(join(tmpdir(), "hl-shard-ordinal-"));
+    mkdirSync(join(root, "core"));
+    writeFileSync(join(root, "core", "toy.json"), `${JSON.stringify(document, null, 2)}\n`, "utf8");
+  });
+
+  afterEach(() => {
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  it("names each shard for its own number, zero-padded", () => {
+    shardLedger(root, plan);
+    expect(listShardNames(join(root, "core", "toy.json"))).toEqual([
+      "0002.json",
+      "0009.json",
+      "0010.json",
+      "0011.json",
+      "_meta.json",
+    ]);
+  });
+
+  it("round-trips byte-exactly", () => {
+    const before = readFileSync(join(root, "core", "toy.json"), "utf8");
+    shardLedger(root, plan);
+    expect(unshardContents(root, plan)).toBe(before);
+  });
+
+  it("would have re-sorted the ledger under UNPADDED names", () => {
+    // THE trap, in four chapters. This is the test that fails if someone decides
+    // the padding is noise and renames the shards to `2.json`, `9.json`, … —
+    // under which sorted order is 10, 11, 2, 9 and chapter 2 lands last.
+    const unpadded = document.chapters.map((c) => `${c.chapter}.json`);
+    expect([...unpadded].sort()).toEqual(["10.json", "11.json", "2.json", "9.json"]);
+    expect([...unpadded].sort()).not.toEqual(unpadded);
+
+    // Padded, the same four sort into authored order.
+    const padded = document.chapters.map((c) => `${String(c.chapter).padStart(4, "0")}.json`);
+    expect([...padded].sort()).toEqual(padded);
+  });
+
+  it("refuses two elements that claim the same number", () => {
+    // With no id, a duplicate chapter number is a duplicate FILENAME and the
+    // second element would overwrite the first — one chapter gone, no error, and
+    // `--check` agreeing with itself about the truncated set ever after.
+    writeFileSync(
+      join(root, "core", "toy.json"),
+      `${JSON.stringify({ ...document, chapters: [{ chapter: 3 }, { chapter: 3 }] }, null, 2)}\n`,
+      "utf8",
+    );
+    expect(() => shardLedger(root, plan)).toThrow(/already taken/);
   });
 });
 

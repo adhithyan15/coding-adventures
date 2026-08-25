@@ -1,0 +1,16 @@
+{
+  "id": "TE-PATH-66-FIELD",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "TE-C66-field",
+    "TE-C66-paddy",
+    "TE-C66-grass",
+    "TE-C66-threshing-floor",
+    "TE-C66-harvest"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-66-FIELD"
+  ],
+  "after": []
+}

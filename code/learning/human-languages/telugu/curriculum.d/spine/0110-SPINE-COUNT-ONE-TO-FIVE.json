@@ -1,0 +1,10 @@
+{
+  "segments": [
+    "TE-PATH-012",
+    "TE-PATH-022"
+  ],
+  "omits": [
+    "NUMBER-ONE-TO-FIVE"
+  ],
+  "relocates": {}
+}

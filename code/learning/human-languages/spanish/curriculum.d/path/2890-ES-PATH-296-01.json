@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-296-01",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "ES-C296-caballo",
+    "ES-C296-vaca",
+    "ES-C296-oveja",
+    "ES-C296-gallina",
+    "ES-C296-burro"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-296-ANIMALES"
+  ],
+  "after": []
+}

@@ -1,0 +1,13 @@
+{
+  "id": "ML-EXT-030-CHILD-SON-DAUGHTER",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can say child, son and daughter in Malayalam, and say which of the three matches Tamil most closely.",
+  "prerequisites": [],
+  "lessons": [
+    "ML-C36-kutti",
+    "ML-C36-makan",
+    "ML-C36-makal"
+  ]
+}

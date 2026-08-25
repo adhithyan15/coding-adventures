@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-316-01",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "ES-C316-llanto",
+    "ES-C316-nunca",
+    "ES-C316-siempre",
+    "ES-C316-todo",
+    "ES-C316-nada"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-316-ANSW"
+  ],
+  "after": []
+}

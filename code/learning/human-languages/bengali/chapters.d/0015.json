@@ -1,0 +1,22 @@
+{
+  "chapter": 15,
+  "title": "Cloth, Shirt, Sari, and Glasses",
+  "label": "ch:bn-cloth-shirt-sari-glasses",
+  "canDo": "I can name cloth, a shirt, a sari and glasses in Bengali, and say which word English borrowed directly and which is built on the same Persian word already met for 'eye'.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "BN-C15-choshma",
+    "kind": "production",
+    "summary": "The chapter closes on চশমা, 'glasses', built on Persian chashm, 'eye' — the very word চোখ's own lesson once named as its only cousin outside the family, here turned into 'eye-thing'. The reader names all four garments — kāpoṛ, jāmā, shāṛi, chôshmā — states that শাড়ি reached English as a direct modern loanword rather than through a shared ancient root, and reaches back to rescue the dative construction and ভালোবাসা, unrevisited since they were taught.",
+    "assesses": [
+      "BN-LEX-C15-KAPOR-01",
+      "BN-LEX-C15-JAMA-01",
+      "BN-LEX-C15-SHARI-01",
+      "BN-LEX-C15-CHOSHMA-01",
+      "BN-GRAMMAR-C09-DATIVE-02",
+      "BN-LEX-C09-BHALOBASA-03"
+    ]
+  }
+}

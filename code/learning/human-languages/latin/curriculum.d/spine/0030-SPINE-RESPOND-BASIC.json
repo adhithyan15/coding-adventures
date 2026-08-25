@@ -1,0 +1,11 @@
+{
+  "segments": [
+    "LA-PATH-004"
+  ],
+  "omits": [
+    "RESPONSE-YES",
+    "RESPONSE-NO",
+    "RESPONSE-OKAY"
+  ],
+  "relocates": {}
+}

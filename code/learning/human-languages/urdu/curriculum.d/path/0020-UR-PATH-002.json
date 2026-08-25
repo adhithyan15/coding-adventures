@@ -1,0 +1,13 @@
+{
+  "id": "UR-PATH-002",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "lessons": [
+    "UR-W01-shukriya-first-three",
+    "UR-C01-shukriya"
+  ],
+  "before": [],
+  "inline": [
+    "UR-EXT-001B-SHUKRIYA-SCRIPT"
+  ],
+  "after": []
+}

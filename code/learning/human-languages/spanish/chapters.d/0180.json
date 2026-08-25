@@ -1,0 +1,20 @@
+{
+  "chapter": 180,
+  "title": "Synthesis --- The Gift and the Motive",
+  "label": "ch:synthesis-por-para",
+  "canDo": "I can change the meaning of a sentence by choosing between por and para.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C51-sintesis-regalo-motivo",
+    "kind": "task",
+    "summary": "Complete ES-C51-sintesis-regalo-motivo: say the dinner sentence both ways and say what a wrong choice actually produces.",
+    "assesses": [
+      "ES-GRAMMAR-POR-PARA-CONTRAST",
+      "ES-LEX-PARA",
+      "ES-LEX-POR"
+    ],
+    "note": "First place where the smallest word carries the sentence's emotional content. A wrong choice is not bad grammar -- it is a true sentence about a different situation."
+  }
+}

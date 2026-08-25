@@ -1,0 +1,21 @@
+{
+  "chapter": 33,
+  "title": "The River and the Road",
+  "label": "ch:sa-land",
+  "canDo": "I can name a river, a bridge, a mountain, a town and the sea in Sanskrit, and say which of them is a cousin of the Greek word behind *police*.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "SA-C33-sea",
+    "kind": "production",
+    "summary": "Complete SA-C33-sea and demonstrate the chapter promise.",
+    "assesses": [
+      "SA-LEX-C33-LAND-01",
+      "SA-LEX-C33-LAND-02",
+      "SA-LEX-C33-LAND-03",
+      "SA-LEX-C33-LAND-04",
+      "SA-LEX-C33-LAND-05"
+    ]
+  }
+}

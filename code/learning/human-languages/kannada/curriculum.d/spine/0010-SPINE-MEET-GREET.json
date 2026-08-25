@@ -1,0 +1,15 @@
+{
+  "segments": [
+    "KA-PATH-001",
+    "KA-PATH-100",
+    "KA-PATH-52-WELCOME",
+    "KA-PATH-53-SKY",
+    "KA-PATH-60-ANIMAL"
+  ],
+  "omits": [
+    "GREETING-FORMAL",
+    "GREETING-PEACE",
+    "GREETING-WELCOME"
+  ],
+  "relocates": {}
+}

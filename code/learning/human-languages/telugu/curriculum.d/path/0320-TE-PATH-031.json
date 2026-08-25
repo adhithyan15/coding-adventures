@@ -1,0 +1,13 @@
+{
+  "id": "TE-PATH-031",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "TE-C38-gunde",
+    "TE-C38-hrudayam"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-032-HEART"
+  ],
+  "after": []
+}

@@ -1,0 +1,16 @@
+{
+  "id": "SA-PATH-31-SKY",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "SA-C31-sky",
+    "SA-C31-moon",
+    "SA-C31-star",
+    "SA-C31-wind",
+    "SA-C31-snow"
+  ],
+  "before": [],
+  "inline": [
+    "SA-EXT-31-SKY"
+  ],
+  "after": []
+}

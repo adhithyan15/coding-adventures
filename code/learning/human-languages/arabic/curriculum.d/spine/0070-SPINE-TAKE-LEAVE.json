@@ -1,0 +1,13 @@
+{
+  "segments": [
+    "AR-PATH-009",
+    "AR-PATH-024",
+    "AR-PATH-026"
+  ],
+  "omits": [
+    "FAREWELL-CASUAL",
+    "FAREWELL-SOON",
+    "FAREWELL-TOMORROW"
+  ],
+  "relocates": {}
+}

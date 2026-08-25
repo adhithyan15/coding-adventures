@@ -1,0 +1,26 @@
+{
+  "chapter": 8,
+  "title": "The Mind, the Page, and the Falling Tone",
+  "label": "ch:pa-mind-and-tone",
+  "canDo": "I can say that I think, understand, read and write in Punjabi, hear and produce the falling tone that ਸਮਝਣਾ and ਪੜ੍ਹਨਾ carry where a breathy consonant used to be, read a subjoined ਹ tucked under its neighbour, and name what each of the four roots meant before it named an act of the mind — burning, waking, reciting aloud and scratching.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "PA-C08-likhna",
+    "kind": "production",
+    "summary": "Say ਮੈਂ ਪੰਜਾਬੀ ਪੜ੍ਹਦਾ ਹਾਂ and ਮੈਂ ਪੰਜਾਬੀ ਲਿਖਦਾ ਹਾਂ in your own gender, then run the chapter's four verbs back to the physical acts their roots named — sochṇā from a root meaning to burn and then to grieve, samajhṇā from one meaning to wake, paṛhnā from one meaning to recite aloud, likhṇā from one meaning to scratch — and pick out the two that are said with a falling pitch and the one that writes its ਹ underneath the letter.",
+    "assesses": [
+      "PA-LEX-SOCHNA",
+      "PA-ETYMON-SOCHNA-SHUC",
+      "PA-LEX-SAMAJHNA",
+      "PA-SOUND-TONE-FALLING",
+      "PA-ETYMON-SAMAJH-BUDH",
+      "PA-LEX-PARHNA",
+      "PA-SCRIPT-SUBJOINED-HA",
+      "PA-ETYMON-PARHNA-PATH",
+      "PA-LEX-LIKHNA",
+      "PA-ETYMON-LIKH-SCRATCH"
+    ]
+  }
+}

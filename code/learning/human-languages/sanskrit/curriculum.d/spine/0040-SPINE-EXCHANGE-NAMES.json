@@ -1,0 +1,14 @@
+{
+  "segments": [
+    "SA-PATH-005",
+    "SA-PATH-014",
+    "SA-PATH-26-ROLE",
+    "SA-PATH-32-TREE",
+    "SA-PATH-41-CRAFT",
+    "SA-PATH-48-BEAST"
+  ],
+  "omits": [
+    "PRONOUN-ME"
+  ],
+  "relocates": {}
+}

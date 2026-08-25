@@ -1,0 +1,16 @@
+{
+  "chapter": 8,
+  "title": "Telling the Time",
+  "label": "ch:time",
+  "canDo": "I can ask for and tell the time in German.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "GE-C08-mittag-mitternacht",
+    "kind": "task",
+    "summary": "Complete GE-C08-mittag-mitternacht, the canonical closing checkpoint, and demonstrate the chapter promise: ask for and tell the time in German.",
+    "assesses": [],
+    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+  }
+}

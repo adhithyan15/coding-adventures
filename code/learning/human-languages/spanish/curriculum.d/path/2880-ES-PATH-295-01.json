@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-295-01",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "ES-C295-sendero",
+    "ES-C295-puente",
+    "ES-C295-orilla",
+    "ES-C295-isla",
+    "ES-C295-niebla"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-295-SENDERO"
+  ],
+  "after": []
+}

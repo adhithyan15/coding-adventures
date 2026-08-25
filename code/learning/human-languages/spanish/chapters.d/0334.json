@@ -1,0 +1,21 @@
+{
+  "chapter": 334,
+  "title": "Health, Hunger, Cold and Heat",
+  "label": "ch:salud-y-edad",
+  "canDo": "I can report la salud, el hambre, el frio, el calor and la edad, and say why el hambre takes el while staying feminine.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "ES-C334-edad",
+    "kind": "production",
+    "summary": "Complete ES-C334-edad: name your salud, say tengo hambre, split hace frio from tengo frio, and give your edad two ways.",
+    "assesses": [
+      "ES-LEX-C334-BODY-31",
+      "ES-LEX-C334-BODY-32",
+      "ES-LEX-C334-BODY-33",
+      "ES-LEX-C334-BODY-34",
+      "ES-LEX-C334-BODY-35"
+    ]
+  }
+}

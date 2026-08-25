@@ -1,0 +1,460 @@
+{
+  "glossaries": [
+    {
+      "language": "telugu",
+      "output": "telugu/book/chapters/appendix-glossary.tex",
+      "scriptSet": "telugu-comparisons"
+    }
+  ],
+  "answerKeys": [
+    {
+      "language": "telugu",
+      "output": "telugu/book/chapters/appendix-answer-key.tex",
+      "scriptSet": "telugu-comparisons"
+    }
+  ],
+  "indexes": [
+    {
+      "language": "telugu",
+      "output": "telugu/book/chapters/appendix-index.tex",
+      "scriptSet": "telugu-comparisons"
+    }
+  ],
+  "targets": [
+    {
+      "language": "telugu",
+      "chapter": 6,
+      "output": "telugu/book/chapters/ch06-dative-case.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 7,
+      "output": "telugu/book/chapters/ch07-numbers-1-10.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 8,
+      "output": "telugu/book/chapters/ch08-please.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 9,
+      "output": "telugu/book/chapters/ch09-sorry.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 10,
+      "output": "telugu/book/chapters/ch10-days.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 11,
+      "output": "telugu/book/chapters/ch11-colours.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 12,
+      "output": "telugu/book/chapters/ch12-family.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 13,
+      "output": "telugu/book/chapters/ch13-head-and-hand.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 14,
+      "output": "telugu/book/chapters/ch14-seasons.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 15,
+      "output": "telugu/book/chapters/ch15-water-and-rice.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 16,
+      "output": "telugu/book/chapters/ch16-months.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 17,
+      "output": "telugu/book/chapters/ch17-noon-and-midnight.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 18,
+      "output": "telugu/book/chapters/ch18-telling-time.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 19,
+      "output": "telugu/book/chapters/ch19-age.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 20,
+      "output": "telugu/book/chapters/ch20-numbers-and-weather.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 21,
+      "output": "telugu/book/chapters/ch21-dog-and-cat.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 22,
+      "output": "telugu/book/chapters/ch22-green-and-yellow.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 23,
+      "output": "telugu/book/chapters/ch23-day.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 24,
+      "output": "telugu/book/chapters/ch24-night.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 25,
+      "output": "telugu/book/chapters/ch25-good-night.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 26,
+      "output": "telugu/book/chapters/ch26-morning.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 27,
+      "output": "telugu/book/chapters/ch27-evening.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 28,
+      "output": "telugu/book/chapters/ch28-afternoon.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 29,
+      "output": "telugu/book/chapters/ch29-good-morning.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 30,
+      "output": "telugu/book/chapters/ch30-good-evening.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 31,
+      "output": "telugu/book/chapters/ch31-good-afternoon.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 32,
+      "output": "telugu/book/chapters/ch32-core-verbs.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 33,
+      "output": "telugu/book/chapters/ch33-verbs-of-the-mind.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 34,
+      "output": "telugu/book/chapters/ch34-verbs-between-people.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 35,
+      "output": "telugu/book/chapters/ch35-family-and-friends.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 36,
+      "output": "telugu/book/chapters/ch36-son-and-daughter.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 37,
+      "output": "telugu/book/chapters/ch37-face-words.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 38,
+      "output": "telugu/book/chapters/ch38-heart.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 39,
+      "output": "telugu/book/chapters/ch39-tea-and-milk.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 40,
+      "output": "telugu/book/chapters/ch40-a-meal.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 41,
+      "output": "telugu/book/chapters/ch41-pointing-and-asking.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 42,
+      "output": "telugu/book/chapters/ch42-describing-things.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 43,
+      "output": "telugu/book/chapters/ch43-more-verbs.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 44,
+      "output": "telugu/book/chapters/ch44-see-say.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 45,
+      "output": "telugu/book/chapters/ch45-grandparents.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 46,
+      "output": "telugu/book/chapters/ch46-things-you-ask-for.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 47,
+      "output": "telugu/book/chapters/ch47-leg-and-tooth.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 48,
+      "output": "telugu/book/chapters/ch48-roles.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 49,
+      "output": "telugu/book/chapters/ch49-replies.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 50,
+      "output": "telugu/book/chapters/ch50-taking-leave.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 51,
+      "output": "telugu/book/chapters/ch51-courtesy.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 52,
+      "output": "telugu/book/chapters/ch52-welcoming-a-guest.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 53,
+      "output": "telugu/book/chapters/ch53-the-sky.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 54,
+      "output": "telugu/book/chapters/ch54-the-tree.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 55,
+      "output": "telugu/book/chapters/ch55-river-and-road.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 56,
+      "output": "telugu/book/chapters/ch56-in-the-house.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 57,
+      "output": "telugu/book/chapters/ch57-more-of-the-body.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 58,
+      "output": "telugu/book/chapters/ch58-more-short-replies.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 59,
+      "output": "telugu/book/chapters/ch59-weather-and-ground.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 60,
+      "output": "telugu/book/chapters/ch60-animals.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 61,
+      "output": "telugu/book/chapters/ch61-in-the-kitchen.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 62,
+      "output": "telugu/book/chapters/ch62-things-people-make.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 63,
+      "output": "telugu/book/chapters/ch63-hunger-sleep-health.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 64,
+      "output": "telugu/book/chapters/ch64-joining-words.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 65,
+      "output": "telugu/book/chapters/ch65-more-good-manners.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 66,
+      "output": "telugu/book/chapters/ch66-the-field.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 67,
+      "output": "telugu/book/chapters/ch67-the-house-itself.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 68,
+      "output": "telugu/book/chapters/ch68-sound-and-voice.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 69,
+      "output": "telugu/book/chapters/ch69-tools.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 70,
+      "output": "telugu/book/chapters/ch70-small-creatures.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 71,
+      "output": "telugu/book/chapters/ch71-the-wider-family.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 72,
+      "output": "telugu/book/chapters/ch72-the-market.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 73,
+      "output": "telugu/book/chapters/ch73-tastes.tex",
+      "scriptSet": "telugu-comparisons"
+    }
+  ],
+  "handwritten": [
+    {
+      "language": "telugu",
+      "chapter": 1,
+      "output": "telugu/book/chapters/ch01-greetings.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 2,
+      "output": "telugu/book/chapters/ch02-introductions.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 3,
+      "output": "telugu/book/chapters/ch03-responding.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 4,
+      "output": "telugu/book/chapters/ch04-farewells.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 5,
+      "output": "telugu/book/chapters/ch05-first-verbs.tex"
+    }
+  ]
+}

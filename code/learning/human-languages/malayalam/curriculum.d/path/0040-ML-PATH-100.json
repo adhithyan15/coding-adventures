@@ -1,0 +1,35 @@
+{
+  "id": "ML-PATH-100",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "ML-S01-letter-ka",
+    "ML-S02-sign-virama",
+    "ML-S03-vowel-sign-i",
+    "ML-S04-vowel-sign-aa",
+    "ML-S05-letter-na",
+    "ML-S06-letter-chillu-ll",
+    "ML-S07-vowel-sign-u",
+    "ML-S08-letter-ta",
+    "ML-S109-letter-ra",
+    "ML-S110-letter-va",
+    "ML-S111-letter-ca",
+    "ML-S112-letter-pa",
+    "ML-S113-letter-nna",
+    "ML-S114-letter-ma",
+    "ML-S115-letter-nya",
+    "ML-S117-letter-tta",
+    "ML-S118-letter-llla",
+    "ML-S119-vowel-sign-oo",
+    "ML-S120-sign-anusvara",
+    "ML-S116-letter-u",
+    "ML-S121-letter-ssa",
+    "ML-S122-letter-ya",
+    "ML-S123-letter-da",
+    "ML-S124-letter-sa"
+  ],
+  "before": [],
+  "inline": [
+    "ML-EXT-100-SCRIPT-RECOGNITION"
+  ],
+  "after": []
+}

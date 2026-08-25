@@ -1,0 +1,25 @@
+{
+  "chapter": 13,
+  "title": "Until When",
+  "label": "ch:until-when",
+  "canDo": "I can pick the farewell that matches when I will next see someone.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "ES-C05-practice",
+    "kind": "dialogue",
+    "summary": "Until When — the chapter run end to end.",
+    "assesses": [
+      "ES-LEX-LUEGO",
+      "ES-LEX-HASTA-LUEGO",
+      "ES-ETYMON-LOCUS",
+      "ES-LEX-MANANA",
+      "ES-LEX-HASTA-MANANA",
+      "ES-ETYMON-MANEANA",
+      "ES-LEX-PRONTO",
+      "ES-LEX-HASTA-PRONTO",
+      "ES-ETYMON-PROMPTUS"
+    ]
+  }
+}

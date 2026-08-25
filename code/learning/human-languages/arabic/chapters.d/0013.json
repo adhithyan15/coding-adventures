@@ -1,0 +1,18 @@
+{
+  "chapter": 13,
+  "title": "Water and Bread",
+  "label": "ch:ar-water-and-bread",
+  "canDo": "I can name water and bread in Arabic and say which of the two sits on a regular root.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "AR-C13-maa-khubz",
+    "kind": "production",
+    "summary": "Say māʾ with its irregular plural miyāh, then khubz from the clean root kh-b-z.",
+    "assesses": [
+      "AR-CONCEPT-C13-MAA-KHUBZ-01",
+      "AR-CONCEPT-C13-MAA-KHUBZ-02"
+    ]
+  }
+}

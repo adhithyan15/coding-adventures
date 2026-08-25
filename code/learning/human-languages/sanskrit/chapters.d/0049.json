@@ -1,0 +1,21 @@
+{
+  "chapter": 49,
+  "title": "Five Small Answers",
+  "label": "ch:sa-small-answers",
+  "canDo": "I can say then, as, only, again and again and oh in Sanskrit, and use any of the five on its own as a reply.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "SA-C49-oh",
+    "kind": "production",
+    "summary": "Complete SA-C49-oh and demonstrate the chapter promise.",
+    "assesses": [
+      "SA-LEX-C49-REPLY-01",
+      "SA-LEX-C49-REPLY-02",
+      "SA-LEX-C49-REPLY-03",
+      "SA-LEX-C49-REPLY-04",
+      "SA-LEX-C49-REPLY-05"
+    ]
+  }
+}

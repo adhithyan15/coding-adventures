@@ -1,0 +1,21 @@
+{
+  "chapter": 67,
+  "title": "The House Itself",
+  "label": "ch:te-the-house-itself",
+  "canDo": "I can name the parts a Telugu house is built from, and greet the people inside it.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "TE-C67-window",
+    "kind": "production",
+    "summary": "Complete TE-C67-window and demonstrate the chapter promise.",
+    "assesses": [
+      "TE-LEX-C67-WALL-01",
+      "TE-LEX-C67-WALL-02",
+      "TE-LEX-C67-WALL-03",
+      "TE-LEX-C67-WALL-04",
+      "TE-LEX-C67-WALL-05"
+    ]
+  }
+}

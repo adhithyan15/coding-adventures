@@ -1,0 +1,35 @@
+{
+  "id": "KA-PATH-100",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "KA-S01-letter-na",
+    "KA-S02-vowel-sign-u",
+    "KA-S03-sign-virama",
+    "KA-S04-vowel-sign-i",
+    "KA-S05-letter-ta",
+    "KA-S06-letter-da",
+    "KA-S07-letter-ra",
+    "KA-S08-vowel-sign-aa",
+    "KA-S110-letter-ba",
+    "KA-S111-vowel-sign-e",
+    "KA-S112-letter-ga",
+    "KA-S113-letter-lla",
+    "KA-S114-vowel-sign-o",
+    "KA-S115-letter-i",
+    "KA-S116-letter-ka",
+    "KA-S117-letter-ya",
+    "KA-S118-letter-dda",
+    "KA-S119-vowel-sign-oo",
+    "KA-S120-letter-ha",
+    "KA-S121-letter-sa",
+    "KA-S122-letter-ca",
+    "KA-S123-sign-anusvara",
+    "KA-S124-letter-pa",
+    "KA-S125-letter-oo"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-100-SCRIPT-RECOGNITION"
+  ],
+  "after": []
+}

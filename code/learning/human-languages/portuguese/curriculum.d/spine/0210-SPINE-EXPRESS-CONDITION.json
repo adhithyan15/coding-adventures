@@ -1,0 +1,10 @@
+{
+  "segments": [],
+  "omits": [
+    "CONDITIONAL-REAL",
+    "CONNECTIVE-IF",
+    "MODAL-WOULD",
+    "CONDITION-DEPENDS"
+  ],
+  "relocates": {}
+}

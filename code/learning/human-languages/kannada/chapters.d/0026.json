@@ -1,0 +1,26 @@
+{
+  "chapter": 26,
+  "title": "Morning",
+  "label": "ch:ka-morning",
+  "canDo": "I can say \"morning\" in Kannada using the language's own native word for it.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "KA-C26-belagge",
+    "kind": "production",
+    "summary": "Say ಬೆಳಗ್ಗೆ, trace it to beḷagu (\"to dawn\") and beḷaku (\"light\"), and contrast it with the Sanskrit dina, rātri and madhyāhna around it.",
+    "assesses": [
+      "KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-01",
+      "KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-02",
+      "KA-PRAGMATICS-C17-MADHYAAHNA-MADHYARAATRI-03",
+      "KA-ETYMON-C23-DINA-01",
+      "KA-ETYMON-C23-DINA-02",
+      "KA-ETYMON-C23-DINA-03",
+      "KA-ETYMON-C24-RATRI-01",
+      "KA-ETYMON-C24-RATRI-02",
+      "KA-ETYMON-C26-BELAGGE-01",
+      "KA-PRAGMATICS-C26-BELAGGE-02"
+    ]
+  }
+}

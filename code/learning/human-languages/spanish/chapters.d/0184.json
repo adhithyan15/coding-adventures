@@ -1,0 +1,20 @@
+{
+  "chapter": 184,
+  "title": "Review --- The Three Se's",
+  "label": "ch:review-three-se",
+  "canDo": "I can tell the three se's apart and say which two are really one word.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C52-tres-ses",
+    "kind": "task",
+    "summary": "Complete ES-C52-tres-ses: say which two se's are one word and what marks the impostor.",
+    "assesses": [
+      "ES-GRAMMAR-SE-IMPERSONAL",
+      "ES-GRAMMAR-SE-FOR-LE",
+      "ES-ETYMON-GELO"
+    ],
+    "note": "Unifies material learned a hundred chapters apart: Spanish has two se's and a coincidence, not three."
+  }
+}

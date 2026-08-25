@@ -1,0 +1,15 @@
+{
+  "id": "SA-EXT-41-CRAFT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five made things in Sanskrit.",
+  "prerequisites": [],
+  "lessons": [
+    "SA-C41-wheel",
+    "SA-C41-pot",
+    "SA-C41-boat",
+    "SA-C41-mirror",
+    "SA-C41-parasol"
+  ]
+}

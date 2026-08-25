@@ -1,0 +1,16 @@
+{
+  "id": "HI-PATH-61-FIRE",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "HI-C61-vessel",
+    "HI-C61-spoon",
+    "HI-C61-tumbler",
+    "HI-C61-griddle",
+    "HI-C61-stove"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-61-FIRE"
+  ],
+  "after": []
+}

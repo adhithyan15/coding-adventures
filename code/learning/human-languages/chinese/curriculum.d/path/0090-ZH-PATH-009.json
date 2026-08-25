@@ -1,0 +1,18 @@
+{
+  "id": "ZH-PATH-009",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "lessons": [
+    "ZH-W10-yan",
+    "ZH-W10-xie",
+    "ZH-C10-xiexie",
+    "ZH-C10-buxie",
+    "ZH-C10-practice"
+  ],
+  "before": [],
+  "inline": [
+    "ZH-EXT-025-YAN-RADICAL",
+    "ZH-EXT-026-REDUPLICATION",
+    "ZH-EXT-027-PREDICT-SANDHI"
+  ],
+  "after": []
+}

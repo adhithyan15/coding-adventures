@@ -1,0 +1,14 @@
+{
+  "segments": [
+    "FR-PATH-007",
+    "FR-PATH-009",
+    "FR-PATH-026"
+  ],
+  "omits": [
+    "QUESTION-WHAT",
+    "PRONOUN-MY",
+    "WORD-NAME",
+    "WORD-IS"
+  ],
+  "relocates": {}
+}

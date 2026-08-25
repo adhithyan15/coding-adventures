@@ -1,0 +1,13 @@
+{
+  "id": "ES-PATH-319-04",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "ES-C319-repaso-respuestas",
+    "ES-C319-otro-y-poco"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-319-RESPUESTAS"
+  ],
+  "after": []
+}

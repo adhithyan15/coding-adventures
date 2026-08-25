@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-042-CMD-EIGHT",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "ES-C50-ocho-cortos"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-042-CMD-EIGHT"
+  ],
+  "after": []
+}

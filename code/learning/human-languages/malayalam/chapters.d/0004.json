@@ -1,0 +1,16 @@
+{
+  "chapter": 4,
+  "title": "Farewells",
+  "label": "ch:farewells",
+  "canDo": "I can end a Malayalam conversation politely and choose a farewell that fits the situation.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "ML-C04-practice",
+    "kind": "task",
+    "summary": "Complete ML-C04-practice, the canonical closing checkpoint, and demonstrate the chapter promise: end a Malayalam conversation politely and choose a farewell that fits the situation.",
+    "assesses": [],
+    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+  }
+}

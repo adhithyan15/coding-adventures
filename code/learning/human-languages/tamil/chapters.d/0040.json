@@ -1,0 +1,23 @@
+{
+  "chapter": 40,
+  "title": "Pointing, and Asking",
+  "label": "ch:ta-pointing-and-asking",
+  "canDo": "I can point at something in Tamil and ask who or where it is — and I can say what the six words have in common.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C40-deixis-system",
+    "kind": "production",
+    "summary": "Say the near word, the far word and the question word in a row, and name the part that changed.",
+    "assesses": [
+      "TA-LEX-C40-DEIXIS-01",
+      "TA-LEX-C40-DEIXIS-02",
+      "TA-LEX-C40-DEIXIS-03",
+      "TA-LEX-C40-DEIXIS-04",
+      "TA-LEX-C40-DEIXIS-05",
+      "TA-LEX-C40-DEIXIS-06",
+      "TA-GRAMMAR-C40-DEIXIS-SYSTEM"
+    ]
+  }
+}

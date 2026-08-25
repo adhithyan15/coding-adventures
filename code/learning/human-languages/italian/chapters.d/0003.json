@@ -1,0 +1,28 @@
+{
+  "chapter": 3,
+  "title": "Introducing Yourself",
+  "label": "ch:it-introductions",
+  "canDo": "I can give my name in Italian, ask for someone else's, and say that it is a pleasure.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "IT-C03-practice",
+    "kind": "dialogue",
+    "summary": "A whole first meeting: ciao, mi chiamo …, Come ti chiami? in the informal and Come si chiama? in the formal, and piacere to close it.",
+    "assesses": [
+      "IT-SOUND-IO-02",
+      "IT-ETYMON-IO-03",
+      "IT-GRAMMAR-IO-04",
+      "IT-SOUND-MI-CHIAMO-02",
+      "IT-ETYMON-MI-CHIAMO-03",
+      "IT-GRAMMAR-MI-CHIAMO-04",
+      "IT-ETYMON-COME-TI-CHIAMI-02",
+      "IT-SOUND-PIACERE-02",
+      "IT-ETYMON-PIACERE-03",
+      "IT-GRAMMAR-PIACERE-04",
+      "IT-LEX-C03-PRACTICE-02",
+      "IT-NOTICE-C03-PRACTICE-03"
+    ]
+  }
+}

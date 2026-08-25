@@ -1,0 +1,19 @@
+{
+  "chapter": 50,
+  "title": "Ser in the Plural",
+  "label": "ch:spanish-ser-plural",
+  "canDo": "I can use all six present forms of ser, and say why no two of them look alike.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C09-repaso-ser",
+    "kind": "dialogue",
+    "summary": "Two Latin verbs in one paradigm - and the seam between them is visible at eres.",
+    "assesses": [
+      "ES-GRAMMAR-SER-PRESENT-COMPLETE",
+      "ES-GRAMMAR-SER-PRESENT-1PL",
+      "ES-GRAMMAR-SER-PRESENT-3PL"
+    ]
+  }
+}

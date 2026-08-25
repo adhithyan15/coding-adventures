@@ -1,0 +1,21 @@
+{
+  "chapter": 323,
+  "title": "Before, After, and While",
+  "label": "ch:antes-y-despues",
+  "canDo": "I can put two events in order with antes, despues, entonces and mientras, and say that a thing is already done with ya.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "ES-C323-mientras",
+    "kind": "production",
+    "summary": "Complete ES-C323-mientras: close todavia no with ya, order two events with antes de and despues de, and join them with mientras.",
+    "assesses": [
+      "ES-LEX-C323-WHEN-16",
+      "ES-LEX-C323-WHEN-17",
+      "ES-LEX-C323-WHEN-18",
+      "ES-LEX-C323-WHEN-19",
+      "ES-LEX-C323-WHEN-20"
+    ]
+  }
+}

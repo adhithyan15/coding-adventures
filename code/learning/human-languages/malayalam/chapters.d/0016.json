@@ -1,0 +1,18 @@
+{
+  "chapter": 16,
+  "title": "The Traditional Months",
+  "label": "ch:ml-traditional-months",
+  "canDo": "I can name the twelve months of the Malayalam Kollam-era calendar and say which zodiac sign each one carries.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "ML-C16-kollavarsham-maasangal",
+    "kind": "production",
+    "summary": "Recite the twelve months from Chiṅṅam, tie Chiṅṅam to Leo, and contrast Malayalam's zodiac naming with Tamil's nakshatras.",
+    "assesses": [
+      "ML-CONCEPT-C16-KOLLAVARSHAM-MAASANGAL-01",
+      "ML-CONCEPT-C16-KOLLAVARSHAM-MAASANGAL-02"
+    ]
+  }
+}

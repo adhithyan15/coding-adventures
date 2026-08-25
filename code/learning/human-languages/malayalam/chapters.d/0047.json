@@ -1,0 +1,21 @@
+{
+  "chapter": 47,
+  "title": "The Leg and the Tooth",
+  "label": "ch:ml-body-more",
+  "canDo": "I can name five more parts of the body in Malayalam, and point to the sound exchanges that separate them from their Tamil, Telugu and Kannada cousins.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "ML-C47-stomach",
+    "kind": "production",
+    "summary": "Complete ML-C47-stomach and say all five words in order.",
+    "assesses": [
+      "ML-LEX-C47-BODY-01",
+      "ML-LEX-C47-BODY-02",
+      "ML-LEX-C47-BODY-03",
+      "ML-LEX-C47-BODY-04",
+      "ML-LEX-C47-BODY-05"
+    ]
+  }
+}

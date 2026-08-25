@@ -1,0 +1,15 @@
+{
+  "id": "TA-EXT-56-AMOUNT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can answer \"how much?\" five ways in Tamil.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C56-a-little",
+    "TA-C56-a-lot",
+    "TA-C56-less",
+    "TA-C56-no-need",
+    "TA-C56-let-it-be"
+  ]
+}

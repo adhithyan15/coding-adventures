@@ -1,0 +1,16 @@
+{
+  "id": "KA-PATH-60-ANIMAL",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "KA-C60-cow",
+    "KA-C60-goat",
+    "KA-C60-hen",
+    "KA-C60-crow",
+    "KA-C60-bird"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-60-ANIMAL"
+  ],
+  "after": []
+}

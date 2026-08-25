@@ -1,0 +1,18 @@
+{
+  "chapter": 161,
+  "title": "Ayudar — the Same Word as Aid",
+  "label": "ch:spanish-ayudar",
+  "canDo": "I can say that I help, and hear English aid inside the Spanish word.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C35-ayudar",
+    "kind": "task",
+    "summary": "adiutare straight through to aid, and the -di- that also gave hodie -> hoy.",
+    "assesses": [
+      "ES-LEX-AYUDAR-05",
+      "ES-ETYMON-AYUDAR-06"
+    ]
+  }
+}

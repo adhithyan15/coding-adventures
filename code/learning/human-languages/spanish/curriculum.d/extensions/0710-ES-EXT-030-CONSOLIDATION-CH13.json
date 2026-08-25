@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-030-CONSOLIDATION-CH13",
+  "stage": "A1",
+  "kind": "supporting",
+  "category": "consolidation",
+  "canDo": "I can retrieve singular putting, leaving, and coming and compare the six learned yo-go forms.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C13-practice"
+  ]
+}

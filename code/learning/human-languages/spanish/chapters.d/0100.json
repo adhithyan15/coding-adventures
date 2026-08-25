@@ -1,0 +1,19 @@
+{
+  "chapter": 100,
+  "title": "Why Se? --- Gelo, and a Collision",
+  "label": "ch:etymon-gelo",
+  "canDo": "I can say why le becomes se, and that this se is not the reflexive one.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C47-por-que-se",
+    "kind": "task",
+    "summary": "Complete ES-C47-por-que-se: name the Old Spanish form, and say whether the se of se lo digo is the se of se llama.",
+    "assesses": [
+      "ES-ETYMON-GELO",
+      "ES-GRAMMAR-SE-FOR-LE"
+    ],
+    "note": "Removes a confusion most learners carry for years: two unrelated words, Latin se and Latin illi, collided by sound in the sixteenth century."
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "chapter": 9,
+  "title": "Eyes, Ears, Mouth, and Nose",
+  "label": "ch:russian-face-parts",
+  "canDo": "I can name the ear, nose, mouth and eye in Russian with their genders, and say which trace to a secure ancient root and which do not.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "RU-C09-glaz",
+    "kind": "production",
+    "summary": "The chapter closes on глаз, the word that quietly evicted Russian's true inherited eye-word: the reader produces all four face words with their genders, names ухо and нос as secure PIE cognates, names рот as an honest dead end, and traces глаз back to slang for 'ball' while placing the real cousin of English eye, око, inside очки. It is the first realization of SPINE-CHECK-WELLBEING in this track, and it reaches back to Chapter 3's видеть and говорить, rescuing three atoms nothing had revisited.",
+    "assesses": [
+      "RU-LEX-UKHO",
+      "RU-ETYMON-UKHO-EAR",
+      "RU-LEX-NOS",
+      "RU-ETYMON-NOS-NOSE",
+      "RU-LEX-ROT",
+      "RU-ETYMON-ROT-DIG",
+      "RU-LEX-GLAZ",
+      "RU-ETYMON-GLAZ-BALL",
+      "RU-LEX-VIDET",
+      "RU-ETYMON-VIDET-WIT",
+      "RU-GRAMMAR-CONSONANT-SWAP-I-FORM",
+      "RU-LEX-GOVORIT",
+      "RU-SCRIPT-GE-GAMMA"
+    ]
+  }
+}

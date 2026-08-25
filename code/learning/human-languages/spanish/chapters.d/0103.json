@@ -1,0 +1,23 @@
+{
+  "chapter": 103,
+  "title": "The Preterite --- Your First Past Tense",
+  "label": "ch:preterite",
+  "canDo": "I can use the singular completed past of ser or ir and the known regular -ar verb hablar.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "ES-C14-practice",
+    "kind": "task",
+    "summary": "Complete ES-C14-practice and distinguish fui/fuiste/fue from hablé/hablaste/habló using known words, context, and written stress.",
+    "assesses": [
+      "ES-LEX-FUI-SER-IR",
+      "ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR",
+      "ES-ETYMON-FUI",
+      "ES-GRAMMAR-AR-PRETERITE-SINGULAR",
+      "ES-ORTHOGRAPHY-AR-PRETERITE-FINAL-STRESS",
+      "ES-HISTORY-AR-PRETERITE-LATIN-PERFECT"
+    ],
+    "note": "The payoff retrieves all six Chapter-14 atoms with mapped activities and deliberately defers plural persons, other past-tense verb classes, and new time, place, or person vocabulary."
+  }
+}

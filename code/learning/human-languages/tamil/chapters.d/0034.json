@@ -1,0 +1,28 @@
+{
+  "chapter": 34,
+  "title": "Four Verbs Between People",
+  "label": "ch:ta-verbs-between-people",
+  "canDo": "I can say I take, I ask, I help and I like in Tamil, hear கேள் doing the work of both asking and hearing, choose between பிடிக்கும் and விரும்பு, and say எனக்குப் பிடிக்கும் knowing why the liker sits in the dative exactly as with தெரியும்.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "TA-C34-pidi",
+    "kind": "production",
+    "summary": "Say எனக்குத் தமிழ் பிடிக்கும் and unpack it as \"to me, Tamil catches\"; name the three dative-experiencer verbs தெரியும் / புரிகிறது / பிடிக்கும், contrast விரும்பு’s ordinary subject, and place Kannada ಹಿಡಿ on the p→h shift met in Chapter 7.",
+    "assesses": [
+      "TA-LEX-PIDI-01",
+      "TA-GRAMMAR-PIDI-02",
+      "TA-LEX-VIRUMBU-03",
+      "TA-LEX-UTAVU-01",
+      "TA-ETYMON-UTAVU-02",
+      "TA-LEX-KEL-01",
+      "TA-LEX-EDU-01",
+      "TA-GRAMMAR-DATIVE-SUBJECT-02",
+      "TA-GRAMMAR-DATIVE-SUBJECT-FAMILY-01",
+      "TA-LEX-TERI-01",
+      "TA-GRAMMAR-PURI-02",
+      "TA-ETYMON-NUMBERS-6-10-FAMILY-02"
+    ]
+  }
+}

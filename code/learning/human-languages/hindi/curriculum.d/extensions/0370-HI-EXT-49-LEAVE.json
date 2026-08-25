@@ -1,0 +1,15 @@
+{
+  "id": "HI-EXT-49-LEAVE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say when I am leaving in Hindi.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C49-now",
+    "HI-C49-day-after",
+    "HI-C49-journey",
+    "HI-C49-set-out",
+    "HI-C49-meeting"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 28,
+  "title": "Afternoon",
+  "label": "ch:ka-afternoon",
+  "canDo": "I can say \"afternoon\" in Kannada and keep it distinct from noon.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "KA-C28-aparahna",
+    "kind": "production",
+    "summary": "Say ಅಪರಾಹ್ನ, split it into apara (\"latter\") + ahna (\"day\"), and match that -ahna against the one in ಮಧ್ಯಾಹ್ನ.",
+    "assesses": [
+      "KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-01",
+      "KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-02",
+      "KA-PRAGMATICS-C17-MADHYAAHNA-MADHYARAATRI-03",
+      "KA-ETYMON-C28-APARAHNA-01",
+      "KA-PRAGMATICS-C28-APARAHNA-02"
+    ]
+  }
+}

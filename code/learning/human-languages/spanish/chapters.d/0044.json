@@ -1,0 +1,18 @@
+{
+  "chapter": 44,
+  "title": "Comeis and Vivis",
+  "label": "ch:spanish-er-ir-2pl",
+  "canDo": "I can recognise both vosotros forms and say that they are the second and last difference.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ES-C07-comeis-vivis",
+    "kind": "task",
+    "summary": "Latin's -tis, collapsed two ways: -eis for one family, -is for the other.",
+    "assesses": [
+      "ES-GRAMMAR-ER-PRESENT-2PL",
+      "ES-GRAMMAR-IR-PRESENT-2PL"
+    ]
+  }
+}

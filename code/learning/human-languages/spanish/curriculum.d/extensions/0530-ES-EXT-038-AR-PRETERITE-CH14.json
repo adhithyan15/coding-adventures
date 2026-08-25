@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-038-AR-PRETERITE-CH14",
+  "stage": "A2",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can form the singular completed past of the known regular -ar verb hablar.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C14-hablar-preterite"
+  ]
+}

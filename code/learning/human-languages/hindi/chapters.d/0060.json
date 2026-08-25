@@ -1,0 +1,21 @@
+{
+  "chapter": 60,
+  "title": "Animals in the Yard",
+  "label": "ch:hi-animals-in-the-yard",
+  "canDo": "I can name five more animals when I greet the house that keeps them.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "HI-C60-peacock",
+    "kind": "production",
+    "summary": "Complete HI-C60-peacock and say all five words in order.",
+    "assesses": [
+      "HI-LEX-C60-YARD-01",
+      "HI-LEX-C60-YARD-02",
+      "HI-LEX-C60-YARD-03",
+      "HI-LEX-C60-YARD-04",
+      "HI-LEX-C60-YARD-05"
+    ]
+  }
+}

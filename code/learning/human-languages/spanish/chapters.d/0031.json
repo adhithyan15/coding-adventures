@@ -1,0 +1,20 @@
+{
+  "chapter": 31,
+  "title": "Synthesis --- The Decoder",
+  "label": "ch:synthesis-sound-laws",
+  "canDo": "I can decode unfamiliar Spanish with three sound laws and three endings.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C57-sintesis-descifrar",
+    "kind": "task",
+    "summary": "Complete ES-C57-sintesis-descifrar: decode hoja and lleno, read a two-ending phrase, and say what a word that resists every rule suggests.",
+    "assesses": [
+      "ES-SOUND-F-TO-H",
+      "ES-SOUND-CLUSTER-TO-LL",
+      "ES-FRIEND-CION-TION"
+    ],
+    "note": "Six rules together. Deliberately exact about what a decoder is NOT -- a reading tool, mostly first guesses -- because overclaiming it disappoints at the worst moment. What actually changes is that an unfamiliar word stops being a wall."
+  }
+}

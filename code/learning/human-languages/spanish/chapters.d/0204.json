@@ -1,0 +1,17 @@
+{
+  "chapter": 204,
+  "title": "Review --- the Whole Preterite",
+  "label": "ch:repaso-preterito",
+  "canDo": "I can give the whole preterite, six people and three families.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ES-C55-repaso-preterito",
+    "kind": "task",
+    "summary": "I can give the whole preterite, six people and three families.",
+    "assesses": [
+      "ES-GRAMMAR-AR-PRETERITE-3PL"
+    ]
+  }
+}

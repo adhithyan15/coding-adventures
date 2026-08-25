@@ -1,0 +1,18 @@
+{
+  "chapter": 9,
+  "title": "Months and Seasons",
+  "label": "ch:it-months-and-seasons",
+  "canDo": "I can name the Italian months and seasons and say what primavera literally promises.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "IT-C09-stagioni",
+    "kind": "task",
+    "summary": "Give la primavera, l'estate, l'autunno, l'inverno, read primavera as prima vera, the first green, and trace stagione back to statiō, a standing of the year.",
+    "assesses": [
+      "IT-ETYMON-MESI-02",
+      "IT-ETYMON-STAGIONI-02"
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-291-ARBOL",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the seed, the root, the trunk, the branch and the wood in Spanish.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C291-semilla",
+    "ES-C291-raiz",
+    "ES-C291-tronco",
+    "ES-C291-rama",
+    "ES-C291-bosque"
+  ]
+}

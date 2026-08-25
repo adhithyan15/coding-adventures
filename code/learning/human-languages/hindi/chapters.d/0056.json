@@ -1,0 +1,21 @@
+{
+  "chapter": 56,
+  "title": "The Road",
+  "label": "ch:hi-the-road",
+  "canDo": "I can name five places along the way when I take my leave.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "HI-C56-field",
+    "kind": "production",
+    "summary": "Complete HI-C56-field and say all five words in order.",
+    "assesses": [
+      "HI-LEX-C56-ROAD-01",
+      "HI-LEX-C56-ROAD-02",
+      "HI-LEX-C56-ROAD-03",
+      "HI-LEX-C56-ROAD-04",
+      "HI-LEX-C56-ROAD-05"
+    ]
+  }
+}

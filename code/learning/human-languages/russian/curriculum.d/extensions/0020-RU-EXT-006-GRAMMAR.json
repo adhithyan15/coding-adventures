@@ -1,0 +1,11 @@
+{
+  "id": "RU-EXT-006-GRAMMAR",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can use the Russian-specific grammar needed for this part of the shared ability.",
+  "prerequisites": [],
+  "lessons": [
+    "RU-C02-kak-cross-language"
+  ]
+}

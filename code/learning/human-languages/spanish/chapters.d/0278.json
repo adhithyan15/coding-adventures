@@ -1,0 +1,24 @@
+{
+  "chapter": 278,
+  "title": "Four Things Outdoors --- Wind, Snow, Tree, Flower",
+  "label": "ch:al-aire-libre",
+  "canDo": "I can name the wind, the snow, a tree and a flower in Spanish, and say for each whether its English relative is an inherited cousin or a later borrowing.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C278-flor",
+    "kind": "task",
+    "summary": "Complete ES-C278-flor: say all four words, then sort their English relatives into cousins and loans.",
+    "assesses": [
+      "ES-LEX-VIENTO",
+      "ES-ETYMON-VIENTO",
+      "ES-LEX-NIEVE",
+      "ES-ETYMON-NIEVE",
+      "ES-LEX-ARBOL",
+      "ES-ETYMON-ARBOL",
+      "ES-LEX-FLOR",
+      "ES-ETYMON-FLOR"
+    ]
+  }
+}

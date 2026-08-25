@@ -1,0 +1,28 @@
+{
+  "chapter": 12,
+  "title": "Mother and Father",
+  "label": "ch:russian-mother-and-father",
+  "canDo": "I can name my mother and father in Russian, in both the affectionate and the formal register, and say which one is a real cousin of the English word and which is not.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "RU-C12-otets",
+    "kind": "production",
+    "summary": "The chapter closes on отец, the surprise of the pair: the reader produces мама, папа, мать and отец, states the natural-gender exception папа tests, and names мать as a secure PIE cousin of mother while отец is not a cousin of father at all. It reaches back to Chapter 8's семья to complete the family it gathers, and rescues four atoms nothing had revisited since Chapters 2, 7 and 8.",
+    "assesses": [
+      "RU-LEX-MAMA",
+      "RU-ETYMON-MAMA-BABBLING",
+      "RU-LEX-PAPA",
+      "RU-GRAMMAR-NATURAL-GENDER-OVERRIDE",
+      "RU-LEX-MAT",
+      "RU-ETYMON-MAT-MOTHER",
+      "RU-LEX-OTETS",
+      "RU-ETYMON-OTETS-ATTA",
+      "RU-LEX-SEMYA",
+      "RU-LEX-SESTRA",
+      "RU-GRAMMAR-OBJECT-PRONOUNS",
+      "RU-GRAMMAR-INDEFINITE-PERSONAL-PLURAL"
+    ]
+  }
+}

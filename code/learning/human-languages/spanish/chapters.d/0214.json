@@ -1,0 +1,17 @@
+{
+  "chapter": 214,
+  "title": "Preguntó Si --- A Question That Stops Being One",
+  "label": "ch:pregunto-si",
+  "canDo": "I can report a yes-or-no question somebody asked.",
+  "spineNodes": [
+    "SPINE-REPORT-WHAT-OTHERS-SAID"
+  ],
+  "payoff": {
+    "lesson": "ES-C57-pregunto-si",
+    "kind": "task",
+    "summary": "I can report a yes-or-no question somebody asked.",
+    "assesses": [
+      "ES-GRAMMAR-REPORTED-YESNO-SI"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 10,
+  "title": "Water, Wine, and Bread",
+  "label": "ch:la-water-wine-bread",
+  "canDo": "I can name water, wine, and bread in Latin, and explain why a companion is someone you share bread with.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "LA-C10-panis",
+    "kind": "production",
+    "summary": "Ask for aqua, vīnum, and pānis, then unpack com- plus pānis into companion.",
+    "assesses": [
+      "LA-ETYMON-AQUA-VINUM-01",
+      "LA-LEX-AQUA-VINUM-02",
+      "LA-ETYMON-PANIS-01",
+      "LA-LEX-PANIS-02",
+      "LA-PRAGMATICS-PANIS-03"
+    ]
+  }
+}

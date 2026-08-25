@@ -1,0 +1,21 @@
+{
+  "chapter": 347,
+  "title": "Which Way, And What Is Around You",
+  "label": "ch:el-norte-y-el-sur",
+  "canDo": "I can name el norte, el sur, el oeste, el centro and alrededor, and say why three of the four compass points came into Spanish from Germanic sailors rather than from Rome.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ES-C347-alrededor",
+    "kind": "production",
+    "summary": "Complete ES-C347-alrededor: send somebody north, south or west, name the middle of a town, and say what encircles it.",
+    "assesses": [
+      "ES-LEX-C347-WHERE-16",
+      "ES-LEX-C347-WHERE-17",
+      "ES-LEX-C347-WHERE-18",
+      "ES-LEX-C347-WHERE-19",
+      "ES-LEX-C347-WHERE-20"
+    ]
+  }
+}

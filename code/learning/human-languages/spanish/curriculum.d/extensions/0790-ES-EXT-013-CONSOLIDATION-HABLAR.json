@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-013-CONSOLIDATION-HABLAR",
+  "stage": "pre-A1",
+  "kind": "supporting",
+  "category": "consolidation",
+  "canDo": "I can run this chapter's material end to end without new vocabulary.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C06-repaso-hablar"
+  ]
+}

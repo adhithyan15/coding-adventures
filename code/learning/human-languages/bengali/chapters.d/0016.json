@@ -1,0 +1,24 @@
+{
+  "chapter": 16,
+  "title": "Hanging From the Head-Line, One Piece at a Time",
+  "label": "ch:bn-script-first",
+  "canDo": "I can write nine Bengali pieces from memory — six consonants, a vowel sign, its independent twin and the hasanta — and read the words for no and the greeting by assembling them from those pieces, including the greeting's conjunct.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "BN-W01-nomoshkar-read",
+    "kind": "reading",
+    "summary": "The greeting assembled from seven pieces the reader can each write from memory, including the conjunct and the letter written s but said sh, and introducing nothing new.",
+    "assesses": [
+      "BN-SCRIPT-NOMOSHKAR-READ-01",
+      "BN-SCRIPT-NA-01",
+      "BN-SCRIPT-MA-01",
+      "BN-SCRIPT-SA-01",
+      "BN-SCRIPT-KA-01",
+      "BN-SCRIPT-HASANTA-01",
+      "BN-SCRIPT-AA-MATRA-01",
+      "BN-SCRIPT-RA-01"
+    ]
+  }
+}

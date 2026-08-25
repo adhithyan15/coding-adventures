@@ -1,0 +1,33 @@
+{
+  "chapter": 20,
+  "title": "Carrying, Buying, Waiting, Meeting",
+  "label": "ch:it-carry-buy-wait-meet",
+  "canDo": "I can say in Italian that I carry or bring something, buy it, wait for someone and meet them, run all four through the -are endings without a pronoun, and put them into the past with avere rather than essere.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "IT-C20-incontrare",
+    "kind": "production",
+    "summary": "The chapter's last lesson runs porto, compro, aspetto and incontro in one breath, then settles Chapter 16's open question by putting incontrare into the past: ho incontrato Marco and ho incontrato Anna, one unmoved participle, because only essere makes it agree — and it names the weld the other three share, a plain Latin verb behind com-, ad- and in-.",
+    "assesses": [
+      "IT-LEX-PORTARE-02",
+      "IT-ETYMON-PORTARE-03",
+      "IT-GRAMMAR-PORTARE-04",
+      "IT-LEX-COMPRARE-02",
+      "IT-ETYMON-COMPRARE-03",
+      "IT-ETYMON-COMPRARE-04",
+      "IT-LEX-ASPETTARE-02",
+      "IT-ETYMON-ASPETTARE-03",
+      "IT-GRAMMAR-ASPETTARE-04",
+      "IT-LEX-INCONTRARE-02",
+      "IT-ETYMON-INCONTRARE-03",
+      "IT-NOTICE-INCONTRARE-04",
+      "IT-GRAMMAR-PASSATO-PROSSIMO-ESSERE-03",
+      "IT-PRAGMATICS-PASSATO-PROSSIMO-ESSERE-04",
+      "IT-GRAMMAR-PASSATO-PROSSIMO-02",
+      "IT-GRAMMAR-PRACTICE-02",
+      "IT-NOTICE-PRACTICE-04"
+    ]
+  }
+}

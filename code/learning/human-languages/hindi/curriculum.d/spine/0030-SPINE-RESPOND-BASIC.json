@@ -1,0 +1,13 @@
+{
+  "segments": [
+    "HI-PATH-011",
+    "HI-PATH-48-REPLY",
+    "HI-PATH-55-SKY",
+    "HI-PATH-64-MEASURE"
+  ],
+  "omits": [
+    "RESPONSE-YESNO",
+    "RESPONSE-OKAY"
+  ],
+  "relocates": {}
+}

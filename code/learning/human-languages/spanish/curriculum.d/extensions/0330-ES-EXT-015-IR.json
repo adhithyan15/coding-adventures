@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-015-IR",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can use the three singular present forms of Spanish ir to ask where someone is going.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C10-ir"
+  ]
+}

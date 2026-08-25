@@ -1,0 +1,21 @@
+{
+  "chapter": 195,
+  "title": "Synthesis --- Describing Where You Are",
+  "label": "ch:synthesis-hay",
+  "canDo": "I can describe a place using existence, relative clauses and impersonal obligation together.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ES-C54-sintesis-lo-que-hay",
+    "kind": "task",
+    "summary": "Complete ES-C54-sintesis-lo-que-hay: build lo que hay, hay que comerlo and say what remains to be learned.",
+    "assesses": [
+      "ES-LEX-HAY",
+      "ES-GRAMMAR-HAY-QUE",
+      "ES-GRAMMAR-LO-QUE",
+      "ES-GRAMMAR-RELATIVE-QUE"
+    ],
+    "note": "Final synthesis of the HL10 rung audit. Four pieces from four chapters stack in one line, and the reader can read comerlo without ever having been taught it."
+  }
+}

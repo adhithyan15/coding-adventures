@@ -1,0 +1,16 @@
+{
+  "id": "UR-EXT-020-FAMILY-FRIENDS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name my brother, sister, friend and family in Urdu, and choose merā or merī correctly for each noun's grammatical gender.",
+  "prerequisites": [
+    "UR-EXT-019-SOCIAL-VERBS"
+  ],
+  "lessons": [
+    "UR-C09-bhai",
+    "UR-C09-bahan",
+    "UR-C09-dost",
+    "UR-C09-khandan"
+  ]
+}

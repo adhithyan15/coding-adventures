@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-294-CASA",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can ask for a knife, a cup, a pot, a blanket and a broom in Spanish, politely.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C294-cuchillo",
+    "ES-C294-taza",
+    "ES-C294-olla",
+    "ES-C294-manta",
+    "ES-C294-escoba"
+  ]
+}

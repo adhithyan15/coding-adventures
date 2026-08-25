@@ -1,0 +1,17 @@
+{
+  "chapter": 41,
+  "title": "Review --- the Whole Present Tense",
+  "label": "ch:spanish-review-present-complete",
+  "canDo": "I can produce all six present-tense forms of a regular -ar verb.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ES-C07-repaso-presente-completo",
+    "kind": "dialogue",
+    "summary": "The first complete paradigm in the book - withheld for thirty-two chapters until every box in it was earned.",
+    "assesses": [
+      "ES-GRAMMAR-AR-PRESENT-COMPLETE"
+    ]
+  }
+}

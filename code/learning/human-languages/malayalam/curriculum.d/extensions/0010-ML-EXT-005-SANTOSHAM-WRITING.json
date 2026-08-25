@@ -1,0 +1,12 @@
+{
+  "id": "ML-EXT-005-SANTOSHAM-WRITING",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can move from noticing two shapes in a known Malayalam word to one guided copy and one delayed copy without a sudden writing jump.",
+  "prerequisites": [],
+  "lessons": [
+    "ML-W02-santosham-guided-copy",
+    "ML-W03-santosham-delayed-copy"
+  ]
+}

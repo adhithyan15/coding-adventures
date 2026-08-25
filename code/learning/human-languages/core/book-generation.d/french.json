@@ -1,0 +1,189 @@
+{
+  "glossaries": [
+    {
+      "language": "french",
+      "output": "french/book/chapters/appendix-glossary.tex"
+    }
+  ],
+  "answerKeys": [
+    {
+      "language": "french",
+      "output": "french/book/chapters/appendix-answer-key.tex"
+    }
+  ],
+  "indexes": [
+    {
+      "language": "french",
+      "output": "french/book/chapters/appendix-index.tex"
+    }
+  ],
+  "targets": [
+    {
+      "language": "french",
+      "chapter": 17,
+      "output": "french/book/chapters/ch17-head-and-hand.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 18,
+      "output": "french/book/chapters/ch18-yes-and-no.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 19,
+      "output": "french/book/chapters/ch19-please.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 20,
+      "output": "french/book/chapters/ch20-sorry.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 21,
+      "output": "french/book/chapters/ch21-weather.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 22,
+      "output": "french/book/chapters/ch22-dog-and-cat.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 23,
+      "output": "french/book/chapters/ch23-green-and-yellow.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 24,
+      "output": "french/book/chapters/ch24-taking-asking-helping-loving.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 25,
+      "output": "french/book/chapters/ch25-verbs-of-the-mind.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 26,
+      "output": "french/book/chapters/ch26-hearing-sleeping-walking-running.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 27,
+      "output": "french/book/chapters/ch27-sitting-standing-opening-closing.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 28,
+      "output": "french/book/chapters/ch28-coffee-tea-milk-sugar.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 29,
+      "output": "french/book/chapters/ch29-the-people-you-introduce.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 30,
+      "output": "french/book/chapters/ch30-cheese-butter-salt-egg.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 31,
+      "output": "french/book/chapters/ch31-eyes-nose-mouth-stomach.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 32,
+      "output": "french/book/chapters/ch32-questions.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 33,
+      "output": "french/book/chapters/ch33-modaux.tex"
+    }
+  ],
+  "handwritten": [
+    {
+      "language": "french",
+      "chapter": 1,
+      "output": "french/book/chapters/ch01-greetings.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 2,
+      "output": "french/book/chapters/ch02-introductions.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 3,
+      "output": "french/book/chapters/ch03-how-are-you.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 4,
+      "output": "french/book/chapters/ch04-farewells.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 5,
+      "output": "french/book/chapters/ch05-first-verbs.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 6,
+      "output": "french/book/chapters/ch06-numbers-1-10.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 7,
+      "output": "french/book/chapters/ch07-days.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 8,
+      "output": "french/book/chapters/ch08-time.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 9,
+      "output": "french/book/chapters/ch09-months-seasons.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 10,
+      "output": "french/book/chapters/ch10-family.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 11,
+      "output": "french/book/chapters/ch11-food.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 12,
+      "output": "french/book/chapters/ch12-numbers-11-20.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 13,
+      "output": "french/book/chapters/ch13-colours.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 14,
+      "output": "french/book/chapters/ch14-avoir-age.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 15,
+      "output": "french/book/chapters/ch15-passe-compose.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 16,
+      "output": "french/book/chapters/ch16-etre.tex"
+    }
+  ]
+}

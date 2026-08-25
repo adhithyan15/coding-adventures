@@ -1,0 +1,18 @@
+{
+  "chapter": 21,
+  "title": "Estudiar --- Studying Is Being Eager",
+  "label": "ch:spanish-estudiar",
+  "canDo": "I can say what I study, with a third regular -ar verb and no new pattern.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "ES-C06-estudiar",
+    "kind": "task",
+    "summary": "studere, to be eager - the root under student, studio and studious.",
+    "assesses": [
+      "ES-LEX-ESTUDIAR",
+      "ES-ETYMON-STUDERE"
+    ]
+  }
+}

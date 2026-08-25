@@ -1,0 +1,17 @@
+{
+  "chapter": 62,
+  "title": "-ncia --- Turning a Quality into a Thing",
+  "label": "ch:ncia",
+  "canDo": "I can read an -ncia word as English -nce, know it is feminine, and describe it.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C09-ncia",
+    "kind": "task",
+    "summary": "Read preferencia, choose la for distancia, and say una diferencia grande.",
+    "assesses": [
+      "ES-FRIEND-NCIA-NCE"
+    ]
+  }
+}

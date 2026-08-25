@@ -1,0 +1,16 @@
+{
+  "id": "IT-PATH-010",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "IT-C04-arrivederci",
+    "IT-C04-a-domani",
+    "IT-C04-a-presto",
+    "IT-C04-a-piu-tardi",
+    "IT-C04-practice"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "IT-EXT-010-CONSOLIDATION"
+  ]
+}

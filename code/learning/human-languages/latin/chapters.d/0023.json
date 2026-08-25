@@ -1,0 +1,22 @@
+{
+  "chapter": 23,
+  "title": "You're Welcome",
+  "label": "ch:la-youre-welcome",
+  "canDo": "I can reply to thanks in Latin with nihil est, and say honestly how classical that reply is.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "LA-C23-nihil-est",
+    "kind": "dialogue",
+    "summary": "Answer grātiās tibi agō with nihil est, and state plainly that the reply is modern convention built from real words.",
+    "assesses": [
+      "LA-PHONO-GRATIAS-01",
+      "LA-ETYMON-GRATIAS-02",
+      "LA-GRAMMAR-GRATIAS-03",
+      "LA-LEX-NIHIL-EST-01",
+      "LA-ETYMON-NIHIL-EST-02",
+      "LA-PRAGMATICS-NIHIL-EST-03"
+    ]
+  }
+}

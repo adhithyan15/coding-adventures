@@ -1,0 +1,17 @@
+{
+  "chapter": 236,
+  "title": "Hablando --- An Action Caught in the Middle",
+  "label": "ch:hablando",
+  "canDo": "I can form the -ando shape of an -ar verb.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C62-hablando",
+    "kind": "task",
+    "summary": "I can form the -ando shape of an -ar verb.",
+    "assesses": [
+      "ES-GRAMMAR-GERUND-AR"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 64,
+  "title": "Five Words That Join",
+  "label": "ch:ml-five-words-that-join",
+  "canDo": "I can say then, soon, sometimes, only and but in Malayalam.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "ML-C64-but",
+    "kind": "production",
+    "summary": "Complete ML-C64-but and say all five words in order.",
+    "assesses": [
+      "ML-LEX-C64-SMALL-01",
+      "ML-LEX-C64-SMALL-02",
+      "ML-LEX-C64-SMALL-03",
+      "ML-LEX-C64-SMALL-04",
+      "ML-LEX-C64-SMALL-05"
+    ]
+  }
+}

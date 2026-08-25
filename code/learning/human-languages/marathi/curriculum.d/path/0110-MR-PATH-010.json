@@ -1,0 +1,15 @@
+{
+  "id": "MR-PATH-010",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "MR-C04-punha",
+    "MR-C04-bhetu",
+    "MR-C04-punha-bhetu",
+    "MR-C04-udya-bhetu"
+  ],
+  "before": [
+    "MR-EXT-010-LANGUAGE-SPECIFIC"
+  ],
+  "inline": [],
+  "after": []
+}

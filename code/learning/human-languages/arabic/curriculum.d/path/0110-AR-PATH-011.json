@@ -1,0 +1,11 @@
+{
+  "id": "AR-PATH-011",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "AR-C06-min-fadlik",
+    "AR-C07-asif"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

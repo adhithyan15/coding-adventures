@@ -1,0 +1,19 @@
+{
+  "chapter": 143,
+  "title": "Water, Wine, and Bread",
+  "label": "ch:spanish-water-wine-bread",
+  "canDo": "I can name water, wine and bread in Spanish and say why a compañero is someone who shares bread with me.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "ES-C26-pan",
+    "kind": "task",
+    "summary": "Say el agua, el vino and el pan, then open compañero into com- plus pānis and follow the root out to panadería and panadero.",
+    "assesses": [
+      "ES-LEX-PAN-01",
+      "ES-ETYMON-PAN-02",
+      "ES-ETYMON-COMPANION-03"
+    ]
+  }
+}

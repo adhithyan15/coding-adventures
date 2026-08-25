@@ -1,0 +1,31 @@
+{
+  "chapter": 166,
+  "title": "Opening, Closing, Sitting Down, Standing Up",
+  "label": "ch:spanish-open-close-sit-stand",
+  "canDo": "I can say I open, close, sit down and stand up in Spanish, and use the reflexive pronoun that makes sentarse and levantarse land the action back on me.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C37-levantarse",
+    "kind": "task",
+    "summary": "Say the chapter in one breath — abro el libro, me siento, cierro el libro, me levanto — then separate the two features it taught: sentarse is reflexive and a stem-changer, levantarse is reflexive only. Name the shared recipe behind both body-position verbs (a Latin present participle, sedēns and levāns), pick abierto out as the one irregular participle, and reach back to la mano for why the article stays feminine.",
+    "assesses": [
+      "ES-LEX-ABRIR-01",
+      "ES-ETYMON-ABRIR-02",
+      "ES-GRAMMAR-ABIERTO-03",
+      "ES-LEX-CERRAR-04",
+      "ES-ETYMON-CERRAR-05",
+      "ES-ETYMON-CLAUDERE-06",
+      "ES-LEX-SENTARSE-07",
+      "ES-ETYMON-SENTARSE-08",
+      "ES-LEX-LEVANTARSE-09",
+      "ES-ETYMON-LEVANTARSE-10",
+      "ES-LEX-DE-PIE-11",
+      "ES-GRAMMAR-REFLEXIVE-FIRST-PERSON",
+      "ES-LEX-MANO-01",
+      "ES-GRAMMAR-MANO-GENDER-02",
+      "ES-LEX-CABEZA-01"
+    ]
+  }
+}

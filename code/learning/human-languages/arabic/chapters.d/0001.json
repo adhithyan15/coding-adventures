@@ -1,0 +1,26 @@
+{
+  "chapter": 1,
+  "title": "Greetings",
+  "label": "ch:greetings",
+  "canDo": "I can greet someone in Arabic, recognize the reply, and choose an appropriate response.",
+  "spineNodes": [
+    "SPINE-MEET-GREET",
+    "SPINE-DEFINITE-REFERENCE",
+    "SPINE-TIME-OF-DAY",
+    "SPINE-COURTESY-THANK",
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "AR-C01-practice",
+    "kind": "task",
+    "summary": "Complete AR-C01-practice, the canonical closing checkpoint, and demonstrate the chapter promise: greet someone in Arabic, recognize the reply, and choose an appropriate response.",
+    "assesses": [
+      "AR-C01-SALAM-01",
+      "AR-SCRIPT-WRITE-SALAM-03",
+      "AR-C01-MARHABA-04",
+      "AR-C01-FULL-GREETING-07",
+      "AR-SCRIPT-WRITE-FULL-GREETING-09"
+    ],
+    "note": "The closing checkpoint now scores spoken meaning, reading, guided writing, and delayed transcription from the migrated chapter-1 ramp."
+  }
+}

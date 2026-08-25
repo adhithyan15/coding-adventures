@@ -1,0 +1,15 @@
+{
+  "id": "ML-EXT-46-ASK",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five everyday things I might ask someone for in Malayalam.",
+  "prerequisites": [],
+  "lessons": [
+    "ML-C46-fruit",
+    "ML-C46-cloth",
+    "ML-C46-lamp",
+    "ML-C46-salt",
+    "ML-C46-book"
+  ]
+}

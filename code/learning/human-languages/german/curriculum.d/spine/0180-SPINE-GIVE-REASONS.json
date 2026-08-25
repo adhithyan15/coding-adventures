@@ -1,0 +1,10 @@
+{
+  "segments": [],
+  "omits": [
+    "OPINION-I-THINK",
+    "CONNECTIVE-SO",
+    "MODAL-SHOULD",
+    "EXPLANATION-GIVE"
+  ],
+  "relocates": {}
+}

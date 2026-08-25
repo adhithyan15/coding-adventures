@@ -1,0 +1,21 @@
+{
+  "chapter": 51,
+  "title": "Overhead",
+  "label": "ch:ta-overhead",
+  "canDo": "I can name the sky, the sun, the moon, the stars and a cloud in Tamil.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "TA-C51-cloud",
+    "kind": "production",
+    "summary": "Complete TA-C51-cloud and say all five words in order.",
+    "assesses": [
+      "TA-LEX-C51-SKY-01",
+      "TA-LEX-C51-SKY-02",
+      "TA-LEX-C51-SKY-03",
+      "TA-LEX-C51-SKY-04",
+      "TA-LEX-C51-SKY-05"
+    ]
+  }
+}

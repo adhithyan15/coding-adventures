@@ -1,0 +1,15 @@
+{
+  "segments": [
+    "SA-PATH-001",
+    "SA-PATH-003",
+    "SA-PATH-100",
+    "SA-PATH-30-WELCOME",
+    "SA-PATH-31-SKY",
+    "SA-PATH-38-EARTH",
+    "SA-PATH-45-DAYTIME"
+  ],
+  "omits": [
+    "GREETING-PEACE"
+  ],
+  "relocates": {}
+}

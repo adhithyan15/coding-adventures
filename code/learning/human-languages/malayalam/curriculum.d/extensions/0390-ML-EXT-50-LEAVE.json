@@ -1,0 +1,15 @@
+{
+  "id": "ML-EXT-50-LEAVE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can take my leave in Malayalam.",
+  "prerequisites": [],
+  "lessons": [
+    "ML-C50-now",
+    "ML-C50-day-after",
+    "ML-C50-journey",
+    "ML-C50-set-out",
+    "ML-C50-farewell"
+  ]
+}

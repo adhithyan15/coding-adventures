@@ -1,0 +1,12 @@
+{
+  "id": "RU-PATH-005A",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "RU-C01-practice"
+  ],
+  "before": [],
+  "inline": [
+    "RU-EXT-001-CONSOLIDATION"
+  ],
+  "after": []
+}

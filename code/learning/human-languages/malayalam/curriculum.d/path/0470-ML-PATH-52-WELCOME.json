@@ -1,0 +1,16 @@
+{
+  "id": "ML-PATH-52-WELCOME",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "ML-C52-door",
+    "ML-C52-chair",
+    "ML-C52-kolam",
+    "ML-C52-flower",
+    "ML-C52-garland"
+  ],
+  "before": [],
+  "inline": [
+    "ML-EXT-52-WELCOME"
+  ],
+  "after": []
+}

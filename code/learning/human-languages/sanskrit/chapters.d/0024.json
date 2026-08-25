@@ -1,0 +1,21 @@
+{
+  "chapter": 24,
+  "title": "Things You Ask For",
+  "label": "ch:sa-ask-for",
+  "canDo": "I can name five everyday things I might ask someone for in Sanskrit, and say which noun family each one belongs to.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "SA-C24-lamp",
+    "kind": "production",
+    "summary": "Complete SA-C24-lamp and demonstrate the chapter promise.",
+    "assesses": [
+      "SA-LEX-C24-ASK-01",
+      "SA-LEX-C24-ASK-02",
+      "SA-LEX-C24-ASK-03",
+      "SA-LEX-C24-ASK-04",
+      "SA-LEX-C24-ASK-05"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "chapter": 45,
+  "title": "The Older Generation",
+  "label": "ch:ka-older-generation",
+  "canDo": "I can name four more family and people words in this language.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C45-wife",
+    "kind": "production",
+    "summary": "Complete KA-C45-wife and say all four words in order.",
+    "assesses": [
+      "KA-LEX-GRANDFATHER",
+      "KA-LEX-GRANDMOTHER",
+      "KA-LEX-HUSBAND",
+      "KA-LEX-WIFE"
+    ]
+  }
+}

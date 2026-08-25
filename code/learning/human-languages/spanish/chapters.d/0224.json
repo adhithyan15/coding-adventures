@@ -1,0 +1,17 @@
+{
+  "chapter": 224,
+  "title": "Esto, Eso, Aquello --- Pointing at What Has No Name",
+  "label": "ch:esto-eso-aquello",
+  "canDo": "I can point at something I cannot name, or at a whole situation.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C59-esto-eso-aquello",
+    "kind": "task",
+    "summary": "I can point at something I cannot name, or at a whole situation.",
+    "assesses": [
+      "ES-GRAMMAR-DEMONSTRATIVE-NEUTER"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 59,
+  "title": "In the Kitchen",
+  "label": "ch:ta-in-the-kitchen",
+  "canDo": "I can name curd, ghee, oil, jaggery and sugar in Tamil.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "TA-C59-sugar",
+    "kind": "production",
+    "summary": "Complete TA-C59-sugar and say all five words in order.",
+    "assesses": [
+      "TA-LEX-C59-KITCHEN-01",
+      "TA-LEX-C59-KITCHEN-02",
+      "TA-LEX-C59-KITCHEN-03",
+      "TA-LEX-C59-KITCHEN-04",
+      "TA-LEX-C59-KITCHEN-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 13,
+  "title": "Telling Time",
+  "label": "ch:la-telling-time",
+  "canDo": "I can talk about the hour in Latin, and explain why a Roman hour was not a fixed sixty minutes.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "LA-C13-hora",
+    "kind": "task",
+    "summary": "Say hōra, then work out how long a Roman hour actually was on a winter day against a summer one.",
+    "assesses": [
+      "LA-LEX-MEDIUS-DIES-NOX-01",
+      "LA-PRAGMATICS-MEDIUS-DIES-NOX-02",
+      "LA-LEX-HORA-01",
+      "LA-PRAGMATICS-HORA-02",
+      "LA-ETYMON-HORA-03"
+    ]
+  }
+}

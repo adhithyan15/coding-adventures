@@ -1,0 +1,20 @@
+{
+  "chapter": 95,
+  "title": "Which One Is the Verb Asking For?",
+  "label": "ch:which-object",
+  "canDo": "I can decide between the direct and indirect pronoun by asking one question of the verb.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C46-cual-pide",
+    "kind": "task",
+    "summary": "Complete ES-C46-cual-pide: state the test, apply it to hablar and tener, and say why le veo is not an error in Madrid.",
+    "assesses": [
+      "ES-GRAMMAR-WHICH-OBJECT",
+      "ES-GRAMMAR-INDIRECT-OBJECT-LE",
+      "ES-GRAMMAR-DIRECT-OBJECT-LO"
+    ],
+    "note": "Replaces a verb-by-verb list with a test the reader can run, and names leismo honestly rather than letting it arrive later as a contradiction."
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 169,
+  "title": "Conseguir --- Getting Is Following Until You Have It",
+  "label": "ch:spanish-conseguir",
+  "canDo": "I can say what I get, and make the e-to-i stem change.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C39-conseguir",
+    "kind": "task",
+    "summary": "consequi, to follow after - the root of sequence and consequence.",
+    "assesses": [
+      "ES-LEX-CONSEGUIR-04",
+      "ES-ETYMON-CONSEGUIR-05",
+      "ES-GRAMMAR-STEM-E-I-06"
+    ]
+  }
+}

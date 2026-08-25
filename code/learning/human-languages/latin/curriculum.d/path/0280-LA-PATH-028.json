@@ -1,0 +1,15 @@
+{
+  "id": "LA-PATH-028",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "LA-C40-audio",
+    "LA-C40-dormio",
+    "LA-C40-sedeo",
+    "LA-C40-sto"
+  ],
+  "before": [],
+  "inline": [
+    "LA-EXT-028-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

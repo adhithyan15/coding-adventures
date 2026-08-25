@@ -1,0 +1,13 @@
+{
+  "id": "ZH-EXT-020-WO-SCRIPT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can write 我, a seven-stroke character that does not decompose into pieces I already know, by following its stroke route and keeping its two hooked strokes unbroken.",
+  "prerequisites": [
+    "ZH-EXT-019-GREETING-FRAME"
+  ],
+  "lessons": [
+    "ZH-W08-wo"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "chapter": 22,
+  "title": "Green and Yellow",
+  "label": "ch:te-green-and-yellow",
+  "canDo": "I can name green and yellow in Telugu, on top of the four colours I already had.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "TE-C22-pacha-pasupu",
+    "kind": "production",
+    "summary": "Say పచ్చ and పసుపు and show they are doublets of one Proto-Dravidian \\*pac- root — where Kannada's yellow broke away as a Sanskrit loan.",
+    "assesses": [
+      "TE-LEX-C11-RANGULU-01",
+      "TE-ETYMON-C11-RANGULU-02",
+      "TE-ETYMON-C21-KUKKA-PILLI-01",
+      "TE-ETYMON-C21-KUKKA-PILLI-02",
+      "TE-ETYMON-C22-PACHA-PASUPU-01",
+      "TE-ETYMON-C22-PACHA-PASUPU-02"
+    ]
+  }
+}

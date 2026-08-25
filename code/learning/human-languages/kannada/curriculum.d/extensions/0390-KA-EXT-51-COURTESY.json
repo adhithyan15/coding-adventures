@@ -1,0 +1,15 @@
+{
+  "id": "KA-EXT-51-COURTESY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can be polite in Kannada beyond thank you.",
+  "prerequisites": [],
+  "lessons": [
+    "KA-C51-gratitude",
+    "KA-C51-favour",
+    "KA-C51-respect",
+    "KA-C51-blessing",
+    "KA-C51-salutation"
+  ]
+}

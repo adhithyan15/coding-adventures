@@ -1,0 +1,15 @@
+{
+  "id": "FA-PATH-013",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "FA-C12-nam",
+    "FA-C12-del",
+    "FA-C12-dar",
+    "FA-C12-ketab"
+  ],
+  "before": [],
+  "inline": [
+    "FA-EXT-020-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

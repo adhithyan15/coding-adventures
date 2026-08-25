@@ -1,0 +1,10 @@
+{
+  "segments": [],
+  "omits": [
+    "ARGUMENT-CLAIM",
+    "ARGUMENT-EVIDENCE",
+    "CONNECTIVE-HOWEVER",
+    "CONNECTIVE-ALTHOUGH"
+  ],
+  "relocates": {}
+}

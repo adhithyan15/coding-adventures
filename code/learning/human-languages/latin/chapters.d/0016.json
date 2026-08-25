@@ -1,0 +1,22 @@
+{
+  "chapter": 16,
+  "title": "Numbers Eleven to Twenty",
+  "label": "ch:la-numbers-eleven-to-twenty",
+  "canDo": "I can count from eleven to twenty in Latin, including its backwards eighteen and nineteen.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "LA-C16-undecim-viginti",
+    "kind": "task",
+    "summary": "Count ūndecim to vīgintī aloud, then say duodēvīgintī and ūndēvīgintī and explain what they are counting backwards from.",
+    "assesses": [
+      "LA-GRAMMAR-WEATHER-VERBS-01",
+      "LA-LEX-WEATHER-VERBS-02",
+      "LA-LEX-UNDECIM-VIGINTI-01",
+      "LA-LEX-UNDECIM-VIGINTI-02",
+      "LA-PRAGMATICS-UNDECIM-VIGINTI-03",
+      "LA-LEX-UNDECIM-VIGINTI-04"
+    ]
+  }
+}

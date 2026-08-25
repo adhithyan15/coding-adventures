@@ -1,0 +1,15 @@
+{
+  "id": "SA-EXT-29-COURTESY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can be polite in Sanskrit beyond thank you.",
+  "prerequisites": [],
+  "lessons": [
+    "SA-C29-please",
+    "SA-C29-pardon",
+    "SA-C29-bow",
+    "SA-C29-favour",
+    "SA-C29-fortunate"
+  ]
+}

@@ -1,0 +1,5 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file."
+}

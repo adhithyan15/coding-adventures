@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-037-SYNTH-REL",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "lessons": [
+    "ES-C53-sintesis-frases-largas"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-037-SYNTH-REL"
+  ],
+  "after": []
+}

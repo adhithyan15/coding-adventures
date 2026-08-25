@@ -1,0 +1,22 @@
+{
+  "chapter": 42,
+  "title": "Describing Things",
+  "label": "ch:ml-describing-things",
+  "canDo": "I can point at something in Malayalam and ask who or where it is — and I can say what the six words have in common.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C42-adjective-system",
+    "kind": "production",
+    "summary": "Say the near word, the far word and the question word in a row, and name the part that changed.",
+    "assesses": [
+      "ML-LEX-C42-ADJ-01",
+      "ML-LEX-C42-ADJ-02",
+      "ML-LEX-C42-ADJ-03",
+      "ML-LEX-C42-ADJ-04",
+      "ML-LEX-C42-ADJ-05",
+      "ML-GRAMMAR-C42-ADJ-SYSTEM"
+    ]
+  }
+}

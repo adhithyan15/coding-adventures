@@ -1,0 +1,11 @@
+{
+  "id": "ML-PATH-002",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "ML-C01-athe",
+    "ML-C01-illa"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

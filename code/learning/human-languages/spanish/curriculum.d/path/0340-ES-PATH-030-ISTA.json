@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-030-ISTA",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "ES-C09-ista"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-030-ISTA"
+  ],
+  "after": []
+}

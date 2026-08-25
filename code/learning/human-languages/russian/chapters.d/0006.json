@@ -1,0 +1,31 @@
+{
+  "chapter": 6,
+  "title": "Water, Coffee, Tea, and Bread",
+  "label": "ch:russian-water-coffee-tea-bread",
+  "canDo": "I can name water, coffee, tea and bread with their genders in Russian, ask for any of them politely, and say which are native and which are loans.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "RU-C06-khleb",
+    "kind": "production",
+    "summary": "The chapter closes on хлеб, the word that looks native but is a prehistoric Germanic loan: the reader produces all four words with their genders, extends пожалуйста into a real request pattern on кофе and чай, and sorts the set into native (вода), loan disguised by age (хлеб), and two visibly foreign words that arrived by opposite routes (кофе by sea, чай overland). It reaches back to Chapter 5's любить, closing the chapter's own final atoms which nothing had yet revisited.",
+    "assesses": [
+      "RU-LEX-VODA",
+      "RU-GRAMMAR-NOUN-GENDER-ENDING",
+      "RU-ETYMON-VODA-WATER",
+      "RU-LEX-KOFE",
+      "RU-SCRIPT-FE",
+      "RU-ETYMON-KOFE-ROUTE",
+      "RU-LEX-CHAI",
+      "RU-ETYMON-CHAI-ROUTE",
+      "RU-GRAMMAR-REQUEST-PATTERN",
+      "RU-LEX-KHLEB",
+      "RU-SCRIPT-KHA",
+      "RU-ETYMON-KHLEB-LOAF",
+      "RU-LEX-LYUBIT",
+      "RU-GRAMMAR-L-EPENTHESIS",
+      "RU-ETYMON-LYUBIT-LOVE"
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "id": "SA-EXT-28-LEAVE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can take my leave in Sanskrit and wish someone well.",
+  "prerequisites": [],
+  "lessons": [
+    "SA-C28-now",
+    "SA-C28-day-after",
+    "SA-C28-journey",
+    "SA-C28-auspicious",
+    "SA-C28-svasti"
+  ]
+}

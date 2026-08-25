@@ -1,0 +1,23 @@
+{
+  "chapter": 41,
+  "title": "Pointing, and Asking",
+  "label": "ch:te-pointing-and-asking",
+  "canDo": "I can point at something in Telugu and ask who or where it is — and I can say what the six words have in common.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "TE-C41-deixis-system",
+    "kind": "production",
+    "summary": "Say the near word, the far word and the question word in a row, and name the part that changed.",
+    "assesses": [
+      "TE-LEX-C41-DEIXIS-01",
+      "TE-LEX-C41-DEIXIS-02",
+      "TE-LEX-C41-DEIXIS-03",
+      "TE-LEX-C41-DEIXIS-04",
+      "TE-LEX-C41-DEIXIS-05",
+      "TE-LEX-C41-DEIXIS-06",
+      "TE-GRAMMAR-C41-DEIXIS-SYSTEM"
+    ]
+  }
+}

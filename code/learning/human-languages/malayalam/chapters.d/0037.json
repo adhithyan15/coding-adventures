@@ -1,0 +1,27 @@
+{
+  "chapter": 37,
+  "title": "Face Words",
+  "label": "ch:ml-face-words",
+  "canDo": "I can name my eye, ear, nose and mouth in Malayalam, and say which of the four the family agrees on almost completely and which one Kannada alone breaks from.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "ML-C37-vaay",
+    "kind": "production",
+    "summary": "Name kannu, chevi, mookku and vaay, run the near-total four-way match on eye against chevi's three-against-one split on ear, and recall that Chapter 33 already named vaay once only to rule it out of vaayikkuka.",
+    "assesses": [
+      "ML-CONCEPT-C37-VAAY-01",
+      "ML-CONCEPT-C37-VAAY-02",
+      "ML-CONCEPT-C37-MOOKKU-01",
+      "ML-CONCEPT-C37-MOOKKU-02",
+      "ML-CONCEPT-C37-CHEVI-01",
+      "ML-CONCEPT-C37-CHEVI-02",
+      "ML-CONCEPT-C37-KANNU-01",
+      "ML-CONCEPT-C37-KANNU-02",
+      "ML-CONCEPT-C13-SHAREERA-BHAAGANGAL-01",
+      "ML-CONCEPT-C33-VAAYIKKUKA-01",
+      "ML-CONCEPT-C33-VAAYIKKUKA-02"
+    ]
+  }
+}

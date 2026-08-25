@@ -1,0 +1,12 @@
+{
+  "id": "AR-PATH-019",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "AR-C17-kam-umruka"
+  ],
+  "before": [],
+  "inline": [
+    "AR-EXT-019-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

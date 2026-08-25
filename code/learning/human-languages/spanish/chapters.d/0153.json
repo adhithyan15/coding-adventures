@@ -1,0 +1,18 @@
+{
+  "chapter": 153,
+  "title": "Pensar — Thinking Is Weighing",
+  "label": "ch:spanish-pensar",
+  "canDo": "I can say what I think, and break pensar's stem the way a stem-changer requires.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C34-pensar",
+    "kind": "task",
+    "summary": "Run pensar through the e→ie boot, and find the scales still inside pensive and peso.",
+    "assesses": [
+      "ES-LEX-PENSAR-01",
+      "ES-ETYMON-PENSAR-02"
+    ]
+  }
+}

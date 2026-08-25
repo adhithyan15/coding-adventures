@@ -1,0 +1,18 @@
+{
+  "chapter": 126,
+  "title": "Wanting, Not Asserting",
+  "label": "ch:spanish-quiero-que",
+  "canDo": "I can tell an asserted event apart from a wanted one, and say why the verb changes.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "ES-C18-quiero-que",
+    "kind": "task",
+    "summary": "Hablas espanol asserts; quiero que hables asserts nothing at all.",
+    "assesses": [
+      "ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED",
+      "ES-GRAMMAR-WANT-ONE-TWO-SUBJECT-CONTRAST"
+    ]
+  }
+}

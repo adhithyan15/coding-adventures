@@ -1,0 +1,21 @@
+{
+  "chapter": 51,
+  "title": "Welcoming a Guest",
+  "label": "ch:hi-welcoming-a-guest",
+  "canDo": "I can name what a Hindi household puts in front of a guest at the door.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "HI-C51-sweet",
+    "kind": "production",
+    "summary": "Complete HI-C51-sweet and say all five words in order.",
+    "assesses": [
+      "HI-LEX-C51-WELCOME-01",
+      "HI-LEX-C51-WELCOME-02",
+      "HI-LEX-C51-WELCOME-03",
+      "HI-LEX-C51-WELCOME-04",
+      "HI-LEX-C51-WELCOME-05"
+    ]
+  }
+}

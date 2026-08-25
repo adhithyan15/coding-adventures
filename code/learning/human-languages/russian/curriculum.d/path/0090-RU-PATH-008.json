@@ -1,0 +1,15 @@
+{
+  "id": "RU-PATH-008",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "RU-C04-dumat",
+    "RU-C04-ponimat",
+    "RU-C04-chitat",
+    "RU-C04-pisat"
+  ],
+  "before": [],
+  "inline": [
+    "RU-EXT-008-MIND-VERBS"
+  ],
+  "after": []
+}

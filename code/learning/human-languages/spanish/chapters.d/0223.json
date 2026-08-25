@@ -1,0 +1,17 @@
+{
+  "chapter": 223,
+  "title": "Aquel --- The Far One, and an Old Friend",
+  "label": "ch:aquel",
+  "canDo": "I can point at something away from us both.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C59-aquel",
+    "kind": "task",
+    "summary": "I can point at something away from us both.",
+    "assesses": [
+      "ES-GRAMMAR-DEMONSTRATIVE-AQUEL"
+    ]
+  }
+}

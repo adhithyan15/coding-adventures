@@ -1,0 +1,13 @@
+{
+  "id": "JA-EXT-004-KATAKANA-LOANWORDS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can read a katakana loanword with its long-vowel bar and recognise katakana as the script that marks a word as borrowed.",
+  "prerequisites": [
+    "JA-EXT-014-KOOHII-KATAKANA"
+  ],
+  "lessons": [
+    "JA-C01-koohii"
+  ]
+}

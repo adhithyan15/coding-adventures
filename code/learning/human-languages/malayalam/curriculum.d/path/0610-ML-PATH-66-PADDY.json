@@ -1,0 +1,16 @@
+{
+  "id": "ML-PATH-66-PADDY",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "ML-C66-paddy",
+    "ML-C66-grass",
+    "ML-C66-ear-of-grain",
+    "ML-C66-plough",
+    "ML-C66-harvest"
+  ],
+  "before": [],
+  "inline": [
+    "ML-EXT-66-PADDY"
+  ],
+  "after": []
+}

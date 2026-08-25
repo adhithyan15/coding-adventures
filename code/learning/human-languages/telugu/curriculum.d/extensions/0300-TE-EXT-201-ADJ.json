@@ -1,0 +1,16 @@
+{
+  "id": "TE-EXT-201-ADJ",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can describe things in Telugu — big, small, good, new, old — and I can see the one pattern the six words are built from.",
+  "prerequisites": [],
+  "lessons": [
+    "TE-C42-big",
+    "TE-C42-small",
+    "TE-C42-good",
+    "TE-C42-new",
+    "TE-C42-old",
+    "TE-C42-adjective-system"
+  ]
+}

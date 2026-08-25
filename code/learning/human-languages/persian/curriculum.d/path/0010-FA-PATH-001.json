@@ -1,0 +1,13 @@
+{
+  "id": "FA-PATH-001",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "FA-C01-salam",
+    "FA-W00-alef-guided-copy"
+  ],
+  "before": [],
+  "inline": [
+    "FA-EXT-001-INLINE-SCRIPT"
+  ],
+  "after": []
+}

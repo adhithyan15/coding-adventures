@@ -1,0 +1,21 @@
+{
+  "chapter": 46,
+  "title": "Light, Shadow, and Going to Sleep",
+  "label": "ch:la-lux",
+  "canDo": "I can name light, shadow, star, moon and sleep in Latin, and use them to close a day the way a Latin speaker would.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "LA-C46-somnus",
+    "kind": "task",
+    "summary": "The fifth word of the group, taken apart against the four before it.",
+    "assesses": [
+      "LA-LEX-C46-NIGHT-01",
+      "LA-LEX-C46-NIGHT-02",
+      "LA-LEX-C46-NIGHT-03",
+      "LA-LEX-C46-NIGHT-04",
+      "LA-LEX-C46-NIGHT-05"
+    ]
+  }
+}

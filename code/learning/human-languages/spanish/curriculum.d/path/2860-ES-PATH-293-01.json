@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-293-01",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "ES-C293-cuello",
+    "ES-C293-hombro",
+    "ES-C293-espalda",
+    "ES-C293-rodilla",
+    "ES-C293-tobillo"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-293-CUERPO"
+  ],
+  "after": []
+}

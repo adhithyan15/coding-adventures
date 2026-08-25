@@ -1,0 +1,15 @@
+{
+  "id": "HI-EXT-66-FIELD",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five things a Hindi field and its well hold.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C66-seed",
+    "HI-C66-crop",
+    "HI-C66-grain",
+    "HI-C66-grass",
+    "HI-C66-well"
+  ]
+}

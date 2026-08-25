@@ -1,0 +1,24 @@
+{
+  "chapter": 22,
+  "title": "Answering, Meeting, and Three Ways to Play",
+  "label": "ch:pt-answering-meeting-playing",
+  "canDo": "I can say that I answer and meet in Portuguese, split meeting between encontrar and conhecer, and choose among the three verbs Portuguese uses for playing — jogar, brincar and tocar.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "PT-C22-jogar-brincar-tocar",
+    "kind": "production",
+    "summary": "The chapter's last lesson closes the set: after the three play verbs the reader produces all five first-person forms in one run - respondo, encontro, jogo, brinco, toco - chooses jogar, brincar or tocar by the kind of playing, and names brincar as the one root of the three that is genuinely unsettled.",
+    "assesses": [
+      "PT-LEX-RESPONDER-02",
+      "PT-ETYMON-RESPONDER-03",
+      "PT-LEX-ENCONTRAR-02",
+      "PT-GRAMMAR-ENCONTRAR-04",
+      "PT-ETYMON-ENCONTRAR-03",
+      "PT-LEX-JOGAR-BRINCAR-TOCAR-02",
+      "PT-GRAMMAR-JOGAR-BRINCAR-TOCAR-04",
+      "PT-ETYMON-JOGAR-BRINCAR-TOCAR-03"
+    ]
+  }
+}

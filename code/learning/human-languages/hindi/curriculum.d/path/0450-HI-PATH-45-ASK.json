@@ -1,0 +1,16 @@
+{
+  "id": "HI-PATH-45-ASK",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "HI-C45-fruit",
+    "HI-C45-cloth",
+    "HI-C45-lamp",
+    "HI-C45-salt",
+    "HI-C45-soap"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-45-ASK"
+  ],
+  "after": []
+}

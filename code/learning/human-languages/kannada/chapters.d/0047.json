@@ -1,0 +1,21 @@
+{
+  "chapter": 47,
+  "title": "The Leg and the Tooth",
+  "label": "ch:ka-body-more",
+  "canDo": "I can name five more parts of the body in Kannada, and point to the two regular sound exchanges that separate them from their Tamil and Telugu cousins.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "KA-C47-stomach",
+    "kind": "production",
+    "summary": "Complete KA-C47-stomach and say all five words in order.",
+    "assesses": [
+      "KA-LEX-C47-BODY-01",
+      "KA-LEX-C47-BODY-02",
+      "KA-LEX-C47-BODY-03",
+      "KA-LEX-C47-BODY-04",
+      "KA-LEX-C47-BODY-05"
+    ]
+  }
+}

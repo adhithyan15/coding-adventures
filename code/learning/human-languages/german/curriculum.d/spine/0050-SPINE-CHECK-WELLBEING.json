@@ -1,0 +1,14 @@
+{
+  "segments": [
+    "GE-PATH-002",
+    "GE-PATH-008",
+    "GE-PATH-012",
+    "GE-PATH-022",
+    "GE-PATH-033",
+    "GE-PATH-034"
+  ],
+  "omits": [
+    "WORD-WELL"
+  ],
+  "relocates": {}
+}

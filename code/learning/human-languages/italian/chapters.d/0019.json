@@ -1,0 +1,35 @@
+{
+  "chapter": 19,
+  "title": "Taking, Asking, Helping — and Mi Piace",
+  "label": "ch:it-backwards-verb",
+  "canDo": "I can say in Italian that I take, ask and help, and build a sentence with piacere the way Italian actually builds it — with the thing liked as the subject and me as the one it happens to.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "IT-C19-mi-piace",
+    "kind": "production",
+    "summary": "The chapter's last lesson turns the set around: prendo, chiedo and aiuto in one run, then mi piace il vino read as the wine pleasing me, so the verb agrees with the thing and goes plural for le stagioni — and Chapter 3's one-word courtesy piacere is revealed as this verb's dictionary form.",
+    "assesses": [
+      "IT-LEX-PRENDERE-02",
+      "IT-ETYMON-PRENDERE-03",
+      "IT-GRAMMAR-PRENDERE-04",
+      "IT-SOUND-CHIEDERE-02",
+      "IT-ETYMON-CHIEDERE-03",
+      "IT-GRAMMAR-CHIEDERE-04",
+      "IT-ETYMON-AIUTARE-02",
+      "IT-GRAMMAR-AIUTARE-03",
+      "IT-LEX-MI-PIACE-02",
+      "IT-GRAMMAR-MI-PIACE-03",
+      "IT-NOTICE-MI-PIACE-04",
+      "IT-SOUND-PIACERE-02",
+      "IT-ETYMON-PIACERE-03",
+      "IT-GRAMMAR-PIACERE-04",
+      "IT-GRAMMAR-MI-CHIAMO-04",
+      "IT-ETYMON-STAGIONI-02",
+      "IT-ETYMON-ACQUA-VINO-03",
+      "IT-GRAMMAR-LEGGERE-04",
+      "IT-LEX-CAPIRE-02"
+    ]
+  }
+}

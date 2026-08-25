@@ -1,0 +1,19 @@
+{
+  "chapter": 124,
+  "title": "One Stem, Two Tenses",
+  "label": "ch:spanish-future-conditional-stems",
+  "canDo": "I can use the irregular stems that serve the future and the conditional alike.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C17-practice",
+    "kind": "task",
+    "summary": "hare, tendre, podre - stems shared by both tenses, so learning one buys the other.",
+    "assesses": [
+      "ES-GRAMMAR-HACER-FUTURE-CONDITIONAL-SINGULAR",
+      "ES-GRAMMAR-TENER-FUTURE-CONDITIONAL-SINGULAR",
+      "ES-GRAMMAR-PODER-FUTURE-CONDITIONAL-SINGULAR"
+    ]
+  }
+}

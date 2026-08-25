@@ -1,0 +1,15 @@
+{
+  "id": "ML-EXT-52-WELCOME",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the five things a guest meets at a doorway in Malayalam.",
+  "prerequisites": [],
+  "lessons": [
+    "ML-C52-door",
+    "ML-C52-chair",
+    "ML-C52-kolam",
+    "ML-C52-flower",
+    "ML-C52-garland"
+  ]
+}

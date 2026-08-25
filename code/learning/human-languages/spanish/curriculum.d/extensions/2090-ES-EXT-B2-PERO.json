@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-B2-PERO",
+  "stage": "B2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can use the additional Spanish material required at this point in the path.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C58-pero"
+  ]
+}

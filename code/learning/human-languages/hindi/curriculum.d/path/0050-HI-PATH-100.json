@@ -1,0 +1,47 @@
+{
+  "id": "HI-PATH-100",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "HI-S01-letter-ma",
+    "HI-S02-letter-na",
+    "HI-S03-letter-a",
+    "HI-S04-letter-aa",
+    "HI-S05-sign-virama",
+    "HI-S06-vowel-sign-aa",
+    "HI-S07-letter-ta",
+    "HI-S08-letter-sa",
+    "HI-S110-letter-ra",
+    "HI-S111-letter-ka",
+    "HI-S112-vowel-sign-e",
+    "HI-S113-letter-pa",
+    "HI-S114-letter-ha",
+    "HI-S115-letter-ya",
+    "HI-S116-vowel-sign-ii",
+    "HI-S117-letter-ca",
+    "HI-S118-sign-candrabindu",
+    "HI-S119-letter-ssa",
+    "HI-S120-vowel-sign-u",
+    "HI-S121-letter-la",
+    "HI-S122-letter-kha",
+    "HI-S123-letter-da",
+    "HI-S124-letter-dha",
+    "HI-W12-schwa-drop",
+    "HI-W12-ii-matra",
+    "HI-W12-u-matra",
+    "HI-W12-ai-matra",
+    "HI-W12-aa",
+    "HI-W12-ii",
+    "HI-W12-chandrabindu",
+    "HI-W12-bha",
+    "HI-W12-ya",
+    "HI-W12-ba",
+    "HI-W12-da-retroflex"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-100-SCRIPT-RECOGNITION"
+  ],
+  "after": [
+    "HI-EXT-060-SCRIPT-SECOND-WAVE"
+  ]
+}

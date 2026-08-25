@@ -1,0 +1,11 @@
+{
+  "id": "IT-EXT-020-ETYMOLOGY",
+  "stage": "A1",
+  "kind": "supporting",
+  "category": "etymology",
+  "canDo": "I can use this Italian word history as a memory hook without confusing origin and current use.",
+  "prerequisites": [],
+  "lessons": [
+    "IT-C16-essere-stato"
+  ]
+}

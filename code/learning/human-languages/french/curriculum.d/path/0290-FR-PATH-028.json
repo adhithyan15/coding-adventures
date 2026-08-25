@@ -1,0 +1,15 @@
+{
+  "id": "FR-PATH-028",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "FR-C31-oeil",
+    "FR-C31-nez",
+    "FR-C31-bouche",
+    "FR-C31-ventre"
+  ],
+  "before": [],
+  "inline": [
+    "FR-EXT-028-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

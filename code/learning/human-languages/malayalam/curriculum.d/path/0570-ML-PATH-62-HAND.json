@@ -1,0 +1,16 @@
+{
+  "id": "ML-PATH-62-HAND",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "lessons": [
+    "ML-C62-rope",
+    "ML-C62-thread",
+    "ML-C62-needle",
+    "ML-C62-broom",
+    "ML-C62-winnowing-tray"
+  ],
+  "before": [],
+  "inline": [
+    "ML-EXT-62-HAND"
+  ],
+  "after": []
+}

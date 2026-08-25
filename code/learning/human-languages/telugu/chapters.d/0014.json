@@ -1,0 +1,19 @@
+{
+  "chapter": 14,
+  "title": "Seasons",
+  "label": "ch:te-seasons",
+  "canDo": "I can name the four seasons in Telugu, including the rains that anchor the year.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "TE-C14-rutuvulu",
+    "kind": "production",
+    "summary": "Say వేసవి (cousin of Kannada's bēsige), వానాకాలం and శీతాకాలం from native roots, then the doubly-Sanskrit వసంత ఋతువు.",
+    "assesses": [
+      "TE-LEX-C13-SHARIRA-BHAGALU-01",
+      "TE-LEX-C14-RUTUVULU-01",
+      "TE-PRAGMATICS-C14-RUTUVULU-02"
+    ]
+  }
+}

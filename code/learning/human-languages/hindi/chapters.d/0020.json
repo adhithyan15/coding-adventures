@@ -1,0 +1,19 @@
+{
+  "chapter": 20,
+  "title": "Weather",
+  "label": "ch:hi-weather",
+  "canDo": "I can say what the weather is doing in Hindi and stay out of the बारिश / वर्षा false-friend trap.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "HI-C20-mausam",
+    "kind": "production",
+    "summary": "Say मौसम, then गर्मी है and ठंड है, and keep everyday बारिश apart from formal वर्षा despite the resemblance.",
+    "assesses": [
+      "HI-CONCEPT-C20-MAUSAM-01",
+      "HI-CONCEPT-C20-MAUSAM-02",
+      "HI-CONCEPT-C20-MAUSAM-03"
+    ]
+  }
+}

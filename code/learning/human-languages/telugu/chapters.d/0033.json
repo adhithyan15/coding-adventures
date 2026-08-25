@@ -1,0 +1,29 @@
+{
+  "chapter": 33,
+  "title": "Four Verbs of the Mind",
+  "label": "ch:te-verbs-of-the-mind",
+  "canDo": "I can say I think, I understand, I read and I write in Telugu with the same three slots, build the -కో ending that hands an action back to its doer, say \"I understood\" with no నేను in it, and tell this chapter's native verbs from the Sanskrit words layered beside them.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "TE-C33-raayu",
+    "kind": "production",
+    "summary": "Say నేను తెలుగు రాస్తాను, run the chapter's four verbs in the present, count them up from ఆరు to పది, take వ్రాయు back to the Dravidian line-drawing root behind Tamil வரை and Kannada ಬರೆ, and name which of the four words came from Sanskrit.",
+    "assesses": [
+      "TE-LEX-C33-RAAYU-01",
+      "TE-ETYMON-C33-RAAYU-02",
+      "TE-LEX-C33-CADUVU-01",
+      "TE-GRAMMAR-C33-CADUVU-02",
+      "TE-LEX-C33-ANUKO-01",
+      "TE-GRAMMAR-C33-ANUKO-02",
+      "TE-ETYMON-C33-ANUKO-03",
+      "TE-LEX-C33-ARTHAM-CESUKO-01",
+      "TE-GRAMMAR-C33-ARTHAM-CESUKO-02",
+      "TE-ETYMON-C33-ARTHAM-CESUKO-03",
+      "TE-LEX-C07-NUMBERS-6-10-01",
+      "TE-ETYMON-C32-TINU-02",
+      "TE-LEX-C32-TELUSU-01"
+    ]
+  }
+}

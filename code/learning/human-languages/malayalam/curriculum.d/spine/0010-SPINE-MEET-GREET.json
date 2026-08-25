@@ -1,0 +1,15 @@
+{
+  "segments": [
+    "ML-PATH-001",
+    "ML-PATH-100",
+    "ML-PATH-52-WELCOME",
+    "ML-PATH-53-SKY",
+    "ML-PATH-60-ANIMAL"
+  ],
+  "omits": [
+    "GREETING-FORMAL",
+    "GREETING-PEACE",
+    "GREETING-WELCOME"
+  ],
+  "relocates": {}
+}

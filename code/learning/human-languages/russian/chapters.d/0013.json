@@ -1,0 +1,26 @@
+{
+  "chapter": 13,
+  "title": "Milk, Cheese, Juice, and Soup",
+  "label": "ch:russian-milk-cheese-juice-soup",
+  "canDo": "I can name milk, cheese, juice and soup in Russian with their genders, ask for any of them politely, and say which are inherited and which are borrowed.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "RU-C13-sup",
+    "kind": "production",
+    "summary": "The chapter closes on суп, a French loan that mirrors кофе's story from the opposite direction: the reader produces молоко, сыр, сок and суп with their genders, extends Chapter 6's request pattern to all four, and sorts the set into a hand-motion cousin, a taste cousin, an honest dead end, and a shared loanword. It reaches all the way back to Chapter 2 to rescue the naming-question comparison and я's script warning, the last two atoms in the track that nothing had revisited.",
+    "assesses": [
+      "RU-LEX-MOLOKO",
+      "RU-ETYMON-MOLOKO-MILK",
+      "RU-LEX-SYR",
+      "RU-ETYMON-SYR-SOUR",
+      "RU-LEX-SOK",
+      "RU-ETYMON-SOK-NO-COUSIN",
+      "RU-LEX-SUP",
+      "RU-ETYMON-SUP-FRENCH-LOAN",
+      "RU-COMPARISON-NAMING-QUESTION-FRAMES",
+      "RU-SCRIPT-YA-NOT-R"
+    ]
+  }
+}

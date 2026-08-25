@@ -1,0 +1,14 @@
+{
+  "id": "TA-EXT-032-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can ask for tea, milk or food in Tamil, and say whose mistake it was when the wrong thing arrives.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C36-teneer",
+    "TA-C36-paal",
+    "TA-C36-unavu",
+    "TA-C36-tavaru"
+  ]
+}

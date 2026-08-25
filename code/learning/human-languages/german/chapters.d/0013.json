@@ -1,0 +1,16 @@
+{
+  "chapter": 13,
+  "title": "Colours",
+  "label": "ch:colours",
+  "canDo": "I can name basic colours in German and use them to describe something.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "GE-C13-rot-blau",
+    "kind": "task",
+    "summary": "Complete GE-C13-rot-blau, the canonical closing checkpoint, and demonstrate the chapter promise: name basic colours in German and use them to describe something.",
+    "assesses": [],
+    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+  }
+}

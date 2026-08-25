@@ -1,0 +1,26 @@
+{
+  "chapter": 2,
+  "title": "Introducing yourself",
+  "label": "ch:russian-introductions",
+  "canDo": "I can give my name in Russian, ask for someone else's, and pick ты or вы to match how well I know them.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "RU-C02-practice",
+    "kind": "dialogue",
+    "summary": "Run the whole introduction with a stranger — greet, ask Как вас зовут?, answer Меня зовут…, close with Очень приятно — then switch it for one friend by changing only the greeting and вас → тебя.",
+    "assesses": [
+      "RU-LEX-YA",
+      "RU-LEX-TY-VY",
+      "RU-GRAMMAR-TY-VY-REGISTER",
+      "RU-PRAGMATICS-VY-POLITENESS",
+      "RU-LEX-MENYA-ZOVUT",
+      "RU-GRAMMAR-INDEFINITE-PERSONAL-PLURAL",
+      "RU-GRAMMAR-MENYA-OBJECT-CASE",
+      "RU-LEX-KAK-VAS-ZOVUT",
+      "RU-GRAMMAR-OBJECT-PRONOUNS",
+      "RU-GRAMMAR-NAMING-HOW-FRAME"
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "id": "ES-PATH-024",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "ES-C26-agua",
+    "ES-C26-vino",
+    "ES-C26-pan"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-024-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

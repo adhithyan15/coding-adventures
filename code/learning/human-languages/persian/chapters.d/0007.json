@@ -1,0 +1,40 @@
+{
+  "chapter": 7,
+  "title": "Four Verbs of the Mind",
+  "label": "ch:fa-mind-verbs",
+  "canDo": "I can say think, understand, read and write in Persian, give the present stem of each, and tell which of the three ways a Persian verb is built each one uses.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "FA-C07-neveshtan",
+    "kind": "production",
+    "summary": "The chapter closes on neveshtan, nevis-, then runs its four verbs back to back — fekr kardan with kon-, fahmidan with fahm-, khândan with khân-, neveshtan with nevis- — and names which is a compound, which hands its stem over free, and which two had to be told. The five pairs from Chapter 6 run after them, so all nine are produced from memory in one sitting.",
+    "assesses": [
+      "FA-LEX-FEKR-KARDAN",
+      "FA-GRAMMAR-COMPOUND-VERB-KARDAN",
+      "FA-STEM-KON",
+      "FA-LEX-FAHMIDAN",
+      "FA-GRAMMAR-IDAN-REGULAR-STEM",
+      "FA-STEM-FAHM",
+      "FA-LEX-KHANDAN",
+      "FA-SCRIPT-SILENT-VAV",
+      "FA-STEM-KHAN",
+      "FA-LEX-NEVESHTAN",
+      "FA-STEM-NEVIS",
+      "FA-ETYMON-NEVESHTAN-PAINT",
+      "FA-GRAMMAR-INFINITIVE-TAN-DAN",
+      "FA-GRAMMAR-PRESENT-STEM",
+      "FA-LEX-BUDAN",
+      "FA-ETYMON-BUDAN-BE",
+      "FA-LEX-RAFTAN",
+      "FA-STEM-RAV",
+      "FA-LEX-AMADAN",
+      "FA-STEM-A",
+      "FA-LEX-GOFTAN",
+      "FA-STEM-GU",
+      "FA-LEX-DANESTAN",
+      "FA-STEM-DAN"
+    ]
+  }
+}

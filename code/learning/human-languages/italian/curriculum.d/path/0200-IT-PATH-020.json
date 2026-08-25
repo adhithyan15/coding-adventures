@@ -1,0 +1,16 @@
+{
+  "id": "IT-PATH-020",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "lessons": [
+    "IT-C16-essere",
+    "IT-C16-essere-stato",
+    "IT-C16-andare",
+    "IT-C16-passato-prossimo-essere"
+  ],
+  "before": [],
+  "inline": [
+    "IT-EXT-020-LANGUAGE-SPECIFIC",
+    "IT-EXT-020-ETYMOLOGY"
+  ],
+  "after": []
+}

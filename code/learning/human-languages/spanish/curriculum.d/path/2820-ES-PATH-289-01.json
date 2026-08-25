@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-289-01",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "ES-C289-amanecer",
+    "ES-C289-cielo",
+    "ES-C289-nube",
+    "ES-C289-estrella",
+    "ES-C289-sombra"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-289-CIELO"
+  ],
+  "after": []
+}

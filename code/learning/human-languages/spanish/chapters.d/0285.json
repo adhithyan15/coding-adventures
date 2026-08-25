@@ -1,0 +1,21 @@
+{
+  "chapter": 285,
+  "title": "Who Someone Is --- Neighbour, Friend, Teacher, Nurse, Cook",
+  "label": "ch:quien-es",
+  "canDo": "I can say who someone is in Spanish — the neighbour, a friend, the teacher, the nurse, the cook.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "ES-C285-cocinero",
+    "kind": "production",
+    "summary": "Complete ES-C285-cocinero: name all five people, and say what each name is really describing.",
+    "assesses": [
+      "ES-LEX-C285-ROLE-01",
+      "ES-LEX-C285-ROLE-02",
+      "ES-LEX-C285-ROLE-03",
+      "ES-LEX-C285-ROLE-04",
+      "ES-LEX-C285-ROLE-05"
+    ]
+  }
+}

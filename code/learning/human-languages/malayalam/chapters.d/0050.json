@@ -1,0 +1,21 @@
+{
+  "chapter": 50,
+  "title": "Taking Leave",
+  "label": "ch:ml-taking-leave",
+  "canDo": "I can say when I am going and take my leave in Malayalam, using either of the two phrases the language builds for it.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "ML-C50-farewell",
+    "kind": "production",
+    "summary": "Complete ML-C50-farewell and say all five words in order.",
+    "assesses": [
+      "ML-LEX-C50-LEAVE-01",
+      "ML-LEX-C50-LEAVE-02",
+      "ML-LEX-C50-LEAVE-03",
+      "ML-LEX-C50-LEAVE-04",
+      "ML-LEX-C50-LEAVE-05"
+    ]
+  }
+}

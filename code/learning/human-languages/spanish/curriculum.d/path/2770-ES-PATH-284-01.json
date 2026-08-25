@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-284-01",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "ES-C284-de-acuerdo",
+    "ES-C284-seguro",
+    "ES-C284-cierto",
+    "ES-C284-exacto",
+    "ES-C284-por-supuesto"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-284-RESPUESTAS"
+  ],
+  "after": []
+}

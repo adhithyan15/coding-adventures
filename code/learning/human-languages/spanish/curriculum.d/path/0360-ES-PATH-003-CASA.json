@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-003-CASA",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ES-C43-casa"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-003-CASA"
+  ],
+  "after": []
+}

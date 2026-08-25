@@ -1,0 +1,18 @@
+{
+  "chapter": 14,
+  "title": "Seasons",
+  "label": "ch:ml-seasons",
+  "canDo": "I can name Malayalam's four seasons, including the monsoon that sits at the centre of the year.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "ML-C14-kaalangal",
+    "kind": "production",
+    "summary": "Say vēnalkkālam, mazhakkālam and śaithyakālam as native compounds, then vasanthakālam as the shared Sanskrit loan.",
+    "assesses": [
+      "ML-CONCEPT-C14-KAALANGAL-01",
+      "ML-CONCEPT-C14-KAALANGAL-02"
+    ]
+  }
+}

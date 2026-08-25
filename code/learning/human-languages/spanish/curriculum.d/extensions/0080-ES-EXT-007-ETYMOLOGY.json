@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-007-ETYMOLOGY",
+  "stage": "pre-A1",
+  "kind": "supporting",
+  "category": "etymology",
+  "canDo": "I can use this Spanish word history as a memory hook without confusing origin and current use.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C03-usted-origin"
+  ]
+}

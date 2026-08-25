@@ -1,0 +1,18 @@
+{
+  "chapter": 22,
+  "title": "Green and Yellow",
+  "label": "ch:ml-green-and-yellow",
+  "canDo": "I can name green and yellow in Malayalam and say why the two come from unrelated roots.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C22-paccha-manja",
+    "kind": "production",
+    "summary": "Say paccha beside Tamil paccai and mañña beside mañcaḷ, and show they are not doublets of each other.",
+    "assesses": [
+      "ML-CONCEPT-C22-PACCHA-MANJA-01",
+      "ML-CONCEPT-C22-PACCHA-MANJA-02"
+    ]
+  }
+}

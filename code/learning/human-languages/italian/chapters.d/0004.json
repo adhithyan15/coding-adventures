@@ -1,0 +1,26 @@
+{
+  "chapter": 4,
+  "title": "Farewells",
+  "label": "ch:it-farewells",
+  "canDo": "I can close an Italian conversation and pick the goodbye that matches when I will next see the person.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "IT-C04-practice",
+    "kind": "dialogue",
+    "summary": "Open with ciao, ask Come stai?, then choose the exit — a più tardi within the hour, a domani for tomorrow, a presto for soon, arrivederci for until-we-meet-again.",
+    "assesses": [
+      "IT-SOUND-ARRIVEDERCI-02",
+      "IT-ETYMON-ARRIVEDERCI-03",
+      "IT-SOUND-A-DOMANI-02",
+      "IT-ETYMON-A-DOMANI-03",
+      "IT-SOUND-A-PRESTO-02",
+      "IT-ETYMON-A-PRESTO-03",
+      "IT-SOUND-A-PIU-TARDI-02",
+      "IT-ETYMON-A-PIU-TARDI-03",
+      "IT-LEX-C04-PRACTICE-02",
+      "IT-NOTICE-C04-PRACTICE-03"
+    ]
+  }
+}

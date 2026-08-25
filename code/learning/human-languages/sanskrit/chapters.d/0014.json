@@ -1,0 +1,23 @@
+{
+  "chapter": 14,
+  "title": "Pointing, and Asking",
+  "label": "ch:sa-pointing-and-asking",
+  "canDo": "I can point at something in Sanskrit and ask who or where it is — and I can say what the six words have in common.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C14-deixis-system",
+    "kind": "production",
+    "summary": "Say the near word, the far word and the question word in a row, and name the part that changed.",
+    "assesses": [
+      "SA-LEX-C14-DEIXIS-01",
+      "SA-LEX-C14-DEIXIS-02",
+      "SA-LEX-C14-DEIXIS-03",
+      "SA-LEX-C14-DEIXIS-04",
+      "SA-LEX-C14-DEIXIS-05",
+      "SA-LEX-C14-DEIXIS-06",
+      "SA-GRAMMAR-C14-DEIXIS-SYSTEM"
+    ]
+  }
+}

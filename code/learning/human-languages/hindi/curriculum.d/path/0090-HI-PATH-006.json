@@ -1,0 +1,11 @@
+{
+  "id": "HI-PATH-006",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "HI-C03-kaise",
+    "HI-C03-aap-kaise-hain"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

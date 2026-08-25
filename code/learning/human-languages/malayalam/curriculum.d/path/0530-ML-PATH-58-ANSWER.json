@@ -1,0 +1,16 @@
+{
+  "id": "ML-PATH-58-ANSWER",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "ML-C58-more",
+    "ML-C58-less",
+    "ML-C58-a-little",
+    "ML-C58-no-need",
+    "ML-C58-that-will-do"
+  ],
+  "before": [],
+  "inline": [
+    "ML-EXT-58-ANSWER"
+  ],
+  "after": []
+}

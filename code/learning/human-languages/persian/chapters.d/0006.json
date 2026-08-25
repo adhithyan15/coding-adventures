@@ -1,0 +1,28 @@
+{
+  "chapter": 6,
+  "title": "Name a Verb, Find Its Stem",
+  "label": "ch:fa-core-verbs",
+  "canDo": "I can name five core Persian verbs in their dictionary form, recognise the -tan/-dan ending that marks any Persian infinitive, and give the present stem that each verb carries beside it.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "FA-C06-danestan",
+    "kind": "production",
+    "summary": "The five pairs run back to back from memory — budan, raftan/rav-, âmadan/â-, goftan/gu-, dânestan/dân- — with the infinitive ending named and the stem produced for each.",
+    "assesses": [
+      "FA-GRAMMAR-INFINITIVE-TAN-DAN",
+      "FA-GRAMMAR-PRESENT-STEM",
+      "FA-LEX-BUDAN",
+      "FA-LEX-RAFTAN",
+      "FA-STEM-RAV",
+      "FA-LEX-AMADAN",
+      "FA-STEM-A",
+      "FA-LEX-GOFTAN",
+      "FA-STEM-GU",
+      "FA-LEX-DANESTAN",
+      "FA-STEM-DAN",
+      "FA-ETYMON-DANESTAN-KNOW"
+    ]
+  }
+}

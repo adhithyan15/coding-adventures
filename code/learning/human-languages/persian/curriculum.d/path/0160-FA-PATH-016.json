@@ -1,0 +1,21 @@
+{
+  "id": "FA-PATH-016",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "FA-W15-alef",
+    "FA-W15-lam",
+    "FA-W15-sin",
+    "FA-W15-mim",
+    "FA-W15-joining",
+    "FA-W15-be",
+    "FA-W15-te-nun",
+    "FA-W15-he",
+    "FA-W15-vav",
+    "FA-C15-practice"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "FA-EXT-023-SCRIPT-NINE"
+  ]
+}

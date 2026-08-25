@@ -1,0 +1,20 @@
+{
+  "segments": [
+    "TE-PATH-005",
+    "TE-PATH-007",
+    "TE-PATH-011",
+    "TE-PATH-016",
+    "TE-PATH-021",
+    "TE-PATH-028",
+    "TE-PATH-029",
+    "TE-PATH-48-ROLE",
+    "TE-PATH-54-TREE",
+    "TE-PATH-61-KITCHEN",
+    "TE-PATH-68-SOUND"
+  ],
+  "omits": [
+    "PRONOUN-ME",
+    "WORD-IS"
+  ],
+  "relocates": {}
+}

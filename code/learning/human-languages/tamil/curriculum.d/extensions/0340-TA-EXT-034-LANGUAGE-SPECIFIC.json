@@ -1,0 +1,12 @@
+{
+  "id": "TA-EXT-034-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can ask after somebody's health in Tamil through the body, and recognise the Sanskrit-derived alternative.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C38-udambu",
+    "TA-C38-sugam"
+  ]
+}

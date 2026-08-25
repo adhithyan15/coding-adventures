@@ -1,0 +1,15 @@
+{
+  "id": "MR-EXT-019-LANGUAGE-SPECIFIC",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can use the Marathi-specific vocabulary and grammar that support this shared ability.",
+  "prerequisites": [],
+  "lessons": [
+    "MR-C05-bolne",
+    "MR-C05-mi-marathi-bolto",
+    "MR-C05-rahne",
+    "MR-C05-kaam-karne",
+    "MR-C05-practice"
+  ]
+}

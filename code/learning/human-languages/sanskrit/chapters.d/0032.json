@@ -1,0 +1,21 @@
+{
+  "chapter": 32,
+  "title": "The Tree and What Grows",
+  "label": "ch:sa-tree",
+  "canDo": "I can name a tree and four things that grow in Sanskrit, and name the two English words that are cousins of grass and of wood.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "SA-C32-wood",
+    "kind": "production",
+    "summary": "Complete SA-C32-wood and demonstrate the chapter promise.",
+    "assesses": [
+      "SA-LEX-C32-TREE-01",
+      "SA-LEX-C32-TREE-02",
+      "SA-LEX-C32-TREE-03",
+      "SA-LEX-C32-TREE-04",
+      "SA-LEX-C32-TREE-05"
+    ]
+  }
+}

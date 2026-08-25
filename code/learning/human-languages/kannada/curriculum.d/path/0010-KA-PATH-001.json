@@ -1,0 +1,12 @@
+{
+  "id": "KA-PATH-001",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "KA-C01-namaskara"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-001-INLINE-SCRIPT"
+  ],
+  "after": []
+}

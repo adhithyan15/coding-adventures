@@ -1,0 +1,18 @@
+{
+  "chapter": 10,
+  "title": "Family",
+  "label": "ch:ar-family",
+  "canDo": "I can name my father, mother, brother and sister in Arabic.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "AR-C10-akh-ukht",
+    "kind": "production",
+    "summary": "Say akh and ukht, show how ukht is built from the same root plus a feminine -t, and place both beside their Hebrew cousins.",
+    "assesses": [
+      "AR-CONCEPT-C10-AKH-UKHT-01",
+      "AR-CONCEPT-C10-AKH-UKHT-02"
+    ]
+  }
+}

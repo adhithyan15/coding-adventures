@@ -1,0 +1,15 @@
+{
+  "id": "ML-PATH-010",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "ML-C04-pokuka",
+    "ML-C04-poyi-varaam",
+    "ML-C04-naale-kaanaam",
+    "ML-C04-veendum-kaanaam"
+  ],
+  "before": [
+    "ML-EXT-010-LANGUAGE-SPECIFIC"
+  ],
+  "inline": [],
+  "after": []
+}

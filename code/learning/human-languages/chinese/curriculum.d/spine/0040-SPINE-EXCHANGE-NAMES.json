@@ -1,0 +1,16 @@
+{
+  "segments": [
+    "ZH-PATH-007",
+    "ZH-PATH-008"
+  ],
+  "omits": [
+    "PRONOUN-ME",
+    "PRONOUN-YOU",
+    "PRONOUN-MY",
+    "WORD-IS",
+    "INTRO-MY-NAME-IS",
+    "INTRO-WHATS-YOUR-NAME",
+    "INTRO-NICE-TO-MEET-YOU"
+  ],
+  "relocates": {}
+}

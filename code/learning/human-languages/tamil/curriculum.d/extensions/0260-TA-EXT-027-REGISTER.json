@@ -1,0 +1,12 @@
+{
+  "id": "TA-EXT-027-REGISTER",
+  "stage": "A1",
+  "kind": "required",
+  "category": "register",
+  "canDo": "I can choose the Tamil form that fits this relationship and setting.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C23-day-family-register",
+    "TA-C24-night-register-darkness"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "id": "IT-PATH-026",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "lessons": [
+    "IT-C22-caffe",
+    "IT-C22-te",
+    "IT-C22-latte",
+    "IT-C22-zucchero"
+  ],
+  "before": [],
+  "inline": [
+    "IT-EXT-026-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

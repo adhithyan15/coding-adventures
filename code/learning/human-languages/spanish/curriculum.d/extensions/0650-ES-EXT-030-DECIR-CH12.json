@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-030-DECIR-CH12",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can use the three learned singular forms of decir with known words and cómo.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C12-decir"
+  ]
+}

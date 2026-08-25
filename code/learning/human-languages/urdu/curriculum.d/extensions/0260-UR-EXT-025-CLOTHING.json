@@ -1,0 +1,16 @@
+{
+  "id": "UR-EXT-025-CLOTHING",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can name a shirt, shoe, cap and coat in Urdu, and sort each word by which direction it was borrowed: into Urdu, out of Urdu into English, or straight from English.",
+  "prerequisites": [
+    "UR-EXT-024-COLORS"
+  ],
+  "lessons": [
+    "UR-C14-qamiz",
+    "UR-C14-juta",
+    "UR-C14-topi",
+    "UR-C14-koat"
+  ]
+}

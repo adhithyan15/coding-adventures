@@ -1,0 +1,15 @@
+{
+  "id": "SA-EXT-26-ROLE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what someone's role is in Sanskrit.",
+  "prerequisites": [],
+  "lessons": [
+    "SA-C26-teacher",
+    "SA-C26-student",
+    "SA-C26-king",
+    "SA-C26-guest",
+    "SA-C26-physician"
+  ]
+}

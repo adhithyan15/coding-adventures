@@ -1,0 +1,25 @@
+{
+  "chapter": 13,
+  "title": "Four Colors",
+  "label": "ch:ur-colors",
+  "canDo": "I can name red, white, black and blue in Urdu, and tell which colors change their ending for the noun they describe and which never do.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "UR-C13-nila",
+    "kind": "production",
+    "summary": "Say all four colors — لال, سفید, کالا, نیلا — sorting the two that agree with the noun's gender from the two that never change, and trace نیلا's cousin nīlī forward through Persian and Arabic into English aniline.",
+    "assesses": [
+      "UR-LEX-KALA",
+      "UR-GRAMMAR-ADJECTIVE-AGREEMENT",
+      "UR-LEX-LAL",
+      "UR-LEX-SAFED",
+      "UR-LEX-NILA",
+      "UR-ETYMON-NILA-ANILINE",
+      "UR-CROSSLINGUAL-KHUDA-HAFIZ-SPELLING",
+      "UR-SCRIPT-MERA-NAAM-HAI",
+      "UR-CHUNK-AAP-SE-MIL-KAR"
+    ]
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "chapter": 24,
+  "title": "See You Soon",
+  "label": "ch:la-see-you-soon",
+  "canDo": "I can tell someone in Latin that I will see them soon, using a phrase Cicero actually wrote.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "LA-C24-propediem-te-videbo",
+    "kind": "dialogue",
+    "summary": "Say propediem tē vidēbō as a parting line, split propediem into prope and diem, and locate it in Cicero's letters.",
+    "assesses": [
+      "LA-LEX-DIES-LUNAE-VENERIS-01",
+      "LA-PRAGMATICS-DIES-LUNAE-VENERIS-02",
+      "LA-PHONO-VALE-01",
+      "LA-ETYMON-VALE-02",
+      "LA-GRAMMAR-VALE-03",
+      "LA-PHONO-GRATIAS-01",
+      "LA-ETYMON-GRATIAS-02",
+      "LA-GRAMMAR-GRATIAS-03",
+      "LA-LEX-PROPEDIEM-TE-VIDEBO-01",
+      "LA-ETYMON-PROPEDIEM-TE-VIDEBO-02",
+      "LA-GRAMMAR-PROPEDIEM-TE-VIDEBO-03"
+    ]
+  }
+}

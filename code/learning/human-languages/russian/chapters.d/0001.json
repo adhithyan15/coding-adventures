@@ -1,0 +1,19 @@
+{
+  "chapter": 1,
+  "title": "Greetings and courtesy",
+  "label": "ch:russian-greetings",
+  "canDo": "I can greet someone in Russian, respond courteously, and close the exchange naturally.",
+  "spineNodes": [
+    "SPINE-MEET-GREET",
+    "SPINE-COURTESY-THANK",
+    "SPINE-POLITE-REQUEST-REPAIR",
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "RU-C01-practice",
+    "kind": "task",
+    "summary": "Complete RU-C01-practice, the canonical closing checkpoint, and demonstrate the chapter promise: greet someone in Russian, respond courteously, and close the exchange naturally.",
+    "assesses": [],
+    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+  }
+}

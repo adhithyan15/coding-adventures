@@ -1,0 +1,20 @@
+{
+  "chapter": 7,
+  "title": "Days of the Week",
+  "label": "ch:pt-days-of-the-week",
+  "canDo": "I can name all seven Portuguese days and count the weekdays from domingo the way Portuguese does.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "PT-C07-dias-2",
+    "kind": "task",
+    "summary": "Run domingo, segunda, terça, quarta, quinta, sexta, sábado, and explain why Monday is the second day: domingo, the Lord's day, is counted first.",
+    "assesses": [
+      "PT-PRAGMATICS-DIAS-1-02",
+      "PT-GRAMMAR-DIAS-1-03",
+      "PT-ETYMON-DIAS-2-02",
+      "PT-GRAMMAR-DIAS-2-03"
+    ]
+  }
+}

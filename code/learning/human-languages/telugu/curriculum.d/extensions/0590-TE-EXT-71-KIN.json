@@ -1,0 +1,15 @@
+{
+  "id": "TE-EXT-71-KIN",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the family a Telugu marriage adds, and ask after each of them.",
+  "prerequisites": [],
+  "lessons": [
+    "TE-C71-uncle",
+    "TE-C71-aunt",
+    "TE-C71-brother-in-law",
+    "TE-C71-sister-in-law",
+    "TE-C71-son-in-law"
+  ]
+}

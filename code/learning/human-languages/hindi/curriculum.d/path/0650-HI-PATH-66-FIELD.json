@@ -1,0 +1,16 @@
+{
+  "id": "HI-PATH-66-FIELD",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "HI-C66-seed",
+    "HI-C66-crop",
+    "HI-C66-grain",
+    "HI-C66-grass",
+    "HI-C66-well"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-66-FIELD"
+  ],
+  "after": []
+}

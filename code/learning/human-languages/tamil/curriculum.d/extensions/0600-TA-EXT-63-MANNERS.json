@@ -1,0 +1,15 @@
+{
+  "id": "TA-EXT-63-MANNERS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the five things that sit behind a polite request in Tamil.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-C63-request",
+    "TA-C63-permission",
+    "TA-C63-hesitancy",
+    "TA-C63-trust",
+    "TA-C63-humility"
+  ]
+}

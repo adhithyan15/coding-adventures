@@ -1,0 +1,18 @@
+{
+  "chapter": 12,
+  "title": "Seasons",
+  "label": "ch:ar-seasons",
+  "canDo": "I can name the four seasons in Arabic and say why the Islamic months do not stay inside them.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "AR-C12-al-fusul",
+    "kind": "production",
+    "summary": "Say rabīʿ, ṣayf, kharīf, shitāʾ, then explain the lunar calendar's drift against the solar seasons.",
+    "assesses": [
+      "AR-CONCEPT-C12-AL-FUSUL-01",
+      "AR-CONCEPT-C12-AL-FUSUL-02"
+    ]
+  }
+}

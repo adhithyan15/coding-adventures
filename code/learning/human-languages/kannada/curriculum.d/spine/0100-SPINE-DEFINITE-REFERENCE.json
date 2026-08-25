@@ -1,0 +1,13 @@
+{
+  "segments": [
+    "KA-PATH-014",
+    "KA-PATH-023",
+    "KA-PATH-200",
+    "KA-PATH-201",
+    "KA-PATH-45-FAMILY"
+  ],
+  "omits": [
+    "GRAMMAR-THE"
+  ],
+  "relocates": {}
+}

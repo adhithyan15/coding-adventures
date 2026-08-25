@@ -1,0 +1,20 @@
+{
+  "chapter": 176,
+  "title": "Para --- For, Pointing Forward",
+  "label": "ch:para",
+  "canDo": "I can use para for a destination, a deadline, a recipient or a purpose.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C51-para",
+    "kind": "task",
+    "summary": "Complete ES-C51-para: produce para ti and para manana, and name the Latin piece inside para that means toward.",
+    "assesses": [
+      "ES-LEX-PARA",
+      "ES-GRAMMAR-PARA-FORWARD",
+      "ES-ETYMON-PER-AD"
+    ],
+    "note": "Replaces the usual list of twelve uses with one direction. The forward-pointing is inside the word: para is per + ad, and ad is the ad of advance and admit."
+  }
+}

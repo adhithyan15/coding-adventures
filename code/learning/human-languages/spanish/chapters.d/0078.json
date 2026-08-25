@@ -1,0 +1,20 @@
+{
+  "chapter": 78,
+  "title": "Las --- The Plural Article That Behaves",
+  "label": "ch:articles-las",
+  "canDo": "I can say las casas and las comidas, putting the plural -s on both the article and the noun.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C44-las",
+    "kind": "task",
+    "summary": "Complete ES-C44-las: produce las casas and las comidas and say how many new rules the chapter added.",
+    "assesses": [
+      "ES-GRAMMAR-DEFINITE-PLURAL-FEMININE",
+      "ES-GRAMMAR-NOUN-NUMBER",
+      "ES-GRAMMAR-AGREEMENT-FEMININE-PLURAL"
+    ],
+    "note": "Adds no rule. The chapter-one -s rule turns out to apply to the article as well, which is agreement doing what it has always done."
+  }
+}

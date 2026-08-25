@@ -1,0 +1,20 @@
+{
+  "chapter": 90,
+  "title": "Os --- You All, in Spain",
+  "label": "ch:pronoun-os",
+  "canDo": "I can use os for a group in Spain and los or las everywhere else.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C45-os",
+    "kind": "task",
+    "summary": "Complete ES-C45-os: say os quiero and its non-peninsular equivalent, and name the older word os is worn down from.",
+    "assesses": [
+      "ES-LEX-OS-OBJECT",
+      "ES-GRAMMAR-OS-DIRECT-OBJECT",
+      "ES-GRAMMAR-DIRECT-OBJECT-PLURAL"
+    ],
+    "note": "Second time the course splits on geography rather than meaning, and the same word vos accounts for os, vosotros and Argentine vos."
+  }
+}

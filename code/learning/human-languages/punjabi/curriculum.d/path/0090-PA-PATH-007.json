@@ -1,0 +1,10 @@
+{
+  "id": "PA-PATH-007",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "PA-C03-main"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

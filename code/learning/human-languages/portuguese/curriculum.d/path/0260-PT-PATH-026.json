@@ -1,0 +1,14 @@
+{
+  "id": "PT-PATH-026",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "PT-C22-responder",
+    "PT-C22-encontrar",
+    "PT-C22-jogar-brincar-tocar"
+  ],
+  "before": [],
+  "inline": [
+    "PT-EXT-026-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

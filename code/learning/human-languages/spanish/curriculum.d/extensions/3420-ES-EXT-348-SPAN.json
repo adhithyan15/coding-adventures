@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-348-SPAN",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the start and the end of a stretch of time, name a single instant inside it, report a delay, and claim my turn.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C348-principio",
+    "ES-C348-fin",
+    "ES-C348-instante",
+    "ES-C348-demora",
+    "ES-C348-turno"
+  ]
+}

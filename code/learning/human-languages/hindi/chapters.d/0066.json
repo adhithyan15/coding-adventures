@@ -1,0 +1,21 @@
+{
+  "chapter": 66,
+  "title": "The Field and the Well",
+  "label": "ch:hi-the-field-and-the-well",
+  "canDo": "I can name five things in a Hindi field before I take my leave.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "HI-C66-well",
+    "kind": "production",
+    "summary": "Complete HI-C66-well and say all five words in order.",
+    "assesses": [
+      "HI-LEX-C66-FIELD-01",
+      "HI-LEX-C66-FIELD-02",
+      "HI-LEX-C66-FIELD-03",
+      "HI-LEX-C66-FIELD-04",
+      "HI-LEX-C66-FIELD-05"
+    ]
+  }
+}

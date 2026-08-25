@@ -1,0 +1,16 @@
+{
+  "id": "TA-PATH-56-AMOUNT",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "TA-C56-a-little",
+    "TA-C56-a-lot",
+    "TA-C56-less",
+    "TA-C56-no-need",
+    "TA-C56-let-it-be"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-56-AMOUNT"
+  ],
+  "after": []
+}

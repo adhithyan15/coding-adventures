@@ -1,0 +1,15 @@
+{
+  "id": "HI-EXT-47-ROLE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what someone's work is in Hindi.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C47-teacher",
+    "HI-C47-student",
+    "HI-C47-farmer",
+    "HI-C47-guest",
+    "HI-C47-neighbour"
+  ]
+}

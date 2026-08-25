@@ -1,0 +1,18 @@
+{
+  "chapter": 132,
+  "title": "Di, Haz, Ve, Pon, Ten, Sal, Se, Ven",
+  "label": "ch:command-irregular",
+  "canDo": "I can use the eight irregular informal commands and say why they are all one syllable.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C50-ocho-cortos",
+    "kind": "task",
+    "summary": "Complete ES-C50-ocho-cortos: give the eight forms and say why they are so short.",
+    "assesses": [
+      "ES-GRAMMAR-COMMAND-IRREGULAR-EIGHT"
+    ],
+    "note": "Not eight arbitrary exceptions: what the eight most-shouted verbs look like after two thousand years of being shouted."
+  }
+}

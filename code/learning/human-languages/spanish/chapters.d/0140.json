@@ -1,0 +1,20 @@
+{
+  "chapter": 140,
+  "title": "Parents and Siblings",
+  "label": "ch:spanish-family",
+  "canDo": "I can name my parents and my siblings in Spanish and explain why hermano is not built on Latin's word for brother.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "ES-C23-hermano-hache",
+    "kind": "task",
+    "summary": "Give el padre, la madre, el hermano and la hermana, trace hermano back through germānus to germen, the seed, rather than to frāter, and separate its silent h from the once-spoken h of hijo and hacer.",
+    "assesses": [
+      "ES-LEX-SIBLINGS-01",
+      "ES-ETYMON-GERMANUS-02",
+      "ES-ETYMON-GERMEN-03",
+      "ES-SOUND-HERMANO-04"
+    ]
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "chapter": 1,
+  "title": "Greetings",
+  "label": "ch:greetings",
+  "canDo": "I can greet someone in Malayalam, read and write namaskāram from sound, recognize the reply, and choose an appropriate response.",
+  "spineNodes": [
+    "SPINE-MEET-GREET",
+    "SPINE-RESPOND-BASIC",
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "ML-C01-practice",
+    "kind": "task",
+    "summary": "Greet and respond, read namaskāram aloud, then write it from dictation and check the three practised groups.",
+    "assesses": [
+      "ML-LEX-NAMASKARAM-01",
+      "ML-ETYMON-NAMASKARAM-BOW-01",
+      "ML-SCRIPT-NA-01",
+      "ML-SCRIPT-MA-01",
+      "ML-SCRIPT-SA-01",
+      "ML-SCRIPT-CHANDRAKKALA-01",
+      "ML-SCRIPT-KA-01",
+      "ML-SCRIPT-AA-MATRA-01",
+      "ML-SCRIPT-RA-01",
+      "ML-SCRIPT-ANUSVARAM-01",
+      "ML-SCRIPT-NAMASKARAM-READ-01"
+    ],
+    "note": "The greeting is heard before script; its eight shapes arrive in groups of two or three, and a small familiar unit reaches dictation before the whole word does."
+  }
+}

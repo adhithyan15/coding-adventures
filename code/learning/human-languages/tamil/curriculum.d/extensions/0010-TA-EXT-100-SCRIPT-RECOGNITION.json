@@ -1,0 +1,25 @@
+{
+  "id": "TA-EXT-100-SCRIPT-RECOGNITION",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can pick out each of these Tamil characters inside the words I already say, and copy its shape by tracing.",
+  "prerequisites": [],
+  "lessons": [
+    "TA-S101-letter-pa",
+    "TA-S102-vowel-sign-oo",
+    "TA-S112-letter-e",
+    "TA-S113-letter-la",
+    "TA-S114-vowel-sign-aa",
+    "TA-S115-letter-llla",
+    "TA-S116-letter-ca",
+    "TA-S117-letter-ra",
+    "TA-S118-letter-tta",
+    "TA-S119-letter-a",
+    "TA-S120-letter-aa",
+    "TA-S121-vowel-sign-u",
+    "TA-S122-letter-ta",
+    "TA-S123-vowel-sign-ee",
+    "TA-S124-letter-ya"
+  ]
+}

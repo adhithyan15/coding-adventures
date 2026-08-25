@@ -1,0 +1,21 @@
+{
+  "chapter": 28,
+  "title": "Taking Your Leave",
+  "label": "ch:sa-leave-more",
+  "canDo": "I can take my leave in Sanskrit, wish someone a good journey, and take the old farewell apart into the two words that built it.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "SA-C28-svasti",
+    "kind": "production",
+    "summary": "Complete SA-C28-svasti and demonstrate the chapter promise.",
+    "assesses": [
+      "SA-LEX-C28-LEAVE-01",
+      "SA-LEX-C28-LEAVE-02",
+      "SA-LEX-C28-LEAVE-03",
+      "SA-LEX-C28-LEAVE-04",
+      "SA-LEX-C28-LEAVE-05"
+    ]
+  }
+}

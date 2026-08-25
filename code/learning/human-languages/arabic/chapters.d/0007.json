@@ -1,0 +1,18 @@
+{
+  "chapter": 7,
+  "title": "Sorry",
+  "label": "ch:ar-sorry",
+  "canDo": "I can apologise in Arabic with āsif or āsifa, choosing the form that matches who is speaking.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "AR-C07-asif",
+    "kind": "production",
+    "summary": "Say the apology twice -- āsif for a man, āsifa for a woman -- then the ungendered maʿdhira.",
+    "assesses": [
+      "AR-CONCEPT-C07-ASIF-01",
+      "AR-CONCEPT-C07-ASIF-02"
+    ]
+  }
+}

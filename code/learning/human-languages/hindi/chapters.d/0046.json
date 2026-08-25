@@ -1,0 +1,21 @@
+{
+  "chapter": 46,
+  "title": "Hair, Ear, and Throat",
+  "label": "ch:hi-body-more",
+  "canDo": "I can name five more parts of the body in Hindi, and follow the wearing-down that turned each Sanskrit word into the one people say.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "HI-C46-throat",
+    "kind": "production",
+    "summary": "Complete HI-C46-throat and say all five words in order.",
+    "assesses": [
+      "HI-LEX-C46-BODY-01",
+      "HI-LEX-C46-BODY-02",
+      "HI-LEX-C46-BODY-03",
+      "HI-LEX-C46-BODY-04",
+      "HI-LEX-C46-BODY-05"
+    ]
+  }
+}

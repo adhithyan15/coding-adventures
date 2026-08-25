@@ -1,0 +1,23 @@
+{
+  "chapter": 9,
+  "title": "Sorry",
+  "label": "ch:ka-sorry",
+  "canDo": "I can apologise in Kannada and ask someone to forgive me.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "KA-C09-kshamisi",
+    "kind": "production",
+    "summary": "Say ಕ್ಷಮಿಸಿ, trace it back through kṣamisu to Sanskrit kṣamā, and contrast it with Tamil's unrelated maṉṉikkavum.",
+    "assesses": [
+      "KA-ETYMON-C08-DAYAVITTU-01",
+      "KA-ETYMON-C08-DAYAVITTU-02",
+      "KA-PRAGMATICS-C08-DAYAVITTU-03",
+      "KA-SCRIPT-C08-DAYAVITTU-04",
+      "KA-ETYMON-C09-KSHAMISI-01",
+      "KA-ETYMON-C09-KSHAMISI-02",
+      "KA-PRAGMATICS-C09-KSHAMISI-03"
+    ]
+  }
+}

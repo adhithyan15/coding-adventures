@@ -1,0 +1,12 @@
+{
+  "id": "KA-PATH-003",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "KA-C01-haudu",
+    "KA-C01-illa",
+    "KA-C01-sari"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

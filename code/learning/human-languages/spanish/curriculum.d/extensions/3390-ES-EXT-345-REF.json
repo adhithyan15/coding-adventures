@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-345-REF",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a thing is the same one, take a set one at a time, name a share of it, and name a single person or object.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C345-mismo",
+    "ES-C345-cada",
+    "ES-C345-parte",
+    "ES-C345-persona",
+    "ES-C345-objeto"
+  ]
+}

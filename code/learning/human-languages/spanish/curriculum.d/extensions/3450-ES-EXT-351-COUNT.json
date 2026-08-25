@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-351-COUNT",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can count to a hundred, name an amount, take two things together, say there are several, and treble a figure.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C351-cien",
+    "ES-C351-cantidad",
+    "ES-C351-ambos",
+    "ES-C351-varios",
+    "ES-C351-triple"
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "chapter": 8,
+  "title": "Telling Time",
+  "label": "ch:pt-telling-time",
+  "canDo": "I can tell the time in Portuguese and use meio-dia and meia-noite for the two hours that take no number.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "PT-C08-meio-dia-meia-noite",
+    "kind": "task",
+    "summary": "Say meio-dia and meia-noite, split each into meio or meia plus dia or noite, and catch noctem → noite as the same shift that gave oito.",
+    "assesses": [
+      "PT-SOUND-HORA-02",
+      "PT-ETYMON-HORA-03",
+      "PT-GRAMMAR-HORA-04",
+      "PT-ETYMON-MEIO-DIA-MEIA-NOITE-02"
+    ]
+  }
+}

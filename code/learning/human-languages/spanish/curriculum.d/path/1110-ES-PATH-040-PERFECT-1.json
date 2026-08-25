@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-040-PERFECT-1",
+  "spine_node": "SPINE-TALK-ABOUT-PAST",
+  "lessons": [
+    "ES-C49-he-hablado"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-040-PERFECT-1"
+  ],
+  "after": []
+}

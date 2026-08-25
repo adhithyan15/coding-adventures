@@ -1,0 +1,19 @@
+{
+  "chapter": 71,
+  "title": "Poner --- Putting, and the Root Under Position",
+  "label": "ch:spanish-poner",
+  "canDo": "I can say what I put, with the -go yo form and regular forms elsewhere.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ES-C13-poner",
+    "kind": "task",
+    "summary": "pongo in the yo slot, pones and pone everywhere else.",
+    "assesses": [
+      "ES-LEX-PONER",
+      "ES-GRAMMAR-PONER-PRESENT-SINGULAR",
+      "ES-ETYMON-PONERE"
+    ]
+  }
+}

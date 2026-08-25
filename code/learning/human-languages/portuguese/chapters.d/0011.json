@@ -1,0 +1,20 @@
+{
+  "chapter": 11,
+  "title": "Bread, Water, and Wine",
+  "label": "ch:pt-bread-water-wine",
+  "canDo": "I can name bread, water and wine in Portuguese and hear the -nh- of vinho as Spanish's ñ.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "PT-C11-agua-vinho",
+    "kind": "task",
+    "summary": "Say o pão, a água and o vinho, hold água against French's worn-down eau, and pronounce the palatal -nh- of vinho, already met in amanhã.",
+    "assesses": [
+      "PT-ETYMON-PAO-02",
+      "PT-ETYMON-PAO-03",
+      "PT-ETYMON-AGUA-VINHO-02",
+      "PT-ETYMON-AGUA-VINHO-03"
+    ]
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "id": "GE-PATH-002",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "GE-C01-gut"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

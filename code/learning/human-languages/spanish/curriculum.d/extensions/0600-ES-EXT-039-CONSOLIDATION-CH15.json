@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-039-CONSOLIDATION-CH15",
+  "stage": "A2",
+  "kind": "supporting",
+  "category": "language-specific",
+  "canDo": "I can retrieve and compare the learned regular and strong singular completed-past patterns without new vocabulary.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C15-practice"
+  ]
+}

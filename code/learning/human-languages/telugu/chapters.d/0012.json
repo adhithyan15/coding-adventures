@@ -1,0 +1,20 @@
+{
+  "chapter": 12,
+  "title": "Family",
+  "label": "ch:te-family",
+  "canDo": "I can name my parents and my brothers and sisters in Telugu, choosing the right word for older or younger.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "TE-C12-kutumbam",
+    "kind": "production",
+    "summary": "Name నాన్న and అమ్మ, then the four age-graded siblings అన్న · తమ్ముడు · అక్క · చెల్లి, with చెల్లి being Telugu's own.",
+    "assesses": [
+      "TE-LEX-C11-RANGULU-01",
+      "TE-ETYMON-C11-RANGULU-02",
+      "TE-LEX-C12-KUTUMBAM-01",
+      "TE-ETYMON-C12-KUTUMBAM-02"
+    ]
+  }
+}

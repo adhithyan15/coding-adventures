@@ -1,0 +1,20 @@
+{
+  "chapter": 151,
+  "title": "Green and Yellow",
+  "label": "ch:spanish-green-and-yellow",
+  "canDo": "I can name green and yellow in Spanish and explain why amarillo is built on the word for bitter.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C33-amarillo",
+    "kind": "task",
+    "summary": "Say verde and amarillo, tie verde to virēre, to flourish, and amarillo to amarellus, a little bitter — the same root as everyday amargo.",
+    "assesses": [
+      "ES-LEX-VERDE-01",
+      "ES-ETYMON-VERDE-02",
+      "ES-LEX-AMARILLO-03",
+      "ES-ETYMON-AMARILLO-04"
+    ]
+  }
+}

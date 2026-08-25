@@ -1,0 +1,13 @@
+{
+  "id": "ZH-EXT-026-REDUPLICATION",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "lexis",
+  "canDo": "I can build a word by doubling a character, as 谢 doubles into 谢谢, and I know the second copy goes neutral -- so the light syllable belongs to the word, not to the character.",
+  "prerequisites": [
+    "ZH-EXT-025-YAN-RADICAL"
+  ],
+  "lessons": [
+    "ZH-C10-xiexie"
+  ]
+}

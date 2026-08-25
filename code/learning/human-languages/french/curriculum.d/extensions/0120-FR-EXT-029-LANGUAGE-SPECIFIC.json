@@ -1,0 +1,12 @@
+{
+  "id": "FR-EXT-029-LANGUAGE-SPECIFIC",
+  "stage": "A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can use the French-specific vocabulary and grammar that support this shared ability.",
+  "prerequisites": [],
+  "lessons": [
+    "FR-C08-heure",
+    "FR-C08-midi-minuit"
+  ]
+}

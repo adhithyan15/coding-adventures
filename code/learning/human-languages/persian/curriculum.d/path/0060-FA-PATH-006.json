@@ -1,0 +1,18 @@
+{
+  "id": "FA-PATH-006",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "FA-C05-khoda",
+    "FA-C05-hafez",
+    "FA-C05-khodahafez",
+    "FA-C05-practice"
+  ],
+  "before": [],
+  "inline": [
+    "FA-EXT-013-KHODA-HISTORY",
+    "FA-EXT-014-HAFEZ-ROOT",
+    "FA-EXT-015-FAREWELL-SCRIPT-REGISTER",
+    "FA-EXT-016-TAKE-LEAVE-CONSOLIDATION"
+  ],
+  "after": []
+}

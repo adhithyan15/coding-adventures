@@ -1,0 +1,15 @@
+{
+  "segments": [
+    "HI-PATH-003",
+    "HI-PATH-009",
+    "HI-PATH-009A",
+    "HI-PATH-025",
+    "HI-PATH-49-LEAVE",
+    "HI-PATH-56-ROAD",
+    "HI-PATH-66-FIELD"
+  ],
+  "omits": [
+    "FAREWELL-SOON"
+  ],
+  "relocates": {}
+}

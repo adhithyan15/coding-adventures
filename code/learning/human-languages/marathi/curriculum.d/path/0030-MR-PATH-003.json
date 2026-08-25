@@ -1,0 +1,12 @@
+{
+  "id": "MR-PATH-003",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "MR-C01-ho",
+    "MR-C01-baram",
+    "MR-C01-nahi"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

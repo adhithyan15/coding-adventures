@@ -1,0 +1,17 @@
+{
+  "id": "LA-PATH-021",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "lessons": [
+    "LA-C23-nihil-est",
+    "LA-C47-sal",
+    "LA-C47-mel",
+    "LA-C47-lac",
+    "LA-C47-ovum",
+    "LA-C47-piscis"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "LA-EXT-047-TABLE"
+  ]
+}

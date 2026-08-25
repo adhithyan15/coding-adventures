@@ -1,0 +1,20 @@
+{
+  "chapter": 12,
+  "title": "Family",
+  "label": "ch:ka-family",
+  "canDo": "I can name my parents and my brothers and sisters in Kannada, choosing the right word for older or younger.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "KA-C12-kutumba",
+    "kind": "production",
+    "summary": "Name ಅಪ್ಪ and ಅಮ್ಮ, then the four age-graded siblings ಅಣ್ಣ · ತಮ್ಮ · ಅಕ್ಕ · ತಂಗಿ, where age is chosen before gender.",
+    "assesses": [
+      "KA-LEX-C11-BANNAGALU-01",
+      "KA-LEX-C11-BANNAGALU-02",
+      "KA-ETYMON-C12-KUTUMBA-01",
+      "KA-ETYMON-C12-KUTUMBA-02"
+    ]
+  }
+}

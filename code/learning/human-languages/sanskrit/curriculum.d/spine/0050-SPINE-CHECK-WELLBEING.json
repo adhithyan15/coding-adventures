@@ -1,0 +1,16 @@
+{
+  "segments": [
+    "SA-PATH-006",
+    "SA-PATH-015",
+    "SA-PATH-016",
+    "SA-PATH-25-BODY",
+    "SA-PATH-34-LIMB",
+    "SA-PATH-39-ANIMAL",
+    "SA-PATH-46-LIGHT"
+  ],
+  "omits": [
+    "WORD-GOOD",
+    "WORD-SOSO"
+  ],
+  "relocates": {}
+}

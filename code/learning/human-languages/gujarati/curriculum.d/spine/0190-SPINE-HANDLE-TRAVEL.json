@@ -1,0 +1,10 @@
+{
+  "segments": [],
+  "omits": [
+    "DIRECTION-ASK",
+    "TRANSPORT-TICKET",
+    "LODGING-ROOM",
+    "PROBLEM-REPORT"
+  ],
+  "relocates": {}
+}

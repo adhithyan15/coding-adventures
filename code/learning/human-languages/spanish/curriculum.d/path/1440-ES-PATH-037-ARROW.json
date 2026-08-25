@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-037-ARROW",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "lessons": [
+    "ES-C51-la-flecha"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-037-ARROW"
+  ],
+  "after": []
+}

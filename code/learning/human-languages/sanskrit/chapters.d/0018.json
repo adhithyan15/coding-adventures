@@ -1,0 +1,18 @@
+{
+  "chapter": 18,
+  "title": "Asking --- Every Question Begins with K",
+  "label": "ch:sa-asking",
+  "canDo": "I can ask when, why, how many and from where in Sanskrit, and I can see that every question word is built on one stem.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "SA-C18-k-words",
+    "kind": "production",
+    "summary": "Complete SA-C18-k-words and demonstrate the chapter promise.",
+    "assesses": [
+      "SA-LEX-C18-ASK-01",
+      "SA-GRAMMAR-C18-K-QUESTIONS"
+    ]
+  }
+}

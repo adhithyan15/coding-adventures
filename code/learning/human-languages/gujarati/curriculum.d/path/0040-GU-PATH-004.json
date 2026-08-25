@@ -1,0 +1,16 @@
+{
+  "id": "GU-PATH-004",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "GU-C01-haa-naa",
+    "GU-W01-haa-guided-copy",
+    "GU-W01-haa-delayed-copy",
+    "GU-W01-haa-dictation",
+    "GU-C01-saarun"
+  ],
+  "before": [],
+  "inline": [],
+  "after": [
+    "GU-EXT-001-WRITING-RUNWAY"
+  ]
+}

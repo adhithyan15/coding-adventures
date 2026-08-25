@@ -1,0 +1,16 @@
+{
+  "id": "ML-PATH-64-SMALL",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "ML-C64-then",
+    "ML-C64-soon",
+    "ML-C64-sometimes",
+    "ML-C64-only",
+    "ML-C64-but"
+  ],
+  "before": [],
+  "inline": [
+    "ML-EXT-64-SMALL"
+  ],
+  "after": []
+}

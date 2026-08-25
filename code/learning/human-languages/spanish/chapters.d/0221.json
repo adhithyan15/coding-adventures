@@ -1,0 +1,17 @@
+{
+  "chapter": 221,
+  "title": "Este --- Pointing at What Is in Your Hand",
+  "label": "ch:este",
+  "canDo": "I can point at something next to me.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C59-este",
+    "kind": "task",
+    "summary": "I can point at something next to me.",
+    "assesses": [
+      "ES-GRAMMAR-DEMONSTRATIVE-ESTE"
+    ]
+  }
+}

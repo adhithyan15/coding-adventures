@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-289-CIELO",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the daybreak, the sky, a cloud, a star and the shade in Spanish.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C289-amanecer",
+    "ES-C289-cielo",
+    "ES-C289-nube",
+    "ES-C289-estrella",
+    "ES-C289-sombra"
+  ]
+}

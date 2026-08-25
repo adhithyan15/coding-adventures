@@ -1,0 +1,16 @@
+{
+  "id": "KA-PATH-57-BODY",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "KA-C57-neck",
+    "KA-C57-back",
+    "KA-C57-lip",
+    "KA-C57-shoulder",
+    "KA-C57-bone"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-57-BODY"
+  ],
+  "after": []
+}

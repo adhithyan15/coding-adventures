@@ -1,0 +1,15 @@
+{
+  "id": "GU-PATH-015",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "lessons": [
+    "GU-C12-aankh",
+    "GU-C12-kaan",
+    "GU-C12-modhu",
+    "GU-C12-naak"
+  ],
+  "before": [],
+  "inline": [
+    "GU-EXT-015-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

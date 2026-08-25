@@ -1,0 +1,11 @@
+{
+  "id": "PT-EXT-021-ETYMOLOGY",
+  "stage": "pre-A1",
+  "kind": "supporting",
+  "category": "etymology",
+  "canDo": "I can use this Portuguese word history as a memory hook without confusing origin and current use.",
+  "prerequisites": [],
+  "lessons": [
+    "PT-C17-cabeca-caput"
+  ]
+}

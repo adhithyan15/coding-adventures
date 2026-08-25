@@ -1,0 +1,18 @@
+{
+  "chapter": 38,
+  "title": "The Heart",
+  "label": "ch:ka-heart",
+  "canDo": "I can name my heart in Kannada and say why it is a genuine Indo-European cousin of the English word, not just a resemblance.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "KA-C38-hrudaya",
+    "kind": "production",
+    "summary": "Say ನನ್ನ ಹೃದಯ, read the vocalic-r sign ೃ against Chapter 14's independent ಋ, and trace hṛdaya to the same Proto-Indo-European root as English heart, Latin cor and Greek kardía.",
+    "assesses": [
+      "KA-LEX-C38-HRUDAYA-01",
+      "KA-ETYMON-C38-HRUDAYA-02"
+    ]
+  }
+}

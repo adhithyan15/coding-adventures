@@ -1,0 +1,21 @@
+{
+  "chapter": 267,
+  "title": "Saying No, and Asking",
+  "label": "ch:es-negate-and-ask",
+  "canDo": "I can say that something is not so, and ask a question that can be answered yes or no.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "ES-C267-negar-preguntar",
+    "kind": "production",
+    "summary": "Hold a four-line exchange that denies something and then asks the other person to agree.",
+    "assesses": [
+      "ES-GRAMMAR-C267-NOVERBO-01",
+      "ES-GRAMMAR-C267-NONADA-01",
+      "ES-GRAMMAR-C267-PREGUNTASINO-01",
+      "ES-GRAMMAR-C267-VERDADNO-01",
+      "ES-GRAMMAR-C267-NEGARPREGUNTAR-01"
+    ]
+  }
+}

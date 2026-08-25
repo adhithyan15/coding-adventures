@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-299-GRANJA",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the field, the farm, the livestock, the harvest and the shepherd in Spanish, and say I am from the country.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C299-campo",
+    "ES-C299-granja",
+    "ES-C299-ganado",
+    "ES-C299-cosecha",
+    "ES-C299-pastor"
+  ]
+}

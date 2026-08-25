@@ -1,0 +1,18 @@
+{
+  "chapter": 19,
+  "title": "Numbers One to Five",
+  "label": "ch:ar-numbers-one-to-five",
+  "canDo": "I can count from one to five in Arabic.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "AR-C19-wahid-khamsa",
+    "kind": "production",
+    "summary": "Count wāḥid to khamsa, then separate the Arabic number WORDS from the Indian-origin digit shapes.",
+    "assesses": [
+      "AR-CONCEPT-C19-WAHID-KHAMSA-01",
+      "AR-CONCEPT-C19-WAHID-KHAMSA-02"
+    ]
+  }
+}

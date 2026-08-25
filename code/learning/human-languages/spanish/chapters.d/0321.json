@@ -1,0 +1,21 @@
+{
+  "chapter": 321,
+  "title": "Pleasure, Reason, Respect",
+  "label": "ch:placer-y-consejo",
+  "canDo": "I can answer a first meeting with un placer, agree with tienes razon, and ask for patience, respect or advice in Spanish.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "ES-C321-consejo",
+    "kind": "production",
+    "summary": "Complete ES-C321-consejo: answer mucho gusto with un placer, hand somebody razon, and ask for paciencia and un consejo.",
+    "assesses": [
+      "ES-LEX-C321-COURT-06",
+      "ES-LEX-C321-COURT-07",
+      "ES-LEX-C321-COURT-08",
+      "ES-LEX-C321-COURT-09",
+      "ES-LEX-C321-COURT-10"
+    ]
+  }
+}

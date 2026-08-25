@@ -1,0 +1,22 @@
+{
+  "chapter": 18,
+  "title": "Telling Time",
+  "label": "ch:te-telling-time",
+  "canDo": "I can tell someone the time on the hour in Telugu, in the singular and the plural.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "TE-C18-ganta",
+    "kind": "task",
+    "summary": "Say గంట — hour, and also \"bell\" — then ఒక గంట for one o'clock and రెండు గంటలు for two, taking the plural -lu.",
+    "assesses": [
+      "TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-01",
+      "TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-02",
+      "TE-GRAMMAR-C17-MADHYAAHNAM-ARDHARAATRI-03",
+      "TE-LEX-C18-GANTA-01",
+      "TE-PRAGMATICS-C18-GANTA-02",
+      "TE-GRAMMAR-C18-GANTA-03"
+    ]
+  }
+}

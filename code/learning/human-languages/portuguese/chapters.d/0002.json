@@ -1,0 +1,32 @@
+{
+  "chapter": 2,
+  "title": "How Are You?",
+  "label": "ch:pt-how-are-you",
+  "canDo": "I can ask a Portuguese speaker how they are, casually or respectfully, and answer for myself.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK",
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "PT-C02-practice",
+    "kind": "dialogue",
+    "summary": "The full Chapter 2 exchange: greet, ask Tudo bem?, answer for yourself, and hand the question back. PT-C02-formal-practice then rebuilds the same exchange for respect (Como está o senhor?), so the chapter's canDo covers both registers.",
+    "assesses": [
+      "PT-SOUND-DE-NADA-02",
+      "PT-ETYMON-DE-NADA-03",
+      "PT-SOUND-COMO-02",
+      "PT-ETYMON-COMO-03",
+      "PT-GRAMMAR-COMO-04",
+      "PT-SOUND-TUDO-02",
+      "PT-ETYMON-TUDO-03",
+      "PT-GRAMMAR-TUDO-04",
+      "PT-GRAMMAR-TUDO-BEM-02",
+      "PT-LEX-COMO-VAI-ESTA-01",
+      "PT-SOUND-MAIS-OU-MENOS-02",
+      "PT-ETYMON-MAIS-OU-MENOS-03",
+      "PT-GRAMMAR-MAIS-OU-MENOS-04",
+      "PT-LEX-C02-PRACTICE-02",
+      "PT-NOTICE-C02-PRACTICE-03"
+    ]
+  }
+}

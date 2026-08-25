@@ -1,0 +1,18 @@
+{
+  "chapter": 14,
+  "title": "Seasons",
+  "label": "ch:hi-seasons",
+  "canDo": "I can name all six traditional Indian seasons in Hindi, including the one the four-season frame has no word for.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "HI-C14-ritu",
+    "kind": "production",
+    "summary": "Say all six ऋतु in order and point to वर्षा, the monsoon season no Western four-season label maps onto.",
+    "assesses": [
+      "HI-CONCEPT-C14-RITU-01",
+      "HI-CONCEPT-C14-RITU-02"
+    ]
+  }
+}

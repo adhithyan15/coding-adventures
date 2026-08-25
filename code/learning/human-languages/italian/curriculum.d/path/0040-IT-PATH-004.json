@@ -1,0 +1,10 @@
+{
+  "id": "IT-PATH-004",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "IT-C01-il-la-lo"
+  ],
+  "before": [],
+  "inline": [],
+  "after": []
+}

@@ -1,0 +1,14 @@
+{
+  "id": "FR-PATH-017",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "FR-C15-passe-compose",
+    "FR-C15-passe-simple",
+    "FR-C16-etre"
+  ],
+  "before": [
+    "FR-EXT-017-LANGUAGE-SPECIFIC"
+  ],
+  "inline": [],
+  "after": []
+}

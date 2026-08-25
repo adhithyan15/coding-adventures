@@ -1,0 +1,21 @@
+{
+  "chapter": 57,
+  "title": "More of the Body",
+  "label": "ch:ka-more-body",
+  "canDo": "I can name five more parts of a person in Kannada, and say where it hurts.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "KA-C57-bone",
+    "kind": "production",
+    "summary": "Complete KA-C57-bone and say all five words in order.",
+    "assesses": [
+      "KA-LEX-C57-BODY-01",
+      "KA-LEX-C57-BODY-02",
+      "KA-LEX-C57-BODY-03",
+      "KA-LEX-C57-BODY-04",
+      "KA-LEX-C57-BODY-05"
+    ]
+  }
+}
