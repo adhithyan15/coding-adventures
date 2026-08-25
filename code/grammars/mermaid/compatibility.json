@@ -121,7 +121,7 @@
     {
       "id": "xychart",
       "headers": ["xychart", "xychart-beta"],
-      "status": "partial",
+      "status": "full",
       "ir": "chart",
       "smoke_source": "xychart-beta\nx-axis [A, B]\ny-axis 0 --> 10\nbar [3, 7]"
     },

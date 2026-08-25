@@ -72,12 +72,13 @@ The first native subsets are:
 - Pie
 - XY chart
 
-The XY-chart subset preserves Mermaid's bounded `xAxis.labelRotation` and
+The XY-chart pipeline preserves Mermaid's bounded `xAxis.labelRotation` and
 `yAxis.labelRotation` configuration in semantic chart IR. As in the pinned
 renderer, rotation affects labels only when that axis is placed at the bottom;
 layout reserves the rotated bounds before transformed Paint glyphs reach native
-backends. The family remains partial until its pinned syntax and visual corpus
-passes in full. Its eight nested `xyChart` axis theme variables preserve
+backends. Its pinned 11.16.1 parser acceptance corpus and native Metal render
+fixtures pass, so the family is tracked at full compatibility. Its eight nested
+`xyChart` axis theme variables preserve
 independent label, title, tick, and spine colors for both axes through semantic
 IR, layout, and backend-neutral Paint instructions. Chart background, title,
 data-label, and comma-separated plot-palette colors follow the same pipeline.

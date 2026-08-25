@@ -1,6 +1,7 @@
 use mermaid_parser::{
     detect_mermaid_type, parse_any_mermaid, parse_gitgraph, parse_journey, parse_pie,
-    parse_quadrant_chart, parse_requirement_diagram, parse_sankey, MERMAID_COMPATIBILITY_BASELINE,
+    parse_quadrant_chart, parse_requirement_diagram, parse_sankey, parse_xychart,
+    MERMAID_COMPATIBILITY_BASELINE,
 };
 use serde_json::Value;
 
@@ -32,6 +33,53 @@ const SANKEY_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/sankey-11.16.1-corpus.json"
 ));
+const XYCHART_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/xychart-11.16.1-corpus.json"
+));
+
+#[test]
+fn xychart_full_status_is_backed_by_the_pinned_corpus() {
+    let manifest: Value =
+        serde_json::from_str(COMPATIBILITY_MANIFEST).expect("compatibility manifest must be JSON");
+    let xychart = manifest["families"]
+        .as_array()
+        .expect("families array")
+        .iter()
+        .find(|family| family["id"] == "xychart")
+        .expect("xychart family");
+    assert_eq!(xychart["status"].as_str(), Some("full"));
+
+    let corpus: Value = serde_json::from_str(XYCHART_CORPUS).expect("xychart corpus must be JSON");
+    assert!(!corpus["valid"].as_array().expect("valid corpus").is_empty());
+    assert!(!corpus["invalid"]
+        .as_array()
+        .expect("invalid corpus")
+        .is_empty());
+}
+
+#[test]
+fn pinned_xychart_corpus_matches_upstream_acceptance() {
+    let corpus: Value = serde_json::from_str(XYCHART_CORPUS).expect("xychart corpus must be JSON");
+    assert_eq!(
+        corpus["upstream_commit"].as_str(),
+        Some("7ecca0cd7f1658ef74f4e7e91f925724ef403bbf")
+    );
+    for fixture in corpus["valid"].as_array().expect("valid corpus array") {
+        let id = fixture["id"].as_str().expect("fixture id");
+        let source = fixture["source"].as_str().expect("fixture source");
+        parse_xychart(source)
+            .unwrap_or_else(|error| panic!("valid upstream fixture {id} failed: {error}"));
+    }
+    for fixture in corpus["invalid"].as_array().expect("invalid corpus array") {
+        let id = fixture["id"].as_str().expect("fixture id");
+        let source = fixture["source"].as_str().expect("fixture source");
+        assert!(
+            parse_xychart(source).is_err(),
+            "invalid upstream fixture {id} unexpectedly parsed"
+        );
+    }
+}
 
 #[test]
 fn sankey_full_status_is_backed_by_the_pinned_corpus() {
