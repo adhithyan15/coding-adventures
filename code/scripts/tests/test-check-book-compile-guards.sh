@@ -62,6 +62,33 @@ TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
 
 # ---------------------------------------------------------------------------
+# 0. The script is executable.
+#
+# It documents its own usage as `./code/scripts/check-book-compile.sh`, and
+# shipped mode 100644 — so on a fresh Linux or macOS clone the documented
+# invocation died with "Permission denied" (exit 126). Windows does not model
+# the bit, so nobody authoring there could see it, and CI called the script as
+# `bash code/scripts/...` which works either way. This suite found it only
+# because it runs the script the way the docs tell a human to.
+#
+# Asserted rather than worked around: invoking via `bash "$SCRIPT"` below would
+# have made the suite pass while leaving the documented command broken.
+# ---------------------------------------------------------------------------
+# The GIT INDEX mode is the thing that ships, and it is checkable everywhere.
+# A filesystem `-x` test would be vacuous on Windows, which does not model the
+# bit and reports every readable file as executable — so the one platform most
+# likely to introduce this bug is the one that could never detect it.
+git_mode="$(git -C "$ROOT" ls-files -s -- "$SCRIPT" 2>/dev/null | awk '{print $1}')"
+if [ -z "$git_mode" ]; then
+  echo "SKIP check-book-compile.sh is executable (not a git checkout)"
+elif [ "$git_mode" = "100755" ]; then
+  ok "check-book-compile.sh is executable in the index (100755)"
+else
+  bad "check-book-compile.sh is executable in the index" \
+      "index mode is $git_mode; the documented './code/scripts/check-book-compile.sh' will fail with exit 126 on a fresh Linux or macOS clone"
+fi
+
+# ---------------------------------------------------------------------------
 # 1. A symlinked book.pdf is refused, and its target is left alone.
 #
 # Scoped skip: only THIS test needs a symlink. Test 2 below runs everywhere, so
