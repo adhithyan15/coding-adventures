@@ -8145,10 +8145,13 @@ impl HtmlParser {
 
         self.generate_implied_end_tags_above(index);
         if !self.current_element_is("form") {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-non-current-form-end-tag",
-                "end tag `</form>` removed a form while a non-form node remained current after implied-end-tag generation",
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-non-current-form-end-tag",
+                    "end tag `</form>` removed a form while a non-form node remained current after implied-end-tag generation",
+                )
+                .at_emission(self.current_token_emission_position),
+            );
         }
         self.open_elements.remove(index);
     }
@@ -8306,10 +8309,13 @@ impl HtmlParser {
                 }
                 self.generate_implied_end_tags_above(index);
                 if !self.current_element_is("form") {
-                    self.diagnostics.push(ParserDiagnostic::new(
-                        "unexpected-non-current-form-end-tag",
-                        "end tag `</form>` removed a form while a non-form node remained current after implied-end-tag generation",
-                    ));
+                    self.diagnostics.push(
+                        ParserDiagnostic::new(
+                            "unexpected-non-current-form-end-tag",
+                            "end tag `</form>` removed a form while a non-form node remained current after implied-end-tag generation",
+                        )
+                        .at_emission(self.current_token_emission_position),
+                    );
                 }
                 self.open_elements.remove(index);
                 return;
@@ -28093,6 +28099,17 @@ mod tests {
         .at_emission(Some(start_tag_position_at(source, "form", occurrence)))
     }
 
+    fn unexpected_non_current_form_end_tag(
+        source: &str,
+        occurrence: usize,
+    ) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-non-current-form-end-tag",
+            "end tag `</form>` removed a form while a non-form node remained current after implied-end-tag generation",
+        )
+        .at_emission(Some(end_tag_position_at(source, "form", occurrence)))
+    }
+
     fn nested_anchor_start_tag(source: &str, occurrence: usize) -> ParserDiagnostic {
         ParserDiagnostic::new(
             "nested-anchor-start-tag",
@@ -35130,10 +35147,7 @@ mod tests {
             output.parser_diagnostics,
             vec![
                 nested_form_start_tag(source, 1),
-                ParserDiagnostic::new(
-                    "unexpected-non-current-form-end-tag",
-                    "end tag `</form>` removed a form while a non-form node remained current after implied-end-tag generation"
-                ),
+                unexpected_non_current_form_end_tag(source, 0),
                 eof_with_unclosed_elements(source)
             ]
         );
@@ -35285,11 +35299,9 @@ mod tests {
                 output
                     .parser_diagnostics
                     .iter()
-                    .filter(|diagnostic| {
-                        diagnostic.code == "unexpected-non-current-form-end-tag"
-                    })
-                    .count(),
-                1,
+                    .filter(|diagnostic| diagnostic.code == "unexpected-non-current-form-end-tag")
+                    .collect::<Vec<_>>(),
+                vec![&unexpected_non_current_form_end_tag(source, 0)],
                 "source {source:?}"
             );
         }
@@ -35319,9 +35331,50 @@ mod tests {
                 .parser_diagnostics
                 .iter()
                 .filter(|diagnostic| diagnostic.code == "unexpected-non-current-form-end-tag")
-                .count(),
-            1
+                .collect::<Vec<_>>(),
+            vec![&unexpected_non_current_form_end_tag(
+                "<form><div></form>",
+                0
+            )]
         );
+
+        let unicode_source = "<!doctype html><!--é-->\r\n<form><div></form>";
+        let unicode = parse_html_with_diagnostics(unicode_source).unwrap();
+        assert!(unicode.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic == &unexpected_non_current_form_end_tag(unicode_source, 0)
+        }));
+        assert!(unicode_source.len() > unicode_source.chars().count());
+
+        let incomplete = parse_html_with_diagnostics("<!doctype html><form><div></form").unwrap();
+        assert!(incomplete.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-non-current-form-end-tag"
+        }));
+
+        let mut unpositioned = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        for token in [
+            Token::StartTag {
+                name: "form".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "div".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::EndTag {
+                name: "form".to_string(),
+            },
+            Token::Eof,
+        ] {
+            unpositioned.process_token(token);
+        }
+        let diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-non-current-form-end-tag")
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
     }
 
     #[test]
