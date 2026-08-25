@@ -9004,10 +9004,13 @@ impl HtmlParser {
                 self.open_elements.pop();
             }
             if self.open_elements.len() > index + 1 {
-                self.diagnostics.push(ParserDiagnostic::new(
-                    "mismatched-template-end-tag",
-                    "end tag `</template>` closed an HTML template while a non-template element remained current",
-                ));
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "mismatched-template-end-tag",
+                        "end tag `</template>` closed an HTML template while a non-template element remained current",
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
             }
             self.open_elements.truncate(index);
             self.template_insertion_modes.pop();
@@ -27756,6 +27759,18 @@ mod tests {
         )))
     }
 
+    fn mismatched_template_end_tag(source: &str, occurrence: usize) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "mismatched-template-end-tag",
+            "end tag `</template>` closed an HTML template while a non-template element remained current",
+        )
+        .at_emission(Some(end_tag_position_at(
+            source,
+            "template",
+            occurrence,
+        )))
+    }
+
     fn unexpected_description_list_item_start_tag(
         source: &str,
         name: &str,
@@ -42050,16 +42065,11 @@ mod tests {
 
     #[test]
     fn reports_template_end_tags_with_a_non_template_current_node_after_implied_end_tags() {
-        let mismatched =
-            parse_html_with_diagnostics("<!doctype html><div><template><div><span></template><b>")
-                .unwrap();
+        let source = "<!doctype html><div><template><div><span></template><b></b></div>";
+        let mismatched = parse_html_with_diagnostics(source).unwrap();
         assert_eq!(
-            mismatched
-                .parser_diagnostics
-                .iter()
-                .filter(|diagnostic| diagnostic.code == "mismatched-template-end-tag")
-                .count(),
-            1
+            mismatched.parser_diagnostics,
+            vec![mismatched_template_end_tag(source, 0)]
         );
 
         for source in [
@@ -42078,6 +42088,73 @@ mod tests {
                 output.parser_diagnostics
             );
         }
+    }
+
+    #[test]
+    fn positions_mismatched_template_end_tags_at_token_emission() {
+        let source = "<!doctype html><!--é-->\r\n<template><div><template><span></template><b></template>";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        assert_eq!(
+            output.parser_diagnostics,
+            vec![
+                mismatched_template_end_tag(source, 0),
+                mismatched_template_end_tag(source, 1),
+            ]
+        );
+        assert!(source.len() > source.chars().count());
+
+        let fragment_source = "<template><div></template>";
+        let fragment =
+            parse_html_fragment_for_context_with_diagnostics(fragment_source, "div").unwrap();
+        assert_eq!(
+            fragment.parser_diagnostics,
+            vec![mismatched_template_end_tag(fragment_source, 0)]
+        );
+
+        let incomplete =
+            parse_html_with_diagnostics("<!doctype html><template><div></template").unwrap();
+        assert!(incomplete
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "mismatched-template-end-tag"));
+
+        for source in [
+            "<!doctype html><template></template>",
+            "<!doctype html><template><p></template>",
+            "<!doctype html><svg><template></template></svg>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "mismatched-template-end-tag"));
+        }
+
+        let mut unpositioned = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        for token in [
+            Token::StartTag {
+                name: "template".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "div".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::EndTag {
+                name: "template".to_string(),
+            },
+            Token::Eof,
+        ] {
+            unpositioned.process_token(token);
+        }
+        let diagnostic = unpositioned
+            .diagnostics()
+            .iter()
+            .find(|diagnostic| diagnostic.code == "mismatched-template-end-tag")
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
     }
 
     #[test]
